@@ -1271,6 +1271,10 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                 case .insufficientFeatures:
                     trackingErrorData.append("InsufficientFeatures")
                     print("InsufficientFeatures")
+                case .none:
+                    return
+                case .initializing:
+                    return
                 }
             case .normal:
                 trackingErrorData.append("Normal")
