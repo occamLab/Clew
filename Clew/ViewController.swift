@@ -156,7 +156,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
      * Create New ARSession
      */
     func createARSession() {
-        configuration = ARWorldTrackingSessionConfiguration()
+        configuration = ARWorldTrackingConfiguration()
         configuration.planeDetection = .horizontal
         sceneView.session.run(configuration)
         sceneView.delegate = self
@@ -338,7 +338,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
         label.text = "Place the device against a flat vertical surface and press the volume button to pause. Do not move your phone until you feel a haptic confirmation. You will need to return to this surface to resume tracking. You can use other apps while in pause, but please keep the app running in the background."
         
-        let buttonWidth = pauseTrackingView.bounds.size.width / 4.5
+//        let buttonWidth = pauseTrackingView.bounds.size.width / 4.5
         
 //        let pauseButton = UIButton(type: .custom)
 //        pauseButton.frame = CGRect(x: 0, y: 0, width: buttonWidth, height: buttonWidth)
@@ -604,7 +604,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     // MARK! BreadCrumbs
     
     // AR Session Configuration
-    var configuration: ARWorldTrackingSessionConfiguration!
+    var configuration: ARWorldTrackingConfiguration!
     
     // Clew internal datastructures
     var crumbs: [LocationInfo]!                 // list of crumbs dropped when recording path
@@ -1271,8 +1271,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                 case .insufficientFeatures:
                     trackingErrorData.append("InsufficientFeatures")
                     print("InsufficientFeatures")
-                case .none:
-                    return
                 case .initializing:
                     return
                 }
