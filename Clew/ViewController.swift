@@ -112,12 +112,25 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     }
     
     func showLogAlert() {
+        
         // Show logging disclaimer when user opens app for the first time
-        let alertVC = UIAlertController(title: "Sharing your experience with Clew",
-                                        message: "Clew is still in beta testing. Help us improve the app by logging your Clew experience. These logs will not include any images or personal information. You can turn this off in Settings.",
-                                        preferredStyle: .alert)
-        alertVC.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
-        self.present(alertVC, animated: true, completion: nil)
+        let logAlertVC = UIAlertController(title: "Sharing your experience with Clew",
+                                           message: "Clew is still in beta testing. Help us improve the app by logging your Clew experience. These logs will not include any images or personal information. You can turn this off in Settings.",
+                                           preferredStyle: .alert)
+        logAlertVC.addAction(UIAlertAction(title: "Ok", style: .default, handler: { action -> Void in
+            self.showSafetyAlert()
+        }
+        ))
+        self.present(logAlertVC, animated: true, completion: nil)
+    }
+    
+    func showSafetyAlert() {
+        // Show safety disclaimer when user opens app for the first time
+        let safetyAlertVC = UIAlertController(title: "For your safety",
+                                              message: "While using the app, please be aware of your surroundings. You agree that your use of the App is at your own risk, and it is solely your responsibility to maintain your personal safety. Visit www.clewapp.org for more information on how to use the app.",
+                                              preferredStyle: .alert)
+        safetyAlertVC.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+        self.present(safetyAlertVC, animated: true, completion: nil)
     }
     
     /*
@@ -133,15 +146,15 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     }
     
     func registerSettingsBundle(){
-        let appDefaults = [String:AnyObject]()
+        let appDefaults = ["voiceFeedback": true, "hapticFeedback": true, "sendLogs": true]
         UserDefaults.standard.register(defaults: appDefaults)
     }
     
     func updateDisplayFromDefaults(){
         let defaults = UserDefaults.standard
+        
         defaultUnit = defaults.integer(forKey: "units")
         defaultColor = defaults.integer(forKey: "crumbColor")
-        trackingOrientation = defaults.bool(forKey: "trackOrientation")
         soundFeedback = defaults.bool(forKey: "soundFeedback")
         voiceFeedback = defaults.bool(forKey: "voiceFeedback")
         hapticFeedback = defaults.bool(forKey: "hapticFeedback")
@@ -338,20 +351,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
         label.text = "Place the device against a flat vertical surface and press the volume button to pause. Do not move your phone until you feel a haptic confirmation. You will need to return to this surface to resume tracking. You can use other apps while in pause, but please keep the app running in the background."
         
-//        let buttonWidth = pauseTrackingView.bounds.size.width / 4.5
-        
-//        let pauseButton = UIButton(type: .custom)
-//        pauseButton.frame = CGRect(x: 0, y: 0, width: buttonWidth, height: buttonWidth)
-//        pauseButton.layer.cornerRadius = 0.5 * pauseButton.bounds.size.width
-//        pauseButton.clipsToBounds = true
-//        pauseButton.setTitle("Pause", for: .normal)
-//        pauseButton.layer.borderWidth = 2
-//        pauseButton.layer.borderColor = UIColor.white.cgColor
-//        pauseButton.center.x = pauseTrackingView.center.x
-//        pauseButton.center.y = pauseTrackingView.bounds.size.height * (4/5)
-//        pauseButton.addTarget(self, action: #selector(pauseTracking), for: .touchUpInside)
-//
-//        pauseTrackingView.addSubview(pauseButton)
         pauseTrackingView.addSubview(label)
     }
     
@@ -423,7 +422,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             button.setImage(buttonImage, for: .normal)
             button.accessibilityLabel = "Start Navigation"
             button.addTarget(self, action: #selector(startNavigation), for: .touchUpInside)
-//            button.center.x = buttonView.center.x - displayWidth/4
             
             let pauseButton = UIButton(type: .custom)
             pauseButton.frame = CGRect(x: 0, y: 0, width: buttonWidth , height: buttonWidth )
@@ -479,7 +477,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         recordPathView.isAccessibilityElement = false
         stopRecordingView.isHidden = false
         currentButton = .stopRecording
-        updateDirectionText("Recording Path", distance: 0, size: 16, displayDistance: false)
+        updateDirectionText("Hold vertically with the rear camera facing forward.", distance: 0, size: 13, displayDistance: false)
     }
     
     /*
@@ -649,7 +647,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     let unitText = [0: " feet", 1: " meters"]
     var defaultUnit: Int!
     var defaultColor: Int!
-    var trackingOrientation: Bool!
     var soundFeedback: Bool!
     var voiceFeedback: Bool!
     var hapticFeedback: Bool!
@@ -733,6 +730,9 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         feedbackGenerator = nil
         waypointFeedbackGenerator = nil
         
+        // erase neariest keypoint
+        keypointNode.removeFromParentNode()
+        
         if(sendLogs) {
             announcementTimer = Timer.scheduledTimer(timeInterval: 2, target: self, selector: (#selector(showRouteRating)), userInfo: nil, repeats: false)
         } else {
@@ -801,14 +801,13 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             let jsonData = try JSONSerialization.data(withJSONObject: body, options: .prettyPrinted)
             // here "jsonData" is the dictionary encoded in JSON data
             bodyText = String(data: jsonData, encoding: String.Encoding.utf8)
-//            print(bodyText)
             
             // create http post request to AWS
             var request = URLRequest(url: URL(string: "https://27bcct7nyg.execute-api.us-east-1.amazonaws.com/Test/pathid")!)
             request.httpMethod = "POST"
             request.addValue("application/json", forHTTPHeaderField: "Content-Type")
             request.httpBody = bodyText.data(using: .utf8)
-            //            print(request.httpBody)
+            
             let task = URLSession.shared.dataTask(with: request) { data, response, error in
                 guard let data = data, error == nil else {                                                 // check for fundamental networking error
                     print("error=\(String(describing: error))")
@@ -897,7 +896,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                 let jsonData = try JSONSerialization.data(withJSONObject: body, options: .prettyPrinted)
                 // here "jsonData" is the dictionary encoded in JSON data
                 bodyText = String(data: jsonData, encoding: String.Encoding.utf8)
-//                print(bodyText)
                 
                 // create http post request to AWS
                 var request = URLRequest(url: URL(string: "https://27bcct7nyg.execute-api.us-east-1.amazonaws.com/Test/pathid")!)

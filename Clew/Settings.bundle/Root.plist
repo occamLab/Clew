@@ -14,7 +14,7 @@
 			<key>Key</key>
 			<string>units</string>
 			<key>DefaultValue</key>
-			<integer>0</integer>
+			<integer>1</integer>
 			<key>Values</key>
 			<array>
 				<integer>0</integer>
@@ -49,16 +49,6 @@
 				<string>Blue</string>
 				<string>Random</string>
 			</array>
-		</dict>
-		<dict>
-			<key>Type</key>
-			<string>PSToggleSwitchSpecifier</string>
-			<key>Title</key>
-			<string>Track Orientation</string>
-			<key>Key</key>
-			<string>trackOrientation</string>
-			<key>DefaultValue</key>
-			<false/>
 		</dict>
 		<dict>
 			<key>Type</key>
