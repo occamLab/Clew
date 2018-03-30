@@ -115,7 +115,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
         // Show logging disclaimer when user opens app for the first time
         let logAlertVC = UIAlertController(title: "Sharing your experience with Clew",
-                                           message: "Clew is still in beta testing. Help us improve the app by logging your Clew experience. These logs will not include any images or personal information. You can turn this off in Settings.",
+                                           message: "Help us improve the app by logging your Clew experience. These logs will not include any images or personal information. You can turn this off in Settings.",
                                            preferredStyle: .alert)
         logAlertVC.addAction(UIAlertAction(title: "Ok", style: .default, handler: { action -> Void in
             self.showSafetyAlert()
