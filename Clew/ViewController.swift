@@ -77,6 +77,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     var stopNavigationView: UIView!
     var directionText: UILabel!
     var routeRatingView: UIView!
+    var routeRatingLabel: UILabel?
     
     enum ButtonViewType {
         // State of button views
@@ -112,7 +113,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     }
     
     func showLogAlert() {
-        
         // Show logging disclaimer when user opens app for the first time
         let logAlertVC = UIAlertController(title: "Sharing your experience with Clew",
                                            message: "Help us improve the app by logging your Clew experience. These logs will not include any images or personal information. You can turn this off in Settings.",
@@ -304,14 +304,14 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         self.view.addSubview(directionText)
         self.view.addSubview(getDirectionButton)
         self.view.addSubview(routeRatingView)
-        showRecordPathButton()
+        showRecordPathButton(announceArrival: false)
     }
     
     func drawRouteRatingView() {
-        let label = UILabel(frame: CGRect(x: 0, y: displayHeight/2.5, width: displayWidth, height: displayHeight/6))
-        label.text = "Please rate your navigation service."
-        label.textColor = UIColor.white
-        label.textAlignment = .center
+        self.routeRatingLabel = UILabel(frame: CGRect(x: 0, y: displayHeight/2.5, width: displayWidth, height: displayHeight/6))
+        routeRatingLabel?.text = "Rate your service."
+        routeRatingLabel?.textColor = UIColor.white
+        routeRatingLabel?.textAlignment = .center
         
         let buttonWidth = routeRatingView.bounds.size.width / 4.5
         
@@ -339,7 +339,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
         routeRatingView.addSubview(thumbsDownButton)
         routeRatingView.addSubview(thumbsUpButton)
-        routeRatingView.addSubview(label)
+        routeRatingView.addSubview(routeRatingLabel!)
     }
     
     func drawPauseTrackingView() {
@@ -410,7 +410,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         case .recordPath:
             let buttonImage = UIImage(named: "StartRecording")
             button.setImage(buttonImage, for: .normal)
-            button.accessibilityLabel = "Re-cord Path"
+            button.accessibilityLabel = "Record path"
             button.addTarget(self, action: #selector(recordPath), for: .touchUpInside)
         case.stopRecording:
             let buttonImage = UIImage(named: "StopRecording")
@@ -458,15 +458,30 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     /*
      * display RECORD PATH button/hide all other views
      */
-    @objc func showRecordPathButton() {
+    @objc func showRecordPathButton(announceArrival: Bool) {
         recordPathView.isHidden = false
         stopNavigationView.isHidden = true
         getDirectionButton.isHidden = true
+
         directionText.isHidden = false
         routeRatingView.isHidden = true
         navigationMode = false
         currentButton = .recordPath
-        updateDirectionText("Press to record path", distance: 0, size: 16, displayDistance: false)
+        var helpText: String
+        if announceArrival {
+            helpText = "You've arrived. Press to record path"
+        } else {
+            helpText = "Press to record path"
+        }
+        updateDirectionText(helpText, distance: 0, size: 16, displayDistance: false)
+        directionText.isAccessibilityElement = true
+        
+        delayTransition()
+    }
+    
+    func delayTransition() {
+        // this notification currently cuts off the announcement of the button that was just pressed
+        UIAccessibilityPostNotification(UIAccessibilityScreenChangedNotification, nil)
     }
     
     /*
@@ -477,7 +492,9 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         recordPathView.isAccessibilityElement = false
         stopRecordingView.isHidden = false
         currentButton = .stopRecording
+        directionText.isAccessibilityElement = true
         updateDirectionText("Hold vertically with the rear camera facing forward.", distance: 0, size: 13, displayDistance: false)
+        delayTransition()
     }
     
     /*
@@ -489,12 +506,14 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         startNavigationView.isHidden = false
         directionText.isHidden = false
         currentButton = .startNavigation
+        directionText.isAccessibilityElement = true
         updateDirectionText("Press to start navigation or pause tracking", distance: 0, size: 14, displayDistance: false)
         do {
             try audioSession.setActive(false)
         } catch {
             print("some error")
         }
+        delayTransition()
     }
     
     /*
@@ -505,12 +524,12 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         directionText.isHidden = true
         pauseTrackingView.isHidden = false
         currentButton = .resumeTracking
-        UIAccessibilityPostNotification(UIAccessibilityAnnouncementNotification, "Follow instructions to pause")
         do {
             try audioSession.setActive(true)
         } catch {
             print("some error")
         }
+        delayTransition()
     }
     
     /*
@@ -520,13 +539,13 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         pauseTrackingView.isHidden = true
         resumeTrackingView.isHidden = false
         currentButton = .resumeTracking
-        UIAccessibilityPostNotification(UIAccessibilityAnnouncementNotification, "Follow instructions to resume")
         do {
             try audioSession.setActive(false)
             print("killed active")
         } catch {
             print("some error")
         }
+        delayTransition()
     }
     
     @objc func showResumeTrackingConfirmButton() {
@@ -537,6 +556,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         } catch {
             print("some error")
         }
+        delayTransition()
     }
     
     /*
@@ -546,24 +566,32 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         startNavigationView.isHidden = true
         stopNavigationView.isHidden = false
         getDirectionButton.isHidden = false
+        // this does not auto update, so don't use it as an accessibility element
+        directionText.isAccessibilityElement = false
         currentButton = .stopNavigation
+        delayTransition()
     }
     
     /*
      * display ROUTE RATING button/hide all other views
      */
-    @objc func showRouteRating() {
+    @objc func showRouteRating(announceArrival: Bool) {
         stopNavigationView.isHidden = true
         getDirectionButton.isHidden = true
         directionText.isHidden = true
         routeRatingView.isHidden = false
+        if announceArrival {
+            routeRatingLabel?.text = "You've arrived. Please rate your service."
+        } else {
+            routeRatingLabel?.text = "Please rate your service."
+        }
         currentButton = .stopNavigation
         
-        UIAccessibilityPostNotification(UIAccessibilityAnnouncementNotification, "Please rate your navigation service.")
         hapticTimer.invalidate()
         
         feedbackGenerator = nil
         waypointFeedbackGenerator = nil
+        delayTransition()
     }
     
     /*
@@ -596,7 +624,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             speechDataTime.append(roundToThousandths(-dataTimer.timeIntervalSinceNow))
         }
         
-        if (voiceFeedback) { UIAccessibilityPostNotification(UIAccessibilityAnnouncementNotification, altText) }
+        // TODO: next line was just if (voiceFeedback)
+        if (navigationMode && voiceFeedback) { UIAccessibilityPostNotification(UIAccessibilityAnnouncementNotification, altText) }
     }
     
     // MARK! BreadCrumbs
@@ -673,7 +702,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         trackingErrorPhase = []
         recordingMode = true
         
-        announcementTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(showStopRecordingButton)), userInfo: nil, repeats: false)
+        showStopRecordingButton()
         droppingCrumbs = Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: #selector(dropCrum), userInfo: nil, repeats: true)
     }
     
@@ -681,7 +710,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         // stop recording current path
         recordingMode = false
         droppingCrumbs.invalidate()
-        announcementTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(showStartNavigationButton)), userInfo: nil, repeats: false)
+        showStartNavigationButton()
     }
     
     @objc func startNavigation(_ sender: UIButton) {
@@ -715,7 +744,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         feedbackGenerator = UIImpactFeedbackGenerator(style: .light)
         waypointFeedbackGenerator = UINotificationFeedbackGenerator()
         
-        announcementTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(showStopNavigationButton)), userInfo: nil, repeats: false)
+        showStopNavigationButton()
         followingCrumbs = Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: (#selector(followCrum)), userInfo: nil, repeats: true)
         
         feedbackTimer = Date()
@@ -734,36 +763,37 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         keypointNode.removeFromParentNode()
         
         if(sendLogs) {
-            announcementTimer = Timer.scheduledTimer(timeInterval: 2, target: self, selector: (#selector(showRouteRating)), userInfo: nil, repeats: false)
+            showRouteRating(announceArrival: false)
         } else {
-            announcementTimer = Timer.scheduledTimer(timeInterval: 2, target: self, selector: (#selector(showRecordPathButton)), userInfo: nil, repeats: false)
+            showRecordPathButton(announceArrival: false)
         }
     }
     
     @objc func pauseTracking() {
         // pause AR pose tracking
         sceneView.session.pause()
-        announcementTimer = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: (#selector(showResumeTrackingButton)), userInfo: nil, repeats: false)
-        announcementTimer = Timer.scheduledTimer(timeInterval: 2, target: self, selector: (#selector(playSound)), userInfo: nil, repeats: false)
+        showResumeTrackingButton()
+        announcementTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(playSound)), userInfo: nil, repeats: false)
     }
     
     @objc func resumeTracking() {
         // resume pose tracking with existing ARSessionConfiguration
         sceneView.session.run(configuration)
-        announcementTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(showStartNavigationButton)), userInfo: nil, repeats: false)
-        announcementTimer = Timer.scheduledTimer(timeInterval: 2, target: self, selector: (#selector(playSound)), userInfo: nil, repeats: false)
+        showStartNavigationButton()
+        announcementTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(playSound)), userInfo: nil, repeats: false)
     }
     
     @objc func sendLogData() {
         // send success log data to AWS
         compileLogData(false)
-        showRecordPathButton()
+        showRecordPathButton(announceArrival: false)
+        delayTransition()
     }
     
     @objc func sendDebugLogData() {
         // send debug log data to AWS
         compileLogData(true)
-        showRecordPathButton()
+        showRecordPathButton(announceArrival: false)
     }
     
     func compileLogData(_ debug: Bool) {
@@ -1092,11 +1122,10 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     
     func announceArrival() {
         // announce destination arrival
-        updateDirectionText("You have arrived!", distance: 0, size: 16, displayDistance: false)
         if(sendLogs) {
-           announcementTimer = Timer.scheduledTimer(timeInterval: 2, target: self, selector: (#selector(showRouteRating)), userInfo: nil, repeats: false)
+            showRouteRating(announceArrival: true)
         } else {
-           announcementTimer = Timer.scheduledTimer(timeInterval: 2, target: self, selector: (#selector(showRecordPathButton)), userInfo: nil, repeats: false)
+            showRecordPathButton(announceArrival: true)
         }
     }
     
@@ -1271,6 +1300,9 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                     print("InsufficientFeatures")
                 case .initializing:
                     return
+                case .relocalizing:
+                    trackingErrorData.append("Relocalizing")
+                    print("Relocalizing")
                 }
             case .normal:
                 trackingErrorData.append("Normal")
