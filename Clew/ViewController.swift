@@ -723,7 +723,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
         // generate path from PathFinder class
         // enabled hapticFeedback generates more keypoints
-        let path = PathFinder(crums: crumbs.reversed(), hapticFeedback: hapticFeedback, voiceFeedBack: voiceFeedback)
+        let path = PathFinder(crumbs: crumbs.reversed(), hapticFeedback: hapticFeedback, voiceFeedBack: voiceFeedback)
         keypoints = path.keypoints
         
         // save keypoints data for debug log
@@ -1030,7 +1030,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     
     func announceTurnWarning(_ currentLocation: CurrentCoordinateInfo) {
         // announce upcoming turn
-        var dir = nav.getTurnWarningDirections(currentLocation, curKeypoint: keypoints[0], nextKeypoint: keypoints[1])
+        var dir = nav.getTurnWarningDirections(currentLocation, nextKeypoint: keypoints[0], secondKeypoint: keypoints[1])
         if(defaultUnit == 0) {
             // convert to imperial units
             dir.distance *= 3.28084

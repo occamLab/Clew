@@ -8,8 +8,12 @@
 //
 import Foundation
 
+/// Struct to store location and transform information
+///
+/// Contains:
+/// * `location` (`LocationInfo`)
+/// * `transformMatrix` (`Matrix3` from `VectorMath`)
 public struct CurrentCoordinateInfo {
-    //  Struct to store location and transform information
     public var location: LocationInfo
     public var transformMatrix: Matrix3 = Matrix3.identity
     
@@ -23,8 +27,14 @@ public struct CurrentCoordinateInfo {
     }
 }
 
+/// Struct to store position information and yaw
+///
+/// Contains:
+/// * `x` (`Float`)
+/// * `y` (`Float`)
+/// * `z` (`Float`)
+/// * `yaw` (`Float`)
 public struct LocationInfo {
-    //  Struct to store position information and yaw
     public var x: Float
     public var y: Float
     public var z: Float
@@ -38,102 +48,124 @@ public struct LocationInfo {
     }
 }
 
+/// Struct to store position and orientation of a keypoint
+///
+/// Contains:
+/// * `location` (`LocationInfo`)
+/// * `orientation` (`Vector3` from `VectorMath`)
 public struct KeypointInfo {
-    //  Struct to store position and orientation of a keypoint
     public var location: LocationInfo
     public var orientation: Vector3
 }
 
+/// Pathfinder class calculates turns or "keypoints" given a path array of LocationInfo
 class PathFinder {
     
-    //  Maximum width of the breadcrumb path; points falling outside this
-    //  margin will produce more keypoints, through Ramer-Douglas-Peucker algorithm
+    ///  Maximum width of the breadcrumb path.
+    ///
+    /// Points falling outside this margin will produce more keypoints, through Ramer-Douglas-Peucker algorithm
+    ///
+    /// - TODO: Clarify units
     private let pathWidth: Scalar!
     
     private var crumbs: [LocationInfo]
     
-    init(crums: [LocationInfo], hapticFeedback: Bool, voiceFeedBack: Bool) {
-        self.crumbs = crums
-        if(!hapticFeedback && voiceFeedBack) {
+    /// Initializes the PathFinder class and determines the value of `pathWidth`
+    ///
+    /// - Parameters:
+    ///   - crumbs: a list of `LocationInfo` objects representing the trail of breadcrumbs left on the path
+    ///   - hapticFeedback: whether or not hapticFeedback is on.
+    ///   - voiceFeedBack: whether or not voiceFeedback is on.
+    ///
+    /// - TODO:
+    ///   - Clarify why these magic `pathWidth` values are as they are.
+    init(crumbs: [LocationInfo], hapticFeedback: Bool, voiceFeedback: Bool) {
+        self.crumbs = crumbs
+        if(!hapticFeedback && voiceFeedback) {
             pathWidth = 0.7
         } else {
             pathWidth = 0.5
         }
     }
     
+    /// a list of `KeypointInfo` objects representing the important turns in the path.
     public var keypoints: [KeypointInfo] {
         get {
-            return getKeypoints(edibleCrums: crumbs)
+            return getKeypoints(edibleCrumbs: crumbs)
         }
     }
     
-    private func getKeypoints(edibleCrums: [LocationInfo]) -> [KeypointInfo] {
-        //  Creates a list of keypoints in a path given a list of points
-        //  dropped several times per second.
-        var res = [KeypointInfo]()
-        let firstKeypointLocation = edibleCrums.first!
+    /// Creates a list of keypoints in a path given a list of points dropped several times per second.
+    ///
+    /// - Parameter edibleCrumbs: a list of `LocationInfo` objects representing the trail of breadcrumbs left on the path.
+    /// - Returns: a list of `KeypointInfo` objects representing the turns in the path
+    func getKeypoints(edibleCrumbs: [LocationInfo]) -> [KeypointInfo] {
+        var keypoints = [KeypointInfo]()
+        let firstKeypointLocation = edibleCrumbs.first!
         let firstKeypointOrientation = Vector3.x
-        res.append(KeypointInfo(location: firstKeypointLocation, orientation: firstKeypointOrientation))
+        keypoints.append(KeypointInfo(location: firstKeypointLocation, orientation: firstKeypointOrientation))
         
-        res += calculateKeypoints(edibleCrums: edibleCrums)
+        keypoints += calculateKeypoints(edibleCrumbs: edibleCrumbs)
         
-        let lastKeypointLocation = edibleCrums.last!
-        let lastKeypointOrientation = Vector3(_: [(res.last?.location.x)! - edibleCrums.last!.x,
+        let lastKeypointLocation = edibleCrumbs.last!
+        let lastKeypointOrientation = Vector3(_: [(keypoints.last?.location.x)! - edibleCrumbs.last!.x,
                                                   0,
-                                                  (res.last?.location.z)! - edibleCrums.last!.z]).normalized()
-        res.append(KeypointInfo(location: lastKeypointLocation, orientation: lastKeypointOrientation))
-        return res
+                                                  (keypoints.last?.location.z)! - edibleCrumbs.last!.z]).normalized()
+        keypoints.append(KeypointInfo(location: lastKeypointLocation, orientation: lastKeypointOrientation))
+        return keypoints
     }
     
-    func calculateKeypoints(edibleCrums: [LocationInfo]) -> [KeypointInfo] {
-        //  Recursively simplifies a path of points using Ramer-Douglas-Peucker
-        //  algorithm.
+    /// Recursively simplifies a path of points using Ramer-Douglas-Peucker algorithm.
+    ///
+    /// - Parameter edibleCrumbs: a list of `LocationInfo` objects representing the trail of breadcrumbs left on the path.
+    /// - Returns: a list of `KeypointInfo` objects representing the important turns in the path.
+    func calculateKeypoints(edibleCrumbs: [LocationInfo]) -> [KeypointInfo] {
         var keypoints = [KeypointInfo]()
         
-        let first_crum = edibleCrums.first
-        let last_crum = edibleCrums.last
+        let firstCrumb = edibleCrumbs.first
+        let lastCrumb = edibleCrumbs.last
         
         //  Direction vector of last crumb in list relative to first
-        let pointVec = Vector3.init(_: [(last_crum?.x)! - (first_crum?.x)!,
-                                        (last_crum?.y)! - (first_crum?.y)!,
-                                        (last_crum?.z)! - (first_crum?.z)!])
+        let pointVector = Vector3.init(_: [(lastCrumb?.x)! - (firstCrumb?.x)!,
+                                        (lastCrumb?.y)! - (firstCrumb?.y)!,
+                                        (lastCrumb?.z)! - (firstCrumb?.z)!])
         
-        //  "Normal" vector to pointVec, rotated 90 degrees about vertical axis
-        let normVec = Matrix3.init(_: [0, 0, 1,
+        //  Vector normal to pointVector, rotated 90 degrees about vertical axis
+        let normalVector = Matrix3.init(_: [0, 0, 1,
                                        0, 0, 0,
-                                       -1, 0, 0]) * pointVec
+                                       -1, 0, 0]) * pointVector
         
-        let unitNormVec = normVec.normalized()
-        let unitPointVec = pointVec.normalized()
+        let unitNormalVector = normalVector.normalized()
+        let unitPointVector = pointVector.normalized()
         
-        //  Third orthonormal vector to normVec and pointVec, used to detect
+        //  Third orthonormal vector to normalVector and pointVector, used to detect
         //  vertical changes like stairways
-        let unitNormVec2 = unitPointVec.cross(unitNormVec)
+        let unitNormalVector2 = unitPointVector.cross(unitNormalVector)
         
         var listOfDistances = [Scalar]()
         
         //  Find maximum distance from the path trajectory among all points
-        for crum in edibleCrums {
-            let c = Vector3.init([crum.x - (first_crum?.x)!, crum.y - (first_crum?.y)!, crum.z - (first_crum?.z)!])
-            let a = c.dot(unitNormVec2)
-            let b = c.dot(unitNormVec)
+        for crumb in edibleCrumbs {
+            let c = Vector3.init([crumb.x - (firstCrumb?.x)!, crumb.y - (firstCrumb?.y)!, crumb.z - (firstCrumb?.z)!])
+            let a = c.dot(unitNormalVector2)
+            let b = c.dot(unitNormalVector)
             listOfDistances.append(sqrtf(powf(a, 2) + powf(b, 2)))
         }
         
-        let maxDist = listOfDistances.max()
-        let maxIdx = listOfDistances.index(of: maxDist!)
+        let maxDistance = listOfDistances.max()
+        let maxIndex = listOfDistances.index(of: maxDistance!)
         
         //  If a point is farther from path center than parameter pathWidth,
         //  there must be another keypoint within that stretch.
-        if (maxDist! > pathWidth) {
+        if (maxDistance! > pathWidth) {
             
             //  Recursively find all keypoints before the detected keypoint and
             //  after the detected keypoint, and add them in a list with the
             //  detected keypoint.
-            let prevKeypoints = calculateKeypoints(edibleCrums: Array(edibleCrums[0..<(maxIdx!+1)]))
-            let postKeypoints = calculateKeypoints(edibleCrums: Array(edibleCrums[maxIdx!...]))
+            let prevKeypoints = calculateKeypoints(edibleCrumbs: Array(edibleCrumbs[0..<(maxIndex!+1)]))
+            let postKeypoints = calculateKeypoints(edibleCrumbs: Array(edibleCrumbs[maxIndex!...]))
             
-            var prevKeypointLocation = edibleCrums.first!
+            var prevKeypointLocation = edibleCrumbs.first!
             var prevKeypointOrientation = Vector3.x
             if (!prevKeypoints.isEmpty) {
                 keypoints += prevKeypoints
@@ -144,8 +176,7 @@ class PathFinder {
             
             let prevKeypoint = KeypointInfo(location: prevKeypointLocation, orientation: prevKeypointOrientation)
             
-            //            var newKeypoint: KeypointInfo!
-            let newKeypointLocation = edibleCrums[maxIdx!]
+            let newKeypointLocation = edibleCrumbs[maxIndex!]
             let newKeypointOrientation = Vector3(_: [prevKeypoint.location.x - newKeypointLocation.x,
                                                      0,
                                                      prevKeypoint.location.z - newKeypointLocation.z]).normalized()

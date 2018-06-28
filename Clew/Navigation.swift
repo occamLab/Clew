@@ -1,11 +1,11 @@
-///
-///  Navigation.swift
-///  ARKitTest
-///
-///  Created by Chris Seonghwan Yoon & Jeremy Ryan on 7/11/17.
-///
-///  Navigation class that provides direction information given 2 LocationInfo position
-///
+//
+//  Navigation.swift
+//  ARKitTest
+//
+//  Created by Chris Seonghwan Yoon & Jeremy Ryan on 7/11/17.
+//
+//  Navigation class that provides direction information given 2 LocationInfo position
+//
 
 import Foundation
 
@@ -113,7 +113,7 @@ public var targetDepth: Scalar = 0.5
 /// Further instructions will be given to the user once they pass inside this bounding box
 public var targetHeight: Scalar = 3
 
-/// <#Description#>
+/// Navigation class that provides direction information given 2 LocationInfo position
 class Navigation {
     
     /// Determines direction of the next turn, relative to the iPhone's current position and the next two keypoints ahead.
