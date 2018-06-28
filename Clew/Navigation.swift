@@ -1,21 +1,39 @@
-//
-//  Navigation.swift
-//  ARKitTest
-//
-//  Created by Chris Seonghwan Yoon & Jeremy Ryan on 7/11/17.
-//
-//  Navigation class that provides direction information given 2 LocationInfo position
-//
+///
+///  Navigation.swift
+///  ARKitTest
+///
+///  Created by Chris Seonghwan Yoon & Jeremy Ryan on 7/11/17.
+///
+///  Navigation class that provides direction information given 2 LocationInfo position
+///
+
 import Foundation
 
+/// Not sure of description yet
+///
+/// - notAtTarget
+/// - atTarget
+/// - closeToTarget
+///
+/// - TODO: Clarify what this is
 public enum PositionState {
     case notAtTarget
     case atTarget
     case closeToTarget
 }
 
+/// Struct for storing relative position of keypoint to user
+///
+/// Contains:
+/// * `distance` (`Float`): distance in meters to keypoint
+/// * `clockDirection` (`Int`): description of angle to keypoint in clock position where straight forward is 12
+/// * `hapticDirection` (`Int`): description of angle to keypoint in a system of some form
+/// * `targetState` (case of enum `PositionState`): not sure of what this is
+///
+/// - TODO:
+///   - Clarify what the basis of haptic directions is
+///   - Clarify what `PositionState` is
 public struct DirectionInfo {
-    //  Struct for storing relative position of keypoint to user
     public var distance: Float
     public var clockDirection: Int
     public var hapticDirection: Int
@@ -28,7 +46,11 @@ public struct DirectionInfo {
     }
 }
 
-public let CLockDirections = [12: "Continue straight",
+/// Dictionary of clock positions
+///
+/// * Keys (`Int` from 1 to 12 inclusive): clock position
+/// * Values (`String`): corresponding spoken direction (e.g. "Slight right towards 2 o'clock")
+public let ClockDirections = [12: "Continue straight",
                               1: "Slight right towards 1 o'clock",
                               2: "Slight right towards 2 o'clock",
                               3: "Turn right",
@@ -41,6 +63,14 @@ public let CLockDirections = [12: "Continue straight",
                               10: "Slight left towards 10 o'clock",
                               11: "Slight left towards 11 o'clock"]
 
+/// Dictionary of directions, somehow based on haptic feedback.
+///
+/// * Keys (`Int` from 0 to 6 inclusive): encoding of haptic feedback
+/// * Values (`String`): corresponding spoken direction (e.g. "Slight right")
+///
+/// - TODO:
+///  - Explain the rationale of this division
+///  - Consider restructuring this
 public let HapticDirections = [1: "Continue straight",
                                2: "Slight right",
                                3: "Turn right",
@@ -49,6 +79,10 @@ public let HapticDirections = [1: "Continue straight",
                                6: "Slight Left",
                                0: "ERROR"]
 
+/// Dictionary of turn warnings based on clock position.
+///
+/// * Keys (`Int` from 1 to 12 inclusive): clock positions
+/// * Values (`String`): corresponding spoken direction (e.g. "Right turn ahead")
 public let TurnWarnings = [12: "Continue straight ahead",
                            1: "Slight right ahead",
                            2: "Slight right ahead",
@@ -62,31 +96,55 @@ public let TurnWarnings = [12: "Continue straight ahead",
                            10: "Slight left ahead",
                            11: "Slight left ahead"]
 
-//  Keypoint target dimensions
-//  Further instructions will be given to the user once they pass inside
-//  this bounding box
+/// Keypoint target dimension (width)
+///
+/// Further instructions will be given to the user once they pass inside this bounding box
+///
+/// - TODO: Determine units (meters?)
 public var targetWidth: Scalar = 2
+
+/// Keypoint target dimension (depth)
+///
+/// Further instructions will be given to the user once they pass inside this bounding box
 public var targetDepth: Scalar = 0.5
+
+/// Keypoint target dimension (height)
+///
+/// Further instructions will be given to the user once they pass inside this bounding box
 public var targetHeight: Scalar = 3
 
+/// <#Description#>
 class Navigation {
+    
+    /// Determines direction of the next turn, relative to the iPhone's current position and the next two keypoints ahead.
+    ///
+    /// - Parameters:
+    ///   - currentLocation:
+    ///   - curKeypoint:
+    ///   - nextKeypoint:
+    /// - Returns: direction between next Keypoint and second Keypoint ahead, to be used in creating turn warnings.
     public func getTurnWarningDirections(_ currentLocation: CurrentCoordinateInfo,
-                                         curKeypoint: KeypointInfo,
-                                         nextKeypoint: KeypointInfo) -> DirectionInfo {
+                                         nextKeypoint: KeypointInfo,
+                                         secondKeypoint: KeypointInfo) -> DirectionInfo {
         
-        let curKeypointDisplacementX = curKeypoint.location.x - currentLocation.location.x
-        let curKeypointDisplacementZ = curKeypoint.location.z - currentLocation.location.z
-        var adjustedNextKeypoint = nextKeypoint
-        adjustedNextKeypoint.location.x = nextKeypoint.location.x - curKeypointDisplacementX
-        adjustedNextKeypoint.location.z = nextKeypoint.location.z - curKeypointDisplacementZ
+        let nextKeypointDisplacementX = nextKeypoint.location.x - currentLocation.location.x
+        let nextKeypointDisplacementZ = nextKeypoint.location.z - currentLocation.location.z
+        // Create adjusted second keypoint object, which will be used to get turn warnings ahead of time
+        var adjustedSecondKeypoint = secondKeypoint
+        adjustedSecondKeypoint.location.x = secondKeypoint.location.x - nextKeypointDisplacementX
+        adjustedSecondKeypoint.location.z = secondKeypoint.location.z - nextKeypointDisplacementZ
         
-        return getDirections(currentLocation: currentLocation, nextKeypoint: adjustedNextKeypoint)
+        return getDirections(currentLocation: currentLocation, nextKeypoint: adjustedSecondKeypoint)
     }
     
+    /// Determines position of the next keypoint relative to the iPhone's current position.
+    ///
+    /// - Parameters:
+    ///   - currentLocation
+    ///   - nextKeypoint
+    /// - Returns: relative position of next keypoint as `DirectionInfo` object
     public func getDirections(currentLocation: CurrentCoordinateInfo, nextKeypoint: KeypointInfo) -> DirectionInfo {
-        //  Given the iPhone's current position in odometry and the position of
-        //  the next keypoint, returns a DirectionsInfo object about their
-        //  relative position.
+        
         //  Transform a unit vector to be pointing upward from the top of the
         //  phone and outward from the front of the phone.
         let zVector = Vector3.z * currentLocation.transformMatrix
@@ -108,12 +166,13 @@ class Navigation {
         let dist = sqrtf(powf((currentLocation.location.x - nextKeypoint.location.x), 2) +
             powf((currentLocation.location.z - nextKeypoint.location.z), 2))
         
+        // Finds angle from "forward"-looking towards the next keypoint in radians. Not sure which direction is negative vs. positive for now.
         let angle = atan2f((currentLocation.location.x - nextKeypoint.location.x), (currentLocation.location.z-nextKeypoint.location.z))
         
         let angleDiff = getAngleDiff(angle1: trueYaw, angle2: angle)
         
-        let hapticDirection = getHapticDirectionIdx(angle: angleDiff)
-        let clockDirection = getClockDirections(angle: angleDiff)
+        let hapticDirection = getHapticDirection(angle: angleDiff)
+        let clockDirection = getClockDirection(angle: angleDiff)
         
         //  Determine the difference in position between the phone and the next
         //  keypoint in the frame of the keypoint.
@@ -141,7 +200,17 @@ class Navigation {
         return direction
     }
     
-    private func getHapticDirectionIdx(angle: Float) -> Int {
+    /// Divides all possible directional angles into six sections for using with haptic feedback.
+    ///
+    /// - Parameter angle: angle in radians from straight ahead.
+    /// - Returns: `Int` from 0 to 6 inclusive, starting with 1 facing straight forward and continuing clockwise. 0 represents no angle.
+    ///
+    /// - SeeAlso: `HapticDirections`
+    ///
+    /// - TODO:
+    ///    - potentially rethink this assignment to ints and dictionary.
+    ///    - consider making return optional or throw an error rather than returning 0.
+    private func getHapticDirection(angle: Float) -> Int {
         if (-Float.pi/6 <= angle && angle <= Float.pi/6) {
             return 1
         } else if (Float.pi/6 <= angle && angle <= Float.pi/3) {
@@ -161,7 +230,13 @@ class Navigation {
         }
     }
     
-    private func getClockDirections(angle: Float) -> Int {
+    /// Determine clock direction from angle in radians, where 0 radians is 12 o'clock.
+    ///
+    /// - Parameter angle: input angle to be converted, in radians
+    /// - Returns: `Int` between 1 and 12, inclusive, representing clock position
+    ///
+    /// - SeeAlso: `ClockDirections`
+    private func getClockDirection(angle: Float) -> Int {
         //  Determine clock direction, from 1-12, based on angle in radians,
         //  where 0 radians is 12 o'clock.
         let a = (angle * (6/Float.pi)) + 12.5
@@ -170,6 +245,7 @@ class Navigation {
         return clockDir == 0 ? 12 : clockDir
     }
     
+    /// Determines the difference between two angles, in radians
     private func getAngleDiff(angle1: Float, angle2: Float) -> Float {
         //  Function to determine the difference between two angles
         let a = angleNormalize(angle: angle1)

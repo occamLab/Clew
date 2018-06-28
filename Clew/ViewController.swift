@@ -686,7 +686,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         if (hapticFeedback) {
             return HapticDirections
         } else {
-            return CLockDirections
+            return ClockDirections
         }
     }
     
