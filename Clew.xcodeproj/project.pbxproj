@@ -7,13 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4B12F4A545BC26EAA16F6633 /* Pods_Clew.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1977F3CD0CF608888A7E2B5C /* Pods_Clew.framework */; };
 		4D6B00C41F33C1C400952242 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D6B00C31F33C1C400952242 /* AppDelegate.swift */; };
 		4D6B00C61F33C1C400952242 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D6B00C51F33C1C400952242 /* ViewController.swift */; };
 		4D6B00C91F33C1C400952242 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4D6B00C71F33C1C400952242 /* Main.storyboard */; };
 		4D6B00CE1F33C1C400952242 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4D6B00CC1F33C1C400952242 /* LaunchScreen.storyboard */; };
 		4D6B00D61F33C1FE00952242 /* Navigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D6B00D51F33C1FE00952242 /* Navigation.swift */; };
 		4D6B00D81F33C21A00952242 /* PathFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D6B00D71F33C21A00952242 /* PathFinder.swift */; };
-		4D6B00DA1F33C24500952242 /* VectorMath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D6B00D91F33C24500952242 /* VectorMath.swift */; };
 		4D6B00DC1F33C26D00952242 /* Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D6B00DB1F33C26D00952242 /* Utility.swift */; };
 		4D6B00DE1F33C33600952242 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 4D6B00DD1F33C33600952242 /* Settings.bundle */; };
 		4D6B00E51F33C9B800952242 /* Crumb.obj in Resources */ = {isa = PBXBuildFile; fileRef = 4D6B00E41F33C85500952242 /* Crumb.obj */; };
@@ -22,6 +22,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		08FA9C31721F9F8CDCC23AE9 /* Pods-Clew.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Clew/Pods-Clew.debug.xcconfig"; sourceTree = "<group>"; };
+		1977F3CD0CF608888A7E2B5C /* Pods_Clew.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Clew.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4D6B00C01F33C1C400952242 /* Clew.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Clew.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4D6B00C31F33C1C400952242 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4D6B00C51F33C1C400952242 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -30,12 +32,12 @@
 		4D6B00CF1F33C1C400952242 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4D6B00D51F33C1FE00952242 /* Navigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Navigation.swift; sourceTree = "<group>"; };
 		4D6B00D71F33C21A00952242 /* PathFinder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PathFinder.swift; sourceTree = "<group>"; };
-		4D6B00D91F33C24500952242 /* VectorMath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VectorMath.swift; sourceTree = "<group>"; };
 		4D6B00DB1F33C26D00952242 /* Utility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utility.swift; sourceTree = "<group>"; };
 		4D6B00DD1F33C33600952242 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		4D6B00E41F33C85500952242 /* Crumb.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = Crumb.obj; sourceTree = "<group>"; };
 		4D940BAA1F38AA79004E6741 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4DF05CC71F34EB56008B0E31 /* Confirm.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = Confirm.mp3; sourceTree = "<group>"; };
+		D89DDB87A8AE1A9ECEAFCEC6 /* Pods-Clew.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew.release.xcconfig"; path = "Pods/Target Support Files/Pods-Clew/Pods-Clew.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -43,6 +45,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4B12F4A545BC26EAA16F6633 /* Pods_Clew.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -56,6 +59,8 @@
 				4D6B00E41F33C85500952242 /* Crumb.obj */,
 				4D6B00C21F33C1C400952242 /* Clew */,
 				4D6B00C11F33C1C400952242 /* Products */,
+				645269AB241294DCBFA0E1B0 /* Pods */,
+				C63B435EA8A32350A76E47DD /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -75,7 +80,6 @@
 				4D6B00C51F33C1C400952242 /* ViewController.swift */,
 				4D6B00D51F33C1FE00952242 /* Navigation.swift */,
 				4D6B00D71F33C21A00952242 /* PathFinder.swift */,
-				4D6B00D91F33C24500952242 /* VectorMath.swift */,
 				4D6B00DB1F33C26D00952242 /* Utility.swift */,
 				4D6B00C71F33C1C400952242 /* Main.storyboard */,
 				4D6B00CC1F33C1C400952242 /* LaunchScreen.storyboard */,
@@ -85,6 +89,23 @@
 			path = Clew;
 			sourceTree = "<group>";
 		};
+		645269AB241294DCBFA0E1B0 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				08FA9C31721F9F8CDCC23AE9 /* Pods-Clew.debug.xcconfig */,
+				D89DDB87A8AE1A9ECEAFCEC6 /* Pods-Clew.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		C63B435EA8A32350A76E47DD /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1977F3CD0CF608888A7E2B5C /* Pods_Clew.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -92,9 +113,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 4D6B00D21F33C1C400952242 /* Build configuration list for PBXNativeTarget "Clew" */;
 			buildPhases = (
+				FC3FD998D963F5FE0C5C7B8E /* [CP] Check Pods Manifest.lock */,
 				4D6B00BC1F33C1C400952242 /* Sources */,
 				4D6B00BD1F33C1C400952242 /* Frameworks */,
 				4D6B00BE1F33C1C400952242 /* Resources */,
+				7D513714488F266F881D7CB7 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -112,7 +135,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0900;
-				LastUpgradeCheck = 0920;
+				LastUpgradeCheck = 0940;
 				ORGANIZATIONNAME = OccamLab;
 				TargetAttributes = {
 					4D6B00BF1F33C1C400952242 = {
@@ -154,6 +177,45 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		7D513714488F266F881D7CB7 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-Clew/Pods-Clew-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/VectorMath/VectorMath.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/VectorMath.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Clew/Pods-Clew-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		FC3FD998D963F5FE0C5C7B8E /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Clew-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		4D6B00BC1F33C1C400952242 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -163,7 +225,6 @@
 				4D6B00D61F33C1FE00952242 /* Navigation.swift in Sources */,
 				4D6B00DC1F33C26D00952242 /* Utility.swift in Sources */,
 				4D6B00C61F33C1C400952242 /* ViewController.swift in Sources */,
-				4D6B00DA1F33C24500952242 /* VectorMath.swift in Sources */,
 				4D6B00C41F33C1C400952242 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -204,6 +265,7 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -211,6 +273,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
@@ -261,6 +324,7 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -268,6 +332,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
@@ -299,6 +364,7 @@
 		};
 		4D6B00D31F33C1C400952242 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 08FA9C31721F9F8CDCC23AE9 /* Pods-Clew.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
@@ -314,6 +380,7 @@
 		};
 		4D6B00D41F33C1C400952242 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D89DDB87A8AE1A9ECEAFCEC6 /* Pods-Clew.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 787TUDMR8Q;

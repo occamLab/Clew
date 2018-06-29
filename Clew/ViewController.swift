@@ -12,6 +12,7 @@ import SceneKit.ModelIO
 import AVFoundation
 import AudioToolbox
 import MediaPlayer
+import VectorMath
 
 // MARK! Fading animation extension for UIView
 extension UIView {
@@ -723,7 +724,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
         // generate path from PathFinder class
         // enabled hapticFeedback generates more keypoints
-        let path = PathFinder(crumbs: crumbs.reversed(), hapticFeedback: hapticFeedback, voiceFeedBack: voiceFeedback)
+        let path = PathFinder(crumbs: crumbs.reversed(), hapticFeedback: hapticFeedback, voiceFeedback: voiceFeedback)
         keypoints = path.keypoints
         
         // save keypoints data for debug log

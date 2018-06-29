@@ -8,6 +8,7 @@
 //
 
 import Foundation
+import VectorMath
 
 /// Not sure of description yet
 ///

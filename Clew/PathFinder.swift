@@ -7,6 +7,7 @@
 // Pathfinder class calculates turns or "keypoints" given a path array of LocationInfo
 //
 import Foundation
+import VectorMath
 
 /// Struct to store location and transform information
 ///

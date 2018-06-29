@@ -1,0 +1,24 @@
+PODS:
+  - VectorMath (0.3.3):
+    - VectorMath/Core (= 0.3.3)
+    - VectorMath/Quartz (= 0.3.3)
+    - VectorMath/SceneKit (= 0.3.3)
+  - VectorMath/Core (0.3.3)
+  - VectorMath/Quartz (0.3.3):
+    - VectorMath/Core
+  - VectorMath/SceneKit (0.3.3):
+    - VectorMath/Core
+
+DEPENDENCIES:
+  - VectorMath (~> 0.3)
+
+SPEC REPOS:
+  https://github.com/CocoaPods/Specs.git:
+    - VectorMath
+
+SPEC CHECKSUMS:
+  VectorMath: 9442bb470704903dd0343547454904ba66355302
+
+PODFILE CHECKSUM: 1aa80aadd34d3efdbda07d8cd3c1c1c2aceafb0f
+
+COCOAPODS: 1.5.0
