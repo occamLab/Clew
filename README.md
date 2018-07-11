@@ -52,6 +52,16 @@ This project uses a feature branching workflow. Make a new branch if you're goin
 #### Documentation
 Before you pull request, make sure the README is up to date, everything you added or updated in the code is appropriately and accurately commented (both inline and header doc), and update the jazzy documentation. OCCaM Lab's documentation guidelines are available on the Google Drive or by request. To update the jazzy docs, run `jazzy --min-acl internal`. If jazzy is not installed on your Mac, run `sudo gem install jazzy`.
 
+#### CocoaPods
+
+Check out the [CocoaPods docs](cocoapods.org "CocoaPods website") for information for adding a new Pod. Make sure to use CocoaPods, if possible, when adding a new library!
+
+If something goes wrong, check what's written in the Podfile. Because this app has multiple targets, make sure to specify the Pod in the correct section (probably all_pods). 
+
+#### Adding new files
+
+This project has multiple targets! You probably want to add any files to both Clew and Clew Dev, so make sure to choose that when the Xcode popup asks. For more information about using multiple targets, check out [this tutorial](https://www.appcoda.com/using-xcode-targets "Using Xcode Targets").
+
 ## Architecture
 <!-- TODO: describe architecture -->
 
@@ -68,3 +78,9 @@ For more information on how to use or troubleshoot CocoaPods, check out their [u
 ### Jazzy
 
 For more information on how to use or troubleshoot jazzy, check out their [project on GitHub](https://github.com/realm/jazzy "Jazzy on GitHub").
+
+### Multiple Targets
+
+Right now, you can choose to build to Clew or to Clew Dev. This means you can build it on an iPhone without overwriting the App Store version of Clew, if you have it. 
+
+If there are problems, most of the steps taken to make this happen are from [this tutorial](https://www.appcoda.com/using-xcode-targets "Using Xcode Targets") and therefore most of the places to check for errors are as well.
