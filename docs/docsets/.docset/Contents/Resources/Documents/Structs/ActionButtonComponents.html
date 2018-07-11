@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>KeypointInfo Structure Reference</title>
+    <title>ActionButtonComponents Structure Reference</title>
     <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
     <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
     <meta charset='utf-8'>
@@ -10,8 +10,8 @@
     
   </head>
   <body>
-    <a name="//apple_ref/swift/Struct/KeypointInfo" class="dashAnchor"></a>
-    <a title="KeypointInfo Structure Reference"></a>
+    <a name="//apple_ref/swift/Struct/ActionButtonComponents" class="dashAnchor"></a>
+    <a title="ActionButtonComponents Structure Reference"></a>
     <header>
       <div class="content-wrapper">
         <p><a href="../index.html"> Docs</a> (20% documented)</p>
@@ -21,7 +21,7 @@
       <p id="breadcrumbs">
         <a href="../index.html"> Reference</a>
         <img id="carat" src="../img/carat.png" />
-        KeypointInfo Structure Reference
+        ActionButtonComponents Structure Reference
       </p>
     </div>
     <div class="content-wrapper">
@@ -128,21 +128,16 @@
       <article class="main-content">
         <section>
           <section class="section">
-            <h1>KeypointInfo</h1>
+            <h1>ActionButtonComponents</h1>
               <div class="declaration">
                 <div class="language">
-                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">KeypointInfo</span></code></pre>
+                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">ActionButtonComponents</span></code></pre>
 
                 </div>
               </div>
-            <p>Struct to store position and orientation of a keypoint</p>
+            <p>Holds information about the buttons that are used to control navigation and tracking.</p>
 
-<p>Contains:</p>
-
-<ul>
-<li><code>location</code> (<code><a href="../Structs/LocationInfo.html">LocationInfo</a></code>)</li>
-<li><code>orientation</code> (<code>Vector3</code> from <code>VectorMath</code>)</li>
-</ul>
+<p>These button attributes are the only ones unique to each of these buttons.</p>
 
           </section>
           <section class="section task-group-section">
@@ -151,9 +146,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:4Clew12KeypointInfoV8locationAA08LocationC0Vvp"></a>
-                    <a name="//apple_ref/swift/Property/location" class="dashAnchor"></a>
-                    <a class="token" href="#/s:4Clew12KeypointInfoV8locationAA08LocationC0Vvp">location</a>
+                    <a name="/s:4Clew22ActionButtonComponentsV5imageSo7UIImageCvp"></a>
+                    <a name="//apple_ref/swift/Property/image" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Clew22ActionButtonComponentsV5imageSo7UIImageCvp">image</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -161,14 +156,14 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>Button image</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">location</span><span class="p">:</span> <span class="kt"><a href="../Structs/LocationInfo.html">LocationInfo</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">image</span><span class="p">:</span> <span class="kt">UIImage</span></code></pre>
 
                         </div>
                       </div>
@@ -178,9 +173,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:4Clew12KeypointInfoV11orientationXevp"></a>
-                    <a name="//apple_ref/swift/Property/orientation" class="dashAnchor"></a>
-                    <a class="token" href="#/s:4Clew12KeypointInfoV11orientationXevp">orientation</a>
+                    <a name="/s:4Clew22ActionButtonComponentsV5labelSSvp"></a>
+                    <a name="//apple_ref/swift/Property/label" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Clew22ActionButtonComponentsV5labelSSvp">label</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -188,14 +183,46 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>Accessibility label</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">orientation</span><span class="p">:</span> <span class="kt">Vector3</span></code></pre>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">label</span><span class="p">:</span> <span class="kt">String</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Clew22ActionButtonComponentsV14targetSelector10ObjectiveC0F0Vvp"></a>
+                    <a name="//apple_ref/swift/Property/targetSelector" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Clew22ActionButtonComponentsV14targetSelector10ObjectiveC0F0Vvp">targetSelector</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Function to call when the button is tapped</p>
+<div class="aside aside-todo">
+    <p class="aside-title">Todo</p>
+    Potentially unnecessary when the transitioning between views is refactored.
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">targetSelector</span><span class="p">:</span> <span class="kt">Selector</span></code></pre>
 
                         </div>
                       </div>

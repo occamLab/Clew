@@ -14,8 +14,10 @@ import AudioToolbox
 import MediaPlayer
 import VectorMath
 
-// MARK! Fading animation extension for UIView
+// MARK: Extensions
 extension UIView {
+    
+    /// Custom fade used for direction text UILabel.
     func fadeTransition(_ duration:CFTimeInterval) {
         let animation = CATransition()
         animation.timingFunction = CAMediaTimingFunction(name:
@@ -25,20 +27,123 @@ extension UIView {
         animation.duration = duration
         layer.add(animation, forKey: kCATransitionFade)
     }
+    
+    /// Configures a button container view and adds a button.
+    ///
+    /// - Parameter buttonComponents: holds information about the button to add
+    ///
+    /// - TODO: generalize for code reuse with the other kinds of subview containers in this app
+    func setupButtonContainer(withButton buttonComponents: ActionButtonComponents) {
+        self.backgroundColor = UIColor.black.withAlphaComponent(0.4)
+        self.isHidden = true
+        let button = UIButton.makeImageButton(self, buttonComponents)
+        self.addSubview(button)
+    }
+}
+
+extension UIButton {
+    
+    /// Factory to make an image button.
+    ///
+    /// Used for start and stop recording and navigation buttons.
+    ///
+    /// - Parameters:
+    ///   - containerView: button container, configured with `UIView.setupButtonContainer(withButton:)`
+    ///   - buttonViewParts: holds information about the button (image, label, and target)
+    /// - Returns: A formatted button
+    ///
+    /// - SeeAlso: `UIView.setupButtonContainer(withButton:)`
+    ///
+    /// - TODO:
+    ///   - Implement AutoLayout
+    static func makeImageButton(_ containerView: UIView, _ buttonViewParts: ActionButtonComponents) -> UIButton {
+        let buttonWidth = containerView.bounds.size.width / 4.5
+        
+        let button = UIButton(type: .custom)
+        
+        button.frame = CGRect(x: 0, y: 0, width: buttonWidth, height: buttonWidth)
+        button.layer.cornerRadius = 0.5 * button.bounds.size.width
+        button.clipsToBounds = true
+        button.center.x = containerView.center.x
+        button.center.y = containerView.bounds.size.height * (6/10)
+        
+        button.setImage(buttonViewParts.image, for: .normal)
+        button.accessibilityLabel = buttonViewParts.label
+        button.addTarget(nil, action: buttonViewParts.targetSelector, for: .touchUpInside)
+        
+        return button
+    }
+}
+
+// Neat way of storing the selectors for all the targets we use.
+// Source: https://medium.com/swift-programming/swift-selector-syntax-sugar-81c8a8b10df3
+fileprivate extension Selector {
+    static let recordPathButtonTapped = #selector(ViewController.recordPath)
+    static let stopRecordingButtonTapped = #selector(ViewController.stopRecording)
+    static let startNavigationButtonTapped = #selector(ViewController.startNavigation)
+    static let stopNavigationButtonTapped = #selector(ViewController.stopNavigation)
+}
+
+/// Holds information about the buttons that are used to control navigation and tracking.
+///
+/// These button attributes are the only ones unique to each of these buttons.
+public struct ActionButtonComponents {
+    
+    /// Button image
+    var image: UIImage
+    
+    /// Accessibility label
+    var label: String
+    
+    /// Function to call when the button is tapped
+    ///
+    /// - TODO: Potentially unnecessary when the transitioning between views is refactored.
+    var targetSelector: Selector
 }
 
 class ViewController: UIViewController, ARSCNViewDelegate {
     
-    // MARK! UI Setup
+    // MARK: - Refactoring UI definition
+    
+    // MARK: Properties and subview declarations
+    
+    // TODO: Define frame for all subview initializations (...AutoLayout?)
+//    let buttonContainerFrame: CGRect = ???
+    
+    /// Image, label, and target for start recording button.
+    let recordPathButton = ActionButtonComponents(image: UIImage(named: "StartRecording")!, label: "Record path", targetSelector: Selector.recordPathButtonTapped)
+    
+    /// Image, label, and target for stop recording button.
+    let stopRecordingButton = ActionButtonComponents(image: UIImage(named: "StopRecording")!, label: "Stop recording", targetSelector: Selector.stopRecordingButtonTapped)
+    
+    /// Image, label, and target for start navigation button.
+    let startNavigationButton = ActionButtonComponents(image: UIImage(named: "StartNavigation")!, label: "Start navigation", targetSelector: Selector.startNavigationButtonTapped)
+
+    /// Image, label, and target for stop navigation button.
+    let stopNavigationButton = ActionButtonComponents(image: UIImage(named: "StopNavigation")!, label: "Stop navigation", targetSelector: Selector.stopNavigationButtonTapped)
+    
+    /// Button view container for stop recording button
+    var stopRecordingView: UIView!
+    
+    /// Button view container for start recording button.
+    var recordPathView: UIView!
+    
+    /// Button view container for start navigation button
+    var startNavigationView: UIView!
+
+    /// Button view container for stop navigation button
+    var stopNavigationView: UIView!
+    
+    // MARK: - UI Setup
     @IBOutlet weak var sceneView: ARSCNView!
     
+    /// Hide status bar
     override var prefersStatusBarHidden: Bool {
-        // hide status bar
         return true
     }
     
+    /// Button frame extends the entire width of screen
     var buttonFrameWidth: CGFloat {
-        // button frame extends the entire width of screen
         return UIScreen.main.bounds.size.width
     }
     
@@ -69,13 +174,13 @@ class ViewController: UIViewController, ARSCNViewDelegate {
      * UIViewss for all UI button containers
      */
     var getDirectionButton: UIButton!
-    var recordPathView: UIView!
-    var stopRecordingView: UIView!
-    var startNavigationView: UIView!
+//    var recordPathView: UIView!
+//    var stopRecordingView: UIView!
+//    var startNavigationView: UIView!
     var pauseTrackingView: UIView!
     var resumeTrackingView: UIView!
     var resumeTrackingConfirmView: UIView!
-    var stopNavigationView: UIView!
+//    var stopNavigationView: UIView!
     var directionText: UILabel!
     var routeRatingView: UIView!
     var routeRatingLabel: UILabel?
@@ -231,7 +336,33 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         tapGestureRecognizer.numberOfTapsRequired = 2
         self.view.addGestureRecognizer(tapGestureRecognizer)
     }
+    // MARK: - drawUI() temp mark for navigation
     
+    /// Initializes, configures, and adds all subviews defined programmatically.
+    ///
+    /// Subviews:
+    /// - `getDirectionButton` (`UIButton`)
+    /// - `directionText` (`UILabel`)
+    /// - `recordPathView` (`UIView`):
+    ///   - configured with `UIView.setupButtonContainer(withButton:)`
+    ///   - contains record path button, with information stored in `recordPathButton` instance of `ActionButtonComponents`
+    /// - `stopRecordingView` (`UIView`):
+    ///   - configured with `UIView.setupButtonContainer(withButton:)`
+    ///   - contains record path button, with information stored in `stopRecordingButton` instance of `ActionButtonComponents`
+    /// - `startNavigationView` (`UIView`)
+    /// - `stopNavigationView` (`UIView`):
+    ///   - configured with `UIView.setupButtonContainer(withButton:)`
+    ///   - contains record path button, with information stored in `stopNavigationButton` instance of `ActionButtonComponents`
+    /// - `pauseTrackingView` (`UIView`)
+    /// - `resumeTrackingView` (`UIView`)
+    /// - `resumeTrackingConfirmView` (`UIView`)
+    /// - `routeRatingView` (`UIView`)
+    ///
+    /// - TODO:
+    ///   - DRY
+    ///   - AutoLayout
+    ///   - `startNavigationView` pause button configuration
+    ///   - subview transitions?
     func drawUI() {
         // button that gives direction to the nearist keypoint
         getDirectionButton = UIButton(frame: CGRect(x: 0, y: 0, width: buttonFrameWidth, height: yOriginOfButtonFrame))
@@ -249,23 +380,18 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
         // Record Path button container
         recordPathView = UIView(frame: CGRect(x: 0, y: yOriginOfButtonFrame, width: buttonFrameWidth, height: buttonFrameHeight))
-        recordPathView.backgroundColor = UIColor.black.withAlphaComponent(0.4)
-        recordPathView.isHidden = false
-        addButtons(buttonView: recordPathView, buttonViewType: .recordPath)
-        
+        recordPathView.setupButtonContainer(withButton: recordPathButton)
         
         // Stop Recording button container
         stopRecordingView = UIView(frame: CGRect(x: 0, y: yOriginOfButtonFrame, width: buttonFrameWidth, height: buttonFrameHeight))
-        stopRecordingView.backgroundColor = UIColor.black.withAlphaComponent(0.4)
-        stopRecordingView.isHidden = true
-        addButtons(buttonView: stopRecordingView, buttonViewType: .stopRecording)
-        
+        stopRecordingView.setupButtonContainer(withButton: stopRecordingButton)
         
         // Start Navigation button container
         startNavigationView = UIView(frame: CGRect(x: 0, y: yOriginOfButtonFrame, width: buttonFrameWidth, height: buttonFrameHeight))
+//        startNavigationView.setupButtonContainer(withButton: startNavigationButton)
         startNavigationView.backgroundColor = UIColor.black.withAlphaComponent(0.4)
         startNavigationView.isHidden = true
-        addButtons(buttonView: startNavigationView, buttonViewType: .startNavigation)
+        addButtons(buttonView: startNavigationView)
         
         
         pauseTrackingView = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height))
@@ -286,10 +412,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
         // Stop Navigation button container
         stopNavigationView = UIView(frame: CGRect(x: 0, y: yOriginOfButtonFrame, width: buttonFrameWidth, height: buttonFrameHeight))
-        stopNavigationView.backgroundColor = UIColor.black.withAlphaComponent(0.4)
-        stopNavigationView.isHidden = true
-        addButtons(buttonView: stopNavigationView, buttonViewType: .stopNavigation)
-        
+        stopNavigationView.setupButtonContainer(withButton: stopNavigationButton)
         
         routeRatingView = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height))
         routeRatingView.backgroundColor = UIColor.black.withAlphaComponent(0.4)
@@ -395,7 +518,12 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     /*
      * Adds buttons to given UIView container
      */
-    func addButtons(buttonView: UIView, buttonViewType: ButtonViewType) {
+    /// Adds start navigation and pause buttons the `startNavigationView` button container.
+    ///
+    /// Largely vestigial. Should be refactored completely out of the code soon.
+    ///
+    /// - Parameter buttonView: `startNavigationView` button container
+    func addButtons(buttonView: UIView) {
         let buttonWidth = buttonView.bounds.size.width / 4.5
         
         let button = UIButton(type: .custom)
@@ -406,53 +534,23 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         button.center.x = buttonView.center.x
         button.center.y = buttonView.bounds.size.height * (6/10)
         
-        // Adds custom button labels
-        switch buttonViewType {
-        case .recordPath:
-            let buttonImage = UIImage(named: "StartRecording")
-            button.setImage(buttonImage, for: .normal)
-            button.accessibilityLabel = "Record path"
-            button.addTarget(self, action: #selector(recordPath), for: .touchUpInside)
-        case.stopRecording:
-            let buttonImage = UIImage(named: "StopRecording")
-            button.setImage(buttonImage, for: .normal)
-            button.accessibilityLabel = "Stop recording"
-            button.addTarget(self, action: #selector(stopRecording), for: .touchUpInside)
-        case .startNavigation:
-            let buttonImage = UIImage(named: "StartNavigation")
-            button.setImage(buttonImage, for: .normal)
-            button.accessibilityLabel = "Start Navigation"
-            button.addTarget(self, action: #selector(startNavigation), for: .touchUpInside)
-            
-            let pauseButton = UIButton(type: .custom)
-            pauseButton.frame = CGRect(x: 0, y: 0, width: buttonWidth , height: buttonWidth )
-            pauseButton.layer.cornerRadius = 0.5 * button.bounds.size.width
-            pauseButton.clipsToBounds = true
-            pauseButton.center.x = buttonView.center.x + displayWidth/3
-            pauseButton.center.y = buttonView.bounds.size.height * (6/10)
-            pauseButton.addTarget(self, action: #selector(showPauseTrackingButton), for: .touchUpInside)
-            pauseButton.setTitle("Pause", for: .normal)
-            pauseButton.layer.borderWidth = 2
-            pauseButton.layer.borderColor = UIColor.white.cgColor
-            
-            buttonView.addSubview(pauseButton)
-        case .pauseTracking:
-            button.addTarget(self, action: #selector(pauseTracking), for: .touchUpInside)
-            button.setTitle("Pause", for: .normal)
-            button.layer.borderWidth = 2
-            button.layer.borderColor = UIColor.white.cgColor
-        case .resumeTracking:
-            button.addTarget(self, action: #selector(resumeTracking), for: .touchUpInside)
-            button.setTitle("Resume", for: .normal)
-            button.layer.borderWidth = 2
-            button.layer.borderColor = UIColor.white.cgColor
-        case.stopNavigation:
-            let buttonImage = UIImage(named: "StopNavigation")
-            button.setImage(buttonImage, for: .normal)
-            button.accessibilityLabel = "Stop Navigation"
-            button.addTarget(self, action: #selector(stopNavigation), for: .touchUpInside)
-        }
+        let buttonImage = UIImage(named: "StartNavigation")
+        button.setImage(buttonImage, for: .normal)
+        button.accessibilityLabel = "Start Navigation"
+        button.addTarget(self, action: #selector(startNavigation), for: .touchUpInside)
         
+        let pauseButton = UIButton(type: .custom)
+        pauseButton.frame = CGRect(x: 0, y: 0, width: buttonWidth , height: buttonWidth )
+        pauseButton.layer.cornerRadius = 0.5 * button.bounds.size.width
+        pauseButton.clipsToBounds = true
+        pauseButton.center.x = buttonView.center.x + displayWidth/3
+        pauseButton.center.y = buttonView.bounds.size.height * (6/10)
+        pauseButton.addTarget(self, action: #selector(showPauseTrackingButton), for: .touchUpInside)
+        pauseButton.setTitle("Pause", for: .normal)
+        pauseButton.layer.borderWidth = 2
+        pauseButton.layer.borderColor = UIColor.white.cgColor
+        
+        buttonView.addSubview(pauseButton)
         buttonView.addSubview(button)
     }
     
@@ -629,7 +727,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         if (navigationMode && voiceFeedback) { UIAccessibilityPostNotification(UIAccessibilityAnnouncementNotification, altText) }
     }
     
-    // MARK! BreadCrumbs
+    // MARK: - BreadCrumbs
     
     // AR Session Configuration
     var configuration: ARWorldTrackingConfiguration!
@@ -784,6 +882,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         announcementTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(playSound)), userInfo: nil, repeats: false)
     }
     
+    // MARK: - Logging
     @objc func sendLogData() {
         // send success log data to AWS
         compileLogData(false)
@@ -1005,6 +1104,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
     }
     
+    // MARK: - Render directions
     @objc func getHapticFeedback() {
         // send haptic feedback depending on correct device
         let curLocation = getRealCoordinates(sceneView: sceneView, record: false)
