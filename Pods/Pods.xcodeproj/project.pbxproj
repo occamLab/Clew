@@ -11,11 +11,14 @@
 		03156112D805483694C2028BDCD90B20 /* VectorMath+Quartz.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95DAC2CD50C7578AA830A9C326AD8BE7 /* VectorMath+Quartz.swift */; };
 		18A7B056AF08E3494A30F45032627103 /* VectorMath-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 654DC6CB67180DBCF1ED462DD2055EC4 /* VectorMath-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1CF5000D5F77965E352863B10A59E5C9 /* VectorMath.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF04CD593501AB6198E8F7CA82317B80 /* VectorMath.swift */; };
+		4704D328A94F9507B97A17C835FF9C6F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6604A7D69453B4569E4E4827FB9155A9 /* Foundation.framework */; };
+		4723492305A3319B7E97E22D98189701 /* Pods-Clew Dev-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 23FED8303AC3C350B497C24ED904D2E9 /* Pods-Clew Dev-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8FE506591ECC6C88273961BDE5062BAF /* VectorMath-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 84D5FDDF4399167455E774ABFCD059F2 /* VectorMath-dummy.m */; };
-		E67A1C88068325E93DA808DB9A83BF7C /* Pods-Clew-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = AE33B7CB1CC6F179CCD97FD601485AD5 /* Pods-Clew-dummy.m */; };
+		B0588D1E4456D826569C18A9DD3D72B5 /* Pods-Clew Dev-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = F179A609091BEF0FD8F678639BA9DA5A /* Pods-Clew Dev-dummy.m */; };
+		E67A1C88068325E93DA808DB9A83BF7C /* Pods-Clew-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = D72CE8E02487D522EF94648E4AF1118F /* Pods-Clew-dummy.m */; };
 		E964437869DBECDD399698D5D431A2DE /* VectorMath+SceneKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E77EC712237787B2183563EF1A6AD50 /* VectorMath+SceneKit.swift */; };
 		F08EAA95D963F47E817175333565F4E5 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6604A7D69453B4569E4E4827FB9155A9 /* Foundation.framework */; };
-		FDA5B3C9A77E767EB24200C309CFDE2B /* Pods-Clew-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 560FD7B25B78A2CA200773180AE59106 /* Pods-Clew-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		FDA5B3C9A77E767EB24200C309CFDE2B /* Pods-Clew-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 44399541B01A9108DC9B620B8AA1E56D /* Pods-Clew-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -26,32 +29,50 @@
 			remoteGlobalIDString = 82B9BD2962F71CEB8F0DC74DA86569FE;
 			remoteInfo = VectorMath;
 		};
+		F068FBD195D6B723DBE21BB0C6454DE1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D41D8CD98F00B204E9800998ECF8427E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 82B9BD2962F71CEB8F0DC74DA86569FE;
+			remoteInfo = VectorMath;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		08F6DB48F70A94C9E43660E6423A93FB /* Pods_Clew.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_Clew.framework; path = "Pods-Clew.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		0856711560BC43D69C3EBE3F566E538D /* Pods-Clew-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-Clew-frameworks.sh"; sourceTree = "<group>"; };
+		0948C6ACAE65E34B3685425DEA7619E1 /* Pods-Clew-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-Clew-acknowledgements.plist"; sourceTree = "<group>"; };
 		1D1F6E7431D0F1FFED0E8C81D5981691 /* VectorMath.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = VectorMath.modulemap; sourceTree = "<group>"; };
 		2231450553BBE270DC494DE21E4AEF86 /* VectorMath.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = VectorMath.xcconfig; sourceTree = "<group>"; };
-		34128F141078052859664E6FBFC474C8 /* Pods-Clew.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Clew.debug.xcconfig"; sourceTree = "<group>"; };
-		37259FAAE86162013767D347191FFAAF /* Pods-Clew.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Clew.release.xcconfig"; sourceTree = "<group>"; };
-		49C9E68C80FA9B993006A5506A7B24C4 /* Pods-Clew-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-Clew-acknowledgements.markdown"; sourceTree = "<group>"; };
-		4FAD74795EA07F3D6C6EA8EF60CDEC53 /* Pods-Clew-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-Clew-acknowledgements.plist"; sourceTree = "<group>"; };
+		23FED8303AC3C350B497C24ED904D2E9 /* Pods-Clew Dev-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-Clew Dev-umbrella.h"; sourceTree = "<group>"; };
+		275C835C26AFC2F4005D9FEE528884B1 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		298918424DC79EE9201CC864EC0CFF5C /* Pods-Clew.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Clew.release.xcconfig"; sourceTree = "<group>"; };
+		44399541B01A9108DC9B620B8AA1E56D /* Pods-Clew-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-Clew-umbrella.h"; sourceTree = "<group>"; };
 		54433EE1F5F7B14E3762B5B912001D25 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		560FD7B25B78A2CA200773180AE59106 /* Pods-Clew-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-Clew-umbrella.h"; sourceTree = "<group>"; };
+		58CC09C836F5852DB53752387BD55C19 /* VectorMath.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = VectorMath.framework; path = VectorMath.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		5BF38397857E883600C75766CF8EDD53 /* Pods_Clew.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_Clew.framework; path = "Pods-Clew.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		5DE97680EC1426E27D2AC36D839FBAD4 /* Pods-Clew Dev.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Clew Dev.debug.xcconfig"; sourceTree = "<group>"; };
 		654DC6CB67180DBCF1ED462DD2055EC4 /* VectorMath-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "VectorMath-umbrella.h"; sourceTree = "<group>"; };
 		6604A7D69453B4569E4E4827FB9155A9 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.3.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
-		7E4125C2362CF2AFB877DA36CC004987 /* VectorMath.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = VectorMath.framework; path = VectorMath.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		67916246308879F66D173AEE05C682EC /* Pods-Clew.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Clew.debug.xcconfig"; sourceTree = "<group>"; };
 		7E77EC712237787B2183563EF1A6AD50 /* VectorMath+SceneKit.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "VectorMath+SceneKit.swift"; path = "VectorMath/VectorMath+SceneKit.swift"; sourceTree = "<group>"; };
-		842548D482E67A6F157369D5A70E1030 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		83BFDF3011A7BD8B6CD0DF0DAAA70EDF /* Pods-Clew Dev-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-Clew Dev-resources.sh"; sourceTree = "<group>"; };
 		84D5FDDF4399167455E774ABFCD059F2 /* VectorMath-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "VectorMath-dummy.m"; sourceTree = "<group>"; };
 		93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		95DAC2CD50C7578AA830A9C326AD8BE7 /* VectorMath+Quartz.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "VectorMath+Quartz.swift"; path = "VectorMath/VectorMath+Quartz.swift"; sourceTree = "<group>"; };
-		AE33B7CB1CC6F179CCD97FD601485AD5 /* Pods-Clew-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-Clew-dummy.m"; sourceTree = "<group>"; };
-		BAF8720534DB7B59C2D61C4CAF424083 /* Pods-Clew-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-Clew-frameworks.sh"; sourceTree = "<group>"; };
-		E93109DE997C774F44619FE3E1DFA478 /* Pods-Clew-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-Clew-resources.sh"; sourceTree = "<group>"; };
+		96BD9138F7AEAD0CEACF6D000CD600F2 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A16EAE180E347B143AB00D3DAE3BA2E0 /* Pods-Clew.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-Clew.modulemap"; sourceTree = "<group>"; };
+		A49D5729A5BFC5F5AA2C15F48320929C /* Pods-Clew-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-Clew-acknowledgements.markdown"; sourceTree = "<group>"; };
+		BE38517E5094EC3EE1E3E0A6FC6B5B8E /* Pods-Clew-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-Clew-resources.sh"; sourceTree = "<group>"; };
+		C4B972435856B3105C69FD84C9540E48 /* Pods-Clew Dev.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Clew Dev.release.xcconfig"; sourceTree = "<group>"; };
+		D4845BC4721FFF2267B217A79E4E3891 /* Pods-Clew Dev-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-Clew Dev-acknowledgements.plist"; sourceTree = "<group>"; };
+		D4AE2FDC829EE12D3C198B551100BC25 /* Pods-Clew Dev.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-Clew Dev.modulemap"; sourceTree = "<group>"; };
+		D72CE8E02487D522EF94648E4AF1118F /* Pods-Clew-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-Clew-dummy.m"; sourceTree = "<group>"; };
+		E77086F8321F3F18B0C79FA31A5A17DB /* Pods-Clew Dev-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-Clew Dev-acknowledgements.markdown"; sourceTree = "<group>"; };
 		EA2F6A4C5EE25AA990FE28F39CF83ED4 /* VectorMath-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "VectorMath-prefix.pch"; sourceTree = "<group>"; };
-		ED251A0012CC23D135CB644467772071 /* Pods-Clew.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-Clew.modulemap"; sourceTree = "<group>"; };
 		EF04CD593501AB6198E8F7CA82317B80 /* VectorMath.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = VectorMath.swift; path = VectorMath/VectorMath.swift; sourceTree = "<group>"; };
+		F179A609091BEF0FD8F678639BA9DA5A /* Pods-Clew Dev-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-Clew Dev-dummy.m"; sourceTree = "<group>"; };
+		F1E6159ADB412A0CEFC4536205D3E73E /* Pods_Clew_Dev.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_Clew_Dev.framework; path = "Pods-Clew Dev.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		FBE4FB0180590D61D7E8A247912370CB /* Pods-Clew Dev-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-Clew Dev-frameworks.sh"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,6 +81,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				028DFBE3DB7361A54DFFBAB9617C1AEB /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		745C0D0AA08F2795B17CD6D83EDA52D4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4704D328A94F9507B97A17C835FF9C6F /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -82,38 +111,12 @@
 			name = SceneKit;
 			sourceTree = "<group>";
 		};
-		0E40FB3CD772CDE1926A492976220F80 /* Pods-Clew */ = {
-			isa = PBXGroup;
-			children = (
-				842548D482E67A6F157369D5A70E1030 /* Info.plist */,
-				ED251A0012CC23D135CB644467772071 /* Pods-Clew.modulemap */,
-				49C9E68C80FA9B993006A5506A7B24C4 /* Pods-Clew-acknowledgements.markdown */,
-				4FAD74795EA07F3D6C6EA8EF60CDEC53 /* Pods-Clew-acknowledgements.plist */,
-				AE33B7CB1CC6F179CCD97FD601485AD5 /* Pods-Clew-dummy.m */,
-				BAF8720534DB7B59C2D61C4CAF424083 /* Pods-Clew-frameworks.sh */,
-				E93109DE997C774F44619FE3E1DFA478 /* Pods-Clew-resources.sh */,
-				560FD7B25B78A2CA200773180AE59106 /* Pods-Clew-umbrella.h */,
-				34128F141078052859664E6FBFC474C8 /* Pods-Clew.debug.xcconfig */,
-				37259FAAE86162013767D347191FFAAF /* Pods-Clew.release.xcconfig */,
-			);
-			name = "Pods-Clew";
-			path = "Target Support Files/Pods-Clew";
-			sourceTree = "<group>";
-		};
 		2B0748EE8D1D6357A6A184FFB525022E /* Core */ = {
 			isa = PBXGroup;
 			children = (
 				EF04CD593501AB6198E8F7CA82317B80 /* VectorMath.swift */,
 			);
 			name = Core;
-			sourceTree = "<group>";
-		};
-		5DB562A2F027799A3F8C3F262E66C0C5 /* Targets Support Files */ = {
-			isa = PBXGroup;
-			children = (
-				0E40FB3CD772CDE1926A492976220F80 /* Pods-Clew */,
-			);
-			name = "Targets Support Files";
 			sourceTree = "<group>";
 		};
 		69D87BCCB7DFB1DF88FF04A4906132D0 /* VectorMath */ = {
@@ -128,13 +131,13 @@
 			path = VectorMath;
 			sourceTree = "<group>";
 		};
-		726A4A6E8F27A560A99559B34D9EDD48 /* Products */ = {
+		7D8B9D9B26CE0F9C05EBC6A089941CCF /* Targets Support Files */ = {
 			isa = PBXGroup;
 			children = (
-				08F6DB48F70A94C9E43660E6423A93FB /* Pods_Clew.framework */,
-				7E4125C2362CF2AFB877DA36CC004987 /* VectorMath.framework */,
+				A70ABD45A33FB2C4D6FA770F6D3BAFCA /* Pods-Clew */,
+				81C5985D31625A12C61A98FA4DBF2659 /* Pods-Clew Dev */,
 			);
-			name = Products;
+			name = "Targets Support Files";
 			sourceTree = "<group>";
 		};
 		7DB346D0F39D3F0E887471402A8071AB = {
@@ -143,9 +146,45 @@
 				93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */,
 				BC3CA7F9E30CC8F7E2DD044DD34432FC /* Frameworks */,
 				E2AFA12C143C34AF3CA1ABB0BF72EAF9 /* Pods */,
-				726A4A6E8F27A560A99559B34D9EDD48 /* Products */,
-				5DB562A2F027799A3F8C3F262E66C0C5 /* Targets Support Files */,
+				EAC9BD4E52CDCB978AD8BFA0E4D9947F /* Products */,
+				7D8B9D9B26CE0F9C05EBC6A089941CCF /* Targets Support Files */,
 			);
+			sourceTree = "<group>";
+		};
+		81C5985D31625A12C61A98FA4DBF2659 /* Pods-Clew Dev */ = {
+			isa = PBXGroup;
+			children = (
+				275C835C26AFC2F4005D9FEE528884B1 /* Info.plist */,
+				D4AE2FDC829EE12D3C198B551100BC25 /* Pods-Clew Dev.modulemap */,
+				E77086F8321F3F18B0C79FA31A5A17DB /* Pods-Clew Dev-acknowledgements.markdown */,
+				D4845BC4721FFF2267B217A79E4E3891 /* Pods-Clew Dev-acknowledgements.plist */,
+				F179A609091BEF0FD8F678639BA9DA5A /* Pods-Clew Dev-dummy.m */,
+				FBE4FB0180590D61D7E8A247912370CB /* Pods-Clew Dev-frameworks.sh */,
+				83BFDF3011A7BD8B6CD0DF0DAAA70EDF /* Pods-Clew Dev-resources.sh */,
+				23FED8303AC3C350B497C24ED904D2E9 /* Pods-Clew Dev-umbrella.h */,
+				5DE97680EC1426E27D2AC36D839FBAD4 /* Pods-Clew Dev.debug.xcconfig */,
+				C4B972435856B3105C69FD84C9540E48 /* Pods-Clew Dev.release.xcconfig */,
+			);
+			name = "Pods-Clew Dev";
+			path = "Target Support Files/Pods-Clew Dev";
+			sourceTree = "<group>";
+		};
+		A70ABD45A33FB2C4D6FA770F6D3BAFCA /* Pods-Clew */ = {
+			isa = PBXGroup;
+			children = (
+				96BD9138F7AEAD0CEACF6D000CD600F2 /* Info.plist */,
+				A16EAE180E347B143AB00D3DAE3BA2E0 /* Pods-Clew.modulemap */,
+				A49D5729A5BFC5F5AA2C15F48320929C /* Pods-Clew-acknowledgements.markdown */,
+				0948C6ACAE65E34B3685425DEA7619E1 /* Pods-Clew-acknowledgements.plist */,
+				D72CE8E02487D522EF94648E4AF1118F /* Pods-Clew-dummy.m */,
+				0856711560BC43D69C3EBE3F566E538D /* Pods-Clew-frameworks.sh */,
+				BE38517E5094EC3EE1E3E0A6FC6B5B8E /* Pods-Clew-resources.sh */,
+				44399541B01A9108DC9B620B8AA1E56D /* Pods-Clew-umbrella.h */,
+				67916246308879F66D173AEE05C682EC /* Pods-Clew.debug.xcconfig */,
+				298918424DC79EE9201CC864EC0CFF5C /* Pods-Clew.release.xcconfig */,
+			);
+			name = "Pods-Clew";
+			path = "Target Support Files/Pods-Clew";
 			sourceTree = "<group>";
 		};
 		A89677E4C3FA413FE005729DCE037724 /* Quartz */ = {
@@ -180,6 +219,16 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		EAC9BD4E52CDCB978AD8BFA0E4D9947F /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5BF38397857E883600C75766CF8EDD53 /* Pods_Clew.framework */,
+				F1E6159ADB412A0CEFC4536205D3E73E /* Pods_Clew_Dev.framework */,
+				58CC09C836F5852DB53752387BD55C19 /* VectorMath.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		FA04C10E4A4AD3481B32B1AC575E285D /* Support Files */ = {
 			isa = PBXGroup;
 			children = (
@@ -205,6 +254,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		D40A98749505CC5F0B4934983B68CE7C /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4723492305A3319B7E97E22D98189701 /* Pods-Clew Dev-umbrella.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		E36203C3BB75363599048ECB14606BD0 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -216,6 +273,24 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		1C9360375BD47539AC2543B7FE443A6D /* Pods-Clew Dev */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 22826DF504EBB929E126D142C7D32063 /* Build configuration list for PBXNativeTarget "Pods-Clew Dev" */;
+			buildPhases = (
+				1746FAAB3F8D0E23FF683CCB6E544C23 /* Sources */,
+				745C0D0AA08F2795B17CD6D83EDA52D4 /* Frameworks */,
+				D40A98749505CC5F0B4934983B68CE7C /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				1CA0536A7A7FE81A20FC3420091AA434 /* PBXTargetDependency */,
+			);
+			name = "Pods-Clew Dev";
+			productName = "Pods-Clew Dev";
+			productReference = F1E6159ADB412A0CEFC4536205D3E73E /* Pods_Clew_Dev.framework */;
+			productType = "com.apple.product-type.framework";
+		};
 		82B9BD2962F71CEB8F0DC74DA86569FE /* VectorMath */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = B58BE71997C9AEE462E6F0C3581FDBBE /* Build configuration list for PBXNativeTarget "VectorMath" */;
@@ -230,7 +305,7 @@
 			);
 			name = VectorMath;
 			productName = VectorMath;
-			productReference = 7E4125C2362CF2AFB877DA36CC004987 /* VectorMath.framework */;
+			productReference = 58CC09C836F5852DB53752387BD55C19 /* VectorMath.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 		D913368B71E9A272DB7622FCE5FEF55A /* Pods-Clew */ = {
@@ -248,7 +323,7 @@
 			);
 			name = "Pods-Clew";
 			productName = "Pods-Clew";
-			productReference = 08F6DB48F70A94C9E43660E6423A93FB /* Pods_Clew.framework */;
+			productReference = 5BF38397857E883600C75766CF8EDD53 /* Pods_Clew.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 /* End PBXNativeTarget section */
@@ -268,17 +343,26 @@
 				en,
 			);
 			mainGroup = 7DB346D0F39D3F0E887471402A8071AB;
-			productRefGroup = 726A4A6E8F27A560A99559B34D9EDD48 /* Products */;
+			productRefGroup = EAC9BD4E52CDCB978AD8BFA0E4D9947F /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
 				D913368B71E9A272DB7622FCE5FEF55A /* Pods-Clew */,
+				1C9360375BD47539AC2543B7FE443A6D /* Pods-Clew Dev */,
 				82B9BD2962F71CEB8F0DC74DA86569FE /* VectorMath */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXSourcesBuildPhase section */
+		1746FAAB3F8D0E23FF683CCB6E544C23 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B0588D1E4456D826569C18A9DD3D72B5 /* Pods-Clew Dev-dummy.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		6ACE7920144AF5D0EA5688C3D7BE2673 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -301,6 +385,12 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		1CA0536A7A7FE81A20FC3420091AA434 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = VectorMath;
+			target = 82B9BD2962F71CEB8F0DC74DA86569FE /* VectorMath */;
+			targetProxy = F068FBD195D6B723DBE21BB0C6454DE1 /* PBXContainerItemProxy */;
+		};
 		9273CA2333B77124B2D68071B43D55B7 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = VectorMath;
@@ -368,9 +458,45 @@
 			};
 			name = Release;
 		};
+		3134E8BC23EC724957FACC5C260AE5A8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = C4B972435856B3105C69FD84C9540E48 /* Pods-Clew Dev.release.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "Target Support Files/Pods-Clew Dev/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-Clew Dev/Pods-Clew Dev.modulemap";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
 		49DD68DEF509C07A8521658BE587063B /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 37259FAAE86162013767D347191FFAAF /* Pods-Clew.release.xcconfig */;
+			baseConfigurationReference = 298918424DC79EE9201CC864EC0CFF5C /* Pods-Clew.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				CLANG_ENABLE_OBJC_WEAK = NO;
@@ -406,7 +532,7 @@
 		};
 		71C85846FDA681FB23799F32F23E22E4 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 34128F141078052859664E6FBFC474C8 /* Pods-Clew.debug.xcconfig */;
+			baseConfigurationReference = 67916246308879F66D173AEE05C682EC /* Pods-Clew.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				CLANG_ENABLE_OBJC_WEAK = NO;
@@ -425,6 +551,42 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MACH_O_TYPE = staticlib;
 				MODULEMAP_FILE = "Target Support Files/Pods-Clew/Pods-Clew.modulemap";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		752243B4ACF39EE1D2D1E73F3CCAC8C3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5DE97680EC1426E27D2AC36D839FBAD4 /* Pods-Clew Dev.debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "Target Support Files/Pods-Clew Dev/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-Clew Dev/Pods-Clew Dev.modulemap";
 				OTHER_LDFLAGS = "";
 				OTHER_LIBTOOLFLAGS = "";
 				PODS_ROOT = "$(SRCROOT)";
@@ -571,6 +733,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		22826DF504EBB929E126D142C7D32063 /* Build configuration list for PBXNativeTarget "Pods-Clew Dev" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				752243B4ACF39EE1D2D1E73F3CCAC8C3 /* Debug */,
+				3134E8BC23EC724957FACC5C260AE5A8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		2D8E8EC45A3A1A1D94AE762CB5028504 /* Build configuration list for PBXProject "Pods" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
