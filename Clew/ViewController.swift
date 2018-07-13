@@ -279,7 +279,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         configuration.planeDetection = .horizontal
         sceneView.session.run(configuration)
         sceneView.delegate = self
-        sceneView.backgroundColor = UIColor(patternImage: UIImage(named: "SplashScreen")!)
     }
     
     /*
