@@ -27,6 +27,7 @@ public enum PositionState {
 ///
 /// Contains:
 /// * `distance` (`Float`): distance in meters to keypoint
+/// * `angleDiff` (`Float`): angle in radians to next keypoint
 /// * `clockDirection` (`Int`): description of angle to keypoint in clock position where straight forward is 12
 /// * `hapticDirection` (`Int`): description of angle to keypoint in a system of some form
 /// * `targetState` (case of enum `PositionState`): not sure of what this is
@@ -36,12 +37,14 @@ public enum PositionState {
 ///   - Clarify what `PositionState` is
 public struct DirectionInfo {
     public var distance: Float
+    public var angleDiff: Float
     public var clockDirection: Int
     public var hapticDirection: Int
     public var targetState = PositionState.notAtTarget
     
-    public init(distance: Float, clockDirection: Int, hapticDirection: Int) {
+    public init(distance: Float, angleDiff: Float, clockDirection: Int, hapticDirection: Int) {
         self.distance = distance
+        self.angleDiff = angleDiff
         self.clockDirection = clockDirection
         self.hapticDirection = hapticDirection
     }
@@ -117,6 +120,9 @@ public var targetHeight: Scalar = 3
 /// Navigation class that provides direction information given 2 LocationInfo position
 class Navigation {
     
+    /// The offset between the user's direction of travel (assumed to be aligned with the front of their body and the phone's orientation)
+    var headingOffset: Float?
+
     /// Determines direction of the next turn, relative to the iPhone's current position and the next two keypoints ahead.
     ///
     /// - Parameters:
@@ -138,6 +144,27 @@ class Navigation {
         return getDirections(currentLocation: currentLocation, nextKeypoint: adjustedSecondKeypoint)
     }
     
+    /// Get the heading for the phone suitable for computing directions to the next waypoint.
+    ///
+    /// The phone's direction is either the projection of its z-axis on the floor plane (x-z plane), or if the phone is lying flatter than 45 degrees, it is the projection of the phone's y-axis.
+    /// - Parameter currentLocation: the phone's location
+    /// - Returns: the phone's yaw that is used for computation of directions
+    public func getPhoneHeadingYaw(currentLocation: CurrentCoordinateInfo)->Float {
+        let zVector = Vector3.z * currentLocation.transformMatrix
+        let yVector = Vector3.x * currentLocation.transformMatrix
+        //  The vector with the lesser vertical component is more flat, so has
+        //  a more accurate direction. If the phone is more flat than 45 degrees
+        //  the upward vector is used for phone direction; if it is more upright
+        //  the outward vector is used.
+        var trueVector: Vector3!
+        if (abs(zVector.y) < abs(yVector.y)) {
+            trueVector = zVector * Matrix3([1, 0, 0, 0, 0, 0, 0, 0, 1])
+        } else {
+            trueVector = yVector * Matrix3([1, 0, 0, 0, 0, 0, 0, 0, 1])
+        }
+        return atan2f(trueVector.x, trueVector.z)
+    }
+    
     /// Determines position of the next keypoint relative to the iPhone's current position.
     ///
     /// - Parameters:
@@ -145,23 +172,7 @@ class Navigation {
     ///   - nextKeypoint
     /// - Returns: relative position of next keypoint as `DirectionInfo` object
     public func getDirections(currentLocation: CurrentCoordinateInfo, nextKeypoint: KeypointInfo) -> DirectionInfo {
-        
-        //  Transform a unit vector to be pointing upward from the top of the
-        //  phone and outward from the front of the phone.
-        let zVector = Vector3.z * currentLocation.transformMatrix
-        let yVector = Vector3.x * currentLocation.transformMatrix
-        var trueVector: Vector3!
-        
-        //  The vector with the lesser vertical component is more flat, so has
-        //  a more accurate direction. If the phone is more flat than 45 degrees
-        //  the upward vector is used for phone direction; if it is more upright
-        //  the outward vector is used.
-        if (abs(zVector.y) < abs(yVector.y)) {
-            trueVector = zVector * Matrix3([1, 0, 0, 0, 0, 0, 0, 0, 1])
-        } else {
-            trueVector = yVector * Matrix3([1, 0, 0, 0, 0, 0, 0, 0, 1])
-        }
-        let trueYaw = atan2f(trueVector.x, trueVector.z)
+        let trueYaw  = getPhoneHeadingYaw(currentLocation: currentLocation) + (headingOffset != nil ? headingOffset! : Float(0.0))
         
         //  Distance to next keypoint in meters
         let dist = sqrtf(powf((currentLocation.location.x - nextKeypoint.location.x), 2) +
@@ -187,7 +198,7 @@ class Navigation {
                              currentLocation.location.y - nextKeypoint.location.y,
                              currentLocation.location.z - nextKeypoint.location.z]).dot(nextKeypoint.orientation.cross(Vector3.y))
         
-        var direction = DirectionInfo(distance: dist, clockDirection: clockDirection, hapticDirection: hapticDirection)
+        var direction = DirectionInfo(distance: dist, angleDiff: angleDiff, clockDirection: clockDirection, hapticDirection: hapticDirection)
         
         //  Determine whether the phone is inside the bounding box of the keypoint
         if (xDiff <= targetDepth && yDiff <= targetHeight && zDiff <= targetWidth) {
@@ -247,7 +258,7 @@ class Navigation {
     }
     
     /// Determines the difference between two angles, in radians
-    private func getAngleDiff(angle1: Float, angle2: Float) -> Float {
+    func getAngleDiff(angle1: Float, angle2: Float) -> Float {
         //  Function to determine the difference between two angles
         let a = angleNormalize(angle: angle1)
         let b = angleNormalize(angle: angle2)
@@ -262,6 +273,16 @@ class Navigation {
     
     private func angleNormalize(angle: Float) -> Float {
         return atan2f(sinf(angle), cosf(angle))
+    }
+    
+    /// Computes the average between two angles (accounting for wraparound)
+    ///
+    /// - Parameters:
+    ///   - a: one of the two angles
+    ///   - b: the other angle
+    /// - Returns: the average fo the angles
+    func averageAngle(a: Float, b: Float)->Float {
+        return atan2f(sin(b) + sin(a), cos(a) + cos(b))
     }
     
     private func roundToTenths(n: Float) -> Float {

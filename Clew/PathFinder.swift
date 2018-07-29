@@ -83,9 +83,9 @@ class PathFinder {
     init(crumbs: [LocationInfo], hapticFeedback: Bool, voiceFeedback: Bool) {
         self.crumbs = crumbs
         if(!hapticFeedback && voiceFeedback) {
-            pathWidth = 0.7
+            pathWidth = 0.1
         } else {
-            pathWidth = 0.5
+            pathWidth = 0.1
         }
     }
     

@@ -110,6 +110,21 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     // TODO: Define frame for all subview initializations (...AutoLayout?)
 //    let buttonContainerFrame: CGRect = ???
     
+    /// While recording, every 0.01s, check to see if we should reset the heading offset
+    var angleOffsetTimer: Timer?
+    
+    /// A threshold to determine when the phone rotated too much to update the angle offset
+    let angleDeviationThreshold : Float = 0.2
+    /// The minimum distance traveled in the floor plane in order to update the angle offset
+    let requiredDistance : Float = 0.3
+    /// A threshold to determine when a path is too curvy to update the angle offset
+    let linearDeviationThreshold: Float = 0.05
+    
+    /// a ring buffer used to keep the last 100 positions of the phone
+    var locationRingBuffer = RingBuffer<Vector3>(capacity: 50)
+    /// a ring buffer used to keep the last 100 headings of the phone
+    var headingRingBuffer = RingBuffer<Float>(capacity: 50)
+
     /// Image, label, and target for start recording button.
     let recordPathButton = ActionButtonComponents(image: UIImage(named: "StartRecording")!, label: "Record path", targetSelector: Selector.recordPathButtonTapped)
     
@@ -252,10 +267,10 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     }
     
     func registerSettingsBundle(){
-        let appDefaults = ["voiceFeedback": true, "hapticFeedback": true, "sendLogs": true]
+        let appDefaults = ["crumbColor": 0, "hapticFeedback": true, "sendLogs": true, "voiceFeedback": true, "soundFeedback": true, "units": 0] as [String : Any]
         UserDefaults.standard.register(defaults: appDefaults)
     }
-    
+
     func updateDisplayFromDefaults(){
         let defaults = UserDefaults.standard
         
@@ -696,26 +711,27 @@ class ViewController: UIViewController, ARSCNViewDelegate {
      * update directionText UILabel given text string and font size
      * distance Bool used to determine whether to add string "meters" to direction text
      */
-    func updateDirectionText(_ discription: String, distance: Float, size: CGFloat, displayDistance: Bool) {
+    func updateDirectionText(_ description: String, distance: Float, size: CGFloat, displayDistance: Bool) {
         directionText.fadeTransition(0.4)
         directionText.font = directionText.font.withSize(size)
+        let distanceToDisplay = roundToTenths(distance * unitConversionFactor[defaultUnit]!)
         var altText = ""
-        if(displayDistance) {
-            directionText.text = discription + " for \(distance)" + unit[defaultUnit]!
+        if (displayDistance) {
+            directionText.text = description + " for \(distanceToDisplay)" + unit[defaultUnit]!
             if(defaultUnit == 0) {
-                altText = discription + " for \(Int(distance))" + unitText[defaultUnit]!
+                altText = description + " for \(Int(distanceToDisplay))" + unitText[defaultUnit]!
             } else {
-                if(distance >= 10) {
-                    let integer = Int(distance)
-                    let decimal = Int((distance - Float(integer)) * 10)
-                    altText = discription + "\(integer) point \(decimal)" + unitText[defaultUnit]!
+                if(distanceToDisplay >= 10) {
+                    let integer = Int(distanceToDisplay)
+                    let decimal = Int((distanceToDisplay - Float(integer)) * 10)
+                    altText = description + "\(integer) point \(decimal)" + unitText[defaultUnit]!
                 } else {
-                    altText = discription + "\(distance)" + unitText[defaultUnit]!
+                    altText = description + "\(distanceToDisplay)" + unitText[defaultUnit]!
                 }
             }
         } else {
-            directionText.text = discription
-            altText = discription
+            directionText.text = description
+            altText = description
         }
         if(navigationMode) {
             speechData.append(altText)
@@ -757,6 +773,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     var followingCrumbs: Timer!
     var announcementTimer: Timer!
     var hapticTimer: Timer!
+    var updateHeadingOffsetTimer: Timer!
     
     // navigation class and state
     var nav = Navigation()                  // Navigation calculation class
@@ -770,8 +787,11 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     let FEEDBACKDELAY = 0.4
     
     // settings bundle configuration
+    // the bundle configuration has 0 as feet and 1 as meters
     let unit = [0: "ft", 1: "m"]
     let unitText = [0: " feet", 1: " meters"]
+    let unitConversionFactor = [0: Float(100.0/2.54/12.0), 1: Float(1.0)]
+
     var defaultUnit: Int!
     var defaultColor: Int!
     var soundFeedback: Bool!
@@ -802,12 +822,18 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
         showStopRecordingButton()
         droppingCrumbs = Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: #selector(dropCrum), userInfo: nil, repeats: true)
+        // make sure there are no old values hanging around
+        nav.headingOffset = 0.0
+        headingRingBuffer.clear()
+        locationRingBuffer.clear()
+        updateHeadingOffsetTimer = Timer.scheduledTimer(timeInterval: 0.01, target: self, selector: (#selector(updateHeadingOffset)), userInfo: nil, repeats: true)
     }
     
     @objc func stopRecording(_ sender: UIButton) {
         // stop recording current path
         recordingMode = false
         droppingCrumbs.invalidate()
+        updateHeadingOffsetTimer.invalidate()
         showStartNavigationButton()
     }
     
@@ -837,7 +863,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         // set navigation state
         navigationMode = true
         turnWarning = false
-        prevKeypointPosition = getRealCoordinates(sceneView: sceneView, record: true).location
+        prevKeypointPosition = getRealCoordinates(record: true).location
         
         feedbackGenerator = UIImpactFeedbackGenerator(style: .light)
         waypointFeedbackGenerator = UINotificationFeedbackGenerator()
@@ -846,6 +872,9 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         followingCrumbs = Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: (#selector(followCrum)), userInfo: nil, repeats: true)
         
         feedbackTimer = Date()
+        // make sure there are no old values hanging around
+        headingRingBuffer.clear()
+        locationRingBuffer.clear()
         hapticTimer = Timer.scheduledTimer(timeInterval: 0.01, target: self, selector: (#selector(getHapticFeedback)), userInfo: nil, repeats: true)
     }
     
@@ -1056,13 +1085,13 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     
     @objc func dropCrum() {
         // drop waypoint markers to record path
-        let curLocation = getRealCoordinates(sceneView: sceneView, record: true).location
+        let curLocation = getRealCoordinates(record: true).location
         crumbs.append(curLocation)
     }
     
     @objc func followCrum() {
         // checks to see if user is on the right path during navigation
-        let curLocation = getRealCoordinates(sceneView: sceneView, record: true)
+        let curLocation = getRealCoordinates(record: true)
         var directionToNextKeypoint = getDirectionToNextKeypoint(currentLocation: curLocation)
         
         if (shouldAnnounceTurnWarning(directionToNextKeypoint)) {
@@ -1103,13 +1132,72 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
     }
     
+    /// Calculate the offset between the phone's heading (either its z-axis or y-axis projected into the floor plane) and the user's direction of travel.  This offset allows us to give directions based on the user's movement rather than the direction of the phone.
+    ///
+    /// - Returns: the offset
+    func getHeadingOffset() -> Float? {
+        guard let startHeading = headingRingBuffer.get(0), let endHeading = headingRingBuffer.get(-1), let startPosition = locationRingBuffer.get(0), let endPosition = locationRingBuffer.get(-1) else {
+            return nil
+        }
+        // make sure the path was far enough in the ground plane
+        if sqrt(pow(startPosition.x - endPosition.x, 2) + pow(startPosition.z - endPosition.z, 2)) < requiredDistance {
+            return nil
+        }
+        
+        // make sure that the headings are all close to the start and end headings
+        for i in 0..<headingRingBuffer.capacity {
+            guard let currAngle = headingRingBuffer.get(i) else {
+                return nil
+            }
+            if abs(nav.getAngleDiff(angle1: currAngle, angle2: startHeading)) > angleDeviationThreshold || abs(nav.getAngleDiff(angle1: currAngle, angle2: endHeading)) > angleDeviationThreshold {
+                // the phone turned too much during the last second
+                return nil
+            }
+        }
+        // make sure the path is straight
+        let u = (endPosition - startPosition).normalized()
+        
+        for i in 0..<locationRingBuffer.capacity {
+            let d = locationRingBuffer.get(i)! - startPosition
+            let orthogonalVector = d - u*Scalar(d.dot(u))
+            if orthogonalVector.length > linearDeviationThreshold {
+                // the phone didn't move in a straight path during the last second
+                return nil
+            }
+        }
+        let movementAngle = atan2f((startPosition.x - endPosition.x), (startPosition.z - endPosition.z))
+        
+        let potentialOffset = nav.getAngleDiff(angle1: movementAngle, angle2: nav.averageAngle(a: startHeading, b: endHeading))
+        // check if the user is potentially moving backwards.  We only try to correct for this if the potentialOffset is in the range [0.75 pi, 1.25 pi]
+        if cos(potentialOffset) < -sqrt(2)/2 {
+            return potentialOffset - Float.pi
+        }
+        return potentialOffset
+    }
+  
+    @objc func updateHeadingOffset() {
+        // send haptic feedback depending on correct device
+        let curLocation = getRealCoordinates(record: false)
+        // NOTE: currPhoneHeading is not the same as curLocation.location.yaw
+        let currPhoneHeading = nav.getPhoneHeadingYaw(currentLocation: curLocation)
+        headingRingBuffer.insert(currPhoneHeading)
+        locationRingBuffer.insert(Vector3(curLocation.location.x, curLocation.location.y, curLocation.location.z))
+        
+        if let newOffset = getHeadingOffset() {
+            nav.headingOffset = newOffset
+            print("New offset", newOffset)
+        }
+    }
+    
     // MARK: - Render directions
     @objc func getHapticFeedback() {
         // send haptic feedback depending on correct device
-        let curLocation = getRealCoordinates(sceneView: sceneView, record: false)
+        updateHeadingOffset()
+        let curLocation = getRealCoordinates(record: false)
         let directionToNextKeypoint = getDirectionToNextKeypoint(currentLocation: curLocation)
         
-        if(directionToNextKeypoint.clockDirection == 12) {
+        // use a stricter criteria than 12 o'clock for providing haptic feedback
+        if(fabs(directionToNextKeypoint.angleDiff) < Float.pi/12) {
             let timeInterval = feedbackTimer.timeIntervalSinceNow
             if(-timeInterval > FEEDBACKDELAY) {
                 // wait until desired time interval before sending another feedback
@@ -1154,7 +1242,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     @objc func announceDirectionHelp() {
         // announce directions at any given point to the next keypoint
         if (navigationMode) {
-            let curLocation = getRealCoordinates(sceneView: sceneView, record: false)
+            let curLocation = getRealCoordinates(record: false)
             let directionToNextKeypoint = getDirectionToNextKeypoint(currentLocation: curLocation)
             setDirectionText(currentLocation: curLocation.location, direction: directionToNextKeypoint, displayDistance: true)
         }
@@ -1345,7 +1433,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                             yaw: coordinates.rotation.y)
     }
     
-    func getRealCoordinates(sceneView: ARSCNView, record: Bool) -> CurrentCoordinateInfo {
+    func getRealCoordinates(record: Bool) -> CurrentCoordinateInfo {
         // returns current location & orientation based on starting origin
         let x = SCNMatrix4((sceneView.session.currentFrame?.camera.transform)!).m41
         let y = SCNMatrix4((sceneView.session.currentFrame?.camera.transform)!).m42
