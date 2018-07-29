@@ -149,8 +149,10 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     /// Button view container for stop navigation button
     var stopNavigationView: UIView!
     
+    var sceneView = ARSCNView()
+    
     // MARK: - UI Setup
-    @IBOutlet weak var sceneView: ARSCNView!
+//    @IBOutlet weak var sceneView: ARSCNView!
     
     /// Hide status bar
     override var prefersStatusBarHidden: Bool {
@@ -214,6 +216,10 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        // Scene view setup
+        sceneView.frame = view.frame
+        view.addSubview(sceneView)
+
         createSettingsBundle()
         listenVolumeButton()
         createARSession()
