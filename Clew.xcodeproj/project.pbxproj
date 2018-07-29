@@ -19,6 +19,7 @@
 		4D6B00E51F33C9B800952242 /* Crumb.obj in Resources */ = {isa = PBXBuildFile; fileRef = 4D6B00E41F33C85500952242 /* Crumb.obj */; };
 		4D9E8E7F1F3A4D3400536FCD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4D940BAA1F38AA79004E6741 /* Assets.xcassets */; };
 		4DF05CC81F34EB6B008B0E31 /* Confirm.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4DF05CC71F34EB56008B0E31 /* Confirm.mp3 */; };
+		822E27F9210E3F260024A5E3 /* Clew Dev-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 822E27F8210E3F260024A5E3 /* Clew Dev-Info.plist */; };
 		B7EB59DA20F693EB00FBBC6A /* PathFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D6B00D71F33C21A00952242 /* PathFinder.swift */; };
 		B7EB59DB20F693EB00FBBC6A /* Navigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D6B00D51F33C1FE00952242 /* Navigation.swift */; };
 		B7EB59DC20F693EB00FBBC6A /* Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D6B00DB1F33C26D00952242 /* Utility.swift */; };
@@ -48,9 +49,9 @@
 		4D6B00E41F33C85500952242 /* Crumb.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = Crumb.obj; sourceTree = "<group>"; };
 		4D940BAA1F38AA79004E6741 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4DF05CC71F34EB56008B0E31 /* Confirm.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = Confirm.mp3; sourceTree = "<group>"; };
+		822E27F8210E3F260024A5E3 /* Clew Dev-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Clew Dev-Info.plist"; sourceTree = "<group>"; };
 		85A1A72DC19F87F15B738291 /* Pods-Clew Dev.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew Dev.release.xcconfig"; path = "Pods/Target Support Files/Pods-Clew Dev/Pods-Clew Dev.release.xcconfig"; sourceTree = "<group>"; };
 		B7EB59EC20F693EB00FBBC6A /* Clew Dev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Clew Dev.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B7EB59ED20F693EC00FBBC6A /* Clew Dev-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Clew Dev-Info.plist"; path = "/Users/louise/assistive_apps/navigation/ios_apps/ClewApp/Clew Dev-Info.plist"; sourceTree = "<absolute>"; };
 		C68778047D8E263D2FB04989 /* Pods-Clew Dev.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew Dev.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Clew Dev/Pods-Clew Dev.debug.xcconfig"; sourceTree = "<group>"; };
 		D89DDB87A8AE1A9ECEAFCEC6 /* Pods-Clew.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew.release.xcconfig"; path = "Pods/Target Support Files/Pods-Clew/Pods-Clew.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -85,7 +86,7 @@
 				4D6B00C11F33C1C400952242 /* Products */,
 				645269AB241294DCBFA0E1B0 /* Pods */,
 				C63B435EA8A32350A76E47DD /* Frameworks */,
-				B7EB59ED20F693EC00FBBC6A /* Clew Dev-Info.plist */,
+				822E27F8210E3F260024A5E3 /* Clew Dev-Info.plist */,
 			);
 			sourceTree = "<group>";
 		};
@@ -230,6 +231,7 @@
 				B7EB59E320F693EB00FBBC6A /* Crumb.obj in Resources */,
 				B7EB59E420F693EB00FBBC6A /* Settings.bundle in Resources */,
 				B7EB59E520F693EB00FBBC6A /* LaunchScreen.storyboard in Resources */,
+				822E27F9210E3F260024A5E3 /* Clew Dev-Info.plist in Resources */,
 				B7EB59E620F693EB00FBBC6A /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
