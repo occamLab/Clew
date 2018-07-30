@@ -1,5 +1,8 @@
 # Created by https://www.gitignore.io/api/swift,xcode,cocoapods
 
+### Firebase ###
+Clew/GoogleService-Info.plist
+
 ### CocoaPods ###
 ## CocoaPods GitIgnore Template
 Pods/

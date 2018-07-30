@@ -13,6 +13,9 @@ import AVFoundation
 import AudioToolbox
 import MediaPlayer
 import VectorMath
+import Firebase
+import FirebaseDatabase
+
 
 // MARK: Extensions
 extension UIView {
@@ -137,6 +140,21 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     /// Image, label, and target for stop navigation button.
     let stopNavigationButton = ActionButtonComponents(image: UIImage(named: "StopNavigation")!, label: "Stop navigation", targetSelector: Selector.stopNavigationButtonTapped)
     
+    /// A handle to the Firebase storage
+    let storageBaseRef = Storage.storage().reference()
+    var databaseHandle = Database.database()
+    
+    // MARK: - Parameters that can be controlled remotely via Firebase
+    
+    /// True if the offset between direction of travel and phone should be updated over time
+    var adjustOffset = true
+    
+    /// True if we should use a cone of pi/12 and false if we should use a cone of pi/6 when deciding whether to issue haptic feedback
+    var strictHaptic = true
+
+    /// A UUID for the current device (note: this can change in various circumstances, so we should be wary of using this, see: https://developer.apple.com/documentation/uikit/uidevice#//apple_ref/occ/instp/UIDevice/identifierForVendor)
+    let deviceID = UIDevice.current.identifierForVendor
+    
     /// Button view container for stop recording button
     var stopRecordingView: UIView!
     
@@ -225,6 +243,32 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         createARSession()
         drawUI()
         addGestures()
+        setupFirebaseObservers()
+    }
+    
+    func setupFirebaseObservers() {
+        let responsePathRef = databaseHandle.reference(withPath: "config/" + deviceID!.uuidString)
+        responsePathRef.observe(.childChanged) { (snapshot) -> Void in
+            self.handleNewConfig(snapshot: snapshot)
+        }
+        responsePathRef.observe(.childAdded) { (snapshot) -> Void in
+            self.handleNewConfig(snapshot: snapshot)
+        }
+
+    }
+    
+    func handleNewConfig(snapshot: DataSnapshot) {
+        if snapshot.key == "adjust_offset", let newValue = snapshot.value as? Bool {
+            self.adjustOffset = newValue
+            if !self.adjustOffset {
+                // clear the offset in case one was set from before
+                nav.headingOffset = 0.0
+            }
+            print("set new adjust offset value", newValue)
+        } else if snapshot.key == "strict_haptic", let newValue = snapshot.value as? Bool {
+            strictHaptic = newValue
+            print("set new strict haptic value", newValue)
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -936,8 +980,9 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZZZZZ"
         let pathDate = dateFormatter.string(from: date)
-        let pathID = UIDevice.current.identifierForVendor!.uuidString + dateFormatter.string(from: date)
-        let userId = UIDevice.current.identifierForVendor!.uuidString
+        let pathID = deviceID!.uuidString + dateFormatter.string(from: date)
+        let userId = deviceID!.uuidString
+        print("USER ID", userId)
         
         sendMetaData(pathDate, pathID+"-0", userId, debug)
         sendPathData(pathID, userId)
@@ -946,7 +991,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     func sendMetaData(_ pathDate: String, _ pathID: String, _ userId: String, _ debug: Bool) {
         let pathType: String!
         if(debug) {
-            pathType = "bug"
+            pathType = "debug"
         } else {
             pathType = "success"
         }
@@ -959,133 +1004,53 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                                     "trackingErrorPhase": trackingErrorPhase,
                                     "trackingErrorTime": trackingErrorTime,
                                     "trackingErrorData": trackingErrorData]
-        
-        let bodyText: String!
         do {
             let jsonData = try JSONSerialization.data(withJSONObject: body, options: .prettyPrinted)
             // here "jsonData" is the dictionary encoded in JSON data
-            bodyText = String(data: jsonData, encoding: String.Encoding.utf8)
-            
-            // create http post request to AWS
-            var request = URLRequest(url: URL(string: "https://27bcct7nyg.execute-api.us-east-1.amazonaws.com/Test/pathid")!)
-            request.httpMethod = "POST"
-            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-            request.httpBody = bodyText.data(using: .utf8)
-            
-            let task = URLSession.shared.dataTask(with: request) { data, response, error in
-                guard let data = data, error == nil else {                                                 // check for fundamental networking error
-                    print("error=\(String(describing: error))")
+            let storageRef = storageBaseRef.child(userId + "_" + pathID + "_metadata.json")
+            let fileType = StorageMetadata()
+            fileType.contentType = "application/json"
+            // upload the image to Firebase storage and setup auto snapshotting
+            storageRef.putData(jsonData, metadata: fileType) { (metadata, error) in
+                guard metadata != nil else {
+                    // Uh-oh, an error occurred!
+                    print("could not upload meta data to firebase", error!.localizedDescription)
                     return
                 }
-                
-                if let httpStatus = response as? HTTPURLResponse, httpStatus.statusCode != 200 {           // check for http errors
-                    print("statusCode should be 200, but is \(httpStatus.statusCode)")
-                    print("response = \(String(describing: response))")
-                }
-                
-                let responseString = String(data: data, encoding: .utf8)
-                print("responseString = \(String(describing: responseString))")
             }
-            task.resume()
         } catch {
             print(error.localizedDescription)
         }
     }
     
     func sendPathData(_ pathID: String, _ userId: String) {
-        var id = 1
-        var pd = [[Float]]()
-        var pdt = [Double]()
-        var nd = [[Float]]()
-        var ndt = [Double]()
-        var sd = [String]()
-        var sdt = [Double]()
+        let body: [String : Any] = ["userId": userId,
+                                    "PathID": pathID,
+                                    "PathDate": "0",
+                                    "PathType": "0",
+                                    "PathData": pathData,
+                                    "pathDataTime": pathDataTime,
+                                    "navigationData": navigationData,
+                                    "navigationDataTime": navigationDataTime,
+                                    "speechData": speechData,
+                                    "speechDataTime": speechDataTime]
         
-        while(!pathData.isEmpty || !navigationData.isEmpty || !speechData.isEmpty) {
-            print(id)
-            if(pathData.count >= 75) {
-                pd = Array(pathData[0..<75])
-                pdt = Array(pathDataTime[0..<75])
-                pathData = Array(pathData[75..<pathData.count])
-                pathDataTime = Array(pathDataTime[75..<pathDataTime.count])
-            } else {
-                pd = pathData
-                pdt = pathDataTime
-                if(pathData.count > 0) {
-                    pathData = []
-                    pathDataTime = []
+        do {
+            let jsonData = try JSONSerialization.data(withJSONObject: body, options: .prettyPrinted)
+            // here "jsonData" is the dictionary encoded as a JSON
+            let storageRef = storageBaseRef.child(userId + "_" + pathID + "_pathdata.json")
+            let fileType = StorageMetadata()
+            fileType.contentType = "application/json"
+            // upload the image to Firebase storage and setup auto snapshotting
+            storageRef.putData(jsonData, metadata: fileType) { (metadata, error) in
+                guard metadata != nil else {
+                    // Uh-oh, an error occurred!
+                    print("could not upload path data to firebase", error!.localizedDescription)
+                    return
                 }
             }
-            if(navigationData.count >= 75) {
-                nd = Array(navigationData[0..<75])
-                ndt = Array(navigationDataTime[0..<75])
-                navigationData = Array(navigationData[75..<navigationData.count])
-                navigationDataTime = Array(navigationDataTime[75..<navigationDataTime.count])
-            } else {
-                nd = navigationData
-                ndt = navigationDataTime
-                if(navigationData.count > 0) {
-                    navigationData = []
-                    navigationDataTime = []
-                }
-            }
-            if(speechData.count >= 20) {
-                sd = Array(speechData[0..<20])
-                sdt = Array(speechDataTime[0..<20])
-                speechData = Array(speechData[20..<pathData.count])
-                speechDataTime = Array(speechDataTime[20..<pathDataTime.count])
-            } else {
-                sd = speechData
-                sdt = speechDataTime
-                if(speechData.count > 0) {
-                    speechData = []
-                    speechDataTime = []
-                }
-            }
-            
-            
-            let body: [String : Any] = ["userId": userId,
-                                        "PathID": pathID + "-\(id)",
-                                        "PathDate": "0",
-                                        "PathType": "0",
-                                        "PathData": pd,
-                                        "pathDataTime": pdt,
-                                        "navigationData": nd,
-                                        "navigationDataTime": ndt,
-                                        "speechData": sd,
-                                        "speechDataTime": sdt]
-            
-            let bodyText: String!
-            do {
-                let jsonData = try JSONSerialization.data(withJSONObject: body, options: .prettyPrinted)
-                // here "jsonData" is the dictionary encoded in JSON data
-                bodyText = String(data: jsonData, encoding: String.Encoding.utf8)
-                
-                // create http post request to AWS
-                var request = URLRequest(url: URL(string: "https://27bcct7nyg.execute-api.us-east-1.amazonaws.com/Test/pathid")!)
-                request.httpMethod = "POST"
-                request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-                request.httpBody = bodyText.data(using: .utf8)
-                //            print(request.httpBody)
-                let task = URLSession.shared.dataTask(with: request) { data, response, error in
-                    guard let data = data, error == nil else {                                                 // check for fundamental networking error
-                        print("error=\(String(describing: error))")
-                        return
-                    }
-                    
-                    if let httpStatus = response as? HTTPURLResponse, httpStatus.statusCode != 200 {           // check for http errors
-                        print("statusCode should be 200, but is \(httpStatus.statusCode)")
-                        print("response = \(String(describing: response))")
-                    }
-                    
-                    let responseString = String(data: data, encoding: .utf8)
-                    print("responseString = \(String(describing: responseString))")
-                }
-                task.resume()
-            } catch {
-                print(error.localizedDescription)
-            }
-            id += 1
+        } catch {
+            print(error.localizedDescription)
         }
     }
     
@@ -1190,8 +1155,10 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         locationRingBuffer.insert(Vector3(curLocation.location.x, curLocation.location.y, curLocation.location.z))
         
         if let newOffset = getHeadingOffset() {
-            nav.headingOffset = newOffset
-            print("New offset", newOffset)
+            if adjustOffset {
+                nav.headingOffset = newOffset
+                print("New offset", newOffset)
+            }
         }
     }
     
@@ -1201,9 +1168,15 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         updateHeadingOffset()
         let curLocation = getRealCoordinates(record: false)
         let directionToNextKeypoint = getDirectionToNextKeypoint(currentLocation: curLocation)
+        let coneWidth: Float!
+        if strictHaptic {
+            coneWidth = Float.pi/12
+        } else {
+            coneWidth = Float.pi/6
+        }
         
         // use a stricter criteria than 12 o'clock for providing haptic feedback
-        if(fabs(directionToNextKeypoint.angleDiff) < Float.pi/12) {
+        if(fabs(directionToNextKeypoint.angleDiff) < coneWidth) {
             let timeInterval = feedbackTimer.timeIntervalSinceNow
             if(-timeInterval > FEEDBACKDELAY) {
                 // wait until desired time interval before sending another feedback
