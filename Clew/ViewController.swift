@@ -147,7 +147,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     // MARK: - Parameters that can be controlled remotely via Firebase
     
     /// True if the offset between direction of travel and phone should be updated over time
-    var adjustOffset = true
+    var adjustOffset = false
     
     /// True if we should use a cone of pi/12 and false if we should use a cone of pi/6 when deciding whether to issue haptic feedback
     var strictHaptic = true
@@ -452,7 +452,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
         // Start Navigation button container
         startNavigationView = UIView(frame: CGRect(x: 0, y: yOriginOfButtonFrame, width: buttonFrameWidth, height: buttonFrameHeight))
-//        startNavigationView.setupButtonContainer(withButton: startNavigationButton)
         startNavigationView.backgroundColor = UIColor.black.withAlphaComponent(0.4)
         startNavigationView.isHidden = true
         addButtons(buttonView: startNavigationView)
@@ -1217,6 +1216,11 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     @objc func aannounceDirectionHelpPressed() {
         announcementTimer = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: (#selector(announceDirectionHelp)), userInfo: nil, repeats: false)
     }
+    
+    @objc func persistMap() {
+        print("persisting map")
+    }
+
     
     @objc func announceDirectionHelp() {
         // announce directions at any given point to the next keypoint
