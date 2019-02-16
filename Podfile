@@ -5,6 +5,7 @@ use_frameworks!
 
 def all_pods
   # Pods for Clew
+  pod 'InAppSettingsKit'
   pod 'VectorMath', '~> 0.3'
   pod 'Firebase/Core'
   pod 'Firebase/Storage'

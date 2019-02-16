@@ -187,6 +187,11 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         return UIScreen.main.bounds.size.height * (1/5)
     }
     
+    var optionsAndHelpFrameHeight: CGFloat {
+        // height of button frame
+        return UIScreen.main.bounds.size.height * (1/12)
+    }
+    
     var displayWidth: CGFloat {
         return UIScreen.main.bounds.size.width
     }
@@ -200,15 +205,27 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         return buttonFrameHeight * (1/12)
     }
     
+    var yOriginOfGetDirectionsButton: CGFloat {
+        // y-origin of button frame
+        return UIScreen.main.bounds.size.height - optionsAndHelpFrameHeight
+    }
+    
+    var yOriginOfOptionsAndHelpButton: CGFloat {
+        // y-origin of button frame
+        return UIScreen.main.bounds.size.height - optionsAndHelpFrameHeight
+    }
+    
     var yOriginOfButtonFrame: CGFloat {
         // y-origin of button frame
-        return UIScreen.main.bounds.size.height - buttonFrameHeight
+        return UIScreen.main.bounds.size.height - buttonFrameHeight - optionsAndHelpFrameHeight
     }
     
     /*
      * UIViewss for all UI button containers
      */
     var getDirectionButton: UIButton!
+    var optionsAndHelpButton: UIButton!
+
 //    var recordPathView: UIView!
 //    var stopRecordingView: UIView!
 //    var startNavigationView: UIView!
@@ -428,13 +445,21 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     ///   - `startNavigationView` pause button configuration
     ///   - subview transitions?
     func drawUI() {
+        // button that shows options menu and will eventually show help
+        optionsAndHelpButton = UIButton(frame: CGRect(x: 0, y: yOriginOfOptionsAndHelpButton, width: buttonFrameWidth, height: optionsAndHelpFrameHeight))
+        optionsAndHelpButton.isAccessibilityElement = true
+        optionsAndHelpButton.setTitle("Settings", for: .normal)
+        optionsAndHelpButton.accessibilityLabel = "Settings"
+        optionsAndHelpButton.backgroundColor = UIColor.black.withAlphaComponent(0.4)
+        optionsAndHelpButton.addTarget(self, action: #selector(optionsAndHelpButtonPressed), for: .touchUpInside)
+
         // button that gives direction to the nearist keypoint
         getDirectionButton = UIButton(frame: CGRect(x: 0, y: 0, width: buttonFrameWidth, height: yOriginOfButtonFrame))
         getDirectionButton.isAccessibilityElement = true
         getDirectionButton.accessibilityLabel = "Get Directions"
         getDirectionButton.isHidden = true
         getDirectionButton.addTarget(self, action: #selector(aannounceDirectionHelpPressed), for: .touchUpInside)
-        
+
         // textlabel that displys directions
         directionText = UILabel(frame: CGRect(x: 0, y: (yOriginOfButtonFrame + textLabelBuffer), width: buttonFrameWidth, height: buttonFrameHeight*(1/6)))
         directionText.textColor = UIColor.white
@@ -490,6 +515,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         self.view.addSubview(stopNavigationView)
         self.view.addSubview(directionText)
         self.view.addSubview(getDirectionButton)
+        self.view.addSubview(optionsAndHelpButton)
         self.view.addSubview(routeRatingView)
         showRecordPathButton(announceArrival: false)
     }
@@ -622,6 +648,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
      */
     @objc func showRecordPathButton(announceArrival: Bool) {
         recordPathView.isHidden = false
+        // the options button is hidden if the route rating shows up
+        optionsAndHelpButton.isHidden = false
         stopNavigationView.isHidden = true
         getDirectionButton.isHidden = true
 
@@ -740,6 +768,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     @objc func showRouteRating(announceArrival: Bool) {
         stopNavigationView.isHidden = true
         getDirectionButton.isHidden = true
+        optionsAndHelpButton.isHidden = true
         directionText.isHidden = true
         routeRatingView.isHidden = false
         if announceArrival {
@@ -1217,10 +1246,18 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         announcementTimer = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: (#selector(announceDirectionHelp)), userInfo: nil, repeats: false)
     }
     
-    @objc func persistMap() {
-        print("persisting map")
+    @objc func optionsAndHelpButtonPressed() {
+        let storyBoard: UIStoryboard = UIStoryboard(name: "SettingsAndHelp", bundle: nil)
+        let popoverContent = storyBoard.instantiateViewController(withIdentifier: "SettingsAndHelp") as! SettingsViewController
+        let nav = UINavigationController(rootViewController: popoverContent)
+        nav.modalPresentationStyle = .popover
+        let popover = nav.popoverPresentationController
+        popover?.delegate = self
+        popover?.sourceView = self.view
+        popover?.sourceRect = CGRect(x: 0, y: optionsAndHelpFrameHeight/2, width: 0,height: 0)
+        
+        self.present(nav, animated: true, completion: nil)
     }
-
     
     @objc func announceDirectionHelp() {
         // announce directions at any given point to the next keypoint
@@ -1484,4 +1521,31 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             }
         }
     }
+}
+
+extension ViewController: UIPopoverPresentationControllerDelegate {
+    // MARK: - UIPopoverPresentationControllerDelegate
+    
+    /// Makes sure that popovers are not modal
+    ///
+    /// - Parameter controller: the presentation controller
+    /// - Returns: whether or not to use modal style
+    func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
+        return .none
+    }
+    
+    /// Ensures that all popover segues are popovers (note: I don't quite understand when this would *not* be the case)
+    ///
+    /// - Parameters:
+    ///   - segue: the segue
+    ///   - sender: the sender who generated this prepare call
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
+        // All popover segues should be popovers even on iPhone.
+        if let popoverController = segue.destination.popoverPresentationController, let button = sender as? UIButton {
+            popoverController.delegate = self
+            popoverController.sourceRect = button.bounds
+        }
+    }
+    
 }
