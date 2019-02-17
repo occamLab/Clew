@@ -187,7 +187,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         return UIScreen.main.bounds.size.height * (1/5)
     }
     
-    var optionsAndHelpFrameHeight: CGFloat {
+    var settingsAndHelpFrameHeight: CGFloat {
         // height of button frame
         return UIScreen.main.bounds.size.height * (1/12)
     }
@@ -207,24 +207,25 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     
     var yOriginOfGetDirectionsButton: CGFloat {
         // y-origin of button frame
-        return UIScreen.main.bounds.size.height - optionsAndHelpFrameHeight
+        return UIScreen.main.bounds.size.height - settingsAndHelpFrameHeight
     }
     
-    var yOriginOfOptionsAndHelpButton: CGFloat {
+    var yOriginOfSettingsAndHelpButton: CGFloat {
         // y-origin of button frame
-        return UIScreen.main.bounds.size.height - optionsAndHelpFrameHeight
+        return UIScreen.main.bounds.size.height - settingsAndHelpFrameHeight
     }
     
     var yOriginOfButtonFrame: CGFloat {
         // y-origin of button frame
-        return UIScreen.main.bounds.size.height - buttonFrameHeight - optionsAndHelpFrameHeight
+        return UIScreen.main.bounds.size.height - buttonFrameHeight - settingsAndHelpFrameHeight
     }
     
     /*
      * UIViewss for all UI button containers
      */
     var getDirectionButton: UIButton!
-    var optionsAndHelpButton: UIButton!
+    var settingsButton: UIButton!
+    var helpButton: UIButton!
 
 //    var recordPathView: UIView!
 //    var stopRecordingView: UIView!
@@ -445,14 +446,24 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     ///   - `startNavigationView` pause button configuration
     ///   - subview transitions?
     func drawUI() {
-        // button that shows options menu and will eventually show help
-        optionsAndHelpButton = UIButton(frame: CGRect(x: 0, y: yOriginOfOptionsAndHelpButton, width: buttonFrameWidth, height: optionsAndHelpFrameHeight))
-        optionsAndHelpButton.isAccessibilityElement = true
-        optionsAndHelpButton.setTitle("Settings", for: .normal)
-        optionsAndHelpButton.accessibilityLabel = "Settings"
-        optionsAndHelpButton.backgroundColor = UIColor.black.withAlphaComponent(0.4)
-        optionsAndHelpButton.addTarget(self, action: #selector(optionsAndHelpButtonPressed), for: .touchUpInside)
+        // button that shows settings menu
+        settingsButton = UIButton(frame: CGRect(x: 0, y: yOriginOfSettingsAndHelpButton, width: buttonFrameWidth/2, height: settingsAndHelpFrameHeight))
+        settingsButton.isAccessibilityElement = true
+        settingsButton.setTitle("Settings", for: .normal)
+        settingsButton.accessibilityLabel = "Settings"
+        settingsButton.titleLabel?.font = UIFont.systemFont(ofSize: 28.0)
+        settingsButton.backgroundColor = UIColor.black.withAlphaComponent(0.4)
+        settingsButton.addTarget(self, action: #selector(settingsButtonPressed), for: .touchUpInside)
 
+        // button that shows help menu
+        helpButton = UIButton(frame: CGRect(x: buttonFrameWidth/2, y: yOriginOfSettingsAndHelpButton, width: buttonFrameWidth/2, height: settingsAndHelpFrameHeight))
+        helpButton.isAccessibilityElement = true
+        helpButton.setTitle("Help", for: .normal)
+        helpButton.titleLabel?.font = UIFont.systemFont(ofSize: 28.0)
+        helpButton.accessibilityLabel = "Help"
+        helpButton.backgroundColor = UIColor.black.withAlphaComponent(0.4)
+        helpButton.addTarget(self, action: #selector(helpButtonPressed), for: .touchUpInside)
+        
         // button that gives direction to the nearist keypoint
         getDirectionButton = UIButton(frame: CGRect(x: 0, y: 0, width: buttonFrameWidth, height: yOriginOfButtonFrame))
         getDirectionButton.isAccessibilityElement = true
@@ -515,7 +526,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         self.view.addSubview(stopNavigationView)
         self.view.addSubview(directionText)
         self.view.addSubview(getDirectionButton)
-        self.view.addSubview(optionsAndHelpButton)
+        self.view.addSubview(settingsButton)
+        self.view.addSubview(helpButton)
         self.view.addSubview(routeRatingView)
         showRecordPathButton(announceArrival: false)
     }
@@ -649,7 +661,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     @objc func showRecordPathButton(announceArrival: Bool) {
         recordPathView.isHidden = false
         // the options button is hidden if the route rating shows up
-        optionsAndHelpButton.isHidden = false
+        settingsButton.isHidden = false
+        helpButton.isHidden = false
         stopNavigationView.isHidden = true
         getDirectionButton.isHidden = true
 
@@ -768,7 +781,9 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     @objc func showRouteRating(announceArrival: Bool) {
         stopNavigationView.isHidden = true
         getDirectionButton.isHidden = true
-        optionsAndHelpButton.isHidden = true
+        settingsButton.isHidden = true
+        helpButton.isHidden = true
+
         directionText.isHidden = true
         routeRatingView.isHidden = false
         if announceArrival {
@@ -1246,15 +1261,28 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         announcementTimer = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: (#selector(announceDirectionHelp)), userInfo: nil, repeats: false)
     }
     
-    @objc func optionsAndHelpButtonPressed() {
+    @objc func settingsButtonPressed() {
         let storyBoard: UIStoryboard = UIStoryboard(name: "SettingsAndHelp", bundle: nil)
-        let popoverContent = storyBoard.instantiateViewController(withIdentifier: "SettingsAndHelp") as! SettingsViewController
+        let popoverContent = storyBoard.instantiateViewController(withIdentifier: "Settings") as! SettingsViewController
         let nav = UINavigationController(rootViewController: popoverContent)
         nav.modalPresentationStyle = .popover
         let popover = nav.popoverPresentationController
         popover?.delegate = self
         popover?.sourceView = self.view
-        popover?.sourceRect = CGRect(x: 0, y: optionsAndHelpFrameHeight/2, width: 0,height: 0)
+        popover?.sourceRect = CGRect(x: 0, y: settingsAndHelpFrameHeight/2, width: 0,height: 0)
+        
+        self.present(nav, animated: true, completion: nil)
+    }
+    
+    @objc func helpButtonPressed() {
+        let storyBoard: UIStoryboard = UIStoryboard(name: "SettingsAndHelp", bundle: nil)
+        let popoverContent = storyBoard.instantiateViewController(withIdentifier: "Help") as! HelpViewController
+        let nav = UINavigationController(rootViewController: popoverContent)
+        nav.modalPresentationStyle = .popover
+        let popover = nav.popoverPresentationController
+        popover?.delegate = self
+        popover?.sourceView = self.view
+        popover?.sourceRect = CGRect(x: 0, y: settingsAndHelpFrameHeight/2, width: 0,height: 0)
         
         self.present(nav, animated: true, completion: nil)
     }

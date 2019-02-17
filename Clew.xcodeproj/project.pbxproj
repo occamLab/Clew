@@ -24,6 +24,10 @@
 		82473B0A2217641D00E98CFC /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 82473B082217641D00E98CFC /* SettingsViewController.m */; };
 		82473B0C2217647A00E98CFC /* SettingsAndHelp.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 82473B0B2217647A00E98CFC /* SettingsAndHelp.storyboard */; };
 		82473B0D2217647A00E98CFC /* SettingsAndHelp.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 82473B0B2217647A00E98CFC /* SettingsAndHelp.storyboard */; };
+		82569F4722187AE700448B45 /* HelpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82569F4622187AE700448B45 /* HelpViewController.swift */; };
+		82569F4822187AE700448B45 /* HelpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82569F4622187AE700448B45 /* HelpViewController.swift */; };
+		82569F4E22187E6500448B45 /* help in Resources */ = {isa = PBXBuildFile; fileRef = 82569F4D22187E6500448B45 /* help */; };
+		82569F4F22187E6500448B45 /* help in Resources */ = {isa = PBXBuildFile; fileRef = 82569F4D22187E6500448B45 /* help */; };
 		82A4B9A9210EAE2100CB83A8 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 82A4B9A8210EAE2100CB83A8 /* GoogleService-Info.plist */; };
 		82A4B9AA210EAE2100CB83A8 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 82A4B9A8210EAE2100CB83A8 /* GoogleService-Info.plist */; };
 		B7EB59DA20F693EB00FBBC6A /* PathFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D6B00D71F33C21A00952242 /* PathFinder.swift */; };
@@ -61,6 +65,8 @@
 		82473B072217641D00E98CFC /* Clew Dev-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Clew Dev-Bridging-Header.h"; sourceTree = "<group>"; };
 		82473B082217641D00E98CFC /* SettingsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
 		82473B0B2217647A00E98CFC /* SettingsAndHelp.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = SettingsAndHelp.storyboard; sourceTree = "<group>"; };
+		82569F4622187AE700448B45 /* HelpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpViewController.swift; sourceTree = "<group>"; };
+		82569F4D22187E6500448B45 /* help */ = {isa = PBXFileReference; lastKnownFileType = folder; path = help; sourceTree = "<group>"; };
 		82A4B9A8210EAE2100CB83A8 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		85A1A72DC19F87F15B738291 /* Pods-Clew Dev.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew Dev.release.xcconfig"; path = "Pods/Target Support Files/Pods-Clew Dev/Pods-Clew Dev.release.xcconfig"; sourceTree = "<group>"; };
 		B7EB59EC20F693EB00FBBC6A /* Clew Dev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Clew Dev.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -92,6 +98,7 @@
 		4D6B00B71F33C1C400952242 = {
 			isa = PBXGroup;
 			children = (
+				82569F4D22187E6500448B45 /* help */,
 				4DF05CC71F34EB56008B0E31 /* Confirm.mp3 */,
 				4D6B00E41F33C85500952242 /* Crumb.obj */,
 				4D6B00C21F33C1C400952242 /* Clew */,
@@ -119,6 +126,7 @@
 				4D6B00C31F33C1C400952242 /* AppDelegate.swift */,
 				4D6B00C51F33C1C400952242 /* ViewController.swift */,
 				82473B0B2217647A00E98CFC /* SettingsAndHelp.storyboard */,
+				82569F4622187AE700448B45 /* HelpViewController.swift */,
 				82473B05221763E200E98CFC /* SettingsViewController.h */,
 				82473B082217641D00E98CFC /* SettingsViewController.m */,
 				4D6B00D51F33C1FE00952242 /* Navigation.swift */,
@@ -242,6 +250,7 @@
 				82A4B9A9210EAE2100CB83A8 /* GoogleService-Info.plist in Resources */,
 				4D6B00E51F33C9B800952242 /* Crumb.obj in Resources */,
 				4D6B00DE1F33C33600952242 /* Settings.bundle in Resources */,
+				82569F4E22187E6500448B45 /* help in Resources */,
 				4D6B00CE1F33C1C400952242 /* LaunchScreen.storyboard in Resources */,
 				4D9E8E7F1F3A4D3400536FCD /* Assets.xcassets in Resources */,
 			);
@@ -256,6 +265,7 @@
 				B7EB59E320F693EB00FBBC6A /* Crumb.obj in Resources */,
 				B7EB59E420F693EB00FBBC6A /* Settings.bundle in Resources */,
 				B7EB59E520F693EB00FBBC6A /* LaunchScreen.storyboard in Resources */,
+				82569F4F22187E6500448B45 /* help in Resources */,
 				822E27F9210E3F260024A5E3 /* Clew Dev-Info.plist in Resources */,
 				82473B0D2217647A00E98CFC /* SettingsAndHelp.storyboard in Resources */,
 				B7EB59E620F693EB00FBBC6A /* Assets.xcassets in Resources */,
@@ -364,6 +374,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				82569F4722187AE700448B45 /* HelpViewController.swift in Sources */,
 				4D6B00D81F33C21A00952242 /* PathFinder.swift in Sources */,
 				4D6B00D61F33C1FE00952242 /* Navigation.swift in Sources */,
 				4D6B00DC1F33C26D00952242 /* Utility.swift in Sources */,
@@ -377,6 +388,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				82569F4822187AE700448B45 /* HelpViewController.swift in Sources */,
 				B7EB59DA20F693EB00FBBC6A /* PathFinder.swift in Sources */,
 				B7EB59DB20F693EB00FBBC6A /* Navigation.swift in Sources */,
 				B7EB59DC20F693EB00FBBC6A /* Utility.swift in Sources */,
