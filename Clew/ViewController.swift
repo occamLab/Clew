@@ -1141,6 +1141,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                 // update text and stop navigation
                 announceArrival()
                 followingCrumbs.invalidate()
+                hapticTimer.invalidate()
             }
         }
         
