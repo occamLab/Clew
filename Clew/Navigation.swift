@@ -138,8 +138,8 @@ class Navigation {
         let nextKeypointDisplacementZ = nextKeypoint.location.z - currentLocation.location.z
         // Create adjusted second keypoint object, which will be used to get turn warnings ahead of time
         var adjustedSecondKeypoint = secondKeypoint
-        adjustedSecondKeypoint.location.x = secondKeypoint.location.x - nextKeypointDisplacementX
-        adjustedSecondKeypoint.location.z = secondKeypoint.location.z - nextKeypointDisplacementZ
+        //TODO: adjustedSecondKeypoint.location.x = secondKeypoint.location.x - nextKeypointDisplacementX
+        //TODO: adjustedSecondKeypoint.location.z = secondKeypoint.location.z - nextKeypointDisplacementZ
         
         return getDirections(currentLocation: currentLocation, nextKeypoint: adjustedSecondKeypoint)
     }
