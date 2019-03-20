@@ -106,9 +106,9 @@ public struct ActionButtonComponents {
 
 // TODO: it would be cool to add the state of some of these transitions using indirect enumerations https://docs.swift.org/swift-book/LanguageGuide/Enumerations.html
 
-enum AppState: Int {
+enum AppState {
     /// This is the screen the comes up immediately after the splash screen
-    case mainScreen
+    case mainScreen(announceArrival: Bool)
     /// User is recording the
     case recordingRoute
     /// User can either navigate back or pause
@@ -116,7 +116,7 @@ enum AppState: Int {
     /// User is navigating along a route
     case navigatingRoute
     /// User is rating the route
-    case ratingRoute
+    case ratingRoute(announceArrival: Bool)
     /// The app is starting up
     case initializing
     /// The user has requested a pause, but has not yet put the phone in the save location
@@ -131,6 +131,8 @@ enum AppState: Int {
     case startingResumeProcedure
     /// user has hit the volume button after requesting resume
     case completingResumeProcedure
+    /// the AR session has entered the relocalizing state, which means that we can now realign the session
+    case readyForFinalResumeAlignment
 }
 
 class ViewController: UIViewController, ARSCNViewDelegate {
@@ -138,9 +140,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     // MARK: - Refactoring UI definition
     
     // MARK: Properties and subview declarations
-    
-    /// state variables that control the state transition to the main screen
-    var announceArrival: Bool = false
     
     /// How long to wait (in seconds) between the volume press and grabbing the transform for pausing
     let pauseWaitingPeriod = 5
@@ -158,9 +157,9 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                 handleStateTransitionToReadyToNavigateOrPause()
             case .navigatingRoute:
                 handleStateTransitionToNavigatingRoute()
-            case .ratingRoute:
+            case .ratingRoute(let announceArrival):
                 handleStateTransitionToRatingRoute(announceArrival: announceArrival)
-            case .mainScreen:
+            case .mainScreen(let announceArrival):
                 handleStateTransitionToMainScreen(announceArrival: announceArrival)
             case .startingPauseProcedure:
                 handleStateTransitionToStartingPauseProcedure()
@@ -174,6 +173,9 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             case .startingResumeProcedure:
                 handleStateTransitionToStartingResumeProcedure()
             case .completingResumeProcedure:
+                // nothing happens currently
+                break
+            case .readyForFinalResumeAlignment:
                 // nothing happens currently
                 break
             case .initializing:
@@ -198,7 +200,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         trackingErrorPhase = []
         
         showStopRecordingButton()
-        droppingCrumbs = Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: #selector(dropCrum), userInfo: nil, repeats: true)
+        droppingCrumbs = Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: #selector(dropCrumb), userInfo: nil, repeats: true)
         // make sure there are no old values hanging around
         nav.headingOffset = 0.0
         headingRingBuffer.clear()
@@ -236,13 +238,14 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         renderKeypoint(keypoints[0].location)
         
         turnWarning = false
-        prevKeypointPosition = getRealCoordinates(record: true).location
+        // TODO: gracefully handle error
+        prevKeypointPosition = getRealCoordinates(record: true)!.location
         
         feedbackGenerator = UIImpactFeedbackGenerator(style: .light)
         waypointFeedbackGenerator = UINotificationFeedbackGenerator()
         
         showStopNavigationButton()
-        followingCrumbs = Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: (#selector(followCrum)), userInfo: nil, repeats: true)
+        followingCrumbs = Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: (#selector(followCrumb)), userInfo: nil, repeats: true)
         
         feedbackTimer = Date()
         // make sure there are no old values hanging around
@@ -275,10 +278,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     
     func handleStateTransitionToCompletingPauseProcedure() {
         if #available(iOS 12.0, *), let currentTransform = sceneView.session.currentFrame?.camera.transform {
-            pausedTransform = currentTransform
             sceneView.session.getCurrentWorldMap { worldMap, error in
                 if worldMap != nil {
-                    self.pausedWorldMap = worldMap
                     do {
                         try self.archive(landmarkTransform: currentTransform, worldMap: worldMap!)
                     } catch {
@@ -600,11 +601,11 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     }
     
     @objc func volumeChanged(notification: NSNotification) {
-        if self.state == .startingPauseProcedure {
+        if case .startingPauseProcedure = state {
             state = .pauseWaitingPeriod
-        } else if self.state == .startingResumeProcedure {
+        } else if case .startingResumeProcedure = state {
             resumeTracking()
-        } else if self.state == .mainScreen {
+        } else if case .mainScreen = state {
             // TODO: this is just a placeholder UI
             recordPathView.isHidden = true
             // the options button is hidden if the route rating shows up
@@ -757,8 +758,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         self.view.addSubview(helpButton)
         self.view.addSubview(routeRatingView)
         
-        announceArrival = false
-        state = .mainScreen
+        state = .mainScreen(announceArrival: false)
     }
     
     func drawRouteRatingView() {
@@ -1053,13 +1053,17 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             directionText.text = description
             altText = description
         }
-        if(navigationMode) {
+        if case .navigatingRoute = state {
             speechData.append(altText)
             speechDataTime.append(roundToThousandths(-dataTimer.timeIntervalSinceNow))
         }
         
         // TODO: next line was just if (voiceFeedback)
-        if (navigationMode && voiceFeedback) { UIAccessibilityPostNotification(UIAccessibilityAnnouncementNotification, altText) }
+        if case .navigatingRoute = state {
+            if voiceFeedback {
+                UIAccessibilityPostNotification(UIAccessibilityAnnouncementNotification, altText)
+            }
+        }
     }
     
     // MARK: - BreadCrumbs
@@ -1075,7 +1079,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     var turnWarning: Bool!                      // bool to make sure turnWarning happens only once
     
     // internal debug logging datastructure
-    var dataTimer: Date!                        // timer to sync data
+    var dataTimer = Date()                        // timer to sync data
     var pathData: [[Float]] = []                // path data taken during RECORDPATH - [[1x16 transform matrix]]
     var pathDataTime: [Double] = []               // time stamps for pathData
     var navigationData: [[Float]] = []          // path data taken during NAVIGATION - [[1x16 transform matrix]]
@@ -1092,6 +1096,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     var followingCrumbs: Timer!
     var announcementTimer: Timer!
     var hapticTimer: Timer!
+
     // XXX: temp timer for printing camera transform
     var cameraTransformTimer: Timer!
 
@@ -1099,11 +1104,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     
     // navigation class and state
     var nav = Navigation()                  // Navigation calculation class
-    var navigationMode: Bool {
-        get {
-            return state == .navigatingRoute
-        }
-    }
     
     // haptic generators
     var feedbackGenerator : UIImpactFeedbackGenerator? = nil
@@ -1123,18 +1123,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     var voiceFeedback: Bool!
     var hapticFeedback: Bool!
     var sendLogs: Bool!
-    
-    @available(iOS 12.0, *)
-    var pausedWorldMap : ARWorldMap? {
-        get {
-            return worldMapAsAny as! ARWorldMap?
-        }
-        set (newValue) {
-            worldMapAsAny = newValue
-        }
-    }
-    // this is a generically typed placeholder for the pausedWorldMap computed property.  This is needed due to the fact that @available cannot be used for stored attributes
-    var worldMapAsAny: Any?
+
+    /// This keeps track of the paused transform while the current session is being realigned to the saved route
     var pausedTransform : simd_float4x4?
     
     // DirectionText based on hapic/voice settings
@@ -1170,11 +1160,9 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         keypointNode.removeFromParentNode()
         
         if(sendLogs) {
-            announceArrival = false
-            state = .ratingRoute
+            state = .ratingRoute(announceArrival: false)
         } else {
-            announceArrival = false
-            state = .mainScreen
+            state = .mainScreen(announceArrival: false)
         }
     }
     
@@ -1204,10 +1192,10 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             // Wait to allow the new configuration to settle.  The need for this is based off of Paul Ruvolo's personal observations, rather than grounded in the documentation of ARKit
             DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(resumeWaitingPeriod)) {
                 // The first check is necessary in case the phone relocalizes before this code exdecutes
-                if self.state == .completingResumeProcedure, let alignTransform = self.pausedTransform, let camera = self.sceneView.session.currentFrame?.camera {
+                if case .readyForFinalResumeAlignment = self.state, let alignTransform = self.pausedTransform, let camera = self.sceneView.session.currentFrame?.camera {
                     // yaw can be determined by projecting the camera's z-axis into the ground plane and using arc tangent (note: the camera coordinate conventions of ARKit https://developer.apple.com/documentation/arkit/arsessionconfiguration/worldalignment/camera
-                    let alignYaw = atan2f(alignTransform.columns.2.x, alignTransform.columns.2.z)
-                    let cameraYaw = atan2f(camera.transform.columns.2.x, camera.transform.columns.2.z)
+                    let alignYaw = self.getYawHelper(alignTransform)
+                    let cameraYaw = self.getYawHelper(camera.transform)
 
                     var leveledCameraPose = simd_float4x4.makeRotate(radians: cameraYaw, 0, 1, 0)
                     leveledCameraPose.columns.3 = camera.transform.columns.3
@@ -1236,15 +1224,13 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     @objc func sendLogData() {
         // send success log data to AWS
         compileLogData(false)
-        announceArrival = false
-        state = .mainScreen
+        state = .mainScreen(announceArrival: false)
     }
     
     @objc func sendDebugLogData() {
         // send debug log data to AWS
         compileLogData(true)
-        announceArrival = false
-        state = .mainScreen
+        state = .mainScreen(announceArrival: false)
     }
     
     func compileLogData(_ debug: Bool) {
@@ -1327,15 +1313,21 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         }
     }
     
-    @objc func dropCrum() {
+    @objc func dropCrumb() {
         // drop waypoint markers to record path
-        let curLocation = getRealCoordinates(record: true).location
+        // TODO: gracefully handle error
+        let curLocation = getRealCoordinates(record: true)!.location
+        // XXX TODO: need to check this to see if it improves relocalization
+        //sceneView.session.add(anchor: curLocation)
         crumbs.append(curLocation)
     }
     
-    @objc func followCrum() {
+    @objc func followCrumb() {
         // checks to see if user is on the right path during navigation
-        let curLocation = getRealCoordinates(record: true)
+        guard let curLocation = getRealCoordinates(record: true) else {
+            // TODO: might want to indicate that something is wrong to the user
+            return
+        }
         var directionToNextKeypoint = getDirectionToNextKeypoint(currentLocation: curLocation)
         
         if (shouldAnnounceTurnWarning(directionToNextKeypoint)) {
@@ -1370,16 +1362,13 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                 
                 followingCrumbs.invalidate()
                 // update text and stop navigation
-                announceArrival = true
-                // announce destination arrival
                 if(sendLogs) {
-                    state = .ratingRoute
+                    state = .ratingRoute(announceArrival: true)
                 } else {
-                    state = .mainScreen
+                    state = .mainScreen(announceArrival: true)
                 }
             }
         }
-        
     }
     
     /// Calculate the offset between the phone's heading (either its z-axis or y-axis projected into the floor plane) and the user's direction of travel.  This offset allows us to give directions based on the user's movement rather than the direction of the phone.
@@ -1427,7 +1416,9 @@ class ViewController: UIViewController, ARSCNViewDelegate {
   
     @objc func updateHeadingOffset() {
         // send haptic feedback depending on correct device
-        let curLocation = getRealCoordinates(record: false)
+        guard let curLocation = getRealCoordinates(record: false) else {
+            return
+        }
         // NOTE: currPhoneHeading is not the same as curLocation.location.yaw
         let currPhoneHeading = nav.getPhoneHeadingYaw(currentLocation: curLocation)
         headingRingBuffer.insert(currPhoneHeading)
@@ -1455,14 +1446,21 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         }
     }
     func getYawHelper(_ transform: simd_float4x4) -> Float {
-        return atan2f(transform.columns.2.x, transform.columns.2.z)
+        if abs(transform.columns.2.y) < abs(transform.columns.0.y) {
+            return atan2f(transform.columns.2.x, transform.columns.2.z)
+        } else {
+            return atan2f(transform.columns.0.x, transform.columns.0.z)
+        }
     }
     
     // MARK: - Render directions
     @objc func getHapticFeedback() {
         // send haptic feedback depending on correct device
         updateHeadingOffset()
-        let curLocation = getRealCoordinates(record: false)
+        guard let curLocation = getRealCoordinates(record: false) else {
+            // TODO: might want to indicate that something is wrong to the user
+            return
+        }
         let directionToNextKeypoint = getDirectionToNextKeypoint(currentLocation: curLocation)
         let coneWidth: Float!
         if strictHaptic {
@@ -1542,8 +1540,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     
     @objc func announceDirectionHelp() {
         // announce directions at any given point to the next keypoint
-        if (navigationMode) {
-            let curLocation = getRealCoordinates(record: false)
+        if case .navigatingRoute = state, let curLocation = getRealCoordinates(record: false) {
             let directionToNextKeypoint = getDirectionToNextKeypoint(currentLocation: curLocation)
             setDirectionText(currentLocation: curLocation.location, direction: directionToNextKeypoint, displayDistance: true)
         }
@@ -1714,22 +1711,19 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         sceneView.scene.rootNode.addChildNode(keypointNode)
     }
     
-    func getCameraCoordinates(sceneView: ARSCNView) -> LocationInfo {
-        // returns coordinate frame of the camera
-        let cameraTransform = sceneView.session.currentFrame?.camera.transform
-        return LocationInfo(transform: cameraTransform!)
-    }
-    
-    func getRealCoordinates(record: Bool) -> CurrentCoordinateInfo {
+    func getRealCoordinates(record: Bool) -> CurrentCoordinateInfo? {
+        guard let currTransform = sceneView.session.currentFrame?.camera.transform else {
+            return nil
+        }
         // returns current location & orientation based on starting origin
-        let scn = SCNMatrix4((sceneView.session.currentFrame?.camera.transform)!)
+        let scn = SCNMatrix4(currTransform)
         let transMatrix = Matrix3([scn.m11, scn.m12, scn.m13,
                                    scn.m21, scn.m22, scn.m23,
                                    scn.m31, scn.m32, scn.m33])
         
         // record location data in debug logs
         if(record) {
-            if (navigationMode) {
+            if case .navigatingRoute = state {
                 navigationData.append([round10k(scn.m11), round10k(scn.m12), round10k(scn.m13), round10k(scn.m14),
                                        round10k(scn.m21), round10k(scn.m22), round10k(scn.m23), round10k(scn.m24),
                                        round10k(scn.m31), round10k(scn.m32), round10k(scn.m33), round10k(scn.m34),
@@ -1743,9 +1737,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                 pathDataTime.append(roundToThousandths(-dataTimer.timeIntervalSinceNow))
             }
         }
-        let transform = sceneView.session.currentFrame?.camera.transform
-
-        return CurrentCoordinateInfo(LocationInfo(transform: transform!), transMatrix: transMatrix)
+        return CurrentCoordinateInfo(LocationInfo(transform: currTransform), transMatrix: transMatrix)
     }
     
     /*
@@ -1759,25 +1751,30 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             switch reason {
             case .excessiveMotion:
                 logString = "ExcessiveMotion"
+                print("Excessive motion")
             case .insufficientFeatures:
                 logString = "InsufficientFeatures"
                 print("InsufficientFeatures")
             case .initializing:
                 // dont' log anything
+                print("initializing")
                 return
             case .relocalizing:
                 logString = "Relocalizing"
-                // TODO: we need to track this with another state
+                print("Relocalizing")
+                if case .completingResumeProcedure = state {
+                    state = .readyForFinalResumeAlignment
+                }
             }
         case .normal:
-
             logString = "Normal"
             if #available(iOS 11.3, *) {
+                // resetting the origin is a needed in the case when we realigned to a saved route
                 print("RESETTING WORLD ORIGIN!!!")
                 session.setWorldOrigin(relativeTransform: simd_float4x4.makeTranslation(0,0,0))
-                if state == .completingResumeProcedure {
+                if case .readyForFinalResumeAlignment = state {
                     // this will cancel any realignment if it hasn't happened yet
-                    state = .mainScreen
+                    state = .mainScreen(announceArrival: false)
                 }
             }
             print("normal")
@@ -1785,12 +1782,12 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             logString = "NotAvailable"
             print("notAvailable")
         }
-        if state == .recordingRoute || navigationMode {
-            if(state == .recordingRoute) {
-                trackingErrorPhase.append(true)
-            } else if (navigationMode) {
-                trackingErrorPhase.append(false)
-            }
+        if case .recordingRoute = state {
+            trackingErrorPhase.append(true)
+            trackingErrorTime.append(roundToThousandths(-dataTimer.timeIntervalSinceNow))
+            trackingErrorData.append(logString)
+        } else if case .navigatingRoute = state {
+            trackingErrorPhase.append(false)
             trackingErrorTime.append(roundToThousandths(-dataTimer.timeIntervalSinceNow))
             trackingErrorData.append(logString)
         }
