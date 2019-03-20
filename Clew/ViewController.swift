@@ -121,6 +121,8 @@ enum AppState: Int {
     case initializing
     /// The user has requested a pause, but has not yet put the phone in the save location
     case startingPauseProcedure
+    /// The user has hit the volume button.  The app now enters a waiting period for the tracking to stabilize
+    case pauseWaitingPeriod
     /// user is attempting to complete the pausing procedure
     case completingPauseProcedure
     /// user has successfully paused the ARSession
@@ -137,19 +139,18 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     
     // MARK: Properties and subview declarations
     
-    // TODO: Define frame for all subview initializations (...AutoLayout?)
-//    let buttonContainerFrame: CGRect = ???
-    
     /// state variables that control the state transition to the main screen
     var announceArrival: Bool = false
     
-    /// state variable taht controls whether or not we should be listening to volume presses
-    var muteVolumeChanges: Bool = false
+    /// How long to wait (in seconds) between the volume press and grabbing the transform for pausing
+    let pauseWaitingPeriod = 5
+    
+    /// How long to wait (in seconds) between the volume press and resuming the tracking session based on physical alignment
+    let resumeWaitingPeriod = 10
     
     /// The state of the app.  This should be constantly referenced and updated as the app transitions
     var state = AppState.initializing {
         didSet {
-            muteVolumeChanges = false
             switch state {
             case .recordingRoute:
                 handleStateTransitionToRecordingRoute()
@@ -163,6 +164,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                 handleStateTransitionToMainScreen(announceArrival: announceArrival)
             case .startingPauseProcedure:
                 handleStateTransitionToStartingPauseProcedure()
+            case .pauseWaitingPeriod:
+                handleStateTransitionToPauseWaitingPeriod()
             case .completingPauseProcedure:
                 handleStateTransitionToCompletingPauseProcedure()
             case .pauseProcedureCompleted:
@@ -264,14 +267,20 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         }
     }
     
+    func handleStateTransitionToPauseWaitingPeriod() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(pauseWaitingPeriod)) {
+            self.pauseTracking()
+        }
+    }
+    
     func handleStateTransitionToCompletingPauseProcedure() {
-        if #available(iOS 12.0, *) {
-            pausedTransform = sceneView.session.currentFrame?.camera.transform
+        if #available(iOS 12.0, *), let currentTransform = sceneView.session.currentFrame?.camera.transform {
+            pausedTransform = currentTransform
             sceneView.session.getCurrentWorldMap { worldMap, error in
-                if worldMap != nil, let pausedTransform = self.pausedTransform {
+                if worldMap != nil {
                     self.pausedWorldMap = worldMap
                     do {
-                        try self.archive(landmarkTransform: pausedTransform, worldMap: worldMap!)
+                        try self.archive(landmarkTransform: currentTransform, worldMap: worldMap!)
                     } catch {
                         fatalError("Can't save map: \(error.localizedDescription)")
                     }
@@ -296,9 +305,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     @available(iOS 12.0, *)
     func archive(landmarkTransform: simd_float4x4, worldMap: ARWorldMap) throws {
         let savedRoute = SavedRoute(id: "hardcodedroute", name: "hardcodedroute", crumbs: crumbs, dateCreated: Date() as NSDate, pausedTransform: landmarkTransform)
-        print("Created saved route")
         NSKeyedArchiver.archiveRootObject(savedRoute, toFile: self.worldMapURL(id: "hardcodedroute", isInfo: true).path)
-        print("got saved route data")
         let data = try NSKeyedArchiver.archivedData(withRootObject: worldMap, requiringSecureCoding: true)
         try data.write(to: self.worldMapURL(id: "hardcodedroute", isInfo: false), options: [.atomic])
     }
@@ -470,7 +477,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         addGestures()
         setupFirebaseObservers()
         
-        cameraTransformTimer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: (#selector(printCameraTransform)), userInfo: nil, repeats: true)
+        cameraTransformTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(printCameraTransform)), userInfo: nil, repeats: true)
 
     }
     
@@ -593,30 +600,17 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     }
     
     @objc func volumeChanged(notification: NSNotification) {
-        if muteVolumeChanges {
-            return
-        }
-        muteVolumeChanges = true    // make sure this doesn't fire this multiple times
-        // wait a little bit before grabbing the transform in case the user's hand wobbles while pressing the volume button
-        var waitTime: Int!
-        if state != .startingResumeProcedure && state != .startingPauseProcedure {
-            waitTime = 0
-        } else {
-            // TODO: add a countdown
-            waitTime = 5000
-        }
-        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(waitTime)) {
-            if self.state == .startingPauseProcedure {
-                self.pauseTracking()
-            } else if self.state == .startingResumeProcedure {
-                self.resumeTracking()
-            } else if self.state == .mainScreen {
-                self.recordPathView.isHidden = true
-                // the options button is hidden if the route rating shows up
-                self.directionText.isHidden = true
-                // hard code this for now (no UI yet)
-                self.state = .startingResumeProcedure
-            }
+        if self.state == .startingPauseProcedure {
+            state = .pauseWaitingPeriod
+        } else if self.state == .startingResumeProcedure {
+            resumeTracking()
+        } else if self.state == .mainScreen {
+            // TODO: this is just a placeholder UI
+            recordPathView.isHidden = true
+            // the options button is hidden if the route rating shows up
+            directionText.isHidden = true
+            // hard code this for now (no UI yet)
+            state = .startingResumeProcedure
         }
     }
     
@@ -978,7 +972,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         currentButton = .resumeTracking
         do {
             try audioSession.setActive(false)
-            print("killed active")
         } catch {
             print("some error")
         }
@@ -1205,14 +1198,30 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                     return
             }
             pausedTransform = savedRouteUnarchived.pausedTransform
-            print("got paused transform back")
-            printTransformHelper(transform: pausedTransform)
             configuration.initialWorldMap = pausedWorldMapRetrieved
             crumbs = savedRouteUnarchived.crumbs
-            // XXX TODO: this seems to cause a small jump in the yaw of the phone (as determined by the print helper).  This is causing things to not work super well when doing realignment.  It's not clear whether there is some transient nature to this behavior.
-            sceneView.session.run(configuration)//, options: [.removeExistingAnchors]) // .resetTracking removed for debugging purposes XXX
-            
+            sceneView.session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
+            // Wait to allow the new configuration to settle.  The need for this is based off of Paul Ruvolo's personal observations, rather than grounded in the documentation of ARKit
+            DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(resumeWaitingPeriod)) {
+                // The first check is necessary in case the phone relocalizes before this code exdecutes
+                if self.state == .completingResumeProcedure, let alignTransform = self.pausedTransform, let camera = self.sceneView.session.currentFrame?.camera {
+                    // yaw can be determined by projecting the camera's z-axis into the ground plane and using arc tangent (note: the camera coordinate conventions of ARKit https://developer.apple.com/documentation/arkit/arsessionconfiguration/worldalignment/camera
+                    let alignYaw = atan2f(alignTransform.columns.2.x, alignTransform.columns.2.z)
+                    let cameraYaw = atan2f(camera.transform.columns.2.x, camera.transform.columns.2.z)
 
+                    var leveledCameraPose = simd_float4x4.makeRotate(radians: cameraYaw, 0, 1, 0)
+                    leveledCameraPose.columns.3 = camera.transform.columns.3
+                    
+                    var leveledAlignPose =  simd_float4x4.makeRotate(radians: alignYaw, 0, 1, 0)
+                    leveledAlignPose.columns.3 = alignTransform.columns.3
+                    
+                    let relativeTransform = leveledCameraPose * leveledAlignPose.inverse
+                    self.sceneView.session.setWorldOrigin(relativeTransform: relativeTransform)
+                        
+                    self.announcementTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(self.playSound)), userInfo: nil, repeats: false)
+                    self.state = .readyToNavigateOrPause
+                }
+            }
         } else {
             sceneView.session.run(configuration)
         }
@@ -1442,8 +1451,11 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             print(transform.columns.0.y, ", ", transform.columns.1.y, ", ", transform.columns.2.y, ", ", transform.columns.3.y)
             print(transform.columns.0.z, ", ", transform.columns.1.z, ", ", transform.columns.2.z, ", ", transform.columns.3.z)
             print(transform.columns.0.w, ", ", transform.columns.1.w, ", ", transform.columns.2.w, ", ", transform.columns.3.w)*/
-            print("yaw", atan2f(transform.columns.1.x, transform.columns.1.z))
+            print("yaw", getYawHelper(transform))
         }
+    }
+    func getYawHelper(_ transform: simd_float4x4) -> Float {
+        return atan2f(transform.columns.2.x, transform.columns.2.z)
     }
     
     // MARK: - Render directions
@@ -1756,39 +1768,17 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             case .relocalizing:
                 logString = "Relocalizing"
                 // TODO: we need to track this with another state
-                if state == .completingResumeProcedure, let alignTransform = pausedTransform {
-                    if #available(iOS 11.3, *) {
-                        // yaw can be determined by projecting the camera's z-axis or y-axis into the ground plane and using arc tangent (note: the camera coordinate conventions of ARKit https://developer.apple.com/documentation/arkit/arsessionconfiguration/worldalignment/camera
-                        let alignYaw = atan2f(alignTransform.columns.2.x, alignTransform.columns.2.z)
-                        let cameraYaw = atan2f(camera.transform.columns.2.x, camera.transform.columns.2.z)
-                        
-                        print("Using this one")
-                        printTransformHelper(transform: camera.transform)
-                        // TODO: it's still not clear how the two methods differ and which one is better in some basic tests the original method appears to be better than method2, which suggests that we may need to revisit our calculation of phone yaw
-                        var leveledCameraPose = simd_float4x4.makeRotate(radians: cameraYaw, 0, 1, 0)
-                        leveledCameraPose.columns.3 = camera.transform.columns.3
-                        
-                        var leveledAlignPose =  simd_float4x4.makeRotate(radians: alignYaw, 0, 1, 0)
-                        leveledAlignPose.columns.3 = alignTransform.columns.3
-                        
-                        let relativeTransform = leveledCameraPose * leveledAlignPose.inverse
-
-                        print("relativeTransform")
-                        printTransformHelper(transform: relativeTransform)
-                        session.setWorldOrigin(relativeTransform: relativeTransform)
-                        
-                        announcementTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(playSound)), userInfo: nil, repeats: false)
-                        state = .readyToNavigateOrPause
-                    } else {
-                        // Nothing can be done Fallback on earlier versions
-                    }
-                }
             }
         case .normal:
+
             logString = "Normal"
             if #available(iOS 11.3, *) {
                 print("RESETTING WORLD ORIGIN!!!")
                 session.setWorldOrigin(relativeTransform: simd_float4x4.makeTranslation(0,0,0))
+                if state == .completingResumeProcedure {
+                    // this will cancel any realignment if it hasn't happened yet
+                    state = .mainScreen
+                }
             }
             print("normal")
         case .notAvailable:
