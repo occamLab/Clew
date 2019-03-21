@@ -190,6 +190,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     
     func handleStateTransitionToRecordingRoute() {
         // records a new path
+        
+        // reset all logging related variables
         crumbs = []
         pathData = []
         pathDataTime = []
@@ -216,6 +218,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     
     func handleStateTransitionToNavigatingRoute() {
         // navigate the recorded path
+        
+        // clear any old log variables
         navigationData = []
         navigationDataTime = []
         speechData = []
@@ -299,7 +303,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     
     func handleStateTransitionToCompletingPauseProcedureHelper() {
         self.showResumeTrackingButton()
-        announcementTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(playSound)), userInfo: nil, repeats: false)
+        Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(playSound)), userInfo: nil, repeats: false)
         state = .pauseProcedureCompleted
     }
     
@@ -478,8 +482,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         addGestures()
         setupFirebaseObservers()
         
-        cameraTransformTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(printCameraTransform)), userInfo: nil, repeats: true)
-
+        Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(printCameraTransform)), userInfo: nil, repeats: true)
     }
     
     func setupFirebaseObservers() {
@@ -698,7 +701,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         getDirectionButton.isAccessibilityElement = true
         getDirectionButton.accessibilityLabel = "Get Directions"
         getDirectionButton.isHidden = true
-        getDirectionButton.addTarget(self, action: #selector(aannounceDirectionHelpPressed), for: .touchUpInside)
+        getDirectionButton.addTarget(self, action: #selector(announceDirectionHelpPressed), for: .touchUpInside)
 
         // textlabel that displys directions
         directionText = UILabel(frame: CGRect(x: 0, y: (yOriginOfButtonFrame + textLabelBuffer), width: buttonFrameWidth, height: buttonFrameHeight*(1/6)))
@@ -1020,7 +1023,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         }
         currentButton = .stopNavigation
         
-        hapticTimer.invalidate()
+        hapticTimer?.invalidate()
         
         feedbackGenerator = nil
         waypointFeedbackGenerator = nil
@@ -1084,22 +1087,17 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     var pathDataTime: [Double] = []               // time stamps for pathData
     var navigationData: [[Float]] = []          // path data taken during NAVIGATION - [[1x16 transform matrix]]
     var navigationDataTime: [Double] = []         // time stamps for navigationData
-    var speechData: [String]!                   // description data during NAVIGATION
-    var speechDataTime: [Double]!               // time stamp for speechData
+    var speechData: [String] = []                   // description data during NAVIGATION
+    var speechDataTime: [Double] = []               // time stamp for speechData
     var keypointData: [Array<Any>]!             // list of keypoints - [[(LocationInfo)x, y, z, yaw]]
-    var trackingErrorData: [String]!            // list of tracking errors ["InsufficientFeatures", "EcessiveMotion"]
-    var trackingErrorTime: [Double]!            // time stamp of tracking error
-    var trackingErrorPhase: [Bool]!             // tracking phase - true: recording, false: navigation
+    var trackingErrorData: [String] = []            // list of tracking errors ["InsufficientFeatures", "ExcessiveMotion"]
+    var trackingErrorTime: [Double] = []            // time stamp of tracking error
+    var trackingErrorPhase: [Bool] = []             // tracking phase - true: recording, false: navigation
     
     // Timers for background functions
     var droppingCrumbs: Timer?
-    var followingCrumbs: Timer!
-    var announcementTimer: Timer!
-    var hapticTimer: Timer!
-
-    // XXX: temp timer for printing camera transform
-    var cameraTransformTimer: Timer!
-
+    var followingCrumbs: Timer?
+    var hapticTimer: Timer?
     var updateHeadingOffsetTimer: Timer?
     
     // navigation class and state
@@ -1150,8 +1148,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     
     @objc func stopNavigation(_ sender: UIButton) {
         // stop navigation
-        followingCrumbs.invalidate()
-        hapticTimer.invalidate()
+        followingCrumbs?.invalidate()
+        hapticTimer?.invalidate()
         
         feedbackGenerator = nil
         waypointFeedbackGenerator = nil
@@ -1206,7 +1204,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                     let relativeTransform = leveledCameraPose * leveledAlignPose.inverse
                     self.sceneView.session.setWorldOrigin(relativeTransform: relativeTransform)
                         
-                    self.announcementTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(self.playSound)), userInfo: nil, repeats: false)
+                    Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(self.playSound)), userInfo: nil, repeats: false)
                     self.state = .readyToNavigateOrPause
                 }
             }
@@ -1360,7 +1358,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                 // erase current keypoint node
                 keypointNode.removeFromParentNode()
                 
-                followingCrumbs.invalidate()
+                followingCrumbs?.invalidate()
                 // update text and stop navigation
                 if(sendLogs) {
                     state = .ratingRoute(announceArrival: true)
@@ -1508,8 +1506,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         return dir
     }
     
-    @objc func aannounceDirectionHelpPressed() {
-        announcementTimer = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: (#selector(announceDirectionHelp)), userInfo: nil, repeats: false)
+    @objc func announceDirectionHelpPressed() {
+        Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: (#selector(announceDirectionHelp)), userInfo: nil, repeats: false)
     }
     
     @objc func settingsButtonPressed() {
@@ -1756,7 +1754,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                 logString = "InsufficientFeatures"
                 print("InsufficientFeatures")
             case .initializing:
-                // dont' log anything
+                // don't log anything
                 print("initializing")
                 return
             case .relocalizing:
