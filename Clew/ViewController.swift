@@ -129,8 +129,6 @@ enum AppState {
     case pauseProcedureCompleted
     /// user has hit the resume button and is waiting for the volume to hit
     case startingResumeProcedure
-    /// user has hit the volume button after requesting resume
-    case completingResumeProcedure
     /// the AR session has entered the relocalizing state, which means that we can now realign the session
     case readyForFinalResumeAlignment
 }
@@ -142,10 +140,10 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     // MARK: Properties and subview declarations
     
     /// How long to wait (in seconds) between the volume press and grabbing the transform for pausing
-    let pauseWaitingPeriod = 5
+    let pauseWaitingPeriod = 2
     
     /// How long to wait (in seconds) between the volume press and resuming the tracking session based on physical alignment
-    let resumeWaitingPeriod = 10
+    let resumeWaitingPeriod = 5
     
     /// The state of the app.  This should be constantly referenced and updated as the app transitions
     var state = AppState.initializing {
@@ -172,9 +170,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                 break
             case .startingResumeProcedure:
                 handleStateTransitionToStartingResumeProcedure()
-            case .completingResumeProcedure:
-                // nothing happens currently
-                break
             case .readyForFinalResumeAlignment:
                 // nothing happens currently
                 break
@@ -263,6 +258,20 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     }
     
     func handleStateTransitionToStartingResumeProcedure() {
+        if #available(iOS 12.0, *) {
+            // load the world map and restart the session so that things have a chance to quiet down before putting it up to the wall
+            guard let worldMapData = retrieveWorldMapData(id: "hardcodedroute"),
+                let pausedWorldMapRetrieved = unarchive(worldMapData: worldMapData),
+                let savedRouteUnarchived = unarchiveSavedRoute()
+                else {
+                    
+                    return
+            }
+            pausedTransform = savedRouteUnarchived.pausedTransform
+            configuration.initialWorldMap = pausedWorldMapRetrieved
+            crumbs = savedRouteUnarchived.crumbs
+            sceneView.session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
+        }
         showResumeTrackingConfirmButton()
     }
     
@@ -607,6 +616,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         if case .startingPauseProcedure = state {
             state = .pauseWaitingPeriod
         } else if case .startingResumeProcedure = state {
+            resumeTracking()
+        } else if case .readyForFinalResumeAlignment = state {
             resumeTracking()
         } else if case .mainScreen = state {
             // TODO: this is just a placeholder UI
@@ -1176,20 +1187,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     @objc func resumeTracking() {
         // resume pose tracking with existing ARSessionConfiguration
         if #available(iOS 12.0, *) {
-            guard let worldMapData = retrieveWorldMapData(id: "hardcodedroute"),
-                let pausedWorldMapRetrieved = unarchive(worldMapData: worldMapData),
-                let savedRouteUnarchived = unarchiveSavedRoute()
-                else {
-                    
-                    return
-            }
-            pausedTransform = savedRouteUnarchived.pausedTransform
-            configuration.initialWorldMap = pausedWorldMapRetrieved
-            crumbs = savedRouteUnarchived.crumbs
-            sceneView.session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
-            // Wait to allow the new configuration to settle.  The need for this is based off of Paul Ruvolo's personal observations, rather than grounded in the documentation of ARKit
             DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(resumeWaitingPeriod)) {
-                // The first check is necessary in case the phone relocalizes before this code exdecutes
+                // The first check is necessary in case the phone relocalizes before this code executes
                 if case .readyForFinalResumeAlignment = self.state, let alignTransform = self.pausedTransform, let camera = self.sceneView.session.currentFrame?.camera {
                     // yaw can be determined by projecting the camera's z-axis into the ground plane and using arc tangent (note: the camera coordinate conventions of ARKit https://developer.apple.com/documentation/arkit/arsessionconfiguration/worldalignment/camera
                     let alignYaw = self.getYawHelper(alignTransform)
@@ -1211,7 +1210,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         } else {
             sceneView.session.run(configuration)
         }
-        state = .completingResumeProcedure
     }
     
     @objc func confirmResumeTracking() {
@@ -1760,7 +1758,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             case .relocalizing:
                 logString = "Relocalizing"
                 print("Relocalizing")
-                if case .completingResumeProcedure = state {
+                if case .startingResumeProcedure = state {
                     state = .readyForFinalResumeAlignment
                 }
             }
