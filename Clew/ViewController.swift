@@ -36,11 +36,16 @@ extension UIView {
     /// - Parameter buttonComponents: holds information about the button to add
     ///
     /// - TODO: generalize for code reuse with the other kinds of subview containers in this app
-    func setupButtonContainer(withButton buttonComponents: ActionButtonComponents) {
+    func setupButtonContainer(withButton buttonComponents: ActionButtonComponents,
+                              withButtonRight buttonComponentsRight: ActionButtonComponents? = nil) {
         self.backgroundColor = UIColor.black.withAlphaComponent(0.4)
         self.isHidden = true
         let button = UIButton.makeImageButton(self, buttonComponents)
         self.addSubview(button)
+        if let buttonComponentsRight = buttonComponentsRight {
+            let buttonRight = UIButton.makeImageButton(self, buttonComponentsRight, alignment: .right)
+            self.addSubview(buttonRight)
+        }
     }
 }
 
@@ -59,7 +64,7 @@ extension UIButton {
     ///
     /// - TODO:
     ///   - Implement AutoLayout
-    static func makeImageButton(_ containerView: UIView, _ buttonViewParts: ActionButtonComponents) -> UIButton {
+    static func makeImageButton(_ containerView: UIView, _ buttonViewParts: ActionButtonComponents, alignment: ButtonContainerHorizontalAlignment = .center) -> UIButton {
         let buttonWidth = containerView.bounds.size.width / 4.5
         
         let button = UIButton(type: .custom)
@@ -67,10 +72,23 @@ extension UIButton {
         button.frame = CGRect(x: 0, y: 0, width: buttonWidth, height: buttonWidth)
         button.layer.cornerRadius = 0.5 * button.bounds.size.width
         button.clipsToBounds = true
-        button.center.x = containerView.center.x
+        switch alignment {
+        case .center:
+            button.center.x = containerView.center.x
+        case .right:
+            button.center.x = containerView.center.x + UIScreen.main.bounds.size.width/3
+        }
         button.center.y = containerView.bounds.size.height * (6/10)
         
-        button.setImage(buttonViewParts.image, for: .normal)
+        switch buttonViewParts.appearance {
+        case .imageButton(let image):
+            button.setImage(image, for: .normal)
+        case .textButton(let label):
+            button.setTitle(label, for: .normal)
+            button.layer.borderWidth = 2
+            button.layer.borderColor = UIColor.white.cgColor
+        }
+        
         button.accessibilityLabel = buttonViewParts.label
         button.addTarget(nil, action: buttonViewParts.targetSelector, for: .touchUpInside)
         
@@ -85,6 +103,8 @@ fileprivate extension Selector {
     static let stopRecordingButtonTapped = #selector(ViewController.stopRecording)
     static let startNavigationButtonTapped = #selector(ViewController.startNavigation)
     static let stopNavigationButtonTapped = #selector(ViewController.stopNavigation)
+    static let landmarkButtonTapped = #selector(ViewController.startCreateLandmarkProcedure)
+    static let pauseButtonTapped = #selector(ViewController.startPauseProcedure)
 }
 
 /// Holds information about the buttons that are used to control navigation and tracking.
@@ -92,8 +112,13 @@ fileprivate extension Selector {
 /// These button attributes are the only ones unique to each of these buttons.
 public struct ActionButtonComponents {
     
+    enum Appearance {
+        case imageButton(image: UIImage)
+        case textButton(label: String)
+    }
+
     /// Button image
-    var image: UIImage
+    var appearance: Appearance
     
     /// Accessibility label
     var label: String
@@ -131,6 +156,11 @@ enum AppState {
     case startingResumeProcedure
     /// the AR session has entered the relocalizing state, which means that we can now realign the session
     case readyForFinalResumeAlignment
+}
+
+enum ButtonContainerHorizontalAlignment {
+    case center
+    case right
 }
 
 class ViewController: UIViewController, ARSCNViewDelegate {
@@ -178,6 +208,10 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             }
         }
     }
+    
+    // This Boolean marks whether or not the pause procedure is being used to create a landmark at the start of a route (true) or if it is being used to pause an already recorded route
+    // TODO: it would be nice if this could be a property of the state transition, but since it needs to stick around for multiple states it might become cumbersome to constantly pass around.  This is why it is an attribute whereas the announceArrival flag is a part of some of the AppState values.
+    var creatingRouteLandmark: Bool = false
     
     func handleStateTransitionToMainScreen(announceArrival: Bool) {
         showRecordPathButton(announceArrival: announceArrival)
@@ -270,7 +304,15 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             pausedTransform = savedRouteUnarchived.pausedTransform
             configuration.initialWorldMap = pausedWorldMapRetrieved
             crumbs = savedRouteUnarchived.crumbs
-            sceneView.session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
+            // make sure to clear out any relative transform that was saved before so we accurately align
+            sceneView.session.setWorldOrigin(relativeTransform: simd_float4x4.makeTranslation(0, 0, 0))
+            sceneView.session.run(configuration, options: [.removeExistingAnchors])
+            
+            if case .limited(reason: .relocalizing)? = sceneView.session.currentFrame?.camera.trackingState {
+                // We have to jump to this state as we will never enter the .relocalizing state since we are already in it
+                state = .readyForFinalResumeAlignment
+            }
+            
         }
         showResumeTrackingConfirmButton()
     }
@@ -290,6 +332,18 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     }
     
     func handleStateTransitionToCompletingPauseProcedure() {
+        // TODO: save paused transform here, but don't save the route
+        if creatingRouteLandmark {
+            guard let currentTransform = sceneView.session.currentFrame?.camera.transform else {
+                print("can't properly save landmark: TODO communicate this to the user somehow")
+                return
+            }
+            pausedTransform = currentTransform
+            Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(playSound)), userInfo: nil, repeats: false)
+            pauseTrackingView.isHidden = true
+            state = .mainScreen(announceArrival: false)
+            return
+        }
         if #available(iOS 12.0, *), let currentTransform = sceneView.session.currentFrame?.camera.transform {
             sceneView.session.getCurrentWorldMap { worldMap, error in
                 if worldMap != nil {
@@ -307,7 +361,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             sceneView.session.pause()
             handleStateTransitionToCompletingPauseProcedureHelper()
         }
-        
     }
     
     func handleStateTransitionToCompletingPauseProcedureHelper() {
@@ -317,8 +370,11 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     }
     
     @available(iOS 12.0, *)
-    func archive(landmarkTransform: simd_float4x4, worldMap: ARWorldMap) throws {
+    func archive(landmarkTransform: simd_float4x4, worldMap: ARWorldMap, reverseRoute: Bool = false) throws {
         let savedRoute = SavedRoute(id: "hardcodedroute", name: "hardcodedroute", crumbs: crumbs, dateCreated: Date() as NSDate, pausedTransform: landmarkTransform)
+        if reverseRoute {
+            savedRoute.crumbs = savedRoute.crumbs.reversed()
+        }
         NSKeyedArchiver.archiveRootObject(savedRoute, toFile: self.worldMapURL(id: "hardcodedroute", isInfo: true).path)
         let data = try NSKeyedArchiver.archivedData(withRootObject: worldMap, requiringSecureCoding: true)
         try data.write(to: self.worldMapURL(id: "hardcodedroute", isInfo: false), options: [.atomic])
@@ -365,16 +421,23 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     var headingRingBuffer = RingBuffer<Float>(capacity: 50)
 
     /// Image, label, and target for start recording button.
-    let recordPathButton = ActionButtonComponents(image: UIImage(named: "StartRecording")!, label: "Record path", targetSelector: Selector.recordPathButtonTapped)
+    let recordPathButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "StartRecording")!), label: "Record path", targetSelector: Selector.recordPathButtonTapped)
+
+    /// Image, label, and target for start recording button.
+    /// TODO: need an image
+    let addLandmarkButton = ActionButtonComponents(appearance: .textButton(label: "Landmark"), label: "Create landmark", targetSelector: Selector.landmarkButtonTapped)
     
     /// Image, label, and target for stop recording button.
-    let stopRecordingButton = ActionButtonComponents(image: UIImage(named: "StopRecording")!, label: "Stop recording", targetSelector: Selector.stopRecordingButtonTapped)
+    let stopRecordingButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "StopRecording")!), label: "Stop recording", targetSelector: Selector.stopRecordingButtonTapped)
     
     /// Image, label, and target for start navigation button.
-    let startNavigationButton = ActionButtonComponents(image: UIImage(named: "StartNavigation")!, label: "Start navigation", targetSelector: Selector.startNavigationButtonTapped)
+    let startNavigationButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "StartNavigation")!), label: "Start navigation", targetSelector: Selector.startNavigationButtonTapped)
 
+    /// Title, label, and target for the pause button
+    let pauseButton = ActionButtonComponents(appearance: .textButton(label: "Pause"), label: "Pause session", targetSelector: Selector.pauseButtonTapped)
+    
     /// Image, label, and target for stop navigation button.
-    let stopNavigationButton = ActionButtonComponents(image: UIImage(named: "StopNavigation")!, label: "Stop navigation", targetSelector: Selector.stopNavigationButtonTapped)
+    let stopNavigationButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "StopNavigation")!), label: "Stop navigation", targetSelector: Selector.stopNavigationButtonTapped)
     
     /// A handle to the Firebase storage
     let storageBaseRef = Storage.storage().reference()
@@ -475,8 +538,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         case resumeTracking
         case stopNavigation
     }
-    
-    var currentButton = ButtonViewType.recordPath
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -723,7 +784,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
         // Record Path button container
         recordPathView = UIView(frame: CGRect(x: 0, y: yOriginOfButtonFrame, width: buttonFrameWidth, height: buttonFrameHeight))
-        recordPathView.setupButtonContainer(withButton: recordPathButton)
+        recordPathView.setupButtonContainer(withButton: recordPathButton, withButtonRight: addLandmarkButton)
         
         // Stop Recording button container
         stopRecordingView = UIView(frame: CGRect(x: 0, y: yOriginOfButtonFrame, width: buttonFrameWidth, height: buttonFrameHeight))
@@ -731,10 +792,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
         // Start Navigation button container
         startNavigationView = UIView(frame: CGRect(x: 0, y: yOriginOfButtonFrame, width: buttonFrameWidth, height: buttonFrameHeight))
-        startNavigationView.backgroundColor = UIColor.black.withAlphaComponent(0.4)
-        startNavigationView.isHidden = true
-        addButtons(buttonView: startNavigationView)
-        
+        startNavigationView.setupButtonContainer(withButton: startNavigationButton, withButtonRight: pauseButton)
         
         pauseTrackingView = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height))
         pauseTrackingView.backgroundColor = UIColor.black.withAlphaComponent(0.4)
@@ -746,7 +804,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         resumeTrackingView.isHidden = true
         drawResumeTrackingView()
         
-       resumeTrackingConfirmView = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height))
+        resumeTrackingConfirmView = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height))
         resumeTrackingConfirmView.backgroundColor = UIColor.black.withAlphaComponent(0.4)
         resumeTrackingConfirmView.isHidden = true
         drawResumeTrackingConfirmView()
@@ -860,45 +918,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     }
     
     /*
-     * Adds buttons to given UIView container
-     */
-    /// Adds start navigation and pause buttons the `startNavigationView` button container.
-    ///
-    /// Largely vestigial. Should be refactored completely out of the code soon.
-    ///
-    /// - Parameter buttonView: `startNavigationView` button container
-    func addButtons(buttonView: UIView) {
-        let buttonWidth = buttonView.bounds.size.width / 4.5
-        
-        let button = UIButton(type: .custom)
-        button.frame = CGRect(x: 0, y: 0, width: buttonWidth , height: buttonWidth )
-        button.layer.cornerRadius = 0.5 * button.bounds.size.width
-        button.clipsToBounds = true
-        
-        button.center.x = buttonView.center.x
-        button.center.y = buttonView.bounds.size.height * (6/10)
-        
-        let buttonImage = UIImage(named: "StartNavigation")
-        button.setImage(buttonImage, for: .normal)
-        button.accessibilityLabel = "Start Navigation"
-        button.addTarget(self, action: #selector(startNavigation), for: .touchUpInside)
-        
-        let pauseButton = UIButton(type: .custom)
-        pauseButton.frame = CGRect(x: 0, y: 0, width: buttonWidth , height: buttonWidth )
-        pauseButton.layer.cornerRadius = 0.5 * button.bounds.size.width
-        pauseButton.clipsToBounds = true
-        pauseButton.center.x = buttonView.center.x + displayWidth/3
-        pauseButton.center.y = buttonView.bounds.size.height * (6/10)
-        pauseButton.addTarget(self, action: #selector(startPauseProcedure), for: .touchUpInside)
-        pauseButton.setTitle("Pause", for: .normal)
-        pauseButton.layer.borderWidth = 2
-        pauseButton.layer.borderColor = UIColor.white.cgColor
-        
-        buttonView.addSubview(pauseButton)
-        buttonView.addSubview(button)
-    }
-    
-    /*
      * display RECORD PATH button/hide all other views
      */
     @objc func showRecordPathButton(announceArrival: Bool) {
@@ -911,7 +930,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
 
         directionText.isHidden = false
         routeRatingView.isHidden = true
-        currentButton = .recordPath
         var helpText: String
         if announceArrival {
             helpText = "You've arrived. Press to record path"
@@ -936,7 +954,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         recordPathView.isHidden = true
         recordPathView.isAccessibilityElement = false
         stopRecordingView.isHidden = false
-        currentButton = .stopRecording
         directionText.isAccessibilityElement = true
         updateDirectionText("Hold vertically with the rear camera facing forward.", distance: 0, size: 13, displayDistance: false)
         delayTransition()
@@ -950,7 +967,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         stopRecordingView.isHidden = true
         startNavigationView.isHidden = false
         directionText.isHidden = false
-        currentButton = .startNavigation
         directionText.isAccessibilityElement = true
         updateDirectionText("Press to start navigation or pause tracking", distance: 0, size: 14, displayDistance: false)
         do {
@@ -965,10 +981,10 @@ class ViewController: UIViewController, ARSCNViewDelegate {
      * display PAUSE TRACKING button/hide all other views
      */
     func showPauseTrackingButton() throws {
+        recordPathView.isHidden = true
         startNavigationView.isHidden = true
         directionText.isHidden = true
         pauseTrackingView.isHidden = false
-        currentButton = .resumeTracking
         do {
             try audioSession.setActive(true)
         } catch {
@@ -983,7 +999,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     @objc func showResumeTrackingButton() {
         pauseTrackingView.isHidden = true
         resumeTrackingView.isHidden = false
-        currentButton = .resumeTracking
         do {
             try audioSession.setActive(false)
         } catch {
@@ -1012,7 +1027,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         getDirectionButton.isHidden = false
         // this does not auto update, so don't use it as an accessibility element
         directionText.isAccessibilityElement = false
-        currentButton = .stopNavigation
         delayTransition()
     }
     
@@ -1032,7 +1046,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         } else {
             routeRatingLabel?.text = "Please rate your service."
         }
-        currentButton = .stopNavigation
         
         hapticTimer?.invalidate()
         
@@ -1150,6 +1163,28 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     }
     
     @objc func stopRecording(_ sender: UIButton) {
+        if creatingRouteLandmark {
+            if #available(iOS 12.0, *), let landmarkTransform = pausedTransform {
+                sceneView.session.getCurrentWorldMap { worldMap, error in
+                    if worldMap != nil {
+                        do {
+                            try self.archive(landmarkTransform: landmarkTransform, worldMap: worldMap!, reverseRoute: true)
+                            print("SAVED reversed route")
+                        } catch {
+                            fatalError("Can't save map: \(error.localizedDescription)")
+                        }
+                        // clear these flags
+                        self.pausedTransform = nil
+                        self.creatingRouteLandmark = false
+                    } else {
+                        print("An error occurred getting the world map")
+                    }
+                }
+            }
+        }
+        
+        // TODO: if the route has a landmark, archive the route here with crumbs reversed
+        // clear the pausedTransform so it can't be used again
         state = .readyToNavigateOrPause
     }
     
@@ -1176,6 +1211,17 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     }
     
     @objc func startPauseProcedure() {
+        creatingRouteLandmark = false
+        state = .startingPauseProcedure
+    }
+    
+    @objc func startCreateLandmarkProcedure() {
+        creatingRouteLandmark = true
+        if #available(iOS 11.3, *) {
+            // make sure to clear out any relative transform and paused transform so the alignment is accurate
+            pausedTransform = nil
+            sceneView.session.setWorldOrigin(relativeTransform: simd_float4x4.makeTranslation(0, 0, 0))
+        }
         state = .startingPauseProcedure
     }
     
