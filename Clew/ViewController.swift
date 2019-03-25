@@ -65,7 +65,7 @@ extension UIButton {
     /// - TODO:
     ///   - Implement AutoLayout
     static func makeImageButton(_ containerView: UIView, _ buttonViewParts: ActionButtonComponents, alignment: ButtonContainerHorizontalAlignment = .center) -> UIButton {
-        let buttonWidth = containerView.bounds.size.width / 4.5
+        let buttonWidth = containerView.bounds.size.width / 3.75
         
         let button = UIButton(type: .custom)
         
@@ -153,7 +153,7 @@ enum AppState {
     /// user has successfully paused the ARSession
     case pauseProcedureCompleted
     /// user has hit the resume button and is waiting for the volume to hit
-    case startingResumeProcedure
+    case startingResumeProcedure(loadReversedRoute: Bool)
     /// the AR session has entered the relocalizing state, which means that we can now realign the session
     case readyForFinalResumeAlignment
 }
@@ -198,8 +198,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             case .pauseProcedureCompleted:
                 // nothing happens currently
                 break
-            case .startingResumeProcedure:
-                handleStateTransitionToStartingResumeProcedure()
+            case .startingResumeProcedure(let loadReversedRoute):
+                handleStateTransitionToStartingResumeProcedure(loadReversedRoute: loadReversedRoute)
             case .readyForFinalResumeAlignment:
                 // nothing happens currently
                 break
@@ -219,6 +219,11 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     
     func handleStateTransitionToRecordingRoute() {
         // records a new path
+        
+        // make sure to never record a path with a transform set
+        if #available(iOS 11.3, *) {
+            sceneView.session.setWorldOrigin(relativeTransform: simd_float4x4.makeTranslation(0, 0, 0))
+        }
         
         // reset all logging related variables
         crumbs = []
@@ -291,17 +296,18 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         showRouteRating(announceArrival: announceArrival)
     }
     
-    func handleStateTransitionToStartingResumeProcedure() {
+    func handleStateTransitionToStartingResumeProcedure(loadReversedRoute: Bool) {
         if #available(iOS 12.0, *) {
             // load the world map and restart the session so that things have a chance to quiet down before putting it up to the wall
-            guard let worldMapData = retrieveWorldMapData(id: "hardcodedroute"),
+            guard let worldMapData = retrieveWorldMapData(id: "hardcodedroute", loadReversedRoute: loadReversedRoute),
                 let pausedWorldMapRetrieved = unarchive(worldMapData: worldMapData),
-                let savedRouteUnarchived = unarchiveSavedRoute()
+                let savedRouteUnarchived = unarchiveSavedRoute(loadReversedRoute: loadReversedRoute)
                 else {
                     
                     return
             }
             pausedTransform = savedRouteUnarchived.pausedTransform
+            let isSameMap = configuration.initialWorldMap == pausedWorldMapRetrieved
             configuration.initialWorldMap = pausedWorldMapRetrieved
             crumbs = savedRouteUnarchived.crumbs
             // make sure to clear out any relative transform that was saved before so we accurately align
@@ -311,6 +317,11 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             if case .limited(reason: .relocalizing)? = sceneView.session.currentFrame?.camera.trackingState {
                 // We have to jump to this state as we will never enter the .relocalizing state since we are already in it
                 state = .readyForFinalResumeAlignment
+            } else if case .normal? = sceneView.session.currentFrame?.camera.trackingState, isSameMap {
+                // we can skip the whole process of relocalization since we are already using the correct map
+                state = .readyToNavigateOrPause
+                // return to prevent the resume tracking confirm button from being shown
+                return
             }
             
         }
@@ -370,19 +381,19 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     }
     
     @available(iOS 12.0, *)
-    func archive(landmarkTransform: simd_float4x4, worldMap: ARWorldMap, reverseRoute: Bool = false) throws {
+    func archive(landmarkTransform: simd_float4x4, worldMap: ARWorldMap, isReversedRoute: Bool = false) throws {
         let savedRoute = SavedRoute(id: "hardcodedroute", name: "hardcodedroute", crumbs: crumbs, dateCreated: Date() as NSDate, pausedTransform: landmarkTransform)
-        if reverseRoute {
+        if isReversedRoute {
             savedRoute.crumbs = savedRoute.crumbs.reversed()
         }
-        NSKeyedArchiver.archiveRootObject(savedRoute, toFile: self.worldMapURL(id: "hardcodedroute", isInfo: true).path)
+        NSKeyedArchiver.archiveRootObject(savedRoute, toFile: self.worldMapURL(id: "hardcodedroute", isInfo: true, isReversedRoute: isReversedRoute).path)
         let data = try NSKeyedArchiver.archivedData(withRootObject: worldMap, requiringSecureCoding: true)
-        try data.write(to: self.worldMapURL(id: "hardcodedroute", isInfo: false), options: [.atomic])
+        try data.write(to: self.worldMapURL(id: "hardcodedroute", isInfo: false, isReversedRoute: isReversedRoute), options: [.atomic])
     }
     
-    func retrieveWorldMapData(id: String) -> Data? {
+    func retrieveWorldMapData(id: String, loadReversedRoute: Bool) -> Data? {
         do {
-            return try Data(contentsOf: worldMapURL(id: id, isInfo: false))
+            return try Data(contentsOf: worldMapURL(id: id, isInfo: false, isReversedRoute: loadReversedRoute))
         } catch {
             print("Error retrieving world map data.")
             return nil
@@ -396,12 +407,17 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         return worldMap
     }
     
-    func unarchiveSavedRoute() -> SavedRoute? {
-        return NSKeyedUnarchiver.unarchiveObject(withFile: self.worldMapURL(id: "hardcodedroute", isInfo: true).path) as? SavedRoute
+    func unarchiveSavedRoute(loadReversedRoute: Bool) -> SavedRoute? {
+        return NSKeyedUnarchiver.unarchiveObject(withFile: self.worldMapURL(id: "hardcodedroute", isInfo: true, isReversedRoute: loadReversedRoute).path) as? SavedRoute
     }
 
-    func worldMapURL(id: String, isInfo: Bool) -> URL {
-        let fileName = isInfo ? "Info" : id
+    func worldMapURL(id: String, isInfo: Bool, isReversedRoute: Bool) -> URL {
+        let fileName : String
+        if isReversedRoute {
+            fileName = isInfo ? "Info" + id + "_reversed" : id
+        } else {
+            fileName = isInfo ? "Info" + id : id
+        }
         return FileManager().urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent(fileName)
     }
     
@@ -686,7 +702,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             // the options button is hidden if the route rating shows up
             directionText.isHidden = true
             // hard code this for now (no UI yet)
-            state = .startingResumeProcedure
+            state = .startingResumeProcedure(loadReversedRoute: true)
         }
     }
     
@@ -839,7 +855,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         routeRatingLabel?.textColor = UIColor.white
         routeRatingLabel?.textAlignment = .center
         
-        let buttonWidth = routeRatingView.bounds.size.width / 4.5
+        let buttonWidth = routeRatingView.bounds.size.width / 3.75
         
         let thumbsUpButton = UIButton(type: .custom)
         thumbsUpButton.frame = CGRect(x: 0, y: 0, width: buttonWidth, height: buttonWidth)
@@ -889,7 +905,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
         label.text = "Return to the last paused location and press Resume for further instructions."
         
-        let buttonWidth = resumeTrackingView.bounds.size.width / 4.5
+        let buttonWidth = resumeTrackingView.bounds.size.width / 3.75
         
         let resumeButton = UIButton(type: .custom)
         resumeButton.frame = CGRect(x: 0, y: 0, width: buttonWidth, height: buttonWidth)
@@ -1047,8 +1063,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             routeRatingLabel?.text = "Please rate your service."
         }
         
-        hapticTimer?.invalidate()
-        
         feedbackGenerator = nil
         waypointFeedbackGenerator = nil
         delayTransition()
@@ -1168,7 +1182,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                 sceneView.session.getCurrentWorldMap { worldMap, error in
                     if worldMap != nil {
                         do {
-                            try self.archive(landmarkTransform: landmarkTransform, worldMap: worldMap!, reverseRoute: true)
+                            try self.archive(landmarkTransform: landmarkTransform, worldMap: worldMap!, isReversedRoute: true)
                             print("SAVED reversed route")
                         } catch {
                             fatalError("Can't save map: \(error.localizedDescription)")
@@ -1259,7 +1273,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     }
     
     @objc func confirmResumeTracking() {
-        state = .startingResumeProcedure
+        state = .startingResumeProcedure(loadReversedRoute: false)
     }
     
     // MARK: - Logging
@@ -1403,6 +1417,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                 keypointNode.removeFromParentNode()
                 
                 followingCrumbs?.invalidate()
+                hapticTimer?.invalidate()
                 // update text and stop navigation
                 if(sendLogs) {
                     state = .ratingRoute(announceArrival: true)
@@ -1810,13 +1825,15 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             }
         case .normal:
             logString = "Normal"
+            AudioServicesPlaySystemSound(SystemSoundID(1025))
             if #available(iOS 11.3, *) {
                 // resetting the origin is a needed in the case when we realigned to a saved route
                 print("RESETTING WORLD ORIGIN!!!")
                 session.setWorldOrigin(relativeTransform: simd_float4x4.makeTranslation(0,0,0))
+                print(state)
                 if case .readyForFinalResumeAlignment = state {
-                    // this will cancel any realignment if it hasn't happened yet
-                    state = .mainScreen(announceArrival: false)
+                    // this will cancel any realignment if it hasn't happened yet and go straight to route navigation mode
+                    state = .readyToNavigateOrPause
                 }
             }
             print("normal")
