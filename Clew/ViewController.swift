@@ -19,7 +19,8 @@ import FirebaseDatabase
 
 // MARK: Extensions
 extension UIView {
-    
+    /// Used to identify the mainText UILabel
+    static let mainTextTag: Int = 1001
     /// Custom fade used for direction text UILabel.
     func fadeTransition(_ duration:CFTimeInterval) {
         let animation = CATransition()
@@ -37,7 +38,8 @@ extension UIView {
     ///
     /// - TODO: generalize for code reuse with the other kinds of subview containers in this app
     func setupButtonContainer(withButton buttonComponents: ActionButtonComponents,
-                              withButtonRight buttonComponentsRight: ActionButtonComponents? = nil) {
+                              withButtonRight buttonComponentsRight: ActionButtonComponents? = nil,
+                              withMainText mainText: String? = nil) {
         self.backgroundColor = UIColor.black.withAlphaComponent(0.4)
         self.isHidden = true
         let button = UIButton.makeImageButton(self, buttonComponents)
@@ -46,6 +48,25 @@ extension UIView {
             let buttonRight = UIButton.makeImageButton(self, buttonComponentsRight, alignment: .right)
             self.addSubview(buttonRight)
         }
+        if let mainText = mainText {
+            let label = UILabel(frame: CGRect(x: 15, y: UIScreen.main.bounds.size.height/3, width: UIScreen.main.bounds.size.width-30, height: UIScreen.main.bounds.size.height/4))
+            label.textColor = UIColor.white
+            label.textAlignment = .center
+            label.numberOfLines = 0
+            label.lineBreakMode = .byWordWrapping
+            
+            label.text = mainText
+            label.tag = UIView.mainTextTag
+            self.addSubview(label)
+        }
+    }
+    var mainText: UILabel? {
+        for subview in subviews {
+            if subview.tag == UIView.mainTextTag, let textLabel = subview as? UILabel {
+                return textLabel
+            }
+        }
+        return nil
     }
 }
 
@@ -105,6 +126,8 @@ fileprivate extension Selector {
     static let stopNavigationButtonTapped = #selector(ViewController.stopNavigation)
     static let landmarkButtonTapped = #selector(ViewController.startCreateLandmarkProcedure)
     static let pauseButtonTapped = #selector(ViewController.startPauseProcedure)
+    static let thumbsUpButtonTapped = #selector(ViewController.sendLogData)
+    static let thumbsDownButtonTapped = #selector(ViewController.sendDebugLogData)
 }
 
 /// Holds information about the buttons that are used to control navigation and tracking.
@@ -439,6 +462,10 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     /// Image, label, and target for start recording button.
     let recordPathButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "StartRecording")!), label: "Record path", targetSelector: Selector.recordPathButtonTapped)
 
+    let thumbsDownButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "thumbs_down")!), label: "Bad", targetSelector: Selector.thumbsDownButtonTapped)
+    
+    let thumbsUpButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "thumbs_up")!), label: "Good", targetSelector: Selector.thumbsUpButtonTapped)
+    
     /// Image, label, and target for start recording button.
     /// TODO: need an image
     let addLandmarkButton = ActionButtonComponents(appearance: .textButton(label: "Landmark"), label: "Create landmark", targetSelector: Selector.landmarkButtonTapped)
@@ -829,9 +856,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         stopNavigationView = UIView(frame: CGRect(x: 0, y: yOriginOfButtonFrame, width: buttonFrameWidth, height: buttonFrameHeight))
         stopNavigationView.setupButtonContainer(withButton: stopNavigationButton)
         
-        routeRatingView = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height))
-        routeRatingView.backgroundColor = UIColor.black.withAlphaComponent(0.4)
-        drawRouteRatingView()
+        routeRatingView = UIView(frame: CGRect(x: 0, y: 0, width: buttonFrameWidth, height: displayHeight))
+        routeRatingView.setupButtonContainer(withButton: thumbsUpButton, withButtonRight: thumbsDownButton, withMainText: "Please rate your service.")
         
         self.view.addSubview(recordPathView)
         self.view.addSubview(stopRecordingView)
@@ -847,41 +873,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         self.view.addSubview(routeRatingView)
         
         state = .mainScreen(announceArrival: false)
-    }
-    
-    func drawRouteRatingView() {
-        self.routeRatingLabel = UILabel(frame: CGRect(x: 0, y: displayHeight/2.5, width: displayWidth, height: displayHeight/6))
-        routeRatingLabel?.text = "Rate your service."
-        routeRatingLabel?.textColor = UIColor.white
-        routeRatingLabel?.textAlignment = .center
-        
-        let buttonWidth = routeRatingView.bounds.size.width / 3.75
-        
-        let thumbsUpButton = UIButton(type: .custom)
-        thumbsUpButton.frame = CGRect(x: 0, y: 0, width: buttonWidth, height: buttonWidth)
-        thumbsUpButton.layer.cornerRadius = 0.5 * thumbsUpButton.bounds.size.width
-        thumbsUpButton.clipsToBounds = true
-        let thumbsUpButtonImage = UIImage(named: "thumbs_up")
-        thumbsUpButton.setImage(thumbsUpButtonImage, for: .normal)
-        thumbsUpButton.accessibilityLabel = "Good"
-        thumbsUpButton.center.x = routeRatingView.center.x + displayWidth/5
-        thumbsUpButton.center.y = routeRatingView.bounds.size.height * (2/3)
-        thumbsUpButton.addTarget(self, action: #selector(sendLogData), for: .touchUpInside)
-        
-        let thumbsDownButton = UIButton(type: .custom)
-        thumbsDownButton.frame = CGRect(x: 0, y: 0, width: buttonWidth , height: buttonWidth)
-        thumbsDownButton.layer.cornerRadius = 0.5 * thumbsUpButton.bounds.size.width
-        thumbsDownButton.clipsToBounds = true
-        let thumbsDownButtonImage = UIImage(named: "thumbs_down")
-        thumbsDownButton.setImage(thumbsDownButtonImage, for: .normal)
-        thumbsDownButton.accessibilityLabel = "Bad"
-        thumbsDownButton.center.x = routeRatingView.center.x - displayWidth/5
-        thumbsDownButton.center.y = routeRatingView.bounds.size.height * (2/3)
-        thumbsDownButton.addTarget(self, action: #selector(sendDebugLogData), for: .touchUpInside)
-        
-        routeRatingView.addSubview(thumbsDownButton)
-        routeRatingView.addSubview(thumbsUpButton)
-        routeRatingView.addSubview(routeRatingLabel!)
     }
     
     func drawPauseTrackingView() {
@@ -1052,15 +1043,13 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     @objc func showRouteRating(announceArrival: Bool) {
         stopNavigationView.isHidden = true
         getDirectionButton.isHidden = true
-        settingsButton.isHidden = true
-        helpButton.isHidden = true
-
-        directionText.isHidden = true
         routeRatingView.isHidden = false
+        directionText.isHidden = true
+
         if announceArrival {
-            routeRatingLabel?.text = "You've arrived. Please rate your service."
+            routeRatingView.mainText?.text = "You've arrived. Please rate your service."
         } else {
-            routeRatingLabel?.text = "Please rate your service."
+            routeRatingView.mainText?.text = "Please rate your service."
         }
         
         feedbackGenerator = nil
@@ -1809,9 +1798,11 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             case .excessiveMotion:
                 logString = "ExcessiveMotion"
                 print("Excessive motion")
+                AudioServicesPlaySystemSound(SystemSoundID(1050))
             case .insufficientFeatures:
                 logString = "InsufficientFeatures"
                 print("InsufficientFeatures")
+                AudioServicesPlaySystemSound(SystemSoundID(1050))
             case .initializing:
                 // don't log anything
                 print("initializing")
