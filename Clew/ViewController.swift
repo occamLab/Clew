@@ -37,27 +37,26 @@ extension UIView {
     /// - Parameter buttonComponents: holds information about the button to add
     ///
     /// - TODO: generalize for code reuse with the other kinds of subview containers in this app
-    func setupButtonContainer(withButton buttonComponents: ActionButtonComponents,
-                              withButtonRight buttonComponentsRight: ActionButtonComponents? = nil,
+    func setupButtonContainer(withButtons buttonComponents: [ActionButtonComponents],
                               withMainText mainText: String? = nil) {
         self.backgroundColor = UIColor.black.withAlphaComponent(0.4)
         self.isHidden = true
-        let button = UIButton.makeImageButton(self, buttonComponents)
-        self.addSubview(button)
-        if let buttonComponentsRight = buttonComponentsRight {
-            let buttonRight = UIButton.makeImageButton(self, buttonComponentsRight, alignment: .right)
-            self.addSubview(buttonRight)
-        }
+
         if let mainText = mainText {
-            let label = UILabel(frame: CGRect(x: 15, y: UIScreen.main.bounds.size.height/3, width: UIScreen.main.bounds.size.width-30, height: UIScreen.main.bounds.size.height/4))
+            let label = UILabel(frame: CGRect(x: 15, y: UIScreen.main.bounds.size.height/4, width: UIScreen.main.bounds.size.width-30, height: UIScreen.main.bounds.size.height/4))
             label.textColor = UIColor.white
             label.textAlignment = .center
             label.numberOfLines = 0
             label.lineBreakMode = .byWordWrapping
-            
+            label.font = label.font.withSize(24)
+
             label.text = mainText
             label.tag = UIView.mainTextTag
             self.addSubview(label)
+        }
+        for components in buttonComponents {
+            let button = UIButton.makeImageButton(self, components)
+            self.addSubview(button)
         }
     }
     var mainText: UILabel? {
@@ -85,7 +84,7 @@ extension UIButton {
     ///
     /// - TODO:
     ///   - Implement AutoLayout
-    static func makeImageButton(_ containerView: UIView, _ buttonViewParts: ActionButtonComponents, alignment: ButtonContainerHorizontalAlignment = .center) -> UIButton {
+    static func makeImageButton(_ containerView: UIView, _ buttonViewParts: ActionButtonComponents) -> UIButton {
         let buttonWidth = containerView.bounds.size.width / 3.75
         
         let button = UIButton(type: .custom)
@@ -93,13 +92,19 @@ extension UIButton {
         button.frame = CGRect(x: 0, y: 0, width: buttonWidth, height: buttonWidth)
         button.layer.cornerRadius = 0.5 * button.bounds.size.width
         button.clipsToBounds = true
-        switch alignment {
+        switch buttonViewParts.alignment {
         case .center:
             button.center.x = containerView.center.x
         case .right:
             button.center.x = containerView.center.x + UIScreen.main.bounds.size.width/3
+        case .left:
+            button.center.x = containerView.center.x - UIScreen.main.bounds.size.width/3
         }
-        button.center.y = containerView.bounds.size.height * (6/10)
+        if containerView.mainText != nil {
+            button.center.y = containerView.bounds.size.height * (8/10)
+        } else {
+            button.center.y = containerView.bounds.size.height * (6/10)
+        }
         
         switch buttonViewParts.appearance {
         case .imageButton(let image):
@@ -128,6 +133,7 @@ fileprivate extension Selector {
     static let pauseButtonTapped = #selector(ViewController.startPauseProcedure)
     static let thumbsUpButtonTapped = #selector(ViewController.sendLogData)
     static let thumbsDownButtonTapped = #selector(ViewController.sendDebugLogData)
+    static let resumeButtonTapped = #selector(ViewController.confirmResumeTracking)
 }
 
 /// Holds information about the buttons that are used to control navigation and tracking.
@@ -138,6 +144,12 @@ public struct ActionButtonComponents {
     enum Appearance {
         case imageButton(image: UIImage)
         case textButton(label: String)
+    }
+    
+    enum ButtonContainerHorizontalAlignment {
+        case center
+        case right
+        case left
     }
 
     /// Button image
@@ -150,6 +162,8 @@ public struct ActionButtonComponents {
     ///
     /// - TODO: Potentially unnecessary when the transitioning between views is refactored.
     var targetSelector: Selector
+    
+    var alignment: ButtonContainerHorizontalAlignment
 }
 
 // TODO: it would be cool to add the state of some of these transitions using indirect enumerations https://docs.swift.org/swift-book/LanguageGuide/Enumerations.html
@@ -179,11 +193,6 @@ enum AppState {
     case startingResumeProcedure(loadReversedRoute: Bool)
     /// the AR session has entered the relocalizing state, which means that we can now realign the session
     case readyForFinalResumeAlignment
-}
-
-enum ButtonContainerHorizontalAlignment {
-    case center
-    case right
 }
 
 class ViewController: UIViewController, ARSCNViewDelegate {
@@ -460,27 +469,29 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     var headingRingBuffer = RingBuffer<Float>(capacity: 50)
 
     /// Image, label, and target for start recording button.
-    let recordPathButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "StartRecording")!), label: "Record path", targetSelector: Selector.recordPathButtonTapped)
+    let recordPathButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "StartRecording")!), label: "Record path", targetSelector: Selector.recordPathButtonTapped, alignment: .center)
 
-    let thumbsDownButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "thumbs_down")!), label: "Bad", targetSelector: Selector.thumbsDownButtonTapped)
+    let thumbsDownButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "thumbs_down")!), label: "Bad", targetSelector: Selector.thumbsDownButtonTapped, alignment: .left)
     
-    let thumbsUpButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "thumbs_up")!), label: "Good", targetSelector: Selector.thumbsUpButtonTapped)
+    let thumbsUpButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "thumbs_up")!), label: "Good", targetSelector: Selector.thumbsUpButtonTapped, alignment: .right)
+    
+    let resumeButton = ActionButtonComponents(appearance: .textButton(label: "Resume"), label: "Good", targetSelector: Selector.resumeButtonTapped, alignment: .center)
     
     /// Image, label, and target for start recording button.
     /// TODO: need an image
-    let addLandmarkButton = ActionButtonComponents(appearance: .textButton(label: "Landmark"), label: "Create landmark", targetSelector: Selector.landmarkButtonTapped)
+    let addLandmarkButton = ActionButtonComponents(appearance: .textButton(label: "Landmark"), label: "Create landmark", targetSelector: Selector.landmarkButtonTapped, alignment: .right)
     
     /// Image, label, and target for stop recording button.
-    let stopRecordingButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "StopRecording")!), label: "Stop recording", targetSelector: Selector.stopRecordingButtonTapped)
+    let stopRecordingButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "StopRecording")!), label: "Stop recording", targetSelector: Selector.stopRecordingButtonTapped, alignment: .center)
     
     /// Image, label, and target for start navigation button.
-    let startNavigationButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "StartNavigation")!), label: "Start navigation", targetSelector: Selector.startNavigationButtonTapped)
+    let startNavigationButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "StartNavigation")!), label: "Start navigation", targetSelector: Selector.startNavigationButtonTapped, alignment: .center)
 
     /// Title, label, and target for the pause button
-    let pauseButton = ActionButtonComponents(appearance: .textButton(label: "Pause"), label: "Pause session", targetSelector: Selector.pauseButtonTapped)
+    let pauseButton = ActionButtonComponents(appearance: .textButton(label: "Pause"), label: "Pause session", targetSelector: Selector.pauseButtonTapped, alignment: .right)
     
     /// Image, label, and target for stop navigation button.
-    let stopNavigationButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "StopNavigation")!), label: "Stop navigation", targetSelector: Selector.stopNavigationButtonTapped)
+    let stopNavigationButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "StopNavigation")!), label: "Stop navigation", targetSelector: Selector.stopNavigationButtonTapped, alignment: .center)
     
     /// A handle to the Firebase storage
     let storageBaseRef = Storage.storage().reference()
@@ -570,7 +581,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     var resumeTrackingConfirmView: UIView!
     var directionText: UILabel!
     var routeRatingView: UIView!
-    var routeRatingLabel: UILabel?
     
     enum ButtonViewType {
         // State of button views
@@ -827,37 +837,31 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
         // Record Path button container
         recordPathView = UIView(frame: CGRect(x: 0, y: yOriginOfButtonFrame, width: buttonFrameWidth, height: buttonFrameHeight))
-        recordPathView.setupButtonContainer(withButton: recordPathButton, withButtonRight: addLandmarkButton)
+        recordPathView.setupButtonContainer(withButtons: [recordPathButton, addLandmarkButton])
         
         // Stop Recording button container
         stopRecordingView = UIView(frame: CGRect(x: 0, y: yOriginOfButtonFrame, width: buttonFrameWidth, height: buttonFrameHeight))
-        stopRecordingView.setupButtonContainer(withButton: stopRecordingButton)
+        stopRecordingView.setupButtonContainer(withButtons: [stopRecordingButton])
         
         // Start Navigation button container
         startNavigationView = UIView(frame: CGRect(x: 0, y: yOriginOfButtonFrame, width: buttonFrameWidth, height: buttonFrameHeight))
-        startNavigationView.setupButtonContainer(withButton: startNavigationButton, withButtonRight: pauseButton)
+        startNavigationView.setupButtonContainer(withButtons: [startNavigationButton, pauseButton])
         
         pauseTrackingView = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height))
-        pauseTrackingView.backgroundColor = UIColor.black.withAlphaComponent(0.4)
-        pauseTrackingView.isHidden = true
-        drawPauseTrackingView()
+        pauseTrackingView.setupButtonContainer(withButtons: [], withMainText: "Place the device against a flat vertical surface and press the volume button to pause. Do not move your phone until you feel a haptic confirmation. You will need to return to this surface to resume tracking. You can use other apps while in pause, but please keep the app running in the background.")
         
         resumeTrackingView = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height))
-        resumeTrackingView.backgroundColor = UIColor.black.withAlphaComponent(0.4)
-        resumeTrackingView.isHidden = true
-        drawResumeTrackingView()
+        resumeTrackingView.setupButtonContainer(withButtons: [resumeButton], withMainText: "Return to the last paused location and press Resume for further instructions.")
         
         resumeTrackingConfirmView = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height))
-        resumeTrackingConfirmView.backgroundColor = UIColor.black.withAlphaComponent(0.4)
-        resumeTrackingConfirmView.isHidden = true
-        drawResumeTrackingConfirmView()
-        
+        resumeTrackingConfirmView.setupButtonContainer(withButtons: [], withMainText: "Place the device in the same surface facing the same orientation and press the volume button to resume. Do not move the device until you feel the haptic confirmation.")
+
         // Stop Navigation button container
         stopNavigationView = UIView(frame: CGRect(x: 0, y: yOriginOfButtonFrame, width: buttonFrameWidth, height: buttonFrameHeight))
-        stopNavigationView.setupButtonContainer(withButton: stopNavigationButton)
+        stopNavigationView.setupButtonContainer(withButtons: [stopNavigationButton])
         
         routeRatingView = UIView(frame: CGRect(x: 0, y: 0, width: buttonFrameWidth, height: displayHeight))
-        routeRatingView.setupButtonContainer(withButton: thumbsUpButton, withButtonRight: thumbsDownButton, withMainText: "Please rate your service.")
+        routeRatingView.setupButtonContainer(withButtons: [thumbsUpButton, thumbsDownButton], withMainText: "Please rate your service.")
         
         self.view.addSubview(recordPathView)
         self.view.addSubview(stopRecordingView)
@@ -873,55 +877,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         self.view.addSubview(routeRatingView)
         
         state = .mainScreen(announceArrival: false)
-    }
-    
-    func drawPauseTrackingView() {
-        let label = UILabel(frame: CGRect(x: 15, y: displayHeight/3, width: displayWidth-30, height: displayHeight/4))
-        label.textColor = UIColor.white
-        label.textAlignment = .center
-        label.numberOfLines = 0
-        label.lineBreakMode = .byWordWrapping
-        
-        label.text = "Place the device against a flat vertical surface and press the volume button to pause. Do not move your phone until you feel a haptic confirmation. You will need to return to this surface to resume tracking. You can use other apps while in pause, but please keep the app running in the background."
-        
-        pauseTrackingView.addSubview(label)
-    }
-    
-    func drawResumeTrackingView() {
-        let label = UILabel(frame: CGRect(x: 15, y: displayHeight/2.5, width: displayWidth-30, height: displayHeight/6))
-        label.textColor = UIColor.white
-        label.textAlignment = .center
-        label.numberOfLines = 0
-        label.lineBreakMode = .byWordWrapping
-        
-        label.text = "Return to the last paused location and press Resume for further instructions."
-        
-        let buttonWidth = resumeTrackingView.bounds.size.width / 3.75
-        
-        let resumeButton = UIButton(type: .custom)
-        resumeButton.frame = CGRect(x: 0, y: 0, width: buttonWidth, height: buttonWidth)
-        resumeButton.layer.cornerRadius = 0.5 * resumeButton.bounds.size.width
-        resumeButton.clipsToBounds = true
-        resumeButton.setTitle("Resume", for: .normal)
-        resumeButton.layer.borderWidth = 2
-        resumeButton.layer.borderColor = UIColor.white.cgColor
-        resumeButton.center.x = pauseTrackingView.center.x
-        resumeButton.center.y = pauseTrackingView.bounds.size.height * (4/5)
-        resumeButton.addTarget(self, action: #selector(confirmResumeTracking), for: .touchUpInside)
-        
-        resumeTrackingView.addSubview(resumeButton)
-        resumeTrackingView.addSubview(label)
-    }
-    
-    func drawResumeTrackingConfirmView() {
-        let label = UILabel(frame: CGRect(x: 15, y: displayHeight/2.5, width: displayWidth-30, height: displayHeight/6))
-        label.textColor = UIColor.white
-        label.textAlignment = .center
-        label.numberOfLines = 0
-        label.lineBreakMode = .byWordWrapping
-        
-        label.text = "Place the device in the same surface facing the same orientation and press the volume button to resume. Do not move the device until you feel the haptic confirmation."
-        resumeTrackingConfirmView.addSubview(label)
     }
     
     /*
