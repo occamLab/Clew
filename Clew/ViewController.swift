@@ -9,7 +9,6 @@
 //
 // Potential enhancements
 //  - Possibly create a warning if the phone doesn't appear to be in the correct orientation
-//  - rename landmark button to something along the lines of create reusable route
 //  - revisit turn warning feature.  It doesn't seem to actually help all that much at the moment.
 //  - Group record path and record button (for instance)
 
@@ -30,6 +29,8 @@ import SRCountdownTimer
 extension UIView {
     /// Used to identify the mainText UILabel
     static let mainTextTag: Int = 1001
+    static let pauseButtonTag: Int = 1002
+
     /// Custom fade used for direction text UILabel.
     func fadeTransition(_ duration:CFTimeInterval) {
         let animation = CATransition()
@@ -75,6 +76,15 @@ extension UIView {
         }
         return nil
     }
+    
+    func getButtonByTag(tag: Int)->UIButton? {
+        for subview in subviews {
+            if subview.tag == tag, let button = subview as? UIButton {
+                return button
+            }
+        }
+        return nil
+    }
 }
 
 extension UIButton {
@@ -96,7 +106,7 @@ extension UIButton {
         let buttonWidth = containerView.bounds.size.width / 3.75
         
         let button = UIButton(type: .custom)
-        
+        button.tag = buttonViewParts.tag
         button.frame = CGRect(x: 0, y: 0, width: buttonWidth, height: buttonWidth)
         button.layer.cornerRadius = 0.5 * button.bounds.size.width
         button.clipsToBounds = true
@@ -180,6 +190,10 @@ public struct ActionButtonComponents {
     var targetSelector: Selector
     
     var alignment: ButtonContainerHorizontalAlignment
+    
+    /// Tag to use to identify the button if we need to interact with it later.  Pass 0 if no
+    /// subsequent interaction is required.
+    var tag: Int
 }
 
 enum AppState {
@@ -188,7 +202,7 @@ enum AppState {
     /// User is recording the
     case recordingRoute
     /// User can either navigate back or pause
-    case readyToNavigateOrPause
+    case readyToNavigateOrPause(allowPause: Bool)
     /// User is navigating along a route
     case navigatingRoute
     /// User is rating the route
@@ -204,7 +218,7 @@ enum AppState {
     /// user has successfully paused the ARSession
     case pauseProcedureCompleted
     /// user has hit the resume button and is waiting for the volume to hit
-    case startingResumeProcedure(route: SavedRoute, map: Any?, navigateStartToEnd: Bool)
+    case startingResumeProcedure(route: SavedRoute, map: ARWorldMap?, navigateStartToEnd: Bool)
     /// the AR session has entered the relocalizing state, which means that we can now realign the session
     case readyForFinalResumeAlignment
 }
@@ -227,8 +241,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             switch state {
             case .recordingRoute:
                 handleStateTransitionToRecordingRoute()
-            case .readyToNavigateOrPause:
-                handleStateTransitionToReadyToNavigateOrPause()
+            case .readyToNavigateOrPause(let allowPause):
+                handleStateTransitionToReadyToNavigateOrPause(allowPause: allowPause)
             case .navigatingRoute:
                 handleStateTransitionToNavigatingRoute()
             case .ratingRoute(let announceArrival):
@@ -244,8 +258,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             case .pauseProcedureCompleted:
                 // nothing happens currently
                 break
-            case .startingResumeProcedure(let route, let mapAsAny, let navigateStartToEnd):
-                handleStateTransitionToStartingResumeProcedure(route: route, mapAsAny: mapAsAny, navigateStartToEnd: navigateStartToEnd)
+            case .startingResumeProcedure(let route, let map, let navigateStartToEnd):
+                handleStateTransitionToStartingResumeProcedure(route: route, map: map, navigateStartToEnd: navigateStartToEnd)
             case .readyForFinalResumeAlignment:
                 // nothing happens currently
                 break
@@ -288,10 +302,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         updateHeadingOffsetTimer = Timer.scheduledTimer(timeInterval: 0.01, target: self, selector: (#selector(updateHeadingOffset)), userInfo: nil, repeats: true)
     }
     
-    func handleStateTransitionToReadyToNavigateOrPause() {
+    func handleStateTransitionToReadyToNavigateOrPause(allowPause: Bool) {
         droppingCrumbs?.invalidate()
         updateHeadingOffsetTimer?.invalidate()
-        showStartNavigationButton()
+        showStartNavigationButton(allowPause: allowPause)
     }
     
     func handleStateTransitionToNavigatingRoute() {
@@ -347,12 +361,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         showRouteRating(announceArrival: announceArrival)
     }
     
-    func handleStateTransitionToStartingResumeProcedure(route: SavedRoute, mapAsAny: Any?, navigateStartToEnd: Bool) {
+    func handleStateTransitionToStartingResumeProcedure(route: SavedRoute, map: ARWorldMap?, navigateStartToEnd: Bool) {
         // load the world map and restart the session so that things have a chance to quiet down before putting it up to the wall
         print("handling resume")
-        guard let map = mapAsAny as? ARWorldMap else {
-            return
-        }
 
         let isSameMap = configuration.initialWorldMap != nil && configuration.initialWorldMap == map
         configuration.initialWorldMap = map
@@ -372,7 +383,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             state = .readyForFinalResumeAlignment
         } else if case .normal? = sceneView.session.currentFrame?.camera.trackingState, isSameMap {
             // we can skip the whole process of relocalization since we are already using the correct map
-            state = .readyToNavigateOrPause
+            state = .readyToNavigateOrPause(allowPause: false)
             // return to prevent the resume tracking confirm button from being shown
             return
         }
@@ -446,9 +457,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     }
     
     @objc func routesButtonPressed() {
-        if dataPersistence == nil {
-            return
-        }
         let storyBoard: UIStoryboard = UIStoryboard(name: "SettingsAndHelp", bundle: nil)
         let popoverContent = storyBoard.instantiateViewController(withIdentifier: "Routes") as! RoutesViewController
         popoverContent.rootViewController = self
@@ -506,35 +514,35 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     var headingRingBuffer = RingBuffer<Float>(capacity: 50)
 
     /// Image, label, and target for start recording button.
-    let recordPathButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "StartRecording")!), label: "Record path", targetSelector: Selector.recordPathButtonTapped, alignment: .center)
+    let recordPathButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "StartRecording")!), label: "Record path", targetSelector: Selector.recordPathButtonTapped, alignment: .center, tag: 0)
 
-    let thumbsDownButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "thumbs_down")!), label: "Bad", targetSelector: Selector.thumbsDownButtonTapped, alignment: .leftcenter)
+    let thumbsDownButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "thumbs_down")!), label: "Bad", targetSelector: Selector.thumbsDownButtonTapped, alignment: .leftcenter, tag: 0)
     
-    let thumbsUpButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "thumbs_up")!), label: "Good", targetSelector: Selector.thumbsUpButtonTapped, alignment: .rightcenter)
+    let thumbsUpButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "thumbs_up")!), label: "Good", targetSelector: Selector.thumbsUpButtonTapped, alignment: .rightcenter, tag: 0)
     
-    let resumeButton = ActionButtonComponents(appearance: .textButton(label: "Resume"), label: "Resume", targetSelector: Selector.resumeButtonTapped, alignment: .center)
+    let resumeButton = ActionButtonComponents(appearance: .textButton(label: "Resume"), label: "Resume", targetSelector: Selector.resumeButtonTapped, alignment: .center, tag: 0)
     
-    let confirmAlignmentButton = ActionButtonComponents(appearance: .textButton(label: "Align"), label: "Start 5 second alignment countdown", targetSelector: Selector.confirmAlignmentButtonTapped, alignment: .center)
+    let confirmAlignmentButton = ActionButtonComponents(appearance: .textButton(label: "Align"), label: "Start 5 second alignment countdown", targetSelector: Selector.confirmAlignmentButtonTapped, alignment: .center, tag: 0)
     
     
     /// Image, label, and target for start recording button.
     /// TODO: need an image
-    let addLandmarkButton = ActionButtonComponents(appearance: .textButton(label: "Landmark"), label: "Create landmark", targetSelector: Selector.landmarkButtonTapped, alignment: .right)
+    let addLandmarkButton = ActionButtonComponents(appearance: .textButton(label: "Landmark"), label: "Create landmark", targetSelector: Selector.landmarkButtonTapped, alignment: .right, tag: 0)
     
     /// Image, label, and target for stop recording button.
-    let stopRecordingButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "StopRecording")!), label: "Stop recording", targetSelector: Selector.stopRecordingButtonTapped, alignment: .center)
+    let stopRecordingButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "StopRecording")!), label: "Stop recording", targetSelector: Selector.stopRecordingButtonTapped, alignment: .center, tag: 0)
     
     /// Image, label, and target for start navigation button.
-    let startNavigationButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "StartNavigation")!), label: "Start navigation", targetSelector: Selector.startNavigationButtonTapped, alignment: .center)
+    let startNavigationButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "StartNavigation")!), label: "Start navigation", targetSelector: Selector.startNavigationButtonTapped, alignment: .center, tag: 0)
 
     /// Title, label, and target for the pause button
-    let pauseButton = ActionButtonComponents(appearance: .textButton(label: "Pause"), label: "Pause session", targetSelector: Selector.pauseButtonTapped, alignment: .right)
+    let pauseButton = ActionButtonComponents(appearance: .textButton(label: "Pause"), label: "Pause session", targetSelector: Selector.pauseButtonTapped, alignment: .right, tag: UIView.pauseButtonTag)
     
     /// Image, label, and target for stop navigation button.
-    let stopNavigationButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "StopNavigation")!), label: "Stop navigation", targetSelector: Selector.stopNavigationButtonTapped, alignment: .center)
+    let stopNavigationButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "StopNavigation")!), label: "Stop navigation", targetSelector: Selector.stopNavigationButtonTapped, alignment: .center, tag: 0)
     
     /// Image, label, and target for routes button.
-    let routesButton = ActionButtonComponents(appearance: .textButton(label: "Routes"), label: "Saved Routes List", targetSelector: Selector.routesButtonTapped, alignment: .left)
+    let routesButton = ActionButtonComponents(appearance: .textButton(label: "Routes"), label: "Saved Routes List", targetSelector: Selector.routesButtonTapped, alignment: .left, tag: 0)
 
     /// A handle to the Firebase storage
     let storageBaseRef = Storage.storage().reference()
@@ -649,11 +657,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        print("TODO: doing this for testing purposes")
-        let prefs = UserDefaults.standard
-        prefs.removeObject(forKey: "showedRecordPathWithoutLandmarkWarning")
-        prefs.removeObject(forKey: "showedNavigatePathWithoutLandmarkWarning")
 
         // Scene view setup
         sceneView.frame = view.frame
@@ -1019,10 +1022,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         countdownTimer.labelFont = UIFont(name: "HelveticaNeue-Light", size: 100)
         countdownTimer.labelTextColor = UIColor.white
         countdownTimer.timerFinishingText = "End"
-        countdownTimer.lineWidth = 4
+        countdownTimer.lineWidth = 10
+        countdownTimer.lineColor = UIColor.white
         countdownTimer.backgroundColor = UIColor.black.withAlphaComponent(0.4)
         countdownTimer.isHidden = true
-        // handle voice over by posting appropriate notifications
+        // handle VoiceOver by posting appropriate notifications
         countdownTimer.isAccessibilityElement = false
         
         // Record Path button container
@@ -1115,14 +1119,19 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /*
      * display START NAVIGATION button/hide all other views
      */
-    @objc func showStartNavigationButton() {
+    @objc func showStartNavigationButton(allowPause: Bool) {
         resumeTrackingView.isHidden = true
         resumeTrackingConfirmView.isHidden = true
         stopRecordingView.isHidden = true
+        startNavigationView.getButtonByTag(tag: UIView.pauseButtonTag)?.isHidden = !allowPause
         startNavigationView.isHidden = false
         directionText.isHidden = false
         directionText.isAccessibilityElement = true
-        updateDirectionText("Press to start navigation or pause tracking", distance: 0, size: 14, displayDistance: false)
+        if allowPause {
+            updateDirectionText("Press to start navigation or pause tracking", distance: 0, size: 14, displayDistance: false)
+        } else {
+            updateDirectionText("Press to start navigation", distance: 0, size: 14, displayDistance: false)
+        }
         delayTransition()
     }
     
@@ -1335,10 +1344,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 }
             }
         }
-        
-        // TODO: if the route has a landmark, archive the route here with crumbs reversed
-        // clear the pausedTransform so it can't be used again
-        state = .readyToNavigateOrPause
+
+        state = .readyToNavigateOrPause(allowPause: true)
     }
     
     @objc func startNavigation(_ sender: UIButton) {
@@ -1406,7 +1413,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 self.sceneView.session.setWorldOrigin(relativeTransform: relativeTransform)
                 
                 Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(self.playSound)), userInfo: nil, repeats: false)
-                self.state = .readyToNavigateOrPause
+                self.state = .readyToNavigateOrPause(allowPause: false)
             }
         }
     }
@@ -1972,7 +1979,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             print(state)
             if case .readyForFinalResumeAlignment = state {
                 // this will cancel any realignment if it hasn't happened yet and go straight to route navigation mode
-                state = .readyToNavigateOrPause
+                state = .readyToNavigateOrPause(allowPause: false)
             }
             print("normal")
         case .notAvailable:
