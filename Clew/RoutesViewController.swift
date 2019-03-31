@@ -10,7 +10,6 @@ import Foundation
 import WebKit
 import ARKit
 
-@available(iOS 12.0, *)
 class RoutesViewController : UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     @IBOutlet weak var tableView: UITableView!
@@ -68,7 +67,7 @@ class RoutesViewController : UIViewController, UITableViewDataSource, UITableVie
             // delete item at indexPath
             do {
                 print(self.routes[indexPath.row].id)
-                try self.rootViewController?.dataPersistence?.delete(route: self.routes[indexPath.row])
+                try self.rootViewController?.dataPersistence.delete(route: self.routes[indexPath.row])
                 print("data successfully deleted")
                 self.routes.remove(at: indexPath.row)
                 print("routes successfully removed")

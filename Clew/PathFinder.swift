@@ -140,15 +140,19 @@ class SavedRoute: NSObject, NSCoding {
     public var dateCreated: NSDate
     public var crumbs: [LocationInfo]
     public var beginRouteLandmarkTransform: simd_float4x4?
+    public var beginRouteLandmarkInformation: NSString?
     public var endRouteLandmarkTransform: simd_float4x4?
+    public var endRouteLandmarkInformation: NSString?
 
-    public init(id: NSString, name: NSString, crumbs: [LocationInfo], dateCreated: NSDate = NSDate(), beginRouteLandmarkTransform: simd_float4x4?, endRouteLandmarkTransform: simd_float4x4?) {
+    public init(id: NSString, name: NSString, crumbs: [LocationInfo], dateCreated: NSDate = NSDate(), beginRouteLandmarkTransform: simd_float4x4?, beginRouteLandmarkInformation: NSString?, endRouteLandmarkTransform: simd_float4x4?, endRouteLandmarkInformation: NSString?) {
         self.id = id
         self.name = name
         self.crumbs = crumbs
         self.dateCreated = dateCreated
         self.beginRouteLandmarkTransform = beginRouteLandmarkTransform
+        self.beginRouteLandmarkInformation = beginRouteLandmarkInformation
         self.endRouteLandmarkTransform = endRouteLandmarkTransform
+        self.endRouteLandmarkInformation = endRouteLandmarkInformation
     }
     
     func encode(with aCoder: NSCoder) {
@@ -159,9 +163,14 @@ class SavedRoute: NSObject, NSCoding {
         if beginRouteLandmarkTransform != nil {
             aCoder.encode(ARAnchor(transform: beginRouteLandmarkTransform!), forKey: "beginRouteLandmarkTransformAsARAnchor")
         }
+        aCoder.encode(beginRouteLandmarkInformation, forKey: "beginRouteLandmarkInformation")
+
         if endRouteLandmarkTransform != nil {
             aCoder.encode(ARAnchor(transform: endRouteLandmarkTransform!), forKey: "endRouteLandmarkTransformAsARAnchor")
         }
+        aCoder.encode(endRouteLandmarkInformation, forKey: "endRouteLandmarkInformation")
+
+        aCoder.encode(dateCreated, forKey: "dateCreated")
     }
     
     required convenience init?(coder aDecoder: NSCoder) {
@@ -178,15 +187,22 @@ class SavedRoute: NSObject, NSCoding {
             return nil
         }
         var beginRouteLandmarkTransform : simd_float4x4? = nil
+        var beginRouteLandmarkInformation : NSString? = nil
+
         var endRouteLandmarkTransform : simd_float4x4? = nil
+        var endRouteLandmarkInformation : NSString? = nil
 
         if let beginRouteLandmarkTransformAsARAnchor = aDecoder.decodeObject(forKey: "beginRouteLandmarkTransformAsARAnchor") as? ARAnchor {
             beginRouteLandmarkTransform = beginRouteLandmarkTransformAsARAnchor.transform
         }
+        beginRouteLandmarkInformation = aDecoder.decodeObject(forKey: "beginRouteLandmarkInformation") as? NSString
+
         if let endRouteLandmarkTransformAsARAnchor = aDecoder.decodeObject(forKey: "endRouteLandmarkTransformAsARAnchor") as? ARAnchor {
             endRouteLandmarkTransform = endRouteLandmarkTransformAsARAnchor.transform
         }
-        self.init(id: id, name: name, crumbs: crumbs, dateCreated: dateCreated, beginRouteLandmarkTransform: beginRouteLandmarkTransform, endRouteLandmarkTransform: endRouteLandmarkTransform)
+        endRouteLandmarkInformation = aDecoder.decodeObject(forKey: "endRouteLandmarkInformation") as? NSString
+
+        self.init(id: id, name: name, crumbs: crumbs, dateCreated: dateCreated, beginRouteLandmarkTransform: beginRouteLandmarkTransform, beginRouteLandmarkInformation: beginRouteLandmarkInformation, endRouteLandmarkTransform: endRouteLandmarkTransform, endRouteLandmarkInformation: endRouteLandmarkInformation)
     }
 }
 

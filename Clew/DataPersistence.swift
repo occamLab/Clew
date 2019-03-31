@@ -9,7 +9,6 @@
 import Foundation
 import ARKit
 
-@available(iOS 12.0, *)
 class DataPersistence {
     
     var routes = [SavedRoute]()
@@ -30,7 +29,6 @@ class DataPersistence {
         try data.write(to: self.getWorldMapURL(id: route.id as String), options: [.atomic])
     }
     
-    @available(iOS 12.0, *)
     func unarchive(id: String) -> ARWorldMap? {
         do {
             let data = try Data(contentsOf: getWorldMapURL(id: id))
