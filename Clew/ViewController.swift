@@ -4,6 +4,17 @@
 //
 //  Created by Chris Seonghwan Yoon & Jeremy Ryan on 7/10/17.
 //
+// Major TODOs
+//  - Help documentation
+//  - Anchor hint
+//  - Test different iOS versions (it would be great if things worked on all iOS >= 11.0)
+//  - Warn user if they don't have the app unmuted (for system sounds)
+//
+// Potential enhancements
+//  - Possibly create a warning if the phone doesn't appear to be in the correct orientation
+//  - rename landmark button to something along the lines of create reusable route
+//  - revisit turn warning feature.  It doesn't seem to actually help all that much at the moment.
+//  - Group record path and record button (for instance)
 
 import UIKit
 import ARKit
@@ -15,6 +26,7 @@ import MediaPlayer
 import VectorMath
 import Firebase
 import FirebaseDatabase
+import SRCountdownTimer
 
 
 // MARK: Extensions
@@ -36,14 +48,13 @@ extension UIView {
     ///
     /// - Parameter buttonComponents: holds information about the button to add
     ///
-    /// - TODO: generalize for code reuse with the other kinds of subview containers in this app
     func setupButtonContainer(withButtons buttonComponents: [ActionButtonComponents],
                               withMainText mainText: String? = nil) {
         self.backgroundColor = UIColor.black.withAlphaComponent(0.4)
         self.isHidden = true
 
         if let mainText = mainText {
-            let label = UILabel(frame: CGRect(x: 15, y: UIScreen.main.bounds.size.height/4, width: UIScreen.main.bounds.size.width-30, height: UIScreen.main.bounds.size.height/4))
+            let label = UILabel(frame: CGRect(x: 15, y: UIScreen.main.bounds.size.height/4, width: UIScreen.main.bounds.size.width-30, height: UIScreen.main.bounds.size.height/2))
             label.textColor = UIColor.white
             label.textAlignment = .center
             label.numberOfLines = 0
@@ -97,8 +108,12 @@ extension UIButton {
             button.center.x = containerView.center.x
         case .right:
             button.center.x = containerView.center.x + UIScreen.main.bounds.size.width/3
+        case .rightcenter:
+            button.center.x = containerView.center.x + UIScreen.main.bounds.size.width/4.5
         case .left:
             button.center.x = containerView.center.x - UIScreen.main.bounds.size.width/3
+        case .leftcenter:
+            button.center.x = containerView.center.x - UIScreen.main.bounds.size.width/4.5
         }
         if containerView.mainText != nil {
             button.center.y = containerView.bounds.size.height * (8/10)
@@ -134,6 +149,9 @@ fileprivate extension Selector {
     static let thumbsUpButtonTapped = #selector(ViewController.sendLogData)
     static let thumbsDownButtonTapped = #selector(ViewController.sendDebugLogData)
     static let resumeButtonTapped = #selector(ViewController.confirmResumeTracking)
+    static let confirmAlignmentButtonTapped = #selector(ViewController.confirmAlignment)
+    @available(iOS 12.0, *)
+    static let routesButtonTapped = #selector(ViewController.routesButtonPressed)
 }
 
 /// Holds information about the buttons that are used to control navigation and tracking.
@@ -148,7 +166,9 @@ public struct ActionButtonComponents {
     
     enum ButtonContainerHorizontalAlignment {
         case center
+        case rightcenter
         case right
+        case leftcenter
         case left
     }
 
@@ -165,8 +185,6 @@ public struct ActionButtonComponents {
     
     var alignment: ButtonContainerHorizontalAlignment
 }
-
-// TODO: it would be cool to add the state of some of these transitions using indirect enumerations https://docs.swift.org/swift-book/LanguageGuide/Enumerations.html
 
 enum AppState {
     /// This is the screen the comes up immediately after the splash screen
@@ -190,19 +208,19 @@ enum AppState {
     /// user has successfully paused the ARSession
     case pauseProcedureCompleted
     /// user has hit the resume button and is waiting for the volume to hit
-    case startingResumeProcedure(loadReversedRoute: Bool)
+    case startingResumeProcedure(route: SavedRoute, map: Any?, navigateStartToEnd: Bool)
     /// the AR session has entered the relocalizing state, which means that we can now realign the session
     case readyForFinalResumeAlignment
 }
 
-class ViewController: UIViewController, ARSCNViewDelegate {
+class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDelegate {
     
     // MARK: - Refactoring UI definition
     
     // MARK: Properties and subview declarations
     
     /// How long to wait (in seconds) between the volume press and grabbing the transform for pausing
-    let pauseWaitingPeriod = 2
+    let pauseWaitingPeriod = 5
     
     /// How long to wait (in seconds) between the volume press and resuming the tracking session based on physical alignment
     let resumeWaitingPeriod = 5
@@ -230,8 +248,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             case .pauseProcedureCompleted:
                 // nothing happens currently
                 break
-            case .startingResumeProcedure(let loadReversedRoute):
-                handleStateTransitionToStartingResumeProcedure(loadReversedRoute: loadReversedRoute)
+            case .startingResumeProcedure(let route, let mapAsAny, let navigateStartToEnd):
+                handleStateTransitionToStartingResumeProcedure(route: route, mapAsAny: mapAsAny, navigateStartToEnd: navigateStartToEnd)
             case .readyForFinalResumeAlignment:
                 // nothing happens currently
                 break
@@ -283,6 +301,11 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     }
     
     func handleStateTransitionToNavigatingRoute() {
+        // If the route has not yet been saved, we can no longer save this route
+        routeName = nil
+        beginRouteLandmarkTransform = nil
+        endRouteLandmarkTransform = nil
+        
         // navigate the recorded path
         
         // clear any old log variables
@@ -328,20 +351,23 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         showRouteRating(announceArrival: announceArrival)
     }
     
-    func handleStateTransitionToStartingResumeProcedure(loadReversedRoute: Bool) {
+    func handleStateTransitionToStartingResumeProcedure(route: SavedRoute, mapAsAny: Any?, navigateStartToEnd: Bool) {
         if #available(iOS 12.0, *) {
             // load the world map and restart the session so that things have a chance to quiet down before putting it up to the wall
-            guard let worldMapData = retrieveWorldMapData(id: "hardcodedroute", loadReversedRoute: loadReversedRoute),
-                let pausedWorldMapRetrieved = unarchive(worldMapData: worldMapData),
-                let savedRouteUnarchived = unarchiveSavedRoute(loadReversedRoute: loadReversedRoute)
-                else {
-                    
-                    return
+            print("handling resume")
+            guard let map = mapAsAny as? ARWorldMap else {
+                return
             }
-            pausedTransform = savedRouteUnarchived.pausedTransform
-            let isSameMap = configuration.initialWorldMap == pausedWorldMapRetrieved
-            configuration.initialWorldMap = pausedWorldMapRetrieved
-            crumbs = savedRouteUnarchived.crumbs
+
+            let isSameMap = configuration.initialWorldMap != nil && configuration.initialWorldMap == map
+            configuration.initialWorldMap = map
+            if navigateStartToEnd {
+                crumbs = route.crumbs.reversed()
+                pausedTransform = route.beginRouteLandmarkTransform
+            } else {
+                crumbs = route.crumbs
+                pausedTransform = route.endRouteLandmarkTransform
+            }
             // make sure to clear out any relative transform that was saved before so we accurately align
             sceneView.session.setWorldOrigin(relativeTransform: simd_float4x4.makeTranslation(0, 0, 0))
             sceneView.session.run(configuration, options: [.removeExistingAnchors])
@@ -355,7 +381,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                 // return to prevent the resume tracking confirm button from being shown
                 return
             }
-            
         }
         showResumeTrackingConfirmButton()
     }
@@ -369,19 +394,24 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     }
     
     func handleStateTransitionToPauseWaitingPeriod() {
+        hideAllViewsHelper()
+        countdownTimer.isHidden = false
+        countdownTimer.start(beginingValue: pauseWaitingPeriod, interval: 1)
+        delayTransition()
         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(pauseWaitingPeriod)) {
+            self.countdownTimer.isHidden = true
             self.pauseTracking()
         }
     }
     
     func handleStateTransitionToCompletingPauseProcedure() {
-        // TODO: save paused transform here, but don't save the route
         if creatingRouteLandmark {
             guard let currentTransform = sceneView.session.currentFrame?.camera.transform else {
                 print("can't properly save landmark: TODO communicate this to the user somehow")
                 return
             }
             pausedTransform = currentTransform
+            beginRouteLandmarkTransform = currentTransform
             Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(playSound)), userInfo: nil, repeats: false)
             pauseTrackingView.isHidden = true
             state = .mainScreen(announceArrival: false)
@@ -391,7 +421,15 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             sceneView.session.getCurrentWorldMap { worldMap, error in
                 if worldMap != nil {
                     do {
-                        try self.archive(landmarkTransform: currentTransform, worldMap: worldMap!)
+                        self.endRouteLandmarkTransform = currentTransform
+                        if self.routeName == nil {
+                            // get a route name
+                            self.showRouteNamingDialog(map: worldMap!)
+                        } else {
+                            // TODO: factor this out
+                            let id = String(Int64(NSDate().timeIntervalSince1970 * 1000)) as NSString
+                            try self.archive(routeId: id, beginRouteLandmarkTransform: self.beginRouteLandmarkTransform, endRouteLandmarkTransform: self.endRouteLandmarkTransform, worldMap: worldMap!)
+                        }
                     } catch {
                         fatalError("Can't save map: \(error.localizedDescription)")
                     }
@@ -413,46 +451,53 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     }
     
     @available(iOS 12.0, *)
-    func archive(landmarkTransform: simd_float4x4, worldMap: ARWorldMap, isReversedRoute: Bool = false) throws {
-        let savedRoute = SavedRoute(id: "hardcodedroute", name: "hardcodedroute", crumbs: crumbs, dateCreated: Date() as NSDate, pausedTransform: landmarkTransform)
-        if isReversedRoute {
-            savedRoute.crumbs = savedRoute.crumbs.reversed()
+    @objc func routesButtonPressed() {
+        if dataPersistence == nil {
+            return
         }
-        NSKeyedArchiver.archiveRootObject(savedRoute, toFile: self.worldMapURL(id: "hardcodedroute", isInfo: true, isReversedRoute: isReversedRoute).path)
-        let data = try NSKeyedArchiver.archivedData(withRootObject: worldMap, requiringSecureCoding: true)
-        try data.write(to: self.worldMapURL(id: "hardcodedroute", isInfo: false, isReversedRoute: isReversedRoute), options: [.atomic])
+        let storyBoard: UIStoryboard = UIStoryboard(name: "SettingsAndHelp", bundle: nil)
+        let popoverContent = storyBoard.instantiateViewController(withIdentifier: "Routes") as! RoutesViewController
+        popoverContent.rootViewController = self
+        print(dataPersistence!.routes.count)
+        popoverContent.updateRoutes(routes: dataPersistence!.routes)
+        let nav = UINavigationController(rootViewController: popoverContent)
+        nav.modalPresentationStyle = .popover
+        let popover = nav.popoverPresentationController
+        popover?.delegate = self
+        popover?.sourceView = self.view
+        popover?.sourceRect = CGRect(x: 0, y: settingsAndHelpFrameHeight/2, width: 0,height: 0)
+        
+        self.present(nav, animated: true, completion: nil)
     }
     
-    func retrieveWorldMapData(id: String, loadReversedRoute: Bool) -> Data? {
-        do {
-            return try Data(contentsOf: worldMapURL(id: id, isInfo: false, isReversedRoute: loadReversedRoute))
-        } catch {
-            print("Error retrieving world map data.")
-            return nil
-        }
+    func hideAllViewsHelper() {
+        directionText.isHidden = true
+        recordPathView.isHidden = true
+        routeRatingView.isHidden = true
+        stopRecordingView.isHidden = true
+        startNavigationView.isHidden = true
+        stopNavigationView.isHidden = true
+        pauseTrackingView.isHidden = true
+        resumeTrackingConfirmView.isHidden = true
+        resumeTrackingView.isHidden = true
+        countdownTimer.isHidden = true
     }
     
     @available(iOS 12.0, *)
-    func unarchive(worldMapData data: Data) -> ARWorldMap? {
-        guard let unarchivedObject = try? NSKeyedUnarchiver.unarchivedObject(ofClass: ARWorldMap.self, from: data),
-            let worldMap = unarchivedObject else { return nil }
-        return worldMap
+    func onRouteTableViewCellClicked(route: SavedRoute, navigateStartToEnd: Bool) {
+        let worldMap = dataPersistence?.unarchive(id: route.id as String)
+        hideAllViewsHelper()
+        
+        state = .startingResumeProcedure(route: route, map: worldMap, navigateStartToEnd: navigateStartToEnd)
     }
     
-    func unarchiveSavedRoute(loadReversedRoute: Bool) -> SavedRoute? {
-        return NSKeyedUnarchiver.unarchiveObject(withFile: self.worldMapURL(id: "hardcodedroute", isInfo: true, isReversedRoute: loadReversedRoute).path) as? SavedRoute
+    @available(iOS 12.0, *)
+    func archive(routeId: NSString, beginRouteLandmarkTransform: simd_float4x4?, endRouteLandmarkTransform: simd_float4x4?, worldMap: ARWorldMap) throws {
+        let savedRoute = SavedRoute(id: routeId, name: routeName!, crumbs: crumbs, dateCreated: Date() as NSDate, beginRouteLandmarkTransform: beginRouteLandmarkTransform, endRouteLandmarkTransform: endRouteLandmarkTransform)
+        try dataPersistence?.archive(route: savedRoute, worldMap: worldMap)
+        justTraveledRoute = savedRoute
     }
 
-    func worldMapURL(id: String, isInfo: Bool, isReversedRoute: Bool) -> URL {
-        let fileName : String
-        if isReversedRoute {
-            fileName = isInfo ? "Info" + id + "_reversed" : id
-        } else {
-            fileName = isInfo ? "Info" + id : id
-        }
-        return FileManager().urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent(fileName)
-    }
-    
     /// While recording, every 0.01s, check to see if we should reset the heading offset
     var angleOffsetTimer: Timer?
     
@@ -471,11 +516,14 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     /// Image, label, and target for start recording button.
     let recordPathButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "StartRecording")!), label: "Record path", targetSelector: Selector.recordPathButtonTapped, alignment: .center)
 
-    let thumbsDownButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "thumbs_down")!), label: "Bad", targetSelector: Selector.thumbsDownButtonTapped, alignment: .left)
+    let thumbsDownButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "thumbs_down")!), label: "Bad", targetSelector: Selector.thumbsDownButtonTapped, alignment: .leftcenter)
     
-    let thumbsUpButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "thumbs_up")!), label: "Good", targetSelector: Selector.thumbsUpButtonTapped, alignment: .right)
+    let thumbsUpButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "thumbs_up")!), label: "Good", targetSelector: Selector.thumbsUpButtonTapped, alignment: .rightcenter)
     
-    let resumeButton = ActionButtonComponents(appearance: .textButton(label: "Resume"), label: "Good", targetSelector: Selector.resumeButtonTapped, alignment: .center)
+    let resumeButton = ActionButtonComponents(appearance: .textButton(label: "Resume"), label: "Resume", targetSelector: Selector.resumeButtonTapped, alignment: .center)
+    
+    let confirmAlignmentButton = ActionButtonComponents(appearance: .textButton(label: "Align"), label: "Start 5 second alignment countdown", targetSelector: Selector.confirmAlignmentButtonTapped, alignment: .center)
+    
     
     /// Image, label, and target for start recording button.
     /// TODO: need an image
@@ -493,9 +541,27 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     /// Image, label, and target for stop navigation button.
     let stopNavigationButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "StopNavigation")!), label: "Stop navigation", targetSelector: Selector.stopNavigationButtonTapped, alignment: .center)
     
+    // let routesButton (we can't declare this here since it relies on a selector that is iOS 12.0 specific)
+    
     /// A handle to the Firebase storage
     let storageBaseRef = Storage.storage().reference()
     var databaseHandle = Database.database()
+    
+    /// Keypoint object
+    var keypointObject : MDLObject!
+    
+    /// Route persistence dummy variable to allow for compilation under iOS prior to 12.0
+    fileprivate var dataPersistanceAsAny : Any?
+    
+    @available(iOS 12.0, *)
+    var dataPersistence : DataPersistence? {
+        get {
+            return dataPersistanceAsAny as! DataPersistence?
+        }
+        set (newValue) {
+            dataPersistanceAsAny = newValue
+        }
+    }
     
     // MARK: - Parameters that can be controlled remotely via Firebase
     
@@ -571,7 +637,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     }
     
     /*
-     * UIViewss for all UI button containers
+     * UIViews for all UI button containers
      */
     var getDirectionButton: UIButton!
     var settingsButton: UIButton!
@@ -581,6 +647,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     var resumeTrackingConfirmView: UIView!
     var directionText: UILabel!
     var routeRatingView: UIView!
+    var countdownTimer: SRCountdownTimer!
     
     enum ButtonViewType {
         // State of button views
@@ -592,20 +659,40 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         case stopNavigation
     }
     
+    @objc func timerDidUpdateCounterValue(newValue: Int) {
+        UIAccessibilityPostNotification(UIAccessibilityAnnouncementNotification, String(newValue))
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        print("TODO: doing this for testing purposes")
+        let prefs = UserDefaults.standard
+        prefs.removeObject(forKey: "showedRecordPathWithoutLandmarkWarning")
+        prefs.removeObject(forKey: "showedNavigatePathWithoutLandmarkWarning")
+
         // Scene view setup
         sceneView.frame = view.frame
         view.addSubview(sceneView)
 
+        loadAssets()
         createSettingsBundle()
-        listenVolumeButton()
         createARSession()
         drawUI()
         addGestures()
         setupFirebaseObservers()
         
+        if #available(iOS 12.0, *) {
+            dataPersistence = DataPersistence()
+        }
+        
         Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(printCameraTransform)), userInfo: nil, repeats: true)
+    }
+    
+    func loadAssets() {
+        let url = NSURL(fileURLWithPath: Bundle.main.path(forResource: "Crumb", ofType: "obj")!)
+        let asset = MDLAsset(url: url as URL)
+        keypointObject = asset.object(at: 0)
     }
     
     func setupFirebaseObservers() {
@@ -642,6 +729,93 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             userDefaults.set(true, forKey: "firstTimeLogin")
             showLogAlert()
         }
+    }
+    
+    func showRecordPathWithoutLandmarkWarning() {
+        let userDefaults: UserDefaults = UserDefaults.standard
+        let showedRecordPathWithoutLandmarkWarning: Bool? = userDefaults.object(forKey: "showedRecordPathWithoutLandmarkWarning") as? Bool
+        if showedRecordPathWithoutLandmarkWarning == nil && pausedTransform == nil {
+            userDefaults.set(true, forKey: "showedRecordPathWithoutLandmarkWarning")
+            // Show logging disclaimer when user opens app for the first time
+            let alert = UIAlertController(title: "Creating reusable routes",
+                                          message: "If you would like to be able to navigate along the forward direction of this route again, you must create a landmark before starting your recording.",
+                                          preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Continue with single-use recording", style: .default, handler: { action -> Void in
+                // proceed to recording
+                self.state = .recordingRoute
+            }
+            ))
+            alert.addAction(UIAlertAction(title: "Cancel recording", style: .default, handler: { action -> Void in
+                // nothing to do, just stay on the main screen
+            }
+            ))
+            self.present(alert, animated: true, completion: nil)
+        } else {
+            state = .recordingRoute
+        }
+        
+    }
+    
+    /// Display a warning that tells the user they must create a landmark
+    /// to be able to use this route again in the reverse direction
+    func showNavigatePathWithoutLandmarkWarning() {
+        let userDefaults: UserDefaults = UserDefaults.standard
+        let showedNavigatePathWithoutLandmarkWarning: Bool? = userDefaults.object(forKey: "showedNavigatePathWithoutLandmarkWarning") as? Bool
+        if showedNavigatePathWithoutLandmarkWarning == nil && pausedTransform == nil {
+            userDefaults.set(true, forKey: "showedNavigatePathWithoutLandmarkWarning")
+            // Show logging disclaimer when user opens app for the first time
+            let alert = UIAlertController(title: "Creating reusable routes",
+                                          message: "If you would like to be able to navigate along the reverse direction of this route again, you must activate the pause button before navigating the route.",
+                                          preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Continue with single-use navigation", style: .default, handler: { action -> Void in
+                // proceed to navigation
+                self.state = .navigatingRoute
+            }
+            ))
+            alert.addAction(UIAlertAction(title: "Cancel navigation", style: .default, handler: { action -> Void in
+                // nothing to do, just stay on the current screen
+            }
+            ))
+            self.present(alert, animated: true, completion: nil)
+        } else {
+            state = .navigatingRoute
+        }
+    }
+    
+    /*
+     * display SAVE ROUTE input dialog
+     */
+    @available(iOS 12.0, *)
+    @objc func showRouteNamingDialog(map: ARWorldMap) {
+        // Set title and message for the alert dialog
+        justUsedMap = map
+
+        let alertController = UIAlertController(title: "Save route", message: "Enter the name of the route", preferredStyle: .alert)
+        // The confirm action taking the inputs
+        let saveAction = UIAlertAction(title: "Save", style: .default) { (_) in
+            let id = String(Int64(NSDate().timeIntervalSince1970 * 1000)) as NSString
+            // Get the input values from user, if it's nil then use timestamp
+            self.routeName = alertController.textFields?[0].text as NSString? ?? id
+            try! self.archive(routeId: id, beginRouteLandmarkTransform: self.beginRouteLandmarkTransform, endRouteLandmarkTransform: self.endRouteLandmarkTransform, worldMap: map)
+        }
+            
+        // The cancel action saves the just traversed route so you can navigate back along it later
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { (_) in
+            self.justTraveledRoute = SavedRoute(id: "dummyid", name: "Last route", crumbs: self.crumbs, dateCreated: Date() as NSDate, beginRouteLandmarkTransform: self.beginRouteLandmarkTransform, endRouteLandmarkTransform: self.endRouteLandmarkTransform)
+        }
+        
+        // Add textfield to our dialog box
+        alertController.addTextField { (textField) in
+            textField.becomeFirstResponder()
+            textField.placeholder = "Enter route title"
+        }
+            
+        // Add the action to dialogbox
+        alertController.addAction(saveAction)
+        alertController.addAction(cancelAction)
+            
+        // Finally, present the dialog box
+        present(alertController, animated: true, completion: nil)
     }
     
     func showLogAlert() {
@@ -712,58 +886,22 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         sceneView.delegate = self
     }
     
-    /*
-     * Setup volume listener
-     */
-    let audioSession = AVAudioSession.sharedInstance()
-    func listenVolumeButton() {
-        // TODO: this causes it to be impossible to adjust the volume in the app, which is probably not desirable (need to pass this through somehow)
-        let volumeView: MPVolumeView = MPVolumeView(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
-        view.addSubview(volumeView)
-        // Note: the commented out code below doesn't fire an event if the volume is at the max or min volume level (the notification center one does though)
-        //audioSession.addObserver(self, forKeyPath: "outputVolume", options: [.initial, .new], context: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(volumeChanged), name: NSNotification.Name(rawValue: "AVSystemController_SystemVolumeDidChangeNotification"), object: nil)
-
-    }
-    
-    @objc func volumeChanged(notification: NSNotification) {
+    @objc func confirmAlignment() {
         if case .startingPauseProcedure = state {
             state = .pauseWaitingPeriod
         } else if case .startingResumeProcedure = state {
             resumeTracking()
         } else if case .readyForFinalResumeAlignment = state {
             resumeTracking()
-        } else if case .mainScreen = state {
-            // TODO: this is just a placeholder UI
-            recordPathView.isHidden = true
-            // the options button is hidden if the route rating shows up
-            directionText.isHidden = true
-            // hard code this for now (no UI yet)
-            state = .startingResumeProcedure(loadReversedRoute: true)
         }
     }
     
     var player: AVAudioPlayer?
     @objc func playSound() {
-        // XXX should use a system sound instead
-        // guard let url = Bundle.main.url(forResource: "Confirm", withExtension: "mp3") else { return }
-        
         feedbackGenerator = UIImpactFeedbackGenerator(style: .heavy)
         feedbackGenerator?.impactOccurred()
         feedbackGenerator = nil
-       /*
-        do {
-            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback)
-            try AVAudioSession.sharedInstance().setActive(true)
-            
-            player = try AVAudioPlayer(contentsOf: url)
-            guard let player = player else { return }
-            
-            player.play()
-            try AVAudioSession.sharedInstance().setActive(false)
-        } catch let error {
-            print(error.localizedDescription)
-        }*/
+        AudioServicesPlaySystemSound(SystemSoundID(1103))
     }
     
     /*
@@ -808,7 +946,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         settingsButton.isAccessibilityElement = true
         settingsButton.setTitle("Settings", for: .normal)
         settingsButton.accessibilityLabel = "Settings"
-        settingsButton.titleLabel?.font = UIFont.systemFont(ofSize: 28.0)
+        settingsButton.titleLabel?.font = UIFont.systemFont(ofSize: 24.0)
         settingsButton.backgroundColor = UIColor.black.withAlphaComponent(0.4)
         settingsButton.addTarget(self, action: #selector(settingsButtonPressed), for: .touchUpInside)
 
@@ -816,11 +954,11 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         helpButton = UIButton(frame: CGRect(x: buttonFrameWidth/2, y: yOriginOfSettingsAndHelpButton, width: buttonFrameWidth/2, height: settingsAndHelpFrameHeight))
         helpButton.isAccessibilityElement = true
         helpButton.setTitle("Help", for: .normal)
-        helpButton.titleLabel?.font = UIFont.systemFont(ofSize: 28.0)
+        helpButton.titleLabel?.font = UIFont.systemFont(ofSize: 24.0)
         helpButton.accessibilityLabel = "Help"
         helpButton.backgroundColor = UIColor.black.withAlphaComponent(0.4)
         helpButton.addTarget(self, action: #selector(helpButtonPressed), for: .touchUpInside)
-        
+
         // button that gives direction to the nearist keypoint
         getDirectionButton = UIButton(frame: CGRect(x: 0, y: 0, width: buttonFrameWidth, height: yOriginOfButtonFrame))
         getDirectionButton.isAccessibilityElement = true
@@ -835,10 +973,26 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         directionText.isAccessibilityElement = true
         
         
+        // button that gives direction to the nearist keypoint
+        countdownTimer = SRCountdownTimer(frame: CGRect(x: buttonFrameWidth*1/10, y: yOriginOfButtonFrame/10, width: buttonFrameWidth*8/10, height: buttonFrameWidth*8/10))
+        countdownTimer.delegate = self
+        countdownTimer.labelFont = UIFont(name: "HelveticaNeue-Light", size: 100)
+        countdownTimer.labelTextColor = UIColor.white
+        countdownTimer.timerFinishingText = "End"
+        countdownTimer.lineWidth = 4
+        countdownTimer.backgroundColor = UIColor.black.withAlphaComponent(0.4)
+        countdownTimer.isHidden = true
+        // handle voice over by posting appropriate notifications
+        countdownTimer.isAccessibilityElement = false
+        
         // Record Path button container
         recordPathView = UIView(frame: CGRect(x: 0, y: yOriginOfButtonFrame, width: buttonFrameWidth, height: buttonFrameHeight))
-        recordPathView.setupButtonContainer(withButtons: [recordPathButton, addLandmarkButton])
-        
+        if #available(iOS 12.0, *) {
+            let routesButton = ActionButtonComponents(appearance: .textButton(label: "Routes"), label: "Saved Routes List", targetSelector: Selector.routesButtonTapped, alignment: .left)
+            recordPathView.setupButtonContainer(withButtons: [routesButton, recordPathButton, addLandmarkButton])
+        } else {
+            recordPathView.setupButtonContainer(withButtons: [recordPathButton, addLandmarkButton])
+        }
         // Stop Recording button container
         stopRecordingView = UIView(frame: CGRect(x: 0, y: yOriginOfButtonFrame, width: buttonFrameWidth, height: buttonFrameHeight))
         stopRecordingView.setupButtonContainer(withButtons: [stopRecordingButton])
@@ -848,13 +1002,13 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         startNavigationView.setupButtonContainer(withButtons: [startNavigationButton, pauseButton])
         
         pauseTrackingView = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height))
-        pauseTrackingView.setupButtonContainer(withButtons: [], withMainText: "Place the device against a flat vertical surface and press the volume button to pause. Do not move your phone until you feel a haptic confirmation. You will need to return to this surface to resume tracking. You can use other apps while in pause, but please keep the app running in the background.")
+        pauseTrackingView.setupButtonContainer(withButtons: [confirmAlignmentButton], withMainText: "Place the device against a flat vertical surface and press the volume button to pause. Do not move your phone until you feel a haptic confirmation. You will need to return to this surface to resume tracking. You can use other apps while in pause, but please keep the app running in the background.")
         
         resumeTrackingView = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height))
         resumeTrackingView.setupButtonContainer(withButtons: [resumeButton], withMainText: "Return to the last paused location and press Resume for further instructions.")
         
         resumeTrackingConfirmView = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height))
-        resumeTrackingConfirmView.setupButtonContainer(withButtons: [], withMainText: "Place the device in the same surface facing the same orientation and press the volume button to resume. Do not move the device until you feel the haptic confirmation.")
+        resumeTrackingConfirmView.setupButtonContainer(withButtons: [confirmAlignmentButton], withMainText: "Place the device in the same surface facing the same orientation and press the volume button to resume. Do not move the device until you feel the haptic confirmation.")
 
         // Stop Navigation button container
         stopNavigationView = UIView(frame: CGRect(x: 0, y: yOriginOfButtonFrame, width: buttonFrameWidth, height: buttonFrameHeight))
@@ -875,6 +1029,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         self.view.addSubview(settingsButton)
         self.view.addSubview(helpButton)
         self.view.addSubview(routeRatingView)
+        self.view.addSubview(countdownTimer)
         
         state = .mainScreen(announceArrival: false)
     }
@@ -925,17 +1080,13 @@ class ViewController: UIViewController, ARSCNViewDelegate {
      * display START NAVIGATION button/hide all other views
      */
     @objc func showStartNavigationButton() {
+        resumeTrackingView.isHidden = true
         resumeTrackingConfirmView.isHidden = true
         stopRecordingView.isHidden = true
         startNavigationView.isHidden = false
         directionText.isHidden = false
         directionText.isAccessibilityElement = true
         updateDirectionText("Press to start navigation or pause tracking", distance: 0, size: 14, displayDistance: false)
-        do {
-            try audioSession.setActive(false)
-        } catch {
-            print("some error")
-        }
         delayTransition()
     }
     
@@ -947,11 +1098,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         startNavigationView.isHidden = true
         directionText.isHidden = true
         pauseTrackingView.isHidden = false
-        do {
-            try audioSession.setActive(true)
-        } catch {
-            print("some error")
-        }
         delayTransition()
     }
     
@@ -961,22 +1107,12 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     @objc func showResumeTrackingButton() {
         pauseTrackingView.isHidden = true
         resumeTrackingView.isHidden = false
-        do {
-            try audioSession.setActive(false)
-        } catch {
-            print("some error")
-        }
         delayTransition()
     }
     
     func showResumeTrackingConfirmButton() {
         resumeTrackingView.isHidden = true
         resumeTrackingConfirmView.isHidden = false
-        do {
-            try audioSession.setActive(true)
-        } catch {
-            print("some error")
-        }
         delayTransition()
     }
     
@@ -1107,6 +1243,22 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     /// This keeps track of the paused transform while the current session is being realigned to the saved route
     var pausedTransform : simd_float4x4?
     
+    // TODO: probably need to do better bookkeeping on these
+    var beginRouteLandmarkTransform: simd_float4x4?
+    var endRouteLandmarkTransform: simd_float4x4?
+    var routeName: NSString?
+    var justTraveledRoute: SavedRoute?
+    var justUsedMapAsAny: Any?
+    @available(iOS 12.0, *)
+    var justUsedMap: ARWorldMap? {
+        get {
+            return justUsedMapAsAny as! ARWorldMap?
+        }
+        set (newValue) {
+            justUsedMapAsAny = newValue
+        }
+    }
+    
     // DirectionText based on hapic/voice settings
     var Directions: Dictionary<Int, String> {
         if (hapticFeedback) {
@@ -1117,21 +1269,22 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     }
     
     @objc func recordPath() {
-        state = .recordingRoute
+        showRecordPathWithoutLandmarkWarning()
     }
     
     @objc func stopRecording(_ sender: UIButton) {
         if creatingRouteLandmark {
-            if #available(iOS 12.0, *), let landmarkTransform = pausedTransform {
+            if #available(iOS 12.0, *), let beginRouteLandmarkTransform = beginRouteLandmarkTransform {
                 sceneView.session.getCurrentWorldMap { worldMap, error in
                     if worldMap != nil {
-                        do {
-                            try self.archive(landmarkTransform: landmarkTransform, worldMap: worldMap!, isReversedRoute: true)
-                            print("SAVED reversed route")
-                        } catch {
-                            fatalError("Can't save map: \(error.localizedDescription)")
+                        if self.routeName == nil {
+                            // get a route name
+                            self.showRouteNamingDialog(map: worldMap!)
+                        } else {
+                            let id = String(Int64(NSDate().timeIntervalSince1970 * 1000)) as NSString
+                            try! self.archive(routeId: id, beginRouteLandmarkTransform: beginRouteLandmarkTransform, endRouteLandmarkTransform: self.endRouteLandmarkTransform, worldMap: worldMap!)
                         }
-                        // clear these flags
+                        // clear these flags TODO: need to do better bookkeeping
                         self.pausedTransform = nil
                         self.creatingRouteLandmark = false
                     } else {
@@ -1147,7 +1300,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     }
     
     @objc func startNavigation(_ sender: UIButton) {
-        state = .navigatingRoute
+        // this will handle the appropriate state transition if we pass the warning
+        showNavigatePathWithoutLandmarkWarning()
     }
     
     @objc func stopNavigation(_ sender: UIButton) {
@@ -1191,7 +1345,12 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     @objc func resumeTracking() {
         // resume pose tracking with existing ARSessionConfiguration
         if #available(iOS 12.0, *) {
+            hideAllViewsHelper()
+            countdownTimer.isHidden = false
+            countdownTimer.start(beginingValue: pauseWaitingPeriod, interval: 1)
+            delayTransition()
             DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(resumeWaitingPeriod)) {
+                self.countdownTimer.isHidden = true
                 // The first check is necessary in case the phone relocalizes before this code executes
                 if case .readyForFinalResumeAlignment = self.state, let alignTransform = self.pausedTransform, let camera = self.sceneView.session.currentFrame?.camera {
                     // yaw can be determined by projecting the camera's z-axis into the ground plane and using arc tangent (note: the camera coordinate conventions of ARKit https://developer.apple.com/documentation/arkit/arsessionconfiguration/worldalignment/camera
@@ -1217,7 +1376,9 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     }
     
     @objc func confirmResumeTracking() {
-        state = .startingResumeProcedure(loadReversedRoute: false)
+        if #available(iOS 12.0, *), let route = justTraveledRoute {
+            state = .startingResumeProcedure(route: route, map: justUsedMap, navigateStartToEnd: false)
+        }
     }
     
     // MARK: - Logging
@@ -1330,9 +1491,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         }
         var directionToNextKeypoint = getDirectionToNextKeypoint(currentLocation: curLocation)
         
-        if (shouldAnnounceTurnWarning(directionToNextKeypoint)) {
-            announceTurnWarning(curLocation)
-        } else if (directionToNextKeypoint.targetState == PositionState.atTarget) {
+        if (directionToNextKeypoint.targetState == PositionState.atTarget) {
             if (keypoints.count > 1) {
                 // arrived at keypoint
                 // send haptic/sonic feedback
@@ -1450,7 +1609,11 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         if abs(transform.columns.2.y) < abs(transform.columns.0.y) {
             return atan2f(transform.columns.2.x, transform.columns.2.z)
         } else {
-            return atan2f(transform.columns.0.x, transform.columns.0.z)
+            // this is a slightly different notion of yaw when the phone is rolled.  This works better for alignment to saved transforms.  I'm not sure whether it is better when navigating a route.
+            // This calculates the angle necessary to align the phone's x-axis (long axis) so that it has a 0 component in the y-direction
+            let pitchAngle = atan2f(-transform.columns.0.y, transform.columns.2.y)
+            let depitchedTransform = transform.rotate(radians: -pitchAngle, 0, 1, 0)
+            return atan2f(depitchedTransform.columns.0.x, depitchedTransform.columns.0.z)
         }
     }
     
@@ -1489,7 +1652,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             keypoints.count > 1 &&
             sqrtf(powf(Float(keypoints[0].location.x - prevKeypointPosition.x),2) + powf(Float(keypoints[0].location.z - prevKeypointPosition.z),2)) >= 6
     }
-    
+    /* disabled for now
     func announceTurnWarning(_ currentLocation: CurrentCoordinateInfo) {
         // announce upcoming turn
         var dir = nav.getTurnWarningDirections(currentLocation, nextKeypoint: keypoints[0], secondKeypoint: keypoints[1])
@@ -1500,7 +1663,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         dir.distance = roundToTenths(dir.distance)
         turnWarning = true
         setTurnWarningText(currentLocation: currentLocation.location, direction: dir)
-    }
+    }*/
     
     func getDirectionToNextKeypoint(currentLocation: CurrentCoordinateInfo) -> DirectionInfo {
         // returns direction to next keypoint from current location
@@ -1609,13 +1772,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     
     func renderKeypoint(_ location: LocationInfo) {
         // render SCNNode of given keypoint
-        let bundle = Bundle.main
-        let path = bundle.path(forResource: "Crumb", ofType: "obj")
-        let url = NSURL(fileURLWithPath: path!)
-        let asset = MDLAsset(url: url as URL)
-        let object = asset.object(at: 0)
-        keypointNode = SCNNode(mdlObject: object)
-        
+        keypointNode = SCNNode(mdlObject: keypointObject)
+
         // configure node attributes
         keypointNode.scale = SCNVector3(0.0004, 0.0004, 0.0004)
         keypointNode.geometry?.firstMaterial?.diffuse.contents = UIColor.red
@@ -1829,37 +1987,12 @@ extension ViewController: UIPopoverPresentationControllerDelegate {
 
 extension float4x4 {
     
-    static func makeScale(_ x: Float, _ y: Float, _ z: Float) -> float4x4 {
-        return unsafeBitCast(GLKMatrix4MakeScale(x, y, z), to: float4x4.self)
-    }
-    
     static func makeRotate(radians: Float, _ x: Float, _ y: Float, _ z: Float) -> float4x4 {
         return unsafeBitCast(GLKMatrix4MakeRotation(radians, x, y, z), to: float4x4.self)
     }
     
     static func makeTranslation(_ x: Float, _ y: Float, _ z: Float) -> float4x4 {
         return unsafeBitCast(GLKMatrix4MakeTranslation(x, y, z), to: float4x4.self)
-    }
-    
-    static func makePerspective(fovyRadians: Float, _ aspect: Float, _ nearZ: Float, _ farZ: Float) -> float4x4 {
-        return unsafeBitCast(GLKMatrix4MakePerspective(fovyRadians, aspect, nearZ, farZ), to: float4x4.self)
-    }
-    
-    static func makeFrustum(left: Float, _ right: Float, _ bottom: Float, _ top: Float, _ nearZ: Float, _ farZ: Float) -> float4x4 {
-        return unsafeBitCast(GLKMatrix4MakeFrustum(left, right, bottom, top, nearZ, farZ), to: float4x4.self)
-    }
-    
-    static func makeOrtho(left: Float, _ right: Float, _ bottom: Float, _ top: Float, _ nearZ: Float, _ farZ: Float) -> float4x4 {
-        return unsafeBitCast(GLKMatrix4MakeOrtho(left, right, bottom, top, nearZ, farZ), to: float4x4.self)
-    }
-    
-    static func makeLookAt(eyeX: Float, _ eyeY: Float, _ eyeZ: Float, _ centerX: Float, _ centerY: Float, _ centerZ: Float, _ upX: Float, _ upY: Float, _ upZ: Float) -> float4x4 {
-        return unsafeBitCast(GLKMatrix4MakeLookAt(eyeX, eyeY, eyeZ, centerX, centerY, centerZ, upX, upY, upZ), to: float4x4.self)
-    }
-    
-    
-    func scale(x: Float, y: Float, z: Float) -> float4x4 {
-        return self * float4x4.makeScale(x, y, z)
     }
     
     func rotate(radians: Float, _ x: Float, _ y: Float, _ z: Float) -> float4x4 {

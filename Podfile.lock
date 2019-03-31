@@ -36,6 +36,7 @@ PODS:
     - nanopb/encode (= 0.3.8)
   - nanopb/decode (0.3.8)
   - nanopb/encode (0.3.8)
+  - SRCountdownTimer (1.1)
   - VectorMath (0.3.3):
     - VectorMath/Core (= 0.3.3)
     - VectorMath/Quartz (= 0.3.3)
@@ -51,6 +52,7 @@ DEPENDENCIES:
   - Firebase/Database
   - Firebase/Storage
   - InAppSettingsKit
+  - SRCountdownTimer
   - VectorMath (~> 0.3)
 
 SPEC REPOS:
@@ -66,6 +68,7 @@ SPEC REPOS:
     - InAppSettingsKit
     - leveldb-library
     - nanopb
+    - SRCountdownTimer
     - VectorMath
 
 SPEC CHECKSUMS:
@@ -80,8 +83,9 @@ SPEC CHECKSUMS:
   InAppSettingsKit: fc3dea21846535b76b8289b119dbfdbe2505b2b2
   leveldb-library: 08cba283675b7ed2d99629a4bc5fd052cd2bb6a5
   nanopb: 5601e6bca2dbf1ed831b519092ec110f66982ca3
+  SRCountdownTimer: 9c92e444b5403c92f01dd6610299b8c634bc8562
   VectorMath: 9442bb470704903dd0343547454904ba66355302
 
-PODFILE CHECKSUM: cc011827007ca40a1bcdc0f52a16e54266ec198d
+PODFILE CHECKSUM: 8005fc28b6d8028c0b06ff42dc12fe0d6d46e408
 
 COCOAPODS: 1.5.3

@@ -10,6 +10,7 @@ def all_pods
   pod 'Firebase/Core'
   pod 'Firebase/Storage'
   pod 'Firebase/Database'
+  pod 'SRCountdownTimer'
 end
 
 target 'Clew' do

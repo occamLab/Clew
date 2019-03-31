@@ -139,14 +139,16 @@ class SavedRoute: NSObject, NSCoding {
     public var name: NSString
     public var dateCreated: NSDate
     public var crumbs: [LocationInfo]
-    public var pausedTransform: simd_float4x4
-    
-    public init(id: NSString, name: NSString, crumbs: [LocationInfo], dateCreated: NSDate = NSDate(), pausedTransform: simd_float4x4) {
+    public var beginRouteLandmarkTransform: simd_float4x4?
+    public var endRouteLandmarkTransform: simd_float4x4?
+
+    public init(id: NSString, name: NSString, crumbs: [LocationInfo], dateCreated: NSDate = NSDate(), beginRouteLandmarkTransform: simd_float4x4?, endRouteLandmarkTransform: simd_float4x4?) {
         self.id = id
         self.name = name
         self.crumbs = crumbs
         self.dateCreated = dateCreated
-        self.pausedTransform = pausedTransform
+        self.beginRouteLandmarkTransform = beginRouteLandmarkTransform
+        self.endRouteLandmarkTransform = endRouteLandmarkTransform
     }
     
     func encode(with aCoder: NSCoder) {
@@ -154,7 +156,12 @@ class SavedRoute: NSObject, NSCoding {
         aCoder.encode(name, forKey: "name")
         aCoder.encode(crumbs, forKey: "crumbs")
         aCoder.encode(dateCreated, forKey: "dateCreated")
-        aCoder.encode(ARAnchor(transform: pausedTransform), forKey: "pausedTransformAsARAnchor")
+        if beginRouteLandmarkTransform != nil {
+            aCoder.encode(ARAnchor(transform: beginRouteLandmarkTransform!), forKey: "beginRouteLandmarkTransformAsARAnchor")
+        }
+        if endRouteLandmarkTransform != nil {
+            aCoder.encode(ARAnchor(transform: endRouteLandmarkTransform!), forKey: "endRouteLandmarkTransformAsARAnchor")
+        }
     }
     
     required convenience init?(coder aDecoder: NSCoder) {
@@ -170,10 +177,16 @@ class SavedRoute: NSObject, NSCoding {
         guard let dateCreated = aDecoder.decodeObject(forKey: "dateCreated") as? NSDate else {
             return nil
         }
-        guard let pausedTransformAsARAnchor = aDecoder.decodeObject(forKey: "pausedTransformAsARAnchor") as? ARAnchor else {
-            return nil
+        var beginRouteLandmarkTransform : simd_float4x4? = nil
+        var endRouteLandmarkTransform : simd_float4x4? = nil
+
+        if let beginRouteLandmarkTransformAsARAnchor = aDecoder.decodeObject(forKey: "beginRouteLandmarkTransformAsARAnchor") as? ARAnchor {
+            beginRouteLandmarkTransform = beginRouteLandmarkTransformAsARAnchor.transform
         }
-        self.init(id: id, name: name, crumbs: crumbs, dateCreated: dateCreated, pausedTransform: pausedTransformAsARAnchor.transform)
+        if let endRouteLandmarkTransformAsARAnchor = aDecoder.decodeObject(forKey: "endRouteLandmarkTransformAsARAnchor") as? ARAnchor {
+            endRouteLandmarkTransform = endRouteLandmarkTransformAsARAnchor.transform
+        }
+        self.init(id: id, name: name, crumbs: crumbs, dateCreated: dateCreated, beginRouteLandmarkTransform: beginRouteLandmarkTransform, endRouteLandmarkTransform: endRouteLandmarkTransform)
     }
 }
 
