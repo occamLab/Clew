@@ -14,9 +14,15 @@ class HelpViewController : UIViewController {
     @IBOutlet var webContent: WKWebView!
     
     override func viewDidLoad() {
+        title = "Clew Help"
         let url = Bundle.main.url(forResource: "index", withExtension: "html", subdirectory: "help")!
         webContent.loadFileURL(url, allowingReadAccessTo: url)
         let request = URLRequest(url: url)
         webContent.load(request)
+    }
+    
+    @objc
+    func doneWithHelp() {
+        dismiss(animated: true, completion: nil)
     }
 }

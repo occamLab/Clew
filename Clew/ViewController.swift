@@ -52,7 +52,7 @@ extension UIView {
         self.isHidden = true
 
         if let mainText = mainText {
-            let label = UILabel(frame: CGRect(x: 15, y: UIScreen.main.bounds.size.height/4, width: UIScreen.main.bounds.size.width-30, height: UIScreen.main.bounds.size.height/2))
+            let label = UILabel(frame: CGRect(x: 15, y: UIScreen.main.bounds.size.height/5, width: UIScreen.main.bounds.size.width-30, height: UIScreen.main.bounds.size.height/2))
             label.textColor = UIColor.white
             label.textAlignment = .center
             label.numberOfLines = 0
@@ -309,14 +309,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     }
     
     func handleStateTransitionToNavigatingRoute() {
+        // navigate the recorded path
+
         // If the route has not yet been saved, we can no longer save this route
         routeName = nil
         beginRouteLandmarkTransform = nil
         beginRouteLandmarkInformation = nil
         endRouteLandmarkTransform = nil
         endRouteLandmarkInformation = nil
-        
-        // navigate the recorded path
+
+        // all of the route navigation announcements are done by posting notifications
+        directionText.isAccessibilityElement = false
         
         // clear any old log variables
         navigationData = []
@@ -460,7 +463,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         let storyBoard: UIStoryboard = UIStoryboard(name: "SettingsAndHelp", bundle: nil)
         let popoverContent = storyBoard.instantiateViewController(withIdentifier: "Routes") as! RoutesViewController
         popoverContent.rootViewController = self
-        print(dataPersistence.routes.count)
+        popoverContent.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: popoverContent, action: #selector(popoverContent.doneWithRoutes))
         popoverContent.updateRoutes(routes: dataPersistence.routes)
         let nav = UINavigationController(rootViewController: popoverContent)
         nav.modalPresentationStyle = .popover
@@ -599,6 +602,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         return UIScreen.main.bounds.size.height * (1/12)
     }
     
+    var settingsAndHelpMargin: CGFloat {
+        // height of button frame
+        return UIScreen.main.bounds.size.height * (1/24)
+    }
+    
     var displayWidth: CGFloat {
         return UIScreen.main.bounds.size.width
     }
@@ -614,17 +622,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     var yOriginOfGetDirectionsButton: CGFloat {
         // y-origin of button frame
-        return UIScreen.main.bounds.size.height - settingsAndHelpFrameHeight
+        return UIScreen.main.bounds.size.height - settingsAndHelpFrameHeight - settingsAndHelpMargin
     }
     
     var yOriginOfSettingsAndHelpButton: CGFloat {
         // y-origin of button frame
-        return UIScreen.main.bounds.size.height - settingsAndHelpFrameHeight
+        return UIScreen.main.bounds.size.height - settingsAndHelpFrameHeight - settingsAndHelpMargin
     }
     
     var yOriginOfButtonFrame: CGFloat {
         // y-origin of button frame
-        return UIScreen.main.bounds.size.height - buttonFrameHeight - settingsAndHelpFrameHeight
+        return UIScreen.main.bounds.size.height - buttonFrameHeight - settingsAndHelpFrameHeight - settingsAndHelpMargin
     }
     
     /*
@@ -1026,8 +1034,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         countdownTimer.lineColor = UIColor.white
         countdownTimer.backgroundColor = UIColor.black.withAlphaComponent(0.4)
         countdownTimer.isHidden = true
-        // handle VoiceOver by posting appropriate notifications
-        countdownTimer.isAccessibilityElement = false
+        // hide the timer as an accessibility element and announce through VoiceOver by posting appropriate notifications
+        countdownTimer.accessibilityElementsHidden = true
         
         // Record Path button container
         recordPathView = UIView(frame: CGRect(x: 0, y: yOriginOfButtonFrame, width: buttonFrameWidth, height: buttonFrameHeight))
@@ -1089,13 +1097,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         routeRatingView.isHidden = true
         var helpText: String
         if announceArrival {
-            helpText = "You've arrived. Press to record path"
+            helpText = "You've arrived."
+            directionText.isAccessibilityElement = true
         } else {
-            helpText = "Press to record path"
+            helpText = ""
+            directionText.isAccessibilityElement = false
         }
         updateDirectionText(helpText, distance: 0, size: 16, displayDistance: false)
-        directionText.isAccessibilityElement = true
-        
         delayTransition()
     }
     
@@ -1126,12 +1134,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         startNavigationView.getButtonByTag(tag: UIView.pauseButtonTag)?.isHidden = !allowPause
         startNavigationView.isHidden = false
         directionText.isHidden = false
-        directionText.isAccessibilityElement = true
-        if allowPause {
-            updateDirectionText("Press to start navigation or pause tracking", distance: 0, size: 14, displayDistance: false)
-        } else {
-            updateDirectionText("Press to start navigation", distance: 0, size: 14, displayDistance: false)
-        }
+        directionText.isAccessibilityElement = false
+        updateDirectionText("", distance: 0, size: 14, displayDistance: false)
         delayTransition()
     }
     
@@ -1729,6 +1733,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         popover?.sourceView = self.view
         popover?.sourceRect = CGRect(x: 0, y: settingsAndHelpFrameHeight/2, width: 0,height: 0)
         
+        popoverContent.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: popoverContent, action: #selector(popoverContent.doneWithSettings))
+
+        
         self.present(nav, animated: true, completion: nil)
     }
     
@@ -1741,7 +1748,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         popover?.delegate = self
         popover?.sourceView = self.view
         popover?.sourceRect = CGRect(x: 0, y: settingsAndHelpFrameHeight/2, width: 0,height: 0)
-        
+        popoverContent.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: popoverContent, action: #selector(popoverContent.doneWithHelp))
+
         self.present(nav, animated: true, completion: nil)
     }
     

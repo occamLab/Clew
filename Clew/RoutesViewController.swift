@@ -20,6 +20,7 @@ class RoutesViewController : UIViewController, UITableViewDataSource, UITableVie
         super.viewDidLoad()
         self.tableView.delegate = self
         self.tableView.dataSource = self
+        title = "Saved Routes List"
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -87,5 +88,10 @@ class RoutesViewController : UIViewController, UITableViewDataSource, UITableVie
     
     func updateRoutes(routes: [SavedRoute]) {
         self.routes = routes.sorted(by: { $0.dateCreated as Date > $1.dateCreated as Date})
+    }
+    
+    @objc
+    func doneWithRoutes() {
+        dismiss(animated: true, completion: nil)
     }
 }

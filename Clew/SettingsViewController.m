@@ -24,6 +24,10 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (void)doneWithSettings {
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
 /*
  #pragma mark - Navigation
  

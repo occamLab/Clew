@@ -9,5 +9,5 @@
 #import "InAppSettingsKit/IASKAppSettingsViewController.h"
 
 @interface SettingsViewController : IASKAppSettingsViewController
-
+- (void) doneWithSettings;
 @end
