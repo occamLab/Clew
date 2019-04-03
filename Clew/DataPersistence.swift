@@ -18,15 +18,17 @@ class DataPersistence {
         self.routes = newRoutes
     }
     
-    func archive(route: SavedRoute, worldMap: ARWorldMap) throws {
+    func archive(route: SavedRoute, worldMap: ARWorldMap?) throws {
         // Save route to the route list
         if try !update(route: route) {
             self.routes.append(route)
             NSKeyedArchiver.archiveRootObject(self.routes, toFile: self.getRoutesURL().path)
         }
         // Save the world map corresponding to the route
-        let data = try NSKeyedArchiver.archivedData(withRootObject: worldMap, requiringSecureCoding: true)
-        try data.write(to: self.getWorldMapURL(id: route.id as String), options: [.atomic])
+        if let worldMapAsAny = worldMap as Any? {
+            let data = try NSKeyedArchiver.archivedData(withRootObject: worldMapAsAny, requiringSecureCoding: true)
+            try data.write(to: self.getWorldMapURL(id: route.id as String), options: [.atomic])
+        }
     }
     
     func unarchive(id: String) -> ARWorldMap? {
@@ -51,12 +53,16 @@ class DataPersistence {
         return false
     }
     
-    func delete(route: SavedRoute) throws {
+    func delete(route: SavedRoute) {
         // Remove route from the route list
         self.routes = self.routes.filter { $0.id != route.id }
         NSKeyedArchiver.archiveRootObject(self.routes, toFile: self.getRoutesURL().path)
         // Remove the world map corresponding to the route
-        try FileManager().removeItem(atPath: self.getWorldMapURL(id: route.id as String).path)
+        do {
+            try FileManager().removeItem(atPath: self.getWorldMapURL(id: route.id as String).path)
+        } catch {
+            // this is bad, but not a complete dealbreaker.  Soldier on.
+        }
     }
     
     private func getURL(url: String) -> URL {

@@ -57,7 +57,7 @@ extension UIView {
             label.textAlignment = .center
             label.numberOfLines = 0
             label.lineBreakMode = .byWordWrapping
-            label.font = label.font.withSize(24)
+            label.font = label.font.withSize(20)
 
             label.text = mainText
             label.tag = UIView.mainTextTag
@@ -158,6 +158,7 @@ fileprivate extension Selector {
     static let resumeButtonTapped = #selector(ViewController.confirmResumeTracking)
     static let confirmAlignmentButtonTapped = #selector(ViewController.confirmAlignment)
     static let routesButtonTapped = #selector(ViewController.routesButtonPressed)
+    static let enterLandmarkDescriptionButtonTapped = #selector(ViewController.showLandmarkInformationDialog)
 }
 
 /// Holds information about the buttons that are used to control navigation and tracking.
@@ -221,6 +222,35 @@ enum AppState {
     case startingResumeProcedure(route: SavedRoute, map: ARWorldMap?, navigateStartToEnd: Bool)
     /// the AR session has entered the relocalizing state, which means that we can now realign the session
     case readyForFinalResumeAlignment
+    
+    var rawValue: String {
+        switch self {
+        case .mainScreen(let announceArrival):
+            return "mainScreen(announceArrival=\(announceArrival))"
+        case .recordingRoute:
+            return "recordingRoute"
+        case .readyToNavigateOrPause(let allowPause):
+            return "readyToNavigateOrPause(allowPause=\(allowPause))"
+        case .navigatingRoute:
+            return "navigatingRoute"
+        case .ratingRoute(let announceArrival):
+            return "ratingRoute(announceArrival=\(announceArrival))"
+        case .initializing:
+            return "initializing"
+        case .startingPauseProcedure:
+            return "startingPauseProcedure"
+        case .pauseWaitingPeriod:
+            return "pauseWaitingPeriod"
+        case .completingPauseProcedure:
+            return "completingPauseProcedure"
+        case .pauseProcedureCompleted:
+            return "pauseProcedureCompleted"
+        case .startingResumeProcedure(_, _, let navigateStartToEnd):
+            return "startingResumeProcedure(route=notloggedhere, map=notlogged, navigateStartToEnd=\(navigateStartToEnd))"
+        case .readyForFinalResumeAlignment:
+            return "readyForFinalResumeAlignment"
+        }
+    }
 }
 
 class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDelegate {
@@ -238,6 +268,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// The state of the app.  This should be constantly referenced and updated as the app transitions
     var state = AppState.initializing {
         didSet {
+            stateSequenceTime.append(roundToThousandths(-stateTransitionLogTimer.timeIntervalSinceNow))
+            stateSequence.append(state.rawValue)
             switch state {
             case .recordingRoute:
                 handleStateTransitionToRecordingRoute()
@@ -366,8 +398,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     func handleStateTransitionToStartingResumeProcedure(route: SavedRoute, map: ARWorldMap?, navigateStartToEnd: Bool) {
         // load the world map and restart the session so that things have a chance to quiet down before putting it up to the wall
-        print("handling resume")
-
         let isSameMap = configuration.initialWorldMap != nil && configuration.initialWorldMap == map
         configuration.initialWorldMap = map
         if navigateStartToEnd {
@@ -384,6 +414,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         if case .limited(reason: .relocalizing)? = sceneView.session.currentFrame?.camera.trackingState {
             // We have to jump to this state as we will never enter the .relocalizing state since we are already in it
             state = .readyForFinalResumeAlignment
+        } else if map == nil {
+            // Go right for the final alignment as we aren't going to go throug the typical sequence of states (relocalizing, then maybe normal)
+            state = .readyForFinalResumeAlignment
         } else if case .normal? = sceneView.session.currentFrame?.camera.trackingState, isSameMap {
             // we can skip the whole process of relocalization since we are already using the correct map
             state = .readyToNavigateOrPause(allowPause: false)
@@ -394,7 +427,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     }
     
     func handleStateTransitionToStartingPauseProcedure() {
-        showLandmarkInformationDialog()
+        // clear out these variables in case they had already been created
+        if creatingRouteLandmark {
+            beginRouteLandmarkInformation = nil
+            beginRouteLandmarkTransform = nil
+        } else {
+            endRouteLandmarkInformation = nil
+            endRouteLandmarkTransform = nil
+        }
         do {
             try showPauseTrackingButton()
         } catch {
@@ -419,37 +459,28 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 print("can't properly save landmark: TODO communicate this to the user somehow")
                 return
             }
-            pausedTransform = currentTransform
             beginRouteLandmarkTransform = currentTransform
             Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(playSound)), userInfo: nil, repeats: false)
             pauseTrackingView.isHidden = true
             state = .mainScreen(announceArrival: false)
             return
-        }
-        if let currentTransform = sceneView.session.currentFrame?.camera.transform {
+        } else if let currentTransform = sceneView.session.currentFrame?.camera.transform {
             sceneView.session.getCurrentWorldMap { worldMap, error in
-                if worldMap != nil {
-                    do {
-                        self.endRouteLandmarkTransform = currentTransform
-                        if self.routeName == nil {
-                            // get a route name
-                            self.showRouteNamingDialog(map: worldMap!)
-                        } else {
-                            // TODO: factor this out
-                            let id = String(Int64(NSDate().timeIntervalSince1970 * 1000)) as NSString
-                            try self.archive(routeId: id, beginRouteLandmarkTransform: self.beginRouteLandmarkTransform, beginRouteLandmarkInformation: self.beginRouteLandmarkInformation, endRouteLandmarkTransform: self.endRouteLandmarkTransform, endRouteLandmarkInformation: self.endRouteLandmarkInformation, worldMap: worldMap!)
-                        }
-                    } catch {
-                        fatalError("Can't save map: \(error.localizedDescription)")
+                do {
+                    self.endRouteLandmarkTransform = currentTransform
+                    if self.routeName == nil {
+                        // get a route name
+                        self.showRouteNamingDialog(map: worldMap)
+                    } else {
+                        // TODO: factor this out
+                        let id = String(Int64(NSDate().timeIntervalSince1970 * 1000)) as NSString
+                        try self.archive(routeId: id, beginRouteLandmarkTransform: self.beginRouteLandmarkTransform, beginRouteLandmarkInformation: self.beginRouteLandmarkInformation, endRouteLandmarkTransform: self.endRouteLandmarkTransform, endRouteLandmarkInformation: self.endRouteLandmarkInformation, worldMap: worldMap)
                     }
-                    self.handleStateTransitionToCompletingPauseProcedureHelper()
-                } else {
-                    print("An error occurred getting the world map")
+                } catch {
+                    fatalError("Can't save map: \(error.localizedDescription)")
                 }
+                self.handleStateTransitionToCompletingPauseProcedureHelper()
             }
-        } else {
-            sceneView.session.pause()
-            handleStateTransitionToCompletingPauseProcedureHelper()
         }
     }
     
@@ -491,11 +522,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     func onRouteTableViewCellClicked(route: SavedRoute, navigateStartToEnd: Bool) {
         let worldMap = dataPersistence.unarchive(id: route.id as String)
         hideAllViewsHelper()
-        
         state = .startingResumeProcedure(route: route, map: worldMap, navigateStartToEnd: navigateStartToEnd)
     }
     
-    func archive(routeId: NSString, beginRouteLandmarkTransform: simd_float4x4?, beginRouteLandmarkInformation: NSString?, endRouteLandmarkTransform: simd_float4x4?, endRouteLandmarkInformation: NSString?, worldMap: ARWorldMap) throws {
+    func archive(routeId: NSString, beginRouteLandmarkTransform: simd_float4x4?, beginRouteLandmarkInformation: NSString?, endRouteLandmarkTransform: simd_float4x4?, endRouteLandmarkInformation: NSString?, worldMap: ARWorldMap?) throws {
         let savedRoute = SavedRoute(id: routeId, name: routeName!, crumbs: crumbs, dateCreated: Date() as NSDate, beginRouteLandmarkTransform: beginRouteLandmarkTransform, beginRouteLandmarkInformation: beginRouteLandmarkInformation, endRouteLandmarkTransform: endRouteLandmarkTransform, endRouteLandmarkInformation: endRouteLandmarkInformation)
         try dataPersistence.archive(route: savedRoute, worldMap: worldMap)
         justTraveledRoute = savedRoute
@@ -525,7 +555,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     let resumeButton = ActionButtonComponents(appearance: .textButton(label: "Resume"), label: "Resume", targetSelector: Selector.resumeButtonTapped, alignment: .center, tag: 0)
     
-    let confirmAlignmentButton = ActionButtonComponents(appearance: .textButton(label: "Align"), label: "Start 5 second alignment countdown", targetSelector: Selector.confirmAlignmentButtonTapped, alignment: .center, tag: 0)
+    let enterLandmarkDescriptionButton = ActionButtonComponents(appearance: .textButton(label: "Describe"), label: "Enter information to help you remember this landmark", targetSelector: Selector.enterLandmarkDescriptionButtonTapped, alignment: .left, tag: 0)
+    
+    let confirmAlignmentButton = ActionButtonComponents(appearance: .textButton(label: "Align"), label: "Start 5-second alignment countdown", targetSelector: Selector.confirmAlignmentButtonTapped, alignment: .center, tag: 0)
     
     
     /// Image, label, and target for start recording button.
@@ -741,7 +773,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     func showRecordPathWithoutLandmarkWarning() {
         let userDefaults: UserDefaults = UserDefaults.standard
         let showedRecordPathWithoutLandmarkWarning: Bool? = userDefaults.object(forKey: "showedRecordPathWithoutLandmarkWarning") as? Bool
-        if showedRecordPathWithoutLandmarkWarning == nil && pausedTransform == nil {
+        if showedRecordPathWithoutLandmarkWarning == nil && beginRouteLandmarkTransform == nil {
             userDefaults.set(true, forKey: "showedRecordPathWithoutLandmarkWarning")
             // Show logging disclaimer when user opens app for the first time
             let alert = UIAlertController(title: "Creating reusable routes",
@@ -768,7 +800,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     func showNavigatePathWithoutLandmarkWarning() {
         let userDefaults: UserDefaults = UserDefaults.standard
         let showedNavigatePathWithoutLandmarkWarning: Bool? = userDefaults.object(forKey: "showedNavigatePathWithoutLandmarkWarning") as? Bool
-        if showedNavigatePathWithoutLandmarkWarning == nil && pausedTransform == nil {
+        if showedNavigatePathWithoutLandmarkWarning == nil && endRouteLandmarkTransform == nil {
             userDefaults.set(true, forKey: "showedNavigatePathWithoutLandmarkWarning")
             // Show logging disclaimer when user opens app for the first time
             let alert = UIAlertController(title: "Creating reusable routes",
@@ -792,7 +824,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /*
      * display SAVE ROUTE input dialog
      */
-    @objc func showRouteNamingDialog(map: ARWorldMap) {
+    @objc func showRouteNamingDialog(map: ARWorldMap?) {
         // Set title and message for the alert dialog
         justUsedMap = map
 
@@ -1050,13 +1082,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         startNavigationView.setupButtonContainer(withButtons: [startNavigationButton, pauseButton])
         
         pauseTrackingView = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height))
-        pauseTrackingView.setupButtonContainer(withButtons: [confirmAlignmentButton], withMainText: "Place the device against a flat vertical surface and press the volume button to pause. Do not move your phone until you feel a haptic confirmation. You will need to return to this surface to resume tracking. You can use other apps while in pause, but please keep the app running in the background.")
+        pauseTrackingView.setupButtonContainer(withButtons: [enterLandmarkDescriptionButton, confirmAlignmentButton], withMainText: "Landmarks allow you to save or pause your route. You will need to to return to the landmark on your own to load or unpause your route. When creating a landmark, hold your device flat with the screen facing up. Press the top (short) edge flush against a flat vertical surface (such as a wall). The \"describe\" button lets you enter information to help you remember the location of the landmark. The \"align\" button starts a \(pauseWaitingPeriod)-second alignment countdown. During this time, do not move the device until the phone provides confirmation via a vibration or sound cue.")
         
         resumeTrackingView = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height))
         resumeTrackingView.setupButtonContainer(withButtons: [resumeButton], withMainText: "Return to the last paused location and press Resume for further instructions.")
         
         resumeTrackingConfirmView = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height))
-        resumeTrackingConfirmView.setupButtonContainer(withButtons: [confirmAlignmentButton], withMainText: "Place the device in the same surface facing the same orientation and hit the align button. Do not move the device until you feel the haptic confirmation.")
+        resumeTrackingConfirmView.setupButtonContainer(withButtons: [confirmAlignmentButton], withMainText: "Hold your device flat with the screen facing up. Press the top (short) edge flush against the same vertical surface that you used to create the landmark.  When you are ready, activate the align button to start the \(resumeWaitingPeriod)-second alignment countdown that will complete the procedure. Do not move the device until the phone provides confirmation via a vibration or sound cue.")
 
         // Stop Navigation button container
         stopNavigationView = UIView(frame: CGRect(x: 0, y: yOriginOfButtonFrame, width: buttonFrameWidth, height: buttonFrameHeight))
@@ -1162,16 +1194,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     func showResumeTrackingConfirmButton(route: SavedRoute, navigateStartToEnd: Bool) {
         resumeTrackingView.isHidden = true
         resumeTrackingConfirmView.isHidden = false
-        resumeTrackingConfirmView.mainText?.text = "Place the device in the same surface facing the same orientation and hit the align button. Do not move the device until you feel the haptic confirmation."
+        resumeTrackingConfirmView.mainText?.text = ""
         if navigateStartToEnd {
             if let landmarkInformation = route.beginRouteLandmarkInformation as String? {
-                resumeTrackingConfirmView.mainText?.text?.append("\nThe landmark information you entered is: " + landmarkInformation + ".")
+                resumeTrackingConfirmView.mainText?.text?.append("The landmark information you entered is: " + landmarkInformation + ".\n\n")
             }
         } else {
             if let landmarkInformation = route.endRouteLandmarkInformation as String? {
-                resumeTrackingConfirmView.mainText?.text?.append("\nThe landmark information you entered is: " + landmarkInformation + ".")
+                resumeTrackingConfirmView.mainText?.text?.append("The landmark information you entered is: " + landmarkInformation + ".\n\n")
             }
         }
+        resumeTrackingConfirmView.mainText?.text?.append("Hold your device flat with the screen facing up. Press the top (short) edge flush against the same vertical surface that you used to create the landmark.  When you are ready, activate the align button to start the \(resumeWaitingPeriod)-second alignment countdown that will complete the procedure. Do not move the device until the phone provides confirmation via a vibration or sound cue.")
         delayTransition()
     }
     
@@ -1259,6 +1292,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     var turnWarning: Bool!                      // bool to make sure turnWarning happens only once
     
     // internal debug logging datastructure
+    var stateTransitionLogTimer = Date()        // timer for logging state transitions
     var dataTimer = Date()                        // timer to sync data
     var pathData: [[Float]] = []                // path data taken during RECORDPATH - [[1x16 transform matrix]]
     var pathDataTime: [Double] = []               // time stamps for pathData
@@ -1270,6 +1304,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     var trackingErrorData: [String] = []            // list of tracking errors ["InsufficientFeatures", "ExcessiveMotion"]
     var trackingErrorTime: [Double] = []            // time stamp of tracking error
     var trackingErrorPhase: [Bool] = []             // tracking phase - true: recording, false: navigation
+    var stateSequence: [String] = []                   // all state transitions the app went through
+    var stateSequenceTime: [Double] = []            // time stamp of state transitions
     
     // Timers for background functions
     var droppingCrumbs: Timer?
@@ -1302,7 +1338,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// This keeps track of the paused transform while the current session is being realigned to the saved route
     var pausedTransform : simd_float4x4?
     
-    // TODO: probably need to do better bookkeeping on these
+    // TODO: refactor these into a class to ease the handling of these
     var beginRouteLandmarkTransform: simd_float4x4?
     var beginRouteLandmarkInformation: NSString?
 
@@ -1328,23 +1364,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     }
     
     @objc func stopRecording(_ sender: UIButton) {
-        if creatingRouteLandmark {
-            if let beginRouteLandmarkTransform = beginRouteLandmarkTransform {
-                sceneView.session.getCurrentWorldMap { worldMap, error in
-                    if worldMap != nil {
-                        if self.routeName == nil {
-                            // get a route name
-                            self.showRouteNamingDialog(map: worldMap!)
-                        } else {
-                            let id = String(Int64(NSDate().timeIntervalSince1970 * 1000)) as NSString
-                            try! self.archive(routeId: id, beginRouteLandmarkTransform: beginRouteLandmarkTransform, beginRouteLandmarkInformation: self.beginRouteLandmarkInformation, endRouteLandmarkTransform: self.endRouteLandmarkTransform, endRouteLandmarkInformation: self.endRouteLandmarkInformation, worldMap: worldMap!)
-                        }
-                        // clear these flags TODO: need to do better bookkeeping
-                        self.pausedTransform = nil
-                        self.creatingRouteLandmark = false
-                    } else {
-                        print("An error occurred getting the world map")
-                    }
+        if let beginRouteLandmarkTransform = beginRouteLandmarkTransform {
+            sceneView.session.getCurrentWorldMap { worldMap, error in
+                if self.routeName == nil {
+                    // get a route name
+                    self.showRouteNamingDialog(map: worldMap)
+                } else {
+                    let id = String(Int64(NSDate().timeIntervalSince1970 * 1000)) as NSString
+                    try! self.archive(routeId: id, beginRouteLandmarkTransform: beginRouteLandmarkTransform, beginRouteLandmarkInformation: self.beginRouteLandmarkInformation, endRouteLandmarkTransform: self.endRouteLandmarkTransform, endRouteLandmarkInformation: self.endRouteLandmarkInformation, worldMap: worldMap)
                 }
             }
         }
@@ -1383,7 +1410,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     @objc func startCreateLandmarkProcedure() {
         creatingRouteLandmark = true
         // make sure to clear out any relative transform and paused transform so the alignment is accurate
-        pausedTransform = nil
         sceneView.session.setWorldOrigin(relativeTransform: simd_float4x4.makeTranslation(0, 0, 0))
         state = .startingPauseProcedure
     }
@@ -1430,13 +1456,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     // MARK: - Logging
     @objc func sendLogData() {
-        // send success log data to AWS
+        // send success log data to Firebase
         compileLogData(false)
         state = .mainScreen(announceArrival: false)
     }
     
     @objc func sendDebugLogData() {
-        // send debug log data to AWS
+        // send debug log data to Firebase
         compileLogData(true)
         state = .mainScreen(announceArrival: false)
     }
@@ -1453,6 +1479,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         
         sendMetaData(pathDate, pathID+"-0", userId, debug)
         sendPathData(pathID, userId)
+        
+        // reset log variables that aren't tied to path recording or navigation
+        stateSequence = []
+        stateSequenceTime = []
     }
     
     func sendMetaData(_ pathDate: String, _ pathID: String, _ userId: String, _ debug: Bool) {
@@ -1470,7 +1500,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                                     "keypointData": keypointData,
                                     "trackingErrorPhase": trackingErrorPhase,
                                     "trackingErrorTime": trackingErrorTime,
-                                    "trackingErrorData": trackingErrorData]
+                                    "trackingErrorData": trackingErrorData,
+                                    "stateSequence": stateSequence,
+                                    "stateSequenceTime": stateSequenceTime]
         do {
             let jsonData = try JSONSerialization.data(withJSONObject: body, options: .prettyPrinted)
             // here "jsonData" is the dictionary encoded in JSON data
@@ -1987,8 +2019,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             print(state)
             if case .readyForFinalResumeAlignment = state {
                 // this will cancel any realignment if it hasn't happened yet and go straight to route navigation mode
+                countdownTimer.isHidden = true
                 state = .readyToNavigateOrPause(allowPause: false)
             }
+            /* TODO: this would be the right thing if we could guarantee that this state was entered into after the session new session was configuration was loaded and run.   For now we leave it out.
+            else if case .startingResumeProcedure = state {
+                state = .readyToNavigateOrPause(allowPause: false)
+            } */
             print("normal")
         case .notAvailable:
             logString = "NotAvailable"

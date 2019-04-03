@@ -169,8 +169,6 @@ class SavedRoute: NSObject, NSCoding {
             aCoder.encode(ARAnchor(transform: endRouteLandmarkTransform!), forKey: "endRouteLandmarkTransformAsARAnchor")
         }
         aCoder.encode(endRouteLandmarkInformation, forKey: "endRouteLandmarkInformation")
-
-        aCoder.encode(dateCreated, forKey: "dateCreated")
     }
     
     required convenience init?(coder aDecoder: NSCoder) {

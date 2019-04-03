@@ -66,17 +66,9 @@ class RoutesViewController : UIViewController, UITableViewDataSource, UITableVie
         
         let delete = UITableViewRowAction(style: .destructive, title: "Delete") { (action, indexPath) in
             // delete item at indexPath
-            do {
-                print(self.routes[indexPath.row].id)
-                try self.rootViewController?.dataPersistence.delete(route: self.routes[indexPath.row])
-                print("data successfully deleted")
-                self.routes.remove(at: indexPath.row)
-                print("routes successfully removed")
-                self.tableView.deleteRows(at: [indexPath], with: .fade)
-                print("table cells deleted")
-            } catch {
-                print("Cannot delete route")
-            }
+            self.rootViewController?.dataPersistence.delete(route: self.routes[indexPath.row])
+            self.routes.remove(at: indexPath.row)
+            self.tableView.deleteRows(at: [indexPath], with: .fade)
         }
         return [delete]
         
