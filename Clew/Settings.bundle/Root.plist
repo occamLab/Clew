@@ -92,7 +92,7 @@
 			<key>Title</key>
 			<string>Send Feedback</string>
 			<key>FooterText</key>
-			<string>Clew is still in beta testing. Help us improve the app by logging your Clew experience. These logs will not include any images or personal information.</string>
+			<string>Help us improve the app by logging your Clew experience. These logs will not include any images or personal information.</string>
 		</dict>
 		<dict>
 			<key>Type</key>
