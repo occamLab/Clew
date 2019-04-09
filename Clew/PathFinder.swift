@@ -87,7 +87,7 @@ public class LocationInfo : ARAnchor {
             // pitch (y-axis rotation)
             let sinp = +2.0 * (qw * qy - qz * qx)
             var pitch: Float
-            if fabs(sinp) >= 1 {
+            if abs(sinp) >= 1 {
                 pitch = copysign(Float.pi / 2, sinp)
             } else {
                 pitch = asin(sinp)
@@ -134,7 +134,9 @@ public struct KeypointInfo {
     public var orientation: Vector3
 }
 
-class SavedRoute: NSObject, NSCoding {
+class SavedRoute: NSObject, NSSecureCoding {
+    static var supportsSecureCoding = true
+    
     public var id: NSString
     public var name: NSString
     public var dateCreated: NSDate
@@ -172,16 +174,16 @@ class SavedRoute: NSObject, NSCoding {
     }
     
     required convenience init?(coder aDecoder: NSCoder) {
-        guard let id = aDecoder.decodeObject(forKey: "id") as? NSString else {
+        guard let id = aDecoder.decodeObject(of: NSString.self, forKey: "id") else {
             return nil
         }
-        guard let name = aDecoder.decodeObject(forKey: "name") as? NSString else {
+        guard let name = aDecoder.decodeObject(of: NSString.self, forKey: "name") else {
             return nil
         }
-        guard let crumbs = aDecoder.decodeObject(forKey: "crumbs") as? [LocationInfo] else {
+        guard let crumbs = aDecoder.decodeObject(of: [].self, forKey: "crumbs") as? [LocationInfo] else {
             return nil
         }
-        guard let dateCreated = aDecoder.decodeObject(forKey: "dateCreated") as? NSDate else {
+        guard let dateCreated = aDecoder.decodeObject(of: NSDate.self, forKey: "dateCreated") else {
             return nil
         }
         var beginRouteLandmarkTransform : simd_float4x4? = nil
@@ -190,15 +192,15 @@ class SavedRoute: NSObject, NSCoding {
         var endRouteLandmarkTransform : simd_float4x4? = nil
         var endRouteLandmarkInformation : NSString? = nil
 
-        if let beginRouteLandmarkTransformAsARAnchor = aDecoder.decodeObject(forKey: "beginRouteLandmarkTransformAsARAnchor") as? ARAnchor {
+        if let beginRouteLandmarkTransformAsARAnchor = aDecoder.decodeObject(of: ARAnchor.self, forKey: "beginRouteLandmarkTransformAsARAnchor") {
             beginRouteLandmarkTransform = beginRouteLandmarkTransformAsARAnchor.transform
         }
-        beginRouteLandmarkInformation = aDecoder.decodeObject(forKey: "beginRouteLandmarkInformation") as? NSString
+        beginRouteLandmarkInformation = aDecoder.decodeObject(of: NSString.self, forKey: "beginRouteLandmarkInformation")
 
-        if let endRouteLandmarkTransformAsARAnchor = aDecoder.decodeObject(forKey: "endRouteLandmarkTransformAsARAnchor") as? ARAnchor {
+        if let endRouteLandmarkTransformAsARAnchor = aDecoder.decodeObject(of: ARAnchor.self, forKey: "endRouteLandmarkTransformAsARAnchor") {
             endRouteLandmarkTransform = endRouteLandmarkTransformAsARAnchor.transform
         }
-        endRouteLandmarkInformation = aDecoder.decodeObject(forKey: "endRouteLandmarkInformation") as? NSString
+        endRouteLandmarkInformation = aDecoder.decodeObject(of: NSString.self, forKey: "endRouteLandmarkInformation")
 
         self.init(id: id, name: name, crumbs: crumbs, dateCreated: dateCreated, beginRouteLandmarkTransform: beginRouteLandmarkTransform, beginRouteLandmarkInformation: beginRouteLandmarkInformation, endRouteLandmarkTransform: endRouteLandmarkTransform, endRouteLandmarkInformation: endRouteLandmarkInformation)
     }
@@ -299,7 +301,7 @@ class PathFinder {
         }
         
         let maxDistance = listOfDistances.max()
-        let maxIndex = listOfDistances.index(of: maxDistance!)
+        let maxIndex = listOfDistances.firstIndex(of: maxDistance!)
         
         //  If a point is farther from path center than parameter pathWidth,
         //  there must be another keypoint within that stretch.

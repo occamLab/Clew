@@ -19,7 +19,6 @@
 		4D6B00E51F33C9B800952242 /* Crumb.obj in Resources */ = {isa = PBXBuildFile; fileRef = 4D6B00E41F33C85500952242 /* Crumb.obj */; };
 		4D9E8E7F1F3A4D3400536FCD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4D940BAA1F38AA79004E6741 /* Assets.xcassets */; };
 		4DF05CC81F34EB6B008B0E31 /* Confirm.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4DF05CC71F34EB56008B0E31 /* Confirm.mp3 */; };
-		822E27F9210E3F260024A5E3 /* Clew Dev-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 822E27F8210E3F260024A5E3 /* Clew Dev-Info.plist */; };
 		82473B092217641D00E98CFC /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 82473B082217641D00E98CFC /* SettingsViewController.m */; };
 		82473B0A2217641D00E98CFC /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 82473B082217641D00E98CFC /* SettingsViewController.m */; };
 		82473B0C2217647A00E98CFC /* SettingsAndHelp.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 82473B0B2217647A00E98CFC /* SettingsAndHelp.storyboard */; };
@@ -221,12 +220,12 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0900;
-				LastUpgradeCheck = 0940;
+				LastUpgradeCheck = 1020;
 				ORGANIZATIONNAME = OccamLab;
 				TargetAttributes = {
 					4D6B00BF1F33C1C400952242 = {
 						CreatedOnToolsVersion = 9.0;
-						LastSwiftMigration = 1010;
+						LastSwiftMigration = 1020;
 					};
 					B7EB59D720F693EB00FBBC6A = {
 						LastSwiftMigration = 1010;
@@ -278,7 +277,6 @@
 				B7EB59E420F693EB00FBBC6A /* Settings.bundle in Resources */,
 				B7EB59E520F693EB00FBBC6A /* LaunchScreen.storyboard in Resources */,
 				82569F4F22187E6500448B45 /* help in Resources */,
-				822E27F9210E3F260024A5E3 /* Clew Dev-Info.plist in Resources */,
 				82473B0D2217647A00E98CFC /* SettingsAndHelp.storyboard in Resources */,
 				B7EB59E620F693EB00FBBC6A /* Assets.xcassets in Resources */,
 			);
@@ -559,7 +557,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Clew/Clew-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
@@ -577,7 +575,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = edu.occam.Clew;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Clew/Clew-Bridging-Header.h";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;

@@ -14,16 +14,21 @@ class DataPersistence {
     var routes = [SavedRoute]()
 
     init() {
-        guard let newRoutes = NSKeyedUnarchiver.unarchiveObject(withFile: self.getRoutesURL().path) as? [SavedRoute] else {return}
-        self.routes = newRoutes
+        do {
+            let data = try Data(contentsOf: self.getRoutesURL())
+            self.routes = try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data) as! [SavedRoute]
+        } catch {
+            print("couldn't unarchive saved routes")
+        }
     }
     
     func archive(route: SavedRoute, worldMap: ARWorldMap?) throws {
         // Save route to the route list
-        if try !update(route: route) {
+        if !update(route: route) {
             self.routes.append(route)
-            NSKeyedArchiver.archiveRootObject(self.routes, toFile: self.getRoutesURL().path)
         }
+        let data = try NSKeyedArchiver.archivedData(withRootObject: self.routes, requiringSecureCoding: true)
+        try data.write(to: self.getRoutesURL(), options: [.atomic])
         // Save the world map corresponding to the route
         if let worldMapAsAny = worldMap as Any? {
             let data = try NSKeyedArchiver.archivedData(withRootObject: worldMapAsAny, requiringSecureCoding: true)
@@ -34,7 +39,7 @@ class DataPersistence {
     func unarchive(id: String) -> ARWorldMap? {
         do {
             let data = try Data(contentsOf: getWorldMapURL(id: id))
-            guard let unarchivedObject = try? NSKeyedUnarchiver.unarchivedObject(ofClass: ARWorldMap.self, from: data),
+            guard let unarchivedObject = ((try? NSKeyedUnarchiver.unarchivedObject(ofClass: ARWorldMap.self, from: data)) as ARWorldMap??),
                 let worldMap = unarchivedObject else { return nil }
             return worldMap
         } catch {
@@ -43,26 +48,22 @@ class DataPersistence {
         }
     }
     
-    func update(route: SavedRoute) throws -> Bool {
-        /// Updates the route in the list based on matching ids.  The return value is route from the route list
+    func update(route: SavedRoute) -> Bool {
+        /// Updates the route in the list based on matching ids.  The return value is true if the route was found and updates and false otherwise from the route list
         if let indexOfRoute = routes.firstIndex(where: {$0.id == route.id || $0.name == route.name }) {
             routes[indexOfRoute] = route
-            NSKeyedArchiver.archiveRootObject(self.routes, toFile: self.getRoutesURL().path)
             return true
         }
         return false
     }
     
-    func delete(route: SavedRoute) {
+    func delete(route: SavedRoute) throws {
         // Remove route from the route list
         self.routes = self.routes.filter { $0.id != route.id }
-        NSKeyedArchiver.archiveRootObject(self.routes, toFile: self.getRoutesURL().path)
-        // Remove the world map corresponding to the route
-        do {
-            try FileManager().removeItem(atPath: self.getWorldMapURL(id: route.id as String).path)
-        } catch {
-            // this is bad, but not a complete dealbreaker.  Soldier on.
-        }
+        let data = try NSKeyedArchiver.archivedData(withRootObject: self.routes, requiringSecureCoding: true)
+        try data.write(to: self.getRoutesURL(), options: [.atomic])
+        // Remove the world map corresponding to the route.  We use try? to continue execution even if this fails, since it is not strictly necessary for continued operation
+        try? FileManager().removeItem(atPath: self.getWorldMapURL(id: route.id as String).path)
     }
     
     private func getURL(url: String) -> URL {

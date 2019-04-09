@@ -66,9 +66,13 @@ class RoutesViewController : UIViewController, UITableViewDataSource, UITableVie
         
         let delete = UITableViewRowAction(style: .destructive, title: "Delete") { (action, indexPath) in
             // delete item at indexPath
-            self.rootViewController?.dataPersistence.delete(route: self.routes[indexPath.row])
-            self.routes.remove(at: indexPath.row)
-            self.tableView.deleteRows(at: [indexPath], with: .fade)
+            do {
+                try self.rootViewController?.dataPersistence.delete(route: self.routes[indexPath.row])
+                self.routes.remove(at: indexPath.row)
+                self.tableView.deleteRows(at: [indexPath], with: .fade)
+            } catch {
+                print("Unexpectedly failed to persist the new routes data")
+            }
         }
         return [delete]
         

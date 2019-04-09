@@ -35,11 +35,11 @@ extension UIView {
     func fadeTransition(_ duration:CFTimeInterval) {
         let animation = CATransition()
         animation.timingFunction = CAMediaTimingFunction(name:
-            kCAMediaTimingFunctionEaseInEaseOut)
-        animation.type = kCATransitionPush
-        animation.subtype = kCATransitionFromTop
+            CAMediaTimingFunctionName.easeInEaseOut)
+        animation.type = CATransitionType.push
+        animation.subtype = CATransitionSubtype.fromTop
         animation.duration = duration
-        layer.add(animation, forKey: kCATransitionFade)
+        layer.add(animation, forKey: CATransitionType.fade.rawValue)
     }
     
     /// Configures a button container view and adds a button.
@@ -596,6 +596,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// True if we should use a cone of pi/12 and false if we should use a cone of pi/6 when deciding whether to issue haptic feedback
     var strictHaptic = true
+    
+    /// True if we should add anchors ahead of the user to encourage more ARWorldMap detail.  In limited testing this did not show promise, therefore it is disabled
+    var shouldDropMappingAnchors = false
 
     /// A UUID for the current device (note: this can change in various circumstances, so we should be wary of using this, see: https://developer.apple.com/documentation/uikit/uidevice#//apple_ref/occ/instp/UIDevice/identifierForVendor)
     let deviceID = UIDevice.current.identifierForVendor
@@ -692,7 +695,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     }
     
     @objc func timerDidUpdateCounterValue(newValue: Int) {
-        UIAccessibilityPostNotification(UIAccessibilityAnnouncementNotification, String(newValue))
+        UIAccessibility.post(notification: UIAccessibility.Notification.announcement, argument: String(newValue))
     }
     
     override func viewDidLoad() {
@@ -949,6 +952,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     func createARSession() {
         configuration = ARWorldTrackingConfiguration()
         configuration.planeDetection = [.horizontal, .vertical]
+        configuration.isAutoFocusEnabled = false
 
         sceneView.session.run(configuration)
         sceneView.delegate = self
@@ -973,7 +977,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     func playSystemSound(id: Int) {
         do {
-            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback)
+            try AVAudioSession.sharedInstance().setCategory(AVAudioSession.Category(rawValue: AVAudioSession.Category.playback.rawValue))
             try AVAudioSession.sharedInstance().setActive(true)
             guard let player = audioPlayers[id] else {
                 // fallback on system sounds
@@ -1141,7 +1145,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     func delayTransition() {
         // this notification currently cuts off the announcement of the button that was just pressed
-        UIAccessibilityPostNotification(UIAccessibilityScreenChangedNotification, nil)
+        UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: nil)
     }
     
     /*
@@ -1274,7 +1278,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         // TODO: next line was just if (voiceFeedback)
         if case .navigatingRoute = state {
             if voiceFeedback {
-                UIAccessibilityPostNotification(UIAccessibilityAnnouncementNotification, altText)
+                UIAccessibility.post(notification: UIAccessibility.Notification.announcement, argument: altText)
             }
         }
     }
@@ -1300,7 +1304,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     var navigationDataTime: [Double] = []         // time stamps for navigationData
     var speechData: [String] = []                   // description data during NAVIGATION
     var speechDataTime: [Double] = []               // time stamp for speechData
-    var keypointData: [Array<Any>]!             // list of keypoints - [[(LocationInfo)x, y, z, yaw]]
+    var keypointData: [Array<Any>] = []             // list of keypoints - [[(LocationInfo)x, y, z, yaw]]
     var trackingErrorData: [String] = []            // list of tracking errors ["InsufficientFeatures", "ExcessiveMotion"]
     var trackingErrorTime: [Double] = []            // time stamp of tracking error
     var trackingErrorPhase: [Bool] = []             // tracking phase - true: recording, false: navigation
@@ -1486,7 +1490,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     }
     
     func sendMetaData(_ pathDate: String, _ pathID: String, _ userId: String, _ debug: Bool) {
-        let pathType: String!
+        let pathType: String
         if(debug) {
             pathType = "debug"
         } else {
@@ -1557,9 +1561,46 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         // drop waypoint markers to record path
         // TODO: gracefully handle error
         let curLocation = getRealCoordinates(record: true)!.location
-        // XXX TODO: need to check this to see if it improves relocalization
-        //sceneView.session.add(anchor: curLocation)
         crumbs.append(curLocation)
+
+        if shouldDropMappingAnchors {
+            // This was an experiment that I (Paul) did to see if adding anchors would improve relocalization performance.  I don't believe that it does.
+            let headingVector = getProjectedHeading(curLocation.transform)
+            let leftToRightVector = simd_make_float4(-headingVector.z, 0, headingVector.x, 0)
+            
+            let aheadAndDown = simd_float4x4.init(columns: (curLocation.transform.columns.0, curLocation.transform.columns.1, curLocation.transform.columns.2, curLocation.transform.columns.3 + 2*headingVector +
+                simd_make_float4(0, -1, 0, 0)))
+            var shouldAddAnchor = true
+            if let mappingAnchors = sceneView.session.currentFrame?.anchors.compactMap({ $0 as? LocationInfo }) {
+                for anchor in mappingAnchors.reversed() {
+                    if simd_norm_one(anchor.transform.columns.3 - aheadAndDown.columns.3) < 1.0 {
+                        shouldAddAnchor = false
+                        break
+                    }
+                }
+            }
+            // only add this as an anchor if there aren't any other ones within 1.0m (L1 distance) of the one we plan to add
+            if shouldAddAnchor {
+                let aheadAndUp = simd_float4x4.init(columns: (curLocation.transform.columns.0, curLocation.transform.columns.1, curLocation.transform.columns.2, curLocation.transform.columns.3 + 2*headingVector +
+                    simd_make_float4(0, 2, 0, 0)))
+                
+                let ahead = simd_float4x4.init(columns: (curLocation.transform.columns.0, curLocation.transform.columns.1, curLocation.transform.columns.2, curLocation.transform.columns.3 + 2*headingVector))
+                
+                let aheadAndLeft = simd_float4x4.init(columns: (curLocation.transform.columns.0, curLocation.transform.columns.1, curLocation.transform.columns.2, curLocation.transform.columns.3 + 2*headingVector - 2*leftToRightVector))
+                
+                let aheadAndRight = simd_float4x4.init(columns: (curLocation.transform.columns.0, curLocation.transform.columns.1, curLocation.transform.columns.2, curLocation.transform.columns.3 + 2*headingVector + 2*leftToRightVector))
+                
+                let anchorTransforms = [aheadAndDown, aheadAndUp, ahead, aheadAndRight, aheadAndLeft]
+                
+                for anchorTransform in anchorTransforms {
+                    sceneView.session.add(anchor: LocationInfo(transform: anchorTransform))
+                    let box = SCNBox(width: 0.1, height: 0.1, length: 0.1, chamferRadius: 0)
+                    let node = SCNNode(geometry: box)
+                    node.transform = SCNMatrix4(anchorTransform)
+                    sceneView.scene.rootNode.addChildNode(node)
+                }
+            }
+        }
     }
     
     @objc func followCrumb() {
@@ -1675,25 +1716,30 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     @objc func printCameraTransform() {
         printTransformHelper(transform: sceneView.session.currentFrame?.camera.transform)
     }
+
     func printTransformHelper(transform: simd_float4x4?) {
         if let transform = transform {
-            /*print(transform.columns.0.x, ", ", transform.columns.1.x, ", ", transform.columns.2.x, ", ", transform.columns.3.x)
-            print(transform.columns.0.y, ", ", transform.columns.1.y, ", ", transform.columns.2.y, ", ", transform.columns.3.y)
-            print(transform.columns.0.z, ", ", transform.columns.1.z, ", ", transform.columns.2.z, ", ", transform.columns.3.z)
-            print(transform.columns.0.w, ", ", transform.columns.1.w, ", ", transform.columns.2.w, ", ", transform.columns.3.w)*/
             print("yaw", getYawHelper(transform))
         }
     }
-    func getYawHelper(_ transform: simd_float4x4) -> Float {
+    
+    func getProjectedHeading(_ transform: simd_float4x4) -> simd_float4 {
         if abs(transform.columns.2.y) < abs(transform.columns.0.y) {
-            return atan2f(transform.columns.2.x, transform.columns.2.z)
+            return -simd_make_float4(transform.columns.2.x, 0, transform.columns.2.z, 0)
         } else {
             // this is a slightly different notion of yaw when the phone is rolled.  This works better for alignment to saved transforms.  I'm not sure whether it is better when navigating a route.
             // This calculates the angle necessary to align the phone's x-axis (long axis) so that it has a 0 component in the y-direction
             let pitchAngle = atan2f(-transform.columns.0.y, transform.columns.2.y)
             let depitchedTransform = transform.rotate(radians: -pitchAngle, 0, 1, 0)
-            return atan2f(depitchedTransform.columns.0.x, depitchedTransform.columns.0.z)
+            return -simd_make_float4(depitchedTransform.columns.0.x, 0, depitchedTransform.columns.0.z, 0)
         }
+        
+    }
+    
+    func getYawHelper(_ transform: simd_float4x4) -> Float {
+        // TODO: this is legacy to match with the stuff in nav, but it doesn't match the getProjectedHeading vector
+        let projectedHeading = getProjectedHeading(transform)
+        return atan2f(-projectedHeading.x, -projectedHeading.z)
     }
     
     // MARK: - Render directions
@@ -1713,7 +1759,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
         
         // use a stricter criteria than 12 o'clock for providing haptic feedback
-        if(fabs(directionToNextKeypoint.angleDiff) < coneWidth) {
+        if abs(directionToNextKeypoint.angleDiff) < coneWidth {
             let timeInterval = feedbackTimer.timeIntervalSinceNow
             if(-timeInterval > FEEDBACKDELAY) {
                 // wait until desired time interval before sending another feedback
@@ -2009,23 +2055,20 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 if case .startingResumeProcedure = state {
                     state = .readyForFinalResumeAlignment
                 }
+            @unknown default:
+                print("An error condition arose that we didn't know about when the app was last compiled")
+                return
             }
         case .normal:
             logString = "Normal"
             playSystemSound(id: 1025)
             // resetting the origin is a needed in the case when we realigned to a saved route
-            print("RESETTING WORLD ORIGIN!!!")
             session.setWorldOrigin(relativeTransform: simd_float4x4.makeTranslation(0,0,0))
-            print(state)
             if case .readyForFinalResumeAlignment = state {
                 // this will cancel any realignment if it hasn't happened yet and go straight to route navigation mode
                 countdownTimer.isHidden = true
                 state = .readyToNavigateOrPause(allowPause: false)
             }
-            /* TODO: this would be the right thing if we could guarantee that this state was entered into after the session new session was configuration was loaded and run.   For now we leave it out.
-            else if case .startingResumeProcedure = state {
-                state = .readyToNavigateOrPause(allowPause: false)
-            } */
             print("normal")
         case .notAvailable:
             logString = "NotAvailable"
