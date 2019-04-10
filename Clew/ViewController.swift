@@ -265,6 +265,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// How long to wait (in seconds) between the volume press and resuming the tracking session based on physical alignment
     let resumeWaitingPeriod = 5
     
+    /// The state of the ARKit tracking session as last communicated to us through the delgate protocol.  This is useful if you want to do something different in the delegate method depending on the previous state
+    var trackingSessionState : ARCamera.TrackingState?
+    
     /// The state of the app.  This should be constantly referenced and updated as the app transitions
     var state = AppState.initializing {
         didSet {
@@ -300,10 +303,16 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             }
         }
     }
+
+    /// When VoiceOver is not active, we use AVSpeechSynthesizer for speech feedback
+    let synth = AVSpeechSynthesizer()
     
     // This Boolean marks whether or not the pause procedure is being used to create a landmark at the start of a route (true) or if it is being used to pause an already recorded route
     // TODO: it would be nice if this could be a property of the state transition, but since it needs to stick around for multiple states it might become cumbersome to constantly pass around.  This is why it is an attribute whereas the announceArrival flag is a part of some of the AppState values.
     var creatingRouteLandmark: Bool = false
+    
+    /// Set to true when the user is attempting to load a saved route that has a map associated with it
+    var attemptingRelocalization: Bool = false
     
     func handleStateTransitionToMainScreen(announceArrival: Bool) {
         showRecordPathButton(announceArrival: announceArrival)
@@ -312,8 +321,16 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     func handleStateTransitionToRecordingRoute() {
         // records a new path
         
+        // TOTEST: do we need to restart the session in case we were attempting to relocalize to a saved path.  Verify that we go to normal tracking state
+        if attemptingRelocalization {
+            announce(announcement: "Restarting tracking session.")
+            configuration.initialWorldMap = nil
+            sceneView.session.run(configuration, options: [.removeExistingAnchors, .resetTracking])
+        }
+        
         // make sure to never record a path with a transform set
         sceneView.session.setWorldOrigin(relativeTransform: simd_float4x4.makeTranslation(0, 0, 0))
+        attemptingRelocalization = false
         
         // reset all logging related variables
         crumbs = []
@@ -349,9 +366,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         beginRouteLandmarkInformation = nil
         endRouteLandmarkTransform = nil
         endRouteLandmarkInformation = nil
-
-        // all of the route navigation announcements are done by posting notifications
-        directionText.isAccessibilityElement = false
         
         // clear any old log variables
         navigationData = []
@@ -383,7 +397,16 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         waypointFeedbackGenerator = UINotificationFeedbackGenerator()
         
         showStopNavigationButton()
-        followingCrumbs = Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: (#selector(followCrumb)), userInfo: nil, repeats: true)
+
+        // wait a little bit before starting navigation to allow screen to transition and make room for the first direction announcement to be communicated
+        
+        if UIAccessibility.isVoiceOverRunning {
+            Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false) { timer in
+                self.followingCrumbs = Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: (#selector(self.followCrumb)), userInfo: nil, repeats: true)
+            }
+        } else {
+            followingCrumbs = Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: (#selector(self.followCrumb)), userInfo: nil, repeats: true)
+        }
         
         feedbackTimer = Date()
         // make sure there are no old values hanging around
@@ -398,8 +421,18 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     func handleStateTransitionToStartingResumeProcedure(route: SavedRoute, map: ARWorldMap?, navigateStartToEnd: Bool) {
         // load the world map and restart the session so that things have a chance to quiet down before putting it up to the wall
+        let isTrackingPerformanceNormal: Bool
+        if case .normal? = sceneView.session.currentFrame?.camera.trackingState {
+            isTrackingPerformanceNormal = true
+        } else {
+            isTrackingPerformanceNormal = false
+        }
+        
         let isSameMap = configuration.initialWorldMap != nil && configuration.initialWorldMap == map
         configuration.initialWorldMap = map
+        
+        attemptingRelocalization =  isSameMap && !isTrackingPerformanceNormal || map != nil && !isSameMap
+
         if navigateStartToEnd {
             crumbs = route.crumbs.reversed()
             pausedTransform = route.beginRouteLandmarkTransform
@@ -415,9 +448,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             // We have to jump to this state as we will never enter the .relocalizing state since we are already in it
             state = .readyForFinalResumeAlignment
         } else if map == nil {
-            // Go right for the final alignment as we aren't going to go throug the typical sequence of states (relocalizing, then maybe normal)
+            // Go right for the final alignment as we aren't going to go through the typical sequence of states (relocalizing, then maybe normal)
             state = .readyForFinalResumeAlignment
-        } else if case .normal? = sceneView.session.currentFrame?.camera.trackingState, isSameMap {
+        } else if isTrackingPerformanceNormal, isSameMap {
             // we can skip the whole process of relocalization since we are already using the correct map
             state = .readyToNavigateOrPause(allowPause: false)
             // return to prevent the resume tracking confirm button from being shown
@@ -507,7 +540,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     }
     
     func hideAllViewsHelper() {
-        directionText.isHidden = true
         recordPathView.isHidden = true
         routeRatingView.isHidden = true
         stopRecordingView.isHidden = true
@@ -670,6 +702,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         return UIScreen.main.bounds.size.height - buttonFrameHeight - settingsAndHelpFrameHeight - settingsAndHelpMargin
     }
     
+    var yOriginOfAnnouncementFrame: CGFloat {
+        return UIScreen.main.bounds.size.height/15
+    }
+    
     /*
      * UIViews for all UI button containers
      */
@@ -679,7 +715,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     var pauseTrackingView: UIView!
     var resumeTrackingView: UIView!
     var resumeTrackingConfirmView: UIView!
-    var directionText: UILabel!
+    var announcementText: UILabel!
     var routeRatingView: UIView!
     var countdownTimer: SRCountdownTimer!
     var audioPlayers: [Int: AVAudioPlayer] = [:]
@@ -712,8 +748,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         drawUI()
         addGestures()
         setupFirebaseObservers()
-
-        Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(printCameraTransform)), userInfo: nil, repeats: true)
     }
     
     func setupAudioPlayers() {
@@ -977,7 +1011,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     func playSystemSound(id: Int) {
         do {
-            try AVAudioSession.sharedInstance().setCategory(AVAudioSession.Category(rawValue: AVAudioSession.Category.playback.rawValue))
+            try AVAudioSession.sharedInstance().setCategory(AVAudioSession.Category.playback)
             try AVAudioSession.sharedInstance().setActive(true)
             guard let player = audioPlayers[id] else {
                 // fallback on system sounds
@@ -1052,13 +1086,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         getDirectionButton.accessibilityLabel = "Get Directions"
         getDirectionButton.isHidden = true
         getDirectionButton.addTarget(self, action: #selector(announceDirectionHelpPressed), for: .touchUpInside)
-
-        // textlabel that displys directions
-        directionText = UILabel(frame: CGRect(x: 0, y: (yOriginOfButtonFrame + textLabelBuffer), width: buttonFrameWidth, height: buttonFrameHeight*(1/6)))
-        directionText.textColor = UIColor.white
-        directionText.textAlignment = .center
-        directionText.isAccessibilityElement = true
         
+        // textlabel that displays announcements
+        announcementText = UILabel(frame: CGRect(x: 0, y: yOriginOfAnnouncementFrame, width: buttonFrameWidth, height: buttonFrameHeight*(1/2)))
+        announcementText.textColor = UIColor.white
+        announcementText.textAlignment = .center
+        announcementText.isAccessibilityElement = false
+        announcementText.lineBreakMode = .byWordWrapping
+        announcementText.numberOfLines = 2
+        announcementText.font = announcementText.font.withSize(20)
+        announcementText.backgroundColor = UIColor.black.withAlphaComponent(0.4)
+        announcementText.isHidden = true
         
         // button that gives direction to the nearist keypoint
         countdownTimer = SRCountdownTimer(frame: CGRect(x: buttonFrameWidth*1/10, y: yOriginOfButtonFrame/10, width: buttonFrameWidth*8/10, height: buttonFrameWidth*8/10))
@@ -1108,7 +1146,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         self.view.addSubview(resumeTrackingView)
         self.view.addSubview(resumeTrackingConfirmView)
         self.view.addSubview(stopNavigationView)
-        self.view.addSubview(directionText)
+        self.view.addSubview(announcementText)
         self.view.addSubview(getDirectionButton)
         self.view.addSubview(settingsButton)
         self.view.addSubview(helpButton)
@@ -1128,24 +1166,26 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         helpButton.isHidden = false
         stopNavigationView.isHidden = true
         getDirectionButton.isHidden = true
-
-        directionText.isHidden = false
         routeRatingView.isHidden = true
-        var helpText: String
         if announceArrival {
-            helpText = "You've arrived."
-            directionText.isAccessibilityElement = true
+            delayTransition(announcement: "You've arrived.")
         } else {
-            helpText = ""
-            directionText.isAccessibilityElement = false
+            delayTransition()
         }
-        updateDirectionText(helpText, distance: 0, size: 16, displayDistance: false)
-        delayTransition()
     }
     
-    func delayTransition() {
+    func delayTransition(announcement: String? = nil) {
         // this notification currently cuts off the announcement of the button that was just pressed
         UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: nil)
+        if let announcement = announcement {
+            if UIAccessibility.isVoiceOverRunning {
+                Timer.scheduledTimer(withTimeInterval: 2.0, repeats: false) { timer in
+                    self.announce(announcement: announcement)
+                }
+            } else {
+                announce(announcement: announcement)
+            }
+        }
     }
     
     /*
@@ -1155,9 +1195,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         recordPathView.isHidden = true
         recordPathView.isAccessibilityElement = false
         stopRecordingView.isHidden = false
-        directionText.isAccessibilityElement = true
-        updateDirectionText("Hold vertically with the rear camera facing forward.", distance: 0, size: 13, displayDistance: false)
-        delayTransition()
+        delayTransition(announcement: "Hold vertically with the rear camera facing forward.")
     }
     
     /*
@@ -1169,9 +1207,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         stopRecordingView.isHidden = true
         startNavigationView.getButtonByTag(tag: UIView.pauseButtonTag)?.isHidden = !allowPause
         startNavigationView.isHidden = false
-        directionText.isHidden = false
-        directionText.isAccessibilityElement = false
-        updateDirectionText("", distance: 0, size: 14, displayDistance: false)
         delayTransition()
     }
     
@@ -1181,7 +1216,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     func showPauseTrackingButton() throws {
         recordPathView.isHidden = true
         startNavigationView.isHidden = true
-        directionText.isHidden = true
         pauseTrackingView.isHidden = false
         delayTransition()
     }
@@ -1220,7 +1254,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         stopNavigationView.isHidden = false
         getDirectionButton.isHidden = false
         // this does not auto update, so don't use it as an accessibility element
-        directionText.isAccessibilityElement = false
         delayTransition()
     }
     
@@ -1231,7 +1264,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         stopNavigationView.isHidden = true
         getDirectionButton.isHidden = true
         routeRatingView.isHidden = false
-        directionText.isHidden = true
 
         if announceArrival {
             routeRatingView.mainText?.text = "You've arrived. Please rate your service."
@@ -1249,16 +1281,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
      * distance Bool used to determine whether to add string "meters" to direction text
      */
     func updateDirectionText(_ description: String, distance: Float, size: CGFloat, displayDistance: Bool) {
-        directionText.fadeTransition(0.4)
-        directionText.font = directionText.font.withSize(size)
         let distanceToDisplay = roundToTenths(distance * unitConversionFactor[defaultUnit]!)
         var altText = ""
         if (displayDistance) {
-            directionText.text = description + " for \(distanceToDisplay)" + unit[defaultUnit]!
-            if(defaultUnit == 0) {
+            if defaultUnit == 0 {
                 altText = description + " for \(Int(distanceToDisplay))" + unitText[defaultUnit]!
             } else {
-                if(distanceToDisplay >= 10) {
+                if distanceToDisplay >= 10 {
                     let integer = Int(distanceToDisplay)
                     let decimal = Int((distanceToDisplay - Float(integer)) * 10)
                     altText = description + "\(integer) point \(decimal)" + unitText[defaultUnit]!
@@ -1267,20 +1296,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 }
             }
         } else {
-            directionText.text = description
             altText = description
         }
         if case .navigatingRoute = state {
             speechData.append(altText)
             speechDataTime.append(roundToThousandths(-dataTimer.timeIntervalSinceNow))
         }
-        
-        // TODO: next line was just if (voiceFeedback)
-        if case .navigatingRoute = state {
-            if voiceFeedback {
-                UIAccessibility.post(notification: UIAccessibility.Notification.announcement, argument: altText)
-            }
-        }
+        announce(announcement: altText)
     }
     
     // MARK: - BreadCrumbs
@@ -1315,6 +1337,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     var droppingCrumbs: Timer?
     var followingCrumbs: Timer?
     var hapticTimer: Timer?
+    var announcementRemovalTimer: Timer?
     var updateHeadingOffsetTimer: Timer?
     
     // navigation class and state
@@ -1712,17 +1735,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
     }
     
-    // MARK: - print camera transform
-    @objc func printCameraTransform() {
-        printTransformHelper(transform: sceneView.session.currentFrame?.camera.transform)
-    }
-
-    func printTransformHelper(transform: simd_float4x4?) {
-        if let transform = transform {
-            print("yaw", getYawHelper(transform))
-        }
-    }
-    
     func getProjectedHeading(_ transform: simd_float4x4) -> simd_float4 {
         if abs(transform.columns.2.y) < abs(transform.columns.0.y) {
             return -simd_make_float4(transform.columns.2.x, 0, transform.columns.2.z, 0)
@@ -1789,6 +1801,34 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         turnWarning = true
         setTurnWarningText(currentLocation: currentLocation.location, direction: dir)
     }*/
+    
+    /// Communicates a message to the user via speech.  If VoiceOver is active, then VoiceOver is used
+    /// to communicate the announcement, otherwise we use the AVSpeechEngine
+    ///
+    /// - Parameter announcement: the text to read to the user
+    func announce(announcement: String) {
+        announcementText.isHidden = false
+        announcementText.text = announcement
+        announcementRemovalTimer?.invalidate()
+        announcementRemovalTimer = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: false) { timer in
+            self.announcementText.isHidden = true
+        }
+        if UIAccessibility.isVoiceOverRunning {
+            // use the VoiceOver API instead of text to speech
+            UIAccessibility.post(notification: UIAccessibility.Notification.announcement, argument: announcement)
+        } else if voiceFeedback {
+            let audioSession = AVAudioSession.sharedInstance()
+            do {
+                try audioSession.setCategory(AVAudioSession.Category.playback)
+                try audioSession.setActive(true)
+                let utterance = AVSpeechUtterance(string: announcement)
+                utterance.rate = 0.6
+                synth.speak(utterance)
+            } catch {
+                print("Unexpeced error announcing something using AVSpeechEngine!")
+            }
+        }
+    }
     
     func getDirectionToNextKeypoint(currentLocation: CurrentCoordinateInfo) -> DirectionInfo {
         // returns direction to next keypoint from current location
@@ -2011,17 +2051,15 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         
         // record location data in debug logs
         if(record) {
+            let logMatrix = [round10k(scn.m11), round10k(scn.m12), round10k(scn.m13), round10k(scn.m14),
+             round10k(scn.m21), round10k(scn.m22), round10k(scn.m23), round10k(scn.m24),
+             round10k(scn.m31), round10k(scn.m32), round10k(scn.m33), round10k(scn.m34),
+             round10k(scn.m41), round10k(scn.m42), round10k(scn.m43), round10k(scn.m44)]
             if case .navigatingRoute = state {
-                navigationData.append([round10k(scn.m11), round10k(scn.m12), round10k(scn.m13), round10k(scn.m14),
-                                       round10k(scn.m21), round10k(scn.m22), round10k(scn.m23), round10k(scn.m24),
-                                       round10k(scn.m31), round10k(scn.m32), round10k(scn.m33), round10k(scn.m34),
-                                       round10k(scn.m41), round10k(scn.m42), round10k(scn.m43), round10k(scn.m44)])
+                navigationData.append(logMatrix)
                 navigationDataTime.append(roundToThousandths(-dataTimer.timeIntervalSinceNow))
             } else {
-                pathData.append([round10k(scn.m11), round10k(scn.m12), round10k(scn.m13), round10k(scn.m14),
-                                 round10k(scn.m21), round10k(scn.m22), round10k(scn.m23), round10k(scn.m24),
-                                 round10k(scn.m31), round10k(scn.m32), round10k(scn.m33), round10k(scn.m34),
-                                 round10k(scn.m41), round10k(scn.m42), round10k(scn.m43), round10k(scn.m44)])
+                pathData.append(logMatrix)
                 pathDataTime.append(roundToThousandths(-dataTimer.timeIntervalSinceNow))
             }
         }
@@ -2032,7 +2070,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
      * Called when there is a change in tracking state
      */
     func session(_ session: ARSession, cameraDidChangeTrackingState camera: ARCamera) {
-        var logString: String
+        var logString: String? = nil
 
         switch camera.trackingState {
         case .limited(let reason):
@@ -2040,15 +2078,20 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             case .excessiveMotion:
                 logString = "ExcessiveMotion"
                 print("Excessive motion")
-                playSystemSound(id: 1050)
+                announce(announcement: "Excessive motion.\nTracking performance is degraded.")
+                if soundFeedback {
+                    playSystemSound(id: 1050)
+                }
             case .insufficientFeatures:
                 logString = "InsufficientFeatures"
                 print("InsufficientFeatures")
-                playSystemSound(id: 1050)
+                announce(announcement: "Insufficient visual features.\nTracking performance is degraded.")
+                if soundFeedback {
+                    playSystemSound(id: 1050)
+                }
             case .initializing:
                 // don't log anything
                 print("initializing")
-                return
             case .relocalizing:
                 logString = "Relocalizing"
                 print("Relocalizing")
@@ -2057,11 +2100,22 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 }
             @unknown default:
                 print("An error condition arose that we didn't know about when the app was last compiled")
-                return
             }
         case .normal:
             logString = "Normal"
-            playSystemSound(id: 1025)
+            if configuration.initialWorldMap != nil, attemptingRelocalization {
+                announce(announcement: "Successfully matched current environment to saved route.")
+                attemptingRelocalization = false
+            } else if case let .limited(reason)? = trackingSessionState {
+                if reason == .initializing {
+                    announce(announcement: "Tracking session initialized.")
+                } else {
+                    announce(announcement: "Tracking performance normal.")
+                    if soundFeedback {
+                        playSystemSound(id: 1025)
+                    }
+                }
+            }
             // resetting the origin is a needed in the case when we realigned to a saved route
             session.setWorldOrigin(relativeTransform: simd_float4x4.makeTranslation(0,0,0))
             if case .readyForFinalResumeAlignment = state {
@@ -2074,16 +2128,25 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             logString = "NotAvailable"
             print("notAvailable")
         }
-        if case .recordingRoute = state {
-            trackingErrorPhase.append(true)
-            trackingErrorTime.append(roundToThousandths(-dataTimer.timeIntervalSinceNow))
-            trackingErrorData.append(logString)
-        } else if case .navigatingRoute = state {
-            trackingErrorPhase.append(false)
-            trackingErrorTime.append(roundToThousandths(-dataTimer.timeIntervalSinceNow))
-            trackingErrorData.append(logString)
+        if let logString = logString {
+            if case .recordingRoute = state {
+                trackingErrorPhase.append(true)
+                trackingErrorTime.append(roundToThousandths(-dataTimer.timeIntervalSinceNow))
+                trackingErrorData.append(logString)
+            } else if case .navigatingRoute = state {
+                trackingErrorPhase.append(false)
+                trackingErrorTime.append(roundToThousandths(-dataTimer.timeIntervalSinceNow))
+                trackingErrorData.append(logString)
+            }
         }
+        // update the tracking state so we can use it in the next call to this function
+        trackingSessionState = camera.trackingState
     }
+    
+    func sessionShouldAttemptRelocalization(_ session: ARSession) -> Bool {
+        return true
+    }
+    
 }
 
 extension ViewController: UIPopoverPresentationControllerDelegate {
