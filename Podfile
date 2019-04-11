@@ -20,3 +20,14 @@ end
 target 'Clew Dev' do
     all_pods
 end
+
+# manually set the swift version for SRCountdownTimer since it doesn't work with Swift 5.0
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+    if ['SRCountdownTimer'].include? target.name
+      target.build_configurations.each do |config|
+        config.build_settings['SWIFT_VERSION'] = '4.0'
+      end
+    end
+  end
+end
