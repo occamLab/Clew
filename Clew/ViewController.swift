@@ -4,13 +4,17 @@
 //
 //  Created by Chris Seonghwan Yoon & Jeremy Ryan on 7/10/17.
 //
-// Major TODOs
-//  - Help documentation
+// Known issues
+//  - It seems that if the route is matched during the 5-second alignment countdown that the start navigation button will not be displayed.
+//
+// Major features to implement
+//  - None currently
 //
 // Potential enhancements
 //  - Possibly create a warning if the phone doesn't appear to be in the correct orientation
 //  - revisit turn warning feature.  It doesn't seem to actually help all that much at the moment.
 //  - Group record path and record button (for instance)
+//  - Might want to suppress old pending tracking status updates (this can be overwhelming and you really only want the latest information)
 
 import UIKit
 import ARKit
@@ -1396,6 +1400,16 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         showNavigatePathWithoutLandmarkWarning()
     }
     
+    /// This helper function will restart the tracking session if a relocalization was in progress but did not succeed.  This is useful in the case when you want to allow for the recording of a new route and don't want to have the possibility achieving relocalization halfway through recording the route.
+    func restartSessionIfFailedToRelocalize() {
+        if attemptingRelocalization {
+            announce(announcement: "Restarting tracking session.")
+            configuration.initialWorldMap = nil
+            sceneView.session.run(configuration, options: [.removeExistingAnchors, .resetTracking])
+            attemptingRelocalization = false
+        }
+    }
+    
     @objc func stopNavigation(_ sender: UIButton) {
         // stop navigation
         followingCrumbs?.invalidate()
@@ -1403,13 +1417,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         
         feedbackGenerator = nil
         waypointFeedbackGenerator = nil
-        
-        if attemptingRelocalization {
-            announce(announcement: "Restarting tracking session.")
-            configuration.initialWorldMap = nil
-            sceneView.session.run(configuration, options: [.removeExistingAnchors, .resetTracking])
-            attemptingRelocalization = false
-        }
+
+        restartSessionIfFailedToRelocalize()
         
         // erase neariest keypoint
         keypointNode.removeFromParentNode()
@@ -1656,6 +1665,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 
                 followingCrumbs?.invalidate()
                 hapticTimer?.invalidate()
+                
+                restartSessionIfFailedToRelocalize()
+                
                 // update text and stop navigation
                 if(sendLogs) {
                     state = .ratingRoute(announceArrival: true)
@@ -2109,7 +2121,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                     }
                 }
             }
-            // resetting the origin is a needed in the case when we realigned to a saved route
+            // resetting the origin is needed in the case when we realigned to a saved route
             session.setWorldOrigin(relativeTransform: simd_float4x4.makeTranslation(0,0,0))
             if case .readyForFinalResumeAlignment = state {
                 // this will cancel any realignment if it hasn't happened yet and go straight to route navigation mode
