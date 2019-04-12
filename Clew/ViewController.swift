@@ -223,6 +223,7 @@ enum AppState {
     /// the AR session has entered the relocalizing state, which means that we can now realign the session
     case readyForFinalResumeAlignment
     
+    /// rawValue is useful for serializing state values, which we are currently using for our logging feature
     var rawValue: String {
         switch self {
         case .mainScreen(let announceArrival):
@@ -320,13 +321,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     func handleStateTransitionToRecordingRoute() {
         // records a new path
-        
-        // TOTEST: do we need to restart the session in case we were attempting to relocalize to a saved path.  Verify that we go to normal tracking state
-        if attemptingRelocalization {
-            announce(announcement: "Restarting tracking session.")
-            configuration.initialWorldMap = nil
-            sceneView.session.run(configuration, options: [.removeExistingAnchors, .resetTracking])
-        }
         
         // make sure to never record a path with a transform set
         sceneView.session.setWorldOrigin(relativeTransform: simd_float4x4.makeTranslation(0, 0, 0))
@@ -487,6 +481,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     }
     
     func handleStateTransitionToCompletingPauseProcedure() {
+        // TODO: we should not be able to create a route landmark if we are in the relocalizing state... (might want to handle this when the user stops navigation on a route they loaded.... This would obviate the need to handle this in the recordPath code as well
         if creatingRouteLandmark {
             guard let currentTransform = sceneView.session.currentFrame?.camera.transform else {
                 print("can't properly save landmark: TODO communicate this to the user somehow")
@@ -512,15 +507,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 } catch {
                     fatalError("Can't save map: \(error.localizedDescription)")
                 }
-                self.handleStateTransitionToCompletingPauseProcedureHelper()
+                self.showResumeTrackingButton()
+                Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(self.playSound)), userInfo: nil, repeats: false)
+                self.state = .pauseProcedureCompleted
             }
         }
-    }
-    
-    func handleStateTransitionToCompletingPauseProcedureHelper() {
-        self.showResumeTrackingButton()
-        Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(playSound)), userInfo: nil, repeats: false)
-        state = .pauseProcedureCompleted
     }
     
     @objc func routesButtonPressed() {
@@ -1280,23 +1271,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
      * update directionText UILabel given text string and font size
      * distance Bool used to determine whether to add string "meters" to direction text
      */
-    func updateDirectionText(_ description: String, distance: Float, size: CGFloat, displayDistance: Bool) {
+    func updateDirectionText(_ description: String, distance: Float, displayDistance: Bool) {
         let distanceToDisplay = roundToTenths(distance * unitConversionFactor[defaultUnit]!)
-        var altText = ""
+        var altText = description
         if (displayDistance) {
-            if defaultUnit == 0 {
-                altText = description + " for \(Int(distanceToDisplay))" + unitText[defaultUnit]!
+            if defaultUnit == 0 || distanceToDisplay >= 10 {
+                // don't use fractiomal feet or for higher numbers of meters (round instead)
+                // Related to higher number of meters, there is a somewhat strange behavior in VoiceOver where numbers greater than 10 will be read as, for instance, 11 dot 4 meters (instead of 11 point 4 meters).
+                altText += " for \(Int(distanceToDisplay))" + unitText[defaultUnit]!
             } else {
-                if distanceToDisplay >= 10 {
-                    let integer = Int(distanceToDisplay)
-                    let decimal = Int((distanceToDisplay - Float(integer)) * 10)
-                    altText = description + "\(integer) point \(decimal)" + unitText[defaultUnit]!
-                } else {
-                    altText = description + "\(distanceToDisplay)" + unitText[defaultUnit]!
-                }
+                altText += " for \(distanceToDisplay)" + unitText[defaultUnit]!
             }
-        } else {
-            altText = description
         }
         if case .navigatingRoute = state {
             speechData.append(altText)
@@ -1418,6 +1403,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         
         feedbackGenerator = nil
         waypointFeedbackGenerator = nil
+        
+        if attemptingRelocalization {
+            announce(announcement: "Restarting tracking session.")
+            configuration.initialWorldMap = nil
+            sceneView.session.run(configuration, options: [.removeExistingAnchors, .resetTracking])
+            attemptingRelocalization = false
+        }
         
         // erase neariest keypoint
         keypointNode.removeFromParentNode()
@@ -1891,21 +1883,21 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             } else {
                 dir += "\(TurnWarnings[direction.clockDirection]!) and proceed upstairs"
             }
-            updateDirectionText(dir, distance: 0, size: 12, displayDistance: false)
+            updateDirectionText(dir, distance: 0, displayDistance: false)
         } else if (slope < -0.3) { // Go downstairs
             if(hapticFeedback) {
                 dir += "\(TurnWarnings[direction.hapticDirection]!) and proceed downstairs"
             } else {
                 dir += "\(TurnWarnings[direction.clockDirection]!) and proceed downstairs"
             }
-            updateDirectionText(dir, distance: direction.distance,size: 12, displayDistance: false)
+            updateDirectionText(dir, distance: direction.distance, displayDistance: false)
         } else { // nromal directions
             if(hapticFeedback) {
                 dir += "\(TurnWarnings[direction.hapticDirection]!)"
             } else {
                 dir += "\(TurnWarnings[direction.clockDirection]!)"
             }
-            updateDirectionText(dir, distance: direction.distance, size: 16, displayDistance:  false)
+            updateDirectionText(dir, distance: direction.distance, displayDistance:  false)
         }
     }
     
@@ -1921,21 +1913,21 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             } else {
                 dir += "\(Directions[direction.clockDirection]!) and proceed upstairs"
             }
-            updateDirectionText(dir, distance: 0, size: 12, displayDistance: false)
+            updateDirectionText(dir, distance: 0, displayDistance: false)
         } else if (slope < -0.3) { // Go downstairs
             if(hapticFeedback) {
                 dir += "\(Directions[direction.hapticDirection]!) and proceed downstairs"
             } else {
                 dir += "\(Directions[direction.clockDirection]!) and proceed downstairs"
             }
-            updateDirectionText(dir, distance: direction.distance,size: 12, displayDistance: false)
+            updateDirectionText(dir, distance: direction.distance, displayDistance: false)
         } else { // nromal directions
             if(hapticFeedback) {
                 dir += "\(Directions[direction.hapticDirection]!)"
             } else {
                 dir += "\(Directions[direction.clockDirection]!)"
             }
-            updateDirectionText(dir, distance: direction.distance, size: 16, displayDistance:  displayDistance)
+            updateDirectionText(dir, distance: direction.distance, displayDistance:  displayDistance)
         }
     }
     
@@ -2055,12 +2047,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
              round10k(scn.m21), round10k(scn.m22), round10k(scn.m23), round10k(scn.m24),
              round10k(scn.m31), round10k(scn.m32), round10k(scn.m33), round10k(scn.m34),
              round10k(scn.m41), round10k(scn.m42), round10k(scn.m43), round10k(scn.m44)]
+            let logTime = roundToThousandths(-dataTimer.timeIntervalSinceNow)
             if case .navigatingRoute = state {
                 navigationData.append(logMatrix)
-                navigationDataTime.append(roundToThousandths(-dataTimer.timeIntervalSinceNow))
+                navigationDataTime.append(logTime)
             } else {
                 pathData.append(logMatrix)
-                pathDataTime.append(roundToThousandths(-dataTimer.timeIntervalSinceNow))
+                pathDataTime.append(logTime)
             }
         }
         return CurrentCoordinateInfo(LocationInfo(transform: currTransform), transMatrix: transMatrix)
