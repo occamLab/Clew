@@ -5,7 +5,6 @@
 //  Created by Chris Seonghwan Yoon & Jeremy Ryan on 7/10/17.
 //
 // Known issues
-//  - It seems that if the route is matched during the 5-second alignment countdown that the start navigation button will not be displayed.
 //
 // Major features to implement
 //  - None currently
@@ -441,20 +440,15 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         // make sure to clear out any relative transform that was saved before so we accurately align
         sceneView.session.setWorldOrigin(relativeTransform: simd_float4x4.makeTranslation(0, 0, 0))
         sceneView.session.run(configuration, options: [.removeExistingAnchors])
-        
-        if case .limited(reason: .relocalizing)? = sceneView.session.currentFrame?.camera.trackingState {
-            // We have to jump to this state as we will never enter the .relocalizing state since we are already in it
-            state = .readyForFinalResumeAlignment
-        } else if map == nil {
-            // Go right for the final alignment as we aren't going to go through the typical sequence of states (relocalizing, then maybe normal)
-            state = .readyForFinalResumeAlignment
-        } else if isTrackingPerformanceNormal, isSameMap {
-            // we can skip the whole process of relocalization since we are already using the correct map
+
+        if isTrackingPerformanceNormal, isSameMap {
+            // we can skip the whole process of relocalization since we are already using the correct map and tracking is normal.  It helps to strip out old anchors to reduce jitter though
             state = .readyToNavigateOrPause(allowPause: false)
-            // return to prevent the resume tracking confirm button from being shown
-            return
+        } else {
+            // setting this flag after entering the .limited(reason: .relocalizing) state is a bit error prone.  Since there is a 5-second waiting period, there is no way that we will ever finish the alignment countdown before the session has successfully restarted
+            state = .readyForFinalResumeAlignment
+            showResumeTrackingConfirmButton(route: route, navigateStartToEnd: navigateStartToEnd)
         }
-        showResumeTrackingConfirmButton(route: route, navigateStartToEnd: navigateStartToEnd)
     }
     
     func handleStateTransitionToStartingPauseProcedure() {
@@ -2100,9 +2094,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             case .relocalizing:
                 logString = "Relocalizing"
                 print("Relocalizing")
-                if case .startingResumeProcedure = state {
-                    state = .readyForFinalResumeAlignment
-                }
             @unknown default:
                 print("An error condition arose that we didn't know about when the app was last compiled")
             }
