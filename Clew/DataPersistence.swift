@@ -22,7 +22,7 @@ class DataPersistence {
         }
     }
     
-    func archive(route: SavedRoute, worldMap: ARWorldMap?) throws {
+    func archive(route: SavedRoute, worldMapAsAny: Any?) throws {
         // Save route to the route list
         if !update(route: route) {
             self.routes.append(route)
@@ -30,20 +30,30 @@ class DataPersistence {
         let data = try NSKeyedArchiver.archivedData(withRootObject: self.routes, requiringSecureCoding: true)
         try data.write(to: self.getRoutesURL(), options: [.atomic])
         // Save the world map corresponding to the route
-        if let worldMapAsAny = worldMap as Any? {
-            let data = try NSKeyedArchiver.archivedData(withRootObject: worldMapAsAny, requiringSecureCoding: true)
-            try data.write(to: self.getWorldMapURL(id: route.id as String), options: [.atomic])
+        if #available(iOS 12.0, *) {
+            if let worldMapAsAny = worldMapAsAny {
+                let data = try NSKeyedArchiver.archivedData(withRootObject: worldMapAsAny, requiringSecureCoding: true)
+                try data.write(to: self.getWorldMapURL(id: route.id as String), options: [.atomic])
+            }
         }
     }
     
-    func unarchive(id: String) -> ARWorldMap? {
-        do {
-            let data = try Data(contentsOf: getWorldMapURL(id: id))
-            guard let unarchivedObject = ((try? NSKeyedUnarchiver.unarchivedObject(ofClass: ARWorldMap.self, from: data)) as ARWorldMap??),
-                let worldMap = unarchivedObject else { return nil }
-            return worldMap
-        } catch {
-            print("Error retrieving world map data.")
+    /// Load the map from the app's local storage.  If we are on a platform that doesn't support ARWorldMap, this function always returns nil
+    ///
+    /// - Parameter id: the map id to fetch
+    /// - Returns: the stored map as Any?
+    func unarchiveMap(id: String) -> Any? {
+        if #available(iOS 12.0, *) {
+            do {
+                let data = try Data(contentsOf: getWorldMapURL(id: id))
+                guard let unarchivedObject = ((try? NSKeyedUnarchiver.unarchivedObject(ofClass: ARWorldMap.self, from: data)) as ARWorldMap??),
+                    let worldMap = unarchivedObject else { return nil }
+                return worldMap
+            } catch {
+                print("Error retrieving world map data.")
+                return nil
+            }
+        } else {
             return nil
         }
     }

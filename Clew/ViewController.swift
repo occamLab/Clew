@@ -8,7 +8,7 @@
 // - Maybe intercept session was interrupted so that we don't mistakenly try to navigate saved route before relocalization
 //
 // Major features to implement
-//  - None currently
+//  - Voice notes would be great to have instead of text for route naming and landmark naming
 //
 // Potential enhancements
 //  - Possibly create a warning if the phone doesn't appear to be in the correct orientation
@@ -223,7 +223,7 @@ enum AppState {
     /// user has successfully paused the ARSession
     case pauseProcedureCompleted
     /// user has hit the resume button and is waiting for the volume to hit
-    case startingResumeProcedure(route: SavedRoute, map: ARWorldMap?, navigateStartToEnd: Bool)
+    case startingResumeProcedure(route: SavedRoute, mapAsAny: Any?, navigateStartToEnd: Bool)
     /// the AR session has entered the relocalizing state, which means that we can now realign the session
     case readyForFinalResumeAlignment
     
@@ -298,8 +298,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             case .pauseProcedureCompleted:
                 // nothing happens currently
                 break
-            case .startingResumeProcedure(let route, let map, let navigateStartToEnd):
-                handleStateTransitionToStartingResumeProcedure(route: route, map: map, navigateStartToEnd: navigateStartToEnd)
+            case .startingResumeProcedure(let route, let mapAsAny, let navigateStartToEnd):
+                handleStateTransitionToStartingResumeProcedure(route: route, mapAsAny: mapAsAny, navigateStartToEnd: navigateStartToEnd)
             case .readyForFinalResumeAlignment:
                 // nothing happens currently
                 break
@@ -458,7 +458,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         showRouteRating(announceArrival: announceArrival)
     }
     
-    func handleStateTransitionToStartingResumeProcedure(route: SavedRoute, map: ARWorldMap?, navigateStartToEnd: Bool) {
+    func handleStateTransitionToStartingResumeProcedure(route: SavedRoute, mapAsAny: Any?, navigateStartToEnd: Bool) {
         // load the world map and restart the session so that things have a chance to quiet down before putting it up to the wall
         let isTrackingPerformanceNormal: Bool
         if case .normal? = sceneView.session.currentFrame?.camera.trackingState {
@@ -467,10 +467,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             isTrackingPerformanceNormal = false
         }
         
-        let isSameMap = configuration.initialWorldMap != nil && configuration.initialWorldMap == map
-        configuration.initialWorldMap = map
+        var isSameMap = false
+        if #available(iOS 12.0, *) {
+            let map = mapAsAny as! ARWorldMap?
+            isSameMap = configuration.initialWorldMap != nil && configuration.initialWorldMap == map
+            configuration.initialWorldMap = map
         
-        attemptingRelocalization =  isSameMap && !isTrackingPerformanceNormal || map != nil && !isSameMap
+            attemptingRelocalization =  isSameMap && !isTrackingPerformanceNormal || map != nil && !isSameMap
+        }
 
         if navigateStartToEnd {
             crumbs = route.crumbs.reversed()
@@ -533,23 +537,35 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             state = .mainScreen(announceArrival: false)
             return
         } else if let currentTransform = sceneView.session.currentFrame?.camera.transform {
-            sceneView.session.getCurrentWorldMap { worldMap, error in
-                do {
-                    self.endRouteLandmarkTransform = currentTransform
-                    if self.routeName == nil {
-                        // get a route name
-                        self.showRouteNamingDialog(map: worldMap)
-                    } else {
-                        // TODO: factor this out
-                        let id = String(Int64(NSDate().timeIntervalSince1970 * 1000)) as NSString
-                        try self.archive(routeId: id, beginRouteLandmarkTransform: self.beginRouteLandmarkTransform, beginRouteLandmarkInformation: self.beginRouteLandmarkInformation, endRouteLandmarkTransform: self.endRouteLandmarkTransform, endRouteLandmarkInformation: self.endRouteLandmarkInformation, worldMap: worldMap)
-                    }
-                } catch {
-                    fatalError("Can't save map: \(error.localizedDescription)")
+            endRouteLandmarkTransform = currentTransform
+
+            if #available(iOS 12.0, *) {
+                sceneView.session.getCurrentWorldMap { worldMap, error in
+                    self.getRouteNameAndSaveRouteHelper(mapAsAny: worldMap)
+                    self.showResumeTrackingButton()
+                    Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(self.playSound)), userInfo: nil, repeats: false)
+                    self.state = .pauseProcedureCompleted
                 }
-                self.showResumeTrackingButton()
+            } else {
+                getRouteNameAndSaveRouteHelper(mapAsAny: nil)
+                showResumeTrackingButton()
                 Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(self.playSound)), userInfo: nil, repeats: false)
-                self.state = .pauseProcedureCompleted
+                state = .pauseProcedureCompleted
+            }
+        }
+    }
+    
+    func getRouteNameAndSaveRouteHelper(mapAsAny: Any?) {
+        if routeName == nil {
+            // get a route name
+            showRouteNamingDialog(mapAsAny: mapAsAny)
+        } else {
+            do {
+                // TODO: factor this out
+                let id = String(Int64(NSDate().timeIntervalSince1970 * 1000)) as NSString
+                try archive(routeId: id, beginRouteLandmarkTransform: beginRouteLandmarkTransform, beginRouteLandmarkInformation: beginRouteLandmarkInformation, endRouteLandmarkTransform: endRouteLandmarkTransform, endRouteLandmarkInformation: endRouteLandmarkInformation, worldMapAsAny: mapAsAny)
+            } catch {
+                fatalError("Can't archive route: \(error.localizedDescription)")
             }
         }
     }
@@ -583,14 +599,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     }
     
     func onRouteTableViewCellClicked(route: SavedRoute, navigateStartToEnd: Bool) {
-        let worldMap = dataPersistence.unarchive(id: route.id as String)
+        let worldMapAsAny = dataPersistence.unarchiveMap(id: route.id as String)
         hideAllViewsHelper()
-        state = .startingResumeProcedure(route: route, map: worldMap, navigateStartToEnd: navigateStartToEnd)
+        state = .startingResumeProcedure(route: route, mapAsAny: worldMapAsAny, navigateStartToEnd: navigateStartToEnd)
     }
     
-    func archive(routeId: NSString, beginRouteLandmarkTransform: simd_float4x4?, beginRouteLandmarkInformation: NSString?, endRouteLandmarkTransform: simd_float4x4?, endRouteLandmarkInformation: NSString?, worldMap: ARWorldMap?) throws {
+    func archive(routeId: NSString, beginRouteLandmarkTransform: simd_float4x4?, beginRouteLandmarkInformation: NSString?, endRouteLandmarkTransform: simd_float4x4?, endRouteLandmarkInformation: NSString?, worldMapAsAny: Any?) throws {
         let savedRoute = SavedRoute(id: routeId, name: routeName!, crumbs: crumbs, dateCreated: Date() as NSDate, beginRouteLandmarkTransform: beginRouteLandmarkTransform, beginRouteLandmarkInformation: beginRouteLandmarkInformation, endRouteLandmarkTransform: endRouteLandmarkTransform, endRouteLandmarkInformation: endRouteLandmarkInformation)
-        try dataPersistence.archive(route: savedRoute, worldMap: worldMap)
+        try dataPersistence.archive(route: savedRoute, worldMapAsAny: worldMapAsAny)
         justTraveledRoute = savedRoute
     }
 
@@ -915,17 +931,18 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /*
      * display SAVE ROUTE input dialog
      */
-    @objc func showRouteNamingDialog(map: ARWorldMap?) {
+    @objc func showRouteNamingDialog(mapAsAny: Any?) {
         // Set title and message for the alert dialog
-        justUsedMap = map
-
+        if #available(iOS 12.0, *) {
+            justUsedMap = mapAsAny as! ARWorldMap?
+        }
         let alertController = UIAlertController(title: "Save route", message: "Enter the name of the route", preferredStyle: .alert)
         // The confirm action taking the inputs
         let saveAction = UIAlertAction(title: "Save", style: .default) { (_) in
             let id = String(Int64(NSDate().timeIntervalSince1970 * 1000)) as NSString
             // Get the input values from user, if it's nil then use timestamp
             self.routeName = alertController.textFields?[0].text as NSString? ?? id
-            try! self.archive(routeId: id, beginRouteLandmarkTransform: self.beginRouteLandmarkTransform, beginRouteLandmarkInformation: self.beginRouteLandmarkInformation, endRouteLandmarkTransform: self.endRouteLandmarkTransform, endRouteLandmarkInformation: self.endRouteLandmarkInformation, worldMap: map)
+            try! self.archive(routeId: id, beginRouteLandmarkTransform: self.beginRouteLandmarkTransform, beginRouteLandmarkInformation: self.beginRouteLandmarkInformation, endRouteLandmarkTransform: self.endRouteLandmarkTransform, endRouteLandmarkInformation: self.endRouteLandmarkInformation, worldMapAsAny: mapAsAny)
         }
             
         // The cancel action saves the just traversed route so you can navigate back along it later
@@ -1423,7 +1440,18 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     var routeName: NSString?
 
     var justTraveledRoute: SavedRoute?
-    var justUsedMap: ARWorldMap?
+    
+    // this is a generically typed placeholder for the justUsedMap computed property.  This is needed due to the fact that @available cannot be used for stored attributes
+    var justUsedMapAsAny: Any?
+    @available(iOS 12.0, *)
+    var justUsedMap : ARWorldMap? {
+        get {
+            return justUsedMapAsAny as! ARWorldMap?
+        }
+        set (newValue) {
+            justUsedMapAsAny = newValue
+        }
+    }
     
     // DirectionText based on hapic/voice settings
     var Directions: Dictionary<Int, String> {
@@ -1439,15 +1467,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     }
     
     @objc func stopRecording(_ sender: UIButton) {
-        if let beginRouteLandmarkTransform = beginRouteLandmarkTransform {
-            sceneView.session.getCurrentWorldMap { worldMap, error in
-                if self.routeName == nil {
-                    // get a route name
-                    self.showRouteNamingDialog(map: worldMap)
-                } else {
-                    let id = String(Int64(NSDate().timeIntervalSince1970 * 1000)) as NSString
-                    try! self.archive(routeId: id, beginRouteLandmarkTransform: beginRouteLandmarkTransform, beginRouteLandmarkInformation: self.beginRouteLandmarkInformation, endRouteLandmarkTransform: self.endRouteLandmarkTransform, endRouteLandmarkInformation: self.endRouteLandmarkInformation, worldMap: worldMap)
+        if beginRouteLandmarkTransform != nil {
+            if #available(iOS 12.0, *) {
+                sceneView.session.getCurrentWorldMap { worldMap, error in
+                    self.getRouteNameAndSaveRouteHelper(mapAsAny: worldMap)
                 }
+            } else {
+                getRouteNameAndSaveRouteHelper(mapAsAny: nil)
             }
         }
 
@@ -1465,7 +1491,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             if !suppressTrackingWarnings {
                 announce(announcement: "Could not match visually to the saved route. Starting new tracking session.")
             }
-            configuration.initialWorldMap = nil
+            if #available(iOS 12.0, *) {
+                configuration.initialWorldMap = nil
+            }
             sceneView.session.run(configuration, options: [.removeExistingAnchors, .resetTracking])
             attemptingRelocalization = false
         }
@@ -1539,7 +1567,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     @objc func confirmResumeTracking() {
         if let route = justTraveledRoute {
-            state = .startingResumeProcedure(route: route, map: justUsedMap, navigateStartToEnd: false)
+            state = .startingResumeProcedure(route: route, mapAsAny: justUsedMapAsAny, navigateStartToEnd: false)
         }
     }
     
@@ -2168,7 +2196,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             }
         case .normal:
             logString = "Normal"
-            if configuration.initialWorldMap != nil, attemptingRelocalization {
+            if #available(iOS 12.0, *), configuration.initialWorldMap != nil, attemptingRelocalization {
                 if !suppressTrackingWarnings {
                     announce(announcement: "Successfully matched current environment to saved route.")
                 }
