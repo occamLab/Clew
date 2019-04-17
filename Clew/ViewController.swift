@@ -5,6 +5,7 @@
 //  Created by Chris Seonghwan Yoon & Jeremy Ryan on 7/10/17.
 //
 // Known issues
+// - Maybe intercept session was interrupted so that we don't mistakenly try to navigate saved route before relocalization
 //
 // Major features to implement
 //  - None currently
@@ -257,7 +258,7 @@ enum AppState {
     }
 }
 
-class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDelegate {
+class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDelegate, AVSpeechSynthesizerDelegate {
     
     // MARK: - Refactoring UI definition
     
@@ -311,12 +312,53 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// When VoiceOver is not active, we use AVSpeechSynthesizer for speech feedback
     let synth = AVSpeechSynthesizer()
     
+    /// The announcement that is currently being read.  If this is nil, that implies nothing is being read
+    var currentAnnouncement: String?
+    
+    /// The announcement that should be read immediately after this one finishes
+    var nextAnnouncement: String?
+    
+    /// A boolean that tracks whether or not to suppress tracking warnings.  By default we don't suppress, but when the help popover is presented we do.
+    var suppressTrackingWarnings = false
+    
     // This Boolean marks whether or not the pause procedure is being used to create a landmark at the start of a route (true) or if it is being used to pause an already recorded route
     // TODO: it would be nice if this could be a property of the state transition, but since it needs to stick around for multiple states it might become cumbersome to constantly pass around.  This is why it is an attribute whereas the announceArrival flag is a part of some of the AppState values.
     var creatingRouteLandmark: Bool = false
     
     /// Set to true when the user is attempting to load a saved route that has a map associated with it
     var attemptingRelocalization: Bool = false
+    
+    // MARK: - Speech Synthesizer Delegate
+    
+    /// Called when an utterance is finished.  We implement this function so that we can keep track of
+    /// whether or not an announcement is currently being read to the user.
+    ///
+    /// - Parameters:
+    ///   - synthesizer: the synthesizer that finished the utterance
+    ///   - utterance: the utterance itself
+    func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer,
+                           didFinish utterance: AVSpeechUtterance) {
+        currentAnnouncement = nil
+        if let nextAnnouncement = self.nextAnnouncement {
+            self.nextAnnouncement = nil
+            announce(announcement: nextAnnouncement)
+        }
+    }
+    
+    /// Called when an utterance is canceled.  We implement this function so that we can keep track of
+    /// whether or not an announcement is currently being read to the user.
+    ///
+    /// - Parameters:
+    ///   - synthesizer: the synthesizer that finished the utterance
+    ///   - utterance: the utterance itself
+    func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer,
+                           didCancel utterance: AVSpeechUtterance) {
+        currentAnnouncement = nil
+        if let nextAnnouncement = self.nextAnnouncement {
+            self.nextAnnouncement = nil
+            announce(announcement: nextAnnouncement)
+        }
+    }
     
     func handleStateTransitionToMainScreen(announceArrival: Bool) {
         showRecordPathButton(announceArrival: announceArrival)
@@ -737,6 +779,20 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         drawUI()
         addGestures()
         setupFirebaseObservers()
+        
+        // create listeners to ensure that the isReadingAnnouncement flag is reset properly
+        NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification, object: nil, queue: nil) { (notification) -> Void in
+            self.currentAnnouncement = nil
+        }
+        
+        NotificationCenter.default.addObserver(forName: UIAccessibility.voiceOverStatusDidChangeNotification, object: nil, queue: nil) { (notification) -> Void in
+            self.currentAnnouncement = nil
+        }
+        
+        // we use a custom notification to communicate from the help controller to the main view controller that the help was dismissed
+        NotificationCenter.default.addObserver(forName: Notification.Name("HelpPopoverDismissed"), object: nil, queue: nil) { (notification) -> Void in
+            self.suppressTrackingWarnings = false
+        }
     }
     
     func setupAudioPlayers() {
@@ -793,6 +849,15 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         if (firstTimeLoggingIn == nil) {
             userDefaults.set(true, forKey: "firstTimeLogin")
             showLogAlert()
+        }
+        
+        synth.delegate = self
+        NotificationCenter.default.addObserver(forName: UIAccessibility.announcementDidFinishNotification, object: nil, queue: nil) { (notification) -> Void in
+            self.currentAnnouncement = nil
+            if let nextAnnouncement = self.nextAnnouncement {
+                self.nextAnnouncement = nil
+                self.announce(announcement: nextAnnouncement)
+            }
         }
     }
     
@@ -1397,7 +1462,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// This helper function will restart the tracking session if a relocalization was in progress but did not succeed.  This is useful in the case when you want to allow for the recording of a new route and don't want to have the possibility achieving relocalization halfway through recording the route.
     func restartSessionIfFailedToRelocalize() {
         if attemptingRelocalization {
-            announce(announcement: "Restarting tracking session.")
+            if !suppressTrackingWarnings {
+                announce(announcement: "Could not match visually to the saved route. Starting new tracking session.")
+            }
             configuration.initialWorldMap = nil
             sceneView.session.run(configuration, options: [.removeExistingAnchors, .resetTracking])
             attemptingRelocalization = false
@@ -1787,24 +1854,20 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             keypoints.count > 1 &&
             sqrtf(powf(Float(keypoints[0].location.x - prevKeypointPosition.x),2) + powf(Float(keypoints[0].location.z - prevKeypointPosition.z),2)) >= 6
     }
-    /* disabled for now
-    func announceTurnWarning(_ currentLocation: CurrentCoordinateInfo) {
-        // announce upcoming turn
-        var dir = nav.getTurnWarningDirections(currentLocation, nextKeypoint: keypoints[0], secondKeypoint: keypoints[1])
-        if(defaultUnit == 0) {
-            // convert to imperial units
-            dir.distance *= 3.28084
-        }
-        dir.distance = roundToTenths(dir.distance)
-        turnWarning = true
-        setTurnWarningText(currentLocation: currentLocation.location, direction: dir)
-    }*/
     
     /// Communicates a message to the user via speech.  If VoiceOver is active, then VoiceOver is used
     /// to communicate the announcement, otherwise we use the AVSpeechEngine
     ///
     /// - Parameter announcement: the text to read to the user
     func announce(announcement: String) {
+        if let currentAnnouncement = currentAnnouncement {
+            // don't interrupt current announcement, but if there is something new to say put it on the queue to say next.  Note that adding it to the queue in this fashion could result in the next queued announcement being preempted
+            if currentAnnouncement != announcement {
+                nextAnnouncement = announcement
+            }
+            return
+        }
+        
         announcementText.isHidden = false
         announcementText.text = announcement
         announcementRemovalTimer?.invalidate()
@@ -1813,6 +1876,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
         if UIAccessibility.isVoiceOverRunning {
             // use the VoiceOver API instead of text to speech
+            currentAnnouncement = announcement
             UIAccessibility.post(notification: UIAccessibility.Notification.announcement, argument: announcement)
         } else if voiceFeedback {
             let audioSession = AVAudioSession.sharedInstance()
@@ -1821,6 +1885,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 try audioSession.setActive(true)
                 let utterance = AVSpeechUtterance(string: announcement)
                 utterance.rate = 0.6
+                currentAnnouncement = announcement
                 synth.speak(utterance)
             } catch {
                 print("Unexpeced error announcing something using AVSpeechEngine!")
@@ -1865,7 +1930,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         popover?.sourceView = self.view
         popover?.sourceRect = CGRect(x: 0, y: settingsAndHelpFrameHeight/2, width: 0,height: 0)
         popoverContent.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: popoverContent, action: #selector(popoverContent.doneWithHelp))
-
+        suppressTrackingWarnings = true
         self.present(nav, animated: true, completion: nil)
     }
     
@@ -2077,16 +2142,20 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             case .excessiveMotion:
                 logString = "ExcessiveMotion"
                 print("Excessive motion")
-                announce(announcement: "Excessive motion.\nTracking performance is degraded.")
-                if soundFeedback {
-                    playSystemSound(id: 1050)
+                if !suppressTrackingWarnings {
+                    announce(announcement: "Excessive motion.\nTracking performance is degraded.")
+                    if soundFeedback {
+                        playSystemSound(id: 1050)
+                    }
                 }
             case .insufficientFeatures:
                 logString = "InsufficientFeatures"
                 print("InsufficientFeatures")
-                announce(announcement: "Insufficient visual features.\nTracking performance is degraded.")
-                if soundFeedback {
-                    playSystemSound(id: 1050)
+                if !suppressTrackingWarnings {
+                    announce(announcement: "Insufficient visual features.\nTracking performance is degraded.")
+                    if soundFeedback {
+                        playSystemSound(id: 1050)
+                    }
                 }
             case .initializing:
                 // don't log anything
@@ -2100,15 +2169,19 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         case .normal:
             logString = "Normal"
             if configuration.initialWorldMap != nil, attemptingRelocalization {
-                announce(announcement: "Successfully matched current environment to saved route.")
+                if !suppressTrackingWarnings {
+                    announce(announcement: "Successfully matched current environment to saved route.")
+                }
                 attemptingRelocalization = false
             } else if case let .limited(reason)? = trackingSessionState {
-                if reason == .initializing {
-                    announce(announcement: "Tracking session initialized.")
-                } else {
-                    announce(announcement: "Tracking performance normal.")
-                    if soundFeedback {
-                        playSystemSound(id: 1025)
+                if !suppressTrackingWarnings {
+                    if reason == .initializing {
+                        announce(announcement: "Tracking session initialized.")
+                    } else {
+                        announce(announcement: "Tracking performance normal.")
+                        if soundFeedback {
+                            playSystemSound(id: 1025)
+                        }
                     }
                 }
             }
@@ -2154,6 +2227,11 @@ extension ViewController: UIPopoverPresentationControllerDelegate {
     /// - Returns: whether or not to use modal style
     func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
         return .none
+    }
+    
+    func popoverPresentationControllerDidDismissPopover(_ popoverPresentationController: UIPopoverPresentationController) {
+        // this will only fire when the popover is dismissed by some UI action, not when the dismiss function is called from one's own code (this is why we use a custom notification to deal with the case when we dismiss the popover ourselves
+        suppressTrackingWarnings = false
     }
     
     /// Ensures that all popover segues are popovers (note: I don't quite understand when this would *not* be the case)

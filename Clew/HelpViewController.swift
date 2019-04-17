@@ -24,5 +24,6 @@ class HelpViewController : UIViewController {
     @objc
     func doneWithHelp() {
         dismiss(animated: true, completion: nil)
+        NotificationCenter.default.post(name: Notification.Name("HelpPopoverDismissed"), object: nil)
     }
 }
