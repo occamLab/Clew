@@ -32,7 +32,6 @@ class RoutesViewController : UIViewController, UITableViewDataSource, UITableVie
             self.rootViewController?.onRouteTableViewCellClicked(route: self.routes[indexPath.row], navigateStartToEnd: true)
             self.dismiss(animated: true, completion: nil)
         }
-        print(self.routes[indexPath.row].beginRouteLandmark)
         if routes[indexPath.row].beginRouteLandmark.transform == nil {
             startToEndAction.isEnabled = false
         }
@@ -56,7 +55,6 @@ class RoutesViewController : UIViewController, UITableViewDataSource, UITableVie
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let df = DateFormatter()
         df.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        print(indexPath)
         let cell = tableView.dequeueReusableCell(withIdentifier: "clew.RouteTableViewCell", for: indexPath) as! RouteTableViewCell
         cell.nameLabel.text = routes[indexPath.row].name as String
         cell.dateCreatedLabel.text = df.string(from: routes[indexPath.row].dateCreated as Date)

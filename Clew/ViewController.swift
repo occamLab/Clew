@@ -1009,7 +1009,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 try AVAudioSession.sharedInstance().setActive(true)
                 voiceNoteToPlay.volume = 1.0
                 voiceNoteToPlay.play()
-                print("playing back")
             } catch let error {
                 print("Couldn't play back the voice note", error.localizedDescription)
             }
@@ -1638,7 +1637,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         let pathDate = dateFormatter.string(from: date)
         let pathID = deviceID!.uuidString + dateFormatter.string(from: date)
         let userId = deviceID!.uuidString
-        print("USER ID", userId)
         
         sendMetaData(pathDate, pathID+"-0", userId, debug)
         sendPathData(pathID, userId)
@@ -1869,7 +1867,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         if let newOffset = getHeadingOffset() {
             if adjustOffset {
                 nav.headingOffset = newOffset
-                print("New offset", newOffset)
             }
         }
     }

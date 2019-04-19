@@ -15,8 +15,11 @@ class DataPersistence {
 
     init() {
         do {
+            // if anything goes wrong with the unarchiving, stick with an emptly list of routes
             let data = try Data(contentsOf: self.getRoutesURL())
-            self.routes = try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data) as! [SavedRoute]
+            if let routes = try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data) as? [SavedRoute] {
+                self.routes = routes
+            }
         } catch {
             print("couldn't unarchive saved routes")
         }
