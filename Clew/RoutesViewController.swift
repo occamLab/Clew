@@ -32,7 +32,8 @@ class RoutesViewController : UIViewController, UITableViewDataSource, UITableVie
             self.rootViewController?.onRouteTableViewCellClicked(route: self.routes[indexPath.row], navigateStartToEnd: true)
             self.dismiss(animated: true, completion: nil)
         }
-        if routes[indexPath.row].beginRouteLandmarkTransform == nil {
+        print(self.routes[indexPath.row].beginRouteLandmark)
+        if routes[indexPath.row].beginRouteLandmark.transform == nil {
             startToEndAction.isEnabled = false
         }
         
@@ -40,7 +41,7 @@ class RoutesViewController : UIViewController, UITableViewDataSource, UITableVie
             self.rootViewController?.onRouteTableViewCellClicked(route: self.routes[indexPath.row], navigateStartToEnd: false)
             self.dismiss(animated: true, completion: nil)
         }
-        if routes[indexPath.row].endRouteLandmarkTransform == nil {
+        if routes[indexPath.row].endRouteLandmark.transform == nil {
             endToStartAction.isEnabled = false
         }
         

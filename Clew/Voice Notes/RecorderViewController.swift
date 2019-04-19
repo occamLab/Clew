@@ -57,6 +57,7 @@ class RecorderViewController: UIViewController {
         setupRecordingButton()
         setupTimeLabel()
         setupAudioView()
+        title = "Voice Note Recorder"
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -257,10 +258,12 @@ class RecorderViewController: UIViewController {
         } catch let error {
             fatalError(error.localizedDescription)
         }
+        NotificationCenter.default.post(name: Notification.Name("ClewPopoverDismissed"), object: nil)
         self.dismiss(animated: true, completion: nil)
     }
     
     @objc func doneWithRecording() {
+        NotificationCenter.default.post(name: Notification.Name("ClewPopoverDismissed"), object: nil)
         self.dismiss(animated: true, completion: nil)
     }
     

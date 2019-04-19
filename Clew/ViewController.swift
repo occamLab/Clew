@@ -331,12 +331,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// Set to true when the user is attempting to load a saved route that has a map associated with it
     var attemptingRelocalization: Bool = false
     
-    /// The begin route voice note
-    var beginRouteLandmarkVoiceNote: NSString?
-    
-    /// The end route voice note
-    var endRouteLandmarkVoiceNote: NSString?
-    
     var voiceNoteToPlay: AVAudioPlayer?
     
     // MARK: - Speech Synthesizer Delegate
@@ -412,12 +406,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
 
         // If the route has not yet been saved, we can no longer save this route
         routeName = nil
-        beginRouteLandmarkTransform = nil
-        beginRouteLandmarkInformation = nil
-        beginRouteLandmarkVoiceNote = nil
-        endRouteLandmarkTransform = nil
-        endRouteLandmarkInformation = nil
-        endRouteLandmarkVoiceNote = nil
+        beginRouteLandmark = RouteLandmark()
+        endRouteLandmark = RouteLandmark()
 
         // clear any old log variables
         navigationData = []
@@ -491,10 +481,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
 
         if navigateStartToEnd {
             crumbs = route.crumbs.reversed()
-            pausedTransform = route.beginRouteLandmarkTransform
+            pausedTransform = route.beginRouteLandmark.transform
         } else {
             crumbs = route.crumbs
-            pausedTransform = route.endRouteLandmarkTransform
+            pausedTransform = route.endRouteLandmark.transform
         }
         // make sure to clear out any relative transform that was saved before so we accurately align
         sceneView.session.setWorldOrigin(relativeTransform: simd_float4x4.makeTranslation(0, 0, 0))
@@ -513,13 +503,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     func handleStateTransitionToStartingPauseProcedure() {
         // clear out these variables in case they had already been created
         if creatingRouteLandmark {
-            beginRouteLandmarkVoiceNote = nil
-            beginRouteLandmarkInformation = nil
-            beginRouteLandmarkTransform = nil
+            beginRouteLandmark = RouteLandmark()
         } else {
-            endRouteLandmarkVoiceNote = nil
-            endRouteLandmarkInformation = nil
-            endRouteLandmarkTransform = nil
+            endRouteLandmark = RouteLandmark()
         }
         do {
             try showPauseTrackingButton()
@@ -546,13 +532,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 print("can't properly save landmark: TODO communicate this to the user somehow")
                 return
             }
-            beginRouteLandmarkTransform = currentTransform
+            beginRouteLandmark.transform = currentTransform
             Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(playSound)), userInfo: nil, repeats: false)
             pauseTrackingView.isHidden = true
             state = .mainScreen(announceArrival: false)
             return
         } else if let currentTransform = sceneView.session.currentFrame?.camera.transform {
-            endRouteLandmarkTransform = currentTransform
+            endRouteLandmark.transform = currentTransform
 
             if #available(iOS 12.0, *) {
                 sceneView.session.getCurrentWorldMap { worldMap, error in
@@ -578,7 +564,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             do {
                 // TODO: factor this out
                 let id = String(Int64(NSDate().timeIntervalSince1970 * 1000)) as NSString
-                try archive(routeId: id, beginRouteLandmarkTransform: beginRouteLandmarkTransform, beginRouteLandmarkInformation: beginRouteLandmarkInformation, beginRouteLandmarkVoiceNote: beginRouteLandmarkVoiceNote, endRouteLandmarkTransform: endRouteLandmarkTransform, endRouteLandmarkInformation: endRouteLandmarkInformation, endRouteLandmarkVoiceNote: endRouteLandmarkVoiceNote, worldMapAsAny: mapAsAny)
+                try archive(routeId: id, beginRouteLandmark: beginRouteLandmark, endRouteLandmark: endRouteLandmark, worldMapAsAny: mapAsAny)
             } catch {
                 fatalError("Can't archive route: \(error.localizedDescription)")
             }
@@ -619,8 +605,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         state = .startingResumeProcedure(route: route, mapAsAny: worldMapAsAny, navigateStartToEnd: navigateStartToEnd)
     }
     
-    func archive(routeId: NSString, beginRouteLandmarkTransform: simd_float4x4?, beginRouteLandmarkInformation: NSString?, beginRouteLandmarkVoiceNote: NSString?, endRouteLandmarkTransform: simd_float4x4?, endRouteLandmarkInformation: NSString?, endRouteLandmarkVoiceNote: NSString?, worldMapAsAny: Any?) throws {
-        let savedRoute = SavedRoute(id: routeId, name: routeName!, crumbs: crumbs, dateCreated: Date() as NSDate, beginRouteLandmarkTransform: beginRouteLandmarkTransform, beginRouteLandmarkInformation: beginRouteLandmarkInformation, beginRouteLandmarkVoiceNote: beginRouteLandmarkVoiceNote, endRouteLandmarkTransform: endRouteLandmarkTransform, endRouteLandmarkInformation: endRouteLandmarkInformation, endRouteLandmarkVoiceNote: endRouteLandmarkVoiceNote)
+    func archive(routeId: NSString, beginRouteLandmark: RouteLandmark, endRouteLandmark: RouteLandmark, worldMapAsAny: Any?) throws {
+        let savedRoute = SavedRoute(id: routeId, name: routeName!, crumbs: crumbs, dateCreated: Date() as NSDate, beginRouteLandmark: beginRouteLandmark, endRouteLandmark: endRouteLandmark)
         try dataPersistence.archive(route: savedRoute, worldMapAsAny: worldMapAsAny)
         justTraveledRoute = savedRoute
     }
@@ -649,7 +635,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     let resumeButton = ActionButtonComponents(appearance: .textButton(label: "Resume"), label: "Resume", targetSelector: Selector.resumeButtonTapped, alignment: .center, tag: 0)
     
-    let enterLandmarkDescriptionButton = ActionButtonComponents(appearance: .textButton(label: "Describe"), label: "Enter information to help you remember this landmark", targetSelector: Selector.enterLandmarkDescriptionButtonTapped, alignment: .left, tag: 0)
+    let enterLandmarkDescriptionButton = ActionButtonComponents(appearance: .textButton(label: "Describe"), label: "Enter text to help you remember this landmark", targetSelector: Selector.enterLandmarkDescriptionButtonTapped, alignment: .left, tag: 0)
     
     let recordVoiceNoteButton = ActionButtonComponents(appearance: .textButton(label: "Voice Note"), label: "Record audio to help you remember this landmark", targetSelector: Selector.recordVoiceNoteButtonTapped, alignment: .right, tag: 0)
 
@@ -824,7 +810,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
         
         // we use a custom notification to communicate from the help controller to the main view controller that the help was dismissed
-        NotificationCenter.default.addObserver(forName: Notification.Name("HelpPopoverDismissed"), object: nil, queue: nil) { (notification) -> Void in
+        NotificationCenter.default.addObserver(forName: Notification.Name("ClewPopoverDismissed"), object: nil, queue: nil) { (notification) -> Void in
             self.suppressTrackingWarnings = false
         }
     }
@@ -898,7 +884,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     func showRecordPathWithoutLandmarkWarning() {
         let userDefaults: UserDefaults = UserDefaults.standard
         let showedRecordPathWithoutLandmarkWarning: Bool? = userDefaults.object(forKey: "showedRecordPathWithoutLandmarkWarning") as? Bool
-        if showedRecordPathWithoutLandmarkWarning == nil && beginRouteLandmarkTransform == nil {
+        if showedRecordPathWithoutLandmarkWarning == nil && beginRouteLandmark.transform == nil {
             userDefaults.set(true, forKey: "showedRecordPathWithoutLandmarkWarning")
             // Show logging disclaimer when user opens app for the first time
             let alert = UIAlertController(title: "Creating reusable routes",
@@ -925,7 +911,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     func showNavigatePathWithoutLandmarkWarning() {
         let userDefaults: UserDefaults = UserDefaults.standard
         let showedNavigatePathWithoutLandmarkWarning: Bool? = userDefaults.object(forKey: "showedNavigatePathWithoutLandmarkWarning") as? Bool
-        if showedNavigatePathWithoutLandmarkWarning == nil && endRouteLandmarkTransform == nil {
+        if showedNavigatePathWithoutLandmarkWarning == nil && endRouteLandmark.transform == nil {
             userDefaults.set(true, forKey: "showedNavigatePathWithoutLandmarkWarning")
             // Show logging disclaimer when user opens app for the first time
             let alert = UIAlertController(title: "Creating reusable routes",
@@ -960,12 +946,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             let id = String(Int64(NSDate().timeIntervalSince1970 * 1000)) as NSString
             // Get the input values from user, if it's nil then use timestamp
             self.routeName = alertController.textFields?[0].text as NSString? ?? id
-            try! self.archive(routeId: id, beginRouteLandmarkTransform: self.beginRouteLandmarkTransform, beginRouteLandmarkInformation: self.beginRouteLandmarkInformation, beginRouteLandmarkVoiceNote: self.beginRouteLandmarkVoiceNote, endRouteLandmarkTransform: self.endRouteLandmarkTransform, endRouteLandmarkInformation: self.endRouteLandmarkInformation, endRouteLandmarkVoiceNote: self.endRouteLandmarkVoiceNote, worldMapAsAny: mapAsAny)
+            try! self.archive(routeId: id, beginRouteLandmark: self.beginRouteLandmark, endRouteLandmark: self.endRouteLandmark, worldMapAsAny: mapAsAny)
         }
             
         // The cancel action saves the just traversed route so you can navigate back along it later
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { (_) in
-            self.justTraveledRoute = SavedRoute(id: "dummyid", name: "Last route", crumbs: self.crumbs, dateCreated: Date() as NSDate, beginRouteLandmarkTransform: self.beginRouteLandmarkTransform, beginRouteLandmarkInformation: self.beginRouteLandmarkInformation, beginRouteLandmarkVoiceNote: self.beginRouteLandmarkVoiceNote, endRouteLandmarkTransform: self.endRouteLandmarkTransform, endRouteLandmarkInformation: self.endRouteLandmarkInformation, endRouteLandmarkVoiceNote: self.endRouteLandmarkVoiceNote)
+            self.justTraveledRoute = SavedRoute(id: "dummyid", name: "Last route", crumbs: self.crumbs, dateCreated: Date() as NSDate, beginRouteLandmark: self.beginRouteLandmark, endRouteLandmark: self.endRouteLandmark)
         }
         
         // Add textfield to our dialog box
@@ -992,9 +978,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         // The confirm action taking the inputs
         let saveAction = UIAlertAction(title: "Ok", style: .default) { (_) in
             if self.creatingRouteLandmark {
-                self.beginRouteLandmarkInformation = alertController.textFields?[0].text as NSString?
+                self.beginRouteLandmark.information = alertController.textFields?[0].text as NSString?
             } else {
-                self.endRouteLandmarkInformation = alertController.textFields?[0].text as NSString?
+                self.endRouteLandmark.information = alertController.textFields?[0].text as NSString?
             }
         }
         
@@ -1040,7 +1026,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         popover?.delegate = self
         popover?.sourceView = self.view
         popover?.sourceRect = CGRect(x: 0, y: self.settingsAndHelpFrameHeight/2, width: 0,height: 0)
-        
+        suppressTrackingWarnings = true
         self.present(nav, animated: true, completion: nil)
     }
     
@@ -1352,10 +1338,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         resumeTrackingConfirmView.mainText?.text = ""
         voiceNoteToPlay = nil
         if navigateStartToEnd {
-            if let landmarkInformation = route.beginRouteLandmarkInformation as String? {
+            if let landmarkInformation = route.beginRouteLandmark.information as String? {
                 resumeTrackingConfirmView.mainText?.text?.append("The landmark information you entered is: " + landmarkInformation + ".\n\n")
             }
-            if let beginRouteLandmarkVoiceNote = route.beginRouteLandmarkVoiceNote {
+            if let beginRouteLandmarkVoiceNote = route.beginRouteLandmark.voiceNote {
                 let voiceNoteToPlayURL = beginRouteLandmarkVoiceNote.documentURL
                 do {
                     let data = try Data(contentsOf: voiceNoteToPlayURL)
@@ -1364,10 +1350,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 } catch {}
             }
         } else {
-            if let landmarkInformation = route.endRouteLandmarkInformation as String? {
+            if let landmarkInformation = route.endRouteLandmark.information as String? {
                 resumeTrackingConfirmView.mainText?.text?.append("The landmark information you entered is: " + landmarkInformation + ".\n\n")
             }
-            if let endRouteLandmarkVoiceNote = route.endRouteLandmarkVoiceNote {
+            if let endRouteLandmarkVoiceNote = route.endRouteLandmark.voiceNote {
                 let voiceNoteToPlayURL = endRouteLandmarkVoiceNote.documentURL
                 do {
                     let data = try Data(contentsOf: voiceNoteToPlayURL)
@@ -1494,12 +1480,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// This keeps track of the paused transform while the current session is being realigned to the saved route
     var pausedTransform : simd_float4x4?
     
-    // TODO: refactor these into a class to ease the handling of these
-    var beginRouteLandmarkTransform: simd_float4x4?
-    var beginRouteLandmarkInformation: NSString?
-
-    var endRouteLandmarkTransform: simd_float4x4?
-    var endRouteLandmarkInformation: NSString?
+    var beginRouteLandmark = RouteLandmark()
+    var endRouteLandmark = RouteLandmark()
 
     var routeName: NSString?
 
@@ -1531,7 +1513,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     }
     
     @objc func stopRecording(_ sender: UIButton) {
-        if beginRouteLandmarkTransform != nil {
+        if beginRouteLandmark.transform != nil {
             if #available(iOS 12.0, *) {
                 sceneView.session.getCurrentWorldMap { worldMap, error in
                     self.getRouteNameAndSaveRouteHelper(mapAsAny: worldMap)
@@ -2317,20 +2299,20 @@ extension ViewController: RecorderViewControllerDelegate {
     func didFinishRecording(audioFileURL: URL) {
         if creatingRouteLandmark {
             // delete the file since we are re-recording it
-            if let beginRouteLandmarkVoiceNote = self.beginRouteLandmarkVoiceNote {
+            if let beginRouteLandmarkVoiceNote = self.beginRouteLandmark.voiceNote {
                 do {
                     try FileManager.default.removeItem(at: beginRouteLandmarkVoiceNote.documentURL)
                 } catch { }
             }
-            beginRouteLandmarkVoiceNote = audioFileURL.lastPathComponent as NSString
+            beginRouteLandmark.voiceNote = audioFileURL.lastPathComponent as NSString
         } else {
             // delete the file since we are re-recording it
-            if let endRouteLandmarkVoiceNote = self.endRouteLandmarkVoiceNote {
+            if let endRouteLandmarkVoiceNote = self.endRouteLandmark.voiceNote {
                 do {
                     try FileManager.default.removeItem(at: endRouteLandmarkVoiceNote.documentURL)
                 } catch { }
             }
-            endRouteLandmarkVoiceNote = audioFileURL.lastPathComponent as NSString
+            endRouteLandmark.voiceNote = audioFileURL.lastPathComponent as NSString
         }
     }
 }

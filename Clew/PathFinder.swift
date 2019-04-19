@@ -134,6 +134,42 @@ public struct KeypointInfo {
     public var orientation: Vector3
 }
 
+class RouteLandmark: NSObject, NSSecureCoding {
+    static var supportsSecureCoding = true
+    
+    public var transform: simd_float4x4?
+    public var information: NSString?
+    public var voiceNote: NSString?
+    
+    public init(transform: simd_float4x4? = nil, information: NSString? = nil, voiceNote: NSString? = nil) {
+        self.transform = transform
+        self.information = information
+        self.voiceNote = voiceNote
+    }
+    
+    func encode(with aCoder: NSCoder) {
+        if transform != nil {
+            aCoder.encode(ARAnchor(transform: transform!), forKey: "transformAsARAnchor")
+        }
+        aCoder.encode(information, forKey: "information")
+        aCoder.encode(voiceNote, forKey: "voiceNote")
+    }
+    
+    required convenience init?(coder aDecoder: NSCoder) {
+        var transform : simd_float4x4? = nil
+        var information : NSString? = nil
+        var voiceNote : NSString? = nil
+        
+        if let transformAsARAnchor = aDecoder.decodeObject(of: ARAnchor.self, forKey: "transformAsARAnchor") {
+            transform = transformAsARAnchor.transform
+        }
+        information = aDecoder.decodeObject(of: NSString.self, forKey: "information")
+        voiceNote = aDecoder.decodeObject(of: NSString.self, forKey: "voiceNote")
+        self.init(transform: transform, information: information, voiceNote: voiceNote)
+    }
+    
+}
+
 class SavedRoute: NSObject, NSSecureCoding {
     static var supportsSecureCoding = true
     
@@ -141,24 +177,16 @@ class SavedRoute: NSObject, NSSecureCoding {
     public var name: NSString
     public var dateCreated: NSDate
     public var crumbs: [LocationInfo]
-    public var beginRouteLandmarkTransform: simd_float4x4?
-    public var beginRouteLandmarkInformation: NSString?
-    public var beginRouteLandmarkVoiceNote: NSString?
-    public var endRouteLandmarkTransform: simd_float4x4?
-    public var endRouteLandmarkInformation: NSString?
-    public var endRouteLandmarkVoiceNote: NSString?
+    public var beginRouteLandmark : RouteLandmark
+    public var endRouteLandmark: RouteLandmark
 
-    public init(id: NSString, name: NSString, crumbs: [LocationInfo], dateCreated: NSDate = NSDate(), beginRouteLandmarkTransform: simd_float4x4?, beginRouteLandmarkInformation: NSString?, beginRouteLandmarkVoiceNote: NSString?, endRouteLandmarkTransform: simd_float4x4?, endRouteLandmarkInformation: NSString?, endRouteLandmarkVoiceNote: NSString?) {
+    public init(id: NSString, name: NSString, crumbs: [LocationInfo], dateCreated: NSDate = NSDate(), beginRouteLandmark: RouteLandmark, endRouteLandmark: RouteLandmark) {
         self.id = id
         self.name = name
         self.crumbs = crumbs
         self.dateCreated = dateCreated
-        self.beginRouteLandmarkTransform = beginRouteLandmarkTransform
-        self.beginRouteLandmarkInformation = beginRouteLandmarkInformation
-        self.beginRouteLandmarkVoiceNote = beginRouteLandmarkVoiceNote
-        self.endRouteLandmarkTransform = endRouteLandmarkTransform
-        self.endRouteLandmarkInformation = endRouteLandmarkInformation
-        self.endRouteLandmarkVoiceNote = endRouteLandmarkVoiceNote
+        self.beginRouteLandmark = beginRouteLandmark
+        self.endRouteLandmark = endRouteLandmark
     }
     
     func encode(with aCoder: NSCoder) {
@@ -166,19 +194,8 @@ class SavedRoute: NSObject, NSSecureCoding {
         aCoder.encode(name, forKey: "name")
         aCoder.encode(crumbs, forKey: "crumbs")
         aCoder.encode(dateCreated, forKey: "dateCreated")
-        if beginRouteLandmarkTransform != nil {
-            aCoder.encode(ARAnchor(transform: beginRouteLandmarkTransform!), forKey: "beginRouteLandmarkTransformAsARAnchor")
-        }
-        aCoder.encode(beginRouteLandmarkInformation, forKey: "beginRouteLandmarkInformation")
-        
-        aCoder.encode(beginRouteLandmarkVoiceNote, forKey: "beginRouteLandmarkVoiceNote")
-
-        if endRouteLandmarkTransform != nil {
-            aCoder.encode(ARAnchor(transform: endRouteLandmarkTransform!), forKey: "endRouteLandmarkTransformAsARAnchor")
-        }
-        aCoder.encode(endRouteLandmarkInformation, forKey: "endRouteLandmarkInformation")
-        
-        aCoder.encode(endRouteLandmarkVoiceNote, forKey: "endRouteLandmarkVoiceNote")
+        aCoder.encode(beginRouteLandmark, forKey: "beginRouteLandmark")
+        aCoder.encode(endRouteLandmark, forKey: "endRouteLandmark")
     }
     
     required convenience init?(coder aDecoder: NSCoder) {
@@ -194,29 +211,14 @@ class SavedRoute: NSObject, NSSecureCoding {
         guard let dateCreated = aDecoder.decodeObject(of: NSDate.self, forKey: "dateCreated") else {
             return nil
         }
-        var beginRouteLandmarkTransform : simd_float4x4? = nil
-        var beginRouteLandmarkInformation : NSString? = nil
-        var beginRouteLandmarkVoiceNote : NSString? = nil
-
-        var endRouteLandmarkTransform : simd_float4x4? = nil
-        var endRouteLandmarkInformation : NSString? = nil
-        var endRouteLandmarkVoiceNote : NSString? = nil
-
-        if let beginRouteLandmarkTransformAsARAnchor = aDecoder.decodeObject(of: ARAnchor.self, forKey: "beginRouteLandmarkTransformAsARAnchor") {
-            beginRouteLandmarkTransform = beginRouteLandmarkTransformAsARAnchor.transform
+        guard let beginRouteLandmark = aDecoder.decodeObject(of: RouteLandmark.self, forKey: "beginRouteLandmark") else {
+            return nil
         }
-        beginRouteLandmarkInformation = aDecoder.decodeObject(of: NSString.self, forKey: "beginRouteLandmarkInformation")
-        beginRouteLandmarkVoiceNote = aDecoder.decodeObject(of: NSString.self, forKey: "beginRouteLandmarkVoiceNote")
-
-
-        if let endRouteLandmarkTransformAsARAnchor = aDecoder.decodeObject(of: ARAnchor.self, forKey: "endRouteLandmarkTransformAsARAnchor") {
-            endRouteLandmarkTransform = endRouteLandmarkTransformAsARAnchor.transform
+        guard let endRouteLandmark = aDecoder.decodeObject(of: RouteLandmark.self, forKey: "endRouteLandmark") else {
+            return nil
         }
-        endRouteLandmarkInformation = aDecoder.decodeObject(of: NSString.self, forKey: "endRouteLandmarkInformation")
-        endRouteLandmarkVoiceNote = aDecoder.decodeObject(of: NSString.self, forKey: "endRouteLandmarkVoiceNote")
 
-
-        self.init(id: id, name: name, crumbs: crumbs, dateCreated: dateCreated, beginRouteLandmarkTransform: beginRouteLandmarkTransform, beginRouteLandmarkInformation: beginRouteLandmarkInformation, beginRouteLandmarkVoiceNote: beginRouteLandmarkVoiceNote, endRouteLandmarkTransform: endRouteLandmarkTransform, endRouteLandmarkInformation: endRouteLandmarkInformation, endRouteLandmarkVoiceNote: endRouteLandmarkVoiceNote)
+        self.init(id: id, name: name, crumbs: crumbs, dateCreated: dateCreated, beginRouteLandmark: beginRouteLandmark, endRouteLandmark: endRouteLandmark)
     }
 }
 
