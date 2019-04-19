@@ -34,6 +34,7 @@ extension UIView {
     /// Used to identify the mainText UILabel
     static let mainTextTag: Int = 1001
     static let pauseButtonTag: Int = 1002
+    static let readVoiceNoteButtonTag: Int = 1003
 
     /// Custom fade used for direction text UILabel.
     func fadeTransition(_ duration:CFTimeInterval) {
@@ -163,6 +164,8 @@ fileprivate extension Selector {
     static let confirmAlignmentButtonTapped = #selector(ViewController.confirmAlignment)
     static let routesButtonTapped = #selector(ViewController.routesButtonPressed)
     static let enterLandmarkDescriptionButtonTapped = #selector(ViewController.showLandmarkInformationDialog)
+    static let recordVoiceNoteButtonTapped = #selector(ViewController.recordVoiceNote)
+    static let readVoiceNoteButtonTapped = #selector(ViewController.readVoiceNote)
 }
 
 /// Holds information about the buttons that are used to control navigation and tracking.
@@ -328,6 +331,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// Set to true when the user is attempting to load a saved route that has a map associated with it
     var attemptingRelocalization: Bool = false
     
+    /// The begin route voice note
+    var beginRouteLandmarkVoiceNote: NSString?
+    
+    /// The end route voice note
+    var endRouteLandmarkVoiceNote: NSString?
+    
+    var voiceNoteToPlay: AVAudioPlayer?
+    
     // MARK: - Speech Synthesizer Delegate
     
     /// Called when an utterance is finished.  We implement this function so that we can keep track of
@@ -403,9 +414,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         routeName = nil
         beginRouteLandmarkTransform = nil
         beginRouteLandmarkInformation = nil
+        beginRouteLandmarkVoiceNote = nil
         endRouteLandmarkTransform = nil
         endRouteLandmarkInformation = nil
-        
+        endRouteLandmarkVoiceNote = nil
+
         // clear any old log variables
         navigationData = []
         navigationDataTime = []
@@ -500,9 +513,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     func handleStateTransitionToStartingPauseProcedure() {
         // clear out these variables in case they had already been created
         if creatingRouteLandmark {
+            beginRouteLandmarkVoiceNote = nil
             beginRouteLandmarkInformation = nil
             beginRouteLandmarkTransform = nil
         } else {
+            endRouteLandmarkVoiceNote = nil
             endRouteLandmarkInformation = nil
             endRouteLandmarkTransform = nil
         }
@@ -563,7 +578,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             do {
                 // TODO: factor this out
                 let id = String(Int64(NSDate().timeIntervalSince1970 * 1000)) as NSString
-                try archive(routeId: id, beginRouteLandmarkTransform: beginRouteLandmarkTransform, beginRouteLandmarkInformation: beginRouteLandmarkInformation, endRouteLandmarkTransform: endRouteLandmarkTransform, endRouteLandmarkInformation: endRouteLandmarkInformation, worldMapAsAny: mapAsAny)
+                try archive(routeId: id, beginRouteLandmarkTransform: beginRouteLandmarkTransform, beginRouteLandmarkInformation: beginRouteLandmarkInformation, beginRouteLandmarkVoiceNote: beginRouteLandmarkVoiceNote, endRouteLandmarkTransform: endRouteLandmarkTransform, endRouteLandmarkInformation: endRouteLandmarkInformation, endRouteLandmarkVoiceNote: endRouteLandmarkVoiceNote, worldMapAsAny: mapAsAny)
             } catch {
                 fatalError("Can't archive route: \(error.localizedDescription)")
             }
@@ -604,8 +619,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         state = .startingResumeProcedure(route: route, mapAsAny: worldMapAsAny, navigateStartToEnd: navigateStartToEnd)
     }
     
-    func archive(routeId: NSString, beginRouteLandmarkTransform: simd_float4x4?, beginRouteLandmarkInformation: NSString?, endRouteLandmarkTransform: simd_float4x4?, endRouteLandmarkInformation: NSString?, worldMapAsAny: Any?) throws {
-        let savedRoute = SavedRoute(id: routeId, name: routeName!, crumbs: crumbs, dateCreated: Date() as NSDate, beginRouteLandmarkTransform: beginRouteLandmarkTransform, beginRouteLandmarkInformation: beginRouteLandmarkInformation, endRouteLandmarkTransform: endRouteLandmarkTransform, endRouteLandmarkInformation: endRouteLandmarkInformation)
+    func archive(routeId: NSString, beginRouteLandmarkTransform: simd_float4x4?, beginRouteLandmarkInformation: NSString?, beginRouteLandmarkVoiceNote: NSString?, endRouteLandmarkTransform: simd_float4x4?, endRouteLandmarkInformation: NSString?, endRouteLandmarkVoiceNote: NSString?, worldMapAsAny: Any?) throws {
+        let savedRoute = SavedRoute(id: routeId, name: routeName!, crumbs: crumbs, dateCreated: Date() as NSDate, beginRouteLandmarkTransform: beginRouteLandmarkTransform, beginRouteLandmarkInformation: beginRouteLandmarkInformation, beginRouteLandmarkVoiceNote: beginRouteLandmarkVoiceNote, endRouteLandmarkTransform: endRouteLandmarkTransform, endRouteLandmarkInformation: endRouteLandmarkInformation, endRouteLandmarkVoiceNote: endRouteLandmarkVoiceNote)
         try dataPersistence.archive(route: savedRoute, worldMapAsAny: worldMapAsAny)
         justTraveledRoute = savedRoute
     }
@@ -636,8 +651,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     let enterLandmarkDescriptionButton = ActionButtonComponents(appearance: .textButton(label: "Describe"), label: "Enter information to help you remember this landmark", targetSelector: Selector.enterLandmarkDescriptionButtonTapped, alignment: .left, tag: 0)
     
+    let recordVoiceNoteButton = ActionButtonComponents(appearance: .textButton(label: "Voice Note"), label: "Record audio to help you remember this landmark", targetSelector: Selector.recordVoiceNoteButtonTapped, alignment: .right, tag: 0)
+
     let confirmAlignmentButton = ActionButtonComponents(appearance: .textButton(label: "Align"), label: "Start 5-second alignment countdown", targetSelector: Selector.confirmAlignmentButtonTapped, alignment: .center, tag: 0)
     
+    let readVoiceNoteButton = ActionButtonComponents(appearance: .textButton(label: "Play Note"), label: "Play recorded voice note", targetSelector: Selector.readVoiceNoteButtonTapped, alignment: .left, tag: UIView.readVoiceNoteButtonTag)
     
     /// Image, label, and target for start recording button.
     /// TODO: need an image
@@ -942,12 +960,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             let id = String(Int64(NSDate().timeIntervalSince1970 * 1000)) as NSString
             // Get the input values from user, if it's nil then use timestamp
             self.routeName = alertController.textFields?[0].text as NSString? ?? id
-            try! self.archive(routeId: id, beginRouteLandmarkTransform: self.beginRouteLandmarkTransform, beginRouteLandmarkInformation: self.beginRouteLandmarkInformation, endRouteLandmarkTransform: self.endRouteLandmarkTransform, endRouteLandmarkInformation: self.endRouteLandmarkInformation, worldMapAsAny: mapAsAny)
+            try! self.archive(routeId: id, beginRouteLandmarkTransform: self.beginRouteLandmarkTransform, beginRouteLandmarkInformation: self.beginRouteLandmarkInformation, beginRouteLandmarkVoiceNote: self.beginRouteLandmarkVoiceNote, endRouteLandmarkTransform: self.endRouteLandmarkTransform, endRouteLandmarkInformation: self.endRouteLandmarkInformation, endRouteLandmarkVoiceNote: self.endRouteLandmarkVoiceNote, worldMapAsAny: mapAsAny)
         }
             
         // The cancel action saves the just traversed route so you can navigate back along it later
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { (_) in
-            self.justTraveledRoute = SavedRoute(id: "dummyid", name: "Last route", crumbs: self.crumbs, dateCreated: Date() as NSDate, beginRouteLandmarkTransform: self.beginRouteLandmarkTransform, beginRouteLandmarkInformation: self.beginRouteLandmarkInformation, endRouteLandmarkTransform: self.endRouteLandmarkTransform, endRouteLandmarkInformation: self.endRouteLandmarkInformation)
+            self.justTraveledRoute = SavedRoute(id: "dummyid", name: "Last route", crumbs: self.crumbs, dateCreated: Date() as NSDate, beginRouteLandmarkTransform: self.beginRouteLandmarkTransform, beginRouteLandmarkInformation: self.beginRouteLandmarkInformation, beginRouteLandmarkVoiceNote: self.beginRouteLandmarkVoiceNote, endRouteLandmarkTransform: self.endRouteLandmarkTransform, endRouteLandmarkInformation: self.endRouteLandmarkInformation, endRouteLandmarkVoiceNote: self.endRouteLandmarkVoiceNote)
         }
         
         // Add textfield to our dialog box
@@ -996,6 +1014,34 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         
         // Finally, present the dialog box
         present(alertController, animated: true, completion: nil)
+    }
+    
+    @objc func readVoiceNote() {
+        if let voiceNoteToPlay = self.voiceNoteToPlay {
+            do {
+                try AVAudioSession.sharedInstance().setCategory(AVAudioSession.Category.playback)
+                try AVAudioSession.sharedInstance().setActive(true)
+                voiceNoteToPlay.volume = 1.0
+                voiceNoteToPlay.play()
+                print("playing back")
+            } catch let error {
+                print("Couldn't play back the voice note", error.localizedDescription)
+            }
+        }
+    }
+    
+    @objc func recordVoiceNote() {
+        let popoverContent = RecorderViewController()
+        popoverContent.delegate = self
+        popoverContent.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: popoverContent, action: #selector(popoverContent.doneWithRecording))
+        let nav = UINavigationController(rootViewController: popoverContent)
+        nav.modalPresentationStyle = .popover
+        let popover = nav.popoverPresentationController
+        popover?.delegate = self
+        popover?.sourceView = self.view
+        popover?.sourceRect = CGRect(x: 0, y: self.settingsAndHelpFrameHeight/2, width: 0,height: 0)
+        
+        self.present(nav, animated: true, completion: nil)
     }
     
     func showLogAlert() {
@@ -1195,13 +1241,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         startNavigationView.setupButtonContainer(withButtons: [startNavigationButton, pauseButton])
         
         pauseTrackingView = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height))
-        pauseTrackingView.setupButtonContainer(withButtons: [enterLandmarkDescriptionButton, confirmAlignmentButton], withMainText: "Landmarks allow you to save or pause your route. You will need to to return to the landmark on your own to load or unpause your route. When creating a landmark, hold your device flat with the screen facing up. Press the top (short) edge flush against a flat vertical surface (such as a wall). The \"describe\" button lets you enter information to help you remember the location of the landmark. The \"align\" button starts a \(pauseWaitingPeriod)-second alignment countdown. During this time, do not move the device until the phone provides confirmation via a vibration or sound cue.")
+        pauseTrackingView.setupButtonContainer(withButtons: [enterLandmarkDescriptionButton, confirmAlignmentButton, recordVoiceNoteButton], withMainText: "Landmarks allow you to save or pause your route. You will need to to return to the landmark on your own to load or unpause your route. When creating a landmark, hold your device flat with the screen facing up. Press the top (short) edge flush against a flat vertical surface (such as a wall). The \"describe\" button lets you enter information to help you remember the location of the landmark. The \"align\" button starts a \(pauseWaitingPeriod)-second alignment countdown. During this time, do not move the device until the phone provides confirmation via a vibration or sound cue.")
         
         resumeTrackingView = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height))
         resumeTrackingView.setupButtonContainer(withButtons: [resumeButton], withMainText: "Return to the last paused location and press Resume for further instructions.")
         
         resumeTrackingConfirmView = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height))
-        resumeTrackingConfirmView.setupButtonContainer(withButtons: [confirmAlignmentButton], withMainText: "Hold your device flat with the screen facing up. Press the top (short) edge flush against the same vertical surface that you used to create the landmark.  When you are ready, activate the align button to start the \(resumeWaitingPeriod)-second alignment countdown that will complete the procedure. Do not move the device until the phone provides confirmation via a vibration or sound cue.")
+        resumeTrackingConfirmView.setupButtonContainer(withButtons: [confirmAlignmentButton, readVoiceNoteButton], withMainText: "Hold your device flat with the screen facing up. Press the top (short) edge flush against the same vertical surface that you used to create the landmark.  When you are ready, activate the align button to start the \(resumeWaitingPeriod)-second alignment countdown that will complete the procedure. Do not move the device until the phone provides confirmation via a vibration or sound cue.")
 
         // Stop Navigation button container
         stopNavigationView = UIView(frame: CGRect(x: 0, y: yOriginOfButtonFrame, width: buttonFrameWidth, height: buttonFrameHeight))
@@ -1304,15 +1350,33 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         resumeTrackingView.isHidden = true
         resumeTrackingConfirmView.isHidden = false
         resumeTrackingConfirmView.mainText?.text = ""
+        voiceNoteToPlay = nil
         if navigateStartToEnd {
             if let landmarkInformation = route.beginRouteLandmarkInformation as String? {
                 resumeTrackingConfirmView.mainText?.text?.append("The landmark information you entered is: " + landmarkInformation + ".\n\n")
+            }
+            if let beginRouteLandmarkVoiceNote = route.beginRouteLandmarkVoiceNote {
+                let voiceNoteToPlayURL = beginRouteLandmarkVoiceNote.documentURL
+                do {
+                    let data = try Data(contentsOf: voiceNoteToPlayURL)
+                    voiceNoteToPlay = try AVAudioPlayer(data: data, fileTypeHint: AVFileType.caf.rawValue)
+                    voiceNoteToPlay?.prepareToPlay()
+                } catch {}
             }
         } else {
             if let landmarkInformation = route.endRouteLandmarkInformation as String? {
                 resumeTrackingConfirmView.mainText?.text?.append("The landmark information you entered is: " + landmarkInformation + ".\n\n")
             }
+            if let endRouteLandmarkVoiceNote = route.endRouteLandmarkVoiceNote {
+                let voiceNoteToPlayURL = endRouteLandmarkVoiceNote.documentURL
+                do {
+                    let data = try Data(contentsOf: voiceNoteToPlayURL)
+                    voiceNoteToPlay = try AVAudioPlayer(data: data, fileTypeHint: AVFileType.caf.rawValue)
+                    voiceNoteToPlay?.prepareToPlay()
+                } catch {}
+            }
         }
+        resumeTrackingConfirmView.getButtonByTag(tag: UIView.readVoiceNoteButtonTag)?.isHidden = voiceNoteToPlay == nil
         resumeTrackingConfirmView.mainText?.text?.append("Hold your device flat with the screen facing up. Press the top (short) edge flush against the same vertical surface that you used to create the landmark.  When you are ready, activate the align button to start the \(resumeWaitingPeriod)-second alignment countdown that will complete the procedure. Do not move the device until the phone provides confirmation via a vibration or sound cue.")
         delayTransition()
     }
@@ -2246,6 +2310,31 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
 }
 
+extension ViewController: RecorderViewControllerDelegate {
+    func didStartRecording() {
+    }
+    
+    func didFinishRecording(audioFileURL: URL) {
+        if creatingRouteLandmark {
+            // delete the file since we are re-recording it
+            if let beginRouteLandmarkVoiceNote = self.beginRouteLandmarkVoiceNote {
+                do {
+                    try FileManager.default.removeItem(at: beginRouteLandmarkVoiceNote.documentURL)
+                } catch { }
+            }
+            beginRouteLandmarkVoiceNote = audioFileURL.lastPathComponent as NSString
+        } else {
+            // delete the file since we are re-recording it
+            if let endRouteLandmarkVoiceNote = self.endRouteLandmarkVoiceNote {
+                do {
+                    try FileManager.default.removeItem(at: endRouteLandmarkVoiceNote.documentURL)
+                } catch { }
+            }
+            endRouteLandmarkVoiceNote = audioFileURL.lastPathComponent as NSString
+        }
+    }
+}
+
 extension ViewController: UIPopoverPresentationControllerDelegate {
     // MARK: - UIPopoverPresentationControllerDelegate
     
@@ -2278,6 +2367,12 @@ extension ViewController: UIPopoverPresentationControllerDelegate {
     
 }
 
+
+extension NSString {
+    var documentURL: URL {
+        return FileManager().urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent(self as String)
+    }
+}
 
 extension float4x4 {
     

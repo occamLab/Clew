@@ -11,6 +11,7 @@ def all_pods
   pod 'Firebase/Storage'
   pod 'Firebase/Database'
   pod 'SRCountdownTimer'
+  pod 'PRTween', '~> 0.1'
 end
 
 target 'Clew' do

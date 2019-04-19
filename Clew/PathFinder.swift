@@ -143,18 +143,22 @@ class SavedRoute: NSObject, NSSecureCoding {
     public var crumbs: [LocationInfo]
     public var beginRouteLandmarkTransform: simd_float4x4?
     public var beginRouteLandmarkInformation: NSString?
+    public var beginRouteLandmarkVoiceNote: NSString?
     public var endRouteLandmarkTransform: simd_float4x4?
     public var endRouteLandmarkInformation: NSString?
+    public var endRouteLandmarkVoiceNote: NSString?
 
-    public init(id: NSString, name: NSString, crumbs: [LocationInfo], dateCreated: NSDate = NSDate(), beginRouteLandmarkTransform: simd_float4x4?, beginRouteLandmarkInformation: NSString?, endRouteLandmarkTransform: simd_float4x4?, endRouteLandmarkInformation: NSString?) {
+    public init(id: NSString, name: NSString, crumbs: [LocationInfo], dateCreated: NSDate = NSDate(), beginRouteLandmarkTransform: simd_float4x4?, beginRouteLandmarkInformation: NSString?, beginRouteLandmarkVoiceNote: NSString?, endRouteLandmarkTransform: simd_float4x4?, endRouteLandmarkInformation: NSString?, endRouteLandmarkVoiceNote: NSString?) {
         self.id = id
         self.name = name
         self.crumbs = crumbs
         self.dateCreated = dateCreated
         self.beginRouteLandmarkTransform = beginRouteLandmarkTransform
         self.beginRouteLandmarkInformation = beginRouteLandmarkInformation
+        self.beginRouteLandmarkVoiceNote = beginRouteLandmarkVoiceNote
         self.endRouteLandmarkTransform = endRouteLandmarkTransform
         self.endRouteLandmarkInformation = endRouteLandmarkInformation
+        self.endRouteLandmarkVoiceNote = endRouteLandmarkVoiceNote
     }
     
     func encode(with aCoder: NSCoder) {
@@ -166,11 +170,15 @@ class SavedRoute: NSObject, NSSecureCoding {
             aCoder.encode(ARAnchor(transform: beginRouteLandmarkTransform!), forKey: "beginRouteLandmarkTransformAsARAnchor")
         }
         aCoder.encode(beginRouteLandmarkInformation, forKey: "beginRouteLandmarkInformation")
+        
+        aCoder.encode(beginRouteLandmarkVoiceNote, forKey: "beginRouteLandmarkVoiceNote")
 
         if endRouteLandmarkTransform != nil {
             aCoder.encode(ARAnchor(transform: endRouteLandmarkTransform!), forKey: "endRouteLandmarkTransformAsARAnchor")
         }
         aCoder.encode(endRouteLandmarkInformation, forKey: "endRouteLandmarkInformation")
+        
+        aCoder.encode(endRouteLandmarkVoiceNote, forKey: "endRouteLandmarkVoiceNote")
     }
     
     required convenience init?(coder aDecoder: NSCoder) {
@@ -188,21 +196,27 @@ class SavedRoute: NSObject, NSSecureCoding {
         }
         var beginRouteLandmarkTransform : simd_float4x4? = nil
         var beginRouteLandmarkInformation : NSString? = nil
+        var beginRouteLandmarkVoiceNote : NSString? = nil
 
         var endRouteLandmarkTransform : simd_float4x4? = nil
         var endRouteLandmarkInformation : NSString? = nil
+        var endRouteLandmarkVoiceNote : NSString? = nil
 
         if let beginRouteLandmarkTransformAsARAnchor = aDecoder.decodeObject(of: ARAnchor.self, forKey: "beginRouteLandmarkTransformAsARAnchor") {
             beginRouteLandmarkTransform = beginRouteLandmarkTransformAsARAnchor.transform
         }
         beginRouteLandmarkInformation = aDecoder.decodeObject(of: NSString.self, forKey: "beginRouteLandmarkInformation")
+        beginRouteLandmarkVoiceNote = aDecoder.decodeObject(of: NSString.self, forKey: "beginRouteLandmarkVoiceNote")
+
 
         if let endRouteLandmarkTransformAsARAnchor = aDecoder.decodeObject(of: ARAnchor.self, forKey: "endRouteLandmarkTransformAsARAnchor") {
             endRouteLandmarkTransform = endRouteLandmarkTransformAsARAnchor.transform
         }
         endRouteLandmarkInformation = aDecoder.decodeObject(of: NSString.self, forKey: "endRouteLandmarkInformation")
+        endRouteLandmarkVoiceNote = aDecoder.decodeObject(of: NSString.self, forKey: "endRouteLandmarkVoiceNote")
 
-        self.init(id: id, name: name, crumbs: crumbs, dateCreated: dateCreated, beginRouteLandmarkTransform: beginRouteLandmarkTransform, beginRouteLandmarkInformation: beginRouteLandmarkInformation, endRouteLandmarkTransform: endRouteLandmarkTransform, endRouteLandmarkInformation: endRouteLandmarkInformation)
+
+        self.init(id: id, name: name, crumbs: crumbs, dateCreated: dateCreated, beginRouteLandmarkTransform: beginRouteLandmarkTransform, beginRouteLandmarkInformation: beginRouteLandmarkInformation, beginRouteLandmarkVoiceNote: beginRouteLandmarkVoiceNote, endRouteLandmarkTransform: endRouteLandmarkTransform, endRouteLandmarkInformation: endRouteLandmarkInformation, endRouteLandmarkVoiceNote: endRouteLandmarkVoiceNote)
     }
 }
 

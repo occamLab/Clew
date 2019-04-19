@@ -33,6 +33,18 @@
 		826D540F224ABBDC009EF410 /* RoutesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 826D540B224ABBDC009EF410 /* RoutesViewController.swift */; };
 		826D5411224ABC39009EF410 /* DataPersistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 826D5410224ABC39009EF410 /* DataPersistence.swift */; };
 		826D5412224ABC39009EF410 /* DataPersistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 826D5410224ABC39009EF410 /* DataPersistence.swift */; };
+		827E859522690956005CF98A /* AudioVisualizerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 827E859422690956005CF98A /* AudioVisualizerView.swift */; };
+		827E859622690956005CF98A /* AudioVisualizerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 827E859422690956005CF98A /* AudioVisualizerView.swift */; };
+		827E859C22690FE4005CF98A /* StartRecording.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 827E859A22690FE4005CF98A /* StartRecording.aiff */; };
+		827E859D22690FE4005CF98A /* StartRecording.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 827E859A22690FE4005CF98A /* StartRecording.aiff */; };
+		827E859E22690FE4005CF98A /* StopRecording.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 827E859B22690FE4005CF98A /* StopRecording.aiff */; };
+		827E859F22690FE4005CF98A /* StopRecording.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 827E859B22690FE4005CF98A /* StopRecording.aiff */; };
+		82A43F482269079300076941 /* RecorderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82A43F472269079300076941 /* RecorderViewController.swift */; };
+		82A43F492269079300076941 /* RecorderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82A43F472269079300076941 /* RecorderViewController.swift */; };
+		82A43F4B226907C600076941 /* RecordButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82A43F4A226907C600076941 /* RecordButton.swift */; };
+		82A43F4C226907C600076941 /* RecordButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82A43F4A226907C600076941 /* RecordButton.swift */; };
+		82A43F4E2269085800076941 /* RecordButtonKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82A43F4D2269085800076941 /* RecordButtonKit.swift */; };
+		82A43F4F2269085800076941 /* RecordButtonKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82A43F4D2269085800076941 /* RecordButtonKit.swift */; };
 		82A4B9A9210EAE2100CB83A8 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 82A4B9A8210EAE2100CB83A8 /* GoogleService-Info.plist */; };
 		82A4B9AA210EAE2100CB83A8 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 82A4B9A8210EAE2100CB83A8 /* GoogleService-Info.plist */; };
 		B7EB59DA20F693EB00FBBC6A /* PathFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D6B00D71F33C21A00952242 /* PathFinder.swift */; };
@@ -75,6 +87,12 @@
 		826D540A224ABBDC009EF410 /* RouteTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteTableViewCell.swift; sourceTree = "<group>"; };
 		826D540B224ABBDC009EF410 /* RoutesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoutesViewController.swift; sourceTree = "<group>"; };
 		826D5410224ABC39009EF410 /* DataPersistence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataPersistence.swift; sourceTree = "<group>"; };
+		827E859422690956005CF98A /* AudioVisualizerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioVisualizerView.swift; sourceTree = "<group>"; };
+		827E859A22690FE4005CF98A /* StartRecording.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = StartRecording.aiff; sourceTree = "<group>"; };
+		827E859B22690FE4005CF98A /* StopRecording.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = StopRecording.aiff; sourceTree = "<group>"; };
+		82A43F472269079300076941 /* RecorderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecorderViewController.swift; sourceTree = "<group>"; wrapsLines = 0; };
+		82A43F4A226907C600076941 /* RecordButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordButton.swift; sourceTree = "<group>"; };
+		82A43F4D2269085800076941 /* RecordButtonKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordButtonKit.swift; sourceTree = "<group>"; };
 		82A4B9A8210EAE2100CB83A8 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		85A1A72DC19F87F15B738291 /* Pods-Clew Dev.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew Dev.release.xcconfig"; path = "Pods/Target Support Files/Pods-Clew Dev/Pods-Clew Dev.release.xcconfig"; sourceTree = "<group>"; };
 		B7EB59EC20F693EB00FBBC6A /* Clew Dev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Clew Dev.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -129,6 +147,8 @@
 		4D6B00C21F33C1C400952242 /* Clew */ = {
 			isa = PBXGroup;
 			children = (
+				827E85A0226985F9005CF98A /* Voice Notes */,
+				827E859922690FE4005CF98A /* Sound Effects */,
 				82A4B9A8210EAE2100CB83A8 /* GoogleService-Info.plist */,
 				4D940BAA1F38AA79004E6741 /* Assets.xcassets */,
 				4D6B00C31F33C1C400952242 /* AppDelegate.swift */,
@@ -161,6 +181,26 @@
 				85A1A72DC19F87F15B738291 /* Pods-Clew Dev.release.xcconfig */,
 			);
 			name = Pods;
+			sourceTree = "<group>";
+		};
+		827E859922690FE4005CF98A /* Sound Effects */ = {
+			isa = PBXGroup;
+			children = (
+				827E859A22690FE4005CF98A /* StartRecording.aiff */,
+				827E859B22690FE4005CF98A /* StopRecording.aiff */,
+			);
+			path = "Sound Effects";
+			sourceTree = "<group>";
+		};
+		827E85A0226985F9005CF98A /* Voice Notes */ = {
+			isa = PBXGroup;
+			children = (
+				82A43F472269079300076941 /* RecorderViewController.swift */,
+				82A43F4A226907C600076941 /* RecordButton.swift */,
+				827E859422690956005CF98A /* AudioVisualizerView.swift */,
+				82A43F4D2269085800076941 /* RecordButtonKit.swift */,
+			);
+			path = "Voice Notes";
 			sourceTree = "<group>";
 		};
 		C63B435EA8A32350A76E47DD /* Frameworks */ = {
@@ -257,7 +297,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				4DF05CC81F34EB6B008B0E31 /* Confirm.mp3 in Resources */,
+				827E859C22690FE4005CF98A /* StartRecording.aiff in Resources */,
 				82473B0C2217647A00E98CFC /* SettingsAndHelp.storyboard in Resources */,
+				827E859E22690FE4005CF98A /* StopRecording.aiff in Resources */,
 				82A4B9A9210EAE2100CB83A8 /* GoogleService-Info.plist in Resources */,
 				4D6B00E51F33C9B800952242 /* Crumb.obj in Resources */,
 				4D6B00DE1F33C33600952242 /* Settings.bundle in Resources */,
@@ -272,7 +314,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				82A4B9AA210EAE2100CB83A8 /* GoogleService-Info.plist in Resources */,
+				827E859D22690FE4005CF98A /* StartRecording.aiff in Resources */,
 				B7EB59E220F693EB00FBBC6A /* Confirm.mp3 in Resources */,
+				827E859F22690FE4005CF98A /* StopRecording.aiff in Resources */,
 				B7EB59E320F693EB00FBBC6A /* Crumb.obj in Resources */,
 				B7EB59E420F693EB00FBBC6A /* Settings.bundle in Resources */,
 				B7EB59E520F693EB00FBBC6A /* LaunchScreen.storyboard in Resources */,
@@ -295,6 +339,7 @@
 				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
 				"${BUILT_PRODUCTS_DIR}/GoogleUtilities/GoogleUtilities.framework",
 				"${BUILT_PRODUCTS_DIR}/InAppSettingsKit/InAppSettingsKit.framework",
+				"${BUILT_PRODUCTS_DIR}/PRTween/PRTween.framework",
 				"${BUILT_PRODUCTS_DIR}/SRCountdownTimer/SRCountdownTimer.framework",
 				"${BUILT_PRODUCTS_DIR}/VectorMath/VectorMath.framework",
 				"${BUILT_PRODUCTS_DIR}/leveldb-library/leveldb.framework",
@@ -305,6 +350,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleUtilities.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/InAppSettingsKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PRTween.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SRCountdownTimer.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/VectorMath.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/leveldb.framework",
@@ -343,6 +389,7 @@
 				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
 				"${BUILT_PRODUCTS_DIR}/GoogleUtilities/GoogleUtilities.framework",
 				"${BUILT_PRODUCTS_DIR}/InAppSettingsKit/InAppSettingsKit.framework",
+				"${BUILT_PRODUCTS_DIR}/PRTween/PRTween.framework",
 				"${BUILT_PRODUCTS_DIR}/SRCountdownTimer/SRCountdownTimer.framework",
 				"${BUILT_PRODUCTS_DIR}/VectorMath/VectorMath.framework",
 				"${BUILT_PRODUCTS_DIR}/leveldb-library/leveldb.framework",
@@ -353,6 +400,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleUtilities.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/InAppSettingsKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PRTween.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SRCountdownTimer.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/VectorMath.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/leveldb.framework",
@@ -392,9 +440,13 @@
 				826D5411224ABC39009EF410 /* DataPersistence.swift in Sources */,
 				826D540E224ABBDC009EF410 /* RoutesViewController.swift in Sources */,
 				4D6B00D81F33C21A00952242 /* PathFinder.swift in Sources */,
+				82A43F482269079300076941 /* RecorderViewController.swift in Sources */,
 				4D6B00D61F33C1FE00952242 /* Navigation.swift in Sources */,
 				4D6B00DC1F33C26D00952242 /* Utility.swift in Sources */,
+				82A43F4E2269085800076941 /* RecordButtonKit.swift in Sources */,
 				82473B092217641D00E98CFC /* SettingsViewController.m in Sources */,
+				827E859522690956005CF98A /* AudioVisualizerView.swift in Sources */,
+				82A43F4B226907C600076941 /* RecordButton.swift in Sources */,
 				826D540C224ABBDC009EF410 /* RouteTableViewCell.swift in Sources */,
 				4D6B00C61F33C1C400952242 /* ViewController.swift in Sources */,
 				4D6B00C41F33C1C400952242 /* AppDelegate.swift in Sources */,
@@ -409,9 +461,13 @@
 				826D5412224ABC39009EF410 /* DataPersistence.swift in Sources */,
 				826D540F224ABBDC009EF410 /* RoutesViewController.swift in Sources */,
 				B7EB59DA20F693EB00FBBC6A /* PathFinder.swift in Sources */,
+				82A43F492269079300076941 /* RecorderViewController.swift in Sources */,
 				B7EB59DB20F693EB00FBBC6A /* Navigation.swift in Sources */,
 				B7EB59DC20F693EB00FBBC6A /* Utility.swift in Sources */,
+				82A43F4F2269085800076941 /* RecordButtonKit.swift in Sources */,
 				82473B0A2217641D00E98CFC /* SettingsViewController.m in Sources */,
+				827E859622690956005CF98A /* AudioVisualizerView.swift in Sources */,
+				82A43F4C226907C600076941 /* RecordButton.swift in Sources */,
 				826D540D224ABBDC009EF410 /* RouteTableViewCell.swift in Sources */,
 				B7EB59DD20F693EB00FBBC6A /* ViewController.swift in Sources */,
 				B7EB59DE20F693EB00FBBC6A /* AppDelegate.swift in Sources */,
