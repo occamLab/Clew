@@ -8,13 +8,10 @@
 // - Maybe intercept session was interrupted so that we don't mistakenly try to navigate saved route before relocalization
 //
 // Major features to implement
-//  - Voice notes would be great to have instead of text for route naming and landmark naming
 //
 // Potential enhancements
 //  - Possibly create a warning if the phone doesn't appear to be in the correct orientation
 //  - revisit turn warning feature.  It doesn't seem to actually help all that much at the moment.
-//  - Group record path and record button (for instance)
-//  - Might want to suppress old pending tracking status updates (this can be overwhelming and you really only want the latest information)
 
 import UIKit
 import ARKit
@@ -267,11 +264,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     // MARK: Properties and subview declarations
     
-    /// How long to wait (in seconds) between the volume press and grabbing the transform for pausing
-    let pauseWaitingPeriod = 5
-    
-    /// How long to wait (in seconds) between the volume press and resuming the tracking session based on physical alignment
-    let resumeWaitingPeriod = 5
+    /// How long to wait (in seconds) between the alignment request and grabbing the transform
+    static let alignmentWaitingPeriod = 5
     
     /// The state of the ARKit tracking session as last communicated to us through the delgate protocol.  This is useful if you want to do something different in the delegate method depending on the previous state
     var trackingSessionState : ARCamera.TrackingState?
@@ -324,13 +318,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// A boolean that tracks whether or not to suppress tracking warnings.  By default we don't suppress, but when the help popover is presented we do.
     var suppressTrackingWarnings = false
     
-    // This Boolean marks whether or not the pause procedure is being used to create a landmark at the start of a route (true) or if it is being used to pause an already recorded route
-    // TODO: it would be nice if this could be a property of the state transition, but since it needs to stick around for multiple states it might become cumbersome to constantly pass around.  This is why it is an attribute whereas the announceArrival flag is a part of some of the AppState values.
+    /// This Boolean marks whether or not the pause procedure is being used to create a landmark at the start of a route (true) or if it is being used to pause an already recorded route
     var creatingRouteLandmark: Bool = false
     
-    /// Set to true when the user is attempting to load a saved route that has a map associated with it
+    /// Set to true when the user is attempting to load a saved route that has a map associated with it. Once relocalization succeeds, this flag should be set back to false
     var attemptingRelocalization: Bool = false
     
+    /// This is an audio player that queues up the voice note associated with a particular route landmark. The player is created whenever a saved route is loaded. Loading it before the user clicks the "Play Voice Note" button allows us to call the prepareToPlay function which reduces the latency when the user clicks the "Play Voice Note" button.
     var voiceNoteToPlay: AVAudioPlayer?
     
     // MARK: - Speech Synthesizer Delegate
@@ -494,7 +488,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             // we can skip the whole process of relocalization since we are already using the correct map and tracking is normal.  It helps to strip out old anchors to reduce jitter though
             state = .readyToNavigateOrPause(allowPause: false)
         } else {
-            // setting this flag after entering the .limited(reason: .relocalizing) state is a bit error prone.  Since there is a 5-second waiting period, there is no way that we will ever finish the alignment countdown before the session has successfully restarted
+            // setting this flag after entering the .limited(reason: .relocalizing) state is a bit error prone.  Since there is a waiting period, there is no way that we will ever finish the alignment countdown before the session has successfully restarted
             state = .readyForFinalResumeAlignment
             showResumeTrackingConfirmButton(route: route, navigateStartToEnd: navigateStartToEnd)
         }
@@ -517,9 +511,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     func handleStateTransitionToPauseWaitingPeriod() {
         hideAllViewsHelper()
         countdownTimer.isHidden = false
-        countdownTimer.start(beginingValue: pauseWaitingPeriod, interval: 1)
+        countdownTimer.start(beginingValue: ViewController.alignmentWaitingPeriod, interval: 1)
         delayTransition()
-        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(pauseWaitingPeriod)) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(ViewController.alignmentWaitingPeriod)) {
             self.countdownTimer.isHidden = true
             self.pauseTracking()
         }
@@ -639,7 +633,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     let recordVoiceNoteButton = ActionButtonComponents(appearance: .textButton(label: "Voice Note"), label: "Record audio to help you remember this landmark", targetSelector: Selector.recordVoiceNoteButtonTapped, alignment: .right, tag: 0)
 
-    let confirmAlignmentButton = ActionButtonComponents(appearance: .textButton(label: "Align"), label: "Start 5-second alignment countdown", targetSelector: Selector.confirmAlignmentButtonTapped, alignment: .center, tag: 0)
+    let confirmAlignmentButton = ActionButtonComponents(appearance: .textButton(label: "Align"), label: "Start \(ViewController.alignmentWaitingPeriod)-second alignment countdown", targetSelector: Selector.confirmAlignmentButtonTapped, alignment: .center, tag: 0)
     
     let readVoiceNoteButton = ActionButtonComponents(appearance: .textButton(label: "Play Note"), label: "Play recorded voice note", targetSelector: Selector.readVoiceNoteButtonTapped, alignment: .left, tag: UIView.readVoiceNoteButtonTag)
     
@@ -660,7 +654,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     let stopNavigationButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "StopNavigation")!), label: "Stop navigation", targetSelector: Selector.stopNavigationButtonTapped, alignment: .center, tag: 0)
     
     /// Image, label, and target for routes button.
-    let routesButton = ActionButtonComponents(appearance: .textButton(label: "Routes"), label: "Saved Routes List", targetSelector: Selector.routesButtonTapped, alignment: .left, tag: 0)
+    let routesButton = ActionButtonComponents(appearance: .textButton(label: "Routes"), label: "Saved routes list", targetSelector: Selector.routesButtonTapped, alignment: .left, tag: 0)
 
     /// A handle to the Firebase storage
     let storageBaseRef = Storage.storage().reference()
@@ -888,9 +882,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             userDefaults.set(true, forKey: "showedRecordPathWithoutLandmarkWarning")
             // Show logging disclaimer when user opens app for the first time
             let alert = UIAlertController(title: "Creating reusable routes",
-                                          message: "If you would like to be able to navigate along the forward direction of this route again, you must create a landmark before starting your recording.",
+                                          message: "To navigate this route in the forward direction at a later time, you must create a landmark before starting the recording.",
                                           preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "Continue with single-use recording", style: .default, handler: { action -> Void in
+            alert.addAction(UIAlertAction(title: "Continue with single-use route", style: .default, handler: { action -> Void in
                 // proceed to recording
                 self.state = .recordingRoute
             }
@@ -915,9 +909,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             userDefaults.set(true, forKey: "showedNavigatePathWithoutLandmarkWarning")
             // Show logging disclaimer when user opens app for the first time
             let alert = UIAlertController(title: "Creating reusable routes",
-                                          message: "If you would like to be able to navigate along the reverse direction of this route again, you must activate the pause button before navigating the route.",
+                                          message: "To navigate this route in the reverse direction at a later time, you must activate the pause button before navigating the route.",
                                           preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "Continue with single-use navigation", style: .default, handler: { action -> Void in
+            alert.addAction(UIAlertAction(title: "Continue with single-use route", style: .default, handler: { action -> Void in
                 // proceed to navigation
                 self.state = .navigatingRoute
             }
@@ -974,7 +968,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
      */
     @objc func showLandmarkInformationDialog() {
         // Set title and message for the alert dialog
-        let alertController = UIAlertController(title: "Landmark information", message: "Enter information about the landmark that will help you find it later.", preferredStyle: .alert)
+        let alertController = UIAlertController(title: "Landmark information", message: "Enter text about the landmark that will help you find it later.", preferredStyle: .alert)
         // The confirm action taking the inputs
         let saveAction = UIAlertAction(title: "Ok", style: .default) { (_) in
             if self.creatingRouteLandmark {
@@ -1226,13 +1220,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         startNavigationView.setupButtonContainer(withButtons: [startNavigationButton, pauseButton])
         
         pauseTrackingView = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height))
-        pauseTrackingView.setupButtonContainer(withButtons: [enterLandmarkDescriptionButton, confirmAlignmentButton, recordVoiceNoteButton], withMainText: "Landmarks allow you to save or pause your route. You will need to to return to the landmark on your own to load or unpause your route. When creating a landmark, hold your device flat with the screen facing up. Press the top (short) edge flush against a flat vertical surface (such as a wall). The \"describe\" button lets you enter information to help you remember the location of the landmark. The \"align\" button starts a \(pauseWaitingPeriod)-second alignment countdown. During this time, do not move the device until the phone provides confirmation via a vibration or sound cue.")
+        pauseTrackingView.setupButtonContainer(withButtons: [enterLandmarkDescriptionButton, confirmAlignmentButton, recordVoiceNoteButton], withMainText: "Landmarks allow you to save or pause your route. You will need to return to the landmark to load or unpause your route. Before creating the landmark, specify text or voice to help you remember its location. To create a landmark, hold your device flat with the screen facing up. Press the top (short) edge flush against a flat vertical surface (such as a wall).  The \"align\" button starts a \(ViewController.alignmentWaitingPeriod)-second countdown. During this time, do not move the device.")
         
         resumeTrackingView = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height))
         resumeTrackingView.setupButtonContainer(withButtons: [resumeButton], withMainText: "Return to the last paused location and press Resume for further instructions.")
         
         resumeTrackingConfirmView = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height))
-        resumeTrackingConfirmView.setupButtonContainer(withButtons: [confirmAlignmentButton, readVoiceNoteButton], withMainText: "Hold your device flat with the screen facing up. Press the top (short) edge flush against the same vertical surface that you used to create the landmark.  When you are ready, activate the align button to start the \(resumeWaitingPeriod)-second alignment countdown that will complete the procedure. Do not move the device until the phone provides confirmation via a vibration or sound cue.")
+        resumeTrackingConfirmView.setupButtonContainer(withButtons: [confirmAlignmentButton, readVoiceNoteButton], withMainText: "Hold your device flat with the screen facing up. Press the top (short) edge flush against the same vertical surface that you used to create the landmark.  When you are ready, activate the align button to start the \(ViewController.alignmentWaitingPeriod)-second alignment countdown that will complete the procedure. Do not move the device until the phone provides confirmation via a vibration or sound cue.")
 
         // Stop Navigation button container
         stopNavigationView = UIView(frame: CGRect(x: 0, y: yOriginOfButtonFrame, width: buttonFrameWidth, height: buttonFrameHeight))
@@ -1362,7 +1356,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             }
         }
         resumeTrackingConfirmView.getButtonByTag(tag: UIView.readVoiceNoteButtonTag)?.isHidden = voiceNoteToPlay == nil
-        resumeTrackingConfirmView.mainText?.text?.append("Hold your device flat with the screen facing up. Press the top (short) edge flush against the same vertical surface that you used to create the landmark.  When you are ready, activate the align button to start the \(resumeWaitingPeriod)-second alignment countdown that will complete the procedure. Do not move the device until the phone provides confirmation via a vibration or sound cue.")
+        resumeTrackingConfirmView.mainText?.text?.append("Hold your device flat with the screen facing up. Press the top (short) edge flush against the same vertical surface that you used to create the landmark.  When you are ready, activate the align button to start the \(ViewController.alignmentWaitingPeriod)-second alignment countdown that will complete the procedure. Do not move the device until the phone provides confirmation via a vibration or sound cue.")
         delayTransition()
     }
     
@@ -1585,9 +1579,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         // resume pose tracking with existing ARSessionConfiguration
         hideAllViewsHelper()
         countdownTimer.isHidden = false
-        countdownTimer.start(beginingValue: pauseWaitingPeriod, interval: 1)
+        countdownTimer.start(beginingValue: ViewController.alignmentWaitingPeriod, interval: 1)
         delayTransition()
-        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(resumeWaitingPeriod)) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(ViewController.alignmentWaitingPeriod)) {
             self.countdownTimer.isHidden = true
             // The first check is necessary in case the phone relocalizes before this code executes
             if case .readyForFinalResumeAlignment = self.state, let alignTransform = self.pausedTransform, let camera = self.sceneView.session.currentFrame?.camera {
