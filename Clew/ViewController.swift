@@ -4,7 +4,9 @@
 //
 //  Created by Chris Seonghwan Yoon & Jeremy Ryan on 7/10/17.
 //
-// Known issues
+// Confirmed issues
+//
+// Unconfirmed issues issues
 // - Maybe intercept session was interrupted so that we don't mistakenly try to navigate saved route before relocalization
 //
 // Major features to implement
@@ -234,8 +236,8 @@ enum AppState {
             return "mainScreen(announceArrival=\(announceArrival))"
         case .recordingRoute:
             return "recordingRoute"
-        case .readyToNavigateOrPause(let allowPause):
-            return "readyToNavigateOrPause(allowPause=\(allowPause))"
+        case .readyToNavigateOrPause:
+            return "readyToNavigateOrPause"
         case .navigatingRoute:
             return "navigatingRoute"
         case .ratingRoute(let announceArrival):
@@ -278,8 +280,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             switch state {
             case .recordingRoute:
                 handleStateTransitionToRecordingRoute()
-            case .readyToNavigateOrPause(let allowPause):
-                handleStateTransitionToReadyToNavigateOrPause(allowPause: allowPause)
+            case .readyToNavigateOrPause:
+                handleStateTransitionToReadyToNavigateOrPause(allowPause: !isResumedRoute)
             case .navigatingRoute:
                 handleStateTransitionToNavigatingRoute()
             case .ratingRoute(let announceArrival):
@@ -320,6 +322,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// This Boolean marks whether or not the pause procedure is being used to create a landmark at the start of a route (true) or if it is being used to pause an already recorded route
     var creatingRouteLandmark: Bool = false
+    
+    /// This Boolean marks whether or not the user is resuming a route
+    var isResumedRoute: Bool = false
     
     /// Set to true when the user is attempting to load a saved route that has a map associated with it. Once relocalization succeeds, this flag should be set back to false
     var attemptingRelocalization: Bool = false
@@ -486,6 +491,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
 
         if isTrackingPerformanceNormal, isSameMap {
             // we can skip the whole process of relocalization since we are already using the correct map and tracking is normal.  It helps to strip out old anchors to reduce jitter though
+            isResumedRoute = true
             state = .readyToNavigateOrPause(allowPause: false)
         } else {
             // setting this flag after entering the .limited(reason: .relocalizing) state is a bit error prone.  Since there is a waiting period, there is no way that we will ever finish the alignment countdown before the session has successfully restarted
@@ -905,7 +911,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     func showNavigatePathWithoutLandmarkWarning() {
         let userDefaults: UserDefaults = UserDefaults.standard
         let showedNavigatePathWithoutLandmarkWarning: Bool? = userDefaults.object(forKey: "showedNavigatePathWithoutLandmarkWarning") as? Bool
-        if showedNavigatePathWithoutLandmarkWarning == nil && endRouteLandmark.transform == nil {
+        if showedNavigatePathWithoutLandmarkWarning == nil && endRouteLandmark.transform == nil && !isResumedRoute {
             userDefaults.set(true, forKey: "showedNavigatePathWithoutLandmarkWarning")
             // Show logging disclaimer when user opens app for the first time
             let alert = UIAlertController(title: "Creating reusable routes",
@@ -1516,6 +1522,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             }
         }
 
+        isResumedRoute = false
         state = .readyToNavigateOrPause(allowPause: true)
     }
     
@@ -1599,6 +1606,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 self.sceneView.session.setWorldOrigin(relativeTransform: relativeTransform)
                 
                 Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(self.playSound)), userInfo: nil, repeats: false)
+                self.isResumedRoute = true
                 self.state = .readyToNavigateOrPause(allowPause: false)
             }
         }
@@ -2255,6 +2263,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             if case .readyForFinalResumeAlignment = state {
                 // this will cancel any realignment if it hasn't happened yet and go straight to route navigation mode
                 countdownTimer.isHidden = true
+                isResumedRoute = true
                 state = .readyToNavigateOrPause(allowPause: false)
             }
             print("normal")
