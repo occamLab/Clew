@@ -2144,6 +2144,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     }
     
     func sessionShouldAttemptRelocalization(_ session: ARSession) -> Bool {
+        // TODO: not sure if this is actually what we should be doing.  Perhaps we should cancel any recording or navigation if this happens rather than trying to relocalize
         return true
     }
     
