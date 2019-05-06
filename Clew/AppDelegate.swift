@@ -16,7 +16,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Use Firebase library to configure APIs
-        FirebaseApp.configure()
+        #if IS_DEV_TARGET
+            let filePath = Bundle.main.path(forResource: "GoogleService-Info_dev", ofType: "plist")!
+            let options = FirebaseOptions(contentsOfFile: filePath)
+            FirebaseApp.configure(options: options!)
+        #else
+            FirebaseApp.configure()
+        #endif
         // Override point for customization after application launch.
         window = UIWindow(frame:UIScreen.main.bounds)
         window?.makeKeyAndVisible()
@@ -41,6 +47,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationDidBecomeActive(_ application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+        print("Application is now active")
+        print((window?.rootViewController as! ViewController).sceneView.session.currentFrame?.camera.trackingState)
     }
 
     func applicationWillTerminate(_ application: UIApplication) {
