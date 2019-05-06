@@ -5,6 +5,7 @@
 //  Created by Chris Seonghwan Yoon & Jeremy Ryan on 7/10/17.
 //
 // Confirmed issues
+// - We are not doing a proper job dealing with resumed routes with respect to logging (we always send recorded stuff in the log file, which we don't always have access to)
 //
 // Unconfirmed issues issues
 // - Maybe intercept session was interrupted so that we don't mistakenly try to navigate saved route before relocalization
@@ -275,8 +276,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// The state of the app.  This should be constantly referenced and updated as the app transitions
     var state = AppState.initializing {
         didSet {
-            stateSequenceTime.append(roundToThousandths(-stateTransitionLogTimer.timeIntervalSinceNow))
-            stateSequence.append(state.rawValue)
+            logger.logStateTransition(newState: state)
             switch state {
             case .recordingRoute:
                 handleStateTransitionToRecordingRoute()
@@ -375,15 +375,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         sceneView.session.setWorldOrigin(relativeTransform: simd_float4x4.makeTranslation(0, 0, 0))
         attemptingRelocalization = false
         
-        // reset all logging related variables
         crumbs = []
-        pathData = []
-        pathDataTime = []
-        dataTimer = Date()
-        
-        trackingErrorData = []
-        trackingErrorTime = []
-        trackingErrorPhase = []
+        logger.resetPathLog()
         
         showStopRecordingButton()
         droppingCrumbs = Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: #selector(dropCrumb), userInfo: nil, repeats: true)
@@ -408,26 +401,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         beginRouteLandmark = RouteLandmark()
         endRouteLandmark = RouteLandmark()
 
-        // clear any old log variables
-        navigationData = []
-        navigationDataTime = []
-        speechData = []
-        speechDataTime = []
-        dataTimer = Date()
-        
+        logger.resetNavigationLog()
+
         // generate path from PathFinder class
         // enabled hapticFeedback generates more keypoints
         let path = PathFinder(crumbs: crumbs.reversed(), hapticFeedback: hapticFeedback, voiceFeedback: voiceFeedback)
         keypoints = path.keypoints
         
         // save keypoints data for debug log
-        keypointData = []
-        for keypoint in keypoints {
-            let data = [keypoint.location.x, keypoint.location.y, keypoint.location.z, keypoint.location.yaw]
-            keypointData.append(data)
-        }
+        logger.logKeypoints(keypoints: keypoints)
         
-        // reder 3D keypoints
+        // render 3D keypoints
         renderKeypoint(keypoints[0].location)
         
         turnWarning = false
@@ -662,8 +646,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// Image, label, and target for routes button.
     let routesButton = ActionButtonComponents(appearance: .textButton(label: "Routes"), label: "Saved routes list", targetSelector: Selector.routesButtonTapped, alignment: .left, tag: 0)
 
-    /// A handle to the Firebase storage
-    let storageBaseRef = Storage.storage().reference()
     var databaseHandle = Database.database()
     
     /// Keypoint object
@@ -682,9 +664,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// True if we should add anchors ahead of the user to encourage more ARWorldMap detail.  In limited testing this did not show promise, therefore it is disabled
     var shouldDropMappingAnchors = false
-
-    /// A UUID for the current device (note: this can change in various circumstances, so we should be wary of using this, see: https://developer.apple.com/documentation/uikit/uidevice#//apple_ref/occ/instp/UIDevice/identifierForVendor)
-    let deviceID = UIDevice.current.identifierForVendor
     
     /// Button view container for stop recording button
     var stopRecordingView: UIView!
@@ -837,7 +816,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     }
     
     func setupFirebaseObservers() {
-        let responsePathRef = databaseHandle.reference(withPath: "config/" + deviceID!.uuidString)
+        let responsePathRef = databaseHandle.reference(withPath: "config/" + UIDevice.current.identifierForVendor!.uuidString)
         responsePathRef.observe(.childChanged) { (snapshot) -> Void in
             self.handleNewConfig(snapshot: snapshot)
         }
@@ -1413,8 +1392,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             }
         }
         if case .navigatingRoute = state {
-            speechData.append(altText)
-            speechDataTime.append(roundToThousandths(-dataTimer.timeIntervalSinceNow))
+            logger.logSpeech(utterance: altText)
         }
         announce(announcement: altText)
     }
@@ -1430,22 +1408,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     var keypointNode: SCNNode!                  // SCNNode of the next keypoint
     var prevKeypointPosition: LocationInfo!     // previous keypoint location - originally set to current location
     var turnWarning: Bool!                      // bool to make sure turnWarning happens only once
-    
-    // internal debug logging datastructure
-    var stateTransitionLogTimer = Date()        // timer for logging state transitions
-    var dataTimer = Date()                        // timer to sync data
-    var pathData: [[Float]] = []                // path data taken during RECORDPATH - [[1x16 transform matrix]]
-    var pathDataTime: [Double] = []               // time stamps for pathData
-    var navigationData: [[Float]] = []          // path data taken during NAVIGATION - [[1x16 transform matrix]]
-    var navigationDataTime: [Double] = []         // time stamps for navigationData
-    var speechData: [String] = []                   // description data during NAVIGATION
-    var speechDataTime: [Double] = []               // time stamp for speechData
-    var keypointData: [Array<Any>] = []             // list of keypoints - [[(LocationInfo)x, y, z, yaw]]
-    var trackingErrorData: [String] = []            // list of tracking errors ["InsufficientFeatures", "ExcessiveMotion"]
-    var trackingErrorTime: [Double] = []            // time stamp of tracking error
-    var trackingErrorPhase: [Bool] = []             // tracking phase - true: recording, false: navigation
-    var stateSequence: [String] = []                   // all state transitions the app went through
-    var stateSequenceTime: [Double] = []            // time stamp of state transitions
+
+    /// Interface for logging data about the session and the path
+    var logger = PathLogger()
     
     // Timers for background functions
     var droppingCrumbs: Timer?
@@ -1621,99 +1586,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     // MARK: - Logging
     @objc func sendLogData() {
         // send success log data to Firebase
-        compileLogData(false)
+        logger.compileLogData(false)
         state = .mainScreen(announceArrival: false)
     }
     
     @objc func sendDebugLogData() {
         // send debug log data to Firebase
-        compileLogData(true)
+        logger.compileLogData(true)
         state = .mainScreen(announceArrival: false)
-    }
-    
-    func compileLogData(_ debug: Bool) {
-        // compile log data
-        let date = Date()
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZZZZZ"
-        let pathDate = dateFormatter.string(from: date)
-        let pathID = deviceID!.uuidString + dateFormatter.string(from: date)
-        let userId = deviceID!.uuidString
-        
-        sendMetaData(pathDate, pathID+"-0", userId, debug)
-        sendPathData(pathID, userId)
-        
-        // reset log variables that aren't tied to path recording or navigation
-        stateSequence = []
-        stateSequenceTime = []
-    }
-    
-    func sendMetaData(_ pathDate: String, _ pathID: String, _ userId: String, _ debug: Bool) {
-        let pathType: String
-        if(debug) {
-            pathType = "debug"
-        } else {
-            pathType = "success"
-        }
-        
-        let body: [String : Any] = ["userId": userId,
-                                    "PathID": pathID,
-                                    "PathDate": pathDate,
-                                    "PathType": pathType,
-                                    "keypointData": keypointData,
-                                    "trackingErrorPhase": trackingErrorPhase,
-                                    "trackingErrorTime": trackingErrorTime,
-                                    "trackingErrorData": trackingErrorData,
-                                    "stateSequence": stateSequence,
-                                    "stateSequenceTime": stateSequenceTime]
-        do {
-            let jsonData = try JSONSerialization.data(withJSONObject: body, options: .prettyPrinted)
-            // here "jsonData" is the dictionary encoded in JSON data
-            let storageRef = storageBaseRef.child(userId + "_" + pathID + "_metadata.json")
-            let fileType = StorageMetadata()
-            fileType.contentType = "application/json"
-            // upload the image to Firebase storage and setup auto snapshotting
-            storageRef.putData(jsonData, metadata: fileType) { (metadata, error) in
-                guard metadata != nil else {
-                    // Uh-oh, an error occurred!
-                    print("could not upload meta data to firebase", error!.localizedDescription)
-                    return
-                }
-            }
-        } catch {
-            print(error.localizedDescription)
-        }
-    }
-    
-    func sendPathData(_ pathID: String, _ userId: String) {
-        let body: [String : Any] = ["userId": userId,
-                                    "PathID": pathID,
-                                    "PathDate": "0",
-                                    "PathType": "0",
-                                    "PathData": pathData,
-                                    "pathDataTime": pathDataTime,
-                                    "navigationData": navigationData,
-                                    "navigationDataTime": navigationDataTime,
-                                    "speechData": speechData,
-                                    "speechDataTime": speechDataTime]
-        
-        do {
-            let jsonData = try JSONSerialization.data(withJSONObject: body, options: .prettyPrinted)
-            // here "jsonData" is the dictionary encoded as a JSON
-            let storageRef = storageBaseRef.child(userId + "_" + pathID + "_pathdata.json")
-            let fileType = StorageMetadata()
-            fileType.contentType = "application/json"
-            // upload the image to Firebase storage and setup auto snapshotting
-            storageRef.putData(jsonData, metadata: fileType) { (metadata, error) in
-                guard metadata != nil else {
-                    // Uh-oh, an error occurred!
-                    print("could not upload path data to firebase", error!.localizedDescription)
-                    return
-                }
-            }
-        } catch {
-            print(error.localizedDescription)
-        }
     }
     
     @objc func dropCrumb() {
@@ -1918,14 +1798,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 feedbackTimer = Date()
             }
         }
-    }
-    
-    func shouldAnnounceTurnWarning(_ direction: DirectionInfo) -> Bool {
-        // check if app should make a turn warning annoucement
-        return direction.targetState == PositionState.closeToTarget &&
-            !turnWarning &&
-            keypoints.count > 1 &&
-            sqrtf(powf(Float(keypoints[0].location.x - prevKeypointPosition.x),2) + powf(Float(keypoints[0].location.z - prevKeypointPosition.z),2)) >= 6
     }
     
     /// Communicates a message to the user via speech.  If VoiceOver is active, then VoiceOver is used
@@ -2187,18 +2059,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         
         // record location data in debug logs
         if(record) {
-            let logMatrix = [round10k(scn.m11), round10k(scn.m12), round10k(scn.m13), round10k(scn.m14),
-             round10k(scn.m21), round10k(scn.m22), round10k(scn.m23), round10k(scn.m24),
-             round10k(scn.m31), round10k(scn.m32), round10k(scn.m33), round10k(scn.m34),
-             round10k(scn.m41), round10k(scn.m42), round10k(scn.m43), round10k(scn.m44)]
-            let logTime = roundToThousandths(-dataTimer.timeIntervalSinceNow)
-            if case .navigatingRoute = state {
-                navigationData.append(logMatrix)
-                navigationDataTime.append(logTime)
-            } else {
-                pathData.append(logMatrix)
-                pathDataTime.append(logTime)
-            }
+            logger.logTransformMatrix(state: state, scn: scn)
         }
         return CurrentCoordinateInfo(LocationInfo(transform: currTransform), transMatrix: transMatrix)
     }
@@ -2273,13 +2134,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
         if let logString = logString {
             if case .recordingRoute = state {
-                trackingErrorPhase.append(true)
-                trackingErrorTime.append(roundToThousandths(-dataTimer.timeIntervalSinceNow))
-                trackingErrorData.append(logString)
+                logger.logTrackingError(isRecordingPhase: true, trackingError: logString)
             } else if case .navigatingRoute = state {
-                trackingErrorPhase.append(false)
-                trackingErrorTime.append(roundToThousandths(-dataTimer.timeIntervalSinceNow))
-                trackingErrorData.append(logString)
+                logger.logTrackingError(isRecordingPhase: false, trackingError: logString)
             }
         }
         // update the tracking state so we can use it in the next call to this function

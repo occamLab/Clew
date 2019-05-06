@@ -19,6 +19,10 @@
 		4D6B00E51F33C9B800952242 /* Crumb.obj in Resources */ = {isa = PBXBuildFile; fileRef = 4D6B00E41F33C85500952242 /* Crumb.obj */; };
 		4D9E8E7F1F3A4D3400536FCD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4D940BAA1F38AA79004E6741 /* Assets.xcassets */; };
 		4DF05CC81F34EB6B008B0E31 /* Confirm.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4DF05CC71F34EB56008B0E31 /* Confirm.mp3 */; };
+		82028C74227CDB3100772701 /* PathLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82028C73227CDB3100772701 /* PathLogger.swift */; };
+		82028C75227CDB3100772701 /* PathLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82028C73227CDB3100772701 /* PathLogger.swift */; };
+		82028C7722807BF400772701 /* GoogleService-Info_dev.plist in Resources */ = {isa = PBXBuildFile; fileRef = 82028C7622807BF400772701 /* GoogleService-Info_dev.plist */; };
+		82028C7922807C1F00772701 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 82028C7822807C1F00772701 /* GoogleService-Info.plist */; };
 		82473B092217641D00E98CFC /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 82473B082217641D00E98CFC /* SettingsViewController.m */; };
 		82473B0A2217641D00E98CFC /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 82473B082217641D00E98CFC /* SettingsViewController.m */; };
 		82473B0C2217647A00E98CFC /* SettingsAndHelp.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 82473B0B2217647A00E98CFC /* SettingsAndHelp.storyboard */; };
@@ -45,8 +49,6 @@
 		82A43F4C226907C600076941 /* RecordButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82A43F4A226907C600076941 /* RecordButton.swift */; };
 		82A43F4E2269085800076941 /* RecordButtonKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82A43F4D2269085800076941 /* RecordButtonKit.swift */; };
 		82A43F4F2269085800076941 /* RecordButtonKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82A43F4D2269085800076941 /* RecordButtonKit.swift */; };
-		82A4B9A9210EAE2100CB83A8 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 82A4B9A8210EAE2100CB83A8 /* GoogleService-Info.plist */; };
-		82A4B9AA210EAE2100CB83A8 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 82A4B9A8210EAE2100CB83A8 /* GoogleService-Info.plist */; };
 		82FDAD3E22715C65009A0A3C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D6B00C51F33C1C400952242 /* ViewController.swift */; };
 		B7EB59DA20F693EB00FBBC6A /* PathFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D6B00D71F33C21A00952242 /* PathFinder.swift */; };
 		B7EB59DB20F693EB00FBBC6A /* Navigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D6B00D51F33C1FE00952242 /* Navigation.swift */; };
@@ -76,6 +78,9 @@
 		4D6B00E41F33C85500952242 /* Crumb.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = Crumb.obj; sourceTree = "<group>"; };
 		4D940BAA1F38AA79004E6741 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4DF05CC71F34EB56008B0E31 /* Confirm.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = Confirm.mp3; sourceTree = "<group>"; };
+		82028C73227CDB3100772701 /* PathLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PathLogger.swift; sourceTree = "<group>"; };
+		82028C7622807BF400772701 /* GoogleService-Info_dev.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info_dev.plist"; sourceTree = "<group>"; };
+		82028C7822807C1F00772701 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		822E27F8210E3F260024A5E3 /* Clew Dev-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Clew Dev-Info.plist"; sourceTree = "<group>"; };
 		82473B05221763E200E98CFC /* SettingsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
 		82473B062217641D00E98CFC /* Clew-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Clew-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -93,7 +98,6 @@
 		82A43F472269079300076941 /* RecorderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecorderViewController.swift; sourceTree = "<group>"; wrapsLines = 0; };
 		82A43F4A226907C600076941 /* RecordButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordButton.swift; sourceTree = "<group>"; };
 		82A43F4D2269085800076941 /* RecordButtonKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordButtonKit.swift; sourceTree = "<group>"; };
-		82A4B9A8210EAE2100CB83A8 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		85A1A72DC19F87F15B738291 /* Pods-Clew Dev.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew Dev.release.xcconfig"; path = "Pods/Target Support Files/Pods-Clew Dev/Pods-Clew Dev.release.xcconfig"; sourceTree = "<group>"; };
 		B7EB59EC20F693EB00FBBC6A /* Clew Dev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Clew Dev.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C68778047D8E263D2FB04989 /* Pods-Clew Dev.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew Dev.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Clew Dev/Pods-Clew Dev.debug.xcconfig"; sourceTree = "<group>"; };
@@ -147,9 +151,10 @@
 		4D6B00C21F33C1C400952242 /* Clew */ = {
 			isa = PBXGroup;
 			children = (
+				82028C7822807C1F00772701 /* GoogleService-Info.plist */,
 				827E85A0226985F9005CF98A /* Voice Notes */,
 				827E859922690FE4005CF98A /* Sound Effects */,
-				82A4B9A8210EAE2100CB83A8 /* GoogleService-Info.plist */,
+				82028C7622807BF400772701 /* GoogleService-Info_dev.plist */,
 				4D940BAA1F38AA79004E6741 /* Assets.xcassets */,
 				4D6B00C31F33C1C400952242 /* AppDelegate.swift */,
 				4D6B00C51F33C1C400952242 /* ViewController.swift */,
@@ -164,6 +169,7 @@
 				4D6B00CC1F33C1C400952242 /* LaunchScreen.storyboard */,
 				826D540B224ABBDC009EF410 /* RoutesViewController.swift */,
 				826D540A224ABBDC009EF410 /* RouteTableViewCell.swift */,
+				82028C73227CDB3100772701 /* PathLogger.swift */,
 				4D6B00CF1F33C1C400952242 /* Info.plist */,
 				4D6B00DD1F33C33600952242 /* Settings.bundle */,
 				82473B062217641D00E98CFC /* Clew-Bridging-Header.h */,
@@ -300,10 +306,10 @@
 				827E859C22690FE4005CF98A /* StartRecording.aiff in Resources */,
 				82473B0C2217647A00E98CFC /* SettingsAndHelp.storyboard in Resources */,
 				827E859E22690FE4005CF98A /* StopRecording.aiff in Resources */,
-				82A4B9A9210EAE2100CB83A8 /* GoogleService-Info.plist in Resources */,
 				4D6B00E51F33C9B800952242 /* Crumb.obj in Resources */,
 				4D6B00DE1F33C33600952242 /* Settings.bundle in Resources */,
 				82569F4E22187E6500448B45 /* help in Resources */,
+				82028C7922807C1F00772701 /* GoogleService-Info.plist in Resources */,
 				4D6B00CE1F33C1C400952242 /* LaunchScreen.storyboard in Resources */,
 				4D9E8E7F1F3A4D3400536FCD /* Assets.xcassets in Resources */,
 			);
@@ -313,7 +319,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				82A4B9AA210EAE2100CB83A8 /* GoogleService-Info.plist in Resources */,
 				827E859D22690FE4005CF98A /* StartRecording.aiff in Resources */,
 				B7EB59E220F693EB00FBBC6A /* Confirm.mp3 in Resources */,
 				827E859F22690FE4005CF98A /* StopRecording.aiff in Resources */,
@@ -321,6 +326,7 @@
 				B7EB59E420F693EB00FBBC6A /* Settings.bundle in Resources */,
 				B7EB59E520F693EB00FBBC6A /* LaunchScreen.storyboard in Resources */,
 				82569F4F22187E6500448B45 /* help in Resources */,
+				82028C7722807BF400772701 /* GoogleService-Info_dev.plist in Resources */,
 				82473B0D2217647A00E98CFC /* SettingsAndHelp.storyboard in Resources */,
 				B7EB59E620F693EB00FBBC6A /* Assets.xcassets in Resources */,
 			);
@@ -443,6 +449,7 @@
 				82A43F482269079300076941 /* RecorderViewController.swift in Sources */,
 				4D6B00D61F33C1FE00952242 /* Navigation.swift in Sources */,
 				4D6B00DC1F33C26D00952242 /* Utility.swift in Sources */,
+				82028C74227CDB3100772701 /* PathLogger.swift in Sources */,
 				82A43F4E2269085800076941 /* RecordButtonKit.swift in Sources */,
 				82473B092217641D00E98CFC /* SettingsViewController.m in Sources */,
 				827E859522690956005CF98A /* AudioVisualizerView.swift in Sources */,
@@ -464,6 +471,7 @@
 				82FDAD3E22715C65009A0A3C /* ViewController.swift in Sources */,
 				82A43F492269079300076941 /* RecorderViewController.swift in Sources */,
 				B7EB59DB20F693EB00FBBC6A /* Navigation.swift in Sources */,
+				82028C75227CDB3100772701 /* PathLogger.swift in Sources */,
 				B7EB59DC20F693EB00FBBC6A /* Utility.swift in Sources */,
 				82A43F4F2269085800076941 /* RecordButtonKit.swift in Sources */,
 				82473B0A2217641D00E98CFC /* SettingsViewController.m in Sources */,
@@ -646,7 +654,7 @@
 				INFOPLIST_FILE = "Clew Dev-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				OTHER_SWIFT_FLAGS = "$(inherited) \"-DDEVELOPER\"";
+				OTHER_SWIFT_FLAGS = "$(inherited) \"-DDEVELOPER\" \"-DIS_DEV_TARGET\"";
 				PRODUCT_BUNDLE_IDENTIFIER = "edu.occam.Clew-Dev";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Clew/Clew Dev-Bridging-Header.h";
@@ -666,7 +674,7 @@
 				INFOPLIST_FILE = "Clew Dev-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				OTHER_SWIFT_FLAGS = "$(inherited) \"-DDEVELOPER\"";
+				OTHER_SWIFT_FLAGS = "$(inherited) \"-DDEVELOPER\" \"-DIS_DEV_TARGET\"";
 				PRODUCT_BUNDLE_IDENTIFIER = "edu.occam.Clew-Dev";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Clew/Clew Dev-Bridging-Header.h";
