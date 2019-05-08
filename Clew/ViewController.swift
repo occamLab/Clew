@@ -894,6 +894,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
     }
     
+    /// Called when the view appears on screen.
+    ///
+    /// - Parameter animated: True if the appearance is animated
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
@@ -915,6 +918,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
     }
     
+    /// Display a warning that tells the user they must create a landmark to be able to use this route again in the forward direction
     func showRecordPathWithoutLandmarkWarning() {
         let userDefaults: UserDefaults = UserDefaults.standard
         let showedRecordPathWithoutLandmarkWarning: Bool? = userDefaults.object(forKey: "showedRecordPathWithoutLandmarkWarning") as? Bool
@@ -940,8 +944,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         
     }
     
-    /// Display a warning that tells the user they must create a landmark
-    /// to be able to use this route again in the reverse direction
+    /// Display a warning that tells the user they must create a landmark to be able to use this route again in the reverse direction
     func showNavigatePathWithoutLandmarkWarning() {
         let userDefaults: UserDefaults = UserDefaults.standard
         let showedNavigatePathWithoutLandmarkWarning: Bool? = userDefaults.object(forKey: "showedNavigatePathWithoutLandmarkWarning") as? Bool
@@ -966,9 +969,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
     }
     
-    /*
-     * display SAVE ROUTE input dialog
-     */
+
+    /// Display the dialog that prompts the user to enter a route name.  If the user enters a route name, the route along with the optional world map will be persisted.
+    ///
+    /// - Parameter mapAsAny: the world map to save (the `Any?` type is used to indicate that the map is optional and to preserve backwards compatibility with iOS 11.3)
     @objc func showRouteNamingDialog(mapAsAny: Any?) {
         // Set title and message for the alert dialog
         if #available(iOS 12.0, *) {
@@ -1003,9 +1007,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     }
 
     
-    /*
-     * display LANDMARK INFORMATION input dialog
-     */
+    /// Show the dialog that allows the user to enter textual information to help them remember a landmark.
     @objc func showLandmarkInformationDialog() {
         // Set title and message for the alert dialog
         let alertController = UIAlertController(title: "Landmark information", message: "Enter text about the landmark that will help you find it later.", preferredStyle: .alert)
@@ -1036,6 +1038,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         present(alertController, animated: true, completion: nil)
     }
     
+    /// Plays back the loaded voice note.  This method assumes that the `voiceNoteToPlay` attribute has already been loaded with an appropriate audio player.
     @objc func readVoiceNote() {
         if let voiceNoteToPlay = self.voiceNoteToPlay {
             do {
@@ -1049,6 +1052,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
     }
     
+    /// Record a voice note by displaying the RecorderView
     @objc func recordVoiceNote() {
         let popoverContent = RecorderViewController()
         popoverContent.delegate = self
@@ -1063,8 +1067,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         self.present(nav, animated: true, completion: nil)
     }
     
+    /// Show logging disclaimer when user opens app for the first time.
     func showLogAlert() {
-        // Show logging disclaimer when user opens app for the first time
         let logAlertVC = UIAlertController(title: "Sharing your experience with Clew",
                                            message: "Help us improve the app by logging your Clew experience. These logs will not include any images or personal information. You can turn this off in Settings.",
                                            preferredStyle: .alert)
@@ -1075,8 +1079,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         self.present(logAlertVC, animated: true, completion: nil)
     }
     
+    /// Show safety disclaimer when user opens app for the first time.
     func showSafetyAlert() {
-        // Show safety disclaimer when user opens app for the first time
         let safetyAlertVC = UIAlertController(title: "For your safety",
                                               message: "While using the app, please be aware of your surroundings. You agree that your use of the App is at your own risk, and it is solely your responsibility to maintain your personal safety. Visit www.clewapp.org for more information on how to use the app.",
                                               preferredStyle: .alert)
@@ -1084,9 +1088,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         self.present(safetyAlertVC, animated: true, completion: nil)
     }
     
-    /*
-     * Configure Settings Bundle
-     */
+    /// Configure Settings Bundle
     func createSettingsBundle() {
         registerSettingsBundle()
         updateDisplayFromDefaults()
@@ -1096,11 +1098,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                                                object: nil)
     }
     
+    /// Register settings bundle
     func registerSettingsBundle(){
         let appDefaults = ["crumbColor": 0, "hapticFeedback": true, "sendLogs": true, "voiceFeedback": true, "soundFeedback": true, "units": 0] as [String : Any]
         UserDefaults.standard.register(defaults: appDefaults)
     }
 
+    /// Respond to update events to the `UserDefaults` object (the settings of the app).
     func updateDisplayFromDefaults(){
         let defaults = UserDefaults.standard
         
@@ -1112,13 +1116,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         sendLogs = defaults.bool(forKey: "sendLogs")
     }
     
+    /// Handles updates to the app settings.
     @objc func defaultsChanged(){
         updateDisplayFromDefaults()
     }
     
-    /*
-     * Create New ARSession
-     */
+    /// Create a new ARSession.
     func createARSession() {
         configuration = ARWorldTrackingConfiguration()
         configuration.planeDetection = [.horizontal, .vertical]
@@ -1128,6 +1131,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         sceneView.delegate = self
     }
     
+    /// Handle the user clicking the confirm alignment to a saved landmark.  Depending on the app state, the behavior of this function will differ (e.g., if the route is being resumed versus reloaded)
     @objc func confirmAlignment() {
         if case .startingPauseProcedure = state {
             state = .pauseWaitingPeriod
@@ -1138,6 +1142,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
     }
     
+    /// Play audio feedback and system sound.  This is used currently when the user is facing the appropriate direction along the route.
     @objc func playSound() {
         feedbackGenerator = UIImpactFeedbackGenerator(style: .heavy)
         feedbackGenerator?.impactOccurred()
@@ -1145,6 +1150,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         playSystemSound(id: 1103)
     }
     
+    /// Play the specified system sound.  If the system sound has been preloaded as an audio player, then play using the AVAudioSession.  If there is no corresponding player, use the `AudioServicesPlaySystemSound` function.
+    ///
+    /// - Parameter id: the id of the system sound to play
     func playSystemSound(id: Int) {
         do {
             try AVAudioSession.sharedInstance().setCategory(AVAudioSession.Category.playback)
@@ -1161,9 +1169,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
     }
     
-    /*
-     * Adds TapGesture to the sceneView
-     */
+    /// Adds double tap gesture to the sceneView to handle the anounce direction button (TODO: I'm not sure exactly what this does at the moment and how it differs from the button itself)
     func addGestures() {
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(announceDirectionHelp))
         tapGestureRecognizer.numberOfTapsRequired = 2
@@ -1292,9 +1298,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         state = .mainScreen(announceArrival: false)
     }
     
-    /*
-     * display RECORD PATH button/hide all other views
-     */
+    /// display RECORD PATH button/hide all other views
     @objc func showRecordPathButton(announceArrival: Bool) {
         recordPathView.isHidden = false
         // the options button is hidden if the route rating shows up
@@ -1310,6 +1314,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
     }
     
+    /// Called when the UI of the view changes dramatically (e.g., if a different subview is displayed).  The optional `announcement` input is will be spoken 2 seconds after the transition occurs.  The delay is necessary to prevent the accessibility notification for screen changed to cut off the announcement.
+    ///
+    /// - Parameter announcement: the announcement to read after a 2 second delay
     func delayTransition(announcement: String? = nil) {
         // this notification currently cuts off the announcement of the button that was just pressed
         UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: nil)
@@ -1324,9 +1331,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
     }
     
-    /*
-     * display STOP RECORDIN button/hide all other views
-     */
+    /// Display stop recording view/hide all other views
     @objc func showStopRecordingButton() {
         recordPathView.isHidden = true
         recordPathView.isAccessibilityElement = false
@@ -1334,9 +1339,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         delayTransition(announcement: "Hold vertically with the rear camera facing forward.")
     }
     
-    /*
-     * display START NAVIGATION button/hide all other views
-     */
+    /// Display start navigation view/hide all other views
     @objc func showStartNavigationButton(allowPause: Bool) {
         resumeTrackingView.isHidden = true
         resumeTrackingConfirmView.isHidden = true
@@ -1345,10 +1348,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         startNavigationView.isHidden = false
         delayTransition()
     }
-    
-    /*
-     * display PAUSE TRACKING button/hide all other views
-     */
+
+    /// Display the pause tracking view/hide all other views
     func showPauseTrackingButton() throws {
         recordPathView.isHidden = true
         startNavigationView.isHidden = true
@@ -1356,15 +1357,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         delayTransition()
     }
     
-    /*
-     * display RESUME TRACKING button/hide all other views
-     */
+    /// Display the resume tracking view/hide all other views
     @objc func showResumeTrackingButton() {
         pauseTrackingView.isHidden = true
         resumeTrackingView.isHidden = false
         delayTransition()
     }
     
+    /// Display the resume tracking confirm view/hide all other views.
     func showResumeTrackingConfirmButton(route: SavedRoute, navigateStartToEnd: Bool) {
         resumeTrackingView.isHidden = true
         resumeTrackingConfirmView.isHidden = false
@@ -1400,9 +1400,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         delayTransition()
     }
     
-    /*
-     * display STOP NAVIGATION button/hide all other views
-     */
+    /// display stop navigation view/hide all other views
     @objc func showStopNavigationButton() {
         startNavigationView.isHidden = true
         stopNavigationView.isHidden = false
@@ -1411,9 +1409,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         delayTransition()
     }
     
-    /*
-     * display ROUTE RATING button/hide all other views
-     */
+    /// display route rating view/hide all other views
     @objc func showRouteRating(announceArrival: Bool) {
         stopNavigationView.isHidden = true
         getDirectionButton.isHidden = true
@@ -1431,15 +1427,21 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     }
     
     /*
-     * update directionText UILabel given text string and font size
-     * distance Bool used to determine whether to add string "meters" to direction text
+     *
      */
+    
+    /// Announce the direction (both in text and using speech if appropriate).  The function will automatically use the appropriate units based on settings to convert `distance` from meters to the appropriate unit.
+    ///
+    /// - Parameters:
+    ///   - description: the direction text to display (e.g., may include the direction to turn)
+    ///   - distance: the distance (expressed in meters)
+    ///   - displayDistance: a Boolean that indicates whether to display the distance (true means display distance)
     func updateDirectionText(_ description: String, distance: Float, displayDistance: Bool) {
         let distanceToDisplay = roundToTenths(distance * unitConversionFactor[defaultUnit]!)
         var altText = description
         if (displayDistance) {
             if defaultUnit == 0 || distanceToDisplay >= 10 {
-                // don't use fractiomal feet or for higher numbers of meters (round instead)
+                // don't use fractional feet or for higher numbers of meters (round instead)
                 // Related to higher number of meters, there is a somewhat strange behavior in VoiceOver where numbers greater than 10 will be read as, for instance, 11 dot 4 meters (instead of 11 point 4 meters).
                 altText += " for \(Int(distanceToDisplay))" + unitText[defaultUnit]!
             } else {
@@ -1467,23 +1469,34 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// Interface for logging data about the session and the path
     var logger = PathLogger()
     
-    // Timers for background functions
+    // MARK: - Timers for background functions
+    
+    /// <#Description#>
     var droppingCrumbs: Timer?
+    /// <#Description#>
     var followingCrumbs: Timer?
+    /// <#Description#>
     var hapticTimer: Timer?
+    /// <#Description#>
     var announcementRemovalTimer: Timer?
+    /// <#Description#>
     var updateHeadingOffsetTimer: Timer?
     
-    // navigation class and state
-    var nav = Navigation()                  // Navigation calculation class
+    /// Navigation class and state
+    var nav = Navigation()
     
-    // haptic generators
+    // MARK: - Haptic generators
+    
+    /// The haptic feedback generator to use when facing towards the keypoint
     var feedbackGenerator : UIImpactFeedbackGenerator? = nil
+    /// The haptic feedback generator to use when a keypoint is reached
     var waypointFeedbackGenerator: UINotificationFeedbackGenerator? = nil
+    /// The time of last haptic feedback
     var feedbackTimer: Date!
-    let FEEDBACKDELAY = 0.4
+    /// The delay between haptic feedback pulses in seconds
+    static let FEEDBACKDELAY = 0.4
     
-    // settings bundle configuration
+    // MARK: - Settings bundle configuration
     // the bundle configuration has 0 as feet and 1 as meters
     let unit = [0: "ft", 1: "m"]
     let unitText = [0: " feet", 1: " meters"]
@@ -1850,7 +1863,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         // use a stricter criteria than 12 o'clock for providing haptic feedback
         if abs(directionToNextKeypoint.angleDiff) < coneWidth {
             let timeInterval = feedbackTimer.timeIntervalSinceNow
-            if(-timeInterval > FEEDBACKDELAY) {
+            if(-timeInterval > ViewController.FEEDBACKDELAY) {
                 // wait until desired time interval before sending another feedback
                 if (hapticFeedback) { feedbackGenerator?.impactOccurred() }
                 if (soundFeedback) { playSystemSound(id: 1103) }
@@ -1859,8 +1872,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
     }
     
-    /// Communicates a message to the user via speech.  If VoiceOver is active, then VoiceOver is used
-    /// to communicate the announcement, otherwise we use the AVSpeechEngine
+    /// Communicates a message to the user via speech.  If VoiceOver is active, then VoiceOver is used to communicate the announcement, otherwise we use the AVSpeechEngine
     ///
     /// - Parameter announcement: the text to read to the user
     func announce(announcement: String) {
