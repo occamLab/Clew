@@ -14,7 +14,7 @@
     <a title="ViewController Class Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html"> Docs</a> (55% documented)</p>
+        <p><a href="../index.html"> Docs</a> (63% documented)</p>
         <p class="header-right"><a href="https://github.com/occamLab/Clew"><img src="../img/gh.png"/>View on GitHub</a></p>
       </div>
     </header>
@@ -5340,8 +5340,7 @@ whether or not an announcement is currently being read to the user.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Communicates a message to the user via speech.  If VoiceOver is active, then VoiceOver is used
-to communicate the announcement, otherwise we use the AVSpeechEngine</p>
+                        <p>Communicates a message to the user via speech.  If VoiceOver is active, then VoiceOver is used to communicate the announcement, otherwise we use the AVSpeechEngine</p>
 
                       </div>
                       <div class="declaration">
@@ -5387,7 +5386,7 @@ to communicate the announcement, otherwise we use the AVSpeechEngine</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>Get direction to next keypoint based on the current location</p>
 
                       </div>
                       <div class="declaration">
@@ -5397,6 +5396,29 @@ to communicate the announcement, otherwise we use the AVSpeechEngine</p>
                           <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">getDirectionToNextKeypoint</span><span class="p">(</span><span class="nv">currentLocation</span><span class="p">:</span> <span class="kt"><a href="../Structs/CurrentCoordinateInfo.html">CurrentCoordinateInfo</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Structs/DirectionInfo.html">DirectionInfo</a></span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>currentLocation</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the current location of the device</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>the direction to the next keypoint with the distance rounded to the nearest tenth of a meter</p>
                       </div>
                     </section>
                   </div>
@@ -5414,7 +5436,7 @@ to communicate the announcement, otherwise we use the AVSpeechEngine</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>Called when the <q>get directions</q> button is pressed.  The announcement is made with a 0.5 second delay to allow the button name to be announced.</p>
 
                       </div>
                       <div class="declaration">
@@ -5442,7 +5464,7 @@ to communicate the announcement, otherwise we use the AVSpeechEngine</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>Called when the settings button is pressed.  This function will display the settings view (managed by SettingsViewController) as a popover.</p>
 
                       </div>
                       <div class="declaration">
@@ -5470,7 +5492,7 @@ to communicate the announcement, otherwise we use the AVSpeechEngine</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>Called when the help button is pressed.  This function will display the help view (managed by HelpViewController) as a popover.</p>
 
                       </div>
                       <div class="declaration">
@@ -5498,7 +5520,7 @@ to communicate the announcement, otherwise we use the AVSpeechEngine</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>Announce directions at any given point to the next keypoint</p>
 
                       </div>
                       <div class="declaration">
@@ -5526,7 +5548,7 @@ to communicate the announcement, otherwise we use the AVSpeechEngine</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>Set the direction text based on the current location and direction info.</p>
 
                       </div>
                       <div class="declaration">
@@ -5536,6 +5558,49 @@ to communicate the announcement, otherwise we use the AVSpeechEngine</p>
                           <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">setDirectionText</span><span class="p">(</span><span class="nv">currentLocation</span><span class="p">:</span> <span class="kt"><a href="../Classes/LocationInfo.html">LocationInfo</a></span><span class="p">,</span> <span class="nv">direction</span><span class="p">:</span> <span class="kt"><a href="../Structs/DirectionInfo.html">DirectionInfo</a></span><span class="p">,</span> <span class="nv">displayDistance</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">)</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>currentLocation</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the current location of the device</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>direction</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the direction info struct (e.g., as computed by the <code><a href="../Classes/Navigation.html">Navigation</a></code> class)</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>displayDistance</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>a Boolean that indicates whether the distance to the net keypoint should be displayed (true if it should be displayed, false otherwise)</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
                       </div>
                     </section>
                   </div>
@@ -5553,7 +5618,7 @@ to communicate the announcement, otherwise we use the AVSpeechEngine</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>Create the keypoint SCNNode that corresponds to the rotating flashing element that looks like a navigation pin.</p>
 
                       </div>
                       <div class="declaration">
@@ -5563,6 +5628,25 @@ to communicate the announcement, otherwise we use the AVSpeechEngine</p>
                           <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">renderKeypoint</span><span class="p">(</span><span class="n">_</span> <span class="nv">location</span><span class="p">:</span> <span class="kt"><a href="../Classes/LocationInfo.html">LocationInfo</a></span><span class="p">)</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>location</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the location of the keypoint</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
                       </div>
                     </section>
                   </div>
@@ -5580,7 +5664,7 @@ to communicate the announcement, otherwise we use the AVSpeechEngine</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>Compute the location of the device based on the ARSession.  If the record flag is set to true, record this position in the logs.</p>
 
                       </div>
                       <div class="declaration">
@@ -5590,6 +5674,29 @@ to communicate the announcement, otherwise we use the AVSpeechEngine</p>
                           <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">getRealCoordinates</span><span class="p">(</span><span class="nv">record</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Structs/CurrentCoordinateInfo.html">CurrentCoordinateInfo</a></span><span class="p">?</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>record</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>a Boolean indicating whether to record the computed position (true if it should be computed, false otherwise)</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>the current location as a <code><a href="../Structs/CurrentCoordinateInfo.html">CurrentCoordinateInfo</a></code> object</p>
                       </div>
                     </section>
                   </div>
@@ -5607,7 +5714,7 @@ to communicate the announcement, otherwise we use the AVSpeechEngine</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>Called when there is a change in tracking state.  This is important for both announcing tracking errors to the user and also to triggering some app state transitions.</p>
 
                       </div>
                       <div class="declaration">
@@ -5617,6 +5724,37 @@ to communicate the announcement, otherwise we use the AVSpeechEngine</p>
                           <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">session</span><span class="p">(</span><span class="n">_</span> <span class="nv">session</span><span class="p">:</span> <span class="kt">ARSession</span><span class="p">,</span> <span class="n">cameraDidChangeTrackingState</span> <span class="nv">camera</span><span class="p">:</span> <span class="kt">ARCamera</span><span class="p">)</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>session</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the AR session associated with the change in tracking state</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>camera</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the AR camera associated with the change in tracking state</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
                       </div>
                     </section>
                   </div>
@@ -5652,10 +5790,10 @@ to communicate the announcement, otherwise we use the AVSpeechEngine</p>
             </div>
             <div class="task-group">
               <div class="task-name-container">
-                <a name="/Extensions"></a>
-                <a name="//apple_ref/swift/Section/Extensions" class="dashAnchor"></a>
-                <a href="#/Extensions">
-                  <h3 class="section-name">Extensions</h3>
+                <a name="/%3C%23RecorderViewControllerDelegate%23%3E"></a>
+                <a name="//apple_ref/swift/Section/&lt;#RecorderViewControllerDelegate#&gt;" class="dashAnchor"></a>
+                <a href="#/%3C%23RecorderViewControllerDelegate%23%3E">
+                  <h3 class="section-name">&lt;#RecorderViewControllerDelegate#&gt;</h3>
                 </a>
               </div>
               <ul>
@@ -5672,7 +5810,7 @@ to communicate the announcement, otherwise we use the AVSpeechEngine</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>Called when a recording starts (currently nothing is done in this function)</p>
 
                       </div>
                       <div class="declaration">
@@ -5699,7 +5837,7 @@ to communicate the announcement, otherwise we use the AVSpeechEngine</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>Called when the user finishes recording a voice note.  This function adds the voice note to the <code><a href="../Classes/RouteLandmark.html">RouteLandmark</a></code> object.</p>
 
                       </div>
                       <div class="declaration">
@@ -5709,6 +5847,25 @@ to communicate the announcement, otherwise we use the AVSpeechEngine</p>
                           <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">didFinishRecording</span><span class="p">(</span><span class="nv">audioFileURL</span><span class="p">:</span> <span class="kt">URL</span><span class="p">)</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>audioFileURL</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>&lt;#audioFileURL description#&gt;</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
                       </div>
                     </section>
                   </div>
@@ -5787,7 +5944,7 @@ to communicate the announcement, otherwise we use the AVSpeechEngine</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>Called when a popover is dismissed</p>
 
                       </div>
                       <div class="declaration">
@@ -5797,6 +5954,25 @@ to communicate the announcement, otherwise we use the AVSpeechEngine</p>
                           <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">popoverPresentationControllerDidDismissPopover</span><span class="p">(</span><span class="n">_</span> <span class="nv">popoverPresentationController</span><span class="p">:</span> <span class="kt">UIPopoverPresentationController</span><span class="p">)</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>popoverPresentationController</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the popover presentation controller used to display the popover.  Currently all this does is re-enable tracking warnings if they were previously disabled (e.g., when displaying the help menu).</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
                       </div>
                     </section>
                   </div>

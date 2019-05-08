@@ -23,266 +23,147 @@
     },
     {
       "file": "/Users/pruvolo/Software/Clew/Clew/PathFinder.swift",
-      "line": 19,
-      "symbol": "CurrentCoordinateInfo.location",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/pruvolo/Software/Clew/Clew/PathFinder.swift",
-      "line": 20,
-      "symbol": "CurrentCoordinateInfo.transformMatrix",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/pruvolo/Software/Clew/Clew/PathFinder.swift",
-      "line": 22,
-      "symbol": "CurrentCoordinateInfo.init(_:transMatrix:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/pruvolo/Software/Clew/Clew/PathFinder.swift",
-      "line": 27,
-      "symbol": "CurrentCoordinateInfo.init(_:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/pruvolo/Software/Clew/Clew/PathFinder.swift",
-      "line": 41,
-      "symbol": "LocationInfo.init(anchor:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/pruvolo/Software/Clew/Clew/PathFinder.swift",
-      "line": 45,
-      "symbol": "LocationInfo.init(transform:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/pruvolo/Software/Clew/Clew/PathFinder.swift",
-      "line": 49,
-      "symbol": "LocationInfo.supportsSecureCoding",
-      "symbol_kind": "source.lang.swift.decl.var.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/pruvolo/Software/Clew/Clew/PathFinder.swift",
-      "line": 53,
-      "symbol": "LocationInfo.init(coder:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/pruvolo/Software/Clew/Clew/PathFinder.swift",
-      "line": 57,
-      "symbol": "LocationInfo.encode(with:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/pruvolo/Software/Clew/Clew/PathFinder.swift",
-      "line": 61,
-      "symbol": "LocationInfo.translation",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/pruvolo/Software/Clew/Clew/PathFinder.swift",
-      "line": 66,
-      "symbol": "LocationInfo.rotation",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/pruvolo/Software/Clew/Clew/PathFinder.swift",
-      "line": 71,
-      "symbol": "LocationInfo.eulerAngles",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/pruvolo/Software/Clew/Clew/PathFinder.swift",
-      "line": 105,
-      "symbol": "LocationInfo.x",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/pruvolo/Software/Clew/Clew/PathFinder.swift",
-      "line": 109,
-      "symbol": "LocationInfo.y",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/pruvolo/Software/Clew/Clew/PathFinder.swift",
-      "line": 113,
-      "symbol": "LocationInfo.z",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/pruvolo/Software/Clew/Clew/PathFinder.swift",
-      "line": 117,
-      "symbol": "LocationInfo.yaw",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/pruvolo/Software/Clew/Clew/PathFinder.swift",
-      "line": 121,
-      "symbol": "LocationInfo.describe()",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/pruvolo/Software/Clew/Clew/PathFinder.swift",
-      "line": 133,
+      "line": 150,
       "symbol": "KeypointInfo.location",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/pruvolo/Software/Clew/Clew/PathFinder.swift",
-      "line": 134,
+      "line": 151,
       "symbol": "KeypointInfo.orientation",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/pruvolo/Software/Clew/Clew/PathFinder.swift",
-      "line": 137,
+      "line": 154,
       "symbol": "RouteLandmark",
       "symbol_kind": "source.lang.swift.decl.class",
       "warning": "undocumented"
     },
     {
       "file": "/Users/pruvolo/Software/Clew/Clew/PathFinder.swift",
-      "line": 138,
+      "line": 155,
       "symbol": "RouteLandmark.supportsSecureCoding",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Users/pruvolo/Software/Clew/Clew/PathFinder.swift",
-      "line": 140,
+      "line": 157,
       "symbol": "RouteLandmark.transform",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/pruvolo/Software/Clew/Clew/PathFinder.swift",
-      "line": 141,
+      "line": 158,
       "symbol": "RouteLandmark.information",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/pruvolo/Software/Clew/Clew/PathFinder.swift",
-      "line": 142,
+      "line": 159,
       "symbol": "RouteLandmark.voiceNote",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/pruvolo/Software/Clew/Clew/PathFinder.swift",
-      "line": 144,
+      "line": 161,
       "symbol": "RouteLandmark.init(transform:information:voiceNote:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/pruvolo/Software/Clew/Clew/PathFinder.swift",
-      "line": 150,
+      "line": 167,
       "symbol": "RouteLandmark.encode(with:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/pruvolo/Software/Clew/Clew/PathFinder.swift",
-      "line": 158,
+      "line": 175,
       "symbol": "RouteLandmark.init(coder:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/pruvolo/Software/Clew/Clew/PathFinder.swift",
-      "line": 173,
+      "line": 190,
       "symbol": "SavedRoute",
       "symbol_kind": "source.lang.swift.decl.class",
       "warning": "undocumented"
     },
     {
       "file": "/Users/pruvolo/Software/Clew/Clew/PathFinder.swift",
-      "line": 174,
+      "line": 191,
       "symbol": "SavedRoute.supportsSecureCoding",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Users/pruvolo/Software/Clew/Clew/PathFinder.swift",
-      "line": 176,
+      "line": 193,
       "symbol": "SavedRoute.id",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/pruvolo/Software/Clew/Clew/PathFinder.swift",
-      "line": 177,
+      "line": 194,
       "symbol": "SavedRoute.name",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/pruvolo/Software/Clew/Clew/PathFinder.swift",
-      "line": 178,
+      "line": 195,
       "symbol": "SavedRoute.dateCreated",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/pruvolo/Software/Clew/Clew/PathFinder.swift",
-      "line": 179,
+      "line": 196,
       "symbol": "SavedRoute.crumbs",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/pruvolo/Software/Clew/Clew/PathFinder.swift",
-      "line": 180,
+      "line": 197,
       "symbol": "SavedRoute.beginRouteLandmark",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/pruvolo/Software/Clew/Clew/PathFinder.swift",
-      "line": 181,
+      "line": 198,
       "symbol": "SavedRoute.endRouteLandmark",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/pruvolo/Software/Clew/Clew/PathFinder.swift",
-      "line": 183,
+      "line": 200,
       "symbol": "SavedRoute.init(id:name:crumbs:dateCreated:beginRouteLandmark:endRouteLandmark:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/pruvolo/Software/Clew/Clew/PathFinder.swift",
-      "line": 192,
+      "line": 209,
       "symbol": "SavedRoute.encode(with:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/pruvolo/Software/Clew/Clew/PathFinder.swift",
-      "line": 201,
+      "line": 218,
       "symbol": "SavedRoute.init(coder:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
@@ -863,156 +744,9 @@
     },
     {
       "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 1913,
-      "symbol": "ViewController.getDirectionToNextKeypoint(currentLocation:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 1920,
-      "symbol": "ViewController.announceDirectionHelpPressed()",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 1924,
-      "symbol": "ViewController.settingsButtonPressed()",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 1940,
-      "symbol": "ViewController.helpButtonPressed()",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 1954,
-      "symbol": "ViewController.announceDirectionHelp()",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 1962,
-      "symbol": "ViewController.setDirectionText(currentLocation:direction:displayDistance:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 1992,
-      "symbol": "ViewController.renderKeypoint(_:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 2092,
-      "symbol": "ViewController.getRealCoordinates(record:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 2112,
-      "symbol": "ViewController.session(_:cameraDidChangeTrackingState:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 2189,
+      "line": 2210,
       "symbol": "ViewController.sessionShouldAttemptRelocalization(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 2197,
-      "symbol": "ViewController.didStartRecording()",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 2200,
-      "symbol": "ViewController.didFinishRecording(audioFileURL:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 2232,
-      "symbol": "ViewController.popoverPresentationControllerDidDismissPopover(_:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 2255,
-      "symbol": "NSString.documentURL",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 2262,
-      "symbol": "float4x4.makeRotate(radians:_:_:_:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 2266,
-      "symbol": "float4x4.makeTranslation(_:_:_:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 2270,
-      "symbol": "float4x4.rotate(radians:_:_:_:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 2274,
-      "symbol": "float4x4.translate(x:_:_:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 2278,
-      "symbol": "float4x4.x",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 2281,
-      "symbol": "float4x4.y",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 2284,
-      "symbol": "float4x4.z",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 2287,
-      "symbol": "float4x4.yaw",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {

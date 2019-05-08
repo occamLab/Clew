@@ -590,569 +590,282 @@
     },
     {
       "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 1304,
-      "symbol": "ViewController.showRecordPathButton(announceArrival:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 1319,
-      "symbol": "ViewController.delayTransition(announcement:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 1336,
-      "symbol": "ViewController.showStopRecordingButton()",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 1346,
-      "symbol": "ViewController.showStartNavigationButton(allowPause:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 1358,
-      "symbol": "ViewController.showPauseTrackingButton()",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 1368,
-      "symbol": "ViewController.showResumeTrackingButton()",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 1374,
-      "symbol": "ViewController.showResumeTrackingConfirmButton(route:navigateStartToEnd:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 1412,
-      "symbol": "ViewController.showStopNavigationButton()",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 1423,
-      "symbol": "ViewController.showRouteRating(announceArrival:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 1443,
-      "symbol": "ViewController.updateDirectionText(_:distance:displayDistance:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 1464,
+      "line": 1460,
       "symbol": "ViewController.configuration",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 1467,
+      "line": 1463,
       "symbol": "ViewController.crumbs",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 1468,
+      "line": 1464,
       "symbol": "ViewController.keypoints",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 1469,
+      "line": 1465,
       "symbol": "ViewController.keypointNode",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 1470,
+      "line": 1466,
       "symbol": "ViewController.prevKeypointPosition",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 1471,
+      "line": 1467,
       "symbol": "ViewController.turnWarning",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 1477,
-      "symbol": "ViewController.droppingCrumbs",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 1478,
-      "symbol": "ViewController.followingCrumbs",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 1479,
-      "symbol": "ViewController.hapticTimer",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 1480,
-      "symbol": "ViewController.announcementRemovalTimer",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 1481,
-      "symbol": "ViewController.updateHeadingOffsetTimer",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 1484,
-      "symbol": "ViewController.nav",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 1487,
-      "symbol": "ViewController.feedbackGenerator",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 1488,
-      "symbol": "ViewController.waypointFeedbackGenerator",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 1489,
-      "symbol": "ViewController.feedbackTimer",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 1490,
-      "symbol": "ViewController.FEEDBACKDELAY",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 1494,
+      "line": 1501,
       "symbol": "ViewController.unit",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 1495,
+      "line": 1502,
       "symbol": "ViewController.unitText",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 1496,
+      "line": 1503,
       "symbol": "ViewController.unitConversionFactor",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 1498,
+      "line": 1505,
       "symbol": "ViewController.defaultUnit",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 1499,
+      "line": 1506,
       "symbol": "ViewController.defaultColor",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 1500,
+      "line": 1507,
       "symbol": "ViewController.soundFeedback",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 1501,
+      "line": 1508,
       "symbol": "ViewController.voiceFeedback",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 1502,
+      "line": 1509,
       "symbol": "ViewController.hapticFeedback",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 1503,
+      "line": 1510,
       "symbol": "ViewController.sendLogs",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 1508,
+      "line": 1515,
       "symbol": "ViewController.beginRouteLandmark",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 1509,
+      "line": 1516,
       "symbol": "ViewController.endRouteLandmark",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 1511,
+      "line": 1518,
       "symbol": "ViewController.routeName",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 1513,
+      "line": 1520,
       "symbol": "ViewController.justTraveledRoute",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 1516,
+      "line": 1523,
       "symbol": "ViewController.justUsedMapAsAny",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 1518,
+      "line": 1525,
       "symbol": "ViewController.justUsedMap",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 1528,
+      "line": 1535,
       "symbol": "ViewController.Directions",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 1536,
+      "line": 1543,
       "symbol": "ViewController.recordPath()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 1540,
+      "line": 1547,
       "symbol": "ViewController.stopRecording(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 1555,
+      "line": 1562,
       "symbol": "ViewController.startNavigation(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 1574,
+      "line": 1581,
       "symbol": "ViewController.stopNavigation(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 1595,
+      "line": 1602,
       "symbol": "ViewController.startPauseProcedure()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 1600,
+      "line": 1607,
       "symbol": "ViewController.startCreateLandmarkProcedure()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 1607,
+      "line": 1614,
       "symbol": "ViewController.pauseTracking()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 1612,
+      "line": 1619,
       "symbol": "ViewController.resumeTracking()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 1642,
+      "line": 1649,
       "symbol": "ViewController.confirmResumeTracking()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 1649,
+      "line": 1656,
       "symbol": "ViewController.sendLogData()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 1656,
+      "line": 1663,
       "symbol": "ViewController.sendDebugLogData()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 1663,
+      "line": 1670,
       "symbol": "ViewController.dropCrumb()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 1709,
+      "line": 1716,
       "symbol": "ViewController.followCrumb()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 1804,
+      "line": 1811,
       "symbol": "ViewController.updateHeadingOffset()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 1821,
+      "line": 1828,
       "symbol": "ViewController.getProjectedHeading(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 1834,
+      "line": 1841,
       "symbol": "ViewController.getYawHelper(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 1841,
+      "line": 1848,
       "symbol": "ViewController.getHapticFeedback()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 1906,
-      "symbol": "ViewController.getDirectionToNextKeypoint(currentLocation:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 1913,
-      "symbol": "ViewController.announceDirectionHelpPressed()",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 1917,
-      "symbol": "ViewController.settingsButtonPressed()",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 1933,
-      "symbol": "ViewController.helpButtonPressed()",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 1947,
-      "symbol": "ViewController.announceDirectionHelp()",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 1955,
-      "symbol": "ViewController.setDirectionText(currentLocation:direction:displayDistance:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 1985,
-      "symbol": "ViewController.renderKeypoint(_:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 2085,
-      "symbol": "ViewController.getRealCoordinates(record:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 2105,
-      "symbol": "ViewController.session(_:cameraDidChangeTrackingState:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 2182,
+      "line": 2210,
       "symbol": "ViewController.sessionShouldAttemptRelocalization(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 2190,
-      "symbol": "ViewController.didStartRecording()",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 2193,
-      "symbol": "ViewController.didFinishRecording(audioFileURL:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 2225,
-      "symbol": "ViewController.popoverPresentationControllerDidDismissPopover(_:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 2248,
-      "symbol": "NSString.documentURL",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 2255,
-      "symbol": "float4x4.makeRotate(radians:_:_:_:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 2259,
-      "symbol": "float4x4.makeTranslation(_:_:_:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 2263,
-      "symbol": "float4x4.rotate(radians:_:_:_:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 2267,
-      "symbol": "float4x4.translate(x:_:_:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 2271,
-      "symbol": "float4x4.x",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 2274,
-      "symbol": "float4x4.y",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 2277,
-      "symbol": "float4x4.z",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/pruvolo/Software/Clew/Clew/ViewController.swift",
-      "line": 2280,
-      "symbol": "float4x4.yaw",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {

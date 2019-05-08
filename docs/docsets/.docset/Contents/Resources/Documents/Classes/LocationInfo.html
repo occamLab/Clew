@@ -14,7 +14,7 @@
     <a title="LocationInfo Class Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html"> Docs</a> (55% documented)</p>
+        <p><a href="../index.html"> Docs</a> (63% documented)</p>
         <p class="header-right"><a href="https://github.com/occamLab/Clew"><img src="../img/gh.png"/>View on GitHub</a></p>
       </div>
     </header>
@@ -207,16 +207,7 @@
 
                 </div>
               </div>
-            <p>Struct to store position information and yaw</p>
-
-<p>Contains:</p>
-
-<ul>
-<li><code>x</code> (<code>Float</code>)</li>
-<li><code>y</code> (<code>Float</code>)</li>
-<li><code>z</code> (<code>Float</code>)</li>
-<li><code>yaw</code> (<code>Float</code>)</li>
-</ul>
+            <p>Struct to store position information and yaw.  By sub-classing <code>ARAnchor</code>, we get specify the 6-DOFs of an ARAnchor while getting the ability to support the secure coding protocol for free.</p>
 
           </section>
           <section class="section task-group-section">
@@ -235,7 +226,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>This initializes a new <code>LocationInfo</code> object based on the specified <code>ARAnchor</code>.</p>
 
                       </div>
                       <div class="declaration">
@@ -245,6 +236,25 @@
                           <pre class="highlight swift"><code><span class="kd">required</span> <span class="nf">init</span><span class="p">(</span><span class="nv">anchor</span><span class="p">:</span> <span class="kt">ARAnchor</span><span class="p">)</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>anchor</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the <code>ARAnchor</code> to use for describing the location</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
                       </div>
                     </section>
                   </div>
@@ -262,7 +272,9 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>This initializes a new <code>LocationInfo</code> object based on the specified transform.</p>
+
+<p>TODO: I think we might be able to delete this since all it does is call the super class method.</p>
 
                       </div>
                       <div class="declaration">
@@ -272,6 +284,25 @@
                           <pre class="highlight swift"><code><span class="k">override</span> <span class="nf">init</span><span class="p">(</span><span class="nv">transform</span><span class="p">:</span> <span class="n">simd_float4x4</span><span class="p">)</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>transform</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the transform (4x4 matrix) describing the location</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
                       </div>
                     </section>
                   </div>
@@ -289,7 +320,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>indicates whether secure coding is supported (it is)</p>
 
                       </div>
                       <div class="declaration">
@@ -316,7 +347,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>The function required by NSSecureCoding protocol to decode the object</p>
 
                       </div>
                       <div class="declaration">
@@ -326,6 +357,25 @@
                           <pre class="highlight swift"><code><span class="kd">required</span> <span class="nf">init</span><span class="p">?(</span><span class="n">coder</span> <span class="nv">aDecoder</span><span class="p">:</span> <span class="kt">NSCoder</span><span class="p">)</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>aDecoder</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the NSCoder doing the decoding</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
                       </div>
                     </section>
                   </div>
@@ -343,7 +393,8 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>The function required by NSSecureCoding protocol to encode the object
+TODO: I think we might be able to delete this since all it does is call the super class method.</p>
 
                       </div>
                       <div class="declaration">
@@ -353,6 +404,25 @@
                           <pre class="highlight swift"><code><span class="k">override</span> <span class="kd">public</span> <span class="kd">func</span> <span class="nf">encode</span><span class="p">(</span><span class="n">with</span> <span class="nv">aCoder</span><span class="p">:</span> <span class="kt">NSCoder</span><span class="p">)</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>aCoder</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the NSCoder doing the encoding</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
                       </div>
                     </section>
                   </div>
@@ -370,7 +440,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>the translation expressed as a 3-element vector (x, y, z)</p>
 
                       </div>
                       <div class="declaration">
@@ -378,33 +448,6 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">translation</span><span class="p">:</span> <span class="kt">SCNVector3</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:4Clew12LocationInfoC8rotationSo10SCNVector3Vvp"></a>
-                    <a name="//apple_ref/swift/Property/rotation" class="dashAnchor"></a>
-                    <a class="token" href="#/s:4Clew12LocationInfoC8rotationSo10SCNVector3Vvp">rotation</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>Undocumented</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">rotation</span><span class="p">:</span> <span class="kt">SCNVector3</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -424,7 +467,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>the Euler angles as a 3 element vector (pitch, yaw, roll)</p>
 
                       </div>
                       <div class="declaration">
@@ -451,7 +494,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>the x translation</p>
 
                       </div>
                       <div class="declaration">
@@ -478,7 +521,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>the y translation</p>
 
                       </div>
                       <div class="declaration">
@@ -505,7 +548,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>the z translation</p>
 
                       </div>
                       <div class="declaration">
@@ -532,7 +575,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>the yaw (in radians)</p>
 
                       </div>
                       <div class="declaration">
@@ -540,33 +583,6 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">yaw</span><span class="p">:</span> <span class="kt">Float</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:4Clew12LocationInfoC8describeSSyF"></a>
-                    <a name="//apple_ref/swift/Method/describe()" class="dashAnchor"></a>
-                    <a class="token" href="#/s:4Clew12LocationInfoC8describeSSyF">describe()</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>Undocumented</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">describe</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">String</span></code></pre>
 
                         </div>
                       </div>

@@ -1909,6 +1909,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
     }
     
+    /// Get direction to next keypoint based on the current location
+    ///
+    /// - Parameter currentLocation: the current location of the device
+    /// - Returns: the direction to the next keypoint with the distance rounded to the nearest tenth of a meter
     func getDirectionToNextKeypoint(currentLocation: CurrentCoordinateInfo) -> DirectionInfo {
         // returns direction to next keypoint from current location
         var dir = nav.getDirections(currentLocation: currentLocation, nextKeypoint: keypoints[0])
@@ -1916,10 +1920,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         return dir
     }
     
+    /// Called when the "get directions" button is pressed.  The announcement is made with a 0.5 second delay to allow the button name to be announced.
     @objc func announceDirectionHelpPressed() {
         Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: (#selector(announceDirectionHelp)), userInfo: nil, repeats: false)
     }
     
+    /// Called when the settings button is pressed.  This function will display the settings view (managed by SettingsViewController) as a popover.
     @objc func settingsButtonPressed() {
         let storyBoard: UIStoryboard = UIStoryboard(name: "SettingsAndHelp", bundle: nil)
         let popoverContent = storyBoard.instantiateViewController(withIdentifier: "Settings") as! SettingsViewController
@@ -1936,6 +1942,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         self.present(nav, animated: true, completion: nil)
     }
     
+    /// Called when the help button is pressed.  This function will display the help view (managed by HelpViewController) as a popover.
     @objc func helpButtonPressed() {
         let storyBoard: UIStoryboard = UIStoryboard(name: "SettingsAndHelp", bundle: nil)
         let popoverContent = storyBoard.instantiateViewController(withIdentifier: "Help") as! HelpViewController
@@ -1950,14 +1957,20 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         self.present(nav, animated: true, completion: nil)
     }
     
+    /// Announce directions at any given point to the next keypoint
     @objc func announceDirectionHelp() {
-        // announce directions at any given point to the next keypoint
         if case .navigatingRoute = state, let curLocation = getRealCoordinates(record: false) {
             let directionToNextKeypoint = getDirectionToNextKeypoint(currentLocation: curLocation)
             setDirectionText(currentLocation: curLocation.location, direction: directionToNextKeypoint, displayDistance: true)
         }
     }
     
+    /// Set the direction text based on the current location and direction info.
+    ///
+    /// - Parameters:
+    ///   - currentLocation: the current location of the device
+    ///   - direction: the direction info struct (e.g., as computed by the `Navigation` class)
+    ///   - displayDistance: a Boolean that indicates whether the distance to the net keypoint should be displayed (true if it should be displayed, false otherwise)
     func setDirectionText(currentLocation: LocationInfo, direction: DirectionInfo, displayDistance: Bool) {
         // Set direction text for text label and VoiceOver
         let xzNorm = sqrtf(powf(currentLocation.x - keypoints[0].location.x, 2) + powf(currentLocation.z - keypoints[0].location.z, 2))
@@ -1988,6 +2001,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
     }
     
+    /// Create the keypoint SCNNode that corresponds to the rotating flashing element that looks like a navigation pin.
+    ///
+    /// - Parameter location: the location of the keypoint
     func renderKeypoint(_ location: LocationInfo) {
         // render SCNNode of given keypoint
         keypointNode = SCNNode(mdlObject: keypointObject)
@@ -2088,6 +2104,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         sceneView.scene.rootNode.addChildNode(keypointNode)
     }
     
+    /// Compute the location of the device based on the ARSession.  If the record flag is set to true, record this position in the logs.
+    ///
+    /// - Parameter record: a Boolean indicating whether to record the computed position (true if it should be computed, false otherwise)
+    /// - Returns: the current location as a `CurrentCoordinateInfo` object
     func getRealCoordinates(record: Bool) -> CurrentCoordinateInfo? {
         guard let currTransform = sceneView.session.currentFrame?.camera.transform else {
             return nil
@@ -2105,9 +2125,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         return CurrentCoordinateInfo(LocationInfo(transform: currTransform), transMatrix: transMatrix)
     }
     
-    /*
-     * Called when there is a change in tracking state
-     */
+    ///Called when there is a change in tracking state.  This is important for both announcing tracking errors to the user and also to triggering some app state transitions.
+    ///
+    /// - Parameters:
+    ///   - session: the AR session associated with the change in tracking state
+    ///   - camera: the AR camera associated with the change in tracking state
     func session(_ session: ARSession, cameraDidChangeTrackingState camera: ARCamera) {
         var logString: String? = nil
 
@@ -2192,10 +2214,15 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
 }
 
+// MARK: - <#RecorderViewControllerDelegate#>
 extension ViewController: RecorderViewControllerDelegate {
+    /// Called when a recording starts (currently nothing is done in this function)
     func didStartRecording() {
     }
     
+    /// Called when the user finishes recording a voice note.  This function adds the voice note to the `RouteLandmark` object.
+    ///
+    /// - Parameter audioFileURL: <#audioFileURL description#>
     func didFinishRecording(audioFileURL: URL) {
         if creatingRouteLandmark {
             // delete the file since we are re-recording it
@@ -2217,9 +2244,8 @@ extension ViewController: RecorderViewControllerDelegate {
     }
 }
 
+// MARK: - UIPopoverPresentationControllerDelegate
 extension ViewController: UIPopoverPresentationControllerDelegate {
-    // MARK: - UIPopoverPresentationControllerDelegate
-    
     /// Makes sure that popovers are not modal
     ///
     /// - Parameter controller: the presentation controller
@@ -2228,6 +2254,9 @@ extension ViewController: UIPopoverPresentationControllerDelegate {
         return .none
     }
     
+    /// Called when a popover is dismissed
+    ///
+    /// - Parameter popoverPresentationController: the popover presentation controller used to display the popover.  Currently all this does is re-enable tracking warnings if they were previously disabled (e.g., when displaying the help menu).
     func popoverPresentationControllerDidDismissPopover(_ popoverPresentationController: UIPopoverPresentationController) {
         // this will only fire when the popover is dismissed by some UI action, not when the dismiss function is called from one's own code (this is why we use a custom notification to deal with the case when we dismiss the popover ourselves
         suppressTrackingWarnings = false
@@ -2251,38 +2280,75 @@ extension ViewController: UIPopoverPresentationControllerDelegate {
 
 
 extension NSString {
+    /// the URL associated in the document directory associated with the particular NSString (note: this is non-sensical for some NSStrings).
     var documentURL: URL {
         return FileManager().urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent(self as String)
     }
 }
 
 extension float4x4 {
-    
+    /// Create a rotation matrix based on the angle and axis.
+    ///
+    /// - Parameters:
+    ///   - radians: the angle to rotate through
+    ///   - x: the x-component of the axis to rotate about
+    ///   - y: the y-component of the axis to rotate about
+    ///   - z: the z-component of the axis to rotate about
+    /// - Returns: a 4x4 transformation matrix that performs this rotation
     static func makeRotate(radians: Float, _ x: Float, _ y: Float, _ z: Float) -> float4x4 {
         return unsafeBitCast(GLKMatrix4MakeRotation(radians, x, y, z), to: float4x4.self)
     }
     
+    /// Create a translation matrix based on the translation vector.
+    ///
+    /// - Parameters:
+    ///   - x: the x-component of the translation vector
+    ///   - y: the y-component of the translation vector
+    ///   - z: the z-component of the translation vector
+    /// - Returns: a 4x4 transformation matrix that performs this translation
     static func makeTranslation(_ x: Float, _ y: Float, _ z: Float) -> float4x4 {
         return unsafeBitCast(GLKMatrix4MakeTranslation(x, y, z), to: float4x4.self)
     }
     
+    /// Perform the specified rotation (right multiply) on the 4x4 matrix
+    ///
+    /// - Parameters:
+    ///   - radians: the angle to rotate through
+    ///   - x: the x-component of the axis to rotate about
+    ///   - y: the y-component of the axis to rotate about
+    ///   - z: the z-component of the axis to rotate about
+    /// - Returns: the result of applying the transformation as 4x4 matrix
     func rotate(radians: Float, _ x: Float, _ y: Float, _ z: Float) -> float4x4 {
         return self * float4x4.makeRotate(radians: radians, x, y, z)
     }
     
+    /// Perform the specified translation (right multiply) on the 4x4 matrix
+    ///
+    /// - Parameters:
+    ///   - x: the x-component of the translation vector
+    ///   - y: the y-component of the translation vector
+    ///   - z: the z-component of the translation vector
+    /// - Returns: the result of applying the transformation as 4x4 matrix
     func translate(x: Float, _ y: Float, _ z: Float) -> float4x4 {
         return self * float4x4.makeTranslation(x, y, z)
     }
     
+    /// The x translation specified by the transform
     var x: Float {
         return columns.3.x
     }
+    
+    /// The y translation specified by the transform
     var y: Float {
         return columns.3.y
     }
+    
+    /// The z translation specified by the transform
     var z: Float {
         return columns.3.z
     }
+    
+    /// The yaw specified by the transforms
     var yaw: Float {
         return LocationInfo(anchor: ARAnchor(transform: self)).yaw
     }

@@ -15,59 +15,76 @@ import ARKit
 /// Contains:
 /// * `location` (`LocationInfo`)
 /// * `transformMatrix` (`Matrix3` from `VectorMath`)
+/// TODO: this is a bit confusing as to what the transformMatrix does that the transform stored with `location` doesn't do.
 public struct CurrentCoordinateInfo {
+    /// the location of the coordinate info
     public var location: LocationInfo
+    /// the 3x3 transform matrix
     public var transformMatrix: Matrix3 = Matrix3.identity
     
+    /// Initialize a `CurrentCoordinateInfoObject`
+    ///
+    /// - Parameters:
+    ///   - location: the location to use
+    ///   - transMatrix: the transformation matrix to use
     public init(_ location: LocationInfo, transMatrix: Matrix3) {
         self.location = location
         self.transformMatrix = transMatrix
     }
     
+    /// Initialize a `CurrentCoordinatedInfoObject`.  This assumes the identity matrix as the transform.
+    ///
+    /// - Parameter location: the location to use
     public init(_ location: LocationInfo) {
         self.location = location
     }
 }
 
-/// Struct to store position information and yaw
-///
-/// Contains:
-/// * `x` (`Float`)
-/// * `y` (`Float`)
-/// * `z` (`Float`)
-/// * `yaw` (`Float`)
+/// Struct to store position information and yaw.  By sub-classing `ARAnchor`, we get specify the 6-DOFs of an ARAnchor while getting the ability to support the secure coding protocol for free.
 public class LocationInfo : ARAnchor {
     
+    /// This initializes a new `LocationInfo` object based on the specified `ARAnchor`.
+    ///
+    /// - Parameter anchor: the `ARAnchor` to use for describing the location
     required init(anchor: ARAnchor) {
         super.init(anchor: anchor)
     }
     
+    /// This initializes a new `LocationInfo` object based on the specified transform.
+    ///
+    /// TODO: I think we might be able to delete this since all it does is call the super class method.
+    /// - Parameter transform: the transform (4x4 matrix) describing the location
     override init(transform: simd_float4x4) {
         super.init(transform: transform)
     }
     
+    /// indicates whether secure coding is supported (it is)
     override public class var supportsSecureCoding: Bool {
         return true
     }
-    
+
+    /// The function required by NSSecureCoding protocol to decode the object
+    ///
+    /// - Parameter aDecoder: the NSCoder doing the decoding
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
     
+    /// The function required by NSSecureCoding protocol to encode the object
+    /// TODO: I think we might be able to delete this since all it does is call the super class method.
+    ///
+    /// - Parameter aCoder: the NSCoder doing the encoding
     override public func encode(with aCoder: NSCoder) {
         super.encode(with: aCoder)
     }
     
+    /// the translation expressed as a 3-element vector (x, y, z)
     public var translation: SCNVector3 {
         let translation = self.transform.columns.3
         return SCNVector3(translation.x, translation.y, translation.z)
     }
     
-    public var rotation: SCNVector3 {
-        let rotation = self.transform.columns.1
-        return SCNVector3(rotation.x, rotation.y, rotation.z)
-    }
-    
+    /// the Euler angles as a 3 element vector (pitch, yaw, roll)
     public var eulerAngles: SCNVector3 {
         get {
             // first we get the quaternion from m00...m22
@@ -101,25 +118,25 @@ public class LocationInfo : ARAnchor {
             return SCNVector3(pitch, yaw, roll)
         }
     }
-    
+
+    /// the x translation
     public var x: Float {
         return translation.x
     }
     
+    /// the y translation
     public var y: Float {
         return translation.y
     }
     
+    /// the z translation
     public var z: Float {
         return translation.z
     }
     
+    /// the yaw (in radians)
     public var yaw: Float {
         return eulerAngles.y
-    }
-    
-    func describe() -> String {
-        return " " + String(x) + " " + String(y) + " " + String(z) + " " + String(yaw)
     }
 }
 
