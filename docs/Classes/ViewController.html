@@ -14,7 +14,7 @@
     <a title="ViewController Class Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html"> Docs</a> (31% documented)</p>
+        <p><a href="../index.html"> Docs</a> (46% documented)</p>
         <p class="header-right"><a href="https://github.com/occamLab/Clew"><img src="../img/gh.png"/>View on GitHub</a></p>
       </div>
     </header>
@@ -98,9 +98,6 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Global Variables.html#/s:4Clew16HapticDirectionsSDySiSSGvp">HapticDirections</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Global Variables.html#/s:4Clew12TurnWarningsSDySiSSGvp">TurnWarnings</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Global Variables.html#/s:4Clew5keyIDSSvp">keyID</a>
@@ -210,7 +207,7 @@
 
                 </div>
               </div>
-            <p>Undocumented</p>
+            <p>The view controller that handles the main Clew window.  This view controller is always active and handles the various views that are used for different app functionalities.</p>
 
           </section>
           <section class="section task-group-section">
@@ -664,7 +661,7 @@ whether or not an announcement is currently being read to the user.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>Handler for the mainScreen app state</p>
 
                       </div>
                       <div class="declaration">
@@ -674,6 +671,25 @@ whether or not an announcement is currently being read to the user.</p>
                           <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">handleStateTransitionToMainScreen</span><span class="p">(</span><span class="nv">announceArrival</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">)</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>announceArrival</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>a Boolean that indicates whether the user&rsquo;s arrival should be announced (true means the user has arrived)</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
                       </div>
                     </section>
                   </div>
@@ -691,7 +707,7 @@ whether or not an announcement is currently being read to the user.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>Handler for the recordingRoute app state</p>
 
                       </div>
                       <div class="declaration">
@@ -718,7 +734,7 @@ whether or not an announcement is currently being read to the user.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>Handler for the readyToNavigateOrPause app state</p>
 
                       </div>
                       <div class="declaration">
@@ -728,6 +744,25 @@ whether or not an announcement is currently being read to the user.</p>
                           <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">handleStateTransitionToReadyToNavigateOrPause</span><span class="p">(</span><span class="nv">allowPause</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">)</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>allowPause</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>a Boolean that determines whether the app should allow the user to pause the route (this is only allowed if it is the initial route recording)</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
                       </div>
                     </section>
                   </div>
@@ -745,7 +780,7 @@ whether or not an announcement is currently being read to the user.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>Handler for the navigatingRoute app state</p>
 
                       </div>
                       <div class="declaration">
@@ -772,7 +807,7 @@ whether or not an announcement is currently being read to the user.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>Handler for the route rating app state</p>
 
                       </div>
                       <div class="declaration">
@@ -782,6 +817,25 @@ whether or not an announcement is currently being read to the user.</p>
                           <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">handleStateTransitionToRatingRoute</span><span class="p">(</span><span class="nv">announceArrival</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">)</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>announceArrival</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>a Boolean that is true if we should announce that the user has arrived at the destination and false otherwise</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
                       </div>
                     </section>
                   </div>
@@ -799,7 +853,7 @@ whether or not an announcement is currently being read to the user.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>Handler for the startingResumeProcedure app state</p>
 
                       </div>
                       <div class="declaration">
@@ -809,6 +863,49 @@ whether or not an announcement is currently being read to the user.</p>
                           <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">handleStateTransitionToStartingResumeProcedure</span><span class="p">(</span><span class="nv">route</span><span class="p">:</span> <span class="kt"><a href="../Classes/SavedRoute.html">SavedRoute</a></span><span class="p">,</span> <span class="nv">mapAsAny</span><span class="p">:</span> <span class="kt">Any</span><span class="p">?,</span> <span class="nv">navigateStartToEnd</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">)</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>route</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the route to navigate</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>mapAsAny</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the world map to use (expressed as <code>Any?</code> since it is optional and we want to maintain backwards compatibility with iOS 11.3)</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>navigateStartToEnd</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>a Boolean that is true if we want to navigate from the start to the end and false if we want to navigate from the end to the start.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
                       </div>
                     </section>
                   </div>
@@ -826,7 +923,7 @@ whether or not an announcement is currently being read to the user.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>Handler for the startingPauseProcedure app state</p>
 
                       </div>
                       <div class="declaration">
@@ -853,7 +950,7 @@ whether or not an announcement is currently being read to the user.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>Handler for the pauseWaitingPeriod app state</p>
 
                       </div>
                       <div class="declaration">
@@ -880,7 +977,7 @@ whether or not an announcement is currently being read to the user.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>Handler for the completingPauseProcedure app state</p>
 
                       </div>
                       <div class="declaration">
@@ -907,7 +1004,7 @@ whether or not an announcement is currently being read to the user.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>Prompt the user for the name of a route and persist the route data if the user supplies one.  If the user cancels, no action is taken.</p>
 
                       </div>
                       <div class="declaration">
@@ -917,6 +1014,25 @@ whether or not an announcement is currently being read to the user.</p>
                           <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">getRouteNameAndSaveRouteHelper</span><span class="p">(</span><span class="nv">mapAsAny</span><span class="p">:</span> <span class="kt">Any</span><span class="p">?)</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>mapAsAny</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the world map (the <code>Any?</code> type is used since it is optional and we want to maintain backward compatibility with iOS 11.3</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
                       </div>
                     </section>
                   </div>
@@ -934,7 +1050,7 @@ whether or not an announcement is currently being read to the user.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>Called when the user presses the routes button.  The function will display the <code>Routes</code> view, which is managed by <code><a href="../Classes/RoutesViewController.html">RoutesViewController</a></code>.</p>
 
                       </div>
                       <div class="declaration">
@@ -962,7 +1078,7 @@ whether or not an announcement is currently being read to the user.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>Hide all the subviews.  TODO: This should probably eventually refactored so it happens more automatically.</p>
 
                       </div>
                       <div class="declaration">
@@ -989,7 +1105,7 @@ whether or not an announcement is currently being read to the user.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>This handles when a route cell is clicked (triggering the route to be loaded).</p>
 
                       </div>
                       <div class="declaration">
@@ -999,6 +1115,37 @@ whether or not an announcement is currently being read to the user.</p>
                           <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">onRouteTableViewCellClicked</span><span class="p">(</span><span class="nv">route</span><span class="p">:</span> <span class="kt"><a href="../Classes/SavedRoute.html">SavedRoute</a></span><span class="p">,</span> <span class="nv">navigateStartToEnd</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">)</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>route</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the route that was clicked</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>navigateStartToEnd</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>a Boolean indicating the navigation direction (true is start to end)</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
                       </div>
                     </section>
                   </div>
@@ -1016,7 +1163,12 @@ whether or not an announcement is currently being read to the user.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>Saves the specified route.  The bulk of the work is done by the <code><a href="../Classes/DataPersistence.html">DataPersistence</a></code> class, but this is a convenient wrapper.</p>
+<div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    an error if something goes wrong
+
+</div>
 
                       </div>
                       <div class="declaration">
@@ -1026,6 +1178,61 @@ whether or not an announcement is currently being read to the user.</p>
                           <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">archive</span><span class="p">(</span><span class="nv">routeId</span><span class="p">:</span> <span class="kt">NSString</span><span class="p">,</span> <span class="nv">beginRouteLandmark</span><span class="p">:</span> <span class="kt"><a href="../Classes/RouteLandmark.html">RouteLandmark</a></span><span class="p">,</span> <span class="nv">endRouteLandmark</span><span class="p">:</span> <span class="kt"><a href="../Classes/RouteLandmark.html">RouteLandmark</a></span><span class="p">,</span> <span class="nv">worldMapAsAny</span><span class="p">:</span> <span class="kt">Any</span><span class="p">?)</span> <span class="k">throws</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>routeId</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the ID of the route</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>beginRouteLandmark</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the route landmark for the beginning (if there is no route landmark at the beginning, the elements of this struct can be nil)</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>endRouteLandmark</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the route landmark for the end (if there is no route landmark at the end, the elements of this struct can be nil)</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>worldMapAsAny</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the world map (we use <code>Any?</code> since it is optional and we want to maintain backward compatibility with iOS 11.3)</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
                       </div>
                     </section>
                   </div>
@@ -1232,7 +1439,7 @@ whether or not an announcement is currently being read to the user.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>The button that the allows the user to indicate a negative navigation experience</p>
 
                       </div>
                       <div class="declaration">
@@ -1259,7 +1466,7 @@ whether or not an announcement is currently being read to the user.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>The button that the allows the user to indicate a positive navigation experience</p>
 
                       </div>
                       <div class="declaration">
@@ -1286,7 +1493,7 @@ whether or not an announcement is currently being read to the user.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>The button that the allows the user to resume a paused route</p>
 
                       </div>
                       <div class="declaration">
@@ -1313,7 +1520,7 @@ whether or not an announcement is currently being read to the user.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>The button that allows the user to enter textual description of a route landmark</p>
 
                       </div>
                       <div class="declaration">
@@ -1340,7 +1547,7 @@ whether or not an announcement is currently being read to the user.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>The button that allows the user to record a voice description of a route landmark</p>
 
                       </div>
                       <div class="declaration">
@@ -1367,7 +1574,7 @@ whether or not an announcement is currently being read to the user.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>The button that allows the user to start the alignment countdown</p>
 
                       </div>
                       <div class="declaration">
@@ -1394,7 +1601,7 @@ whether or not an announcement is currently being read to the user.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>The button that plays back the recorded voice note associated with a landmark</p>
 
                       </div>
                       <div class="declaration">
@@ -1421,8 +1628,7 @@ whether or not an announcement is currently being read to the user.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Image, label, and target for start recording button.
-TODO: need an image</p>
+                        <p>Image, label, and target for start recording button. TODO: need an image</p>
 
                       </div>
                       <div class="declaration">
@@ -1584,7 +1790,7 @@ TODO: need an image</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>The conection to the Firebase real-time database</p>
 
                       </div>
                       <div class="declaration">
@@ -1946,7 +2152,7 @@ TODO: need an image</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>Height of button frame</p>
 
                       </div>
                       <div class="declaration">
@@ -2000,7 +2206,7 @@ TODO: need an image</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>The margin from the settings and help buttons to the bottom of the window</p>
 
                       </div>
                       <div class="declaration">
@@ -2008,60 +2214,6 @@ TODO: need an image</p>
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">settingsAndHelpMargin</span><span class="p">:</span> <span class="kt">CGFloat</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:4Clew14ViewControllerC12displayWidth12CoreGraphics7CGFloatVvp"></a>
-                    <a name="//apple_ref/swift/Property/displayWidth" class="dashAnchor"></a>
-                    <a class="token" href="#/s:4Clew14ViewControllerC12displayWidth12CoreGraphics7CGFloatVvp">displayWidth</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>Undocumented</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">displayWidth</span><span class="p">:</span> <span class="kt">CGFloat</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:4Clew14ViewControllerC13displayHeight12CoreGraphics7CGFloatVvp"></a>
-                    <a name="//apple_ref/swift/Property/displayHeight" class="dashAnchor"></a>
-                    <a class="token" href="#/s:4Clew14ViewControllerC13displayHeight12CoreGraphics7CGFloatVvp">displayHeight</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>Undocumented</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">displayHeight</span><span class="p">:</span> <span class="kt">CGFloat</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -2081,7 +2233,7 @@ TODO: need an image</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>top margin of direction text label</p>
 
                       </div>
                       <div class="declaration">
@@ -2108,7 +2260,7 @@ TODO: need an image</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>y-origin of the get directions button</p>
 
                       </div>
                       <div class="declaration">
@@ -2135,7 +2287,7 @@ TODO: need an image</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>y-origin of the settings and help buttons</p>
 
                       </div>
                       <div class="declaration">
@@ -2162,7 +2314,7 @@ TODO: need an image</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>y-origin of button frame</p>
 
                       </div>
                       <div class="declaration">
@@ -2203,6 +2355,17 @@ TODO: need an image</p>
                     </section>
                   </div>
                 </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/UIViews%20for%20all%20UI%20button%20containers"></a>
+                <a name="//apple_ref/swift/Section/UIViews for all UI button containers" class="dashAnchor"></a>
+                <a href="#/UIViews%20for%20all%20UI%20button%20containers">
+                  <h3 class="section-name">UIViews for all UI button containers</h3>
+                </a>
+              </div>
+              <ul>
                 <li class="item">
                   <div>
                     <code>
@@ -2569,7 +2732,7 @@ TODO: need an image</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>Create the audio player objdcts for the various app sounds.  Creating them ahead of time helps reduce latency when playing them later.</p>
 
                       </div>
                       <div class="declaration">
@@ -2596,7 +2759,7 @@ TODO: need an image</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>Load the crumb 3D model</p>
 
                       </div>
                       <div class="declaration">
@@ -2623,7 +2786,7 @@ TODO: need an image</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>Observe the relevant Firebase paths to handle any dynamic reconfiguration requests (this is currently not used in the app store version of Clew)</p>
 
                       </div>
                       <div class="declaration">
@@ -2650,7 +2813,7 @@ TODO: need an image</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>Respond to any dynamic reconfiguration requests (this is currently not used in the app store version of Clew).</p>
 
                       </div>
                       <div class="declaration">
@@ -2660,6 +2823,25 @@ TODO: need an image</p>
                           <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">handleNewConfig</span><span class="p">(</span><span class="nv">snapshot</span><span class="p">:</span> <span class="kt">DataSnapshot</span><span class="p">)</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>snapshot</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the new configuration data</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
                       </div>
                     </section>
                   </div>
@@ -5174,33 +5356,6 @@ to communicate the announcement, otherwise we use the AVSpeechEngine</p>
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc</span>
 <span class="kd">func</span> <span class="nf">announceDirectionHelp</span><span class="p">()</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:4Clew14ViewControllerC18setTurnWarningText15currentLocation9directionyAA0I4InfoC_AA09DirectionK0VtF"></a>
-                    <a name="//apple_ref/swift/Method/setTurnWarningText(currentLocation:direction:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:4Clew14ViewControllerC18setTurnWarningText15currentLocation9directionyAA0I4InfoC_AA09DirectionK0VtF">setTurnWarningText(currentLocation:direction:)</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>Undocumented</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">setTurnWarningText</span><span class="p">(</span><span class="nv">currentLocation</span><span class="p">:</span> <span class="kt"><a href="../Classes/LocationInfo.html">LocationInfo</a></span><span class="p">,</span> <span class="nv">direction</span><span class="p">:</span> <span class="kt"><a href="../Structs/DirectionInfo.html">DirectionInfo</a></span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>

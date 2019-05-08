@@ -29,19 +29,27 @@ public enum PositionState {
 /// * `distance` (`Float`): distance in meters to keypoint
 /// * `angleDiff` (`Float`): angle in radians to next keypoint
 /// * `clockDirection` (`Int`): description of angle to keypoint in clock position where straight forward is 12
-/// * `hapticDirection` (`Int`): description of angle to keypoint in a system of some form
-/// * `targetState` (case of enum `PositionState`): not sure of what this is
-///
-/// - TODO:
-///   - Clarify what the basis of haptic directions is
-///   - Clarify what `PositionState` is
+/// * `hapticDirection` (`Int`): description of angle to keypoint to use when haptic feedback is turned on.
+/// * `targetState` (case of enum `PositionState`): the state (at, near, or away from target) of the position relative to the keypoint
 public struct DirectionInfo {
+    /// the distance in meters to keypoint
     public var distance: Float
+    /// the angle in radians (yaw) to the next keypoint
     public var angleDiff: Float
+    /// the description of angle to keypoint in clock position where straight forward is 12
     public var clockDirection: Int
+    /// the description of angle to keypoint to use when haptic feedback is turned on.
     public var hapticDirection: Int
+    /// the state (at, near, or away from target) of the position relative to the keypoint
     public var targetState = PositionState.notAtTarget
     
+    /// Initialize a DirectionInfo object
+    ///
+    /// - Parameters:
+    ///   - distance: the distance to the next keypoint
+    ///   - angleDiff: the angle (yaw) to the next keypoint
+    ///   - clockDirection: the clock direction to the next keypoint
+    ///   - hapticDirection: the state (at, near, or away from target) of the position relative to the keypoint
     public init(distance: Float, angleDiff: Float, clockDirection: Int, hapticDirection: Int) {
         self.distance = distance
         self.angleDiff = angleDiff
@@ -83,23 +91,6 @@ public let HapticDirections = [1: "Continue straight",
                                6: "Slight Left",
                                0: "ERROR"]
 
-/// Dictionary of turn warnings based on clock position.
-///
-/// * Keys (`Int` from 1 to 12 inclusive): clock positions
-/// * Values (`String`): corresponding spoken direction (e.g. "Right turn ahead")
-public let TurnWarnings = [12: "Continue straight ahead",
-                           1: "Slight right ahead",
-                           2: "Slight right ahead",
-                           3: "Right turn ahead",
-                           4: "Right turn ahead",
-                           5: "",
-                           6: "",
-                           7: "",
-                           8: "Left turn ahead",
-                           9: "Left turn ahead",
-                           10: "Slight left ahead",
-                           11: "Slight left ahead"]
-
 /// Keypoint target dimension (width)
 ///
 /// Further instructions will be given to the user once they pass inside this bounding box
@@ -122,30 +113,6 @@ class Navigation {
     
     /// The offset between the user's direction of travel (assumed to be aligned with the front of their body and the phone's orientation)
     var headingOffset: Float?
-
-    
-    /*
-    /// Determines direction of the next turn, relative to the iPhone's current position and the next two keypoints ahead.
-    ///
-    /// - Parameters:
-    ///   - currentLocation:
-    ///   - curKeypoint:
-    ///   - nextKeypoint:
-    /// - Returns: direction between next Keypoint and second Keypoint ahead, to be used in creating turn warnings.
-    public func getTurnWarningDirections(_ currentLocation: CurrentCoordinateInfo,
-                                         nextKeypoint: KeypointInfo,
-                                         secondKeypoint: KeypointInfo) -> DirectionInfo {
-        
-        let nextKeypointDisplacementX = nextKeypoint.location.x - currentLocation.location.x
-        let nextKeypointDisplacementZ = nextKeypoint.location.z - currentLocation.location.z
-        // Create adjusted second keypoint object, which will be used to get turn warnings ahead of time
-        var adjustedSecondKeypoint = secondKeypoint
-        //TODO: adjustedSecondKeypoint.location.x = secondKeypoint.location.x - nextKeypointDisplacementX
-        //TODO: adjustedSecondKeypoint.location.z = secondKeypoint.location.z - nextKeypointDisplacementZ
-        
-        return getDirections(currentLocation: currentLocation, nextKeypoint: adjustedSecondKeypoint)
-    }
- */
     
     /// Get the heading for the phone suitable for computing directions to the next waypoint.
     ///
@@ -274,6 +241,10 @@ class Navigation {
         return abs(d1) < abs(d2) ? d1 : d2
     }
     
+    /// Normalizes an angle in radians to be between -pi and pi
+    ///
+    /// - Parameter angle: an angle in radians
+    /// - Returns: the angle mapped to between -pi and pi
     private func angleNormalize(angle: Float) -> Float {
         return atan2f(sinf(angle), cosf(angle))
     }
@@ -286,10 +257,6 @@ class Navigation {
     /// - Returns: the average fo the angles
     func averageAngle(a: Float, b: Float)->Float {
         return atan2f(sin(b) + sin(a), cos(a) + cos(b))
-    }
-    
-    private func roundToTenths(n: Float) -> Float {
-        return roundf(10 * n)/10
     }
 }
 

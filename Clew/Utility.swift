@@ -8,6 +8,10 @@
 
 import Foundation
 
+/// Round a float to the nearest tenth.  Swift doesn't have a good built-in method for doing this.
+///
+/// - Parameter n: the number to round
+/// - Returns: the number rounded to the nearest tenth
 func roundToTenths(_ n: Float) -> Float {
     return roundf(10 * n)/10
 }

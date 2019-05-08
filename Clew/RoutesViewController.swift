@@ -10,12 +10,17 @@ import Foundation
 import WebKit
 import ARKit
 
+/// The view controller that handles the saved routes view
 class RoutesViewController : UIViewController, UITableViewDataSource, UITableViewDelegate {
     
+    /// The table that displays the routes
     @IBOutlet weak var tableView: UITableView!
+    /// A handle back to the root view controller so that relevant events can be communicated back to the root
     var rootViewController: ViewController?
+    /// The routes to display
     var routes = [SavedRoute]()
     
+    /// When the view loads, the table view is populated and the title of the view is set.
     override func viewDidLoad() {
         super.viewDidLoad()
         self.tableView.delegate = self
@@ -23,6 +28,11 @@ class RoutesViewController : UIViewController, UITableViewDataSource, UITableVie
         title = "Saved Routes List"
     }
     
+    /// Called when the user selects an element from the routes table.
+    ///
+    /// - Parameters:
+    ///   - tableView: the table view
+    ///   - indexPath: the path that was selected
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         self.tableView.deselectRow(at: indexPath, animated: true)
         // Set title and message for the alert dialog
@@ -52,6 +62,12 @@ class RoutesViewController : UIViewController, UITableViewDataSource, UITableVie
         self.present(alertController, animated: true, completion: nil)
     }
     
+    /// Called when the routes table is being populated
+    ///
+    /// - Parameters:
+    ///   - tableView: the table being populated
+    ///   - indexPath: the index path of the route whose data should be loaded
+    /// - Returns: a cell that contains the route
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let df = DateFormatter()
         df.dateFormat = "yyyy-MM-dd HH:mm:ss"
@@ -61,6 +77,12 @@ class RoutesViewController : UIViewController, UITableViewDataSource, UITableVie
         return cell
     }
     
+    /// Called when user performs and edit action on the row.  Currently, only delete is supported.
+    ///
+    /// - Parameters:
+    ///   - tableView: a handle to the routes table
+    ///   - indexPath: the path to the route being modified
+    /// - Returns: a list of actions that were performed.
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         
         let delete = UITableViewRowAction(style: .destructive, title: "Delete") { (action, indexPath) in
@@ -77,16 +99,25 @@ class RoutesViewController : UIViewController, UITableViewDataSource, UITableVie
         
     }
     
+    /// The number of routes in the table (needed by `UITableViewDataSource`)
+    ///
+    /// - Parameters:
+    ///   - tableView: the table view being managed
+    ///   - section: the section (currently ignored)
+    /// - Returns: the number of elements in the table view (i.e., the number of routes)
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return routes.count
     }
     
+    /// Update the routes table, e.g., when the data is loaded from persistent storage.
+    ///
+    /// - Parameter routes: the new set of routes.
     func updateRoutes(routes: [SavedRoute]) {
         self.routes = routes.sorted(by: { $0.dateCreated as Date > $1.dateCreated as Date})
     }
     
-    @objc
-    func doneWithRoutes() {
+    /// Called to dismiss the routes menu
+    @objc func doneWithRoutes() {
         dismiss(animated: true, completion: nil)
     }
 }

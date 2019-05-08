@@ -14,7 +14,7 @@
     <a title="DirectionInfo Structure Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html"> Docs</a> (31% documented)</p>
+        <p><a href="../index.html"> Docs</a> (46% documented)</p>
         <p class="header-right"><a href="https://github.com/occamLab/Clew"><img src="../img/gh.png"/>View on GitHub</a></p>
       </div>
     </header>
@@ -98,9 +98,6 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Global Variables.html#/s:4Clew16HapticDirectionsSDySiSSGvp">HapticDirections</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Global Variables.html#/s:4Clew12TurnWarningsSDySiSSGvp">TurnWarnings</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Global Variables.html#/s:4Clew5keyIDSSvp">keyID</a>
@@ -213,21 +210,14 @@
             <p>Struct for storing relative position of keypoint to user</p>
 
 <p>Contains:</p>
+
+<ul>
 <li><code>distance</code> (<code>Float</code>): distance in meters to keypoint</li>
 <li><code>angleDiff</code> (<code>Float</code>): angle in radians to next keypoint</li>
 <li><code>clockDirection</code> (<code>Int</code>): description of angle to keypoint in clock position where straight forward is 12</li>
-<li><code>hapticDirection</code> (<code>Int</code>): description of angle to keypoint in a system of some form</li>
-<li><p><code>targetState</code> (case of enum <code><a href="../Enums/PositionState.html">PositionState</a></code>): not sure of what this is</p></li>
-<div class="aside aside-todo">
-    <p class="aside-title">Todo</p>
-    <p>TODO:</p>
-
-<ul>
-<li>Clarify what the basis of haptic directions is</li>
-<li>Clarify what <code><a href="../Enums/PositionState.html">PositionState</a></code> is</li>
+<li><code>hapticDirection</code> (<code>Int</code>): description of angle to keypoint to use when haptic feedback is turned on.</li>
+<li><code>targetState</code> (case of enum <code><a href="../Enums/PositionState.html">PositionState</a></code>): the state (at, near, or away from target) of the position relative to the keypoint</li>
 </ul>
-
-</div>
 
           </section>
           <section class="section task-group-section">
@@ -246,7 +236,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>the distance in meters to keypoint</p>
 
                       </div>
                       <div class="declaration">
@@ -273,7 +263,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>the angle in radians (yaw) to the next keypoint</p>
 
                       </div>
                       <div class="declaration">
@@ -300,7 +290,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>the description of angle to keypoint in clock position where straight forward is 12</p>
 
                       </div>
                       <div class="declaration">
@@ -327,7 +317,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>the description of angle to keypoint to use when haptic feedback is turned on.</p>
 
                       </div>
                       <div class="declaration">
@@ -354,7 +344,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>the state (at, near, or away from target) of the position relative to the keypoint</p>
 
                       </div>
                       <div class="declaration">
@@ -381,7 +371,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>Initialize a DirectionInfo object</p>
 
                       </div>
                       <div class="declaration">
@@ -391,6 +381,61 @@
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="nv">distance</span><span class="p">:</span> <span class="kt">Float</span><span class="p">,</span> <span class="nv">angleDiff</span><span class="p">:</span> <span class="kt">Float</span><span class="p">,</span> <span class="nv">clockDirection</span><span class="p">:</span> <span class="kt">Int</span><span class="p">,</span> <span class="nv">hapticDirection</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>distance</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the distance to the next keypoint</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>angleDiff</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the angle (yaw) to the next keypoint</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>clockDirection</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the clock direction to the next keypoint</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>hapticDirection</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the state (at, near, or away from target) of the position relative to the keypoint</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
                       </div>
                     </section>
                   </div>
