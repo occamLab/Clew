@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>RecorderViewController Class Reference</title>
+    <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
+    <meta charset='utf-8'>
+    <script src="../js/jquery.min.js" defer></script>
+    <script src="../js/jazzy.js" defer></script>
+    
+  </head>
+  <body>
+    <a name="//apple_ref/swift/Class/RecorderViewController" class="dashAnchor"></a>
+    <a title="RecorderViewController Class Reference"></a>
+    <header>
+      <div class="content-wrapper">
+        <p><a href="../index.html"> Docs</a> (31% documented)</p>
+        <p class="header-right"><a href="https://github.com/occamLab/Clew"><img src="../img/gh.png"/>View on GitHub</a></p>
+      </div>
+    </header>
+    <div class="content-wrapper">
+      <p id="breadcrumbs">
+        <a href="../index.html"> Reference</a>
+        <img id="carat" src="../img/carat.png" />
+        RecorderViewController Class Reference
+      </p>
+    </div>
+    <div class="content-wrapper">
+      <nav class="sidebar">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a href="../Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Classes/AppDelegate.html">AppDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/AudioVisualizerView.html">AudioVisualizerView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/DataPersistence.html">DataPersistence</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/HelpViewController.html">HelpViewController</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/LocationInfo.html">LocationInfo</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/Navigation.html">Navigation</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/PathFinder.html">PathFinder</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/PathLogger.html">PathLogger</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/RecordButton.html">RecordButton</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/RecordButtonKit.html">RecordButtonKit</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/RecordButtonKit/ResizingBehavior.html">– ResizingBehavior</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/RecorderViewController.html">RecorderViewController</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/RingBuffer.html">RingBuffer</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/RouteLandmark.html">RouteLandmark</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/RouteTableViewCell.html">RouteTableViewCell</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/RoutesViewController.html">RoutesViewController</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/SavedRoute.html">SavedRoute</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ViewController.html">ViewController</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ViewController/ButtonViewType.html">– ButtonViewType</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Global Variables.html">Global Variables</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Global Variables.html#/s:4Clew15ClockDirectionsSDySiSSGvp">ClockDirections</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global Variables.html#/s:4Clew16HapticDirectionsSDySiSSGvp">HapticDirections</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global Variables.html#/s:4Clew12TurnWarningsSDySiSSGvp">TurnWarnings</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global Variables.html#/s:4Clew5keyIDSSvp">keyID</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global Variables.html#/s:4Clew11targetDepthSfvp">targetDepth</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global Variables.html#/s:4Clew12targetHeightSfvp">targetHeight</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global Variables.html#/s:4Clew11targetWidthSfvp">targetWidth</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Enums.html">Enumerations</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Enums/AppState.html">AppState</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/PositionState.html">PositionState</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/RecorderState.html">RecorderState</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Extensions.html">Extensions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Extensions/Double.html">Double</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/Int.html">Int</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/NSString.html">NSString</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/UIButton.html">UIButton</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/UIColor.html">UIColor</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/UIView.html">UIView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/float4x4.html">float4x4</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Functions.html">Functions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:4Clew3modyS2i_SitF">mod(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:4Clew13roundToTenthsyS2fF">roundToTenths(_:)</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Protocols.html">Protocols</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Protocols/RecorderViewControllerDelegate.html">RecorderViewControllerDelegate</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Structs.html">Structures</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Structs/ActionButtonComponents.html">ActionButtonComponents</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ActionButtonComponents/Appearance.html">– Appearance</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ActionButtonComponents/ButtonContainerHorizontalAlignment.html">– ButtonContainerHorizontalAlignment</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/CurrentCoordinateInfo.html">CurrentCoordinateInfo</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/DirectionInfo.html">DirectionInfo</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/KeypointInfo.html">KeypointInfo</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+        <section>
+          <section class="section">
+            <h1>RecorderViewController</h1>
+              <div class="declaration">
+                <div class="language">
+                  <pre class="highlight swift"><code><span class="kd">class</span> <span class="kt">RecorderViewController</span> <span class="p">:</span> <span class="kt">UIViewController</span></code></pre>
+
+                </div>
+              </div>
+            <p>Undocumented</p>
+
+          </section>
+          <section class="section task-group-section">
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Clew22RecorderViewControllerC06handleC0So6UIViewCvp"></a>
+                    <a name="//apple_ref/swift/Property/handleView" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Clew22RecorderViewControllerC06handleC0So6UIViewCvp">handleView</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">handleView</span><span class="p">:</span> <span class="kt">UIView</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Clew22RecorderViewControllerC12recordButtonAA06RecordF0Cvp"></a>
+                    <a name="//apple_ref/swift/Property/recordButton" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Clew22RecorderViewControllerC12recordButtonAA06RecordF0Cvp">recordButton</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">recordButton</span><span class="p">:</span> <span class="kt"><a href="../Classes/RecordButton.html">RecordButton</a></span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Clew22RecorderViewControllerC9timeLabelSo7UILabelCvp"></a>
+                    <a name="//apple_ref/swift/Property/timeLabel" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Clew22RecorderViewControllerC9timeLabelSo7UILabelCvp">timeLabel</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">timeLabel</span><span class="p">:</span> <span class="kt">UILabel</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Clew22RecorderViewControllerC05audioC0AA015AudioVisualizerC0Cvp"></a>
+                    <a name="//apple_ref/swift/Property/audioView" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Clew22RecorderViewControllerC05audioC0AA015AudioVisualizerC0Cvp">audioView</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">audioView</span><span class="p">:</span> <span class="kt"><a href="../Classes/AudioVisualizerView.html">AudioVisualizerView</a></span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Clew22RecorderViewControllerC8settingsSDySSypGvp"></a>
+                    <a name="//apple_ref/swift/Property/settings" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Clew22RecorderViewControllerC8settingsSDySSypGvp">settings</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">let</span> <span class="nv">settings</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span> <span class="p">:</span> <span class="kt">Any</span><span class="p">]</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Clew22RecorderViewControllerC11audioEngineSo07AVAudioF0Cvp"></a>
+                    <a name="//apple_ref/swift/Property/audioEngine" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Clew22RecorderViewControllerC11audioEngineSo07AVAudioF0Cvp">audioEngine</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">let</span> <span class="nv">audioEngine</span><span class="p">:</span> <span class="kt">AVAudioEngine</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Clew22RecorderViewControllerC8delegateAA0bcD8Delegate_pSgvp"></a>
+                    <a name="//apple_ref/swift/Property/delegate" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Clew22RecorderViewControllerC8delegateAA0bcD8Delegate_pSgvp">delegate</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">weak</span> <span class="k">var</span> <span class="nv">delegate</span><span class="p">:</span> <span class="kt"><a href="../Protocols/RecorderViewControllerDelegate.html">RecorderViewControllerDelegate</a></span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@Clew@objc(cs)RecorderViewController(py)fadeView"></a>
+                    <a name="//apple_ref/swift/Property/fadeView" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@Clew@objc(cs)RecorderViewController(py)fadeView">fadeView</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@IBOutlet</span>
+<span class="k">weak</span> <span class="k">var</span> <span class="nv">fadeView</span><span class="p">:</span> <span class="kt">UIView</span><span class="o">!</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@Clew@objc(cs)RecorderViewController(im)viewDidLoad"></a>
+                    <a name="//apple_ref/swift/Method/viewDidLoad()" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@Clew@objc(cs)RecorderViewController(im)viewDidLoad">viewDidLoad()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">override</span> <span class="kd">func</span> <span class="nf">viewDidLoad</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@Clew@objc(cs)RecorderViewController(im)viewWillAppear:"></a>
+                    <a name="//apple_ref/swift/Method/viewWillAppear(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@Clew@objc(cs)RecorderViewController(im)viewWillAppear:">viewWillAppear(_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">override</span> <span class="kd">func</span> <span class="nf">viewWillAppear</span><span class="p">(</span><span class="n">_</span> <span class="nv">animated</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@Clew@objc(cs)RecorderViewController(im)viewWillDisappear:"></a>
+                    <a name="//apple_ref/swift/Method/viewWillDisappear(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@Clew@objc(cs)RecorderViewController(im)viewWillDisappear:">viewWillDisappear(_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">override</span> <span class="kd">func</span> <span class="nf">viewWillDisappear</span><span class="p">(</span><span class="n">_</span> <span class="nv">animated</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@Clew@objc(cs)RecorderViewController(im)handleRecording:"></a>
+                    <a name="//apple_ref/swift/Method/handleRecording(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@Clew@objc(cs)RecorderViewController(im)handleRecording:">handleRecording(_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">func</span> <span class="nf">handleRecording</span><span class="p">(</span><span class="n">_</span> <span class="nv">sender</span><span class="p">:</span> <span class="kt"><a href="../Classes/RecordButton.html">RecordButton</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@Clew@objc(cs)RecorderViewController(im)doneWithRecording"></a>
+                    <a name="//apple_ref/swift/Method/doneWithRecording()" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@Clew@objc(cs)RecorderViewController(im)doneWithRecording">doneWithRecording()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">func</span> <span class="nf">doneWithRecording</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@Clew@objc(cs)RecorderViewController(im)handleInterruptionWithNotification:"></a>
+                    <a name="//apple_ref/swift/Method/handleInterruption(notification:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@Clew@objc(cs)RecorderViewController(im)handleInterruptionWithNotification:">handleInterruption(notification:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">func</span> <span class="nf">handleInterruption</span><span class="p">(</span><span class="nv">notification</span><span class="p">:</span> <span class="kt">Notification</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </section>
+        </section>
+        <section id="footer">
+          <p>&copy; 2019 <a class="link" href="" target="_blank" rel="external"></a>. All rights reserved. (Last updated: 2019-05-08)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.9.6</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+        </section>
+      </article>
+    </div>
+  </body>
+</div>
+</html>
