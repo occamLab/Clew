@@ -1520,13 +1520,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
 
         restartSessionIfFailedToRelocalize()
         
-        // erase neariest keypoint
+        // erase nearest keypoint
         keypointNode.removeFromParentNode()
         
         if(sendLogs) {
             state = .ratingRoute(announceArrival: false)
         } else {
             state = .mainScreen(announceArrival: false)
+            logger.resetStateSequenceLog()
         }
     }
     
@@ -1587,12 +1588,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     @objc func sendLogData() {
         // send success log data to Firebase
         logger.compileLogData(false)
+        logger.resetStateSequenceLog()
         state = .mainScreen(announceArrival: false)
     }
     
     @objc func sendDebugLogData() {
         // send debug log data to Firebase
         logger.compileLogData(true)
+        logger.resetStateSequenceLog()
         state = .mainScreen(announceArrival: false)
     }
     
@@ -1688,6 +1691,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                     state = .ratingRoute(announceArrival: true)
                 } else {
                     state = .mainScreen(announceArrival: true)
+                    logger.resetStateSequenceLog()
                 }
             }
         }
@@ -2125,6 +2129,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 // this will cancel any realignment if it hasn't happened yet and go straight to route navigation mode
                 countdownTimer.isHidden = true
                 isResumedRoute = true
+                
                 state = .readyToNavigateOrPause(allowPause: false)
             }
             print("normal")

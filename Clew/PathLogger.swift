@@ -121,8 +121,6 @@ class PathLogger {
         
         sendMetaData(pathDate, pathID+"-0", userId, debug)
         sendPathData(pathID, userId)
-        
-        resetStateSequenceLog()
     }
     
     func sendMetaData(_ pathDate: String, _ pathID: String, _ userId: String, _ debug: Bool) {
