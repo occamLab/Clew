@@ -14,7 +14,7 @@
     <a title="PathLogger Class Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html"> Docs</a> (63% documented)</p>
+        <p><a href="../index.html"> Docs</a> (77% documented)</p>
         <p class="header-right"><a href="https://github.com/occamLab/Clew"><img src="../img/gh.png"/>View on GitHub</a></p>
       </div>
     </header>
@@ -98,9 +98,6 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Global Variables.html#/s:4Clew16HapticDirectionsSDySiSSGvp">HapticDirections</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Global Variables.html#/s:4Clew5keyIDSSvp">keyID</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Global Variables.html#/s:4Clew11targetDepthSfvp">targetDepth</a>
@@ -207,7 +204,7 @@
 
                 </div>
               </div>
-            <p>Undocumented</p>
+            <p>A class to handle logging app usage data</p>
 
           </section>
           <section class="section task-group-section">
@@ -631,7 +628,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>Add the specified state transition to the log.</p>
 
                       </div>
                       <div class="declaration">
@@ -641,6 +638,25 @@
                           <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">logStateTransition</span><span class="p">(</span><span class="nv">newState</span><span class="p">:</span> <span class="kt"><a href="../Enums/AppState.html">AppState</a></span><span class="p">)</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>newState</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the new state of the app</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
                       </div>
                     </section>
                   </div>
@@ -658,7 +674,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>Log an utterance issued by the app.</p>
 
                       </div>
                       <div class="declaration">
@@ -668,6 +684,25 @@
                           <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">logSpeech</span><span class="p">(</span><span class="nv">utterance</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>utterance</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the utterance that was delivered by the app (either via an <code>AVAudioSession</code> or through VoiceOver)</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
                       </div>
                     </section>
                   </div>
@@ -685,7 +720,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>Log a tracking error from the app.</p>
 
                       </div>
                       <div class="declaration">
@@ -695,6 +730,37 @@
                           <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">logTrackingError</span><span class="p">(</span><span class="nv">isRecordingPhase</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">,</span> <span class="nv">trackingError</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>isRecordingPhase</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>true if the error is associated with the recording phase, false if it is associated with the navigation phase</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>trackingError</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>&lt;#trackingError description#&gt;</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
                       </div>
                     </section>
                   </div>
@@ -712,7 +778,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>Log a transformation matrix</p>
 
                       </div>
                       <div class="declaration">
@@ -722,6 +788,37 @@
                           <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">logTransformMatrix</span><span class="p">(</span><span class="nv">state</span><span class="p">:</span> <span class="kt"><a href="../Enums/AppState.html">AppState</a></span><span class="p">,</span> <span class="nv">scn</span><span class="p">:</span> <span class="kt">SCNMatrix4</span><span class="p">)</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>state</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the app&rsquo;s state (this helps determine whether to log the transformation as part of the path recording or navigation data)</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>scn</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the 4x4 matrix that encodes the position and orientation of the phone</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
                       </div>
                     </section>
                   </div>
@@ -739,7 +836,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>Log the keypoints of a route.</p>
 
                       </div>
                       <div class="declaration">
@@ -749,6 +846,25 @@
                           <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">logKeypoints</span><span class="p">(</span><span class="nv">keypoints</span><span class="p">:</span> <span class="p">[</span><span class="kt"><a href="../Structs/KeypointInfo.html">KeypointInfo</a></span><span class="p">])</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>keypoints</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the keypoints of the route being navigated</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
                       </div>
                     </section>
                   </div>
@@ -766,7 +882,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>Reset the logging variables having to do with path recording or ones that are shared between path recording / path navigating</p>
 
                       </div>
                       <div class="declaration">
@@ -793,7 +909,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>Reset the logging variables having to do with path navigation.</p>
 
                       </div>
                       <div class="declaration">
@@ -820,7 +936,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>Reset the logging variables having to do with state sequence tracking</p>
 
                       </div>
                       <div class="declaration">
@@ -847,7 +963,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>Compile log data and send it to the cloud</p>
 
                       </div>
                       <div class="declaration">
@@ -857,6 +973,25 @@
                           <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">compileLogData</span><span class="p">(</span><span class="n">_</span> <span class="nv">debug</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">)</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>debug</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>true if the route was unsuccessful (useful for debugging) and false if the route was successful</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
                       </div>
                     </section>
                   </div>
@@ -874,7 +1009,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>Send the meta data log to the cloud</p>
 
                       </div>
                       <div class="declaration">
@@ -884,6 +1019,61 @@
                           <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">sendMetaData</span><span class="p">(</span><span class="n">_</span> <span class="nv">pathDate</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="n">_</span> <span class="nv">pathID</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="n">_</span> <span class="nv">userId</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="n">_</span> <span class="nv">debug</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">)</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>pathDate</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the path date</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>pathID</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the path id</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>userId</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the user id</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>debug</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>true if the route was unsuccessful (useful for debugging) and false if the route was successful</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
                       </div>
                     </section>
                   </div>
@@ -901,7 +1091,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>Send the path data log to the cloud.</p>
 
                       </div>
                       <div class="declaration">
@@ -912,6 +1102,37 @@
 
                         </div>
                       </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>pathID</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the id of the path</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>userId</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the user id</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
                     </section>
                   </div>
                 </li>
@@ -920,7 +1141,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2019 <a class="link" href="" target="_blank" rel="external"></a>. All rights reserved. (Last updated: 2019-05-08)</p>
+          <p>&copy; 2019 <a class="link" href="" target="_blank" rel="external"></a>. All rights reserved. (Last updated: 2019-05-15)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.9.6</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
         </section>
       </article>

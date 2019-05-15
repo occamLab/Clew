@@ -151,19 +151,33 @@ public struct KeypointInfo {
     public var orientation: Vector3
 }
 
+/// An encapsulation of a route landmark, including position, text, and audio information.
 class RouteLandmark: NSObject, NSSecureCoding {
+    /// Needs to be declared and assigned true to support `NSSecureCoding`
     static var supportsSecureCoding = true
     
+    /// The position and orientation as a 4x4 matrix
     public var transform: simd_float4x4?
+    /// Text to help user remember the landmark
     public var information: NSString?
+    /// The URL to an audio file that contains information to help the user remember a landmark
     public var voiceNote: NSString?
     
+    /// Initialize the landmark.
+    ///
+    /// - Parameters:
+    ///   - transform: the position and orientation
+    ///   - information: textual description
+    ///   - voiceNote: URL to auditory description
     public init(transform: simd_float4x4? = nil, information: NSString? = nil, voiceNote: NSString? = nil) {
         self.transform = transform
         self.information = information
         self.voiceNote = voiceNote
     }
     
+    /// Encode the landmark.
+    ///
+    /// - Parameter aCoder: the encoder
     func encode(with aCoder: NSCoder) {
         if transform != nil {
             aCoder.encode(ARAnchor(transform: transform!), forKey: "transformAsARAnchor")
@@ -172,6 +186,9 @@ class RouteLandmark: NSObject, NSSecureCoding {
         aCoder.encode(voiceNote, forKey: "voiceNote")
     }
     
+    /// Decode the landmark.
+    ///
+    /// - Parameter aDecoder: the decoder
     required convenience init?(coder aDecoder: NSCoder) {
         var transform : simd_float4x4? = nil
         var information : NSString? = nil
@@ -187,16 +204,33 @@ class RouteLandmark: NSObject, NSSecureCoding {
     
 }
 
+/// This class encapsulates a route that can be persisted to storage and reloaded as needed.
 class SavedRoute: NSObject, NSSecureCoding {
+    /// This is needed to use NSSecureCoding
     static var supportsSecureCoding = true
     
+    /// The id of the route (should be unique)
     public var id: NSString
+    /// The name of the route (as displayed by the `RoutesViewController`)
     public var name: NSString
+    /// The date the route was recorded
     public var dateCreated: NSDate
+    /// The crumbs that make up the route.  The densely sampled positions (crumbs) are stored and the keypoints (sparser goal positionsare calculated on demand when navigation is requested.
     public var crumbs: [LocationInfo]
+    /// The landmark the marks the beginning of the route (needed for start to end navigation)
     public var beginRouteLandmark : RouteLandmark
+    /// The landmark the marks the beginning of the route (needed for end to start navigation)
     public var endRouteLandmark: RouteLandmark
 
+    /// Initialize the route.
+    ///
+    /// - Parameters:
+    ///   - id: the route id
+    ///   - name: the route name
+    ///   - crumbs: the crumbs for the route
+    ///   - dateCreated: the route creation date
+    ///   - beginRouteLandmark: the landmark for the beginning of the route (pass a `RouteLandmark` with default initialization if no landmark was recorded at the beginning of the route)
+    ///   - endRouteLandmark: the landmark for the end of the route (pass a `RouteLandmark` with default initialization if no landmark was recorded at the end of the route)
     public init(id: NSString, name: NSString, crumbs: [LocationInfo], dateCreated: NSDate = NSDate(), beginRouteLandmark: RouteLandmark, endRouteLandmark: RouteLandmark) {
         self.id = id
         self.name = name
@@ -206,6 +240,9 @@ class SavedRoute: NSObject, NSSecureCoding {
         self.endRouteLandmark = endRouteLandmark
     }
     
+    /// Encodes the object to the specified coder object
+    ///
+    /// - Parameter aCoder: the object used for encoding
     func encode(with aCoder: NSCoder) {
         aCoder.encode(id, forKey: "id")
         aCoder.encode(name, forKey: "name")
@@ -215,6 +252,9 @@ class SavedRoute: NSObject, NSSecureCoding {
         aCoder.encode(endRouteLandmark, forKey: "endRouteLandmark")
     }
     
+    /// Initialize an object based using data from a decoder
+    ///
+    /// - Parameter aDecoder: the decoder object
     required convenience init?(coder aDecoder: NSCoder) {
         guard let id = aDecoder.decodeObject(of: NSString.self, forKey: "id") else {
             return nil
@@ -249,6 +289,7 @@ class PathFinder {
     /// - TODO: Clarify units
     private let pathWidth: Scalar!
     
+    /// The crumbs that make up the desired path. These should be ordered with respect to the user's intended direction of travel (start to end versus end to start)
     private var crumbs: [LocationInfo]
     
     /// Initializes the PathFinder class and determines the value of `pathWidth`

@@ -53,11 +53,6 @@ class RingBuffer<Element> {
     
     /// Get the index in the buffer stored at the specified index.
     ///
-    /// - Parameter index: the index to check.  0 means the index most distant from the next insertion point of the buffer.  As index goes up, the data becomes more recent
-    /// - Returns: the element stored at the specified index.
-    
-    /// Get the index in the buffer stored at the specified index.
-    ///
     /// - Parameter index: the index to check.  0 means the index most distant from the most recently inserted element into the buffer.  As index goes up, the data becomes more recent.  Index -1 will be the most recently inserted element into the buffer
     /// - Returns: the element stored at the specified index.
     public func get(_ index: Int)->Element? {

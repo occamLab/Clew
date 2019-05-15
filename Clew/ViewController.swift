@@ -13,6 +13,8 @@
 // Major features to implement
 //
 // Potential enhancements
+//  - Add a tip to the help file regarding holding phone against your chest (see Per Rosqvist's suggestion)
+//  - Warn user via an alert if they have an iPhone 5S or 6
 //  - Possibly create a warning if the phone doesn't appear to be in the correct orientation
 //  - revisit turn warning feature.  It doesn't seem to actually help all that much at the moment.
 

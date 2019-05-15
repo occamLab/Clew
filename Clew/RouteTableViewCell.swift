@@ -8,20 +8,11 @@
 
 import UIKit
 
+/// A table cell that holds the route data
 class RouteTableViewCell: UITableViewCell {
 
+    /// The route label (i.e. the name)
     @IBOutlet weak var nameLabel: UILabel!
+    /// The route creation date
     @IBOutlet weak var dateCreatedLabel: UILabel!
-    
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
-    }
-
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
-    }
-
 }

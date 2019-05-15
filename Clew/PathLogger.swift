@@ -10,7 +10,8 @@ import Foundation
 import Firebase
 import SceneKit
 
-class PathLogger {    
+/// A class to handle logging app usage data
+class PathLogger {
     /// A handle to the Firebase storage
     let storageBaseRef = Storage.storage().reference()
 
@@ -45,22 +46,38 @@ class PathLogger {
     /// list of keypoints - [[(LocationInfo)x, y, z, yaw]]
     var keypointData: [Array<Any>] = []
     
+    /// Add the specified state transition to the log.
+    ///
+    /// - Parameter newState: the new state of the app
     func logStateTransition(newState: AppState) {
         stateSequenceTime.append(-stateTransitionLogTimer.timeIntervalSinceNow)
         stateSequence.append(newState.rawValue)
     }
     
+    /// Log an utterance issued by the app.
+    ///
+    /// - Parameter utterance: the utterance that was delivered by the app (either via an `AVAudioSession` or through VoiceOver)
     func logSpeech(utterance: String) {
         speechData.append(utterance)
         speechDataTime.append(-dataTimer.timeIntervalSinceNow)
     }
     
+    /// Log a tracking error from the app.
+    ///
+    /// - Parameters:
+    ///   - isRecordingPhase: true if the error is associated with the recording phase, false if it is associated with the navigation phase
+    ///   - trackingError: <#trackingError description#>
     func logTrackingError(isRecordingPhase: Bool, trackingError: String) {
         trackingErrorPhase.append(isRecordingPhase)
         trackingErrorTime.append(-dataTimer.timeIntervalSinceNow)
         trackingErrorData.append(trackingError)
     }
     
+    /// Log a transformation matrix
+    ///
+    /// - Parameters:
+    ///   - state: the app's state (this helps determine whether to log the transformation as part of the path recording or navigation data)
+    ///   - scn: the 4x4 matrix that encodes the position and orientation of the phone
     func logTransformMatrix(state: AppState, scn: SCNMatrix4) {
         let logTime = -dataTimer.timeIntervalSinceNow
         let logMatrix = [scn.m11, scn.m12, scn.m13, scn.m14,
@@ -76,6 +93,9 @@ class PathLogger {
         }
     }
 
+    /// Log the keypoints of a route.
+    ///
+    /// - Parameter keypoints: the keypoints of the route being navigated
     func logKeypoints(keypoints: [KeypointInfo]) {
         keypointData = []
         for keypoint in keypoints {
@@ -84,6 +104,7 @@ class PathLogger {
         }
     }
     
+    /// Reset the logging variables having to do with path recording or ones that are shared between path recording / path navigating
     func resetPathLog() {
         // reset all logging related variables for the path
         pathData = []
@@ -95,6 +116,7 @@ class PathLogger {
         trackingErrorPhase = []
     }
     
+    /// Reset the logging variables having to do with path navigation.
     func resetNavigationLog() {
         // clear any old log variables
         navigationData = []
@@ -104,12 +126,16 @@ class PathLogger {
         dataTimer = Date()
     }
     
+    /// Reset the logging variables having to do with state sequence tracking
     func resetStateSequenceLog() {
         // reset log variables that aren't tied to path recording or navigation
         stateSequence = []
         stateSequenceTime = []
     }
     
+    /// Compile log data and send it to the cloud
+    ///
+    /// - Parameter debug: true if the route was unsuccessful (useful for debugging) and false if the route was successful
     func compileLogData(_ debug: Bool) {
         // compile log data
         let date = Date()
@@ -123,6 +149,13 @@ class PathLogger {
         sendPathData(pathID, userId)
     }
     
+    /// Send the meta data log to the cloud
+    ///
+    /// - Parameters:
+    ///   - pathDate: the path date
+    ///   - pathID: the path id
+    ///   - userId: the user id
+    ///   - debug: true if the route was unsuccessful (useful for debugging) and false if the route was successful
     func sendMetaData(_ pathDate: String, _ pathID: String, _ userId: String, _ debug: Bool) {
         let pathType: String
         if(debug) {
@@ -160,6 +193,11 @@ class PathLogger {
         }
     }
     
+    /// Send the path data log to the cloud.
+    ///
+    /// - Parameters:
+    ///   - pathID: the id of the path
+    ///   - userId: the user id
     func sendPathData(_ pathID: String, _ userId: String) {
         let body: [String : Any] = ["userId": userId,
                                     "PathID": pathID,

@@ -18,8 +18,11 @@ import VectorMath
 ///
 /// - TODO: Clarify what this is
 public enum PositionState {
+    /// user is far from target
     case notAtTarget
+    /// user is at target
     case atTarget
+    /// user is close to the target
     case closeToTarget
 }
 
@@ -228,6 +231,11 @@ class Navigation {
     }
     
     /// Determines the difference between two angles, in radians
+    ///
+    /// - Parameters:
+    ///   - angle1: the first angle
+    ///   - angle2: the second angle
+    /// - Returns: the difference between the two angles
     func getAngleDiff(angle1: Float, angle2: Float) -> Float {
         //  Function to determine the difference between two angles
         let a = angleNormalize(angle: angle1)

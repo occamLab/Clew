@@ -11,6 +11,7 @@ import AVFoundation
 import Accelerate
 
 extension Double {
+    /// a double expressed as a time string of format MINUTES:SECONDS
     var toTimeString: String {
         let seconds: Int = Int(self.truncatingRemainder(dividingBy: 60.0))
         let minutes: Int = Int(self / 60.0)
@@ -18,32 +19,51 @@ extension Double {
     }
 }
 
+/// The states for the audio recorder.
+///
+/// - recording: recording is ongoing
+/// - stopped: recording has been stopped
+/// - denied: the recording has been denied (e.g., appropriate permission was not granted)
 enum RecorderState {
+    /// recording is ongoing
     case recording
+    /// recording has been stopped
     case stopped
+    /// the recording has been denied (e.g., appropriate permission was not granted)
     case denied
 }
 
+/// A protocol for the audio recorder delegate
 protocol RecorderViewControllerDelegate: class {
+    /// Called when recording is started.
     func didStartRecording()
+    
+    /// Called when recording is finished.
+    ///
+    /// - Parameter audioFileURL: a URL the to the recorded audio
     func didFinishRecording(audioFileURL: URL)
 }
 
-let keyID = "key"
-
+/// The view controller for the audio recorder
 class RecorderViewController: UIViewController {
     
     //MARK:- Properties
     var handleView = UIView()
+    /// the button used for recording
     var recordButton = RecordButton()
+    /// the view that displays the time
     var timeLabel = UILabel()
+    /// the visualizer of the audio waveform
     var audioView = AudioVisualizerView()
+    /// the audio recording settings
     let settings = [AVFormatIDKey: kAudioFormatLinearPCM, AVLinearPCMBitDepthKey: 16, AVLinearPCMIsFloatKey: true, AVSampleRateKey: Float64(44100), AVNumberOfChannelsKey: 1] as [String : Any]
+    /// a handle to the `AVAudioEngine`
     let audioEngine = AVAudioEngine()
     private var renderTs: Double = 0
     private var recordingTs: Double = 0
     private var silenceTs: Double = 0
     private var audioFile: AVAudioFile?
+    /// a delegate to notify of various recording events
     weak var delegate: RecorderViewControllerDelegate?
     
     //MARK:- Outlets
@@ -53,26 +73,32 @@ class RecorderViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        setupHandelView()
+        setupHandleView()
         setupRecordingButton()
         setupTimeLabel()
         setupAudioView()
         title = "Voice Note Recorder"
     }
     
+    /// Called when the view will appear.
+    ///
+    /// - Parameter animated: true if animated, false otherwise
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         let notificationName = AVAudioSession.interruptionNotification
         NotificationCenter.default.addObserver(self, selector: #selector(handleRecording(_:)), name: notificationName, object: nil)
     }
     
+    /// Called whent he view will disappear.
+    ///
+    /// - Parameter animated: true if animated, false otherwise
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         NotificationCenter.default.removeObserver(self)
     }
     
     //MARK:- Setup Methods
-    fileprivate func setupHandelView() {
+    fileprivate func setupHandleView() {
         handleView.layer.cornerRadius = 2.5
         handleView.backgroundColor = UIColor(red: 208, green: 207, blue: 205, alpha: 255)
         view.addSubview(handleView)
@@ -114,6 +140,10 @@ class RecorderViewController: UIViewController {
     }
     
     //MARK:- Actions
+    
+    /// Start recording in response to a user action.
+    ///
+    /// - Parameter sender: the button that initiated the recording
     @objc func handleRecording(_ sender: RecordButton) {
         var defaultFrame: CGRect = CGRect(x: 0, y: 24, width: view.frame.width, height: 135)
         if recordButton.isRecording {
@@ -245,6 +275,7 @@ class RecorderViewController: UIViewController {
         self.updateUI(.recording)
     }
     
+    /// Called when recording is stopped.  This will also dismiss the view.
     private func stopRecording() {
         if let d = self.delegate, let audioFile = self.audioFile {
             d.didFinishRecording(audioFileURL: audioFile.url)
@@ -262,11 +293,13 @@ class RecorderViewController: UIViewController {
         self.dismiss(animated: true, completion: nil)
     }
     
+    /// Called when the button on the popover view is activated to dismiss the recorder.
     @objc func doneWithRecording() {
         NotificationCenter.default.post(name: Notification.Name("ClewPopoverDismissed"), object: nil)
         self.dismiss(animated: true, completion: nil)
     }
     
+    /// Make sure appropriate permissiosn to access the microphone have been granted.  If not, ask for them now.
     private func checkPermissionAndRecord() {
         let permission = AVAudioSession.sharedInstance().recordPermission
         switch permission {
@@ -293,6 +326,9 @@ class RecorderViewController: UIViewController {
         }
     }
     
+    /// Return whether or not the recorder is actively recording audio.
+    ///
+    /// - Returns: true if audio is being recorded and false otherwise
     private func isRecording() -> Bool {
         if self.audioEngine.isRunning {
             return true
@@ -300,6 +336,9 @@ class RecorderViewController: UIViewController {
         return false
     }
     
+    /// Return the audio recording format / settings
+    ///
+    /// - Returns: the audio recording format / settings
     private func format() -> AVAudioFormat? {
         let format = AVAudioFormat(settings: self.settings)
         return format
@@ -316,6 +355,9 @@ class RecorderViewController: UIViewController {
         return url
     }
     
+    /// Create the audio file used for the recording.
+    ///
+    /// - Returns: the `AVAudioFile` object that can be used for recording
     private func createAudioRecordFile() -> AVAudioFile? {
         guard let path = self.createAudioRecordPath() else {
             return nil
@@ -330,6 +372,10 @@ class RecorderViewController: UIViewController {
     }
     
     // MARK:- Handle interruption
+    
+    /// Called when the recording is interrupted
+    ///
+    /// - Parameter notification: the interrupting notification
     @objc func handleInterruption(notification: Notification) {
         guard let userInfo = notification.userInfo else { return }
         guard let key = userInfo[AVAudioSessionInterruptionTypeKey] as? NSNumber
