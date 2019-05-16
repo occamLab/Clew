@@ -35,7 +35,9 @@ import SRCountdownTimer
 extension UIView {
     /// Used to identify the mainText UILabel
     static let mainTextTag: Int = 1001
+    /// Used to identify the pause button so that it can be enabled or disabled
     static let pauseButtonTag: Int = 1002
+    /// Used to identify the read voice note button tag so that it can be enabled or disabled
     static let readVoiceNoteButtonTag: Int = 1003
 
     /// Custom fade used for direction text UILabel.
@@ -75,6 +77,7 @@ extension UIView {
             self.addSubview(button)
         }
     }
+    /// the main text UILabel if it exists for a particular view
     var mainText: UILabel? {
         for subview in subviews {
             if subview.tag == UIView.mainTextTag, let textLabel = subview as? UILabel {
@@ -84,6 +87,10 @@ extension UIView {
         return nil
     }
     
+    /// Search for a button based on the tag.  This function is useful in cases where the state of a UI control must be modified dependent on the app's state.
+    ///
+    /// - Parameter tag: the tag ID
+    /// - Returns: the UIButton if it exists (nil otherwise)
     func getButtonByTag(tag: Int)->UIButton? {
         for subview in subviews {
             if subview.tag == tag, let button = subview as? UIButton {
@@ -435,7 +442,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         // render 3D keypoints
         renderKeypoint(keypoints[0].location)
         
-        turnWarning = false
         // TODO: gracefully handle error
         prevKeypointPosition = getRealCoordinates(record: true)!.location
         
@@ -735,6 +741,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// Button view container for stop navigation button
     var stopNavigationView: UIView!
     
+    /// This is embeds an AR scene.  The ARSession is a part of the scene view, which allows us to capture where the phone is in space and the state of the world tracking.  The scene also allows us to insert virtual objects
     var sceneView = ARSCNView()
     
     /// Hide status bar
@@ -752,7 +759,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         return UIScreen.main.bounds.size.height * (1/5)
     }
     
-    // Height of settings and help buttons
+    /// Height of settings and help buttons
     var settingsAndHelpFrameHeight: CGFloat {
         return UIScreen.main.bounds.size.height * (1/12)
     }
@@ -784,37 +791,51 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         return UIScreen.main.bounds.size.height - buttonFrameHeight - settingsAndHelpFrameHeight - settingsAndHelpMargin
     }
     
-    // y-origin of announcement frame
+    /// y-origin of announcement frame
     var yOriginOfAnnouncementFrame: CGFloat {
         return UIScreen.main.bounds.size.height/15
     }
     
     // MARK: - UIViews for all UI button containers
+    
+    /// button for getting directions to the next keypoint
     var getDirectionButton: UIButton!
+    
+    /// button for bringing up the settings menu
     var settingsButton: UIButton!
+    
+    /// button for bringing up the help menu
     var helpButton: UIButton!
+    
+    /// the view on which the user can pause tracking
     var pauseTrackingView: UIView!
+    
+    /// the view on which the user can initiate the tracking resume procedure
     var resumeTrackingView: UIView!
+    
+    /// the view on which the user can confirm the tracking resume procedure
     var resumeTrackingConfirmView: UIView!
+    
+    /// a banner that displays an announcement in the top quarter of the screen.  This is used for displaying status updates or directions.  This should only be used to display time-sensitive content.
     var announcementText: UILabel!
+    
+    /// the view on which the user can rate the quality of their navigation experience
     var routeRatingView: UIView!
+    
+    /// a timer that counts down during the alignment procedure (alignment is captured at the end of the time)
     var countdownTimer: SRCountdownTimer!
+    
+    /// audio players for playing system sounds through an `AVAudioSession` (this allows them to be audible even when the rocker switch is muted.
     var audioPlayers: [Int: AVAudioPlayer] = [:]
     
-    enum ButtonViewType {
-        // State of button views
-        case recordPath
-        case stopRecording
-        case startNavigation
-        case pauseTracking
-        case resumeTracking
-        case stopNavigation
-    }
-    
+    /// Callback function for when `countdownTimer` updates.  This allows us to announce the new value via voice
+    ///
+    /// - Parameter newValue: the new value (in seconds) displayed on the countdown timer
     @objc func timerDidUpdateCounterValue(newValue: Int) {
         UIAccessibility.post(notification: UIAccessibility.Notification.announcement, argument: String(newValue))
     }
     
+    /// called when the view has loaded.  We setup various app elements in here.
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -1458,30 +1479,41 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     // MARK: - BreadCrumbs
     
-    // AR Session Configuration
+    /// AR Session Configuration
     var configuration: ARWorldTrackingConfiguration!
     
-    // Clew internal datastructures
-    var crumbs: [LocationInfo]!                 // list of crumbs dropped when recording path
-    var keypoints: [KeypointInfo]!              // list of keypoints calculated after path completion
-    var keypointNode: SCNNode!                  // SCNNode of the next keypoint
-    var prevKeypointPosition: LocationInfo!     // previous keypoint location - originally set to current location
-    var turnWarning: Bool!                      // bool to make sure turnWarning happens only once
+    /// MARK: - Clew internal datastructures
+    
+    /// list of crumbs dropped when recording path
+    var crumbs: [LocationInfo]!
+    
+    /// list of keypoints calculated after path completion
+    var keypoints: [KeypointInfo]!
+    
+    /// SCNNode of the next keypoint
+    var keypointNode: SCNNode!
+    
+    /// previous keypoint location - originally set to current location
+    var prevKeypointPosition: LocationInfo!
 
     /// Interface for logging data about the session and the path
     var logger = PathLogger()
     
     // MARK: - Timers for background functions
     
-    /// <#Description#>
+    /// times the recording of path crumbs
     var droppingCrumbs: Timer?
-    /// <#Description#>
+    
+    /// times the checking of the path navigation process (e.g., have we reached a waypoint)
     var followingCrumbs: Timer?
-    /// <#Description#>
+    
+    /// times the generation of haptic feedback
     var hapticTimer: Timer?
-    /// <#Description#>
+    
+    /// times when an announcement should be removed.  These announcements are displayed on the `announcementText` label.
     var announcementRemovalTimer: Timer?
-    /// <#Description#>
+    
+    /// times when the heading offset should be recalculated.  The ability to use the heading offset is currently not exposed to the user.
     var updateHeadingOffsetTimer: Timer?
     
     /// Navigation class and state
@@ -1499,30 +1531,53 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     static let FEEDBACKDELAY = 0.4
     
     // MARK: - Settings bundle configuration
-    // the bundle configuration has 0 as feet and 1 as meters
+    
+    /// the bundle configuration has 0 as feet and 1 as meters
     let unit = [0: "ft", 1: "m"]
+    
+    /// the text to display for each possible unit
     let unitText = [0: " feet", 1: " meters"]
+    
+    /// the converstion factor to apply to distances as reported by ARKit so that they are expressed in the user's chosen distance units.  ARKit's unit of distance is meters.
     let unitConversionFactor = [0: Float(100.0/2.54/12.0), 1: Float(1.0)]
 
+    /// the selected default unit index (this index cross-references `unit`, `unitText`, and `unitConversionFactor`
     var defaultUnit: Int!
+    
+    /// the color of the waypoints.  0 is red, 1 is green, 2 is blue, and 3 is random
     var defaultColor: Int!
+    
+    /// true if sound feedback should be generated when the user is facing the next waypoint, false otherwise
     var soundFeedback: Bool!
+    
+    /// true if the app should announce directions via text to speech, false otherwise
     var voiceFeedback: Bool!
+    
+    /// true if haptic feedback should be generated when the user is facing the next waypoint, false otherwise
     var hapticFeedback: Bool!
+
+    /// true if we should prompt the user to rate route navigation and then send log data to the cloud
     var sendLogs: Bool!
 
     /// This keeps track of the paused transform while the current session is being realigned to the saved route
     var pausedTransform : simd_float4x4?
     
+    /// the landmark to use to mark the beginning of the route currently being recorded
     var beginRouteLandmark = RouteLandmark()
+    
+    /// the landmark to use to mark the end of the route currently being recorded
     var endRouteLandmark = RouteLandmark()
 
+    /// the name of the route being recorded
     var routeName: NSString?
 
+    /// the route just recorded.  This is useful for when the user resumes a route that wasn't saved.
     var justTraveledRoute: SavedRoute?
     
-    // this is a generically typed placeholder for the justUsedMap computed property.  This is needed due to the fact that @available cannot be used for stored attributes
-    var justUsedMapAsAny: Any?
+    /// this is a generically typed placeholder for the justUsedMap computed property.  This is needed due to the fact that @available cannot be used for stored attributes
+    private var justUsedMapAsAny: Any?
+
+    /// the most recently used map.  This helps us determine whether a route the user is attempting to load requires alignment.  If we have already aligned within a particular map, we can skip the alignment procedure.
     @available(iOS 12.0, *)
     var justUsedMap : ARWorldMap? {
         get {
@@ -1533,7 +1588,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
     }
     
-    // DirectionText based on hapic/voice settings
+    /// DirectionText based on hapic/voice settings
     var Directions: Dictionary<Int, String> {
         if (hapticFeedback) {
             return HapticDirections
@@ -1542,10 +1597,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
     }
     
+    /// handles the user pressing the record path button.
     @objc func recordPath() {
         showRecordPathWithoutLandmarkWarning()
     }
     
+    /// handles the user pressing the stop recording button.
+    ///
+    /// - Parameter sender: the button that generated the event
     @objc func stopRecording(_ sender: UIButton) {
         if beginRouteLandmark.transform != nil {
             if #available(iOS 12.0, *) {
@@ -1561,6 +1620,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         state = .readyToNavigateOrPause(allowPause: true)
     }
     
+    /// handles the user pressing the start navigation button.
+    ///
+    /// - Parameter sender: the button that generated the event
     @objc func startNavigation(_ sender: UIButton) {
         // this will handle the appropriate state transition if we pass the warning
         showNavigatePathWithoutLandmarkWarning()
@@ -1580,6 +1642,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
     }
     
+    /// handles the user pressing the stop navigation button.
+    ///
+    /// - Parameter sender: the button that generated the event
     @objc func stopNavigation(_ sender: UIButton) {
         // stop navigation
         followingCrumbs?.invalidate()
@@ -1601,11 +1666,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
     }
     
+    /// handles the user pressing the pause button
     @objc func startPauseProcedure() {
         creatingRouteLandmark = false
         state = .startingPauseProcedure
     }
     
+    /// handles the user pressing the landmark button
     @objc func startCreateLandmarkProcedure() {
         creatingRouteLandmark = true
         // make sure to clear out any relative transform and paused transform so the alignment is accurate
@@ -1613,12 +1680,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         state = .startingPauseProcedure
     }
     
+    /// this is called after the alignment countdown timer finishes in order to complete the pause tracking procedure
     @objc func pauseTracking() {
         // pause AR pose tracking
         state = .completingPauseProcedure
     }
     
-    @objc func resumeTracking() {
+    /// this is called when the user has confirmed the alignment and is the alignment countdown should begin.  Once the alignment countdown has finished, the alignment will be performed and the app will move to the ready to navigate view.
+    func resumeTracking() {
         // resume pose tracking with existing ARSessionConfiguration
         hideAllViewsHelper()
         countdownTimer.isHidden = false
@@ -1648,6 +1717,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
     }
     
+    /// handles the user pressing the resume tracking confirmation button.
     @objc func confirmResumeTracking() {
         if let route = justTraveledRoute {
             state = .startingResumeProcedure(route: route, mapAsAny: justUsedMapAsAny, navigateStartToEnd: false)
@@ -1655,6 +1725,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     }
     
     // MARK: - Logging
+    
+    /// send log data for an successful route navigation (thumbs up)
     @objc func sendLogData() {
         // send success log data to Firebase
         logger.compileLogData(false)
@@ -1662,6 +1734,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         state = .mainScreen(announceArrival: false)
     }
     
+    /// send log data for an unsuccessful route navigation (thumbs down)
     @objc func sendDebugLogData() {
         // send debug log data to Firebase
         logger.compileLogData(true)
@@ -1669,6 +1742,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         state = .mainScreen(announceArrival: false)
     }
     
+    /// drop a crumb during path recording
     @objc func dropCrumb() {
         // drop waypoint markers to record path
         // TODO: gracefully handle error
@@ -1715,8 +1789,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
     }
     
+    /// checks to see if user is on the right path during navigation.
     @objc func followCrumb() {
-        // checks to see if user is on the right path during navigation
         guard let curLocation = getRealCoordinates(record: true) else {
             // TODO: might want to indicate that something is wrong to the user
             return
@@ -1741,7 +1815,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 // update directions to next keypoint
                 directionToNextKeypoint = getDirectionToNextKeypoint(currentLocation: curLocation)
                 setDirectionText(currentLocation: curLocation.location, direction: directionToNextKeypoint, displayDistance: false)
-                turnWarning = false
             } else {
                 // arrived at final keypoint
                 // send haptic/sonic feedback
@@ -1810,6 +1883,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         return potentialOffset
     }
   
+    /// update the offset between direction of travel and the orientation of the phone.  This supports a feature which allows the user to navigate with the phone pointed in a direction other than the direction of travel.  The feature cannot be accessed by users in the app store version.
     @objc func updateHeadingOffset() {
         // send haptic feedback depending on correct device
         guard let curLocation = getRealCoordinates(record: false) else {
@@ -1827,6 +1901,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
     }
     
+    /// Compute the heading vector of the phone.  When the phone is mostly upright, this is just the project of the negative z-axis of the device into the x-z plane.  When the phone is mostly flat, this is the y-axis of the phone projected into the x-z plane after the pitch and roll of the phone are undone.  The case where the phone is mostly flat is used primarily for alignment to and creation of landmarks.
+    ///
+    /// - Parameter transform: the position and orientation of the phone
+    /// - Returns: the heading vector as a 4 dimensional vector (y-component and w-component will necessarily be 0)
     func getProjectedHeading(_ transform: simd_float4x4) -> simd_float4 {
         if abs(transform.columns.2.y) < abs(transform.columns.0.y) {
             return -simd_make_float4(transform.columns.2.x, 0, transform.columns.2.z, 0)
@@ -1840,15 +1918,16 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         
     }
     
+    /// this gets the yaw of the phone using the heading vector returned by `getProjectedHeading`.
     func getYawHelper(_ transform: simd_float4x4) -> Float {
-        // TODO: this is legacy to match with the stuff in nav, but it doesn't match the getProjectedHeading vector
         let projectedHeading = getProjectedHeading(transform)
         return atan2f(-projectedHeading.x, -projectedHeading.z)
     }
     
     // MARK: - Render directions
+    
+    /// send haptic feedback if the device is pointing towards the next keypoint.
     @objc func getHapticFeedback() {
-        // send haptic feedback depending on correct device
         updateHeadingOffset()
         guard let curLocation = getRealCoordinates(record: false) else {
             // TODO: might want to indicate that something is wrong to the user
@@ -2209,14 +2288,15 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         trackingSessionState = camera.trackingState
     }
     
+    /// this tells the ARSession that when the app is becoming active again, we should try to relocalize to the previous world map (rather than proceding with the tracking session in the normal state even though the coordinate systems are no longer aligned).
+    /// TODO: not sure if this is actually what we should be doing.  Perhaps we should cancel any recording or navigation if this happens rather than trying to relocalize
     func sessionShouldAttemptRelocalization(_ session: ARSession) -> Bool {
-        // TODO: not sure if this is actually what we should be doing.  Perhaps we should cancel any recording or navigation if this happens rather than trying to relocalize
         return true
     }
     
 }
 
-// MARK: - <#RecorderViewControllerDelegate#>
+// MARK: - methods for implementing RecorderViewControllerDelegate
 extension ViewController: RecorderViewControllerDelegate {
     /// Called when a recording starts (currently nothing is done in this function)
     func didStartRecording() {

@@ -11,9 +11,10 @@
 
 import UIKit
 
+/// Encapsulates various properties needed to define the record button's appearance.
 public class RecordButtonKit : NSObject {
     
-    //// Cache
+    /// Cache
     
     private struct Cache {
         static let recordButtonColor: UIColor = UIColor(red: 1.000, green: 0.000, blue: 0.000, alpha: 1.000)
@@ -22,15 +23,27 @@ public class RecordButtonKit : NSObject {
         static let recordButtonNormalColor: UIColor = RecordButtonKit.recordButtonColor
     }
     
-    //// Colors
+    // - MARK: Colors
     
+    /// the color of the record button
     @objc public dynamic class var recordButtonColor: UIColor { return Cache.recordButtonColor }
+    /// the color of the record button's highlight
     @objc public dynamic class var recordButtonHighlightedColor: UIColor { return Cache.recordButtonHighlightedColor }
+    /// the color of the record button's frame
     @objc public dynamic class var recordFrameColor: UIColor { return Cache.recordFrameColor }
+    /// the record button's normal color
     @objc public dynamic class var recordButtonNormalColor: UIColor { return Cache.recordButtonNormalColor }
     
-    //// Drawing Methods
+    // - MARK: Drawing Methods
     
+    /// Draw the record button.
+    ///
+    /// - Parameters:
+    ///   - targetFrame: the frame to draw into
+    ///   - resizing: the resizing behavior to use for the button
+    ///   - recordButtonFrameColor: the frame color of the record button
+    ///   - isRecording: true if button is in the recording state, false otherwise
+    ///   - isPressed: true if the button is pressed, false otherwise
     @objc public dynamic class func drawRecordButton(frame targetFrame: CGRect = CGRect(x: 0, y: 0, width: 100, height: 100), resizing: ResizingBehavior = .aspectFit, recordButtonFrameColor: UIColor = UIColor(red: 1.000, green: 1.000, blue: 1.000, alpha: 1.000), isRecording: CGFloat = 1, isPressed: Bool = false) {
         //// General Declarations
         let context = UIGraphicsGetCurrentContext()!
@@ -84,13 +97,23 @@ public class RecordButtonKit : NSObject {
     
     
     
-    
+    /// the resizing behavior of the record button.
     @objc public enum ResizingBehavior: Int {
-        case aspectFit /// The content is proportionally resized to fit into the target rectangle.
-        case aspectFill /// The content is proportionally resized to completely fill the target rectangle.
-        case stretch /// The content is stretched to match the entire target rectangle.
-        case center /// The content is centered in the target rectangle, but it is NOT resized.
-        
+        /// The content is proportionally resized to fit into the target rectangle.
+        case aspectFit
+        /// The content is proportionally resized to completely fill the target rectangle.
+        case aspectFill
+        /// The content is stretched to match the entire target rectangle.
+        case stretch
+        /// The content is centered in the target rectangle, but it is NOT resized.
+        case center
+    
+        /// Apply the resize operation to map to the target rectangle.
+        ///
+        /// - Parameters:
+        ///   - rect: the rectangle to resize
+        ///   - target: the target rectangle
+        /// - Returns: the resized rectangle
         public func apply(rect: CGRect, target: CGRect) -> CGRect {
             if rect == target || target == CGRect.zero {
                 return rect
@@ -127,31 +150,60 @@ public class RecordButtonKit : NSObject {
 
 
 extension UIColor {
+    /// Compute a color based on the specified hue value.
+    ///
+    /// - Parameter newHue: the hue to use
+    /// - Returns: the new UIColor
     func withHue(_ newHue: CGFloat) -> UIColor {
         var saturation: CGFloat = 1, brightness: CGFloat = 1, alpha: CGFloat = 1
         self.getHue(nil, saturation: &saturation, brightness: &brightness, alpha: &alpha)
         return UIColor(hue: newHue, saturation: saturation, brightness: brightness, alpha: alpha)
     }
+    
+    /// Compute a color based on the specified saturation value.
+    ///
+    /// - Parameter newSaturation: the saturation to use
+    /// - Returns: the new UIColor
     func withSaturation(_ newSaturation: CGFloat) -> UIColor {
         var hue: CGFloat = 1, brightness: CGFloat = 1, alpha: CGFloat = 1
         self.getHue(&hue, saturation: nil, brightness: &brightness, alpha: &alpha)
         return UIColor(hue: hue, saturation: newSaturation, brightness: brightness, alpha: alpha)
     }
+    
+    /// Compute a color based on the specified brightness value.
+    ///
+    /// - Parameter newBrightness: the brightness to use
+    /// - Returns: the new UIColor
     func withBrightness(_ newBrightness: CGFloat) -> UIColor {
         var hue: CGFloat = 1, saturation: CGFloat = 1, alpha: CGFloat = 1
         self.getHue(&hue, saturation: &saturation, brightness: nil, alpha: &alpha)
         return UIColor(hue: hue, saturation: saturation, brightness: newBrightness, alpha: alpha)
     }
+    
+    /// Compute a color based on the specified alpha value.
+    ///
+    /// - Parameter newAlpha: the alpha to use
+    /// - Returns: the new UIColor
     func withAlpha(_ newAlpha: CGFloat) -> UIColor {
         var hue: CGFloat = 1, saturation: CGFloat = 1, brightness: CGFloat = 1
         self.getHue(&hue, saturation: &saturation, brightness: &brightness, alpha: nil)
         return UIColor(hue: hue, saturation: saturation, brightness: brightness, alpha: newAlpha)
     }
+    
+    /// Get the highlight color.
+    ///
+    /// - Parameter highlight: the level of highlight
+    /// - Returns: the highlight color
     func highlight(withLevel highlight: CGFloat) -> UIColor {
         var red: CGFloat = 1, green: CGFloat = 1, blue: CGFloat = 1, alpha: CGFloat = 1
         self.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
         return UIColor(red: red * (1-highlight) + highlight, green: green * (1-highlight) + highlight, blue: blue * (1-highlight) + highlight, alpha: alpha * (1-highlight) + highlight)
     }
+    
+    /// Get the shadow color.
+    ///
+    /// - Parameter shadow: shadow level
+    /// - Returns: the shadow color
     func shadow(withLevel shadow: CGFloat) -> UIColor {
         var red: CGFloat = 1, green: CGFloat = 1, blue: CGFloat = 1, alpha: CGFloat = 1
         self.getRed(&red, green: &green, blue: &blue, alpha: &alpha)

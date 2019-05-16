@@ -48,6 +48,7 @@ protocol RecorderViewControllerDelegate: class {
 class RecorderViewController: UIViewController {
     
     //MARK:- Properties
+    /// the handle view (TODO: not sure exactly what this is)
     var handleView = UIView()
     /// the button used for recording
     var recordButton = RecordButton()
@@ -67,9 +68,13 @@ class RecorderViewController: UIViewController {
     weak var delegate: RecorderViewControllerDelegate?
     
     //MARK:- Outlets
+    
+    /// the view to use when fading the control in / out
     @IBOutlet weak var fadeView: UIView!
     
     //MARK:- Life Cycle
+    
+    /// Called when the view loads so various components can be setup.
     override func viewDidLoad() {
         super.viewDidLoad()
         

@@ -10,6 +10,7 @@ import UIKit
 import AVFoundation
 import PRTween
 
+/// a button that can initiate an audio recording
 @IBDesignable
 class RecordButton: UIButton {
     
@@ -23,14 +24,17 @@ class RecordButton: UIButton {
         }
     }
     
+    /// true if various sound effects (e.g., record start and stop) should be ;layed, false otherwise
     @IBInspectable open var playSounds = true
     
+    /// the color of the frame around the record button
     @IBInspectable open var frameColor : UIColor = RecordButtonKit.recordFrameColor {
         didSet {
             setNeedsDisplay()
         }
     }
     
+    /// true if the recording is active, and false otherwise.  By changing the value of this attribute, an animation will be presented that communicates that the recording state is changing.
     @IBInspectable open var isRecording : Bool = false {
         didSet {
             #if !TARGET_INTERFACE_BUILDER
@@ -55,6 +59,12 @@ class RecordButton: UIButton {
         }
     }
     
+    /// Track touch events
+    ///
+    /// - Parameters:
+    ///   - touch: the touch event
+    ///   - event: a description of the event
+    /// - Returns: true if the control should continue tracking touch events or false if it should stop.  Currently, we defer this to the super class implementation.
     override func beginTracking(_ touch: UITouch, with event: UIEvent?) -> Bool {
         let result = super.beginTracking(touch, with: event)
         
@@ -72,6 +82,12 @@ class RecordButton: UIButton {
         return result
     }
     
+    /// Send action override to toggle button state
+    ///
+    /// - Parameters:
+    ///   - action: the action being sent
+    ///   - target: the target of the action
+    ///   - event: the event description
     override func sendAction(_ action: Selector, to target: Any?, for event: UIEvent?) {
         if playSounds {
             if isRecording {
@@ -85,6 +101,7 @@ class RecordButton: UIButton {
         super.sendAction(action, to: target, for: event)
     }
     
+    /// specifies the accessibility label to be reflective of the current button state.
     fileprivate func setAccessibilityLabel() {
         if isRecording {
             self.accessibilityLabel = "Stop Recording"
@@ -92,7 +109,10 @@ class RecordButton: UIButton {
             self.accessibilityLabel = "Record Voice Note"
         }
     }
-    
+
+    /// draw the record button to the specified rectangle.
+    ///
+    /// - Parameter rect: where to draw the button
     override func draw(_ rect: CGRect) {
         let buttonFrame = bounds
         let pressed = isHighlighted || isTracking
@@ -103,6 +123,7 @@ class RecordButton: UIButton {
                                          isPressed: pressed)
     }
     
+    /// computes whether the button is highlighted
     override var isHighlighted: Bool {
         get {
             return super.isHighlighted

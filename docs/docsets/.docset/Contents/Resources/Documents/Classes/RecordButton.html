@@ -14,7 +14,7 @@
     <a title="RecordButton Class Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html"> Docs</a> (77% documented)</p>
+        <p><a href="../index.html"> Docs</a> (100% documented)</p>
         <p class="header-right"><a href="https://github.com/occamLab/Clew"><img src="../img/gh.png"/>View on GitHub</a></p>
       </div>
     </header>
@@ -84,9 +84,6 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/ViewController.html">ViewController</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Classes/ViewController/ButtonViewType.html">– ButtonViewType</a>
               </li>
             </ul>
           </li>
@@ -205,7 +202,7 @@
 
                 </div>
               </div>
-            <p>Undocumented</p>
+            <p>a button that can initiate an audio recording</p>
 
           </section>
           <section class="section task-group-section">
@@ -224,7 +221,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>true if various sound effects (e.g., record start and stop) should be ;layed, false otherwise</p>
 
                       </div>
                       <div class="declaration">
@@ -252,7 +249,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>the color of the frame around the record button</p>
 
                       </div>
                       <div class="declaration">
@@ -280,7 +277,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>true if the recording is active, and false otherwise.  By changing the value of this attribute, an animation will be presented that communicates that the recording state is changing.</p>
 
                       </div>
                       <div class="declaration">
@@ -308,7 +305,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>Track touch events</p>
 
                       </div>
                       <div class="declaration">
@@ -318,6 +315,41 @@
                           <pre class="highlight swift"><code><span class="k">override</span> <span class="kd">func</span> <span class="nf">beginTracking</span><span class="p">(</span><span class="n">_</span> <span class="nv">touch</span><span class="p">:</span> <span class="kt">UITouch</span><span class="p">,</span> <span class="n">with</span> <span class="nv">event</span><span class="p">:</span> <span class="kt">UIEvent</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>touch</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the touch event</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>event</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>a description of the event</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>true if the control should continue tracking touch events or false if it should stop.  Currently, we defer this to the super class implementation.</p>
                       </div>
                     </section>
                   </div>
@@ -335,7 +367,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>Send action override to toggle button state</p>
 
                       </div>
                       <div class="declaration">
@@ -345,6 +377,49 @@
                           <pre class="highlight swift"><code><span class="k">override</span> <span class="kd">func</span> <span class="nf">sendAction</span><span class="p">(</span><span class="n">_</span> <span class="nv">action</span><span class="p">:</span> <span class="kt">Selector</span><span class="p">,</span> <span class="n">to</span> <span class="nv">target</span><span class="p">:</span> <span class="kt">Any</span><span class="p">?,</span> <span class="k">for</span> <span class="nv">event</span><span class="p">:</span> <span class="kt">UIEvent</span><span class="p">?)</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>action</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the action being sent</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>target</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the target of the action</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>event</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the event description</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
                       </div>
                     </section>
                   </div>
@@ -362,7 +437,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>draw the record button to the specified rectangle.</p>
 
                       </div>
                       <div class="declaration">
@@ -372,6 +447,25 @@
                           <pre class="highlight swift"><code><span class="k">override</span> <span class="kd">func</span> <span class="nf">draw</span><span class="p">(</span><span class="n">_</span> <span class="nv">rect</span><span class="p">:</span> <span class="kt">CGRect</span><span class="p">)</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>rect</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>where to draw the button</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
                       </div>
                     </section>
                   </div>
@@ -389,7 +483,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>computes whether the button is highlighted</p>
 
                       </div>
                       <div class="declaration">
@@ -408,7 +502,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2019 <a class="link" href="" target="_blank" rel="external"></a>. All rights reserved. (Last updated: 2019-05-15)</p>
+          <p>&copy; 2019 <a class="link" href="" target="_blank" rel="external"></a>. All rights reserved. (Last updated: 2019-05-16)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.9.6</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
         </section>
       </article>

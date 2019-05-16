@@ -147,7 +147,9 @@ public class LocationInfo : ARAnchor {
 /// * `location` (`LocationInfo`)
 /// * `orientation` (`Vector3` from `VectorMath`)
 public struct KeypointInfo {
+    /// the location of the keypoint
     public var location: LocationInfo
+    /// the orientation of a keypoint is a unit vector that points from the previous keypoint to current keypoint.  The orientation is useful for defining the area where we check off the user as having reached a keypoint
     public var orientation: Vector3
 }
 

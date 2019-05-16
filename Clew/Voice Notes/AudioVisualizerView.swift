@@ -9,16 +9,18 @@
 import UIKit
 
 extension Int {
+    /// convert to radians
     var degreesToRadians: CGFloat {
         return CGFloat(self) * .pi / 180.0
     }
 }
 
+/// Visualize audio being recorded
 class AudioVisualizerView: UIView {
     
-    // Bar width
+    /// Bar width
     var barWidth: CGFloat = 4.0
-    // Indicate that waveform should draw active/inactive state
+    /// Indicate that waveform should draw active/inactive state
     var active = false {
         didSet {
             if self.active {
@@ -29,23 +31,32 @@ class AudioVisualizerView: UIView {
             }
         }
     }
-    // Color for bars
+    /// Color for bars
     var color = UIColor.gray.cgColor
-    // Given waveforms
+    /// Given waveforms
     var waveforms: [Int] = Array(repeating: 0, count: 100)
     
     // MARK: - Init
+    
+    /// initialize from a rectangle
     override init (frame : CGRect) {
         super.init(frame : frame)
         self.backgroundColor = UIColor.clear
     }
     
+    /// initializer when decoding a saved version of the object
+    ///
+    /// - Parameter decoder: the decoder being used
     required init?(coder decoder: NSCoder) {
         super.init(coder: decoder)
         self.backgroundColor = UIColor.clear
     }
     
     // MARK: - Draw bars
+    
+    /// Draw the bars that make up the visualization of the recorded audio.
+    ///
+    /// - Parameter rect: the rectangle to draw the bars within
     override func draw(_ rect: CGRect) {
         guard let context = UIGraphicsGetCurrentContext() else {
             return
