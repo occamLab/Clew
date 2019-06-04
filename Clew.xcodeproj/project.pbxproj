@@ -60,6 +60,10 @@
 		B7EB59E420F693EB00FBBC6A /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 4D6B00DD1F33C33600952242 /* Settings.bundle */; };
 		B7EB59E520F693EB00FBBC6A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4D6B00CC1F33C1C400952242 /* LaunchScreen.storyboard */; };
 		B7EB59E620F693EB00FBBC6A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4D940BAA1F38AA79004E6741 /* Assets.xcassets */; };
+		E5959CAC22A70B5B00E53446 /* NSStringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5959CAB22A70B5B00E53446 /* NSStringExtension.swift */; };
+		E5959CAD22A70B5B00E53446 /* NSStringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5959CAB22A70B5B00E53446 /* NSStringExtension.swift */; };
+		E5E1886A22A709F000A40EBC /* Float4x4Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E1886922A709F000A40EBC /* Float4x4Extension.swift */; };
+		E5E1886B22A709F000A40EBC /* Float4x4Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E1886922A709F000A40EBC /* Float4x4Extension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -102,6 +106,8 @@
 		B7EB59EC20F693EB00FBBC6A /* Clew Dev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Clew Dev.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C68778047D8E263D2FB04989 /* Pods-Clew Dev.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew Dev.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Clew Dev/Pods-Clew Dev.debug.xcconfig"; sourceTree = "<group>"; };
 		D89DDB87A8AE1A9ECEAFCEC6 /* Pods-Clew.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew.release.xcconfig"; path = "Pods/Target Support Files/Pods-Clew/Pods-Clew.release.xcconfig"; sourceTree = "<group>"; };
+		E5959CAB22A70B5B00E53446 /* NSStringExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSStringExtension.swift; sourceTree = "<group>"; };
+		E5E1886922A709F000A40EBC /* Float4x4Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Float4x4Extension.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -151,25 +157,17 @@
 		4D6B00C21F33C1C400952242 /* Clew */ = {
 			isa = PBXGroup;
 			children = (
+				E5959CAA22A70AD500E53446 /* Misc */,
+				E5E1885B22A7028300A40EBC /* Controllers */,
+				E5E1885A22A7027600A40EBC /* Models */,
+				E5E1885922A7026500A40EBC /* Views */,
 				82028C7822807C1F00772701 /* GoogleService-Info.plist */,
 				827E85A0226985F9005CF98A /* Voice Notes */,
 				827E859922690FE4005CF98A /* Sound Effects */,
 				82028C7622807BF400772701 /* GoogleService-Info_dev.plist */,
 				4D940BAA1F38AA79004E6741 /* Assets.xcassets */,
-				4D6B00C31F33C1C400952242 /* AppDelegate.swift */,
-				4D6B00C51F33C1C400952242 /* ViewController.swift */,
-				826D5410224ABC39009EF410 /* DataPersistence.swift */,
-				82473B0B2217647A00E98CFC /* SettingsAndHelp.storyboard */,
-				82569F4622187AE700448B45 /* HelpViewController.swift */,
 				82473B05221763E200E98CFC /* SettingsViewController.h */,
 				82473B082217641D00E98CFC /* SettingsViewController.m */,
-				4D6B00D51F33C1FE00952242 /* Navigation.swift */,
-				4D6B00D71F33C21A00952242 /* PathFinder.swift */,
-				4D6B00DB1F33C26D00952242 /* Utility.swift */,
-				4D6B00CC1F33C1C400952242 /* LaunchScreen.storyboard */,
-				826D540B224ABBDC009EF410 /* RoutesViewController.swift */,
-				826D540A224ABBDC009EF410 /* RouteTableViewCell.swift */,
-				82028C73227CDB3100772701 /* PathLogger.swift */,
 				4D6B00CF1F33C1C400952242 /* Info.plist */,
 				4D6B00DD1F33C33600952242 /* Settings.bundle */,
 				82473B062217641D00E98CFC /* Clew-Bridging-Header.h */,
@@ -216,6 +214,49 @@
 				4315F457247AC66574B86A26 /* Pods_Clew_Dev.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		E5959CAA22A70AD500E53446 /* Misc */ = {
+			isa = PBXGroup;
+			children = (
+				4D6B00D51F33C1FE00952242 /* Navigation.swift */,
+				4D6B00D71F33C21A00952242 /* PathFinder.swift */,
+				4D6B00DB1F33C26D00952242 /* Utility.swift */,
+				4D6B00C31F33C1C400952242 /* AppDelegate.swift */,
+				E5E1886922A709F000A40EBC /* Float4x4Extension.swift */,
+				E5959CAB22A70B5B00E53446 /* NSStringExtension.swift */,
+				82028C73227CDB3100772701 /* PathLogger.swift */,
+			);
+			name = Misc;
+			path = ../Misc;
+			sourceTree = "<group>";
+		};
+		E5E1885922A7026500A40EBC /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				826D540A224ABBDC009EF410 /* RouteTableViewCell.swift */,
+				82473B0B2217647A00E98CFC /* SettingsAndHelp.storyboard */,
+				4D6B00CC1F33C1C400952242 /* LaunchScreen.storyboard */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		E5E1885A22A7027600A40EBC /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				826D5410224ABC39009EF410 /* DataPersistence.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		E5E1885B22A7028300A40EBC /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				826D540B224ABBDC009EF410 /* RoutesViewController.swift */,
+				82569F4622187AE700448B45 /* HelpViewController.swift */,
+				4D6B00C51F33C1C400952242 /* ViewController.swift */,
+			);
+			path = Controllers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -341,7 +382,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-Clew/Pods-Clew-frameworks.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-Clew/Pods-Clew-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
 				"${BUILT_PRODUCTS_DIR}/GoogleUtilities/GoogleUtilities.framework",
 				"${BUILT_PRODUCTS_DIR}/InAppSettingsKit/InAppSettingsKit.framework",
@@ -364,7 +405,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Clew/Pods-Clew-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Clew/Pods-Clew-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		B7EB59D820F693EB00FBBC6A /* [CP] Check Pods Manifest.lock */ = {
@@ -391,7 +432,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-Clew Dev/Pods-Clew Dev-frameworks.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-Clew Dev/Pods-Clew Dev-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
 				"${BUILT_PRODUCTS_DIR}/GoogleUtilities/GoogleUtilities.framework",
 				"${BUILT_PRODUCTS_DIR}/InAppSettingsKit/InAppSettingsKit.framework",
@@ -414,7 +455,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Clew Dev/Pods-Clew Dev-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Clew Dev/Pods-Clew Dev-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		FC3FD998D963F5FE0C5C7B8E /* [CP] Check Pods Manifest.lock */ = {
@@ -447,6 +488,8 @@
 				826D540E224ABBDC009EF410 /* RoutesViewController.swift in Sources */,
 				4D6B00D81F33C21A00952242 /* PathFinder.swift in Sources */,
 				82A43F482269079300076941 /* RecorderViewController.swift in Sources */,
+				E5E1886A22A709F000A40EBC /* Float4x4Extension.swift in Sources */,
+				E5959CAC22A70B5B00E53446 /* NSStringExtension.swift in Sources */,
 				4D6B00D61F33C1FE00952242 /* Navigation.swift in Sources */,
 				4D6B00DC1F33C26D00952242 /* Utility.swift in Sources */,
 				82028C74227CDB3100772701 /* PathLogger.swift in Sources */,
@@ -469,6 +512,8 @@
 				826D540F224ABBDC009EF410 /* RoutesViewController.swift in Sources */,
 				B7EB59DA20F693EB00FBBC6A /* PathFinder.swift in Sources */,
 				82FDAD3E22715C65009A0A3C /* ViewController.swift in Sources */,
+				E5E1886B22A709F000A40EBC /* Float4x4Extension.swift in Sources */,
+				E5959CAD22A70B5B00E53446 /* NSStringExtension.swift in Sources */,
 				82A43F492269079300076941 /* RecorderViewController.swift in Sources */,
 				B7EB59DB20F693EB00FBBC6A /* Navigation.swift in Sources */,
 				82028C75227CDB3100772701 /* PathLogger.swift in Sources */,
@@ -652,7 +697,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
 				INFOPLIST_FILE = "Clew Dev-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_SWIFT_FLAGS = "$(inherited) \"-DDEVELOPER\" \"-DIS_DEV_TARGET\"";
 				PRODUCT_BUNDLE_IDENTIFIER = "edu.occam.Clew-Dev";
@@ -672,7 +717,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
 				INFOPLIST_FILE = "Clew Dev-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_SWIFT_FLAGS = "$(inherited) \"-DDEVELOPER\" \"-DIS_DEV_TARGET\"";
 				PRODUCT_BUNDLE_IDENTIFIER = "edu.occam.Clew-Dev";
