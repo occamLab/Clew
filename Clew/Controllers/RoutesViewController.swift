@@ -77,7 +77,7 @@ class RoutesViewController : UIViewController, UITableViewDataSource, UITableVie
         return cell
     }
     
-    /// Called when user performs and edit action on the row.  Currently, only delete is supported.
+    /// Called when user performs an edit action on the row.  Currently, only delete is supported.
     ///
     /// - Parameters:
     ///   - tableView: a handle to the routes table

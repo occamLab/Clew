@@ -62,6 +62,8 @@
 		B7EB59E620F693EB00FBBC6A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4D940BAA1F38AA79004E6741 /* Assets.xcassets */; };
 		E5959CAC22A70B5B00E53446 /* NSStringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5959CAB22A70B5B00E53446 /* NSStringExtension.swift */; };
 		E5959CAD22A70B5B00E53446 /* NSStringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5959CAB22A70B5B00E53446 /* NSStringExtension.swift */; };
+		E5959CAF22A9534C00E53446 /* StateController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5959CAE22A9534C00E53446 /* StateController.swift */; };
+		E5959CB022A9534C00E53446 /* StateController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5959CAE22A9534C00E53446 /* StateController.swift */; };
 		E5E1886A22A709F000A40EBC /* Float4x4Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E1886922A709F000A40EBC /* Float4x4Extension.swift */; };
 		E5E1886B22A709F000A40EBC /* Float4x4Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E1886922A709F000A40EBC /* Float4x4Extension.swift */; };
 /* End PBXBuildFile section */
@@ -107,6 +109,7 @@
 		C68778047D8E263D2FB04989 /* Pods-Clew Dev.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew Dev.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Clew Dev/Pods-Clew Dev.debug.xcconfig"; sourceTree = "<group>"; };
 		D89DDB87A8AE1A9ECEAFCEC6 /* Pods-Clew.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew.release.xcconfig"; path = "Pods/Target Support Files/Pods-Clew/Pods-Clew.release.xcconfig"; sourceTree = "<group>"; };
 		E5959CAB22A70B5B00E53446 /* NSStringExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSStringExtension.swift; sourceTree = "<group>"; };
+		E5959CAE22A9534C00E53446 /* StateController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateController.swift; sourceTree = "<group>"; };
 		E5E1886922A709F000A40EBC /* Float4x4Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Float4x4Extension.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -226,6 +229,7 @@
 				E5E1886922A709F000A40EBC /* Float4x4Extension.swift */,
 				E5959CAB22A70B5B00E53446 /* NSStringExtension.swift */,
 				82028C73227CDB3100772701 /* PathLogger.swift */,
+				826D5410224ABC39009EF410 /* DataPersistence.swift */,
 			);
 			name = Misc;
 			path = ../Misc;
@@ -244,7 +248,6 @@
 		E5E1885A22A7027600A40EBC /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				826D5410224ABC39009EF410 /* DataPersistence.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -255,6 +258,7 @@
 				826D540B224ABBDC009EF410 /* RoutesViewController.swift */,
 				82569F4622187AE700448B45 /* HelpViewController.swift */,
 				4D6B00C51F33C1C400952242 /* ViewController.swift */,
+				E5959CAE22A9534C00E53446 /* StateController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -496,6 +500,7 @@
 				82A43F4E2269085800076941 /* RecordButtonKit.swift in Sources */,
 				82473B092217641D00E98CFC /* SettingsViewController.m in Sources */,
 				827E859522690956005CF98A /* AudioVisualizerView.swift in Sources */,
+				E5959CAF22A9534C00E53446 /* StateController.swift in Sources */,
 				82A43F4B226907C600076941 /* RecordButton.swift in Sources */,
 				826D540C224ABBDC009EF410 /* RouteTableViewCell.swift in Sources */,
 				4D6B00C61F33C1C400952242 /* ViewController.swift in Sources */,
@@ -520,6 +525,7 @@
 				B7EB59DC20F693EB00FBBC6A /* Utility.swift in Sources */,
 				82A43F4F2269085800076941 /* RecordButtonKit.swift in Sources */,
 				82473B0A2217641D00E98CFC /* SettingsViewController.m in Sources */,
+				E5959CB022A9534C00E53446 /* StateController.swift in Sources */,
 				827E859622690956005CF98A /* AudioVisualizerView.swift in Sources */,
 				82A43F4C226907C600076941 /* RecordButton.swift in Sources */,
 				826D540D224ABBDC009EF410 /* RouteTableViewCell.swift in Sources */,
