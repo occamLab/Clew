@@ -196,11 +196,14 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="B8M-ht-rXG" userLabel="Send">
-                                <rect key="frame" x="239" y="607" width="107" height="60"/>
+                                <rect key="frame" x="248" y="607" width="107" height="60"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GL3-t8-5RO">
                                         <rect key="frame" x="0.0" y="15" width="107" height="30"/>
                                         <state key="normal" title="Send Feedback"/>
+                                        <connections>
+                                            <action selector="sendFeedback:" destination="aGB-Bm-cub" eventType="touchUpInside" id="zUW-ne-Mt7"/>
+                                        </connections>
                                     </button>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -229,6 +232,7 @@
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ciF-Yc-W59" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="aGB-Bm-cub" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="2007.2" y="-242.42878560719643"/>
         </scene>

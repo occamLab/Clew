@@ -2037,7 +2037,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         suppressTrackingWarnings = true
         self.present(nav, animated: true, completion: nil)
     }
-    /// Called when the help button is pressed.  This function will display the help view (managed by FeedbackViewController) as a popover.
+    /// Called when the Feedback button is pressed.  This function will display the Feedback view (managed by FeedbackViewController) as a popover.
     @objc func FeedbackButtonPressed() {
         let storyBoard: UIStoryboard = UIStoryboard(name: "SettingsAndHelp", bundle: nil)
         let popoverContent = storyBoard.instantiateViewController(withIdentifier: "Feedback") as! FeedbackViewController
