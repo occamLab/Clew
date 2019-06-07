@@ -132,24 +132,16 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Please use the following form to provide feedback to the development team." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0ay-sa-9HG">
-                                <rect key="frame" x="20" y="69" width="335" height="41"/>
+                                <rect key="frame" x="20" y="30" width="335" height="41"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="spN-XF-mSD">
-                                <rect key="frame" x="0.0" y="20" width="375" height="44"/>
-                                <items>
-                                    <navigationItem title="Feedback" id="1ME-tj-pU0">
-                                        <barButtonItem key="leftBarButtonItem" title="Cancel" largeContentSizeImage="Cancel" id="e8b-fy-qU9"/>
-                                    </navigationItem>
-                                </items>
-                            </navigationBar>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NsM-4k-b35" userLabel="Form">
-                                <rect key="frame" x="10" y="120" width="355" height="487"/>
+                                <rect key="frame" x="10" y="81" width="355" height="526"/>
                                 <subviews>
                                     <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="Enter Feedback" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="oIQ-Ua-Mpo">
-                                        <rect key="frame" x="0.0" y="40" width="355" height="447"/>
+                                        <rect key="frame" x="0.0" y="40" width="355" height="486"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
@@ -164,13 +156,13 @@
                                                     <constraint firstAttribute="width" constant="20" id="70g-JR-H1b"/>
                                                 </constraints>
                                             </view>
-                                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Name" borderStyle="roundedRect" placeholder="Enter Your Name" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="rLz-VJ-aNK">
+                                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Name" borderStyle="roundedRect" placeholder="Name" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="rLz-VJ-aNK">
                                                 <rect key="frame" x="0.0" y="0.0" width="167.5" height="30"/>
                                                 <nil key="textColor"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <textInputTraits key="textInputTraits"/>
                                             </textField>
-                                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Country" borderStyle="roundedRect" placeholder="Enter your country" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="u2H-bu-ac3">
+                                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Country (optional)" borderStyle="roundedRect" placeholder="Country (optional)" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="u2H-bu-ac3">
                                                 <rect key="frame" x="187.5" y="0.0" width="167.5" height="30"/>
                                                 <nil key="textColor"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -223,16 +215,13 @@
                         <constraints>
                             <constraint firstItem="NsM-4k-b35" firstAttribute="top" secondItem="0ay-sa-9HG" secondAttribute="bottom" constant="10" id="11y-ut-Iet"/>
                             <constraint firstItem="B8M-ht-rXG" firstAttribute="top" secondItem="NsM-4k-b35" secondAttribute="bottom" id="69W-4j-bZp"/>
-                            <constraint firstItem="spN-XF-mSD" firstAttribute="centerX" secondItem="wFg-yk-usG" secondAttribute="centerX" id="Cq7-3K-sn3"/>
                             <constraint firstAttribute="bottom" secondItem="B8M-ht-rXG" secondAttribute="bottom" id="J0G-pd-6vZ"/>
                             <constraint firstItem="NsM-4k-b35" firstAttribute="leading" secondItem="Xa5-xY-BVv" secondAttribute="leading" constant="10" id="JVo-Lq-CZk"/>
                             <constraint firstItem="NsM-4k-b35" firstAttribute="centerX" secondItem="wFg-yk-usG" secondAttribute="centerX" id="LuI-ka-czv"/>
                             <constraint firstItem="0ay-sa-9HG" firstAttribute="leading" secondItem="Xa5-xY-BVv" secondAttribute="leading" constant="20" id="PYo-Q4-4CP"/>
-                            <constraint firstItem="0ay-sa-9HG" firstAttribute="top" secondItem="spN-XF-mSD" secondAttribute="bottom" constant="5" id="Z7A-By-mfY"/>
-                            <constraint firstItem="spN-XF-mSD" firstAttribute="leading" secondItem="wFg-yk-usG" secondAttribute="leading" id="c0Y-sR-ySr"/>
                             <constraint firstItem="0ay-sa-9HG" firstAttribute="centerX" secondItem="wFg-yk-usG" secondAttribute="centerX" id="cVl-Dx-tpB"/>
-                            <constraint firstItem="spN-XF-mSD" firstAttribute="top" secondItem="Xa5-xY-BVv" secondAttribute="top" id="ccL-AK-byO"/>
                             <constraint firstItem="B8M-ht-rXG" firstAttribute="trailing" secondItem="Xa5-xY-BVv" secondAttribute="trailing" constant="15" id="eoc-If-gKi"/>
+                            <constraint firstItem="0ay-sa-9HG" firstAttribute="top" secondItem="Xa5-xY-BVv" secondAttribute="top" constant="10" id="hN8-nv-B7A"/>
                             <constraint firstItem="Xa5-xY-BVv" firstAttribute="trailing" secondItem="NsM-4k-b35" secondAttribute="trailing" constant="10" id="kWW-5c-rD7"/>
                             <constraint firstItem="Xa5-xY-BVv" firstAttribute="bottom" secondItem="NsM-4k-b35" secondAttribute="bottom" constant="60" id="z7E-vQ-Pyj"/>
                         </constraints>
@@ -244,7 +233,4 @@
             <point key="canvasLocation" x="2007.2" y="-242.42878560719643"/>
         </scene>
     </scenes>
-    <resources>
-        <image name="Cancel" width="16" height="16"/>
-    </resources>
 </document>
