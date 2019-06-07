@@ -20,10 +20,12 @@ class FeedbackViewController : UIViewController {
     //MARK: Actions
     //This is a function which takes the feedback from the form an sends it to firebase then it closes the popup window
     @IBAction func sendFeedback(_ sender: UIButton) {
+        
+        let feedbackLogger : FeedbackLogger
         //TODO retrieve form data
         
         //TODO send data to firebase
-        
+        let sucessvalue = feedbackLogger.saveFeedback(name: <#T##String#>, message: <#T##String#>, country: <#T##String?#>)
         
         //closes the popup
         closeFeedback()
