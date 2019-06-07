@@ -341,7 +341,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-Clew/Pods-Clew-frameworks.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-Clew/Pods-Clew-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
 				"${BUILT_PRODUCTS_DIR}/GoogleUtilities/GoogleUtilities.framework",
 				"${BUILT_PRODUCTS_DIR}/InAppSettingsKit/InAppSettingsKit.framework",
@@ -364,7 +364,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Clew/Pods-Clew-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Clew/Pods-Clew-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		B7EB59D820F693EB00FBBC6A /* [CP] Check Pods Manifest.lock */ = {
@@ -391,7 +391,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-Clew Dev/Pods-Clew Dev-frameworks.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-Clew Dev/Pods-Clew Dev-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
 				"${BUILT_PRODUCTS_DIR}/GoogleUtilities/GoogleUtilities.framework",
 				"${BUILT_PRODUCTS_DIR}/InAppSettingsKit/InAppSettingsKit.framework",
@@ -414,7 +414,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Clew Dev/Pods-Clew Dev-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Clew Dev/Pods-Clew Dev-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		FC3FD998D963F5FE0C5C7B8E /* [CP] Check Pods Manifest.lock */ = {
