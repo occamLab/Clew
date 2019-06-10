@@ -126,7 +126,7 @@
         <!--Feedback View Controller-->
         <scene sceneID="wNG-jw-Pzv">
             <objects>
-                <viewController id="ERa-SA-HJx" userLabel="Feedback View Controller" sceneMemberID="viewController">
+                <viewController id="ERa-SA-HJx" userLabel="Feedback View Controller" customClass="FeedbackViewController" customModule="Clew" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="wFg-yk-usG">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -140,12 +140,6 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NsM-4k-b35" userLabel="Form">
                                 <rect key="frame" x="10" y="81" width="355" height="526"/>
                                 <subviews>
-                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="Enter Feedback" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="oIQ-Ua-Mpo">
-                                        <rect key="frame" x="0.0" y="40" width="355" height="486"/>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                                    </textView>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zYC-fI-6zb">
                                         <rect key="frame" x="0.0" y="0.0" width="355" height="30"/>
                                         <subviews>
@@ -183,6 +177,12 @@
                                             <constraint firstAttribute="trailing" secondItem="u2H-bu-ac3" secondAttribute="trailing" id="sqa-EC-fCH"/>
                                         </constraints>
                                     </view>
+                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" text="Enter Feedback" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="oIQ-Ua-Mpo">
+                                        <rect key="frame" x="0.0" y="32" width="355" height="486"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                    </textView>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
@@ -202,7 +202,7 @@
                                         <rect key="frame" x="0.0" y="15" width="107" height="30"/>
                                         <state key="normal" title="Send Feedback"/>
                                         <connections>
-                                            <action selector="sendFeedback:" destination="aGB-Bm-cub" eventType="touchUpInside" id="zUW-ne-Mt7"/>
+                                            <action selector="sendFeedback:" destination="ERa-SA-HJx" eventType="touchUpInside" id="M5Y-25-bs8"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -230,9 +230,13 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="Xa5-xY-BVv"/>
                     </view>
+                    <connections>
+                        <outlet property="countryTextField" destination="u2H-bu-ac3" id="ggL-cv-kGW"/>
+                        <outlet property="feedbackTextField" destination="oIQ-Ua-Mpo" id="25R-Ps-EjU"/>
+                        <outlet property="nameTextField" destination="rLz-VJ-aNK" id="TyH-p3-iJV"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ciF-Yc-W59" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <exit id="aGB-Bm-cub" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="2007.2" y="-242.42878560719643"/>
         </scene>

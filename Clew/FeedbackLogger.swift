@@ -17,7 +17,8 @@ class FeedbackLogger {
     
     //a function which saves the feedback and publishis it to the firebase website
     func writeFeedbackToFirebase(name : String, data : Data) -> Int {
-        
+        //creates an intiger which stores the return value of the function (0 for no errors and 1 for a failed build)
+        var returnValue = 0
         //creates a reference to the location we want to save the new file
         let fileRef = feedbackRef.child("\(name)")
         
@@ -27,11 +28,13 @@ class FeedbackLogger {
             guard metadata != nil else {
                 // prints an errorstatement to the console
                 print("could not upload feedback to firebase", error!.localizedDescription)
+                //sets the return value equal to 1 if an error ocurred
+                returnValue = 1
                 //quits the conditional
                 return
             }
         }
-        return 0
+        return returnValue
     }
     
     //takes in all the different pieces of data and combines them into a properly formatted string of type Data
