@@ -20,7 +20,7 @@ class FeedbackLogger {
         //creates an intiger which stores the return value of the function (0 for no errors and 1 for a failed build)
         var returnValue = 0
         //creates a reference to the location we want to save the new file
-        let fileRef = feedbackRef.child("\(name) \(Date().description(with: .current)) \(UUID().uuidString)")
+        let fileRef = feedbackRef.child("\(name) \(UUID().uuidString)")
         
         
         // Upload the file to the path defined by fileRef then checks for any errors
@@ -38,7 +38,15 @@ class FeedbackLogger {
     }
     
     //takes in all the different pieces of data and combines them into a properly formatted string of type Data
-    func makeData(name: String, message: String, country: String?) -> Data {
+    func makeData(name: String,message: String,country inputCountry: String?) -> Data {
+        var country: String? = "NONE"
+        
+        //performs input processing on the country Field
+        if inputCountry == "Country (optional)"{
+            country = "NONE"
+        }else{
+            country = inputCountry
+        }
         
         //combines all of the input strings into one data string of the proper formatting
         let data = "DATE: \(Date().description(with: .current)) \nNAME: \(name) \nCOUNTRY: \(country!) \nMESSAGE: \(message)"

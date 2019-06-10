@@ -1231,7 +1231,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     ///   - subview transitions?
     func drawUI() {
         // button that shows settings menu
-        settingsButton = UIButton(frame: CGRect(x: 0, y: yOriginOfSettingsAndHelpButton, width: buttonFrameWidth/2, height: settingsAndHelpFrameHeight))
+        settingsButton = UIButton(frame: CGRect(x: 0, y: yOriginOfSettingsAndHelpButton, width: buttonFrameWidth/3, height: settingsAndHelpFrameHeight))
         settingsButton.isAccessibilityElement = true
         settingsButton.setTitle("Settings", for: .normal)
         settingsButton.accessibilityLabel = "Settings"
@@ -1240,7 +1240,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         settingsButton.addTarget(self, action: #selector(settingsButtonPressed), for: .touchUpInside)
 
         // button that shows help menu
-        helpButton = UIButton(frame: CGRect(x: buttonFrameWidth/2, y: yOriginOfSettingsAndHelpButton, width: buttonFrameWidth/2, height: settingsAndHelpFrameHeight))
+        helpButton = UIButton(frame: CGRect(x: buttonFrameWidth/3, y: yOriginOfSettingsAndHelpButton, width: buttonFrameWidth/3, height: settingsAndHelpFrameHeight))
         helpButton.isAccessibilityElement = true
         helpButton.setTitle("Help", for: .normal)
         helpButton.titleLabel?.font = UIFont.systemFont(ofSize: 24.0)
@@ -1249,11 +1249,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         helpButton.addTarget(self, action: #selector(helpButtonPressed), for: .touchUpInside)
         
         // button that shows feedback menu
-        feedbackButton = UIButton(frame: CGRect(x: buttonFrameWidth/2, y: yOriginOfSettingsAndHelpButton, width: buttonFrameWidth/2, height: settingsAndHelpFrameHeight))
+        feedbackButton = UIButton(frame: CGRect(x: 2*buttonFrameWidth/3, y: yOriginOfSettingsAndHelpButton, width: buttonFrameWidth/3, height: settingsAndHelpFrameHeight))
         feedbackButton.isAccessibilityElement = true
-        feedbackButton.setTitle("Help", for: .normal)
+        feedbackButton.setTitle("Feedback", for: .normal)
         feedbackButton.titleLabel?.font = UIFont.systemFont(ofSize: 24.0)
-        feedbackButton.accessibilityLabel = "Help"
+        feedbackButton.accessibilityLabel = "Feedback"
         feedbackButton.backgroundColor = UIColor.black.withAlphaComponent(0.4)
         feedbackButton.addTarget(self, action: #selector(feedbackButtonPressed), for: .touchUpInside)
 
@@ -2062,7 +2062,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         popover?.delegate = self
         popover?.sourceView = self.view
         popover?.sourceRect = CGRect(x: 0, y: settingsAndHelpFrameHeight/2, width: 0,height: 0)
-        popoverContent.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: popoverContent, action: #selector(popoverContent.closeFeedback))
+        popoverContent.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: popoverContent, action: #selector(popoverContent.closeFeedback))
         suppressTrackingWarnings = true
         self.present(nav, animated: true, completion: nil)
     }
