@@ -19,6 +19,8 @@ class FeedbackViewController : UIViewController {
     @IBOutlet weak var nameTextField: UITextField!
     @IBOutlet weak var countryTextField: UITextField!
     @IBOutlet weak var feedbackTextField: UITextView!
+    @IBOutlet weak var phoneNumberTextField: UITextField!
+    @IBOutlet weak var emailTextField: UITextField!
     
     //MARK: Actions
     //This is a function which takes the feedback from the form and sends it to firebase. This function is called when the send feedback button is pressed
@@ -36,6 +38,21 @@ class FeedbackViewController : UIViewController {
             name = "NONE"
         }
         
+        //retrieves the name from the form
+        var number = phoneNumberTextField.text!
+        //performs input processing on the name to make sure that the user inputted a name
+        if number == "Phone Number (optional)" {
+            //if the user did not input a phone number it sets the value of the ohone number to a special value
+            number = "NONE"
+        }
+        
+        //retrieves the name from the form
+        var email = emailTextField.text!
+        if email == "Email (optional)" {
+            //if the user did not input an email it sets the value of the ohone number to a special value
+            email = "NONE"
+        }
+        
         var feedback = feedbackTextField.text!
         
         if feedback == "Enter Feedback"{
@@ -51,7 +68,7 @@ class FeedbackViewController : UIViewController {
         //if the feedback was entered properly
         if feedback != "NONE" && name != "NONE" && feedback != "Please enter feedback on Clew"{
             //retrieves the data from the feedback field and sends it to firebase using functions described in the feedback logger class. sucessvalue is a variable which stores a zero or one corresponding to the sucess of the upload (one means that there was a failure
-            let sucessvalue = feedbackLogger.saveFeedback(name: name, message: feedback, country: countryTextField.text!)
+            let sucessvalue = feedbackLogger.saveFeedback(name: name, message: feedback, country: countryTextField.text!, phone: number, email: email)
             
             //closes the popup
             closeFeedback()

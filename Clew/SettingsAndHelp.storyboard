@@ -179,18 +179,59 @@
                                         </constraints>
                                     </view>
                                     <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="Enter Feedback" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="oIQ-Ua-Mpo">
-                                        <rect key="frame" x="0.0" y="40" width="355" height="506.5"/>
+                                        <rect key="frame" x="0.0" y="80" width="355" height="466.5"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                     </textView>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iHU-f0-ekv">
+                                        <rect key="frame" x="0.0" y="40" width="355" height="30"/>
+                                        <subviews>
+                                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Email (optional)" borderStyle="roundedRect" textAlignment="natural" clearsOnBeginEditing="YES" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="gdh-cx-htS">
+                                                <rect key="frame" x="187.5" y="0.0" width="167.5" height="30"/>
+                                                <nil key="textColor"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                <textInputTraits key="textInputTraits" textContentType="email"/>
+                                            </textField>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5hk-Nq-rQ4">
+                                                <rect key="frame" x="167.5" y="0.0" width="20" height="30"/>
+                                                <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="20" id="VYl-AU-nMU"/>
+                                                </constraints>
+                                            </view>
+                                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Phone Number (optional)" borderStyle="roundedRect" textAlignment="natural" clearsOnBeginEditing="YES" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ona-NU-g6a">
+                                                <rect key="frame" x="0.0" y="0.0" width="167.5" height="30"/>
+                                                <nil key="textColor"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                <textInputTraits key="textInputTraits" textContentType="tel"/>
+                                            </textField>
+                                        </subviews>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstAttribute="bottom" secondItem="ona-NU-g6a" secondAttribute="bottom" id="2ag-7K-Hue"/>
+                                            <constraint firstItem="ona-NU-g6a" firstAttribute="leading" secondItem="iHU-f0-ekv" secondAttribute="leading" id="5HA-33-3k5"/>
+                                            <constraint firstItem="5hk-Nq-rQ4" firstAttribute="leading" secondItem="ona-NU-g6a" secondAttribute="trailing" id="5rc-im-rX7"/>
+                                            <constraint firstItem="gdh-cx-htS" firstAttribute="top" secondItem="iHU-f0-ekv" secondAttribute="top" id="8nv-OQ-acS"/>
+                                            <constraint firstItem="gdh-cx-htS" firstAttribute="leading" secondItem="5hk-Nq-rQ4" secondAttribute="trailing" id="E62-rx-aV5"/>
+                                            <constraint firstAttribute="bottom" secondItem="5hk-Nq-rQ4" secondAttribute="bottom" id="Gmk-Ts-tOi"/>
+                                            <constraint firstAttribute="trailing" secondItem="gdh-cx-htS" secondAttribute="trailing" id="HtR-3D-jEL"/>
+                                            <constraint firstItem="ona-NU-g6a" firstAttribute="top" secondItem="iHU-f0-ekv" secondAttribute="top" id="Pc6-3U-AXb"/>
+                                            <constraint firstItem="5hk-Nq-rQ4" firstAttribute="centerX" secondItem="iHU-f0-ekv" secondAttribute="centerX" id="eFG-ag-Cv5"/>
+                                            <constraint firstAttribute="bottom" secondItem="gdh-cx-htS" secondAttribute="bottom" id="ntL-BF-CZN"/>
+                                            <constraint firstItem="5hk-Nq-rQ4" firstAttribute="top" secondItem="iHU-f0-ekv" secondAttribute="top" id="p3B-w5-caG"/>
+                                        </constraints>
+                                    </view>
                                 </subviews>
                                 <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                 <constraints>
-                                    <constraint firstItem="oIQ-Ua-Mpo" firstAttribute="top" secondItem="zYC-fI-6zb" secondAttribute="bottom" constant="10" id="Jrz-p8-VYY"/>
+                                    <constraint firstAttribute="trailing" secondItem="iHU-f0-ekv" secondAttribute="trailing" id="C8b-8P-6wY"/>
+                                    <constraint firstItem="oIQ-Ua-Mpo" firstAttribute="top" secondItem="iHU-f0-ekv" secondAttribute="bottom" constant="10" id="MIU-op-pdX"/>
                                     <constraint firstItem="oIQ-Ua-Mpo" firstAttribute="leading" secondItem="NsM-4k-b35" secondAttribute="leading" id="c1l-l5-98I"/>
                                     <constraint firstAttribute="trailing" secondItem="zYC-fI-6zb" secondAttribute="trailing" id="e6X-fE-y6b"/>
                                     <constraint firstItem="zYC-fI-6zb" firstAttribute="leading" secondItem="NsM-4k-b35" secondAttribute="leading" id="gcL-1o-jjq"/>
+                                    <constraint firstItem="iHU-f0-ekv" firstAttribute="leading" secondItem="NsM-4k-b35" secondAttribute="leading" id="lvS-6w-cfQ"/>
+                                    <constraint firstItem="iHU-f0-ekv" firstAttribute="top" secondItem="zYC-fI-6zb" secondAttribute="bottom" constant="10" id="mQu-EX-YCT"/>
                                     <constraint firstAttribute="bottom" secondItem="oIQ-Ua-Mpo" secondAttribute="bottom" id="nii-il-9SD"/>
                                     <constraint firstItem="zYC-fI-6zb" firstAttribute="top" secondItem="NsM-4k-b35" secondAttribute="top" id="vNX-c4-73r"/>
                                     <constraint firstAttribute="trailing" secondItem="oIQ-Ua-Mpo" secondAttribute="trailing" id="xtd-QR-o1J"/>
@@ -237,8 +278,10 @@
                     </view>
                     <connections>
                         <outlet property="countryTextField" destination="u2H-bu-ac3" id="ggL-cv-kGW"/>
+                        <outlet property="emailTextField" destination="gdh-cx-htS" id="ZJX-s2-vRD"/>
                         <outlet property="feedbackTextField" destination="oIQ-Ua-Mpo" id="25R-Ps-EjU"/>
                         <outlet property="nameTextField" destination="rLz-VJ-aNK" id="TyH-p3-iJV"/>
+                        <outlet property="phoneNumberTextField" destination="ona-NU-g6a" id="Tw9-aP-UnI"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ciF-Yc-W59" userLabel="First Responder" sceneMemberID="firstResponder"/>

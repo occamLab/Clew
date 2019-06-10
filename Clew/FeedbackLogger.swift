@@ -38,7 +38,7 @@ class FeedbackLogger {
     }
     
     //takes in all the different pieces of data and combines them into a properly formatted string of type Data
-    func makeData(name: String,message: String,country inputCountry: String?) -> Data {
+    func makeData(name: String, message: String, country inputCountry: String?, phone: String, email: String) -> Data {
         var country: String? = "NONE"
         
         //performs input processing on the country Field
@@ -49,7 +49,7 @@ class FeedbackLogger {
         }
         
         //combines all of the input strings into one data string of the proper formatting
-        let data = "DATE: \(Date().description(with: .current)) \nNAME: \(name) \nCOUNTRY: \(country!) \nMESSAGE: \(message)"
+        let data = "DATE: \(Date().description(with: .current)) \nPHONE NUMBER: \(phone) \nEMAIL: \(email) \nNAME: \(name) \nCOUNTRY: \(country!) \nMESSAGE: \(message)"
         
         //converts the data into a NSData type so it can be pushed to firebase
         let feedbackNSString = data as NSString
@@ -59,8 +59,8 @@ class FeedbackLogger {
         return feedbackData
     }
     //combines the information together and saves a file to Firebase containing the user's feedback
-    func saveFeedback(name: String, message: String, country: String?) -> Int{
+    func saveFeedback(name: String, message: String, country: String?, phone: String, email: String) -> Int{
         //calls the functions to create the properly formatted data and upload the result to firebase
-        return writeFeedbackToFirebase(name: name, data: makeData(name: name, message: message, country: country))
+        return writeFeedbackToFirebase(name: name, data: makeData(name: name, message: message, country: country, phone: phone, email: email))
     }
 }
