@@ -126,7 +126,7 @@
         <!--Feedback View Controller-->
         <scene sceneID="wNG-jw-Pzv">
             <objects>
-                <viewController id="ERa-SA-HJx" userLabel="Feedback View Controller" customClass="FeedbackViewController" customModule="Clew" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="Feedback" title="Feedback" id="ERa-SA-HJx" userLabel="Feedback View Controller" customClass="FeedbackViewController" customModule="Clew" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="wFg-yk-usG">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -177,8 +177,8 @@
                                             <constraint firstAttribute="trailing" secondItem="u2H-bu-ac3" secondAttribute="trailing" id="sqa-EC-fCH"/>
                                         </constraints>
                                     </view>
-                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" text="Enter Feedback" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="oIQ-Ua-Mpo">
-                                        <rect key="frame" x="0.0" y="32" width="355" height="486"/>
+                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="Enter Feedback" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="oIQ-Ua-Mpo">
+                                        <rect key="frame" x="0.0" y="40" width="355" height="486"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
@@ -195,8 +195,8 @@
                                     <constraint firstAttribute="trailing" secondItem="oIQ-Ua-Mpo" secondAttribute="trailing" id="xtd-QR-o1J"/>
                                 </constraints>
                             </view>
-                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="B8M-ht-rXG" userLabel="Send">
-                                <rect key="frame" x="248" y="607" width="107" height="60"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="B8M-ht-rXG" userLabel="Send">
+                                <rect key="frame" x="258" y="607" width="107" height="60"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GL3-t8-5RO">
                                         <rect key="frame" x="0.0" y="15" width="107" height="30"/>
@@ -208,9 +208,9 @@
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="GL3-t8-5RO" secondAttribute="trailing" id="Lih-OX-ntg"/>
                                     <constraint firstItem="GL3-t8-5RO" firstAttribute="centerY" secondItem="B8M-ht-rXG" secondAttribute="centerY" id="Quf-aC-eos"/>
-                                    <constraint firstAttribute="trailing" secondItem="GL3-t8-5RO" secondAttribute="trailing" id="cNb-Kf-Dqb"/>
-                                    <constraint firstItem="GL3-t8-5RO" firstAttribute="leading" secondItem="B8M-ht-rXG" secondAttribute="leading" id="ecP-mc-Tt0"/>
+                                    <constraint firstItem="GL3-t8-5RO" firstAttribute="leading" secondItem="B8M-ht-rXG" secondAttribute="leading" id="x6q-hq-fHD"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -223,9 +223,9 @@
                             <constraint firstItem="NsM-4k-b35" firstAttribute="centerX" secondItem="wFg-yk-usG" secondAttribute="centerX" id="LuI-ka-czv"/>
                             <constraint firstItem="0ay-sa-9HG" firstAttribute="leading" secondItem="Xa5-xY-BVv" secondAttribute="leading" constant="20" id="PYo-Q4-4CP"/>
                             <constraint firstItem="0ay-sa-9HG" firstAttribute="centerX" secondItem="wFg-yk-usG" secondAttribute="centerX" id="cVl-Dx-tpB"/>
-                            <constraint firstItem="B8M-ht-rXG" firstAttribute="trailing" secondItem="Xa5-xY-BVv" secondAttribute="trailing" constant="15" id="eoc-If-gKi"/>
                             <constraint firstItem="0ay-sa-9HG" firstAttribute="top" secondItem="Xa5-xY-BVv" secondAttribute="top" constant="10" id="hN8-nv-B7A"/>
                             <constraint firstItem="Xa5-xY-BVv" firstAttribute="trailing" secondItem="NsM-4k-b35" secondAttribute="trailing" constant="10" id="kWW-5c-rD7"/>
+                            <constraint firstItem="Xa5-xY-BVv" firstAttribute="trailing" secondItem="B8M-ht-rXG" secondAttribute="trailing" constant="10" id="yP8-vV-67f"/>
                             <constraint firstItem="Xa5-xY-BVv" firstAttribute="bottom" secondItem="NsM-4k-b35" secondAttribute="bottom" constant="60" id="z7E-vQ-Pyj"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="Xa5-xY-BVv"/>

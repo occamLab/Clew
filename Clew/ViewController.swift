@@ -807,6 +807,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// button for bringing up the help menu
     var helpButton: UIButton!
     
+    /// button for bringing up the feedback menu
+    var feedbackButton: UIButton!
+    
     /// the view on which the user can pause tracking
     var pauseTrackingView: UIView!
     
@@ -1244,6 +1247,15 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         helpButton.accessibilityLabel = "Help"
         helpButton.backgroundColor = UIColor.black.withAlphaComponent(0.4)
         helpButton.addTarget(self, action: #selector(helpButtonPressed), for: .touchUpInside)
+        
+        // button that shows feedback menu
+        feedbackButton = UIButton(frame: CGRect(x: buttonFrameWidth/2, y: yOriginOfSettingsAndHelpButton, width: buttonFrameWidth/2, height: settingsAndHelpFrameHeight))
+        feedbackButton.isAccessibilityElement = true
+        feedbackButton.setTitle("Help", for: .normal)
+        feedbackButton.titleLabel?.font = UIFont.systemFont(ofSize: 24.0)
+        feedbackButton.accessibilityLabel = "Help"
+        feedbackButton.backgroundColor = UIColor.black.withAlphaComponent(0.4)
+        feedbackButton.addTarget(self, action: #selector(feedbackButtonPressed), for: .touchUpInside)
 
         // button that gives direction to the nearist keypoint
         getDirectionButton = UIButton(frame: CGRect(x: 0, y: 0, width: buttonFrameWidth, height: yOriginOfButtonFrame))
@@ -1315,6 +1327,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         self.view.addSubview(getDirectionButton)
         self.view.addSubview(settingsButton)
         self.view.addSubview(helpButton)
+        self.view.addSubview(feedbackButton)
         self.view.addSubview(routeRatingView)
         self.view.addSubview(countdownTimer)
         
@@ -1327,6 +1340,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         // the options button is hidden if the route rating shows up
         settingsButton.isHidden = false
         helpButton.isHidden = false
+        feedbackButton.isHidden = false
         stopNavigationView.isHidden = true
         getDirectionButton.isHidden = true
         routeRatingView.isHidden = true
@@ -2037,8 +2051,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         suppressTrackingWarnings = true
         self.present(nav, animated: true, completion: nil)
     }
+    
     /// Called when the Feedback button is pressed.  This function will display the Feedback view (managed by FeedbackViewController) as a popover.
-    @objc func FeedbackButtonPressed() {
+    @objc func feedbackButtonPressed() {
         let storyBoard: UIStoryboard = UIStoryboard(name: "SettingsAndHelp", bundle: nil)
         let popoverContent = storyBoard.instantiateViewController(withIdentifier: "Feedback") as! FeedbackViewController
         let nav = UINavigationController(rootViewController: popoverContent)
@@ -2051,6 +2066,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         suppressTrackingWarnings = true
         self.present(nav, animated: true, completion: nil)
     }
+    
     /// Announce directions at any given point to the next keypoint
     @objc func announceDirectionHelp() {
         if case .navigatingRoute = state, let curLocation = getRealCoordinates(record: false) {

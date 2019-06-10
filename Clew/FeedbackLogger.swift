@@ -20,7 +20,7 @@ class FeedbackLogger {
         //creates an intiger which stores the return value of the function (0 for no errors and 1 for a failed build)
         var returnValue = 0
         //creates a reference to the location we want to save the new file
-        let fileRef = feedbackRef.child("\(name)")
+        let fileRef = feedbackRef.child("\(name) \(Date().description(with: .current)) \(UUID().uuidString)")
         
         
         // Upload the file to the path defined by fileRef then checks for any errors
