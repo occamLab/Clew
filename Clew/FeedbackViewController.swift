@@ -8,13 +8,8 @@
 
 import Foundation
 
-class FeedbackViewController : UIViewController {
+class FeedbackViewController : UIViewController, UITextViewDelegate {
     
-    override func viewDidLoad(){
-        
-        title = "Clew Feedback"
-        
-    }
     //MARK: Outlets
     @IBOutlet weak var nameTextField: UITextField!
     @IBOutlet weak var countryTextField: UITextField!
@@ -22,7 +17,23 @@ class FeedbackViewController : UIViewController {
     @IBOutlet weak var phoneNumberTextField: UITextField!
     @IBOutlet weak var emailTextField: UITextField!
     
+    //called when the popover is loaded
+    override func viewDidLoad(){
+        super.viewDidLoad()
+        //feedbackTextField.delegate = self
+        //sets the title of the popover
+        title = "Clew Feedback"
+        
+    }
+    
     //MARK: Actions
+    
+    //called whenever you start editing the feedback text field
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        //clears the text in the text field
+        feedbackTextField.text = ""
+    }
+    
     //This is a function which takes the feedback from the form and sends it to firebase. This function is called when the send feedback button is pressed
     @IBAction func sendFeedback(_ sender: UIButton) {
         
@@ -31,6 +42,7 @@ class FeedbackViewController : UIViewController {
         
         //retrieves the name from the form
         var name = nameTextField.text!
+        
         //performs input processing on the name to make sure that the user inputted a name
         if name == "Name" || name == "Please enter a name"{
             //if the user did not input a name it prompts them to do so and sets the value of the name to a special value so the feedback request is not sent
@@ -53,6 +65,7 @@ class FeedbackViewController : UIViewController {
             email = "NONE"
         }
         
+        //retrieves the feedback message from the form
         var feedback = feedbackTextField.text!
         
         if feedback == "Enter Feedback"{

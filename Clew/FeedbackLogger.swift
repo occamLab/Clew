@@ -6,6 +6,7 @@
 //  Copyright © 2019 OccamLab. All rights reserved.
 //
 
+//imports lobraries
 import Foundation
 import Firebase
 
@@ -15,8 +16,10 @@ class FeedbackLogger {
     //creates a reference to the feedback folder within firebase
     let feedbackRef = Storage.storage().reference().child("feedback")
     
+    //MARK: functions
     //a function which saves the feedback and publishis it to the firebase website
     func writeFeedbackToFirebase(name : String, data : Data) -> Int {
+        
         //creates an intiger which stores the return value of the function (0 for no errors and 1 for a failed build)
         var returnValue = 0
         
@@ -43,13 +46,13 @@ class FeedbackLogger {
     //takes in all the different pieces of data and combines them into a properly formatted string of type Data
     func makeData(name: String, message: String, country inputCountry: String?, phone: String, email: String) -> Data? {
         
-        var country: String? = "NONE"
+        var country: String = "NONE"
         
         //performs input processing on the country Field
         if inputCountry == "Country (optional)"{
             country = "NONE"
         }else{
-            country = inputCountry
+            country = inputCountry!
         }
         
         //places the data into a dictionary to be formatted into JSON later
