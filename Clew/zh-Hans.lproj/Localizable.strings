@@ -1,0 +1,63 @@
+/* 
+  Localizable.strings
+  Clew
+
+  Created by Terri Liu on 2019/6/10.
+  Copyright © 2019 OccamLab. All rights reserved.
+*/
+
+// Strings from ViewController
+
+    // Voicing directions
+"Tracking session initialized." = "开始录行程";
+"Tracking performance normal." = "记录行程性能正常";
+"Hold vertically with the rear camera facing forward." = "将手机垂直与地面，让后置摄像头朝前";
+"You've arrived." = "您已经到达目标";
+
+    // Name of labels that appear in UI
+"Record path" = "开始记录路程";
+"Bad" = "不满意";
+"Good" = "满意";
+"Resume" = "继续行程";
+"Saved Routes List" = "已保存路线";
+"Stop navigation" = "停止导航";
+"Start navigation" = "开始导航";
+"Stop recording" = "停止记录路程";
+
+    // Pop-ups
+"Save route" = "保存行程";
+"Enter the name of the route" = "输入路线的名称";
+
+    // Rating service view
+"You've arrived. Please rate your service." = "您已到达目标。请为这次的服务做评价。";
+"Please rate your service." = "请为这次的服务做评价。";
+
+    // Other
+"Successfully matched current environment to saved route." = "成功将当前环境与所选路线里的环境相匹配。";
+"Could not match environment to the saved route. Starting new tracking session." = "无法将环境与所选路线里的环境匹配。 开始新的行程录像。";
+"Excessive motion.\nTracking performance is degraded." = "动作幅度过大\n跟踪性能减弱。";
+"Insufficient visual features.\nTracking performance is degraded." = "捕捉的环境特征不足。\n跟踪性能减弱。";
+
+// Strings from Navigation
+
+    // Version of directions given when haptic feedback function is turned on (Simpler)
+"Continue straight" = "继续向前行走";
+"Slight right" = "稍微向右偏";
+"Turn right" = "向右转";
+"Turn around" = "转身";
+"Turn left" = "向左转";
+"Slight left" = "稍微向左偏";
+
+    // Version of directions given when haptic feedback function is turned off (Clock directions)
+"Continue straight" = "继续向前行走";
+"Slight right towards 1 o'clock" = "身体往右转到一点钟方向";
+"Slight right towards 2 o'clock" = "身体往右转到两点钟方向";
+"Turn right" = "向右转";
+"Turn towards 4 o'clock" = "身体转向四点钟方向";
+"Turn around towards 5 o'clock" = "身体转向五点钟方向";
+"Turn around towards 6 o'clock" = "身体转向六点钟方向";
+"Turn around towards 7 o'clock" = "身体转向七点钟方向";
+"Turn towards 8 o'clock" = "身体转向八点钟方向";
+"Turn left" = "向左转";
+"Slight left towards 10 o'clock" = "身体往左转到十点钟方向";
+"Slight left towards 11 o'clock" = "身体往左转到十一点钟方向";

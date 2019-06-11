@@ -668,16 +668,16 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     var headingRingBuffer = RingBuffer<Float>(capacity: 50)
 
     /// Image, label, and target for start recording button.
-    let recordPathButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "StartRecording")!), label: "Record path", targetSelector: Selector.recordPathButtonTapped, alignment: .center, tag: 0)
+    let recordPathButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "StartRecording")!), label: NSLocalizedString("Record path", comment: "Video record path to a destination"), targetSelector: Selector.recordPathButtonTapped, alignment: .center, tag: 0)
 
     /// The button that the allows the user to indicate a negative navigation experience
-    let thumbsDownButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "thumbs_down")!), label: "Bad", targetSelector: Selector.thumbsDownButtonTapped, alignment: .leftcenter, tag: 0)
+    let thumbsDownButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "thumbs_down")!), label: NSLocalizedString("Bad", comment: "Unsatisfactory service"), targetSelector: Selector.thumbsDownButtonTapped, alignment: .leftcenter, tag: 0)
     
     /// The button that the allows the user to indicate a positive navigation experience
-    let thumbsUpButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "thumbs_up")!), label: "Good", targetSelector: Selector.thumbsUpButtonTapped, alignment: .rightcenter, tag: 0)
+    let thumbsUpButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "thumbs_up")!), label: NSLocalizedString("Good", comment: "Satisfactory service"), targetSelector: Selector.thumbsUpButtonTapped, alignment: .rightcenter, tag: 0)
     
     /// The button that the allows the user to resume a paused route
-    let resumeButton = ActionButtonComponents(appearance: .textButton(label: "Resume"), label: "Resume", targetSelector: Selector.resumeButtonTapped, alignment: .center, tag: 0)
+    let resumeButton = ActionButtonComponents(appearance: .textButton(label: "Resume"), label: NSLocalizedString("Resume", comment: "Resume paused route"), targetSelector: Selector.resumeButtonTapped, alignment: .center, tag: 0)
     
     /// The button that allows the user to enter textual description of a route landmark
     let enterLandmarkDescriptionButton = ActionButtonComponents(appearance: .textButton(label: "Describe"), label: "Enter text to help you remember this landmark", targetSelector: Selector.enterLandmarkDescriptionButtonTapped, alignment: .left, tag: 0)
@@ -695,19 +695,19 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     let addLandmarkButton = ActionButtonComponents(appearance: .textButton(label: "Landmark"), label: "Create landmark", targetSelector: Selector.landmarkButtonTapped, alignment: .right, tag: 0)
     
     /// Image, label, and target for stop recording button.
-    let stopRecordingButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "StopRecording")!), label: "Stop recording", targetSelector: Selector.stopRecordingButtonTapped, alignment: .center, tag: 0)
+    let stopRecordingButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "StopRecording")!), label: NSLocalizedString("Stop recording", comment: "The name of the button that allows user to stop recording."), targetSelector: Selector.stopRecordingButtonTapped, alignment: .center, tag: 0)
     
     /// Image, label, and target for start navigation button.
-    let startNavigationButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "StartNavigation")!), label: "Start navigation", targetSelector: Selector.startNavigationButtonTapped, alignment: .center, tag: 0)
+    let startNavigationButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "StartNavigation")!), label: NSLocalizedString("Start navigation", comment: "The name of the button that allows user to start navigating."), targetSelector: Selector.startNavigationButtonTapped, alignment: .center, tag: 0)
 
     /// Title, label, and target for the pause button
     let pauseButton = ActionButtonComponents(appearance: .textButton(label: "Pause"), label: "Pause session", targetSelector: Selector.pauseButtonTapped, alignment: .right, tag: UIView.pauseButtonTag)
     
     /// Image, label, and target for stop navigation button.
-    let stopNavigationButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "StopNavigation")!), label: "Stop navigation", targetSelector: Selector.stopNavigationButtonTapped, alignment: .center, tag: 0)
+    let stopNavigationButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "StopNavigation")!), label: NSLocalizedString("Stop navigation", comment: "The name of the button that allows user to stop navigating."), targetSelector: Selector.stopNavigationButtonTapped, alignment: .center, tag: 0)
     
     /// Image, label, and target for routes button.
-    let routesButton = ActionButtonComponents(appearance: .textButton(label: "Routes"), label: "Saved routes list", targetSelector: Selector.routesButtonTapped, alignment: .left, tag: 0)
+    let routesButton = ActionButtonComponents(appearance: .textButton(label: "Routes"), label: NSLocalizedString("Saved Routes List", comment: "The title to a list of routes that have been saved by the user"), targetSelector: Selector.routesButtonTapped, alignment: .left, tag: 0)
 
     /// The conection to the Firebase real-time database
     var databaseHandle = Database.database()
@@ -1001,7 +1001,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         if #available(iOS 12.0, *) {
             justUsedMap = mapAsAny as! ARWorldMap?
         }
-        let alertController = UIAlertController(title: "Save route", message: "Enter the name of the route", preferredStyle: .alert)
+        let alertController = UIAlertController(title: NSLocalizedString("Save route", comment: "The title of a popup window where user enters a name for the route they want to save."), message: NSLocalizedString("Enter the name of the route", comment: "Ask user to provide a descriptive name for the route they want to save."), preferredStyle: .alert)
         // The confirm action taking the inputs
         let saveAction = UIAlertAction(title: "Save", style: .default) { (_) in
             let id = String(Int64(NSDate().timeIntervalSince1970 * 1000)) as NSString
@@ -1439,9 +1439,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         routeRatingView.isHidden = false
 
         if announceArrival {
-            routeRatingView.mainText?.text = "You've arrived. Please rate your service."
+            routeRatingView.mainText?.text = NSLocalizedString("You've arrived. Please rate your service.", comment: "You have arrived at your destination. Please rate your experience.")
         } else {
-            routeRatingView.mainText?.text = "Please rate your service."
+            routeRatingView.mainText?.text = NSLocalizedString("Please rate your service.", comment: "Please rate your experience.")
         }
         
         feedbackGenerator = nil
@@ -1632,7 +1632,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     func restartSessionIfFailedToRelocalize() {
         if attemptingRelocalization {
             if !suppressTrackingWarnings {
-                announce(announcement: "Could not match visually to the saved route. Starting new tracking session.")
+                announce(announcement: NSLocalizedString("Could not match environment to the saved route. Starting new tracking session.", comment: "Current environment does not match up with the environment in previously saved route. About to start a new tracking session."))
             }
             if #available(iOS 12.0, *) {
                 configuration.initialWorldMap = nil
@@ -2221,7 +2221,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 logString = "ExcessiveMotion"
                 print("Excessive motion")
                 if !suppressTrackingWarnings {
-                    announce(announcement: "Excessive motion.\nTracking performance is degraded.")
+                    announce(announcement: NSLocalizedString("Excessive motion.\nTracking performance is degraded.", comment: "Let user know that there is too much movement of their phone and thus the app's ability to track a route has been lowered."))
                     if soundFeedback {
                         playSystemSound(id: 1050)
                     }
@@ -2230,7 +2230,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 logString = "InsufficientFeatures"
                 print("InsufficientFeatures")
                 if !suppressTrackingWarnings {
-                    announce(announcement: "Insufficient visual features.\nTracking performance is degraded.")
+                    announce(announcement: NSLocalizedString("Insufficient visual features.\nTracking performance is degraded.", comment: "Let user know that their current surroundings do not have enough visual markers and thus the app's ability to track a route has been lowered."))
                     if soundFeedback {
                         playSystemSound(id: 1050)
                     }
@@ -2248,15 +2248,15 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             logString = "Normal"
             if #available(iOS 12.0, *), configuration.initialWorldMap != nil, attemptingRelocalization {
                 if !suppressTrackingWarnings {
-                    announce(announcement: "Successfully matched current environment to saved route.")
+                    announce(announcement: NSLocalizedString("Successfully matched current environment to saved route.", comment: "Let user know that their surroundings match up to the surroundings of a saved route and that they can begin navigating."))
                 }
                 attemptingRelocalization = false
             } else if case let .limited(reason)? = trackingSessionState {
                 if !suppressTrackingWarnings {
                     if reason == .initializing {
-                        announce(announcement: NSLocalizedString("Tracking session initialized.", comment: "Tracking session has started."))
+                        announce(announcement: NSLocalizedString("Tracking session initialized.", comment: "Let user know that the tracking session has started."))
                     } else {
-                        announce(announcement: "Tracking performance normal.")
+                        announce(announcement: NSLocalizedString("Tracking performance normal.", comment: "Let user know that the ability to track and record a route is normal."))
                         if soundFeedback {
                             playSystemSound(id: 1025)
                         }

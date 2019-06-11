@@ -7,14 +7,57 @@
 */
 
 // Strings from ViewController
+
+    // Voicing directions
 "Tracking session initialized." = "Sesión de seguimiento inicializada.";
+"Tracking performance normal." = "Rendimiento de seguimiento normal.";
 "Hold vertically with the rear camera facing forward." = "Sostenga verticalmente con la cámara trasera mirando hacia adelante.";
 "You've arrived." = "Has llegado.";
 
+    // Name of labels that appear in UI
+"Record path" = "Iniciar grabación";
+"Bad" = "Malo";
+"Good" = "Bueno";
+"Resume" = "Reanunda";
+"Saved Routes List" = "Rutas guardadas";
+"Stop navigation" = "Detener la navegación";
+"Start navigation" = "Iniciar la navegación";
+"Stop recording" = "Detener la grabación";
+
+    // Pop-ups
+"Save route" = "Guarda la ruta";
+"Enter the name of the route" = "Introduce el nombre de la ruta";
+
+    // Rating service view
+"You've arrived. Please rate your service." = "Has llegado. Por favor califique su servicio.";
+"Please rate your service." = "Por favor califique su servicio.";
+
+    // Other
+"Successfully matched current environment to saved route." = "Entorno actual coincidente exitosamente con la ruta guardada";
+"Could not match environment to the saved route. Starting new tracking session." = "No se pudo hacer coincidir el entorno con la ruta guardada. Comenzando nueva sesión de seguimiento.";
+"Excessive motion.\nTracking performance is degraded." = "Movimiento excesivo. El rendimiento del seguimiento está degradado.";
+"Insufficient visual features.\nTracking performance is degraded." = "Características visuales insuficientes.\nEl rendimiento del seguimiento está degradado.";
+
 // Strings from Navigation
+
+    // Version of directions given when haptic feedback function is turned on (Simpler)
 "Continue straight" = "Continue derecho";
 "Slight right" = "Un poco a la derecha";
 "Turn right" = "Girar a la derecha";
 "Turn around" = "Giro de vuelta";
 "Turn left" = "Girar a la izquierda";
-"Slight Left" = "Un poco a la izquierda";
+"Slight left" = "Un poco a la izquierda";
+
+    // Version of directions given when haptic feedback function is turned off (Clock directions)
+"Continue straight" = "Continue derecho";
+"Slight right towards 1 o'clock" = "Leve a la derecha hacia 1 en punto";
+"Slight right towards 2 o'clock" = "Leve derecha hacia las 2 en punto";
+"Turn right" = "Gire a la derecha";
+"Turn towards 4 o'clock" = "Gire hacia las 4 en punto";
+"Turn around towards 5 o'clock" = "Da la vuelta hacia las 5 en punto";
+"Turn around towards 6 o'clock" = "Da la vuelta hacia las 6 en punto";
+"Turn around towards 7 o'clock" = "Da la vuelta hacia las 7 en punto";
+"Turn towards 8 o'clock" = "Gire hacia las 8 en punto";
+"Turn left" = "Gire a la izquierda";
+"Slight left towards 10 o'clock" = "Gire a la izquierda hacia las 10 en punto";
+"Slight left towards 11 o'clock" = "Gire a la izquierda hacia las 11 en punto";

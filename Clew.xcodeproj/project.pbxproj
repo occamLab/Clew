@@ -81,6 +81,8 @@
 		775DDC9022AEF63A00954938 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		77AAC79E22AFDE91001D30E6 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		77AAC7A022AFDE94001D30E6 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
+		77AAC7A122AFE700001D30E6 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
+		77AAC7A222AFE700001D30E6 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		82028C73227CDB3100772701 /* PathLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PathLogger.swift; sourceTree = "<group>"; };
 		82028C7622807BF400772701 /* GoogleService-Info_dev.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info_dev.plist"; sourceTree = "<group>"; };
 		82028C7822807C1F00772701 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
@@ -166,7 +168,6 @@
 				82473B05221763E200E98CFC /* SettingsViewController.h */,
 				82473B082217641D00E98CFC /* SettingsViewController.m */,
 				4D6B00D51F33C1FE00952242 /* Navigation.swift */,
-				77AAC79F22AFDE91001D30E6 /* Localizable.strings */,
 				4D6B00D71F33C21A00952242 /* PathFinder.swift */,
 				4D6B00DB1F33C26D00952242 /* Utility.swift */,
 				4D6B00CC1F33C1C400952242 /* LaunchScreen.storyboard */,
@@ -177,6 +178,7 @@
 				4D6B00DD1F33C33600952242 /* Settings.bundle */,
 				82473B062217641D00E98CFC /* Clew-Bridging-Header.h */,
 				82473B072217641D00E98CFC /* Clew Dev-Bridging-Header.h */,
+				77AAC79F22AFDE91001D30E6 /* Localizable.strings */,
 			);
 			path = Clew;
 			sourceTree = "<group>";
@@ -289,6 +291,7 @@
 				en,
 				Base,
 				es,
+				"zh-Hans",
 			);
 			mainGroup = 4D6B00B71F33C1C400952242;
 			productRefGroup = 4D6B00C11F33C1C400952242 /* Products */;
@@ -496,6 +499,7 @@
 			children = (
 				4D6B00CD1F33C1C400952242 /* Base */,
 				775DDC9022AEF63A00954938 /* es */,
+				77AAC7A122AFE700001D30E6 /* zh-Hans */,
 			);
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
@@ -505,6 +509,7 @@
 			children = (
 				77AAC79E22AFDE91001D30E6 /* en */,
 				77AAC7A022AFDE94001D30E6 /* es */,
+				77AAC7A222AFE700001D30E6 /* zh-Hans */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -517,6 +522,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				"CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED[arch=*]" = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -577,6 +583,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				"CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED[arch=*]" = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";

@@ -69,12 +69,21 @@ class RoutesViewController : UIViewController, UITableViewDataSource, UITableVie
     ///   - indexPath: the index path of the route whose data should be loaded
     /// - Returns: a cell that contains the route
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+//        let df = DateFormatter()
+//        df.dateFormat = "yyyy-MM-dd HH:mm:ss"
+//        let cell = tableView.dequeueReusableCell(withIdentifier: "clew.RouteTableViewCell", for: indexPath) as! RouteTableViewCell
+//        cell.nameLabel.text = routes[indexPath.row].name as String
+//        cell.dateCreatedLabel.text = df.string(from: routes[indexPath.row].dateCreated as Date)
+//        return cell
+        
         let df = DateFormatter()
-        df.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        df.setLocalizedDateFormatFromTemplate("yyyy-MM-dd HH:mm:ss")
         let cell = tableView.dequeueReusableCell(withIdentifier: "clew.RouteTableViewCell", for: indexPath) as! RouteTableViewCell
         cell.nameLabel.text = routes[indexPath.row].name as String
         cell.dateCreatedLabel.text = df.string(from: routes[indexPath.row].dateCreated as Date)
         return cell
+
+        
     }
     
     /// Called when user performs and edit action on the row.  Currently, only delete is supported.
