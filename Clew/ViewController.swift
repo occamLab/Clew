@@ -1331,7 +1331,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         getDirectionButton.isHidden = true
         routeRatingView.isHidden = true
         if announceArrival {
-            delayTransition(announcement: "You've arrived.")
+            delayTransition(announcement: NSLocalizedString("You've arrived.", comment: "You have arrived at your destination."))
         } else {
             delayTransition()
         }
@@ -1359,7 +1359,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         recordPathView.isHidden = true
         recordPathView.isAccessibilityElement = false
         stopRecordingView.isHidden = false
-        delayTransition(announcement: "Hold vertically with the rear camera facing forward.")
+        delayTransition(announcement: NSLocalizedString("Hold vertically with the rear camera facing forward.", comment: "Hold the phone vertically with the rear camera facing forward."))
     }
     
     /// Display start navigation view/hide all other views
@@ -2254,7 +2254,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             } else if case let .limited(reason)? = trackingSessionState {
                 if !suppressTrackingWarnings {
                     if reason == .initializing {
-                        announce(announcement: "Tracking session initialized.")
+                        announce(announcement: NSLocalizedString("Tracking session initialized.", comment: "Tracking session has started."))
                     } else {
                         announce(announcement: "Tracking performance normal.")
                         if soundFeedback {

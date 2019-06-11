@@ -1,0 +1,21 @@
+/* 
+  Localizable.strings
+  Clew
+
+  Created by Terri Liu on 2019/6/10.
+  Copyright © 2019 OccamLab. All rights reserved.
+*/
+
+// Strings from ViewController
+"Tracking session initialized." = "Tracking session initialized.";
+"Hold vertically with the rear camera facing forward." = "Hold vertically with the rear camera facing forward.";
+"You've arrived." = "You've arrived.";
+
+// Strings from Navigation
+
+"Continue straight" = "Continue straight";
+"Slight right" = "Slight right";
+"Turn right" = "Turn right";
+"Turn around" = "Turn around";
+"Turn left" = "Turn left";
+"Slight Left" = "Slight Left";

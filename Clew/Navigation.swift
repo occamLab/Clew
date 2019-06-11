@@ -86,12 +86,12 @@ public let ClockDirections = [12: "Continue straight",
 /// - TODO:
 ///  - Explain the rationale of this division
 ///  - Consider restructuring this
-public let HapticDirections = [1: "Continue straight",
-                               2: "Slight right",
-                               3: "Turn right",
-                               4: "Turn around",
-                               5: "Turn left",
-                               6: "Slight Left",
+public let HapticDirections = [1: NSLocalizedString("Continue straight", comment: "Continue straight"),
+                               2: NSLocalizedString("Slight right", comment: "Slight right"),
+                               3: NSLocalizedString("Turn right", comment: "Turn right"),
+                               4: NSLocalizedString("Turn around", comment: "Turn around"),
+                               5: NSLocalizedString("Turn left", comment: "Turn left"),
+                               6: NSLocalizedString("Slight Left", comment: "Slight Left"),
                                0: "ERROR"]
 
 /// Keypoint target dimension (width)
