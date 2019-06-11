@@ -48,6 +48,9 @@ protocol RecorderViewControllerDelegate: class {
 class RecorderViewController: UIViewController {
     
     //MARK:- Properties
+    /// Should automatically dismiss when the stop recording button is pressed
+    var shouldAutoDismiss = false
+    
     /// the handle view (TODO: not sure exactly what this is)
     var handleView = UIView()
     /// the button used for recording
@@ -294,8 +297,10 @@ class RecorderViewController: UIViewController {
         } catch let error {
             fatalError(error.localizedDescription)
         }
-        NotificationCenter.default.post(name: Notification.Name("ClewPopoverDismissed"), object: nil)
-        self.dismiss(animated: true, completion: nil)
+        if shouldAutoDismiss {
+            NotificationCenter.default.post(name: Notification.Name("ClewPopoverDismissed"), object: nil)
+            self.dismiss(animated: true, completion: nil)
+        }
     }
     
     /// Called when the button on the popover view is activated to dismiss the recorder.

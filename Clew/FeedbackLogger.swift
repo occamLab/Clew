@@ -18,7 +18,7 @@ class FeedbackLogger {
     
     //MARK: functions
     //a function which saves the feedback and publishis it to the firebase website
-    func writeFeedbackToFirebase(name : String, data : Data) -> Int {
+    func writeFeedbackToFirebase(name : String, data : Data, audio audioFileURL : URL?) -> Int {
         
         //creates an intiger which stores the return value of the function (0 for no errors and 1 for a failed build)
         var returnValue = 0
@@ -40,6 +40,29 @@ class FeedbackLogger {
                 return
             }
         }
+        
+        //MARK: Audio Recording to Firebase
+        // if there was an audio note recording attached to the feedback submission then send it to firebase as well
+        if audioFileURL != nil{
+            if let data = try? Data(contentsOf: audioFileURL!) {
+                //sets the file type to the proper audio file
+                let fileType = StorageMetadata()
+                fileType.contentType = "audio/wav"
+                
+                let fileRef = feedbackRef.child("\(name)_\(UUID().uuidString).wav")
+                let uploadTask = fileRef.putData(data, metadata: fileType){ (metadata, error) in
+                    guard metadata != nil else {
+                        returnValue = 1
+                        // prints an errorstatement to the console
+                        print("could not upload audio recording to firebase", error!.localizedDescription)
+                        //quits the conditional
+                        return
+                    }
+                }
+            }
+        }
+        
+        
         return returnValue
     }
     
@@ -61,7 +84,8 @@ class FeedbackLogger {
                                     "Email": email,
                                     "Name": name,
                                     "Country": country,
-                                    "Message": message]
+                                    "Message": message,
+                                    "AppInstanceID": Analytics.appInstanceID()]
         do {
             let data = try JSONSerialization.data(withJSONObject: body, options: .prettyPrinted)
             //returns the data properly combined and formatted
@@ -72,8 +96,8 @@ class FeedbackLogger {
         return nil
     }
     //combines the information together and saves a file to Firebase containing the user's feedback
-    func saveFeedback(name: String, message: String, country: String?, phone: String, email: String) -> Int{
+    func saveFeedback(name: String, message: String, country: String?, phone: String, email: String,audio: URL?) -> Int{
         //calls the functions to create the properly formatted data and upload the result to firebase
-        return writeFeedbackToFirebase(name: name, data: makeData(name: name, message: message, country: country, phone: phone, email: email)!)
+        return writeFeedbackToFirebase(name: name, data: makeData(name: name, message: message, country: country, phone: phone, email: email)!,audio: audio)
     }
 }

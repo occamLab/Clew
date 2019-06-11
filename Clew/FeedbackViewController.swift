@@ -8,15 +8,21 @@
 
 import Foundation
 
-class FeedbackViewController : UIViewController, UITextViewDelegate {
+class FeedbackViewController : UIViewController, UITextViewDelegate, UIPopoverPresentationControllerDelegate, RecorderViewControllerDelegate {
+    func didStartRecording() {
+        print("started recording")
+    }
     
+    func didFinishRecording(audioFileURL: URL) {
+        print("finished recording", audioFileURL)
+    }
+
     //MARK: Outlets
     @IBOutlet weak var nameTextField: UITextField!
     @IBOutlet weak var countryTextField: UITextField!
     @IBOutlet weak var feedbackTextField: UITextView!
     @IBOutlet weak var phoneNumberTextField: UITextField!
     @IBOutlet weak var emailTextField: UITextField!
-    
     //called when the popover is loaded
     override func viewDidLoad(){
         super.viewDidLoad()
@@ -26,6 +32,13 @@ class FeedbackViewController : UIViewController, UITextViewDelegate {
         
     }
     
+    override func prepare(for segue: UIStoryboardSegue,
+                          sender: Any?) {
+        if segue.identifier == "recorderSubView", let recorderViewController  = segue.destination as? RecorderViewController {
+            recorderViewController.delegate = self
+        }
+    }
+
     //MARK: Actions
     
     //called whenever you start editing the feedback text field
@@ -81,7 +94,8 @@ class FeedbackViewController : UIViewController, UITextViewDelegate {
         //if the feedback was entered properly
         if feedback != "NONE" && name != "NONE" && feedback != "Please enter feedback on Clew"{
             //retrieves the data from the feedback field and sends it to firebase using functions described in the feedback logger class. sucessvalue is a variable which stores a zero or one corresponding to the sucess of the upload (one means that there was a failure
-            let sucessvalue = feedbackLogger.saveFeedback(name: name, message: feedback, country: countryTextField.text!, phone: number, email: email)
+            let audio: URL? = nil
+            let sucessvalue = feedbackLogger.saveFeedback(name: name, message: feedback, country: countryTextField.text!, phone: number, email: email,audio: audio)
             
             //closes the popup
             closeFeedback()
