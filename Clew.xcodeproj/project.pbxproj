@@ -66,8 +66,8 @@
 		E5959CB022A9534C00E53446 /* StateController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5959CAE22A9534C00E53446 /* StateController.swift */; };
 		E5E1886A22A709F000A40EBC /* Float4x4Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E1886922A709F000A40EBC /* Float4x4Extension.swift */; };
 		E5E1886B22A709F000A40EBC /* Float4x4Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E1886922A709F000A40EBC /* Float4x4Extension.swift */; };
-		E5F498B522AEA7D300FA1E6C /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F498B422AEA7D300FA1E6C /* RootView.swift */; };
-		E5F498B622AEA7D300FA1E6C /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F498B422AEA7D300FA1E6C /* RootView.swift */; };
+		E5F498B522AEA7D300FA1E6C /* RootContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F498B422AEA7D300FA1E6C /* RootContainerView.swift */; };
+		E5F498B622AEA7D300FA1E6C /* RootContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F498B422AEA7D300FA1E6C /* RootContainerView.swift */; };
 		E5F498B822AEA8A600FA1E6C /* UIViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F498B722AEA8A600FA1E6C /* UIViewExtensions.swift */; };
 		E5F498B922AEA8A600FA1E6C /* UIViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F498B722AEA8A600FA1E6C /* UIViewExtensions.swift */; };
 		E5F498BB22AEA8B500FA1E6C /* UIButtonExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F498BA22AEA8B500FA1E6C /* UIButtonExtensions.swift */; };
@@ -117,7 +117,7 @@
 		E5959CAB22A70B5B00E53446 /* NSStringExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSStringExtension.swift; sourceTree = "<group>"; };
 		E5959CAE22A9534C00E53446 /* StateController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateController.swift; sourceTree = "<group>"; };
 		E5E1886922A709F000A40EBC /* Float4x4Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Float4x4Extension.swift; sourceTree = "<group>"; };
-		E5F498B422AEA7D300FA1E6C /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		E5F498B422AEA7D300FA1E6C /* RootContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootContainerView.swift; sourceTree = "<group>"; };
 		E5F498B722AEA8A600FA1E6C /* UIViewExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewExtensions.swift; sourceTree = "<group>"; };
 		E5F498BA22AEA8B500FA1E6C /* UIButtonExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIButtonExtensions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -249,7 +249,7 @@
 				826D540A224ABBDC009EF410 /* RouteTableViewCell.swift */,
 				82473B0B2217647A00E98CFC /* SettingsAndHelp.storyboard */,
 				4D6B00CC1F33C1C400952242 /* LaunchScreen.storyboard */,
-				E5F498B422AEA7D300FA1E6C /* RootView.swift */,
+				E5F498B422AEA7D300FA1E6C /* RootContainerView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -515,7 +515,7 @@
 				E5E1886A22A709F000A40EBC /* Float4x4Extension.swift in Sources */,
 				E5F498BB22AEA8B500FA1E6C /* UIButtonExtensions.swift in Sources */,
 				E5F498B822AEA8A600FA1E6C /* UIViewExtensions.swift in Sources */,
-				E5F498B522AEA7D300FA1E6C /* RootView.swift in Sources */,
+				E5F498B522AEA7D300FA1E6C /* RootContainerView.swift in Sources */,
 				E5959CAC22A70B5B00E53446 /* NSStringExtension.swift in Sources */,
 				4D6B00D61F33C1FE00952242 /* Navigation.swift in Sources */,
 				4D6B00DC1F33C26D00952242 /* Utility.swift in Sources */,
@@ -543,7 +543,7 @@
 				E5E1886B22A709F000A40EBC /* Float4x4Extension.swift in Sources */,
 				E5F498BC22AEA8B500FA1E6C /* UIButtonExtensions.swift in Sources */,
 				E5F498B922AEA8A600FA1E6C /* UIViewExtensions.swift in Sources */,
-				E5F498B622AEA7D300FA1E6C /* RootView.swift in Sources */,
+				E5F498B622AEA7D300FA1E6C /* RootContainerView.swift in Sources */,
 				E5959CAD22A70B5B00E53446 /* NSStringExtension.swift in Sources */,
 				82A43F492269079300076941 /* RecorderViewController.swift in Sources */,
 				B7EB59DB20F693EB00FBBC6A /* Navigation.swift in Sources */,

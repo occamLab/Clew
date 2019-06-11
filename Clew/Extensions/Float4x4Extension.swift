@@ -23,7 +23,7 @@ extension float4x4 {
     static func makeRotate(radians: Float, _ x: Float, _ y: Float, _ z: Float) -> float4x4 {
         return unsafeBitCast(GLKMatrix4MakeRotation(radians, x, y, z), to: float4x4.self)
     }
-    
+
     /// Create a translation matrix based on the translation vector.
     ///
     /// - Parameters:
@@ -34,7 +34,7 @@ extension float4x4 {
     static func makeTranslation(_ x: Float, _ y: Float, _ z: Float) -> float4x4 {
         return unsafeBitCast(GLKMatrix4MakeTranslation(x, y, z), to: float4x4.self)
     }
-    
+
     /// Perform the specified rotation (right multiply) on the 4x4 matrix
     ///
     /// - Parameters:
@@ -46,7 +46,7 @@ extension float4x4 {
     func rotate(radians: Float, _ x: Float, _ y: Float, _ z: Float) -> float4x4 {
         return self * float4x4.makeRotate(radians: radians, x, y, z)
     }
-    
+
     /// Perform the specified translation (right multiply) on the 4x4 matrix
     ///
     /// - Parameters:
@@ -57,25 +57,24 @@ extension float4x4 {
     func translate(x: Float, _ y: Float, _ z: Float) -> float4x4 {
         return self * float4x4.makeTranslation(x, y, z)
     }
-    
+
     /// The x translation specified by the transform
     var x: Float {
         return columns.3.x
     }
-    
+
     /// The y translation specified by the transform
     var y: Float {
         return columns.3.y
     }
-    
+
     /// The z translation specified by the transform
     var z: Float {
         return columns.3.z
     }
-    
+
     /// The yaw specified by the transforms
     var yaw: Float {
         return LocationInfo(anchor: ARAnchor(transform: self)).yaw
     }
 }
-

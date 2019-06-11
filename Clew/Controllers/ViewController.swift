@@ -481,7 +481,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         let popover = nav.popoverPresentationController
         popover?.delegate = self
         popover?.sourceView = self.view
-        popover?.sourceRect = CGRect(x: 0, y: settingsAndHelpFrameHeight/2, width: 0,height: 0)
+        popover?.sourceRect = CGRect(x: 0,
+                                     y: settingsAndHelpFrameHeight/2,
+                                     width: 0,height: 0)
         
         self.present(nav, animated: true, completion: nil)
     }
@@ -601,18 +603,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// True if we should add anchors ahead of the user to encourage more ARWorldMap detail.  In limited testing this did not show promise, therefore it is disabled
     var shouldDropMappingAnchors = false
     
-    /// Button view container for stop recording button
-    var stopRecordingView: UIView!
-    
-    /// Button view container for start recording button.
-    var recordPathView: UIView!
-    
-    /// Button view container for start navigation button
-    var startNavigationView: UIView!
-
-    /// Button view container for stop navigation button
-    var stopNavigationView: UIView!
-    
     /// This is embeds an AR scene.  The ARSession is a part of the scene view, which allows us to capture where the phone is in space and the state of the world tracking.  The scene also allows us to insert virtual objects
     var sceneView = ARSCNView()
     
@@ -621,81 +611,34 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         return true
     }
     
-    /// Button frame extends the entire width of screen
-    var buttonFrameWidth: CGFloat {
-        return UIScreen.main.bounds.size.width
-    }
-    
-    /// Height of button frame
-    var buttonFrameHeight: CGFloat {
-        return UIScreen.main.bounds.size.height * (1/5)
-    }
-    
-    /// Height of settings and help buttons
-    var settingsAndHelpFrameHeight: CGFloat {
-        return UIScreen.main.bounds.size.height * (1/12)
-    }
-    
-    /// The margin from the settings and help buttons to the bottom of the window
-    var settingsAndHelpMargin: CGFloat {
-        // height of button frame
-        return UIScreen.main.bounds.size.height * (1/24)
-    }
-    
-    /// top margin of direction text label
-    var textLabelBuffer: CGFloat {
-        return buttonFrameHeight * (1/12)
-    }
-    
-    /// y-origin of the get directions button
-    var yOriginOfGetDirectionsButton: CGFloat {
-        return UIScreen.main.bounds.size.height - settingsAndHelpFrameHeight - settingsAndHelpMargin
-    }
-    
-    /// y-origin of the settings and help buttons
-    var yOriginOfSettingsAndHelpButton: CGFloat {
-        // y-origin of button frame
-        return UIScreen.main.bounds.size.height - settingsAndHelpFrameHeight - settingsAndHelpMargin
-    }
-
-    /// y-origin of button frame
-    var yOriginOfButtonFrame: CGFloat {
-        return UIScreen.main.bounds.size.height - buttonFrameHeight - settingsAndHelpFrameHeight - settingsAndHelpMargin
-    }
-    
-    /// y-origin of announcement frame
-    var yOriginOfAnnouncementFrame: CGFloat {
-        return UIScreen.main.bounds.size.height/15
-    }
-    
     // MARK: - UIViews for all UI button containers
     
-    /// button for getting directions to the next keypoint
-    var getDirectionButton: UIButton!
-    
-    /// button for bringing up the settings menu
-    var settingsButton: UIButton!
-    
-    /// button for bringing up the help menu
-    var helpButton: UIButton!
-    
-    /// the view on which the user can pause tracking
-    var pauseTrackingView: UIView!
-    
-    /// the view on which the user can initiate the tracking resume procedure
-    var resumeTrackingView: UIView!
-    
-    /// the view on which the user can confirm the tracking resume procedure
-    var resumeTrackingConfirmView: UIView!
-    
-    /// a banner that displays an announcement in the top quarter of the screen.  This is used for displaying status updates or directions.  This should only be used to display time-sensitive content.
-    var announcementText: UILabel!
-    
-    /// the view on which the user can rate the quality of their navigation experience
-    var routeRatingView: UIView!
+//    /// button for getting directions to the next keypoint
+//    var getDirectionButton: UIButton!
+//
+//    /// button for bringing up the settings menu
+//    var settingsButton: UIButton!
+//
+//    /// button for bringing up the help menu
+//    var helpButton: UIButton!
+//
+//    /// the view on which the user can pause tracking
+//    var pauseTrackingView: UIView!
+//
+//    /// the view on which the user can initiate the tracking resume procedure
+//    var resumeTrackingView: UIView!
+//
+//    /// the view on which the user can confirm the tracking resume procedure
+//    var resumeTrackingConfirmView: UIView!
+//
+//    /// a banner that displays an announcement in the top quarter of the screen.  This is used for displaying status updates or directions.  This should only be used to display time-sensitive content.
+//    var announcementText: UILabel!
+//
+//    /// the view on which the user can rate the quality of their navigation experience
+//    var routeRatingView: UIView!
     
     /// a timer that counts down during the alignment procedure (alignment is captured at the end of the time)
-    var countdownTimer: SRCountdownTimer!
+//    var countdownTimer: SRCountdownTimer!
     
     /// audio players for playing system sounds through an `AVAudioSession` (this allows them to be audible even when the rocker switch is muted.
     var audioPlayers: [Int: AVAudioPlayer] = [:]
@@ -707,11 +650,19 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         UIAccessibility.post(notification: UIAccessibility.Notification.announcement, argument: String(newValue))
     }
     
+    // hook in the view
+    var rootContainerView: RootContainerView {
+        return view as! RootContainerView
+    }
+    
     /// called when the view has loaded.  We setup various app elements in here.
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // set the main view as active
+        view = RootContainerView(frame: UIScreen.main.bounds)
 
-        // Scene view setup
+        // Scene view setup -> move this to the rootContainerView
         sceneView.frame = view.frame
         view.addSubview(sceneView)
 
@@ -753,6 +704,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             print("count not setup audio players", error)
         }
     }
+
     
     /// Load the crumb 3D model
     func loadAssets() {
@@ -1099,55 +1051,21 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     ///   - `startNavigationView` pause button configuration
     ///   - subview transitions?
     func drawUI() {
-        // button that shows settings menu
-        settingsButton = UIButton(frame: CGRect(x: 0, y: yOriginOfSettingsAndHelpButton, width: buttonFrameWidth/2, height: settingsAndHelpFrameHeight))
-        settingsButton.isAccessibilityElement = true
-        settingsButton.setTitle("Settings", for: .normal)
-        settingsButton.accessibilityLabel = "Settings"
-        settingsButton.titleLabel?.font = UIFont.systemFont(ofSize: 24.0)
-        settingsButton.backgroundColor = UIColor.black.withAlphaComponent(0.4)
-        settingsButton.addTarget(self, action: #selector(settingsButtonPressed), for: .touchUpInside)
+        rootview.settingsButton.addTarget(self,
+                                 action: #selector(settingsButtonPressed),
+                                 for: .touchUpInside)
+        
+        helpButton.addTarget(self,
+                             action: #selector(helpButtonPressed),
+                             for: .touchUpInside)
+        
+        getDirectionButton.addTarget(self,
+                                     action: #selector(announceDirectionHelpPressed),
+                                     for: .touchUpInside)
+        
+        // UIView containerization example
+//        rootContainerView.helpButton.addTarget(self, action: #selector(helpButtonPressed), for: .touchUpInside)
 
-        // button that shows help menu
-        helpButton = UIButton(frame: CGRect(x: buttonFrameWidth/2, y: yOriginOfSettingsAndHelpButton, width: buttonFrameWidth/2, height: settingsAndHelpFrameHeight))
-        helpButton.isAccessibilityElement = true
-        helpButton.setTitle("Help", for: .normal)
-        helpButton.titleLabel?.font = UIFont.systemFont(ofSize: 24.0)
-        helpButton.accessibilityLabel = "Help"
-        helpButton.backgroundColor = UIColor.black.withAlphaComponent(0.4)
-        helpButton.addTarget(self, action: #selector(helpButtonPressed), for: .touchUpInside)
-
-        // button that gives direction to the nearist keypoint
-        getDirectionButton = UIButton(frame: CGRect(x: 0, y: 0, width: buttonFrameWidth, height: yOriginOfButtonFrame))
-        getDirectionButton.isAccessibilityElement = true
-        getDirectionButton.accessibilityLabel = "Get Directions"
-        getDirectionButton.isHidden = true
-        getDirectionButton.addTarget(self, action: #selector(announceDirectionHelpPressed), for: .touchUpInside)
-        
-        // textlabel that displays announcements
-        announcementText = UILabel(frame: CGRect(x: 0, y: yOriginOfAnnouncementFrame, width: buttonFrameWidth, height: buttonFrameHeight*(1/2)))
-        announcementText.textColor = UIColor.white
-        announcementText.textAlignment = .center
-        announcementText.isAccessibilityElement = false
-        announcementText.lineBreakMode = .byWordWrapping
-        announcementText.numberOfLines = 2
-        announcementText.font = announcementText.font.withSize(20)
-        announcementText.backgroundColor = UIColor.black.withAlphaComponent(0.4)
-        announcementText.isHidden = true
-        
-        // button that gives direction to the nearist keypoint
-        countdownTimer = SRCountdownTimer(frame: CGRect(x: buttonFrameWidth*1/10, y: yOriginOfButtonFrame/10, width: buttonFrameWidth*8/10, height: buttonFrameWidth*8/10))
-        countdownTimer.delegate = self
-        countdownTimer.labelFont = UIFont(name: "HelveticaNeue-Light", size: 100)
-        countdownTimer.labelTextColor = UIColor.white
-        countdownTimer.timerFinishingText = "End"
-        countdownTimer.lineWidth = 10
-        countdownTimer.lineColor = UIColor.white
-        countdownTimer.backgroundColor = UIColor.black.withAlphaComponent(0.4)
-        countdownTimer.isHidden = true
-        // hide the timer as an accessibility element and announce through VoiceOver by posting appropriate notifications
-        countdownTimer.accessibilityElementsHidden = true
-        
         // Record Path button container
         recordPathView = UIView(frame: CGRect(x: 0, y: yOriginOfButtonFrame, width: buttonFrameWidth, height: buttonFrameHeight))
         recordPathView.setupButtonContainer(withButtons: [routesButton, recordPathButton, addLandmarkButton])
@@ -1159,6 +1077,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         // Start Navigation button container
         startNavigationView = UIView(frame: CGRect(x: 0, y: yOriginOfButtonFrame, width: buttonFrameWidth, height: buttonFrameHeight))
         startNavigationView.setupButtonContainer(withButtons: [startNavigationButton, pauseButton])
+        
+        countdownTimer.delegate = self
         
         pauseTrackingView = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height))
         pauseTrackingView.setupButtonContainer(withButtons: [enterLandmarkDescriptionButton, confirmAlignmentButton, recordVoiceNoteButton], withMainText: "Landmarks allow you to save or pause your route. You will need to return to the landmark to load or unpause your route. Before creating the landmark, specify text or voice to help you remember its location. To create a landmark, hold your device flat with the screen facing up. Press the top (short) edge flush against a flat vertical surface (such as a wall).  The \"align\" button starts a \(ViewController.alignmentWaitingPeriod)-second countdown. During this time, do not move the device.")
@@ -1175,20 +1095,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         
         routeRatingView = UIView(frame: CGRect(x: 0, y: 0, width: buttonFrameWidth, height: UIScreen.main.bounds.size.height))
         routeRatingView.setupButtonContainer(withButtons: [thumbsUpButton, thumbsDownButton], withMainText: "Please rate your service.")
-        
-        self.view.addSubview(recordPathView)
-        self.view.addSubview(stopRecordingView)
-        self.view.addSubview(startNavigationView)
-        self.view.addSubview(pauseTrackingView)
-        self.view.addSubview(resumeTrackingView)
-        self.view.addSubview(resumeTrackingConfirmView)
-        self.view.addSubview(stopNavigationView)
-        self.view.addSubview(announcementText)
-        self.view.addSubview(getDirectionButton)
-        self.view.addSubview(settingsButton)
-        self.view.addSubview(helpButton)
-        self.view.addSubview(routeRatingView)
-        self.view.addSubview(countdownTimer)
+
         
         state = .mainScreen(announceArrival: false)
     }
