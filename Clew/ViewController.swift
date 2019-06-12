@@ -806,8 +806,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     var settingsButton: UIButton!
     
     /// button for going back
-    var backButton: UIButton!
-    
+    var homeButton: UIButton!
     
     /// button for bringing up the help menu
     var helpButton: UIButton!
@@ -1040,6 +1039,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// Show the dialog that allows the user to enter textual information to help them remember a landmark.
     @objc func showLandmarkInformationDialog() {
+        homeButton.isHidden = false // home button here
         // Set title and message for the alert dialog
         let alertController = UIAlertController(title: "Landmark information", message: "Enter text about the landmark that will help you find it later.", preferredStyle: .alert)
         // The confirm action taking the inputs
@@ -1267,13 +1267,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
 //        contactButton.setImage(UIImage(named: "Contact"), for: .normal)
         
         //button to go back
-        backButton = UIButton(frame: CGRect(x: 10, y: 10, width: buttonFrameWidth/7, height: buttonFrameWidth/7))
-        backButton.isAccessibilityElement = true
-        backButton.setTitle("Go Back", for: .normal)
-        backButton.titleLabel?.font = UIFont.systemFont(ofSize: 24.0)
-        backButton.accessibilityLabel = "Go Back"
+        homeButton = UIButton(frame: CGRect(x: 10, y: 10, width: buttonFrameWidth/7, height: buttonFrameWidth/7))
+        homeButton.isAccessibilityElement = true
+        homeButton.setTitle("Go Back", for: .normal)
+        homeButton.titleLabel?.font = UIFont.systemFont(ofSize: 24.0)
+        homeButton.accessibilityLabel = "Go Back"
         ///backButton.addTarget(self, action: #selector(backButtonPressed), for: .touchUpInside)
-        backButton.setImage(UIImage(named: "backButton"), for: .normal)
+        homeButton.setImage(UIImage(named: "backButton"), for: .normal)
+        homeButton.addTarget(self, action: #selector(homeButtonPressed), for: .touchUpInside)
         
         // button that shows feedback menu
         feedbackButton = UIButton(frame: CGRect(x: buttonFrameWidth/(7/5), y: yOriginOfSettingsAndHelpButton + 10, width: buttonFrameWidth/7, height: buttonFrameWidth/7))
@@ -1354,7 +1355,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         self.view.addSubview(announcementText)
         self.view.addSubview(getDirectionButton)
         self.view.addSubview(settingsButton)
-        self.view.addSubview(backButton)
+        self.view.addSubview(homeButton)
         self.view.addSubview(helpButton)
         self.view.addSubview(feedbackButton)
         self.view.addSubview(routeRatingView)
@@ -1368,7 +1369,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         recordPathView.isHidden = false
         // the options button is hidden if the route rating shows up
         settingsButton.isHidden = false
-        backButton.isHidden = false
+        homeButton.isHidden = true // home button here
         helpButton.isHidden = false
         feedbackButton.isHidden = false
         stopNavigationView.isHidden = true
@@ -1400,6 +1401,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// Display stop recording view/hide all other views
     @objc func showStopRecordingButton() {
+        homeButton.isHidden = true // home button here
         recordPathView.isHidden = true
         recordPathView.isAccessibilityElement = false
         stopRecordingView.isHidden = false
@@ -1408,6 +1410,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// Display start navigation view/hide all other views
     @objc func showStartNavigationButton(allowPause: Bool) {
+        homeButton.isHidden = true // home button here
         resumeTrackingView.isHidden = true
         resumeTrackingConfirmView.isHidden = true
         stopRecordingView.isHidden = true
@@ -1418,6 +1421,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
 
     /// Display the pause tracking view/hide all other views
     func showPauseTrackingButton() throws {
+        homeButton.isHidden = false // home button here
         recordPathView.isHidden = true
         startNavigationView.isHidden = true
         pauseTrackingView.isHidden = false
@@ -1426,6 +1430,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// Display the resume tracking view/hide all other views
     @objc func showResumeTrackingButton() {
+        homeButton.isHidden = true // home button here
         pauseTrackingView.isHidden = true
         resumeTrackingView.isHidden = false
         delayTransition()
@@ -1433,6 +1438,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// Display the resume tracking confirm view/hide all other views.
     func showResumeTrackingConfirmButton(route: SavedRoute, navigateStartToEnd: Bool) {
+        homeButton.isHidden = true // home button here
         resumeTrackingView.isHidden = true
         resumeTrackingConfirmView.isHidden = false
         resumeTrackingConfirmView.mainText?.text = ""
@@ -1469,6 +1475,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// display stop navigation view/hide all other views
     @objc func showStopNavigationButton() {
+        homeButton.isHidden = true // home button here
         startNavigationView.isHidden = true
         stopNavigationView.isHidden = false
         getDirectionButton.isHidden = false
@@ -1478,6 +1485,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// display route rating view/hide all other views
     @objc func showRouteRating(announceArrival: Bool) {
+        homeButton.isHidden = true // home button here
         stopNavigationView.isHidden = true
         getDirectionButton.isHidden = true
         routeRatingView.isHidden = false
@@ -1718,6 +1726,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// handles the user pressing the landmark button
     @objc func startCreateLandmarkProcedure() {
+        homeButton.isHidden = false // home button here
         creatingRouteLandmark = true
         // make sure to clear out any relative transform and paused transform so the alignment is accurate
         sceneView.session.setWorldOrigin(relativeTransform: simd_float4x4.makeTranslation(0, 0, 0))
@@ -2048,6 +2057,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// Called when the "get directions" button is pressed.  The announcement is made with a 0.5 second delay to allow the button name to be announced.
     @objc func announceDirectionHelpPressed() {
         Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: (#selector(announceDirectionHelp)), userInfo: nil, repeats: false)
+    }
+    
+    // Called when home button is pressed.
+    @objc func homeButtonPressed() {
+        hideAllViewsHelper()
+        recordPathView.isHidden = false
+        recordPathView.isAccessibilityElement = true
     }
     
     /// Called when the settings button is pressed.  This function will display the settings view (managed by SettingsViewController) as a popover.
