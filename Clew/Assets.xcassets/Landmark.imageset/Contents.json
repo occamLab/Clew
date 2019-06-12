@@ -2,12 +2,7 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "StartNavigation.png",
-      "scale" : "1x"
-    },
-    {
-      "idiom" : "universal",
-      "filename" : "StartRecording.png",
+      "filename" : "Landmark.png",
       "scale" : "1x"
     },
     {

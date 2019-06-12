@@ -139,7 +139,7 @@ extension UIButton {
         if containerView.mainText != nil {
             button.center.y = containerView.bounds.size.height * (8/10)
         } else {
-            button.center.y = containerView.bounds.size.height * (6/10)
+            button.center.y = containerView.bounds.size.height * (5/10)
         }
         
         switch buttonViewParts.appearance {
@@ -668,7 +668,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     var headingRingBuffer = RingBuffer<Float>(capacity: 50)
 
     /// Image, label, and target for start recording button.
-    let recordPathButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "StartRecording")!), label: "Record path", targetSelector: Selector.recordPathButtonTapped, alignment: .center, tag: 0)
+    let recordPathButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "Record")!), label: "Record path", targetSelector: Selector.recordPathButtonTapped, alignment: .center, tag: 0)
 
     /// The button that the allows the user to indicate a negative navigation experience
     let thumbsDownButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "thumbs_down")!), label: "Bad", targetSelector: Selector.thumbsDownButtonTapped, alignment: .leftcenter, tag: 0)
@@ -677,22 +677,22 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     let thumbsUpButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "thumbs_up")!), label: "Good", targetSelector: Selector.thumbsUpButtonTapped, alignment: .rightcenter, tag: 0)
     
     /// The button that the allows the user to resume a paused route
-    let resumeButton = ActionButtonComponents(appearance: .textButton(label: "Resume"), label: "Resume", targetSelector: Selector.resumeButtonTapped, alignment: .center, tag: 0)
+    let resumeButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "Resume")!), label: "Resume", targetSelector: Selector.resumeButtonTapped, alignment: .center, tag: 0)
     
     /// The button that allows the user to enter textual description of a route landmark
-    let enterLandmarkDescriptionButton = ActionButtonComponents(appearance: .textButton(label: "Describe"), label: "Enter text to help you remember this landmark", targetSelector: Selector.enterLandmarkDescriptionButtonTapped, alignment: .left, tag: 0)
+    let enterLandmarkDescriptionButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "Describe")!), label: "Enter text to help you remember this landmark", targetSelector: Selector.enterLandmarkDescriptionButtonTapped, alignment: .left, tag: 0)
     
     /// The button that allows the user to record a voice description of a route landmark
-    let recordVoiceNoteButton = ActionButtonComponents(appearance: .textButton(label: "Voice Note"), label: "Record audio to help you remember this landmark", targetSelector: Selector.recordVoiceNoteButtonTapped, alignment: .right, tag: 0)
+    let recordVoiceNoteButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "VoiceNote")!), label: "Record audio to help you remember this landmark", targetSelector: Selector.recordVoiceNoteButtonTapped, alignment: .right, tag: 0)
 
     /// The button that allows the user to start the alignment countdown
-    let confirmAlignmentButton = ActionButtonComponents(appearance: .textButton(label: "Align"), label: "Start \(ViewController.alignmentWaitingPeriod)-second alignment countdown", targetSelector: Selector.confirmAlignmentButtonTapped, alignment: .center, tag: 0)
+    let confirmAlignmentButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "Align")!), label: "Start \(ViewController.alignmentWaitingPeriod)-second alignment countdown", targetSelector: Selector.confirmAlignmentButtonTapped, alignment: .center, tag: 0)
     
     /// The button that plays back the recorded voice note associated with a landmark
-    let readVoiceNoteButton = ActionButtonComponents(appearance: .textButton(label: "Play Note"), label: "Play recorded voice note", targetSelector: Selector.readVoiceNoteButtonTapped, alignment: .left, tag: UIView.readVoiceNoteButtonTag)
+    let readVoiceNoteButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "Read")!), label: "Play recorded voice note", targetSelector: Selector.readVoiceNoteButtonTapped, alignment: .left, tag: UIView.readVoiceNoteButtonTag)
     
     /// Image, label, and target for start recording button. TODO: need an image
-    let addLandmarkButton = ActionButtonComponents(appearance: .textButton(label: "Landmark"), label: "Create landmark", targetSelector: Selector.landmarkButtonTapped, alignment: .right, tag: 0)
+    let addLandmarkButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "Landmark")!), label: "Create landmark", targetSelector: Selector.landmarkButtonTapped, alignment: .right, tag: 0)
     
     /// Image, label, and target for stop recording button.
     let stopRecordingButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "StopRecording")!), label: "Stop recording", targetSelector: Selector.stopRecordingButtonTapped, alignment: .center, tag: 0)
@@ -701,13 +701,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     let startNavigationButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "StartNavigation")!), label: "Start navigation", targetSelector: Selector.startNavigationButtonTapped, alignment: .center, tag: 0)
 
     /// Title, label, and target for the pause button
-    let pauseButton = ActionButtonComponents(appearance: .textButton(label: "Pause"), label: "Pause session", targetSelector: Selector.pauseButtonTapped, alignment: .right, tag: UIView.pauseButtonTag)
+    let pauseButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "Pause")!), label: "Pause session", targetSelector: Selector.pauseButtonTapped, alignment: .right, tag: UIView.pauseButtonTag)
     
     /// Image, label, and target for stop navigation button.
     let stopNavigationButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "StopNavigation")!), label: "Stop navigation", targetSelector: Selector.stopNavigationButtonTapped, alignment: .center, tag: 0)
     
     /// Image, label, and target for routes button.
-    let routesButton = ActionButtonComponents(appearance: .textButton(label: "Routes"), label: "Saved routes list", targetSelector: Selector.routesButtonTapped, alignment: .left, tag: 0)
+    let routesButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "route")!), label: "Saved routes list", targetSelector: Selector.routesButtonTapped, alignment: .left, tag: 0)
+
 
     /// The conection to the Firebase real-time database
     var databaseHandle = Database.database()
@@ -803,6 +804,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// button for bringing up the settings menu
     var settingsButton: UIButton!
+    
+    /// button for going back
+    var backButton: UIButton!
+    
+    /// button for contacting developers
+    var contactButton: UIButton!
     
     /// button for bringing up the help menu
     var helpButton: UIButton!
@@ -1228,22 +1235,42 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     ///   - subview transitions?
     func drawUI() {
         // button that shows settings menu
-        settingsButton = UIButton(frame: CGRect(x: 0, y: yOriginOfSettingsAndHelpButton, width: buttonFrameWidth/2, height: settingsAndHelpFrameHeight))
+        settingsButton = UIButton(frame: CGRect(x: buttonFrameWidth/7, y: yOriginOfSettingsAndHelpButton + 10, width: buttonFrameWidth/7, height: buttonFrameWidth/7))
         settingsButton.isAccessibilityElement = true
         settingsButton.setTitle("Settings", for: .normal)
         settingsButton.accessibilityLabel = "Settings"
         settingsButton.titleLabel?.font = UIFont.systemFont(ofSize: 24.0)
-        settingsButton.backgroundColor = UIColor.black.withAlphaComponent(0.4)
+        //settingsButton.backgroundColor = UIColor.black.withAlphaComponent(0.4)
         settingsButton.addTarget(self, action: #selector(settingsButtonPressed), for: .touchUpInside)
+        settingsButton.setImage(UIImage(named: "settingsGear"), for: .normal)
 
         // button that shows help menu
-        helpButton = UIButton(frame: CGRect(x: buttonFrameWidth/2, y: yOriginOfSettingsAndHelpButton, width: buttonFrameWidth/2, height: settingsAndHelpFrameHeight))
+        helpButton = UIButton(frame: CGRect(x: buttonFrameWidth/(7/3), y: yOriginOfSettingsAndHelpButton + 10, width: buttonFrameWidth/7, height: buttonFrameWidth/7))
         helpButton.isAccessibilityElement = true
         helpButton.setTitle("Help", for: .normal)
         helpButton.titleLabel?.font = UIFont.systemFont(ofSize: 24.0)
         helpButton.accessibilityLabel = "Help"
-        helpButton.backgroundColor = UIColor.black.withAlphaComponent(0.4)
+        //helpButton.backgroundColor = UIColor.black.withAlphaComponent(0.4)
         helpButton.addTarget(self, action: #selector(helpButtonPressed), for: .touchUpInside)
+        helpButton.setImage(UIImage(named: "HelpButton"), for: .normal)
+        
+        //button that allows user to contact developers
+        contactButton = UIButton(frame: CGRect(x: buttonFrameWidth/(7/5), y: yOriginOfSettingsAndHelpButton + 10, width: buttonFrameWidth/7, height: buttonFrameWidth/7))
+        contactButton.isAccessibilityElement = true
+        contactButton.setTitle("Contact Developers", for: .normal)
+        contactButton.titleLabel?.font = UIFont.systemFont(ofSize: 24.0)
+        contactButton.accessibilityLabel = "Contact Developers"
+        ///contactButton.addTarget(self, action: #selector(contactButtonPressed), for: .touchUpInside)
+        contactButton.setImage(UIImage(named: "Contact"), for: .normal)
+        
+        //button to go back
+        backButton = UIButton(frame: CGRect(x: 10, y: 10, width: buttonFrameWidth/7, height: buttonFrameWidth/7))
+        backButton.isAccessibilityElement = true
+        backButton.setTitle("Go Back", for: .normal)
+        backButton.titleLabel?.font = UIFont.systemFont(ofSize: 24.0)
+        backButton.accessibilityLabel = "Go Back"
+        ///backButton.addTarget(self, action: #selector(backButtonPressed), for: .touchUpInside)
+        backButton.setImage(UIImage(named: "backButton"), for: .normal)
 
         // button that gives direction to the nearist keypoint
         getDirectionButton = UIButton(frame: CGRect(x: 0, y: 0, width: buttonFrameWidth, height: yOriginOfButtonFrame))
@@ -1314,6 +1341,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         self.view.addSubview(announcementText)
         self.view.addSubview(getDirectionButton)
         self.view.addSubview(settingsButton)
+        self.view.addSubview(backButton)
+        self.view.addSubview(contactButton)
         self.view.addSubview(helpButton)
         self.view.addSubview(routeRatingView)
         self.view.addSubview(countdownTimer)
@@ -1326,7 +1355,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         recordPathView.isHidden = false
         // the options button is hidden if the route rating shows up
         settingsButton.isHidden = false
+        backButton.isHidden = false
         helpButton.isHidden = false
+        contactButton.isHidden = false
         stopNavigationView.isHidden = true
         getDirectionButton.isHidden = true
         routeRatingView.isHidden = true

@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		12317E6A4CEFE90BE755D803 /* Pods_Clew_Dev.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4315F457247AC66574B86A26 /* Pods_Clew_Dev.framework */; };
-		4B12F4A545BC26EAA16F6633 /* Pods_Clew.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1977F3CD0CF608888A7E2B5C /* Pods_Clew.framework */; };
+		4B12F4A545BC26EAA16F6633 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		4D6B00C41F33C1C400952242 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D6B00C31F33C1C400952242 /* AppDelegate.swift */; };
 		4D6B00C61F33C1C400952242 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D6B00C51F33C1C400952242 /* ViewController.swift */; };
 		4D6B00CE1F33C1C400952242 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4D6B00CC1F33C1C400952242 /* LaunchScreen.storyboard */; };
@@ -54,7 +54,6 @@
 		B7EB59DB20F693EB00FBBC6A /* Navigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D6B00D51F33C1FE00952242 /* Navigation.swift */; };
 		B7EB59DC20F693EB00FBBC6A /* Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D6B00DB1F33C26D00952242 /* Utility.swift */; };
 		B7EB59DE20F693EB00FBBC6A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D6B00C31F33C1C400952242 /* AppDelegate.swift */; };
-		B7EB59E020F693EB00FBBC6A /* Pods_Clew.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1977F3CD0CF608888A7E2B5C /* Pods_Clew.framework */; };
 		B7EB59E220F693EB00FBBC6A /* Confirm.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4DF05CC71F34EB56008B0E31 /* Confirm.mp3 */; };
 		B7EB59E320F693EB00FBBC6A /* Crumb.obj in Resources */ = {isa = PBXBuildFile; fileRef = 4D6B00E41F33C85500952242 /* Crumb.obj */; };
 		B7EB59E420F693EB00FBBC6A /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 4D6B00DD1F33C33600952242 /* Settings.bundle */; };
@@ -64,7 +63,6 @@
 
 /* Begin PBXFileReference section */
 		08FA9C31721F9F8CDCC23AE9 /* Pods-Clew.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Clew/Pods-Clew.debug.xcconfig"; sourceTree = "<group>"; };
-		1977F3CD0CF608888A7E2B5C /* Pods_Clew.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Clew.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4315F457247AC66574B86A26 /* Pods_Clew_Dev.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Clew_Dev.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4D6B00C01F33C1C400952242 /* Clew.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Clew.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4D6B00C31F33C1C400952242 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -109,7 +107,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4B12F4A545BC26EAA16F6633 /* Pods_Clew.framework in Frameworks */,
+				4B12F4A545BC26EAA16F6633 /* (null) in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -117,7 +115,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B7EB59E020F693EB00FBBC6A /* Pods_Clew.framework in Frameworks */,
 				12317E6A4CEFE90BE755D803 /* Pods_Clew_Dev.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -212,7 +209,6 @@
 		C63B435EA8A32350A76E47DD /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				1977F3CD0CF608888A7E2B5C /* Pods_Clew.framework */,
 				4315F457247AC66574B86A26 /* Pods_Clew_Dev.framework */,
 			);
 			name = Frameworks;
@@ -341,7 +337,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-Clew/Pods-Clew-frameworks.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-Clew/Pods-Clew-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
 				"${BUILT_PRODUCTS_DIR}/GoogleUtilities/GoogleUtilities.framework",
 				"${BUILT_PRODUCTS_DIR}/InAppSettingsKit/InAppSettingsKit.framework",
@@ -364,7 +360,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Clew/Pods-Clew-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Clew/Pods-Clew-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		B7EB59D820F693EB00FBBC6A /* [CP] Check Pods Manifest.lock */ = {
@@ -391,7 +387,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-Clew Dev/Pods-Clew Dev-frameworks.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-Clew Dev/Pods-Clew Dev-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
 				"${BUILT_PRODUCTS_DIR}/GoogleUtilities/GoogleUtilities.framework",
 				"${BUILT_PRODUCTS_DIR}/InAppSettingsKit/InAppSettingsKit.framework",
@@ -414,7 +410,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Clew Dev/Pods-Clew Dev-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Clew Dev/Pods-Clew Dev-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		FC3FD998D963F5FE0C5C7B8E /* [CP] Check Pods Manifest.lock */ = {
