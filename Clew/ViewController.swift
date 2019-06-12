@@ -808,8 +808,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// button for going back
     var backButton: UIButton!
     
-    /// button for contacting developers
-    var contactButton: UIButton!
     
     /// button for bringing up the help menu
     var helpButton: UIButton!
@@ -1260,13 +1258,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         helpButton.setImage(UIImage(named: "HelpButton"), for: .normal)
         
         //button that allows user to contact developers
-        contactButton = UIButton(frame: CGRect(x: buttonFrameWidth/(7/5), y: yOriginOfSettingsAndHelpButton + 10, width: buttonFrameWidth/7, height: buttonFrameWidth/7))
-        contactButton.isAccessibilityElement = true
-        contactButton.setTitle("Contact Developers", for: .normal)
-        contactButton.titleLabel?.font = UIFont.systemFont(ofSize: 24.0)
-        contactButton.accessibilityLabel = "Contact Developers"
-        ///contactButton.addTarget(self, action: #selector(contactButtonPressed), for: .touchUpInside)
-        contactButton.setImage(UIImage(named: "Contact"), for: .normal)
+//        contactButton = UIButton(frame: CGRect(x: buttonFrameWidth/(7/5), y: yOriginOfSettingsAndHelpButton + 10, width: buttonFrameWidth/7, height: buttonFrameWidth/7))
+//        contactButton.isAccessibilityElement = true
+//        contactButton.setTitle("Contact Developers", for: .normal)
+//        contactButton.titleLabel?.font = UIFont.systemFont(ofSize: 24.0)
+//        contactButton.accessibilityLabel = "Contact Developers"
+//        ///contactButton.addTarget(self, action: #selector(contactButtonPressed), for: .touchUpInside)
+//        contactButton.setImage(UIImage(named: "Contact"), for: .normal)
         
         //button to go back
         backButton = UIButton(frame: CGRect(x: 10, y: 10, width: buttonFrameWidth/7, height: buttonFrameWidth/7))
@@ -1278,13 +1276,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         backButton.setImage(UIImage(named: "backButton"), for: .normal)
         
         // button that shows feedback menu
-        feedbackButton = UIButton(frame: CGRect(x: 2*buttonFrameWidth/3, y: yOriginOfSettingsAndHelpButton, width: buttonFrameWidth/3, height: settingsAndHelpFrameHeight))
+        feedbackButton = UIButton(frame: CGRect(x: buttonFrameWidth/(7/5), y: yOriginOfSettingsAndHelpButton + 10, width: buttonFrameWidth/7, height: buttonFrameWidth/7))
         feedbackButton.isAccessibilityElement = true
         feedbackButton.setTitle("Feedback", for: .normal)
         feedbackButton.titleLabel?.font = UIFont.systemFont(ofSize: 24.0)
         feedbackButton.accessibilityLabel = "Feedback"
-        feedbackButton.backgroundColor = UIColor.black.withAlphaComponent(0.4)
+        //feedbackButton.backgroundColor = UIColor.black.withAlphaComponent(0)
         feedbackButton.addTarget(self, action: #selector(feedbackButtonPressed), for: .touchUpInside)
+        feedbackButton.setImage(UIImage(named: "Contact"), for: .normal)
 
         // button that gives direction to the nearist keypoint
         getDirectionButton = UIButton(frame: CGRect(x: 0, y: 0, width: buttonFrameWidth, height: yOriginOfButtonFrame))
@@ -1356,7 +1355,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         self.view.addSubview(getDirectionButton)
         self.view.addSubview(settingsButton)
         self.view.addSubview(backButton)
-        self.view.addSubview(contactButton)
         self.view.addSubview(helpButton)
         self.view.addSubview(feedbackButton)
         self.view.addSubview(routeRatingView)
@@ -1372,7 +1370,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         settingsButton.isHidden = false
         backButton.isHidden = false
         helpButton.isHidden = false
-        contactButton.isHidden = false
         feedbackButton.isHidden = false
         stopNavigationView.isHidden = true
         getDirectionButton.isHidden = true
