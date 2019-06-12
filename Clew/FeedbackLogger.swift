@@ -15,6 +15,8 @@ class FeedbackLogger {
 
     //creates a reference to the feedback folder within firebase
     let feedbackRef = Storage.storage().reference().child("feedback")
+    //creates a referance for the file path of the audiofile
+    let uniqueID = UUID().uuidString
     
     //MARK: functions
     //a function which saves the feedback and publishis it to the firebase website
@@ -24,7 +26,7 @@ class FeedbackLogger {
         var returnValue = 0
         
         //creates a reference to the location we want to save the new file
-        let fileRef = feedbackRef.child("\(name)_\(UUID().uuidString)_metadata.json")
+        let fileRef = feedbackRef.child("\(name)_\(uniqueID)_metadata.json")
         
         let fileType = StorageMetadata()
         fileType.contentType = "application/json"
@@ -44,15 +46,19 @@ class FeedbackLogger {
         //MARK: Audio Recording to Firebase
         // if there was an audio note recording attached to the feedback submission then send it to firebase as well
         if audioFileURL != nil{
+            
+            //stores a reference to the aidiofile URL
+            let audioref = "\(name)_Recording_\(uniqueID).wav"
+            
             if let data = try? Data(contentsOf: audioFileURL!) {
                 //sets the file type to the proper audio file
                 let fileType = StorageMetadata()
                 fileType.contentType = "audio/wav"
                 
-                let fileRef = feedbackRef.child("\(name)_\(UUID().uuidString).wav")
+                let fileRef = feedbackRef.child(audioref)
                 let uploadTask = fileRef.putData(data, metadata: fileType){ (metadata, error) in
                     guard metadata != nil else {
-                        returnValue = 1
+                        returnValue = 2
                         // prints an errorstatement to the console
                         print("could not upload audio recording to firebase", error!.localizedDescription)
                         //quits the conditional
@@ -85,7 +91,8 @@ class FeedbackLogger {
                                     "Name": name,
                                     "Country": country,
                                     "Message": message,
-                                    "AppInstanceID": Analytics.appInstanceID()]
+                                    "AppInstanceID": Analytics.appInstanceID(),
+                                    "AudioFileName": "\(name)_Recording_\(uniqueID).wav"]
         do {
             let data = try JSONSerialization.data(withJSONObject: body, options: .prettyPrinted)
             //returns the data properly combined and formatted

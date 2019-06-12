@@ -1081,6 +1081,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// Record a voice note by displaying the RecorderView
     @objc func recordVoiceNote() {
         let popoverContent = RecorderViewController()
+        //says that the recorder should dismiss tiself when it is done
         popoverContent.shouldAutoDismiss = true
         popoverContent.delegate = self
         popoverContent.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: popoverContent, action: #selector(popoverContent.doneWithRecording))

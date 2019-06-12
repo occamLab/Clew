@@ -9,13 +9,6 @@
 import Foundation
 
 class FeedbackViewController : UIViewController, UITextViewDelegate, UIPopoverPresentationControllerDelegate, RecorderViewControllerDelegate {
-    func didStartRecording() {
-        print("started recording")
-    }
-    
-    func didFinishRecording(audioFileURL: URL) {
-        print("finished recording", audioFileURL)
-    }
 
     //MARK: Outlets
     @IBOutlet weak var nameTextField: UITextField!
@@ -23,18 +16,43 @@ class FeedbackViewController : UIViewController, UITextViewDelegate, UIPopoverPr
     @IBOutlet weak var feedbackTextField: UITextView!
     @IBOutlet weak var phoneNumberTextField: UITextField!
     @IBOutlet weak var emailTextField: UITextField!
+    
+    //MARK: Private variables and constants
+    //sets an empty audiofile url
+    var audio: URL? = nil
+    
+    //MARK: functions
     //called when the popover is loaded
     override func viewDidLoad(){
+        
+        //performs the default loading behavor of the superclass
         super.viewDidLoad()
-        //feedbackTextField.delegate = self
+        
+        //sets itself as the feedback field's delegate so it can clear the text in the feedback field upon editing
+        feedbackTextField.delegate = self
+        
         //sets the title of the popover
         title = "Clew Feedback"
         
     }
     
+    //called when the voice recording is started
+    func didStartRecording() {
+    }
+    
+    //called when the voice recording is finished
+    func didFinishRecording(audioFileURL: URL) {
+        audio = audioFileURL
+    }
+    
+    //handels the permissions of dealing with the recorder view
     override func prepare(for segue: UIStoryboardSegue,
                           sender: Any?) {
+        
+        //if there is a properly formatted recorder view
         if segue.identifier == "recorderSubView", let recorderViewController  = segue.destination as? RecorderViewController {
+            
+            //sets itself as the delegate for the recorder view controller
             recorderViewController.delegate = self
         }
     }
@@ -43,8 +61,13 @@ class FeedbackViewController : UIViewController, UITextViewDelegate, UIPopoverPr
     
     //called whenever you start editing the feedback text field
     func textViewDidBeginEditing(_ textView: UITextView) {
-        //clears the text in the text field
-        feedbackTextField.text = ""
+        
+        //checks to see if the value is equal to the default value so that it will only clear the text if it is the default value
+        if feedbackTextField.text == "Enter Feedback"{
+            
+            //clears the text in the text field
+            feedbackTextField.text = ""
+        }
     }
     
     //This is a function which takes the feedback from the form and sends it to firebase. This function is called when the send feedback button is pressed
@@ -94,9 +117,19 @@ class FeedbackViewController : UIViewController, UITextViewDelegate, UIPopoverPr
         //if the feedback was entered properly
         if feedback != "NONE" && name != "NONE" && feedback != "Please enter feedback on Clew"{
             //retrieves the data from the feedback field and sends it to firebase using functions described in the feedback logger class. sucessvalue is a variable which stores a zero or one corresponding to the sucess of the upload (one means that there was a failure
-            let audio: URL? = nil
             let sucessvalue = feedbackLogger.saveFeedback(name: name, message: feedback, country: countryTextField.text!, phone: number, email: email,audio: audio)
             
+            //perfomes check which will print different states to the console based on the sucess of uploading files to firebase
+            switch sucessvalue{
+            case 0:
+                    print("Uploaded to Firebase Sucessfully")
+            case 1:
+                    print("Feedback failed to upload")
+            case 2:
+                    print("Audio failied to upload")
+            default:
+                    print("This shouldn't happen")
+            }
             //closes the popup
             closeFeedback()
         }
