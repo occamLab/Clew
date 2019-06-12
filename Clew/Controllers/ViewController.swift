@@ -611,35 +611,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         return true
     }
     
-    // MARK: - UIViews for all UI button containers
-    
-//    /// button for getting directions to the next keypoint
-//    var getDirectionButton: UIButton!
-//
-//    /// button for bringing up the settings menu
-//    var settingsButton: UIButton!
-//
-//    /// button for bringing up the help menu
-//    var helpButton: UIButton!
-//
-//    /// the view on which the user can pause tracking
-//    var pauseTrackingView: UIView!
-//
-//    /// the view on which the user can initiate the tracking resume procedure
-//    var resumeTrackingView: UIView!
-//
-//    /// the view on which the user can confirm the tracking resume procedure
-//    var resumeTrackingConfirmView: UIView!
-//
-//    /// a banner that displays an announcement in the top quarter of the screen.  This is used for displaying status updates or directions.  This should only be used to display time-sensitive content.
-//    var announcementText: UILabel!
-//
-//    /// the view on which the user can rate the quality of their navigation experience
-//    var routeRatingView: UIView!
-    
-    /// a timer that counts down during the alignment procedure (alignment is captured at the end of the time)
-//    var countdownTimer: SRCountdownTimer!
-    
     /// audio players for playing system sounds through an `AVAudioSession` (this allows them to be audible even when the rocker switch is muted.
     var audioPlayers: [Int: AVAudioPlayer] = [:]
     

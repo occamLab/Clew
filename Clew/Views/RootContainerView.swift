@@ -19,58 +19,7 @@ import FirebaseDatabase
 import SRCountdownTimer
 
 class RootContainerView: UIView {
-    
-    // MARK: UI Dimensions
 
-    /// Button frame extends the entire width of screen
-    var buttonFrameWidth: CGFloat {
-        return UIScreen.main.bounds.size.width
-    }
-    
-    /// Height of button frame
-    var buttonFrameHeight: CGFloat {
-        return UIScreen.main.bounds.size.height * (1/5)
-    }
-    
-    /// Height of settings and help buttons
-    var settingsAndHelpFrameHeight: CGFloat {
-        return UIScreen.main.bounds.size.height * (1/12)
-    }
-    
-    /// The margin from the settings and help buttons to the bottom of the window
-    var settingsAndHelpMargin: CGFloat {
-        // height of button frame
-        return UIScreen.main.bounds.size.height * (1/24)
-    }
-    
-    /// top margin of direction text label
-    var textLabelBuffer: CGFloat {
-        return buttonFrameHeight * (1/12)
-    }
-    
-    /// y-origin of the get directions button
-    var yOriginOfGetDirectionsButton: CGFloat {
-        return UIScreen.main.bounds.size.height - settingsAndHelpFrameHeight - settingsAndHelpMargin
-    }
-    
-    /// y-origin of the settings and help buttons
-    var yOriginOfSettingsAndHelpButton: CGFloat {
-        get {
-            // y-origin of button frame
-            return UIScreen.main.bounds.size.height - settingsAndHelpFrameHeight - settingsAndHelpMargin
-        }
-    }
-    
-    /// y-origin of button frame
-    var yOriginOfButtonFrame: CGFloat {
-        return UIScreen.main.bounds.size.height - buttonFrameHeight - settingsAndHelpFrameHeight - settingsAndHelpMargin
-    }
-    
-    /// y-origin of announcement frame
-    var yOriginOfAnnouncementFrame: CGFloat {
-        return UIScreen.main.bounds.size.height/15
-    }
-    
     // MARK: - UIViews for all UI button containers
     
     /// button for getting directions to the next keypoint
@@ -124,9 +73,9 @@ class RootContainerView: UIView {
         
         // MARK: Settings Button
         settingsButton = UIButton(frame: CGRect(x: 0,
-                                                y: yOriginOfSettingsAndHelpButton,
-                                                width: buttonFrameWidth/2,
-                                                height: settingsAndHelpFrameHeight))
+                                                y: UIConstants.yOriginOfSettingsAndHelpButton,
+                                                width: UIConstants.buttonFrameWidth/2,
+                                                height: UIConstants.settingsAndHelpFrameHeight))
         settingsButton.isAccessibilityElement = true
         settingsButton.setTitle("Settings", for: .normal)
         settingsButton.accessibilityLabel = "Settings"
@@ -134,10 +83,10 @@ class RootContainerView: UIView {
         settingsButton.backgroundColor = UIColor.black.withAlphaComponent(0.4)
         
         // MARK: Help Button
-        helpButton = UIButton(frame: CGRect(x: buttonFrameWidth/2,
-                                            y: yOriginOfSettingsAndHelpButton,
-                                            width: buttonFrameWidth/2,
-                                            height: settingsAndHelpFrameHeight))
+        helpButton = UIButton(frame: CGRect(x: UIConstants.buttonFrameWidth/2,
+                                            y: UIConstants.yOriginOfSettingsAndHelpButton,
+                                            width: UIConstants.buttonFrameWidth/2,
+                                            height: UIConstants.settingsAndHelpFrameHeight))
         helpButton.isAccessibilityElement = true
         helpButton.setTitle("Help", for: .normal)
         helpButton.titleLabel?.font = UIFont.systemFont(ofSize: 24.0)
@@ -149,17 +98,17 @@ class RootContainerView: UIView {
         // to the next waypoint.
         getDirectionButton = UIButton(frame: CGRect(x: 0,
                                                     y: 0,
-                                                    width: buttonFrameWidth,
-                                                    height: yOriginOfButtonFrame))
+                                                    width: UIConstants.buttonFrameWidth,
+                                                    height: UIConstants.yOriginOfButtonFrame))
         getDirectionButton.isAccessibilityElement = true
         getDirectionButton.accessibilityLabel = "Get Directions"
         getDirectionButton.isHidden = true
 
         // MARK: Announcement Text
         announcementText = UILabel(frame: CGRect(x: 0,
-                                                 y: yOriginOfAnnouncementFrame,
-                                                 width: buttonFrameWidth,
-                                                 height: buttonFrameHeight*(1/2)))
+                                                 y: UIConstants.yOriginOfAnnouncementFrame,
+                                                 width: UIConstants.buttonFrameWidth,
+                                                 height: UIConstants.buttonFrameHeight*(1/2)))
         announcementText.textColor = UIColor.white
         announcementText.textAlignment = .center
         announcementText.isAccessibilityElement = false
@@ -170,7 +119,7 @@ class RootContainerView: UIView {
         announcementText.isHidden = true
         
         // MARK: countdown element
-        countdownTimer = SRCountdownTimer(frame: CGRect(x: buttonFrameWidth*1/10, y: yOriginOfButtonFrame/10, width: buttonFrameWidth*8/10, height: buttonFrameWidth*8/10))
+        countdownTimer = SRCountdownTimer(frame: CGRect(x: UIConstants.buttonFrameWidth*1/10, y: UIConstants.yOriginOfButtonFrame/10, width: UIConstants.buttonFrameWidth*8/10, height: UIConstants.buttonFrameWidth*8/10))
 //        countdownTimer.delegate = self
         countdownTimer.labelFont = UIFont(name: "HelveticaNeue-Light", size: 100)
         countdownTimer.labelTextColor = UIColor.white
