@@ -8,7 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		12317E6A4CEFE90BE755D803 /* Pods_Clew_Dev.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4315F457247AC66574B86A26 /* Pods_Clew_Dev.framework */; };
-		4B12F4A545BC26EAA16F6633 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		1F2958D722AABFB3001A8547 /* FeedbackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2958D622AABFB3001A8547 /* FeedbackViewController.swift */; };
+		1F2958D822AABFB3001A8547 /* FeedbackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2958D622AABFB3001A8547 /* FeedbackViewController.swift */; };
+		1F2958D922AAC00C001A8547 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D6B00C51F33C1C400952242 /* ViewController.swift */; };
+		1F2958DB22AAE2D1001A8547 /* FeedbackLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2958DA22AAE2D1001A8547 /* FeedbackLogger.swift */; };
+		1F2958DC22AAE2D1001A8547 /* FeedbackLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2958DA22AAE2D1001A8547 /* FeedbackLogger.swift */; };
+		4B12F4A545BC26EAA16F6633 /* Pods_Clew.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1977F3CD0CF608888A7E2B5C /* Pods_Clew.framework */; };
 		4D6B00C41F33C1C400952242 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D6B00C31F33C1C400952242 /* AppDelegate.swift */; };
 		4D6B00C61F33C1C400952242 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D6B00C51F33C1C400952242 /* ViewController.swift */; };
 		4D6B00CE1F33C1C400952242 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4D6B00CC1F33C1C400952242 /* LaunchScreen.storyboard */; };
@@ -19,6 +24,7 @@
 		4D6B00E51F33C9B800952242 /* Crumb.obj in Resources */ = {isa = PBXBuildFile; fileRef = 4D6B00E41F33C85500952242 /* Crumb.obj */; };
 		4D9E8E7F1F3A4D3400536FCD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4D940BAA1F38AA79004E6741 /* Assets.xcassets */; };
 		4DF05CC81F34EB6B008B0E31 /* Confirm.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4DF05CC71F34EB56008B0E31 /* Confirm.mp3 */; };
+		6C5EAEA6841FD0A893E9B13B /* Pods_Clew.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C4CE12E3C729D40002186797 /* Pods_Clew.framework */; };
 		82028C74227CDB3100772701 /* PathLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82028C73227CDB3100772701 /* PathLogger.swift */; };
 		82028C75227CDB3100772701 /* PathLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82028C73227CDB3100772701 /* PathLogger.swift */; };
 		82028C7722807BF400772701 /* GoogleService-Info_dev.plist in Resources */ = {isa = PBXBuildFile; fileRef = 82028C7622807BF400772701 /* GoogleService-Info_dev.plist */; };
@@ -49,7 +55,6 @@
 		82A43F4C226907C600076941 /* RecordButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82A43F4A226907C600076941 /* RecordButton.swift */; };
 		82A43F4E2269085800076941 /* RecordButtonKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82A43F4D2269085800076941 /* RecordButtonKit.swift */; };
 		82A43F4F2269085800076941 /* RecordButtonKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82A43F4D2269085800076941 /* RecordButtonKit.swift */; };
-		82FDAD3E22715C65009A0A3C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D6B00C51F33C1C400952242 /* ViewController.swift */; };
 		B7EB59DA20F693EB00FBBC6A /* PathFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D6B00D71F33C21A00952242 /* PathFinder.swift */; };
 		B7EB59DB20F693EB00FBBC6A /* Navigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D6B00D51F33C1FE00952242 /* Navigation.swift */; };
 		B7EB59DC20F693EB00FBBC6A /* Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D6B00DB1F33C26D00952242 /* Utility.swift */; };
@@ -63,6 +68,9 @@
 
 /* Begin PBXFileReference section */
 		08FA9C31721F9F8CDCC23AE9 /* Pods-Clew.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Clew/Pods-Clew.debug.xcconfig"; sourceTree = "<group>"; };
+		1977F3CD0CF608888A7E2B5C /* Pods_Clew.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Clew.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		1F2958D622AABFB3001A8547 /* FeedbackViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackViewController.swift; sourceTree = "<group>"; };
+		1F2958DA22AAE2D1001A8547 /* FeedbackLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackLogger.swift; sourceTree = "<group>"; };
 		4315F457247AC66574B86A26 /* Pods_Clew_Dev.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Clew_Dev.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4D6B00C01F33C1C400952242 /* Clew.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Clew.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4D6B00C31F33C1C400952242 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -98,6 +106,7 @@
 		82A43F4D2269085800076941 /* RecordButtonKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordButtonKit.swift; sourceTree = "<group>"; };
 		85A1A72DC19F87F15B738291 /* Pods-Clew Dev.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew Dev.release.xcconfig"; path = "Pods/Target Support Files/Pods-Clew Dev/Pods-Clew Dev.release.xcconfig"; sourceTree = "<group>"; };
 		B7EB59EC20F693EB00FBBC6A /* Clew Dev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Clew Dev.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		C4CE12E3C729D40002186797 /* Pods_Clew.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Clew.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C68778047D8E263D2FB04989 /* Pods-Clew Dev.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew Dev.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Clew Dev/Pods-Clew Dev.debug.xcconfig"; sourceTree = "<group>"; };
 		D89DDB87A8AE1A9ECEAFCEC6 /* Pods-Clew.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew.release.xcconfig"; path = "Pods/Target Support Files/Pods-Clew/Pods-Clew.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -107,7 +116,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4B12F4A545BC26EAA16F6633 /* (null) in Frameworks */,
+				4B12F4A545BC26EAA16F6633 /* Pods_Clew.framework in Frameworks */,
+				6C5EAEA6841FD0A893E9B13B /* Pods_Clew.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -167,10 +177,12 @@
 				826D540B224ABBDC009EF410 /* RoutesViewController.swift */,
 				826D540A224ABBDC009EF410 /* RouteTableViewCell.swift */,
 				82028C73227CDB3100772701 /* PathLogger.swift */,
+				1F2958DA22AAE2D1001A8547 /* FeedbackLogger.swift */,
 				4D6B00CF1F33C1C400952242 /* Info.plist */,
 				4D6B00DD1F33C33600952242 /* Settings.bundle */,
 				82473B062217641D00E98CFC /* Clew-Bridging-Header.h */,
 				82473B072217641D00E98CFC /* Clew Dev-Bridging-Header.h */,
+				1F2958D622AABFB3001A8547 /* FeedbackViewController.swift */,
 			);
 			path = Clew;
 			sourceTree = "<group>";
@@ -210,6 +222,7 @@
 			isa = PBXGroup;
 			children = (
 				4315F457247AC66574B86A26 /* Pods_Clew_Dev.framework */,
+				C4CE12E3C729D40002186797 /* Pods_Clew.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -441,7 +454,9 @@
 				82569F4722187AE700448B45 /* HelpViewController.swift in Sources */,
 				826D5411224ABC39009EF410 /* DataPersistence.swift in Sources */,
 				826D540E224ABBDC009EF410 /* RoutesViewController.swift in Sources */,
+				1F2958D722AABFB3001A8547 /* FeedbackViewController.swift in Sources */,
 				4D6B00D81F33C21A00952242 /* PathFinder.swift in Sources */,
+				1F2958DB22AAE2D1001A8547 /* FeedbackLogger.swift in Sources */,
 				82A43F482269079300076941 /* RecorderViewController.swift in Sources */,
 				4D6B00D61F33C1FE00952242 /* Navigation.swift in Sources */,
 				4D6B00DC1F33C26D00952242 /* Utility.swift in Sources */,
@@ -464,8 +479,8 @@
 				826D5412224ABC39009EF410 /* DataPersistence.swift in Sources */,
 				826D540F224ABBDC009EF410 /* RoutesViewController.swift in Sources */,
 				B7EB59DA20F693EB00FBBC6A /* PathFinder.swift in Sources */,
-				82FDAD3E22715C65009A0A3C /* ViewController.swift in Sources */,
 				82A43F492269079300076941 /* RecorderViewController.swift in Sources */,
+				1F2958DC22AAE2D1001A8547 /* FeedbackLogger.swift in Sources */,
 				B7EB59DB20F693EB00FBBC6A /* Navigation.swift in Sources */,
 				82028C75227CDB3100772701 /* PathLogger.swift in Sources */,
 				B7EB59DC20F693EB00FBBC6A /* Utility.swift in Sources */,
@@ -474,6 +489,8 @@
 				827E859622690956005CF98A /* AudioVisualizerView.swift in Sources */,
 				82A43F4C226907C600076941 /* RecordButton.swift in Sources */,
 				826D540D224ABBDC009EF410 /* RouteTableViewCell.swift in Sources */,
+				1F2958D822AABFB3001A8547 /* FeedbackViewController.swift in Sources */,
+				1F2958D922AAC00C001A8547 /* ViewController.swift in Sources */,
 				B7EB59DE20F693EB00FBBC6A /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -648,7 +665,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
 				INFOPLIST_FILE = "Clew Dev-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_SWIFT_FLAGS = "$(inherited) \"-DDEVELOPER\" \"-DIS_DEV_TARGET\"";
 				PRODUCT_BUNDLE_IDENTIFIER = "edu.occam.Clew-Dev";
@@ -668,7 +685,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
 				INFOPLIST_FILE = "Clew Dev-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_SWIFT_FLAGS = "$(inherited) \"-DDEVELOPER\" \"-DIS_DEV_TARGET\"";
 				PRODUCT_BUNDLE_IDENTIFIER = "edu.occam.Clew-Dev";

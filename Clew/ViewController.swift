@@ -814,6 +814,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// button for bringing up the help menu
     var helpButton: UIButton!
     
+    /// button for bringing up the feedback menu
+    var feedbackButton: UIButton!
+    
     /// the view on which the user can pause tracking
     var pauseTrackingView: UIView!
     
@@ -1085,6 +1088,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// Record a voice note by displaying the RecorderView
     @objc func recordVoiceNote() {
         let popoverContent = RecorderViewController()
+        //says that the recorder should dismiss tiself when it is done
+        popoverContent.shouldAutoDismiss = true
         popoverContent.delegate = self
         popoverContent.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: popoverContent, action: #selector(popoverContent.doneWithRecording))
         let nav = UINavigationController(rootViewController: popoverContent)
@@ -1271,6 +1276,15 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         backButton.accessibilityLabel = "Go Back"
         ///backButton.addTarget(self, action: #selector(backButtonPressed), for: .touchUpInside)
         backButton.setImage(UIImage(named: "backButton"), for: .normal)
+        
+        // button that shows feedback menu
+        feedbackButton = UIButton(frame: CGRect(x: 2*buttonFrameWidth/3, y: yOriginOfSettingsAndHelpButton, width: buttonFrameWidth/3, height: settingsAndHelpFrameHeight))
+        feedbackButton.isAccessibilityElement = true
+        feedbackButton.setTitle("Feedback", for: .normal)
+        feedbackButton.titleLabel?.font = UIFont.systemFont(ofSize: 24.0)
+        feedbackButton.accessibilityLabel = "Feedback"
+        feedbackButton.backgroundColor = UIColor.black.withAlphaComponent(0.4)
+        feedbackButton.addTarget(self, action: #selector(feedbackButtonPressed), for: .touchUpInside)
 
         // button that gives direction to the nearist keypoint
         getDirectionButton = UIButton(frame: CGRect(x: 0, y: 0, width: buttonFrameWidth, height: yOriginOfButtonFrame))
@@ -1344,6 +1358,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         self.view.addSubview(backButton)
         self.view.addSubview(contactButton)
         self.view.addSubview(helpButton)
+        self.view.addSubview(feedbackButton)
         self.view.addSubview(routeRatingView)
         self.view.addSubview(countdownTimer)
         
@@ -1358,6 +1373,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         backButton.isHidden = false
         helpButton.isHidden = false
         contactButton.isHidden = false
+        feedbackButton.isHidden = false
         stopNavigationView.isHidden = true
         getDirectionButton.isHidden = true
         routeRatingView.isHidden = true
@@ -2065,6 +2081,21 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         popover?.sourceView = self.view
         popover?.sourceRect = CGRect(x: 0, y: settingsAndHelpFrameHeight/2, width: 0,height: 0)
         popoverContent.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: popoverContent, action: #selector(popoverContent.doneWithHelp))
+        suppressTrackingWarnings = true
+        self.present(nav, animated: true, completion: nil)
+    }
+    
+    /// Called when the Feedback button is pressed.  This function will display the Feedback view (managed by FeedbackViewController) as a popover.
+    @objc func feedbackButtonPressed() {
+        let storyBoard: UIStoryboard = UIStoryboard(name: "SettingsAndHelp", bundle: nil)
+        let popoverContent = storyBoard.instantiateViewController(withIdentifier: "Feedback") as! FeedbackViewController
+        let nav = UINavigationController(rootViewController: popoverContent)
+        nav.modalPresentationStyle = .popover
+        let popover = nav.popoverPresentationController
+        popover?.delegate = self
+        popover?.sourceView = self.view
+        popover?.sourceRect = CGRect(x: 0, y: settingsAndHelpFrameHeight/2, width: 0,height: 0)
+        popoverContent.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: popoverContent, action: #selector(popoverContent.closeFeedback))
         suppressTrackingWarnings = true
         self.present(nav, animated: true, completion: nil)
     }
