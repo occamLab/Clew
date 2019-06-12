@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>AppState Enumeration Reference</title>
+    <title>FeedbackViewController Class Reference</title>
     <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
     <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
     <meta charset='utf-8'>
@@ -10,8 +10,8 @@
     
   </head>
   <body>
-    <a name="//apple_ref/swift/Enum/AppState" class="dashAnchor"></a>
-    <a title="AppState Enumeration Reference"></a>
+    <a name="//apple_ref/swift/Class/FeedbackViewController" class="dashAnchor"></a>
+    <a title="FeedbackViewController Class Reference"></a>
     <header>
       <div class="content-wrapper">
         <p><a href="../index.html"> Docs</a> (96% documented)</p>
@@ -21,7 +21,7 @@
       <p id="breadcrumbs">
         <a href="../index.html"> Reference</a>
         <img id="carat" src="../img/carat.png" />
-        AppState Enumeration Reference
+        FeedbackViewController Class Reference
       </p>
     </div>
     <div class="content-wrapper">
@@ -199,25 +199,32 @@
       <article class="main-content">
         <section>
           <section class="section">
-            <h1>AppState</h1>
+            <h1>FeedbackViewController</h1>
               <div class="declaration">
                 <div class="language">
-                  <pre class="highlight swift"><code><span class="kd">enum</span> <span class="kt">AppState</span></code></pre>
+                  <pre class="highlight swift"><code><span class="kd">class</span> <span class="kt">FeedbackViewController</span> <span class="p">:</span> <span class="kt">UIViewController</span><span class="p">,</span> <span class="kt">UITextViewDelegate</span><span class="p">,</span> <span class="kt">UIPopoverPresentationControllerDelegate</span><span class="p">,</span> <span class="kt"><a href="../Protocols/RecorderViewControllerDelegate.html">RecorderViewControllerDelegate</a></span></code></pre>
 
                 </div>
               </div>
-            <p>A custom enumeration type that describes the exact state of the app.  The state is not exhaustive (e.g., there are Boolean flags that also track app state).</p>
+            <p>Undocumented</p>
 
           </section>
           <section class="section task-group-section">
             <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Outlets"></a>
+                <a name="//apple_ref/swift/Section/Outlets" class="dashAnchor"></a>
+                <a href="#/Outlets">
+                  <h3 class="section-name">Outlets</h3>
+                </a>
+              </div>
               <ul>
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:4Clew8AppStateO10mainScreenyACSb_tcACmF"></a>
-                    <a name="//apple_ref/swift/Element/mainScreen(announceArrival:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:4Clew8AppStateO10mainScreenyACSb_tcACmF">mainScreen(announceArrival:)</a>
+                    <a name="/s:4Clew22FeedbackViewControllerC13nameTextFieldXevp"></a>
+                    <a name="//apple_ref/swift/Property/nameTextField" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Clew22FeedbackViewControllerC13nameTextFieldXevp">nameTextField</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -225,14 +232,15 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>This is the screen the comes up immediately after the splash screen</p>
+                        <p>Undocumented</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">case</span> <span class="nf">mainScreen</span><span class="p">(</span><span class="nv">announceArrival</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@IBOutlet</span>
+<span class="k">weak</span> <span class="k">var</span> <span class="nv">nameTextField</span><span class="p">:</span> <span class="kt">UITextField</span><span class="o">!</span></code></pre>
 
                         </div>
                       </div>
@@ -242,9 +250,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:4Clew8AppStateO14recordingRouteyA2CmF"></a>
-                    <a name="//apple_ref/swift/Element/recordingRoute" class="dashAnchor"></a>
-                    <a class="token" href="#/s:4Clew8AppStateO14recordingRouteyA2CmF">recordingRoute</a>
+                    <a name="/s:4Clew22FeedbackViewControllerC16countryTextFieldXevp"></a>
+                    <a name="//apple_ref/swift/Property/countryTextField" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Clew22FeedbackViewControllerC16countryTextFieldXevp">countryTextField</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -252,14 +260,15 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>User is recording the route</p>
+                        <p>Undocumented</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">recordingRoute</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@IBOutlet</span>
+<span class="k">weak</span> <span class="k">var</span> <span class="nv">countryTextField</span><span class="p">:</span> <span class="kt">UITextField</span><span class="o">!</span></code></pre>
 
                         </div>
                       </div>
@@ -269,9 +278,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:4Clew8AppStateO22readyToNavigateOrPauseyACSb_tcACmF"></a>
-                    <a name="//apple_ref/swift/Element/readyToNavigateOrPause(allowPause:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:4Clew8AppStateO22readyToNavigateOrPauseyACSb_tcACmF">readyToNavigateOrPause(allowPause:)</a>
+                    <a name="/s:4Clew22FeedbackViewControllerC17feedbackTextFieldXevp"></a>
+                    <a name="//apple_ref/swift/Property/feedbackTextField" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Clew22FeedbackViewControllerC17feedbackTextFieldXevp">feedbackTextField</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -279,14 +288,15 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>User can either navigate back or pause</p>
+                        <p>Undocumented</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">case</span> <span class="nf">readyToNavigateOrPause</span><span class="p">(</span><span class="nv">allowPause</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@IBOutlet</span>
+<span class="k">weak</span> <span class="k">var</span> <span class="nv">feedbackTextField</span><span class="p">:</span> <span class="kt">UITextView</span><span class="o">!</span></code></pre>
 
                         </div>
                       </div>
@@ -296,9 +306,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:4Clew8AppStateO15navigatingRouteyA2CmF"></a>
-                    <a name="//apple_ref/swift/Element/navigatingRoute" class="dashAnchor"></a>
-                    <a class="token" href="#/s:4Clew8AppStateO15navigatingRouteyA2CmF">navigatingRoute</a>
+                    <a name="/s:4Clew22FeedbackViewControllerC20phoneNumberTextFieldXevp"></a>
+                    <a name="//apple_ref/swift/Property/phoneNumberTextField" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Clew22FeedbackViewControllerC20phoneNumberTextFieldXevp">phoneNumberTextField</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -306,14 +316,15 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>User is navigating along a route</p>
+                        <p>Undocumented</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">navigatingRoute</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@IBOutlet</span>
+<span class="k">weak</span> <span class="k">var</span> <span class="nv">phoneNumberTextField</span><span class="p">:</span> <span class="kt">UITextField</span><span class="o">!</span></code></pre>
 
                         </div>
                       </div>
@@ -323,9 +334,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:4Clew8AppStateO11ratingRouteyACSb_tcACmF"></a>
-                    <a name="//apple_ref/swift/Element/ratingRoute(announceArrival:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:4Clew8AppStateO11ratingRouteyACSb_tcACmF">ratingRoute(announceArrival:)</a>
+                    <a name="/s:4Clew22FeedbackViewControllerC14emailTextFieldXevp"></a>
+                    <a name="//apple_ref/swift/Property/emailTextField" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Clew22FeedbackViewControllerC14emailTextFieldXevp">emailTextField</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -333,14 +344,91 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>User is rating the route</p>
+                        <p>Undocumented</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">case</span> <span class="nf">ratingRoute</span><span class="p">(</span><span class="nv">announceArrival</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@IBOutlet</span>
+<span class="k">weak</span> <span class="k">var</span> <span class="nv">emailTextField</span><span class="p">:</span> <span class="kt">UITextField</span><span class="o">!</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Private%20variables%20and%20constants"></a>
+                <a name="//apple_ref/swift/Section/Private variables and constants" class="dashAnchor"></a>
+                <a href="#/Private%20variables%20and%20constants">
+                  <h3 class="section-name">Private variables and constants</h3>
+                </a>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Clew22FeedbackViewControllerC5audio10Foundation3URLVSgvp"></a>
+                    <a name="//apple_ref/swift/Property/audio" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Clew22FeedbackViewControllerC5audio10Foundation3URLVSgvp">audio</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">audio</span><span class="p">:</span> <span class="kt">URL</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/functions"></a>
+                <a name="//apple_ref/swift/Section/functions" class="dashAnchor"></a>
+                <a href="#/functions">
+                  <h3 class="section-name">functions</h3>
+                </a>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Clew22FeedbackViewControllerC11viewDidLoadyyF"></a>
+                    <a name="//apple_ref/swift/Method/viewDidLoad()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Clew22FeedbackViewControllerC11viewDidLoadyyF">viewDidLoad()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">override</span> <span class="kd">func</span> <span class="nf">viewDidLoad</span><span class="p">()</span></code></pre>
 
                         </div>
                       </div>
@@ -350,9 +438,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:4Clew8AppStateO12initializingyA2CmF"></a>
-                    <a name="//apple_ref/swift/Element/initializing" class="dashAnchor"></a>
-                    <a class="token" href="#/s:4Clew8AppStateO12initializingyA2CmF">initializing</a>
+                    <a name="/s:4Clew30RecorderViewControllerDelegateP17didStartRecordingyyF"></a>
+                    <a name="//apple_ref/swift/Method/didStartRecording()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Clew30RecorderViewControllerDelegateP17didStartRecordingyyF">didStartRecording()</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -360,14 +448,13 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>The app is starting up</p>
-
+                        
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">initializing</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">didStartRecording</span><span class="p">()</span></code></pre>
 
                         </div>
                       </div>
@@ -377,9 +464,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:4Clew8AppStateO22startingPauseProcedureyA2CmF"></a>
-                    <a name="//apple_ref/swift/Element/startingPauseProcedure" class="dashAnchor"></a>
-                    <a class="token" href="#/s:4Clew8AppStateO22startingPauseProcedureyA2CmF">startingPauseProcedure</a>
+                    <a name="/s:4Clew30RecorderViewControllerDelegateP18didFinishRecording12audioFileURLy10Foundation0K0V_tF"></a>
+                    <a name="//apple_ref/swift/Method/didFinishRecording(audioFileURL:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Clew30RecorderViewControllerDelegateP18didFinishRecording12audioFileURLy10Foundation0K0V_tF">didFinishRecording(audioFileURL:)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -387,14 +474,13 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>The user has requested a pause, but has not yet put the phone in the save location</p>
-
+                        
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">startingPauseProcedure</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">didFinishRecording</span><span class="p">(</span><span class="nv">audioFileURL</span><span class="p">:</span> <span class="kt">URL</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -404,9 +490,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:4Clew8AppStateO18pauseWaitingPeriodyA2CmF"></a>
-                    <a name="//apple_ref/swift/Element/pauseWaitingPeriod" class="dashAnchor"></a>
-                    <a class="token" href="#/s:4Clew8AppStateO18pauseWaitingPeriodyA2CmF">pauseWaitingPeriod</a>
+                    <a name="/s:4Clew22FeedbackViewControllerC7prepareyyXe_ypSgtcACF"></a>
+                    <a name="//apple_ref/swift/Method/prepare(for:sender:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Clew22FeedbackViewControllerC7prepareyyXe_ypSgtcACF">prepare(for:sender:)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -414,14 +500,53 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>The user has hit the volume button.  The app now enters a waiting period for the tracking to stabilize</p>
+                        <p>Undocumented</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">pauseWaitingPeriod</span></code></pre>
+                          <pre class="highlight swift"><code><span class="k">override</span> <span class="kd">func</span> <span class="nf">prepare</span><span class="p">(</span><span class="k">for</span> <span class="nv">segue</span><span class="p">:</span> <span class="kt">UIStoryboardSegue</span><span class="p">,</span>
+                      <span class="nv">sender</span><span class="p">:</span> <span class="kt">Any</span><span class="p">?)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Actions"></a>
+                <a name="//apple_ref/swift/Section/Actions" class="dashAnchor"></a>
+                <a href="#/Actions">
+                  <h3 class="section-name">Actions</h3>
+                </a>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Clew22FeedbackViewControllerC04textC15DidBeginEditingyyXecACF"></a>
+                    <a name="//apple_ref/swift/Method/textViewDidBeginEditing(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Clew22FeedbackViewControllerC04textC15DidBeginEditingyyXecACF">textViewDidBeginEditing(_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">textViewDidBeginEditing</span><span class="p">(</span><span class="n">_</span> <span class="nv">textView</span><span class="p">:</span> <span class="kt">UITextView</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -431,9 +556,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:4Clew8AppStateO24completingPauseProcedureyA2CmF"></a>
-                    <a name="//apple_ref/swift/Element/completingPauseProcedure" class="dashAnchor"></a>
-                    <a class="token" href="#/s:4Clew8AppStateO24completingPauseProcedureyA2CmF">completingPauseProcedure</a>
+                    <a name="/s:4Clew22FeedbackViewControllerC04sendB0yyXecACF"></a>
+                    <a name="//apple_ref/swift/Method/sendFeedback(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Clew22FeedbackViewControllerC04sendB0yyXecACF">sendFeedback(_:)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -441,14 +566,15 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>user is attempting to complete the pausing procedure</p>
+                        <p>Undocumented</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">completingPauseProcedure</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@IBAction</span>
+<span class="kd">func</span> <span class="nf">sendFeedback</span><span class="p">(</span><span class="n">_</span> <span class="nv">sender</span><span class="p">:</span> <span class="kt">UIButton</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -458,9 +584,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:4Clew8AppStateO23pauseProcedureCompletedyA2CmF"></a>
-                    <a name="//apple_ref/swift/Element/pauseProcedureCompleted" class="dashAnchor"></a>
-                    <a class="token" href="#/s:4Clew8AppStateO23pauseProcedureCompletedyA2CmF">pauseProcedureCompleted</a>
+                    <a name="/s:4Clew22FeedbackViewControllerC05closeB0yyF"></a>
+                    <a name="//apple_ref/swift/Method/closeFeedback()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Clew22FeedbackViewControllerC05closeB0yyF">closeFeedback()</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -468,95 +594,15 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>user has successfully paused the ARSession</p>
+                        <p>This is called when the view should close.  This method posts a notification <q>ClewPopoverDismissed</q> that can be listened to if an object needs to know that the view is being closed.</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">pauseProcedureCompleted</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:4Clew8AppStateO23startingResumeProcedureyAcA10SavedRouteC_ypSgSbtcACmF"></a>
-                    <a name="//apple_ref/swift/Element/startingResumeProcedure(route:mapAsAny:navigateStartToEnd:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:4Clew8AppStateO23startingResumeProcedureyAcA10SavedRouteC_ypSgSbtcACmF">startingResumeProcedure(route:mapAsAny:navigateStartToEnd:)</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>user has hit the resume button and is waiting for the volume to hit</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">case</span> <span class="nf">startingResumeProcedure</span><span class="p">(</span><span class="nv">route</span><span class="p">:</span> <span class="kt"><a href="../Classes/SavedRoute.html">SavedRoute</a></span><span class="p">,</span> <span class="nv">mapAsAny</span><span class="p">:</span> <span class="kt">Any</span><span class="p">?,</span> <span class="nv">navigateStartToEnd</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">)</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:4Clew8AppStateO28readyForFinalResumeAlignmentyA2CmF"></a>
-                    <a name="//apple_ref/swift/Element/readyForFinalResumeAlignment" class="dashAnchor"></a>
-                    <a class="token" href="#/s:4Clew8AppStateO28readyForFinalResumeAlignmentyA2CmF">readyForFinalResumeAlignment</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>the AR session has entered the relocalizing state, which means that we can now realign the session</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">readyForFinalResumeAlignment</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:4Clew8AppStateO8rawValueSSvp"></a>
-                    <a name="//apple_ref/swift/Property/rawValue" class="dashAnchor"></a>
-                    <a class="token" href="#/s:4Clew8AppStateO8rawValueSSvp">rawValue</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>rawValue is useful for serializing state values, which we are currently using for our logging feature</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">rawValue</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">func</span> <span class="nf">closeFeedback</span><span class="p">()</span></code></pre>
 
                         </div>
                       </div>
