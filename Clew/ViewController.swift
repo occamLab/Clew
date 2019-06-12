@@ -2062,6 +2062,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     // Called when home button is pressed.
     @objc func homeButtonPressed() {
         hideAllViewsHelper()
+        homeButton.isHidden = true // home button here
         recordPathView.isHidden = false
         recordPathView.isAccessibilityElement = true
     }
