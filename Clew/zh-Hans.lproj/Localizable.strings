@@ -9,7 +9,7 @@
 // Strings from ViewController
 
     // Voicing directions
-"Tracking session initialized." = "开始录行程";
+"Tracking session initialized." = "开始记录行程";
 "Tracking performance normal." = "记录行程性能正常";
 "Hold vertically with the rear camera facing forward." = "将手机垂直与地面，让后置摄像头朝前";
 "You've arrived." = "您已经到达目标";
