@@ -123,7 +123,7 @@ extension UIButton {
         button.tag = buttonViewParts.tag
         button.frame = CGRect(x: 0, y: 0, width: buttonWidth, height: buttonWidth)
         button.layer.cornerRadius = 0.5 * button.bounds.size.width
-        button.clipsToBounds = true
+        button.clipsToBounds = false
         switch buttonViewParts.alignment {
         case .center:
             button.center.x = containerView.center.x

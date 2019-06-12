@@ -1,0 +1,64 @@
+/* 
+  Localizable.strings
+  Clew
+
+  Created by Terri Liu on 2019/6/10.
+  Copyright © 2019 OccamLab. All rights reserved.
+*/
+
+// Strings from ViewController
+
+    // Voicing directions
+"Tracking session initialized." = "เริ่มต้นเซสชันการติดตามแล้ว";
+"Tracking performance normal." = "ติดตามประสิทธิภาพปกติ";
+"Hold vertically with the rear camera facing forward." = "ถือในแนวตั้งโดยให้กล้องด้านหลังหันไปข้างหน้า";
+"You've arrived." = "คุณมาถึงแล้ว";
+
+    // Name of labels that appear in UI
+"Record path" = "เส้นทางบันทึก";
+"Bad" = "Bad";
+"Good" = "Good";
+"Resume" = "Resume";
+"Saved Routes List" = "Saved Routes List";
+"Stop navigation" = "หยุดการนำทาง";
+"Start navigation" = "เริ่มการนำทาง";
+"Stop recording" = "หยุดการบันทึก";
+
+    // Pop-ups
+"Save route" = "Save route";
+"Enter the name of the route" = "Enter the name of the route";
+
+    // Rating service view
+"You've arrived. Please rate your service." = "You've arrived. Please rate your service.";
+"Please rate your service." = "Please rate your service.";
+
+    // Other
+"Successfully matched current environment to saved route." = "Successfully matched current environment to saved route.";
+"Could not match environment to the saved route. Starting new tracking session." = "Could not match environment to the saved route. Starting new tracking session.";
+"Excessive motion.\nTracking performance is degraded." = "Excessive motion.\nTracking performance is degraded.";
+"Insufficient visual features.\nTracking performance is degraded." = "Insufficient visual features.\nTracking performance is degraded.";
+
+
+// Strings from Navigation
+
+    // Version of directions given when haptic feedback function is turned on (Simpler)
+"Continue straight" = "Continue straight";
+"Slight right" = "Slight right";
+"Turn right" = "Turn right";
+"Turn around" = "Turn around";
+"Turn left" = "Turn left"; 
+"Slight left" = "Slight left";
+
+    // Version of directions given when haptic feedback function is turned off (Clock directions)
+"Continue straight" = "Continue straight";
+"Slight right towards 1 o'clock" = "Slight right towards 1 o'clock";
+"Slight right towards 2 o'clock" = "Slight right towards 2 o'clock";
+"Turn right" = "Turn right";
+"Turn towards 4 o'clock" = "Turn towards 4 o'clock";
+"Turn around towards 5 o'clock" = "Turn around towards 5 o'clock";
+"Turn around towards 6 o'clock" = "Turn around towards 6 o'clock";
+"Turn around towards 7 o'clock" = "Turn around towards 7 o'clock";
+"Turn towards 8 o'clock" = "Turn towards 8 o'clock";
+"Turn left" = "Turn left";
+"Slight left towards 10 o'clock" = "Slight left towards 10 o'clock";
+"Slight left towards 11 o'clock" = "Slight left towards 11 o'clock";

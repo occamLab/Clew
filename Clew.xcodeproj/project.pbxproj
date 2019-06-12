@@ -79,10 +79,12 @@
 		4D940BAA1F38AA79004E6741 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4DF05CC71F34EB56008B0E31 /* Confirm.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = Confirm.mp3; sourceTree = "<group>"; };
 		775DDC9022AEF63A00954938 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
+		778DD79822B1375C00EF0778 /* th */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = th; path = th.lproj/Localizable.strings; sourceTree = "<group>"; };
 		77AAC79E22AFDE91001D30E6 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		77AAC7A022AFDE94001D30E6 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
 		77AAC7A122AFE700001D30E6 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 		77AAC7A222AFE700001D30E6 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		77F0E84B22B136EF00505DF6 /* th */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = th; path = th.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		82028C73227CDB3100772701 /* PathLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PathLogger.swift; sourceTree = "<group>"; };
 		82028C7622807BF400772701 /* GoogleService-Info_dev.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info_dev.plist"; sourceTree = "<group>"; };
 		82028C7822807C1F00772701 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
@@ -292,6 +294,7 @@
 				Base,
 				es,
 				"zh-Hans",
+				th,
 			);
 			mainGroup = 4D6B00B71F33C1C400952242;
 			productRefGroup = 4D6B00C11F33C1C400952242 /* Products */;
@@ -500,6 +503,7 @@
 				4D6B00CD1F33C1C400952242 /* Base */,
 				775DDC9022AEF63A00954938 /* es */,
 				77AAC7A122AFE700001D30E6 /* zh-Hans */,
+				77F0E84B22B136EF00505DF6 /* th */,
 			);
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
@@ -510,6 +514,7 @@
 				77AAC79E22AFDE91001D30E6 /* en */,
 				77AAC7A022AFDE94001D30E6 /* es */,
 				77AAC7A222AFE700001D30E6 /* zh-Hans */,
+				778DD79822B1375C00EF0778 /* th */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
