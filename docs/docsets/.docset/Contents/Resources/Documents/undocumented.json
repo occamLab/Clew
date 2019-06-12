@@ -1,6 +1,96 @@
 {
   "warnings": [
-
+    {
+      "file": "/Users/tad/Desktop/tnovak/Clew/Clew/FeedbackLogger.swift",
+      "line": 13,
+      "symbol": "FeedbackLogger",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tad/Desktop/tnovak/Clew/Clew/FeedbackLogger.swift",
+      "line": 16,
+      "symbol": "FeedbackLogger.feedbackRef",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tad/Desktop/tnovak/Clew/Clew/FeedbackLogger.swift",
+      "line": 19,
+      "symbol": "FeedbackLogger.writeFeedbackToFirebase(name:data:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tad/Desktop/tnovak/Clew/Clew/FeedbackLogger.swift",
+      "line": 44,
+      "symbol": "FeedbackLogger.makeData(name:message:country:phone:email:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tad/Desktop/tnovak/Clew/Clew/FeedbackLogger.swift",
+      "line": 72,
+      "symbol": "FeedbackLogger.saveFeedback(name:message:country:phone:email:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tad/Desktop/tnovak/Clew/Clew/FeedbackViewController.swift",
+      "line": 11,
+      "symbol": "FeedbackViewController",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tad/Desktop/tnovak/Clew/Clew/FeedbackViewController.swift",
+      "line": 13,
+      "symbol": "FeedbackViewController.viewDidLoad()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tad/Desktop/tnovak/Clew/Clew/FeedbackViewController.swift",
+      "line": 19,
+      "symbol": "FeedbackViewController.nameTextField",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tad/Desktop/tnovak/Clew/Clew/FeedbackViewController.swift",
+      "line": 20,
+      "symbol": "FeedbackViewController.countryTextField",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tad/Desktop/tnovak/Clew/Clew/FeedbackViewController.swift",
+      "line": 21,
+      "symbol": "FeedbackViewController.feedbackTextField",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tad/Desktop/tnovak/Clew/Clew/FeedbackViewController.swift",
+      "line": 22,
+      "symbol": "FeedbackViewController.phoneNumberTextField",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tad/Desktop/tnovak/Clew/Clew/FeedbackViewController.swift",
+      "line": 23,
+      "symbol": "FeedbackViewController.emailTextField",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tad/Desktop/tnovak/Clew/Clew/FeedbackViewController.swift",
+      "line": 27,
+      "symbol": "FeedbackViewController.sendFeedback(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    }
   ],
-  "source_directory": "/Users/pruvolo/Software/Clew"
+  "source_directory": "/Users/tad/Desktop/tnovak/Clew"
 }
