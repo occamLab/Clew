@@ -72,6 +72,8 @@
 		E5F498B922AEA8A600FA1E6C /* UIViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F498B722AEA8A600FA1E6C /* UIViewExtensions.swift */; };
 		E5F498BB22AEA8B500FA1E6C /* UIButtonExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F498BA22AEA8B500FA1E6C /* UIButtonExtensions.swift */; };
 		E5F498BC22AEA8B500FA1E6C /* UIButtonExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F498BA22AEA8B500FA1E6C /* UIButtonExtensions.swift */; };
+		E5F498C022B16DC900FA1E6C /* UIConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F498BF22B16DC900FA1E6C /* UIConstants.swift */; };
+		E5F498C122B16DC900FA1E6C /* UIConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F498BF22B16DC900FA1E6C /* UIConstants.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -120,6 +122,7 @@
 		E5F498B422AEA7D300FA1E6C /* RootContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootContainerView.swift; sourceTree = "<group>"; };
 		E5F498B722AEA8A600FA1E6C /* UIViewExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewExtensions.swift; sourceTree = "<group>"; };
 		E5F498BA22AEA8B500FA1E6C /* UIButtonExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIButtonExtensions.swift; sourceTree = "<group>"; };
+		E5F498BF22B16DC900FA1E6C /* UIConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIConstants.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -250,6 +253,7 @@
 				82473B0B2217647A00E98CFC /* SettingsAndHelp.storyboard */,
 				4D6B00CC1F33C1C400952242 /* LaunchScreen.storyboard */,
 				E5F498B422AEA7D300FA1E6C /* RootContainerView.swift */,
+				E5F498BF22B16DC900FA1E6C /* UIConstants.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -526,6 +530,7 @@
 				E5959CAF22A9534C00E53446 /* StateController.swift in Sources */,
 				82A43F4B226907C600076941 /* RecordButton.swift in Sources */,
 				826D540C224ABBDC009EF410 /* RouteTableViewCell.swift in Sources */,
+				E5F498C022B16DC900FA1E6C /* UIConstants.swift in Sources */,
 				4D6B00C61F33C1C400952242 /* ViewController.swift in Sources */,
 				4D6B00C41F33C1C400952242 /* AppDelegate.swift in Sources */,
 			);
@@ -554,6 +559,7 @@
 				E5959CB022A9534C00E53446 /* StateController.swift in Sources */,
 				827E859622690956005CF98A /* AudioVisualizerView.swift in Sources */,
 				82A43F4C226907C600076941 /* RecordButton.swift in Sources */,
+				E5F498C122B16DC900FA1E6C /* UIConstants.swift in Sources */,
 				826D540D224ABBDC009EF410 /* RouteTableViewCell.swift in Sources */,
 				B7EB59DE20F693EB00FBBC6A /* AppDelegate.swift in Sources */,
 			);
