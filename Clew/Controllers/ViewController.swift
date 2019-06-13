@@ -429,7 +429,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             }
             beginRouteLandmark.transform = currentTransform
             Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(playSound)), userInfo: nil, repeats: false)
-            pauseTrackingView.isHidden = true
+            rootContainerView.pauseTrackingView.isHidden = true
             state = .mainScreen(announceArrival: false)
             return
         } else if let currentTransform = sceneView.session.currentFrame?.camera.transform {
@@ -490,14 +490,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// Hide all the subviews.  TODO: This should probably eventually refactored so it happens more automatically.
     func hideAllViewsHelper() {
-        recordPathView.isHidden = true
-        routeRatingView.isHidden = true
-        stopRecordingView.isHidden = true
-        startNavigationView.isHidden = true
-        stopNavigationView.isHidden = true
-        pauseTrackingView.isHidden = true
-        resumeTrackingConfirmView.isHidden = true
-        resumeTrackingView.isHidden = true
+        rootContainerView.recordPathView.isHidden = true
+        rootContainerView.routeRatingView.isHidden = true
+        rootContainerView.stopRecordingView.isHidden = true
+        rootContainerView.startNavigationView.isHidden = true
+        rootContainerView.stopNavigationView.isHidden = true
+        rootContainerView.pauseTrackingView.isHidden = true
+        rootContainerView.resumeTrackingConfirmView.isHidden = true
+        rootContainerView.resumeTrackingView.isHidden = true
         rootContainerView.countdownTimer.isHidden = true
     }
     
@@ -1039,36 +1039,68 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     ///   - subview transitions?
     func drawUI() {
         
-        // UIView containerization example
-//        rootContainerView.helpButton.addTarget(self, action: #selector(helpButtonPressed), for: .touchUpInside)
-
         // Record Path button container
-        recordPathView = UIView(frame: CGRect(x: 0, y: yOriginOfButtonFrame, width: buttonFrameWidth, height: buttonFrameHeight))
-        recordPathView.setupButtonContainer(withButtons: [routesButton, recordPathButton, addLandmarkButton])
+        rootContainerView.recordPathView = UIView(frame: CGRect(x: 0,
+                                                                y: UIConstants.yOriginOfButtonFrame,
+                                                                width: UIConstants.buttonFrameWidth,
+                                                                height: UIConstants.buttonFrameHeight))
+        rootContainerView.recordPathView.setupButtonContainer(withButtons: [routesButton,
+                                                          recordPathButton,
+                                                          addLandmarkButton])
         
         // Stop Recording button container
-        stopRecordingView = UIView(frame: CGRect(x: 0, y: yOriginOfButtonFrame, width: buttonFrameWidth, height: buttonFrameHeight))
-        stopRecordingView.setupButtonContainer(withButtons: [stopRecordingButton])
+        rootContainerView.stopRecordingView = UIView(frame: CGRect(x: 0,
+                                                                   y: UIConstants.yOriginOfButtonFrame,
+                                                                   width: UIConstants.buttonFrameWidth,
+                                                                   height: UIConstants.buttonFrameHeight))
+        rootContainerView.stopRecordingView.setupButtonContainer(withButtons: [stopRecordingButton])
         
         // Start Navigation button container
-        startNavigationView = UIView(frame: CGRect(x: 0, y: yOriginOfButtonFrame, width: buttonFrameWidth, height: buttonFrameHeight))
-        startNavigationView.setupButtonContainer(withButtons: [startNavigationButton, pauseButton])
+        rootContainerView.startNavigationView = UIView(frame: CGRect(x: 0,
+                                                                     y: UIConstants.yOriginOfButtonFrame,
+                                                                     width: UIConstants.buttonFrameWidth,
+                                                                     height: UIConstants.buttonFrameHeight))
+        rootContainerView.startNavigationView.setupButtonContainer(withButtons: [startNavigationButton,
+                                                               pauseButton])
         
-        pauseTrackingView = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height))
-        pauseTrackingView.setupButtonContainer(withButtons: [enterLandmarkDescriptionButton, confirmAlignmentButton, recordVoiceNoteButton], withMainText: "Landmarks allow you to save or pause your route. You will need to return to the landmark to load or unpause your route. Before creating the landmark, specify text or voice to help you remember its location. To create a landmark, hold your device flat with the screen facing up. Press the top (short) edge flush against a flat vertical surface (such as a wall).  The \"align\" button starts a \(ViewController.alignmentWaitingPeriod)-second countdown. During this time, do not move the device.")
+        rootContainerView.pauseTrackingView = UIView(frame: CGRect(x: 0,
+                                                                   y: 0,
+                                                                   width: UIScreen.main.bounds.size.width,
+                                                                   height: UIScreen.main.bounds.size.height))
+        rootContainerView.pauseTrackingView.setupButtonContainer(withButtons: [enterLandmarkDescriptionButton,
+                                                                               confirmAlignmentButton,
+                                                                               recordVoiceNoteButton],
+                                                                 withMainText: "Landmarks allow you to save or pause your route. You will need to return to the landmark to load or unpause your route. Before creating the landmark, specify text or voice to help you remember its location. To create a landmark, hold your device flat with the screen facing up. Press the top (short) edge flush against a flat vertical surface (such as a wall).  The \"align\" button starts a \(ViewController.alignmentWaitingPeriod)-second countdown. During this time, do not move the device.")
         
-        resumeTrackingView = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height))
-        resumeTrackingView.setupButtonContainer(withButtons: [resumeButton], withMainText: "Return to the last paused location and press Resume for further instructions.")
+        rootContainerView.resumeTrackingView = UIView(frame: CGRect(x: 0,
+                                                                    y: 0,
+                                                                    width: UIScreen.main.bounds.size.width,
+                                                                    height: UIScreen.main.bounds.size.height))
+        rootContainerView.resumeTrackingView.setupButtonContainer(withButtons: [resumeButton],
+                                                                  withMainText: "Return to the last paused location and press Resume for further instructions.")
         
-        resumeTrackingConfirmView = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height))
-        resumeTrackingConfirmView.setupButtonContainer(withButtons: [confirmAlignmentButton, readVoiceNoteButton], withMainText: "Hold your device flat with the screen facing up. Press the top (short) edge flush against the same vertical surface that you used to create the landmark.  When you are ready, activate the align button to start the \(ViewController.alignmentWaitingPeriod)-second alignment countdown that will complete the procedure. Do not move the device until the phone provides confirmation via a vibration or sound cue.")
+        rootContainerView.resumeTrackingConfirmView = UIView(frame: CGRect(x: 0,
+                                                         y: 0,
+                                                         width: UIScreen.main.bounds.size.width,
+                                                         height: UIScreen.main.bounds.size.height))
+        rootContainerView.resumeTrackingConfirmView.setupButtonContainer(withButtons: [confirmAlignmentButton,
+                                                                                       readVoiceNoteButton],
+                                                                         withMainText: "Hold your device flat with the screen facing up. Press the top (short) edge flush against the same vertical surface that you used to create the landmark.  When you are ready, activate the align button to start the \(ViewController.alignmentWaitingPeriod)-second alignment countdown that will complete the procedure. Do not move the device until the phone provides confirmation via a vibration or sound cue.")
 
         // Stop Navigation button container
-        stopNavigationView = UIView(frame: CGRect(x: 0, y: yOriginOfButtonFrame, width: buttonFrameWidth, height: buttonFrameHeight))
-        stopNavigationView.setupButtonContainer(withButtons: [stopNavigationButton])
+        rootContainerView.stopNavigationView = UIView(frame: CGRect(x: 0,
+                                                                    y: UIConstants.yOriginOfButtonFrame,
+                                                                    width: UIConstants.buttonFrameWidth,
+                                                                    height: UIConstants.buttonFrameHeight))
+        rootContainerView.stopNavigationView.setupButtonContainer(withButtons: [stopNavigationButton])
         
-        routeRatingView = UIView(frame: CGRect(x: 0, y: 0, width: buttonFrameWidth, height: UIScreen.main.bounds.size.height))
-        routeRatingView.setupButtonContainer(withButtons: [thumbsUpButton, thumbsDownButton], withMainText: "Please rate your service.")
+        rootContainerView.routeRatingView = UIView(frame: CGRect(x: 0,
+                                                                 y: 0,
+                                                                 width: UIConstants.buttonFrameWidth,
+                                                                 height: UIScreen.main.bounds.size.height))
+        rootContainerView.routeRatingView.setupButtonContainer(withButtons: [thumbsUpButton,
+                                                                             thumbsDownButton],
+                                                               withMainText: "Please rate your service.")
 
         
         state = .mainScreen(announceArrival: false)
@@ -1076,13 +1108,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// display RECORD PATH button/hide all other views
     @objc func showRecordPathButton(announceArrival: Bool) {
-        recordPathView.isHidden = false
+        rootContainerView.recordPathView.isHidden = false
         // the options button is hidden if the route rating shows up
-        settingsButton.isHidden = false
-        helpButton.isHidden = false
-        stopNavigationView.isHidden = true
-        getDirectionButton.isHidden = true
-        routeRatingView.isHidden = true
+        rootContainerView.settingsButton.isHidden = false
+        rootContainerView.helpButton.isHidden = false
+        rootContainerView.stopNavigationView.isHidden = true
+        rootContainerView.getDirectionButton.isHidden = true
+        rootContainerView.routeRatingView.isHidden = true
         if announceArrival {
             delayTransition(announcement: "You've arrived.")
         } else {
@@ -1109,46 +1141,46 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// Display stop recording view/hide all other views
     @objc func showStopRecordingButton() {
-        recordPathView.isHidden = true
-        recordPathView.isAccessibilityElement = false
-        stopRecordingView.isHidden = false
+        rootContainerView.recordPathView.isHidden = true
+        rootContainerView.recordPathView.isAccessibilityElement = false
+        rootContainerView.stopRecordingView.isHidden = false
         delayTransition(announcement: "Hold vertically with the rear camera facing forward.")
     }
     
     /// Display start navigation view/hide all other views
     @objc func showStartNavigationButton(allowPause: Bool) {
-        resumeTrackingView.isHidden = true
-        resumeTrackingConfirmView.isHidden = true
-        stopRecordingView.isHidden = true
-        startNavigationView.getButtonByTag(tag: UIView.pauseButtonTag)?.isHidden = !allowPause
-        startNavigationView.isHidden = false
+        rootContainerView.resumeTrackingView.isHidden = true
+        rootContainerView.resumeTrackingConfirmView.isHidden = true
+        rootContainerView.stopRecordingView.isHidden = true
+        rootContainerView.startNavigationView.getButtonByTag(tag: UIView.pauseButtonTag)?.isHidden = !allowPause
+        rootContainerView.startNavigationView.isHidden = false
         delayTransition()
     }
 
     /// Display the pause tracking view/hide all other views
     func showPauseTrackingButton() throws {
-        recordPathView.isHidden = true
-        startNavigationView.isHidden = true
-        pauseTrackingView.isHidden = false
+        rootContainerView.recordPathView.isHidden = true
+        rootContainerView.startNavigationView.isHidden = true
+        rootContainerView.pauseTrackingView.isHidden = false
         delayTransition()
     }
     
     /// Display the resume tracking view/hide all other views
     @objc func showResumeTrackingButton() {
-        pauseTrackingView.isHidden = true
-        resumeTrackingView.isHidden = false
+        rootContainerView.pauseTrackingView.isHidden = true
+        rootContainerView.resumeTrackingView.isHidden = false
         delayTransition()
     }
     
     /// Display the resume tracking confirm view/hide all other views.
     func showResumeTrackingConfirmButton(route: SavedRoute, navigateStartToEnd: Bool) {
-        resumeTrackingView.isHidden = true
-        resumeTrackingConfirmView.isHidden = false
-        resumeTrackingConfirmView.mainText?.text = ""
+        rootContainerView.resumeTrackingView.isHidden = true
+        rootContainerView.resumeTrackingConfirmView.isHidden = false
+        rootContainerView.resumeTrackingConfirmView.mainText?.text = ""
         voiceNoteToPlay = nil
         if navigateStartToEnd {
             if let landmarkInformation = route.beginRouteLandmark.information as String? {
-                resumeTrackingConfirmView.mainText?.text?.append("The landmark information you entered is: " + landmarkInformation + ".\n\n")
+                rootContainerView.resumeTrackingConfirmView.mainText?.text?.append("The landmark information you entered is: " + landmarkInformation + ".\n\n")
             }
             if let beginRouteLandmarkVoiceNote = route.beginRouteLandmark.voiceNote {
                 let voiceNoteToPlayURL = beginRouteLandmarkVoiceNote.documentURL
@@ -1160,7 +1192,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             }
         } else {
             if let landmarkInformation = route.endRouteLandmark.information as String? {
-                resumeTrackingConfirmView.mainText?.text?.append("The landmark information you entered is: " + landmarkInformation + ".\n\n")
+                rootContainerView.resumeTrackingConfirmView.mainText?.text?.append("The landmark information you entered is: " + landmarkInformation + ".\n\n")
             }
             if let endRouteLandmarkVoiceNote = route.endRouteLandmark.voiceNote {
                 let voiceNoteToPlayURL = endRouteLandmarkVoiceNote.documentURL
@@ -1171,30 +1203,30 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 } catch {}
             }
         }
-        resumeTrackingConfirmView.getButtonByTag(tag: UIView.readVoiceNoteButtonTag)?.isHidden = voiceNoteToPlay == nil
-        resumeTrackingConfirmView.mainText?.text?.append("Hold your device flat with the screen facing up. Press the top (short) edge flush against the same vertical surface that you used to create the landmark.  When you are ready, activate the align button to start the \(ViewController.alignmentWaitingPeriod)-second alignment countdown that will complete the procedure. Do not move the device until the phone provides confirmation via a vibration or sound cue.")
+        rootContainerView.resumeTrackingConfirmView.getButtonByTag(tag: UIView.readVoiceNoteButtonTag)?.isHidden = voiceNoteToPlay == nil
+        rootContainerView.resumeTrackingConfirmView.mainText?.text?.append("Hold your device flat with the screen facing up. Press the top (short) edge flush against the same vertical surface that you used to create the landmark.  When you are ready, activate the align button to start the \(ViewController.alignmentWaitingPeriod)-second alignment countdown that will complete the procedure. Do not move the device until the phone provides confirmation via a vibration or sound cue.")
         delayTransition()
     }
     
     /// display stop navigation view/hide all other views
     @objc func showStopNavigationButton() {
-        startNavigationView.isHidden = true
-        stopNavigationView.isHidden = false
-        getDirectionButton.isHidden = false
+        rootContainerView.startNavigationView.isHidden = true
+        rootContainerView.stopNavigationView.isHidden = false
+        rootContainerView.getDirectionButton.isHidden = false
         // this does not auto update, so don't use it as an accessibility element
         delayTransition()
     }
     
     /// display route rating view/hide all other views
     @objc func showRouteRating(announceArrival: Bool) {
-        stopNavigationView.isHidden = true
-        getDirectionButton.isHidden = true
-        routeRatingView.isHidden = false
+        rootContainerView.stopNavigationView.isHidden = true
+        rootContainerView.getDirectionButton.isHidden = true
+        rootContainerView.routeRatingView.isHidden = false
 
         if announceArrival {
-            routeRatingView.mainText?.text = "You've arrived. Please rate your service."
+            rootContainerView.routeRatingView.mainText?.text = "You've arrived. Please rate your service."
         } else {
-            routeRatingView.mainText?.text = "Please rate your service."
+            rootContainerView.routeRatingView.mainText?.text = "Please rate your service."
         }
         
         feedbackGenerator = nil
@@ -1718,11 +1750,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             return
         }
         
-        announcementText.isHidden = false
-        announcementText.text = announcement
+        rootContainerView.announcementText.isHidden = false
+        rootContainerView.announcementText.text = announcement
         announcementRemovalTimer?.invalidate()
         announcementRemovalTimer = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: false) { timer in
-            self.announcementText.isHidden = true
+            self.rootContainerView.announcementText.isHidden = true
         }
         if UIAccessibility.isVoiceOverRunning {
             // use the VoiceOver API instead of text to speech

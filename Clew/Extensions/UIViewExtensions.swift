@@ -57,6 +57,7 @@ extension UIView {
             self.addSubview(button)
         }
     }
+    
     /// the main text UILabel if it exists for a particular view
     var mainText: UILabel? {
         for subview in subviews {
