@@ -123,7 +123,7 @@ extension UIButton {
         button.tag = buttonViewParts.tag
         button.frame = CGRect(x: 0, y: 0, width: buttonWidth, height: buttonWidth)
         button.layer.cornerRadius = 0.5 * button.bounds.size.width
-        button.clipsToBounds = true
+        button.clipsToBounds = false
         switch buttonViewParts.alignment {
         case .center:
             button.center.x = containerView.center.x
@@ -1403,9 +1403,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// Called when the UI of the view changes dramatically (e.g., if a different subview is displayed).  The optional `announcement` input is will be spoken 2 seconds after the transition occurs.  The delay is necessary to prevent the accessibility notification for screen changed to cut off the announcement.
     ///
     /// - Parameter announcement: the announcement to read after a 2 second delay
-    func delayTransition(announcement: String? = nil) {
+    func delayTransition(announcement: String? = nil, initialFocus: UIView? = nil) {
         // this notification currently cuts off the announcement of the button that was just pressed
-        UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: nil)
+        UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: initialFocus)
         if let announcement = announcement {
             if UIAccessibility.isVoiceOverRunning {
                 Timer.scheduledTimer(withTimeInterval: 2.0, repeats: false) { timer in
@@ -1434,7 +1434,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         stopRecordingView.isHidden = true
         startNavigationView.getButtonByTag(tag: UIView.pauseButtonTag)?.isHidden = !allowPause
         startNavigationView.isHidden = false
-        delayTransition()
+        delayTransition(announcement: nil)
     }
 
     /// Display the pause tracking view/hide all other views
@@ -1443,7 +1443,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         recordPathView.isHidden = true
         startNavigationView.isHidden = true
         pauseTrackingView.isHidden = false
-        delayTransition()
+        delayTransition(announcement: nil, initialFocus: pauseTrackingView.mainText)
     }
     
     /// Display the resume tracking view/hide all other views
@@ -2090,8 +2090,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         recordPathView.isAccessibilityElement = false
         if case .navigatingRoute = state {
             keypointNode.removeFromParentNode()
-            followingCrumbs?.invalidate()
             }
+        followingCrumbs?.invalidate()
+        routeName = nil
+        beginRouteLandmark = RouteLandmark()
+        endRouteLandmark = RouteLandmark()
         playAlignmentConfirmation?.cancel()
         announcementText.isHidden = true
         nav.headingOffset = 0.0
@@ -2100,8 +2103,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         logger.resetNavigationLog()
         logger.resetPathLog()
         hapticTimer?.invalidate()
-        state = .mainScreen(announceArrival: false)
         logger.resetStateSequenceLog()
+        state = .mainScreen(announceArrival: false)
     }
     
     /// Called when the settings button is pressed.  This function will display the settings view (managed by SettingsViewController) as a popover.
