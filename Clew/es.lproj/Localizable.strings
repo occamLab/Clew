@@ -61,3 +61,6 @@
 "Turn left" = "Gire a la izquierda";
 "Slight left towards 10 o'clock" = "Gire a la izquierda hacia las 10 en punto";
 "Slight left towards 11 o'clock" = "Gire a la izquierda hacia las 11 en punto";
+
+// Settings pop-up
+"settings_header" = "Ajustes";

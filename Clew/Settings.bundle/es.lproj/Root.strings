@@ -1,0 +1,34 @@
+/* 
+  Root.strings
+  
+
+  Created by Terri Liu on 2019/6/12.
+  
+*/
+
+"Group" = "Group";
+"Name" = "Name";
+"none given" = "none given";
+"Enabled" = "Enabled";
+
+"Settings" = "Ajustes"; // Comment: The title of a menu that allows the user to change the settings.
+
+// Strings that are in the settings pop-up
+"Distance Units" = "Unidades de Distancia"; // Comments: The title of the menu that allows the user to change the units distance is displayed. with
+"Imperial (ft)" = "Imperial (pies)"; // Comments: The option of having imperial units.
+"Metric (m)" = "Métrica (m)"; // Comments: The option of having metric units.
+
+"Crumb Color" = "Color de miga"; // Comments: The title of the menu that allows the user to change the color of each marker/goal that the user need to reach to get to their destination.
+"Red" = "Roja"; // Comments: The option for the markers to be red.
+"Green" = "Verde"; // Comments: The option for the markers to be green.
+"Blue" = "Azul"; // Comments: The option for the markers to be blue.
+"Random" = "Aleatoria"; // Comments: The option for each marker to be a random color.
+
+"Feedback Options" = "Opciones de Retroalimentación"; // Comments: The header for choosing different ways to receive navigation directions/feedback.
+"Sound" = "Sonido"; // Comments: The option for the user to get navigation directions/hints through sounds.
+"Voice" = "Voz"; // Comments: The option for the user to get navigation directions through vocal narration.
+"Haptic" = "Háptico"; // Comments: The option for the user to get navigation directions through vibrations/sensations given by the phone.
+
+"Send Feedback" = "Enviar Comentarios"; // Comments: The header for choosing whether or not to send feedback to the developers.
+"Send Logs" = "Enviar Registros"; // Comments: The name of a button that allows the user to send their route navigation data that could help improve the app.
+"Help us improve the app by logging your Clew experience. These logs will not include any images or personal information." = "Ayúdanos a mejorar la aplicación al registrar tu experiencia Clew. Estos registros no incluirán ninguna imagen o información personal."; // Comments: A comment on what turning on the button of "Send Logs" does.

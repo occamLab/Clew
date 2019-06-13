@@ -62,3 +62,6 @@
 "Turn left" = "Turn left";
 "Slight left towards 10 o'clock" = "Slight left towards 10 o'clock";
 "Slight left towards 11 o'clock" = "Slight left towards 11 o'clock";
+
+// Settings pop-up
+"settings_header" = "Settings";

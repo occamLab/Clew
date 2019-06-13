@@ -61,3 +61,6 @@
 "Turn left" = "向左转";
 "Slight left towards 10 o'clock" = "身体往左转到十点钟方向";
 "Slight left towards 11 o'clock" = "身体往左转到十一点钟方向";
+
+// Settings pop-up
+"settings_header" = "设置";
