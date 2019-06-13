@@ -1475,7 +1475,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// display stop navigation view/hide all other views
     @objc func showStopNavigationButton() {
-        homeButton.isHidden = true // home button here
+        homeButton.isHidden = false // home button here
         startNavigationView.isHidden = true
         stopNavigationView.isHidden = false
         getDirectionButton.isHidden = false
@@ -2065,6 +2065,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         homeButton.isHidden = true // home button here
         recordPathView.isHidden = false
         recordPathView.isAccessibilityElement = true
+        state = .mainScreen(announceArrival: false)
+        logger.resetStateSequenceLog()
+        keypointNode.removeFromParentNode()
+        followingCrumbs?.invalidate()
+        hapticTimer?.invalidate()
     }
     
     /// Called when the settings button is pressed.  This function will display the settings view (managed by SettingsViewController) as a popover.
