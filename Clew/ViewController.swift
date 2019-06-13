@@ -805,8 +805,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// button for bringing up the settings menu
     var settingsButton: UIButton!
     
-    /// button for going back
+    /// button for going to the main screen
     var homeButton: UIButton!
+    
+    /// button for going back
+    var backButton: UIButton!
     
     /// button for bringing up the help menu
     var helpButton: UIButton!
@@ -1040,6 +1043,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// Show the dialog that allows the user to enter textual information to help them remember a landmark.
     @objc func showLandmarkInformationDialog() {
         homeButton.isHidden = false // home button here
+        backButton.isHidden = true // no back button here
         // Set title and message for the alert dialog
         let alertController = UIAlertController(title: "Landmark information", message: "Enter text about the landmark that will help you find it later.", preferredStyle: .alert)
         // The confirm action taking the inputs
@@ -1266,15 +1270,23 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
 //        ///contactButton.addTarget(self, action: #selector(contactButtonPressed), for: .touchUpInside)
 //        contactButton.setImage(UIImage(named: "Contact"), for: .normal)
         
-        //button to go back
+        //button to go to the home screen
         homeButton = UIButton(frame: CGRect(x: 10, y: 10, width: buttonFrameWidth/7, height: buttonFrameWidth/7))
         homeButton.isAccessibilityElement = true
         homeButton.setTitle("Go Back", for: .normal)
         homeButton.titleLabel?.font = UIFont.systemFont(ofSize: 24.0)
-        homeButton.accessibilityLabel = "Go Back"
-        ///backButton.addTarget(self, action: #selector(backButtonPressed), for: .touchUpInside)
+        homeButton.accessibilityLabel = "Go Home"
         homeButton.setImage(UIImage(named: "backButton"), for: .normal)
         homeButton.addTarget(self, action: #selector(homeButtonPressed), for: .touchUpInside)
+        
+        //button to go to the home screen
+        backButton = UIButton(frame: CGRect(x: 80, y: 10, width: buttonFrameWidth/7, height: buttonFrameWidth/7))
+        backButton.isAccessibilityElement = true
+        backButton.setTitle("Go Back", for: .normal)
+        backButton.titleLabel?.font = UIFont.systemFont(ofSize: 24.0)
+        backButton.accessibilityLabel = "Go Back"
+        backButton.setImage(UIImage(named: "actualBackButton"), for: .normal)
+        //backButton.addTarget(self, action: #selector(backButtonPressed), for: .touchUpInside)
         
         // button that shows feedback menu
         feedbackButton = UIButton(frame: CGRect(x: buttonFrameWidth/(7/5), y: yOriginOfSettingsAndHelpButton + 10, width: buttonFrameWidth/7, height: buttonFrameWidth/7))
@@ -1356,6 +1368,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         self.view.addSubview(getDirectionButton)
         self.view.addSubview(settingsButton)
         self.view.addSubview(homeButton)
+        self.view.addSubview(backButton)
         self.view.addSubview(helpButton)
         self.view.addSubview(feedbackButton)
         self.view.addSubview(routeRatingView)
@@ -1430,7 +1443,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// Display the resume tracking view/hide all other views
     @objc func showResumeTrackingButton() {
-        homeButton.isHidden = true // home button here
+        homeButton.isHidden = true // no home button here
         pauseTrackingView.isHidden = true
         resumeTrackingView.isHidden = false
         delayTransition()
@@ -1438,7 +1451,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// Display the resume tracking confirm view/hide all other views.
     func showResumeTrackingConfirmButton(route: SavedRoute, navigateStartToEnd: Bool) {
-        homeButton.isHidden = true // home button here
+        homeButton.isHidden = true // no home button here
+        backButton.isHidden = true // back button here
         resumeTrackingView.isHidden = true
         resumeTrackingConfirmView.isHidden = false
         resumeTrackingConfirmView.mainText?.text = ""
@@ -1476,6 +1490,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// display stop navigation view/hide all other views
     @objc func showStopNavigationButton() {
         homeButton.isHidden = false // home button here
+        backButton.isHidden = true
         startNavigationView.isHidden = true
         stopNavigationView.isHidden = false
         getDirectionButton.isHidden = false
@@ -1485,7 +1500,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// display route rating view/hide all other views
     @objc func showRouteRating(announceArrival: Bool) {
-        homeButton.isHidden = true // home button here
+        homeButton.isHidden = true // no home button here
+        backButton.isHidden = true // no back button here
         stopNavigationView.isHidden = true
         getDirectionButton.isHidden = true
         routeRatingView.isHidden = false
@@ -1727,6 +1743,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// handles the user pressing the landmark button
     @objc func startCreateLandmarkProcedure() {
         homeButton.isHidden = false // home button here
+        backButton.isHidden = true // no back button here
         creatingRouteLandmark = true
         // make sure to clear out any relative transform and paused transform so the alignment is accurate
         sceneView.session.setWorldOrigin(relativeTransform: simd_float4x4.makeTranslation(0, 0, 0))
@@ -2062,14 +2079,20 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     // Called when home button is pressed.
     @objc func homeButtonPressed() {
         hideAllViewsHelper()
-        homeButton.isHidden = true // home button here
+        homeButton.isHidden = true // no home button here
+        backButton.isHidden = true // no back button here
         recordPathView.isHidden = false
         recordPathView.isAccessibilityElement = true
+        if case .navigatingRoute = state {
+            keypointNode.removeFromParentNode()
+            followingCrumbs?.invalidate()
+            hapticTimer?.invalidate()}
+            logger.resetNavigationLog()
+        if case .recordingRoute = state {
+            logger.resetPathLog()
+            }
         state = .mainScreen(announceArrival: false)
         logger.resetStateSequenceLog()
-        keypointNode.removeFromParentNode()
-        followingCrumbs?.invalidate()
-        hapticTimer?.invalidate()
     }
     
     /// Called when the settings button is pressed.  This function will display the settings view (managed by SettingsViewController) as a popover.
