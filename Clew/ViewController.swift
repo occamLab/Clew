@@ -2087,7 +2087,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         homeButton.isHidden = true // no home button here
         backButton.isHidden = true // no back button here
         recordPathView.isHidden = false
-        recordPathView.isAccessibilityElement = true
+        recordPathView.isAccessibilityElement = false
         if case .navigatingRoute = state {
             keypointNode.removeFromParentNode()
             followingCrumbs?.invalidate()
