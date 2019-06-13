@@ -410,11 +410,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// Handler for the pauseWaitingPeriod app state
     func handleStateTransitionToPauseWaitingPeriod() {
         hideAllViewsHelper()
-        countdownTimer.isHidden = false
-        countdownTimer.start(beginingValue: ViewController.alignmentWaitingPeriod, interval: 1)
+        rootContainerView.countdownTimer.isHidden = false
+        rootContainerView.countdownTimer.start(beginingValue: ViewController.alignmentWaitingPeriod, interval: 1)
         delayTransition()
         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(ViewController.alignmentWaitingPeriod)) {
-            self.countdownTimer.isHidden = true
+            self.rootContainerView.countdownTimer.isHidden = true
             self.pauseTracking()
         }
     }
@@ -482,7 +482,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         popover?.delegate = self
         popover?.sourceView = self.view
         popover?.sourceRect = CGRect(x: 0,
-                                     y: settingsAndHelpFrameHeight/2,
+                                     y: UIConstants.settingsAndHelpFrameHeight/2,
                                      width: 0,height: 0)
         
         self.present(nav, animated: true, completion: nil)
@@ -498,7 +498,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         pauseTrackingView.isHidden = true
         resumeTrackingConfirmView.isHidden = true
         resumeTrackingView.isHidden = true
-        countdownTimer.isHidden = true
+        rootContainerView.countdownTimer.isHidden = true
     }
     
     /// This handles when a route cell is clicked (triggering the route to be loaded).
@@ -633,7 +633,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         // set the main view as active
         view = RootContainerView(frame: UIScreen.main.bounds)
 
-        // Scene view setup -> move this to the rootContainerView
+        // Add the scene to the view, which is a RootContainerView
         sceneView.frame = view.frame
         view.addSubview(sceneView)
 
@@ -641,7 +641,23 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         loadAssets()
         createSettingsBundle()
         createARSession()
-        drawUI()
+        drawUI() // To be removed
+        
+        rootContainerView.settingsButton.addTarget(self,
+                                                   action: #selector(settingsButtonPressed),
+                                                   for: .touchUpInside)
+        
+        rootContainerView.helpButton.addTarget(self,
+                                               action: #selector(helpButtonPressed),
+                                               for: .touchUpInside)
+        
+        rootContainerView.getDirectionButton.addTarget(self,
+                                                       action: #selector(announceDirectionHelpPressed),
+                                                       for: .touchUpInside)
+        
+        // make sure this happens after the view is created!
+        rootContainerView.countdownTimer.delegate = self
+        
         addGestures()
         setupFirebaseObservers()
         
@@ -880,7 +896,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         let popover = nav.popoverPresentationController
         popover?.delegate = self
         popover?.sourceView = self.view
-        popover?.sourceRect = CGRect(x: 0, y: self.settingsAndHelpFrameHeight/2, width: 0,height: 0)
+        popover?.sourceRect = CGRect(x: 0, y: UIConstants.settingsAndHelpFrameHeight/2, width: 0,height: 0)
         suppressTrackingWarnings = true
         self.present(nav, animated: true, completion: nil)
     }
@@ -1022,17 +1038,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     ///   - `startNavigationView` pause button configuration
     ///   - subview transitions?
     func drawUI() {
-        rootview.settingsButton.addTarget(self,
-                                 action: #selector(settingsButtonPressed),
-                                 for: .touchUpInside)
-        
-        helpButton.addTarget(self,
-                             action: #selector(helpButtonPressed),
-                             for: .touchUpInside)
-        
-        getDirectionButton.addTarget(self,
-                                     action: #selector(announceDirectionHelpPressed),
-                                     for: .touchUpInside)
         
         // UIView containerization example
 //        rootContainerView.helpButton.addTarget(self, action: #selector(helpButtonPressed), for: .touchUpInside)
@@ -1048,8 +1053,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         // Start Navigation button container
         startNavigationView = UIView(frame: CGRect(x: 0, y: yOriginOfButtonFrame, width: buttonFrameWidth, height: buttonFrameHeight))
         startNavigationView.setupButtonContainer(withButtons: [startNavigationButton, pauseButton])
-        
-        countdownTimer.delegate = self
         
         pauseTrackingView = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height))
         pauseTrackingView.setupButtonContainer(withButtons: [enterLandmarkDescriptionButton, confirmAlignmentButton, recordVoiceNoteButton], withMainText: "Landmarks allow you to save or pause your route. You will need to return to the landmark to load or unpause your route. Before creating the landmark, specify text or voice to help you remember its location. To create a landmark, hold your device flat with the screen facing up. Press the top (short) edge flush against a flat vertical surface (such as a wall).  The \"align\" button starts a \(ViewController.alignmentWaitingPeriod)-second countdown. During this time, do not move the device.")
@@ -1440,11 +1443,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     func resumeTracking() {
         // resume pose tracking with existing ARSessionConfiguration
         hideAllViewsHelper()
-        countdownTimer.isHidden = false
-        countdownTimer.start(beginingValue: ViewController.alignmentWaitingPeriod, interval: 1)
+        rootContainerView.countdownTimer.isHidden = false
+        rootContainerView.countdownTimer.start(beginingValue: ViewController.alignmentWaitingPeriod, interval: 1)
         delayTransition()
         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(ViewController.alignmentWaitingPeriod)) {
-            self.countdownTimer.isHidden = true
+            self.rootContainerView.countdownTimer.isHidden = true
             // The first check is necessary in case the phone relocalizes before this code executes
             if case .readyForFinalResumeAlignment = self.state, let alignTransform = self.pausedTransform, let camera = self.sceneView.session.currentFrame?.camera {
                 // yaw can be determined by projecting the camera's z-axis into the ground plane and using arc tangent (note: the camera coordinate conventions of ARKit https://developer.apple.com/documentation/arkit/arsessionconfiguration/worldalignment/camera
@@ -1760,12 +1763,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     @objc func settingsButtonPressed() {
         let storyBoard: UIStoryboard = UIStoryboard(name: "SettingsAndHelp", bundle: nil)
         let popoverContent = storyBoard.instantiateViewController(withIdentifier: "Settings") as! SettingsViewController
+        
         let nav = UINavigationController(rootViewController: popoverContent)
         nav.modalPresentationStyle = .popover
         let popover = nav.popoverPresentationController
         popover?.delegate = self
         popover?.sourceView = self.view
-        popover?.sourceRect = CGRect(x: 0, y: settingsAndHelpFrameHeight/2, width: 0,height: 0)
+        popover?.sourceRect = CGRect(x: 0, y: UIConstants.settingsAndHelpFrameHeight/2, width: 0,height: 0)
         
         popoverContent.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: popoverContent, action: #selector(popoverContent.doneWithSettings))
 
@@ -1782,7 +1786,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         let popover = nav.popoverPresentationController
         popover?.delegate = self
         popover?.sourceView = self.view
-        popover?.sourceRect = CGRect(x: 0, y: settingsAndHelpFrameHeight/2, width: 0,height: 0)
+        popover?.sourceRect = CGRect(x: 0, y: UIConstants.settingsAndHelpFrameHeight/2, width: 0,height: 0)
         popoverContent.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: popoverContent, action: #selector(popoverContent.doneWithHelp))
         suppressTrackingWarnings = true
         self.present(nav, animated: true, completion: nil)
@@ -2017,7 +2021,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             session.setWorldOrigin(relativeTransform: simd_float4x4.makeTranslation(0,0,0))
             if case .readyForFinalResumeAlignment = state {
                 // this will cancel any realignment if it hasn't happened yet and go straight to route navigation mode
-                countdownTimer.isHidden = true
+                rootContainerView.countdownTimer.isHidden = true
                 isResumedRoute = true
                 
                 state = .readyToNavigateOrPause(allowPause: false)

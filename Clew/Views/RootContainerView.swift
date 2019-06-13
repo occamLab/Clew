@@ -64,6 +64,8 @@ class RootContainerView: UIView {
     /// Button view container for stop navigation button
     var stopNavigationView: UIView!
 
+    // required for non storyboard UIView
+    // objects
     required init(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented.")
     }
@@ -119,7 +121,11 @@ class RootContainerView: UIView {
         announcementText.isHidden = true
         
         // MARK: countdown element
-        countdownTimer = SRCountdownTimer(frame: CGRect(x: UIConstants.buttonFrameWidth*1/10, y: UIConstants.yOriginOfButtonFrame/10, width: UIConstants.buttonFrameWidth*8/10, height: UIConstants.buttonFrameWidth*8/10))
+        countdownTimer = SRCountdownTimer(frame: CGRect(x: UIConstants.buttonFrameWidth*1/10,
+                                                        y: UIConstants.yOriginOfButtonFrame/10,
+                                                        width: UIConstants.buttonFrameWidth*8/10,
+                                                        height: UIConstants.buttonFrameWidth*8/10))
+        // TODO: need to move this delegate handling to the view controller
 //        countdownTimer.delegate = self
         countdownTimer.labelFont = UIFont(name: "HelveticaNeue-Light", size: 100)
         countdownTimer.labelTextColor = UIColor.white
@@ -131,7 +137,7 @@ class RootContainerView: UIView {
         /// hide the timer as an accessibility element and announce through VoiceOver by posting appropriate notifications
         countdownTimer.accessibilityElementsHidden = true
         
-        /// add all  sub views
+        /// add all sub views
         addSubview(recordPathView)
         addSubview(stopRecordingView)
         addSubview(startNavigationView)
