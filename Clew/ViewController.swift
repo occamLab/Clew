@@ -541,10 +541,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         countdownTimer.isHidden = false
         countdownTimer.start(beginingValue: ViewController.alignmentWaitingPeriod, interval: 1)
         delayTransition()
-        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(ViewController.alignmentWaitingPeriod)) {
+        playAlignmentConfirmation = DispatchWorkItem{
             self.countdownTimer.isHidden = true
             self.pauseTracking()
         }
+        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(ViewController.alignmentWaitingPeriod), execute: playAlignmentConfirmation!)
     }
     
     /// Handler for the completingPauseProcedure app state
@@ -834,6 +835,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// a timer that counts down during the alignment procedure (alignment is captured at the end of the time)
     var countdownTimer: SRCountdownTimer!
+    
+    /// work item for playing alignment confirmation sound
+    var playAlignmentConfirmation: DispatchWorkItem?
     
     /// audio players for playing system sounds through an `AVAudioSession` (this allows them to be audible even when the rocker switch is muted.
     var audioPlayers: [Int: AVAudioPlayer] = [:]
@@ -1383,6 +1387,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         // the options button is hidden if the route rating shows up
         settingsButton.isHidden = false
         homeButton.isHidden = true // home button here
+        backButton.isHidden = true
         helpButton.isHidden = false
         feedbackButton.isHidden = false
         stopNavigationView.isHidden = true
@@ -1414,7 +1419,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// Display stop recording view/hide all other views
     @objc func showStopRecordingButton() {
-        homeButton.isHidden = true // home button here
+        homeButton.isHidden = false // home button here
         recordPathView.isHidden = true
         recordPathView.isAccessibilityElement = false
         stopRecordingView.isHidden = false
@@ -1423,7 +1428,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// Display start navigation view/hide all other views
     @objc func showStartNavigationButton(allowPause: Bool) {
-        homeButton.isHidden = true // home button here
+        homeButton.isHidden = false // home button here
         resumeTrackingView.isHidden = true
         resumeTrackingConfirmView.isHidden = true
         stopRecordingView.isHidden = true
@@ -1443,7 +1448,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// Display the resume tracking view/hide all other views
     @objc func showResumeTrackingButton() {
-        homeButton.isHidden = true // no home button here
+        homeButton.isHidden = false // no home button here
         pauseTrackingView.isHidden = true
         resumeTrackingView.isHidden = false
         delayTransition()
@@ -1451,7 +1456,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// Display the resume tracking confirm view/hide all other views.
     func showResumeTrackingConfirmButton(route: SavedRoute, navigateStartToEnd: Bool) {
-        homeButton.isHidden = true // no home button here
+        homeButton.isHidden = false // no home button here
         backButton.isHidden = true // back button here
         resumeTrackingView.isHidden = true
         resumeTrackingConfirmView.isHidden = false
@@ -1763,7 +1768,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         countdownTimer.isHidden = false
         countdownTimer.start(beginingValue: ViewController.alignmentWaitingPeriod, interval: 1)
         delayTransition()
-        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(ViewController.alignmentWaitingPeriod)) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(ViewController.alignmentWaitingPeriod)){
             self.countdownTimer.isHidden = true
             // The first check is necessary in case the phone relocalizes before this code executes
             if case .readyForFinalResumeAlignment = self.state, let alignTransform = self.pausedTransform, let camera = self.sceneView.session.currentFrame?.camera {
@@ -2086,11 +2091,15 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         if case .navigatingRoute = state {
             keypointNode.removeFromParentNode()
             followingCrumbs?.invalidate()
-            hapticTimer?.invalidate()}
-            logger.resetNavigationLog()
-        if case .recordingRoute = state {
-            logger.resetPathLog()
             }
+        playAlignmentConfirmation?.cancel()
+        announcementText.isHidden = true
+        nav.headingOffset = 0.0
+        headingRingBuffer.clear()
+        locationRingBuffer.clear()
+        logger.resetNavigationLog()
+        logger.resetPathLog()
+        hapticTimer?.invalidate()
         state = .mainScreen(announceArrival: false)
         logger.resetStateSequenceLog()
     }
