@@ -11,6 +11,7 @@ import Foundation
 class FeedbackViewController : UIViewController, UITextViewDelegate, UIPopoverPresentationControllerDelegate, RecorderViewControllerDelegate {
 
     //MARK: Outlets
+    @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var nameTextField: UITextField!
     @IBOutlet weak var countryTextField: UITextField!
     @IBOutlet weak var feedbackTextField: UITextView!
@@ -140,6 +141,23 @@ class FeedbackViewController : UIViewController, UITextViewDelegate, UIPopoverPr
     @objc func closeFeedback() {
         dismiss(animated: true, completion: nil)
         NotificationCenter.default.post(name: Notification.Name("ClewPopoverDismissed"), object: nil)
+    }
+    
+    var timerForShowScrollIndicator: Timer?
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(true)
+        startTimerForShowScrollIndicator()
+    }
+    
+    @objc func showScrollIndicatorsInContacts() {
+        UIView.animate(withDuration: 0.001) {
+            self.scrollView.flashScrollIndicators()
+        }
+    }
+    
+    func startTimerForShowScrollIndicator() {
+        self.timerForShowScrollIndicator = Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: #selector(self.showScrollIndicatorsInContacts), userInfo: nil, repeats: true)
     }
     
 }
