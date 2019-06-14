@@ -21,6 +21,8 @@ class FeedbackViewController : UIViewController, UITextViewDelegate, UIPopoverPr
     //MARK: Private variables and constants
     ///sets an empty audiofile url
     var audio: URL? = nil
+    ///creates a timer for keeping the scrollindicator shown
+    var timerForShowScrollIndicator: Timer?
     
     //MARK: functions
     ///called when the popover is loaded
@@ -31,6 +33,9 @@ class FeedbackViewController : UIViewController, UITextViewDelegate, UIPopoverPr
         
         ///sets itself as the feedback field's delegate so it can clear the text in the feedback field upon editing
         feedbackTextField.delegate = self
+        
+        ///starts the timer which shows the scroll bar indicator
+        startTimerForShowScrollIndicator()
         
         ///sets the title of the popover
         title = "Clew Feedback"
@@ -142,21 +147,17 @@ class FeedbackViewController : UIViewController, UITextViewDelegate, UIPopoverPr
         dismiss(animated: true, completion: nil)
         NotificationCenter.default.post(name: Notification.Name("ClewPopoverDismissed"), object: nil)
     }
-    
-    var timerForShowScrollIndicator: Timer?
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(true)
-        startTimerForShowScrollIndicator()
-    }
-    
+    ///force shows the scroll bar indicator
     @objc func showScrollIndicatorsInContacts() {
         UIView.animate(withDuration: 0.001) {
             self.scrollView.flashScrollIndicators()
         }
     }
     
+    ///handels the timer for the scroll indicator
     func startTimerForShowScrollIndicator() {
+        
+        ///sets the timer to activate every .3 seconds
         self.timerForShowScrollIndicator = Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: #selector(self.showScrollIndicatorsInContacts), userInfo: nil, repeats: true)
     }
     
