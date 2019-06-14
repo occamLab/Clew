@@ -1423,7 +1423,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         recordPathView.isHidden = true
         recordPathView.isAccessibilityElement = false
         stopRecordingView.isHidden = false
-        delayTransition(announcement: "Hold vertically with the rear camera facing forward.")
+        delayTransition(announcement: "Record starting. Hold vertically with the rear camera facing forward.")
     }
     
     /// Display start navigation view/hide all other views
