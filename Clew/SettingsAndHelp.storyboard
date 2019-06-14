@@ -345,6 +345,53 @@
             </objects>
             <point key="canvasLocation" x="2007.2" y="-242.42878560719643"/>
         </scene>
+        <!--HelpTableViewController-->
+        <scene sceneID="kWZ-MS-i1t">
+            <objects>
+                <viewController storyboardIdentifier="HelpTable" title="HelpTableViewController" id="98w-Bp-EtQ" customClass="HelpTableViewController" customModule="Clew" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="zQs-4i-pCa">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="GoW-VV-CGX">
+                                <rect key="frame" x="0.0" y="64" width="375" height="603"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="GoW-VV-CGX" firstAttribute="leading" secondItem="nra-Gw-3Bj" secondAttribute="leading" id="1RG-nq-e6g"/>
+                            <constraint firstItem="nra-Gw-3Bj" firstAttribute="bottom" secondItem="GoW-VV-CGX" secondAttribute="bottom" id="8cQ-n2-oZk"/>
+                            <constraint firstItem="nra-Gw-3Bj" firstAttribute="trailing" secondItem="GoW-VV-CGX" secondAttribute="trailing" id="Chx-9F-mpS"/>
+                            <constraint firstItem="GoW-VV-CGX" firstAttribute="top" secondItem="nra-Gw-3Bj" secondAttribute="top" id="e60-E7-0Bg"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="nra-Gw-3Bj"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="LhY-Kt-aPi"/>
+                    <connections>
+                        <outlet property="tableView" destination="GoW-VV-CGX" id="d71-pN-IkP"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="mQ0-2f-KdP" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2748" y="454.72263868065971"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="YJf-FG-i6d">
+            <objects>
+                <navigationController id="Wms-7V-f9x" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="nLy-QD-f3M">
+                        <rect key="frame" x="0.0" y="20" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="98w-Bp-EtQ" kind="relationship" relationship="rootViewController" id="LpJ-2d-S6v"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="0kj-Ko-IfF" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2748" y="-268"/>
+        </scene>
         <!--Recorder View Controller-->
         <scene sceneID="cnx-xv-HD9">
             <objects>

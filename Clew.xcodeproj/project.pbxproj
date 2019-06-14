@@ -8,14 +8,17 @@
 
 /* Begin PBXBuildFile section */
 		12317E6A4CEFE90BE755D803 /* Pods_Clew_Dev.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4315F457247AC66574B86A26 /* Pods_Clew_Dev.framework */; };
+		1F26981A22B2D0B4009B3CE0 /* HelpTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F26981922B2D0B4009B3CE0 /* HelpTableViewController.swift */; };
+		1F26981B22B2D0B4009B3CE0 /* HelpTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F26981922B2D0B4009B3CE0 /* HelpTableViewController.swift */; };
+		1F26981D22B2D570009B3CE0 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F26981C22B2D570009B3CE0 /* ViewController.swift */; };
+		1F26981E22B2D570009B3CE0 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F26981C22B2D570009B3CE0 /* ViewController.swift */; };
+		1F26982322B3D894009B3CE0 /* JSONParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F26982222B3D894009B3CE0 /* JSONParser.swift */; };
 		1F2958D722AABFB3001A8547 /* FeedbackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2958D622AABFB3001A8547 /* FeedbackViewController.swift */; };
 		1F2958D822AABFB3001A8547 /* FeedbackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2958D622AABFB3001A8547 /* FeedbackViewController.swift */; };
-		1F2958D922AAC00C001A8547 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D6B00C51F33C1C400952242 /* ViewController.swift */; };
 		1F2958DB22AAE2D1001A8547 /* FeedbackLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2958DA22AAE2D1001A8547 /* FeedbackLogger.swift */; };
 		1F2958DC22AAE2D1001A8547 /* FeedbackLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2958DA22AAE2D1001A8547 /* FeedbackLogger.swift */; };
 		4B12F4A545BC26EAA16F6633 /* Pods_Clew.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1977F3CD0CF608888A7E2B5C /* Pods_Clew.framework */; };
 		4D6B00C41F33C1C400952242 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D6B00C31F33C1C400952242 /* AppDelegate.swift */; };
-		4D6B00C61F33C1C400952242 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D6B00C51F33C1C400952242 /* ViewController.swift */; };
 		4D6B00CE1F33C1C400952242 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4D6B00CC1F33C1C400952242 /* LaunchScreen.storyboard */; };
 		4D6B00D61F33C1FE00952242 /* Navigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D6B00D51F33C1FE00952242 /* Navigation.swift */; };
 		4D6B00D81F33C21A00952242 /* PathFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D6B00D71F33C21A00952242 /* PathFinder.swift */; };
@@ -69,12 +72,14 @@
 /* Begin PBXFileReference section */
 		08FA9C31721F9F8CDCC23AE9 /* Pods-Clew.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Clew/Pods-Clew.debug.xcconfig"; sourceTree = "<group>"; };
 		1977F3CD0CF608888A7E2B5C /* Pods_Clew.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Clew.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		1F26981922B2D0B4009B3CE0 /* HelpTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpTableViewController.swift; sourceTree = "<group>"; };
+		1F26981C22B2D570009B3CE0 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		1F26982222B3D894009B3CE0 /* JSONParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONParser.swift; sourceTree = "<group>"; };
 		1F2958D622AABFB3001A8547 /* FeedbackViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackViewController.swift; sourceTree = "<group>"; };
 		1F2958DA22AAE2D1001A8547 /* FeedbackLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackLogger.swift; sourceTree = "<group>"; };
 		4315F457247AC66574B86A26 /* Pods_Clew_Dev.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Clew_Dev.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4D6B00C01F33C1C400952242 /* Clew.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Clew.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4D6B00C31F33C1C400952242 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		4D6B00C51F33C1C400952242 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		4D6B00CD1F33C1C400952242 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		4D6B00CF1F33C1C400952242 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4D6B00D51F33C1FE00952242 /* Navigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Navigation.swift; sourceTree = "<group>"; };
@@ -163,7 +168,9 @@
 				82028C7622807BF400772701 /* GoogleService-Info_dev.plist */,
 				4D940BAA1F38AA79004E6741 /* Assets.xcassets */,
 				4D6B00C31F33C1C400952242 /* AppDelegate.swift */,
-				4D6B00C51F33C1C400952242 /* ViewController.swift */,
+				1F26981922B2D0B4009B3CE0 /* HelpTableViewController.swift */,
+				1F26982222B3D894009B3CE0 /* JSONParser.swift */,
+				1F26981C22B2D570009B3CE0 /* ViewController.swift */,
 				826D5410224ABC39009EF410 /* DataPersistence.swift */,
 				82473B0B2217647A00E98CFC /* SettingsAndHelp.storyboard */,
 				82569F4622187AE700448B45 /* HelpViewController.swift */,
@@ -456,16 +463,18 @@
 				1F2958D722AABFB3001A8547 /* FeedbackViewController.swift in Sources */,
 				4D6B00D81F33C21A00952242 /* PathFinder.swift in Sources */,
 				1F2958DB22AAE2D1001A8547 /* FeedbackLogger.swift in Sources */,
+				1F26982322B3D894009B3CE0 /* JSONParser.swift in Sources */,
 				82A43F482269079300076941 /* RecorderViewController.swift in Sources */,
 				4D6B00D61F33C1FE00952242 /* Navigation.swift in Sources */,
+				1F26981A22B2D0B4009B3CE0 /* HelpTableViewController.swift in Sources */,
 				4D6B00DC1F33C26D00952242 /* Utility.swift in Sources */,
 				82028C74227CDB3100772701 /* PathLogger.swift in Sources */,
 				82A43F4E2269085800076941 /* RecordButtonKit.swift in Sources */,
+				1F26981D22B2D570009B3CE0 /* ViewController.swift in Sources */,
 				82473B092217641D00E98CFC /* SettingsViewController.m in Sources */,
 				827E859522690956005CF98A /* AudioVisualizerView.swift in Sources */,
 				82A43F4B226907C600076941 /* RecordButton.swift in Sources */,
 				826D540C224ABBDC009EF410 /* RouteTableViewCell.swift in Sources */,
-				4D6B00C61F33C1C400952242 /* ViewController.swift in Sources */,
 				4D6B00C41F33C1C400952242 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -482,14 +491,15 @@
 				1F2958DC22AAE2D1001A8547 /* FeedbackLogger.swift in Sources */,
 				B7EB59DB20F693EB00FBBC6A /* Navigation.swift in Sources */,
 				82028C75227CDB3100772701 /* PathLogger.swift in Sources */,
+				1F26981B22B2D0B4009B3CE0 /* HelpTableViewController.swift in Sources */,
 				B7EB59DC20F693EB00FBBC6A /* Utility.swift in Sources */,
 				82A43F4F2269085800076941 /* RecordButtonKit.swift in Sources */,
 				82473B0A2217641D00E98CFC /* SettingsViewController.m in Sources */,
+				1F26981E22B2D570009B3CE0 /* ViewController.swift in Sources */,
 				827E859622690956005CF98A /* AudioVisualizerView.swift in Sources */,
 				82A43F4C226907C600076941 /* RecordButton.swift in Sources */,
 				826D540D224ABBDC009EF410 /* RouteTableViewCell.swift in Sources */,
 				1F2958D822AABFB3001A8547 /* FeedbackViewController.swift in Sources */,
-				1F2958D922AAC00C001A8547 /* ViewController.swift in Sources */,
 				B7EB59DE20F693EB00FBBC6A /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

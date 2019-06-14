@@ -2039,8 +2039,26 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         self.present(nav, animated: true, completion: nil)
     }
     
-    /// Called when the help button is pressed.  This function will display the help view (managed by HelpViewController) as a popover.
+    /// Called when the help button is pressed.  This function will display the beta help view (managed by HelpTableViewController) as a popover.
     @objc func helpButtonPressed() {
+        let storyBoard: UIStoryboard = UIStoryboard(name: "SettingsAndHelp", bundle: nil)
+        let popoverContent = storyBoard.instantiateViewController(withIdentifier: "HelpTable") as! HelpTableViewController
+        ///called if programatic UI is being used
+        //let helpTableViewController = HelpTableViewController()
+        //let popoverContent = helpTableViewController
+        let nav = UINavigationController(rootViewController: popoverContent)
+        nav.modalPresentationStyle = .popover
+        let popover = nav.popoverPresentationController
+        popover?.delegate = self
+        popover?.sourceView = self.view
+        popover?.sourceRect = CGRect(x: 0, y: settingsAndHelpFrameHeight/2, width: 0,height: 0)
+        popoverContent.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: popoverContent, action: #selector(popoverContent.doneWithHelp))
+        suppressTrackingWarnings = true
+        self.present(nav, animated: true, completion: nil)
+    }
+
+    /// Called when the help button is pressed.  This function will display the help view (managed by HelpViewController) as a popover.
+    @objc func betahelpButtonPressed() {
         let storyBoard: UIStoryboard = UIStoryboard(name: "SettingsAndHelp", bundle: nil)
         let popoverContent = storyBoard.instantiateViewController(withIdentifier: "Help") as! HelpViewController
         let nav = UINavigationController(rootViewController: popoverContent)
