@@ -47,7 +47,7 @@ Navigate to the `ClewApp` directory and type `open Clew.xcworkspace` in the Term
 ### How to contribute
 
 #### Branching and pull requests
-This project uses a feature branching workflow. Make a new branch if you're going to implement a feature. Pull requests (and at least one review) are required before merging to `master`. Pull `master` into your branch before pull requesting so you don't create merge conflicts on `master`.
+This project uses a feature branching workflow. Make a new branch if you're going to implement a feature. Pull requests (and at least one review) are required before merging to `master`. Pull `master` into your branch before pull requesting so you don't create merge conflicts on `master`.  Additionally, when reviewing a pull request, be sure to (at the very least) run the app and test the build before passing a review, reviewing code style, cleanness, and comment quality. On Github, it is possible to add comments to individual lines of code to highlight specific elements.
 
 #### Documentation
 Before you pull request, make sure the README is up to date, everything you added or updated in the code is appropriately and accurately commented (both inline and header doc), and update the jazzy documentation. OCCaM Lab's documentation guidelines are available on the Google Drive or by request. To update the jazzy docs, run `jazzy --min-acl internal`. If jazzy is not installed on your Mac, run `sudo gem install jazzy`.
