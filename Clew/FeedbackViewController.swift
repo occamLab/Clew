@@ -11,6 +11,7 @@ import Foundation
 class FeedbackViewController : UIViewController, UITextViewDelegate, UIPopoverPresentationControllerDelegate, RecorderViewControllerDelegate {
 
     //MARK: Outlets
+    @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var nameTextField: UITextField!
     @IBOutlet weak var countryTextField: UITextField!
     @IBOutlet weak var feedbackTextField: UITextView!
@@ -20,6 +21,8 @@ class FeedbackViewController : UIViewController, UITextViewDelegate, UIPopoverPr
     //MARK: Private variables and constants
     ///sets an empty audiofile url
     var audio: URL? = nil
+    ///creates a timer for keeping the scrollindicator shown
+    var timerForShowScrollIndicator: Timer?
     
     //MARK: functions
     ///called when the popover is loaded
@@ -30,6 +33,9 @@ class FeedbackViewController : UIViewController, UITextViewDelegate, UIPopoverPr
         
         ///sets itself as the feedback field's delegate so it can clear the text in the feedback field upon editing
         feedbackTextField.delegate = self
+        
+        ///starts the timer which shows the scroll bar indicator
+        startTimerForShowScrollIndicator()
         
         ///sets the title of the popover
         title = "Clew Feedback"
@@ -140,6 +146,21 @@ class FeedbackViewController : UIViewController, UITextViewDelegate, UIPopoverPr
     @objc func closeFeedback() {
         dismiss(animated: true, completion: nil)
         NotificationCenter.default.post(name: Notification.Name("ClewPopoverDismissed"), object: nil)
+    }
+    ///force shows the scroll bar indicator
+    @objc func showScrollIndicator() {
+        //if the scroll indicator is not curently shown play the animation of it expanding out
+        UIView.animate(withDuration: 0.001) {
+            //show the scroll indicator
+            self.scrollView.flashScrollIndicators()
+        }
+    }
+    
+    ///handles the timer for the scroll indicator such that the scroll indicatyor is forced to be shown every .3 seconds
+    func startTimerForShowScrollIndicator() {
+        
+        ///sets the timer to activate every .3 seconds and call showScrollIndicator function to force load the scroll indicator.
+        self.timerForShowScrollIndicator = Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: #selector(self.showScrollIndicator), userInfo: nil, repeats: true)
     }
     
 }
