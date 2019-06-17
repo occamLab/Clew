@@ -174,6 +174,7 @@ fileprivate extension Selector {
     static let routesButtonTapped = #selector(ViewController.routesButtonPressed)
     static let enterLandmarkDescriptionButtonTapped = #selector(ViewController.showLandmarkInformationDialog)
     static let recordVoiceNoteButtonTapped = #selector(ViewController.recordVoiceNote)
+    static let showRouteDirectionButtonTapped = #selector(ViewController.showRouteDirection)
     static let readVoiceNoteButtonTapped = #selector(ViewController.readVoiceNote)
 }
 
@@ -696,6 +697,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// Image, label, and target for stop recording button.
     let stopRecordingButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "StopRecording")!), label: "Stop recording", targetSelector: Selector.stopRecordingButtonTapped, alignment: .center, tag: 0)
+    
+    /// Testing apparatus for adding a cylinder to the scene in the direction of magnetic north
+    let showRouteDirectionButton = ActionButtonComponents(appearance: .textButton(label: "Show Direction"), label: "show direction", targetSelector: Selector.showRouteDirectionButtonTapped, alignment: .right, tag: 0)
     
     /// Image, label, and target for start navigation button.
     let startNavigationButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "StartNavigation")!), label: "Start navigation", targetSelector: Selector.startNavigationButtonTapped, alignment: .center, tag: 0)
@@ -1299,8 +1303,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
 
         // Stop Navigation button container
         stopNavigationView = UIView(frame: CGRect(x: 0, y: yOriginOfButtonFrame, width: buttonFrameWidth, height: buttonFrameHeight))
-        stopNavigationView.setupButtonContainer(withButtons: [stopNavigationButton])
-        
+        stopNavigationView.setupButtonContainer(withButtons: [stopNavigationButton, showRouteDirectionButton])
+
         routeRatingView = UIView(frame: CGRect(x: 0, y: 0, width: buttonFrameWidth, height: UIScreen.main.bounds.size.height))
         routeRatingView.setupButtonContainer(withButtons: [thumbsUpButton, thumbsDownButton], withMainText: "Please rate your service.")
         
@@ -1740,6 +1744,28 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         logger.compileLogData(true)
         logger.resetStateSequenceLog()
         state = .mainScreen(announceArrival: false)
+    }
+    
+    @objc func showRouteDirection() {
+        if let transform = sceneView.session.currentFrame?.camera.transform, keypoints.count > 0 {
+            let nextKeypoint = keypoints[0]
+            
+            let desiredTubeStart = Vector3(transform[3].x, transform[3].y, transform[3].z) + Vector3(transform[1].x, transform[1].y, transform[1].z)
+            
+            let vectorToNextKeypoint = simd_make_float3(nextKeypoint.location.x - desiredTubeStart.x, nextKeypoint.location.y - desiredTubeStart.y, nextKeypoint.location.z - desiredTubeStart.z)
+            
+
+            let tube = SCNTube(innerRadius: 0.005, outerRadius: 0.01, height: CGFloat(simd_length(vectorToNextKeypoint)))
+            let node = SCNNode(geometry: tube)
+            
+            let desiredYAxis = Vector3(vectorToNextKeypoint.x, vectorToNextKeypoint.y, vectorToNextKeypoint.z).normalized()
+            let desiredXAxis = desiredYAxis.cross(Vector3(0, 1, 0)).normalized()
+            let desiredZAxis = desiredXAxis.cross(desiredYAxis).normalized()
+
+            node.transform = SCNMatrix4(m11: desiredXAxis.x, m12: desiredXAxis.y, m13: desiredXAxis.z, m14: 0, m21: desiredYAxis.x, m22: desiredYAxis.y, m23: desiredYAxis.z, m24: 0, m31: desiredZAxis.x, m32: desiredZAxis.y, m33: desiredZAxis.z, m34: 0, m41: (desiredTubeStart.x + nextKeypoint.location.x)/2, m42: (desiredTubeStart.y + nextKeypoint.location.y)/2, m43: (desiredTubeStart.z + nextKeypoint.location.z)/2, m44: 1)
+            sceneView.scene.rootNode.addChildNode(node)
+            print("current transform", transform)
+        }
     }
     
     /// drop a crumb during path recording
