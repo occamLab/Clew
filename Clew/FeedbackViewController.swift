@@ -148,17 +148,19 @@ class FeedbackViewController : UIViewController, UITextViewDelegate, UIPopoverPr
         NotificationCenter.default.post(name: Notification.Name("ClewPopoverDismissed"), object: nil)
     }
     ///force shows the scroll bar indicator
-    @objc func showScrollIndicatorsInContacts() {
+    @objc func showScrollIndicator() {
+        //if the scroll indicator is not curently shown play the animation of it expanding out
         UIView.animate(withDuration: 0.001) {
+            //show the scroll indicator
             self.scrollView.flashScrollIndicators()
         }
     }
     
-    ///handels the timer for the scroll indicator
+    ///handles the timer for the scroll indicator such that the scroll indicatyor is forced to be shown every .3 seconds
     func startTimerForShowScrollIndicator() {
         
-        ///sets the timer to activate every .3 seconds
-        self.timerForShowScrollIndicator = Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: #selector(self.showScrollIndicatorsInContacts), userInfo: nil, repeats: true)
+        ///sets the timer to activate every .3 seconds and call showScrollIndicator function to force load the scroll indicator.
+        self.timerForShowScrollIndicator = Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: #selector(self.showScrollIndicator), userInfo: nil, repeats: true)
     }
     
 }
