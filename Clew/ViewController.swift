@@ -307,6 +307,28 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             case .ratingRoute(let announceArrival):
                 handleStateTransitionToRatingRoute(announceArrival: announceArrival)
             case .mainScreen(let announceArrival):
+                /// handling main screen transitions outside of the first load
+                self.hideAllViewsHelper()
+                self.homeButton.isHidden = true // no home button here
+                self.backButton.isHidden = true // no back button here
+                self.recordPathView.isHidden = false
+                self.recordPathView.isAccessibilityElement = false
+                if case .navigatingRoute = self.state {
+                    self.keypointNode.removeFromParentNode()
+                }
+                self.followingCrumbs?.invalidate()
+                self.routeName = nil
+                self.beginRouteLandmark = RouteLandmark()
+                self.endRouteLandmark = RouteLandmark()
+                self.playAlignmentConfirmation?.cancel()
+                self.announcementText.isHidden = true
+                self.nav.headingOffset = 0.0
+                self.headingRingBuffer.clear()
+                self.locationRingBuffer.clear()
+                self.logger.resetNavigationLog()
+                self.logger.resetPathLog()
+                self.hapticTimer?.invalidate()
+                self.logger.resetStateSequenceLog()
                 handleStateTransitionToMainScreen(announceArrival: announceArrival)
             case .startingPauseProcedure:
                 handleStateTransitionToStartingPauseProcedure()
@@ -1006,7 +1028,57 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
     }
     
-
+    /// function that creates alerts for the home button
+    func homePageNavigationProcesses() {
+        let alert = UIAlertController(title: "Are you sure?",
+                                      message: "If you exit this process right now, your active route information will be lost.",
+                                      preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Go to the Home Page", style: .default, handler: { action -> Void in
+            // proceed to home page
+            self.state = .mainScreen(announceArrival: false)
+        }
+        ))
+        alert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: { action -> Void in
+            // nothing to do, just stay on the page
+        }
+        ))
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    
+    func showHomeButtonWarning() {
+        if case .navigatingRoute = self.state {
+            homePageNavigationProcesses()
+        }
+        if case .readyToNavigateOrPause = self.state {
+            homePageNavigationProcesses()
+        }
+        if case .recordingRoute = self.state {
+            homePageNavigationProcesses()
+        }
+        if case .pauseWaitingPeriod = self.state {
+            homePageNavigationProcesses()
+        }
+        if case .startingPauseProcedure = self.state {
+            homePageNavigationProcesses()
+        }
+        if case .completingPauseProcedure = self.state {
+            homePageNavigationProcesses()
+        }
+        if case .startingResumeProcedure = self.state {
+            homePageNavigationProcesses()
+        }
+        if case .readyForFinalResumeAlignment = self.state {
+            homePageNavigationProcesses()
+        }
+        if case .pauseProcedureCompleted = self.state {
+            homePageNavigationProcesses()
+        }
+        
+        
+    }
+    
+    /// Display a warning that tells the user they must create a landmark to be able to use this route again in the forward direction
     /// Display the dialog that prompts the user to enter a route name.  If the user enters a route name, the route along with the optional world map will be persisted.
     ///
     /// - Parameter mapAsAny: the world map to save (the `Any?` type is used to indicate that the map is optional and to preserve backwards compatibility with iOS 11.3)
@@ -1277,9 +1349,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         //button to go to the home screen
         homeButton = UIButton(frame: CGRect(x: 10, y: 10, width: buttonFrameWidth/7, height: buttonFrameWidth/7))
         homeButton.isAccessibilityElement = true
-        homeButton.setTitle("Go Back", for: .normal)
+        homeButton.setTitle("Home Button", for: .normal)
         homeButton.titleLabel?.font = UIFont.systemFont(ofSize: 24.0)
-        homeButton.accessibilityLabel = "Go Home"
+        homeButton.accessibilityLabel = "Clew Home Screen"
         homeButton.setImage(UIImage(named: "backButton"), for: .normal)
         homeButton.addTarget(self, action: #selector(homeButtonPressed), for: .touchUpInside)
         
@@ -2083,28 +2155,33 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     // Called when home button is pressed.
     @objc func homeButtonPressed() {
-        hideAllViewsHelper()
-        homeButton.isHidden = true // no home button here
-        backButton.isHidden = true // no back button here
-        recordPathView.isHidden = false
-        recordPathView.isAccessibilityElement = false
-        if case .navigatingRoute = state {
-            keypointNode.removeFromParentNode()
-            }
-        followingCrumbs?.invalidate()
-        routeName = nil
-        beginRouteLandmark = RouteLandmark()
-        endRouteLandmark = RouteLandmark()
-        playAlignmentConfirmation?.cancel()
-        announcementText.isHidden = true
-        nav.headingOffset = 0.0
-        headingRingBuffer.clear()
-        locationRingBuffer.clear()
-        logger.resetNavigationLog()
-        logger.resetPathLog()
-        hapticTimer?.invalidate()
-        logger.resetStateSequenceLog()
-        state = .mainScreen(announceArrival: false)
+        if case .navigatingRoute = self.state {
+            showHomeButtonWarning()
+        }
+        else if case .recordingRoute = self.state {
+            showHomeButtonWarning()
+        }
+        else if case .readyToNavigateOrPause = self.state {
+            showHomeButtonWarning()
+        }
+        else if case .pauseWaitingPeriod = self.state {
+            showHomeButtonWarning()
+        }
+        else if case .startingPauseProcedure = self.state {
+            showHomeButtonWarning()
+        }
+        else if case .completingPauseProcedure = self.state {
+            showHomeButtonWarning()
+        }
+        else if case .readyForFinalResumeAlignment = self.state {
+            showHomeButtonWarning()
+        }
+        else if case .startingResumeProcedure = self.state {
+            showHomeButtonWarning()
+        }
+        else {
+            self.state = .mainScreen(announceArrival: false)
+        }
     }
     
     /// Called when the settings button is pressed.  This function will display the settings view (managed by SettingsViewController) as a popover.
