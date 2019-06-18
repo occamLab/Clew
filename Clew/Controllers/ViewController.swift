@@ -49,51 +49,6 @@ fileprivate extension Selector {
     static let readVoiceNoteButtonTapped = #selector(ViewController.readVoiceNote)
 }
 
-/// Holds information about the buttons that are used to control navigation and tracking.
-///
-/// These button attributes are the only ones unique to each of these buttons.
-public struct ActionButtonComponents {
-    
-    /// The appearance of the button.
-    enum Appearance {
-        /// An image button appears using the specified UIImage
-        case imageButton(image: UIImage)
-        /// A text button appears using the specified text label
-        case textButton(label: String)
-    }
-    
-    /// How to align the button horizontally within the button frame
-    enum ButtonContainerHorizontalAlignment {
-        /// put the button in the center
-        case center
-        /// put the button right of center
-        case rightcenter
-        /// put the button to the right
-        case right
-        /// put the button left of center
-        case leftcenter
-        /// put the button to the left
-        case left
-    }
-
-    /// Button apperance (image or text)
-    var appearance: Appearance
-    
-    /// Accessibility label
-    var label: String
-    
-    /// Function to call when the button is tapped
-    ///
-    /// - TODO: Potentially unnecessary when the transitioning between views is refactored.
-    var targetSelector: Selector
-    
-    /// The horizontal alignment within the button container
-    var alignment: ButtonContainerHorizontalAlignment
-    
-    /// Tag to use to identify the button if we need to interact with it later.  Pass 0 if no subsequent interaction is required.
-    var tag: Int
-}
-
 /// A custom enumeration type that describes the exact state of the app.  The state is not exhaustive (e.g., there are Boolean flags that also track app state).
 enum AppState {
     /// This is the screen the comes up immediately after the splash screen
@@ -654,6 +609,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         rootContainerView.getDirectionButton.addTarget(self,
                                                        action: #selector(announceDirectionHelpPressed),
                                                        for: .touchUpInside)
+  
+        
         
         // make sure this happens after the view is created!
         rootContainerView.countdownTimer.delegate = self
@@ -1040,69 +997,37 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     func drawUI() {
         
         // Record Path button container
-        rootContainerView.recordPathView = UIView(frame: CGRect(x: 0,
-                                                                y: UIConstants.yOriginOfButtonFrame,
-                                                                width: UIConstants.buttonFrameWidth,
-                                                                height: UIConstants.buttonFrameHeight))
+
         rootContainerView.recordPathView.setupButtonContainer(withButtons: [routesButton,
                                                           recordPathButton,
                                                           addLandmarkButton])
         
         // Stop Recording button container
-        rootContainerView.stopRecordingView = UIView(frame: CGRect(x: 0,
-                                                                   y: UIConstants.yOriginOfButtonFrame,
-                                                                   width: UIConstants.buttonFrameWidth,
-                                                                   height: UIConstants.buttonFrameHeight))
         rootContainerView.stopRecordingView.setupButtonContainer(withButtons: [stopRecordingButton])
         
         // Start Navigation button container
-        rootContainerView.startNavigationView = UIView(frame: CGRect(x: 0,
-                                                                     y: UIConstants.yOriginOfButtonFrame,
-                                                                     width: UIConstants.buttonFrameWidth,
-                                                                     height: UIConstants.buttonFrameHeight))
         rootContainerView.startNavigationView.setupButtonContainer(withButtons: [startNavigationButton,
                                                                pauseButton])
         
-        rootContainerView.pauseTrackingView = UIView(frame: CGRect(x: 0,
-                                                                   y: 0,
-                                                                   width: UIScreen.main.bounds.size.width,
-                                                                   height: UIScreen.main.bounds.size.height))
         rootContainerView.pauseTrackingView.setupButtonContainer(withButtons: [enterLandmarkDescriptionButton,
                                                                                confirmAlignmentButton,
                                                                                recordVoiceNoteButton],
                                                                  withMainText: "Landmarks allow you to save or pause your route. You will need to return to the landmark to load or unpause your route. Before creating the landmark, specify text or voice to help you remember its location. To create a landmark, hold your device flat with the screen facing up. Press the top (short) edge flush against a flat vertical surface (such as a wall).  The \"align\" button starts a \(ViewController.alignmentWaitingPeriod)-second countdown. During this time, do not move the device.")
         
-        rootContainerView.resumeTrackingView = UIView(frame: CGRect(x: 0,
-                                                                    y: 0,
-                                                                    width: UIScreen.main.bounds.size.width,
-                                                                    height: UIScreen.main.bounds.size.height))
         rootContainerView.resumeTrackingView.setupButtonContainer(withButtons: [resumeButton],
                                                                   withMainText: "Return to the last paused location and press Resume for further instructions.")
         
-        rootContainerView.resumeTrackingConfirmView = UIView(frame: CGRect(x: 0,
-                                                         y: 0,
-                                                         width: UIScreen.main.bounds.size.width,
-                                                         height: UIScreen.main.bounds.size.height))
         rootContainerView.resumeTrackingConfirmView.setupButtonContainer(withButtons: [confirmAlignmentButton,
                                                                                        readVoiceNoteButton],
                                                                          withMainText: "Hold your device flat with the screen facing up. Press the top (short) edge flush against the same vertical surface that you used to create the landmark.  When you are ready, activate the align button to start the \(ViewController.alignmentWaitingPeriod)-second alignment countdown that will complete the procedure. Do not move the device until the phone provides confirmation via a vibration or sound cue.")
 
         // Stop Navigation button container
-        rootContainerView.stopNavigationView = UIView(frame: CGRect(x: 0,
-                                                                    y: UIConstants.yOriginOfButtonFrame,
-                                                                    width: UIConstants.buttonFrameWidth,
-                                                                    height: UIConstants.buttonFrameHeight))
         rootContainerView.stopNavigationView.setupButtonContainer(withButtons: [stopNavigationButton])
         
-        rootContainerView.routeRatingView = UIView(frame: CGRect(x: 0,
-                                                                 y: 0,
-                                                                 width: UIConstants.buttonFrameWidth,
-                                                                 height: UIScreen.main.bounds.size.height))
         rootContainerView.routeRatingView.setupButtonContainer(withButtons: [thumbsUpButton,
                                                                              thumbsDownButton],
                                                                withMainText: "Please rate your service.")
 
-        
         state = .mainScreen(announceArrival: false)
     }
     

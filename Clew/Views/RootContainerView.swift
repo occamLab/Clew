@@ -31,6 +31,129 @@ class RootContainerView: UIView {
     /// button for bringing up the help menu
     var helpButton: UIButton!
     
+    // MARK: recordPathButton
+    /// Image, label, and target for start recording button.
+    
+    let recordPathButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "StartRecording")!),
+                                                  label: "Record path",
+                                                  targetSelector: Selector.recordPathButtonTapped,
+                                                  alignment: .center,
+                                                  tag: 0)
+    
+    // MARK: thumbsDownButton
+    /// The button that the allows the user to indicate a negative navigation experience
+    let thumbsDownButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "thumbs_down")!),
+                                                  label: "Bad",
+                                                  targetSelector: Selector.thumbsDownButtonTapped,
+                                                  alignment: .leftcenter,
+                                                  tag: 0)
+    
+    // MARK: thumbsUpButton
+    /// The button that the allows the user to indicate a positive navigation experience
+    let thumbsUpButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "thumbs_up")!),
+                                                label: "Good",
+                                                targetSelector: Selector.thumbsUpButtonTapped,
+                                                alignment: .rightcenter,
+                                                tag: 0)
+    
+    // MARK: resumeButton
+    /// The button that the allows the user to resume a paused route
+    let resumeButton = ActionButtonComponents(appearance: .textButton(label: "Resume"),
+                                              label: "Resume",
+                                              targetSelector: Selector.resumeButtonTapped,
+                                              alignment: .center,
+                                              tag: 0)
+    
+    // MARK: enterLandmarkDescriptionButton
+    /// The button that allows the user to enter textual description of a route landmark
+    let enterLandmarkDescriptionButton = ActionButtonComponents(appearance: .textButton(label: "Describe"),
+                                                                label: "Enter text to help you remember this landmark",
+                                                                targetSelector: Selector.enterLandmarkDescriptionButtonTapped,
+                                                                alignment: .left,
+                                                                tag: 0)
+    
+    // MARK: recordVoiceNoteButton
+    /// The button that allows the user to record a voice description of a route landmark
+    let recordVoiceNoteButton = ActionButtonComponents(appearance: .textButton(label: "Voice Note"),
+                                                       label: "Record audio to help you remember this landmark",
+                                                       targetSelector: Selector.recordVoiceNoteButtonTapped,
+                                                       alignment: .right,
+                                                       tag: 0)
+    
+    // MARK: confirmAlignmentButton
+    /// The button that allows the user to start the alignment countdown
+    let confirmAlignmentButton = ActionButtonComponents(appearance: .textButton(label: "Align"),
+                                                        label: "Start \(ViewController.alignmentWaitingPeriod)-second alignment countdown",
+        targetSelector: Selector.confirmAlignmentButtonTapped,
+        alignment: .center,
+        tag: 0)
+    
+    // MARK: readVoiceNoteButton
+    /// The button that plays back the recorded voice note associated with a landmark
+    let readVoiceNoteButton = ActionButtonComponents(appearance: .textButton(label: "Play Note"),
+                                                     label: "Play recorded voice note", targetSelector: Selector.readVoiceNoteButtonTapped,
+                                                     alignment: .left,
+                                                     tag: UIView.readVoiceNoteButtonTag)
+    
+    // MARK: addLandmarkButton
+    /// Image, label, and target for start recording button. TODO: need an image
+    let addLandmarkButton = ActionButtonComponents(appearance: .textButton(label: "Landmark"),
+                                                   label: "Create landmark",
+                                                   targetSelector: Selector.landmarkButtonTapped,
+                                                   alignment: .right,
+                                                   tag: 0)
+    
+    // MARK: stopRecordingButton
+    /// Image, label, and target for stop recording button.
+    let stopRecordingButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "StopRecording")!),
+                                                     label: "Stop recording", targetSelector: Selector.stopRecordingButtonTapped,
+                                                     alignment: .center,
+                                                     tag: 0)
+    
+    // MARK: startNavigationButton
+    /// Image, label, and target for start navigation button.
+    let startNavigationButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "StartNavigation")!),
+                                                       label: "Start navigation", targetSelector: Selector.startNavigationButtonTapped,
+                                                       alignment: .center,
+                                                       tag: 0)
+    
+    // MARK: pauseButton
+    /// Title, label, and target for the pause button
+    let pauseButton = ActionButtonComponents(appearance: .textButton(label: "Pause"),
+                                             label: "Pause session",
+                                             targetSelector: Selector.pauseButtonTapped,
+                                             alignment: .right,
+                                             tag: UIView.pauseButtonTag)
+    
+    // MARK: stopNavigationButton
+    /// Image, label, and target for stop navigation button.
+    let stopNavigationButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "StopNavigation")!),
+                                                      label: "Stop navigation",
+                                                      targetSelector: Selector.stopNavigationButtonTapped,
+                                                      alignment: .center,
+                                                      tag: 0)
+    
+    // MARK: routesButton
+    /// Image, label, and target for routes button.
+    let routesButton = ActionButtonComponents(appearance: .textButton(label: "Routes"),
+                                              label: "Saved routes list",
+                                              targetSelector: Selector.routesButtonTapped,
+                                              alignment: .left,
+                                              tag: 0)
+
+    
+    /// a banner that displays an announcement in the top quarter of the screen.
+    /// This is used for displaying status updates or directions.
+    /// This should only be used to display time-sensitive content.
+    var announcementText: UILabel!
+
+    /// a timer that counts down during the alignment procedure
+    /// (alignment is captured at the end of the time)
+    var countdownTimer: SRCountdownTimer!
+    
+    /// the view on which the user can rate the quality of their navigation experience
+    var routeRatingView: UIView!
+
     /// the view on which the user can pause tracking
     var pauseTrackingView: UIView!
     
@@ -39,18 +162,6 @@ class RootContainerView: UIView {
     
     /// the view on which the user can confirm the tracking resume procedure
     var resumeTrackingConfirmView: UIView!
-    
-    /// a banner that displays an announcement in the top quarter of the screen.
-    /// This is used for displaying status updates or directions.
-    /// This should only be used to display time-sensitive content.
-    var announcementText: UILabel!
-    
-    /// the view on which the user can rate the quality of their navigation experience
-    var routeRatingView: UIView!
-    
-    /// a timer that counts down during the alignment procedure
-    /// (alignment is captured at the end of the time)
-    var countdownTimer: SRCountdownTimer!
     
     /// Button view container for stop recording button
     var stopRecordingView: UIView!
@@ -125,8 +236,6 @@ class RootContainerView: UIView {
                                                         y: UIConstants.yOriginOfButtonFrame/10,
                                                         width: UIConstants.buttonFrameWidth*8/10,
                                                         height: UIConstants.buttonFrameWidth*8/10))
-        // TODO: need to move this delegate handling to the view controller
-//        countdownTimer.delegate = self
         countdownTimer.labelFont = UIFont(name: "HelveticaNeue-Light", size: 100)
         countdownTimer.labelTextColor = UIColor.white
         countdownTimer.timerFinishingText = "End"
@@ -134,8 +243,54 @@ class RootContainerView: UIView {
         countdownTimer.lineColor = UIColor.white
         countdownTimer.backgroundColor = UIColor.black.withAlphaComponent(0.4)
         countdownTimer.isHidden = true
-        /// hide the timer as an accessibility element and announce through VoiceOver by posting appropriate notifications
+        /// hide the timer as an accessibility element
+        /// and announce through VoiceOver by posting appropriate notifications
         countdownTimer.accessibilityElementsHidden = true
+        
+//        rootContainerView.settingsButton.addTarget(self,
+//                                                   action: #selector(settingsButtonPressed),
+//                                                   for: .touchUpInside)
+
+        recordPathView = UIView(frame: CGRect(x: 0,
+                                              y: UIConstants.yOriginOfButtonFrame,
+                                              width: UIConstants.buttonFrameWidth,
+                                              height: UIConstants.buttonFrameHeight))
+        
+        stopRecordingView = UIView(frame: CGRect(x: 0,
+                                                 y: UIConstants.yOriginOfButtonFrame,
+                                                 width: UIConstants.buttonFrameWidth,
+                                                 height: UIConstants.buttonFrameHeight))
+
+        startNavigationView = UIView(frame: CGRect(x: 0,
+                                                   y: UIConstants.yOriginOfButtonFrame,
+                                                   width: UIConstants.buttonFrameWidth,
+                                                   height: UIConstants.buttonFrameHeight))
+
+        pauseTrackingView = UIView(frame: CGRect(x: 0,
+                                                 y: 0,
+                                                 width: UIScreen.main.bounds.size.width,
+                                                 height: UIScreen.main.bounds.size.height))
+
+        resumeTrackingView = UIView(frame: CGRect(x: 0,
+                                                  y: 0,
+                                                  width: UIScreen.main.bounds.size.width,
+                                                  height: UIScreen.main.bounds.size.height))
+
+        resumeTrackingConfirmView = UIView(frame: CGRect(x: 0,
+                                                         y: 0,
+                                                         width: UIScreen.main.bounds.size.width,
+                                                         height: UIScreen.main.bounds.size.height))
+
+        stopNavigationView = UIView(frame: CGRect(x: 0,
+                                                  y: UIConstants.yOriginOfButtonFrame,
+                                                  width: UIConstants.buttonFrameWidth,
+                                                  height: UIConstants.buttonFrameHeight))
+
+        routeRatingView = UIView(frame: CGRect(x: 0,
+                                               y: 0,
+                                               width: UIConstants.buttonFrameWidth,
+                                               height: UIScreen.main.bounds.size.height))
+
         
         /// add all sub views
         addSubview(recordPathView)
