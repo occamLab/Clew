@@ -1352,8 +1352,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         homeButton.setTitle("Home Button", for: .normal)
         homeButton.titleLabel?.font = UIFont.systemFont(ofSize: 24.0)
 <<<<<<< HEAD
+<<<<<<< HEAD
         homeButton.accessibilityLabel = "Clew Home Screen"
         homeButton.setImage(UIImage(named: "backButton"), for: .normal)
+=======
+        homeButton.accessibilityLabel = "Go Home"
+        homeButton.setImage(UIImage(named: "homeButton"), for: .normal)
+>>>>>>> 18108e40bd2f2b7f82581e0b5ba003944c3d4b19
 =======
         homeButton.accessibilityLabel = "Go Home"
         homeButton.setImage(UIImage(named: "homeButton"), for: .normal)
