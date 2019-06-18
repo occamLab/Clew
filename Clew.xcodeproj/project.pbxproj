@@ -8,11 +8,28 @@
 
 /* Begin PBXBuildFile section */
 		12317E6A4CEFE90BE755D803 /* Pods_Clew_Dev.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4315F457247AC66574B86A26 /* Pods_Clew_Dev.framework */; };
-		1F26981A22B2D0B4009B3CE0 /* HelpTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F26981922B2D0B4009B3CE0 /* HelpTableViewController.swift */; };
-		1F26981B22B2D0B4009B3CE0 /* HelpTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F26981922B2D0B4009B3CE0 /* HelpTableViewController.swift */; };
+		1F24224C22B9365C00AE3009 /* HelpTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F24224B22B9365C00AE3009 /* HelpTableViewController.swift */; };
+		1F24224D22B937D900AE3009 /* HelpTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F24224B22B9365C00AE3009 /* HelpTableViewController.swift */; };
+		1F24225022B938A400AE3009 /* HeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1F24224F22B938A400AE3009 /* HeaderView.xib */; };
+		1F24225122B938A400AE3009 /* HeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1F24224F22B938A400AE3009 /* HeaderView.xib */; };
+		1F24225322B938CF00AE3009 /* HeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F24225222B938CF00AE3009 /* HeaderView.swift */; };
+		1F24225422B938CF00AE3009 /* HeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F24225222B938CF00AE3009 /* HeaderView.swift */; };
+		1F24225622B939A700AE3009 /* HelpModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F24225522B939A700AE3009 /* HelpModel.swift */; };
+		1F24225722B939A700AE3009 /* HelpModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F24225522B939A700AE3009 /* HelpModel.swift */; };
+		1F24225922B93B0000AE3009 /* HelpViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F24225822B93B0000AE3009 /* HelpViewModel.swift */; };
+		1F24225A22B93B0000AE3009 /* HelpViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F24225822B93B0000AE3009 /* HelpViewModel.swift */; };
+		1F24225C22B93ECD00AE3009 /* AboutCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1F24225B22B93ECD00AE3009 /* AboutCell.xib */; };
+		1F24225D22B93ECD00AE3009 /* AboutCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1F24225B22B93ECD00AE3009 /* AboutCell.xib */; };
+		1F24225F22B93EEC00AE3009 /* AboutCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F24225E22B93EEC00AE3009 /* AboutCell.swift */; };
+		1F24226022B93EEC00AE3009 /* AboutCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F24225E22B93EEC00AE3009 /* AboutCell.swift */; };
+		1F24226222B93FDB00AE3009 /* AttributeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1F24226122B93FDB00AE3009 /* AttributeCell.xib */; };
+		1F24226322B93FDB00AE3009 /* AttributeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1F24226122B93FDB00AE3009 /* AttributeCell.xib */; };
+		1F24226522B9400F00AE3009 /* AttributeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F24226422B9400F00AE3009 /* AttributeCell.swift */; };
+		1F24226622B9400F00AE3009 /* AttributeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F24226422B9400F00AE3009 /* AttributeCell.swift */; };
+		1F24226822B9408800AE3009 /* ServerData.json in Resources */ = {isa = PBXBuildFile; fileRef = 1F24226722B9408800AE3009 /* ServerData.json */; };
+		1F24226922B9408800AE3009 /* ServerData.json in Resources */ = {isa = PBXBuildFile; fileRef = 1F24226722B9408800AE3009 /* ServerData.json */; };
 		1F26981D22B2D570009B3CE0 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F26981C22B2D570009B3CE0 /* ViewController.swift */; };
 		1F26981E22B2D570009B3CE0 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F26981C22B2D570009B3CE0 /* ViewController.swift */; };
-		1F26982322B3D894009B3CE0 /* JSONParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F26982222B3D894009B3CE0 /* JSONParser.swift */; };
 		1F2958D722AABFB3001A8547 /* FeedbackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2958D622AABFB3001A8547 /* FeedbackViewController.swift */; };
 		1F2958D822AABFB3001A8547 /* FeedbackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2958D622AABFB3001A8547 /* FeedbackViewController.swift */; };
 		1F2958DB22AAE2D1001A8547 /* FeedbackLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2958DA22AAE2D1001A8547 /* FeedbackLogger.swift */; };
@@ -72,9 +89,17 @@
 /* Begin PBXFileReference section */
 		08FA9C31721F9F8CDCC23AE9 /* Pods-Clew.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Clew/Pods-Clew.debug.xcconfig"; sourceTree = "<group>"; };
 		1977F3CD0CF608888A7E2B5C /* Pods_Clew.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Clew.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		1F26981922B2D0B4009B3CE0 /* HelpTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpTableViewController.swift; sourceTree = "<group>"; };
+		1F24224B22B9365C00AE3009 /* HelpTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpTableViewController.swift; sourceTree = "<group>"; };
+		1F24224F22B938A400AE3009 /* HeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HeaderView.xib; sourceTree = "<group>"; };
+		1F24225222B938CF00AE3009 /* HeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderView.swift; sourceTree = "<group>"; };
+		1F24225522B939A700AE3009 /* HelpModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpModel.swift; sourceTree = "<group>"; };
+		1F24225822B93B0000AE3009 /* HelpViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpViewModel.swift; sourceTree = "<group>"; };
+		1F24225B22B93ECD00AE3009 /* AboutCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AboutCell.xib; sourceTree = "<group>"; };
+		1F24225E22B93EEC00AE3009 /* AboutCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutCell.swift; sourceTree = "<group>"; };
+		1F24226122B93FDB00AE3009 /* AttributeCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AttributeCell.xib; sourceTree = "<group>"; };
+		1F24226422B9400F00AE3009 /* AttributeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttributeCell.swift; sourceTree = "<group>"; };
+		1F24226722B9408800AE3009 /* ServerData.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = ServerData.json; sourceTree = "<group>"; };
 		1F26981C22B2D570009B3CE0 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		1F26982222B3D894009B3CE0 /* JSONParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONParser.swift; sourceTree = "<group>"; };
 		1F2958D622AABFB3001A8547 /* FeedbackViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackViewController.swift; sourceTree = "<group>"; };
 		1F2958DA22AAE2D1001A8547 /* FeedbackLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackLogger.swift; sourceTree = "<group>"; };
 		4315F457247AC66574B86A26 /* Pods_Clew_Dev.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Clew_Dev.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -136,6 +161,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1F24224E22B9385D00AE3009 /* Help Table Cells */ = {
+			isa = PBXGroup;
+			children = (
+				1F24224F22B938A400AE3009 /* HeaderView.xib */,
+				1F24225222B938CF00AE3009 /* HeaderView.swift */,
+				1F24225B22B93ECD00AE3009 /* AboutCell.xib */,
+				1F24225E22B93EEC00AE3009 /* AboutCell.swift */,
+				1F24226122B93FDB00AE3009 /* AttributeCell.xib */,
+				1F24226422B9400F00AE3009 /* AttributeCell.swift */,
+			);
+			path = "Help Table Cells";
+			sourceTree = "<group>";
+		};
 		4D6B00B71F33C1C400952242 = {
 			isa = PBXGroup;
 			children = (
@@ -168,9 +206,11 @@
 				82028C7622807BF400772701 /* GoogleService-Info_dev.plist */,
 				4D940BAA1F38AA79004E6741 /* Assets.xcassets */,
 				4D6B00C31F33C1C400952242 /* AppDelegate.swift */,
-				1F26981922B2D0B4009B3CE0 /* HelpTableViewController.swift */,
-				1F26982222B3D894009B3CE0 /* JSONParser.swift */,
 				1F26981C22B2D570009B3CE0 /* ViewController.swift */,
+				1F24224B22B9365C00AE3009 /* HelpTableViewController.swift */,
+				1F24225522B939A700AE3009 /* HelpModel.swift */,
+				1F24225822B93B0000AE3009 /* HelpViewModel.swift */,
+				1F24224E22B9385D00AE3009 /* Help Table Cells */,
 				826D5410224ABC39009EF410 /* DataPersistence.swift */,
 				82473B0B2217647A00E98CFC /* SettingsAndHelp.storyboard */,
 				82569F4622187AE700448B45 /* HelpViewController.swift */,
@@ -180,6 +220,7 @@
 				4D6B00D71F33C21A00952242 /* PathFinder.swift */,
 				4D6B00DB1F33C26D00952242 /* Utility.swift */,
 				4D6B00CC1F33C1C400952242 /* LaunchScreen.storyboard */,
+				1F24226722B9408800AE3009 /* ServerData.json */,
 				826D540B224ABBDC009EF410 /* RoutesViewController.swift */,
 				826D540A224ABBDC009EF410 /* RouteTableViewCell.swift */,
 				82028C73227CDB3100772701 /* PathLogger.swift */,
@@ -320,11 +361,15 @@
 				4DF05CC81F34EB6B008B0E31 /* Confirm.mp3 in Resources */,
 				827E859C22690FE4005CF98A /* StartRecording.aiff in Resources */,
 				82473B0C2217647A00E98CFC /* SettingsAndHelp.storyboard in Resources */,
+				1F24225022B938A400AE3009 /* HeaderView.xib in Resources */,
 				827E859E22690FE4005CF98A /* StopRecording.aiff in Resources */,
+				1F24226222B93FDB00AE3009 /* AttributeCell.xib in Resources */,
 				4D6B00E51F33C9B800952242 /* Crumb.obj in Resources */,
 				4D6B00DE1F33C33600952242 /* Settings.bundle in Resources */,
+				1F24226822B9408800AE3009 /* ServerData.json in Resources */,
 				82569F4E22187E6500448B45 /* help in Resources */,
 				82028C7922807C1F00772701 /* GoogleService-Info.plist in Resources */,
+				1F24225C22B93ECD00AE3009 /* AboutCell.xib in Resources */,
 				4D6B00CE1F33C1C400952242 /* LaunchScreen.storyboard in Resources */,
 				4D9E8E7F1F3A4D3400536FCD /* Assets.xcassets in Resources */,
 			);
@@ -337,11 +382,15 @@
 				827E859D22690FE4005CF98A /* StartRecording.aiff in Resources */,
 				B7EB59E220F693EB00FBBC6A /* Confirm.mp3 in Resources */,
 				827E859F22690FE4005CF98A /* StopRecording.aiff in Resources */,
+				1F24225122B938A400AE3009 /* HeaderView.xib in Resources */,
 				B7EB59E320F693EB00FBBC6A /* Crumb.obj in Resources */,
+				1F24226322B93FDB00AE3009 /* AttributeCell.xib in Resources */,
 				B7EB59E420F693EB00FBBC6A /* Settings.bundle in Resources */,
 				B7EB59E520F693EB00FBBC6A /* LaunchScreen.storyboard in Resources */,
+				1F24226922B9408800AE3009 /* ServerData.json in Resources */,
 				82569F4F22187E6500448B45 /* help in Resources */,
 				82028C7722807BF400772701 /* GoogleService-Info_dev.plist in Resources */,
+				1F24225D22B93ECD00AE3009 /* AboutCell.xib in Resources */,
 				82473B0D2217647A00E98CFC /* SettingsAndHelp.storyboard in Resources */,
 				B7EB59E620F693EB00FBBC6A /* Assets.xcassets in Resources */,
 			);
@@ -461,21 +510,25 @@
 				826D5411224ABC39009EF410 /* DataPersistence.swift in Sources */,
 				826D540E224ABBDC009EF410 /* RoutesViewController.swift in Sources */,
 				1F2958D722AABFB3001A8547 /* FeedbackViewController.swift in Sources */,
+				1F24225622B939A700AE3009 /* HelpModel.swift in Sources */,
 				4D6B00D81F33C21A00952242 /* PathFinder.swift in Sources */,
 				1F2958DB22AAE2D1001A8547 /* FeedbackLogger.swift in Sources */,
-				1F26982322B3D894009B3CE0 /* JSONParser.swift in Sources */,
+				1F24225322B938CF00AE3009 /* HeaderView.swift in Sources */,
 				82A43F482269079300076941 /* RecorderViewController.swift in Sources */,
 				4D6B00D61F33C1FE00952242 /* Navigation.swift in Sources */,
-				1F26981A22B2D0B4009B3CE0 /* HelpTableViewController.swift in Sources */,
+				1F24225922B93B0000AE3009 /* HelpViewModel.swift in Sources */,
+				1F24224C22B9365C00AE3009 /* HelpTableViewController.swift in Sources */,
 				4D6B00DC1F33C26D00952242 /* Utility.swift in Sources */,
 				82028C74227CDB3100772701 /* PathLogger.swift in Sources */,
 				82A43F4E2269085800076941 /* RecordButtonKit.swift in Sources */,
 				1F26981D22B2D570009B3CE0 /* ViewController.swift in Sources */,
 				82473B092217641D00E98CFC /* SettingsViewController.m in Sources */,
+				1F24225F22B93EEC00AE3009 /* AboutCell.swift in Sources */,
 				827E859522690956005CF98A /* AudioVisualizerView.swift in Sources */,
 				82A43F4B226907C600076941 /* RecordButton.swift in Sources */,
 				826D540C224ABBDC009EF410 /* RouteTableViewCell.swift in Sources */,
 				4D6B00C41F33C1C400952242 /* AppDelegate.swift in Sources */,
+				1F24226522B9400F00AE3009 /* AttributeCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -487,20 +540,25 @@
 				826D5412224ABC39009EF410 /* DataPersistence.swift in Sources */,
 				826D540F224ABBDC009EF410 /* RoutesViewController.swift in Sources */,
 				B7EB59DA20F693EB00FBBC6A /* PathFinder.swift in Sources */,
+				1F24225722B939A700AE3009 /* HelpModel.swift in Sources */,
 				82A43F492269079300076941 /* RecorderViewController.swift in Sources */,
 				1F2958DC22AAE2D1001A8547 /* FeedbackLogger.swift in Sources */,
+				1F24225422B938CF00AE3009 /* HeaderView.swift in Sources */,
 				B7EB59DB20F693EB00FBBC6A /* Navigation.swift in Sources */,
 				82028C75227CDB3100772701 /* PathLogger.swift in Sources */,
-				1F26981B22B2D0B4009B3CE0 /* HelpTableViewController.swift in Sources */,
+				1F24225A22B93B0000AE3009 /* HelpViewModel.swift in Sources */,
+				1F24224D22B937D900AE3009 /* HelpTableViewController.swift in Sources */,
 				B7EB59DC20F693EB00FBBC6A /* Utility.swift in Sources */,
 				82A43F4F2269085800076941 /* RecordButtonKit.swift in Sources */,
 				82473B0A2217641D00E98CFC /* SettingsViewController.m in Sources */,
 				1F26981E22B2D570009B3CE0 /* ViewController.swift in Sources */,
 				827E859622690956005CF98A /* AudioVisualizerView.swift in Sources */,
+				1F24226022B93EEC00AE3009 /* AboutCell.swift in Sources */,
 				82A43F4C226907C600076941 /* RecordButton.swift in Sources */,
 				826D540D224ABBDC009EF410 /* RouteTableViewCell.swift in Sources */,
 				1F2958D822AABFB3001A8547 /* FeedbackViewController.swift in Sources */,
 				B7EB59DE20F693EB00FBBC6A /* AppDelegate.swift in Sources */,
+				1F24226622B9400F00AE3009 /* AttributeCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
