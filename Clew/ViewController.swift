@@ -309,8 +309,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             case .mainScreen(let announceArrival):
                 /// handling main screen transitions outside of the first load
                 self.hideAllViewsHelper()
-                self.homeButton.isHidden = true // no home button here
-                self.backButton.isHidden = true // no back button here
+                self.homeButton.isHidden = true
+//                self.backButton.isHidden = true
                 self.recordPathView.isHidden = false
                 self.recordPathView.isAccessibilityElement = false
                 if case .navigatingRoute = self.state {
@@ -1351,18 +1351,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         homeButton.isAccessibilityElement = true
         homeButton.setTitle("Home Button", for: .normal)
         homeButton.titleLabel?.font = UIFont.systemFont(ofSize: 24.0)
-<<<<<<< HEAD
-<<<<<<< HEAD
         homeButton.accessibilityLabel = "Clew Home Screen"
-        homeButton.setImage(UIImage(named: "backButton"), for: .normal)
-=======
-        homeButton.accessibilityLabel = "Go Home"
         homeButton.setImage(UIImage(named: "homeButton"), for: .normal)
->>>>>>> 18108e40bd2f2b7f82581e0b5ba003944c3d4b19
-=======
-        homeButton.accessibilityLabel = "Go Home"
-        homeButton.setImage(UIImage(named: "homeButton"), for: .normal)
->>>>>>> 18108e40bd2f2b7f82581e0b5ba003944c3d4b19
         homeButton.addTarget(self, action: #selector(homeButtonPressed), for: .touchUpInside)
         
         //button to go to the home screen
@@ -2166,7 +2156,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     // Called when home button is pressed.
     @objc func homeButtonPressed() {
-<<<<<<< HEAD
         if case .navigatingRoute = self.state {
             showHomeButtonWarning()
         }
@@ -2194,30 +2183,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         else {
             self.state = .mainScreen(announceArrival: false)
         }
-=======
-        hideAllViewsHelper()
-        homeButton.isHidden = true
-//        backButton.isHidden = true
-        recordPathView.isHidden = false
-        recordPathView.isAccessibilityElement = false
-        if case .navigatingRoute = state {
-            keypointNode.removeFromParentNode()
-            }
-        followingCrumbs?.invalidate()
-        routeName = nil
-        beginRouteLandmark = RouteLandmark()
-        endRouteLandmark = RouteLandmark()
-        playAlignmentConfirmation?.cancel()
-        announcementText.isHidden = true
-        nav.headingOffset = 0.0
-        headingRingBuffer.clear()
-        locationRingBuffer.clear()
-        logger.resetNavigationLog()
-        logger.resetPathLog()
-        hapticTimer?.invalidate()
-        logger.resetStateSequenceLog()
-        state = .mainScreen(announceArrival: false)
->>>>>>> 18108e40bd2f2b7f82581e0b5ba003944c3d4b19
     }
     
     /// Called when the settings button is pressed.  This function will display the settings view (managed by SettingsViewController) as a popover.
