@@ -32,7 +32,7 @@
                 </constraints>
             </tableViewCellContentView>
             <connections>
-                <outlet property="aboutLabel" destination="EBv-mT-PRJ" id="OAu-qd-Uuu"/>
+                <outlet property="aboutLabel" destination="EBv-mT-PRJ" id="Pje-cS-e64"/>
             </connections>
             <point key="canvasLocation" x="208.69565217391306" y="80.022321428571431"/>
         </tableViewCell>

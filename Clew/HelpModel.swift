@@ -24,7 +24,7 @@ public func dataFromFile(_ filename: String) -> Data? {
 ///describes what a HelpTable contains
 class HelpTable {
     var about: String?
-    var helpAttributes = [Attribute]()
+    var appFeatures: String?
     
     ///initalizer which sets the state of the help table based on the data provided
     init?(data: Data) {
@@ -37,10 +37,7 @@ class HelpTable {
                 
                 ///initalize the properties of the profile
                 self.about = body["about"] as? String
-                ///if there are profile attributes
-                if let helpTableAttributes = body["profileAttributes"] as? [[String: Any]] {
-                    self.helpAttributes = helpTableAttributes.map { Attribute(json: $0) }
-                }
+                self.appFeatures = body["appFeatures"] as? String
             }
         } catch {
             ///if there was an error with parsing the JSON

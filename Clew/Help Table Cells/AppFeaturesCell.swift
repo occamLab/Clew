@@ -1,5 +1,5 @@
 //
-//  AttributeCell.swift
+//  AppFeaturesCell.swift
 //  Clew
 //
 //  Created by tad on 6/18/19.
@@ -9,15 +9,18 @@
 import Foundation
 import UIKit
 
-class AttributeCell: UITableViewCell {
+class AppFeaturesCell: UITableViewCell {
     
-    @IBOutlet weak var titleLabel: UILabel?
-    @IBOutlet weak var valueLabel: UILabel?
+
+    @IBOutlet weak var informationLabel: UILabel!
     
-    var item: Attribute?  {
+    var item: HelpViewModelItem? {
         didSet {
-            titleLabel?.text = item?.key
-            valueLabel?.text = item?.value
+            guard  let item = item as? HelpViewModelAppFeaturesItem else {
+                return
+            }
+            
+            informationLabel?.text = item.appFeatures
         }
     }
     

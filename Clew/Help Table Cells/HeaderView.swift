@@ -36,6 +36,7 @@ class HeaderView: UITableViewHeaderFooterView {
     @IBOutlet weak var titleLabel: UILabel?
     @IBOutlet weak var arrowLabel: UILabel?
     
+    
     //MARK: Private Variables
     var section: Int = 0
     
@@ -62,6 +63,7 @@ class HeaderView: UITableViewHeaderFooterView {
         arrowLabel?.isAccessibilityElement = false
         ///sets the accessability label for the words to describe how they are both headinga and buttons
         titleLabel?.accessibilityTraits = [.header, .button]
+
     }
     
     ///what happens when the button is tapped

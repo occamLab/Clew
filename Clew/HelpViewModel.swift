@@ -12,7 +12,18 @@ import UIKit
 ///describes what sections a profile can hold
 enum HelpViewModelItemType {
     case about
-    case attribute
+    case appFeatures
+    case howWellDoesClewWork
+    case recordingARoute
+    case stoppingARecording
+    case pausingARouteOrRecordingALandmark
+    case resumingARoute
+    case theSavedRoutesMenu
+    case followingARoute
+    case appSoundsAndTheirMeanings
+    case ratingYourNavigationExperience
+    case providingFeedbackToTheDevelopmentTeam
+    
 }
 
 ///describes one of the sections and its properties
@@ -63,12 +74,11 @@ class HelpViewModel: NSObject{
             let aboutItem = HelpViewModelAboutItem(about: about)
             items.append(aboutItem)
         }
-        //if there is an attributes section
-        let attributes = helpTable.helpAttributes
-        if !attributes.isEmpty {
-            //set up the attributes section
-            let attributesItem = HelpViewModelAttributeItem(attributes: attributes)
-            items.append(attributesItem)
+        ///if there is an appFeatures section
+        if let appFeatures = helpTable.appFeatures {
+            ///set up the abbout section
+            let appFeaturesItem = HelpViewModelAppFeaturesItem(appFeatures: appFeatures)
+            items.append(appFeaturesItem)
         }
     }
 }
@@ -98,18 +108,20 @@ extension HelpViewModel: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         ///grabs the path to look into
         let item = items[indexPath.section]
-        ///depending on the section return a different type of cell
+        ///depending on the section this creates a different type of cell
         switch item.type {
         case .about:
             if let cell = tableView.dequeueReusableCell(withIdentifier: AboutCell.identifier, for: indexPath) as? AboutCell {
                 cell.item = item
                 return cell
             }
-        case .attribute:
-            if let item = item as? HelpViewModelAttributeItem, let cell = tableView.dequeueReusableCell(withIdentifier: AttributeCell.identifier, for: indexPath) as? AttributeCell {
-                cell.item = item.attributes[indexPath.row]
+        case .appFeatures:
+            if let item = item as? HelpViewModelAppFeaturesItem, let cell = tableView.dequeueReusableCell(withIdentifier: AppFeaturesCell.identifier, for: indexPath) as? AppFeaturesCell {
+                cell.item = item
                 return cell
             }
+        default:
+            print("hello")
         }
         ///return an empty cell
         return UITableViewCell()
@@ -180,26 +192,30 @@ class HelpViewModelAboutItem: HelpViewModelItem {
         self.about = about
     }
 }
-
-class HelpViewModelAttributeItem: HelpViewModelItem {
+///creates an appFeatures section
+class HelpViewModelAppFeaturesItem: HelpViewModelItem {
     
+    ///sets the type
     var type: HelpViewModelItemType {
-        return .attribute
+        return .appFeatures
     }
     
+    ///sets the name of the section
     var sectionTitle: String {
-        return "Attributes"
+        return "AppFeatures"
     }
     
-    var rowCount: Int {
-        return attributes.count
+    ///sets whether or not it is collapseable
+    var isCollapsible: Bool {
+        return true
     }
     
+    ///sets the state to be collapsed
     var isCollapsed = true
     
-    var attributes: [Attribute]
-    
-    init(attributes: [Attribute]) {
-        self.attributes = attributes
+    ///sets the text value
+    var appFeatures: String
+    init(appFeatures: String) {
+        self.appFeatures = appFeatures
     }
 }

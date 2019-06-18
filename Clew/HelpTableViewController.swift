@@ -42,6 +42,8 @@ class HelpTableViewController: UIViewController {
         
         ///registers all the different types of cells that can be used
         tableView?.register(AboutCell.nib, forCellReuseIdentifier: AboutCell.identifier)
+        ///registers all the different types of cells that can be used
+        tableView?.register(AppFeaturesCell.nib, forCellReuseIdentifier: AppFeaturesCell.identifier)
         ///registers the header this one is important and needs to stay
         tableView?.register(HeaderView.nib, forHeaderFooterViewReuseIdentifier: HeaderView.identifier)
     }
