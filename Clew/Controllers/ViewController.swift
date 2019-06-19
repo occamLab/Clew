@@ -540,13 +540,33 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         return view as! RootContainerView
     }
     
+    // child view controllers for various app states
+    var routeRatingController: RouteRatingController!
+    var pauseTrackingController: PauseTrackingController!
+    var resumeTrackingController: ResumeTrackingController!
+    var resumeTrackingConfirmController: ResumeTrackingConfirmController!
+    var stopRecordingController: StopRecordingController!
+    var recordPathController: RecordPathController!
+    var startNavigationController: StartNavigationController!
+    var stopNavigationController: StopNavigationController!
+    
     /// called when the view has loaded.  We setup various app elements in here.
     override func viewDidLoad() {
         super.viewDidLoad()
         
         // set the main view as active
         view = RootContainerView(frame: UIScreen.main.bounds)
-
+        
+        // initialize child view controllers
+        routeRatingController = RouteRatingController()
+        pauseTrackingController = PauseTrackingController()
+        resumeTrackingController = ResumeTrackingController()
+        resumeTrackingConfirmController = ResumeTrackingConfirmController()
+        stopRecordingController = StopRecordingController()
+        recordPathController = RecordPathController()
+        startNavigationController = StartNavigationController()
+        stopNavigationController = StopNavigationController()
+        
         // Add the scene to the view, which is a RootContainerView
         sceneView.frame = view.frame
         view.addSubview(sceneView)
@@ -558,19 +578,36 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         
         state = .mainScreen(announceArrival: false)
 
-        rootContainerView.settingsButton.addTarget(self,
-                                                   action: #selector(settingsButtonPressed),
-                                                   for: .touchUpInside)
+        // targets for global buttons
+        rootContainerView.settingsButton.addTarget(self, action: #selector(settingsButtonPressed), for: .touchUpInside)
         
-        rootContainerView.helpButton.addTarget(self,
-                                               action: #selector(helpButtonPressed),
-                                               for: .touchUpInside)
+        rootContainerView.helpButton.addTarget(self, action: #selector(helpButtonPressed), for: .touchUpInside)
         
-        rootContainerView.getDirectionButton.addTarget(self,
-                                                       action: #selector(announceDirectionHelpPressed),
-                                                       for: .touchUpInside)
-  
+        rootContainerView.getDirectionButton.addTarget(self, action: #selector(announceDirectionHelpPressed), for: .touchUpInside)
         
+        // targets for child view controllers
+        routeRatingController.thumbsUpButton.addTarget(self, action: .thumbsUpButtonTapped, for: .touchUpInside)
+        
+        routeRatingController.thumbsDownButton.addTarget(self, action: .thumbsDownButtonTapped, for: .touchUpInside)
+        
+        pauseTrackingController.recordVoiceNoteButton.addTarget(self, action: .recordVoiceNoteButtonTapped, for: .touchUpInside)
+        pauseTrackingController.confirmAlignmentButton.addTarget(self, action: .confirmAlignmentButtonTapped, for: .touchUpInside)
+        
+        resumeTrackingController.resumeButton.addTarget(self, action: .resumeButtonTapped, for: .touchUpInside)
+        
+        resumeTrackingConfirmController.confirmAlignmentButton.addTarget(self, action: .confirmAlignmentButtonTapped, for: .touchUpInside)
+        resumeTrackingConfirmController.readVoiceNoteButton.addTarget(self, action: .readVoiceNoteButtonTapped, for: .touchUpInside)
+        
+        stopRecordingController.stopRecordingButton.addTarget(self, action: .stopRecordingButtonTapped, for: .touchUpInside)
+        
+        recordPathController.recordPathButton.addTarget(self, action: .recordPathButtonTapped, for: .touchUpInside)
+        recordPathController.addLandmarkButton.addTarget(self, action: .landmarkButtonTapped, for: .touchUpInside)
+        recordPathController.routesButton.addTarget(self, action: .routesButtonTapped, for: .touchUpInside)
+        
+        startNavigationController.startNavigationButton.addTarget(self, action: .startNavigationButtonTapped, for: .touchUpInside)
+        startNavigationController.pauseButton.addTarget(self, action: .pauseButtonTapped, for: .touchUpInside)
+        
+        stopNavigationController.stopNavigationButton.addTarget(self, action: .stopNavigationButtonTapped, for: .touchUpInside)
         
         // make sure this happens after the view is created!
         rootContainerView.countdownTimer.delegate = self
