@@ -1,8 +1,18 @@
 {
     "data": {
         "id": 1,
-        "about": "I like travelling along Missisipi!",
-        "appFeatures": "Current Version \nClew allows you to record routes using your phone that you can then navigate (either in the forward or reverse direction) at a later point in time. Clew can be used in situations where you want to immediately navigate back to your starting location (e.g., if you went somewhere with a sighted guide or if it is harder to navigate the reverse journey) or when you want to remember a route that you are learning so you can navigate it more confidently in the future.  Importantly, Clew does not use your phone's GPS, so it can be used indoors. \nThe ability to save routes is a new feature for Clew.\nFuture Versions\nWe are working on a route sharing feature so that you can send routes to other users."
+        "appFeatures": "Current Version \nClew allows you to record routes using your phone that you can then navigate (either in the forward or reverse direction) at a later point in time. Clew can be used in situations where you want to immediately navigate back to your starting location (e.g., if you went somewhere with a sighted guide or if it is harder to navigate the reverse journey) or when you want to remember a route that you are learning so you can navigate it more confidently in the future.  Importantly, Clew does not use your phone's GPS, so it can be used indoors. \nThe ability to save routes is a new feature for Clew.\nFuture Versions\nWe are working on a route sharing feature so that you can send routes to other users.",
+        "helpSection": "Attempts to create a generalized format which can be used for all the sections of help",
+        "howWellDoesClewWork": "howWellDoesClewWork",
+        "recordingARoute": "recordingARoute",
+        "stoppingARecording": "stoppingARecording",
+        "pausingARouteOrRecordingALandmark": "pausingARouteOrRecordingALandmark",
+        "resumingARoute": "resumingARoute",
+        "theSavedRoutesMenu": "theSavedRoutesMenu",
+        "followingARoute": "followingARoute",
+        "appSoundsAndTheirMeanings": "appSoundsAndTheirMeanings",
+        "ratingYourNavigationExperience": "ratingYourNavigationExperience",
+        "providingFeedbackToTheDevelopmentTeam": "providingFeedbackToTheDevelopmentTeam"
     },
     "error": 0,
     "message": "Success"

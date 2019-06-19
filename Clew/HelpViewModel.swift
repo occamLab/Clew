@@ -11,8 +11,8 @@ import UIKit
 
 ///describes what sections a profile can hold
 enum HelpViewModelItemType {
-    case about
     case appFeatures
+    case helpSection
     case howWellDoesClewWork
     case recordingARoute
     case stoppingARecording
@@ -68,18 +68,73 @@ class HelpViewModel: NSObject{
         guard let data = dataFromFile("ServerData"), let helpTable = HelpTable(data: data) else {
             return
         }
-        ///if there is an about section
-        if let about = helpTable.about {
-            ///set up the abbout section
-            let aboutItem = HelpViewModelAboutItem(about: about)
-            items.append(aboutItem)
-        }
+        ///if there is an helpSection section
+//        if let helpSection = helpTable.helpSection {
+//            ///set up the section
+//            let helpSectionItem = HelpViewModelHelpSectionItem(helpSection: helpSection, sectionType: "HelpSection")
+//            items.append(helpSectionItem)
+//        }
         ///if there is an appFeatures section
         if let appFeatures = helpTable.appFeatures {
-            ///set up the abbout section
-            let appFeaturesItem = HelpViewModelAppFeaturesItem(appFeatures: appFeatures)
+            ///set up the section
+            let appFeaturesItem = HelpViewModelHelpSectionItem(helpSection: appFeatures, sectionType: "App Features")
             items.append(appFeaturesItem)
         }
+        ///if there is an howWellDoesClewWork section
+        if let howWellDoesClewWork = helpTable.howWellDoesClewWork {
+            ///set up the section
+            let howWellDoesClewWorkItem = HelpViewModelHelpSectionItem(helpSection: howWellDoesClewWork,sectionType: "How Well Does Clew Work")
+            items.append(howWellDoesClewWorkItem)
+        }
+        ///if there is an recordingARoute section
+        if let recordingARoute = helpTable.recordingARoute {
+            ///set up the section
+            let recordingARouteItem = HelpViewModelHelpSectionItem(helpSection: recordingARoute,sectionType: "Recording A Route")
+            items.append(recordingARouteItem)
+        }
+        ///if there is an stoppingARecording section
+        if let stoppingARecording = helpTable.stoppingARecording {
+            ///set up the section
+            let stoppingARecordingItem = HelpViewModelHelpSectionItem(helpSection: stoppingARecording,sectionType: "Stopping A Recording")
+            items.append(stoppingARecordingItem)
+        }
+        ///if there is an pausingARouteOrRecordingALandmark section
+        if let pausingARouteOrRecordingALandmark = helpTable.pausingARouteOrRecordingALandmark {
+            ///set up the section
+            let pausingARouteOrRecordingALandmarkItem = HelpViewModelHelpSectionItem(helpSection: pausingARouteOrRecordingALandmark,sectionType: "Pausing A Route Or Recording A Landmark")
+            items.append(pausingARouteOrRecordingALandmarkItem)
+        }
+        ///if there is an resumingARoute section
+        if let resumingARoute = helpTable.resumingARoute {
+            ///set up the section
+            let resumingARouteItem = HelpViewModelHelpSectionItem(helpSection: resumingARoute,sectionType: "Resuming A Route")
+            items.append(resumingARouteItem)
+        }
+        ///if there is an theSavedRoutesMenu section
+        if let theSavedRoutesMenu = helpTable.theSavedRoutesMenu {
+            ///set up the section
+            let theSavedRoutesMenuItem = HelpViewModelHelpSectionItem(helpSection: theSavedRoutesMenu,sectionType: "The Saved Routes Menu")
+            items.append(theSavedRoutesMenuItem)
+        }
+        ///if there is an sfollowingARoute section
+        if let followingARoute = helpTable.followingARoute {
+            ///set up the section
+            let followingARouteItem = HelpViewModelHelpSectionItem(helpSection: followingARoute,sectionType: "Following A Route")
+            items.append(followingARouteItem)
+        }
+        ///if there is an ratingYourNavigationExperience section
+        if let ratingYourNavigationExperience = helpTable.ratingYourNavigationExperience {
+            ///set up the section
+            let ratingYourNavigationExperienceItem = HelpViewModelHelpSectionItem(helpSection: ratingYourNavigationExperience,sectionType: "Rating Your Navigation Experience")
+            items.append(ratingYourNavigationExperienceItem)
+        }
+        ///if there is an providingFeedbackToTheDevelopmentTeam section
+        if let providingFeedbackToTheDevelopmentTeam = helpTable.providingFeedbackToTheDevelopmentTeam {
+            ///set up the section
+            let providingFeedbackToTheDevelopmentTeamItem = HelpViewModelHelpSectionItem(helpSection: providingFeedbackToTheDevelopmentTeam,sectionType: "Providing Feedback To The Development Team")
+            items.append(providingFeedbackToTheDevelopmentTeamItem)
+        }
+
     }
 }
 
@@ -110,18 +165,66 @@ extension HelpViewModel: UITableViewDataSource {
         let item = items[indexPath.section]
         ///depending on the section this creates a different type of cell
         switch item.type {
-        case .about:
-            if let cell = tableView.dequeueReusableCell(withIdentifier: AboutCell.identifier, for: indexPath) as? AboutCell {
-                cell.item = item
-                return cell
-            }
         case .appFeatures:
-            if let item = item as? HelpViewModelAppFeaturesItem, let cell = tableView.dequeueReusableCell(withIdentifier: AppFeaturesCell.identifier, for: indexPath) as? AppFeaturesCell {
+            if let item = item as? HelpViewModelHelpSectionItem, let cell = tableView.dequeueReusableCell(withIdentifier: HelpSectionCell.identifier, for: indexPath) as? HelpSectionCell {
                 cell.item = item
                 return cell
             }
-        default:
-            print("hello")
+        case .helpSection:
+            if let item = item as? HelpViewModelHelpSectionItem, let cell = tableView.dequeueReusableCell(withIdentifier: HelpSectionCell.identifier, for: indexPath) as? HelpSectionCell {
+                cell.item = item
+                return cell
+            }
+        case .howWellDoesClewWork:
+            if let item = item as? HelpViewModelHelpSectionItem, let cell = tableView.dequeueReusableCell(withIdentifier: HelpSectionCell.identifier, for: indexPath) as? HelpSectionCell {
+                cell.item = item
+                return cell
+            }
+        case .recordingARoute:
+            if let item = item as? HelpViewModelHelpSectionItem, let cell = tableView.dequeueReusableCell(withIdentifier: HelpSectionCell.identifier, for: indexPath) as? HelpSectionCell {
+                cell.item = item
+                return cell
+            }
+        case .stoppingARecording:
+            if let item = item as? HelpViewModelHelpSectionItem, let cell = tableView.dequeueReusableCell(withIdentifier: HelpSectionCell.identifier, for: indexPath) as? HelpSectionCell {
+                cell.item = item
+                return cell
+            }
+        case .pausingARouteOrRecordingALandmark:
+            if let item = item as? HelpViewModelHelpSectionItem, let cell = tableView.dequeueReusableCell(withIdentifier: HelpSectionCell.identifier, for: indexPath) as? HelpSectionCell {
+                cell.item = item
+                return cell
+            }
+        case .resumingARoute:
+            if let item = item as? HelpViewModelHelpSectionItem, let cell = tableView.dequeueReusableCell(withIdentifier: HelpSectionCell.identifier, for: indexPath) as? HelpSectionCell {
+                cell.item = item
+                return cell
+            }
+        case .theSavedRoutesMenu:
+            if let item = item as? HelpViewModelHelpSectionItem, let cell = tableView.dequeueReusableCell(withIdentifier: HelpSectionCell.identifier, for: indexPath) as? HelpSectionCell {
+                cell.item = item
+                return cell
+            }
+        case .followingARoute:
+            if let item = item as? HelpViewModelHelpSectionItem, let cell = tableView.dequeueReusableCell(withIdentifier: HelpSectionCell.identifier, for: indexPath) as? HelpSectionCell {
+                cell.item = item
+                return cell
+            }
+        case .appSoundsAndTheirMeanings:
+            if let item = item as? HelpViewModelHelpSectionItem, let cell = tableView.dequeueReusableCell(withIdentifier: HelpSectionCell.identifier, for: indexPath) as? HelpSectionCell {
+                cell.item = item
+                return cell
+            }
+        case .ratingYourNavigationExperience:
+            if let item = item as? HelpViewModelHelpSectionItem, let cell = tableView.dequeueReusableCell(withIdentifier: HelpSectionCell.identifier, for: indexPath) as? HelpSectionCell {
+                cell.item = item
+                return cell
+            }
+        case .providingFeedbackToTheDevelopmentTeam:
+            if let item = item as? HelpViewModelHelpSectionItem, let cell = tableView.dequeueReusableCell(withIdentifier: HelpSectionCell.identifier, for: indexPath) as? HelpSectionCell {
+                cell.item = item
+                return cell
+            }
         }
         ///return an empty cell
         return UITableViewCell()
@@ -134,11 +237,11 @@ extension HelpViewModel: UITableViewDelegate {
         if let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: HeaderView.identifier) as? HeaderView {
             ///sets the section of the header
             let item = items[section]
-            
             ///sets the state/text of the header
             headerView.item = item
             headerView.section = section
             headerView.delegate = self
+            
             return headerView
         }
         return UIView()
@@ -165,18 +268,17 @@ extension HelpViewModel: HeaderViewDelegate {
 }
 
 //MARK: Creating types of sections
-///creates an about section
-class HelpViewModelAboutItem: HelpViewModelItem {
+
+///creates a Generic Section section
+class HelpViewModelHelpSectionItem: HelpViewModelItem {
     
     ///sets the type
     var type: HelpViewModelItemType {
-        return .about
+        return .helpSection
     }
     
     ///sets the name of the section
-    var sectionTitle: String {
-        return "About"
-    }
+    var sectionTitle: String
     
     ///sets whether or not it is collapseable
     var isCollapsible: Bool {
@@ -187,35 +289,9 @@ class HelpViewModelAboutItem: HelpViewModelItem {
     var isCollapsed = true
     
     ///sets the text value
-    var about: String
-    init(about: String) {
-        self.about = about
-    }
-}
-///creates an appFeatures section
-class HelpViewModelAppFeaturesItem: HelpViewModelItem {
-    
-    ///sets the type
-    var type: HelpViewModelItemType {
-        return .appFeatures
-    }
-    
-    ///sets the name of the section
-    var sectionTitle: String {
-        return "AppFeatures"
-    }
-    
-    ///sets whether or not it is collapseable
-    var isCollapsible: Bool {
-        return true
-    }
-    
-    ///sets the state to be collapsed
-    var isCollapsed = true
-    
-    ///sets the text value
-    var appFeatures: String
-    init(appFeatures: String) {
-        self.appFeatures = appFeatures
+    var helpSection: String
+    init(helpSection: String,sectionType: String) {
+        self.helpSection = helpSection
+        self.sectionTitle = sectionType
     }
 }

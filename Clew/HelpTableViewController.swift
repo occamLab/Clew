@@ -28,7 +28,7 @@ class HelpTableViewController: UIViewController {
             self?.tableView?.reloadSections([section], with: .fade)
             self?.tableView?.endUpdates()
         }
-        
+
         ///sets the dimensions for each row and the headers
         tableView?.estimatedRowHeight = 100
         tableView?.rowHeight = UITableView.automaticDimension
@@ -39,11 +39,8 @@ class HelpTableViewController: UIViewController {
         tableView?.dataSource = viewModel
         ///sets the view model as the delegate for the table
         tableView?.delegate = viewModel as UITableViewDelegate
-        
         ///registers all the different types of cells that can be used
-        tableView?.register(AboutCell.nib, forCellReuseIdentifier: AboutCell.identifier)
-        ///registers all the different types of cells that can be used
-        tableView?.register(AppFeaturesCell.nib, forCellReuseIdentifier: AppFeaturesCell.identifier)
+        tableView?.register(HelpSectionCell.nib, forCellReuseIdentifier: HelpSectionCell.identifier)
         ///registers the header this one is important and needs to stay
         tableView?.register(HeaderView.nib, forHeaderFooterViewReuseIdentifier: HeaderView.identifier)
     }

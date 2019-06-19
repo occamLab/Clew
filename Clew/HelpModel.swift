@@ -23,8 +23,18 @@ public func dataFromFile(_ filename: String) -> Data? {
 
 ///describes what a HelpTable contains
 class HelpTable {
-    var about: String?
     var appFeatures: String?
+    var helpSection: String?
+    var howWellDoesClewWork: String?
+    var recordingARoute: String?
+    var stoppingARecording: String?
+    var pausingARouteOrRecordingALandmark: String?
+    var resumingARoute: String?
+    var theSavedRoutesMenu: String?
+    var followingARoute: String?
+    var appSoundsAndTheirMeanings: String?
+    var ratingYourNavigationExperience: String?
+    var providingFeedbackToTheDevelopmentTeam: String?
     
     ///initalizer which sets the state of the help table based on the data provided
     init?(data: Data) {
@@ -36,8 +46,20 @@ class HelpTable {
                 ///TODO: CHANGE ALL THIS TO REFLECT A HELP MENU
                 
                 ///initalize the properties of the profile
-                self.about = body["about"] as? String
                 self.appFeatures = body["appFeatures"] as? String
+                self.helpSection = body["helpSection"] as? String
+                self.howWellDoesClewWork = body["howWellDoesClewWork"] as? String
+                self.recordingARoute = body["recordingARoute"] as? String
+                self.stoppingARecording = body["stoppingARecording"] as? String
+                self.pausingARouteOrRecordingALandmark = body["pausingARouteOrRecordingALandmark"] as? String
+                self.resumingARoute = body["resumingARoute"] as? String
+                self.theSavedRoutesMenu = body["theSavedRoutesMenu"] as? String
+                self.followingARoute = body["followingARoute"] as? String
+                self.appSoundsAndTheirMeanings = body["appSoundsAndTheirMeanings"] as? String
+                self.ratingYourNavigationExperience = body["ratingYourNavigationExperience"] as? String
+                self.providingFeedbackToTheDevelopmentTeam = body["providingFeedbackToTheDevelopmentTeam"] as? String
+                
+                
             }
         } catch {
             ///if there was an error with parsing the JSON
