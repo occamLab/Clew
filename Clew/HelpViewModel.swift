@@ -123,6 +123,12 @@ class HelpViewModel: NSObject{
             items.append(followingARouteItem)
         }
         ///if there is an ratingYourNavigationExperience section
+        if let appSoundsAndTheirMeanings = helpTable.appSoundsAndTheirMeanings {
+            ///set up the section
+            let appSoundsAndTheirMeaningsItem = HelpViewModelHelpSectionItem(helpSection: appSoundsAndTheirMeanings,sectionType: "App Sounds And Their Meanings")
+            items.append(appSoundsAndTheirMeaningsItem)
+        }
+        ///if there is an ratingYourNavigationExperience section
         if let ratingYourNavigationExperience = helpTable.ratingYourNavigationExperience {
             ///set up the section
             let ratingYourNavigationExperienceItem = HelpViewModelHelpSectionItem(helpSection: ratingYourNavigationExperience,sectionType: "Rating Your Navigation Experience")

@@ -16,8 +16,6 @@
 		1F24225722B939A700AE3009 /* HelpModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F24225522B939A700AE3009 /* HelpModel.swift */; };
 		1F24225922B93B0000AE3009 /* HelpViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F24225822B93B0000AE3009 /* HelpViewModel.swift */; };
 		1F24225A22B93B0000AE3009 /* HelpViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F24225822B93B0000AE3009 /* HelpViewModel.swift */; };
-		1F24226822B9408800AE3009 /* ServerData.json in Resources */ = {isa = PBXBuildFile; fileRef = 1F24226722B9408800AE3009 /* ServerData.json */; };
-		1F24226922B9408800AE3009 /* ServerData.json in Resources */ = {isa = PBXBuildFile; fileRef = 1F24226722B9408800AE3009 /* ServerData.json */; };
 		1F24227122B96F5D00AE3009 /* HeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1F24227022B96F5D00AE3009 /* HeaderView.xib */; };
 		1F24227222B96F5D00AE3009 /* HeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1F24227022B96F5D00AE3009 /* HeaderView.xib */; };
 		1F26981D22B2D570009B3CE0 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F26981C22B2D570009B3CE0 /* ViewController.swift */; };
@@ -30,6 +28,8 @@
 		1F6B188122BA87FD00ECA6F4 /* HelpSectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F6B187E22BA86D400ECA6F4 /* HelpSectionCell.swift */; };
 		1F6B188322BA891600ECA6F4 /* HelpSectionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1F6B188222BA891600ECA6F4 /* HelpSectionCell.xib */; };
 		1F6B188422BA891600ECA6F4 /* HelpSectionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1F6B188222BA891600ECA6F4 /* HelpSectionCell.xib */; };
+		1F6B189022BAC34B00ECA6F4 /* ServerData.json in Resources */ = {isa = PBXBuildFile; fileRef = 1F6B189322BAC34B00ECA6F4 /* ServerData.json */; };
+		1F6B189122BAC34B00ECA6F4 /* ServerData.json in Resources */ = {isa = PBXBuildFile; fileRef = 1F6B189322BAC34B00ECA6F4 /* ServerData.json */; };
 		4B12F4A545BC26EAA16F6633 /* Pods_Clew.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1977F3CD0CF608888A7E2B5C /* Pods_Clew.framework */; };
 		4D6B00C41F33C1C400952242 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D6B00C31F33C1C400952242 /* AppDelegate.swift */; };
 		4D6B00CE1F33C1C400952242 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4D6B00CC1F33C1C400952242 /* LaunchScreen.storyboard */; };
@@ -89,13 +89,15 @@
 		1F24225222B938CF00AE3009 /* HeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderView.swift; sourceTree = "<group>"; };
 		1F24225522B939A700AE3009 /* HelpModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpModel.swift; sourceTree = "<group>"; };
 		1F24225822B93B0000AE3009 /* HelpViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpViewModel.swift; sourceTree = "<group>"; };
-		1F24226722B9408800AE3009 /* ServerData.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = ServerData.json; sourceTree = "<group>"; };
 		1F24227022B96F5D00AE3009 /* HeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HeaderView.xib; sourceTree = "<group>"; };
 		1F26981C22B2D570009B3CE0 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		1F2958D622AABFB3001A8547 /* FeedbackViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackViewController.swift; sourceTree = "<group>"; };
 		1F2958DA22AAE2D1001A8547 /* FeedbackLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackLogger.swift; sourceTree = "<group>"; };
 		1F6B187E22BA86D400ECA6F4 /* HelpSectionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpSectionCell.swift; sourceTree = "<group>"; };
 		1F6B188222BA891600ECA6F4 /* HelpSectionCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HelpSectionCell.xib; sourceTree = "<group>"; };
+		1F6B188522BAC1A100ECA6F4 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
+		1F6B188722BAC1E100ECA6F4 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
+		1F6B189222BAC34B00ECA6F4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = Base; path = Base.lproj/ServerData.json; sourceTree = "<group>"; };
 		4315F457247AC66574B86A26 /* Pods_Clew_Dev.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Clew_Dev.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4D6B00C01F33C1C400952242 /* Clew.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Clew.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4D6B00C31F33C1C400952242 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -212,7 +214,7 @@
 				4D6B00D71F33C21A00952242 /* PathFinder.swift */,
 				4D6B00DB1F33C26D00952242 /* Utility.swift */,
 				4D6B00CC1F33C1C400952242 /* LaunchScreen.storyboard */,
-				1F24226722B9408800AE3009 /* ServerData.json */,
+				1F6B189322BAC34B00ECA6F4 /* ServerData.json */,
 				826D540B224ABBDC009EF410 /* RoutesViewController.swift */,
 				826D540A224ABBDC009EF410 /* RouteTableViewCell.swift */,
 				82028C73227CDB3100772701 /* PathLogger.swift */,
@@ -333,6 +335,7 @@
 			knownRegions = (
 				en,
 				Base,
+				es,
 			);
 			mainGroup = 4D6B00B71F33C1C400952242;
 			productRefGroup = 4D6B00C11F33C1C400952242 /* Products */;
@@ -356,7 +359,7 @@
 				827E859E22690FE4005CF98A /* StopRecording.aiff in Resources */,
 				4D6B00E51F33C9B800952242 /* Crumb.obj in Resources */,
 				4D6B00DE1F33C33600952242 /* Settings.bundle in Resources */,
-				1F24226822B9408800AE3009 /* ServerData.json in Resources */,
+				1F6B189022BAC34B00ECA6F4 /* ServerData.json in Resources */,
 				82569F4E22187E6500448B45 /* help in Resources */,
 				82028C7922807C1F00772701 /* GoogleService-Info.plist in Resources */,
 				1F6B188322BA891600ECA6F4 /* HelpSectionCell.xib in Resources */,
@@ -376,7 +379,7 @@
 				B7EB59E320F693EB00FBBC6A /* Crumb.obj in Resources */,
 				B7EB59E420F693EB00FBBC6A /* Settings.bundle in Resources */,
 				B7EB59E520F693EB00FBBC6A /* LaunchScreen.storyboard in Resources */,
-				1F24226922B9408800AE3009 /* ServerData.json in Resources */,
+				1F6B189122BAC34B00ECA6F4 /* ServerData.json in Resources */,
 				82569F4F22187E6500448B45 /* help in Resources */,
 				82028C7722807BF400772701 /* GoogleService-Info_dev.plist in Resources */,
 				1F6B188422BA891600ECA6F4 /* HelpSectionCell.xib in Resources */,
@@ -553,10 +556,20 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
+		1F6B189322BAC34B00ECA6F4 /* ServerData.json */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1F6B189222BAC34B00ECA6F4 /* Base */,
+			);
+			name = ServerData.json;
+			sourceTree = "<group>";
+		};
 		4D6B00CC1F33C1C400952242 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
 				4D6B00CD1F33C1C400952242 /* Base */,
+				1F6B188522BAC1A100ECA6F4 /* es */,
+				1F6B188722BAC1E100ECA6F4 /* en */,
 			);
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
@@ -568,6 +581,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -627,6 +641,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
