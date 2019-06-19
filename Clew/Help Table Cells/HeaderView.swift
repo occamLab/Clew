@@ -17,7 +17,7 @@ protocol HeaderViewDelegate: class {
 ///creates the main header class
 class HeaderView: UITableViewHeaderFooterView {
     
-    var isCollapsed = true
+    var isCollapsed: Bool = false
     
     ///creates a section in the Help Table
     var item: HelpViewModelItem? {
@@ -30,11 +30,10 @@ class HeaderView: UITableViewHeaderFooterView {
             arrowLabel?.isAccessibilityElement = false
             ///set the label on the header to be the section label from the HelpTable item
             titleLabel?.text = item.sectionTitle
-            
-            updateAccessabilityLabels()
-            
             ///makes sure the default condition is collapsed
             setCollapsed(collapsed: item.isCollapsed)
+            
+            updateAccessibilityLabels()
         }
     }
     
@@ -43,8 +42,7 @@ class HeaderView: UITableViewHeaderFooterView {
     @IBOutlet weak var titleLabel: UILabel!
 
     @IBOutlet weak var arrowLabel: UILabel!
-    
-    
+        
     //MARK: Private Variables
     var section: Int = 0
     
@@ -60,17 +58,6 @@ class HeaderView: UITableViewHeaderFooterView {
         return String(describing: self)
     }
     
-    override init(reuseIdentifier: String?) {
-        super.init(reuseIdentifier: reuseIdentifier)
-        print(reuseIdentifier)
-        print(isCollapsed)
-    }
-    
-    required init?(coder: NSCoder) {
-        super.init(coder: coder)
-        print("in coder init")
-    }
-    
     ///Akin to on view did load()
     override func awakeFromNib() {
         ///call default functionality
@@ -82,26 +69,29 @@ class HeaderView: UITableViewHeaderFooterView {
         self.backgroundView = UIView(frame: self.bounds)
         self.backgroundView!.backgroundColor = UIColor(white: 1.0, alpha: 1.0)
 
-        updateAccessabilityLabels()
+        updateAccessibilityLabels()
     }
     
     ///what happens when the button is tapped
     @objc private func didTapHeader() {
         ///calls the delegate's togleSection method
         delegate?.toggleSection(header: self, section: section)
-        isCollapsed = !isCollapsed
-        updateAccessabilityLabels()
+        ///toggles the variable which holds the curent state of the view
+        //isCollapsed = !isCollapsed
+        updateAccessibilityLabels()
     }
     
     ///sets the visual state of the arrow to display collapsed and not collapsed states
     func setCollapsed(collapsed: Bool) {
+        isCollapsed = collapsed
         arrowLabel?.rotate(collapsed ? 0.0 : .pi)
     }
-    func updateAccessabilityLabels() {
-        ///sets the accessability label for the words to describe how they are both headings and buttons
+    
+    func updateAccessibilityLabels() {
+        ///sets the accessibility label for the words to describe how they are both headings and buttons
         titleLabel?.accessibilityTraits = [.header, .button]
         ///sets the accessability label based on the collapsed state of the section
-        if isCollapsed{
+        if isCollapsed {
             titleLabel?.accessibilityLabel = titleLabel.text! + ". Expand section"
         }else{
             titleLabel?.accessibilityLabel = titleLabel.text! + ". Collapse section "
