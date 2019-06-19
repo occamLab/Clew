@@ -34,7 +34,24 @@ class StartNavigationController: UIViewController {
                                     height: UIConstants.buttonFrameHeight))
 
         view.backgroundColor = UIColor.black.withAlphaComponent(0.4)
-        view.isHidden = true
+//        view.isHidden = true
+        
+        let label = UILabel(frame: CGRect(x: 15,
+                                          y: UIScreen.main.bounds.size.height/5,
+                                          width: UIScreen.main.bounds.size.width-30,
+                                          height: UIScreen.main.bounds.size.height/2))
+        
+        var mainText : String?
+        if let mainText: String = mainText {
+            label.textColor = UIColor.white
+            label.textAlignment = .center
+            label.numberOfLines = 0
+            label.lineBreakMode = .byWordWrapping
+            label.font = label.font.withSize(20)
+            label.text = mainText
+            label.tag = UIView.mainTextTag
+            view.addSubview(label)
+        }
         
         startNavigationButton = UIButton.makeImageButton(view,
                                                          alignment: UIConstants.ButtonContainerHorizontalAlignment.center,
@@ -45,6 +62,15 @@ class StartNavigationController: UIViewController {
                                                alignment: UIConstants.ButtonContainerHorizontalAlignment.right,
                                                appearance: UIConstants.ButtonAppearance.textButton(label: "Pause"),
                                                label: "Pause session")
+        
+        if let parent: UIViewController = parent {
+            startNavigationButton.addTarget(parent,
+                                   action: #selector(ViewController.startNavigation),
+                                   for: .touchUpInside)
+            pauseButton.addTarget(parent,
+                                        action: #selector(ViewController.startPauseProcedure),
+                                        for: .touchUpInside)
+        }
         
         // Do any additional setup after loading the view.
         view.addSubview(startNavigationButton)

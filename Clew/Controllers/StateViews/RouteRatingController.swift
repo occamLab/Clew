@@ -29,7 +29,6 @@ class RouteRatingController: UIViewController {
     
     var thumbsDownButton: UIButton!
 
-
     var thumbsUpButton: UIButton!
     
     override func viewDidLoad() {
@@ -49,7 +48,7 @@ class RouteRatingController: UIViewController {
                                           height: UIScreen.main.bounds.size.height/2))
         
         view.backgroundColor = UIColor.black.withAlphaComponent(0.4)
-        view.isHidden = true
+//        view.isHidden = true
         
         let mainText = "Please rate your service."
         label.textColor = UIColor.white
@@ -59,19 +58,28 @@ class RouteRatingController: UIViewController {
         label.font = label.font.withSize(20)
         label.text = mainText
         label.tag = UIView.mainTextTag
+        view.addSubview(label)
         
         thumbsDownButton = UIButton.makeImageButton(view,
                                                     alignment: UIConstants.ButtonContainerHorizontalAlignment.leftcenter,
                                                     appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "thumbs_down")!),
                                                     label: "Bad")
         thumbsUpButton = UIButton.makeImageButton(view,
-                                                  alignment: UIConstants.ButtonContainerHorizontalAlignment.leftcenter,
+                                                  alignment: UIConstants.ButtonContainerHorizontalAlignment.rightcenter,
                                                   appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "thumbs_up")!),
                                                   label: "Good")
         
+        if let parent: UIViewController = parent {
+            thumbsUpButton.addTarget(parent,
+                                     action: #selector(ViewController.sendLogData),
+                                     for: .touchUpInside)
+            thumbsDownButton.addTarget(parent,
+                                       action: #selector(ViewController.sendDebugLogData),
+                                       for: .touchUpInside)
+        }
+        
         view.addSubview(thumbsDownButton)
         view.addSubview(thumbsUpButton)
-        view.addSubview(label)
         
         // Do any additional setup after loading the view.
     }

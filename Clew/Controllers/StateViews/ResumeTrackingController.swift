@@ -31,7 +31,7 @@ class ResumeTrackingController: UIViewController {
                                           height: UIScreen.main.bounds.size.height/2))
         
         view.backgroundColor = UIColor.black.withAlphaComponent(0.4)
-        view.isHidden = true
+//        view.isHidden = true
         
         let mainText = "Return to the last paused location and press Resume for further instructions."
         label.textColor = UIColor.white
@@ -41,6 +41,8 @@ class ResumeTrackingController: UIViewController {
         label.font = label.font.withSize(20)
         label.text = mainText
         label.tag = UIView.mainTextTag
+        view.addSubview(label)
+        
         
         /// The button that the allows the user to resume a paused route
         resumeButton = UIButton.makeImageButton(view,
@@ -48,8 +50,14 @@ class ResumeTrackingController: UIViewController {
                                                 appearance: UIConstants.ButtonAppearance.textButton(label: "Resume"),
                                                 label: "Resume")
         
+        
+        if let parent: UIViewController = parent {
+            resumeButton.addTarget(parent,
+                                     action: #selector(ViewController.confirmResumeTracking),
+                                     for: .touchUpInside)
+        }
+        
         // Do any additional setup after loading the view.
-        view.addSubview(label)
         view.addSubview(resumeButton)
     }
     
