@@ -1044,39 +1044,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         ))
         self.present(alert, animated: true, completion: nil)
     }
-    
-    
-    func showHomeButtonWarning() {
-        if case .navigatingRoute = self.state {
-            homePageNavigationProcesses()
-        }
-        if case .readyToNavigateOrPause = self.state {
-            homePageNavigationProcesses()
-        }
-        if case .recordingRoute = self.state {
-            homePageNavigationProcesses()
-        }
-        if case .pauseWaitingPeriod = self.state {
-            homePageNavigationProcesses()
-        }
-        if case .startingPauseProcedure = self.state {
-            homePageNavigationProcesses()
-        }
-        if case .completingPauseProcedure = self.state {
-            homePageNavigationProcesses()
-        }
-        if case .startingResumeProcedure = self.state {
-            homePageNavigationProcesses()
-        }
-        if case .readyForFinalResumeAlignment = self.state {
-            homePageNavigationProcesses()
-        }
-        if case .pauseProcedureCompleted = self.state {
-            homePageNavigationProcesses()
-        }
-        
-        
-    }
+
     
     /// Display a warning that tells the user they must create a landmark to be able to use this route again in the forward direction
     /// Display the dialog that prompts the user to enter a route name.  If the user enters a route name, the route along with the optional world map will be persisted.
@@ -1355,15 +1323,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         homeButton.setImage(UIImage(named: "homeButton"), for: .normal)
         homeButton.addTarget(self, action: #selector(homeButtonPressed), for: .touchUpInside)
         
-        //button to go to the home screen
-//        backButton = UIButton(frame: CGRect(x: 80, y: 10, width: buttonFrameWidth/7, height: buttonFrameWidth/7))
-//        backButton.isAccessibilityElement = true
-//        backButton.setTitle("Go Back", for: .normal)
-//        backButton.titleLabel?.font = UIFont.systemFont(ofSize: 24.0)
-//        backButton.accessibilityLabel = "Go Back"
-//        backButton.setImage(UIImage(named: "actualBackButton"), for: .normal)
-        //backButton.addTarget(self, action: #selector(backButtonPressed), for: .touchUpInside)
-        
         // button that shows feedback menu
         feedbackButton = UIButton(frame: CGRect(x: buttonFrameWidth/(7/5), y: yOriginOfSettingsAndHelpButton + 10, width: buttonFrameWidth/7, height: buttonFrameWidth/7))
         feedbackButton.isAccessibilityElement = true
@@ -1445,7 +1404,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         self.view.addSubview(getDirectionButton)
         self.view.addSubview(settingsButton)
         self.view.addSubview(homeButton)
-//        self.view.addSubview(backButton)
         self.view.addSubview(helpButton)
         self.view.addSubview(feedbackButton)
         self.view.addSubview(routeRatingView)
@@ -1460,7 +1418,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         // the options button is hidden if the route rating shows up
         settingsButton.isHidden = false
         homeButton.isHidden = true
-//        backButton.isHidden = true
         helpButton.isHidden = false
         feedbackButton.isHidden = false
         stopNavigationView.isHidden = true
@@ -2154,31 +2111,36 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: (#selector(announceDirectionHelp)), userInfo: nil, repeats: false)
     }
     
-    // Called when home button is pressed.
+    // Called when home button is pressed
+    // Chooses the states in which the home page alerts pop up
     @objc func homeButtonPressed() {
+        print (state.rawValue)
         if case .navigatingRoute = self.state {
-            showHomeButtonWarning()
+            homePageNavigationProcesses()
         }
         else if case .recordingRoute = self.state {
-            showHomeButtonWarning()
+            homePageNavigationProcesses()
         }
         else if case .readyToNavigateOrPause = self.state {
-            showHomeButtonWarning()
+            homePageNavigationProcesses()
         }
         else if case .pauseWaitingPeriod = self.state {
-            showHomeButtonWarning()
+            homePageNavigationProcesses()
         }
         else if case .startingPauseProcedure = self.state {
-            showHomeButtonWarning()
+            homePageNavigationProcesses()
         }
         else if case .completingPauseProcedure = self.state {
-            showHomeButtonWarning()
+            homePageNavigationProcesses()
+        }
+        else if case .pauseProcedureCompleted = self.state {
+            homePageNavigationProcesses()
         }
         else if case .readyForFinalResumeAlignment = self.state {
-            showHomeButtonWarning()
+            homePageNavigationProcesses()
         }
         else if case .startingResumeProcedure = self.state {
-            showHomeButtonWarning()
+            homePageNavigationProcesses()
         }
         else {
             self.state = .mainScreen(announceArrival: false)
