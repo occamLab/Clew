@@ -1318,7 +1318,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     ///   - subview transitions?
     func drawUI() {
         // button that shows settings menu
-        settingsButton = UIButton(frame: CGRect(x: buttonFrameWidth/7, y: yOriginOfSettingsAndHelpButton + 10, width: buttonFrameWidth/7, height: buttonFrameWidth/7))
+        settingsButton = UIButton(frame: CGRect(x: 10, y: 10, width: buttonFrameWidth/7, height: buttonFrameWidth/7))
         settingsButton.isAccessibilityElement = true
         settingsButton.setTitle("Settings", for: .normal)
         settingsButton.accessibilityLabel = "Settings"
@@ -1347,7 +1347,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
 //        contactButton.setImage(UIImage(named: "Contact"), for: .normal)
         
         //button to go to the home screen
-        homeButton = UIButton(frame: CGRect(x: 10, y: 10, width: buttonFrameWidth/7, height: buttonFrameWidth/7))
+        homeButton = UIButton(frame: CGRect(x: buttonFrameWidth/7, y: yOriginOfSettingsAndHelpButton + 10, width: buttonFrameWidth/7, height: buttonFrameWidth/7))
         homeButton.isAccessibilityElement = true
         homeButton.setTitle("Home Button", for: .normal)
         homeButton.titleLabel?.font = UIFont.systemFont(ofSize: 24.0)
@@ -1365,7 +1365,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         //backButton.addTarget(self, action: #selector(backButtonPressed), for: .touchUpInside)
         
         // button that shows feedback menu
-        feedbackButton = UIButton(frame: CGRect(x: buttonFrameWidth/(7/5), y: yOriginOfSettingsAndHelpButton + 10, width: buttonFrameWidth/7, height: buttonFrameWidth/7))
+        feedbackButton = UIButton(frame: CGRect(x: 70, y: 10, width: buttonFrameWidth/7, height: buttonFrameWidth/7))
         feedbackButton.isAccessibilityElement = true
         feedbackButton.setTitle("Feedback", for: .normal)
         feedbackButton.titleLabel?.font = UIFont.systemFont(ofSize: 24.0)
@@ -1375,7 +1375,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         feedbackButton.setImage(UIImage(named: "Contact"), for: .normal)
 
         // button that gives direction to the nearist keypoint
-        getDirectionButton = UIButton(frame: CGRect(x: 70, y: 10, width: buttonFrameWidth/7, height: buttonFrameWidth/7))
+        getDirectionButton = UIButton(frame: CGRect(x: buttonFrameWidth/(7/5), y: yOriginOfSettingsAndHelpButton + 10, width: buttonFrameWidth/7, height: buttonFrameWidth/7))
         //        getDirectionButton.isHidden = true
         getDirectionButton.isAccessibilityElement = true
         getDirectionButton.accessibilityLabel = "Get Directions"
