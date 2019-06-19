@@ -10,6 +10,9 @@ import Foundation
 import Firebase
 import SceneKit
 
+//FirebaseApp.configure()
+//Analytics.
+
 /// A class to handle logging app usage data
 class PathLogger {
     /// A handle to the Firebase storage
@@ -45,6 +48,9 @@ class PathLogger {
     var speechDataTime: [Double] = []
     /// list of keypoints - [[(LocationInfo)x, y, z, yaw]]
     var keypointData: [Array<Any>] = []
+    
+    /// language used in recording
+    var langData: [String] = []
     
     /// Add the specified state transition to the log.
     ///
@@ -103,6 +109,12 @@ class PathLogger {
             keypointData.append(data)
         }
     }
+    
+    /// Log language used by user in recording.
+    //
+    ///
+///    func logLang(lang)
+    
     
     /// Reset the logging variables having to do with path recording or ones that are shared between path recording / path navigating
     func resetPathLog() {

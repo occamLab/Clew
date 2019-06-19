@@ -82,7 +82,8 @@ class RecorderViewController: UIViewController {
         setupRecordingButton()
         setupTimeLabel()
         setupAudioView()
-        title = "Voice Note Recorder"
+        
+        title = NSLocalizedString("Voice Note Recorder", comment: "The header of a pop-up window that allows user to record a voice note")
     }
     
     /// Called when the view will appear.

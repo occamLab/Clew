@@ -6,8 +6,27 @@
   Copyright © 2019 OccamLab. All rights reserved.
 */
 
-// Strings from ViewController
 
+// When opening the app for the first time
+"Sharing your experience with Clew" = "Sharing your experience with Clew";
+
+"Help us improve the app by logging your Clew experience. These logs will not include any images or personal information. You can turn this off in Settings." = "ช่วยเราปรับปรุงแอพโดยบันทึกประสบการณ์การใช้ Clew ของคุณ บันทึกเหล่านี้จะไม่รวมภาพหรือข้อมูลส่วนตัวใด ๆ คุณสามารถปิดสิ่งนี้ได้ในการตั้งค่า.";
+
+"For your safety" = "For your safety";
+
+"While using the app, please be aware of your surroundings. You agree that your use of the App is at your own risk, and it is solely your responsibility to maintain your personal safety. Visit www.clewapp.org for more information on how to use the app." = "ในขณะที่ใช้แอพโปรดระวังสภาพแวดล้อมของคุณ คุณยอมรับว่าการใช้งานแอพนี้เป็นความเสี่ยงของคุณเองและเป็นความรับผิดชอบของคุณในการรักษาความปลอดภัยส่วนบุคคล เยี่ยมชม www.clewapp.org สำหรับข้อมูลเพิ่มเติมเกี่ยวกับวิธีใช้แอพ.";
+
+"Continue with single-use route" = "ดำเนินการต่อด้วยเส้นทางแบบใช้ครั้งเดียว";
+
+"Cancel recording" = "ยกเลิกการบันทึก";
+
+"Creating reusable routes" = "Creating reusable routes";
+
+"Continue with single-use route" = "Continue with single-use route";
+
+"Cancel navigation" = "Cancel navigation";
+
+// Strings from ViewController
     // Voicing directions
 "Tracking session initialized." = "เริ่มต้นเซสชันการติดตามแล้ว";
 "Tracking performance normal." = "ติดตามประสิทธิภาพปกติ";
@@ -24,9 +43,16 @@
 "Start navigation" = "เริ่มการนำทาง";
 "Stop recording" = "หยุดการบันทึก";
 
-    // Pop-ups
+    // Save routes
 "Save route" = "Save route";
 "Enter the name of the route" = "Enter the name of the route";
+"Saved Routes List" = "รายการเส้นทางที่บันทึกไว้";
+"Enter route title" = "Enter route title";
+"Save" = "Save";
+"Cancel" = "Cancel";
+
+    // Resume
+"Return to the last paused location and press Resume for further instructions." = "Return to the last paused location and press Resume for further instructions.";
 
     // Rating service view
 "You've arrived. Please rate your service." = "You've arrived. Please rate your service.";
@@ -40,7 +66,8 @@
 
 
 // Strings from Navigation
-
+" and proceed upstairs" = " and proceed upstairs";
+" and proceed downstairs" = " and proceed downstairs";
     // Version of directions given when haptic feedback function is turned on (Simpler)
 "Continue straight" = "Continue straight";
 "Slight right" = "Slight right";
@@ -63,5 +90,37 @@
 "Slight left towards 10 o'clock" = "Slight left towards 10 o'clock";
 "Slight left towards 11 o'clock" = "Slight left towards 11 o'clock";
 
-// Settings pop-up
-"settings_header" = "การตั้งค่า";
+// Landmark
+"To navigate this route in the forward direction at a later time, you must create a landmark before starting the recording." = "หากต้องการนำทางเส้นทางนี้ไปยังทิศทางไปข้างหน้าในภายหลังคุณต้องสร้างจุดสังเกตก่อนเริ่มการบันทึก";
+
+"To navigate this route in the reverse direction at a later time, you must activate the pause button before navigating the route." = "หากต้องการนำทางเส้นทางนี้ในทิศทางย้อนกลับในภายหลังคุณต้องเปิดใช้งานปุ่มหยุดชั่วคราวก่อนนำทางเส้นทาง";
+
+"Landmark information" = "Landmark information";
+
+"Enter text about the landmark that will help you find it later." = "Enter text about the landmark that will help you find it later.";
+
+"Ok" = "Ok";
+
+"Don't specify this information" = "Don't specify this information";
+
+"Enter landmark information" = "Enter landmark information";
+
+"Landmarks allow you to save or pause your route. You will need to return to the landmark to load or unpause your route. Before creating the landmark, specify text or voice to help you remember its location. To create a landmark, hold your device flat with the screen facing up. Press the top (short) edge flush against a flat vertical surface (such as a wall).  The \"align\" button starts a %lu-second countdown. During this time, do not move the device." = "Landmarks allow you to save or pause your route. You will need to return to the landmark to load or unpause your route. Before creating the landmark, specify text or voice to help you remember its location. To create a landmark, hold your device flat with the screen facing up. Press the top (short) edge flush against a flat vertical surface (such as a wall).  The \"align\" button starts a %lu-second countdown. During this time, do not move the device.";
+
+"Hold your device flat with the screen facing up. Press the top (short) edge flush against the same vertical surface that you used to create the landmark.  When you are ready, activate the align button to start the %lu-second alignment countdown that will complete the procedure. Do not move the device until the phone provides confirmation via a vibration or sound cue." = "Hold your device flat with the screen facing up. Press the top (short) edge flush against the same vertical surface that you used to create the landmark.  When you are ready, activate the align button to start the %lu-second alignment countdown that will complete the procedure. Do not move the device until the phone provides confirmation via a vibration or sound cue.";
+
+"Settings" = "การตั้งค่า"; // Comments: Title/header of the settings menu.
+
+// Voicenote
+"Voice Note Recorder" = "เครื่องบันทึกเสียง";
+
+// RoutesViewController
+"Route direction" = "Route direction";
+
+"Start to End" = "Start to End";
+
+"End to Start" = "End to Start";
+
+// Info.plist
+"Clew needs to access your camera to track your orientation." = "Clew needs to access your camera to track your orientation.";
+"Permission to use the microphone is required to use the voice notes feature." = "Permission to use the microphone is required to use the voice notes feature.";

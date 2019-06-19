@@ -32,3 +32,5 @@
 "Send Feedback" = "Enviar Comentarios"; // Comments: The header for choosing whether or not to send feedback to the developers.
 "Send Logs" = "Enviar Registros"; // Comments: The name of a button that allows the user to send their route navigation data that could help improve the app.
 "Help us improve the app by logging your Clew experience. These logs will not include any images or personal information." = "Ayúdanos a mejorar la aplicación al registrar tu experiencia Clew. Estos registros no incluirán ninguna imagen o información personal."; // Comments: A comment on what turning on the button of "Send Logs" does.
+
+//"Settings" = "Ajustes"; // Comments: Title/header of the settings menu.
