@@ -10,12 +10,68 @@ import UIKit
 
 class RouteRatingController: UIViewController {
 
+    /// the view on which the user can rate the quality of their navigation experience
+    //     var routeRatingView: UIView!
+    
+    /// The button that the allows the user to indicate a negative navigation experience
+    //    let thumbsDownButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "thumbs_down")!),
+    //                                                  label: "Bad",
+    //                                                  targetSelector: Selector.thumbsDownButtonTapped,
+    //                                                  alignment: .leftcenter,
+    //                                                  tag: 0)
+    
+    /// The button that the allows the user to indicate a positive navigation experience
+    //    let thumbsUpButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "thumbs_up")!),
+    //                                                label: "Good",
+    //                                                targetSelector: Selector.thumbsUpButtonTapped,
+    //                                                alignment: .rightcenter,
+    //                                                tag: 0)
+    
+    var thumbsDownButton: UIButton!
+
+
+    var thumbsUpButton: UIButton!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+//      rootContainerView.routeRatingView.setupButtonContainer(withButtons: [thumbsUpButton,
+//                                                                           thumbsDownButton],
+//                                                             withMainText: )
 
-        // MARK: ThumbsDownButton
+        view = UIView(frame: CGRect(x: 0,
+                                    y: 0,
+                                    width: UIConstants.buttonFrameWidth,
+                                    height: UIScreen.main.bounds.size.height))
         
-        // MARK: ThumbsUpButton
+        let label = UILabel(frame: CGRect(x: 15,
+                                          y: UIScreen.main.bounds.size.height/5,
+                                          width: UIScreen.main.bounds.size.width-30,
+                                          height: UIScreen.main.bounds.size.height/2))
+        
+        view.backgroundColor = UIColor.black.withAlphaComponent(0.4)
+        view.isHidden = true
+        
+        let mainText = "Please rate your service."
+        label.textColor = UIColor.white
+        label.textAlignment = .center
+        label.numberOfLines = 0
+        label.lineBreakMode = .byWordWrapping
+        label.font = label.font.withSize(20)
+        label.text = mainText
+        label.tag = UIView.mainTextTag
+        
+        thumbsDownButton = UIButton.makeImageButton(view,
+                                                    alignment: UIConstants.ButtonContainerHorizontalAlignment.leftcenter,
+                                                    appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "thumbs_down")!),
+                                                    label: "Bad")
+        thumbsUpButton = UIButton.makeImageButton(view,
+                                                  alignment: UIConstants.ButtonContainerHorizontalAlignment.leftcenter,
+                                                  appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "thumbs_up")!),
+                                                  label: "Good")
+        
+        view.addSubview(thumbsDownButton)
+        view.addSubview(thumbsUpButton)
+        view.addSubview(label)
         
         // Do any additional setup after loading the view.
     }

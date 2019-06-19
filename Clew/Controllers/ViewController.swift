@@ -496,47 +496,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// a ring buffer used to keep the last 100 headings of the phone
     var headingRingBuffer = RingBuffer<Float>(capacity: 50)
 
-    /// Image, label, and target for start recording button.
-    let recordPathButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "StartRecording")!), label: "Record path", targetSelector: Selector.recordPathButtonTapped, alignment: .center, tag: 0)
-
-    /// The button that the allows the user to indicate a negative navigation experience
-    let thumbsDownButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "thumbs_down")!), label: "Bad", targetSelector: Selector.thumbsDownButtonTapped, alignment: .leftcenter, tag: 0)
-    
-    /// The button that the allows the user to indicate a positive navigation experience
-    let thumbsUpButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "thumbs_up")!), label: "Good", targetSelector: Selector.thumbsUpButtonTapped, alignment: .rightcenter, tag: 0)
-    
-    /// The button that the allows the user to resume a paused route
-    let resumeButton = ActionButtonComponents(appearance: .textButton(label: "Resume"), label: "Resume", targetSelector: Selector.resumeButtonTapped, alignment: .center, tag: 0)
-    
-    /// The button that allows the user to enter textual description of a route landmark
-    let enterLandmarkDescriptionButton = ActionButtonComponents(appearance: .textButton(label: "Describe"), label: "Enter text to help you remember this landmark", targetSelector: Selector.enterLandmarkDescriptionButtonTapped, alignment: .left, tag: 0)
-    
-    /// The button that allows the user to record a voice description of a route landmark
-    let recordVoiceNoteButton = ActionButtonComponents(appearance: .textButton(label: "Voice Note"), label: "Record audio to help you remember this landmark", targetSelector: Selector.recordVoiceNoteButtonTapped, alignment: .right, tag: 0)
-
-    /// The button that allows the user to start the alignment countdown
-    let confirmAlignmentButton = ActionButtonComponents(appearance: .textButton(label: "Align"), label: "Start \(ViewController.alignmentWaitingPeriod)-second alignment countdown", targetSelector: Selector.confirmAlignmentButtonTapped, alignment: .center, tag: 0)
-    
-    /// The button that plays back the recorded voice note associated with a landmark
-    let readVoiceNoteButton = ActionButtonComponents(appearance: .textButton(label: "Play Note"), label: "Play recorded voice note", targetSelector: Selector.readVoiceNoteButtonTapped, alignment: .left, tag: UIView.readVoiceNoteButtonTag)
-    
-    /// Image, label, and target for start recording button. TODO: need an image
-    let addLandmarkButton = ActionButtonComponents(appearance: .textButton(label: "Landmark"), label: "Create landmark", targetSelector: Selector.landmarkButtonTapped, alignment: .right, tag: 0)
-    
-    /// Image, label, and target for stop recording button.
-    let stopRecordingButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "StopRecording")!), label: "Stop recording", targetSelector: Selector.stopRecordingButtonTapped, alignment: .center, tag: 0)
-    
-    /// Image, label, and target for start navigation button.
-    let startNavigationButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "StartNavigation")!), label: "Start navigation", targetSelector: Selector.startNavigationButtonTapped, alignment: .center, tag: 0)
-
-    /// Title, label, and target for the pause button
-    let pauseButton = ActionButtonComponents(appearance: .textButton(label: "Pause"), label: "Pause session", targetSelector: Selector.pauseButtonTapped, alignment: .right, tag: UIView.pauseButtonTag)
-    
-    /// Image, label, and target for stop navigation button.
-    let stopNavigationButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "StopNavigation")!), label: "Stop navigation", targetSelector: Selector.stopNavigationButtonTapped, alignment: .center, tag: 0)
-    
-    /// Image, label, and target for routes button.
-    let routesButton = ActionButtonComponents(appearance: .textButton(label: "Routes"), label: "Saved routes list", targetSelector: Selector.routesButtonTapped, alignment: .left, tag: 0)
 
     /// The conection to the Firebase real-time database
     var databaseHandle = Database.database()
@@ -596,8 +555,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         loadAssets()
         createSettingsBundle()
         createARSession()
-        drawUI() // To be removed
         
+        state = .mainScreen(announceArrival: false)
+
         rootContainerView.settingsButton.addTarget(self,
                                                    action: #selector(settingsButtonPressed),
                                                    for: .touchUpInside)
@@ -994,42 +954,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     ///   - AutoLayout
     ///   - `startNavigationView` pause button configuration
     ///   - subview transitions?
-    func drawUI() {
-        
-        // Record Path button container
-
-        rootContainerView.recordPathView.setupButtonContainer(withButtons: [routesButton,
-                                                          recordPathButton,
-                                                          addLandmarkButton])
-        
-        // Stop Recording button container
-        rootContainerView.stopRecordingView.setupButtonContainer(withButtons: [stopRecordingButton])
-        
-        // Start Navigation button container
-        rootContainerView.startNavigationView.setupButtonContainer(withButtons: [startNavigationButton,
-                                                               pauseButton])
-        
-        rootContainerView.pauseTrackingView.setupButtonContainer(withButtons: [enterLandmarkDescriptionButton,
-                                                                               confirmAlignmentButton,
-                                                                               recordVoiceNoteButton],
-                                                                 withMainText: "Landmarks allow you to save or pause your route. You will need to return to the landmark to load or unpause your route. Before creating the landmark, specify text or voice to help you remember its location. To create a landmark, hold your device flat with the screen facing up. Press the top (short) edge flush against a flat vertical surface (such as a wall).  The \"align\" button starts a \(ViewController.alignmentWaitingPeriod)-second countdown. During this time, do not move the device.")
-        
-        rootContainerView.resumeTrackingView.setupButtonContainer(withButtons: [resumeButton],
-                                                                  withMainText: "Return to the last paused location and press Resume for further instructions.")
-        
-        rootContainerView.resumeTrackingConfirmView.setupButtonContainer(withButtons: [confirmAlignmentButton,
-                                                                                       readVoiceNoteButton],
-                                                                         withMainText: "Hold your device flat with the screen facing up. Press the top (short) edge flush against the same vertical surface that you used to create the landmark.  When you are ready, activate the align button to start the \(ViewController.alignmentWaitingPeriod)-second alignment countdown that will complete the procedure. Do not move the device until the phone provides confirmation via a vibration or sound cue.")
-
-        // Stop Navigation button container
-        rootContainerView.stopNavigationView.setupButtonContainer(withButtons: [stopNavigationButton])
-        
-        rootContainerView.routeRatingView.setupButtonContainer(withButtons: [thumbsUpButton,
-                                                                             thumbsDownButton],
-                                                               withMainText: "Please rate your service.")
-
-        state = .mainScreen(announceArrival: false)
-    }
     
     /// display RECORD PATH button/hide all other views
     @objc func showRecordPathButton(announceArrival: Bool) {

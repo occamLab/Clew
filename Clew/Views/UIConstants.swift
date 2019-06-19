@@ -64,4 +64,26 @@ enum UIConstants {
     static var yOriginOfAnnouncementFrame: CGFloat {
         return UIScreen.main.bounds.size.height/15
     }
+    
+    /// How to align the button horizontally within the button frame
+    enum ButtonContainerHorizontalAlignment {
+        /// put the button in the center
+        case center
+        /// put the button right of center
+        case rightcenter
+        /// put the button to the right
+        case right
+        /// put the button left of center
+        case leftcenter
+        /// put the button to the left
+        case left
+    }
+    
+    /// The appearance of the button.
+    enum ButtonAppearance {
+        /// An image button appears using the specified UIImage
+        case imageButton(image: UIImage)
+        /// A text button appears using the specified text label
+        case textButton(label: String)
+    }
 }
