@@ -80,6 +80,8 @@
 		E5959CAD22A70B5B00E53446 /* NSStringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5959CAB22A70B5B00E53446 /* NSStringExtension.swift */; };
 		E5959CAF22A9534C00E53446 /* StateController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5959CAE22A9534C00E53446 /* StateController.swift */; };
 		E5959CB022A9534C00E53446 /* StateController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5959CAE22A9534C00E53446 /* StateController.swift */; };
+		E5A3354422BA746D0014092B /* UIViewControllerExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5A3354322BA746D0014092B /* UIViewControllerExtensions.swift */; };
+		E5A3354522BA746D0014092B /* UIViewControllerExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5A3354322BA746D0014092B /* UIViewControllerExtensions.swift */; };
 		E5E1886A22A709F000A40EBC /* Float4x4Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E1886922A709F000A40EBC /* Float4x4Extension.swift */; };
 		E5E1886B22A709F000A40EBC /* Float4x4Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E1886922A709F000A40EBC /* Float4x4Extension.swift */; };
 		E5F498B522AEA7D300FA1E6C /* RootContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F498B422AEA7D300FA1E6C /* RootContainerView.swift */; };
@@ -142,6 +144,7 @@
 		E5337EC222B97C5500C562F8 /* StopNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StopNavigationController.swift; sourceTree = "<group>"; };
 		E5959CAB22A70B5B00E53446 /* NSStringExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSStringExtension.swift; sourceTree = "<group>"; };
 		E5959CAE22A9534C00E53446 /* StateController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateController.swift; sourceTree = "<group>"; };
+		E5A3354322BA746D0014092B /* UIViewControllerExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewControllerExtensions.swift; sourceTree = "<group>"; };
 		E5E1886922A709F000A40EBC /* Float4x4Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Float4x4Extension.swift; sourceTree = "<group>"; };
 		E5F498B422AEA7D300FA1E6C /* RootContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootContainerView.swift; sourceTree = "<group>"; };
 		E5F498B722AEA8A600FA1E6C /* UIViewExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewExtensions.swift; sourceTree = "<group>"; };
@@ -331,6 +334,7 @@
 				E5959CAB22A70B5B00E53446 /* NSStringExtension.swift */,
 				E5F498B722AEA8A600FA1E6C /* UIViewExtensions.swift */,
 				E5F498BA22AEA8B500FA1E6C /* UIButtonExtensions.swift */,
+				E5A3354322BA746D0014092B /* UIViewControllerExtensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -580,6 +584,7 @@
 				E5337EBD22B97C3B00C562F8 /* RecordPathController.swift in Sources */,
 				82A43F4E2269085800076941 /* RecordButtonKit.swift in Sources */,
 				E5337EAE22B97BED00C562F8 /* RouteRatingController.swift in Sources */,
+				E5A3354422BA746D0014092B /* UIViewControllerExtensions.swift in Sources */,
 				82473B092217641D00E98CFC /* SettingsViewController.m in Sources */,
 				827E859522690956005CF98A /* AudioVisualizerView.swift in Sources */,
 				E5959CAF22A9534C00E53446 /* StateController.swift in Sources */,
@@ -617,6 +622,7 @@
 				E5337EBE22B97C3B00C562F8 /* RecordPathController.swift in Sources */,
 				B7EB59DC20F693EB00FBBC6A /* Utility.swift in Sources */,
 				E5337EAF22B97BED00C562F8 /* RouteRatingController.swift in Sources */,
+				E5A3354522BA746D0014092B /* UIViewControllerExtensions.swift in Sources */,
 				82A43F4F2269085800076941 /* RecordButtonKit.swift in Sources */,
 				82473B0A2217641D00E98CFC /* SettingsViewController.m in Sources */,
 				E5959CB022A9534C00E53446 /* StateController.swift in Sources */,
