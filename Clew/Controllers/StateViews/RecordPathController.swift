@@ -18,16 +18,6 @@ class RecordPathController: UIViewController {
     var addLandmarkButton: UIButton!
 
     var routesButton: UIButton!
-    
-    //        /// Image, label, and target for start recording button.
-    //        let recordPathButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "StartRecording")!), label: "Record path", targetSelector: Selector.recordPathButtonTapped, alignment: .center, tag: 0)
-    //
-    //        /// Image, label, and target for start recording button. TODO: need an image
-    //        let addLandmarkButton = ActionButtonComponents(appearance: .textButton(label: "Landmark"), label: "Create landmark", targetSelector: Selector.landmarkButtonTapped, alignment: .right, tag: 0)
-    //
-    //        /// Image, label, and target for routes button.
-    //        let routesButton = ActionButtonComponents(appearance: .textButton(label: "Routes"), label: "Saved routes list", targetSelector: Selector.routesButtonTapped, alignment: .left, tag: 0)
-
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -89,16 +79,4 @@ class RecordPathController: UIViewController {
         view.addSubview(addLandmarkButton)
         view.addSubview(recordPathButton)
     }
-    
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }

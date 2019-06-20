@@ -15,9 +15,6 @@ class StopNavigationController: UIViewController {
     
     var stopNavigationButton: UIButton!
     
-    /// Image, label, and target for stop navigation button.
-    //        let stopNavigationButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "StopNavigation")!), label: "Stop navigation", targetSelector: Selector.stopNavigationButtonTapped, alignment: .center, tag: 0)
-    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -60,15 +57,4 @@ class StopNavigationController: UIViewController {
         // Do any additional setup after loading the view.
         view.addSubview(stopNavigationButton)
     }
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }

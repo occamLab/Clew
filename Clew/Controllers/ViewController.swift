@@ -30,25 +30,6 @@ import Firebase
 import FirebaseDatabase
 import SRCountdownTimer
 
-// Neat way of storing the selectors for all the targets we use.
-// Source: https://medium.com/swift-programming/swift-selector-syntax-sugar-81c8a8b10df3
-//fileprivate extension Selector {
-//    static let recordPathButtonTapped = #selector(ViewController.recordPath)
-//    static let stopRecordingButtonTapped = #selector(ViewController.stopRecording)
-//    static let startNavigationButtonTapped = #selector(ViewController.startNavigation)
-//    static let stopNavigationButtonTapped = #selector(ViewController.stopNavigation)
-//    static let landmarkButtonTapped = #selector(ViewController.startCreateLandmarkProcedure)
-//    static let pauseButtonTapped = #selector(ViewController.startPauseProcedure)
-//    static let thumbsUpButtonTapped = #selector(ViewController.sendLogData)
-//    static let thumbsDownButtonTapped = #selector(ViewController.sendDebugLogData)
-//    static let resumeButtonTapped = #selector(ViewController.confirmResumeTracking)
-//    static let confirmAlignmentButtonTapped = #selector(ViewController.confirmAlignment)
-//    static let routesButtonTapped = #selector(ViewController.routesButtonPressed)
-//    static let enterLandmarkDescriptionButtonTapped = #selector(ViewController.showLandmarkInformationDialog)
-//    static let recordVoiceNoteButtonTapped = #selector(ViewController.recordVoiceNote)
-//    static let readVoiceNoteButtonTapped = #selector(ViewController.readVoiceNote)
-//}
-
 /// A custom enumeration type that describes the exact state of the app.  The state is not exhaustive (e.g., there are Boolean flags that also track app state).
 enum AppState {
     /// This is the screen the comes up immediately after the splash screen
@@ -385,7 +366,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             beginRouteLandmark.transform = currentTransform
             Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(playSound)), userInfo: nil, repeats: false)
 //            rootContainerView.pauseTrackingView.isHidden = true
-            add(pauseTrackingController)
+            pauseTrackingController.remove()
             state = .mainScreen(announceArrival: false)
             return
         } else if let currentTransform = sceneView.session.currentFrame?.camera.transform {

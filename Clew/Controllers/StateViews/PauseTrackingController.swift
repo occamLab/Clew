@@ -9,24 +9,13 @@
 import UIKit
 
 class PauseTrackingController: UIViewController {
-    /// the view on which the user can pause tracking
-//    var pauseTrackingView: UIView!
-    
+
     var enterLandmarkDescriptionButton: UIButton!
     
     var recordVoiceNoteButton: UIButton!
     
     var confirmAlignmentButton: UIButton!
-    
-    /// The button that allows the user to enter textual description of a route landmark
-    //        let enterLandmarkDescriptionButton = ActionButtonComponents(appearance: .textButton(label: "Describe"), label: "Enter text to help you remember this landmark", targetSelector: Selector.enterLandmarkDescriptionButtonTapped, alignment: .left, tag: 0)
-    
-    /// The button that allows the user to record a voice description of a route landmark
-    //        let recordVoiceNoteButton = ActionButtonComponents(appearance: .textButton(label: "Voice Note"), label: "Record audio to help you remember this landmark", targetSelector: Selector.recordVoiceNoteButtonTapped, alignment: .right, tag: 0)
-    
-    /// The button that allows the user to start the alignment countdown
-    //        let confirmAlignmentButton = ActionButtonComponents(appearance: .textButton(label: "Align"), label: "Start \(ViewController.alignmentWaitingPeriod)-second alignment countdown", targetSelector: Selector.confirmAlignmentButtonTapped, alignment: .center, tag: 0)
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -86,16 +75,4 @@ class PauseTrackingController: UIViewController {
         view.addSubview(confirmAlignmentButton)
         
     }
-    
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }

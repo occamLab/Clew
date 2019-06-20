@@ -10,32 +10,12 @@ import UIKit
 
 class RouteRatingController: UIViewController {
 
-    /// the view on which the user can rate the quality of their navigation experience
-    //     var routeRatingView: UIView!
-    
-    /// The button that the allows the user to indicate a negative navigation experience
-    //    let thumbsDownButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "thumbs_down")!),
-    //                                                  label: "Bad",
-    //                                                  targetSelector: Selector.thumbsDownButtonTapped,
-    //                                                  alignment: .leftcenter,
-    //                                                  tag: 0)
-    
-    /// The button that the allows the user to indicate a positive navigation experience
-    //    let thumbsUpButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "thumbs_up")!),
-    //                                                label: "Good",
-    //                                                targetSelector: Selector.thumbsUpButtonTapped,
-    //                                                alignment: .rightcenter,
-    //                                                tag: 0)
-    
     var thumbsDownButton: UIButton!
 
     var thumbsUpButton: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-//      rootContainerView.routeRatingView.setupButtonContainer(withButtons: [thumbsUpButton,
-//                                                                           thumbsDownButton],
-//                                                             withMainText: )
 
         view = UIView(frame: CGRect(x: 0,
                                     y: 0,
@@ -83,16 +63,4 @@ class RouteRatingController: UIViewController {
         
         // Do any additional setup after loading the view.
     }
-    
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }

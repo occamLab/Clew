@@ -16,15 +16,7 @@ class StartNavigationController: UIViewController {
     var startNavigationButton: UIButton!
     
     var pauseButton: UIButton!
-    
-    //        /// Image, label, and target for start navigation button.
-    //        let startNavigationButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "StartNavigation")!), label: "Start navigation", targetSelector: Selector.startNavigationButtonTapped, alignment: .center, tag: 0)
-    //
-    //
-    //        /// Title, label, and target for the pause button
-    //        let pauseButton = ActionButtonComponents(appearance: .textButton(label: "Pause"), label: "Pause session", targetSelector: Selector.pauseButtonTapped, alignment: .right, tag: UIView.pauseButtonTag)
 
-    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -76,16 +68,4 @@ class StartNavigationController: UIViewController {
         view.addSubview(startNavigationButton)
         view.addSubview(pauseButton)
     }
-    
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }

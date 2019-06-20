@@ -14,10 +14,7 @@ class StopRecordingController: UIViewController {
     var stopRecordingView: UIView!
     
     var stopRecordingButton: UIButton!
-    
-    /// Image, label, and target for stop recording button.
-    //        let stopRecordingButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "StopRecording")!), label: "Stop recording", targetSelector: Selector.stopRecordingButtonTapped, alignment: .center, tag: 0)
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -61,16 +58,4 @@ class StopRecordingController: UIViewController {
         view.addSubview(stopRecordingButton)
         
     }
-    
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }

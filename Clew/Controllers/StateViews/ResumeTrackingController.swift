@@ -14,9 +14,7 @@ class ResumeTrackingController: UIViewController {
     var resumeTrackingView: UIView!
     
     var resumeButton: UIButton!
-    
-    //        let resumeButton = ActionButtonComponents(appearance: .textButton(label: "Resume"), label: "Resume", targetSelector: Selector.resumeButtonTapped, alignment: .center, tag: 0)
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -60,16 +58,4 @@ class ResumeTrackingController: UIViewController {
         // Do any additional setup after loading the view.
         view.addSubview(resumeButton)
     }
-    
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }

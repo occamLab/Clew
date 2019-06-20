@@ -18,9 +18,17 @@ class ResumeTrackingConfirmController: UIViewController {
     var readVoiceNoteButton: UIButton!
     
     /// The button that allows the user to start the alignment countdown
-    //        let confirmAlignmentButton = ActionButtonComponents(appearance: .textButton(label: "Align"), label: "Start \(ViewController.alignmentWaitingPeriod)-second alignment countdown", targetSelector: Selector.confirmAlignmentButtonTapped, alignment: .center, tag: 0)
-    
-    //        let readVoiceNoteButton = ActionButtonComponents(appearance: .textButton(label: "Play Note"), label: "Play recorded voice note", targetSelector: Selector.readVoiceNoteButtonTapped, alignment: .left, tag: UIView.readVoiceNoteButtonTag)
+//            let confirmAlignmentButton = ActionButtonComponents(appearance: .textButton(label: "Align"),
+//                                                                label: "Start \(ViewController.alignmentWaitingPeriod)-second alignment countdown",
+//                                                                targetSelector: Selector.confirmAlignmentButtonTapped,
+//                                                                alignment: .center,
+//                                                                tag: 0)
+//
+//            let readVoiceNoteButton = ActionButtonComponents(appearance: .textButton(label: "Play Note"),
+//                                                             label: "Play recorded voice note",
+//                                                             targetSelector: Selector.readVoiceNoteButtonTapped,
+//                                                             alignment: .left,
+//                                                             tag: UIView.readVoiceNoteButtonTag)
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -76,15 +84,4 @@ class ResumeTrackingConfirmController: UIViewController {
         view.addSubview(readVoiceNoteButton)
         view.addSubview(confirmAlignmentButton)
     }
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }
