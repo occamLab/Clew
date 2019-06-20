@@ -29,7 +29,6 @@ class ResumeTrackingController: UIViewController {
                                           height: UIScreen.main.bounds.size.height/2))
         
         view.backgroundColor = UIColor.black.withAlphaComponent(0.4)
-//        view.isHidden = true
         
         let mainText = "Return to the last paused location and press Resume for further instructions."
         label.textColor = UIColor.white

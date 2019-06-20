@@ -24,14 +24,13 @@ class StopNavigationController: UIViewController {
                             height: UIConstants.buttonFrameHeight)
 
         view.backgroundColor = UIColor.black.withAlphaComponent(0.4)
-//        view.isHidden = true
         
         let label = UILabel(frame: CGRect(x: 15,
                                           y: UIScreen.main.bounds.size.height/5,
                                           width: UIScreen.main.bounds.size.width-30,
                                           height: UIScreen.main.bounds.size.height/2))
         
-        var mainText : String?
+        var mainText: String?
         if let mainText: String = mainText {
             label.textColor = UIColor.white
             label.textAlignment = .center

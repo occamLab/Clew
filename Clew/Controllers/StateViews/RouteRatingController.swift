@@ -33,7 +33,6 @@ class RouteRatingController: UIViewController {
                                           height: UIScreen.main.bounds.size.height/2))
         
         view.backgroundColor = UIColor.black.withAlphaComponent(0.4)
-//        view.isHidden = true
         
         let mainText = "Please rate your service."
         label.textColor = UIColor.white

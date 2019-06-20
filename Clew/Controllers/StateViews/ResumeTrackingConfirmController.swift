@@ -32,9 +32,8 @@ class ResumeTrackingConfirmController: UIViewController {
                                           height: UIScreen.main.bounds.size.height/2))
         
         view.backgroundColor = UIColor.black.withAlphaComponent(0.4)
-//        view.isHidden = true
         
-        var mainText : String?
+        var mainText: String?
         if let mainText: String = mainText {
             label.textColor = UIColor.white
             label.textAlignment = .center

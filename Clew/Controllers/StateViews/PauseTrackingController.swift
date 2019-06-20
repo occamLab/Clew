@@ -37,7 +37,6 @@ class PauseTrackingController: UIViewController {
                                           height: UIScreen.main.bounds.size.height/2))
         
         view.backgroundColor = UIColor.black.withAlphaComponent(0.4)
-//        view.isHidden = true
         
         let mainText = "Landmarks allow you to save or pause your route. You will need to return to the landmark to load or unpause your route. Before creating the landmark, specify text or voice to help you remember its location. To create a landmark, hold your device flat with the screen facing up. Press the top (short) edge flush against a flat vertical surface (such as a wall).  The \"align\" button starts a \(ViewController.alignmentWaitingPeriod)-second countdown. During this time, do not move the device."
         label.textColor = UIColor.white
@@ -80,6 +79,5 @@ class PauseTrackingController: UIViewController {
         view.addSubview(enterLandmarkDescriptionButton)
         view.addSubview(recordVoiceNoteButton)
         view.addSubview(confirmAlignmentButton)
-        
     }
 }

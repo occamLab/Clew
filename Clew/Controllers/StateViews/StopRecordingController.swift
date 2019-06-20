@@ -24,7 +24,6 @@ class StopRecordingController: UIViewController {
                             height: UIConstants.buttonFrameHeight)
         
         view.backgroundColor = UIColor.black.withAlphaComponent(0.4)
-//        view.isHidden = true
         
         let label = UILabel(frame: CGRect(x: 15,
                                           y: UIScreen.main.bounds.size.height/5,
@@ -56,6 +55,5 @@ class StopRecordingController: UIViewController {
         
         // Do any additional setup after loading the view.
         view.addSubview(stopRecordingButton)
-        
     }
 }

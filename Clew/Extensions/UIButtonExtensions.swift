@@ -62,46 +62,7 @@ extension UIButton {
         }
         
         button.accessibilityLabel = label
-//        button.addTarget(nil, action: buttonViewParts.targetSelector, for: .touchUpInside)
         
         return button
     }
 }
-
-/// Holds information about the buttons that are used to control navigation and tracking.
-///
-/// These button attributes are the only ones unique to each of these buttons.
-//public struct ActionButtonComponents {
-//
-//
-//    /// How to align the button horizontally within the button frame
-//    enum ButtonContainerHorizontalAlignment {
-//        /// put the button in the center
-//        case center
-//        /// put the button right of center
-//        case rightcenter
-//        /// put the button to the right
-//        case right
-//        /// put the button left of center
-//        case leftcenter
-//        /// put the button to the left
-//        case left
-//    }
-//
-//    /// Button apperance (image or text)
-//    var appearance: Appearance
-//
-//    /// Accessibility label
-//    var label: String
-//
-//    /// Function to call when the button is tapped
-//    ///
-//    /// - TODO: Potentially unnecessary when the transitioning between views is refactored.
-//    var targetSelector: Selector
-//
-//    /// The horizontal alignment within the button container
-//    var alignment: ButtonContainerHorizontalAlignment
-//
-//    /// Tag to use to identify the button if we need to interact with it later.  Pass 0 if no subsequent interaction is required.
-//    var tag: Int
-//}
