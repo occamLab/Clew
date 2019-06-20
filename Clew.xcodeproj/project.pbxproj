@@ -25,6 +25,8 @@
 		4D9E8E7F1F3A4D3400536FCD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4D940BAA1F38AA79004E6741 /* Assets.xcassets */; };
 		4DF05CC81F34EB6B008B0E31 /* Confirm.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4DF05CC71F34EB56008B0E31 /* Confirm.mp3 */; };
 		6C5EAEA6841FD0A893E9B13B /* Pods_Clew.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C4CE12E3C729D40002186797 /* Pods_Clew.framework */; };
+		77CD805022BBD97600822C42 /* UILabelDesign.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77CD804F22BBD97500822C42 /* UILabelDesign.swift */; };
+		77CD805122BBD97600822C42 /* UILabelDesign.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77CD804F22BBD97500822C42 /* UILabelDesign.swift */; };
 		82028C74227CDB3100772701 /* PathLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82028C73227CDB3100772701 /* PathLogger.swift */; };
 		82028C75227CDB3100772701 /* PathLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82028C73227CDB3100772701 /* PathLogger.swift */; };
 		82028C7722807BF400772701 /* GoogleService-Info_dev.plist in Resources */ = {isa = PBXBuildFile; fileRef = 82028C7622807BF400772701 /* GoogleService-Info_dev.plist */; };
@@ -86,6 +88,7 @@
 		4D6B00E41F33C85500952242 /* Crumb.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = Crumb.obj; sourceTree = "<group>"; };
 		4D940BAA1F38AA79004E6741 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4DF05CC71F34EB56008B0E31 /* Confirm.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = Confirm.mp3; sourceTree = "<group>"; };
+		77CD804F22BBD97500822C42 /* UILabelDesign.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UILabelDesign.swift; sourceTree = "<group>"; };
 		82028C73227CDB3100772701 /* PathLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PathLogger.swift; sourceTree = "<group>"; };
 		82028C7622807BF400772701 /* GoogleService-Info_dev.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info_dev.plist"; sourceTree = "<group>"; };
 		82028C7822807C1F00772701 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
@@ -189,6 +192,7 @@
 				82473B072217641D00E98CFC /* Clew Dev-Bridging-Header.h */,
 				1F2958D622AABFB3001A8547 /* FeedbackViewController.swift */,
 				9884EB5022BA9383000D31AF /* Storyboard.storyboard */,
+				77CD804F22BBD97500822C42 /* UILabelDesign.swift */,
 				9884EB5222BACD49000D31AF /* TutorialViewController.swift */,
 			);
 			path = Clew;
@@ -475,6 +479,7 @@
 				1F2958DB22AAE2D1001A8547 /* FeedbackLogger.swift in Sources */,
 				82A43F482269079300076941 /* RecorderViewController.swift in Sources */,
 				4D6B00D61F33C1FE00952242 /* Navigation.swift in Sources */,
+				77CD805022BBD97600822C42 /* UILabelDesign.swift in Sources */,
 				4D6B00DC1F33C26D00952242 /* Utility.swift in Sources */,
 				82028C74227CDB3100772701 /* PathLogger.swift in Sources */,
 				82A43F4E2269085800076941 /* RecordButtonKit.swift in Sources */,
@@ -498,6 +503,7 @@
 				82A43F492269079300076941 /* RecorderViewController.swift in Sources */,
 				1F2958DC22AAE2D1001A8547 /* FeedbackLogger.swift in Sources */,
 				B7EB59DB20F693EB00FBBC6A /* Navigation.swift in Sources */,
+				77CD805122BBD97600822C42 /* UILabelDesign.swift in Sources */,
 				82028C75227CDB3100772701 /* PathLogger.swift in Sources */,
 				B7EB59DC20F693EB00FBBC6A /* Utility.swift in Sources */,
 				82A43F4F2269085800076941 /* RecordButtonKit.swift in Sources */,
