@@ -8,35 +8,23 @@
 
 import UIKit
 
+/// A View Controller for aligning and confirming a route navigation resume state
 class ResumeTrackingConfirmController: UIViewController {
-    
-    /// the view on which the user can confirm the tracking resume procedure
-    var resumeTrackingConfirmView: UIView!
-    
+
+    /// button for aligning phone
     var confirmAlignmentButton: UIButton!
     
+    /// button for recalling a voice note for a route
     var readVoiceNoteButton: UIButton!
     
-    /// The button that allows the user to start the alignment countdown
-//            let confirmAlignmentButton = ActionButtonComponents(appearance: .textButton(label: "Align"),
-//                                                                label: "Start \(ViewController.alignmentWaitingPeriod)-second alignment countdown",
-//                                                                targetSelector: Selector.confirmAlignmentButtonTapped,
-//                                                                alignment: .center,
-//                                                                tag: 0)
-//
-//            let readVoiceNoteButton = ActionButtonComponents(appearance: .textButton(label: "Play Note"),
-//                                                             label: "Play recorded voice note",
-//                                                             targetSelector: Selector.readVoiceNoteButtonTapped,
-//                                                             alignment: .left,
-//                                                             tag: UIView.readVoiceNoteButtonTag)
-    
+    /// called when the view has loaded.  We setup various app elements in here.
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view = UIView(frame: CGRect(x: 0,
-                                    y: UIConstants.yOriginOfButtonFrame,
-                                    width: UIConstants.buttonFrameWidth,
-                                    height: UIConstants.buttonFrameHeight))        
+        view.frame = CGRect(x: 0,
+                            y: UIConstants.yOriginOfButtonFrame,
+                            width: UIConstants.buttonFrameWidth,
+                            height: UIConstants.buttonFrameHeight)
         
         let label = UILabel(frame: CGRect(x: 15,
                                           y: UIScreen.main.bounds.size.height/5,

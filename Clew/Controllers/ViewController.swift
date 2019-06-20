@@ -517,19 +517,35 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         UIAccessibility.post(notification: UIAccessibility.Notification.announcement, argument: String(newValue))
     }
     
-    // hook in the view
+    /// Hook in the view class as a view, so that we can access its variables easily
     var rootContainerView: RootContainerView {
         return view as! RootContainerView
     }
     
-    // child view controllers for various app states
+    /// child view controllers for various app states
+    
+    /// route rating VC
     var routeRatingController: RouteRatingController!
+    
+    /// route navigation pausing VC
     var pauseTrackingController: PauseTrackingController!
+    
+    /// route navigation resuming VC
     var resumeTrackingController: ResumeTrackingController!
+    
+    /// route navigation resuming alignment and confirmation VC
     var resumeTrackingConfirmController: ResumeTrackingConfirmController!
+    
+    /// route recording dismissal VC
     var stopRecordingController: StopRecordingController!
+    
+    /// route recording VC (called on app start)
     var recordPathController: RecordPathController!
+    
+    /// start route navigation VC
     var startNavigationController: StartNavigationController!
+    
+    /// stop route navigation VC
     var stopNavigationController: StopNavigationController!
     
     /// called when the view has loaded.  We setup various app elements in here.

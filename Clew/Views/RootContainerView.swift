@@ -20,6 +20,8 @@ import Firebase
 import FirebaseDatabase
 import SRCountdownTimer
 
+/// View for buttons and elements which are, generally, accessible
+/// regardless of current app state
 class RootContainerView: UIView {
 
     // MARK: - UIViews for all UI button containers
@@ -45,12 +47,14 @@ class RootContainerView: UIView {
     /// (alignment is captured at the end of the time)
     var countdownTimer: SRCountdownTimer!
 
-    // required for non storyboard UIView
-    // objects
+    /// required for non storyboard UIView
+    /// objects
     required init(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented.")
     }
     
+    /// initializer for view, initializes all subview objects
+    /// like buttons
     override init(frame: CGRect) {
         super.init(frame: frame)
         

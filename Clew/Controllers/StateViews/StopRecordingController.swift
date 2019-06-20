@@ -8,20 +8,20 @@
 
 import UIKit
 
+/// A View Controller for handling the stop recording state
 class StopRecordingController: UIViewController {
-
-    /// Button view container for stop recording button
-    var stopRecordingView: UIView!
     
+    /// Button for stopping a route recording
     var stopRecordingButton: UIButton!
 
+    /// called when the view has loaded.  We setup various app elements in here.
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view = UIView(frame: CGRect(x: 0,
-                                    y: UIConstants.yOriginOfButtonFrame,
-                                    width: UIConstants.buttonFrameWidth,
-                                    height: UIConstants.buttonFrameHeight))
+        view.frame = CGRect(x: 0,
+                            y: UIConstants.yOriginOfButtonFrame,
+                            width: UIConstants.buttonFrameWidth,
+                            height: UIConstants.buttonFrameHeight)
         
         view.backgroundColor = UIColor.black.withAlphaComponent(0.4)
 //        view.isHidden = true

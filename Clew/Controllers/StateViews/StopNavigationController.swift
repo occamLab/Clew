@@ -8,20 +8,20 @@
 
 import UIKit
 
+/// A View Controller for handling the stop navigation state
 class StopNavigationController: UIViewController {
 
-    /// Button view container for stop navigation button
-    var stopNavigationView: UIView!
-    
+    /// button for stopping route navigation
     var stopNavigationButton: UIButton!
     
+    /// called when the view has loaded.  We setup various app elements in here.
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view = UIView(frame: CGRect(x: 0,
-                                    y: UIConstants.yOriginOfButtonFrame,
-                                    width: UIConstants.buttonFrameWidth,
-                                    height: UIConstants.buttonFrameHeight))
+        view.frame = CGRect(x: 0,
+                            y: UIConstants.yOriginOfButtonFrame,
+                            width: UIConstants.buttonFrameWidth,
+                            height: UIConstants.buttonFrameHeight)
 
         view.backgroundColor = UIColor.black.withAlphaComponent(0.4)
 //        view.isHidden = true

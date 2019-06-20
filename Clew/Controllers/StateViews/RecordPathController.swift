@@ -8,17 +8,19 @@
 
 import UIKit
 
+/// A View Controller for handling the recording path/route state
 class RecordPathController: UIViewController {
 
-    /// Button view container for start recording button.
-//    var recordPathView: UIView!
-    
+    /// Button for recording a route
     var recordPathButton: UIButton!
     
+    /// button for creating a new landmark
     var addLandmarkButton: UIButton!
 
+    /// button for accessing saved routes
     var routesButton: UIButton!
 
+    /// called when the view has loaded.  We setup various app elements in here.
     override func viewDidLoad() {
         super.viewDidLoad()
 

@@ -8,20 +8,20 @@
 
 import UIKit
 
+/// A View Controller for handling resuming a route navigation
 class ResumeTrackingController: UIViewController {
-
-    /// the view on which the user can initiate the tracking resume procedure
-    var resumeTrackingView: UIView!
     
+    /// button for resuming navigation
     var resumeButton: UIButton!
 
+    /// called when the view has loaded.  We setup various app elements in here.
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view = UIView(frame: CGRect(x: 0,
-                                    y: 0,
-                                    width: UIScreen.main.bounds.size.width,
-                                    height: UIScreen.main.bounds.size.height))
+        view.frame = CGRect(x: 0,
+                            y: 0,
+                            width: UIScreen.main.bounds.size.width,
+                            height: UIScreen.main.bounds.size.height)
 
         let label = UILabel(frame: CGRect(x: 15,
                                           y: UIScreen.main.bounds.size.height/5,

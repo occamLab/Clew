@@ -8,22 +8,23 @@
 
 import UIKit
 
+/// A View Controller for the starting navigation state
 class StartNavigationController: UIViewController {
 
-    /// Button view container for start navigation button
-    var startNavigationView: UIView!
-    
+    /// button for beginning navigation along a route
     var startNavigationButton: UIButton!
     
+    /// button for pausing navigation
     var pauseButton: UIButton!
 
+    /// called when the view has loaded.  We setup various app elements in here.
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view = UIView(frame: CGRect(x: 0,
-                                    y: UIConstants.yOriginOfButtonFrame,
-                                    width: UIConstants.buttonFrameWidth,
-                                    height: UIConstants.buttonFrameHeight))
+        view.frame = CGRect(x: 0,
+                            y: UIConstants.yOriginOfButtonFrame,
+                            width: UIConstants.buttonFrameWidth,
+                            height: UIConstants.buttonFrameHeight)
 
         view.backgroundColor = UIColor.black.withAlphaComponent(0.4)
 //        view.isHidden = true

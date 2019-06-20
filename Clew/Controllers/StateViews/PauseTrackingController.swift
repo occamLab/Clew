@@ -8,14 +8,21 @@
 
 import UIKit
 
+/// A View Controller for handling the pause route state
+/// also handles associated buttons
 class PauseTrackingController: UIViewController {
 
+    /// button for storing landmark descriptions
     var enterLandmarkDescriptionButton: UIButton!
     
+    /// button for recording a voice note about a
+    /// landmark
     var recordVoiceNoteButton: UIButton!
     
+    /// button for aligning phone position in space
     var confirmAlignmentButton: UIButton!
 
+    /// called when the view has loaded.  We setup various app elements in here.
     override func viewDidLoad() {
         super.viewDidLoad()
 

@@ -8,19 +8,24 @@
 
 import UIKit
 
+/// A View Controller for handling rating the app
+/// functionality and route that was just navigated
 class RouteRatingController: UIViewController {
 
+    /// a button for rating a path navigation positively
     var thumbsDownButton: UIButton!
 
+    /// a button for rating a path navigation negatively
     var thumbsUpButton: UIButton!
     
+    /// called when the view has loaded.  We setup various app elements in here.
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view = UIView(frame: CGRect(x: 0,
+        view.frame = CGRect(x: 0,
                                     y: 0,
                                     width: UIConstants.buttonFrameWidth,
-                                    height: UIScreen.main.bounds.size.height))
+                                    height: UIScreen.main.bounds.size.height)
         
         let label = UILabel(frame: CGRect(x: 15,
                                           y: UIScreen.main.bounds.size.height/5,
