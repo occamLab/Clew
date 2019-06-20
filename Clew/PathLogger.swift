@@ -50,7 +50,13 @@ class PathLogger {
     var keypointData: [Array<Any>] = []
     
     /// language used in recording
-    var langData: [String] = []
+//    var langData: [String] = []
+//    let langData = Locale.preferredLanguages[0]
+    func currentLocale() -> String {
+        let preferredLanguage = Locale.preferredLanguages[0] as String
+        print(preferredLanguage)
+        return preferredLanguage
+    }
     
     /// Add the specified state transition to the log.
     ///
@@ -113,7 +119,10 @@ class PathLogger {
     /// Log language used by user in recording.
     //
     ///
-///    func logLang(lang)
+//    func logLang() {
+//        let langData = Locale.preferredLanguages[0]
+//        return langData
+//    }
     
     
     /// Reset the logging variables having to do with path recording or ones that are shared between path recording / path navigating
@@ -241,3 +250,4 @@ class PathLogger {
         }
     }
 }
+

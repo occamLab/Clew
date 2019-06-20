@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		12317E6A4CEFE90BE755D803 /* Pods_Clew_Dev.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4315F457247AC66574B86A26 /* Pods_Clew_Dev.framework */; settings = {ATTRIBUTES = (Required, ); }; };
-		4B12F4A545BC26EAA16F6633 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		4B12F4A545BC26EAA16F6633 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
 		4D6B00C41F33C1C400952242 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D6B00C31F33C1C400952242 /* AppDelegate.swift */; };
 		4D6B00C61F33C1C400952242 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D6B00C51F33C1C400952242 /* ViewController.swift */; };
 		4D6B00CE1F33C1C400952242 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4D6B00CC1F33C1C400952242 /* LaunchScreen.storyboard */; };
@@ -19,6 +19,7 @@
 		4D6B00E51F33C9B800952242 /* Crumb.obj in Resources */ = {isa = PBXBuildFile; fileRef = 4D6B00E41F33C85500952242 /* Crumb.obj */; };
 		4D9E8E7F1F3A4D3400536FCD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4D940BAA1F38AA79004E6741 /* Assets.xcassets */; };
 		4DF05CC81F34EB6B008B0E31 /* Confirm.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4DF05CC71F34EB56008B0E31 /* Confirm.mp3 */; };
+		77467DAF22BBC1D300FA7DEE /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 77467DAE22BBC1D300FA7DEE /* Default-568h@2x.png */; };
 		77AAC79C22AFDE91001D30E6 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 77AAC79F22AFDE91001D30E6 /* Localizable.strings */; };
 		77AAC79D22AFDE91001D30E6 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 77AAC79F22AFDE91001D30E6 /* Localizable.strings */; };
 		77E722B422B82C3300C1FD19 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 77D4460622B14AD100CE1FEF /* Info.plist */; };
@@ -63,6 +64,7 @@
 		B7EB59E420F693EB00FBBC6A /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 4D6B00DD1F33C33600952242 /* Settings.bundle */; };
 		B7EB59E520F693EB00FBBC6A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4D6B00CC1F33C1C400952242 /* LaunchScreen.storyboard */; };
 		B7EB59E620F693EB00FBBC6A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4D940BAA1F38AA79004E6741 /* Assets.xcassets */; };
+		DF3B969DFABFE4D417F46A6E /* Pods_Clew.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65F5925048BA1916F4D016B9 /* Pods_Clew.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -79,7 +81,9 @@
 		4D6B00E41F33C85500952242 /* Crumb.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = Crumb.obj; sourceTree = "<group>"; };
 		4D940BAA1F38AA79004E6741 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4DF05CC71F34EB56008B0E31 /* Confirm.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = Confirm.mp3; sourceTree = "<group>"; };
+		65F5925048BA1916F4D016B9 /* Pods_Clew.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Clew.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7737690822B9320F00B751FA /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
+		77467DAE22BBC1D300FA7DEE /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		775DDC9022AEF63A00954938 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		778DD79822B1375C00EF0778 /* th */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = th; path = th.lproj/Localizable.strings; sourceTree = "<group>"; };
 		77AAC79E22AFDE91001D30E6 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -125,7 +129,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4B12F4A545BC26EAA16F6633 /* (null) in Frameworks */,
+				4B12F4A545BC26EAA16F6633 /* BuildFile in Frameworks */,
+				DF3B969DFABFE4D417F46A6E /* Pods_Clew.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -143,6 +148,7 @@
 		4D6B00B71F33C1C400952242 = {
 			isa = PBXGroup;
 			children = (
+				77467DAE22BBC1D300FA7DEE /* Default-568h@2x.png */,
 				82569F4D22187E6500448B45 /* help */,
 				4DF05CC71F34EB56008B0E31 /* Confirm.mp3 */,
 				4D6B00E41F33C85500952242 /* Crumb.obj */,
@@ -229,6 +235,7 @@
 			isa = PBXGroup;
 			children = (
 				4315F457247AC66574B86A26 /* Pods_Clew_Dev.framework */,
+				65F5925048BA1916F4D016B9 /* Pods_Clew.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -332,6 +339,7 @@
 				4D6B00DE1F33C33600952242 /* Settings.bundle in Resources */,
 				82569F4E22187E6500448B45 /* help in Resources */,
 				77E722B522B82C3400C1FD19 /* Info.plist in Resources */,
+				77467DAF22BBC1D300FA7DEE /* Default-568h@2x.png in Resources */,
 				82028C7922807C1F00772701 /* GoogleService-Info.plist in Resources */,
 				4D6B00CE1F33C1C400952242 /* LaunchScreen.storyboard in Resources */,
 				4D9E8E7F1F3A4D3400536FCD /* Assets.xcassets in Resources */,
