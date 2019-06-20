@@ -117,7 +117,7 @@ class EdgeInsetLabel: UILabel {
     }
     
     override func textRect(forBounds bounds: CGRect, limitedToNumberOfLines numberOfLines: Int) -> CGRect {
-        let insetRect = CGRect.insetBy(<#T##self: CGRect##CGRect#>)
+        let insetRect = CGRect.inset(by: bounds, textInsets)
         let textRect = super.textRect(forBounds: insetRect, limitedToNumberOfLines: numberOfLines)
         let invertedInsets = UIEdgeInsets(top: -textInsets.top,
                                           left: -textInsets.left,
