@@ -35,12 +35,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let storyBoard: UIStoryboard = UIStoryboard(name: "Storyboard", bundle: nil)
         let safetyContent = storyBoard.instantiateViewController(withIdentifier: "SafetyNotice") as! UIViewController
         
+        let userDefaults: UserDefaults = UserDefaults.standard
+        let firstTimeLoggingIn: Bool? = userDefaults.object(forKey: "firstTimeLogin") as? Bool
+        
+        if (firstTimeLoggingIn == nil) {
+            userDefaults.set(true, forKey: "firstTimeLogin")
+            window = UIWindow(frame:UIScreen.main.bounds)
+            window?.makeKeyAndVisible()
+            window?.rootViewController = safetyContent
+            UIApplication.shared.isIdleTimerDisabled = true
+            return true
+        } else {
         // Override point for customization after application launch.
         window = UIWindow(frame:UIScreen.main.bounds)
         window?.makeKeyAndVisible()
-        window?.rootViewController = safetyContent
+        window?.rootViewController = ViewController()
         UIApplication.shared.isIdleTimerDisabled = true
         return true
+        }
     }
 
     /// Sent when the application is about to move from active to inactive state.  In Clew's current implementation, this method doesn't do anything.

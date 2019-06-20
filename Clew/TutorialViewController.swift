@@ -13,7 +13,7 @@ class TutorialViewController: UIViewController {
     
     @IBAction func CloseTips(_ sender: UIButton) {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        appDelegate.window?.rootViewController?.dismiss(animated: false)
+        appDelegate.window?.rootViewController?.dismiss(animated: true)
         appDelegate.window?.rootViewController = ViewController()
         print("hi")
     }
