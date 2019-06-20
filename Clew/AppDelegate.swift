@@ -31,10 +31,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         #else
             FirebaseApp.configure()
         #endif
+        
+        let storyBoard: UIStoryboard = UIStoryboard(name: "Storyboard", bundle: nil)
+        let safetyContent = storyBoard.instantiateViewController(withIdentifier: "SafetyNotice") as! UIViewController
+        
         // Override point for customization after application launch.
         window = UIWindow(frame:UIScreen.main.bounds)
         window?.makeKeyAndVisible()
-        window?.rootViewController = ViewController()
+        window?.rootViewController = safetyContent
         UIApplication.shared.isIdleTimerDisabled = true
         return true
     }

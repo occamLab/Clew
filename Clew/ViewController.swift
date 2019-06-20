@@ -1305,14 +1305,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         helpButton.addTarget(self, action: #selector(helpButtonPressed), for: .touchUpInside)
         helpButton.setImage(UIImage(named: "HelpButton"), for: .normal)
         
-        //button that allows user to contact developers
-//        contactButton = UIButton(frame: CGRect(x: buttonFrameWidth/(7/5), y: yOriginOfSettingsAndHelpButton + 10, width: buttonFrameWidth/7, height: buttonFrameWidth/7))
-//        contactButton.isAccessibilityElement = true
-//        contactButton.setTitle("Contact Developers", for: .normal)
-//        contactButton.titleLabel?.font = UIFont.systemFont(ofSize: 24.0)
-//        contactButton.accessibilityLabel = "Contact Developers"
+//        //button that allows user to contact developers
+//        tutorialButton = UIButton(frame: CGRect(x: buttonFrameWidth/(2/5), y: yOriginOfSettingsAndHelpButton + 10, width: buttonFrameWidth/7, height: buttonFrameWidth/7))
+//        tutorialButton.isAccessibilityElement = true
+//        tutorialButton.setTitle("Contact Developers", for: .normal)
+//        tutorialButton.titleLabel?.font = UIFont.systemFont(ofSize: 24.0)
+//        tutorialButton.accessibilityLabel = "go to tutorial"
 //        ///contactButton.addTarget(self, action: #selector(contactButtonPressed), for: .touchUpInside)
-//        contactButton.setImage(UIImage(named: "Contact"), for: .normal)
+//        tutorialButton.setImage(UIImage(named: "lightbulb"), for: .normal)
         
         //button to go to the home screen
         homeButton = UIButton(frame: CGRect(x: buttonFrameWidth/7, y: yOriginOfSettingsAndHelpButton + 10, width: buttonFrameWidth/7, height: buttonFrameWidth/7))
