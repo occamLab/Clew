@@ -34,9 +34,9 @@ class ResumeTrackingConfirmController: UIViewController {
         super.viewDidLoad()
         
         view = UIView(frame: CGRect(x: 0,
-                                    y: 0,
-                                    width: UIScreen.main.bounds.size.width,
-                                    height: UIScreen.main.bounds.size.height))        
+                                    y: UIConstants.yOriginOfButtonFrame,
+                                    width: UIConstants.buttonFrameWidth,
+                                    height: UIConstants.buttonFrameHeight))        
         
         let label = UILabel(frame: CGRect(x: 15,
                                           y: UIScreen.main.bounds.size.height/5,

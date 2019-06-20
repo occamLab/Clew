@@ -32,6 +32,9 @@ class RootContainerView: UIView {
     
     /// button for bringing up the help menu
     var helpButton: UIButton!
+
+    /// button for bringing up the feedback menu
+    var feedbackButton: UIButton!
     
     /// a banner that displays an announcement in the top quarter of the screen.
     /// This is used for displaying status updates or directions.
@@ -54,7 +57,7 @@ class RootContainerView: UIView {
         // MARK: Settings Button
         settingsButton = UIButton(frame: CGRect(x: 0,
                                                 y: UIConstants.yOriginOfSettingsAndHelpButton,
-                                                width: UIConstants.buttonFrameWidth/2,
+                                                width: UIConstants.buttonFrameWidth/3,
                                                 height: UIConstants.settingsAndHelpFrameHeight))
         settingsButton.isAccessibilityElement = true
         settingsButton.setTitle("Settings", for: .normal)
@@ -63,9 +66,9 @@ class RootContainerView: UIView {
         settingsButton.backgroundColor = UIColor.black.withAlphaComponent(0.4)
         
         // MARK: Help Button
-        helpButton = UIButton(frame: CGRect(x: UIConstants.buttonFrameWidth/2,
+        helpButton = UIButton(frame: CGRect(x: UIConstants.buttonFrameWidth/3,
                                             y: UIConstants.yOriginOfSettingsAndHelpButton,
-                                            width: UIConstants.buttonFrameWidth/2,
+                                            width: UIConstants.buttonFrameWidth/3,
                                             height: UIConstants.settingsAndHelpFrameHeight))
         helpButton.isAccessibilityElement = true
         helpButton.setTitle("Help", for: .normal)
@@ -73,6 +76,17 @@ class RootContainerView: UIView {
         helpButton.accessibilityLabel = "Help"
         helpButton.backgroundColor = UIColor.black.withAlphaComponent(0.4)
         
+        // button that shows feedback menu
+        feedbackButton = UIButton(frame: CGRect(x: 2*UIConstants.buttonFrameWidth/3,
+                                                y: UIConstants.yOriginOfSettingsAndHelpButton,
+                                                width: UIConstants.buttonFrameWidth/3,
+                                                height: UIConstants.settingsAndHelpFrameHeight))
+        feedbackButton.isAccessibilityElement = true
+        feedbackButton.setTitle("Feedback", for: .normal)
+        feedbackButton.titleLabel?.font = UIFont.systemFont(ofSize: 24.0)
+        feedbackButton.accessibilityLabel = "Feedback"
+        feedbackButton.backgroundColor = UIColor.black.withAlphaComponent(0.4)
+
         // MARK: Directions Button
         // an invisible button which can be pressed to get the directions
         // to the next waypoint.
@@ -120,5 +134,6 @@ class RootContainerView: UIView {
         addSubview(settingsButton)
         addSubview(helpButton)
         addSubview(countdownTimer)
+        addSubview(feedbackButton)
     }
 }

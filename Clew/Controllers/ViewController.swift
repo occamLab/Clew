@@ -506,7 +506,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     override var prefersStatusBarHidden: Bool {
         return true
     }
-    
+
     /// audio players for playing system sounds through an `AVAudioSession` (this allows them to be audible even when the rocker switch is muted.
     var audioPlayers: [Int: AVAudioPlayer] = [:]
     
@@ -567,6 +567,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         rootContainerView.helpButton.addTarget(self, action: #selector(helpButtonPressed), for: .touchUpInside)
 
         rootContainerView.getDirectionButton.addTarget(self, action: #selector(announceDirectionHelpPressed), for: .touchUpInside)
+
+        rootContainerView.feedbackButton.addTarget(self, action: #selector(feedbackButtonPressed), for: .touchUpInside)
 
         // make sure this happens after the view is created!
         rootContainerView.countdownTimer.delegate = self
@@ -803,6 +805,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// Record a voice note by displaying the RecorderView
     @objc func recordVoiceNote() {
         let popoverContent = RecorderViewController()
+        //says that the recorder should dismiss tiself when it is done
+        popoverContent.shouldAutoDismiss = true
         popoverContent.delegate = self
         popoverContent.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: popoverContent, action: #selector(popoverContent.doneWithRecording))
         let nav = UINavigationController(rootViewController: popoverContent)
@@ -972,7 +976,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         // the options button is hidden if the route rating shows up
         rootContainerView.settingsButton.isHidden = false
         rootContainerView.helpButton.isHidden = false
-        
+        rootContainerView.feedbackButton.isHidden = false
+
         if announceArrival {
             delayTransition(announcement: "You've arrived.")
         } else {
@@ -1700,6 +1705,24 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         popover?.sourceView = self.view
         popover?.sourceRect = CGRect(x: 0, y: UIConstants.settingsAndHelpFrameHeight/2, width: 0,height: 0)
         popoverContent.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: popoverContent, action: #selector(popoverContent.doneWithHelp))
+        suppressTrackingWarnings = true
+        self.present(nav, animated: true, completion: nil)
+    }
+    
+    /// Called when the Feedback button is pressed.  This function will display the Feedback view (managed by FeedbackViewController) as a popover.
+    @objc func feedbackButtonPressed() {
+        let storyBoard: UIStoryboard = UIStoryboard(name: "SettingsAndHelp", bundle: nil)
+        let popoverContent = storyBoard.instantiateViewController(withIdentifier: "Feedback") as! FeedbackViewController
+        let nav = UINavigationController(rootViewController: popoverContent)
+        nav.modalPresentationStyle = .popover
+        let popover = nav.popoverPresentationController
+        popover?.delegate = self
+        popover?.sourceView = self.view
+        popover?.sourceRect = CGRect(x: 0,
+                                     y: UIConstants.settingsAndHelpFrameHeight/2,
+                                     width: 0,
+                                     height: 0)
+        popoverContent.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: popoverContent, action: #selector(popoverContent.closeFeedback))
         suppressTrackingWarnings = true
         self.present(nav, animated: true, completion: nil)
     }

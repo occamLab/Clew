@@ -1,4 +1,6 @@
 PODS:
+  - Firebase/Analytics (6.0.0):
+    - Firebase/Core
   - Firebase/Core (6.0.0):
     - Firebase/CoreOnly
     - FirebaseAnalytics (= 6.0.0)
@@ -83,6 +85,7 @@ PODS:
     - VectorMath/Core
 
 DEPENDENCIES:
+  - Firebase/Analytics
   - Firebase/Core
   - Firebase/Database
   - Firebase/Storage
@@ -128,6 +131,6 @@ SPEC CHECKSUMS:
   SRCountdownTimer: 9c92e444b5403c92f01dd6610299b8c634bc8562
   VectorMath: 2768d3f60f96db22d61cc25446ffe6e43681b045
 
-PODFILE CHECKSUM: 1c3469b90d2339c716bacfe62e3c86bc0cc2c86f
+PODFILE CHECKSUM: 4c19f32395bedefc8d422e1020dc597588e744fd
 
 COCOAPODS: 1.6.2
