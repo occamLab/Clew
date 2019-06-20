@@ -11,8 +11,6 @@
 		1F2958D722AABFB3001A8547 /* FeedbackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2958D622AABFB3001A8547 /* FeedbackViewController.swift */; };
 		1F2958D822AABFB3001A8547 /* FeedbackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2958D622AABFB3001A8547 /* FeedbackViewController.swift */; };
 		1F2958D922AAC00C001A8547 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D6B00C51F33C1C400952242 /* ViewController.swift */; };
-		1F2958DB22AAE2D1001A8547 /* FeedbackLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2958DA22AAE2D1001A8547 /* FeedbackLogger.swift */; };
-		1F2958DC22AAE2D1001A8547 /* FeedbackLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2958DA22AAE2D1001A8547 /* FeedbackLogger.swift */; };
 		4B12F4A545BC26EAA16F6633 /* Pods_Clew.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1977F3CD0CF608888A7E2B5C /* Pods_Clew.framework */; };
 		4D6B00C41F33C1C400952242 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D6B00C31F33C1C400952242 /* AppDelegate.swift */; };
 		4D6B00C61F33C1C400952242 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D6B00C51F33C1C400952242 /* ViewController.swift */; };
@@ -64,13 +62,46 @@
 		B7EB59E420F693EB00FBBC6A /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 4D6B00DD1F33C33600952242 /* Settings.bundle */; };
 		B7EB59E520F693EB00FBBC6A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4D6B00CC1F33C1C400952242 /* LaunchScreen.storyboard */; };
 		B7EB59E620F693EB00FBBC6A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4D940BAA1F38AA79004E6741 /* Assets.xcassets */; };
+		E5337EAE22B97BED00C562F8 /* RouteRatingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5337EAD22B97BED00C562F8 /* RouteRatingController.swift */; };
+		E5337EAF22B97BED00C562F8 /* RouteRatingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5337EAD22B97BED00C562F8 /* RouteRatingController.swift */; };
+		E5337EB122B97C0000C562F8 /* PauseTrackingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5337EB022B97C0000C562F8 /* PauseTrackingController.swift */; };
+		E5337EB222B97C0000C562F8 /* PauseTrackingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5337EB022B97C0000C562F8 /* PauseTrackingController.swift */; };
+		E5337EB422B97C0F00C562F8 /* ResumeTrackingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5337EB322B97C0F00C562F8 /* ResumeTrackingController.swift */; };
+		E5337EB722B97C1D00C562F8 /* ResumeTrackingConfirmController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5337EB622B97C1D00C562F8 /* ResumeTrackingConfirmController.swift */; };
+		E5337EB822B97C1D00C562F8 /* ResumeTrackingConfirmController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5337EB622B97C1D00C562F8 /* ResumeTrackingConfirmController.swift */; };
+		E5337EBA22B97C2800C562F8 /* StopRecordingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5337EB922B97C2800C562F8 /* StopRecordingController.swift */; };
+		E5337EBD22B97C3B00C562F8 /* RecordPathController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5337EBC22B97C3B00C562F8 /* RecordPathController.swift */; };
+		E5337EBE22B97C3B00C562F8 /* RecordPathController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5337EBC22B97C3B00C562F8 /* RecordPathController.swift */; };
+		E5337EC022B97C4600C562F8 /* StartNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5337EBF22B97C4600C562F8 /* StartNavigationController.swift */; };
+		E5337EC122B97C4600C562F8 /* StartNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5337EBF22B97C4600C562F8 /* StartNavigationController.swift */; };
+		E5337EC322B97C5500C562F8 /* StopNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5337EC222B97C5500C562F8 /* StopNavigationController.swift */; };
+		E5337EC422B97C5500C562F8 /* StopNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5337EC222B97C5500C562F8 /* StopNavigationController.swift */; };
+		E5959CAC22A70B5B00E53446 /* NSStringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5959CAB22A70B5B00E53446 /* NSStringExtension.swift */; };
+		E5959CAF22A9534C00E53446 /* StateController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5959CAE22A9534C00E53446 /* StateController.swift */; };
+		E5959CB022A9534C00E53446 /* StateController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5959CAE22A9534C00E53446 /* StateController.swift */; };
+		E5A3354422BA746D0014092B /* UIViewControllerExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5A3354322BA746D0014092B /* UIViewControllerExtensions.swift */; };
+		E5A3354522BA746D0014092B /* UIViewControllerExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5A3354322BA746D0014092B /* UIViewControllerExtensions.swift */; };
+		E5B9200B22BBC4D60072B0E4 /* Float4x4Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E1886922A709F000A40EBC /* Float4x4Extension.swift */; };
+		E5B9200C22BBC4D80072B0E4 /* NSStringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5959CAB22A70B5B00E53446 /* NSStringExtension.swift */; };
+		E5B9200D22BBC4DB0072B0E4 /* UIViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F498B722AEA8A600FA1E6C /* UIViewExtensions.swift */; };
+		E5B9200E22BBC4DE0072B0E4 /* UIButtonExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F498BA22AEA8B500FA1E6C /* UIButtonExtensions.swift */; };
+		E5B9200F22BBC4F40072B0E4 /* StopRecordingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5337EB922B97C2800C562F8 /* StopRecordingController.swift */; };
+		E5B9201022BBC4FE0072B0E4 /* ResumeTrackingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5337EB322B97C0F00C562F8 /* ResumeTrackingController.swift */; };
+		E5B9201122BBC5110072B0E4 /* RootContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F498B422AEA7D300FA1E6C /* RootContainerView.swift */; };
+		E5B9201322BBC5E50072B0E4 /* FeedbackLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5B9201222BBC5E40072B0E4 /* FeedbackLogger.swift */; };
+		E5B9201422BBC5E50072B0E4 /* FeedbackLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5B9201222BBC5E40072B0E4 /* FeedbackLogger.swift */; };
+		E5E1886A22A709F000A40EBC /* Float4x4Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E1886922A709F000A40EBC /* Float4x4Extension.swift */; };
+		E5F498B522AEA7D300FA1E6C /* RootContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F498B422AEA7D300FA1E6C /* RootContainerView.swift */; };
+		E5F498B822AEA8A600FA1E6C /* UIViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F498B722AEA8A600FA1E6C /* UIViewExtensions.swift */; };
+		E5F498BB22AEA8B500FA1E6C /* UIButtonExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F498BA22AEA8B500FA1E6C /* UIButtonExtensions.swift */; };
+		E5F498C022B16DC900FA1E6C /* UIConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F498BF22B16DC900FA1E6C /* UIConstants.swift */; };
+		E5F498C122B16DC900FA1E6C /* UIConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F498BF22B16DC900FA1E6C /* UIConstants.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		08FA9C31721F9F8CDCC23AE9 /* Pods-Clew.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Clew/Pods-Clew.debug.xcconfig"; sourceTree = "<group>"; };
 		1977F3CD0CF608888A7E2B5C /* Pods_Clew.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Clew.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F2958D622AABFB3001A8547 /* FeedbackViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackViewController.swift; sourceTree = "<group>"; };
-		1F2958DA22AAE2D1001A8547 /* FeedbackLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackLogger.swift; sourceTree = "<group>"; };
 		4315F457247AC66574B86A26 /* Pods_Clew_Dev.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Clew_Dev.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4D6B00C01F33C1C400952242 /* Clew.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Clew.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4D6B00C31F33C1C400952242 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -108,6 +139,23 @@
 		B7EB59EC20F693EB00FBBC6A /* Clew Dev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Clew Dev.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C68778047D8E263D2FB04989 /* Pods-Clew Dev.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew Dev.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Clew Dev/Pods-Clew Dev.debug.xcconfig"; sourceTree = "<group>"; };
 		D89DDB87A8AE1A9ECEAFCEC6 /* Pods-Clew.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew.release.xcconfig"; path = "Pods/Target Support Files/Pods-Clew/Pods-Clew.release.xcconfig"; sourceTree = "<group>"; };
+		E5337EAD22B97BED00C562F8 /* RouteRatingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteRatingController.swift; sourceTree = "<group>"; };
+		E5337EB022B97C0000C562F8 /* PauseTrackingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PauseTrackingController.swift; sourceTree = "<group>"; };
+		E5337EB322B97C0F00C562F8 /* ResumeTrackingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResumeTrackingController.swift; sourceTree = "<group>"; };
+		E5337EB622B97C1D00C562F8 /* ResumeTrackingConfirmController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResumeTrackingConfirmController.swift; sourceTree = "<group>"; };
+		E5337EB922B97C2800C562F8 /* StopRecordingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StopRecordingController.swift; sourceTree = "<group>"; };
+		E5337EBC22B97C3B00C562F8 /* RecordPathController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordPathController.swift; sourceTree = "<group>"; };
+		E5337EBF22B97C4600C562F8 /* StartNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartNavigationController.swift; sourceTree = "<group>"; };
+		E5337EC222B97C5500C562F8 /* StopNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StopNavigationController.swift; sourceTree = "<group>"; };
+		E5959CAB22A70B5B00E53446 /* NSStringExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSStringExtension.swift; sourceTree = "<group>"; };
+		E5959CAE22A9534C00E53446 /* StateController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateController.swift; sourceTree = "<group>"; };
+		E5A3354322BA746D0014092B /* UIViewControllerExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewControllerExtensions.swift; sourceTree = "<group>"; };
+		E5B9201222BBC5E40072B0E4 /* FeedbackLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FeedbackLogger.swift; path = Misc/FeedbackLogger.swift; sourceTree = SOURCE_ROOT; };
+		E5E1886922A709F000A40EBC /* Float4x4Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Float4x4Extension.swift; sourceTree = "<group>"; };
+		E5F498B422AEA7D300FA1E6C /* RootContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootContainerView.swift; sourceTree = "<group>"; };
+		E5F498B722AEA8A600FA1E6C /* UIViewExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewExtensions.swift; sourceTree = "<group>"; };
+		E5F498BA22AEA8B500FA1E6C /* UIButtonExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIButtonExtensions.swift; sourceTree = "<group>"; };
+		E5F498BF22B16DC900FA1E6C /* UIConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIConstants.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -157,26 +205,18 @@
 		4D6B00C21F33C1C400952242 /* Clew */ = {
 			isa = PBXGroup;
 			children = (
+				E5F498BD22AEA94000FA1E6C /* Extensions */,
+				E5959CAA22A70AD500E53446 /* Misc */,
+				E5E1885B22A7028300A40EBC /* Controllers */,
+				E5E1885A22A7027600A40EBC /* Models */,
+				E5E1885922A7026500A40EBC /* Views */,
 				82028C7822807C1F00772701 /* GoogleService-Info.plist */,
 				827E85A0226985F9005CF98A /* Voice Notes */,
 				827E859922690FE4005CF98A /* Sound Effects */,
 				82028C7622807BF400772701 /* GoogleService-Info_dev.plist */,
 				4D940BAA1F38AA79004E6741 /* Assets.xcassets */,
-				4D6B00C31F33C1C400952242 /* AppDelegate.swift */,
-				4D6B00C51F33C1C400952242 /* ViewController.swift */,
-				826D5410224ABC39009EF410 /* DataPersistence.swift */,
-				82473B0B2217647A00E98CFC /* SettingsAndHelp.storyboard */,
-				82569F4622187AE700448B45 /* HelpViewController.swift */,
 				82473B05221763E200E98CFC /* SettingsViewController.h */,
 				82473B082217641D00E98CFC /* SettingsViewController.m */,
-				4D6B00D51F33C1FE00952242 /* Navigation.swift */,
-				4D6B00D71F33C21A00952242 /* PathFinder.swift */,
-				4D6B00DB1F33C26D00952242 /* Utility.swift */,
-				4D6B00CC1F33C1C400952242 /* LaunchScreen.storyboard */,
-				826D540B224ABBDC009EF410 /* RoutesViewController.swift */,
-				826D540A224ABBDC009EF410 /* RouteTableViewCell.swift */,
-				82028C73227CDB3100772701 /* PathLogger.swift */,
-				1F2958DA22AAE2D1001A8547 /* FeedbackLogger.swift */,
 				4D6B00CF1F33C1C400952242 /* Info.plist */,
 				4D6B00DD1F33C33600952242 /* Settings.bundle */,
 				82473B062217641D00E98CFC /* Clew-Bridging-Header.h */,
@@ -224,6 +264,87 @@
 				4315F457247AC66574B86A26 /* Pods_Clew_Dev.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		E5337EAC22B97BA900C562F8 /* StateViews */ = {
+			isa = PBXGroup;
+			children = (
+				E5337EAD22B97BED00C562F8 /* RouteRatingController.swift */,
+				E5337EB022B97C0000C562F8 /* PauseTrackingController.swift */,
+				E5337EB322B97C0F00C562F8 /* ResumeTrackingController.swift */,
+				E5337EB622B97C1D00C562F8 /* ResumeTrackingConfirmController.swift */,
+				E5337EB922B97C2800C562F8 /* StopRecordingController.swift */,
+				E5337EBC22B97C3B00C562F8 /* RecordPathController.swift */,
+				E5337EBF22B97C4600C562F8 /* StartNavigationController.swift */,
+				E5337EC222B97C5500C562F8 /* StopNavigationController.swift */,
+			);
+			path = StateViews;
+			sourceTree = "<group>";
+		};
+		E5337EC522B97D9000C562F8 /* PopOvers */ = {
+			isa = PBXGroup;
+			children = (
+				82569F4622187AE700448B45 /* HelpViewController.swift */,
+				826D540B224ABBDC009EF410 /* RoutesViewController.swift */,
+			);
+			path = PopOvers;
+			sourceTree = "<group>";
+		};
+		E5959CAA22A70AD500E53446 /* Misc */ = {
+			isa = PBXGroup;
+			children = (
+				4D6B00D51F33C1FE00952242 /* Navigation.swift */,
+				4D6B00D71F33C21A00952242 /* PathFinder.swift */,
+				4D6B00DB1F33C26D00952242 /* Utility.swift */,
+				4D6B00C31F33C1C400952242 /* AppDelegate.swift */,
+				82028C73227CDB3100772701 /* PathLogger.swift */,
+				826D5410224ABC39009EF410 /* DataPersistence.swift */,
+				E5B9201222BBC5E40072B0E4 /* FeedbackLogger.swift */,
+			);
+			name = Misc;
+			path = ../Misc;
+			sourceTree = "<group>";
+		};
+		E5E1885922A7026500A40EBC /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				826D540A224ABBDC009EF410 /* RouteTableViewCell.swift */,
+				82473B0B2217647A00E98CFC /* SettingsAndHelp.storyboard */,
+				4D6B00CC1F33C1C400952242 /* LaunchScreen.storyboard */,
+				E5F498B422AEA7D300FA1E6C /* RootContainerView.swift */,
+				E5F498BF22B16DC900FA1E6C /* UIConstants.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		E5E1885A22A7027600A40EBC /* Models */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		E5E1885B22A7028300A40EBC /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				E5337EAC22B97BA900C562F8 /* StateViews */,
+				E5337EC522B97D9000C562F8 /* PopOvers */,
+				4D6B00C51F33C1C400952242 /* ViewController.swift */,
+				E5959CAE22A9534C00E53446 /* StateController.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		E5F498BD22AEA94000FA1E6C /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				E5E1886922A709F000A40EBC /* Float4x4Extension.swift */,
+				E5959CAB22A70B5B00E53446 /* NSStringExtension.swift */,
+				E5F498B722AEA8A600FA1E6C /* UIViewExtensions.swift */,
+				E5F498BA22AEA8B500FA1E6C /* UIButtonExtensions.swift */,
+				E5A3354322BA746D0014092B /* UIViewControllerExtensions.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -451,20 +572,36 @@
 			buildActionMask = 2147483647;
 			files = (
 				82569F4722187AE700448B45 /* HelpViewController.swift in Sources */,
+				E5337EC022B97C4600C562F8 /* StartNavigationController.swift in Sources */,
 				826D5411224ABC39009EF410 /* DataPersistence.swift in Sources */,
 				826D540E224ABBDC009EF410 /* RoutesViewController.swift in Sources */,
 				1F2958D722AABFB3001A8547 /* FeedbackViewController.swift in Sources */,
 				4D6B00D81F33C21A00952242 /* PathFinder.swift in Sources */,
-				1F2958DB22AAE2D1001A8547 /* FeedbackLogger.swift in Sources */,
 				82A43F482269079300076941 /* RecorderViewController.swift in Sources */,
+				E5E1886A22A709F000A40EBC /* Float4x4Extension.swift in Sources */,
+				E5337EBA22B97C2800C562F8 /* StopRecordingController.swift in Sources */,
+				E5F498BB22AEA8B500FA1E6C /* UIButtonExtensions.swift in Sources */,
+				E5F498B822AEA8A600FA1E6C /* UIViewExtensions.swift in Sources */,
+				E5F498B522AEA7D300FA1E6C /* RootContainerView.swift in Sources */,
+				E5959CAC22A70B5B00E53446 /* NSStringExtension.swift in Sources */,
 				4D6B00D61F33C1FE00952242 /* Navigation.swift in Sources */,
+				E5337EB422B97C0F00C562F8 /* ResumeTrackingController.swift in Sources */,
 				4D6B00DC1F33C26D00952242 /* Utility.swift in Sources */,
 				82028C74227CDB3100772701 /* PathLogger.swift in Sources */,
+				E5337EB722B97C1D00C562F8 /* ResumeTrackingConfirmController.swift in Sources */,
+				E5337EB122B97C0000C562F8 /* PauseTrackingController.swift in Sources */,
+				E5337EBD22B97C3B00C562F8 /* RecordPathController.swift in Sources */,
 				82A43F4E2269085800076941 /* RecordButtonKit.swift in Sources */,
+				E5B9201322BBC5E50072B0E4 /* FeedbackLogger.swift in Sources */,
+				E5337EAE22B97BED00C562F8 /* RouteRatingController.swift in Sources */,
+				E5A3354422BA746D0014092B /* UIViewControllerExtensions.swift in Sources */,
 				82473B092217641D00E98CFC /* SettingsViewController.m in Sources */,
 				827E859522690956005CF98A /* AudioVisualizerView.swift in Sources */,
+				E5959CAF22A9534C00E53446 /* StateController.swift in Sources */,
 				82A43F4B226907C600076941 /* RecordButton.swift in Sources */,
 				826D540C224ABBDC009EF410 /* RouteTableViewCell.swift in Sources */,
+				E5F498C022B16DC900FA1E6C /* UIConstants.swift in Sources */,
+				E5337EC322B97C5500C562F8 /* StopNavigationController.swift in Sources */,
 				4D6B00C61F33C1C400952242 /* ViewController.swift in Sources */,
 				4D6B00C41F33C1C400952242 /* AppDelegate.swift in Sources */,
 			);
@@ -475,22 +612,38 @@
 			buildActionMask = 2147483647;
 			files = (
 				82569F4822187AE700448B45 /* HelpViewController.swift in Sources */,
+				E5B9201022BBC4FE0072B0E4 /* ResumeTrackingController.swift in Sources */,
+				E5337EC122B97C4600C562F8 /* StartNavigationController.swift in Sources */,
 				826D5412224ABC39009EF410 /* DataPersistence.swift in Sources */,
 				826D540F224ABBDC009EF410 /* RoutesViewController.swift in Sources */,
 				B7EB59DA20F693EB00FBBC6A /* PathFinder.swift in Sources */,
 				82A43F492269079300076941 /* RecorderViewController.swift in Sources */,
-				1F2958DC22AAE2D1001A8547 /* FeedbackLogger.swift in Sources */,
 				B7EB59DB20F693EB00FBBC6A /* Navigation.swift in Sources */,
 				82028C75227CDB3100772701 /* PathLogger.swift in Sources */,
+				E5337EB822B97C1D00C562F8 /* ResumeTrackingConfirmController.swift in Sources */,
+				E5337EB222B97C0000C562F8 /* PauseTrackingController.swift in Sources */,
+				E5337EBE22B97C3B00C562F8 /* RecordPathController.swift in Sources */,
 				B7EB59DC20F693EB00FBBC6A /* Utility.swift in Sources */,
+				E5337EAF22B97BED00C562F8 /* RouteRatingController.swift in Sources */,
+				E5A3354522BA746D0014092B /* UIViewControllerExtensions.swift in Sources */,
+				E5B9200E22BBC4DE0072B0E4 /* UIButtonExtensions.swift in Sources */,
+				E5B9200B22BBC4D60072B0E4 /* Float4x4Extension.swift in Sources */,
 				82A43F4F2269085800076941 /* RecordButtonKit.swift in Sources */,
 				82473B0A2217641D00E98CFC /* SettingsViewController.m in Sources */,
+				E5959CB022A9534C00E53446 /* StateController.swift in Sources */,
 				827E859622690956005CF98A /* AudioVisualizerView.swift in Sources */,
+				E5B9201422BBC5E50072B0E4 /* FeedbackLogger.swift in Sources */,
+				E5B9200F22BBC4F40072B0E4 /* StopRecordingController.swift in Sources */,
 				82A43F4C226907C600076941 /* RecordButton.swift in Sources */,
+				E5B9201122BBC5110072B0E4 /* RootContainerView.swift in Sources */,
+				E5F498C122B16DC900FA1E6C /* UIConstants.swift in Sources */,
+				E5B9200D22BBC4DB0072B0E4 /* UIViewExtensions.swift in Sources */,
+				E5337EC422B97C5500C562F8 /* StopNavigationController.swift in Sources */,
 				826D540D224ABBDC009EF410 /* RouteTableViewCell.swift in Sources */,
 				1F2958D822AABFB3001A8547 /* FeedbackViewController.swift in Sources */,
 				1F2958D922AAC00C001A8547 /* ViewController.swift in Sources */,
 				B7EB59DE20F693EB00FBBC6A /* AppDelegate.swift in Sources */,
+				E5B9200C22BBC4D80072B0E4 /* NSStringExtension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
