@@ -50,20 +50,6 @@
       "warning": "undocumented"
     },
     {
-      "file": "/Users/dieterbrehm/git/occam/Clew/Clew/Views/RootContainerView.swift",
-      "line": 52,
-      "symbol": "RootContainerView.init(coder:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/dieterbrehm/git/occam/Clew/Clew/Views/RootContainerView.swift",
-      "line": 56,
-      "symbol": "RootContainerView.init(frame:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
       "file": "/Users/dieterbrehm/git/occam/Clew/Misc/FeedbackLogger.swift",
       "line": 13,
       "symbol": "FeedbackLogger",
