@@ -8,19 +8,24 @@
 
 import Foundation
 import UIKit
+import WebKit
 
-class HelpSectionCell: UITableViewCell {
+class HelpSectionCell: UITableViewCell, WKUIDelegate,WKNavigationDelegate{
+
     
-    @IBOutlet weak var informationLabel: UILabel!
-    
+    @IBOutlet weak var webView: WKWebView!
     
     var item: HelpViewModelItem? {
         didSet {
             guard  let item = item as? HelpViewModelHelpSectionItem else {
                 return
             }
+
             
-            informationLabel?.text = item.helpSection
+            webView.loadHTMLString(item.helpSection, baseURL: nil)
+            webView.frame.size = webView.scrollView.contentSize
+            
+            //informationLabel?.text = item.helpSection
         }
     }
     

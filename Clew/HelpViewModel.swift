@@ -65,7 +65,7 @@ class HelpViewModel: NSObject{
         ///calls defult behavior
         super.init()
         ///pulls the data from the file and initalizes a profile with that data
-        guard let data = dataFromFile("ServerData"), let helpTable = HelpTable(data: data) else {
+        guard let helpTable = HelpTable(dictionary: helpDictionary) else {
             return
         }
         ///if there is an helpSection section

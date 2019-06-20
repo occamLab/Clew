@@ -42,7 +42,8 @@ class HeaderView: UITableViewHeaderFooterView {
     @IBOutlet weak var titleLabel: UILabel!
 
     @IBOutlet weak var arrowLabel: UILabel!
-        
+    
+    @IBOutlet weak var colorView: UIView!
     //MARK: Private Variables
     var section: Int = 0
     
@@ -66,8 +67,7 @@ class HeaderView: UITableViewHeaderFooterView {
         addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapHeader)))
 
         ///sets the header background color to white
-        self.backgroundView = UIView(frame: self.bounds)
-        self.backgroundView!.backgroundColor = UIColor(white: 1.0, alpha: 1.0)
+        colorView.backgroundColor = UIColor(white: 1.0, alpha: 1.0)
 
         updateAccessibilityLabels()
     }
