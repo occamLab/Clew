@@ -882,6 +882,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         setupAudioPlayers()
         loadAssets()
         createSettingsBundle()
+        print("About to request permissions")
         createARSession()
         drawUI()
         addGestures()
@@ -1324,7 +1325,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         homeButton.addTarget(self, action: #selector(homeButtonPressed), for: .touchUpInside)
         
         // button that shows feedback menu
-        feedbackButton = UIButton(frame: CGRect(x: 70, y: 10, width: buttonFrameWidth/7, height: buttonFrameWidth/7))
+        feedbackButton = UIButton(frame: CGRect(x: 80, y: 10, width: buttonFrameWidth/7, height: buttonFrameWidth/7))
         feedbackButton.isAccessibilityElement = true
         feedbackButton.setTitle("Feedback", for: .normal)
         feedbackButton.titleLabel?.font = UIFont.systemFont(ofSize: 24.0)
