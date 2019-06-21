@@ -1,0 +1,16 @@
+/* 
+  Localizable.strings
+  Clew
+
+  Created by tad on 6/21/19.
+  Copyright © 2019 OccamLab. All rights reserved.
+*/
+
+///The following section of strings are all part of the help doccumentation menu which is intended to give an explanation of the buttons and controlls in the app as well as an overview of the functionality.
+
+"currentFeaturesHeader" = "Current Version";
+"currentAppFeaturesText" = "Clew allows you to record routes using your phone that you can then navigate (either in the forward or reverse direction) at a later point in time. Clew can be used in situations where you want to immediately navigate back to your starting location (e.g., if you went somewhere with a sighted guide or if it is harder to navigate the reverse journey) or when you want to remember a route that you are learning so you can navigate it more confidently in the future.  Importantly, Clew does not use your phone's GPS, so it can be used indoors.";
+"newAppFeaturesText" = "The ability to save routes is a new feature for Clew.";
+"futureFeaturesHeader" = "Future Versions";
+"futureAppFeaturesText" = "We are working on a route sharing feature so that you can send routes to other users.";
+

@@ -28,6 +28,16 @@ class HelpTableViewController: UIViewController {
             self?.tableView?.reloadSections([section], with: .fade)
             self?.tableView?.endUpdates()
         }
+        
+        NotificationCenter.default.addObserver(forName: Notification.Name("webcontentloaded"), object: nil, queue: nil) { (notification) -> Void in
+            //self.viewModel.reloadSections!(notification.object as! Int)
+            print("received notification with string", notification.object!)
+            //self.view.setNeedsLayout()
+            self.tableView?.invalidateIntrinsicContentSize()
+            print("blah", self.tableView?.contentSize.height)
+            //self.tableView?.setNeedsLayout()
+//            self.view.frame.height = tableView.
+        }
 
         ///sets the dimensions for each row and the headers
         tableView?.estimatedRowHeight = 100

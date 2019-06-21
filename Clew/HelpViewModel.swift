@@ -173,61 +173,73 @@ extension HelpViewModel: UITableViewDataSource {
         switch item.type {
         case .appFeatures:
             if let item = item as? HelpViewModelHelpSectionItem, let cell = tableView.dequeueReusableCell(withIdentifier: HelpSectionCell.identifier, for: indexPath) as? HelpSectionCell {
+                cell.section = indexPath.section
                 cell.item = item
                 return cell
             }
         case .helpSection:
             if let item = item as? HelpViewModelHelpSectionItem, let cell = tableView.dequeueReusableCell(withIdentifier: HelpSectionCell.identifier, for: indexPath) as? HelpSectionCell {
+                cell.section = indexPath.section
                 cell.item = item
                 return cell
             }
         case .howWellDoesClewWork:
             if let item = item as? HelpViewModelHelpSectionItem, let cell = tableView.dequeueReusableCell(withIdentifier: HelpSectionCell.identifier, for: indexPath) as? HelpSectionCell {
+                cell.section = indexPath.section
                 cell.item = item
                 return cell
             }
         case .recordingARoute:
             if let item = item as? HelpViewModelHelpSectionItem, let cell = tableView.dequeueReusableCell(withIdentifier: HelpSectionCell.identifier, for: indexPath) as? HelpSectionCell {
+                cell.section = indexPath.section
                 cell.item = item
                 return cell
             }
         case .stoppingARecording:
             if let item = item as? HelpViewModelHelpSectionItem, let cell = tableView.dequeueReusableCell(withIdentifier: HelpSectionCell.identifier, for: indexPath) as? HelpSectionCell {
+                cell.section = indexPath.section
                 cell.item = item
                 return cell
             }
         case .pausingARouteOrRecordingALandmark:
             if let item = item as? HelpViewModelHelpSectionItem, let cell = tableView.dequeueReusableCell(withIdentifier: HelpSectionCell.identifier, for: indexPath) as? HelpSectionCell {
+                cell.section = indexPath.section
                 cell.item = item
                 return cell
             }
         case .resumingARoute:
             if let item = item as? HelpViewModelHelpSectionItem, let cell = tableView.dequeueReusableCell(withIdentifier: HelpSectionCell.identifier, for: indexPath) as? HelpSectionCell {
+                cell.section = indexPath.section
                 cell.item = item
                 return cell
             }
         case .theSavedRoutesMenu:
             if let item = item as? HelpViewModelHelpSectionItem, let cell = tableView.dequeueReusableCell(withIdentifier: HelpSectionCell.identifier, for: indexPath) as? HelpSectionCell {
+                cell.section = indexPath.section
                 cell.item = item
                 return cell
             }
         case .followingARoute:
             if let item = item as? HelpViewModelHelpSectionItem, let cell = tableView.dequeueReusableCell(withIdentifier: HelpSectionCell.identifier, for: indexPath) as? HelpSectionCell {
+                cell.section = indexPath.section
                 cell.item = item
                 return cell
             }
         case .appSoundsAndTheirMeanings:
             if let item = item as? HelpViewModelHelpSectionItem, let cell = tableView.dequeueReusableCell(withIdentifier: HelpSectionCell.identifier, for: indexPath) as? HelpSectionCell {
+                cell.section = indexPath.section
                 cell.item = item
                 return cell
             }
         case .ratingYourNavigationExperience:
             if let item = item as? HelpViewModelHelpSectionItem, let cell = tableView.dequeueReusableCell(withIdentifier: HelpSectionCell.identifier, for: indexPath) as? HelpSectionCell {
+                cell.section = indexPath.section
                 cell.item = item
                 return cell
             }
         case .providingFeedbackToTheDevelopmentTeam:
             if let item = item as? HelpViewModelHelpSectionItem, let cell = tableView.dequeueReusableCell(withIdentifier: HelpSectionCell.identifier, for: indexPath) as? HelpSectionCell {
+                cell.section = indexPath.section
                 cell.item = item
                 return cell
             }
