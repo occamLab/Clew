@@ -21,8 +21,8 @@
                         <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="▽" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qJj-Ru-AIh">
                             <rect key="frame" x="355" y="24.5" width="20" height="21"/>
                             <accessibility key="accessibilityConfiguration">
-                                <accessibilityTraits key="traits" button="YES"/>
-                                <bool key="isElement" value="YES"/>
+                                <accessibilityTraits key="traits" notEnabled="YES"/>
+                                <bool key="isElement" value="NO"/>
                             </accessibility>
                             <constraints>
                                 <constraint firstAttribute="width" constant="20" id="qHS-KP-UEd"/>
@@ -34,7 +34,7 @@
                         <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Go1-62-sCl">
                             <rect key="frame" x="0.0" y="0.0" width="345" height="70"/>
                             <accessibility key="accessibilityConfiguration">
-                                <accessibilityTraits key="traits" button="YES" staticText="YES"/>
+                                <accessibilityTraits key="traits" button="YES" staticText="YES" header="YES"/>
                             </accessibility>
                             <fontDescription key="fontDescription" type="system" weight="medium" pointSize="20"/>
                             <nil key="textColor"/>

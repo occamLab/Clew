@@ -68,12 +68,6 @@ class HelpViewModel: NSObject{
         guard let helpTable = HelpTable(dictionary: helpDictionary) else {
             return
         }
-        ///if there is an helpSection section
-//        if let helpSection = helpTable.helpSection {
-//            ///set up the section
-//            let helpSectionItem = HelpViewModelHelpSectionItem(helpSection: helpSection, sectionType: "HelpSection")
-//            items.append(helpSectionItem)
-//        }
         ///if there is an appFeatures section
         if let appFeatures = helpTable.appFeatures {
             ///set up the section

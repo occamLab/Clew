@@ -29,14 +29,16 @@ class HelpTableViewController: UIViewController {
             self?.tableView?.endUpdates()
         }
         
-        NotificationCenter.default.addObserver(forName: Notification.Name("webcontentloaded"), object: nil, queue: nil) { (notification) -> Void in
-            //self.viewModel.reloadSections!(notification.object as! Int)
-            print("received notification with string", notification.object!)
-            //self.view.setNeedsLayout()
-            self.tableView?.invalidateIntrinsicContentSize()
-            print("blah", self.tableView?.contentSize.height)
-            //self.tableView?.setNeedsLayout()
-//            self.view.frame.height = tableView.
+        NotificationCenter.default.addObserver(forName: Notification.Name("webContentLoaded"), object: nil, queue: nil) { (notification) -> Void in
+            guard let object = notification.object as? (CGFloat, Int) else {
+                print("unexpected object sent with notification")
+                return
+            }
+            print("received notification with string", object.0)
+
+            if object.0 == CGFloat(200){
+                self.viewModel.reloadSections!(object.1)
+            }
         }
 
         ///sets the dimensions for each row and the headers

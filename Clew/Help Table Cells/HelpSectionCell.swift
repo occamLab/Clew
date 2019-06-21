@@ -12,17 +12,24 @@ import WebKit
 
 class HelpSectionCell: UITableViewCell,WKNavigationDelegate{
 
+    //MARK: Private variables
+    ///describes what section this is in
     var section = 1
-    
-    @IBOutlet weak var webView: WKWebView!
+    ///describes what the hight of the webview will be
     var webViewHeightConstraint: NSLayoutConstraint?
     
+    //MARK: Outlets
+    @IBOutlet weak var webView: WKWebView!
+    
+    //MARK: Set Itam Type
     var item: HelpViewModelItem? {
         didSet {
             guard  let item = item as? HelpViewModelHelpSectionItem else {
                 return
             }
             webView.loadHTMLString(item.helpSection, baseURL: Bundle.main.bundleURL)
+            
+            ///set delegate and remove scrolling
             webView.scrollView.isScrollEnabled = false
             webView.scrollView.bounces = false
             webView.navigationDelegate = self
@@ -30,26 +37,25 @@ class HelpSectionCell: UITableViewCell,WKNavigationDelegate{
         }
     }
     
+    //MARK: on finished navigation
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         
+        ///calculate the height of the webview
         webView.evaluateJavaScript("document.documentElement.scrollHeight", completionHandler: { (height, error) in
+            ///set height constraint to calculated height
             self.webViewHeightConstraint?.constant = (height as! CGFloat)
         })
-//
-//        webView.frame.size = CGSize(width: webView.scrollView.contentSize.width, height: webView.scrollView.contentSize.height)
-//
-//        print ("\(webView.scrollView.contentSize.height)  \(webView.frame.size.height)  Blah blah ")
-//        frame.size = CGSize(width: webView.scrollView.contentSize.width, height: webView.scrollView.contentSize.height)
-//
-//        NotificationCenter.default.post(name: Notification.Name("webcontentloaded"), object: section)
-        
+        NotificationCenter.default.post(name: Notification.Name("webContentLoaded"), object: (webView.frame.size.height,section))
+        print("\(webView.frame.size)Size")
     }
     
+    //MARK: create Nib
     static var nib:UINib {
         return UINib(nibName: identifier, bundle: nil)
     }
-    
+    //MARK: NibDidLoad
     override func awakeFromNib() {
+        /// sets the constraints on the web view
         webView.translatesAutoresizingMaskIntoConstraints = false
         webView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 0).isActive = true
         webView.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 0).isActive = true
@@ -59,6 +65,7 @@ class HelpSectionCell: UITableViewCell,WKNavigationDelegate{
         webViewHeightConstraint?.isActive = true
     }
     
+    //MARK: set identifier
     static var identifier: String {
         return String(describing: self)
     }
