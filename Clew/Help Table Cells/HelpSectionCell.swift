@@ -21,15 +21,17 @@ class HelpSectionCell: UITableViewCell,WKNavigationDelegate{
     //MARK: Outlets
     @IBOutlet weak var webView: WKWebView!
     
-    //MARK: Set Itam Type
+    //MARK: Load Web content
     var item: HelpViewModelItem? {
         didSet {
+            ///makes sure that the item is in proper format
             guard  let item = item as? HelpViewModelHelpSectionItem else {
                 return
             }
+            ///loads the web content by loading the HTML string provided in the item object
             webView.loadHTMLString(item.helpSection, baseURL: Bundle.main.bundleURL)
             
-            ///set delegate and remove scrolling
+            ///set delegate and remove scrolling and bouncing so that the scroll functionality of the websites have been disabled.
             webView.scrollView.isScrollEnabled = false
             webView.scrollView.bounces = false
             webView.navigationDelegate = self
@@ -45,14 +47,16 @@ class HelpSectionCell: UITableViewCell,WKNavigationDelegate{
             ///set height constraint to calculated height
             self.webViewHeightConstraint?.constant = (height as! CGFloat)
         })
+        
+        ///posts a notification which says that the cell with this web content needs to be reloaded
         NotificationCenter.default.post(name: Notification.Name("webContentLoaded"), object: (webView.frame.size.height,section))
-        print("\(webView.frame.size)Size")
     }
     
     //MARK: create Nib
     static var nib:UINib {
         return UINib(nibName: identifier, bundle: nil)
     }
+    
     //MARK: NibDidLoad
     override func awakeFromNib() {
         /// sets the constraints on the web view

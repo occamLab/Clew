@@ -62,7 +62,7 @@ class HelpViewModel: NSObject{
     
     ///initializer
     override init() {
-        ///calls defult behavior
+        ///calls default behavior
         super.init()
         ///pulls the data from the file and initalizes a profile with that data
         guard let helpTable = HelpTable(dictionary: helpDictionary) else {
@@ -71,13 +71,13 @@ class HelpViewModel: NSObject{
         ///if there is an appFeatures section
         if let appFeatures = helpTable.appFeatures {
             ///set up the section
-            let appFeaturesItem = HelpViewModelHelpSectionItem(helpSection: appFeatures, sectionType: "App Features")
+            let appFeaturesItem = HelpViewModelHelpSectionItem(helpSection: appFeatures, sectionType: NSLocalizedString("appFeaturesSectionHeading",comment: "This is a section heading which can be interacted with to display documentation describing the "))
             items.append(appFeaturesItem)
         }
         ///if there is an howWellDoesClewWork section
         if let howWellDoesClewWork = helpTable.howWellDoesClewWork {
             ///set up the section
-            let howWellDoesClewWorkItem = HelpViewModelHelpSectionItem(helpSection: howWellDoesClewWork,sectionType: "How Well Does Clew Work")
+            let howWellDoesClewWorkItem = HelpViewModelHelpSectionItem(helpSection: howWellDoesClewWork,sectionType: NSLocalizedString("howWellDoesClewWorkSectionHeading", comment: "this is a section heading which can be interacted with to display documentation describing the proper usage for Clew to attain optimal performance"))
             items.append(howWellDoesClewWorkItem)
         }
         ///if there is an recordingARoute section
@@ -166,75 +166,135 @@ extension HelpViewModel: UITableViewDataSource {
         ///depending on the section this creates a different type of cell
         switch item.type {
         case .appFeatures:
+            ///checks to make sure that the new section is the proper format and marks it as reuseable
             if let item = item as? HelpViewModelHelpSectionItem, let cell = tableView.dequeueReusableCell(withIdentifier: HelpSectionCell.identifier, for: indexPath) as? HelpSectionCell {
+                
+                ///sets the variables of the cell
                 cell.section = indexPath.section
                 cell.item = item
+                
+                ///returns the properly initalized cell
                 return cell
             }
+        ///checks to make sure that the new section is the proper format and marks it as reuseable
         case .helpSection:
             if let item = item as? HelpViewModelHelpSectionItem, let cell = tableView.dequeueReusableCell(withIdentifier: HelpSectionCell.identifier, for: indexPath) as? HelpSectionCell {
+                
+                ///sets the variables of the cell
                 cell.section = indexPath.section
                 cell.item = item
+                
+                ///returns the properly initalized cell
                 return cell
             }
+        ///checks to make sure that the new section is the proper format and marks it as reuseable
         case .howWellDoesClewWork:
             if let item = item as? HelpViewModelHelpSectionItem, let cell = tableView.dequeueReusableCell(withIdentifier: HelpSectionCell.identifier, for: indexPath) as? HelpSectionCell {
+                
+                ///sets the variables of the cell
                 cell.section = indexPath.section
                 cell.item = item
+                
+                ///returns the properly initalized cell
                 return cell
             }
+        ///checks to make sure that the new section is the proper format and marks it as reuseable
         case .recordingARoute:
             if let item = item as? HelpViewModelHelpSectionItem, let cell = tableView.dequeueReusableCell(withIdentifier: HelpSectionCell.identifier, for: indexPath) as? HelpSectionCell {
+                
+                ///sets the variables of the cell
                 cell.section = indexPath.section
                 cell.item = item
+                
+                ///returns the properly initalized cell
                 return cell
             }
+        ///checks to make sure that the new section is the proper format and marks it as reuseable
         case .stoppingARecording:
             if let item = item as? HelpViewModelHelpSectionItem, let cell = tableView.dequeueReusableCell(withIdentifier: HelpSectionCell.identifier, for: indexPath) as? HelpSectionCell {
+                
+                ///sets the variables of the cell
                 cell.section = indexPath.section
                 cell.item = item
+                
+                ///returns the properly initalized cell
                 return cell
             }
+        ///checks to make sure that the new section is the proper format and marks it as reuseable
         case .pausingARouteOrRecordingALandmark:
             if let item = item as? HelpViewModelHelpSectionItem, let cell = tableView.dequeueReusableCell(withIdentifier: HelpSectionCell.identifier, for: indexPath) as? HelpSectionCell {
+                
+                ///sets the variables of the cell
                 cell.section = indexPath.section
                 cell.item = item
+                
+                ///returns the properly initalized cell
                 return cell
             }
+        ///checks to make sure that the new section is the proper format and marks it as reuseable
         case .resumingARoute:
             if let item = item as? HelpViewModelHelpSectionItem, let cell = tableView.dequeueReusableCell(withIdentifier: HelpSectionCell.identifier, for: indexPath) as? HelpSectionCell {
+                
+                ///sets the variables of the cell
                 cell.section = indexPath.section
                 cell.item = item
+                
+                ///returns the properly initalized cell
                 return cell
             }
+        ///checks to make sure that the new section is the proper format and marks it as reuseable
         case .theSavedRoutesMenu:
             if let item = item as? HelpViewModelHelpSectionItem, let cell = tableView.dequeueReusableCell(withIdentifier: HelpSectionCell.identifier, for: indexPath) as? HelpSectionCell {
+                
+                ///sets the variables of the cell
                 cell.section = indexPath.section
                 cell.item = item
+                
+                ///returns the properly initalized cell
                 return cell
             }
+        ///checks to make sure that the new section is the proper format and marks it as reuseable
         case .followingARoute:
             if let item = item as? HelpViewModelHelpSectionItem, let cell = tableView.dequeueReusableCell(withIdentifier: HelpSectionCell.identifier, for: indexPath) as? HelpSectionCell {
+                
+                ///sets the variables of the cell
                 cell.section = indexPath.section
                 cell.item = item
+                
+                ///returns the properly initalized cell
                 return cell
             }
+        ///checks to make sure that the new section is the proper format and marks it as reuseable
         case .appSoundsAndTheirMeanings:
             if let item = item as? HelpViewModelHelpSectionItem, let cell = tableView.dequeueReusableCell(withIdentifier: HelpSectionCell.identifier, for: indexPath) as? HelpSectionCell {
+                
+                ///sets the variables of the cell
                 cell.section = indexPath.section
                 cell.item = item
+                
+                ///returns the properly initalized cell
                 return cell
             }
+        ///checks to make sure that the new section is the proper format and marks it as reuseable
         case .ratingYourNavigationExperience:
             if let item = item as? HelpViewModelHelpSectionItem, let cell = tableView.dequeueReusableCell(withIdentifier: HelpSectionCell.identifier, for: indexPath) as? HelpSectionCell {
+                
+                ///sets the variables of the cell
                 cell.section = indexPath.section
                 cell.item = item
+                
+                ///returns the properly initalized cell
                 return cell
             }
+        ///checks to make sure that the new section is the proper format and marks it as reuseable
         case .providingFeedbackToTheDevelopmentTeam:
             if let item = item as? HelpViewModelHelpSectionItem, let cell = tableView.dequeueReusableCell(withIdentifier: HelpSectionCell.identifier, for: indexPath) as? HelpSectionCell {
+                
+                ///sets the variables of the cell
                 cell.section = indexPath.section
                 cell.item = item
+                
+                ///returns the properly initalized cell
                 return cell
             }
         }

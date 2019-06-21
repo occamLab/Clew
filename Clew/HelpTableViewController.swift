@@ -22,21 +22,26 @@ class HelpTableViewController: UIViewController {
         ///calls default behavior
         super.viewDidLoad()
         
-        //reloads the table
+        ///reloads the table
         viewModel.reloadSections = { [weak self] (section: Int) in
             self?.tableView?.beginUpdates()
             self?.tableView?.reloadSections([section], with: .fade)
             self?.tableView?.endUpdates()
         }
         
+        ///Listens for notifications from the child that the cells with website vies need to be reloaded to display properly
         NotificationCenter.default.addObserver(forName: Notification.Name("webContentLoaded"), object: nil, queue: nil) { (notification) -> Void in
+            
+            ///makes sure that the object provided by the notification is in the proper format
             guard let object = notification.object as? (CGFloat, Int) else {
                 print("unexpected object sent with notification")
                 return
             }
-            print("received notification with string", object.0)
-
+            
+            ///if the size of the webpage is equal to the unadjusted height
             if object.0 == CGFloat(200){
+                ///reload the section with that web page
+                //self.tableView?.setNeedsLayout()
                 self.viewModel.reloadSections!(object.1)
             }
         }
@@ -56,6 +61,7 @@ class HelpTableViewController: UIViewController {
         ///registers the header this one is important and needs to stay
         tableView?.register(HeaderView.nib, forHeaderFooterViewReuseIdentifier: HeaderView.identifier)
     }
+    
     /// This is called when the view should close.  This method posts a notification "ClewPopoverDismissed" that can be listened to if an object needs to know that the view is being closed.
     @objc func doneWithHelp() {
         dismiss(animated: true, completion: nil)
