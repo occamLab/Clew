@@ -9,6 +9,7 @@
 import UIKit
 
 /// A table cell that holds the route data
+/// for routes list popover
 class RouteTableViewCell: UITableViewCell {
 
     /// The route label (i.e. the name)

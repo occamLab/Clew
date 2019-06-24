@@ -1,5 +1,8 @@
 # Created by https://www.gitignore.io/api/swift,xcode,cocoapods
 
+### apple metadata ###
+.DS_Store
+
 ### Firebase ###
 Clew/GoogleService-Info.plist
 Clew/GoogleService-Info_dev.plist
@@ -49,4 +52,3 @@ xcuserdata/
 
 # End of https://www.gitignore.io/api/swift,xcode,cocoapods
 
-.nogit
