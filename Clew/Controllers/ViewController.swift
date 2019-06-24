@@ -30,198 +30,6 @@ import Firebase
 import FirebaseDatabase
 import SRCountdownTimer
 
-
-// MARK: Extensions
-extension UIView {
-    /// Used to identify the mainText UILabel
-    static let mainTextTag: Int = 1001
-    /// Used to identify the pause button so that it can be enabled or disabled
-    static let pauseButtonTag: Int = 1002
-    /// Used to identify the read voice note button tag so that it can be enabled or disabled
-    static let readVoiceNoteButtonTag: Int = 1003
-
-    /// Custom fade used for direction text UILabel.
-    func fadeTransition(_ duration:CFTimeInterval) {
-        let animation = CATransition()
-        animation.timingFunction = CAMediaTimingFunction(name:
-            CAMediaTimingFunctionName.easeInEaseOut)
-        animation.type = CATransitionType.push
-        animation.subtype = CATransitionSubtype.fromTop
-        animation.duration = duration
-        layer.add(animation, forKey: CATransitionType.fade.rawValue)
-    }
-    
-    /// Configures a button container view and adds a button.
-    ///
-    /// - Parameter buttonComponents: holds information about the button to add
-    ///
-    func setupButtonContainer(withButtons buttonComponents: [ActionButtonComponents],
-                              withMainText mainText: String? = nil) {
-        self.backgroundColor = UIColor.black.withAlphaComponent(0.4)
-        self.isHidden = true
-
-        if let mainText = mainText {
-            let label = UILabel(frame: CGRect(x: 15, y: UIScreen.main.bounds.size.height/5, width: UIScreen.main.bounds.size.width-30, height: UIScreen.main.bounds.size.height/2))
-            label.textColor = UIColor.white
-            label.textAlignment = .center
-            label.numberOfLines = 0
-            label.lineBreakMode = .byWordWrapping
-            label.font = label.font.withSize(20)
-
-            label.text = mainText
-            label.tag = UIView.mainTextTag
-            self.addSubview(label)
-        }
-        for components in buttonComponents {
-            let button = UIButton.makeImageButton(self, components)
-            self.addSubview(button)
-        }
-    }
-    /// the main text UILabel if it exists for a particular view
-    var mainText: UILabel? {
-        for subview in subviews {
-            if subview.tag == UIView.mainTextTag, let textLabel = subview as? UILabel {
-                return textLabel
-            }
-        }
-        return nil
-    }
-    
-    /// Search for a button based on the tag.  This function is useful in cases where the state of a UI control must be modified dependent on the app's state.
-    ///
-    /// - Parameter tag: the tag ID
-    /// - Returns: the UIButton if it exists (nil otherwise)
-    func getButtonByTag(tag: Int)->UIButton? {
-        for subview in subviews {
-            if subview.tag == tag, let button = subview as? UIButton {
-                return button
-            }
-        }
-        return nil
-    }
-}
-
-extension UIButton {
-    
-    /// Factory to make an image button.
-    ///
-    /// Used for start and stop recording and navigation buttons.
-    ///
-    /// - Parameters:
-    ///   - containerView: button container, configured with `UIView.setupButtonContainer(withButton:)`
-    ///   - buttonViewParts: holds information about the button (image, label, and target)
-    /// - Returns: A formatted button
-    ///
-    /// - SeeAlso: `UIView.setupButtonContainer(withButton:)`
-    ///
-    /// - TODO:
-    ///   - Implement AutoLayout
-    static func makeImageButton(_ containerView: UIView, _ buttonViewParts: ActionButtonComponents) -> UIButton {
-        let buttonWidth = containerView.bounds.size.width / 3.75
-        
-        let button = UIButton(type: .custom)
-        button.tag = buttonViewParts.tag
-        button.frame = CGRect(x: 0, y: 0, width: buttonWidth, height: buttonWidth)
-        button.layer.cornerRadius = 0.5 * button.bounds.size.width
-        button.clipsToBounds = false
-        switch buttonViewParts.alignment {
-        case .center:
-            button.center.x = containerView.center.x
-        case .right:
-            button.center.x = containerView.center.x + UIScreen.main.bounds.size.width/3
-        case .rightcenter:
-            button.center.x = containerView.center.x + UIScreen.main.bounds.size.width/4.5
-        case .left:
-            button.center.x = containerView.center.x - UIScreen.main.bounds.size.width/3
-        case .leftcenter:
-            button.center.x = containerView.center.x - UIScreen.main.bounds.size.width/4.5
-        }
-        if containerView.mainText != nil {
-            button.center.y = containerView.bounds.size.height * (31/40)
-        } else {
-            button.center.y = containerView.bounds.size.height * (5/10)
-        }
-        
-        switch buttonViewParts.appearance {
-        case .imageButton(let image):
-            button.setImage(image, for: .normal)
-        case .textButton(let label):
-            button.setTitle(label, for: .normal)
-            button.layer.borderWidth = 2
-            button.layer.borderColor = UIColor.white.cgColor
-        }
-        
-        button.accessibilityLabel = buttonViewParts.label
-        button.addTarget(nil, action: buttonViewParts.targetSelector, for: .touchUpInside)
-        
-        return button
-    }
-}
-
-// Neat way of storing the selectors for all the targets we use.
-// Source: https://medium.com/swift-programming/swift-selector-syntax-sugar-81c8a8b10df3
-fileprivate extension Selector {
-    static let recordPathButtonTapped = #selector(ViewController.recordPath)
-    static let stopRecordingButtonTapped = #selector(ViewController.stopRecording)
-    static let startNavigationButtonTapped = #selector(ViewController.startNavigation)
-    static let stopNavigationButtonTapped = #selector(ViewController.stopNavigation)
-    static let landmarkButtonTapped = #selector(ViewController.startCreateLandmarkProcedure)
-    static let pauseButtonTapped = #selector(ViewController.startPauseProcedure)
-    static let thumbsUpButtonTapped = #selector(ViewController.sendLogData)
-    static let thumbsDownButtonTapped = #selector(ViewController.sendDebugLogData)
-    static let resumeButtonTapped = #selector(ViewController.confirmResumeTracking)
-    static let confirmAlignmentButtonTapped = #selector(ViewController.confirmAlignment)
-    static let routesButtonTapped = #selector(ViewController.routesButtonPressed)
-    static let enterLandmarkDescriptionButtonTapped = #selector(ViewController.showLandmarkInformationDialog)
-    static let recordVoiceNoteButtonTapped = #selector(ViewController.recordVoiceNote)
-    static let readVoiceNoteButtonTapped = #selector(ViewController.readVoiceNote)
-}
-
-/// Holds information about the buttons that are used to control navigation and tracking.
-///
-/// These button attributes are the only ones unique to each of these buttons.
-public struct ActionButtonComponents {
-    
-    /// The appearance of the button.
-    enum Appearance {
-        /// An image button appears using the specified UIImage
-        case imageButton(image: UIImage)
-        /// A text button appears using the specified text label
-        case textButton(label: String)
-    }
-    
-    /// How to align the button horizontally within the button frame
-    enum ButtonContainerHorizontalAlignment {
-        /// put the button in the center
-        case center
-        /// put the button right of center
-        case rightcenter
-        /// put the button to the right
-        case right
-        /// put the button left of center
-        case leftcenter
-        /// put the button to the left
-        case left
-    }
-
-    /// Button apperance (image or text)
-    var appearance: Appearance
-    
-    /// Accessibility label
-    var label: String
-    
-    /// Function to call when the button is tapped
-    ///
-    /// - TODO: Potentially unnecessary when the transitioning between views is refactored.
-    var targetSelector: Selector
-    
-    /// The horizontal alignment within the button container
-    var alignment: ButtonContainerHorizontalAlignment
-    
-    /// Tag to use to identify the button if we need to interact with it later.  Pass 0 if no subsequent interaction is required.
-    var tag: Int
-}
-
 /// A custom enumeration type that describes the exact state of the app.  The state is not exhaustive (e.g., there are Boolean flags that also track app state).
 enum AppState {
     /// This is the screen the comes up immediately after the splash screen
@@ -309,10 +117,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             case .mainScreen(let announceArrival):
                 /// handling main screen transitions outside of the first load
                 self.hideAllViewsHelper()
-                self.homeButton.isHidden = true
-//                self.backButton.isHidden = true
-                self.recordPathView.isHidden = false
-                self.recordPathView.isAccessibilityElement = false
+                self.rootContainerView.homeButton.isHidden = true
+//                self.recordPathView.isHidden = false
+                add(self.recordPathController)
+                self.recordPathController.isAccessibilityElement = false
                 if case .navigatingRoute = self.state {
                     self.keypointNode.removeFromParentNode()
                 }
@@ -321,7 +129,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 self.beginRouteLandmark = RouteLandmark()
                 self.endRouteLandmark = RouteLandmark()
                 self.playAlignmentConfirmation?.cancel()
-                self.announcementText.isHidden = true
+                self.rootContainerView.announcementText.isHidden = true
                 self.nav.headingOffset = 0.0
                 self.headingRingBuffer.clear()
                 self.locationRingBuffer.clear()
@@ -560,11 +368,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// Handler for the pauseWaitingPeriod app state
     func handleStateTransitionToPauseWaitingPeriod() {
         hideAllViewsHelper()
-        countdownTimer.isHidden = false
-        countdownTimer.start(beginingValue: ViewController.alignmentWaitingPeriod, interval: 1)
+        rootContainerView.countdownTimer.isHidden = false
+        rootContainerView.countdownTimer.start(beginingValue: ViewController.alignmentWaitingPeriod, interval: 1)
         delayTransition()
         playAlignmentConfirmation = DispatchWorkItem{
-            self.countdownTimer.isHidden = true
+            self.rootContainerView.countdownTimer.isHidden = true
             self.pauseTracking()
         }
         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(ViewController.alignmentWaitingPeriod), execute: playAlignmentConfirmation!)
@@ -580,7 +388,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             }
             beginRouteLandmark.transform = currentTransform
             Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(playSound)), userInfo: nil, repeats: false)
-            pauseTrackingView.isHidden = true
+//            rootContainerView.pauseTrackingView.isHidden = true
+            pauseTrackingController.remove()
             state = .mainScreen(announceArrival: false)
             return
         } else if let currentTransform = sceneView.session.currentFrame?.camera.transform {
@@ -632,22 +441,24 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         let popover = nav.popoverPresentationController
         popover?.delegate = self
         popover?.sourceView = self.view
-        popover?.sourceRect = CGRect(x: 0, y: settingsAndHelpFrameHeight/2, width: 0,height: 0)
+        popover?.sourceRect = CGRect(x: 0,
+                                     y: UIConstants.settingsAndHelpFrameHeight/2,
+                                     width: 0,height: 0)
         
         self.present(nav, animated: true, completion: nil)
     }
     
     /// Hide all the subviews.  TODO: This should probably eventually refactored so it happens more automatically.
     func hideAllViewsHelper() {
-        recordPathView.isHidden = true
-        routeRatingView.isHidden = true
-        stopRecordingView.isHidden = true
-        startNavigationView.isHidden = true
-        stopNavigationView.isHidden = true
-        pauseTrackingView.isHidden = true
-        resumeTrackingConfirmView.isHidden = true
-        resumeTrackingView.isHidden = true
-        countdownTimer.isHidden = true
+        recordPathController.remove()
+        routeRatingController.remove()
+        stopRecordingController.remove()
+        startNavigationController.remove()
+        stopNavigationController.remove()
+        pauseTrackingController.remove()
+        resumeTrackingConfirmController.remove()
+        resumeTrackingController.remove()
+//        rootContainerView.countdownTimer.isHidden = true
     }
     
     /// This handles when a route cell is clicked (triggering the route to be loaded).
@@ -690,49 +501,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// a ring buffer used to keep the last 100 headings of the phone
     var headingRingBuffer = RingBuffer<Float>(capacity: 50)
 
-    /// Image, label, and target for start recording button.
-    let recordPathButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "Record")!), label: "Record path", targetSelector: Selector.recordPathButtonTapped, alignment: .center, tag: 0)
-
-    /// The button that the allows the user to indicate a negative navigation experience
-    let thumbsDownButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "thumbs_down")!), label: "Bad", targetSelector: Selector.thumbsDownButtonTapped, alignment: .leftcenter, tag: 0)
-    
-    /// The button that the allows the user to indicate a positive navigation experience
-    let thumbsUpButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "thumbs_up")!), label: "Good", targetSelector: Selector.thumbsUpButtonTapped, alignment: .rightcenter, tag: 0)
-    
-    /// The button that the allows the user to resume a paused route
-    let resumeButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "Resume")!), label: "Resume", targetSelector: Selector.resumeButtonTapped, alignment: .center, tag: 0)
-    
-    /// The button that allows the user to enter textual description of a route landmark
-    let enterLandmarkDescriptionButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "Describe")!), label: "Enter text to help you remember this landmark", targetSelector: Selector.enterLandmarkDescriptionButtonTapped, alignment: .left, tag: 0)
-    
-    /// The button that allows the user to record a voice description of a route landmark
-    let recordVoiceNoteButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "VoiceNote")!), label: "Record audio to help you remember this landmark", targetSelector: Selector.recordVoiceNoteButtonTapped, alignment: .right, tag: 0)
-
-    /// The button that allows the user to start the alignment countdown
-    let confirmAlignmentButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "Align")!), label: "Start \(ViewController.alignmentWaitingPeriod)-second alignment countdown", targetSelector: Selector.confirmAlignmentButtonTapped, alignment: .center, tag: 0)
-    
-    /// The button that plays back the recorded voice note associated with a landmark
-    let readVoiceNoteButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "Read")!), label: "Play recorded voice note", targetSelector: Selector.readVoiceNoteButtonTapped, alignment: .left, tag: UIView.readVoiceNoteButtonTag)
-    
-    /// Image, label, and target for start recording button. TODO: need an image
-    let addLandmarkButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "Landmark")!), label: "Create landmark", targetSelector: Selector.landmarkButtonTapped, alignment: .right, tag: 0)
-    
-    /// Image, label, and target for stop recording button.
-    let stopRecordingButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "StopRecording")!), label: "Stop recording", targetSelector: Selector.stopRecordingButtonTapped, alignment: .center, tag: 0)
-    
-    /// Image, label, and target for start navigation button.
-    let startNavigationButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "StartNavigation")!), label: "Start navigation", targetSelector: Selector.startNavigationButtonTapped, alignment: .center, tag: 0)
-
-    /// Title, label, and target for the pause button
-    let pauseButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "Pause")!), label: "Pause session", targetSelector: Selector.pauseButtonTapped, alignment: .right, tag: UIView.pauseButtonTag)
-    
-    /// Image, label, and target for stop navigation button.
-    let stopNavigationButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "StopNavigation")!), label: "Stop navigation", targetSelector: Selector.stopNavigationButtonTapped, alignment: .center, tag: 0)
-    
-    /// Image, label, and target for routes button.
-    let routesButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "route")!), label: "Saved routes list", targetSelector: Selector.routesButtonTapped, alignment: .left, tag: 0)
-
-
     /// The conection to the Firebase real-time database
     var databaseHandle = Database.database()
     
@@ -753,18 +521,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// True if we should add anchors ahead of the user to encourage more ARWorldMap detail.  In limited testing this did not show promise, therefore it is disabled
     var shouldDropMappingAnchors = false
     
-    /// Button view container for stop recording button
-    var stopRecordingView: UIView!
-    
-    /// Button view container for start recording button.
-    var recordPathView: UIView!
-    
-    /// Button view container for start navigation button
-    var startNavigationView: UIView!
-
-    /// Button view container for stop navigation button
-    var stopNavigationView: UIView!
-    
     /// This is embeds an AR scene.  The ARSession is a part of the scene view, which allows us to capture where the phone is in space and the state of the world tracking.  The scene also allows us to insert virtual objects
     var sceneView = ARSCNView()
     
@@ -772,95 +528,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     override var prefersStatusBarHidden: Bool {
         return true
     }
-    
-    /// Button frame extends the entire width of screen
-    var buttonFrameWidth: CGFloat {
-        return UIScreen.main.bounds.size.width
-    }
-    
-    /// Height of button frame
-    var buttonFrameHeight: CGFloat {
-        return UIScreen.main.bounds.size.height * (1/5)
-    }
-    
-    /// Height of settings and help buttons
-    var settingsAndHelpFrameHeight: CGFloat {
-        return UIScreen.main.bounds.size.height * (1/12)
-    }
-    
-    /// The margin from the settings and help buttons to the bottom of the window
-    var settingsAndHelpMargin: CGFloat {
-        // height of button frame
-        return UIScreen.main.bounds.size.height * (1/24)
-    }
-    
-    /// top margin of direction text label
-    var textLabelBuffer: CGFloat {
-        return buttonFrameHeight * (1/12)
-    }
-    
-    /// y-origin of the get directions button
-    var yOriginOfGetDirectionsButton: CGFloat {
-        return UIScreen.main.bounds.size.height - settingsAndHelpFrameHeight - settingsAndHelpMargin
-    }
-    
-    /// y-origin of the settings and help buttons
-    var yOriginOfSettingsAndHelpButton: CGFloat {
-        // y-origin of button frame
-        return UIScreen.main.bounds.size.height - settingsAndHelpFrameHeight - settingsAndHelpMargin
-    }
 
-    /// y-origin of button frame
-    var yOriginOfButtonFrame: CGFloat {
-        return UIScreen.main.bounds.size.height - buttonFrameHeight - settingsAndHelpFrameHeight - settingsAndHelpMargin
-    }
-    
-    /// y-origin of announcement frame
-    var yOriginOfAnnouncementFrame: CGFloat {
-        return UIScreen.main.bounds.size.height/15
-    }
-    
-    // MARK: - UIViews for all UI button containers
-    
-    /// button for getting directions to the next keypoint
-    var getDirectionButton: UIButton!
-    
-    /// button for bringing up the settings menu
-    var settingsButton: UIButton!
-    
-    /// button for going to the main screen
-    var homeButton: UIButton!
-    
-    /// button for going back
-//    var backButton: UIButton!
-    
-    /// button for bringing up the help menu
-    var helpButton: UIButton!
-    
-    /// button for bringing up the feedback menu
-    var feedbackButton: UIButton!
-    
-    /// the view on which the user can pause tracking
-    var pauseTrackingView: UIView!
-    
-    /// the view on which the user can initiate the tracking resume procedure
-    var resumeTrackingView: UIView!
-    
-    /// the view on which the user can confirm the tracking resume procedure
-    var resumeTrackingConfirmView: UIView!
-    
-    /// a banner that displays an announcement in the top quarter of the screen.  This is used for displaying status updates or directions.  This should only be used to display time-sensitive content.
-    var announcementText: UILabel!
-    
-    /// the view on which the user can rate the quality of their navigation experience
-    var routeRatingView: UIView!
-    
-    /// a timer that counts down during the alignment procedure (alignment is captured at the end of the time)
-    var countdownTimer: SRCountdownTimer!
-    
-    /// work item for playing alignment confirmation sound
-    var playAlignmentConfirmation: DispatchWorkItem?
-    
     /// audio players for playing system sounds through an `AVAudioSession` (this allows them to be audible even when the rocker switch is muted.
     var audioPlayers: [Int: AVAudioPlayer] = [:]
     
@@ -871,11 +539,58 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         UIAccessibility.post(notification: UIAccessibility.Notification.announcement, argument: String(newValue))
     }
     
+    /// Hook in the view class as a view, so that we can access its variables easily
+    var rootContainerView: RootContainerView {
+        return view as! RootContainerView
+    }
+    
+    /// child view controllers for various app states
+    
+    /// route rating VC
+    var routeRatingController: RouteRatingController!
+    
+    /// route navigation pausing VC
+    var pauseTrackingController: PauseTrackingController!
+    
+    /// route navigation resuming VC
+    var resumeTrackingController: ResumeTrackingController!
+    
+    /// route navigation resuming alignment and confirmation VC
+    var resumeTrackingConfirmController: ResumeTrackingConfirmController!
+    
+    /// route recording dismissal VC
+    var stopRecordingController: StopRecordingController!
+    
+    /// route recording VC (called on app start)
+    var recordPathController: RecordPathController!
+    
+    /// start route navigation VC
+    var startNavigationController: StartNavigationController!
+    
+    /// work item for playing alignment confirmation sound
+    var playAlignmentConfirmation: DispatchWorkItem?
+    
+    /// stop route navigation VC
+    var stopNavigationController: StopNavigationController!
+
     /// called when the view has loaded.  We setup various app elements in here.
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Scene view setup
+        
+        // set the main view as active
+        view = RootContainerView(frame: UIScreen.main.bounds)
+        
+        // initialize child view controllers
+        routeRatingController = RouteRatingController()
+        pauseTrackingController = PauseTrackingController()
+        resumeTrackingController = ResumeTrackingController()
+        resumeTrackingConfirmController = ResumeTrackingConfirmController()
+        stopRecordingController = StopRecordingController()
+        recordPathController = RecordPathController()
+        startNavigationController = StartNavigationController()
+        stopNavigationController = StopNavigationController()
+        
+        // Add the scene to the view, which is a RootContainerView
         sceneView.frame = view.frame
         view.addSubview(sceneView)
 
@@ -883,7 +598,24 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         loadAssets()
         createSettingsBundle()
         createARSession()
-        drawUI()
+        
+        state = .mainScreen(announceArrival: false)
+        view.sendSubviewToBack(sceneView)
+        
+        // targets for global buttons
+        rootContainerView.settingsButton.addTarget(self, action: #selector(settingsButtonPressed), for: .touchUpInside)
+
+        rootContainerView.helpButton.addTarget(self, action: #selector(helpButtonPressed), for: .touchUpInside)
+        
+        rootContainerView.homeButton.addTarget(self, action: #selector(homeButtonPressed), for: .touchUpInside)
+
+        rootContainerView.getDirectionButton.addTarget(self, action: #selector(announceDirectionHelpPressed), for: .touchUpInside)
+
+        rootContainerView.feedbackButton.addTarget(self, action: #selector(feedbackButtonPressed), for: .touchUpInside)
+
+        // make sure this happens after the view is created!
+        rootContainerView.countdownTimer.delegate = self
+        
         addGestures()
         setupFirebaseObservers()
         
@@ -900,6 +632,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         NotificationCenter.default.addObserver(forName: Notification.Name("ClewPopoverDismissed"), object: nil, queue: nil) { (notification) -> Void in
             self.suppressTrackingWarnings = false
         }
+        
     }
     
     /// Create the audio player objdcts for the various app sounds.  Creating them ahead of time helps reduce latency when playing them later.
@@ -917,6 +650,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             print("count not setup audio players", error)
         }
     }
+
     
     /// Load the crumb 3D model
     func loadAssets() {
@@ -985,14 +719,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             userDefaults.set(true, forKey: "showedRecordPathWithoutLandmarkWarning")
             // Show logging disclaimer when user opens app for the first time
             let alert = UIAlertController(title: "Creating reusable routes",
-                                          message: "To navigate this route in the forward direction at a later time, you must create a landmark before starting the recording.",
+                                          message: NSLocalizedString("To navigate this route in the forward direction at a later time, you must create a landmark before starting the recording.", comment: "A message to the user"),
                                           preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "Continue with single-use route", style: .default, handler: { action -> Void in
+            alert.addAction(UIAlertAction(title: NSLocalizedString("Continue with single-use route", comment: "The label of an option for the user"), style: .default, handler: { action -> Void in
                 // proceed to recording
                 self.state = .recordingRoute
             }
             ))
-            alert.addAction(UIAlertAction(title: "Cancel recording", style: .default, handler: { action -> Void in
+            alert.addAction(UIAlertAction(title: NSLocalizedString("Cancel recording", comment: "The label of an option for the user"), style: .default, handler: { action -> Void in
                 // nothing to do, just stay on the main screen
             }
             ))
@@ -1010,15 +744,15 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         if showedNavigatePathWithoutLandmarkWarning == nil && endRouteLandmark.transform == nil && !isResumedRoute {
             userDefaults.set(true, forKey: "showedNavigatePathWithoutLandmarkWarning")
             // Show logging disclaimer when user opens app for the first time
-            let alert = UIAlertController(title: "Creating reusable routes",
-                                          message: "To navigate this route in the reverse direction at a later time, you must activate the pause button before navigating the route.",
+            let alert = UIAlertController(title: NSLocalizedString("Creating reusable routes", comment: "Header of a pop-up message"),
+                                          message: NSLocalizedString("To navigate this route in the reverse direction at a later time, you must activate the pause button before navigating the route.", comment: "A message to the user"),
                                           preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "Continue with single-use route", style: .default, handler: { action -> Void in
+            alert.addAction(UIAlertAction(title: NSLocalizedString("Continue with single-use route", comment: "Option for user to select"), style: .default, handler: { action -> Void in
                 // proceed to navigation
                 self.state = .navigatingRoute
             }
             ))
-            alert.addAction(UIAlertAction(title: "Cancel navigation", style: .default, handler: { action -> Void in
+            alert.addAction(UIAlertAction(title: NSLocalizedString("Cancel navigation", comment: "Option for user to select"), style: .default, handler: { action -> Void in
                 // nothing to do, just stay on the current screen
             }
             ))
@@ -1055,9 +789,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         if #available(iOS 12.0, *) {
             justUsedMap = mapAsAny as! ARWorldMap?
         }
-        let alertController = UIAlertController(title: "Save route", message: "Enter the name of the route", preferredStyle: .alert)
+        let alertController = UIAlertController(title: NSLocalizedString("Save route", comment: "The title of a popup window where user enters a name for the route they want to save."), message: NSLocalizedString("Enter the name of the route", comment: "Ask user to provide a descriptive name for the route they want to save."), preferredStyle: .alert)
         // The confirm action taking the inputs
-        let saveAction = UIAlertAction(title: "Save", style: .default) { (_) in
+        let saveAction = UIAlertAction(title: NSLocalizedString("Save", comment: "An option for the user to select"), style: .default) { (_) in
             let id = String(Int64(NSDate().timeIntervalSince1970 * 1000)) as NSString
             // Get the input values from user, if it's nil then use timestamp
             self.routeName = alertController.textFields?[0].text as NSString? ?? id
@@ -1065,14 +799,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
             
         // The cancel action saves the just traversed route so you can navigate back along it later
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { (_) in
+        let cancelAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: "An option for the user to select"), style: .cancel) { (_) in
             self.justTraveledRoute = SavedRoute(id: "dummyid", name: "Last route", crumbs: self.crumbs, dateCreated: Date() as NSDate, beginRouteLandmark: self.beginRouteLandmark, endRouteLandmark: self.endRouteLandmark)
         }
         
         // Add textfield to our dialog box
         alertController.addTextField { (textField) in
             textField.becomeFirstResponder()
-            textField.placeholder = "Enter route title"
+            textField.placeholder = NSLocalizedString("Enter route title", comment: "A placeholder before user enters text in textbox")
         }
             
         // Add the action to dialogbox
@@ -1086,12 +820,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// Show the dialog that allows the user to enter textual information to help them remember a landmark.
     @objc func showLandmarkInformationDialog() {
-        homeButton.isHidden = false
+        rootContainerView.homeButton.isHidden = false
 //        backButton.isHidden = true
         // Set title and message for the alert dialog
-        let alertController = UIAlertController(title: "Landmark information", message: "Enter text about the landmark that will help you find it later.", preferredStyle: .alert)
+        let alertController = UIAlertController(title: NSLocalizedString("Landmark information", comment: "The header of a pop-up menu"), message: NSLocalizedString("Enter text about the landmark that will help you find it later.", comment: "Prompts user to enter information"), preferredStyle: .alert)
         // The confirm action taking the inputs
-        let saveAction = UIAlertAction(title: "Ok", style: .default) { (_) in
+        let saveAction = UIAlertAction(title: NSLocalizedString("Ok", comment: "A button for user to click to acknowledge and close a pop-up"), style: .default) { (_) in
             if self.creatingRouteLandmark {
                 self.beginRouteLandmark.information = alertController.textFields?[0].text as NSString?
             } else {
@@ -1100,13 +834,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
         
         // The cancel action saves the just traversed route so you can navigate back along it later
-        let cancelAction = UIAlertAction(title: "Don't specify this information", style: .cancel) { (_) in
+        let cancelAction = UIAlertAction(title: NSLocalizedString("Don't specify this information", comment: "A button for user to click"), style: .cancel) { (_) in
         }
         
         // Add textfield to our dialog box
         alertController.addTextField { (textField) in
             textField.becomeFirstResponder()
-            textField.placeholder = "Enter landmark information"
+            textField.placeholder = NSLocalizedString("Enter landmark information", comment: "A placeholder that appears in text box before user enters any text.")
         }
         
         // Add the action to dialogbox
@@ -1143,17 +877,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         let popover = nav.popoverPresentationController
         popover?.delegate = self
         popover?.sourceView = self.view
-        popover?.sourceRect = CGRect(x: 0, y: self.settingsAndHelpFrameHeight/2, width: 0,height: 0)
+        popover?.sourceRect = CGRect(x: 0, y: UIConstants.settingsAndHelpFrameHeight/2, width: 0,height: 0)
         suppressTrackingWarnings = true
         self.present(nav, animated: true, completion: nil)
     }
     
     /// Show logging disclaimer when user opens app for the first time.
     func showLogAlert() {
-        let logAlertVC = UIAlertController(title: "Sharing your experience with Clew",
-                                           message: "Help us improve the app by logging your Clew experience. These logs will not include any images or personal information. You can turn this off in Settings.",
+        let logAlertVC = UIAlertController(title: NSLocalizedString("Sharing your experience with Clew", comment: "The heading of a pop-up"),
+                                           message: NSLocalizedString("Help us improve the app by logging your Clew experience. These logs will not include any images or personal information. You can turn this off in Settings.", comment: "Disclaimer shown to the user when they open the app for the first time"),
                                            preferredStyle: .alert)
-        logAlertVC.addAction(UIAlertAction(title: "Ok", style: .default, handler: { action -> Void in
+        logAlertVC.addAction(UIAlertAction(title: NSLocalizedString("Ok", comment: "What the user clicks to acknowledge a message and dismiss pop-up"), style: .default, handler: { action -> Void in
             self.showSafetyAlert()
         }
         ))
@@ -1162,10 +896,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// Show safety disclaimer when user opens app for the first time.
     func showSafetyAlert() {
-        let safetyAlertVC = UIAlertController(title: "For your safety",
-                                              message: "While using the app, please be aware of your surroundings. You agree that your use of the App is at your own risk, and it is solely your responsibility to maintain your personal safety. Visit www.clewapp.org for more information on how to use the app.",
+        let safetyAlertVC = UIAlertController(title: NSLocalizedString("For your safety", comment: "The heading of a pop-up"),
+                                              message: NSLocalizedString("While using the app, please be aware of your surroundings. You agree that your use of the App is at your own risk, and it is solely your responsibility to maintain your personal safety. Visit www.clewapp.org for more information on how to use the app.", comment: "Disclaimer shown to the user when they open the app for the first time"),
                                               preferredStyle: .alert)
-        safetyAlertVC.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+        safetyAlertVC.addAction(UIAlertAction(title: NSLocalizedString("Ok", comment: "What the user clicks to acknowledge a message and dismiss pop-up"), style: .default, handler: nil))
         self.present(safetyAlertVC, animated: true, completion: nil)
     }
     
@@ -1284,147 +1018,31 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     ///   - AutoLayout
     ///   - `startNavigationView` pause button configuration
     ///   - subview transitions?
-    func drawUI() {
-        // button that shows settings menu
-        settingsButton = UIButton(frame: CGRect(x: 10, y: 10, width: buttonFrameWidth/7, height: buttonFrameWidth/7))
-        settingsButton.isAccessibilityElement = true
-        settingsButton.setTitle("Settings", for: .normal)
-        settingsButton.accessibilityLabel = "Settings"
-        settingsButton.titleLabel?.font = UIFont.systemFont(ofSize: 24.0)
-        //settingsButton.backgroundColor = UIColor.black.withAlphaComponent(0.4)
-        settingsButton.addTarget(self, action: #selector(settingsButtonPressed), for: .touchUpInside)
-        settingsButton.setImage(UIImage(named: "settingsGear"), for: .normal)
-
-        // button that shows help menu
-        helpButton = UIButton(frame: CGRect(x: buttonFrameWidth/(7/3), y: yOriginOfSettingsAndHelpButton + 10, width: buttonFrameWidth/7, height: buttonFrameWidth/7))
-        helpButton.isAccessibilityElement = true
-        helpButton.setTitle("Help", for: .normal)
-        helpButton.titleLabel?.font = UIFont.systemFont(ofSize: 24.0)
-        helpButton.accessibilityLabel = "Help"
-        //helpButton.backgroundColor = UIColor.black.withAlphaComponent(0.4)
-        helpButton.addTarget(self, action: #selector(helpButtonPressed), for: .touchUpInside)
-        helpButton.setImage(UIImage(named: "HelpButton"), for: .normal)
-        
-        //button that allows user to contact developers
-//        contactButton = UIButton(frame: CGRect(x: buttonFrameWidth/(7/5), y: yOriginOfSettingsAndHelpButton + 10, width: buttonFrameWidth/7, height: buttonFrameWidth/7))
-//        contactButton.isAccessibilityElement = true
-//        contactButton.setTitle("Contact Developers", for: .normal)
-//        contactButton.titleLabel?.font = UIFont.systemFont(ofSize: 24.0)
-//        contactButton.accessibilityLabel = "Contact Developers"
-//        ///contactButton.addTarget(self, action: #selector(contactButtonPressed), for: .touchUpInside)
-//        contactButton.setImage(UIImage(named: "Contact"), for: .normal)
-        
-        //button to go to the home screen
-        homeButton = UIButton(frame: CGRect(x: buttonFrameWidth/7, y: yOriginOfSettingsAndHelpButton + 10, width: buttonFrameWidth/7, height: buttonFrameWidth/7))
-        homeButton.isAccessibilityElement = true
-        homeButton.setTitle("Home Button", for: .normal)
-        homeButton.titleLabel?.font = UIFont.systemFont(ofSize: 24.0)
-        homeButton.accessibilityLabel = "Clew Home Screen"
-        homeButton.setImage(UIImage(named: "homeButton"), for: .normal)
-        homeButton.addTarget(self, action: #selector(homeButtonPressed), for: .touchUpInside)
-        
-        // button that shows feedback menu
-        feedbackButton = UIButton(frame: CGRect(x: 70, y: 10, width: buttonFrameWidth/7, height: buttonFrameWidth/7))
-        feedbackButton.isAccessibilityElement = true
-        feedbackButton.setTitle("Feedback", for: .normal)
-        feedbackButton.titleLabel?.font = UIFont.systemFont(ofSize: 24.0)
-        feedbackButton.accessibilityLabel = "Feedback"
-        //feedbackButton.backgroundColor = UIColor.black.withAlphaComponent(0)
-        feedbackButton.addTarget(self, action: #selector(feedbackButtonPressed), for: .touchUpInside)
-        feedbackButton.setImage(UIImage(named: "Contact"), for: .normal)
-
-        // button that gives direction to the nearist keypoint
-        getDirectionButton = UIButton(frame: CGRect(x: buttonFrameWidth/(7/5), y: yOriginOfSettingsAndHelpButton + 10, width: buttonFrameWidth/7, height: buttonFrameWidth/7))
-        //        getDirectionButton.isHidden = true
-        getDirectionButton.isAccessibilityElement = true
-        getDirectionButton.accessibilityLabel = "Get Directions"
-        getDirectionButton.setImage(UIImage(named: "GetDirection"), for: .normal)
-        getDirectionButton.addTarget(self, action: #selector(announceDirectionHelpPressed), for: .touchUpInside)
-        
-        // textlabel that displays announcements
-        announcementText = UILabel(frame: CGRect(x: 0, y: yOriginOfAnnouncementFrame, width: buttonFrameWidth, height: buttonFrameHeight*(1/2)))
-        announcementText.textColor = UIColor.white
-        announcementText.textAlignment = .center
-        announcementText.isAccessibilityElement = false
-        announcementText.lineBreakMode = .byWordWrapping
-        announcementText.numberOfLines = 2
-        announcementText.font = announcementText.font.withSize(20)
-        announcementText.backgroundColor = UIColor.black.withAlphaComponent(0.4)
-        announcementText.isHidden = true
-        
-        // button that gives direction to the nearist keypoint
-        countdownTimer = SRCountdownTimer(frame: CGRect(x: buttonFrameWidth*1/10, y: yOriginOfButtonFrame/10, width: buttonFrameWidth*8/10, height: buttonFrameWidth*8/10))
-        countdownTimer.delegate = self
-        countdownTimer.labelFont = UIFont(name: "HelveticaNeue-Light", size: 100)
-        countdownTimer.labelTextColor = UIColor.white
-        countdownTimer.timerFinishingText = "End"
-        countdownTimer.lineWidth = 10
-        countdownTimer.lineColor = UIColor.white
-        countdownTimer.backgroundColor = UIColor.black.withAlphaComponent(0.4)
-        countdownTimer.isHidden = true
-        // hide the timer as an accessibility element and announce through VoiceOver by posting appropriate notifications
-        countdownTimer.accessibilityElementsHidden = true
-        
-        // Record Path button container
-        recordPathView = UIView(frame: CGRect(x: 0, y: yOriginOfButtonFrame, width: buttonFrameWidth, height: buttonFrameHeight))
-        recordPathView.setupButtonContainer(withButtons: [routesButton, recordPathButton, addLandmarkButton])
-        
-        // Stop Recording button container
-        stopRecordingView = UIView(frame: CGRect(x: 0, y: yOriginOfButtonFrame, width: buttonFrameWidth, height: buttonFrameHeight))
-        stopRecordingView.setupButtonContainer(withButtons: [stopRecordingButton])
-        
-        // Start Navigation button container
-        startNavigationView = UIView(frame: CGRect(x: 0, y: yOriginOfButtonFrame, width: buttonFrameWidth, height: buttonFrameHeight))
-        startNavigationView.setupButtonContainer(withButtons: [startNavigationButton, pauseButton])
-        
-        pauseTrackingView = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height))
-        pauseTrackingView.setupButtonContainer(withButtons: [enterLandmarkDescriptionButton, confirmAlignmentButton, recordVoiceNoteButton], withMainText: "Landmarks allow you to save or pause your route. You will need to return to the landmark to load or unpause your route. Before creating the landmark, specify text or voice to help you remember its location. To create a landmark, hold your device flat with the screen facing up. Press the top (short) edge flush against a flat vertical surface (such as a wall).  The \"align\" button starts a \(ViewController.alignmentWaitingPeriod)-second countdown. During this time, do not move the device.")
-        
-        resumeTrackingView = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height))
-        resumeTrackingView.setupButtonContainer(withButtons: [resumeButton], withMainText: "Return to the last paused location and press Resume for further instructions.")
-        
-        resumeTrackingConfirmView = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height))
-        resumeTrackingConfirmView.setupButtonContainer(withButtons: [confirmAlignmentButton, readVoiceNoteButton], withMainText: "Hold your device flat with the screen facing up. Press the top (short) edge flush against the same vertical surface that you used to create the landmark.  When you are ready, activate the align button to start the \(ViewController.alignmentWaitingPeriod)-second alignment countdown that will complete the procedure. Do not move the device until the phone provides confirmation via a vibration or sound cue.")
-
-        // Stop Navigation button container
-        stopNavigationView = UIView(frame: CGRect(x: 0, y: yOriginOfButtonFrame, width: buttonFrameWidth, height: buttonFrameHeight))
-        stopNavigationView.setupButtonContainer(withButtons: [stopNavigationButton])
-        
-        routeRatingView = UIView(frame: CGRect(x: 0, y: 0, width: buttonFrameWidth, height: UIScreen.main.bounds.size.height))
-        routeRatingView.setupButtonContainer(withButtons: [thumbsUpButton, thumbsDownButton], withMainText: "Please rate your service.")
-        
-        self.view.addSubview(recordPathView)
-        self.view.addSubview(stopRecordingView)
-        self.view.addSubview(startNavigationView)
-        self.view.addSubview(pauseTrackingView)
-        self.view.addSubview(resumeTrackingView)
-        self.view.addSubview(resumeTrackingConfirmView)
-        self.view.addSubview(stopNavigationView)
-        self.view.addSubview(announcementText)
-        self.view.addSubview(getDirectionButton)
-        self.view.addSubview(settingsButton)
-        self.view.addSubview(homeButton)
-        self.view.addSubview(helpButton)
-        self.view.addSubview(feedbackButton)
-        self.view.addSubview(routeRatingView)
-        self.view.addSubview(countdownTimer)
-        
-        state = .mainScreen(announceArrival: false)
-    }
-    
     /// display RECORD PATH button/hide all other views
     @objc func showRecordPathButton(announceArrival: Bool) {
-        recordPathView.isHidden = false
+//        rootContainerView.recordPathView.isHidden = false
+//        rootContainerView.routeRatingView.isHidden = true
+//        rootContainerView.stopNavigationView.isHidden = true
+//        add(recordPathController)
+        addChild(recordPathController)
+        /// add the view of the child to the view of the parent
+        recordPathController.view.isHidden = false
+        rootContainerView.addSubview(recordPathController.view)
+        /// notify the child that it was moved to a parent
+        recordPathController.didMove(toParent: self)
+        
+        routeRatingController.remove()
+        stopNavigationController.remove()
+        
+        rootContainerView.getDirectionButton.isHidden = true
         // the options button is hidden if the route rating shows up
-        settingsButton.isHidden = false
-        homeButton.isHidden = true
-        helpButton.isHidden = false
-        feedbackButton.isHidden = false
-        stopNavigationView.isHidden = true
-        getDirectionButton.isHidden = true
-        routeRatingView.isHidden = true
+        rootContainerView.settingsButton.isHidden = false
+        rootContainerView.helpButton.isHidden = false
+        rootContainerView.feedbackButton.isHidden = false
+        rootContainerView.homeButton.isHidden = true
+
         if announceArrival {
-            delayTransition(announcement: "You've arrived.")
+            delayTransition(announcement: NSLocalizedString("You've arrived.", comment: "You have arrived at your destination."))
         } else {
             delayTransition()
         }
@@ -1449,52 +1067,51 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// Display stop recording view/hide all other views
     @objc func showStopRecordingButton() {
-        homeButton.isHidden = false // home button here
-        recordPathView.isHidden = true
-        recordPathView.isAccessibilityElement = false
-        stopRecordingView.isHidden = false
-        delayTransition(announcement: "Record starting. Hold vertically with the rear camera facing forward.")
+        rootContainerView.homeButton.isHidden = false // home button here
+        recordPathController.remove()
+        recordPathController.view.isAccessibilityElement = false
+        add(stopRecordingController)
+        delayTransition(announcement: NSLocalizedString("Hold vertically with the rear camera facing forward.", comment: "Hold the phone vertically with the rear camera facing forward."))
     }
     
     /// Display start navigation view/hide all other views
     @objc func showStartNavigationButton(allowPause: Bool) {
-        homeButton.isHidden = false // home button here
-        resumeTrackingView.isHidden = true
-        resumeTrackingConfirmView.isHidden = true
-        stopRecordingView.isHidden = true
-        startNavigationView.getButtonByTag(tag: UIView.pauseButtonTag)?.isHidden = !allowPause
-        startNavigationView.isHidden = false
-        delayTransition(announcement: nil)
+        rootContainerView.homeButton.isHidden = false // home button here
+        resumeTrackingController.remove()
+        resumeTrackingConfirmController.remove()
+        stopRecordingController.remove()
+        add(startNavigationController)
+        startNavigationController.pauseButton.isHidden = !allowPause
+        delayTransition()
     }
 
     /// Display the pause tracking view/hide all other views
     func showPauseTrackingButton() throws {
-        homeButton.isHidden = false // home button here
-        recordPathView.isHidden = true
-        startNavigationView.isHidden = true
-        pauseTrackingView.isHidden = false
-        delayTransition(announcement: nil, initialFocus: pauseTrackingView.mainText)
+        rootContainerView.homeButton.isHidden = false // home button here
+        recordPathController.remove()
+        startNavigationController.remove()
+        add(pauseTrackingController)
+        delayTransition()
     }
     
     /// Display the resume tracking view/hide all other views
     @objc func showResumeTrackingButton() {
-        homeButton.isHidden = false // no home button here
-        pauseTrackingView.isHidden = true
-        resumeTrackingView.isHidden = false
+        rootContainerView.homeButton.isHidden = false // no home button here
+        pauseTrackingController.remove()
+        add(resumeTrackingController)
         delayTransition()
     }
     
     /// Display the resume tracking confirm view/hide all other views.
     func showResumeTrackingConfirmButton(route: SavedRoute, navigateStartToEnd: Bool) {
-        homeButton.isHidden = false
-//        backButton.isHidden = true
-        resumeTrackingView.isHidden = true
-        resumeTrackingConfirmView.isHidden = false
-        resumeTrackingConfirmView.mainText?.text = ""
+        rootContainerView.homeButton.isHidden = false
+        resumeTrackingController.remove()
+        add(resumeTrackingConfirmController)
+        resumeTrackingConfirmController.view.mainText?.text = ""
         voiceNoteToPlay = nil
         if navigateStartToEnd {
             if let landmarkInformation = route.beginRouteLandmark.information as String? {
-                resumeTrackingConfirmView.mainText?.text?.append("The landmark information you entered is: " + landmarkInformation + ".\n\n")
+                resumeTrackingConfirmController.view.mainText?.text?.append("The landmark information you entered is: " + landmarkInformation + ".\n\n")
             }
             if let beginRouteLandmarkVoiceNote = route.beginRouteLandmark.voiceNote {
                 let voiceNoteToPlayURL = beginRouteLandmarkVoiceNote.documentURL
@@ -1506,7 +1123,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             }
         } else {
             if let landmarkInformation = route.endRouteLandmark.information as String? {
-                resumeTrackingConfirmView.mainText?.text?.append("The landmark information you entered is: " + landmarkInformation + ".\n\n")
+                resumeTrackingConfirmController.view.mainText?.text?.append("The landmark information you entered is: " + landmarkInformation + ".\n\n")
             }
             if let endRouteLandmarkVoiceNote = route.endRouteLandmark.voiceNote {
                 let voiceNoteToPlayURL = endRouteLandmarkVoiceNote.documentURL
@@ -1517,34 +1134,34 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 } catch {}
             }
         }
-        resumeTrackingConfirmView.getButtonByTag(tag: UIView.readVoiceNoteButtonTag)?.isHidden = voiceNoteToPlay == nil
-        resumeTrackingConfirmView.mainText?.text?.append("Hold your device flat with the screen facing up. Press the top (short) edge flush against the same vertical surface that you used to create the landmark.  When you are ready, activate the align button to start the \(ViewController.alignmentWaitingPeriod)-second alignment countdown that will complete the procedure. Do not move the device until the phone provides confirmation via a vibration or sound cue.")
+//        rootContainerView.resumeTrackingConfirmView.getButtonByTag(tag: UIView.readVoiceNoteButtonTag)?.isHidden = voiceNoteToPlay == nil
+        resumeTrackingConfirmController.readVoiceNoteButton?.isHidden = voiceNoteToPlay == nil
+        let waitingPeriod = ViewController.alignmentWaitingPeriod
+        resumeTrackingConfirmController.view.mainText?.text?.append(String.localizedStringWithFormat(NSLocalizedString("Hold your device flat with the screen facing up. Press the top (short) edge flush against the same vertical surface that you used to create the landmark.  When you are ready, activate the align button to start the %lu-second alignment countdown that will complete the procedure. Do not move the device until the phone provides confirmation via a vibration or sound cue.", comment: "Informative mssage that appears to the user."), waitingPeriod))
         delayTransition()
     }
     
     /// display stop navigation view/hide all other views
     @objc func showStopNavigationButton() {
-        homeButton.isHidden = false
-//        backButton.isHidden = true
-        startNavigationView.isHidden = true
-        stopNavigationView.isHidden = false
-        getDirectionButton.isHidden = false
+        rootContainerView.homeButton.isHidden = false
+        rootContainerView.getDirectionButton.isHidden = false
+        startNavigationController.remove()
+        add(stopNavigationController)
+        
         // this does not auto update, so don't use it as an accessibility element
         delayTransition()
     }
     
     /// display route rating view/hide all other views
     @objc func showRouteRating(announceArrival: Bool) {
-        homeButton.isHidden = true
-//        backButton.isHidden = true
-        stopNavigationView.isHidden = true
-        getDirectionButton.isHidden = true
-        routeRatingView.isHidden = false
-
+        rootContainerView.getDirectionButton.isHidden = true
+        rootContainerView.homeButton.isHidden = true
+        stopNavigationController.remove()
+        add(routeRatingController)
         if announceArrival {
-            routeRatingView.mainText?.text = "You've arrived. Please rate your service."
+            routeRatingController.view.mainText?.text = NSLocalizedString("You've arrived. Please rate your service.", comment: "Announce to the user that they have arrived at their destination and ask user to rate their experience.")
         } else {
-            routeRatingView.mainText?.text = "Please rate your service."
+            routeRatingController.view.mainText?.text = NSLocalizedString("Please rate your service.", comment: "Ask user to rate their experience.")
         }
         
         feedbackGenerator = nil
@@ -1735,7 +1352,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     func restartSessionIfFailedToRelocalize() {
         if attemptingRelocalization {
             if !suppressTrackingWarnings {
-                announce(announcement: "Could not match visually to the saved route. Starting new tracking session.")
+                announce(announcement: NSLocalizedString("Could not match environment to the saved route. Starting new tracking session.", comment: "Current environment does not match up with the environment in previously saved route. About to start a new tracking session."))
             }
             if #available(iOS 12.0, *) {
                 configuration.initialWorldMap = nil
@@ -1777,7 +1394,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// handles the user pressing the landmark button
     @objc func startCreateLandmarkProcedure() {
-        homeButton.isHidden = false
+        rootContainerView.homeButton.isHidden = false
 //        backButton.isHidden = true
         creatingRouteLandmark = true
         // make sure to clear out any relative transform and paused transform so the alignment is accurate
@@ -1795,11 +1412,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     func resumeTracking() {
         // resume pose tracking with existing ARSessionConfiguration
         hideAllViewsHelper()
-        countdownTimer.isHidden = false
-        countdownTimer.start(beginingValue: ViewController.alignmentWaitingPeriod, interval: 1)
+        pauseTrackingController.remove()
+        rootContainerView.countdownTimer.isHidden = false
+        rootContainerView.countdownTimer.start(beginingValue: ViewController.alignmentWaitingPeriod, interval: 1)
         delayTransition()
-        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(ViewController.alignmentWaitingPeriod)){
-            self.countdownTimer.isHidden = true
+        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(ViewController.alignmentWaitingPeriod)) {
+            self.rootContainerView.countdownTimer.isHidden = true
             // The first check is necessary in case the phone relocalizes before this code executes
             if case .readyForFinalResumeAlignment = self.state, let alignTransform = self.pausedTransform, let camera = self.sceneView.session.currentFrame?.camera {
                 // yaw can be determined by projecting the camera's z-axis into the ground plane and using arc tangent (note: the camera coordinate conventions of ARKit https://developer.apple.com/documentation/arkit/arsessionconfiguration/worldalignment/camera
@@ -2070,11 +1688,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             return
         }
         
-        announcementText.isHidden = false
-        announcementText.text = announcement
+        rootContainerView.announcementText.isHidden = false
+        rootContainerView.announcementText.text = announcement
         announcementRemovalTimer?.invalidate()
         announcementRemovalTimer = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: false) { timer in
-            self.announcementText.isHidden = true
+            self.rootContainerView.announcementText.isHidden = true
         }
         if UIAccessibility.isVoiceOverRunning {
             // use the VoiceOver API instead of text to speech
@@ -2151,12 +1769,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     @objc func settingsButtonPressed() {
         let storyBoard: UIStoryboard = UIStoryboard(name: "SettingsAndHelp", bundle: nil)
         let popoverContent = storyBoard.instantiateViewController(withIdentifier: "Settings") as! SettingsViewController
+        
         let nav = UINavigationController(rootViewController: popoverContent)
         nav.modalPresentationStyle = .popover
         let popover = nav.popoverPresentationController
         popover?.delegate = self
         popover?.sourceView = self.view
-        popover?.sourceRect = CGRect(x: 0, y: settingsAndHelpFrameHeight/2, width: 0,height: 0)
+        popover?.sourceRect = CGRect(x: 0, y: UIConstants.settingsAndHelpFrameHeight/2, width: 0,height: 0)
         
         popoverContent.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: popoverContent, action: #selector(popoverContent.doneWithSettings))
 
@@ -2173,7 +1792,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         let popover = nav.popoverPresentationController
         popover?.delegate = self
         popover?.sourceView = self.view
-        popover?.sourceRect = CGRect(x: 0, y: settingsAndHelpFrameHeight/2, width: 0,height: 0)
+        popover?.sourceRect = CGRect(x: 0, y: UIConstants.settingsAndHelpFrameHeight/2, width: 0,height: 0)
         popoverContent.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: popoverContent, action: #selector(popoverContent.doneWithHelp))
         suppressTrackingWarnings = true
         self.present(nav, animated: true, completion: nil)
@@ -2188,7 +1807,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         let popover = nav.popoverPresentationController
         popover?.delegate = self
         popover?.sourceView = self.view
-        popover?.sourceRect = CGRect(x: 0, y: settingsAndHelpFrameHeight/2, width: 0,height: 0)
+        popover?.sourceRect = CGRect(x: 0,
+                                     y: UIConstants.settingsAndHelpFrameHeight/2,
+                                     width: 0,
+                                     height: 0)
         popoverContent.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: popoverContent, action: #selector(popoverContent.closeFeedback))
         suppressTrackingWarnings = true
         self.present(nav, animated: true, completion: nil)
@@ -2216,9 +1838,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         
         if(slope > 0.3) { // Go upstairs
             if(hapticFeedback) {
-                dir += "\(Directions[direction.hapticDirection]!) and proceed upstairs"
+                dir += "\(Directions[direction.hapticDirection]!)" + NSLocalizedString(" and proceed upstairs", comment: "Additional directions given to user")
             } else {
-                dir += "\(Directions[direction.clockDirection]!) and proceed upstairs"
+                dir += "\(Directions[direction.clockDirection]!)" + NSLocalizedString(" and proceed upstairs", comment: "Additional directions given to user")
             }
             updateDirectionText(dir, distance: 0, displayDistance: false)
         } else if (slope < -0.3) { // Go downstairs
@@ -2377,7 +1999,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 logString = "ExcessiveMotion"
                 print("Excessive motion")
                 if !suppressTrackingWarnings {
-                    announce(announcement: "Excessive motion.\nTracking performance is degraded.")
+                    announce(announcement: NSLocalizedString("Excessive motion.\nTracking performance is degraded.", comment: "Let user know that there is too much movement of their phone and thus the app's ability to track a route has been lowered."))
                     if soundFeedback {
                         playSystemSound(id: 1050)
                     }
@@ -2386,7 +2008,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 logString = "InsufficientFeatures"
                 print("InsufficientFeatures")
                 if !suppressTrackingWarnings {
-                    announce(announcement: "Insufficient visual features.\nTracking performance is degraded.")
+                    announce(announcement: NSLocalizedString("Insufficient visual features.\nTracking performance is degraded.", comment: "Let user know that their current surroundings do not have enough visual markers and thus the app's ability to track a route has been lowered."))
                     if soundFeedback {
                         playSystemSound(id: 1050)
                     }
@@ -2404,15 +2026,15 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             logString = "Normal"
             if #available(iOS 12.0, *), configuration.initialWorldMap != nil, attemptingRelocalization {
                 if !suppressTrackingWarnings {
-                    announce(announcement: "Successfully matched current environment to saved route.")
+                    announce(announcement: NSLocalizedString("Successfully matched current environment to saved route.", comment: "Let user know that their surroundings match up to the surroundings of a saved route and that they can begin navigating."))
                 }
                 attemptingRelocalization = false
             } else if case let .limited(reason)? = trackingSessionState {
                 if !suppressTrackingWarnings {
                     if reason == .initializing {
-                        announce(announcement: "Tracking session initialized.")
+                        announce(announcement: NSLocalizedString("Tracking session initialized.", comment: "Let user know that the tracking session has started."))
                     } else {
-                        announce(announcement: "Tracking performance normal.")
+                        announce(announcement: NSLocalizedString("Tracking performance normal.", comment: "Let user know that the ability to track and record a route is normal."))
                         if soundFeedback {
                             playSystemSound(id: 1025)
                         }
@@ -2423,7 +2045,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             session.setWorldOrigin(relativeTransform: simd_float4x4.makeTranslation(0,0,0))
             if case .readyForFinalResumeAlignment = state {
                 // this will cancel any realignment if it hasn't happened yet and go straight to route navigation mode
-                countdownTimer.isHidden = true
+                rootContainerView.countdownTimer.isHidden = true
                 isResumedRoute = true
                 
                 state = .readyToNavigateOrPause(allowPause: false)
@@ -2514,80 +2136,4 @@ extension ViewController: UIPopoverPresentationControllerDelegate {
         }
     }
     
-}
-
-
-extension NSString {
-    /// the URL associated in the document directory associated with the particular NSString (note: this is non-sensical for some NSStrings).
-    var documentURL: URL {
-        return FileManager().urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent(self as String)
-    }
-}
-
-extension float4x4 {
-    /// Create a rotation matrix based on the angle and axis.
-    ///
-    /// - Parameters:
-    ///   - radians: the angle to rotate through
-    ///   - x: the x-component of the axis to rotate about
-    ///   - y: the y-component of the axis to rotate about
-    ///   - z: the z-component of the axis to rotate about
-    /// - Returns: a 4x4 transformation matrix that performs this rotation
-    static func makeRotate(radians: Float, _ x: Float, _ y: Float, _ z: Float) -> float4x4 {
-        return unsafeBitCast(GLKMatrix4MakeRotation(radians, x, y, z), to: float4x4.self)
-    }
-    
-    /// Create a translation matrix based on the translation vector.
-    ///
-    /// - Parameters:
-    ///   - x: the x-component of the translation vector
-    ///   - y: the y-component of the translation vector
-    ///   - z: the z-component of the translation vector
-    /// - Returns: a 4x4 transformation matrix that performs this translation
-    static func makeTranslation(_ x: Float, _ y: Float, _ z: Float) -> float4x4 {
-        return unsafeBitCast(GLKMatrix4MakeTranslation(x, y, z), to: float4x4.self)
-    }
-    
-    /// Perform the specified rotation (right multiply) on the 4x4 matrix
-    ///
-    /// - Parameters:
-    ///   - radians: the angle to rotate through
-    ///   - x: the x-component of the axis to rotate about
-    ///   - y: the y-component of the axis to rotate about
-    ///   - z: the z-component of the axis to rotate about
-    /// - Returns: the result of applying the transformation as 4x4 matrix
-    func rotate(radians: Float, _ x: Float, _ y: Float, _ z: Float) -> float4x4 {
-        return self * float4x4.makeRotate(radians: radians, x, y, z)
-    }
-    
-    /// Perform the specified translation (right multiply) on the 4x4 matrix
-    ///
-    /// - Parameters:
-    ///   - x: the x-component of the translation vector
-    ///   - y: the y-component of the translation vector
-    ///   - z: the z-component of the translation vector
-    /// - Returns: the result of applying the transformation as 4x4 matrix
-    func translate(x: Float, _ y: Float, _ z: Float) -> float4x4 {
-        return self * float4x4.makeTranslation(x, y, z)
-    }
-    
-    /// The x translation specified by the transform
-    var x: Float {
-        return columns.3.x
-    }
-    
-    /// The y translation specified by the transform
-    var y: Float {
-        return columns.3.y
-    }
-    
-    /// The z translation specified by the transform
-    var z: Float {
-        return columns.3.z
-    }
-    
-    /// The yaw specified by the transforms
-    var yaw: Float {
-        return LocationInfo(anchor: ARAnchor(transform: self)).yaw
-    }
 }

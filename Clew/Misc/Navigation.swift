@@ -65,18 +65,20 @@ public struct DirectionInfo {
 ///
 /// * Keys (`Int` from 1 to 12 inclusive): clock position
 /// * Values (`String`): corresponding spoken direction (e.g. "Slight right towards 2 o'clock")
-public let ClockDirections = [12: "Continue straight",
-                              1: "Slight right towards 1 o'clock",
-                              2: "Slight right towards 2 o'clock",
-                              3: "Turn right",
-                              4: "Turn towards 4 o'clock",
-                              5: "Turn around towards 5 o'clock",
-                              6: "Turn around towards 6 o'clock",
-                              7: "Turn around towards 7 o'clock",
-                              8: "Turn towards 8 o'clock",
-                              9: "Turn left",
-                              10: "Slight left towards 10 o'clock",
-                              11: "Slight left towards 11 o'clock"]
+public let ClockDirections = [
+                              12: NSLocalizedString("Continue straight", comment: "Continue moving in forward direction"),
+                              1: NSLocalizedString("Slight right towards 1 o'clock", comment: "Angle your body towards the 1 o'clock direction"),
+                              2: NSLocalizedString("Slight right towards 2 o'clock", comment: "Angle your body towards the 2 o'clock direction"),
+                              3: NSLocalizedString("Turn right", comment: "Turn to your right"),
+                              4: NSLocalizedString("Turn towards 4 o'clock", comment: "Angle your body towards 4 o'clock direction"),
+                              5: NSLocalizedString("Turn around towards 5 o'clock", comment: "Angle your body towards 5 o'clock direction"),
+                              6: NSLocalizedString("Turn around towards 6 o'clock", comment: "Angle your body towards 6 o'clock direction"),
+                              7: NSLocalizedString("Turn around towards 7 o'clock", comment: "Angle your body towards 7 o'clock direction"),
+                              8: NSLocalizedString("Turn towards 8 o'clock", comment: "Angle your body towards 8 o'clock direction"),
+                              9: NSLocalizedString("Turn left", comment: "Turn to your left"),
+                              10: NSLocalizedString("Slight left towards 10 o'clock", comment: "Angle your body towards the 10 o'clock direction"),
+                              11: NSLocalizedString("Slight left towards 11 o'clock", comment: "Angle your body towards the 11 o'clock direction")
+                             ]
 
 /// Dictionary of directions, somehow based on haptic feedback.
 ///
@@ -86,13 +88,15 @@ public let ClockDirections = [12: "Continue straight",
 /// - TODO:
 ///  - Explain the rationale of this division
 ///  - Consider restructuring this
-public let HapticDirections = [1: "Continue straight",
-                               2: "Slight right",
-                               3: "Turn right",
-                               4: "Turn around",
-                               5: "Turn left",
-                               6: "Slight Left",
-                               0: "ERROR"]
+public let HapticDirections = [
+                               1: NSLocalizedString("Continue straight", comment: "Continue moving in forward direction"),
+                               2: NSLocalizedString("Slight right", comment: "Angle your body slightly towards the right"),
+                               3: NSLocalizedString("Turn right", comment: "Turn to your right"),
+                               4: NSLocalizedString("Turn around", comment: "Turn completely around"),
+                               5: NSLocalizedString("Turn left", comment: "Turn to your left"),
+                               6: NSLocalizedString("Slight left", comment: "Angle your body slightly towards the left"),
+                               0: "ERROR"
+                              ] 
 
 /// Keypoint target dimension (width)
 ///

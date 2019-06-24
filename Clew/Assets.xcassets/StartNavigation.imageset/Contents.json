@@ -7,16 +7,17 @@
     },
     {
       "idiom" : "universal",
-      "filename" : "StartRecording.png",
-      "scale" : "1x"
-    },
-    {
-      "idiom" : "universal",
       "scale" : "2x"
     },
     {
       "idiom" : "universal",
       "scale" : "3x"
+    },
+    {
+      "idiom" : "universal",
+      "filename" : "StartRecording.png",
+      "unassigned" : true,
+      "scale" : "1x"
     }
   ],
   "info" : {

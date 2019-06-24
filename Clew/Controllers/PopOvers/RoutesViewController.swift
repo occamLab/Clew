@@ -25,7 +25,7 @@ class RoutesViewController : UIViewController, UITableViewDataSource, UITableVie
         super.viewDidLoad()
         self.tableView.delegate = self
         self.tableView.dataSource = self
-        title = "Saved Routes List"
+        title = NSLocalizedString("Saved Routes List", comment: "The title to a list of routes that have been saved by the user.")
     }
     
     /// Called when the user selects an element from the routes table.
@@ -36,9 +36,9 @@ class RoutesViewController : UIViewController, UITableViewDataSource, UITableVie
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         self.tableView.deselectRow(at: indexPath, animated: true)
         // Set title and message for the alert dialog
-        let alertController = UIAlertController(title: "Route direction", message: "", preferredStyle: .alert)
+        let alertController = UIAlertController(title: NSLocalizedString("Route direction", comment: "The header of a pop-up"), message: "", preferredStyle: .alert)
         // The confirm action taking the inputs
-        let startToEndAction = UIAlertAction(title: "Start to End", style: .default) { (_) in
+        let startToEndAction = UIAlertAction(title: NSLocalizedString("Start to End", comment: "Option for user to select"), style: .default) { (_) in
             self.rootViewController?.onRouteTableViewCellClicked(route: self.routes[indexPath.row], navigateStartToEnd: true)
             self.dismiss(animated: true, completion: nil)
         }
@@ -46,7 +46,7 @@ class RoutesViewController : UIViewController, UITableViewDataSource, UITableVie
             startToEndAction.isEnabled = false
         }
         
-        let endToStartAction = UIAlertAction(title: "End to Start", style: .default) { (_) in
+        let endToStartAction = UIAlertAction(title: NSLocalizedString("End to Start", comment: "Option for user to select"), style: .default) { (_) in
             self.rootViewController?.onRouteTableViewCellClicked(route: self.routes[indexPath.row], navigateStartToEnd: false)
             self.dismiss(animated: true, completion: nil)
         }
@@ -70,14 +70,14 @@ class RoutesViewController : UIViewController, UITableViewDataSource, UITableVie
     /// - Returns: a cell that contains the route
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let df = DateFormatter()
-        df.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        df.setLocalizedDateFormatFromTemplate("yyyy-MM-dd HH:mm:ss")
         let cell = tableView.dequeueReusableCell(withIdentifier: "clew.RouteTableViewCell", for: indexPath) as! RouteTableViewCell
         cell.nameLabel.text = routes[indexPath.row].name as String
         cell.dateCreatedLabel.text = df.string(from: routes[indexPath.row].dateCreated as Date)
         return cell
     }
     
-    /// Called when user performs and edit action on the row.  Currently, only delete is supported.
+    /// Called when user performs an edit action on the row.  Currently, only delete is supported.
     ///
     /// - Parameters:
     ///   - tableView: a handle to the routes table
