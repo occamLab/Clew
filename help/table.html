@@ -1,0 +1,309 @@
+<!-- Based off of the expandable menu tutorial here https://codingphase.com/blog/how-to-build-an-accordion-menu-with-css/ -->
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            /* sets the sizing to box sizing which means that the margins around the text arte included in the size of an object
+             for more information go here: https://www.w3schools.com/css/css3_box-sizing.asp*/
+            * {
+                box-sizing: border-box;
+            }
+        
+            /* sets the style of the bain body of the website*/
+            html,
+            body {
+                font: 28px 'Roboto';
+                /*the background color of the website*/
+                background-color: #ffffff;
+                /*the color of the text on the website*/
+                color: #000000;
+            }
+        
+            /* sets the magins on the container which holds the expanding tables */
+            .container {
+                margin: 0em auto;
+                max-width: 100em;
+            }
+        
+            /*sets the styling for the accordion class to have the default styling*/
+            .accordion {
+            }
+        
+            /*hides the checkbox which makes the variable functionality*/
+            .toggle {
+                display: none;
+            }
+        
+        
+            .title,
+            .content {
+                -webkit-backface-visibility: hidden;
+                backface-visibility: hidden;
+                -webkit-transform: translateZ(0);
+                transform: translateZ(0);
+                transition: all 0.2s;
+            }
+        
+            /*sets the styling of the headings*/
+            .title {
+                /*sets the background color of the heading box*/
+                background: #ffffff;
+                padding: 1rem;
+                display: block;
+                /*text color*/
+                color: #000000;
+                font-weight: bold;
+                margin-bottom: 1rem;
+            }
+        
+            /*the plus sign properties*/
+            .title:after,
+            .title:before {
+                /*superimposes the content on each arm of the plus*/
+                content: '';
+                position: absolute;
+                /*constrain the position of the plus sign to the box around it*/
+                right: 1.25em;
+                top: 1.25em;
+                /*sets the stroke width of the plus signs*/
+                width: 2px;
+                /*the length of the plus sign's limbs/lines*/
+                height: 0.75em;
+                /*sets the color of the plus sign*/
+                background-color: #000000;
+                /*the time it takes for the plus animation to occur*/
+                transition: all .2s;
+            }
+        
+            .title:after {
+                -webkit-transform: rotate(90deg);
+                /*sets the 'horrizontal' bar's inital rotation*/
+                transform: rotate(90deg);
+            }
+        
+            /*handels the inital state of the togeleable content*/
+            .content {
+                /*sets the menu content's intial display height*/
+                max-height: 0;
+                /*hides anything that is longer than the specifieed height*/
+                overflow: hidden;
+            }
+        
+            /*hendles the opening and closing of the menu by calling imbedded code when the hidden check box is in the 'checked' state or the menu has been opened*/
+            .toggle:checked + .title + .content {
+                /*sets the maximum expanded height to a fixed value this line will likely need to be changed to allow for dynamic allocation but currently allows dynamic sizing when the size of the content is smaller than this value*/
+                max-height: 500px;
+            }
+        
+            /*handles the plus sign animation when the hidden toggele box is 'checked' or the menu is expanded*/
+            .toggle:checked + .title:before {
+                -webkit-transform: rotate(90deg) !important;
+                /*sets the number of degrees that the plus rotates through*/
+                transform: rotate(90deg) !important;
+            }
+        </style>
+        
+    </head>
+    <body>
+        <!-- makes a container which holds all of the toggle menus-->
+        <div class="container">
+            
+            <!-- creates an accordian menu in the actual website -->
+            <div class="accordion">
+                <!-- creates a hidden checkbox used to record the state of the expandable menu. -->
+                <input type="checkbox" id="appfeatures" class="toggle" />
+                
+                <!-- creates the text for the title in the menu header -->
+                <label class="title" for="appfeatures"> <h1> App Features</h1> </label>
+                
+                <!-- creates a container for the content of a menu -->
+                <div class="content ">
+                    <!-- content to be shown in the exapndable menu -->
+                    <h2>Current Version</h2>
+                    <p>Clew allows you to record routes using your phone that you can then navigate (either in the forward or reverse direction) at a later point in time. Clew can be used in situations where you want to immediately navigate back to your starting location (e.g., if you went somewhere with a sighted guide or if it is harder to navigate the reverse journey) or when you want to remember a route that you are learning so you can navigate it more confidently in the future.  Importantly, Clew does not use your phone's GPS, so it can be used indoors.</p>
+                    <p>The ability to save routes is a new feature for Clew.</p>
+                    <h2>Future Versions</h2>
+                    <p>We are working on a route sharing feature so that you can send routes to other users.</p>
+                </div>
+                
+            </div>
+            
+            <!-- creates an accordian menu in the actual website -->
+            <div class="accordion">
+                <!-- creates a hidden checkbox used to record the state of the expandable menu. -->
+                <input type="checkbox" id="howWellDoesClewWork" class="toggle" />
+                
+                <!-- creates the text for the title in the menu header -->
+                <label class="title" for="howWellDoesClewWork"> <h1>How well does Clew work?</h1> </label>
+                
+                <!-- creates a container for the content of a menu -->
+                <div class="content ">
+                    <!-- content to be shown in the exapndable menu -->
+                    <p>Clew relies on the position tracking technology provided by Apple's ARKit. These motion estimates are based on tracking elements in the environment visually (using your phone's camera) and on motion estimates from inertial sensors in your phone. While this technology is advanced, it does not work perfectly. You should expect that over very long routes, particular ones with limited visual features or poor lighting, that the accuracy of the tracking (and hence the app's guidance) will decrease. We have found that Clew works best when you navigate routes along the same direction as they were originally recorded (&quot;Start to End &quot; rather than &quot;End to Start &quot; navigation mode).</p>
+                    <p>Given the limitations of Clew, you should always use your orientation and mobility skills to ensure your personal safety when using Clew. We are working on additional strategies for improving the accuracy of Clew.</p>
+                </div>
+                
+            </div>
+
+            <!-- creates an accordian menu in the actual website -->
+            <div class="accordion">
+                <!-- creates a hidden checkbox used to record the state of the expandable menu. -->
+                <input type="checkbox" id="recordingANote" class="toggle" />
+                
+                <!-- creates the text for the title in the menu header -->
+                <label class="title" for="recordingANote"> <h1>Recording a route</h1> </label>
+                
+                <!-- creates a container for the content of a menu -->
+                <div class="content ">
+                    <!-- content to be shown in the exapndable menu -->
+                    <p>As soon as the app launches, the app will present three buttons: saved routes, record route, and create landmark. To record a route that you don't need to save, or if you only want to be able to save the route in the reverse direction, you can simply activate the record button and move along the route you'd like to record. If you want to be able to save the route so that you can receive automatic guidance along it at a later time, activate the create landmark button and follow the procedure for landmark creation and route pausing described later in this document.
+                    <h3>Properly positioning your phone when using Clew</h3>
+                    <p>The app's motion estimates are based primarily on analyzing images from your phone's camera. The app will not work unless your phone's rear camera is capturing images of your environment. The app will not work if the phone is in your pocket or if any part of your body is blocking your phone's rear camera. We have found that the app works best when you hold the phone in portrait orientation with the rear camera facing directly ahead of you and the phone oriented vertically. Other orientations can work, but may result in diminished accuracy.</p>
+                    
+                </div>
+                
+            </div>
+            
+            <!-- creates an accordian menu in the actual website -->
+            <div class="accordion">
+                <!-- creates a hidden checkbox used to record the state of the expandable menu. -->
+                <input type="checkbox" id="stoppingARecording" class="toggle" />
+                
+                <!-- creates the text for the title in the menu header -->
+                <label class="title" for="stoppingARecording"> <h1>Stopping a recording</h1> </label>
+                
+                <!-- creates a container for the content of a menu -->
+                <div class="content ">
+                    <!-- content to be shown in the exapndable menu -->
+                    <p>When you've finished the route, you can use the stop button to stop the recording. If you recorded a landmark before starting the route, you will be prompted to provide a name for the route and save it for later use in the forward direction. If you would like to pause the route so you can navigate it later in the reverse direction (i.e., from your current location back to the start) activate the pause button.</p>
+                    
+                </div>
+                
+            </div>
+            
+            <!-- creates an accordian menu in the actual website -->
+            <div class="accordion">
+                <!-- creates a hidden checkbox used to record the state of the expandable menu. -->
+                <input type="checkbox" id="pausingARouteOrSettingALandmark" class="toggle" />
+                
+                <!-- creates the text for the title in the menu header -->
+                <label class="title" for="pausingARouteOrSettingALandmark"> <h1>Pausing a route or recording a landmark</h1> </label>
+                
+                <!-- creates a container for the content of a menu -->
+                <div class="content ">
+                    <!-- content to be shown in the exapndable menu -->
+                    <p>The procedure for pausing the route and recording a landmark are the same. The key idea is that in order to reuse routes, your phone must be able to align its current position with a position from the recorded route. In some cases, Apple's ARKit will be able to automatically do this registration (for example, when the camera sees a distinctive visual feature that can be matched to the recording); however, in many situations this will not be possible.</p>
+                    <p>In order to register your position in such cases you be able to place the phone in a position and orientation such that you can reliably return the phone to that same position and orientation when reusing a saved route. While it is not crucial that you position the phone in exactly the same place (although the more accurately you can do this, the better the app will work), you must be able to place the phone in the precisely the same orientation. To make it easy to return the phone to the same orientation, you should hold your phone flat with the screen facing up and press the top (short-edge) of your phone flush with a vertical surface (like a wall). More instructions are provided in the app when you activate the pause feature or the create landmark feature.</p>
+                    
+                </div>
+                
+            </div>
+            
+            <!-- creates an accordian menu in the actual website -->
+            <div class="accordion">
+                <!-- creates a hidden checkbox used to record the state of the expandable menu. -->
+                <input type="checkbox" id="resumingARoute" class="toggle" />
+                
+                <!-- creates the text for the title in the menu header -->
+                <label class="title" for="resumingARoute"> <h1>Resuming a route</h1> </label>
+                
+                <!-- creates a container for the content of a menu -->
+                <div class="content ">
+                    <!-- content to be shown in the exapndable menu -->
+                    <p>Assuming you paused your route, you can resume it by following the instructions provided by the app. The app will prompt you to return the phone to the location where you paused it or created a landmark.</p>
+                    
+                </div>
+                
+            </div>
+            
+            <!-- creates an accordian menu in the actual website -->
+            <div class="accordion">
+                <!-- creates a hidden checkbox used to record the state of the expandable menu. -->
+                <input type="checkbox" id="theSavedRoutesMenu" class="toggle" />
+                
+                <!-- creates the text for the title in the menu header -->
+                <label class="title" for="theSavedRoutesMenu"> <h1>The saved routes menu</h1> </label>
+                
+                <!-- creates a container for the content of a menu -->
+                <div class="content ">
+                    <!-- content to be shown in the exapndable menu -->
+                    <p>The saved routes menu is a new feature for Clew. It allows you to load previously traveled routes and navigate along them in either the forward or reverse direction.
+                    <h2>Loading a route</h2>
+                    <p>The saved routes menu provides you with a list of previously recorded routes ordered from most to least recent. Once you tap on a route, you will be prompted to navigate the route in &quot;start to end&quot; or &quot;end to start&quot; mode. &quot;Start to end&quot; means that you would navigate along the route in the same direction as it was initially recorded. &quot;End to start&quot; means that you would navigate the route in the reverse direction as it was initially recorded. If either option is dimmed (i.e., not able to be activated), it means that an appropriate landmark was not created at either the start or end of the route.</p>
+                    <h2>Deleting a saved route</h2>
+                    <p>You can delete routes from this menu either swiping left (if not using VoiceOver) or by activating the secondary action on the route (if you are using VoiceOver).</p>
+                    
+                </div>
+                
+            </div>
+            
+            <!-- creates an accordian menu in the actual website -->
+            <div class="accordion">
+                <!-- creates a hidden checkbox used to record the state of the expandable menu. -->
+                <input type="checkbox" id="followingARoute" class="toggle" />
+                
+                <!-- creates the text for the title in the menu header -->
+                <label class="title" for="followingARoute"> <h1>Following a route</h1> </label>
+                
+                <!-- creates a container for the content of a menu -->
+                <div class="content ">
+                    <!-- content to be shown in the exapndable menu -->
+                    <p>Once you activate the start navigation feature, the app will provide you with instructions to navigate back to your starting location. The app provides feedback in the following formats.</p>
+                    <h2>Haptic feedback</h2>
+                    <p>Assuming you have enabled haptic feedback in the app settings and you have an iPhone that supports haptics (iPhone 7 or later should work), the phone will provide haptic vibration when it is facing in the correct direction of travel for the route. It is important to keep in mind that this feedback is relative to the direction of the phone, rather than your body. When you achieve a milestone in the route (we call these waypoints), you will feel a stronger haptic vibration.</p>
+                    <h2>Auditory beeps</h2>
+                    <p>Assuming you have enabled sound feedback in the app settings and your iphone doesn't have system sounds muted, the phone will make a beeping sound when it is facing in the correct direction of travel for the route. It is important to keep in mind that this feedback is relative to the direction of the phone, rather than your body. When you achieve a milestone in the route (we call these waypoints), you will hear a different sound effect.</p>
+                    </h2>
+                    <h2>Speech feedback</h2>
+                    <p>
+                    Assuming you have enabled speech feedback in the app settings and voice over is on, the phone will provide you with voice directions whenever you encounter a waypoint on your route, start a route, or complete a route. If you want to hear voice directions again, you can use the &quot;Get Directions&quot; button.</p>
+                    </p>
+                    </h2>
+                    
+                </div>
+                
+            </div>
+            
+            <!-- creates an accordian menu in the actual website -->
+            <div class="accordion">
+                <!-- creates a hidden checkbox used to record the state of the expandable menu. -->
+                <input type="checkbox" id="appSoundsAndTheirMeanings" class="toggle"/>
+                
+                <!-- creates the text for the title in the menu header -->
+                <label class="title" for="appSoundsAndTheirMeanings"> <h1>App sounds and their meanings</h1> </label>
+                
+                <!-- creates a container for the content of a menu -->
+                <div class="content ">
+                    <!-- content to be shown in the exapndable menu -->
+                    <p>In addition to the auditory guidance that you get when navigating along a route (described previously), there are some additional sounds that help you understand what is currently happening with the app. If you have enabled the speech feedback option in the app settings, each of these sounds is accompanied by speech that briefly explains the sounds meaning. Note that these sounds are not delivered when you are in the help menu (to avoid distracting you while you are reading through the help information).</p>
+                    <ul>
+                        <li><p>Normal motion tracking sound: this sound is a short recording of a brass instrument. It indicates that the app's position tracking has entered into the &quot;normal&quot; state. If the app has just started up this means that the motion tracking is now active. If the app previously experienced diminished accuracy, see next sound description, it means that the motion tracking has recovered. If you hear this sound after loading or resuming a route, this means that ARKit has been able to automatically align the route to the recording.</p></li>
+                        <li><p>Motion tracking warning sound: this sound is a short recording of a stringed instrument playing a slightly scratchy note. This sound indicates that the app's position tracking has been degraded either due to the phone moving too rapidly or due to the environment not having an adequate amount of visual detail. The latter condition occurs if your environment is too dark or if the camera is occluded.</p></li>
+                    </ul>
+                    
+                </div>
+                
+            </div>
+            
+            <!-- creates an accordian menu in the actual website -->
+            <div class="accordion">
+                <!-- creates a hidden checkbox used to record the state of the expandable menu. -->
+                <input type="checkbox" id="ratingYourNavigation" class="toggle" />
+                
+                <!-- creates the text for the title in the menu header -->
+                <label class="title" for="ratingYourNavigation"> <h1>Rating your navigation experience</h1> </label>
+                
+                <!-- creates a container for the content of a menu -->
+                <div class="content ">
+                    <!-- content to be shown in the exapndable menu -->
+                    <p>Once you are done navigating, assuming you have enabled the &quot;Send Logs&quot; setting, the app will ask you to rate your service. These ratings help us improve the app experience and the app's accuracy. Along with your rating, your phone's path will be sent in the log. Please note that this data is not linked to you in any way and it does not contain any information about the location where the path was recorded (e.g., no GPS coordinates are logged). Further, no images or other sensitive information are logged by the app. If you have any concerns about the data in the logs, please contact us (or simply switch off the &quot;Send Logs&quot; feature in the app settings).</p>
+                    <h2>Providing feedback to the development team</h2>
+                    <p>Please send all feedback to the development team through the feedback popover in the Clew app. The feedback popover is accessible by tapping the feedback button in the app. We take your feedback seriously and will do our best to act on it.</p>
+                    
+                </div>
+                
+            </div>
+            
+        </div>
+    </body>
+</html>

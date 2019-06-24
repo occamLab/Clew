@@ -18,7 +18,8 @@ class HelpViewController : UIViewController {
     /// When the view has loaded, the index.html file will be loaded and rendered by webContent.
     override func viewDidLoad() {
         title = "Clew Help"
-        let url = Bundle.main.url(forResource: "index", withExtension: "html", subdirectory: "help")!
+        let url = Bundle.main.url(forResource: "table", withExtension: "html", subdirectory: "help")!
+        //let url = Bundle.main.url(forResource: "index", withExtension: "html", subdirectory: "help")!
         webContent.loadFileURL(url, allowingReadAccessTo: url)
         let request = URLRequest(url: url)
         webContent.load(request)
