@@ -296,6 +296,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// The state of the app.  This should be constantly referenced and updated as the app transitions
     var state = AppState.initializing {
         didSet {
+            observer?.didTransitionTo(newState: state)
             logger.logStateTransition(newState: state)
             switch state {
             case .recordingRoute:
@@ -349,7 +350,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             }
         }
     }
-
+    /// Observer of Clew App
+    var observer: ClewObserver?
+    
     /// When VoiceOver is not active, we use AVSpeechSynthesizer for speech feedback
     let synth = AVSpeechSynthesizer()
     
@@ -384,6 +387,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     ///   - utterance: the utterance itself
     func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer,
                            didFinish utterance: AVSpeechUtterance) {
+        observer?.finishAnnouncement(announcement: utterance.speechString)
         currentAnnouncement = nil
         if let nextAnnouncement = self.nextAnnouncement {
             self.nextAnnouncement = nil
@@ -887,6 +891,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         drawUI()
         addGestures()
         setupFirebaseObservers()
+        observer = TutorialManager()
         
         // create listeners to ensure that the isReadingAnnouncement flag is reset properly
         NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification, object: nil, queue: nil) { (notification) -> Void in
@@ -969,7 +974,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
         
         synth.delegate = self
-        NotificationCenter.default.addObserver(forName: UIAccessibility.announcementDidFinishNotification, object: nil, queue: nil) { (notification) -> Void in
+        NotificationCenter.default.addObserver(forName: UIAccessibility.announcementDidFinishNotification, object: nil, queue: nil) { (notification) ->Void in
+            self.observer?.finishAnnouncement(announcement: "not receiving announcement strings")
             self.currentAnnouncement = nil
             if let nextAnnouncement = self.nextAnnouncement {
                 self.nextAnnouncement = nil
