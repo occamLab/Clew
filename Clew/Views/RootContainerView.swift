@@ -62,28 +62,28 @@ class RootContainerView: UIView {
         super.init(frame: frame)
         
         // MARK: Settings Button
-        settingsButton = UIButton(frame: CGRect(x: 0,
-                                                y: UIConstants.yOriginOfSettingsAndHelpButton,
-                                                width: UIConstants.buttonFrameWidth/3,
-                                                height: UIConstants.settingsAndHelpFrameHeight))
+        settingsButton = UIButton(frame: CGRect(x: UIConstants.buttonFrameWidth/(10/0.5),
+                                                y: 10,
+                                                width: UIConstants.buttonFrameWidth/7,
+                                                height: UIConstants.buttonFrameWidth/7))
         settingsButton.isAccessibilityElement = true
         settingsButton.setTitle("Settings", for: .normal)
         settingsButton.accessibilityLabel = "Settings"
         settingsButton.titleLabel?.font = UIFont.systemFont(ofSize: 24.0)
-        settingsButton.backgroundColor = UIColor.black.withAlphaComponent(0.4)
+//        settingsButton.backgroundColor = UIColor.black.withAlphaComponent(0.4)
         settingsButton.setImage(UIImage(named: "settingsGear"), for: .normal)
 
         
         // MARK: Help Button
-        helpButton = UIButton(frame: CGRect(x: UIConstants.buttonFrameWidth/3,
-                                            y: UIConstants.yOriginOfSettingsAndHelpButton,
-                                            width: UIConstants.buttonFrameWidth/3,
-                                            height: UIConstants.settingsAndHelpFrameHeight))
+        helpButton = UIButton(frame: CGRect(x: UIConstants.buttonFrameWidth/(7/3),
+                                            y: UIConstants.yOriginOfSettingsAndHelpButton + 10,
+                                            width: UIConstants.buttonFrameWidth/7,
+                                            height: UIConstants.buttonFrameWidth/7))
         helpButton.isAccessibilityElement = true
         helpButton.setTitle("Help", for: .normal)
         helpButton.titleLabel?.font = UIFont.systemFont(ofSize: 24.0)
         helpButton.accessibilityLabel = "Help"
-        helpButton.backgroundColor = UIColor.black.withAlphaComponent(0.4)
+//        helpButton.backgroundColor = UIColor.black.withAlphaComponent(0.4)
         helpButton.setImage(UIImage(named: "HelpButton"), for: .normal)
 
         //button to go to the home screen
@@ -102,7 +102,7 @@ class RootContainerView: UIView {
         //                                         y: UIConstants.yOriginOfSettingsAndHelpButton,
         //                                         width: UIConstants.buttonFrameWidth/3,
         //                                         height: UIConstants.settingsAndHelpFrameHeight))
-        feedbackButton = UIButton(frame: CGRect(x: 70,
+        feedbackButton = UIButton(frame: CGRect(x: UIConstants.buttonFrameWidth/(10/8),
                                                 y: 10,
                                                 width: UIConstants.buttonFrameWidth/7,
                                                 height: UIConstants.buttonFrameWidth/7))
@@ -110,7 +110,7 @@ class RootContainerView: UIView {
         feedbackButton.setTitle("Feedback", for: .normal)
         feedbackButton.titleLabel?.font = UIFont.systemFont(ofSize: 24.0)
         feedbackButton.accessibilityLabel = "Feedback"
-        feedbackButton.backgroundColor = UIColor.black.withAlphaComponent(0.4)
+//        feedbackButton.backgroundColor = UIColor.black.withAlphaComponent(0.4)
         feedbackButton.setImage(UIImage(named: "Contact"), for: .normal)
 
 

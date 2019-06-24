@@ -458,7 +458,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         pauseTrackingController.remove()
         resumeTrackingConfirmController.remove()
         resumeTrackingController.remove()
-//        rootContainerView.countdownTimer.isHidden = true
+        rootContainerView.countdownTimer.isHidden = true
     }
     
     /// This handles when a route cell is clicked (triggering the route to be loaded).

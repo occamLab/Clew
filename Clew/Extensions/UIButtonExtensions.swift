@@ -47,9 +47,9 @@ extension UIButton {
             button.center.x = containerView.center.x - UIScreen.main.bounds.size.width/4.5
         }
         if containerView.mainText != nil {
-            button.center.y = containerView.bounds.size.height * (8/10)
+            button.center.y = containerView.bounds.size.height * (31/40)
         } else {
-            button.center.y = containerView.bounds.size.height * (6/10)
+            button.center.y = containerView.bounds.size.height * (5/10)
         }
         
         switch appearance {
