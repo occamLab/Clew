@@ -11,6 +11,8 @@
 		4D6B00E51F33C9B800952242 /* Crumb.obj in Resources */ = {isa = PBXBuildFile; fileRef = 4D6B00E41F33C85500952242 /* Crumb.obj */; };
 		4DF05CC81F34EB6B008B0E31 /* Confirm.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4DF05CC71F34EB56008B0E31 /* Confirm.mp3 */; };
 		77467DAF22BBC1D300FA7DEE /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 77467DAE22BBC1D300FA7DEE /* Default-568h@2x.png */; };
+		77A734E222C156AC00E124EA /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 77A734E122C156AC00E124EA /* GoogleService-Info.plist */; };
+		77A734E322C156AC00E124EA /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 77A734E122C156AC00E124EA /* GoogleService-Info.plist */; };
 		82569F4E22187E6500448B45 /* help in Resources */ = {isa = PBXBuildFile; fileRef = 82569F4D22187E6500448B45 /* help */; };
 		82569F4F22187E6500448B45 /* help in Resources */ = {isa = PBXBuildFile; fileRef = 82569F4D22187E6500448B45 /* help */; };
 		B0A563F6FE1007A2716DC876 /* Pods_Clew_Dev.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3532E390954571B93729786A /* Pods_Clew_Dev.framework */; };
@@ -52,8 +54,6 @@
 		E5470F1922C119F5001092A4 /* StartRecording.aiff in Resources */ = {isa = PBXBuildFile; fileRef = E5470ED222C119F4001092A4 /* StartRecording.aiff */; };
 		E5470F1A22C119F5001092A4 /* StopRecording.aiff in Resources */ = {isa = PBXBuildFile; fileRef = E5470ED322C119F4001092A4 /* StopRecording.aiff */; };
 		E5470F1B22C119F5001092A4 /* StopRecording.aiff in Resources */ = {isa = PBXBuildFile; fileRef = E5470ED322C119F4001092A4 /* StopRecording.aiff */; };
-		E5470F1C22C119F5001092A4 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E5470ED422C119F4001092A4 /* GoogleService-Info.plist */; };
-		E5470F1D22C119F5001092A4 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E5470ED422C119F4001092A4 /* GoogleService-Info.plist */; };
 		E5470F1E22C119F5001092A4 /* NSStringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470ED622C119F4001092A4 /* NSStringExtension.swift */; };
 		E5470F1F22C119F5001092A4 /* NSStringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470ED622C119F4001092A4 /* NSStringExtension.swift */; };
 		E5470F2022C119F5001092A4 /* UIViewControllerExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470ED722C119F4001092A4 /* UIViewControllerExtensions.swift */; };
@@ -111,6 +111,7 @@
 		4D6B00E41F33C85500952242 /* Crumb.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = Crumb.obj; sourceTree = "<group>"; };
 		4DF05CC71F34EB56008B0E31 /* Confirm.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = Confirm.mp3; sourceTree = "<group>"; };
 		77467DAE22BBC1D300FA7DEE /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		77A734E122C156AC00E124EA /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		822E27F8210E3F260024A5E3 /* Clew Dev-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Clew Dev-Info.plist"; sourceTree = "<group>"; };
 		82569F4D22187E6500448B45 /* help */ = {isa = PBXFileReference; lastKnownFileType = folder; path = help; sourceTree = "<group>"; };
 		85A1A72DC19F87F15B738291 /* Pods-Clew Dev.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew Dev.release.xcconfig"; path = "Pods/Target Support Files/Pods-Clew Dev/Pods-Clew Dev.release.xcconfig"; sourceTree = "<group>"; };
@@ -153,7 +154,6 @@
 		E5470ED022C119F4001092A4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E5470ED222C119F4001092A4 /* StartRecording.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = StartRecording.aiff; sourceTree = "<group>"; };
 		E5470ED322C119F4001092A4 /* StopRecording.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = StopRecording.aiff; sourceTree = "<group>"; };
-		E5470ED422C119F4001092A4 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		E5470ED622C119F4001092A4 /* NSStringExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSStringExtension.swift; sourceTree = "<group>"; };
 		E5470ED722C119F4001092A4 /* UIViewControllerExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIViewControllerExtensions.swift; sourceTree = "<group>"; };
 		E5470ED822C119F4001092A4 /* UIViewExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIViewExtensions.swift; sourceTree = "<group>"; };
@@ -250,6 +250,7 @@
 		E5470EA922C119F4001092A4 /* Clew */ = {
 			isa = PBXGroup;
 			children = (
+				E5470ED022C119F4001092A4 /* Assets.xcassets */,
 				E5470EAA22C119F4001092A4 /* Voice Notes */,
 				E5470EAF22C119F4001092A4 /* Misc */,
 				E5470EB722C119F4001092A4 /* SettingsViewController.m */,
@@ -257,15 +258,14 @@
 				E5470EB922C119F4001092A4 /* Settings.bundle */,
 				E5470EBA22C119F4001092A4 /* SettingsTableViewController.h */,
 				E5470EBB22C119F4001092A4 /* localizations */,
-				E5470ED022C119F4001092A4 /* Assets.xcassets */,
 				E5470ED122C119F4001092A4 /* Sound Effects */,
-				E5470ED422C119F4001092A4 /* GoogleService-Info.plist */,
 				E5470ED522C119F4001092A4 /* Extensions */,
 				E5470EDB22C119F4001092A4 /* SettingsViewController.h */,
 				E5470EDC22C119F4001092A4 /* Clew-Bridging-Header.h */,
 				E5470EDD22C119F4001092A4 /* Controllers */,
 				E5470EED22C119F4001092A4 /* Views */,
 				E5470EF422C119F4001092A4 /* Info.plist */,
+				77A734E122C156AC00E124EA /* GoogleService-Info.plist */,
 				E5470EF522C119F4001092A4 /* GoogleService-Info_dev.plist */,
 			);
 			path = Clew;
@@ -468,9 +468,9 @@
 			files = (
 				4DF05CC81F34EB6B008B0E31 /* Confirm.mp3 in Resources */,
 				E5470F1822C119F5001092A4 /* StartRecording.aiff in Resources */,
+				77A734E222C156AC00E124EA /* GoogleService-Info.plist in Resources */,
 				E5470F1022C119F5001092A4 /* LaunchScreen.strings in Resources */,
 				4D6B00E51F33C9B800952242 /* Crumb.obj in Resources */,
-				E5470F1C22C119F5001092A4 /* GoogleService-Info.plist in Resources */,
 				E5470F1222C119F5001092A4 /* Localizable.strings in Resources */,
 				E5470F0E22C119F5001092A4 /* Settings.bundle in Resources */,
 				82569F4E22187E6500448B45 /* help in Resources */,
@@ -498,8 +498,8 @@
 				E5470F4F22C119F5001092A4 /* GoogleService-Info_dev.plist in Resources */,
 				E5470F1122C119F5001092A4 /* LaunchScreen.strings in Resources */,
 				82569F4F22187E6500448B45 /* help in Resources */,
-				E5470F1D22C119F5001092A4 /* GoogleService-Info.plist in Resources */,
 				E5470F1722C119F5001092A4 /* Assets.xcassets in Resources */,
+				77A734E322C156AC00E124EA /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
