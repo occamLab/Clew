@@ -3,19 +3,25 @@ var coll = document.getElementsByClassName("collapsible");
 //creates an index counter variable
 var i;
 
+//updates the accessability labels
 function updateAccessabilityLabels (htmlElement,action){
-    if action == "open"{
-        //change the accessability tag
-        //htmlElement.setAttribute("aria-Label","expand " + htmlElement.innerHTML + " section")
-    }else{
-        //change the accessability tag
-        //htmlElement.setAttribute("aria-Label","collapse " + htmlElement.innerHTML + " section")
+    //if the user just opened a section
+    if (action == "open"){
+        //set the accessability label
+        htmlElement.setAttribute("aria-Label","contract " + htmlElement.innerHTML + " section");
+        return 0
     }
-    return 0
+    //if the user is closing the section
+    if (action == "close"){
+        //set the accessability label
+        htmlElement.setAttribute("aria-Label","expand " + htmlElement.innerHTML + " section");
+        return 0
+    }
+
 }
 
 
-//itterates through al of the collapseable elements
+//itterates through all of the collapseable elements
 for (i = 0; i < coll.length; i++) {
 //adds clickable functionality
 coll[i].addEventListener("click", function() {
@@ -28,13 +34,13 @@ coll[i].addEventListener("click", function() {
                          //hide the content
                          content.style.display = "none";
                          //change the accessability tag
-                         //updateAccessabilityLabels(this,"close");
+                         updateAccessabilityLabels(this,"close");
                          
                          } else {
                          //show the content
                          content.style.display = "block";
                          //change the accessability tag
-                         //updateAccessabilityLabels(this,"open");
+                         updateAccessabilityLabels(this,"open");
                          }
                          });
 }

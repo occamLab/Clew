@@ -3,40 +3,42 @@
 <html>
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1">
-            <style>
-                .collapsible {
-                    background-color: #777;
-                    color: white;
-                    cursor: pointer;
-                    padding: 18px;
-                    width: 100%;
-                    border: none;
-                    text-align: left;
-                    outline: none;
-                    font-size: 15px;
-                }
-            
+        <style>
+            .collapsible {
+                background-color: #777;
+                color: white;
+                cursor: pointer;
+                padding: 18px;
+                width: 100%;
+                border: none;
+                text-align: left;
+                outline: none;
+                font-size: 15px;
+            }
+        
             .active, .collapsible:hover {
                 background-color: #555;
             }
-            
+        
             .content {
                 padding: 0 18px;
                 display: none;
                 overflow: hidden;
                 background-color: #f1f1f1;
             }
-            </style>
+        </style>
     </head>
     <body>
         
-        <p id = console> This is a console </p>
-        
         <!--creates an accordian menu heading which needs to be exapanded by defualt.-->
-        <button class="collapsible" aria-label = "expand stuff and things section"> <h1>Stuff and things</h1></button>
+        <button class="collapsible" aria-label = "expand app features section"> App Features </button>
         <!-- the content that is hidden goes here -->
         <div class="content">
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+            <h2>Current Version</h2>
+            <p>Clew allows you to record routes using your phone that you can then navigate (either in the forward or reverse direction) at a later point in time. Clew can be used in situations where you want to immediately navigate back to your starting location (e.g., if you went somewhere with a sighted guide or if it is harder to navigate the reverse journey) or when you want to remember a route that you are learning so you can navigate it more confidently in the future.  Importantly, Clew does not use your phone's GPS, so it can be used indoors.</p>
+            <p>The ability to save routes is a new feature for Clew.</p>
+            <h2>Future Versions</h2>
+            <p>We are working on a route sharing feature so that you can send routes to other users.</p>
         </div>
 
         
