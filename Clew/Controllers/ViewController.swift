@@ -410,6 +410,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     @objc func routesButtonPressed() {
         let storyBoard: UIStoryboard = UIStoryboard(name: "SettingsAndHelp", bundle: nil)
         let popoverContent = storyBoard.instantiateViewController(withIdentifier: "Routes") as! RoutesViewController
+        popoverContent.preferredContentSize = CGSize(width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height)
         popoverContent.rootViewController = self
         popoverContent.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: popoverContent, action: #selector(popoverContent.doneWithRoutes))
         popoverContent.updateRoutes(routes: dataPersistence.routes)
@@ -1692,7 +1693,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     @objc func settingsButtonPressed() {
         let storyBoard: UIStoryboard = UIStoryboard(name: "SettingsAndHelp", bundle: nil)
         let popoverContent = storyBoard.instantiateViewController(withIdentifier: "Settings") as! SettingsViewController
-        
+        popoverContent.preferredContentSize = CGSize(width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height)
         let nav = UINavigationController(rootViewController: popoverContent)
         nav.modalPresentationStyle = .popover
         let popover = nav.popoverPresentationController
@@ -1710,12 +1711,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     @objc func helpButtonPressed() {
         let storyBoard: UIStoryboard = UIStoryboard(name: "SettingsAndHelp", bundle: nil)
         let popoverContent = storyBoard.instantiateViewController(withIdentifier: "Help") as! HelpViewController
+        popoverContent.preferredContentSize = CGSize(width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height)
         let nav = UINavigationController(rootViewController: popoverContent)
         nav.modalPresentationStyle = .popover
         let popover = nav.popoverPresentationController
         popover?.delegate = self
         popover?.sourceView = self.view
-        popover?.sourceRect = CGRect(x: 0, y: UIConstants.settingsAndHelpFrameHeight/2, width: 0,height: 0)
+        popover?.sourceRect = CGRect(x: 0, y: 0, width: 0, height: 0)
         popoverContent.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: popoverContent, action: #selector(popoverContent.doneWithHelp))
         suppressTrackingWarnings = true
         self.present(nav, animated: true, completion: nil)
@@ -1725,6 +1727,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     @objc func feedbackButtonPressed() {
         let storyBoard: UIStoryboard = UIStoryboard(name: "SettingsAndHelp", bundle: nil)
         let popoverContent = storyBoard.instantiateViewController(withIdentifier: "Feedback") as! FeedbackViewController
+        popoverContent.preferredContentSize = CGSize(width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height)
         let nav = UINavigationController(rootViewController: popoverContent)
         nav.modalPresentationStyle = .popover
         let popover = nav.popoverPresentationController
