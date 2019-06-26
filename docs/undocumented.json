@@ -65,14 +65,7 @@
     },
     {
       "file": "/Users/dieterbrehm/git/occam/Clew/Clew/Controllers/ViewController.swift",
-      "line": 746,
-      "symbol": "ViewController.clearState()",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/dieterbrehm/git/occam/Clew/Clew/Controllers/ViewController.swift",
-      "line": 1737,
+      "line": 1743,
       "symbol": "ViewController.homeButtonPressed()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
