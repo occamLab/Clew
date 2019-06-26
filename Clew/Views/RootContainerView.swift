@@ -97,11 +97,6 @@ class RootContainerView: UIView {
         homeButton.accessibilityLabel = "Clew Home Screen"
         homeButton.setImage(UIImage(named: "homeButton"), for: .normal)
         
-        // button that shows feedback menu
-        // feedbackButton = UIButton(frame: CGRect(x: 2*UIConstants.buttonFrameWidth/3,
-        //                                         y: UIConstants.yOriginOfSettingsAndHelpButton,
-        //                                         width: UIConstants.buttonFrameWidth/3,
-        //                                         height: UIConstants.settingsAndHelpFrameHeight))
         feedbackButton = UIButton(frame: CGRect(x: UIConstants.buttonFrameWidth/(10/8),
                                                 y: 10,
                                                 width: UIConstants.buttonFrameWidth/7,
@@ -110,17 +105,9 @@ class RootContainerView: UIView {
         feedbackButton.setTitle("Feedback", for: .normal)
         feedbackButton.titleLabel?.font = UIFont.systemFont(ofSize: 24.0)
         feedbackButton.accessibilityLabel = "Feedback"
-//        feedbackButton.backgroundColor = UIColor.black.withAlphaComponent(0.4)
         feedbackButton.setImage(UIImage(named: "Contact"), for: .normal)
 
 
-        // MARK: Directions Button
-        // an invisible button which can be pressed to get the directions
-        // to the next waypoint.
-        // getDirectionButton = UIButton(frame: CGRect(x: 0,
-        //                                             y: 0,
-        //                                             width: UIConstants.buttonFrameWidth,
-        //                                             height: UIConstants.yOriginOfButtonFrame))
         getDirectionButton = UIButton(frame: CGRect(x: UIConstants.buttonFrameWidth/(7/5),
                                                     y: UIConstants.yOriginOfSettingsAndHelpButton + 10,
                                                     width: UIConstants.buttonFrameWidth/7,
