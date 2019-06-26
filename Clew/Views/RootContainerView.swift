@@ -70,7 +70,6 @@ class RootContainerView: UIView {
         settingsButton.setTitle("Settings", for: .normal)
         settingsButton.accessibilityLabel = "Settings"
         settingsButton.titleLabel?.font = UIFont.systemFont(ofSize: 24.0)
-//        settingsButton.backgroundColor = UIColor.black.withAlphaComponent(0.4)
         settingsButton.setImage(UIImage(named: "settingsGear"), for: .normal)
 
         
@@ -83,7 +82,6 @@ class RootContainerView: UIView {
         helpButton.setTitle("Help", for: .normal)
         helpButton.titleLabel?.font = UIFont.systemFont(ofSize: 24.0)
         helpButton.accessibilityLabel = "Help"
-//        helpButton.backgroundColor = UIColor.black.withAlphaComponent(0.4)
         helpButton.setImage(UIImage(named: "HelpButton"), for: .normal)
 
         // MARK: Home Button
