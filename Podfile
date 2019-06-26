@@ -1,4 +1,5 @@
 # Uncomment the next line to define a global platform for your project
+source 'https://github.com/CocoaPods/Specs.git'
 platform :ios, '12.0'
 
 use_frameworks!
@@ -13,6 +14,7 @@ def all_pods
   pod 'SRCountdownTimer'
   pod 'PRTween', '~> 0.1'
   pod 'Firebase/Analytics'
+  pod 'Instructions', '~> 1.3.1'
 end
 
 target 'Clew' do
