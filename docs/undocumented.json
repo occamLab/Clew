@@ -64,6 +64,13 @@
       "warning": "undocumented"
     },
     {
+      "file": "/Users/dieterbrehm/git/occam/Clew/Clew/Controllers/ViewController.swift",
+      "line": 1743,
+      "symbol": "ViewController.homeButtonPressed()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
       "file": "/Users/dieterbrehm/git/occam/Clew/Clew/Misc/FeedbackLogger.swift",
       "line": 13,
       "symbol": "FeedbackLogger",
