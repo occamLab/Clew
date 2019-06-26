@@ -18,19 +18,19 @@ class HelpViewController : UIViewController, WKUIDelegate, WKNavigationDelegate 
     @IBOutlet var webContent: WKWebView!
     
     /// When the view has loaded, the index.html file will be loaded and rendered by webContent.
-    override func viewDidLoad() {
+    /*override func viewDidLoad() {
         title = "Clew Help"
         let url = Bundle.main.url(forResource: "helpDocsHTML", withExtension: "html", subdirectory: "help")!
         //let url = Bundle.main.url(forResource: "index", withExtension: "html", subdirectory: "help")!
         webContent.loadFileURL(url, allowingReadAccessTo: url)
         let request = URLRequest(url: url)
         webContent.load(request)
-    }
+    }*/
     /// When the view has loaded, the index.html file will be loaded and rendered by webContent.
-    /*override func viewDidLoad() {
+    override func viewDidLoad() {
         title = "Clew Help"
         helpCompiler.loadWebContent(webView: webContent)
-    }*/
+    }
     
     /// This is called when the view should close.  This method posts a notification "ClewPopoverDismissed" that can be listened to if an object needs to know that the view is being closed.
     @objc func doneWithHelp() {

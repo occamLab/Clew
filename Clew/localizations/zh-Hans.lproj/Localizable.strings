@@ -123,3 +123,18 @@
 // Info.plist
 "Clew needs to access your camera to track your orientation." = "Clew需要使用您的相机以跟踪您的方向。";
 "Permission to use the microphone is required to use the voice notes feature." = "使用语音备忘录功能需要使用麦克风。";
+
+// HelpCompiler.swift
+"appFeaturesHeading" = "App Features";
+"appFeaturesCurrentVersionHeading" = "Current Version";
+"appfeaturesCurrentVersionContent" = "Clew allows you to record routes using your phone that you can then navigate (either in the forward or reverse direction) at a later point in time. Clew can be used in situations where you want to immediately navigate back to your starting location (e.g., if you went somewhere with a sighted guide or if it is harder to navigate the reverse journey) or when you want to remember a route that you are learning so you can navigate it more confidently in the future.  Importantly, Clew does not use your phone's GPS, so it can be used indoors.";
+"appFeaturesNewFeaturesContent" = "The ability to save routes is a new feature for Clew.";
+"appFeaturesFutureVersionsHeader" = "Future Versions";
+"appFeaturesFutureVersionsContent" = "We are working on a route sharing feature so that you can send routes to other users.";
+"howWellDoesClewWorkHeader" = "How well does Clew work?";
+"howWellDoesClewWorkContentParagraph1" = "Clew relies on the position tracking technology provided by Apple's ARKit. These motion estimates are based on tracking elements in the environment visually (using your phone's camera) and on motion estimates from inertial sensors in your phone. While this technology is advanced, it does not work perfectly. You should expect that over very long routes, particular ones with limited visual features or poor lighting, that the accuracy of the tracking (and hence the app's guidance) will decrease. We have found that Clew works best when you navigate routes along the same direction as they were originally recorded (&quot;Start to End &quot; rather than &quot;End to Start &quot; navigation mode).";
+"howWellDoesClewWorkContentParagraph2" = "Given the limitations of Clew, you should always use your orientation and mobility skills to ensure your personal safety when using Clew. We are working on additional strategies for improving the accuracy of Clew.";
+"recordingARouteHeader" = "Recording a route";
+"recordingARouteContent" = "As soon as the app launches, the app will present three buttons: saved routes, record route, and create landmark. To record a route that you don't need to save, or if you only want to be able to save the route in the reverse direction, you can simply activate the record button and move along the route you'd like to record. If you want to be able to save the route so that you can receive automatic guidance along it at a later time, activate the create landmark button and follow the procedure for landmark creation and route pausing described later in this document.";
+"recordingARouteProperPositioningHeading" = "Properly positioning your phone when using Clew";
+"recordingARouteProperPositioningContent" = "The app's motion estimates are based primarily on analyzing images from your phone's camera. The app will not work unless your phone's rear camera is capturing images of your environment. The app will not work if the phone is in your pocket or if any part of your body is blocking your phone's rear camera. We have found that the app works best when you hold the phone in portrait orientation with the rear camera facing directly ahead of you and the phone oriented vertically. Other orientations can work, but may result in diminished accuracy.";
