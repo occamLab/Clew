@@ -115,28 +115,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             case .ratingRoute(let announceArrival):
                 handleStateTransitionToRatingRoute(announceArrival: announceArrival)
             case .mainScreen(let announceArrival):
-                /// handling main screen transitions outside of the first load
-                self.hideAllViewsHelper()
-                self.rootContainerView.homeButton.isHidden = true
-//                self.recordPathView.isHidden = false
-                add(self.recordPathController)
-                self.recordPathController.isAccessibilityElement = false
-                if case .navigatingRoute = self.state {
-                    self.keypointNode.removeFromParentNode()
-                }
-                self.followingCrumbs?.invalidate()
-                self.routeName = nil
-                self.beginRouteLandmark = RouteLandmark()
-                self.endRouteLandmark = RouteLandmark()
-                self.playAlignmentConfirmation?.cancel()
-                self.rootContainerView.announcementText.isHidden = true
-                self.nav.headingOffset = 0.0
-                self.headingRingBuffer.clear()
-                self.locationRingBuffer.clear()
-                self.logger.resetNavigationLog()
-                self.logger.resetPathLog()
-                self.hapticTimer?.invalidate()
-                self.logger.resetStateSequenceLog()
                 handleStateTransitionToMainScreen(announceArrival: announceArrival)
             case .startingPauseProcedure:
                 handleStateTransitionToStartingPauseProcedure()
@@ -381,12 +359,15 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// Handler for the completingPauseProcedure app state
     func handleStateTransitionToCompletingPauseProcedure() {
         // TODO: we should not be able to create a route landmark if we are in the relocalizing state... (might want to handle this when the user stops navigation on a route they loaded.... This would obviate the need to handle this in the recordPath code as well
+        print("completing pause procedure")
         if creatingRouteLandmark {
             guard let currentTransform = sceneView.session.currentFrame?.camera.transform else {
                 print("can't properly save landmark: TODO communicate this to the user somehow")
                 return
             }
             beginRouteLandmark.transform = currentTransform
+            print("setting transform", beginRouteLandmark.transform)
+
             Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(playSound)), userInfo: nil, repeats: false)
 //            rootContainerView.pauseTrackingView.isHidden = true
             pauseTrackingController.remove()
@@ -762,6 +743,28 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
     }
     
+    func clearState() {
+        // TODO: check for code reuse
+        rootContainerView.homeButton.isHidden = true
+        recordPathController.isAccessibilityElement = false
+        if case .navigatingRoute = self.state {
+            keypointNode.removeFromParentNode()
+        }
+        followingCrumbs?.invalidate()
+        routeName = nil
+        beginRouteLandmark = RouteLandmark()
+        endRouteLandmark = RouteLandmark()
+        playAlignmentConfirmation?.cancel()
+        rootContainerView.announcementText.isHidden = true
+        nav.headingOffset = 0.0
+        headingRingBuffer.clear()
+        locationRingBuffer.clear()
+        logger.resetNavigationLog()
+        logger.resetPathLog()
+        hapticTimer?.invalidate()
+        logger.resetStateSequenceLog()
+    }
+    
     /// function that creates alerts for the home button
     func homePageNavigationProcesses() {
         let alert = UIAlertController(title: "Are you sure?",
@@ -769,6 +772,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                                       preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Go to the Home Page", style: .default, handler: { action -> Void in
             // proceed to home page
+            self.clearState()
+            self.hideAllViewsHelper()
             self.state = .mainScreen(announceArrival: false)
         }
         ))
@@ -1023,14 +1028,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
 //        rootContainerView.recordPathView.isHidden = false
 //        rootContainerView.routeRatingView.isHidden = true
 //        rootContainerView.stopNavigationView.isHidden = true
-//        add(recordPathController)
-        addChild(recordPathController)
+        add(recordPathController)
+        /// handling main screen transitions outside of the first load
         /// add the view of the child to the view of the parent
-        recordPathController.view.isHidden = false
-        rootContainerView.addSubview(recordPathController.view)
-        /// notify the child that it was moved to a parent
-        recordPathController.didMove(toParent: self)
-        
+        //recordPathController.view.isHidden = false
         routeRatingController.remove()
         stopNavigationController.remove()
         
@@ -1327,6 +1328,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// - Parameter sender: the button that generated the event
     @objc func stopRecording(_ sender: UIButton) {
         if beginRouteLandmark.transform != nil {
+            print("Attempting to save route")
             if #available(iOS 12.0, *) {
                 sceneView.session.getCurrentWorldMap { worldMap, error in
                     self.getRouteNameAndSaveRouteHelper(mapAsAny: worldMap)
@@ -1398,6 +1400,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
 //        backButton.isHidden = true
         creatingRouteLandmark = true
         // make sure to clear out any relative transform and paused transform so the alignment is accurate
+        print("starting pause procedure", creatingRouteLandmark)
         sceneView.session.setWorldOrigin(relativeTransform: simd_float4x4.makeTranslation(0, 0, 0))
         state = .startingPauseProcedure
     }
@@ -1732,7 +1735,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     // Called when home button is pressed
     // Chooses the states in which the home page alerts pop up
     @objc func homeButtonPressed() {
-        print (state.rawValue)
         if case .navigatingRoute = self.state {
             homePageNavigationProcesses()
         }
@@ -1761,6 +1763,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             homePageNavigationProcesses()
         }
         else {
+            // proceed to home page
+            clearState()
+            hideAllViewsHelper()
             self.state = .mainScreen(announceArrival: false)
         }
     }
