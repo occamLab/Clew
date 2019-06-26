@@ -10,7 +10,9 @@ import Foundation
 import WebKit
 
 /// The view controller for the help dialog.  This is a thin wrapper on top of WKWebView, which displays the main content.
-class HelpViewController : UIViewController {
+class HelpViewController : UIViewController, WKUIDelegate, WKNavigationDelegate  {
+    
+    var helpCompiler = HelpCompiler()
     
     /// The view that displays the help as a webpage
     @IBOutlet var webContent: WKWebView!
@@ -24,6 +26,11 @@ class HelpViewController : UIViewController {
         let request = URLRequest(url: url)
         webContent.load(request)
     }
+    /// When the view has loaded, the index.html file will be loaded and rendered by webContent.
+    /*override func viewDidLoad() {
+        title = "Clew Help"
+        helpCompiler.loadWebContent(webView: webContent)
+    }*/
     
     /// This is called when the view should close.  This method posts a notification "ClewPopoverDismissed" that can be listened to if an object needs to know that the view is being closed.
     @objc func doneWithHelp() {
