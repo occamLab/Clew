@@ -18,6 +18,14 @@
 //  - Possibly create a warning if the phone doesn't appear to be in the correct orientation
 //  - revisit turn warning feature.  It doesn't seem to actually help all that much at the moment.
 
+// Path alignment
+// TODO: implement local suppression so we don't get to many alignment points in one place.
+// TODO: implement something to keep the points moving in the proper direction (avoid reversing the route on mistake)
+// TODO: automatically add the first keypoint of the route (probably this would also involve an alignment at that point as well)
+// TODO: recency of path alignment
+// TODO: current version doesn't seem to work properly with the align to route feature
+// TODO: if you get an error during alignment, it may mistakenly think that you have localized to the route visually (it cancels out the alignment procedure)
+
 import UIKit
 import ARKit
 import SceneKit
@@ -29,7 +37,7 @@ import VectorMath
 import Firebase
 import FirebaseDatabase
 import SRCountdownTimer
-
+import LASwift
 
 // MARK: Extensions
 extension UIView {
@@ -165,6 +173,7 @@ fileprivate extension Selector {
     static let stopRecordingButtonTapped = #selector(ViewController.stopRecording)
     static let startNavigationButtonTapped = #selector(ViewController.startNavigation)
     static let stopNavigationButtonTapped = #selector(ViewController.stopNavigation)
+    static let snapToRouteButtonTapped = #selector(ViewController.snapToRoute)
     static let landmarkButtonTapped = #selector(ViewController.startCreateLandmarkProcedure)
     static let pauseButtonTapped = #selector(ViewController.startPauseProcedure)
     static let thumbsUpButtonTapped = #selector(ViewController.sendLogData)
@@ -394,9 +403,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// Handler for the recordingRoute app state
     func handleStateTransitionToRecordingRoute() {
         // records a new path
-        
-        // make sure to never record a path with a transform set
-        sceneView.session.setWorldOrigin(relativeTransform: simd_float4x4.makeTranslation(0, 0, 0))
         attemptingRelocalization = false
         
         crumbs = []
@@ -420,6 +426,29 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         showStartNavigationButton(allowPause: allowPause)
     }
     
+    func removeFollowCrumbNodes() {
+        // erase nearest keypoint
+        followCrumbNodes.map({$0.removeFromParentNode()})
+        followCrumbNodes = []
+    }
+    
+    func renderFollowCrumbNodes() {
+        removeFollowCrumbNodes()
+        for crumb in followCrumbs {
+            let newLoc = LocationInfo(transform: currentWorldOriginRelativeTransform*crumb.transform)
+            let cubeNode = SCNNode(geometry: SCNBox(width: 0.05, height: 0.05, length: 0.05, chamferRadius: 0))
+            cubeNode.position = SCNVector3(newLoc.x, newLoc.y, newLoc.z)
+            sceneView.scene.rootNode.addChildNode(cubeNode)
+            
+            let box = SCNBox(width: 0.05, height: 0.05, length: 0.05, chamferRadius: 0)
+            box.firstMaterial?.diffuse.contents = UIColor(red: 30.0 / 255.0, green: 150.0 / 255.0, blue: 30.0 / 255.0, alpha: 1)
+            let cubeNodeOrig = SCNNode(geometry: box)
+            cubeNodeOrig.position = SCNVector3(crumb.x, crumb.y, crumb.z)
+            sceneView.scene.rootNode.addChildNode(cubeNodeOrig)
+            
+        }
+    }
+    
     /// Handler for the navigatingRoute app state
     func handleStateTransitionToNavigatingRoute() {
         // navigate the recorded path
@@ -428,13 +457,15 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         routeName = nil
         beginRouteLandmark = RouteLandmark()
         endRouteLandmark = RouteLandmark()
-
+        followCrumbs = []
+        //removeFollowCrumbNodes()
         logger.resetNavigationLog()
 
         // generate path from PathFinder class
         // enabled hapticFeedback generates more keypoints
         let path = PathFinder(crumbs: crumbs.reversed(), hapticFeedback: hapticFeedback, voiceFeedback: voiceFeedback)
         keypoints = path.keypoints
+        checkedOffKeypoints = []
         
         // save keypoints data for debug log
         logger.logKeypoints(keypoints: keypoints)
@@ -505,8 +536,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             crumbs = route.crumbs
             pausedTransform = route.endRouteLandmark.transform
         }
-        // make sure to clear out any relative transform that was saved before so we accurately align
-        sceneView.session.setWorldOrigin(relativeTransform: simd_float4x4.makeTranslation(0, 0, 0))
+        // TODO: we may need to revisit whether we need to undo previously applied relativeTransforms (I suspect not though)
         sceneView.session.run(configuration, options: [.removeExistingAnchors])
 
         if isTrackingPerformanceNormal, isSameMap {
@@ -706,6 +736,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// Image, label, and target for stop navigation button.
     let stopNavigationButton = ActionButtonComponents(appearance: .imageButton(image: UIImage(named: "StopNavigation")!), label: "Stop navigation", targetSelector: Selector.stopNavigationButtonTapped, alignment: .center, tag: 0)
     
+    /// label and target for stop navigation button.
+    let snapToRouteButton = ActionButtonComponents(appearance: .textButton(label: "Snap to Route"), label: "Snap to route", targetSelector: Selector.snapToRouteButtonTapped, alignment: .right, tag: 0)
+    
     /// Image, label, and target for routes button.
     let routesButton = ActionButtonComponents(appearance: .textButton(label: "Routes"), label: "Saved routes list", targetSelector: Selector.routesButtonTapped, alignment: .left, tag: 0)
 
@@ -841,7 +874,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// called when the view has loaded.  We setup various app elements in here.
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         // Scene view setup
         sceneView.frame = view.frame
         view.addSubview(sceneView)
@@ -867,9 +900,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         NotificationCenter.default.addObserver(forName: Notification.Name("ClewPopoverDismissed"), object: nil, queue: nil) { (notification) -> Void in
             self.suppressTrackingWarnings = false
         }
+        /*
+        // TODO: setup an actual legitimate case to test the implementation
+        followCrumbs = [LocationInfo(transform: simd_float4x4.makeTranslation(2, 0, 0)), LocationInfo(transform: simd_float4x4.makeTranslation(0, 0, sqrt(2)))]
+        // note that the orientation of the keypoints does not affect the calculation at all
+        keypoints = [KeypointInfo(location: LocationInfo(transform: simd_float4x4.makeTranslation(0, 0, 0)), orientation: Vector3(0, 1, 0))]
+        checkedOffKeypoints = [KeypointInfo(location: LocationInfo(transform: simd_float4x4.makeTranslation(1, 0, 1)), orientation: Vector3(0, 1, 0))]
+        snapToRoute(helpButton)
+ */
     }
     
-    /// Create the audio player objdcts for the various app sounds.  Creating them ahead of time helps reduce latency when playing them later.
+    /// Create the audio player objects for the various app sounds.  Creating them ahead of time helps reduce latency when playing them later.
     func setupAudioPlayers() {
         do {
             audioPlayers[1103] = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: "/System/Library/Audio/UISounds/Tink.caf"))
@@ -1154,7 +1195,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         configuration = ARWorldTrackingConfiguration()
         configuration.planeDetection = [.horizontal, .vertical]
         configuration.isAutoFocusEnabled = false
-
+        sceneView.debugOptions = .showWorldOrigin
         sceneView.session.run(configuration)
         sceneView.delegate = self
     }
@@ -1313,7 +1354,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
 
         // Stop Navigation button container
         stopNavigationView = UIView(frame: CGRect(x: 0, y: yOriginOfButtonFrame, width: buttonFrameWidth, height: buttonFrameHeight))
-        stopNavigationView.setupButtonContainer(withButtons: [stopNavigationButton])
+        stopNavigationView.setupButtonContainer(withButtons: [stopNavigationButton, snapToRouteButton])
         
         routeRatingView = UIView(frame: CGRect(x: 0, y: 0, width: buttonFrameWidth, height: UIScreen.main.bounds.size.height))
         routeRatingView.setupButtonContainer(withButtons: [thumbsUpButton, thumbsDownButton], withMainText: "Please rate your service.")
@@ -1500,14 +1541,24 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// MARK: - Clew internal datastructures
     
-    /// list of crumbs dropped when recording path
+    /// list of crumbs dropped when recording pth
     var crumbs: [LocationInfo]!
+    
+    /// list of crumbs dropped when following path
+    var followCrumbs: [LocationInfo]!
+    
+    var currentWorldOriginRelativeTransform = matrix_identity_float4x4
     
     /// list of keypoints calculated after path completion
     var keypoints: [KeypointInfo]!
     
+    var checkedOffKeypoints: [KeypointInfo]!
+    
     /// SCNNode of the next keypoint
     var keypointNode: SCNNode!
+    
+    /// follow crumb nodes
+    var followCrumbNodes: [SCNNode] = []
     
     /// previous keypoint location - originally set to current location
     var prevKeypointPosition: LocationInfo!
@@ -1624,8 +1675,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     @objc func stopRecording(_ sender: UIButton) {
         if beginRouteLandmark.transform != nil {
             if #available(iOS 12.0, *) {
-                sceneView.session.getCurrentWorldMap { worldMap, error in
-                    self.getRouteNameAndSaveRouteHelper(mapAsAny: worldMap)
+                sceneView.session.getCurrentWorldMap {
+                    worldMap, error in
+                    print("disallowing map")
+                    self.getRouteNameAndSaveRouteHelper(mapAsAny: nil)
                 }
             } else {
                 getRouteNameAndSaveRouteHelper(mapAsAny: nil)
@@ -1681,6 +1734,148 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             logger.resetStateSequenceLog()
         }
     }
+
+    func transformLocationInfo(locations: [LocationInfo], transform: simd_float4x4)->[simd_float4] {
+        return locations.map {
+            transform * simd_float4($0.x, $0.y, $0.z, 1)
+        }
+    }
+    
+    func closestPointOnSegment(_ p: simd_float3, start: simd_float3, end: simd_float3)->simd_float3 {
+        let startToEnd = end - start
+        let vToP = p - start
+        let proj = simd_dot(vToP, simd_normalize(startToEnd))
+        // clamp proj so it doesn't go past either end of the line segment
+        let projClamped = min(max(0, proj), simd_length(startToEnd))
+        // TODO: implement
+        return start + projClamped*simd_normalize(startToEnd)
+    }
+    
+    func getClosestRouteMatch(points: [simd_float4], routeKeypoints: [KeypointInfo], constrainBeginning: Bool = false)->[simd_float4] {
+        var closestPoints: [simd_float4] = []
+        
+        for p in points {
+            var closestPoint = simd_float3()
+
+            if constrainBeginning && closestPoints.isEmpty {
+                if !routeKeypoints.isEmpty {
+                    closestPoint = simd_float3(routeKeypoints[0].location.x, routeKeypoints[0].location.y, routeKeypoints[0].location.z)
+                    print("CONSTRAINED!")
+                }
+            } else {
+                var closestDistance = Float.infinity
+
+                for i in 0..<routeKeypoints.count-1 {
+                    let startOfSegment = simd_float3(routeKeypoints[i].location.x, routeKeypoints[i].location.y, routeKeypoints[i].location.z)
+                    let endOfSegment = simd_float3(routeKeypoints[i+1].location.x, routeKeypoints[i+1].location.y, routeKeypoints[i+1].location.z)
+                
+                    let pInhomogeneous = simd_float3(p.x, p.y, p.z)
+                    let closestOnSegment = closestPointOnSegment(pInhomogeneous, start: startOfSegment, end: endOfSegment)
+                    let d = simd_length(closestOnSegment - pInhomogeneous)
+                    if d < closestDistance {
+                        closestDistance = d
+                        closestPoint = closestOnSegment
+                    }
+                }
+                // it would be great to have to / from homogeneous functions
+            }
+            closestPoints.append(simd_float4(closestPoint.x, closestPoint.y, closestPoint.z, 1))
+        }
+
+        return closestPoints
+    }
+    
+    @objc func snapToRoute(_ send: UIButton) {
+        // initially we start with identity
+        var optimalTransform = matrix_identity_float4x4
+
+        var converged = false
+        var iterCount = 0
+        var lastIterationCost = Float.infinity
+        while !converged {
+            print("followCrumbs", followCrumbs)
+            let transformedFollowCrumbs = transformLocationInfo(locations: followCrumbs, transform: optimalTransform)
+            var keypointsToUse: [KeypointInfo] = checkedOffKeypoints
+            // this probably should always succeed since you shouldn't be able to snap to route unless you are actively navigating, but we will be safe about it anyway
+            if !keypoints.isEmpty {
+                keypointsToUse.append(keypoints[0])
+            }
+            let closestMatchToRoute = getClosestRouteMatch(points: transformedFollowCrumbs, routeKeypoints: keypointsToUse, constrainBeginning: false)
+            let currentCost = zip(transformedFollowCrumbs, closestMatchToRoute).reduce(0) {
+                $0 + simd_length_squared($1.0 - $1.1)
+            }
+            var additionalTransform = matrix_identity_float4x4
+            
+            let meanOfFollowCrumbs = transformedFollowCrumbs.reduce(simd_float4(0, 0, 0, 0)) {
+                $0 + $1.divide(Float(transformedFollowCrumbs.count))
+            }
+            let meanOfClosestMatches = closestMatchToRoute.reduce(simd_float4(0, 0, 0, 0)) {
+                $0 + $1.divide(Float(closestMatchToRoute.count))
+            }
+            
+            let meanSubtractedFollowCrumbs = transformedFollowCrumbs.map({$0 - meanOfFollowCrumbs})
+            let meanSubtractedClosestMatches = closestMatchToRoute.map({$0 - meanOfClosestMatches})
+
+            let outerProductMatrix = zip(meanSubtractedClosestMatches, meanSubtractedFollowCrumbs).reduce(simd_float2x2()) {
+                $0 + simd_float2($1.0.x, $1.0.z).outerProduct(simd_float2($1.1.x, $1.1.z))
+            }
+            
+            var (U, S, V) = outerProductMatrix.svd()
+
+            // TODO: hacky way to fix this
+            if S.columns.0.x.isNaN {
+                S.columns.0.x = 0
+            }
+            if S.columns.1.y.isNaN {
+                S.columns.1.y = 0
+            }
+            let R: simd_float2x2
+            if max(S.columns.0.x, S.columns.1.y) < 10e-5 {
+                print("rank 0 condition detected")
+                // apply no rotation
+                R = matrix_identity_float2x2
+            } else {
+                // Note that this is inverted from what we see in various resources on ICP since we are implicitly rotating about the negative y-axis and would really like rotate about the positive y-axis.  By nature of projecting into the x-z plane and computing the orientation there, we are implicitly rotating about the negative y-axis.
+                R = V * simd_float2x2(diagonal: simd_float2(1, (V*U.transpose).determinant)) * U.transpose
+            }
+            print("current cost", currentCost)
+            
+            // Calculate optimal transform difference by applying the appropriate formula from http://ais.informatik.uni-freiburg.de/teaching/ss11/robotics/slides/17-icp.pdf
+
+            // this maps a 2D rotation that was implicitly computed about the NEGATIVE y axis (this is a consequence of projecting into the x-z plane) to a rotation about the positive y-axis in 3D
+            additionalTransform.columns.0.x = R.columns.0.x
+            additionalTransform.columns.2.z = R.columns.1.y
+            additionalTransform.columns.0.z = R.columns.1.x
+            additionalTransform.columns.2.x = R.columns.0.y
+            
+            // this sets the translation based on the appropriate formula
+            additionalTransform.columns.3 = meanOfClosestMatches - additionalTransform*meanOfFollowCrumbs
+            
+            // this will accidentally change element (4, 4) to 0
+            additionalTransform.columns.3.w = 1
+            
+            print("additionalTransform", additionalTransform)
+            
+            // convergence is achieved if no additional transformation need be applied
+            converged = (additionalTransform - matrix_identity_float4x4).frobenius() < 10e-4 || lastIterationCost - currentCost < 10e-4
+            lastIterationCost = currentCost
+
+            optimalTransform = additionalTransform * optimalTransform
+            print("additionalTransform", additionalTransform)
+            
+            iterCount += 1
+        }
+        updateWorldOrigin(relativeTransform: optimalTransform.inverse)
+        //renderFollowCrumbNodes()
+    }
+    
+    /// This function should be used whenever the world origin should be realigned.  Don't call the ARSession method directly as it will skip vital steps.
+    ///
+    /// - Parameter relativeTransform: the relative transform to apply to the axes of the world tracking session
+    func updateWorldOrigin(relativeTransform: simd_float4x4) {
+        sceneView.session.setWorldOrigin(relativeTransform: relativeTransform)
+        followCrumbs = followCrumbs?.map({ LocationInfo(transform: relativeTransform.inverse*$0.transform) })
+    }
     
     /// handles the user pressing the pause button
     @objc func startPauseProcedure() {
@@ -1691,8 +1886,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// handles the user pressing the landmark button
     @objc func startCreateLandmarkProcedure() {
         creatingRouteLandmark = true
-        // make sure to clear out any relative transform and paused transform so the alignment is accurate
-        sceneView.session.setWorldOrigin(relativeTransform: simd_float4x4.makeTranslation(0, 0, 0))
         state = .startingPauseProcedure
     }
     
@@ -1724,8 +1917,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 leveledAlignPose.columns.3 = alignTransform.columns.3
                 
                 let relativeTransform = leveledCameraPose * leveledAlignPose.inverse
-                self.sceneView.session.setWorldOrigin(relativeTransform: relativeTransform)
-                
+                self.updateWorldOrigin(relativeTransform: relativeTransform)
                 Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(self.playSound)), userInfo: nil, repeats: false)
                 self.isResumedRoute = true
                 self.state = .readyToNavigateOrPause(allowPause: false)
@@ -1764,53 +1956,16 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         // TODO: gracefully handle error
         let curLocation = getRealCoordinates(record: true)!.location
         crumbs.append(curLocation)
-
-        if shouldDropMappingAnchors {
-            // This was an experiment that I (Paul) did to see if adding anchors would improve relocalization performance.  I don't believe that it does.
-            let headingVector = getProjectedHeading(curLocation.transform)
-            let leftToRightVector = simd_make_float4(-headingVector.z, 0, headingVector.x, 0)
-            
-            let aheadAndDown = simd_float4x4.init(columns: (curLocation.transform.columns.0, curLocation.transform.columns.1, curLocation.transform.columns.2, curLocation.transform.columns.3 + 2*headingVector +
-                simd_make_float4(0, -1, 0, 0)))
-            var shouldAddAnchor = true
-            if let mappingAnchors = sceneView.session.currentFrame?.anchors.compactMap({ $0 as? LocationInfo }) {
-                for anchor in mappingAnchors.reversed() {
-                    if simd_norm_one(anchor.transform.columns.3 - aheadAndDown.columns.3) < 1.0 {
-                        shouldAddAnchor = false
-                        break
-                    }
-                }
-            }
-            // only add this as an anchor if there aren't any other ones within 1.0m (L1 distance) of the one we plan to add
-            if shouldAddAnchor {
-                let aheadAndUp = simd_float4x4.init(columns: (curLocation.transform.columns.0, curLocation.transform.columns.1, curLocation.transform.columns.2, curLocation.transform.columns.3 + 2*headingVector +
-                    simd_make_float4(0, 2, 0, 0)))
-                
-                let ahead = simd_float4x4.init(columns: (curLocation.transform.columns.0, curLocation.transform.columns.1, curLocation.transform.columns.2, curLocation.transform.columns.3 + 2*headingVector))
-                
-                let aheadAndLeft = simd_float4x4.init(columns: (curLocation.transform.columns.0, curLocation.transform.columns.1, curLocation.transform.columns.2, curLocation.transform.columns.3 + 2*headingVector - 2*leftToRightVector))
-                
-                let aheadAndRight = simd_float4x4.init(columns: (curLocation.transform.columns.0, curLocation.transform.columns.1, curLocation.transform.columns.2, curLocation.transform.columns.3 + 2*headingVector + 2*leftToRightVector))
-                
-                let anchorTransforms = [aheadAndDown, aheadAndUp, ahead, aheadAndRight, aheadAndLeft]
-                
-                for anchorTransform in anchorTransforms {
-                    sceneView.session.add(anchor: LocationInfo(transform: anchorTransform))
-                    let box = SCNBox(width: 0.1, height: 0.1, length: 0.1, chamferRadius: 0)
-                    let node = SCNNode(geometry: box)
-                    node.transform = SCNMatrix4(anchorTransform)
-                    sceneView.scene.rootNode.addChildNode(node)
-                }
-            }
-        }
     }
     
     /// checks to see if user is on the right path during navigation.
     @objc func followCrumb() {
-        guard let curLocation = getRealCoordinates(record: true) else {
+        guard let curLocation = getRealCoordinates(record: true), let untransformedLocation = getRealCoordinates(record: false, undoWorldOriginTransform: true) else {
             // TODO: might want to indicate that something is wrong to the user
             return
         }
+        
+        followCrumbs.append(untransformedLocation.location)
         var directionToNextKeypoint = getDirectionToNextKeypoint(currentLocation: curLocation)
         
         if (directionToNextKeypoint.targetState == PositionState.atTarget) {
@@ -1822,6 +1977,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 
                 // remove current visited keypont from keypoint list
                 prevKeypointPosition = keypoints[0].location
+                checkedOffKeypoints.append(keypoints[0])
                 keypoints.remove(at: 0)
                 
                 // erase current keypoint and render next keypoint node
@@ -2220,9 +2376,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     ///
     /// - Parameter record: a Boolean indicating whether to record the computed position (true if it should be computed, false otherwise)
     /// - Returns: the current location as a `CurrentCoordinateInfo` object
-    func getRealCoordinates(record: Bool) -> CurrentCoordinateInfo? {
-        guard let currTransform = sceneView.session.currentFrame?.camera.transform else {
+    func getRealCoordinates(record: Bool, undoWorldOriginTransform: Bool = false) -> CurrentCoordinateInfo? {
+        guard var currTransform = sceneView.session.currentFrame?.camera.transform else {
             return nil
+        }
+        if undoWorldOriginTransform {
+            currTransform = currentWorldOriginRelativeTransform * currTransform
         }
         // returns current location & orientation based on starting origin
         let scn = SCNMatrix4(currTransform)
@@ -2294,8 +2453,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                     }
                 }
             }
-            // resetting the origin is needed in the case when we realigned to a saved route
-            session.setWorldOrigin(relativeTransform: simd_float4x4.makeTranslation(0,0,0))
             if case .readyForFinalResumeAlignment = state {
                 // this will cancel any realignment if it hasn't happened yet and go straight to route navigation mode
                 countdownTimer.isHidden = true
@@ -2399,6 +2556,50 @@ extension NSString {
     }
 }
 
+extension float4 {
+    func divide(_ divisor: Float)->float4 {
+        return float4(self.x/divisor, self.y/divisor, self.z/divisor, self.w/divisor)
+    }
+}
+
+extension float2 {
+    func outerProduct(_ other: float2)->float2x2 {
+        return float2x2(columns: (float2(self.x*other.x, self.y*other.x), float2(self.x*other.y, self.y*other.y)))
+    }
+}
+
+extension float3 {
+    func outerProduct(_ other: float3)->float3x3 {
+        return float3x3(columns: (float3(self.x*other.x, self.y*other.x, self.z*other.x), float3(self.x*other.y, self.y*other.y, self.z*other.y), float3(self.x*other.z, self.y*other.z, self.z*other.z)))
+    }
+}
+
+extension float2x2 {
+    func svd()->(float2x2, float2x2, float2x2) {
+        let usv = LASwift.svd(toMatrix())
+        return (simd_float2x2.fromMatrix(usv.U), simd_float2x2.fromMatrix(usv.S), simd_float2x2.fromMatrix(usv.V))
+    }
+    static func fromMatrix(_ m : Matrix)->simd_float2x2 {
+        return simd_float2x2(columns: (simd_float2(Float(m[0, 0]), Float(m[1,0])), simd_float2(Float(m[0,1]), Float(m[1,1]))))
+    }
+    func toMatrix()->Matrix {
+        return Matrix([[Double(columns.0.x), Double(columns.1.x)], [Double(columns.0.y), Double(columns.1.y)]])
+    }
+}
+
+extension float3x3 {
+    func svd()->(float3x3, float3x3, float3x3) {
+        let usv = LASwift.svd(toMatrix())
+        return (simd_float3x3.fromMatrix(usv.U), simd_float3x3.fromMatrix(usv.S), simd_float3x3.fromMatrix(usv.V))
+    }
+    static func fromMatrix(_ m : Matrix)->simd_float3x3 {
+        return simd_float3x3(columns: (simd_float3(Float(m[0, 0]), Float(m[1,0]), Float(m[2,0])), simd_float3(Float(m[0,1]), Float(m[1,1]), Float(m[2,1])), simd_float3(Float(m[0,2]), Float(m[1,2]), Float(m[2,2]))))
+    }
+    func toMatrix()->Matrix {
+        return Matrix([[Double(columns.0.x), Double(columns.1.x), Double(columns.2.x)], [Double(columns.0.y), Double(columns.1.y), Double(columns.2.y)], [Double(columns.0.z), Double(columns.1.z), Double(columns.2.z)]])
+    }
+}
+
 extension float4x4 {
     /// Create a rotation matrix based on the angle and axis.
     ///
@@ -2433,6 +2634,10 @@ extension float4x4 {
     /// - Returns: the result of applying the transformation as 4x4 matrix
     func rotate(radians: Float, _ x: Float, _ y: Float, _ z: Float) -> float4x4 {
         return self * float4x4.makeRotate(radians: radians, x, y, z)
+    }
+    
+    func frobenius()->Float {
+        return sqrt(simd_length_squared(columns.0) + simd_length_squared(columns.1) + simd_length_squared(columns.2) + simd_length_squared(columns.3))
     }
     
     /// Perform the specified translation (right multiply) on the 4x4 matrix
