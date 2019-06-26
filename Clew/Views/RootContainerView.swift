@@ -86,7 +86,7 @@ class RootContainerView: UIView {
 //        helpButton.backgroundColor = UIColor.black.withAlphaComponent(0.4)
         helpButton.setImage(UIImage(named: "HelpButton"), for: .normal)
 
-        //button to go to the home screen
+        // MARK: Home Button
         homeButton = UIButton(frame: CGRect(x: UIConstants.buttonFrameWidth/7,
                                             y: UIConstants.yOriginOfSettingsAndHelpButton + 10,
                                             width: UIConstants.buttonFrameWidth/7,

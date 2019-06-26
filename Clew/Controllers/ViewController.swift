@@ -743,8 +743,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
     }
     
+    /// func that prepares the state transition to home by clearing active processes and data
     func clearState() {
         // TODO: check for code reuse
+        // Clearing All State Processes and Data
         rootContainerView.homeButton.isHidden = true
         recordPathController.isAccessibilityElement = false
         if case .navigatingRoute = self.state {
@@ -767,6 +769,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// function that creates alerts for the home button
     func homePageNavigationProcesses() {
+        // Create alert to warn users of lost information
         let alert = UIAlertController(title: "Are you sure?",
                                       message: "If you exit this process right now, your active route information will be lost.",
                                       preferredStyle: .alert)
@@ -1092,6 +1095,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         recordPathController.remove()
         startNavigationController.remove()
         add(pauseTrackingController)
+        
         delayTransition()
     }
     
@@ -1100,6 +1104,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         rootContainerView.homeButton.isHidden = false // no home button here
         pauseTrackingController.remove()
         add(resumeTrackingController)
+        UIApplication.shared.keyWindow!.bringSubviewToFront(rootContainerView)
         delayTransition()
     }
     
@@ -1735,6 +1740,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     // Called when home button is pressed
     // Chooses the states in which the home page alerts pop up
     @objc func homeButtonPressed() {
+    // if the state case needs to have a home button alert, send it to the function that creates the relevant alert
         if case .navigatingRoute = self.state {
             homePageNavigationProcesses()
         }
