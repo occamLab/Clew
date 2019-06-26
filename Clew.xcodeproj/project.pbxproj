@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1F2B9D6822C3A2F800317DC8 /* HelpCompiler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2B9D6722C3A2F800317DC8 /* HelpCompiler.swift */; };
+		1F2B9D6922C3A2F800317DC8 /* HelpCompiler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2B9D6722C3A2F800317DC8 /* HelpCompiler.swift */; };
 		2748B8490FCBA95C7AA028D7 /* Pods_Clew.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 942F73299DA8DCF97FAA974A /* Pods_Clew.framework */; };
 		4D6B00E51F33C9B800952242 /* Crumb.obj in Resources */ = {isa = PBXBuildFile; fileRef = 4D6B00E41F33C85500952242 /* Crumb.obj */; };
 		4DF05CC81F34EB6B008B0E31 /* Confirm.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4DF05CC71F34EB56008B0E31 /* Confirm.mp3 */; };
@@ -106,6 +108,7 @@
 
 /* Begin PBXFileReference section */
 		08FA9C31721F9F8CDCC23AE9 /* Pods-Clew.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Clew/Pods-Clew.debug.xcconfig"; sourceTree = "<group>"; };
+		1F2B9D6722C3A2F800317DC8 /* HelpCompiler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpCompiler.swift; sourceTree = "<group>"; };
 		3532E390954571B93729786A /* Pods_Clew_Dev.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Clew_Dev.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4D6B00C01F33C1C400952242 /* Clew.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Clew.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4D6B00E41F33C85500952242 /* Crumb.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = Crumb.obj; sourceTree = "<group>"; };
@@ -292,6 +295,7 @@
 				E5470EB422C119F4001092A4 /* PathFinder.swift */,
 				E5470EB522C119F4001092A4 /* Utility.swift */,
 				E5470EB622C119F4001092A4 /* AppDelegate.swift */,
+				1F2B9D6722C3A2F800317DC8 /* HelpCompiler.swift */,
 			);
 			path = Misc;
 			sourceTree = "<group>";
@@ -626,6 +630,7 @@
 				E5470EF622C119F5001092A4 /* RecordButtonKit.swift in Sources */,
 				E5470F0622C119F5001092A4 /* PathFinder.swift in Sources */,
 				E5470F2C22C119F5001092A4 /* StartNavigationController.swift in Sources */,
+				1F2B9D6822C3A2F800317DC8 /* HelpCompiler.swift in Sources */,
 				E5470F3022C119F5001092A4 /* RouteRatingController.swift in Sources */,
 				E5470F4222C119F5001092A4 /* UIConstants.swift in Sources */,
 				E5470F2022C119F5001092A4 /* UIViewControllerExtensions.swift in Sources */,
@@ -666,6 +671,7 @@
 				E5470EF722C119F5001092A4 /* RecordButtonKit.swift in Sources */,
 				E5470F0722C119F5001092A4 /* PathFinder.swift in Sources */,
 				E5470F2D22C119F5001092A4 /* StartNavigationController.swift in Sources */,
+				1F2B9D6922C3A2F800317DC8 /* HelpCompiler.swift in Sources */,
 				E5470F3122C119F5001092A4 /* RouteRatingController.swift in Sources */,
 				E5470F4322C119F5001092A4 /* UIConstants.swift in Sources */,
 				E5470F2122C119F5001092A4 /* UIViewControllerExtensions.swift in Sources */,
