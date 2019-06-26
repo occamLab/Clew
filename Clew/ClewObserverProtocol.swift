@@ -7,8 +7,10 @@
 //
 
 import Foundation
+import SceneKit
 
 protocol ClewObserver {
     func finishAnnouncement(announcement: String)
     func didTransitionTo(newState: AppState)
+    func didReceiveNewCameraPose(transform: simd_float4x4)
 }

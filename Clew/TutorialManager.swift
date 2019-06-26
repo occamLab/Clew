@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import SceneKit
 
 class TutorialManager: ClewObserver {
     func finishAnnouncement(announcement: String) {
@@ -17,5 +18,13 @@ class TutorialManager: ClewObserver {
             UIAccessibility.post(notification: UIAccessibility.Notification.announcement, argument: NSLocalizedString("Let's learn about route navigation!", comment: "Message to user during tutorial"))
             print("howdy!")
         }
+    }
+    func didReceiveNewCameraPose(transform: simd_float4x4) {
+        let angleFromVertical = acos(-transform.columns.0.y)
+        if abs(angleFromVertical) < 0.1 {
+            let feedbackGenerator = UIImpactFeedbackGenerator(style: .heavy)
+            feedbackGenerator.impactOccurred()
+        }
+        print("angleFromVertical", angleFromVertical)
     }
 }

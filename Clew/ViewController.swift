@@ -29,6 +29,7 @@ import VectorMath
 import Firebase
 import FirebaseDatabase
 import SRCountdownTimer
+import Instructions
 
 
 // MARK: Extensions
@@ -281,7 +282,44 @@ enum AppState {
 }
 
 /// The view controller that handles the main Clew window.  This view controller is always active and handles the various views that are used for different app functionalities.
-class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDelegate, AVSpeechSynthesizerDelegate {
+class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDelegate, AVSpeechSynthesizerDelegate, CoachMarksControllerDataSource, CoachMarksControllerDelegate {
+    
+    ////////////////////////
+    let coachMarksController = CoachMarksController()
+    /*
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        self.coachMarksController.dataSource = self
+    }*/
+    
+    func numberOfCoachMarks(for coachMarksController: CoachMarksController) -> Int {
+        return 1
+    }
+    
+    let pointOfInterest = UIView()
+    
+    func coachMarksController(_ coachMarksController: CoachMarksController,
+                              coachMarkAt index: Int) -> CoachMark {
+        pointOfInterest.center = CGPoint(x: 150, y: 150)
+        return coachMarksController.helper.makeCoachMark(for: pointOfInterest)
+    }
+    
+    func coachMarksController(_ coachMarksController: CoachMarksController, coachMarkViewsAt index: Int, madeFrom coachMark: CoachMark) -> (bodyView: CoachMarkBodyView, arrowView: CoachMarkArrowView?) {
+        let coachViews = coachMarksController.helper.makeDefaultCoachViews(withArrow: true, arrowOrientation: coachMark.arrowOrientation)
+        
+        coachViews.bodyView.hintLabel.text = "Hello! I'm a Coach Mark!"
+        coachViews.bodyView.nextLabel.text = "Ok!"
+        
+        return (bodyView: coachViews.bodyView, arrowView: coachViews.arrowView)
+    }
+    /*
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        self.coachMarksController.start(in: .window(over: self))
+    }*/
+    ////////////////////////
     
     // MARK: - Refactoring UI definition
     
@@ -1217,6 +1255,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
 
         sceneView.session.run(configuration)
         sceneView.delegate = self
+        sceneView.session.delegate = self
+        print("setting self as delegate to session")
     }
     
     /// Handle the user clicking the confirm alignment to a saved landmark.  Depending on the app state, the behavior of this function will differ (e.g., if the route is being resumed versus reloaded)
@@ -2457,6 +2497,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         return true
     }
     
+}
+
+extension ViewController: ARSessionDelegate {
+    func session(_: ARSession, didUpdate frame: ARFrame) {
+        print("got new frame")
+        observer?.didReceiveNewCameraPose(transform: frame.camera.transform)
+    }
 }
 
 // MARK: - methods for implementing RecorderViewControllerDelegate
