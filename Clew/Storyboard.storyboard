@@ -20,8 +20,8 @@
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" userInteractionEnabled="NO" contentMode="scaleToFill" text="SAFETY NOTICE" textAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="DEo-3r-7EW">
                                 <rect key="frame" x="0.0" y="55" width="375" height="74"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <accessibility key="accessibilityConfiguration" label="Label">
-                                    <accessibilityTraits key="traits" staticText="YES"/>
+                                <accessibility key="accessibilityConfiguration">
+                                    <accessibilityTraits key="traits" header="YES"/>
                                 </accessibility>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="74" id="Y3o-cU-9pY"/>
@@ -295,8 +295,8 @@
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" userInteractionEnabled="NO" contentMode="scaleToFill" text="TIPS FOR USE" textAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="B0s-r4-N6F" customClass="IASKTextView">
                                 <rect key="frame" x="-1" y="10" width="375" height="76"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <accessibility key="accessibilityConfiguration" label="Label">
-                                    <accessibilityTraits key="traits" staticText="YES"/>
+                                <accessibility key="accessibilityConfiguration">
+                                    <accessibilityTraits key="traits" header="YES"/>
                                 </accessibility>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="76" id="EiN-fx-wVt"/>

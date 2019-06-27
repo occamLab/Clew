@@ -1,0 +1,30 @@
+
+/* Class = "UILabel"; text = "Use in large indoor spaces where navigation is difficult (e.g. airports)!"; ObjectID = "10J-WF-b2F"; */
+"10J-WF-b2F.text" = "Use in large indoor spaces where navigation is difficult (e.g. airports)!";
+
+/* Class = "UITextView"; text = "TIPS FOR USE"; ObjectID = "4yG-37-QSu"; */
+"4yG-37-QSu.text" = "TIPS FOR USE";
+
+/* Class = "UITextView"; text = "SAFETY NOTICE"; ObjectID = "DEo-3r-7EW"; */
+"DEo-3r-7EW.text" = "SAFETY NOTICE";
+
+/* Class = "UILabel"; text = "Mobility aids and devices must still be used."; ObjectID = "E0a-r9-Ew3"; */
+"E0a-r9-Ew3.text" = "Mobility aids and devices must still be used.";
+
+/* Class = "UILabel"; text = "Access saved routes and navigate with ease!"; ObjectID = "EyK-CY-7X1"; */
+"EyK-CY-7X1.text" = "Access saved routes and navigate with ease!";
+
+/* Class = "UIButton"; normalTitle = "GOT IT!"; ObjectID = "MVZ-8U-ZE6"; */
+"MVZ-8U-ZE6.normalTitle" = "GOT IT!";
+
+/* Class = "UIButton"; normalTitle = "GOT IT!"; ObjectID = "SpT-ee-DoY"; */
+"SpT-ee-DoY.normalTitle" = "GOT IT!";
+
+/* Class = "UILabel"; text = "Use Clew in proper lighting to achieve full functionality."; ObjectID = "ZwH-qp-LiI"; */
+"ZwH-qp-LiI.text" = "Use Clew in proper lighting to achieve full functionality.";
+
+/* Class = "UILabel"; text = "Clew can only be used indoors. Navigating outdoors will be inaccurate and drains battery life."; ObjectID = "hhz-zf-BN9"; */
+"hhz-zf-BN9.text" = "Clew can only be used indoors. Navigating outdoors will be inaccurate and drains battery life.";
+
+/* Class = "UILabel"; text = "Use with another assistive navigation app to find your way back!"; ObjectID = "j06-9K-5E2"; */
+"j06-9K-5E2.text" = "Use with another assistive navigation app to find your way back!";

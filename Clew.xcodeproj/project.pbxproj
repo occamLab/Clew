@@ -11,6 +11,7 @@
 		4D6B00E51F33C9B800952242 /* Crumb.obj in Resources */ = {isa = PBXBuildFile; fileRef = 4D6B00E41F33C85500952242 /* Crumb.obj */; };
 		4DF05CC81F34EB6B008B0E31 /* Confirm.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4DF05CC71F34EB56008B0E31 /* Confirm.mp3 */; };
 		77467DAF22BBC1D300FA7DEE /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 77467DAE22BBC1D300FA7DEE /* Default-568h@2x.png */; };
+		77F89C3622C507E80054E412 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E5F4C34022C4035200E0D94E /* Info.plist */; };
 		82569F4E22187E6500448B45 /* help in Resources */ = {isa = PBXBuildFile; fileRef = 82569F4D22187E6500448B45 /* help */; };
 		82569F4F22187E6500448B45 /* help in Resources */ = {isa = PBXBuildFile; fileRef = 82569F4D22187E6500448B45 /* help */; };
 		B0A563F6FE1007A2716DC876 /* Pods_Clew_Dev.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3532E390954571B93729786A /* Pods_Clew_Dev.framework */; };
@@ -143,10 +144,10 @@
 		E5F4C2FA22C4035200E0D94E /* PathFinder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PathFinder.swift; sourceTree = "<group>"; };
 		E5F4C2FB22C4035200E0D94E /* Utility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utility.swift; sourceTree = "<group>"; };
 		E5F4C2FC22C4035200E0D94E /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		E5F4C2FD22C4035200E0D94E /* SettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
+		E5F4C2FD22C4035200E0D94E /* SettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SettingsViewController.m; path = ../SettingsViewController.m; sourceTree = "<group>"; };
 		E5F4C2FE22C4035200E0D94E /* Clew Dev-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Clew Dev-Bridging-Header.h"; sourceTree = "<group>"; };
 		E5F4C2FF22C4035200E0D94E /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
-		E5F4C30022C4035200E0D94E /* SettingsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsTableViewController.h; sourceTree = "<group>"; };
+		E5F4C30022C4035200E0D94E /* SettingsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SettingsTableViewController.h; path = ../SettingsTableViewController.h; sourceTree = "<group>"; };
 		E5F4C30322C4035200E0D94E /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 		E5F4C30522C4035200E0D94E /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		E5F4C30822C4035200E0D94E /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
@@ -164,16 +165,16 @@
 		E5F4C31922C4035200E0D94E /* StartRecording.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = StartRecording.aiff; sourceTree = "<group>"; };
 		E5F4C31A22C4035200E0D94E /* StopRecording.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = StopRecording.aiff; sourceTree = "<group>"; };
 		E5F4C31B22C4035200E0D94E /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
-		E5F4C31C22C4035200E0D94E /* TutorialViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TutorialViewController.swift; sourceTree = "<group>"; };
+		E5F4C31C22C4035200E0D94E /* TutorialViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TutorialViewController.swift; path = ../TutorialViewController.swift; sourceTree = "<group>"; };
 		E5F4C31E22C4035200E0D94E /* NSStringExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSStringExtension.swift; sourceTree = "<group>"; };
 		E5F4C31F22C4035200E0D94E /* UIViewControllerExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIViewControllerExtensions.swift; sourceTree = "<group>"; };
 		E5F4C32022C4035200E0D94E /* UIViewExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIViewExtensions.swift; sourceTree = "<group>"; };
 		E5F4C32122C4035200E0D94E /* UIButtonExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIButtonExtensions.swift; sourceTree = "<group>"; };
 		E5F4C32222C4035200E0D94E /* Float4x4Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Float4x4Extension.swift; sourceTree = "<group>"; };
-		E5F4C32322C4035200E0D94E /* SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
+		E5F4C32322C4035200E0D94E /* SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SettingsViewController.h; path = ../SettingsViewController.h; sourceTree = "<group>"; };
 		E5F4C32422C4035200E0D94E /* Clew-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Clew-Bridging-Header.h"; sourceTree = "<group>"; };
 		E5F4C32522C4035200E0D94E /* TutorialManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TutorialManager.swift; sourceTree = "<group>"; };
-		E5F4C32622C4035200E0D94E /* Tutorial.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Tutorial.storyboard; sourceTree = "<group>"; };
+		E5F4C32622C4035200E0D94E /* Tutorial.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Tutorial.storyboard; path = ../../Tutorial.storyboard; sourceTree = "<group>"; };
 		E5F4C32822C4035200E0D94E /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		E5F4C32A22C4035200E0D94E /* RecordPathController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecordPathController.swift; sourceTree = "<group>"; };
 		E5F4C32B22C4035200E0D94E /* StartNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StartNavigationController.swift; sourceTree = "<group>"; };
@@ -192,8 +193,8 @@
 		E5F4C33A22C4035200E0D94E /* RootContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootContainerView.swift; sourceTree = "<group>"; };
 		E5F4C33C22C4035200E0D94E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		E5F4C33D22C4035200E0D94E /* RouteTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteTableViewCell.swift; sourceTree = "<group>"; };
-		E5F4C33E22C4035200E0D94E /* Storyboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Storyboard.storyboard; sourceTree = "<group>"; };
-		E5F4C33F22C4035200E0D94E /* UILabelDesign.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UILabelDesign.swift; sourceTree = "<group>"; };
+		E5F4C33E22C4035200E0D94E /* Storyboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Storyboard.storyboard; path = ../../Storyboard.storyboard; sourceTree = "<group>"; };
+		E5F4C33F22C4035200E0D94E /* UILabelDesign.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UILabelDesign.swift; path = ../../UILabelDesign.swift; sourceTree = "<group>"; };
 		E5F4C34022C4035200E0D94E /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E5F4C34122C4035200E0D94E /* GoogleService-Info_dev.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info_dev.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -254,6 +255,16 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		77F89C3522C507940054E412 /* Tutorial Views */ = {
+			isa = PBXGroup;
+			children = (
+				E5F4C32622C4035200E0D94E /* Tutorial.storyboard */,
+				E5F4C33F22C4035200E0D94E /* UILabelDesign.swift */,
+				E5F4C33E22C4035200E0D94E /* Storyboard.storyboard */,
+			);
+			path = "Tutorial Views";
+			sourceTree = "<group>";
+		};
 		C63B435EA8A32350A76E47DD /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -274,29 +285,22 @@
 		E5F4C2EF22C4035200E0D94E /* Clew */ = {
 			isa = PBXGroup;
 			children = (
+				E5F4C31822C4035200E0D94E /* Sound Effects */,
 				E5F4C2F022C4035200E0D94E /* Voice Notes */,
+				E5F4C31D22C4035200E0D94E /* Extensions */,
+				E5F4C30122C4035200E0D94E /* localizations */,
 				E5F4C2F522C4035200E0D94E /* Misc */,
-				E5F4C2FD22C4035200E0D94E /* SettingsViewController.m */,
 				E5F4C2FE22C4035200E0D94E /* Clew Dev-Bridging-Header.h */,
 				E5F4C2FF22C4035200E0D94E /* Settings.bundle */,
-				E5F4C30022C4035200E0D94E /* SettingsTableViewController.h */,
-				E5F4C30122C4035200E0D94E /* localizations */,
 				E5F4C31622C4035200E0D94E /* Assets.xcassets */,
 				E5F4C31722C4035200E0D94E /* ClewObserverProtocol.swift */,
-				E5F4C31822C4035200E0D94E /* Sound Effects */,
+				E5F4C34022C4035200E0D94E /* Info.plist */,
 				E5F4C31B22C4035200E0D94E /* GoogleService-Info.plist */,
-				E5F4C31C22C4035200E0D94E /* TutorialViewController.swift */,
-				E5F4C31D22C4035200E0D94E /* Extensions */,
-				E5F4C32322C4035200E0D94E /* SettingsViewController.h */,
+				E5F4C34122C4035200E0D94E /* GoogleService-Info_dev.plist */,
 				E5F4C32422C4035200E0D94E /* Clew-Bridging-Header.h */,
 				E5F4C32522C4035200E0D94E /* TutorialManager.swift */,
-				E5F4C32622C4035200E0D94E /* Tutorial.storyboard */,
 				E5F4C32722C4035200E0D94E /* Controllers */,
 				E5F4C33722C4035200E0D94E /* Views */,
-				E5F4C33E22C4035200E0D94E /* Storyboard.storyboard */,
-				E5F4C33F22C4035200E0D94E /* UILabelDesign.swift */,
-				E5F4C34022C4035200E0D94E /* Info.plist */,
-				E5F4C34122C4035200E0D94E /* GoogleService-Info_dev.plist */,
 			);
 			path = Clew;
 			sourceTree = "<group>";
@@ -359,7 +363,11 @@
 		E5F4C32722C4035200E0D94E /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				E5F4C31C22C4035200E0D94E /* TutorialViewController.swift */,
+				E5F4C30022C4035200E0D94E /* SettingsTableViewController.h */,
+				E5F4C2FD22C4035200E0D94E /* SettingsViewController.m */,
 				E5F4C32822C4035200E0D94E /* ViewController.swift */,
+				E5F4C32322C4035200E0D94E /* SettingsViewController.h */,
 				E5F4C32922C4035200E0D94E /* StateViews */,
 				E5F4C33222C4035200E0D94E /* PopOvers */,
 				E5F4C33622C4035200E0D94E /* StateController.swift */,
@@ -395,6 +403,7 @@
 		E5F4C33722C4035200E0D94E /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				77F89C3522C507940054E412 /* Tutorial Views */,
 				E5F4C33822C4035200E0D94E /* UIConstants.swift */,
 				E5F4C33922C4035200E0D94E /* SettingsAndHelp.storyboard */,
 				E5F4C33A22C4035200E0D94E /* RootContainerView.swift */,
@@ -519,6 +528,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				77F89C3622C507E80054E412 /* Info.plist in Resources */,
 				E5F4C39922C4035200E0D94E /* SettingsAndHelp.storyboard in Resources */,
 				E5F4C36B22C4035200E0D94E /* GoogleService-Info.plist in Resources */,
 				E5F4C36922C4035200E0D94E /* StopRecording.aiff in Resources */,
