@@ -44,7 +44,7 @@ class ResumeTrackingController: UIViewController {
         /// The button that the allows the user to resume a paused route
         resumeButton = UIButton.makeImageButton(view,
                                                 alignment: UIConstants.ButtonContainerHorizontalAlignment.center,
-                                                appearance: UIConstants.ButtonAppearance.textButton(label: "Resume"),
+                                                appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "Resume")!),
                                                 label: NSLocalizedString("Resume", comment: "Resume paused route"))
         
         

@@ -50,17 +50,17 @@ class RecordPathController: UIViewController {
 
         recordPathButton = UIButton.makeImageButton(view,
                                                     alignment: UIConstants.ButtonContainerHorizontalAlignment.center,
-                                                    appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "StartRecording")!),
+                                                    appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "Record")!),
                                                     label: NSLocalizedString("Record path", comment: "Video record path to a destination"))
         
         addLandmarkButton = UIButton.makeImageButton(view,
                                                      alignment: UIConstants.ButtonContainerHorizontalAlignment.right,
-                                                     appearance: UIConstants.ButtonAppearance.textButton(label: "Landmark"),
+                                                     appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "Landmark")!),
                                                      label: "Saved routes list")
         
         routesButton = UIButton.makeImageButton(view,
                                                 alignment: UIConstants.ButtonContainerHorizontalAlignment.left,
-                                                appearance: UIConstants.ButtonAppearance.textButton(label: "Routes"),
+                                                appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "route")!),
                                                 label: "Saved routes list")
         
         if let parent: UIViewController = parent {
