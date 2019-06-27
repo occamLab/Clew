@@ -21,9 +21,17 @@ class TutorialManager: ClewObserver {
     }
     func didReceiveNewCameraPose(transform: simd_float4x4) {
         let angleFromVertical = acos(-transform.columns.0.y)
+        let feedbackGenerator = UIImpactFeedbackGenerator(style: .light )
+        
         if abs(angleFromVertical) < 0.1 {
-            let feedbackGenerator = UIImpactFeedbackGenerator(style: .light )
-            feedbackGenerator.impactOccurred()
+            Timer.scheduledTimer(withTimeInterval: 0.1, repeats: false) {_ in
+                feedbackGenerator.impactOccurred()
+            }
+        }
+        if abs(angleFromVertical) < 0.5 && abs(angleFromVertical) > 0.1 {
+                Timer.scheduledTimer(withTimeInterval: 3.0, repeats: false) {_ in
+                    feedbackGenerator.impactOccurred()
+            }
         }
         print("angleFromVertical", angleFromVertical)
     }

@@ -11,7 +11,6 @@
 		4D6B00E51F33C9B800952242 /* Crumb.obj in Resources */ = {isa = PBXBuildFile; fileRef = 4D6B00E41F33C85500952242 /* Crumb.obj */; };
 		4DF05CC81F34EB6B008B0E31 /* Confirm.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4DF05CC71F34EB56008B0E31 /* Confirm.mp3 */; };
 		77467DAF22BBC1D300FA7DEE /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 77467DAE22BBC1D300FA7DEE /* Default-568h@2x.png */; };
-		77F89C3622C507E80054E412 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E5F4C34022C4035200E0D94E /* Info.plist */; };
 		82569F4E22187E6500448B45 /* help in Resources */ = {isa = PBXBuildFile; fileRef = 82569F4D22187E6500448B45 /* help */; };
 		82569F4F22187E6500448B45 /* help in Resources */ = {isa = PBXBuildFile; fileRef = 82569F4D22187E6500448B45 /* help */; };
 		B0A563F6FE1007A2716DC876 /* Pods_Clew_Dev.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3532E390954571B93729786A /* Pods_Clew_Dev.framework */; };
@@ -113,7 +112,6 @@
 		E5F4C3A122C4035200E0D94E /* Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E5F4C33E22C4035200E0D94E /* Storyboard.storyboard */; };
 		E5F4C3A222C4035200E0D94E /* UILabelDesign.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F4C33F22C4035200E0D94E /* UILabelDesign.swift */; };
 		E5F4C3A322C4035200E0D94E /* UILabelDesign.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F4C33F22C4035200E0D94E /* UILabelDesign.swift */; };
-		E5F4C3A422C4035200E0D94E /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E5F4C34022C4035200E0D94E /* Info.plist */; };
 		E5F4C3A622C4035200E0D94E /* GoogleService-Info_dev.plist in Resources */ = {isa = PBXBuildFile; fileRef = E5F4C34122C4035200E0D94E /* GoogleService-Info_dev.plist */; };
 		E5F4C3A722C4035200E0D94E /* GoogleService-Info_dev.plist in Resources */ = {isa = PBXBuildFile; fileRef = E5F4C34122C4035200E0D94E /* GoogleService-Info_dev.plist */; };
 /* End PBXBuildFile section */
@@ -514,7 +512,6 @@
 				E5F4C36A22C4035200E0D94E /* GoogleService-Info.plist in Resources */,
 				E5F4C3A622C4035200E0D94E /* GoogleService-Info_dev.plist in Resources */,
 				E5F4C35E22C4035200E0D94E /* Localizable.strings in Resources */,
-				E5F4C3A422C4035200E0D94E /* Info.plist in Resources */,
 				E5F4C39822C4035200E0D94E /* SettingsAndHelp.storyboard in Resources */,
 				E5F4C35A22C4035200E0D94E /* Settings.bundle in Resources */,
 				82569F4E22187E6500448B45 /* help in Resources */,
@@ -528,7 +525,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				77F89C3622C507E80054E412 /* Info.plist in Resources */,
 				E5F4C39922C4035200E0D94E /* SettingsAndHelp.storyboard in Resources */,
 				E5F4C36B22C4035200E0D94E /* GoogleService-Info.plist in Resources */,
 				E5F4C36922C4035200E0D94E /* StopRecording.aiff in Resources */,
