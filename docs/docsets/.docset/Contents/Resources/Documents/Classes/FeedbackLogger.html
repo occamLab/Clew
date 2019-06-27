@@ -15,7 +15,6 @@
     <header>
       <div class="content-wrapper">
         <p><a href="../index.html"> Docs</a> (97% documented)</p>
-        <p class="header-right"><a href="https://github.com/occamLab/Clew"><img src="../img/gh.png"/>View on GitHub</a></p>
       </div>
     </header>
     <div class="content-wrapper">
@@ -133,13 +132,13 @@
                 <a href="../Global Variables.html#/s:4Clew16HapticDirectionsSDySiSSGvp">HapticDirections</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Global Variables.html#/s:4Clew11targetDepthSfvp">targetDepth</a>
+                <a href="../Global Variables.html#/s:4Clew11targetDepthXevp">targetDepth</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Global Variables.html#/s:4Clew12targetHeightSfvp">targetHeight</a>
+                <a href="../Global Variables.html#/s:4Clew12targetHeightXevp">targetHeight</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Global Variables.html#/s:4Clew11targetWidthSfvp">targetWidth</a>
+                <a href="../Global Variables.html#/s:4Clew11targetWidthXevp">targetWidth</a>
               </li>
             </ul>
           </li>
@@ -256,9 +255,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:4Clew14FeedbackLoggerC11feedbackRefSo19FIRStorageReferenceCvp"></a>
+                    <a name="/s:4Clew14FeedbackLoggerC11feedbackRefXevp"></a>
                     <a name="//apple_ref/swift/Property/feedbackRef" class="dashAnchor"></a>
-                    <a class="token" href="#/s:4Clew14FeedbackLoggerC11feedbackRefSo19FIRStorageReferenceCvp">feedbackRef</a>
+                    <a class="token" href="#/s:4Clew14FeedbackLoggerC11feedbackRefXevp">feedbackRef</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -273,7 +272,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">let</span> <span class="nv">feedbackRef</span><span class="p">:</span> <span class="kt">StorageReference</span></code></pre>
+                          <pre class="highlight swift"><code><span class="k">let</span> <span class="nv">feedbackRef</span><span class="p">:</span> <span class="o">&lt;&lt;</span><span class="n">error</span> <span class="n">type</span><span class="o">&gt;&gt;</span></code></pre>
 
                         </div>
                       </div>
@@ -348,9 +347,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:4Clew14FeedbackLoggerC8makeData4name7message7country5phone5email10Foundation0E0VSgSS_S2SSgS2StF"></a>
-                    <a name="//apple_ref/swift/Method/makeData(name:message:country:phone:email:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:4Clew14FeedbackLoggerC8makeData4name7message7country5phone5email10Foundation0E0VSgSS_S2SSgS2StF">makeData(name:message:country:phone:email:)</a>
+                    <a name="/s:4Clew14FeedbackLoggerC8makeData4name7message7country5phone5email7isAudio10Foundation0E0VSgSS_S2SSgS2SSbtF"></a>
+                    <a name="//apple_ref/swift/Method/makeData(name:message:country:phone:email:isAudio:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Clew14FeedbackLoggerC8makeData4name7message7country5phone5email7isAudio10Foundation0E0VSgSS_S2SSgS2SSbtF">makeData(name:message:country:phone:email:isAudio:)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -365,7 +364,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">makeData</span><span class="p">(</span><span class="nv">name</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">message</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="n">country</span> <span class="nv">inputCountry</span><span class="p">:</span> <span class="kt">String</span><span class="p">?,</span> <span class="nv">phone</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">email</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Data</span><span class="p">?</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">makeData</span><span class="p">(</span><span class="nv">name</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">message</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="n">country</span> <span class="nv">inputCountry</span><span class="p">:</span> <span class="kt">String</span><span class="p">?,</span> <span class="nv">phone</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">email</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">isAudio</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Data</span><span class="p">?</span></code></pre>
 
                         </div>
                       </div>
@@ -404,7 +403,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2019 <a class="link" href="" target="_blank" rel="external"></a>. All rights reserved. (Last updated: 2019-06-26)</p>
+          <p>&copy; 2019 <a class="link" href="" target="_blank" rel="external"></a>. All rights reserved. (Last updated: 2019-06-27)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.9.6</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
         </section>
       </article>
