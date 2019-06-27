@@ -26,11 +26,35 @@ class HelpCompiler {
         <h3>\(NSLocalizedString("recordingARouteProperPositioningHeading", comment: "This is a heading in the recording a route section of the help documentation."))</h3>
         <p>\(NSLocalizedString("recordingARouteProperPositioningContent", comment: "This is a paragraph in the recording a route section of the help menu. This paragraph describes how to properly hold the phone while recording a route for optimal performance"))</p>
         """),("\(NSLocalizedString("savedRoutesHeader", comment: "This is a section header in the help documentation"))","""
-        <p>\(NSLocalizedString("savedRoutesContent", comment: "this is a paragraph in the saved routes section of the help documentation. this paragraph describes the basic functionaliuty of the saved routes feature"))</p>
-        <h3>\(NSLocalizedString("savedRoutesLoadingARouteHeader", comment: "This is a header in the saving routes section of the help documentation menu"))</h3>
-        <p>\(NSLocalizedString("savedRoutesLoadingARouteContent", comment: "This is a paragraph in the saving routes section of the help menu which describes the process for loading a saved route for navigation."))</p>
-        <h3>\(NSLocalizedString("savedRoutesDeletingASavedRouteHeader", comment: "This is a header in the saved routes section of the help documentation"))</h3>
-        <p>\(NSLocalizedString("savedRoutesDeletingASavedRouteContent", comment: "This is a paragraph in the saved routes section of the help documentation. This paragraph describes how to delete a saved route."))</p>
+            <p>\(NSLocalizedString("savedRoutesContent", comment: "this is a paragraph in the saved routes section of the help documentation. this paragraph describes the basic functionaliuty of the saved routes feature"))</p>
+            <h3>\(NSLocalizedString("savedRoutesLoadingARouteHeader", comment: "This is a header in the saving routes section of the help documentation menu"))</h3>
+            <p>\(NSLocalizedString("savedRoutesLoadingARouteContent", comment: "This is a paragraph in the saving routes section of the help menu which describes the process for loading a saved route for navigation."))</p>
+            <h3>\(NSLocalizedString("savedRoutesDeletingASavedRouteHeader", comment: "This is a header in the saved routes section of the help documentation"))</h3>
+            <p>\(NSLocalizedString("savedRoutesDeletingASavedRouteContent", comment: "This is a paragraph in the saved routes section of the help documentation. This paragraph describes how to delete a saved route."))</p>
+            """),("\(NSLocalizedString("followingARouteHeader", comment: "This is a header for the following a route section of the help documentation."))","""
+        <p>\(NSLocalizedString("followingARouteContent", comment: "This is a paragraph which is in the following a route section of the help documentation."))</p>
+        <h3>\(NSLocalizedString("followingARouteHapticFeedbackHeader", comment: "This is a header inside the following a route section of the help documentation"))</h3>
+        <p>\(NSLocalizedString("followingARouteHapticFeedbackContent", comment: "this is a paragraph in the following a route section of the help documentation which describes the meaning of haptic feedback that the user recieves during navigation."))</p>
+        <h3>\(NSLocalizedString("followingARouteAuditoryBeepsHeader", comment: "This is a header inside the following a route section of the help documentation"))</h3>
+        <p>\(NSLocalizedString("followingARouteAuditoryBeepsContent", comment: "This is a paragraph in the following a route section of the help documentation which describes the menaing of audityory meps during navigation."))</p>
+        </h3>
+        <h3>\(NSLocalizedString("followingARouteSpeechFeedbackHeader", comment: "This is a header inside the following a route section of the help documentation"))</h3>
+        <p>\(NSLocalizedString("followingARouteSpeechFeedbackContent", comment: "this is a paragraph in the following a route section of the help documentation which describes the meaning of auditory speech feedback during navigation."))
+        </p>
+        </p>
+        </h3>
+        """),("\(NSLocalizedString("appSoundsAndTheirMeaningsHeader", comment: "This is a section header in the help documentation"))","""
+        <p>\(NSLocalizedString("appSoundsAndTheirMeaningsContent", comment: "This is a paragraph in the App sounds and their meanings section."))</p>
+        <ul>
+            <li><p>\(NSLocalizedString("appSoundsAndTheirMeaningsNormalMotionTrackingSoundBullet", comment: "This is a bullet point which describes the normal motion tracking sound and its meaning"))</p></li>
+            <li><p>\(NSLocalizedString("appSoundsAndTheirMeaningsMotionTrackingWarningSoundBullet", comment: "This is a bullet point which describes the motion tracking warning sound and its meaning"))</p></li>
+        </ul>
+        """),("\(NSLocalizedString("ratingYourNavigationExperienceHeader", comment: "This is a section header in the help documentation menu"))","""
+        <p>\(NSLocalizedString("ratingYourNavigationExperienceContent", comment: "This is a paragraph in the rating your navigation experiennce section of the help menu."))</p>
+        """),("\(NSLocalizedString("providingFeedbackToTheDevelopmentTeamHeader", comment: "this is a section in the help documentation menu"))","""
+        <p>\(NSLocalizedString("providingFeedbackToTheDevelopmentTeamContent", comment: "This is a paragraph which describes how to send feedback to the development team"))</p>
+        </body>
+        </html>
         """)]
     func compileWebContent()->String{
         
