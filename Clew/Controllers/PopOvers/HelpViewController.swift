@@ -12,23 +12,16 @@ import WebKit
 /// The view controller for the help dialog.  This is a thin wrapper on top of WKWebView, which displays the main content.
 class HelpViewController : UIViewController, WKUIDelegate, WKNavigationDelegate  {
     
+    /// instzntiates an instance of a help compiler
     var helpCompiler = HelpCompiler()
     
     /// The view that displays the help as a webpage
     @IBOutlet var webContent: WKWebView!
-    
-    /// When the view has loaded, the index.html file will be loaded and rendered by webContent.
-    /*override func viewDidLoad() {
-        title = "Clew Help"
-        let url = Bundle.main.url(forResource: "helpDocsHTML", withExtension: "html", subdirectory: "help")!
-        //let url = Bundle.main.url(forResource: "index", withExtension: "html", subdirectory: "help")!
-        webContent.loadFileURL(url, allowingReadAccessTo: url)
-        let request = URLRequest(url: url)
-        webContent.load(request)
-    }*/
+
     /// When the view has loaded, the index.html file will be loaded and rendered by webContent.
     override func viewDidLoad() {
         title = "Clew Help"
+        ///creates and loads the website
         helpCompiler.loadWebContent(webView: webContent)
     }
     

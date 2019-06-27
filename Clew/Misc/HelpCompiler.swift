@@ -10,8 +10,10 @@ import Foundation
 import UIKit
 import WebKit
 
+///and external class which contains the information necessary for loading the help documentation website
 class HelpCompiler {
 
+    ///creates a dictionry which sets up the HTML structure for all of the help menu sections. the format for a section is (NSLocalizedString describing the section header, html describing section content with NSLocalized strings for relevant sections)
     let contentDictioanry = [("\(NSLocalizedString("appFeaturesHeading", comment: "this is a heading in the help documentation. it is also used for the creation of the accessability labels used to inform the user as to how to interact with the help documantatio's accordian menu"))","""
         <h3>\(NSLocalizedString("appFeaturesCurrentVersionHeading", comment: "this is a heading in the help documentation and part of the app features section."))</h3>
         <p>\(NSLocalizedString("appfeaturesCurrentVersionContent", comment: "this is a paragraph in the app features section of the help menu which describes the main features of Clew"))</p>
@@ -57,8 +59,10 @@ class HelpCompiler {
         </html>
         """)]
     
+    ///compiles all of the web content into a giant string of HTML
     func compileWebContent()->String{
         
+        ///creates a string which will contain the html for the website and prep it witth the content which is rendered above any content specific to different help sections. this means that this creates the header, css, and loads the website title
         var result:String = """
         <!DOCTYPE html>
         <html>
@@ -104,8 +108,10 @@ class HelpCompiler {
                 <h1 class = "pageTitle"> \(NSLocalizedString("clewHelpTitle", comment: "This is the top heading of the help documentation"))</h1>
         """
         
+        ///itterates through the dictionary of help sections and their content
         for (key,value) in contentDictioanry{
             
+            //for each section this adds it to the html as a collapseable section with the proper content
             let section = """
             
             <!--creates an accordian menu heading which needs to be exapanded by defualt.-->
@@ -115,8 +121,10 @@ class HelpCompiler {
                 \(value)
             </div>
             """
+            /// appends the latest section to the stack of sections
             result = result + section
         }
+        ///appends the footer information to the html string. this includes adding the javascript for handeling accesability (included inside this folder rather than a remote javascript file so it can be localized) and the javascript which handels the expanding and contracting menus.
         result = result + """
         <!--Loads the Javascript which handles the accessability tags.-->
         <script>
@@ -141,17 +149,21 @@ class HelpCompiler {
         <!--Loads the Javascript which handles the collapseability-->
         <script async src="./helpDocsJavascript.js"> </script>
         """
+        
+        ///returns the string which contains the full html for the website
         return result
     }
     
+    ///loads the help documentation content into a website
     func loadWebContent(webView: WKWebView){
+        //gives access to the resources folder
         let url = Bundle.main.url(forResource: "helpDocsJavascript", withExtension: "js", subdirectory: "help/assets")!
         //let url = Bundle.main.url(forResource: "index", withExtension: "html", subdirectory: "help")!
         webView.loadFileURL(url, allowingReadAccessTo: url)
         
         //creates the string of HTML that contains the web content for the help page
         let webContent = compileWebContent()
-        ///loads the web content by loading the HTML string provided in the item object
+        ///loads the web content into a website by loading the HTML string provided in the item object
         webView.loadHTMLString(webContent, baseURL: url)
     }
     
