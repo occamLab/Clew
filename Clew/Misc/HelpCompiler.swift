@@ -56,6 +56,7 @@ class HelpCompiler {
         </body>
         </html>
         """)]
+    
     func compileWebContent()->String{
         
         var result:String = """
@@ -86,16 +87,29 @@ class HelpCompiler {
                         overflow: hidden;
                         background-color: #f1f1f1;
                     }
+                    img.image {
+                        display: block;
+                        margin-left: auto;
+                        margin-right: auto;
+                        width: 40%;
+                        border-radius: 30px;
+                    }
+                    .pageTitle {
+                        text-align: Center;
+                    }
                 </style>
             </head>
             <body>
+                <img class = "image" src="./clewLogo.png" alt="\(NSLocalizedString("clewAppLogoAccessabilityText", comment: "This is the accessability text placed over the clew app logo in the help documentation"))">
+                <h1 class = "pageTitle"> \(NSLocalizedString("clewHelpTitle", comment: "This is the top heading of the help documentation"))</h1>
         """
         
         for (key,value) in contentDictioanry{
             
             let section = """
+            
             <!--creates an accordian menu heading which needs to be exapanded by defualt.-->
-            <button class="collapsible" aria-label = "expand \(key) section"> \(key) </button>
+            <button class="collapsible" aria-label = "\(key): \(NSLocalizedString("expandSectionAccessabilityTag", comment: "This is a tag that is spoken by the accessability elements. This tag describes the action a user must take to expand one of the sections in the help documentation"))"> \(key) </button>
             <!-- the content that is hidden goes here -->
             <div class="content">
                 \(value)
@@ -104,14 +118,34 @@ class HelpCompiler {
             result = result + section
         }
         result = result + """
-        <!--Loads the Javascript which handles the collapseability and the accessability tags.-->
+        <!--Loads the Javascript which handles the accessability tags.-->
+        <script>
+        //updates the accessability labels
+        function updateAccessabilityLabels (htmlElement,action){
+            //if the user just opened a section
+            if (action == "open"){
+                //set the accessability label
+        htmlElement.setAttribute("aria-Label", htmlElement.innerHTML + ":" + "\(NSLocalizedString("contractSectionAccessabilityTag", comment: "This is a tag that is spoken by the accessability elements. This tag describes the action a user must take to collapse one of the sections in the help documentation"))");
+                return 0
+            }
+            //if the user is closing the section
+            if (action == "close"){
+                //set the accessability label
+        htmlElement.setAttribute("aria-Label",htmlElement.innerHTML + ":" + "\(NSLocalizedString("expandSectionAccessabilityTag", comment: "This is a tag that is spoken by the accessability elements. This tag describes the action a user must take to expand one of the sections in the help documentation"))");
+                return 0
+            }
+        
+        }
+        </script>
+        
+        <!--Loads the Javascript which handles the collapseability-->
         <script async src="./helpDocsJavascript.js"> </script>
         """
         return result
     }
     
     func loadWebContent(webView: WKWebView){
-        let url = Bundle.main.url(forResource: "helpDocsJavascript", withExtension: "js", subdirectory: "help/javascript")!
+        let url = Bundle.main.url(forResource: "helpDocsJavascript", withExtension: "js", subdirectory: "help/assets")!
         //let url = Bundle.main.url(forResource: "index", withExtension: "html", subdirectory: "help")!
         webView.loadFileURL(url, allowingReadAccessTo: url)
         

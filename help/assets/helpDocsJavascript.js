@@ -3,23 +3,6 @@ var coll = document.getElementsByClassName("collapsible");
 //creates an index counter variable
 var i;
 
-//updates the accessability labels
-function updateAccessabilityLabels (htmlElement,action){
-    //if the user just opened a section
-    if (action == "open"){
-        //set the accessability label
-        htmlElement.setAttribute("aria-Label","contract " + htmlElement.innerHTML + " section");
-        return 0
-    }
-    //if the user is closing the section
-    if (action == "close"){
-        //set the accessability label
-        htmlElement.setAttribute("aria-Label","expand " + htmlElement.innerHTML + " section");
-        return 0
-    }
-
-}
-
 
 //itterates through all of the collapseable elements
 for (i = 0; i < coll.length; i++) {
