@@ -78,7 +78,7 @@ class FeedbackLogger {
         var country: String = "NONE"
         
         ///performs input processing on the country Field
-        if inputCountry == "Country (optional)"{
+        if inputCountry == ""{
             country = "NONE"
         }else{
             country = inputCountry!

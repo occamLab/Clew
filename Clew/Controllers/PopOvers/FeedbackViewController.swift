@@ -38,7 +38,7 @@ class FeedbackViewController : UIViewController, UITextViewDelegate, UIPopoverPr
         startTimerForShowScrollIndicator()
         
         ///sets the title of the popover
-        title = "Clew Feedback"
+        title = "\(NSLocalizedString("feedbackMenuTitle", comment: "this is the title on the feedback popover content"))"
         
     }
     
@@ -64,17 +64,7 @@ class FeedbackViewController : UIViewController, UITextViewDelegate, UIPopoverPr
     }
 
     //MARK: Actions
-    
-    ///called whenever you start editing the feedback text field
-    func textViewDidBeginEditing(_ textView: UITextView) {
-        
-        ///checks to see if the value is equal to the default value so that it will only clear the text if it is the default value
-        if feedbackTextField.text == "Enter Feedback"{
-            
-            ///clears the text in the text field
-            feedbackTextField.text = ""
-        }
-    }
+
     
     ///This is a function which takes the feedback from the form and sends it to firebase. This function is called when the send feedback button is pressed
     @IBAction func sendFeedback(_ sender: UIButton) {
@@ -86,7 +76,7 @@ class FeedbackViewController : UIViewController, UITextViewDelegate, UIPopoverPr
         var name = nameTextField.text!
         
         ///performs input processing on the name to make sure that the user inputted a name
-        if name == "Name" || name == "Please enter a name"{
+        if name == ""{
             ///if the user did not input a name the program just sets the value of the users 'name to a special empty value
             name = "NO NAME GIVEN"
         }
@@ -94,21 +84,21 @@ class FeedbackViewController : UIViewController, UITextViewDelegate, UIPopoverPr
         ///retrieves the name from the form
         var number = phoneNumberTextField.text!
         ///performs input processing on the name to make sure that the user inputted a name
-        if number == "Phone Number (optional)" {
+        if number == "" {
             ///if the user did not input a phone number it sets the value of the phone number to a special value
             number = "NONE"
         }
         
         ///retrieves the name from the form
         var email = emailTextField.text!
-        if email == "Email (optional)" {
+        if email == "" {
             ///if the user did not input an email it sets the value of the email to a special value
             email = "NONE"
         }
         
         ///retrieves the feedback message from the form
         var feedback = feedbackTextField.text!
-        if feedback == "Enter Feedback" {
+        if feedback == "" {
             ///if the user did not input textual feedback it sets the value to a special empty value
             feedback = "NONE"
         }

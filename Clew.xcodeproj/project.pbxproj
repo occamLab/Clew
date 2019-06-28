@@ -7,44 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1F2B9D8722C5446B00317DC8 /* SettingsAndHelp.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1F2B9D8A22C5446B00317DC8 /* SettingsAndHelp.storyboard */; };
+		1F2B9D8822C5446B00317DC8 /* SettingsAndHelp.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1F2B9D8A22C5446B00317DC8 /* SettingsAndHelp.storyboard */; };
+		1F2B9DAD22C554C300317DC8 /* localizations in Resources */ = {isa = PBXBuildFile; fileRef = 1F2B9DAC22C554C300317DC8 /* localizations */; };
+		1F2B9DAE22C554C300317DC8 /* localizations in Resources */ = {isa = PBXBuildFile; fileRef = 1F2B9DAC22C554C300317DC8 /* localizations */; };
 		2748B8490FCBA95C7AA028D7 /* Pods_Clew.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 942F73299DA8DCF97FAA974A /* Pods_Clew.framework */; };
 		4D6B00E51F33C9B800952242 /* Crumb.obj in Resources */ = {isa = PBXBuildFile; fileRef = 4D6B00E41F33C85500952242 /* Crumb.obj */; };
 		4DF05CC81F34EB6B008B0E31 /* Confirm.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4DF05CC71F34EB56008B0E31 /* Confirm.mp3 */; };
-		6C5EAEA6841FD0A893E9B13B /* Pods_Clew.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C4CE12E3C729D40002186797 /* Pods_Clew.framework */; };
-		82028C74227CDB3100772701 /* PathLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82028C73227CDB3100772701 /* PathLogger.swift */; };
-		82028C75227CDB3100772701 /* PathLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82028C73227CDB3100772701 /* PathLogger.swift */; };
-		82028C7722807BF400772701 /* GoogleService-Info_dev.plist in Resources */ = {isa = PBXBuildFile; fileRef = 82028C7622807BF400772701 /* GoogleService-Info_dev.plist */; };
-		82028C7922807C1F00772701 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 82028C7822807C1F00772701 /* GoogleService-Info.plist */; };
-		82473B092217641D00E98CFC /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 82473B082217641D00E98CFC /* SettingsViewController.m */; };
-		82473B0A2217641D00E98CFC /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 82473B082217641D00E98CFC /* SettingsViewController.m */; };
-		82473B0C2217647A00E98CFC /* SettingsAndHelp.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 82473B0B2217647A00E98CFC /* SettingsAndHelp.storyboard */; };
-		82473B0D2217647A00E98CFC /* SettingsAndHelp.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 82473B0B2217647A00E98CFC /* SettingsAndHelp.storyboard */; };
-		82569F4722187AE700448B45 /* HelpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82569F4622187AE700448B45 /* HelpViewController.swift */; };
-		82569F4822187AE700448B45 /* HelpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82569F4622187AE700448B45 /* HelpViewController.swift */; };
-		82569F4E22187E6500448B45 /* help in Resources */ = {isa = PBXBuildFile; fileRef = 82569F4D22187E6500448B45 /* help */; };
-		82569F4F22187E6500448B45 /* help in Resources */ = {isa = PBXBuildFile; fileRef = 82569F4D22187E6500448B45 /* help */; };
-		826D540C224ABBDC009EF410 /* RouteTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 826D540A224ABBDC009EF410 /* RouteTableViewCell.swift */; };
-		826D540D224ABBDC009EF410 /* RouteTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 826D540A224ABBDC009EF410 /* RouteTableViewCell.swift */; };
-		826D540E224ABBDC009EF410 /* RoutesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 826D540B224ABBDC009EF410 /* RoutesViewController.swift */; };
-		826D540F224ABBDC009EF410 /* RoutesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 826D540B224ABBDC009EF410 /* RoutesViewController.swift */; };
-		826D5411224ABC39009EF410 /* DataPersistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 826D5410224ABC39009EF410 /* DataPersistence.swift */; };
-		826D5412224ABC39009EF410 /* DataPersistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 826D5410224ABC39009EF410 /* DataPersistence.swift */; };
-		827E859522690956005CF98A /* AudioVisualizerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 827E859422690956005CF98A /* AudioVisualizerView.swift */; };
-		827E859622690956005CF98A /* AudioVisualizerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 827E859422690956005CF98A /* AudioVisualizerView.swift */; };
-		827E859C22690FE4005CF98A /* StartRecording.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 827E859A22690FE4005CF98A /* StartRecording.aiff */; };
-		827E859D22690FE4005CF98A /* StartRecording.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 827E859A22690FE4005CF98A /* StartRecording.aiff */; };
-		827E859E22690FE4005CF98A /* StopRecording.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 827E859B22690FE4005CF98A /* StopRecording.aiff */; };
-		827E859F22690FE4005CF98A /* StopRecording.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 827E859B22690FE4005CF98A /* StopRecording.aiff */; };
-		82A43F482269079300076941 /* RecorderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82A43F472269079300076941 /* RecorderViewController.swift */; };
-		82A43F492269079300076941 /* RecorderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82A43F472269079300076941 /* RecorderViewController.swift */; };
-		82A43F4B226907C600076941 /* RecordButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82A43F4A226907C600076941 /* RecordButton.swift */; };
-		82A43F4C226907C600076941 /* RecordButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82A43F4A226907C600076941 /* RecordButton.swift */; };
-		82A43F4E2269085800076941 /* RecordButtonKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82A43F4D2269085800076941 /* RecordButtonKit.swift */; };
-		82A43F4F2269085800076941 /* RecordButtonKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82A43F4D2269085800076941 /* RecordButtonKit.swift */; };
-		B7EB59DA20F693EB00FBBC6A /* PathFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D6B00D71F33C21A00952242 /* PathFinder.swift */; };
-		B7EB59DB20F693EB00FBBC6A /* Navigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D6B00D51F33C1FE00952242 /* Navigation.swift */; };
-		B7EB59DC20F693EB00FBBC6A /* Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D6B00DB1F33C26D00952242 /* Utility.swift */; };
-		B7EB59DE20F693EB00FBBC6A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D6B00C31F33C1C400952242 /* AppDelegate.swift */; };
 		77467DAF22BBC1D300FA7DEE /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 77467DAE22BBC1D300FA7DEE /* Default-568h@2x.png */; };
 		82569F4E22187E6500448B45 /* help in Resources */ = {isa = PBXBuildFile; fileRef = 82569F4D22187E6500448B45 /* help */; };
 		82569F4F22187E6500448B45 /* help in Resources */ = {isa = PBXBuildFile; fileRef = 82569F4D22187E6500448B45 /* help */; };
@@ -77,10 +46,6 @@
 		E5470F0D22C119F5001092A4 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E5470EB722C119F4001092A4 /* SettingsViewController.m */; };
 		E5470F0E22C119F5001092A4 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = E5470EB922C119F4001092A4 /* Settings.bundle */; };
 		E5470F0F22C119F5001092A4 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = E5470EB922C119F4001092A4 /* Settings.bundle */; };
-		E5470F1022C119F5001092A4 /* LaunchScreen.strings in Resources */ = {isa = PBXBuildFile; fileRef = E5470EBC22C119F4001092A4 /* LaunchScreen.strings */; };
-		E5470F1122C119F5001092A4 /* LaunchScreen.strings in Resources */ = {isa = PBXBuildFile; fileRef = E5470EBC22C119F4001092A4 /* LaunchScreen.strings */; };
-		E5470F1222C119F5001092A4 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E5470EBE22C119F4001092A4 /* Localizable.strings */; };
-		E5470F1322C119F5001092A4 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E5470EBE22C119F4001092A4 /* Localizable.strings */; };
 		E5470F1622C119F5001092A4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E5470ED022C119F4001092A4 /* Assets.xcassets */; };
 		E5470F1722C119F5001092A4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E5470ED022C119F4001092A4 /* Assets.xcassets */; };
 		E5470F1822C119F5001092A4 /* StartRecording.aiff in Resources */ = {isa = PBXBuildFile; fileRef = E5470ED222C119F4001092A4 /* StartRecording.aiff */; };
@@ -127,8 +92,6 @@
 		E5470F4122C119F5001092A4 /* StateController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470EEC22C119F4001092A4 /* StateController.swift */; };
 		E5470F4222C119F5001092A4 /* UIConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470EEE22C119F4001092A4 /* UIConstants.swift */; };
 		E5470F4322C119F5001092A4 /* UIConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470EEE22C119F4001092A4 /* UIConstants.swift */; };
-		E5470F4422C119F5001092A4 /* SettingsAndHelp.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E5470EEF22C119F4001092A4 /* SettingsAndHelp.storyboard */; };
-		E5470F4522C119F5001092A4 /* SettingsAndHelp.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E5470EEF22C119F4001092A4 /* SettingsAndHelp.storyboard */; };
 		E5470F4622C119F5001092A4 /* RootContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470EF022C119F4001092A4 /* RootContainerView.swift */; };
 		E5470F4722C119F5001092A4 /* RootContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470EF022C119F4001092A4 /* RootContainerView.swift */; };
 		E5470F4822C119F5001092A4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E5470EF122C119F4001092A4 /* LaunchScreen.storyboard */; };
@@ -141,6 +104,15 @@
 
 /* Begin PBXFileReference section */
 		08FA9C31721F9F8CDCC23AE9 /* Pods-Clew.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Clew/Pods-Clew.debug.xcconfig"; sourceTree = "<group>"; };
+		1F2B9D8922C5446B00317DC8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/SettingsAndHelp.storyboard; sourceTree = "<group>"; };
+		1F2B9D9D22C5510900317DC8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = ../localizations/en.lproj/SettingsAndHelp.strings; sourceTree = "<group>"; };
+		1F2B9D9F22C5528400317DC8 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/SettingsAndHelp.strings; sourceTree = "<group>"; };
+		1F2B9DA122C5528800317DC8 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/SettingsAndHelp.strings"; sourceTree = "<group>"; };
+		1F2B9DA322C5528C00317DC8 /* th */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = th; path = th.lproj/SettingsAndHelp.strings; sourceTree = "<group>"; };
+		1F2B9DA522C5529200317DC8 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/SettingsAndHelp.strings; sourceTree = "<group>"; };
+		1F2B9DA722C5529600317DC8 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/SettingsAndHelp.strings; sourceTree = "<group>"; };
+		1F2B9DA922C5529A00317DC8 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/SettingsAndHelp.strings; sourceTree = "<group>"; };
+		1F2B9DAC22C554C300317DC8 /* localizations */ = {isa = PBXFileReference; lastKnownFileType = folder; path = localizations; sourceTree = "<group>"; };
 		3532E390954571B93729786A /* Pods_Clew_Dev.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Clew_Dev.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4D6B00C01F33C1C400952242 /* Clew.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Clew.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4D6B00E41F33C85500952242 /* Crumb.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = Crumb.obj; sourceTree = "<group>"; };
@@ -151,7 +123,6 @@
 		85A1A72DC19F87F15B738291 /* Pods-Clew Dev.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew Dev.release.xcconfig"; path = "Pods/Target Support Files/Pods-Clew Dev/Pods-Clew Dev.release.xcconfig"; sourceTree = "<group>"; };
 		942F73299DA8DCF97FAA974A /* Pods_Clew.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Clew.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B7EB59EC20F693EB00FBBC6A /* Clew Dev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Clew Dev.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		C4CE12E3C729D40002186797 /* Pods_Clew.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Clew.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C68778047D8E263D2FB04989 /* Pods-Clew Dev.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew Dev.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Clew Dev/Pods-Clew Dev.debug.xcconfig"; sourceTree = "<group>"; };
 		D89DDB87A8AE1A9ECEAFCEC6 /* Pods-Clew.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew.release.xcconfig"; path = "Pods/Target Support Files/Pods-Clew/Pods-Clew.release.xcconfig"; sourceTree = "<group>"; };
 		E5470EAB22C119F4001092A4 /* RecordButtonKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecordButtonKit.swift; sourceTree = "<group>"; };
@@ -169,23 +140,6 @@
 		E5470EB822C119F4001092A4 /* Clew Dev-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Clew Dev-Bridging-Header.h"; sourceTree = "<group>"; };
 		E5470EB922C119F4001092A4 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		E5470EBA22C119F4001092A4 /* SettingsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsTableViewController.h; sourceTree = "<group>"; };
-		E5470EBD22C119F4001092A4 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
-		E5470EBF22C119F4001092A4 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		E5470EC122C119F4001092A4 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "zh-Hans"; path = "zh-Hans.lproj/Info.plist"; sourceTree = "<group>"; };
-		E5470EC222C119F4001092A4 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
-		E5470EC322C119F4001092A4 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
-		E5470EC422C119F4001092A4 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = en; path = en.lproj/Info.plist; sourceTree = "<group>"; };
-		E5470EC522C119F4001092A4 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
-		E5470EC622C119F4001092A4 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
-		E5470EC722C119F4001092A4 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = es; path = es.lproj/Info.plist; sourceTree = "<group>"; };
-		E5470EC822C119F4001092A4 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
-		E5470EC922C119F4001092A4 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
-		E5470ECA22C119F4001092A4 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
-		E5470ECB22C119F4001092A4 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
-		E5470ECC22C119F4001092A4 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = ru; path = ru.lproj/Info.plist; sourceTree = "<group>"; };
-		E5470ECD22C119F4001092A4 /* th */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = th; path = th.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
-		E5470ECE22C119F4001092A4 /* th */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = th; path = th.lproj/Localizable.strings; sourceTree = "<group>"; };
-		E5470ECF22C119F4001092A4 /* th */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = th; path = th.lproj/Info.plist; sourceTree = "<group>"; };
 		E5470ED022C119F4001092A4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E5470ED222C119F4001092A4 /* StartRecording.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = StartRecording.aiff; sourceTree = "<group>"; };
 		E5470ED322C119F4001092A4 /* StopRecording.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = StopRecording.aiff; sourceTree = "<group>"; };
@@ -211,7 +165,6 @@
 		E5470EEB22C119F4001092A4 /* RoutesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoutesViewController.swift; sourceTree = "<group>"; };
 		E5470EEC22C119F4001092A4 /* StateController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StateController.swift; sourceTree = "<group>"; };
 		E5470EEE22C119F4001092A4 /* UIConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIConstants.swift; sourceTree = "<group>"; };
-		E5470EEF22C119F4001092A4 /* SettingsAndHelp.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = SettingsAndHelp.storyboard; sourceTree = "<group>"; };
 		E5470EF022C119F4001092A4 /* RootContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootContainerView.swift; sourceTree = "<group>"; };
 		E5470EF222C119F4001092A4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		E5470EF322C119F4001092A4 /* RouteTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteTableViewCell.swift; sourceTree = "<group>"; };
@@ -251,7 +204,6 @@
 				645269AB241294DCBFA0E1B0 /* Pods */,
 				C63B435EA8A32350A76E47DD /* Frameworks */,
 				822E27F8210E3F260024A5E3 /* Clew Dev-Info.plist */,
-				984493C622B17EC6000C2F32 /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};
@@ -287,13 +239,13 @@
 		E5470EA922C119F4001092A4 /* Clew */ = {
 			isa = PBXGroup;
 			children = (
+				1F2B9DAC22C554C300317DC8 /* localizations */,
 				E5470EAA22C119F4001092A4 /* Voice Notes */,
 				E5470EAF22C119F4001092A4 /* Misc */,
 				E5470EB722C119F4001092A4 /* SettingsViewController.m */,
 				E5470EB822C119F4001092A4 /* Clew Dev-Bridging-Header.h */,
 				E5470EB922C119F4001092A4 /* Settings.bundle */,
 				E5470EBA22C119F4001092A4 /* SettingsTableViewController.h */,
-				E5470EBB22C119F4001092A4 /* localizations */,
 				E5470ED022C119F4001092A4 /* Assets.xcassets */,
 				E5470ED122C119F4001092A4 /* Sound Effects */,
 				E5470ED422C119F4001092A4 /* GoogleService-Info.plist */,
@@ -331,16 +283,6 @@
 				E5470EB622C119F4001092A4 /* AppDelegate.swift */,
 			);
 			path = Misc;
-			sourceTree = "<group>";
-		};
-		E5470EBB22C119F4001092A4 /* localizations */ = {
-			isa = PBXGroup;
-			children = (
-				E5470EBC22C119F4001092A4 /* LaunchScreen.strings */,
-				E5470EBE22C119F4001092A4 /* Localizable.strings */,
-				E5470EC022C119F4001092A4 /* Info.plist */,
-			);
-			path = localizations;
 			sourceTree = "<group>";
 		};
 		E5470ED122C119F4001092A4 /* Sound Effects */ = {
@@ -404,7 +346,7 @@
 			isa = PBXGroup;
 			children = (
 				E5470EEE22C119F4001092A4 /* UIConstants.swift */,
-				E5470EEF22C119F4001092A4 /* SettingsAndHelp.storyboard */,
+				1F2B9D8A22C5446B00317DC8 /* SettingsAndHelp.storyboard */,
 				E5470EF022C119F4001092A4 /* RootContainerView.swift */,
 				E5470EF122C119F4001092A4 /* LaunchScreen.storyboard */,
 				E5470EF322C119F4001092A4 /* RouteTableViewCell.swift */,
@@ -505,18 +447,17 @@
 			files = (
 				4DF05CC81F34EB6B008B0E31 /* Confirm.mp3 in Resources */,
 				E5470F1822C119F5001092A4 /* StartRecording.aiff in Resources */,
-				E5470F1022C119F5001092A4 /* LaunchScreen.strings in Resources */,
 				4D6B00E51F33C9B800952242 /* Crumb.obj in Resources */,
 				E5470F1C22C119F5001092A4 /* GoogleService-Info.plist in Resources */,
-				E5470F1222C119F5001092A4 /* Localizable.strings in Resources */,
 				E5470F0E22C119F5001092A4 /* Settings.bundle in Resources */,
 				82569F4E22187E6500448B45 /* help in Resources */,
 				E5470F1622C119F5001092A4 /* Assets.xcassets in Resources */,
 				E5470F4E22C119F5001092A4 /* GoogleService-Info_dev.plist in Resources */,
-				E5470F4422C119F5001092A4 /* SettingsAndHelp.storyboard in Resources */,
+				1F2B9D8722C5446B00317DC8 /* SettingsAndHelp.storyboard in Resources */,
 				E5470F4822C119F5001092A4 /* LaunchScreen.storyboard in Resources */,
 				E5470F1A22C119F5001092A4 /* StopRecording.aiff in Resources */,
 				77467DAF22BBC1D300FA7DEE /* Default-568h@2x.png in Resources */,
+				1F2B9DAD22C554C300317DC8 /* localizations in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -526,15 +467,14 @@
 			files = (
 				E5470F0F22C119F5001092A4 /* Settings.bundle in Resources */,
 				E5470F1922C119F5001092A4 /* StartRecording.aiff in Resources */,
-				E5470F1322C119F5001092A4 /* Localizable.strings in Resources */,
 				E5470F1B22C119F5001092A4 /* StopRecording.aiff in Resources */,
 				B7EB59E220F693EB00FBBC6A /* Confirm.mp3 in Resources */,
 				B7EB59E320F693EB00FBBC6A /* Crumb.obj in Resources */,
-				E5470F4522C119F5001092A4 /* SettingsAndHelp.storyboard in Resources */,
+				1F2B9D8822C5446B00317DC8 /* SettingsAndHelp.storyboard in Resources */,
 				E5470F4922C119F5001092A4 /* LaunchScreen.storyboard in Resources */,
 				E5470F4F22C119F5001092A4 /* GoogleService-Info_dev.plist in Resources */,
-				E5470F1122C119F5001092A4 /* LaunchScreen.strings in Resources */,
 				82569F4F22187E6500448B45 /* help in Resources */,
+				1F2B9DAE22C554C300317DC8 /* localizations in Resources */,
 				E5470F1D22C119F5001092A4 /* GoogleService-Info.plist in Resources */,
 				E5470F1722C119F5001092A4 /* Assets.xcassets in Resources */,
 			);
@@ -729,42 +669,19 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		E5470EBC22C119F4001092A4 /* LaunchScreen.strings */ = {
+		1F2B9D8A22C5446B00317DC8 /* SettingsAndHelp.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
-				E5470EBD22C119F4001092A4 /* zh-Hans */,
-				E5470EC222C119F4001092A4 /* ja */,
-				E5470EC522C119F4001092A4 /* es */,
-				E5470EC822C119F4001092A4 /* ko */,
-				E5470ECA22C119F4001092A4 /* ru */,
-				E5470ECD22C119F4001092A4 /* th */,
+				1F2B9D8922C5446B00317DC8 /* Base */,
+				1F2B9D9D22C5510900317DC8 /* en */,
+				1F2B9D9F22C5528400317DC8 /* es */,
+				1F2B9DA122C5528800317DC8 /* zh-Hans */,
+				1F2B9DA322C5528C00317DC8 /* th */,
+				1F2B9DA522C5529200317DC8 /* ko */,
+				1F2B9DA722C5529600317DC8 /* ja */,
+				1F2B9DA922C5529A00317DC8 /* ru */,
 			);
-			name = LaunchScreen.strings;
-			sourceTree = "<group>";
-		};
-		E5470EBE22C119F4001092A4 /* Localizable.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				E5470EBF22C119F4001092A4 /* zh-Hans */,
-				E5470EC322C119F4001092A4 /* en */,
-				E5470EC622C119F4001092A4 /* es */,
-				E5470EC922C119F4001092A4 /* ko */,
-				E5470ECB22C119F4001092A4 /* ru */,
-				E5470ECE22C119F4001092A4 /* th */,
-			);
-			name = Localizable.strings;
-			sourceTree = "<group>";
-		};
-		E5470EC022C119F4001092A4 /* Info.plist */ = {
-			isa = PBXVariantGroup;
-			children = (
-				E5470EC122C119F4001092A4 /* zh-Hans */,
-				E5470EC422C119F4001092A4 /* en */,
-				E5470EC722C119F4001092A4 /* es */,
-				E5470ECC22C119F4001092A4 /* ru */,
-				E5470ECF22C119F4001092A4 /* th */,
-			);
-			name = Info.plist;
+			name = SettingsAndHelp.storyboard;
 			sourceTree = "<group>";
 		};
 		E5470EF122C119F4001092A4 /* LaunchScreen.storyboard */ = {
