@@ -90,7 +90,6 @@ class TutorialViewController: UIViewController, CoachMarksControllerDataSource, 
     }
     
     
-    
     func  initialize() {
         print("whyyyy")
     }

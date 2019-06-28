@@ -10,9 +10,10 @@ import Foundation
 import SceneKit
 
 class TutorialManager: ClewObserver {
+    // TODO: double check that overriding the default implementation actually gets called
     func finishAnnouncement(announcement: String) {
     }
-    
+ 
     func didTransitionTo(newState: AppState) {
         if case .navigatingRoute = newState {
             UIAccessibility.post(notification: UIAccessibility.Notification.announcement, argument: NSLocalizedString("Let's learn about route navigation!", comment: "Message to user during tutorial"))
@@ -21,10 +22,7 @@ class TutorialManager: ClewObserver {
         
         if case .mainScreen = newState {
             let TVC = TutorialViewController()
-            let VC = ViewController()
-            VC.handleStateTransitionToMainScreen(announceArrival: true)
             TVC.handleStateTransitionToReadyToRecordSingleRoute()
-            print("please show up")
         }
         
         if case .recordingRoute = newState {
@@ -33,6 +31,7 @@ class TutorialManager: ClewObserver {
     }
     
     func didReceiveNewCameraPose(transform: simd_float4x4) {
+        /*
         let angleFromVertical = acos(-transform.columns.0.y)
         let feedbackGenerator = UIImpactFeedbackGenerator(style: .light )
         
@@ -46,6 +45,15 @@ class TutorialManager: ClewObserver {
                     feedbackGenerator.impactOccurred()
             }
         }
-        print("angleFromVertical", angleFromVertical)
+        print("angleFromVertical", angleFromVertical) */
+        
+        // optionally do something to respond to this event
+        // if appropriate, pass the event to children
+        
+//        for child in getChildViewControllers() {
+//            if let observer = child as ClewObserver {
+//                observer.didReceiveNewCameraPose(transform: transform)
+//            }
+//        }
     }
 }
