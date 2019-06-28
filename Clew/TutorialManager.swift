@@ -18,7 +18,20 @@ class TutorialManager: ClewObserver {
             UIAccessibility.post(notification: UIAccessibility.Notification.announcement, argument: NSLocalizedString("Let's learn about route navigation!", comment: "Message to user during tutorial"))
             print("howdy!")
         }
+        
+        if case .mainScreen = newState {
+            let TVC = TutorialViewController()
+            let VC = ViewController()
+            VC.handleStateTransitionToMainScreen(announceArrival: true)
+            TVC.handleStateTransitionToReadyToRecordSingleRoute()
+            print("please show up")
+        }
+        
+        if case .recordingRoute = newState {
+            print("recording!")
+        }
     }
+    
     func didReceiveNewCameraPose(transform: simd_float4x4) {
         let angleFromVertical = acos(-transform.columns.0.y)
         let feedbackGenerator = UIImpactFeedbackGenerator(style: .light )

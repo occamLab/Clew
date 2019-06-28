@@ -14,7 +14,7 @@ class TutorialViewController: UIViewController, CoachMarksControllerDataSource, 
 
     @IBOutlet weak var staticLabel2: DesignableLabel!
     @IBAction func CloseTips(_ sender: UIButton) {
-        var appDelegate = UIApplication.shared.delegate as! AppDelegate
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         appDelegate.window?.rootViewController?.dismiss(animated: false)
         appDelegate.window = UIWindow(frame:UIScreen.main.bounds)
         appDelegate.window?.makeKeyAndVisible()
@@ -55,5 +55,43 @@ class TutorialViewController: UIViewController, CoachMarksControllerDataSource, 
         super.viewDidAppear(animated)
         
         self.coachMarksController.start(in: .window(over: self))
+    }
+    
+    ////////////////////////////
+    /// A custom enumeration type that describes the exact state of the tutorial.
+    enum TutorialState {
+        /// This is the screen that comes up immediately after the phone orientation training
+        case readyToRecordSingleRoute(announceArrival: Bool)
+        case initializing
+        /// rawValue is useful for serializing state values, which we are currently using for our logging feature
+        var rawValue: String {
+            switch self {
+            case .readyToRecordSingleRoute:
+                return "readyToRecordSingleRoute"
+            case .initializing:
+                return "initializing"
+            }
+        }
+    }
+    func handleStateTransitionToReadyToRecordSingleRoute() {
+        print("heyo")
+    }
+    
+    var state = TutorialState.initializing {
+        didSet {
+            //        logger.logStateTransition(newState: state)
+            switch state {
+            case .readyToRecordSingleRoute:
+                handleStateTransitionToReadyToRecordSingleRoute()
+            case .initializing:
+                initialize()
+            }
+        }
+    }
+    
+    
+    
+    func  initialize() {
+        print("whyyyy")
     }
 }
