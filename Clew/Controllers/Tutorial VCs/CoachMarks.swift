@@ -9,29 +9,9 @@
 import UIKit
 import Instructions
 
-<<<<<<< HEAD:Clew/TutorialViewController.swift
-
-class TutorialViewController: UIViewController, CoachMarksControllerDataSource, CoachMarksControllerDelegate {
-
-    @IBOutlet weak var staticLabel2: DesignableLabel!
-    @IBAction func CloseTips(_ sender: UIButton) {
-
-        
-        //initializing tutorial delegate
-        var appDelegate = UIApplication.shared.delegate as! AppDelegate
-        appDelegate.window?.rootViewController?.dismiss(animated: false)
-        appDelegate.window = UIWindow(frame:UIScreen.main.bounds)
-        appDelegate.window?.makeKeyAndVisible()
-        appDelegate.window?.rootViewController = ViewController()
-        print("hi")
-    }
-    
-    //////////
-=======
 //TODO: Edit and add place to put parameters
 class CoachMarks: UIViewController, CoachMarksControllerDataSource, CoachMarksControllerDelegate {
     
->>>>>>> 1cf7d6d5d22691e2a20e6cf306b8c05f3e0513f9:Clew/Controllers/Tutorial VCs/CoachMarks.swift
     let coachMarksController = CoachMarksController()
     
     override func viewDidLoad() {
