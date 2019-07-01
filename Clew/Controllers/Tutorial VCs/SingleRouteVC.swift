@@ -13,11 +13,12 @@ class SingleRouteVC: TutorialChildViewController {
         super.viewDidDisappear(animated)
         Timer.scheduledTimer(withTimeInterval: 5.0, repeats: false) { timer in
             UIAccessibility.post(notification: UIAccessibility.Notification.announcement, argument: NSLocalizedString("Let's learn about route navigation!", comment: "Message to user during tutorial"))
-            print("trying to post this")
+            print("trying to post this - works")
         }
     }
     
     func didTransitionTo(newState: AppState) {
+        print("check if function gets called")
         if case .readyToNavigateOrPause = newState {
             // TODO: maybe figure out a way to reuse this (subclass from a common superclass)
             self.tutorialParent?.state = .teachTheNavigationOfASingleRoute

@@ -27,11 +27,11 @@ class TutorialViewController: UIViewController, ClewObserver {
     
     /// A custom enumeration type that describes the exact state of the tutorial.
     enum TutorialState {
+        case tutorialStarting
         /// This is the screen that comes up immediately after the phone orientation training
         case readyToRecordSingleRoute
         case initializing
         case teachTheNavigationOfASingleRoute
-        case tutorialStarting
         case optimalOrientationAchieved
         case startingOrientationTraining
         /*
@@ -56,18 +56,19 @@ class TutorialViewController: UIViewController, ClewObserver {
         didSet {
             //        logger.logStateTransition(newState: state)
             switch state {
+            case .tutorialStarting:
+                view = TransparentTouchView(frame:CGRect(x: 0,
+                                                         y: 0,
+                                                         width: UIScreen.main.bounds.size.width,
+                                                         height: UIScreen.main.bounds.size.height))
+                print("does this work - check")
+                add(phoneOrientationTrainingChildVC)
             case .readyToRecordSingleRoute:
                 print("nothing")
             case .initializing:
                 initialize()
             case .teachTheNavigationOfASingleRoute:
                 print("placeholder")
-            case .tutorialStarting:
-                view = TransparentTouchView(frame:CGRect(x: 0,
-                                                         y: 0,
-                                                         width: UIScreen.main.bounds.size.width,
-                                                         height: UIScreen.main.bounds.size.height))
-                add(singleRouteChildVC)
             case .optimalOrientationAchieved:
                 print("nothing")
             case .startingOrientationTraining:
@@ -111,16 +112,17 @@ class TutorialViewController: UIViewController, ClewObserver {
     }
 
     func didReceiveNewCameraPose(transform: simd_float4x4) {
-//        phoneOrientationTrainingChildVC.didReceiveNewCameraPose(transform: transform)
         print("received new camera pose")
+        phoneOrientationTrainingChildVC.didReceiveNewCameraPose(transform: transform)
+//        add(phoneOrientationTrainingChildVC)
         
         // optionally do something in the TutorialViewController
-        
-        for child in children {
-            if let observer = child as? ClewObserver {
-                observer.didReceiveNewCameraPose(transform: transform)
-            }
-        }
+        // TODO: need to work on/fix
+//        for child in (TutorialViewController.children) {
+//            if let observer = child as? ClewObserver {
+//                observer.didReceiveNewCameraPose(transform: transform)
+//            }
+//        }
     }
 
 }
