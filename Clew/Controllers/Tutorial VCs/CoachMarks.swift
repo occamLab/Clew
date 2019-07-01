@@ -1,14 +1,15 @@
 //
-//  TutorialViewController.swift
-//  Clew Dev
+//  CoachMarks.swift
+//  Clew
 //
-//  Created by occamlab on 6/19/19.
+//  Created by Terri Liu on 2019/6/28.
 //  Copyright © 2019 OccamLab. All rights reserved.
 //
 
 import UIKit
 import Instructions
 
+<<<<<<< HEAD:Clew/TutorialViewController.swift
 
 class TutorialViewController: UIViewController, CoachMarksControllerDataSource, CoachMarksControllerDelegate {
 
@@ -26,6 +27,11 @@ class TutorialViewController: UIViewController, CoachMarksControllerDataSource, 
     }
     
     //////////
+=======
+//TODO: Edit and add place to put parameters
+class CoachMarks: UIViewController, CoachMarksControllerDataSource, CoachMarksControllerDelegate {
+    
+>>>>>>> 1cf7d6d5d22691e2a20e6cf306b8c05f3e0513f9:Clew/Controllers/Tutorial VCs/CoachMarks.swift
     let coachMarksController = CoachMarksController()
     
     override func viewDidLoad() {
@@ -60,4 +66,5 @@ class TutorialViewController: UIViewController, CoachMarksControllerDataSource, 
         
         self.coachMarksController.start(in: .window(over: self))
     }
+    
 }

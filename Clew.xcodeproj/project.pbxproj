@@ -11,6 +11,10 @@
 		4D6B00E51F33C9B800952242 /* Crumb.obj in Resources */ = {isa = PBXBuildFile; fileRef = 4D6B00E41F33C85500952242 /* Crumb.obj */; };
 		4DF05CC81F34EB6B008B0E31 /* Confirm.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4DF05CC71F34EB56008B0E31 /* Confirm.mp3 */; };
 		77467DAF22BBC1D300FA7DEE /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 77467DAE22BBC1D300FA7DEE /* Default-568h@2x.png */; };
+		77A30FE522C66998008EEAAB /* CoachMarks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77A30FE422C66998008EEAAB /* CoachMarks.swift */; };
+		77A30FE622C66998008EEAAB /* CoachMarks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77A30FE422C66998008EEAAB /* CoachMarks.swift */; };
+		77A30FE822C66C3A008EEAAB /* PhoneOrientationTrainingVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77A30FE722C66C3A008EEAAB /* PhoneOrientationTrainingVC.swift */; };
+		77A30FE922C66C3A008EEAAB /* PhoneOrientationTrainingVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77A30FE722C66C3A008EEAAB /* PhoneOrientationTrainingVC.swift */; };
 		82569F4E22187E6500448B45 /* help in Resources */ = {isa = PBXBuildFile; fileRef = 82569F4D22187E6500448B45 /* help */; };
 		82569F4F22187E6500448B45 /* help in Resources */ = {isa = PBXBuildFile; fileRef = 82569F4D22187E6500448B45 /* help */; };
 		B0A563F6FE1007A2716DC876 /* Pods_Clew_Dev.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3532E390954571B93729786A /* Pods_Clew_Dev.framework */; };
@@ -56,8 +60,8 @@
 		E5F4C36922C4035200E0D94E /* StopRecording.aiff in Resources */ = {isa = PBXBuildFile; fileRef = E5F4C31A22C4035200E0D94E /* StopRecording.aiff */; };
 		E5F4C36A22C4035200E0D94E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E5F4C31B22C4035200E0D94E /* GoogleService-Info.plist */; };
 		E5F4C36B22C4035200E0D94E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E5F4C31B22C4035200E0D94E /* GoogleService-Info.plist */; };
-		E5F4C36C22C4035200E0D94E /* TutorialViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F4C31C22C4035200E0D94E /* TutorialViewController.swift */; };
-		E5F4C36D22C4035200E0D94E /* TutorialViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F4C31C22C4035200E0D94E /* TutorialViewController.swift */; };
+		E5F4C36C22C4035200E0D94E /* SingleRouteVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F4C31C22C4035200E0D94E /* SingleRouteVC.swift */; };
+		E5F4C36D22C4035200E0D94E /* SingleRouteVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F4C31C22C4035200E0D94E /* SingleRouteVC.swift */; };
 		E5F4C36E22C4035200E0D94E /* NSStringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F4C31E22C4035200E0D94E /* NSStringExtension.swift */; };
 		E5F4C36F22C4035200E0D94E /* NSStringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F4C31E22C4035200E0D94E /* NSStringExtension.swift */; };
 		E5F4C37022C4035200E0D94E /* UIViewControllerExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F4C31F22C4035200E0D94E /* UIViewControllerExtensions.swift */; };
@@ -68,8 +72,8 @@
 		E5F4C37522C4035200E0D94E /* UIButtonExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F4C32122C4035200E0D94E /* UIButtonExtensions.swift */; };
 		E5F4C37622C4035200E0D94E /* Float4x4Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F4C32222C4035200E0D94E /* Float4x4Extension.swift */; };
 		E5F4C37722C4035200E0D94E /* Float4x4Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F4C32222C4035200E0D94E /* Float4x4Extension.swift */; };
-		E5F4C37822C4035200E0D94E /* TutorialManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F4C32522C4035200E0D94E /* TutorialManager.swift */; };
-		E5F4C37922C4035200E0D94E /* TutorialManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F4C32522C4035200E0D94E /* TutorialManager.swift */; };
+		E5F4C37822C4035200E0D94E /* TutorialViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F4C32522C4035200E0D94E /* TutorialViewController.swift */; };
+		E5F4C37922C4035200E0D94E /* TutorialViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F4C32522C4035200E0D94E /* TutorialViewController.swift */; };
 		E5F4C37A22C4035200E0D94E /* Tutorial.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E5F4C32622C4035200E0D94E /* Tutorial.storyboard */; };
 		E5F4C37B22C4035200E0D94E /* Tutorial.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E5F4C32622C4035200E0D94E /* Tutorial.storyboard */; };
 		E5F4C37C22C4035200E0D94E /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F4C32822C4035200E0D94E /* ViewController.swift */; };
@@ -123,6 +127,8 @@
 		4D6B00E41F33C85500952242 /* Crumb.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = Crumb.obj; sourceTree = "<group>"; };
 		4DF05CC71F34EB56008B0E31 /* Confirm.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = Confirm.mp3; sourceTree = "<group>"; };
 		77467DAE22BBC1D300FA7DEE /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		77A30FE422C66998008EEAAB /* CoachMarks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoachMarks.swift; sourceTree = "<group>"; };
+		77A30FE722C66C3A008EEAAB /* PhoneOrientationTrainingVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneOrientationTrainingVC.swift; sourceTree = "<group>"; };
 		822E27F8210E3F260024A5E3 /* Clew Dev-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Clew Dev-Info.plist"; sourceTree = "<group>"; };
 		82569F4D22187E6500448B45 /* help */ = {isa = PBXFileReference; lastKnownFileType = folder; path = help; sourceTree = "<group>"; };
 		85A1A72DC19F87F15B738291 /* Pods-Clew Dev.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew Dev.release.xcconfig"; path = "Pods/Target Support Files/Pods-Clew Dev/Pods-Clew Dev.release.xcconfig"; sourceTree = "<group>"; };
@@ -163,7 +169,7 @@
 		E5F4C31922C4035200E0D94E /* StartRecording.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = StartRecording.aiff; sourceTree = "<group>"; };
 		E5F4C31A22C4035200E0D94E /* StopRecording.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = StopRecording.aiff; sourceTree = "<group>"; };
 		E5F4C31B22C4035200E0D94E /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
-		E5F4C31C22C4035200E0D94E /* TutorialViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TutorialViewController.swift; path = ../TutorialViewController.swift; sourceTree = "<group>"; };
+		E5F4C31C22C4035200E0D94E /* SingleRouteVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SingleRouteVC.swift; sourceTree = "<group>"; };
 		E5F4C31E22C4035200E0D94E /* NSStringExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSStringExtension.swift; sourceTree = "<group>"; };
 		E5F4C31F22C4035200E0D94E /* UIViewControllerExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIViewControllerExtensions.swift; sourceTree = "<group>"; };
 		E5F4C32022C4035200E0D94E /* UIViewExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIViewExtensions.swift; sourceTree = "<group>"; };
@@ -171,7 +177,7 @@
 		E5F4C32222C4035200E0D94E /* Float4x4Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Float4x4Extension.swift; sourceTree = "<group>"; };
 		E5F4C32322C4035200E0D94E /* SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SettingsViewController.h; path = ../SettingsViewController.h; sourceTree = "<group>"; };
 		E5F4C32422C4035200E0D94E /* Clew-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Clew-Bridging-Header.h"; sourceTree = "<group>"; };
-		E5F4C32522C4035200E0D94E /* TutorialManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TutorialManager.swift; sourceTree = "<group>"; };
+		E5F4C32522C4035200E0D94E /* TutorialViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TutorialViewController.swift; path = "Tutorial VCs/TutorialViewController.swift"; sourceTree = "<group>"; };
 		E5F4C32622C4035200E0D94E /* Tutorial.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Tutorial.storyboard; path = ../../Tutorial.storyboard; sourceTree = "<group>"; };
 		E5F4C32822C4035200E0D94E /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		E5F4C32A22C4035200E0D94E /* RecordPathController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecordPathController.swift; sourceTree = "<group>"; };
@@ -253,6 +259,16 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		77A30FE322C66917008EEAAB /* Tutorial VCs */ = {
+			isa = PBXGroup;
+			children = (
+				E5F4C31C22C4035200E0D94E /* SingleRouteVC.swift */,
+				77A30FE722C66C3A008EEAAB /* PhoneOrientationTrainingVC.swift */,
+				77A30FE422C66998008EEAAB /* CoachMarks.swift */,
+			);
+			path = "Tutorial VCs";
+			sourceTree = "<group>";
+		};
 		77F89C3522C507940054E412 /* Tutorial Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -291,12 +307,11 @@
 				E5F4C2FE22C4035200E0D94E /* Clew Dev-Bridging-Header.h */,
 				E5F4C2FF22C4035200E0D94E /* Settings.bundle */,
 				E5F4C31622C4035200E0D94E /* Assets.xcassets */,
-				E5F4C31722C4035200E0D94E /* ClewObserverProtocol.swift */,
 				E5F4C34022C4035200E0D94E /* Info.plist */,
-				E5F4C31B22C4035200E0D94E /* GoogleService-Info.plist */,
 				E5F4C34122C4035200E0D94E /* GoogleService-Info_dev.plist */,
 				E5F4C32422C4035200E0D94E /* Clew-Bridging-Header.h */,
-				E5F4C32522C4035200E0D94E /* TutorialManager.swift */,
+				E5F4C31722C4035200E0D94E /* ClewObserverProtocol.swift */,
+				E5F4C31B22C4035200E0D94E /* GoogleService-Info.plist */,
 				E5F4C32722C4035200E0D94E /* Controllers */,
 				E5F4C33722C4035200E0D94E /* Views */,
 			);
@@ -361,7 +376,8 @@
 		E5F4C32722C4035200E0D94E /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				E5F4C31C22C4035200E0D94E /* TutorialViewController.swift */,
+				E5F4C32522C4035200E0D94E /* TutorialViewController.swift */,
+				77A30FE322C66917008EEAAB /* Tutorial VCs */,
 				E5F4C30022C4035200E0D94E /* SettingsTableViewController.h */,
 				E5F4C2FD22C4035200E0D94E /* SettingsViewController.m */,
 				E5F4C32822C4035200E0D94E /* ViewController.swift */,
@@ -657,6 +673,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				77A30FE822C66C3A008EEAAB /* PhoneOrientationTrainingVC.swift in Sources */,
 				E5F4C37022C4035200E0D94E /* UIViewControllerExtensions.swift in Sources */,
 				E5F4C39E22C4035200E0D94E /* RouteTableViewCell.swift in Sources */,
 				E5F4C38622C4035200E0D94E /* ResumeTrackingController.swift in Sources */,
@@ -665,7 +682,7 @@
 				E5F4C39422C4035200E0D94E /* StateController.swift in Sources */,
 				E5F4C37E22C4035200E0D94E /* RecordPathController.swift in Sources */,
 				E5F4C38A22C4035200E0D94E /* PauseTrackingController.swift in Sources */,
-				E5F4C37822C4035200E0D94E /* TutorialManager.swift in Sources */,
+				E5F4C37822C4035200E0D94E /* TutorialViewController.swift in Sources */,
 				E5F4C37622C4035200E0D94E /* Float4x4Extension.swift in Sources */,
 				E5F4C34822C4035200E0D94E /* RecordButton.swift in Sources */,
 				E5F4C35822C4035200E0D94E /* SettingsViewController.m in Sources */,
@@ -676,7 +693,8 @@
 				E5F4C36422C4035200E0D94E /* ClewObserverProtocol.swift in Sources */,
 				E5F4C36E22C4035200E0D94E /* NSStringExtension.swift in Sources */,
 				E5F4C38022C4035200E0D94E /* StartNavigationController.swift in Sources */,
-				E5F4C36C22C4035200E0D94E /* TutorialViewController.swift in Sources */,
+				77A30FE522C66998008EEAAB /* CoachMarks.swift in Sources */,
+				E5F4C36C22C4035200E0D94E /* SingleRouteVC.swift in Sources */,
 				E5F4C38422C4035200E0D94E /* RouteRatingController.swift in Sources */,
 				E5F4C38E22C4035200E0D94E /* HelpViewController.swift in Sources */,
 				E5F4C38222C4035200E0D94E /* StopRecordingController.swift in Sources */,
@@ -701,6 +719,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				77A30FE922C66C3A008EEAAB /* PhoneOrientationTrainingVC.swift in Sources */,
 				E5F4C37122C4035200E0D94E /* UIViewControllerExtensions.swift in Sources */,
 				E5F4C39F22C4035200E0D94E /* RouteTableViewCell.swift in Sources */,
 				E5F4C38722C4035200E0D94E /* ResumeTrackingController.swift in Sources */,
@@ -709,7 +728,7 @@
 				E5F4C39522C4035200E0D94E /* StateController.swift in Sources */,
 				E5F4C37F22C4035200E0D94E /* RecordPathController.swift in Sources */,
 				E5F4C38B22C4035200E0D94E /* PauseTrackingController.swift in Sources */,
-				E5F4C37922C4035200E0D94E /* TutorialManager.swift in Sources */,
+				E5F4C37922C4035200E0D94E /* TutorialViewController.swift in Sources */,
 				E5F4C37722C4035200E0D94E /* Float4x4Extension.swift in Sources */,
 				E5F4C34922C4035200E0D94E /* RecordButton.swift in Sources */,
 				E5F4C35922C4035200E0D94E /* SettingsViewController.m in Sources */,
@@ -720,7 +739,8 @@
 				E5F4C36522C4035200E0D94E /* ClewObserverProtocol.swift in Sources */,
 				E5F4C36F22C4035200E0D94E /* NSStringExtension.swift in Sources */,
 				E5F4C38122C4035200E0D94E /* StartNavigationController.swift in Sources */,
-				E5F4C36D22C4035200E0D94E /* TutorialViewController.swift in Sources */,
+				77A30FE622C66998008EEAAB /* CoachMarks.swift in Sources */,
+				E5F4C36D22C4035200E0D94E /* SingleRouteVC.swift in Sources */,
 				E5F4C38522C4035200E0D94E /* RouteRatingController.swift in Sources */,
 				E5F4C38F22C4035200E0D94E /* HelpViewController.swift in Sources */,
 				E5F4C38322C4035200E0D94E /* StopRecordingController.swift in Sources */,

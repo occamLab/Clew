@@ -90,44 +90,7 @@ enum AppState {
 }
 
 /// The view controller that handles the main Clew window.  This view controller is always active and handles the various views that are used for different app functionalities.
-class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDelegate, AVSpeechSynthesizerDelegate, CoachMarksControllerDataSource, CoachMarksControllerDelegate {
-    
-    ////////////////////////
-    let coachMarksController = CoachMarksController()
-    /*
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        self.coachMarksController.dataSource = self
-    }*/
-    
-    func numberOfCoachMarks(for coachMarksController: CoachMarksController) -> Int {
-        return 1
-    }
-    
-    let pointOfInterest = UIView()
-    
-    func coachMarksController(_ coachMarksController: CoachMarksController,
-                              coachMarkAt index: Int) -> CoachMark {
-        pointOfInterest.center = CGPoint(x: 150, y: 150)
-        return coachMarksController.helper.makeCoachMark(for: pointOfInterest)
-    }
-    
-    func coachMarksController(_ coachMarksController: CoachMarksController, coachMarkViewsAt index: Int, madeFrom coachMark: CoachMark) -> (bodyView: CoachMarkBodyView, arrowView: CoachMarkArrowView?) {
-        let coachViews = coachMarksController.helper.makeDefaultCoachViews(withArrow: true, arrowOrientation: coachMark.arrowOrientation)
-        
-        coachViews.bodyView.hintLabel.text = "Hello! I'm a Coach Mark!"
-        coachViews.bodyView.nextLabel.text = "Ok!"
-        
-        return (bodyView: coachViews.bodyView, arrowView: coachViews.arrowView)
-    }
-    /*
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        
-        self.coachMarksController.start(in: .window(over: self))
-    }*/
-    ////////////////////////
+class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDelegate, AVSpeechSynthesizerDelegate {
     
     // MARK: - Refactoring UI definition
     
@@ -597,6 +560,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// stop route navigation VC
     var stopNavigationController: StopNavigationController!
 
+    /// tutorial VC
+    var tutorialViewController: TutorialViewController!
+    
     /// called when the view has loaded.  We setup various app elements in here.
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -613,6 +579,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         recordPathController = RecordPathController()
         startNavigationController = StartNavigationController()
         stopNavigationController = StopNavigationController()
+        tutorialViewController = TutorialViewController()
         
         // Add the scene to the view, which is a RootContainerView
         sceneView.frame = view.frame
@@ -643,7 +610,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         
         addGestures()
         setupFirebaseObservers()
-        observer = TutorialManager()
+        observer = tutorialViewController
         
         // create listeners to ensure that the isReadingAnnouncement flag is reset properly
         NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification, object: nil, queue: nil) { (notification) -> Void in
@@ -658,6 +625,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         NotificationCenter.default.addObserver(forName: Notification.Name("ClewPopoverDismissed"), object: nil, queue: nil) { (notification) -> Void in
             self.suppressTrackingWarnings = false
         }
+        
+        print("always start tutorial!!  This is a hack")
+        add(tutorialViewController)
+        tutorialViewController.state = .tutorialStarting
         
     }
     
