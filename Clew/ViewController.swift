@@ -428,7 +428,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     func removeFollowCrumbNodes() {
         // erase nearest keypoint
-        followCrumbNodes.map({$0.removeFromParentNode()})
+        _ = followCrumbNodes.map({$0.removeFromParentNode()})
         followCrumbNodes = []
     }
     
@@ -531,10 +531,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
 
         if navigateStartToEnd {
             crumbs = route.crumbs.reversed()
-            pausedTransform = route.beginRouteLandmark.transform
+            pausedLandmark = route.beginRouteLandmark
         } else {
             crumbs = route.crumbs
-            pausedTransform = route.endRouteLandmark.transform
+            pausedLandmark = route.endRouteLandmark
         }
         // TODO: we may need to revisit whether we need to undo previously applied relativeTransforms (I suspect not though)
         sceneView.session.run(configuration, options: [.removeExistingAnchors])
@@ -682,6 +682,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         justTraveledRoute = savedRoute
     }
 
+    /// A threshold to determine when a segment is long enough to use for soft alignment
+    var softAlignmentSegmentLengthThreshold = 1.0
+    
     /// While recording, every 0.01s, check to see if we should reset the heading offset
     var angleOffsetTimer: Timer?
     
@@ -987,6 +990,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// Display a warning that tells the user they must create a landmark to be able to use this route again in the forward direction
     func showRecordPathWithoutLandmarkWarning() {
+        /*
         let userDefaults: UserDefaults = UserDefaults.standard
         let showedRecordPathWithoutLandmarkWarning: Bool? = userDefaults.object(forKey: "showedRecordPathWithoutLandmarkWarning") as? Bool
         if showedRecordPathWithoutLandmarkWarning == nil && beginRouteLandmark.transform == nil {
@@ -1008,6 +1012,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         } else {
             state = .recordingRoute
         }
+        */
+        
+        // this is an alternate path where the current transform is used for alignment if none is set
+        
+        state = .recordingRoute
         
     }
     
@@ -1627,7 +1636,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     var sendLogs: Bool!
 
     /// This keeps track of the paused transform while the current session is being realigned to the saved route
-    var pausedTransform : simd_float4x4?
+    var pausedLandmark : RouteLandmark?
     
     /// the landmark to use to mark the beginning of the route currently being recorded
     var beginRouteLandmark = RouteLandmark()
@@ -1669,10 +1678,66 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         showRecordPathWithoutLandmarkWarning()
     }
     
+    /// Gets a transform suitable for soft alignment.  The transform that is returned will be based on  `firstTransformToUse` if `secondTransformToUse` is not specified or if the translation between the two is less than `softAlignmentSegmentLengthThreshold`.  The transform returned from this function is preleveled use in the realignment step (i.e., no leveling should be performed during the realignemnt process).
+    ///
+    /// - Parameters:
+    ///   - firstTransformToUse: the first transform to use for soft alignment (this should be the first or last keypoint depending on direction)
+    ///   - secondTransformToUse: the second transform to use for soft alignment (this should be the second or second to- last-keypoint if one exists)
+    ///   - isReversed: true if the path is reversed
+    /// - Returns: a leveled transform suitable for alignment
+    func getSoftAlignment(firstTransformToUse: simd_float4x4, secondTransformToUse: simd_float4x4?, isReversed: Bool)->simd_float4x4 {
+        guard let secondTransformToUse = secondTransformToUse else {
+            if isReversed {
+                return firstTransformToUse.level.flipOrientationAboutYAxis
+            } else {
+                return firstTransformToUse.level
+            }
+        }
+
+        if simd_length(firstTransformToUse.level.columns.3 - secondTransformToUse.level.columns.3) < Float(softAlignmentSegmentLengthThreshold) {
+            if isReversed {
+                return firstTransformToUse.level.flipOrientationAboutYAxis
+            } else {
+                return firstTransformToUse.level
+            }
+        }
+        let alignmentYaw = atan2(firstTransformToUse.x - secondTransformToUse.x, firstTransformToUse.z - secondTransformToUse.z)
+        var alignmentTransform = simd_float4x4.makeRotate(radians: alignmentYaw, 0, 1, 0)
+        alignmentTransform.columns.3 = firstTransformToUse.columns.3
+        return alignmentTransform
+    }
+    
     /// handles the user pressing the stop recording button.
     ///
     /// - Parameter sender: the button that generated the event
     @objc func stopRecording(_ sender: UIButton) {
+        // fill out landmarks with the first and last crumb
+        let p = PathFinder(crumbs: crumbs, hapticFeedback: hapticFeedback, voiceFeedback: voiceFeedback)
+        let keypoints = p.keypoints
+        if beginRouteLandmark.transform == nil, let firstKeypointTransform = keypoints.first?.location.transform {
+            beginRouteLandmark.information = "Route start"
+            var secondKeypointTransform: simd_float4x4? = nil
+
+            if keypoints.count > 1 {
+                secondKeypointTransform = keypoints[1].location.transform
+            }
+            
+            beginRouteLandmark.transform = getSoftAlignment(firstTransformToUse: firstKeypointTransform, secondTransformToUse: secondKeypointTransform, isReversed: false)
+            beginRouteLandmark.isSoftAlignment = true
+        }
+        
+        if endRouteLandmark.transform == nil, let lastKeypointTransform = keypoints.last?.location.transform {
+            endRouteLandmark.information = "Route end"
+            var secondToLastKeypointTransform: simd_float4x4? = nil
+
+            if keypoints.count > 1 {
+                secondToLastKeypointTransform = keypoints[keypoints.endIndex - 2].location.transform
+            }
+            
+            endRouteLandmark.transform = getSoftAlignment(firstTransformToUse: lastKeypointTransform, secondTransformToUse: secondToLastKeypointTransform, isReversed: true)
+            endRouteLandmark.isSoftAlignment = true
+        }
+        
         if beginRouteLandmark.transform != nil {
             if #available(iOS 12.0, *) {
                 sceneView.session.getCurrentWorldMap {
@@ -1793,7 +1858,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         var iterCount = 0
         var lastIterationCost = Float.infinity
         while !converged {
-            print("followCrumbs", followCrumbs)
             let transformedFollowCrumbs = transformLocationInfo(locations: followCrumbs, transform: optimalTransform)
             var keypointsToUse: [KeypointInfo] = checkedOffKeypoints
             // this probably should always succeed since you shouldn't be able to snap to route unless you are actively navigating, but we will be safe about it anyway
@@ -1815,7 +1879,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             
             let meanSubtractedFollowCrumbs = transformedFollowCrumbs.map({$0 - meanOfFollowCrumbs})
             let meanSubtractedClosestMatches = closestMatchToRoute.map({$0 - meanOfClosestMatches})
-
             let outerProductMatrix = zip(meanSubtractedClosestMatches, meanSubtractedFollowCrumbs).reduce(simd_float2x2()) {
                 $0 + simd_float2($1.0.x, $1.0.z).outerProduct(simd_float2($1.1.x, $1.1.z))
             }
@@ -1898,23 +1961,33 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// this is called when the user has confirmed the alignment and is the alignment countdown should begin.  Once the alignment countdown has finished, the alignment will be performed and the app will move to the ready to navigate view.
     func resumeTracking() {
         // resume pose tracking with existing ARSessionConfiguration
+        guard let pausedLandmark = pausedLandmark else {
+            return
+        }
         hideAllViewsHelper()
         countdownTimer.isHidden = false
-        countdownTimer.start(beginingValue: ViewController.alignmentWaitingPeriod, interval: 1)
+        let deadline: DispatchTime
+
+        if !pausedLandmark.isSoftAlignment {
+            countdownTimer.start(beginingValue: ViewController.alignmentWaitingPeriod, interval: 1)
+            deadline = .now() + .seconds(ViewController.alignmentWaitingPeriod)
+        } else {
+            deadline = .now()
+        }
         delayTransition()
-        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(ViewController.alignmentWaitingPeriod)) {
+        
+        DispatchQueue.main.asyncAfter(deadline: deadline) {
             self.countdownTimer.isHidden = true
             // The first check is necessary in case the phone relocalizes before this code executes
-            if case .readyForFinalResumeAlignment = self.state, let alignTransform = self.pausedTransform, let camera = self.sceneView.session.currentFrame?.camera {
-                // yaw can be determined by projecting the camera's z-axis into the ground plane and using arc tangent (note: the camera coordinate conventions of ARKit https://developer.apple.com/documentation/arkit/arsessionconfiguration/worldalignment/camera
-                let alignYaw = self.getYawHelper(alignTransform)
-                let cameraYaw = self.getYawHelper(camera.transform)
-
-                var leveledCameraPose = simd_float4x4.makeRotate(radians: cameraYaw, 0, 1, 0)
-                leveledCameraPose.columns.3 = camera.transform.columns.3
+            if case .readyForFinalResumeAlignment = self.state, let alignTransform = self.pausedLandmark?.transform, let camera = self.sceneView.session.currentFrame?.camera {
+            // yaw can be determined by projecting the camera's z-axis into the ground plane and using arc tangent (note: the camera coordinate conventions of ARKit https://developer.apple.com/documentation/arkit/arsessionconfiguration/worldalignment/camera
+                let leveledCameraPose = camera.transform.level
                 
-                var leveledAlignPose =  simd_float4x4.makeRotate(radians: alignYaw, 0, 1, 0)
-                leveledAlignPose.columns.3 = alignTransform.columns.3
+                var leveledAlignPose = alignTransform
+                if !pausedLandmark.isSoftAlignment {
+                    // soft alignments are preleveled, so we only level if we are doing hard alignment
+                    leveledAlignPose = alignTransform.level
+                }
                 
                 let relativeTransform = leveledCameraPose * leveledAlignPose.inverse
                 self.updateWorldOrigin(relativeTransform: relativeTransform)
@@ -2077,7 +2150,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     ///
     /// - Parameter transform: the position and orientation of the phone
     /// - Returns: the heading vector as a 4 dimensional vector (y-component and w-component will necessarily be 0)
-    func getProjectedHeading(_ transform: simd_float4x4) -> simd_float4 {
+    static func getProjectedHeading(_ transform: simd_float4x4) -> simd_float4 {
         if abs(transform.columns.2.y) < abs(transform.columns.0.y) {
             return -simd_make_float4(transform.columns.2.x, 0, transform.columns.2.z, 0)
         } else {
@@ -2091,7 +2164,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     }
     
     /// this gets the yaw of the phone using the heading vector returned by `getProjectedHeading`.
-    func getYawHelper(_ transform: simd_float4x4) -> Float {
+    static func getYawHelper(_ transform: simd_float4x4) -> Float {
         let projectedHeading = getProjectedHeading(transform)
         return atan2f(-projectedHeading.x, -projectedHeading.z)
     }
@@ -2587,19 +2660,6 @@ extension float2x2 {
     }
 }
 
-extension float3x3 {
-    func svd()->(float3x3, float3x3, float3x3) {
-        let usv = LASwift.svd(toMatrix())
-        return (simd_float3x3.fromMatrix(usv.U), simd_float3x3.fromMatrix(usv.S), simd_float3x3.fromMatrix(usv.V))
-    }
-    static func fromMatrix(_ m : Matrix)->simd_float3x3 {
-        return simd_float3x3(columns: (simd_float3(Float(m[0, 0]), Float(m[1,0]), Float(m[2,0])), simd_float3(Float(m[0,1]), Float(m[1,1]), Float(m[2,1])), simd_float3(Float(m[0,2]), Float(m[1,2]), Float(m[2,2]))))
-    }
-    func toMatrix()->Matrix {
-        return Matrix([[Double(columns.0.x), Double(columns.1.x), Double(columns.2.x)], [Double(columns.0.y), Double(columns.1.y), Double(columns.2.y)], [Double(columns.0.z), Double(columns.1.z), Double(columns.2.z)]])
-    }
-}
-
 extension float4x4 {
     /// Create a rotation matrix based on the angle and axis.
     ///
@@ -2669,5 +2729,24 @@ extension float4x4 {
     /// The yaw specified by the transforms
     var yaw: Float {
         return LocationInfo(anchor: ARAnchor(transform: self)).yaw
+    }
+    
+    /// a leveled pose suitable for alignment
+    var level: float4x4 {
+        let yaw = ViewController.getYawHelper(self)
+        var leveledOrientation = simd_float4x4.makeRotate(radians: yaw, 0, 1, 0)
+        leveledOrientation.columns.3 = self.columns.3
+        return leveledOrientation
+    }
+    
+    /// A transform where the orientation has been rotated about the y-axis by pi radians.  The translation remains static.
+    var flipOrientationAboutYAxis: float4x4 {
+        var returnValue = matrix_identity_float4x4
+        returnValue.columns.0 = columns.0
+        returnValue.columns.1 = columns.1
+        returnValue.columns.2 = columns.2
+        returnValue = simd_float4x4.makeRotate(radians: Float.pi, 0, 1, 0)*returnValue
+        returnValue.columns.3 = columns.3
+        return returnValue
     }
 }

@@ -32,7 +32,7 @@ class FeedbackLogger {
         fileType.contentType = "application/json"
         
         /// Upload the file to the path defined by fileRef then checks for any errors
-        let uploadTask = fileRef.putData(data, metadata: fileType){ (metadata, error) in
+        let _ = fileRef.putData(data, metadata: fileType){ (metadata, error) in
             guard metadata != nil else {
                 /// prints an errorstatement to the console
                 print("could not upload feedback to firebase", error!.localizedDescription)
@@ -56,7 +56,7 @@ class FeedbackLogger {
                 fileType.contentType = "audio/wav"
                 
                 let fileRef = feedbackRef.child(audioref)
-                let uploadTask = fileRef.putData(data, metadata: fileType){ (metadata, error) in
+                let _ = fileRef.putData(data, metadata: fileType){ (metadata, error) in
                     guard metadata != nil else {
                         returnValue = 2
                         /// prints an errorstatement to the console

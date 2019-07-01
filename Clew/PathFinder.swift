@@ -165,16 +165,20 @@ class RouteLandmark: NSObject, NSSecureCoding {
     /// The URL to an audio file that contains information to help the user remember a landmark
     public var voiceNote: NSString?
     
+    /// true if the alignment is a soft one (based on the first crumb), false if it is a hard one (based on the landmark creation process)
+    public var isSoftAlignment: Bool = false
+    
     /// Initialize the landmark.
     ///
     /// - Parameters:
     ///   - transform: the position and orientation
     ///   - information: textual description
     ///   - voiceNote: URL to auditory description
-    public init(transform: simd_float4x4? = nil, information: NSString? = nil, voiceNote: NSString? = nil) {
+    public init(transform: simd_float4x4? = nil, information: NSString? = nil, voiceNote: NSString? = nil, isSoftAlignment: Bool = false) {
         self.transform = transform
         self.information = information
         self.voiceNote = voiceNote
+        self.isSoftAlignment = isSoftAlignment
     }
     
     /// Encode the landmark.
@@ -186,6 +190,7 @@ class RouteLandmark: NSObject, NSSecureCoding {
         }
         aCoder.encode(information, forKey: "information")
         aCoder.encode(voiceNote, forKey: "voiceNote")
+        aCoder.encode(isSoftAlignment, forKey: "isSoftAlignment")
     }
     
     /// Decode the landmark.
@@ -195,13 +200,16 @@ class RouteLandmark: NSObject, NSSecureCoding {
         var transform : simd_float4x4? = nil
         var information : NSString? = nil
         var voiceNote : NSString? = nil
+        let isSoftAlignment: Bool
         
         if let transformAsARAnchor = aDecoder.decodeObject(of: ARAnchor.self, forKey: "transformAsARAnchor") {
             transform = transformAsARAnchor.transform
         }
         information = aDecoder.decodeObject(of: NSString.self, forKey: "information")
         voiceNote = aDecoder.decodeObject(of: NSString.self, forKey: "voiceNote")
-        self.init(transform: transform, information: information, voiceNote: voiceNote)
+        isSoftAlignment = aDecoder.decodeBool(forKey: "isSoftAlignment")
+        
+        self.init(transform: transform, information: information, voiceNote: voiceNote, isSoftAlignment: isSoftAlignment)
     }
     
 }
