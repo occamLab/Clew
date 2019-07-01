@@ -12,13 +12,14 @@ import SceneKit
 
 class PhoneOrientationTrainingVC: TutorialChildViewController {
     override func viewDidAppear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
+        super.viewDidAppear(animated)
         print("plz- check")
-        }
+    }
     
     var lastHapticFeedbackTime = Date()
     
-    func didReceiveNewCameraPose(transform: simd_float4x4) {
+    override func didReceiveNewCameraPose(transform: simd_float4x4) {
+        print("IN here")
         UIAccessibility.post(notification: UIAccessibility.Notification.announcement, argument: NSLocalizedString("Trying to figure out haptic feedback", comment: "Message to user during tutorial"))
         
         let angleFromVertical = acos(-transform.columns.0.y)

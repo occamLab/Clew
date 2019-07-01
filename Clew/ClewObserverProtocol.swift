@@ -14,9 +14,3 @@ protocol ClewObserver {
     func didTransitionTo(newState: AppState)
     func didReceiveNewCameraPose(transform: simd_float4x4)
 }
-
-extension ClewObserver {
-    func finishAnnouncement(announcement: String) { }
-    func didReceiveNewCameraPose(transform: simd_float4x4)  {}
-    func didTransitionTo(newState: AppState) {}
-}
