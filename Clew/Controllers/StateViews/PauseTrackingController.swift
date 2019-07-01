@@ -36,11 +36,14 @@ class PauseTrackingController: UIViewController, UIScrollViewDelegate {
     
     var label: UILabel!
     
+    /// called when the view loads (any time)
     override func viewDidAppear(_ animated: Bool) {
+        /// update label font
+        /// TODO: is this a safe implementation? Might crash if label has no body, unclear.
         label.font = UIFont.preferredFont(forTextStyle: .body)
     }
     
-    /// called when the view has loaded.  We setup various app elements in here.
+    /// called when the view has loaded the first time.  We setup various app elements in here.
     override func viewDidLoad() {
         super.viewDidLoad()
         

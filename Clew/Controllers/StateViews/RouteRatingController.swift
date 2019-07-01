@@ -44,14 +44,36 @@ class RouteRatingController: UIViewController {
         label.tag = UIView.mainTextTag
         view.addSubview(label)
         
-        thumbsDownButton = UIButton.makeImageButton(view,
+        thumbsDownButton = UIButton.makeConstraintButton(view,
                                                     alignment: UIConstants.ButtonContainerHorizontalAlignment.leftcenter,
                                                     appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "thumbs_down")!),
                                                     label: NSLocalizedString("Bad", comment: "Unsatisfactory service"))
-        thumbsUpButton = UIButton.makeImageButton(view,
+        thumbsUpButton = UIButton.makeConstraintButton(view,
                                                   alignment: UIConstants.ButtonContainerHorizontalAlignment.rightcenter,
                                                   appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "thumbs_up")!),
                                                   label: NSLocalizedString("Good", comment: "Satisfactory service"))
+        
+        /// create stack view for aligning and distributing bottom layer buttons
+        let stackView   = UIStackView()
+        view.addSubview(stackView)
+        stackView.translatesAutoresizingMaskIntoConstraints = false;
+        
+        /// define horizonal, centered, and equal alignment of elements
+        /// inside the bottom stack
+        stackView.axis = NSLayoutConstraint.Axis.horizontal
+        stackView.distribution  = UIStackView.Distribution.equalSpacing
+        stackView.alignment = UIStackView.Alignment.center
+        
+        /// add elements to the stack
+        stackView.addArrangedSubview(thumbsDownButton)
+        stackView.addArrangedSubview(thumbsUpButton)
+        
+        /// size the stack
+        stackView.topAnchor.constraint(equalTo: view.topAnchor, constant: 450.0).isActive = true
+        stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8.0).isActive = true
+        stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8.0).isActive = true
+        stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -UIConstants.buttonFrameWidth/7 * 2).isActive = true
+        
         
         if let parent: UIViewController = parent {
             thumbsUpButton.addTarget(parent,
@@ -62,9 +84,9 @@ class RouteRatingController: UIViewController {
                                        for: .touchUpInside)
         }
         
-        view.addSubview(thumbsDownButton)
-        view.addSubview(thumbsUpButton)
-        
+//        view.addSubview(thumbsDownButton)
+//        view.addSubview(thumbsUpButton)
+
         // Do any additional setup after loading the view.
     }
 }
