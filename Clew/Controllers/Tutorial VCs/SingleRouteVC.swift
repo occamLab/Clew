@@ -8,28 +8,27 @@
 
 import UIKit
 
-class SingleRouteVC: UIViewController {
-//    let parentVC = TutorialViewController()
-//    
-//    func didTransitionTo(newState: AppState) {
-//        if case .navigatingRoute = newState {
-//            UIAccessibility.post(notification: UIAccessibility.Notification.announcement, argument: NSLocalizedString("Let's learn about route navigation!", comment: "Message to user during tutorial"))
-//            print("howdy!")
-//        }
-//        
-//        if case .mainScreen = newState {
-//            handleStateTransitionToReadyToRecordSingleRoute()
-//        }
-//        
-//        if case .recordingRoute = newState {
-//            print("recording!")
-//        }
-//    }
-    func handleStateTransitionToReadyToRecordSingleRoute() {
-        print("heyo")
+class SingleRouteVC: TutorialChildViewController {
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        Timer.scheduledTimer(withTimeInterval: 5.0, repeats: false) { timer in
+            UIAccessibility.post(notification: UIAccessibility.Notification.announcement, argument: NSLocalizedString("Let's learn about route navigation!", comment: "Message to user during tutorial"))
+            print("trying to post this")
+        }
     }
+    
+    func didTransitionTo(newState: AppState) {
+        if case .readyToNavigateOrPause = newState {
+            // TODO: maybe figure out a way to reuse this (subclass from a common superclass)
+            self.tutorialParent?.state = .teachTheNavigationOfASingleRoute
 
-    func handleStateTransitionToRecordingSingleRoute() {
-        print("recording!")
+            // do something to handle this new thing
+            Timer.scheduledTimer(withTimeInterval: 5.0, repeats: false) { timer in
+                UIAccessibility.post(notification: UIAccessibility.Notification.announcement, argument: NSLocalizedString("Great job.  You've recorded a route.  Now we will navigate it back to thst art!", comment: "Message to user during tutorial"))
+            }
+        }
+        if case .mainScreen(let announceArrival) = newState, case .teachTheNavigationOfASingleRoute? = tutorialParent?.state {
+            (parent as? TutorialViewController)?.state = .startingOrientationTraining
+        }
     }
 }

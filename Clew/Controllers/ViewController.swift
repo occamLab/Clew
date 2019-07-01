@@ -560,6 +560,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// stop route navigation VC
     var stopNavigationController: StopNavigationController!
 
+    /// tutorial VC
+    var tutorialViewController: TutorialViewController!
+    
     /// called when the view has loaded.  We setup various app elements in here.
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -576,6 +579,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         recordPathController = RecordPathController()
         startNavigationController = StartNavigationController()
         stopNavigationController = StopNavigationController()
+        tutorialViewController = TutorialViewController()
         
         // Add the scene to the view, which is a RootContainerView
         sceneView.frame = view.frame
@@ -606,7 +610,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         
         addGestures()
         setupFirebaseObservers()
-        observer = TutorialViewController()
+        observer = tutorialViewController
         
         // create listeners to ensure that the isReadingAnnouncement flag is reset properly
         NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification, object: nil, queue: nil) { (notification) -> Void in
@@ -621,6 +625,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         NotificationCenter.default.addObserver(forName: Notification.Name("ClewPopoverDismissed"), object: nil, queue: nil) { (notification) -> Void in
             self.suppressTrackingWarnings = false
         }
+        
+        print("always start tutorial!!  This is a hack")
+        add(tutorialViewController)
+        tutorialViewController.state = .tutorialStarting
         
     }
     
