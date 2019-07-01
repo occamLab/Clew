@@ -13,8 +13,7 @@ import UIKit
 class TutorialViewController: UIViewController, ClewObserver {
 
     let singleRouteChildVC = SingleRouteVC()
-    let orientationRouteChildVC  = PhoneOrientationTrainingVC()
-    let phoneOrientationTrainingChildVC = PhoneOrientationTrainingVC()
+    let phoneOrientationTrainingChildVC  = PhoneOrientationTrainingVC()
     
     @IBOutlet weak var staticLabel2: DesignableLabel!
     @IBAction func CloseTips(_ sender: UIButton) {
@@ -73,7 +72,7 @@ class TutorialViewController: UIViewController, ClewObserver {
                 print("nothing")
             case .startingOrientationTraining:
                 singleRouteChildVC.remove()
-                add(orientationRouteChildVC)
+                add(phoneOrientationTrainingChildVC)
             }
         }
     }
