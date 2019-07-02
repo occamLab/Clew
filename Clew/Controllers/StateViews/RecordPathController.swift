@@ -72,7 +72,6 @@ class RecordPathController: UIViewController {
         /// inside the bottom stack
         stackView.axis = NSLayoutConstraint.Axis.horizontal
         stackView.distribution  = UIStackView.Distribution.equalSpacing
-        //        stackView.distribution = UIStackView.Distribution.fillEqually
         stackView.alignment = UIStackView.Alignment.center
         
         /// add elements to the stack
@@ -85,7 +84,6 @@ class RecordPathController: UIViewController {
         stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: UIConstants.yButtonFrameMargin).isActive = true
         stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -UIConstants.yButtonFrameMargin).isActive = true
         stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-
         
         if let parent: UIViewController = parent {
             routesButton.addTarget(parent,
@@ -98,10 +96,5 @@ class RecordPathController: UIViewController {
                                           action: #selector(ViewController.recordPath),
                                           for: .touchUpInside)
         }
-        
-        // Do any additional setup after loading the view.
-//        view.addSubview(routesButton)
-//        view.addSubview(addLandmarkButton)
-//        view.addSubview(recordPathButton)
     }
 }

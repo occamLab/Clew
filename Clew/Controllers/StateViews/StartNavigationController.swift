@@ -64,7 +64,6 @@ class StartNavigationController: UIViewController {
         /// inside the bottom stack
         stackView.axis = NSLayoutConstraint.Axis.horizontal
         stackView.distribution  = UIStackView.Distribution.equalSpacing
-        //        stackView.distribution = UIStackView.Distribution.fillEqually
         stackView.alignment = UIStackView.Alignment.center
         
         /// add elements to the stack
@@ -86,9 +85,5 @@ class StartNavigationController: UIViewController {
                                         action: #selector(ViewController.startPauseProcedure),
                                         for: .touchUpInside)
         }
-        
-        // Do any additional setup after loading the view.
-//        view.addSubview(startNavigationButton)
-//        view.addSubview(pauseButton)
     }
 }

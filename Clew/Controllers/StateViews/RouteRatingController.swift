@@ -84,10 +84,5 @@ class RouteRatingController: UIViewController {
                                        action: #selector(ViewController.sendDebugLogData),
                                        for: .touchUpInside)
         }
-        
-//        view.addSubview(thumbsDownButton)
-//        view.addSubview(thumbsUpButton)
-
-        // Do any additional setup after loading the view.
     }
 }
