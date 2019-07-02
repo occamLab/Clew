@@ -1,61 +1,89 @@
 {
   "warnings": [
     {
-      "file": "/Users/tad/Desktop/tnovak/Clew/Clew/FeedbackLogger.swift",
-      "line": 13,
-      "symbol": "FeedbackLogger",
-      "symbol_kind": "source.lang.swift.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/tad/Desktop/tnovak/Clew/Clew/FeedbackViewController.swift",
+      "file": "/Users/dieterbrehm/git/occam/Clew/Clew/Controllers/PopOvers/FeedbackViewController.swift",
       "line": 11,
       "symbol": "FeedbackViewController",
       "symbol_kind": "source.lang.swift.decl.class",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/tad/Desktop/tnovak/Clew/Clew/FeedbackViewController.swift",
+      "file": "/Users/dieterbrehm/git/occam/Clew/Clew/Controllers/PopOvers/FeedbackViewController.swift",
       "line": 14,
       "symbol": "FeedbackViewController.scrollView",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/tad/Desktop/tnovak/Clew/Clew/FeedbackViewController.swift",
+      "file": "/Users/dieterbrehm/git/occam/Clew/Clew/Controllers/PopOvers/FeedbackViewController.swift",
       "line": 15,
       "symbol": "FeedbackViewController.nameTextField",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/tad/Desktop/tnovak/Clew/Clew/FeedbackViewController.swift",
+      "file": "/Users/dieterbrehm/git/occam/Clew/Clew/Controllers/PopOvers/FeedbackViewController.swift",
       "line": 16,
       "symbol": "FeedbackViewController.countryTextField",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/tad/Desktop/tnovak/Clew/Clew/FeedbackViewController.swift",
+      "file": "/Users/dieterbrehm/git/occam/Clew/Clew/Controllers/PopOvers/FeedbackViewController.swift",
       "line": 17,
       "symbol": "FeedbackViewController.feedbackTextField",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/tad/Desktop/tnovak/Clew/Clew/FeedbackViewController.swift",
+      "file": "/Users/dieterbrehm/git/occam/Clew/Clew/Controllers/PopOvers/FeedbackViewController.swift",
       "line": 18,
       "symbol": "FeedbackViewController.phoneNumberTextField",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/tad/Desktop/tnovak/Clew/Clew/FeedbackViewController.swift",
+      "file": "/Users/dieterbrehm/git/occam/Clew/Clew/Controllers/PopOvers/FeedbackViewController.swift",
       "line": 19,
       "symbol": "FeedbackViewController.emailTextField",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
+    },
+    {
+      "file": "/Users/dieterbrehm/git/occam/Clew/Clew/Controllers/StateViews/PauseTrackingController.swift",
+      "line": 11,
+      "symbol": "TransparentTouchView",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/dieterbrehm/git/occam/Clew/Clew/Controllers/StateViews/PauseTrackingController.swift",
+      "line": 12,
+      "symbol": "TransparentTouchView.point(inside:with:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/dieterbrehm/git/occam/Clew/Clew/Controllers/ViewController.swift",
+      "line": 1743,
+      "symbol": "ViewController.homeButtonPressed()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/dieterbrehm/git/occam/Clew/Clew/Misc/FeedbackLogger.swift",
+      "line": 13,
+      "symbol": "FeedbackLogger",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/dieterbrehm/git/occam/Clew/Clew/Misc/PathLogger.swift",
+      "line": 55,
+      "symbol": "PathLogger.currentLocale()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
     }
   ],
-  "source_directory": "/Users/tad/Desktop/tnovak/Clew"
+  "source_directory": "/Users/dieterbrehm/git/occam/Clew"
 }

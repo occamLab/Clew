@@ -1,0 +1,33 @@
+
+/* Class = "UILabel"; text = "Please give us your feedback!"; ObjectID = "9cz-vg-ExE"; */
+"9cz-vg-ExE.text" = "Please give us your feedback!";
+
+/* Class = "UILabel"; text = "Attach a voice recording"; ObjectID = "AwY-9g-fYn"; */
+"AwY-9g-fYn.text" = "Attach a voice recording";
+
+/* Class = "UIViewController"; title = "Feedback"; ObjectID = "ERa-SA-HJx"; */
+"ERa-SA-HJx.title" = "Feedback";
+
+/* Class = "UILabel"; text = "Title"; ObjectID = "Vtf-R1-h2R"; */
+"Vtf-R1-h2R.text" = "Title";
+
+/* Class = "UIButton"; accessibilityLabel = "Send Feedback"; ObjectID = "Yh2-1z-izX"; */
+"Yh2-1z-izX.accessibilityLabel" = "Send Feedback";
+
+/* Class = "UIButton"; normalTitle = "Send >"; ObjectID = "Yh2-1z-izX"; */
+"Yh2-1z-izX.normalTitle" = "Send >";
+
+/* Class = "UITextField"; placeholder = "Email (optional)"; ObjectID = "gdh-cx-htS"; */
+"gdh-cx-htS.placeholder" = "Email (optional)";
+
+/* Class = "UITextField"; placeholder = "Phone Number (optional)"; ObjectID = "ona-NU-g6a"; */
+"ona-NU-g6a.placeholder" = "Phone Number (optional)";
+
+/* Class = "UITextField"; placeholder = "Name"; ObjectID = "rLz-VJ-aNK"; */
+"rLz-VJ-aNK.placeholder" = "Name";
+
+/* Class = "UILabel"; text = "Date created:"; ObjectID = "tUX-fc-ttC"; */
+"tUX-fc-ttC.text" = "Date created:";
+
+/* Class = "UITextField"; placeholder = "Country (optional)"; ObjectID = "u2H-bu-ac3"; */
+"u2H-bu-ac3.placeholder" = "Country (optional)";

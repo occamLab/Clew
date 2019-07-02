@@ -1,121 +1,86 @@
 {
   "warnings": [
     {
-      "file": "/Users/tad/Desktop/tnovak/Clew/Clew/FeedbackLogger.swift",
-      "line": 14,
-      "symbol": "FeedbackLogger",
-      "symbol_kind": "source.lang.swift.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/tad/Desktop/tnovak/Clew/Clew/FeedbackLogger.swift",
-      "line": 17,
-      "symbol": "FeedbackLogger.feedbackRef",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/tad/Desktop/tnovak/Clew/Clew/FeedbackLogger.swift",
-      "line": 19,
-      "symbol": "FeedbackLogger.uniqueID",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/tad/Desktop/tnovak/Clew/Clew/FeedbackLogger.swift",
-      "line": 23,
-      "symbol": "FeedbackLogger.writeFeedbackToFirebase(name:data:audio:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/tad/Desktop/tnovak/Clew/Clew/FeedbackLogger.swift",
-      "line": 76,
-      "symbol": "FeedbackLogger.makeData(name:message:country:phone:email:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/tad/Desktop/tnovak/Clew/Clew/FeedbackLogger.swift",
-      "line": 106,
-      "symbol": "FeedbackLogger.saveFeedback(name:message:country:phone:email:audio:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/tad/Desktop/tnovak/Clew/Clew/FeedbackViewController.swift",
+      "file": "/Users/tad/Desktop/tnovak/Clew/Clew/Controllers/PopOvers/FeedbackViewController.swift",
       "line": 11,
       "symbol": "FeedbackViewController",
       "symbol_kind": "source.lang.swift.decl.class",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/tad/Desktop/tnovak/Clew/Clew/FeedbackViewController.swift",
+      "file": "/Users/tad/Desktop/tnovak/Clew/Clew/Controllers/PopOvers/FeedbackViewController.swift",
       "line": 14,
+      "symbol": "FeedbackViewController.scrollView",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tad/Desktop/tnovak/Clew/Clew/Controllers/PopOvers/FeedbackViewController.swift",
+      "line": 15,
       "symbol": "FeedbackViewController.nameTextField",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/tad/Desktop/tnovak/Clew/Clew/FeedbackViewController.swift",
-      "line": 15,
+      "file": "/Users/tad/Desktop/tnovak/Clew/Clew/Controllers/PopOvers/FeedbackViewController.swift",
+      "line": 16,
       "symbol": "FeedbackViewController.countryTextField",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/tad/Desktop/tnovak/Clew/Clew/FeedbackViewController.swift",
-      "line": 16,
+      "file": "/Users/tad/Desktop/tnovak/Clew/Clew/Controllers/PopOvers/FeedbackViewController.swift",
+      "line": 17,
       "symbol": "FeedbackViewController.feedbackTextField",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/tad/Desktop/tnovak/Clew/Clew/FeedbackViewController.swift",
-      "line": 17,
+      "file": "/Users/tad/Desktop/tnovak/Clew/Clew/Controllers/PopOvers/FeedbackViewController.swift",
+      "line": 18,
       "symbol": "FeedbackViewController.phoneNumberTextField",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/tad/Desktop/tnovak/Clew/Clew/FeedbackViewController.swift",
-      "line": 18,
+      "file": "/Users/tad/Desktop/tnovak/Clew/Clew/Controllers/PopOvers/FeedbackViewController.swift",
+      "line": 19,
       "symbol": "FeedbackViewController.emailTextField",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/tad/Desktop/tnovak/Clew/Clew/FeedbackViewController.swift",
-      "line": 22,
-      "symbol": "FeedbackViewController.audio",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "file": "/Users/tad/Desktop/tnovak/Clew/Clew/Controllers/StateViews/PauseTrackingController.swift",
+      "line": 11,
+      "symbol": "TransparentTouchView",
+      "symbol_kind": "source.lang.swift.decl.class",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/tad/Desktop/tnovak/Clew/Clew/FeedbackViewController.swift",
-      "line": 26,
-      "symbol": "FeedbackViewController.viewDidLoad()",
+      "file": "/Users/tad/Desktop/tnovak/Clew/Clew/Controllers/StateViews/PauseTrackingController.swift",
+      "line": 12,
+      "symbol": "TransparentTouchView.point(inside:with:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/tad/Desktop/tnovak/Clew/Clew/FeedbackViewController.swift",
-      "line": 49,
-      "symbol": "FeedbackViewController.prepare(for:sender:)",
+      "file": "/Users/tad/Desktop/tnovak/Clew/Clew/Controllers/ViewController.swift",
+      "line": 1743,
+      "symbol": "ViewController.homeButtonPressed()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/tad/Desktop/tnovak/Clew/Clew/FeedbackViewController.swift",
-      "line": 63,
-      "symbol": "FeedbackViewController.textViewDidBeginEditing(_:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "file": "/Users/tad/Desktop/tnovak/Clew/Clew/Misc/FeedbackLogger.swift",
+      "line": 13,
+      "symbol": "FeedbackLogger",
+      "symbol_kind": "source.lang.swift.decl.class",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/tad/Desktop/tnovak/Clew/Clew/FeedbackViewController.swift",
-      "line": 74,
-      "symbol": "FeedbackViewController.sendFeedback(_:)",
+      "file": "/Users/tad/Desktop/tnovak/Clew/Clew/Misc/PathLogger.swift",
+      "line": 55,
+      "symbol": "PathLogger.currentLocale()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     }
