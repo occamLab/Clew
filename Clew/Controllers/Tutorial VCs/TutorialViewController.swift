@@ -27,12 +27,13 @@ class TutorialViewController: UIViewController, ClewObserver {
     
     /// A custom enumeration type that describes the exact state of the tutorial.
     enum TutorialState {
-        case tutorialStarting
+        case startOrientationTraining
+        case optimalOrientationAchieved
         /// This is the screen that comes up immediately after the phone orientation training
         case readyToRecordSingleRoute
-        case initializing
+        case recordingSingleRoute
         case teachTheNavigationOfASingleRoute
-        case optimalOrientationAchieved
+        case initializing
         /*
         /// rawValue is useful for serializing state values, which we are currently using for our logging feature
         var rawValue: String {
@@ -55,18 +56,20 @@ class TutorialViewController: UIViewController, ClewObserver {
         didSet {
             //        logger.logStateTransition(newState: state)
             switch state {
-            case .tutorialStarting:
+            case .startOrientationTraining:
                 print("does this work - check")
                 add(phoneOrientationTrainingChildVC)
+            case .optimalOrientationAchieved:
+                print("nothing")
             case .readyToRecordSingleRoute:
                 add(singleRouteChildVC)
                 phoneOrientationTrainingChildVC.remove()
-            case .initializing:
-                initialize()
+            case .recordingSingleRoute:
+                print("recording single route")
             case .teachTheNavigationOfASingleRoute:
                 print("placeholder")
-            case .optimalOrientationAchieved:
-                print("nothing")
+            case .initializing:
+                initialize()
            // case .startingOrientationTraining:
              //   print("starting orientation training added as child vc")
              //   add(phoneOrientationTrainingChildVC)

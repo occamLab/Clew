@@ -628,7 +628,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         
         print("always start tutorial!!  This is a hack")
         add(tutorialViewController)
-        tutorialViewController.state = .tutorialStarting
+        tutorialViewController.state = .startOrientationTraining
         
     }
     

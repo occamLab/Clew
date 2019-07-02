@@ -25,7 +25,7 @@ class SingleRouteVC: TutorialChildViewController {
 
             // do something to handle this new thing
             Timer.scheduledTimer(withTimeInterval: 5.0, repeats: false) { timer in
-                UIAccessibility.post(notification: UIAccessibility.Notification.announcement, argument: NSLocalizedString("Great job.  You've recorded a route.  Now we will navigate it back to thst art!", comment: "Message to user during tutorial"))
+                UIAccessibility.post(notification: UIAccessibility.Notification.announcement, argument: NSLocalizedString("Great job.  You've recorded a route.  Now we will navigate it back to the start!", comment: "Message to user during tutorial"))
             }
         }
       /*  if case .mainScreen(let announceArrival) = newState, case .teachTheNavigationOfASingleRoute? = tutorialParent?.state {
