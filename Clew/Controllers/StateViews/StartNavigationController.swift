@@ -52,7 +52,7 @@ class StartNavigationController: UIViewController {
         
         pauseButton = UIButton.makeImageButton(view,
                                                alignment: UIConstants.ButtonContainerHorizontalAlignment.right,
-                                               appearance: UIConstants.ButtonAppearance.textButton(label: "Pause"),
+                                               appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "Pause")!),
                                                label: "Pause session")
         
         if let parent: UIViewController = parent {

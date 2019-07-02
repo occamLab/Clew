@@ -38,7 +38,7 @@ class FeedbackViewController : UIViewController, UITextViewDelegate, UIPopoverPr
         startTimerForShowScrollIndicator()
         
         ///sets the title of the popover
-        title = "Clew Feedback"
+        title = "\(NSLocalizedString("feedbackMenuTitle", comment: "this is the title on the feedback popover content"))"
         
     }
     
@@ -64,17 +64,7 @@ class FeedbackViewController : UIViewController, UITextViewDelegate, UIPopoverPr
     }
 
     //MARK: Actions
-    
-    ///called whenever you start editing the feedback text field
-    func textViewDidBeginEditing(_ textView: UITextView) {
-        
-        ///checks to see if the value is equal to the default value so that it will only clear the text if it is the default value
-        if feedbackTextField.text == "Enter Feedback"{
-            
-            ///clears the text in the text field
-            feedbackTextField.text = ""
-        }
-    }
+
     
     ///This is a function which takes the feedback from the form and sends it to firebase. This function is called when the send feedback button is pressed
     @IBAction func sendFeedback(_ sender: UIButton) {
@@ -86,42 +76,36 @@ class FeedbackViewController : UIViewController, UITextViewDelegate, UIPopoverPr
         var name = nameTextField.text!
         
         ///performs input processing on the name to make sure that the user inputted a name
-        if name == "Name" || name == "Please enter a name"{
-            ///if the user did not input a name it prompts them to do so and sets the value of the name to a special value so the feedback request is not sent
-            nameTextField.text = "Please enter a name"
-            name = "NONE"
+        if name == ""{
+            ///if the user did not input a name the program just sets the value of the users 'name to a special empty value
+            name = "NO NAME GIVEN"
         }
         
         ///retrieves the name from the form
         var number = phoneNumberTextField.text!
         ///performs input processing on the name to make sure that the user inputted a name
-        if number == "Phone Number (optional)" {
-            ///if the user did not input a phone number it sets the value of the ohone number to a special value
+        if number == "" {
+            ///if the user did not input a phone number it sets the value of the phone number to a special value
             number = "NONE"
         }
         
         ///retrieves the name from the form
         var email = emailTextField.text!
-        if email == "Email (optional)" {
-            ///if the user did not input an email it sets the value of the ohone number to a special value
+        if email == "" {
+            ///if the user did not input an email it sets the value of the email to a special value
             email = "NONE"
         }
         
         ///retrieves the feedback message from the form
         var feedback = feedbackTextField.text!
-        
-        if feedback == "Enter Feedback"{
-            ///if the user did not input any feedback the program prompts them to do so and sets the value of theor feedback to a special value so that the file will not get sent.
-            feedbackTextField.text = "Please enter feedback on Clew"
+        if feedback == "" {
+            ///if the user did not input textual feedback it sets the value to a special empty value
             feedback = "NONE"
         }
-        ///if the user insists on sending an empty feedback message close the popover as you normally would to give the user the impression that they sent it however do not actually send the message so as to minimize the number of invalid responses saved to the database
-        if feedback == "Please enter feedback on Clew"{
-            closeFeedback()
-        }
         
-        ///if the feedback was entered properly
-        if feedback != "NONE" && name != "NONE" && feedback != "Please enter feedback on Clew"{
+        
+        ///if the user properly included a name
+        if audio != nil || feedback != "NONE"{
             ///retrieves the data from the feedback field and sends it to firebase using functions described in the feedback logger class. sucessvalue is a variable which stores a zero or one corresponding to the sucess of the upload (one means that there was a failure
             let sucessvalue = feedbackLogger.saveFeedback(name: name, message: feedback, country: countryTextField.text!, phone: number, email: email,audio: audio)
             
@@ -138,6 +122,12 @@ class FeedbackViewController : UIViewController, UITextViewDelegate, UIPopoverPr
             }
             ///closes the popup
             closeFeedback()
+            
+        }else{
+            
+            //closes the popup without sending if the user did not enter any feedback
+            closeFeedback()
+            
         }
 
     }

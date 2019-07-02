@@ -35,6 +35,9 @@ class RootContainerView: UIView {
     /// button for bringing up the help menu
     var helpButton: UIButton!
 
+    /// button for going to the main screen
+    var homeButton: UIButton!
+
     /// button for bringing up the feedback menu
     var feedbackButton: UIButton!
     
@@ -59,47 +62,58 @@ class RootContainerView: UIView {
         super.init(frame: frame)
         
         // MARK: Settings Button
-        settingsButton = UIButton(frame: CGRect(x: 0,
-                                                y: UIConstants.yOriginOfSettingsAndHelpButton,
-                                                width: UIConstants.buttonFrameWidth/3,
-                                                height: UIConstants.settingsAndHelpFrameHeight))
+        settingsButton = UIButton(frame: CGRect(x: UIConstants.buttonFrameWidth/(10/0.5),
+                                                y: 10,
+                                                width: UIConstants.buttonFrameWidth/7,
+                                                height: UIConstants.buttonFrameWidth/7))
         settingsButton.isAccessibilityElement = true
         settingsButton.setTitle("Settings", for: .normal)
         settingsButton.accessibilityLabel = "Settings"
         settingsButton.titleLabel?.font = UIFont.systemFont(ofSize: 24.0)
-        settingsButton.backgroundColor = UIColor.black.withAlphaComponent(0.4)
+        settingsButton.setImage(UIImage(named: "settingsGear"), for: .normal)
+
         
         // MARK: Help Button
-        helpButton = UIButton(frame: CGRect(x: UIConstants.buttonFrameWidth/3,
-                                            y: UIConstants.yOriginOfSettingsAndHelpButton,
-                                            width: UIConstants.buttonFrameWidth/3,
-                                            height: UIConstants.settingsAndHelpFrameHeight))
+        helpButton = UIButton(frame: CGRect(x: UIConstants.buttonFrameWidth/(7/3),
+                                            y: UIConstants.yOriginOfSettingsAndHelpButton + 10,
+                                            width: UIConstants.buttonFrameWidth/7,
+                                            height: UIConstants.buttonFrameWidth/7))
         helpButton.isAccessibilityElement = true
         helpButton.setTitle("Help", for: .normal)
         helpButton.titleLabel?.font = UIFont.systemFont(ofSize: 24.0)
         helpButton.accessibilityLabel = "Help"
-        helpButton.backgroundColor = UIColor.black.withAlphaComponent(0.4)
+        helpButton.setImage(UIImage(named: "HelpButton"), for: .normal)
+
+        // MARK: Home Button
+        homeButton = UIButton(frame: CGRect(x: UIConstants.buttonFrameWidth/7,
+                                            y: UIConstants.yOriginOfSettingsAndHelpButton + 10,
+                                            width: UIConstants.buttonFrameWidth/7,
+                                            height: UIConstants.buttonFrameWidth/7))
+        homeButton.isAccessibilityElement = true
+        homeButton.setTitle("Home Button", for: .normal)
+        homeButton.titleLabel?.font = UIFont.systemFont(ofSize: 24.0)
+        homeButton.accessibilityLabel = "Clew Home Screen"
+        homeButton.setImage(UIImage(named: "homeButton"), for: .normal)
         
-        // button that shows feedback menu
-        feedbackButton = UIButton(frame: CGRect(x: 2*UIConstants.buttonFrameWidth/3,
-                                                y: UIConstants.yOriginOfSettingsAndHelpButton,
-                                                width: UIConstants.buttonFrameWidth/3,
-                                                height: UIConstants.settingsAndHelpFrameHeight))
+        feedbackButton = UIButton(frame: CGRect(x: UIConstants.buttonFrameWidth/(10/8),
+                                                y: 10,
+                                                width: UIConstants.buttonFrameWidth/7,
+                                                height: UIConstants.buttonFrameWidth/7))
         feedbackButton.isAccessibilityElement = true
         feedbackButton.setTitle("Feedback", for: .normal)
         feedbackButton.titleLabel?.font = UIFont.systemFont(ofSize: 24.0)
         feedbackButton.accessibilityLabel = "Feedback"
-        feedbackButton.backgroundColor = UIColor.black.withAlphaComponent(0.4)
+        feedbackButton.setImage(UIImage(named: "Contact"), for: .normal)
 
-        // MARK: Directions Button
-        // an invisible button which can be pressed to get the directions
-        // to the next waypoint.
-        getDirectionButton = UIButton(frame: CGRect(x: 0,
-                                                    y: 0,
-                                                    width: UIConstants.buttonFrameWidth,
-                                                    height: UIConstants.yOriginOfButtonFrame))
+
+        getDirectionButton = UIButton(frame: CGRect(x: UIConstants.buttonFrameWidth/(7/5),
+                                                    y: UIConstants.yOriginOfSettingsAndHelpButton + 10,
+                                                    width: UIConstants.buttonFrameWidth/7,
+                                                    height: UIConstants.buttonFrameWidth/7))
+
         getDirectionButton.isAccessibilityElement = true
         getDirectionButton.accessibilityLabel = "Get Directions"
+        getDirectionButton.setImage(UIImage(named: "GetDirection"), for: .normal)
         getDirectionButton.isHidden = true
 
         // MARK: Announcement Text
@@ -139,5 +153,6 @@ class RootContainerView: UIView {
         addSubview(helpButton)
         addSubview(countdownTimer)
         addSubview(feedbackButton)
+        addSubview(homeButton)
     }
 }

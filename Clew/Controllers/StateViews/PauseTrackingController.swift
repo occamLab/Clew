@@ -8,6 +8,18 @@
 
 import UIKit
 
+class TransparentTouchView: UIView {
+    override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
+        for view in self.subviews {
+            if view.isUserInteractionEnabled, view.point(inside: self.convert(point, to: view), with: event) {
+                return true
+            }
+        }
+        
+        return false
+    }
+}
+
 /// A View Controller for handling the pause route state
 /// also handles associated buttons
 class PauseTrackingController: UIViewController {
@@ -25,12 +37,11 @@ class PauseTrackingController: UIViewController {
     /// called when the view has loaded.  We setup various app elements in here.
     override func viewDidLoad() {
         super.viewDidLoad()
+        view = TransparentTouchView(frame:CGRect(x: 0,
+                                                 y: 0,
+                                                 width: UIScreen.main.bounds.size.width,
+                                                 height: UIScreen.main.bounds.size.height))
 
-        view.frame = CGRect(x: 0,
-                            y: 0,
-                            width: UIScreen.main.bounds.size.width,
-                            height: UIScreen.main.bounds.size.height)
-                
         let label = UILabel(frame: CGRect(x: 15,
                                           y: UIScreen.main.bounds.size.height/5,
                                           width: UIScreen.main.bounds.size.width-30,
@@ -51,17 +62,17 @@ class PauseTrackingController: UIViewController {
         
         enterLandmarkDescriptionButton = UIButton.makeImageButton(view,
                                                                   alignment: UIConstants.ButtonContainerHorizontalAlignment.left,
-                                                                  appearance: UIConstants.ButtonAppearance.textButton(label: "Describe"),
+                                                                  appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "Describe")!),
                                                                   label: "Enter text to help you remember this landmark")
         
         recordVoiceNoteButton = UIButton.makeImageButton(view,
                                                          alignment: UIConstants.ButtonContainerHorizontalAlignment.right,
-                                                         appearance: UIConstants.ButtonAppearance.textButton(label: "Voice Note"),
+                                                         appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "VoiceNote")!),
                                                          label: "Record audio to help you remember this landmark")
         
         confirmAlignmentButton = UIButton.makeImageButton(view,
                                                           alignment: UIConstants.ButtonContainerHorizontalAlignment.center,
-                                                          appearance: UIConstants.ButtonAppearance.textButton(label: "Align"),
+                                                          appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "Align")!),
                                                           label: "Start \(ViewController.alignmentWaitingPeriod)-second alignment countdown")
         
         if let parent: UIViewController = parent {

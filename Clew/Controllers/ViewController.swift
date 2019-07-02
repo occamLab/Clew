@@ -349,21 +349,25 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         rootContainerView.countdownTimer.isHidden = false
         rootContainerView.countdownTimer.start(beginingValue: ViewController.alignmentWaitingPeriod, interval: 1)
         delayTransition()
-        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(ViewController.alignmentWaitingPeriod)) {
+        playAlignmentConfirmation = DispatchWorkItem{
             self.rootContainerView.countdownTimer.isHidden = true
             self.pauseTracking()
         }
+        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(ViewController.alignmentWaitingPeriod), execute: playAlignmentConfirmation!)
     }
     
     /// Handler for the completingPauseProcedure app state
     func handleStateTransitionToCompletingPauseProcedure() {
         // TODO: we should not be able to create a route landmark if we are in the relocalizing state... (might want to handle this when the user stops navigation on a route they loaded.... This would obviate the need to handle this in the recordPath code as well
+        print("completing pause procedure")
         if creatingRouteLandmark {
             guard let currentTransform = sceneView.session.currentFrame?.camera.transform else {
                 print("can't properly save landmark: TODO communicate this to the user somehow")
                 return
             }
             beginRouteLandmark.transform = currentTransform
+            print("setting transform", beginRouteLandmark.transform)
+
             Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(playSound)), userInfo: nil, repeats: false)
 //            rootContainerView.pauseTrackingView.isHidden = true
             pauseTrackingController.remove()
@@ -410,6 +414,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     @objc func routesButtonPressed() {
         let storyBoard: UIStoryboard = UIStoryboard(name: "SettingsAndHelp", bundle: nil)
         let popoverContent = storyBoard.instantiateViewController(withIdentifier: "Routes") as! RoutesViewController
+        popoverContent.preferredContentSize = CGSize(width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height)
         popoverContent.rootViewController = self
         popoverContent.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: popoverContent, action: #selector(popoverContent.doneWithRoutes))
         popoverContent.updateRoutes(routes: dataPersistence.routes)
@@ -435,7 +440,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         pauseTrackingController.remove()
         resumeTrackingConfirmController.remove()
         resumeTrackingController.remove()
-//        rootContainerView.countdownTimer.isHidden = true
+        rootContainerView.countdownTimer.isHidden = true
     }
     
     /// This handles when a route cell is clicked (triggering the route to be loaded).
@@ -544,9 +549,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// start route navigation VC
     var startNavigationController: StartNavigationController!
     
+    /// work item for playing alignment confirmation sound
+    var playAlignmentConfirmation: DispatchWorkItem?
+    
     /// stop route navigation VC
     var stopNavigationController: StopNavigationController!
-    
+
     /// called when the view has loaded.  We setup various app elements in here.
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -580,6 +588,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         rootContainerView.settingsButton.addTarget(self, action: #selector(settingsButtonPressed), for: .touchUpInside)
 
         rootContainerView.helpButton.addTarget(self, action: #selector(helpButtonPressed), for: .touchUpInside)
+        
+        rootContainerView.homeButton.addTarget(self, action: #selector(homeButtonPressed), for: .touchUpInside)
 
         rootContainerView.getDirectionButton.addTarget(self, action: #selector(announceDirectionHelpPressed), for: .touchUpInside)
 
@@ -734,7 +744,52 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
     }
     
+    /// func that prepares the state transition to home by clearing active processes and data
+    func clearState() {
+        // TODO: check for code reuse
+        // Clearing All State Processes and Data
+        rootContainerView.homeButton.isHidden = true
+        recordPathController.isAccessibilityElement = false
+        if case .navigatingRoute = self.state {
+            keypointNode.removeFromParentNode()
+        }
+        followingCrumbs?.invalidate()
+        routeName = nil
+        beginRouteLandmark = RouteLandmark()
+        endRouteLandmark = RouteLandmark()
+        playAlignmentConfirmation?.cancel()
+        rootContainerView.announcementText.isHidden = true
+        nav.headingOffset = 0.0
+        headingRingBuffer.clear()
+        locationRingBuffer.clear()
+        logger.resetNavigationLog()
+        logger.resetPathLog()
+        hapticTimer?.invalidate()
+        logger.resetStateSequenceLog()
+    }
+    
+    /// function that creates alerts for the home button
+    func homePageNavigationProcesses() {
+        // Create alert to warn users of lost information
+        let alert = UIAlertController(title: "Are you sure?",
+                                      message: "If you exit this process right now, your active route information will be lost.",
+                                      preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Go to the Home Page", style: .default, handler: { action -> Void in
+            // proceed to home page
+            self.clearState()
+            self.hideAllViewsHelper()
+            self.state = .mainScreen(announceArrival: false)
+        }
+        ))
+        alert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: { action -> Void in
+            // nothing to do, just stay on the page
+        }
+        ))
+        self.present(alert, animated: true, completion: nil)
+    }
 
+    
+    /// Display a warning that tells the user they must create a landmark to be able to use this route again in the forward direction
     /// Display the dialog that prompts the user to enter a route name.  If the user enters a route name, the route along with the optional world map will be persisted.
     ///
     /// - Parameter mapAsAny: the world map to save (the `Any?` type is used to indicate that the map is optional and to preserve backwards compatibility with iOS 11.3)
@@ -774,6 +829,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// Show the dialog that allows the user to enter textual information to help them remember a landmark.
     @objc func showLandmarkInformationDialog() {
+        rootContainerView.homeButton.isHidden = false
+//        backButton.isHidden = true
         // Set title and message for the alert dialog
         let alertController = UIAlertController(title: NSLocalizedString("Landmark information", comment: "The header of a pop-up menu"), message: NSLocalizedString("Enter text about the landmark that will help you find it later.", comment: "Prompts user to enter information"), preferredStyle: .alert)
         // The confirm action taking the inputs
@@ -975,14 +1032,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
 //        rootContainerView.recordPathView.isHidden = false
 //        rootContainerView.routeRatingView.isHidden = true
 //        rootContainerView.stopNavigationView.isHidden = true
-//        add(recordPathController)
-        addChild(recordPathController)
+        add(recordPathController)
+        /// handling main screen transitions outside of the first load
         /// add the view of the child to the view of the parent
-        recordPathController.view.isHidden = false
-        rootContainerView.addSubview(recordPathController.view)
-        /// notify the child that it was moved to a parent
-        recordPathController.didMove(toParent: self)
-        
+        //recordPathController.view.isHidden = false
         routeRatingController.remove()
         stopNavigationController.remove()
         
@@ -991,6 +1044,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         rootContainerView.settingsButton.isHidden = false
         rootContainerView.helpButton.isHidden = false
         rootContainerView.feedbackButton.isHidden = false
+        rootContainerView.homeButton.isHidden = true
 
         if announceArrival {
             delayTransition(announcement: NSLocalizedString("You've arrived.", comment: "You have arrived at your destination."))
@@ -1002,9 +1056,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// Called when the UI of the view changes dramatically (e.g., if a different subview is displayed).  The optional `announcement` input is will be spoken 2 seconds after the transition occurs.  The delay is necessary to prevent the accessibility notification for screen changed to cut off the announcement.
     ///
     /// - Parameter announcement: the announcement to read after a 2 second delay
-    func delayTransition(announcement: String? = nil) {
+    func delayTransition(announcement: String? = nil, initialFocus: UIView? = nil) {
         // this notification currently cuts off the announcement of the button that was just pressed
-        UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: nil)
+        UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: initialFocus)
         if let announcement = announcement {
             if UIAccessibility.isVoiceOverRunning {
                 Timer.scheduledTimer(withTimeInterval: 2.0, repeats: false) { timer in
@@ -1018,6 +1072,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// Display stop recording view/hide all other views
     @objc func showStopRecordingButton() {
+        rootContainerView.homeButton.isHidden = false // home button here
         recordPathController.remove()
         recordPathController.view.isAccessibilityElement = false
         add(stopRecordingController)
@@ -1026,11 +1081,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// Display start navigation view/hide all other views
     @objc func showStartNavigationButton(allowPause: Bool) {
-//        rootContainerView.resumeTrackingView.isHidden = true
-//        rootContainerView.resumeTrackingConfirmView.isHidden = true
-//        rootContainerView.stopRecordingView.isHidden = true
-//        rootContainerView.startNavigationView.getButtonByTag(tag: UIView.pauseButtonTag)?.isHidden = !allowPause
-//        rootContainerView.startNavigationView.isHidden = false
+        rootContainerView.homeButton.isHidden = false // home button here
         resumeTrackingController.remove()
         resumeTrackingConfirmController.remove()
         stopRecordingController.remove()
@@ -1041,29 +1092,26 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
 
     /// Display the pause tracking view/hide all other views
     func showPauseTrackingButton() throws {
-//        rootContainerView.recordPathView.isHidden = true
-//        rootContainerView.startNavigationView.isHidden = true
-//        rootContainerView.pauseTrackingView.isHidden = false
+        rootContainerView.homeButton.isHidden = false // home button here
         recordPathController.remove()
         startNavigationController.remove()
         add(pauseTrackingController)
+        
         delayTransition()
     }
     
     /// Display the resume tracking view/hide all other views
     @objc func showResumeTrackingButton() {
-//        rootContainerView.pauseTrackingView.isHidden = true
-//        rootContainerView.resumeTrackingView.isHidden = false
+        rootContainerView.homeButton.isHidden = false // no home button here
         pauseTrackingController.remove()
         add(resumeTrackingController)
+        UIApplication.shared.keyWindow!.bringSubviewToFront(rootContainerView)
         delayTransition()
     }
     
     /// Display the resume tracking confirm view/hide all other views.
     func showResumeTrackingConfirmButton(route: SavedRoute, navigateStartToEnd: Bool) {
-//        rootContainerView.resumeTrackingView.isHidden = true
-//        rootContainerView.resumeTrackingConfirmView.isHidden = false
-//        rootContainerView.resumeTrackingConfirmView.mainText?.text = ""
+        rootContainerView.homeButton.isHidden = false
         resumeTrackingController.remove()
         add(resumeTrackingConfirmController)
         resumeTrackingConfirmController.view.mainText?.text = ""
@@ -1102,8 +1150,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// display stop navigation view/hide all other views
     @objc func showStopNavigationButton() {
-//        rootContainerView.startNavigationView.isHidden = true
-//        rootContainerView.stopNavigationView.isHidden = false
+        rootContainerView.homeButton.isHidden = false
         rootContainerView.getDirectionButton.isHidden = false
         startNavigationController.remove()
         add(stopNavigationController)
@@ -1114,9 +1161,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// display route rating view/hide all other views
     @objc func showRouteRating(announceArrival: Bool) {
-//        rootContainerView.stopNavigationView.isHidden = true
         rootContainerView.getDirectionButton.isHidden = true
-//        rootContainerView.routeRatingView.isHidden = false
+        rootContainerView.homeButton.isHidden = true
         stopNavigationController.remove()
         add(routeRatingController)
         if announceArrival {
@@ -1288,6 +1334,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// - Parameter sender: the button that generated the event
     @objc func stopRecording(_ sender: UIButton) {
         if beginRouteLandmark.transform != nil {
+            print("Attempting to save route")
             if #available(iOS 12.0, *) {
                 sceneView.session.getCurrentWorldMap { worldMap, error in
                     self.getRouteNameAndSaveRouteHelper(mapAsAny: worldMap)
@@ -1355,8 +1402,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// handles the user pressing the landmark button
     @objc func startCreateLandmarkProcedure() {
+        rootContainerView.homeButton.isHidden = false
+//        backButton.isHidden = true
         creatingRouteLandmark = true
         // make sure to clear out any relative transform and paused transform so the alignment is accurate
+        print("starting pause procedure", creatingRouteLandmark)
         sceneView.session.setWorldOrigin(relativeTransform: simd_float4x4.makeTranslation(0, 0, 0))
         state = .startingPauseProcedure
     }
@@ -1688,11 +1738,50 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: (#selector(announceDirectionHelp)), userInfo: nil, repeats: false)
     }
     
+    // Called when home button is pressed
+    // Chooses the states in which the home page alerts pop up
+    @objc func homeButtonPressed() {
+    // if the state case needs to have a home button alert, send it to the function that creates the relevant alert
+        if case .navigatingRoute = self.state {
+            homePageNavigationProcesses()
+        }
+        else if case .recordingRoute = self.state {
+            homePageNavigationProcesses()
+        }
+        else if case .readyToNavigateOrPause = self.state {
+            homePageNavigationProcesses()
+        }
+        else if case .pauseWaitingPeriod = self.state {
+            homePageNavigationProcesses()
+        }
+        else if case .startingPauseProcedure = self.state {
+            homePageNavigationProcesses()
+        }
+        else if case .completingPauseProcedure = self.state {
+            homePageNavigationProcesses()
+        }
+        else if case .pauseProcedureCompleted = self.state {
+            homePageNavigationProcesses()
+        }
+        else if case .readyForFinalResumeAlignment = self.state {
+            homePageNavigationProcesses()
+        }
+        else if case .startingResumeProcedure = self.state {
+            homePageNavigationProcesses()
+        }
+        else {
+            // proceed to home page
+            clearState()
+            hideAllViewsHelper()
+            self.state = .mainScreen(announceArrival: false)
+        }
+    }
+    
     /// Called when the settings button is pressed.  This function will display the settings view (managed by SettingsViewController) as a popover.
     @objc func settingsButtonPressed() {
         let storyBoard: UIStoryboard = UIStoryboard(name: "SettingsAndHelp", bundle: nil)
         let popoverContent = storyBoard.instantiateViewController(withIdentifier: "Settings") as! SettingsViewController
-        
+        popoverContent.preferredContentSize = CGSize(width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height)
         let nav = UINavigationController(rootViewController: popoverContent)
         nav.modalPresentationStyle = .popover
         let popover = nav.popoverPresentationController
@@ -1710,12 +1799,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     @objc func helpButtonPressed() {
         let storyBoard: UIStoryboard = UIStoryboard(name: "SettingsAndHelp", bundle: nil)
         let popoverContent = storyBoard.instantiateViewController(withIdentifier: "Help") as! HelpViewController
+        popoverContent.preferredContentSize = CGSize(width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height)
         let nav = UINavigationController(rootViewController: popoverContent)
         nav.modalPresentationStyle = .popover
         let popover = nav.popoverPresentationController
         popover?.delegate = self
         popover?.sourceView = self.view
-        popover?.sourceRect = CGRect(x: 0, y: UIConstants.settingsAndHelpFrameHeight/2, width: 0,height: 0)
+        popover?.sourceRect = CGRect(x: 0, y: 0, width: 0, height: 0)
         popoverContent.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: popoverContent, action: #selector(popoverContent.doneWithHelp))
         suppressTrackingWarnings = true
         self.present(nav, animated: true, completion: nil)
@@ -1725,6 +1815,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     @objc func feedbackButtonPressed() {
         let storyBoard: UIStoryboard = UIStoryboard(name: "SettingsAndHelp", bundle: nil)
         let popoverContent = storyBoard.instantiateViewController(withIdentifier: "Feedback") as! FeedbackViewController
+        popoverContent.preferredContentSize = CGSize(width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height)
         let nav = UINavigationController(rootViewController: popoverContent)
         nav.modalPresentationStyle = .popover
         let popover = nav.popoverPresentationController

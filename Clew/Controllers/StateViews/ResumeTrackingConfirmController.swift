@@ -63,13 +63,13 @@ class ResumeTrackingConfirmController: UIViewController {
         /// The button that plays back the recorded voice note associated with a landmark
         readVoiceNoteButton = UIButton.makeImageButton(view,
                                                        alignment: UIConstants.ButtonContainerHorizontalAlignment.left,
-                                                       appearance: UIConstants.ButtonAppearance.textButton(label: "Play Note"),
+                                                       appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "Read")!),
                                                        label: "Play recorded voice note")
         
         // MARK: ConfirmAlignmentButton
         confirmAlignmentButton = UIButton.makeImageButton(view,
                                                           alignment: UIConstants.ButtonContainerHorizontalAlignment.center,
-                                                          appearance: UIConstants.ButtonAppearance.textButton(label: "Align"),
+                                                          appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "Align")!),
                                                           label: "Start \(ViewController.alignmentWaitingPeriod)-second alignment countdown")
         
         if let parent: UIViewController = parent {

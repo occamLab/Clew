@@ -73,15 +73,24 @@ class FeedbackLogger {
     }
     
     ///takes in all the different pieces of data and combines them into a properly formatted string of type Data
-    func makeData(name: String, message: String, country inputCountry: String?, phone: String, email: String) -> Data? {
+    func makeData(name: String, message: String, country inputCountry: String?, phone: String, email: String,isAudio: Bool) -> Data? {
         
         var country: String = "NONE"
         
         ///performs input processing on the country Field
-        if inputCountry == "Country (optional)"{
+        if inputCountry == ""{
             country = "NONE"
         }else{
             country = inputCountry!
+        }
+        
+        ///sets the default state to not have an audio file
+        var audioData = "NONE"
+        
+        ///performs input processing on the audio data to say whether or not there is an audio file
+        if isAudio {
+            ///sets the address of the audio file if there is one
+            audioData = "\(name)_Recording_\(uniqueID).wav"
         }
         
         ///places the data into a dictionary to be formatted into JSON later
@@ -92,7 +101,7 @@ class FeedbackLogger {
                                     "Country": country,
                                     "Message": message,
                                     "AppInstanceID": Analytics.appInstanceID(),
-                                    "AudioFileName": "\(name)_Recording_\(uniqueID).wav"]
+                                    "AudioFileName": audioData]
         do {
             ///converts the data into JSON
             let data = try JSONSerialization.data(withJSONObject: body, options: .prettyPrinted)
@@ -106,6 +115,13 @@ class FeedbackLogger {
     ///combines the information together and saves a file to Firebase containing the user's feedback
     func saveFeedback(name: String, message: String, country: String?, phone: String, email: String,audio: URL?) -> Int{
         ///calls the functions to create the properly formatted data and upload the result to firebase
-        return writeFeedbackToFirebase(name: name, data: makeData(name: name, message: message, country: country, phone: phone, email: email)!,audio: audio)
+        if audio == nil {
+            ///if there is no audio log tell the program to notate theat in the log
+            return writeFeedbackToFirebase(name: name, data: makeData(name: name, message: message, country: country, phone: phone, email: email, isAudio: false)!,audio: audio)
+        }else{
+            ///if there is an audio file tell the program to notate that in the log
+            return writeFeedbackToFirebase(name: name, data: makeData(name: name, message: message, country: country, phone: phone, email: email, isAudio: true)!,audio: audio)
+        }
+        
     }
 }
