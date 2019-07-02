@@ -45,16 +45,39 @@ class StartNavigationController: UIViewController {
             view.addSubview(label)
         }
         
-        startNavigationButton = UIButton.makeImageButton(view,
+        startNavigationButton = UIButton.makeConstraintButton(view,
                                                          alignment: UIConstants.ButtonContainerHorizontalAlignment.center,
                                                          appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "StartNavigation")!),
                                                          label: NSLocalizedString("Start navigation", comment: "The name of the button that allows user to start navigating."))
         
-        pauseButton = UIButton.makeImageButton(view,
+        pauseButton = UIButton.makeConstraintButton(view,
                                                alignment: UIConstants.ButtonContainerHorizontalAlignment.right,
                                                appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "Pause")!),
                                                label: "Pause session")
         
+        /// create stack view for aligning and distributing bottom layer buttons
+        let stackView   = UIStackView()
+        view.addSubview(stackView)
+        stackView.translatesAutoresizingMaskIntoConstraints = false;
+        
+        /// define horizonal, centered, and equal alignment of elements
+        /// inside the bottom stack
+        stackView.axis = NSLayoutConstraint.Axis.horizontal
+        stackView.distribution  = UIStackView.Distribution.equalSpacing
+        //        stackView.distribution = UIStackView.Distribution.fillEqually
+        stackView.alignment = UIStackView.Alignment.center
+        
+        /// add elements to the stack
+        stackView.addArrangedSubview(pauseButton)
+        stackView.addArrangedSubview(startNavigationButton)
+        
+        /// size the stack
+        stackView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: UIConstants.yButtonFrameMargin).isActive = true
+        stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -UIConstants.yButtonFrameMargin).isActive = true
+        stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+
+
         if let parent: UIViewController = parent {
             startNavigationButton.addTarget(parent,
                                    action: #selector(ViewController.startNavigation),
@@ -65,7 +88,7 @@ class StartNavigationController: UIViewController {
         }
         
         // Do any additional setup after loading the view.
-        view.addSubview(startNavigationButton)
-        view.addSubview(pauseButton)
+//        view.addSubview(startNavigationButton)
+//        view.addSubview(pauseButton)
     }
 }

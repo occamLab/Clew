@@ -23,9 +23,9 @@ class RouteRatingController: UIViewController {
         super.viewDidLoad()
 
         view.frame = CGRect(x: 0,
-                                    y: 0,
-                                    width: UIConstants.buttonFrameWidth,
-                                    height: UIScreen.main.bounds.size.height)
+                            y: 0,
+                            width: UIConstants.buttonFrameWidth,
+                            height: UIScreen.main.bounds.size.height)
         
         let label = UILabel(frame: CGRect(x: 15,
                                           y: UIScreen.main.bounds.size.height/5,
@@ -57,11 +57,12 @@ class RouteRatingController: UIViewController {
         let stackView   = UIStackView()
         view.addSubview(stackView)
         stackView.translatesAutoresizingMaskIntoConstraints = false;
-        
+
         /// define horizonal, centered, and equal alignment of elements
         /// inside the bottom stack
         stackView.axis = NSLayoutConstraint.Axis.horizontal
         stackView.distribution  = UIStackView.Distribution.equalSpacing
+//        stackView.distribution = UIStackView.Distribution.fillEqually
         stackView.alignment = UIStackView.Alignment.center
         
         /// add elements to the stack
@@ -69,12 +70,12 @@ class RouteRatingController: UIViewController {
         stackView.addArrangedSubview(thumbsUpButton)
         
         /// size the stack
-        stackView.topAnchor.constraint(equalTo: view.topAnchor, constant: 450.0).isActive = true
-        stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8.0).isActive = true
-        stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8.0).isActive = true
+        stackView.topAnchor.constraint(equalTo: view.topAnchor, constant: UIConstants.topButtonFrameMargin).isActive = true
+        stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: UIConstants.yButtonFrameMargin).isActive = true
+        stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -UIConstants.yButtonFrameMargin).isActive = true
         stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -UIConstants.buttonFrameWidth/7 * 2).isActive = true
         
-        
+
         if let parent: UIViewController = parent {
             thumbsUpButton.addTarget(parent,
                                      action: #selector(ViewController.sendLogData),

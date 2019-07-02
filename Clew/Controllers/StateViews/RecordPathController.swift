@@ -48,20 +48,44 @@ class RecordPathController: UIViewController {
             view.addSubview(label)
         }
 
-        recordPathButton = UIButton.makeImageButton(view,
+        recordPathButton = UIButton.makeConstraintButton(view,
                                                     alignment: UIConstants.ButtonContainerHorizontalAlignment.center,
                                                     appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "Record")!),
                                                     label: NSLocalizedString("Record path", comment: "Video record path to a destination"))
         
-        addLandmarkButton = UIButton.makeImageButton(view,
+        addLandmarkButton = UIButton.makeConstraintButton(view,
                                                      alignment: UIConstants.ButtonContainerHorizontalAlignment.right,
                                                      appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "Landmark")!),
                                                      label: "Saved routes list")
         
-        routesButton = UIButton.makeImageButton(view,
+        routesButton = UIButton.makeConstraintButton(view,
                                                 alignment: UIConstants.ButtonContainerHorizontalAlignment.left,
                                                 appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "route")!),
                                                 label: "Saved routes list")
+        
+        /// create stack view for aligning and distributing bottom layer buttons
+        let stackView   = UIStackView()
+        view.addSubview(stackView)
+        stackView.translatesAutoresizingMaskIntoConstraints = false;
+        
+        /// define horizonal, centered, and equal alignment of elements
+        /// inside the bottom stack
+        stackView.axis = NSLayoutConstraint.Axis.horizontal
+        stackView.distribution  = UIStackView.Distribution.equalSpacing
+        //        stackView.distribution = UIStackView.Distribution.fillEqually
+        stackView.alignment = UIStackView.Alignment.center
+        
+        /// add elements to the stack
+        stackView.addArrangedSubview(routesButton)
+        stackView.addArrangedSubview(recordPathButton)
+        stackView.addArrangedSubview(addLandmarkButton)
+        
+        /// size the stack
+        stackView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: UIConstants.yButtonFrameMargin).isActive = true
+        stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -UIConstants.yButtonFrameMargin).isActive = true
+        stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+
         
         if let parent: UIViewController = parent {
             routesButton.addTarget(parent,
@@ -76,8 +100,8 @@ class RecordPathController: UIViewController {
         }
         
         // Do any additional setup after loading the view.
-        view.addSubview(routesButton)
-        view.addSubview(addLandmarkButton)
-        view.addSubview(recordPathButton)
+//        view.addSubview(routesButton)
+//        view.addSubview(addLandmarkButton)
+//        view.addSubview(recordPathButton)
     }
 }
