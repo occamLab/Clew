@@ -35,19 +35,24 @@ class PhoneOrientationTrainingVC: TutorialChildViewController {
             print("yeaaaa")
             feedbackGenerator.impactOccurred()
             lastHapticFeedbackTime = now
+            // if (the user is done with the experience) <- some condition can also be outside the if statement
+             tutorialParent?.state = .optimalOrientationAchieved
         }
-//         if abs(angleFromVertical) < 0.1 {
-//            Timer.scheduledTimer(withTimeInterval: 0.1, repeats: false) {_ in
-//            feedbackGenerator.impactOccurred()
-//            self.tutorialParent?.state = .optimalOrientationAchieved
-//            UIAccessibility.post(notification: UIAccessibility.Notification.announcement, argument: NSLocalizedString("Great job.  you have the phone positioned properly!", comment: "Message to user during tutorial"))
+         /* if abs(angleFromVertical) < 0.1 {
+            Timer.scheduledTimer(withTimeInterval: 0.1, repeats: false) {_ in
+            feedbackGenerator.impactOccurred()
+            self.tutorialParent?.state = .optimalOrientationAchieved
+            UIAccessibility.post(notification: UIAccessibility.Notification.announcement, argument: NSLocalizedString("Great job.  you have the phone positioned properly!", comment: "Message to user during tutorial"))
 
-//         }
+         }
+         if abs(angleFromVertical) < 0.5 && abs(angleFromVertical) > 0.1 {
+         Timer.scheduledTimer(withTimeInterval: 3.0, repeats: false) {_ in
+         feedbackGenerator.impactOccurred()
+         }
+         }
+         print("angleFromVertical", angleFromVertical) */
+    
     }
-//         if abs(angleFromVertical) < 0.5 && abs(angleFromVertical) > 0.1 {
-//         Timer.scheduledTimer(withTimeInterval: 3.0, repeats: false) {_ in
-//         feedbackGenerator.impactOccurred()
-//         }
-//         }
-//         print("angleFromVertical", angleFromVertical)
+        /* if case .mainScreen(let announceArrival) = newState, case .optimalOrientationReached? = tutorialParent?.state {
+            (parent as? TutorialViewController)?.state = .readyToRecordSingleRoute } */
 }
