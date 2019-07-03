@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>PauseTrackingController Class Reference</title>
+    <title>float2x2 Extension Reference</title>
     <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
     <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
     <meta charset='utf-8'>
@@ -10,8 +10,8 @@
     
   </head>
   <body>
-    <a name="//apple_ref/swift/Class/PauseTrackingController" class="dashAnchor"></a>
-    <a title="PauseTrackingController Class Reference"></a>
+    <a name="//apple_ref/swift/Extension/float2x2" class="dashAnchor"></a>
+    <a title="float2x2 Extension Reference"></a>
     <header>
       <div class="content-wrapper">
         <p><a href="../index.html"> Docs</a> (97% documented)</p>
@@ -22,7 +22,7 @@
       <p id="breadcrumbs">
         <a href="../index.html"> Reference</a>
         <img id="carat" src="../img/carat.png" />
-        PauseTrackingController Class Reference
+        float2x2 Extension Reference
       </p>
     </div>
     <div class="content-wrapper">
@@ -239,16 +239,14 @@
       <article class="main-content">
         <section>
           <section class="section">
-            <h1>PauseTrackingController</h1>
+            <h1>float2x2</h1>
               <div class="declaration">
                 <div class="language">
-                  <pre class="highlight swift"><code><span class="kd">class</span> <span class="kt">PauseTrackingController</span> <span class="p">:</span> <span class="kt">UIViewController</span></code></pre>
+                  <pre class="highlight swift"><code><span class="kd">typealias</span> <span class="n">float2x2</span> <span class="o">=</span> <span class="n">simd_float2x2</span></code></pre>
 
                 </div>
               </div>
-            <p>A View Controller for handling the pause route state
-also handles associated buttons</p>
-
+            
           </section>
           <section class="section task-group-section">
             <div class="task-group">
@@ -256,9 +254,9 @@ also handles associated buttons</p>
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:4Clew23PauseTrackingControllerC30enterLandmarkDescriptionButtonSo8UIButtonCSgvp"></a>
-                    <a name="//apple_ref/swift/Property/enterLandmarkDescriptionButton" class="dashAnchor"></a>
-                    <a class="token" href="#/s:4Clew23PauseTrackingControllerC30enterLandmarkDescriptionButtonSo8UIButtonCSgvp">enterLandmarkDescriptionButton</a>
+                    <a name="/s:So13simd_float2x2a4ClewE3svdAB_A2BtyF"></a>
+                    <a name="//apple_ref/swift/Method/svd()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:So13simd_float2x2a4ClewE3svdAB_A2BtyF">svd()</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -266,16 +264,20 @@ also handles associated buttons</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>button for storing landmark descriptions</p>
+                        <p>Computes the SVD of the 2x2 matrix</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">enterLandmarkDescriptionButton</span><span class="p">:</span> <span class="kt">UIButton</span><span class="o">!</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">svd</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="n">float2x2</span><span class="p">,</span> <span class="n">float2x2</span><span class="p">,</span> <span class="n">float2x2</span><span class="p">)</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>U, S, V such that U * S * V.T is the original matrix</p>
                       </div>
                     </section>
                   </div>
@@ -283,9 +285,9 @@ also handles associated buttons</p>
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:4Clew23PauseTrackingControllerC21recordVoiceNoteButtonSo8UIButtonCSgvp"></a>
-                    <a name="//apple_ref/swift/Property/recordVoiceNoteButton" class="dashAnchor"></a>
-                    <a class="token" href="#/s:4Clew23PauseTrackingControllerC21recordVoiceNoteButtonSo8UIButtonCSgvp">recordVoiceNoteButton</a>
+                    <a name="/s:So13simd_float2x2a4ClewE10fromMatrixyAB7LASwift0E0CFZ"></a>
+                    <a name="//apple_ref/swift/Method/fromMatrix(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:So13simd_float2x2a4ClewE10fromMatrixyAB7LASwift0E0CFZ">fromMatrix(_:)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -293,17 +295,39 @@ also handles associated buttons</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>button for recording a voice note about a
-landmark</p>
+                        <p>Create a float2x2 from a LASwift style 2x2 matrix</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">recordVoiceNoteButton</span><span class="p">:</span> <span class="kt">UIButton</span><span class="o">!</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">static</span> <span class="kd">func</span> <span class="nf">fromMatrix</span><span class="p">(</span><span class="n">_</span> <span class="nv">m</span><span class="p">:</span> <span class="kt">Matrix</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">simd_float2x2</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>m</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>a 2x2 matrix in LASwift format</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>a float2x2 matrix</p>
                       </div>
                     </section>
                   </div>
@@ -311,9 +335,9 @@ landmark</p>
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:4Clew23PauseTrackingControllerC22confirmAlignmentButtonSo8UIButtonCSgvp"></a>
-                    <a name="//apple_ref/swift/Property/confirmAlignmentButton" class="dashAnchor"></a>
-                    <a class="token" href="#/s:4Clew23PauseTrackingControllerC22confirmAlignmentButtonSo8UIButtonCSgvp">confirmAlignmentButton</a>
+                    <a name="/s:So13simd_float2x2a4ClewE8toMatrix7LASwift0E0CyF"></a>
+                    <a name="//apple_ref/swift/Method/toMatrix()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:So13simd_float2x2a4ClewE8toMatrix7LASwift0E0CyF">toMatrix()</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -321,43 +345,20 @@ landmark</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>button for aligning phone position in space</p>
+                        <p>Crete a LASwift style matrix from the float2x2</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">confirmAlignmentButton</span><span class="p">:</span> <span class="kt">UIButton</span><span class="o">!</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">toMatrix</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Matrix</span></code></pre>
 
                         </div>
                       </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/c:@M@Clew@objc(cs)PauseTrackingController(im)viewDidLoad"></a>
-                    <a name="//apple_ref/swift/Method/viewDidLoad()" class="dashAnchor"></a>
-                    <a class="token" href="#/c:@M@Clew@objc(cs)PauseTrackingController(im)viewDidLoad">viewDidLoad()</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>called when the view has loaded.  We setup various app elements in here.</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">override</span> <span class="kd">func</span> <span class="nf">viewDidLoad</span><span class="p">()</span></code></pre>
-
-                        </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>a LASwift style 2x2 matrix</p>
                       </div>
                     </section>
                   </div>

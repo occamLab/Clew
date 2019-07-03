@@ -233,29 +233,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         showStartNavigationButton(allowPause: allowPause)
     }
     
-    func removeFollowCrumbNodes() {
-        // erase nearest keypoint
-        _ = followCrumbNodes.map({$0.removeFromParentNode()})
-        followCrumbNodes = []
-    }
-    
-    func renderFollowCrumbNodes() {
-        removeFollowCrumbNodes()
-        for crumb in followCrumbs {
-            let newLoc = LocationInfo(transform: currentWorldOriginRelativeTransform*crumb.transform)
-            let cubeNode = SCNNode(geometry: SCNBox(width: 0.05, height: 0.05, length: 0.05, chamferRadius: 0))
-            cubeNode.position = SCNVector3(newLoc.x, newLoc.y, newLoc.z)
-            sceneView.scene.rootNode.addChildNode(cubeNode)
-            
-            let box = SCNBox(width: 0.05, height: 0.05, length: 0.05, chamferRadius: 0)
-            box.firstMaterial?.diffuse.contents = UIColor(red: 30.0 / 255.0, green: 150.0 / 255.0, blue: 30.0 / 255.0, alpha: 1)
-            let cubeNodeOrig = SCNNode(geometry: box)
-            cubeNodeOrig.position = SCNVector3(crumb.x, crumb.y, crumb.z)
-            sceneView.scene.rootNode.addChildNode(cubeNodeOrig)
-            
-        }
-    }
-    
     /// Handler for the navigatingRoute app state
     func handleStateTransitionToNavigatingRoute() {
         // navigate the recorded path
@@ -303,6 +280,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         headingRingBuffer.clear()
         locationRingBuffer.clear()
         hapticTimer = Timer.scheduledTimer(timeInterval: 0.01, target: self, selector: (#selector(getHapticFeedback)), userInfo: nil, repeats: true)
+        print("turning off auto snap to route")
+        //snapToRouteTimer = Timer.scheduledTimer(timeInterval: 5, target: self, selector: (#selector(snapToRoute)), userInfo: nil, repeats: true)
     }
     
     /// Handler for the route rating app state
@@ -529,9 +508,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// True if we should use a cone of pi/12 and false if we should use a cone of pi/6 when deciding whether to issue haptic feedback
     var strictHaptic = true
     
-    /// True if we should add anchors ahead of the user to encourage more ARWorldMap detail.  In limited testing this did not show promise, therefore it is disabled
-    var shouldDropMappingAnchors = false
-    
     /// This is embeds an AR scene.  The ARSession is a part of the scene view, which allows us to capture where the phone is in space and the state of the world tracking.  The scene also allows us to insert virtual objects
     var sceneView = ARSCNView()
     
@@ -742,6 +718,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         logger.resetNavigationLog()
         logger.resetPathLog()
         hapticTimer?.invalidate()
+        snapToRouteTimer?.invalidate()
         logger.resetStateSequenceLog()
     }
     
@@ -977,34 +954,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         self.view.addGestureRecognizer(tapGestureRecognizer)
     }
 
-    // MARK: - drawUI() temp mark for navigation
-    
-    /// Initializes, configures, and adds all subviews defined programmatically.
-    ///
-    /// Subviews:
-    /// - `getDirectionButton` (`UIButton`)
-    /// - `directionText` (`UILabel`)
-    /// - `recordPathView` (`UIView`):
-    ///   - configured with `UIView.setupButtonContainer(withButton:)`
-    ///   - contains record path button, with information stored in `recordPathButton` instance of `ActionButtonComponents`
-    /// - `stopRecordingView` (`UIView`):
-    ///   - configured with `UIView.setupButtonContainer(withButton:)`
-    ///   - contains record path button, with information stored in `stopRecordingButton` instance of `ActionButtonComponents`
-    /// - `startNavigationView` (`UIView`)
-    /// - `stopNavigationView` (`UIView`):
-    ///   - configured with `UIView.setupButtonContainer(withButton:)`
-    ///   - contains record path button, with information stored in `stopNavigationButton` instance of `ActionButtonComponents`
-    /// - `pauseTrackingView` (`UIView`)
-    /// - `resumeTrackingView` (`UIView`)
-    /// - `resumeTrackingConfirmView` (`UIView`)
-    /// - `routeRatingView` (`UIView`)
-    ///
-    /// - TODO:
-    ///   - DRY
-    ///   - AutoLayout
-    ///   - `startNavigationView` pause button configuration
-    ///   - subview transitions?
-
     /// display RECORD PATH button/hide all other views
     @objc func showRecordPathButton(announceArrival: Bool) {
         add(recordPathController)
@@ -1190,11 +1139,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// list of crumbs dropped when following path
     var followCrumbs: [LocationInfo]!
     
-    var currentWorldOriginRelativeTransform = matrix_identity_float4x4
-    
     /// list of keypoints calculated after path completion
     var keypoints: [KeypointInfo]!
     
+    /// stores the keypoints that have been checked off along the route thus far
     var checkedOffKeypoints: [KeypointInfo]!
     
     /// SCNNode of the next keypoint
@@ -1219,6 +1167,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// times the generation of haptic feedback
     var hapticTimer: Timer?
+    
+    /// times the generation of snap to route
+    var snapToRouteTimer: Timer?
     
     /// times when an announcement should be removed.  These announcements are displayed on the `announcementText` label.
     var announcementRemovalTimer: Timer?
@@ -1376,8 +1327,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             if #available(iOS 12.0, *) {
                 sceneView.session.getCurrentWorldMap {
                     worldMap, error in
-                    print("disallowing map")
-                    self.getRouteNameAndSaveRouteHelper(mapAsAny: nil)
+                    self.getRouteNameAndSaveRouteHelper(mapAsAny: worldMap)
                 }
             } else {
                 getRouteNameAndSaveRouteHelper(mapAsAny: nil)
@@ -1416,6 +1366,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         // stop navigation
         followingCrumbs?.invalidate()
         hapticTimer?.invalidate()
+        snapToRouteTimer?.invalidate()
         
         feedbackGenerator = nil
         waypointFeedbackGenerator = nil
@@ -1433,12 +1384,25 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
     }
 
+    /// Transform location info by applying the specified transform.
+    ///
+    /// - Parameters:
+    ///   - locations: the array of locations
+    ///   - transform: the transform to apply (multiplied on the left)
+    /// - Returns: the transformed locations represented as an array of homogeneous 3D coordinates.
     func transformLocationInfo(locations: [LocationInfo], transform: simd_float4x4)->[simd_float4] {
         return locations.map {
             transform * simd_float4($0.x, $0.y, $0.z, 1)
         }
     }
     
+    /// Compute the closet point on a line segment to the specified input point.
+    ///
+    /// - Parameters:
+    ///   - p: the point to match to the line segment
+    ///   - start: the starting point of the line segment
+    ///   - end: the ending point of the line segment
+    /// - Returns: the closet point (in the L2 sense) to `p` on the line segment connecting `start` and `end`.
     func closestPointOnSegment(_ p: simd_float3, start: simd_float3, end: simd_float3)->simd_float3 {
         let startToEnd = end - start
         let vToP = p - start
@@ -1449,31 +1413,29 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         return start + projClamped*simd_normalize(startToEnd)
     }
     
-    func getClosestRouteMatch(points: [simd_float4], routeKeypoints: [KeypointInfo], constrainBeginning: Bool = false)->[simd_float4] {
+    /// Determines the closet point to each of `points` on the piecewise linear route defined by `routeKeypoints`.  The definition of closest is given by the L2 norm.
+    ///
+    /// - Parameters:
+    ///   - points: the points to match to the route
+    ///   - routeKeypoints: the route keypoints
+    /// - Returns: an array of homogenous 3D vectors representing the closet matched point.
+    func getClosestRouteMatch(points: [simd_float4], routeKeypoints: [KeypointInfo])->[simd_float4] {
         var closestPoints: [simd_float4] = []
         
         for p in points {
             var closestPoint = simd_float3()
+            var closestDistance = Float.infinity
 
-            if constrainBeginning && closestPoints.isEmpty {
-                if !routeKeypoints.isEmpty {
-                    closestPoint = simd_float3(routeKeypoints[0].location.x, routeKeypoints[0].location.y, routeKeypoints[0].location.z)
-                    print("CONSTRAINED!")
-                }
-            } else {
-                var closestDistance = Float.infinity
-
-                for i in 0..<routeKeypoints.count-1 {
-                    let startOfSegment = simd_float3(routeKeypoints[i].location.x, routeKeypoints[i].location.y, routeKeypoints[i].location.z)
-                    let endOfSegment = simd_float3(routeKeypoints[i+1].location.x, routeKeypoints[i+1].location.y, routeKeypoints[i+1].location.z)
-                
-                    let pInhomogeneous = simd_float3(p.x, p.y, p.z)
-                    let closestOnSegment = closestPointOnSegment(pInhomogeneous, start: startOfSegment, end: endOfSegment)
-                    let d = simd_length(closestOnSegment - pInhomogeneous)
-                    if d < closestDistance {
-                        closestDistance = d
-                        closestPoint = closestOnSegment
-                    }
+            for i in 0..<routeKeypoints.count-1 {
+                let startOfSegment = simd_float3(routeKeypoints[i].location.x, routeKeypoints[i].location.y, routeKeypoints[i].location.z)
+                let endOfSegment = simd_float3(routeKeypoints[i+1].location.x, routeKeypoints[i+1].location.y, routeKeypoints[i+1].location.z)
+            
+                let pInhomogeneous = simd_float3(p.x, p.y, p.z)
+                let closestOnSegment = closestPointOnSegment(pInhomogeneous, start: startOfSegment, end: endOfSegment)
+                let d = simd_length(closestOnSegment - pInhomogeneous)
+                if d < closestDistance {
+                    closestDistance = d
+                    closestPoint = closestOnSegment
                 }
                 // it would be great to have to / from homogeneous functions
             }
@@ -1483,6 +1445,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         return closestPoints
     }
     
+    /// The handler for the snap to route button.
+    ///
+    /// - Parameter send: the sender of the button pressed event
     @objc func snapToRoute(_ send: UIButton) {
         // initially we start with identity
         var optimalTransform = matrix_identity_float4x4
@@ -1497,7 +1462,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             if !keypoints.isEmpty {
                 keypointsToUse.append(keypoints[0])
             }
-            let closestMatchToRoute = getClosestRouteMatch(points: transformedFollowCrumbs, routeKeypoints: keypointsToUse, constrainBeginning: false)
+            let closestMatchToRoute = getClosestRouteMatch(points: transformedFollowCrumbs, routeKeypoints: keypointsToUse)
             let currentCost = zip(transformedFollowCrumbs, closestMatchToRoute).reduce(0) {
                 $0 + simd_length_squared($1.0 - $1.1)
             }
@@ -1670,12 +1635,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// checks to see if user is on the right path during navigation.
     @objc func followCrumb() {
-        guard let curLocation = getRealCoordinates(record: true), let untransformedLocation = getRealCoordinates(record: false, undoWorldOriginTransform: true) else {
+        guard let curLocation = getRealCoordinates(record: true) else {
             // TODO: might want to indicate that something is wrong to the user
             return
         }
         
-        followCrumbs.append(untransformedLocation.location)
+        followCrumbs.append(curLocation.location)
         var directionToNextKeypoint = getDirectionToNextKeypoint(currentLocation: curLocation)
         
         if (directionToNextKeypoint.targetState == PositionState.atTarget) {
@@ -1708,6 +1673,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 
                 followingCrumbs?.invalidate()
                 hapticTimer?.invalidate()
+                snapToRouteTimer?.invalidate()
                 
                 restartSessionIfFailedToRelocalize()
                 
@@ -2131,13 +2097,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     ///
     /// - Parameter record: a Boolean indicating whether to record the computed position (true if it should be computed, false otherwise)
     /// - Returns: the current location as a `CurrentCoordinateInfo` object
-    func getRealCoordinates(record: Bool, undoWorldOriginTransform: Bool = false) -> CurrentCoordinateInfo? {
+    func getRealCoordinates(record: Bool) -> CurrentCoordinateInfo? {
         guard var currTransform = sceneView.session.currentFrame?.camera.transform else {
             return nil
         }
-        if undoWorldOriginTransform {
-            currTransform = currentWorldOriginRelativeTransform * currTransform
-        }
+
         // returns current location & orientation based on starting origin
         let scn = SCNMatrix4(currTransform)
         let transMatrix = Matrix3([scn.m11, scn.m12, scn.m13,
@@ -2195,6 +2159,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 if !suppressTrackingWarnings {
                     announce(announcement: NSLocalizedString("Successfully matched current environment to saved route.", comment: "Let user know that their surroundings match up to the surroundings of a saved route and that they can begin navigating."))
                 }
+                // We clear out `followCrumbs` as we have no way to update their position relative to the updated world origin.  We could potentially circumvent this if we inserted them as proper SCNNodes
+                followCrumbs = []
                 attemptingRelocalization = false
             } else if case let .limited(reason)? = trackingSessionState {
                 if !suppressTrackingWarnings {
@@ -2208,8 +2174,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                     }
                 }
             }
-            if case .readyForFinalResumeAlignment = state {
-                // this will cancel any realignment if it hasn't happened yet and go straight to route navigation mode
+            if case .readyForFinalResumeAlignment = state, configuration.initialWorldMap != nil {
+                // this will cancel any realignment if it hasn't happened yet and go straight to route navigation mode.  This only applies if there an initial map (which would employ relocalization has occurred)
                 rootContainerView.countdownTimer.isHidden = true
                 isResumedRoute = true
                 
