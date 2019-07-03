@@ -78,13 +78,14 @@ extension UIButton {
         button.translatesAutoresizingMaskIntoConstraints = false
         
         /// set width of button and constaint height to be equal to width
-        button.widthAnchor.constraint(equalToConstant: containerView.bounds.size.width / 3.75).isActive = true
-        button.heightAnchor.constraint(equalTo: button.widthAnchor).isActive = true
-        
+        button.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 3.50).isActive = true
+        button.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 3.50).isActive = true
+
         /// apply appearance, either an image or a text field
         switch appearance {
         case .imageButton(let image):
             button.setImage(image, for: .normal)
+            button.imageView?.contentMode = .scaleAspectFit
         case .textButton(let label):
             button.setTitle(label, for: .normal)
             button.layer.borderWidth = 2

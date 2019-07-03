@@ -14,6 +14,7 @@ class ResumeTrackingController: UIViewController {
     /// button for resuming navigation
     var resumeButton: UIButton!
     
+    /// text label for the state
     var label: UILabel!
     
     /// called when the view loads (any time)

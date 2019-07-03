@@ -8,18 +8,6 @@
 
 import UIKit
 
-class TransparentTouchView: UIView {
-    override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
-        for view in self.subviews {
-            if view.isUserInteractionEnabled, view.point(inside: self.convert(point, to: view), with: event) {
-                return true
-            }
-        }
-        
-        return false
-    }
-}
-
 /// A View Controller for handling the pause route state
 /// also handles associated buttons
 class PauseTrackingController: UIViewController, UIScrollViewDelegate {
@@ -34,6 +22,7 @@ class PauseTrackingController: UIViewController, UIScrollViewDelegate {
     /// button for aligning phone position in space
     var confirmAlignmentButton: UIButton!
     
+    /// text label for the state
     var label: UILabel!
     
     /// called when the view loads (any time)
@@ -138,7 +127,6 @@ class PauseTrackingController: UIViewController, UIScrollViewDelegate {
         scrollView.flashScrollIndicators()
 
         /// size the stack
-        stackView.topAnchor.constraint(equalTo: view.topAnchor, constant: 450.0).isActive = true
         stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8.0).isActive = true
         stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8.0).isActive = true
         stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -UIConstants.buttonFrameWidth/7 * 2).isActive = true

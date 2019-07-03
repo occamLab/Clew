@@ -76,7 +76,6 @@ class StartNavigationController: UIViewController {
         stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -UIConstants.yButtonFrameMargin).isActive = true
         stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
 
-
         if let parent: UIViewController = parent {
             startNavigationButton.addTarget(parent,
                                    action: #selector(ViewController.startNavigation),

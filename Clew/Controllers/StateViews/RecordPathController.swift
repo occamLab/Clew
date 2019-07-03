@@ -80,10 +80,9 @@ class RecordPathController: UIViewController {
         stackView.addArrangedSubview(addLandmarkButton)
         
         /// size the stack
-        stackView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: UIConstants.yButtonFrameMargin).isActive = true
         stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -UIConstants.yButtonFrameMargin).isActive = true
-        stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -12).isActive = true
         
         if let parent: UIViewController = parent {
             routesButton.addTarget(parent,
