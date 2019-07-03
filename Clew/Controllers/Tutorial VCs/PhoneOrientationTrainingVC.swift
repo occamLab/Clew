@@ -34,7 +34,6 @@ class PhoneOrientationTrainingVC: TutorialChildViewController {
     }
     
     override func didReceiveNewCameraPose(transform: simd_float4x4) {
-        print("IN here")
         UIAccessibility.post(notification: UIAccessibility.Notification.announcement, argument: NSLocalizedString("Trying to figure out haptic feedback", comment: "Message to user during tutorial"))
         
         let angleFromVertical = acos(-transform.columns.0.y)
@@ -58,7 +57,7 @@ class PhoneOrientationTrainingVC: TutorialChildViewController {
                     print("timer finished")
                     tutorialParent?.state = .optimalOrientationAchieved
                 }
-            
+                
             feedbackGenerator.impactOccurred()
             lastHapticFeedbackTime = now
             }

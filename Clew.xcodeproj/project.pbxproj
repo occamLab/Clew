@@ -10,7 +10,14 @@
 		2748B8490FCBA95C7AA028D7 /* Pods_Clew.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 942F73299DA8DCF97FAA974A /* Pods_Clew.framework */; };
 		4D6B00E51F33C9B800952242 /* Crumb.obj in Resources */ = {isa = PBXBuildFile; fileRef = 4D6B00E41F33C85500952242 /* Crumb.obj */; };
 		4DF05CC81F34EB6B008B0E31 /* Confirm.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4DF05CC71F34EB56008B0E31 /* Confirm.mp3 */; };
+		77000C3222CCE8F2004AC60B /* Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 77000C3122CCE8F1004AC60B /* Storyboard.storyboard */; };
+		77000C3322CCE8F2004AC60B /* Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 77000C3122CCE8F1004AC60B /* Storyboard.storyboard */; };
 		77467DAF22BBC1D300FA7DEE /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 77467DAE22BBC1D300FA7DEE /* Default-568h@2x.png */; };
+		7754323022CBEDBE006E2159 /* UILabelDesign.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7754322D22CBEDBE006E2159 /* UILabelDesign.swift */; };
+		7793DE1B22CBD1D5003A0BF7 /* TutorialChildViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7793DE1A22CBD1D5003A0BF7 /* TutorialChildViewController.swift */; };
+		7793DE1C22CBD1D5003A0BF7 /* TutorialChildViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7793DE1A22CBD1D5003A0BF7 /* TutorialChildViewController.swift */; };
+		7793DE1E22CBE7B8003A0BF7 /* TipsAndWarningsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7793DE1D22CBE7B8003A0BF7 /* TipsAndWarningsViewController.swift */; };
+		7793DE1F22CBE7B8003A0BF7 /* TipsAndWarningsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7793DE1D22CBE7B8003A0BF7 /* TipsAndWarningsViewController.swift */; };
 		77A30FE522C66998008EEAAB /* CoachMarks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77A30FE422C66998008EEAAB /* CoachMarks.swift */; };
 		77A30FE622C66998008EEAAB /* CoachMarks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77A30FE422C66998008EEAAB /* CoachMarks.swift */; };
 		77A30FE822C66C3A008EEAAB /* PhoneOrientationTrainingVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77A30FE722C66C3A008EEAAB /* PhoneOrientationTrainingVC.swift */; };
@@ -21,6 +28,8 @@
 		AD13576A22CCEDA800EE36E2 /* Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AD13576822CCEDA800EE36E2 /* Storyboard.storyboard */; };
 		ADE90D4A22CCE48C001CD52C /* Tutorial.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = ADE90D4722CCE48C001CD52C /* Tutorial.storyboard */; };
 		ADE90D4C22CCE48C001CD52C /* UILabelDesign.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADE90D4922CCE48C001CD52C /* UILabelDesign.swift */; };
+		9884EB5B22CCE569000D31AF /* AnnouncementManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9884EB5A22CCE569000D31AF /* AnnouncementManager.swift */; };
+		9884EB5C22CCE569000D31AF /* AnnouncementManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9884EB5A22CCE569000D31AF /* AnnouncementManager.swift */; };
 		B0A563F6FE1007A2716DC876 /* Pods_Clew_Dev.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3532E390954571B93729786A /* Pods_Clew_Dev.framework */; };
 		B7EB59E220F693EB00FBBC6A /* Confirm.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4DF05CC71F34EB56008B0E31 /* Confirm.mp3 */; };
 		B7EB59E320F693EB00FBBC6A /* Crumb.obj in Resources */ = {isa = PBXBuildFile; fileRef = 4D6B00E41F33C85500952242 /* Crumb.obj */; };
@@ -124,7 +133,11 @@
 		4D6B00C01F33C1C400952242 /* Clew.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Clew.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4D6B00E41F33C85500952242 /* Crumb.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = Crumb.obj; sourceTree = "<group>"; };
 		4DF05CC71F34EB56008B0E31 /* Confirm.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = Confirm.mp3; sourceTree = "<group>"; };
+		77000C3122CCE8F1004AC60B /* Storyboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Storyboard.storyboard; path = Clew/Storyboard.storyboard; sourceTree = SOURCE_ROOT; };
 		77467DAE22BBC1D300FA7DEE /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		7754322D22CBEDBE006E2159 /* UILabelDesign.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UILabelDesign.swift; path = Clew/UILabelDesign.swift; sourceTree = SOURCE_ROOT; };
+		7793DE1A22CBD1D5003A0BF7 /* TutorialChildViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialChildViewController.swift; sourceTree = "<group>"; };
+		7793DE1D22CBE7B8003A0BF7 /* TipsAndWarningsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TipsAndWarningsViewController.swift; sourceTree = "<group>"; };
 		77A30FE422C66998008EEAAB /* CoachMarks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoachMarks.swift; sourceTree = "<group>"; };
 		77A30FE722C66C3A008EEAAB /* PhoneOrientationTrainingVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneOrientationTrainingVC.swift; sourceTree = "<group>"; };
 		822E27F8210E3F260024A5E3 /* Clew Dev-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Clew Dev-Info.plist"; sourceTree = "<group>"; };
@@ -135,6 +148,7 @@
 		AD13576822CCEDA800EE36E2 /* Storyboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Storyboard.storyboard; path = Clew/Storyboard.storyboard; sourceTree = SOURCE_ROOT; };
 		ADE90D4722CCE48C001CD52C /* Tutorial.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Tutorial.storyboard; path = Clew/Tutorial.storyboard; sourceTree = SOURCE_ROOT; };
 		ADE90D4922CCE48C001CD52C /* UILabelDesign.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UILabelDesign.swift; path = Clew/UILabelDesign.swift; sourceTree = SOURCE_ROOT; };
+		9884EB5A22CCE569000D31AF /* AnnouncementManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnouncementManager.swift; sourceTree = "<group>"; };
 		B7EB59EC20F693EB00FBBC6A /* Clew Dev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Clew Dev.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C68778047D8E263D2FB04989 /* Pods-Clew Dev.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew Dev.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Clew Dev/Pods-Clew Dev.debug.xcconfig"; sourceTree = "<group>"; };
 		D89DDB87A8AE1A9ECEAFCEC6 /* Pods-Clew.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew.release.xcconfig"; path = "Pods/Target Support Files/Pods-Clew/Pods-Clew.release.xcconfig"; sourceTree = "<group>"; };
@@ -260,8 +274,8 @@
 		77A30FE322C66917008EEAAB /* Tutorial VCs */ = {
 			isa = PBXGroup;
 			children = (
-				E5F4C31C22C4035200E0D94E /* SingleRouteVC.swift */,
 				77A30FE722C66C3A008EEAAB /* PhoneOrientationTrainingVC.swift */,
+				E5F4C31C22C4035200E0D94E /* SingleRouteVC.swift */,
 				77A30FE422C66998008EEAAB /* CoachMarks.swift */,
 			);
 			path = "Tutorial VCs";
@@ -364,7 +378,10 @@
 		E5F4C32722C4035200E0D94E /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				7793DE1D22CBE7B8003A0BF7 /* TipsAndWarningsViewController.swift */,
 				E5F4C32522C4035200E0D94E /* TutorialViewController.swift */,
+				7793DE1A22CBD1D5003A0BF7 /* TutorialChildViewController.swift */,
+				9884EB5A22CCE569000D31AF /* AnnouncementManager.swift */,
 				77A30FE322C66917008EEAAB /* Tutorial VCs */,
 				E5F4C30022C4035200E0D94E /* SettingsTableViewController.h */,
 				E5F4C2FD22C4035200E0D94E /* SettingsViewController.m */,
@@ -405,9 +422,8 @@
 		E5F4C33722C4035200E0D94E /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				AD13576822CCEDA800EE36E2 /* Storyboard.storyboard */,
-				ADE90D4722CCE48C001CD52C /* Tutorial.storyboard */,
-				ADE90D4922CCE48C001CD52C /* UILabelDesign.swift */,
+				77000C3122CCE8F1004AC60B /* Storyboard.storyboard */,
+				7754322D22CBEDBE006E2159 /* UILabelDesign.swift */,
 				E5F4C33822C4035200E0D94E /* UIConstants.swift */,
 				E5F4C33922C4035200E0D94E /* SettingsAndHelp.storyboard */,
 				E5F4C33A22C4035200E0D94E /* RootContainerView.swift */,
@@ -524,6 +540,7 @@
 				E5F4C36222C4035200E0D94E /* Assets.xcassets in Resources */,
 				E5F4C36822C4035200E0D94E /* StopRecording.aiff in Resources */,
 				77467DAF22BBC1D300FA7DEE /* Default-568h@2x.png in Resources */,
+				77000C3222CCE8F2004AC60B /* Storyboard.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -536,7 +553,7 @@
 				E5F4C36922C4035200E0D94E /* StopRecording.aiff in Resources */,
 				B7EB59E220F693EB00FBBC6A /* Confirm.mp3 in Resources */,
 				E5F4C36322C4035200E0D94E /* Assets.xcassets in Resources */,
-				AD13576A22CCEDA800EE36E2 /* Storyboard.storyboard in Resources */,
+				77000C3322CCE8F2004AC60B /* Storyboard.storyboard in Resources */,
 				B7EB59E320F693EB00FBBC6A /* Crumb.obj in Resources */,
 				E5F4C39D22C4035200E0D94E /* LaunchScreen.storyboard in Resources */,
 				E5F4C35D22C4035200E0D94E /* LaunchScreen.strings in Resources */,
@@ -663,6 +680,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				77A30FE822C66C3A008EEAAB /* PhoneOrientationTrainingVC.swift in Sources */,
+				9884EB5B22CCE569000D31AF /* AnnouncementManager.swift in Sources */,
 				E5F4C37022C4035200E0D94E /* UIViewControllerExtensions.swift in Sources */,
 				E5F4C39E22C4035200E0D94E /* RouteTableViewCell.swift in Sources */,
 				E5F4C38622C4035200E0D94E /* ResumeTrackingController.swift in Sources */,
@@ -679,7 +697,7 @@
 				E5F4C34222C4035200E0D94E /* RecordButtonKit.swift in Sources */,
 				E5F4C35222C4035200E0D94E /* PathFinder.swift in Sources */,
 				E5F4C34E22C4035200E0D94E /* Navigation.swift in Sources */,
-				ADE90D4C22CCE48C001CD52C /* UILabelDesign.swift in Sources */,
+				7793DE1B22CBD1D5003A0BF7 /* TutorialChildViewController.swift in Sources */,
 				E5F4C36422C4035200E0D94E /* ClewObserverProtocol.swift in Sources */,
 				E5F4C36E22C4035200E0D94E /* NSStringExtension.swift in Sources */,
 				E5F4C38022C4035200E0D94E /* StartNavigationController.swift in Sources */,
@@ -688,11 +706,13 @@
 				E5F4C38422C4035200E0D94E /* RouteRatingController.swift in Sources */,
 				E5F4C38E22C4035200E0D94E /* HelpViewController.swift in Sources */,
 				E5F4C38222C4035200E0D94E /* StopRecordingController.swift in Sources */,
+				7793DE1E22CBE7B8003A0BF7 /* TipsAndWarningsViewController.swift in Sources */,
 				E5F4C39A22C4035200E0D94E /* RootContainerView.swift in Sources */,
 				E5F4C38822C4035200E0D94E /* StopNavigationController.swift in Sources */,
 				E5F4C39222C4035200E0D94E /* RoutesViewController.swift in Sources */,
 				E5F4C34622C4035200E0D94E /* RecorderViewController.swift in Sources */,
 				E5F4C39622C4035200E0D94E /* UIConstants.swift in Sources */,
+				7754323022CBEDBE006E2159 /* UILabelDesign.swift in Sources */,
 				E5F4C35022C4035200E0D94E /* FeedbackLogger.swift in Sources */,
 				E5F4C34A22C4035200E0D94E /* DataPersistence.swift in Sources */,
 				E5F4C37222C4035200E0D94E /* UIViewExtensions.swift in Sources */,
@@ -709,6 +729,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				77A30FE922C66C3A008EEAAB /* PhoneOrientationTrainingVC.swift in Sources */,
+				9884EB5C22CCE569000D31AF /* AnnouncementManager.swift in Sources */,
 				E5F4C37122C4035200E0D94E /* UIViewControllerExtensions.swift in Sources */,
 				E5F4C39F22C4035200E0D94E /* RouteTableViewCell.swift in Sources */,
 				E5F4C38722C4035200E0D94E /* ResumeTrackingController.swift in Sources */,
@@ -725,6 +746,7 @@
 				E5F4C34322C4035200E0D94E /* RecordButtonKit.swift in Sources */,
 				E5F4C35322C4035200E0D94E /* PathFinder.swift in Sources */,
 				E5F4C34F22C4035200E0D94E /* Navigation.swift in Sources */,
+				7793DE1C22CBD1D5003A0BF7 /* TutorialChildViewController.swift in Sources */,
 				E5F4C36522C4035200E0D94E /* ClewObserverProtocol.swift in Sources */,
 				E5F4C36F22C4035200E0D94E /* NSStringExtension.swift in Sources */,
 				E5F4C38122C4035200E0D94E /* StartNavigationController.swift in Sources */,
@@ -733,6 +755,7 @@
 				E5F4C38522C4035200E0D94E /* RouteRatingController.swift in Sources */,
 				E5F4C38F22C4035200E0D94E /* HelpViewController.swift in Sources */,
 				E5F4C38322C4035200E0D94E /* StopRecordingController.swift in Sources */,
+				7793DE1F22CBE7B8003A0BF7 /* TipsAndWarningsViewController.swift in Sources */,
 				E5F4C39B22C4035200E0D94E /* RootContainerView.swift in Sources */,
 				E5F4C38922C4035200E0D94E /* StopNavigationController.swift in Sources */,
 				E5F4C39322C4035200E0D94E /* RoutesViewController.swift in Sources */,
