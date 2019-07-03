@@ -42,6 +42,7 @@
 "Stop navigation" = "หยุดการนำทาง";
 "Start navigation" = "เริ่มการนำทาง";
 "Stop recording" = "หยุดการบันทึก";
+"Landmark" = "Landmark";
 
     // Save routes
 "Save route" = "Save route";

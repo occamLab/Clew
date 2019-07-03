@@ -42,6 +42,17 @@
 "Stop navigation" = "Detener la navegación";
 "Start navigation" = "Iniciar la navegación";
 "Stop recording" = "Detener la grabación";
+"Landmark" = "Punto de referencia";
+"Help" = "Ayuda";
+"Clew Home Screen" = "Clew Pantalla de inicio";
+"Feedback" = "Realimentación";
+"Get Directions" = "Obtener las direcciones";
+"Pause session" = "Pausa de sesion";
+
+    // Home button function
+"Are you sure?" = "¿Está seguro?";
+"If you exit this process right now, your active route information will be lost." = "Si sale de este proceso en este momento, la información de su ruta activa se perderá.";
+"Go to the Home Page" = "Ir a la pagina principal";
 
     // Save routes
 "Save route" = "Guarda la ruta";

@@ -771,17 +771,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// function that creates alerts for the home button
     func homePageNavigationProcesses() {
         // Create alert to warn users of lost information
-        let alert = UIAlertController(title: "Are you sure?",
-                                      message: "If you exit this process right now, your active route information will be lost.",
+        let alert = UIAlertController(title: NSLocalizedString("Are you sure?", comment: "The heading of a pop-up that asks the user for confirmation to return to home screen"),
+                                      message: NSLocalizedString("If you exit this process right now, your active route information will be lost.", comment: "A informative message for the user that informs them of the repercussions of going to the home screen"),
                                       preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "Go to the Home Page", style: .default, handler: { action -> Void in
+        alert.addAction(UIAlertAction(title: NSLocalizedString("Go to the Home Page", comment: "An option for user to select."), style: .default, handler: { action -> Void in
             // proceed to home page
             self.clearState()
             self.hideAllViewsHelper()
             self.state = .mainScreen(announceArrival: false)
         }
         ))
-        alert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: { action -> Void in
+        alert.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment: "Another option for user to select to close the pop-up and stay on the current screen of the app."), style: .default, handler: { action -> Void in
             // nothing to do, just stay on the page
         }
         ))

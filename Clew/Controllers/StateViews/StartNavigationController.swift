@@ -53,7 +53,7 @@ class StartNavigationController: UIViewController {
         pauseButton = UIButton.makeImageButton(view,
                                                alignment: UIConstants.ButtonContainerHorizontalAlignment.right,
                                                appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "Pause")!),
-                                               label: "Pause session")
+                                               label: NSLocalizedString("Pause session", comment: "A button that allows user to pause the navigation session"))
         
         if let parent: UIViewController = parent {
             startNavigationButton.addTarget(parent,

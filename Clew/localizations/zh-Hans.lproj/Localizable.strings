@@ -42,6 +42,17 @@
 "Stop navigation" = "停止导航";
 "Start navigation" = "开始导航";
 "Stop recording" = "停止记录路程";
+"Landmark" = "里程碑";
+"Help" = "帮助";
+"Clew Home Screen" = "Clew 主屏幕";
+"Feedback" = "反馈";
+"Get Directions" = "获取路线";
+"Pause session" = "暂停导航";
+
+    // Home button function
+"Are you sure?" = "您确定吗？";
+"If you exit this process right now, your active route information will be lost." = "如果您现在退出此过程，您的活动路线信息将会丢失。";
+"Go to the Home Page" = "转到主页";
 
     // Save routes
 "Save route" = "保存行程";

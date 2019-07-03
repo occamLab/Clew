@@ -81,7 +81,7 @@ class RootContainerView: UIView {
         helpButton.isAccessibilityElement = true
         helpButton.setTitle("Help", for: .normal)
         helpButton.titleLabel?.font = UIFont.systemFont(ofSize: 24.0)
-        helpButton.accessibilityLabel = "Help"
+        helpButton.accessibilityLabel = NSLocalizedString("Help", comment: "A button that displays the help menu")
         helpButton.setImage(UIImage(named: "HelpButton"), for: .normal)
 
         // MARK: Home Button
@@ -92,7 +92,7 @@ class RootContainerView: UIView {
         homeButton.isAccessibilityElement = true
         homeButton.setTitle("Home Button", for: .normal)
         homeButton.titleLabel?.font = UIFont.systemFont(ofSize: 24.0)
-        homeButton.accessibilityLabel = "Clew Home Screen"
+        homeButton.accessibilityLabel = NSLocalizedString("Clew Home Screen", comment: "A button that allows the user to return to the home screen")
         homeButton.setImage(UIImage(named: "homeButton"), for: .normal)
         
         feedbackButton = UIButton(frame: CGRect(x: UIConstants.buttonFrameWidth/(10/8),
@@ -102,7 +102,7 @@ class RootContainerView: UIView {
         feedbackButton.isAccessibilityElement = true
         feedbackButton.setTitle("Feedback", for: .normal)
         feedbackButton.titleLabel?.font = UIFont.systemFont(ofSize: 24.0)
-        feedbackButton.accessibilityLabel = "Feedback"
+        feedbackButton.accessibilityLabel = NSLocalizedString("Feedback", comment: "A button that displays the feedback form a user can fill out")
         feedbackButton.setImage(UIImage(named: "Contact"), for: .normal)
 
 
@@ -112,7 +112,7 @@ class RootContainerView: UIView {
                                                     height: UIConstants.buttonFrameWidth/7))
 
         getDirectionButton.isAccessibilityElement = true
-        getDirectionButton.accessibilityLabel = "Get Directions"
+        getDirectionButton.accessibilityLabel = NSLocalizedString("Get Directions", comment: "A button that will give the user specific directions to their destination")
         getDirectionButton.setImage(UIImage(named: "GetDirection"), for: .normal)
         getDirectionButton.isHidden = true
 

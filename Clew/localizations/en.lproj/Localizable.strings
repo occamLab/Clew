@@ -42,6 +42,17 @@
 "Stop navigation" = "Stop navigation";
 "Start navigation" = "Start navigation";
 "Stop recording" = "Stop recording";
+"Landmark" = "Landmark";
+"Help" = "Help";
+"Clew Home Screen" = "Clew Home Screen";
+"Feedback" = "Feedback";
+"Get Directions" = "Get Directions";
+"Pause session" = "Pause session";
+
+    // Home button function
+"Are you sure?" = "Are you sure?";
+"If you exit this process right now, your active route information will be lost." = "If you exit this process right now, your active route information will be lost.";
+"Go to the Home Page" = "Go to the Home Page";
 
     // Save routes
 "Save route" = "Save route";

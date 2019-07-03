@@ -42,6 +42,8 @@
 "Stop navigation" = "Stop navigation";
 "Start navigation" = "Start navigation";
 "Stop recording" = "Stop recording";
+"Landmark" = "Landmark";
+"Help" = "Help"
 
     // Save routes
 "Save route" = "Save route";
@@ -50,6 +52,7 @@
 "Enter route title" = "Enter route title";
 "Save" = "Save";
 "Cancel" = "Cancel";
+
 
     // Resume
 "Return to the last paused location and press Resume for further instructions." = "Return to the last paused location and press Resume for further instructions.";
