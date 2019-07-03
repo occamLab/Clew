@@ -24,6 +24,8 @@
 		77A30FE922C66C3A008EEAAB /* PhoneOrientationTrainingVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77A30FE722C66C3A008EEAAB /* PhoneOrientationTrainingVC.swift */; };
 		82569F4E22187E6500448B45 /* help in Resources */ = {isa = PBXBuildFile; fileRef = 82569F4D22187E6500448B45 /* help */; };
 		82569F4F22187E6500448B45 /* help in Resources */ = {isa = PBXBuildFile; fileRef = 82569F4D22187E6500448B45 /* help */; };
+		9884EB5B22CCE569000D31AF /* AnnouncementManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9884EB5A22CCE569000D31AF /* AnnouncementManager.swift */; };
+		9884EB5C22CCE569000D31AF /* AnnouncementManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9884EB5A22CCE569000D31AF /* AnnouncementManager.swift */; };
 		B0A563F6FE1007A2716DC876 /* Pods_Clew_Dev.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3532E390954571B93729786A /* Pods_Clew_Dev.framework */; };
 		B7EB59E220F693EB00FBBC6A /* Confirm.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4DF05CC71F34EB56008B0E31 /* Confirm.mp3 */; };
 		B7EB59E320F693EB00FBBC6A /* Crumb.obj in Resources */ = {isa = PBXBuildFile; fileRef = 4D6B00E41F33C85500952242 /* Crumb.obj */; };
@@ -139,6 +141,7 @@
 		85A1A72DC19F87F15B738291 /* Pods-Clew Dev.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew Dev.release.xcconfig"; path = "Pods/Target Support Files/Pods-Clew Dev/Pods-Clew Dev.release.xcconfig"; sourceTree = "<group>"; };
 		942F73299DA8DCF97FAA974A /* Pods_Clew.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Clew.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9884EB5022BA9383000D31AF /* Storyboard.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Storyboard.storyboard; sourceTree = "<group>"; };
+		9884EB5A22CCE569000D31AF /* AnnouncementManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnouncementManager.swift; sourceTree = "<group>"; };
 		B7EB59EC20F693EB00FBBC6A /* Clew Dev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Clew Dev.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C68778047D8E263D2FB04989 /* Pods-Clew Dev.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew Dev.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Clew Dev/Pods-Clew Dev.debug.xcconfig"; sourceTree = "<group>"; };
 		D89DDB87A8AE1A9ECEAFCEC6 /* Pods-Clew.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew.release.xcconfig"; path = "Pods/Target Support Files/Pods-Clew/Pods-Clew.release.xcconfig"; sourceTree = "<group>"; };
@@ -371,6 +374,7 @@
 				7793DE1D22CBE7B8003A0BF7 /* TipsAndWarningsViewController.swift */,
 				E5F4C32522C4035200E0D94E /* TutorialViewController.swift */,
 				7793DE1A22CBD1D5003A0BF7 /* TutorialChildViewController.swift */,
+				9884EB5A22CCE569000D31AF /* AnnouncementManager.swift */,
 				77A30FE322C66917008EEAAB /* Tutorial VCs */,
 				E5F4C30022C4035200E0D94E /* SettingsTableViewController.h */,
 				E5F4C2FD22C4035200E0D94E /* SettingsViewController.m */,
@@ -667,6 +671,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				77A30FE822C66C3A008EEAAB /* PhoneOrientationTrainingVC.swift in Sources */,
+				9884EB5B22CCE569000D31AF /* AnnouncementManager.swift in Sources */,
 				E5F4C37022C4035200E0D94E /* UIViewControllerExtensions.swift in Sources */,
 				E5F4C39E22C4035200E0D94E /* RouteTableViewCell.swift in Sources */,
 				E5F4C38622C4035200E0D94E /* ResumeTrackingController.swift in Sources */,
@@ -715,6 +720,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				77A30FE922C66C3A008EEAAB /* PhoneOrientationTrainingVC.swift in Sources */,
+				9884EB5C22CCE569000D31AF /* AnnouncementManager.swift in Sources */,
 				E5F4C37122C4035200E0D94E /* UIViewControllerExtensions.swift in Sources */,
 				E5F4C39F22C4035200E0D94E /* RouteTableViewCell.swift in Sources */,
 				E5F4C38722C4035200E0D94E /* ResumeTrackingController.swift in Sources */,

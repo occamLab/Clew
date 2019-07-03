@@ -90,7 +90,7 @@ enum AppState {
 }
 
 /// The view controller that handles the main Clew window.  This view controller is always active and handles the various views that are used for different app functionalities.
-class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDelegate, AVSpeechSynthesizerDelegate {
+class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDelegate {
     
     // MARK: - Refactoring UI definition
     
@@ -140,15 +140,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// Observer of Clew App
     var observer: ClewObserver?
     
-    /// When VoiceOver is not active, we use AVSpeechSynthesizer for speech feedback
-    let synth = AVSpeechSynthesizer()
-    
-    /// The announcement that is currently being read.  If this is nil, that implies nothing is being read
-    var currentAnnouncement: String?
-    
-    /// The announcement that should be read immediately after this one finishes
-    var nextAnnouncement: String?
-    
     /// A boolean that tracks whether or not to suppress tracking warnings.  By default we don't suppress, but when the help popover is presented we do.
     var suppressTrackingWarnings = false
     
@@ -163,39 +154,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// This is an audio player that queues up the voice note associated with a particular route landmark. The player is created whenever a saved route is loaded. Loading it before the user clicks the "Play Voice Note" button allows us to call the prepareToPlay function which reduces the latency when the user clicks the "Play Voice Note" button.
     var voiceNoteToPlay: AVAudioPlayer?
-    
-    // MARK: - Speech Synthesizer Delegate
-    
-    /// Called when an utterance is finished.  We implement this function so that we can keep track of
-    /// whether or not an announcement is currently being read to the user.
-    ///
-    /// - Parameters:
-    ///   - synthesizer: the synthesizer that finished the utterance
-    ///   - utterance: the utterance itself
-    func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer,
-                           didFinish utterance: AVSpeechUtterance) {
-        observer?.finishAnnouncement(announcement: utterance.speechString)
-        currentAnnouncement = nil
-        if let nextAnnouncement = self.nextAnnouncement {
-            self.nextAnnouncement = nil
-            announce(announcement: nextAnnouncement)
-        }
-    }
-    
-    /// Called when an utterance is canceled.  We implement this function so that we can keep track of
-    /// whether or not an announcement is currently being read to the user.
-    ///
-    /// - Parameters:
-    ///   - synthesizer: the synthesizer that finished the utterance
-    ///   - utterance: the utterance itself
-    func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer,
-                           didCancel utterance: AVSpeechUtterance) {
-        currentAnnouncement = nil
-        if let nextAnnouncement = self.nextAnnouncement {
-            self.nextAnnouncement = nil
-            announce(announcement: nextAnnouncement)
-        }
-    }
     
     /// Handler for the mainScreen app state
     ///
@@ -551,6 +509,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// route recording VC (called on app start)
     var recordPathController: RecordPathController!
     
+    /// announcement view controller
+    var announcementViewController: AnnouncementManager!
+    
     /// start route navigation VC
     var startNavigationController: StartNavigationController!
     
@@ -577,6 +538,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         resumeTrackingConfirmController = ResumeTrackingConfirmController()
         stopRecordingController = StopRecordingController()
         recordPathController = RecordPathController()
+        announcementViewController = AnnouncementManager()
         startNavigationController = StartNavigationController()
         stopNavigationController = StopNavigationController()
         tutorialViewController = TutorialViewController()
@@ -611,25 +573,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         addGestures()
         setupFirebaseObservers()
         observer = tutorialViewController
-        
-        // create listeners to ensure that the isReadingAnnouncement flag is reset properly
-        NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification, object: nil, queue: nil) { (notification) -> Void in
-            self.currentAnnouncement = nil
-        }
-        
-        NotificationCenter.default.addObserver(forName: UIAccessibility.voiceOverStatusDidChangeNotification, object: nil, queue: nil) { (notification) -> Void in
-            self.currentAnnouncement = nil
-        }
+        announcementViewController.observer = tutorialViewController
         
         // we use a custom notification to communicate from the help controller to the main view controller that the help was dismissed
         NotificationCenter.default.addObserver(forName: Notification.Name("ClewPopoverDismissed"), object: nil, queue: nil) { (notification) -> Void in
             self.suppressTrackingWarnings = false
         }
-        
+
+        add(announcementViewController)
         print("always start tutorial!!  This is a hack")
         add(tutorialViewController)
         tutorialViewController.state = .startOrientationTraining
-        
     }
     
     /// Create the audio player objdcts for the various app sounds.  Creating them ahead of time helps reduce latency when playing them later.
@@ -696,16 +650,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         if (firstTimeLoggingIn == nil) {
             userDefaults.set(true, forKey: "firstTimeLogin")
             showLogAlert()
-        }
-        
-        synth.delegate = self
-        NotificationCenter.default.addObserver(forName: UIAccessibility.announcementDidFinishNotification, object: nil, queue: nil) { (notification) ->Void in
-            self.observer?.finishAnnouncement(announcement: "not receiving announcement strings")
-            self.currentAnnouncement = nil
-            if let nextAnnouncement = self.nextAnnouncement {
-                self.nextAnnouncement = nil
-                self.announce(announcement: nextAnnouncement)
-            }
         }
     }
     
@@ -774,7 +718,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         beginRouteLandmark = RouteLandmark()
         endRouteLandmark = RouteLandmark()
         playAlignmentConfirmation?.cancel()
-        rootContainerView.announcementText.isHidden = true
+        announcementViewController.announcementText.isHidden = true
         nav.headingOffset = 0.0
         headingRingBuffer.clear()
         locationRingBuffer.clear()
@@ -1079,9 +1023,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: initialFocus)
         if let announcement = announcement {
             if UIAccessibility.isVoiceOverRunning {
-                Timer.scheduledTimer(withTimeInterval: 2.0, repeats: false) { timer in
-                    self.announce(announcement: announcement)
-                }
+                announce(announcement: announcement, delayInSeconds: 2.0)
             } else {
                 announce(announcement: announcement)
             }
@@ -1254,9 +1196,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// times the generation of haptic feedback
     var hapticTimer: Timer?
-    
-    /// times when an announcement should be removed.  These announcements are displayed on the `announcementText` label.
-    var announcementRemovalTimer: Timer?
     
     /// times when the heading offset should be recalculated.  The ability to use the heading offset is currently not exposed to the user.
     var updateHeadingOffsetTimer: Timer?
@@ -1706,38 +1645,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// Communicates a message to the user via speech.  If VoiceOver is active, then VoiceOver is used to communicate the announcement, otherwise we use the AVSpeechEngine
     ///
     /// - Parameter announcement: the text to read to the user
-    func announce(announcement: String) {
-        if let currentAnnouncement = currentAnnouncement {
-            // don't interrupt current announcement, but if there is something new to say put it on the queue to say next.  Note that adding it to the queue in this fashion could result in the next queued announcement being preempted
-            if currentAnnouncement != announcement {
-                nextAnnouncement = announcement
-            }
-            return
-        }
-        
-        rootContainerView.announcementText.isHidden = false
-        rootContainerView.announcementText.text = announcement
-        announcementRemovalTimer?.invalidate()
-        announcementRemovalTimer = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: false) { timer in
-            self.rootContainerView.announcementText.isHidden = true
-        }
-        if UIAccessibility.isVoiceOverRunning {
-            // use the VoiceOver API instead of text to speech
-            currentAnnouncement = announcement
-            UIAccessibility.post(notification: UIAccessibility.Notification.announcement, argument: announcement)
-        } else if voiceFeedback {
-            let audioSession = AVAudioSession.sharedInstance()
-            do {
-                try audioSession.setCategory(AVAudioSession.Category.playback)
-                try audioSession.setActive(true)
-                let utterance = AVSpeechUtterance(string: announcement)
-                utterance.rate = 0.6
-                currentAnnouncement = announcement
-                synth.speak(utterance)
-            } catch {
-                print("Unexpeced error announcing something using AVSpeechEngine!")
-            }
-        }
+    func announce(announcement: String, delayInSeconds: Double? = nil) {
+        NotificationCenter.default.post(name: Notification.Name("makeClewAnnouncement"), object: self, userInfo: ["announcementText": announcement, "delayInSeconds": delayInSeconds])
+        // Method 2 (requires access to the particular object)
+        //announcementViewController.announce(announcement: announcement)
     }
     
     /// Get direction to next keypoint based on the current location

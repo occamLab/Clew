@@ -28,14 +28,14 @@ class CoachMarks: UIViewController, CoachMarksControllerDataSource, CoachMarksCo
     
     func coachMarksController(_ coachMarksController: CoachMarksController,
                               coachMarkAt index: Int) -> CoachMark {
-        pointOfInterest.center = CGPoint(x: 150, y: 150)
+        pointOfInterest.center = CGPoint(x: 210, y: 660)
         return coachMarksController.helper.makeCoachMark(for: pointOfInterest)
     }
     
     func coachMarksController(_ coachMarksController: CoachMarksController, coachMarkViewsAt index: Int, madeFrom coachMark: CoachMark) -> (bodyView: CoachMarkBodyView, arrowView: CoachMarkArrowView?) {
         let coachViews = coachMarksController.helper.makeDefaultCoachViews(withArrow: true, arrowOrientation: coachMark.arrowOrientation)
         
-        coachViews.bodyView.hintLabel.text = "Hello! I'm a Coach Mark!"
+        coachViews.bodyView.hintLabel.text = "Click here when you're ready!"
         coachViews.bodyView.nextLabel.text = "Ok!"
         
         return (bodyView: coachViews.bodyView, arrowView: coachViews.arrowView)
