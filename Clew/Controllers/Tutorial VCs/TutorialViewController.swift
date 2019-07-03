@@ -15,7 +15,6 @@ class TutorialViewController: UIViewController, ClewObserver {
     let singleRouteChildVC = SingleRouteVC()
     let phoneOrientationTrainingChildVC  = PhoneOrientationTrainingVC()
     
-    @IBOutlet weak var staticLabel2: DesignableLabel!
     @IBAction func CloseTips(_ sender: UIButton) {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         appDelegate.window?.rootViewController?.dismiss(animated: false)

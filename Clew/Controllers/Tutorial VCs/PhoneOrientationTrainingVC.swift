@@ -13,10 +13,25 @@ import SceneKit
 class PhoneOrientationTrainingVC: TutorialChildViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        print("plz- check")
     }
     
     var lastHapticFeedbackTime = Date()
+    var timeLeft = 10
+    var countdown:Timer? = nil {
+        willSet{
+            countdown?.invalidate()
+        }
+    }
+    
+    @objc func timerCalled() {
+        print("timeLeft", timeLeft)
+        if timeLeft != 0 {
+            timeLeft -= 1
+        } else {
+            print("stop")
+            countdown = nil
+        }
+    }
     
     override func didReceiveNewCameraPose(transform: simd_float4x4) {
         print("IN here")
@@ -27,17 +42,28 @@ class PhoneOrientationTrainingVC: TutorialChildViewController {
         
         let intendedInterval = TimeInterval(1/(4*exp(-pow(angleFromVertical, 2))))
         print("intendedInterval", intendedInterval)
+        
         // if abs(angleFromVertical) < 0.1 {
         let now = Date()
         let timeInterval = now.timeIntervalSince(lastHapticFeedbackTime)
         print("timeInterval", timeInterval)
+        print("angleFromVertical", angleFromVertical)
+        
         if timeInterval > intendedInterval {
-            print("yeaaaa")
+            // condition to pass if state transition was to occur
+            if angleFromVertical < 0.5 {
+                print("angle falls in range")
+                countdown = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(timerCalled), userInfo: nil, repeats: true)
+                if countdown == nil {
+                    print("timer finished")
+                    tutorialParent?.state = .optimalOrientationAchieved
+                }
+            
             feedbackGenerator.impactOccurred()
             lastHapticFeedbackTime = now
-            // if (the user is done with the experience) <- some condition can also be outside the if statement
-             tutorialParent?.state = .optimalOrientationAchieved
+            }
         }
+        
          /* if abs(angleFromVertical) < 0.1 {
             Timer.scheduledTimer(withTimeInterval: 0.1, repeats: false) {_ in
             feedbackGenerator.impactOccurred()
@@ -51,8 +77,5 @@ class PhoneOrientationTrainingVC: TutorialChildViewController {
          }
          }
          print("angleFromVertical", angleFromVertical) */
-    
     }
-        /* if case .mainScreen(let announceArrival) = newState, case .optimalOrientationReached? = tutorialParent?.state {
-            (parent as? TutorialViewController)?.state = .readyToRecordSingleRoute } */
 }
