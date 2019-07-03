@@ -13,13 +13,11 @@ import SceneKit
 class PhoneOrientationTrainingVC: TutorialChildViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        print("plz- check")
     }
     
     var lastHapticFeedbackTime = Date()
     
     override func didReceiveNewCameraPose(transform: simd_float4x4) {
-        print("IN here")
         UIAccessibility.post(notification: UIAccessibility.Notification.announcement, argument: NSLocalizedString("Trying to figure out haptic feedback", comment: "Message to user during tutorial"))
         
         let angleFromVertical = acos(-transform.columns.0.y)
@@ -32,7 +30,6 @@ class PhoneOrientationTrainingVC: TutorialChildViewController {
         let timeInterval = now.timeIntervalSince(lastHapticFeedbackTime)
         print("timeInterval", timeInterval)
         if timeInterval > intendedInterval {
-            print("yeaaaa")
             feedbackGenerator.impactOccurred()
             lastHapticFeedbackTime = now
             // if (the user is done with the experience) <- some condition can also be outside the if statement

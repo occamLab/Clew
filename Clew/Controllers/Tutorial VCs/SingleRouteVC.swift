@@ -10,7 +10,7 @@ import UIKit
 
 class SingleRouteVC: TutorialChildViewController {
     override func viewDidAppear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
+        super.viewDidAppear(animated)
         Timer.scheduledTimer(withTimeInterval: 5.0, repeats: false) { timer in
             UIAccessibility.post(notification: UIAccessibility.Notification.announcement, argument: NSLocalizedString("Let's learn about route navigation!", comment: "Message to user during tutorial"))
             print("trying to post this - works")
@@ -26,6 +26,7 @@ class SingleRouteVC: TutorialChildViewController {
             // do something to handle this new thing
             Timer.scheduledTimer(withTimeInterval: 5.0, repeats: false) { timer in
                 UIAccessibility.post(notification: UIAccessibility.Notification.announcement, argument: NSLocalizedString("Great job.  You've recorded a route.  Now we will navigate it back to the start!", comment: "Message to user during tutorial"))
+            print("User has recorded a route")
             }
         }
       /*  if case .mainScreen(let announceArrival) = newState, case .teachTheNavigationOfASingleRoute? = tutorialParent?.state {

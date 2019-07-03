@@ -11,19 +11,16 @@ import SceneKit
 import UIKit
 
 class TutorialViewController: UIViewController, ClewObserver {
-
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view = TransparentTouchView(frame:CGRect(x: 0,
+                                                 y: 0,
+                                                 width: UIScreen.main.bounds.size.width,
+                                                 height: UIScreen.main.bounds.size.height))
+    }
+    
     let singleRouteChildVC = SingleRouteVC()
     let phoneOrientationTrainingChildVC  = PhoneOrientationTrainingVC()
-    
-    @IBOutlet weak var staticLabel2: DesignableLabel!
-    @IBAction func CloseTips(_ sender: UIButton) {
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        appDelegate.window?.rootViewController?.dismiss(animated: false)
-        appDelegate.window = UIWindow(frame:UIScreen.main.bounds)
-        appDelegate.window?.makeKeyAndVisible()
-        appDelegate.window?.rootViewController = ViewController()
-        print("hi")
-    }
     
     /// A custom enumeration type that describes the exact state of the tutorial.
     enum TutorialState {
@@ -57,28 +54,26 @@ class TutorialViewController: UIViewController, ClewObserver {
             //        logger.logStateTransition(newState: state)
             switch state {
             case .startOrientationTraining:
-                print("does this work - check")
                 add(phoneOrientationTrainingChildVC)
             case .optimalOrientationAchieved:
                 print("nothing")
             case .readyToRecordSingleRoute:
+                removeAllChildVCs()
                 add(singleRouteChildVC)
-                phoneOrientationTrainingChildVC.remove()
             case .recordingSingleRoute:
                 print("recording single route")
             case .teachTheNavigationOfASingleRoute:
                 print("placeholder")
             case .initializing:
                 initialize()
-           // case .startingOrientationTraining:
-             //   print("starting orientation training added as child vc")
-             //   add(phoneOrientationTrainingChildVC)
             }
         }
     }
     
     func removeAllChildVCs() {
-        
+        for child in children {
+            child.remove()
+        }
     }
     
     func  initialize() {
@@ -94,16 +89,7 @@ class TutorialViewController: UIViewController, ClewObserver {
             }
         }
     }
- 
-        
-        // optionally do something to respond to this event
-        // if appropriate, pass the event to children
-        
-//        for child in getChildViewControllers() {
-//            if let observer = child as ClewObserver {
-//                observer.didReceiveNewCameraPose(transform: transform)
-//            }
-//        }
+
 
 
     func didTransitionTo(newState: AppState) {
@@ -116,11 +102,8 @@ class TutorialViewController: UIViewController, ClewObserver {
 
     func didReceiveNewCameraPose(transform: simd_float4x4) {
         print("received new camera pose")
-//        phoneOrientationTrainingChildVC.didReceiveNewCameraPose(transform: transform)
-//        add(phoneOrientationTrainingChildVC)
         
         // optionally do something in the TutorialViewController
-        // TODO: need to work on/fix
         for child in children {
             print("propagating to children")
             if let observer = child as? ClewObserver {
@@ -128,23 +111,7 @@ class TutorialViewController: UIViewController, ClewObserver {
             }
         }
     }
-
-}
-
-
-class TutorialChildViewController: UIViewController, ClewObserver {
-    var tutorialParent: TutorialViewController? {
-        return parent as? TutorialViewController
-    }
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        view = TransparentTouchView(frame:CGRect(x: 0,
-                                                 y: 0,
-                                                 width: UIScreen.main.bounds.size.width,
-                                                 height: UIScreen.main.bounds.size.height))
-    }
     
-    func finishAnnouncement(announcement: String) { }
-    func didReceiveNewCameraPose(transform: simd_float4x4)  {}
-    func didTransitionTo(newState: AppState) {}
+
 }
+

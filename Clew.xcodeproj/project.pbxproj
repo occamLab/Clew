@@ -10,7 +10,14 @@
 		2748B8490FCBA95C7AA028D7 /* Pods_Clew.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 942F73299DA8DCF97FAA974A /* Pods_Clew.framework */; };
 		4D6B00E51F33C9B800952242 /* Crumb.obj in Resources */ = {isa = PBXBuildFile; fileRef = 4D6B00E41F33C85500952242 /* Crumb.obj */; };
 		4DF05CC81F34EB6B008B0E31 /* Confirm.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4DF05CC71F34EB56008B0E31 /* Confirm.mp3 */; };
+		77000C3222CCE8F2004AC60B /* Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 77000C3122CCE8F1004AC60B /* Storyboard.storyboard */; };
+		77000C3322CCE8F2004AC60B /* Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 77000C3122CCE8F1004AC60B /* Storyboard.storyboard */; };
 		77467DAF22BBC1D300FA7DEE /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 77467DAE22BBC1D300FA7DEE /* Default-568h@2x.png */; };
+		7754323022CBEDBE006E2159 /* UILabelDesign.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7754322D22CBEDBE006E2159 /* UILabelDesign.swift */; };
+		7793DE1B22CBD1D5003A0BF7 /* TutorialChildViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7793DE1A22CBD1D5003A0BF7 /* TutorialChildViewController.swift */; };
+		7793DE1C22CBD1D5003A0BF7 /* TutorialChildViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7793DE1A22CBD1D5003A0BF7 /* TutorialChildViewController.swift */; };
+		7793DE1E22CBE7B8003A0BF7 /* TipsAndWarningsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7793DE1D22CBE7B8003A0BF7 /* TipsAndWarningsViewController.swift */; };
+		7793DE1F22CBE7B8003A0BF7 /* TipsAndWarningsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7793DE1D22CBE7B8003A0BF7 /* TipsAndWarningsViewController.swift */; };
 		77A30FE522C66998008EEAAB /* CoachMarks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77A30FE422C66998008EEAAB /* CoachMarks.swift */; };
 		77A30FE622C66998008EEAAB /* CoachMarks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77A30FE422C66998008EEAAB /* CoachMarks.swift */; };
 		77A30FE822C66C3A008EEAAB /* PhoneOrientationTrainingVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77A30FE722C66C3A008EEAAB /* PhoneOrientationTrainingVC.swift */; };
@@ -74,8 +81,6 @@
 		E5F4C37722C4035200E0D94E /* Float4x4Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F4C32222C4035200E0D94E /* Float4x4Extension.swift */; };
 		E5F4C37822C4035200E0D94E /* TutorialViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F4C32522C4035200E0D94E /* TutorialViewController.swift */; };
 		E5F4C37922C4035200E0D94E /* TutorialViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F4C32522C4035200E0D94E /* TutorialViewController.swift */; };
-		E5F4C37A22C4035200E0D94E /* Tutorial.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E5F4C32622C4035200E0D94E /* Tutorial.storyboard */; };
-		E5F4C37B22C4035200E0D94E /* Tutorial.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E5F4C32622C4035200E0D94E /* Tutorial.storyboard */; };
 		E5F4C37C22C4035200E0D94E /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F4C32822C4035200E0D94E /* ViewController.swift */; };
 		E5F4C37D22C4035200E0D94E /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F4C32822C4035200E0D94E /* ViewController.swift */; };
 		E5F4C37E22C4035200E0D94E /* RecordPathController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F4C32A22C4035200E0D94E /* RecordPathController.swift */; };
@@ -112,10 +117,6 @@
 		E5F4C39D22C4035200E0D94E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E5F4C33B22C4035200E0D94E /* LaunchScreen.storyboard */; };
 		E5F4C39E22C4035200E0D94E /* RouteTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F4C33D22C4035200E0D94E /* RouteTableViewCell.swift */; };
 		E5F4C39F22C4035200E0D94E /* RouteTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F4C33D22C4035200E0D94E /* RouteTableViewCell.swift */; };
-		E5F4C3A022C4035200E0D94E /* Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E5F4C33E22C4035200E0D94E /* Storyboard.storyboard */; };
-		E5F4C3A122C4035200E0D94E /* Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E5F4C33E22C4035200E0D94E /* Storyboard.storyboard */; };
-		E5F4C3A222C4035200E0D94E /* UILabelDesign.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F4C33F22C4035200E0D94E /* UILabelDesign.swift */; };
-		E5F4C3A322C4035200E0D94E /* UILabelDesign.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F4C33F22C4035200E0D94E /* UILabelDesign.swift */; };
 		E5F4C3A622C4035200E0D94E /* GoogleService-Info_dev.plist in Resources */ = {isa = PBXBuildFile; fileRef = E5F4C34122C4035200E0D94E /* GoogleService-Info_dev.plist */; };
 		E5F4C3A722C4035200E0D94E /* GoogleService-Info_dev.plist in Resources */ = {isa = PBXBuildFile; fileRef = E5F4C34122C4035200E0D94E /* GoogleService-Info_dev.plist */; };
 /* End PBXBuildFile section */
@@ -126,7 +127,11 @@
 		4D6B00C01F33C1C400952242 /* Clew.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Clew.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4D6B00E41F33C85500952242 /* Crumb.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = Crumb.obj; sourceTree = "<group>"; };
 		4DF05CC71F34EB56008B0E31 /* Confirm.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = Confirm.mp3; sourceTree = "<group>"; };
+		77000C3122CCE8F1004AC60B /* Storyboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Storyboard.storyboard; path = Clew/Storyboard.storyboard; sourceTree = SOURCE_ROOT; };
 		77467DAE22BBC1D300FA7DEE /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		7754322D22CBEDBE006E2159 /* UILabelDesign.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UILabelDesign.swift; path = Clew/UILabelDesign.swift; sourceTree = SOURCE_ROOT; };
+		7793DE1A22CBD1D5003A0BF7 /* TutorialChildViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialChildViewController.swift; sourceTree = "<group>"; };
+		7793DE1D22CBE7B8003A0BF7 /* TipsAndWarningsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TipsAndWarningsViewController.swift; sourceTree = "<group>"; };
 		77A30FE422C66998008EEAAB /* CoachMarks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoachMarks.swift; sourceTree = "<group>"; };
 		77A30FE722C66C3A008EEAAB /* PhoneOrientationTrainingVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneOrientationTrainingVC.swift; sourceTree = "<group>"; };
 		822E27F8210E3F260024A5E3 /* Clew Dev-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Clew Dev-Info.plist"; sourceTree = "<group>"; };
@@ -178,7 +183,6 @@
 		E5F4C32322C4035200E0D94E /* SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SettingsViewController.h; path = ../SettingsViewController.h; sourceTree = "<group>"; };
 		E5F4C32422C4035200E0D94E /* Clew-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Clew-Bridging-Header.h"; sourceTree = "<group>"; };
 		E5F4C32522C4035200E0D94E /* TutorialViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TutorialViewController.swift; path = "Tutorial VCs/TutorialViewController.swift"; sourceTree = "<group>"; };
-		E5F4C32622C4035200E0D94E /* Tutorial.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Tutorial.storyboard; path = ../../Tutorial.storyboard; sourceTree = "<group>"; };
 		E5F4C32822C4035200E0D94E /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		E5F4C32A22C4035200E0D94E /* RecordPathController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecordPathController.swift; sourceTree = "<group>"; };
 		E5F4C32B22C4035200E0D94E /* StartNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StartNavigationController.swift; sourceTree = "<group>"; };
@@ -197,8 +201,6 @@
 		E5F4C33A22C4035200E0D94E /* RootContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootContainerView.swift; sourceTree = "<group>"; };
 		E5F4C33C22C4035200E0D94E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		E5F4C33D22C4035200E0D94E /* RouteTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteTableViewCell.swift; sourceTree = "<group>"; };
-		E5F4C33E22C4035200E0D94E /* Storyboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Storyboard.storyboard; path = ../../Storyboard.storyboard; sourceTree = "<group>"; };
-		E5F4C33F22C4035200E0D94E /* UILabelDesign.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UILabelDesign.swift; path = ../../UILabelDesign.swift; sourceTree = "<group>"; };
 		E5F4C34022C4035200E0D94E /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E5F4C34122C4035200E0D94E /* GoogleService-Info_dev.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info_dev.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -262,21 +264,11 @@
 		77A30FE322C66917008EEAAB /* Tutorial VCs */ = {
 			isa = PBXGroup;
 			children = (
-				E5F4C31C22C4035200E0D94E /* SingleRouteVC.swift */,
 				77A30FE722C66C3A008EEAAB /* PhoneOrientationTrainingVC.swift */,
+				E5F4C31C22C4035200E0D94E /* SingleRouteVC.swift */,
 				77A30FE422C66998008EEAAB /* CoachMarks.swift */,
 			);
 			path = "Tutorial VCs";
-			sourceTree = "<group>";
-		};
-		77F89C3522C507940054E412 /* Tutorial Views */ = {
-			isa = PBXGroup;
-			children = (
-				E5F4C32622C4035200E0D94E /* Tutorial.storyboard */,
-				E5F4C33F22C4035200E0D94E /* UILabelDesign.swift */,
-				E5F4C33E22C4035200E0D94E /* Storyboard.storyboard */,
-			);
-			path = "Tutorial Views";
 			sourceTree = "<group>";
 		};
 		C63B435EA8A32350A76E47DD /* Frameworks */ = {
@@ -376,7 +368,9 @@
 		E5F4C32722C4035200E0D94E /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				7793DE1D22CBE7B8003A0BF7 /* TipsAndWarningsViewController.swift */,
 				E5F4C32522C4035200E0D94E /* TutorialViewController.swift */,
+				7793DE1A22CBD1D5003A0BF7 /* TutorialChildViewController.swift */,
 				77A30FE322C66917008EEAAB /* Tutorial VCs */,
 				E5F4C30022C4035200E0D94E /* SettingsTableViewController.h */,
 				E5F4C2FD22C4035200E0D94E /* SettingsViewController.m */,
@@ -417,7 +411,8 @@
 		E5F4C33722C4035200E0D94E /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				77F89C3522C507940054E412 /* Tutorial Views */,
+				77000C3122CCE8F1004AC60B /* Storyboard.storyboard */,
+				7754322D22CBEDBE006E2159 /* UILabelDesign.swift */,
 				E5F4C33822C4035200E0D94E /* UIConstants.swift */,
 				E5F4C33922C4035200E0D94E /* SettingsAndHelp.storyboard */,
 				E5F4C33A22C4035200E0D94E /* RootContainerView.swift */,
@@ -518,11 +513,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E5F4C37A22C4035200E0D94E /* Tutorial.storyboard in Resources */,
 				4DF05CC81F34EB6B008B0E31 /* Confirm.mp3 in Resources */,
 				E5F4C39C22C4035200E0D94E /* LaunchScreen.storyboard in Resources */,
 				E5F4C36622C4035200E0D94E /* StartRecording.aiff in Resources */,
-				E5F4C3A022C4035200E0D94E /* Storyboard.storyboard in Resources */,
 				E5F4C35C22C4035200E0D94E /* LaunchScreen.strings in Resources */,
 				4D6B00E51F33C9B800952242 /* Crumb.obj in Resources */,
 				E5F4C36A22C4035200E0D94E /* GoogleService-Info.plist in Resources */,
@@ -534,6 +527,7 @@
 				E5F4C36222C4035200E0D94E /* Assets.xcassets in Resources */,
 				E5F4C36822C4035200E0D94E /* StopRecording.aiff in Resources */,
 				77467DAF22BBC1D300FA7DEE /* Default-568h@2x.png in Resources */,
+				77000C3222CCE8F2004AC60B /* Storyboard.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -544,12 +538,11 @@
 				E5F4C39922C4035200E0D94E /* SettingsAndHelp.storyboard in Resources */,
 				E5F4C36B22C4035200E0D94E /* GoogleService-Info.plist in Resources */,
 				E5F4C36922C4035200E0D94E /* StopRecording.aiff in Resources */,
-				E5F4C3A122C4035200E0D94E /* Storyboard.storyboard in Resources */,
 				B7EB59E220F693EB00FBBC6A /* Confirm.mp3 in Resources */,
 				E5F4C36322C4035200E0D94E /* Assets.xcassets in Resources */,
+				77000C3322CCE8F2004AC60B /* Storyboard.storyboard in Resources */,
 				B7EB59E320F693EB00FBBC6A /* Crumb.obj in Resources */,
 				E5F4C39D22C4035200E0D94E /* LaunchScreen.storyboard in Resources */,
-				E5F4C37B22C4035200E0D94E /* Tutorial.storyboard in Resources */,
 				E5F4C35D22C4035200E0D94E /* LaunchScreen.strings in Resources */,
 				E5F4C35F22C4035200E0D94E /* Localizable.strings in Resources */,
 				E5F4C35B22C4035200E0D94E /* Settings.bundle in Resources */,
@@ -690,6 +683,7 @@
 				E5F4C34222C4035200E0D94E /* RecordButtonKit.swift in Sources */,
 				E5F4C35222C4035200E0D94E /* PathFinder.swift in Sources */,
 				E5F4C34E22C4035200E0D94E /* Navigation.swift in Sources */,
+				7793DE1B22CBD1D5003A0BF7 /* TutorialChildViewController.swift in Sources */,
 				E5F4C36422C4035200E0D94E /* ClewObserverProtocol.swift in Sources */,
 				E5F4C36E22C4035200E0D94E /* NSStringExtension.swift in Sources */,
 				E5F4C38022C4035200E0D94E /* StartNavigationController.swift in Sources */,
@@ -698,12 +692,13 @@
 				E5F4C38422C4035200E0D94E /* RouteRatingController.swift in Sources */,
 				E5F4C38E22C4035200E0D94E /* HelpViewController.swift in Sources */,
 				E5F4C38222C4035200E0D94E /* StopRecordingController.swift in Sources */,
+				7793DE1E22CBE7B8003A0BF7 /* TipsAndWarningsViewController.swift in Sources */,
 				E5F4C39A22C4035200E0D94E /* RootContainerView.swift in Sources */,
 				E5F4C38822C4035200E0D94E /* StopNavigationController.swift in Sources */,
 				E5F4C39222C4035200E0D94E /* RoutesViewController.swift in Sources */,
 				E5F4C34622C4035200E0D94E /* RecorderViewController.swift in Sources */,
 				E5F4C39622C4035200E0D94E /* UIConstants.swift in Sources */,
-				E5F4C3A222C4035200E0D94E /* UILabelDesign.swift in Sources */,
+				7754323022CBEDBE006E2159 /* UILabelDesign.swift in Sources */,
 				E5F4C35022C4035200E0D94E /* FeedbackLogger.swift in Sources */,
 				E5F4C34A22C4035200E0D94E /* DataPersistence.swift in Sources */,
 				E5F4C37222C4035200E0D94E /* UIViewExtensions.swift in Sources */,
@@ -736,6 +731,7 @@
 				E5F4C34322C4035200E0D94E /* RecordButtonKit.swift in Sources */,
 				E5F4C35322C4035200E0D94E /* PathFinder.swift in Sources */,
 				E5F4C34F22C4035200E0D94E /* Navigation.swift in Sources */,
+				7793DE1C22CBD1D5003A0BF7 /* TutorialChildViewController.swift in Sources */,
 				E5F4C36522C4035200E0D94E /* ClewObserverProtocol.swift in Sources */,
 				E5F4C36F22C4035200E0D94E /* NSStringExtension.swift in Sources */,
 				E5F4C38122C4035200E0D94E /* StartNavigationController.swift in Sources */,
@@ -744,12 +740,12 @@
 				E5F4C38522C4035200E0D94E /* RouteRatingController.swift in Sources */,
 				E5F4C38F22C4035200E0D94E /* HelpViewController.swift in Sources */,
 				E5F4C38322C4035200E0D94E /* StopRecordingController.swift in Sources */,
+				7793DE1F22CBE7B8003A0BF7 /* TipsAndWarningsViewController.swift in Sources */,
 				E5F4C39B22C4035200E0D94E /* RootContainerView.swift in Sources */,
 				E5F4C38922C4035200E0D94E /* StopNavigationController.swift in Sources */,
 				E5F4C39322C4035200E0D94E /* RoutesViewController.swift in Sources */,
 				E5F4C34722C4035200E0D94E /* RecorderViewController.swift in Sources */,
 				E5F4C39722C4035200E0D94E /* UIConstants.swift in Sources */,
-				E5F4C3A322C4035200E0D94E /* UILabelDesign.swift in Sources */,
 				E5F4C35122C4035200E0D94E /* FeedbackLogger.swift in Sources */,
 				E5F4C34B22C4035200E0D94E /* DataPersistence.swift in Sources */,
 				E5F4C37322C4035200E0D94E /* UIViewExtensions.swift in Sources */,
