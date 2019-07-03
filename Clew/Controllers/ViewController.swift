@@ -23,8 +23,6 @@
 // TODO: implement something to keep the points moving in the proper direction (avoid reversing the route on mistake)
 // TODO: automatically add the first keypoint of the route (probably this would also involve an alignment at that point as well)
 // TODO: recency of path alignment
-// TODO: current version doesn't seem to work properly with the align to route feature
-// TODO: if you get an error during alignment, it may mistakenly think that you have localized to the route visually (it cancels out the alignment procedure)
 
 import UIKit
 import ARKit
@@ -1157,6 +1155,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// Interface for logging data about the session and the path
     var logger = PathLogger()
     
+    /// Interface for matching points to a saved route
+    var pathMatcher = PathMatcher()
+    
     // MARK: - Timers for background functions
     
     /// times the recording of path crumbs
@@ -1383,151 +1384,20 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             logger.resetStateSequenceLog()
         }
     }
-
-    /// Transform location info by applying the specified transform.
-    ///
-    /// - Parameters:
-    ///   - locations: the array of locations
-    ///   - transform: the transform to apply (multiplied on the left)
-    /// - Returns: the transformed locations represented as an array of homogeneous 3D coordinates.
-    func transformLocationInfo(locations: [LocationInfo], transform: simd_float4x4)->[simd_float4] {
-        return locations.map {
-            transform * simd_float4($0.x, $0.y, $0.z, 1)
-        }
-    }
-    
-    /// Compute the closet point on a line segment to the specified input point.
-    ///
-    /// - Parameters:
-    ///   - p: the point to match to the line segment
-    ///   - start: the starting point of the line segment
-    ///   - end: the ending point of the line segment
-    /// - Returns: the closet point (in the L2 sense) to `p` on the line segment connecting `start` and `end`.
-    func closestPointOnSegment(_ p: simd_float3, start: simd_float3, end: simd_float3)->simd_float3 {
-        let startToEnd = end - start
-        let vToP = p - start
-        let proj = simd_dot(vToP, simd_normalize(startToEnd))
-        // clamp proj so it doesn't go past either end of the line segment
-        let projClamped = min(max(0, proj), simd_length(startToEnd))
-        // TODO: implement
-        return start + projClamped*simd_normalize(startToEnd)
-    }
-    
-    /// Determines the closet point to each of `points` on the piecewise linear route defined by `routeKeypoints`.  The definition of closest is given by the L2 norm.
-    ///
-    /// - Parameters:
-    ///   - points: the points to match to the route
-    ///   - routeKeypoints: the route keypoints
-    /// - Returns: an array of homogenous 3D vectors representing the closet matched point.
-    func getClosestRouteMatch(points: [simd_float4], routeKeypoints: [KeypointInfo])->[simd_float4] {
-        var closestPoints: [simd_float4] = []
-        
-        for p in points {
-            var closestPoint = simd_float3()
-            var closestDistance = Float.infinity
-
-            for i in 0..<routeKeypoints.count-1 {
-                let startOfSegment = simd_float3(routeKeypoints[i].location.x, routeKeypoints[i].location.y, routeKeypoints[i].location.z)
-                let endOfSegment = simd_float3(routeKeypoints[i+1].location.x, routeKeypoints[i+1].location.y, routeKeypoints[i+1].location.z)
-            
-                let pInhomogeneous = simd_float3(p.x, p.y, p.z)
-                let closestOnSegment = closestPointOnSegment(pInhomogeneous, start: startOfSegment, end: endOfSegment)
-                let d = simd_length(closestOnSegment - pInhomogeneous)
-                if d < closestDistance {
-                    closestDistance = d
-                    closestPoint = closestOnSegment
-                }
-                // it would be great to have to / from homogeneous functions
-            }
-            closestPoints.append(simd_float4(closestPoint.x, closestPoint.y, closestPoint.z, 1))
-        }
-
-        return closestPoints
-    }
     
     /// The handler for the snap to route button.
     ///
     /// - Parameter send: the sender of the button pressed event
     @objc func snapToRoute(_ send: UIButton) {
         // initially we start with identity
-        var optimalTransform = matrix_identity_float4x4
-
-        var converged = false
-        var iterCount = 0
-        var lastIterationCost = Float.infinity
-        while !converged {
-            let transformedFollowCrumbs = transformLocationInfo(locations: followCrumbs, transform: optimalTransform)
-            var keypointsToUse: [KeypointInfo] = checkedOffKeypoints
-            // this probably should always succeed since you shouldn't be able to snap to route unless you are actively navigating, but we will be safe about it anyway
-            if !keypoints.isEmpty {
-                keypointsToUse.append(keypoints[0])
-            }
-            let closestMatchToRoute = getClosestRouteMatch(points: transformedFollowCrumbs, routeKeypoints: keypointsToUse)
-            let currentCost = zip(transformedFollowCrumbs, closestMatchToRoute).reduce(0) {
-                $0 + simd_length_squared($1.0 - $1.1)
-            }
-            var additionalTransform = matrix_identity_float4x4
-            
-            let meanOfFollowCrumbs = transformedFollowCrumbs.reduce(simd_float4(0, 0, 0, 0)) {
-                $0 + $1 / (Float(transformedFollowCrumbs.count))
-            }
-            let meanOfClosestMatches = closestMatchToRoute.reduce(simd_float4(0, 0, 0, 0)) {
-                $0 + $1 / (Float(closestMatchToRoute.count))
-            }
-            
-            let meanSubtractedFollowCrumbs = transformedFollowCrumbs.map({$0 - meanOfFollowCrumbs})
-            let meanSubtractedClosestMatches = closestMatchToRoute.map({$0 - meanOfClosestMatches})
-            let outerProductMatrix = zip(meanSubtractedClosestMatches, meanSubtractedFollowCrumbs).reduce(simd_float2x2()) {
-                $0 + simd_float2($1.0.x, $1.0.z).outerProduct(simd_float2($1.1.x, $1.1.z))
-            }
-            
-            var (U, S, V) = outerProductMatrix.svd()
-
-            // TODO: hacky way to fix this
-            if S.columns.0.x.isNaN {
-                S.columns.0.x = 0
-            }
-            if S.columns.1.y.isNaN {
-                S.columns.1.y = 0
-            }
-            let R: simd_float2x2
-            if max(S.columns.0.x, S.columns.1.y) < 10e-5 {
-                print("rank 0 condition detected")
-                // apply no rotation
-                R = matrix_identity_float2x2
-            } else {
-                // Note that this is inverted from what we see in various resources on ICP since we are implicitly rotating about the negative y-axis and would really like rotate about the positive y-axis.  By nature of projecting into the x-z plane and computing the orientation there, we are implicitly rotating about the negative y-axis.
-                R = V * simd_float2x2(diagonal: simd_float2(1, (V*U.transpose).determinant)) * U.transpose
-            }
-            print("current cost", currentCost)
-            
-            // Calculate optimal transform difference by applying the appropriate formula from http://ais.informatik.uni-freiburg.de/teaching/ss11/robotics/slides/17-icp.pdf
-
-            // this maps a 2D rotation that was implicitly computed about the NEGATIVE y axis (this is a consequence of projecting into the x-z plane) to a rotation about the positive y-axis in 3D
-            additionalTransform.columns.0.x = R.columns.0.x
-            additionalTransform.columns.2.z = R.columns.1.y
-            additionalTransform.columns.0.z = R.columns.1.x
-            additionalTransform.columns.2.x = R.columns.0.y
-            
-            // this sets the translation based on the appropriate formula
-            additionalTransform.columns.3 = meanOfClosestMatches - additionalTransform*meanOfFollowCrumbs
-            
-            // this will accidentally change element (4, 4) to 0
-            additionalTransform.columns.3.w = 1
-            
-            print("additionalTransform", additionalTransform)
-            
-            // convergence is achieved if no additional transformation need be applied
-            converged = (additionalTransform - matrix_identity_float4x4).frobenius() < 10e-4 || lastIterationCost - currentCost < 10e-4
-            lastIterationCost = currentCost
-
-            optimalTransform = additionalTransform * optimalTransform
-            print("additionalTransform", additionalTransform)
-            
-            iterCount += 1
+        
+        var keypointsToUse: [KeypointInfo] = checkedOffKeypoints
+        if let firstKeypoint = keypoints.first {
+            keypointsToUse.append(firstKeypoint)
         }
+
+        let optimalTransform = pathMatcher.match(points: followCrumbs, toPath: keypointsToUse)
         updateWorldOrigin(relativeTransform: optimalTransform.inverse)
-        //renderFollowCrumbNodes()
     }
     
     /// This function should be used whenever the world origin should be realigned.  Don't call the ARSession method directly as it will skip vital steps.

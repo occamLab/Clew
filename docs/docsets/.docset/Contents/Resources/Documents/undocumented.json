@@ -65,30 +65,16 @@
     },
     {
       "file": "/Users/pruvolo/Software/Clew/Clew/Controllers/ViewController.swift",
-      "line": 1145,
-      "symbol": "ViewController.checkedOffKeypoints",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/pruvolo/Software/Clew/Clew/Controllers/ViewController.swift",
-      "line": 1386,
-      "symbol": "ViewController.transformLocationInfo(locations:transform:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/pruvolo/Software/Clew/Clew/Controllers/ViewController.swift",
-      "line": 1392,
-      "symbol": "ViewController.closestPointOnSegment(_:start:end:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/pruvolo/Software/Clew/Clew/Controllers/ViewController.swift",
-      "line": 1845,
+      "line": 1729,
       "symbol": "ViewController.homeButtonPressed()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/pruvolo/Software/Clew/Clew/Extensions/FloatMatrixVectorExtensions.swift",
+      "line": 112,
+      "symbol": "float4.inhomogeneous",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>NSString Extension Reference</title>
+    <title>float4 Extension Reference</title>
     <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
     <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
     <meta charset='utf-8'>
@@ -10,8 +10,8 @@
     
   </head>
   <body>
-    <a name="//apple_ref/swift/Extension/NSString" class="dashAnchor"></a>
-    <a title="NSString Extension Reference"></a>
+    <a name="//apple_ref/swift/Extension/float4" class="dashAnchor"></a>
+    <a title="float4 Extension Reference"></a>
     <header>
       <div class="content-wrapper">
         <p><a href="../index.html"> Docs</a> (97% documented)</p>
@@ -22,7 +22,7 @@
       <p id="breadcrumbs">
         <a href="../index.html"> Reference</a>
         <img id="carat" src="../img/carat.png" />
-        NSString Extension Reference
+        float4 Extension Reference
       </p>
     </div>
     <div class="content-wrapper">
@@ -245,10 +245,10 @@
       <article class="main-content">
         <section>
           <section class="section">
-            <h1>NSString</h1>
+            <h1>float4</h1>
               <div class="declaration">
                 <div class="language">
-                  <pre class="highlight swift"><code><span class="kd">class</span> <span class="kt">NSString</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt">NSCopying</span><span class="p">,</span> <span class="kt">NSMutableCopying</span><span class="p">,</span> <span class="kt">NSSecureCoding</span></code></pre>
+                  <pre class="highlight swift"><code><span class="kd">typealias</span> <span class="n">float4</span> <span class="o">=</span> <span class="kt">SIMD4</span><span class="o">&lt;</span><span class="kt">Float</span><span class="o">&gt;</span></code></pre>
 
                 </div>
               </div>
@@ -260,9 +260,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:So8NSStringC4ClewE11documentURL10Foundation0D0Vvp"></a>
-                    <a name="//apple_ref/swift/Property/documentURL" class="dashAnchor"></a>
-                    <a class="token" href="#/s:So8NSStringC4ClewE11documentURL10Foundation0D0Vvp">documentURL</a>
+                    <a name="/s:s5SIMD4V4ClewSfRszrlE13inhomogeneouss5SIMD3VySfGvp"></a>
+                    <a name="//apple_ref/swift/Property/inhomogeneous" class="dashAnchor"></a>
+                    <a class="token" href="#/s:s5SIMD4V4ClewSfRszrlE13inhomogeneouss5SIMD3VySfGvp">inhomogeneous</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -270,14 +270,14 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>the URL associated in the document directory associated with the particular NSString (note: this is non-sensical for some NSStrings).</p>
+                        <p>convert from a 4-element homogeneous vector to a 3-element inhomogeneous one.  This attribute only makes sense if the 4-element vector is a homogeneous representation of a 3D point.</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">documentURL</span><span class="p">:</span> <span class="kt">URL</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">inhomogeneous</span><span class="p">:</span> <span class="n">float3</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>

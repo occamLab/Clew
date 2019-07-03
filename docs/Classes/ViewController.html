@@ -62,6 +62,9 @@
                 <a href="../Classes/PathLogger.html">PathLogger</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Classes/PathMatcher.html">PathMatcher</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Classes/PauseTrackingController.html">PauseTrackingController</a>
               </li>
               <li class="nav-group-task">
@@ -195,6 +198,9 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Extensions/float2x2.html">float2x2</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/float4.html">float4</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Extensions/float4x4.html">float4x4</a>
@@ -3308,6 +3314,33 @@ list of crumbs dropped when recording pth</p>
                     </section>
                   </div>
                 </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Clew14ViewControllerC11pathMatcherAA04PathE0Cvp"></a>
+                    <a name="//apple_ref/swift/Property/pathMatcher" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Clew14ViewControllerC11pathMatcherAA04PathE0Cvp">pathMatcher</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Interface for matching points to a saved route</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">pathMatcher</span><span class="p">:</span> <span class="kt"><a href="../Classes/PathMatcher.html">PathMatcher</a></span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
               </ul>
             </div>
             <div class="task-group">
@@ -4337,204 +4370,6 @@ list of crumbs dropped when recording pth</p>
                             </tr>
                           </tbody>
                         </table>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:4Clew14ViewControllerC21transformLocationInfo9locations0D0Says5SIMD4VySfGGSayAA0eF0CG_So13simd_float4x4atF"></a>
-                    <a name="//apple_ref/swift/Method/transformLocationInfo(locations:transform:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:4Clew14ViewControllerC21transformLocationInfo9locations0D0Says5SIMD4VySfGGSayAA0eF0CG_So13simd_float4x4atF">transformLocationInfo(locations:transform:)</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>Transform location info by applying the specified transform.</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">transformLocationInfo</span><span class="p">(</span><span class="nv">locations</span><span class="p">:</span> <span class="p">[</span><span class="kt"><a href="../Classes/LocationInfo.html">LocationInfo</a></span><span class="p">],</span> <span class="nv">transform</span><span class="p">:</span> <span class="n">simd_float4x4</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="n">simd_float4</span><span class="p">]</span></code></pre>
-
-                        </div>
-                      </div>
-                      <div>
-                        <h4>Parameters</h4>
-                        <table class="graybox">
-                          <tbody>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>locations</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>the array of locations</p>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>transform</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>the transform to apply (multiplied on the left)</p>
-                                </div>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                      <div>
-                        <h4>Return Value</h4>
-                        <p>the transformed locations represented as an array of homogeneous 3D coordinates.</p>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:4Clew14ViewControllerC21closestPointOnSegment_5start3ends5SIMD3VySfGAI_A2ItF"></a>
-                    <a name="//apple_ref/swift/Method/closestPointOnSegment(_:start:end:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:4Clew14ViewControllerC21closestPointOnSegment_5start3ends5SIMD3VySfGAI_A2ItF">closestPointOnSegment(_:start:end:)</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>Compute the closet point on a line segment to the specified input point.</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">closestPointOnSegment</span><span class="p">(</span><span class="n">_</span> <span class="nv">p</span><span class="p">:</span> <span class="n">simd_float3</span><span class="p">,</span> <span class="nv">start</span><span class="p">:</span> <span class="n">simd_float3</span><span class="p">,</span> <span class="nv">end</span><span class="p">:</span> <span class="n">simd_float3</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">simd_float3</span></code></pre>
-
-                        </div>
-                      </div>
-                      <div>
-                        <h4>Parameters</h4>
-                        <table class="graybox">
-                          <tbody>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>p</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>the point to match to the line segment</p>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>start</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>the starting point of the line segment</p>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>end</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>the ending point of the line segment</p>
-                                </div>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                      <div>
-                        <h4>Return Value</h4>
-                        <p>the closet point (in the L2 sense) to <code>p</code> on the line segment connecting <code>start</code> and <code>end</code>.</p>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:4Clew14ViewControllerC20getClosestRouteMatch6points14routeKeypointsSays5SIMD4VySfGGAJ_SayAA12KeypointInfoVGtF"></a>
-                    <a name="//apple_ref/swift/Method/getClosestRouteMatch(points:routeKeypoints:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:4Clew14ViewControllerC20getClosestRouteMatch6points14routeKeypointsSays5SIMD4VySfGGAJ_SayAA12KeypointInfoVGtF">getClosestRouteMatch(points:routeKeypoints:)</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>Determines the closet point to each of <code>points</code> on the piecewise linear route defined by <code>routeKeypoints</code>.  The definition of closest is given by the L2 norm.</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">getClosestRouteMatch</span><span class="p">(</span><span class="nv">points</span><span class="p">:</span> <span class="p">[</span><span class="n">simd_float4</span><span class="p">],</span> <span class="nv">routeKeypoints</span><span class="p">:</span> <span class="p">[</span><span class="kt"><a href="../Structs/KeypointInfo.html">KeypointInfo</a></span><span class="p">])</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="n">simd_float4</span><span class="p">]</span></code></pre>
-
-                        </div>
-                      </div>
-                      <div>
-                        <h4>Parameters</h4>
-                        <table class="graybox">
-                          <tbody>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>points</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>the points to match to the route</p>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>routeKeypoints</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>the route keypoints</p>
-                                </div>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                      <div>
-                        <h4>Return Value</h4>
-                        <p>an array of homogenous 3D vectors representing the closet matched point.</p>
                       </div>
                     </section>
                   </div>
@@ -5839,7 +5674,7 @@ TODO: not sure if this is actually what we should be doing.  Perhaps we should c
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2019 <a class="link" href="" target="_blank" rel="external"></a>. All rights reserved. (Last updated: 2019-07-02)</p>
+          <p>&copy; 2019 <a class="link" href="" target="_blank" rel="external"></a>. All rights reserved. (Last updated: 2019-07-03)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.9.6</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
         </section>
       </article>

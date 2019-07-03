@@ -15,6 +15,8 @@
 		77467DAF22BBC1D300FA7DEE /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 77467DAE22BBC1D300FA7DEE /* Default-568h@2x.png */; };
 		82569F4E22187E6500448B45 /* help in Resources */ = {isa = PBXBuildFile; fileRef = 82569F4D22187E6500448B45 /* help */; };
 		82569F4F22187E6500448B45 /* help in Resources */ = {isa = PBXBuildFile; fileRef = 82569F4D22187E6500448B45 /* help */; };
+		825C7D6822CCDDA600545605 /* PathMatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 825C7D6722CCDDA600545605 /* PathMatcher.swift */; };
+		825C7D6922CCDDA600545605 /* PathMatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 825C7D6722CCDDA600545605 /* PathMatcher.swift */; };
 		B0A563F6FE1007A2716DC876 /* Pods_Clew_Dev.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3532E390954571B93729786A /* Pods_Clew_Dev.framework */; };
 		B7EB59E220F693EB00FBBC6A /* Confirm.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4DF05CC71F34EB56008B0E31 /* Confirm.mp3 */; };
 		B7EB59E320F693EB00FBBC6A /* Crumb.obj in Resources */ = {isa = PBXBuildFile; fileRef = 4D6B00E41F33C85500952242 /* Crumb.obj */; };
@@ -120,6 +122,7 @@
 		77467DAE22BBC1D300FA7DEE /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		822E27F8210E3F260024A5E3 /* Clew Dev-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Clew Dev-Info.plist"; sourceTree = "<group>"; };
 		82569F4D22187E6500448B45 /* help */ = {isa = PBXFileReference; lastKnownFileType = folder; path = help; sourceTree = "<group>"; };
+		825C7D6722CCDDA600545605 /* PathMatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PathMatcher.swift; sourceTree = "<group>"; };
 		85A1A72DC19F87F15B738291 /* Pods-Clew Dev.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew Dev.release.xcconfig"; path = "Pods/Target Support Files/Pods-Clew Dev/Pods-Clew Dev.release.xcconfig"; sourceTree = "<group>"; };
 		942F73299DA8DCF97FAA974A /* Pods_Clew.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Clew.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B7EB59EC20F693EB00FBBC6A /* Clew Dev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Clew Dev.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -308,6 +311,7 @@
 				E5470EB522C119F4001092A4 /* Utility.swift */,
 				1F2B9D7022C3B50D00317DC8 /* HelpCompiler.swift */,
 				E5470EB622C119F4001092A4 /* AppDelegate.swift */,
+				825C7D6722CCDDA600545605 /* PathMatcher.swift */,
 			);
 			path = Misc;
 			sourceTree = "<group>";
@@ -670,6 +674,7 @@
 				E5470F0022C119F5001092A4 /* PathLogger.swift in Sources */,
 				E5470F2422C119F5001092A4 /* UIButtonExtensions.swift in Sources */,
 				E5470EF822C119F5001092A4 /* AudioVisualizerView.swift in Sources */,
+				825C7D6822CCDDA600545605 /* PathMatcher.swift in Sources */,
 				E5470F1E22C119F5001092A4 /* NSStringExtension.swift in Sources */,
 				E5470F3222C119F5001092A4 /* ResumeTrackingController.swift in Sources */,
 			);
@@ -681,6 +686,7 @@
 			files = (
 				E5470F2F22C119F5001092A4 /* StopRecordingController.swift in Sources */,
 				E5470F0B22C119F5001092A4 /* AppDelegate.swift in Sources */,
+				825C7D6922CCDDA600545605 /* PathMatcher.swift in Sources */,
 				E5470F2322C119F5001092A4 /* UIViewExtensions.swift in Sources */,
 				E5470F3D22C119F5001092A4 /* FeedbackViewController.swift in Sources */,
 				E5470F3522C119F5001092A4 /* StopNavigationController.swift in Sources */,
