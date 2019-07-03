@@ -40,11 +40,6 @@ class RootContainerView: UIView {
 
     /// button for bringing up the feedback menu
     var feedbackButton: UIButton!
-    
-    /// a banner that displays an announcement in the top quarter of the screen.
-    /// This is used for displaying status updates or directions.
-    /// This should only be used to display time-sensitive content.
-    var announcementText: UILabel!
 
     /// a timer that counts down during the alignment procedure
     /// (alignment is captured at the end of the time)
@@ -115,20 +110,6 @@ class RootContainerView: UIView {
         getDirectionButton.accessibilityLabel = "Get Directions"
         getDirectionButton.setImage(UIImage(named: "GetDirection"), for: .normal)
         getDirectionButton.isHidden = true
-
-        // MARK: Announcement Text
-        announcementText = UILabel(frame: CGRect(x: 0,
-                                                 y: UIConstants.yOriginOfAnnouncementFrame,
-                                                 width: UIConstants.buttonFrameWidth,
-                                                 height: UIConstants.buttonFrameHeight*(1/2)))
-        announcementText.textColor = UIColor.white
-        announcementText.textAlignment = .center
-        announcementText.isAccessibilityElement = false
-        announcementText.lineBreakMode = .byWordWrapping
-        announcementText.numberOfLines = 2
-        announcementText.font = announcementText.font.withSize(20)
-        announcementText.backgroundColor = UIColor.black.withAlphaComponent(0.4)
-        announcementText.isHidden = true
         
         // MARK: countdown element
         countdownTimer = SRCountdownTimer(frame: CGRect(x: UIConstants.buttonFrameWidth*1/10,
@@ -147,7 +128,6 @@ class RootContainerView: UIView {
         countdownTimer.accessibilityElementsHidden = true
         
         /// add all sub views
-        addSubview(announcementText)
         addSubview(getDirectionButton)
         addSubview(settingsButton)
         addSubview(helpButton)

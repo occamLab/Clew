@@ -86,7 +86,7 @@ class TutorialViewController: UIViewController, ClewObserver {
     
     // TODO: double check that overriding the default implementation actually gets called
     func finishAnnouncement(announcement: String) {
-        // optionally do something in the TutorialViewController
+        // if let currentAnnouncement = current
         
         for child in children {
             if let observer = child as? ClewObserver {
