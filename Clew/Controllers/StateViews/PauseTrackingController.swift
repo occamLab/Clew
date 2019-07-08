@@ -8,18 +8,6 @@
 
 import UIKit
 
-class TransparentTouchView: UIView {
-    override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
-        for view in self.subviews {
-            if view.isUserInteractionEnabled, view.point(inside: self.convert(point, to: view), with: event) {
-                return true
-            }
-        }
-        
-        return false
-    }
-}
-
 /// A View Controller for handling the pause route state
 /// also handles associated buttons
 class PauseTrackingController: UIViewController {
