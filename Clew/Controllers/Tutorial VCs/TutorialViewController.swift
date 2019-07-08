@@ -21,6 +21,7 @@ class TutorialViewController: UIViewController, ClewObserver {
     
     let singleRouteChildVC = SingleRouteVC()
     let phoneOrientationTrainingChildVC  = PhoneOrientationTrainingVC()
+    let tipsAndWarningsChildVC = TipsAndWarningsViewController()
     
     /// A custom enumeration type that describes the exact state of the tutorial.
     enum TutorialState {
