@@ -28,10 +28,10 @@ class ResumeTrackingController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.frame = CGRect(x: 0,
-                            y: 0,
-                            width: UIScreen.main.bounds.size.width,
-                            height: UIScreen.main.bounds.size.height)
+        view = TransparentTouchView(frame:CGRect(x: 0,
+                                                 y: 0,
+                                                 width: UIScreen.main.bounds.size.width,
+                                                 height: UIScreen.main.bounds.size.height))
 
         label = UILabel()
         let scrollView = UIScrollView()

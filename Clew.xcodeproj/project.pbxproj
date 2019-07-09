@@ -18,8 +18,8 @@
 		B0A563F6FE1007A2716DC876 /* Pods_Clew_Dev.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3532E390954571B93729786A /* Pods_Clew_Dev.framework */; };
 		B7EB59E220F693EB00FBBC6A /* Confirm.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4DF05CC71F34EB56008B0E31 /* Confirm.mp3 */; };
 		B7EB59E320F693EB00FBBC6A /* Crumb.obj in Resources */ = {isa = PBXBuildFile; fileRef = 4D6B00E41F33C85500952242 /* Crumb.obj */; };
-		E50DED4322CCEAD2003856AF /* TransparentTouchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E50DED4222CCEAD1003856AF /* TransparentTouchView.swift */; };
-		E50DED4422CCEAD2003856AF /* TransparentTouchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E50DED4222CCEAD1003856AF /* TransparentTouchView.swift */; };
+		E538EF4F22D3BFEC004216E9 /* TransparentTouchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E538EF4E22D3BFEC004216E9 /* TransparentTouchView.swift */; };
+		E538EF5022D3BFEC004216E9 /* TransparentTouchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E538EF4E22D3BFEC004216E9 /* TransparentTouchView.swift */; };
 		E5470EF622C119F5001092A4 /* RecordButtonKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470EAB22C119F4001092A4 /* RecordButtonKit.swift */; };
 		E5470EF722C119F5001092A4 /* RecordButtonKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470EAB22C119F4001092A4 /* RecordButtonKit.swift */; };
 		E5470EF822C119F5001092A4 /* AudioVisualizerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470EAC22C119F4001092A4 /* AudioVisualizerView.swift */; };
@@ -127,7 +127,7 @@
 		B7EB59EC20F693EB00FBBC6A /* Clew Dev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Clew Dev.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C68778047D8E263D2FB04989 /* Pods-Clew Dev.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew Dev.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Clew Dev/Pods-Clew Dev.debug.xcconfig"; sourceTree = "<group>"; };
 		D89DDB87A8AE1A9ECEAFCEC6 /* Pods-Clew.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew.release.xcconfig"; path = "Pods/Target Support Files/Pods-Clew/Pods-Clew.release.xcconfig"; sourceTree = "<group>"; };
-		E50DED4222CCEAD1003856AF /* TransparentTouchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransparentTouchView.swift; sourceTree = "<group>"; };
+		E538EF4E22D3BFEC004216E9 /* TransparentTouchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransparentTouchView.swift; sourceTree = "<group>"; };
 		E5470EAB22C119F4001092A4 /* RecordButtonKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecordButtonKit.swift; sourceTree = "<group>"; };
 		E5470EAC22C119F4001092A4 /* AudioVisualizerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioVisualizerView.swift; sourceTree = "<group>"; };
 		E5470EAD22C119F4001092A4 /* RecorderViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecorderViewController.swift; sourceTree = "<group>"; };
@@ -332,7 +332,7 @@
 				E5470ED822C119F4001092A4 /* UIViewExtensions.swift */,
 				E5470ED922C119F4001092A4 /* UIButtonExtensions.swift */,
 				E5470EDA22C119F4001092A4 /* Float4x4Extension.swift */,
-				E50DED4222CCEAD1003856AF /* TransparentTouchView.swift */,
+				E538EF4E22D3BFEC004216E9 /* TransparentTouchView.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -642,7 +642,7 @@
 				E5470F2E22C119F5001092A4 /* StopRecordingController.swift in Sources */,
 				E5470F0A22C119F5001092A4 /* AppDelegate.swift in Sources */,
 				E5470F2222C119F5001092A4 /* UIViewExtensions.swift in Sources */,
-				E50DED4322CCEAD2003856AF /* TransparentTouchView.swift in Sources */,
+				E538EF4F22D3BFEC004216E9 /* TransparentTouchView.swift in Sources */,
 				E5470F3C22C119F5001092A4 /* FeedbackViewController.swift in Sources */,
 				E5470F3422C119F5001092A4 /* StopNavigationController.swift in Sources */,
 				E5470F3E22C119F5001092A4 /* RoutesViewController.swift in Sources */,
@@ -680,7 +680,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E50DED4422CCEAD2003856AF /* TransparentTouchView.swift in Sources */,
+				E538EF5022D3BFEC004216E9 /* TransparentTouchView.swift in Sources */,
 				E5470F2F22C119F5001092A4 /* StopRecordingController.swift in Sources */,
 				E5470F0B22C119F5001092A4 /* AppDelegate.swift in Sources */,
 				E5470F2322C119F5001092A4 /* UIViewExtensions.swift in Sources */,
