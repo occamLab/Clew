@@ -8,29 +8,25 @@
 
 import Foundation
 import SceneKit
+import SRCountdownTimer
 
 
-class PhoneOrientationTrainingVC: TutorialChildViewController {
+class PhoneOrientationTrainingVC: TutorialChildViewController, SRCountdownTimerDelegate {
+//    var rootContainerView: RootContainerView!
+//
+//    var tutorialViewController: TutorialViewController!
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
     }
     
     var lastHapticFeedbackTime = Date()
     var timeLeft = 10
-    var countdown:Timer? = nil {
-        willSet{
-            countdown?.invalidate()
-        }
-    }
+    var countdown:Timer?
     
     @objc func timerCalled() {
-        print("timeLeft", timeLeft)
-        if timeLeft != 0 {
-            timeLeft -= 1
-        } else {
-            print("stop")
-            countdown = nil
-        }
+        print("timer finished")
+        tutorialParent?.state = .optimalOrientationAchieved
     }
     
     override func didReceiveNewCameraPose(transform: simd_float4x4) {
@@ -48,19 +44,22 @@ class PhoneOrientationTrainingVC: TutorialChildViewController {
         print("timeInterval", timeInterval)
         print("angleFromVertical", angleFromVertical)
         
-        if timeInterval > intendedInterval {
-            // condition to pass if state transition was to occur
-            if angleFromVertical < 0.5 {
+        // condition to pass if state transition was to occur
+        if abs(angleFromVertical) < 0.5 {
+            if countdown == nil {
                 print("angle falls in range")
-                countdown = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(timerCalled), userInfo: nil, repeats: true)
-                if countdown == nil {
-                    print("timer finished")
-                    tutorialParent?.state = .optimalOrientationAchieved
-                }
-                
+//                rootContainerView.countdownTimer.isHidden = false
+//                rootContainerView.countdownTimer.start(beginingValue: ViewController.alignmentWaitingPeriod, interval: 1)
+//                tutorialViewController.viewDidLoad()
+                countdown = Timer.scheduledTimer(timeInterval: 5.0, target: self, selector: #selector(timerCalled), userInfo: nil, repeats: false)
+            }
+        } else {
+            countdown?.invalidate()
+        }
+        
+        if timeInterval > intendedInterval {
             feedbackGenerator.impactOccurred()
             lastHapticFeedbackTime = now
-            }
         }
         
          /* if abs(angleFromVertical) < 0.1 {
