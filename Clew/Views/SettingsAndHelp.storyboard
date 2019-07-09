@@ -71,16 +71,13 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Vtf-R1-h2R">
-                                                    <rect key="frame" x="15" y="11" width="345" height="29"/>
+                                                    <rect key="frame" x="15" y="19" width="345" height="20.5"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Date created:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tUX-fc-ttC">
-                                                    <rect key="frame" x="15" y="48" width="345" height="18"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="height" constant="18" id="Ij3-4K-4EH"/>
-                                                    </constraints>
+                                                    <rect key="frame" x="15" y="51.5" width="345" height="14.5"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -89,9 +86,9 @@
                                             <constraints>
                                                 <constraint firstAttribute="bottomMargin" secondItem="tUX-fc-ttC" secondAttribute="bottom" constant="8" id="0cr-gX-fv2"/>
                                                 <constraint firstItem="Vtf-R1-h2R" firstAttribute="trailing" secondItem="I2o-E7-Fmg" secondAttribute="trailingMargin" id="8ow-SF-a4a"/>
-                                                <constraint firstItem="tUX-fc-ttC" firstAttribute="top" secondItem="Vtf-R1-h2R" secondAttribute="bottom" constant="8" symbolic="YES" id="Glu-p6-8y1"/>
                                                 <constraint firstItem="tUX-fc-ttC" firstAttribute="trailing" secondItem="Vtf-R1-h2R" secondAttribute="trailing" id="JYL-gc-JWn"/>
-                                                <constraint firstItem="Vtf-R1-h2R" firstAttribute="top" secondItem="I2o-E7-Fmg" secondAttribute="topMargin" id="O9G-We-YCi"/>
+                                                <constraint firstItem="Vtf-R1-h2R" firstAttribute="top" secondItem="I2o-E7-Fmg" secondAttribute="topMargin" constant="8" id="O9G-We-YCi"/>
+                                                <constraint firstItem="tUX-fc-ttC" firstAttribute="top" secondItem="Vtf-R1-h2R" secondAttribute="bottom" constant="12" id="aoj-BD-k5S"/>
                                                 <constraint firstItem="tUX-fc-ttC" firstAttribute="leading" secondItem="I2o-E7-Fmg" secondAttribute="leadingMargin" id="ebd-XF-4hn"/>
                                                 <constraint firstItem="tUX-fc-ttC" firstAttribute="centerX" secondItem="Vtf-R1-h2R" secondAttribute="centerX" id="kHg-r0-1wM"/>
                                                 <constraint firstItem="Vtf-R1-h2R" firstAttribute="leading" secondItem="I2o-E7-Fmg" secondAttribute="leadingMargin" id="vsn-ph-a4h"/>
