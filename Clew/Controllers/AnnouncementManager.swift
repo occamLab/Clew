@@ -142,6 +142,7 @@ class AnnouncementManager : UIViewController, AVSpeechSynthesizerDelegate {
         
         if UIAccessibility.isVoiceOverRunning {
             // use the VoiceOver API instead of text to speech
+            print("halp")
             currentAnnouncement = announcement
             UIAccessibility.post(notification: UIAccessibility.Notification.announcement, argument: announcement)
         } else if UserDefaults.standard.bool(forKey: "voiceFeedback") {
