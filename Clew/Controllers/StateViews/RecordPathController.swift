@@ -56,7 +56,7 @@ class RecordPathController: UIViewController {
         addLandmarkButton = UIButton.makeConstraintButton(view,
                                                      alignment: UIConstants.ButtonContainerHorizontalAlignment.right,
                                                      appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "Landmark")!),
-                                                     label: "Saved routes list")
+                                                     label: "Landmark")
         
         routesButton = UIButton.makeConstraintButton(view,
                                                 alignment: UIConstants.ButtonContainerHorizontalAlignment.left,
