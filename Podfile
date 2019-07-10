@@ -13,7 +13,6 @@ def all_pods
   pod 'SRCountdownTimer'
   pod 'PRTween', '~> 0.1'
   pod 'Firebase/Analytics'
-  pod 'OpenCV'
 end
 
 target 'Clew' do
