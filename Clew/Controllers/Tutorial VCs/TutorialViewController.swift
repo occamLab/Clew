@@ -9,10 +9,8 @@
 import Foundation
 import SceneKit
 import UIKit
-import SRCountdownTimer
 
 class TutorialViewController: UIViewController, ClewObserver {
-    var countdownTimer: SRCountdownTimer!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -20,19 +18,6 @@ class TutorialViewController: UIViewController, ClewObserver {
                                                  y: 0,
                                                  width: UIScreen.main.bounds.size.width,
                                                  height: UIScreen.main.bounds.size.height))
-        // put new timer here
-        countdownTimer = SRCountdownTimer(frame: CGRect(x: UIConstants.buttonFrameWidth*1/10,
-                                                        y: UIConstants.yOriginOfButtonFrame/10,
-                                                        width: UIConstants.buttonFrameWidth*8/10,
-                                                        height: UIConstants.buttonFrameWidth*8/10))
-        countdownTimer.labelFont = UIFont(name: "HelveticaNeue-Light", size: 100)
-        countdownTimer.labelTextColor = UIColor.white
-        countdownTimer.timerFinishingText = "End"
-        countdownTimer.lineWidth = 10
-        countdownTimer.lineColor = UIColor.white
-        countdownTimer.backgroundColor = UIColor.black.withAlphaComponent(0.4)
-        countdownTimer.isHidden = true
-        countdownTimer.accessibilityElementsHidden = true
     }
     
     let singleRouteChildVC = SingleRouteVC()

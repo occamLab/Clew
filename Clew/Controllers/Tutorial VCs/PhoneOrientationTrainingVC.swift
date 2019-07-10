@@ -12,21 +12,46 @@ import SRCountdownTimer
 
 
 class PhoneOrientationTrainingVC: TutorialChildViewController, SRCountdownTimerDelegate {
-//    var rootContainerView: RootContainerView!
-//
-//    var tutorialViewController: TutorialViewController!
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
     }
     
+    
+    /// Callback function for when `countdownTimer` updates.  This allows us to announce the new value via voice
+    ///
+    /// - Parameter newValue: the new value (in seconds) displayed on the countdown timer
+    @objc func timerDidUpdateCounterValue(newValue: Int) {
+        UIAccessibility.post(notification: UIAccessibility.Notification.announcement, argument: String(newValue))
+    }
+
+    
     var lastHapticFeedbackTime = Date()
-    var timeLeft = 10
+    var countdownTimer: SRCountdownTimer!
     var countdown:Timer?
+    
     
     @objc func timerCalled() {
         print("timer finished")
         tutorialParent?.state = .optimalOrientationAchieved
+        countdownTimer.isHidden = true
+    }
+    
+    override func viewDidLoad() {
+        countdownTimer = SRCountdownTimer(frame: CGRect(x: UIConstants.buttonFrameWidth*1/10,
+                                                        y: UIConstants.yOriginOfButtonFrame/10,
+                                                        width: UIConstants.buttonFrameWidth*8/10,
+                                                        height: UIConstants.buttonFrameWidth*8/10))
+        countdownTimer.labelFont = UIFont(name: "HelveticaNeue-Light", size: 100)
+        countdownTimer.labelTextColor = UIColor.white
+        countdownTimer.timerFinishingText = "End"
+        countdownTimer.lineWidth = 10
+        countdownTimer.lineColor = UIColor.white
+        countdownTimer.backgroundColor = UIColor.black.withAlphaComponent(0.4)
+        countdownTimer.isHidden = true
+        countdownTimer.delegate = self
+        countdownTimer.accessibilityElementsHidden = true
+        view.addSubview(countdownTimer)
     }
     
     override func didReceiveNewCameraPose(transform: simd_float4x4) {
@@ -48,12 +73,12 @@ class PhoneOrientationTrainingVC: TutorialChildViewController, SRCountdownTimerD
         if abs(angleFromVertical) < 0.5 {
             if countdown == nil {
                 print("angle falls in range")
-//                rootContainerView.countdownTimer.isHidden = false
-//                rootContainerView.countdownTimer.start(beginingValue: ViewController.alignmentWaitingPeriod, interval: 1)
-//                tutorialViewController.viewDidLoad()
-                countdown = Timer.scheduledTimer(timeInterval: 5.0, target: self, selector: #selector(timerCalled), userInfo: nil, repeats: false)
-            }
+                countdownTimer.isHidden = false
+                countdownTimer.start(beginingValue: 3, interval: 1)
+                
+                countdown = Timer.scheduledTimer(timeInterval: 3.0, target: self, selector: #selector(timerCalled), userInfo: nil, repeats: false) }
         } else {
+            countdownTimer.isHidden = true
             countdown?.invalidate()
         }
         
@@ -61,19 +86,5 @@ class PhoneOrientationTrainingVC: TutorialChildViewController, SRCountdownTimerD
             feedbackGenerator.impactOccurred()
             lastHapticFeedbackTime = now
         }
-        
-         /* if abs(angleFromVertical) < 0.1 {
-            Timer.scheduledTimer(withTimeInterval: 0.1, repeats: false) {_ in
-            feedbackGenerator.impactOccurred()
-            self.tutorialParent?.state = .optimalOrientationAchieved
-            UIAccessibility.post(notification: UIAccessibility.Notification.announcement, argument: NSLocalizedString("Great job.  you have the phone positioned properly!", comment: "Message to user during tutorial"))
-
-         }
-         if abs(angleFromVertical) < 0.5 && abs(angleFromVertical) > 0.1 {
-         Timer.scheduledTimer(withTimeInterval: 3.0, repeats: false) {_ in
-         feedbackGenerator.impactOccurred()
-         }
-         }
-         print("angleFromVertical", angleFromVertical) */
     }
 }
