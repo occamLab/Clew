@@ -89,8 +89,17 @@ enum AppState {
 }
 
 /// The view controller that handles the main Clew window.  This view controller is always active and handles the various views that are used for different app functionalities.
-class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDelegate, AVSpeechSynthesizerDelegate {
-    
+class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDelegate, AVSpeechSynthesizerDelegate, ARSessionDelegate {
+    func session(_ session: ARSession,
+                 didUpdate frame: ARFrame){
+        baseImage = (sceneView.session.currentFrame?.capturedImage).map{UIImage(ciImage: CIImage(cvPixelBuffer: $0), scale: 10, orientation: .up)}
+
+        if let baseImage = baseImage {
+            imageView.image = VisualAlignment.visualAlignmentImage(baseImage)
+            imageView.frame = CGRect(x: 0, y: 100, width: baseImage.size.width, height: baseImage.size.height)
+
+        }
+    }
     // MARK: - Refactoring UI definition
     
     // MARK: Properties and subview declarations
@@ -554,10 +563,15 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// stop route navigation VC
     var stopNavigationController: StopNavigationController!
+    
+    var baseImage: UIImage?
+    var imageView = UIImageView()
 
     /// called when the view has loaded.  We setup various app elements in here.
     override func viewDidLoad() {
         super.viewDidLoad()
+       
+       // var image: UIImage =
         
         // set the main view as active
         view = RootContainerView(frame: UIScreen.main.bounds)
@@ -575,7 +589,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         // Add the scene to the view, which is a RootContainerView
         sceneView.frame = view.frame
         view.addSubview(sceneView)
-
+   
         setupAudioPlayers()
         loadAssets()
         createSettingsBundle()
@@ -614,7 +628,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         NotificationCenter.default.addObserver(forName: Notification.Name("ClewPopoverDismissed"), object: nil, queue: nil) { (notification) -> Void in
             self.suppressTrackingWarnings = false
         }
-        
+
+        imageView = UIImageView(image: baseImage)
+        //imageView.frame = CGRect
+        view.addSubview(imageView)
+
     }
     
     /// Create the audio player objdcts for the various app sounds.  Creating them ahead of time helps reduce latency when playing them later.
@@ -953,6 +971,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
 
         sceneView.session.run(configuration)
         sceneView.delegate = self
+        sceneView.session.delegate = self
     }
     
     /// Handle the user clicking the confirm alignment to a saved landmark.  Depending on the app state, the behavior of this function will differ (e.g., if the route is being resumed versus reloaded)

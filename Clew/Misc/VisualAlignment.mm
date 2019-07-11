@@ -8,10 +8,19 @@
 
 #import "VisualAlignment.h"
 #import <opencv2/opencv.hpp>
-
+#import <opencv2/imgcodecs/ios.h>
+#import <UIKit/UIKit.h>
 @implementation VisualAlignment
 
-+ (void) computeRotation :(cv::Mat)base_image :(cv::Mat) new_image :(double) focal_length :(cv::Point2d) principle_point {
++ (UIImage *) visualAlignmentImage :(UIImage *)base_image {
+    cv::Mat image;
+    UIImageToMat(base_image, image);
+    UIImage* ui_image = MatToUIImage(image);
+    
+    return ui_image;
+}
+
++ (cv::Mat) computeRotation :(cv::Mat)base_image :(cv::Mat) new_image :(double) focal_length :(cv::Point2d) principle_point {
     
     auto detector = cv::AKAZE::create();
     std::vector<cv::KeyPoint> keypoints1, keypoints2;
@@ -35,8 +44,9 @@
     cv::Mat rotation, translation;
     
     cv::recoverPose(essential_mat, selected_points1, selected_points2, rotation, translation, focal_length, principle_point, cv::Mat());
+    
+    return rotation;
 }
-
 
 + (NSString *)openCVVersionString {
     
