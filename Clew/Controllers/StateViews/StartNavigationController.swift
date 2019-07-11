@@ -55,6 +55,12 @@ class StartNavigationController: UIViewController {
                                                appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "Pause")!),
                                                label: "Pause session")
         
+        let fillerSpace = UIView()
+        fillerSpace.translatesAutoresizingMaskIntoConstraints = false
+        /// set width of button and constaint height to be equal to width
+        fillerSpace.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 3.50).isActive = true
+        fillerSpace.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 3.50).isActive = true
+        
         /// create stack view for aligning and distributing bottom layer buttons
         let stackView   = UIStackView()
         view.addSubview(stackView)
@@ -69,6 +75,7 @@ class StartNavigationController: UIViewController {
         /// add elements to the stack
         stackView.addArrangedSubview(pauseButton)
         stackView.addArrangedSubview(startNavigationButton)
+        stackView.addArrangedSubview(fillerSpace)
         
         /// size the stack
         stackView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
