@@ -11,8 +11,29 @@ import SceneKit
 
 
 class PhoneOrientationTrainingVC: TutorialChildViewController {
+    
+    var nextButton: UIButton!
+    var backgroundShadow: UIView! = TutorialShadowBackground()
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        
+        // test button to figure out state transition
+        let button = UIButton(frame: CGRect(x: 100, y: 100, width: 200, height: 50))
+        button.backgroundColor = .white
+        button.setTitle("Next state", for: .normal)
+        button.setTitleColor(.black, for: .normal)
+        button.layer.masksToBounds = true
+        button.layer.cornerRadius = 8.0
+        button.addTarget(self, action: #selector(buttonAction), for: .touchUpInside)
+        
+        self.view.addSubview(backgroundShadow)
+        self.view.addSubview(button)
+        //
+    }
+    
+    @objc func buttonAction(sender: UIButton!) {
+         tutorialParent?.state = .readyToRecordSingleRoute
     }
     
     var lastHapticFeedbackTime = Date()

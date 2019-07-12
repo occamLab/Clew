@@ -42,7 +42,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             userDefaults.set(true, forKey: "firstTimeLogin")
             window = UIWindow(frame:UIScreen.main.bounds)
             window?.makeKeyAndVisible()
-            window?.rootViewController = safetyContent
+            window?.rootViewController = ViewController() //Remember to change it back to safetyContent
             UIApplication.shared.isIdleTimerDisabled = true
             return true
 //        } else {
