@@ -289,7 +289,7 @@
                                     <color key="titleColor" red="0.4004661739" green="0.7354947329" blue="0.27886539700000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
                                 <connections>
-                                    <action selector="CloseTips:" destination="wXT-km-fnf" eventType="touchUpInside" id="gOG-TH-OGm"/>
+                                    <segue destination="6MB-UK-AQl" kind="presentation" id="Zuj-47-QKf"/>
                                 </connections>
                             </button>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" userInteractionEnabled="NO" contentMode="scaleToFill" text="TIPS FOR USE" textAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="B0s-r4-N6F" customClass="IASKTextView">
@@ -405,6 +405,65 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7Ug-WX-Bz2" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="771.01449275362324" y="37.5"/>
+        </scene>
+        <!--Phone Orientation StoryboardVC-->
+        <scene sceneID="L37-79-7eO">
+            <objects>
+                <viewController id="6MB-UK-AQl" customClass="PhoneOrientationStoryboardVC" customModule="Clew" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="5vX-yA-l6r">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ALIGN YOUR PHONE!" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mRf-yi-euW">
+                                <rect key="frame" x="45" y="86" width="285" height="118"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="118" id="8m4-vW-qPQ"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="HelveticaNeue-CondensedBold" family="Helvetica Neue" pointSize="45"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="MPM-bD-E4D" customClass="FLAnimatedImageView">
+                                <rect key="frame" x="62.5" y="246" width="250" height="250"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="250" id="UhT-mB-GIR"/>
+                                    <constraint firstAttribute="height" constant="250" id="y1d-L4-lVH"/>
+                                </constraints>
+                            </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2E6-tb-gjS">
+                                <rect key="frame" x="135" y="546" width="105" height="81"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="81" id="Kr3-Z1-UcB"/>
+                                    <constraint firstAttribute="width" constant="105" id="ZoZ-S6-ZJr"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="HelveticaNeue-CondensedBold" family="Helvetica Neue" pointSize="28"/>
+                                <state key="normal" title="GOT IT!" backgroundImage="buttonBackground2">
+                                    <color key="titleColor" red="0.4004661739" green="0.7354947329" blue="0.27886539700000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="CloseTips:" destination="6MB-UK-AQl" eventType="touchUpInside" id="6sH-5r-fPq"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" red="0.4004661739" green="0.7354947329" blue="0.27886539700000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="mRf-yi-euW" firstAttribute="centerX" secondItem="2E6-tb-gjS" secondAttribute="centerX" id="Ko9-qG-8lc"/>
+                            <constraint firstItem="mRf-yi-euW" firstAttribute="centerX" secondItem="5vX-yA-l6r" secondAttribute="centerX" id="QHX-yo-2qc"/>
+                            <constraint firstItem="MPM-bD-E4D" firstAttribute="top" secondItem="mRf-yi-euW" secondAttribute="bottom" constant="42" id="UBM-FJ-c89"/>
+                            <constraint firstItem="mRf-yi-euW" firstAttribute="leading" secondItem="Juz-Ia-9EF" secondAttribute="leading" constant="45" id="Xfy-iG-Daf"/>
+                            <constraint firstItem="mRf-yi-euW" firstAttribute="top" secondItem="Juz-Ia-9EF" secondAttribute="top" constant="66" id="cVP-YT-hLh"/>
+                            <constraint firstItem="mRf-yi-euW" firstAttribute="centerX" secondItem="MPM-bD-E4D" secondAttribute="centerX" id="dNK-VU-MRE"/>
+                            <constraint firstItem="2E6-tb-gjS" firstAttribute="top" secondItem="MPM-bD-E4D" secondAttribute="bottom" constant="50" id="z84-uP-kGi"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="Juz-Ia-9EF"/>
+                    </view>
+                    <connections>
+                        <outlet property="PhoneOrientationGIF" destination="MPM-bD-E4D" id="ZJG-lW-70t"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="fwp-8B-ydd" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1493.5999999999999" y="37.331334332833585"/>
         </scene>
     </scenes>
     <resources>

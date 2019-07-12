@@ -23,6 +23,7 @@ class TutorialViewController: UIViewController, ClewObserver {
     let singleRouteChildVC = SingleRouteVC()
     let phoneOrientationTrainingChildVC  = PhoneOrientationTrainingVC()
     let tipsAndWarningsChildVC = TipsAndWarningsViewController()
+    let announcementManager = AnnouncementManager()
     
     /// A custom enumeration type that describes the exact state of the tutorial.
     enum TutorialState {
@@ -58,7 +59,9 @@ class TutorialViewController: UIViewController, ClewObserver {
             case .startOrientationTraining:
                 add(phoneOrientationTrainingChildVC)
             case .optimalOrientationAchieved:
-                print("nothing")
+                phoneOrientationTrainingChildVC.remove()
+                announcementManager.remove()
+//                self.remove()
             case .readyToRecordSingleRoute:
                 removeAllChildVCs()
                 add(singleRouteChildVC)

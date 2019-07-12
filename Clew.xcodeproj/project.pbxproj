@@ -24,12 +24,14 @@
 		77A30FE922C66C3A008EEAAB /* PhoneOrientationTrainingVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77A30FE722C66C3A008EEAAB /* PhoneOrientationTrainingVC.swift */; };
 		82569F4E22187E6500448B45 /* help in Resources */ = {isa = PBXBuildFile; fileRef = 82569F4D22187E6500448B45 /* help */; };
 		82569F4F22187E6500448B45 /* help in Resources */ = {isa = PBXBuildFile; fileRef = 82569F4D22187E6500448B45 /* help */; };
-		AD13576922CCEDA800EE36E2 /* Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AD13576822CCEDA800EE36E2 /* Storyboard.storyboard */; };
-		AD13576A22CCEDA800EE36E2 /* Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AD13576822CCEDA800EE36E2 /* Storyboard.storyboard */; };
-		ADE90D4A22CCE48C001CD52C /* Tutorial.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = ADE90D4722CCE48C001CD52C /* Tutorial.storyboard */; };
-		ADE90D4C22CCE48C001CD52C /* UILabelDesign.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADE90D4922CCE48C001CD52C /* UILabelDesign.swift */; };
 		9884EB5B22CCE569000D31AF /* AnnouncementManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9884EB5A22CCE569000D31AF /* AnnouncementManager.swift */; };
 		9884EB5C22CCE569000D31AF /* AnnouncementManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9884EB5A22CCE569000D31AF /* AnnouncementManager.swift */; };
+		AD13576922CCEDA800EE36E2 /* Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AD13576822CCEDA800EE36E2 /* Storyboard.storyboard */; };
+		AD8EBB9922D7CB0700B76BA0 /* PhoneOrientationStoryboardVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD8EBB9822D7CB0700B76BA0 /* PhoneOrientationStoryboardVC.swift */; };
+		AD8EBB9A22D7CB0700B76BA0 /* PhoneOrientationStoryboardVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD8EBB9822D7CB0700B76BA0 /* PhoneOrientationStoryboardVC.swift */; };
+		AD8EBBA022D8DEFD00B76BA0 /* PhoneOrientation.gif in Resources */ = {isa = PBXBuildFile; fileRef = AD8EBB9F22D8DEFD00B76BA0 /* PhoneOrientation.gif */; };
+		AD8EBBA122D8DEFD00B76BA0 /* PhoneOrientation.gif in Resources */ = {isa = PBXBuildFile; fileRef = AD8EBB9F22D8DEFD00B76BA0 /* PhoneOrientation.gif */; };
+		ADE90D4A22CCE48C001CD52C /* Tutorial.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = ADE90D4722CCE48C001CD52C /* Tutorial.storyboard */; };
 		B0A563F6FE1007A2716DC876 /* Pods_Clew_Dev.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3532E390954571B93729786A /* Pods_Clew_Dev.framework */; };
 		B7EB59E220F693EB00FBBC6A /* Confirm.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4DF05CC71F34EB56008B0E31 /* Confirm.mp3 */; };
 		B7EB59E320F693EB00FBBC6A /* Crumb.obj in Resources */ = {isa = PBXBuildFile; fileRef = 4D6B00E41F33C85500952242 /* Crumb.obj */; };
@@ -145,10 +147,12 @@
 		85A1A72DC19F87F15B738291 /* Pods-Clew Dev.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew Dev.release.xcconfig"; path = "Pods/Target Support Files/Pods-Clew Dev/Pods-Clew Dev.release.xcconfig"; sourceTree = "<group>"; };
 		942F73299DA8DCF97FAA974A /* Pods_Clew.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Clew.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9884EB5022BA9383000D31AF /* Storyboard.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Storyboard.storyboard; sourceTree = "<group>"; };
-		AD13576822CCEDA800EE36E2 /* Storyboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Storyboard.storyboard; path = Clew/Storyboard.storyboard; sourceTree = SOURCE_ROOT; };
-		ADE90D4722CCE48C001CD52C /* Tutorial.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Tutorial.storyboard; path = Clew/Tutorial.storyboard; sourceTree = SOURCE_ROOT; };
-		ADE90D4922CCE48C001CD52C /* UILabelDesign.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UILabelDesign.swift; path = Clew/UILabelDesign.swift; sourceTree = SOURCE_ROOT; };
 		9884EB5A22CCE569000D31AF /* AnnouncementManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnouncementManager.swift; sourceTree = "<group>"; };
+		AD13576822CCEDA800EE36E2 /* Storyboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Storyboard.storyboard; path = Clew/Storyboard.storyboard; sourceTree = SOURCE_ROOT; };
+		AD8EBB9822D7CB0700B76BA0 /* PhoneOrientationStoryboardVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneOrientationStoryboardVC.swift; sourceTree = "<group>"; };
+		AD8EBB9B22D7CEB300B76BA0 /* PhoneOrientation1.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = PhoneOrientation1.gif; sourceTree = "<group>"; };
+		AD8EBB9F22D8DEFD00B76BA0 /* PhoneOrientation.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; name = PhoneOrientation.gif; path = ../../Downloads/PhoneOrientation.gif; sourceTree = "<group>"; };
+		ADE90D4722CCE48C001CD52C /* Tutorial.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Tutorial.storyboard; path = Clew/Tutorial.storyboard; sourceTree = SOURCE_ROOT; };
 		B7EB59EC20F693EB00FBBC6A /* Clew Dev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Clew Dev.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C68778047D8E263D2FB04989 /* Pods-Clew Dev.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew Dev.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Clew Dev/Pods-Clew Dev.debug.xcconfig"; sourceTree = "<group>"; };
 		D89DDB87A8AE1A9ECEAFCEC6 /* Pods-Clew.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew.release.xcconfig"; path = "Pods/Target Support Files/Pods-Clew/Pods-Clew.release.xcconfig"; sourceTree = "<group>"; };
@@ -240,6 +244,7 @@
 			children = (
 				E5F4C2EF22C4035200E0D94E /* Clew */,
 				77467DAE22BBC1D300FA7DEE /* Default-568h@2x.png */,
+				AD8EBB9F22D8DEFD00B76BA0 /* PhoneOrientation.gif */,
 				82569F4D22187E6500448B45 /* help */,
 				4DF05CC71F34EB56008B0E31 /* Confirm.mp3 */,
 				4D6B00E41F33C85500952242 /* Crumb.obj */,
@@ -275,6 +280,8 @@
 			isa = PBXGroup;
 			children = (
 				77A30FE722C66C3A008EEAAB /* PhoneOrientationTrainingVC.swift */,
+				AD8EBB9822D7CB0700B76BA0 /* PhoneOrientationStoryboardVC.swift */,
+				AD8EBB9B22D7CEB300B76BA0 /* PhoneOrientation1.gif */,
 				E5F4C31C22C4035200E0D94E /* SingleRouteVC.swift */,
 				77A30FE422C66998008EEAAB /* CoachMarks.swift */,
 			);
@@ -294,6 +301,8 @@
 			isa = PBXGroup;
 			children = (
 				9884EB5022BA9383000D31AF /* Storyboard.storyboard */,
+				AD13576822CCEDA800EE36E2 /* Storyboard.storyboard */,
+				ADE90D4722CCE48C001CD52C /* Tutorial.storyboard */,
 			);
 			name = "Recovered References";
 			sourceTree = "<group>";
@@ -528,6 +537,7 @@
 				E5F4C39C22C4035200E0D94E /* LaunchScreen.storyboard in Resources */,
 				E5F4C36622C4035200E0D94E /* StartRecording.aiff in Resources */,
 				E5F4C35C22C4035200E0D94E /* LaunchScreen.strings in Resources */,
+				AD8EBBA022D8DEFD00B76BA0 /* PhoneOrientation.gif in Resources */,
 				4D6B00E51F33C9B800952242 /* Crumb.obj in Resources */,
 				AD13576922CCEDA800EE36E2 /* Storyboard.storyboard in Resources */,
 				E5F4C36A22C4035200E0D94E /* GoogleService-Info.plist in Resources */,
@@ -552,6 +562,7 @@
 				E5F4C36B22C4035200E0D94E /* GoogleService-Info.plist in Resources */,
 				E5F4C36922C4035200E0D94E /* StopRecording.aiff in Resources */,
 				B7EB59E220F693EB00FBBC6A /* Confirm.mp3 in Resources */,
+				AD8EBBA122D8DEFD00B76BA0 /* PhoneOrientation.gif in Resources */,
 				E5F4C36322C4035200E0D94E /* Assets.xcassets in Resources */,
 				77000C3322CCE8F2004AC60B /* Storyboard.storyboard in Resources */,
 				B7EB59E320F693EB00FBBC6A /* Crumb.obj in Resources */,
@@ -575,24 +586,28 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Clew/Pods-Clew-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/FLAnimatedImage/FLAnimatedImage.framework",
 				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
 				"${BUILT_PRODUCTS_DIR}/GoogleUtilities/GoogleUtilities.framework",
 				"${BUILT_PRODUCTS_DIR}/InAppSettingsKit/InAppSettingsKit.framework",
 				"${BUILT_PRODUCTS_DIR}/Instructions/Instructions.framework",
 				"${BUILT_PRODUCTS_DIR}/PRTween/PRTween.framework",
 				"${BUILT_PRODUCTS_DIR}/SRCountdownTimer/SRCountdownTimer.framework",
+				"${BUILT_PRODUCTS_DIR}/SwiftGifOrigin/SwiftGifOrigin.framework",
 				"${BUILT_PRODUCTS_DIR}/VectorMath/VectorMath.framework",
 				"${BUILT_PRODUCTS_DIR}/leveldb-library/leveldb.framework",
 				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FLAnimatedImage.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleUtilities.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/InAppSettingsKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Instructions.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PRTween.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SRCountdownTimer.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftGifOrigin.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/VectorMath.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/leveldb.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
@@ -627,24 +642,28 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Clew Dev/Pods-Clew Dev-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/FLAnimatedImage/FLAnimatedImage.framework",
 				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
 				"${BUILT_PRODUCTS_DIR}/GoogleUtilities/GoogleUtilities.framework",
 				"${BUILT_PRODUCTS_DIR}/InAppSettingsKit/InAppSettingsKit.framework",
 				"${BUILT_PRODUCTS_DIR}/Instructions/Instructions.framework",
 				"${BUILT_PRODUCTS_DIR}/PRTween/PRTween.framework",
 				"${BUILT_PRODUCTS_DIR}/SRCountdownTimer/SRCountdownTimer.framework",
+				"${BUILT_PRODUCTS_DIR}/SwiftGifOrigin/SwiftGifOrigin.framework",
 				"${BUILT_PRODUCTS_DIR}/VectorMath/VectorMath.framework",
 				"${BUILT_PRODUCTS_DIR}/leveldb-library/leveldb.framework",
 				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FLAnimatedImage.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleUtilities.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/InAppSettingsKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Instructions.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PRTween.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SRCountdownTimer.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftGifOrigin.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/VectorMath.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/leveldb.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
@@ -717,6 +736,7 @@
 				E5F4C34A22C4035200E0D94E /* DataPersistence.swift in Sources */,
 				E5F4C37222C4035200E0D94E /* UIViewExtensions.swift in Sources */,
 				E5F4C37422C4035200E0D94E /* UIButtonExtensions.swift in Sources */,
+				AD8EBB9922D7CB0700B76BA0 /* PhoneOrientationStoryboardVC.swift in Sources */,
 				E5F4C39022C4035200E0D94E /* FeedbackViewController.swift in Sources */,
 				E5F4C37C22C4035200E0D94E /* ViewController.swift in Sources */,
 				E5F4C34C22C4035200E0D94E /* PathLogger.swift in Sources */,
@@ -753,6 +773,7 @@
 				77A30FE622C66998008EEAAB /* CoachMarks.swift in Sources */,
 				E5F4C36D22C4035200E0D94E /* SingleRouteVC.swift in Sources */,
 				E5F4C38522C4035200E0D94E /* RouteRatingController.swift in Sources */,
+				AD8EBB9A22D7CB0700B76BA0 /* PhoneOrientationStoryboardVC.swift in Sources */,
 				E5F4C38F22C4035200E0D94E /* HelpViewController.swift in Sources */,
 				E5F4C38322C4035200E0D94E /* StopRecordingController.swift in Sources */,
 				7793DE1F22CBE7B8003A0BF7 /* TipsAndWarningsViewController.swift in Sources */,
