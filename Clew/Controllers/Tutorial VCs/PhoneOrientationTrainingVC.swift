@@ -9,14 +9,20 @@
 import Foundation
 import SceneKit
 import SRCountdownTimer
-
-
+      
 class PhoneOrientationTrainingVC: TutorialChildViewController, SRCountdownTimerDelegate {
     /// Called when the view appears on screen.
     ///
     /// - Parameter animated: True if the appearance is animated
+    
+    var backgroundShadow: UIView! = TutorialShadowBackground()
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+    }
+    
+    @objc func buttonAction(sender: UIButton!) {
+         tutorialParent?.state = .readyToRecordSingleRoute
     }
     
     
@@ -58,6 +64,7 @@ class PhoneOrientationTrainingVC: TutorialChildViewController, SRCountdownTimerD
         countdownTimer.isHidden = true
         countdownTimer.delegate = self
         countdownTimer.accessibilityElementsHidden = true
+        view.addSubview(backgroundShadow)
         view.addSubview(countdownTimer)
     }
     
@@ -93,4 +100,45 @@ class PhoneOrientationTrainingVC: TutorialChildViewController, SRCountdownTimerD
             lastHapticFeedbackTime = now
         }
     }
+    
+//    @objc func nextButtonAction(sender: UIButton!) {
+//        nextButton.removeFromSuperview()
+//        backgroundShadow.removeFromSuperview()
+//    }
+//
+//    func createCongratsView() -> UIView {
+//        // Initialize views and add them to the ViewController's view
+//        congratsView = UIView(frame:CGRect(x: 0,
+//                                           y: 0,
+//                                           width: UIScreen.main.bounds.size.width,
+//                                           height: UIScreen.main.bounds.size.height))
+//        congratsLabel = UILabel(frame: CGRect(x: 150, y: 200, width: 200, height: 150))
+//        congratsLabel.text = "Congratulations! You have successfully oriented your phone. Now you will be recording a simple single route."
+//        congratsLabel.textColor = UIColor.black
+//        congratsLabel.backgroundColor = UIColor.white
+//        congratsLabel.textAlignment = .center
+//        congratsLabel.numberOfLines = 0
+//        congratsLabel.lineBreakMode = .byWordWrapping
+//        congratsLabel.layer.masksToBounds = true
+//        congratsLabel.layer.cornerRadius = 8.0
+//        congratsView.addSubview(congratsLabel)
+//
+//        nextButton = UIButton(frame: CGRect(x: 150, y: 350, width: 100, height: 50))
+//        nextButton.backgroundColor = .white
+//        nextButton.setTitleColor(.black, for: .normal)
+//        nextButton.setTitle("Next", for: .normal)
+//        nextButton.layer.masksToBounds = true
+//        nextButton.layer.cornerRadius = 8.0
+//        nextButton.isAccessibilityElement = true
+//        nextButton.isUserInteractionEnabled = true
+//        nextButton.addTarget(self, action: #selector(nextButtonAction), for: .touchUpInside)
+//        congratsView.addSubview(nextButton)
+//
+//        return congratsView
+//    }
+//
+//    func handleStateTransitionToReadyToRecordSingleRoute() {
+//        // create the pop overs then add single routevc
+//        add(SingleRouteVC)
+//    }
 }

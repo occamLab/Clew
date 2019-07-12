@@ -14,6 +14,8 @@
 		77000C3322CCE8F2004AC60B /* Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 77000C3122CCE8F1004AC60B /* Storyboard.storyboard */; };
 		77467DAF22BBC1D300FA7DEE /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 77467DAE22BBC1D300FA7DEE /* Default-568h@2x.png */; };
 		7754323022CBEDBE006E2159 /* UILabelDesign.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7754322D22CBEDBE006E2159 /* UILabelDesign.swift */; };
+		7758D72122D7906600A2312F /* TutorialShadowBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7758D72022D7906600A2312F /* TutorialShadowBackground.swift */; };
+		7758D72222D7906600A2312F /* TutorialShadowBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7758D72022D7906600A2312F /* TutorialShadowBackground.swift */; };
 		7793DE1B22CBD1D5003A0BF7 /* TutorialChildViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7793DE1A22CBD1D5003A0BF7 /* TutorialChildViewController.swift */; };
 		7793DE1C22CBD1D5003A0BF7 /* TutorialChildViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7793DE1A22CBD1D5003A0BF7 /* TutorialChildViewController.swift */; };
 		7793DE1E22CBE7B8003A0BF7 /* TipsAndWarningsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7793DE1D22CBE7B8003A0BF7 /* TipsAndWarningsViewController.swift */; };
@@ -138,6 +140,7 @@
 		77000C3122CCE8F1004AC60B /* Storyboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Storyboard.storyboard; path = Clew/Storyboard.storyboard; sourceTree = SOURCE_ROOT; };
 		77467DAE22BBC1D300FA7DEE /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		7754322D22CBEDBE006E2159 /* UILabelDesign.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UILabelDesign.swift; path = Clew/UILabelDesign.swift; sourceTree = SOURCE_ROOT; };
+		7758D72022D7906600A2312F /* TutorialShadowBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialShadowBackground.swift; sourceTree = "<group>"; };
 		7793DE1A22CBD1D5003A0BF7 /* TutorialChildViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialChildViewController.swift; sourceTree = "<group>"; };
 		7793DE1D22CBE7B8003A0BF7 /* TipsAndWarningsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TipsAndWarningsViewController.swift; sourceTree = "<group>"; };
 		77A30FE422C66998008EEAAB /* CoachMarks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoachMarks.swift; sourceTree = "<group>"; };
@@ -438,6 +441,7 @@
 				E5F4C33A22C4035200E0D94E /* RootContainerView.swift */,
 				E5F4C33B22C4035200E0D94E /* LaunchScreen.storyboard */,
 				E5F4C33D22C4035200E0D94E /* RouteTableViewCell.swift */,
+				7758D72022D7906600A2312F /* TutorialShadowBackground.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -702,6 +706,7 @@
 				9884EB5B22CCE569000D31AF /* AnnouncementManager.swift in Sources */,
 				E5F4C37022C4035200E0D94E /* UIViewControllerExtensions.swift in Sources */,
 				E5F4C39E22C4035200E0D94E /* RouteTableViewCell.swift in Sources */,
+				7758D72122D7906600A2312F /* TutorialShadowBackground.swift in Sources */,
 				E5F4C38622C4035200E0D94E /* ResumeTrackingController.swift in Sources */,
 				E5F4C35622C4035200E0D94E /* AppDelegate.swift in Sources */,
 				E5F4C35422C4035200E0D94E /* Utility.swift in Sources */,
@@ -761,6 +766,7 @@
 				E5F4C37922C4035200E0D94E /* TutorialViewController.swift in Sources */,
 				E5F4C37722C4035200E0D94E /* Float4x4Extension.swift in Sources */,
 				E5F4C34922C4035200E0D94E /* RecordButton.swift in Sources */,
+				7758D72222D7906600A2312F /* TutorialShadowBackground.swift in Sources */,
 				E5F4C35922C4035200E0D94E /* SettingsViewController.m in Sources */,
 				E5F4C38D22C4035200E0D94E /* ResumeTrackingConfirmController.swift in Sources */,
 				E5F4C34322C4035200E0D94E /* RecordButtonKit.swift in Sources */,

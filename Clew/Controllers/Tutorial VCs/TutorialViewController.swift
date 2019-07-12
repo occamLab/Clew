@@ -57,18 +57,20 @@ class TutorialViewController: UIViewController, ClewObserver {
             //        logger.logStateTransition(newState: state)
             switch state {
             case .startOrientationTraining:
+                removeAllChildVCs()
                 add(phoneOrientationTrainingChildVC)
             case .optimalOrientationAchieved:
-                phoneOrientationTrainingChildVC.remove()
-                announcementManager.remove()
-//                self.remove()
-            case .readyToRecordSingleRoute:
                 removeAllChildVCs()
                 add(singleRouteChildVC)
+            case .readyToRecordSingleRoute:
+                print("in readyToRecordState")
+                break
             case .recordingSingleRoute:
-                print("recording single route")
+                print("in recording state")
+                break
             case .teachTheNavigationOfASingleRoute:
-                print("placeholder")
+                print("in teaching navigation state")
+                break
             case .initializing:
                 initialize()
             }
@@ -119,5 +121,4 @@ class TutorialViewController: UIViewController, ClewObserver {
     
 
 }
-
 
