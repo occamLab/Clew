@@ -98,11 +98,17 @@ class RouteRatingController: UIViewController {
                                                   appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "thumbs_up")!),
                                                   label: NSLocalizedString("Good", comment: "Satisfactory service"))
         
+        let fillerSpace = UIView()
+        fillerSpace.translatesAutoresizingMaskIntoConstraints = false
+        /// set width of button and constaint height to be equal to width
+        fillerSpace.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 3.50).isActive = true
+        fillerSpace.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 3.50).isActive = true
+        
         /// create stack view for aligning and distributing bottom layer buttons
         let stackView   = UIStackView()
         view.addSubview(stackView)
         stackView.translatesAutoresizingMaskIntoConstraints = false;
-
+        
         /// define horizonal, centered, and equal alignment of elements
         /// inside the bottom stack
         stackView.axis = NSLayoutConstraint.Axis.horizontal
@@ -112,6 +118,7 @@ class RouteRatingController: UIViewController {
         
         /// add elements to the stack
         stackView.addArrangedSubview(thumbsDownButton)
+        stackView.addArrangedSubview(fillerSpace)
         stackView.addArrangedSubview(thumbsUpButton)
         
         /// size the stack
