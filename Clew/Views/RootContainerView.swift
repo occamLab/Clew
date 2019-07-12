@@ -44,6 +44,21 @@ class RootContainerView: UIView {
     /// a timer that counts down during the alignment procedure
     /// (alignment is captured at the end of the time)
     var countdownTimer: SRCountdownTimer!
+    
+    /// check Button to clear a popup
+    var checkButton: UIButton!
+    
+    /// text box to display a message for tutorial
+    //var buttonLabel: UILabel!
+    
+    /// arrow to display the connection between a button and a message
+    var imageView: UIImageView!
+    
+    /// variable to describe tagged view
+    var foundView: UIView!
+    
+    /// button Coordinates
+    var xCenter: Int!
 
     /// required for non storyboard UIView
     /// objects
@@ -53,6 +68,8 @@ class RootContainerView: UIView {
     
     /// initializer for view, initializes all subview objects
     /// like buttons
+    
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -66,6 +83,7 @@ class RootContainerView: UIView {
         settingsButton.accessibilityLabel = "Settings"
         settingsButton.titleLabel?.font = UIFont.systemFont(ofSize: 24.0)
         settingsButton.setImage(UIImage(named: "settingsGear"), for: .normal)
+        settingsButton.tag = 0xFADEFAD
 
         
         // MARK: Help Button
@@ -78,6 +96,8 @@ class RootContainerView: UIView {
         helpButton.titleLabel?.font = UIFont.systemFont(ofSize: 24.0)
         helpButton.accessibilityLabel = "Help"
         helpButton.setImage(UIImage(named: "HelpButton"), for: .normal)
+        helpButton.tag = 0xFEEDDAD
+        print(helpButton.tag)
 
         // MARK: Home Button
         homeButton = UIButton(frame: CGRect(x: UIConstants.buttonFrameWidth/7,
@@ -126,6 +146,7 @@ class RootContainerView: UIView {
         /// hide the timer as an accessibility element
         /// and announce through VoiceOver by posting appropriate notifications
         countdownTimer.accessibilityElementsHidden = true
+
         
         /// add all sub views
         addSubview(getDirectionButton)
@@ -134,5 +155,15 @@ class RootContainerView: UIView {
         addSubview(countdownTimer)
         addSubview(feedbackButton)
         addSubview(homeButton)
+        //addSubview(buttonLabel)
+//        addSubview(checkButton)
+        
+        
+      /*  if let foundView = self.viewWithTag(0xDEADBEEF) {
+            let xCenter = foundView.frame.minX
+            print("1 - locationText")
+            print(foundView.frame.minX)
+            buttonLabel.center = CGPoint(x: xCenter, y: 275)
+        }*/
     }
 }

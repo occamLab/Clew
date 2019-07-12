@@ -524,6 +524,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// tutorial VC
     var tutorialViewController: TutorialViewController!
     
+    /// tutorial child VC
+    var tutorialChildViewController: TutorialChildViewController!
+    
     /// called when the view has loaded.  We setup various app elements in here.
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -542,6 +545,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         startNavigationController = StartNavigationController()
         stopNavigationController = StopNavigationController()
         tutorialViewController = TutorialViewController()
+//        tutorialChildViewController = TutorialChildViewController()
         
         // Add the scene to the view, which is a RootContainerView
         sceneView.frame = view.frame
@@ -557,7 +561,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         view.sendSubviewToBack(sceneView)
         
         // targets for global buttons
-        rootContainerView.settingsButton.addTarget(self, action: #selector(settingsButtonPressed), for: .touchUpInside)
+//        rootContainerView.settingsButton.addTarget(self, action: #selector(settingsButtonPressed), for: .touchUpInside)
+        
+//        .checkButton.addTarget(self, action: #selector(checkButtonPressed), for: .touchUpInside)
 
         rootContainerView.helpButton.addTarget(self, action: #selector(helpButtonPressed), for: .touchUpInside)
         
@@ -566,6 +572,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         rootContainerView.getDirectionButton.addTarget(self, action: #selector(announceDirectionHelpPressed), for: .touchUpInside)
 
         rootContainerView.feedbackButton.addTarget(self, action: #selector(feedbackButtonPressed), for: .touchUpInside)
+        
 
         // make sure this happens after the view is created!
         rootContainerView.countdownTimer.delegate = self
@@ -1723,6 +1730,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         
         self.present(nav, animated: true, completion: nil)
     }
+    
+//    @objc func checkButtonPressed() {
+////        rootContainerView.imageView.isHidden = true
+////        rootContainerView.buttonLabel.isHidden = true
+//        tutorialChildViewController.checkButton.isHidden = true
+//    }
+    
     
     /// Called when the help button is pressed.  This function will display the help view (managed by HelpViewController) as a popover.
     @objc func helpButtonPressed() {
