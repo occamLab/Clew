@@ -15,6 +15,7 @@
 + (UIImage *) visualAlignmentImage :(UIImage *)base_image {
     cv::Mat image;
     UIImageToMat(base_image, image);
+    
     UIImage* ui_image = MatToUIImage(image);
     
     return ui_image;

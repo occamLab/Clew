@@ -29,6 +29,7 @@ import VectorMath
 import Firebase
 import FirebaseDatabase
 import SRCountdownTimer
+import VideoToolbox
 
 /// A custom enumeration type that describes the exact state of the app.  The state is not exhaustive (e.g., there are Boolean flags that also track app state).
 enum AppState {
@@ -90,10 +91,18 @@ enum AppState {
 
 /// The view controller that handles the main Clew window.  This view controller is always active and handles the various views that are used for different app functionalities.
 class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDelegate, AVSpeechSynthesizerDelegate, ARSessionDelegate {
-    func session(_ session: ARSession,
-                 didUpdate frame: ARFrame){
-        baseImage = (sceneView.session.currentFrame?.capturedImage).map{UIImage(ciImage: CIImage(cvPixelBuffer: $0), scale: 10, orientation: .up)}
-
+    func session(_ session: ARSession, didUpdate frame: ARFrame) {
+        var cgImage: CGImage?
+        let pixelBuffer: CVPixelBuffer? = sceneView.session.currentFrame?.capturedImage
+        
+        // Convert the current pixel buffer to a CGImage
+        // This is the portion which introduces the most lag.
+        // Using CIImages has no lag, but the conversion to a cv::Mat implemented in OpenCV requires a CGImage.
+        if let pixelBuffer = pixelBuffer {
+            VTCreateCGImageFromCVPixelBuffer(pixelBuffer, options: nil, imageOut: &cgImage)
+            baseImage = cgImage.map{UIImage(cgImage: $0, scale: 10, orientation: .up)}
+        }
+        
         if let baseImage = baseImage {
             imageView.image = VisualAlignment.visualAlignmentImage(baseImage)
             imageView.frame = CGRect(x: 0, y: 100, width: baseImage.size.width, height: baseImage.size.height)
