@@ -26,6 +26,10 @@
 		77A30FE922C66C3A008EEAAB /* PhoneOrientationTrainingVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77A30FE722C66C3A008EEAAB /* PhoneOrientationTrainingVC.swift */; };
 		82569F4E22187E6500448B45 /* help in Resources */ = {isa = PBXBuildFile; fileRef = 82569F4D22187E6500448B45 /* help */; };
 		82569F4F22187E6500448B45 /* help in Resources */ = {isa = PBXBuildFile; fileRef = 82569F4D22187E6500448B45 /* help */; };
+		AD13576922CCEDA800EE36E2 /* Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AD13576822CCEDA800EE36E2 /* Storyboard.storyboard */; };
+		AD13576A22CCEDA800EE36E2 /* Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AD13576822CCEDA800EE36E2 /* Storyboard.storyboard */; };
+		ADE90D4A22CCE48C001CD52C /* Tutorial.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = ADE90D4722CCE48C001CD52C /* Tutorial.storyboard */; };
+		ADE90D4C22CCE48C001CD52C /* UILabelDesign.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADE90D4922CCE48C001CD52C /* UILabelDesign.swift */; };
 		9884EB5B22CCE569000D31AF /* AnnouncementManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9884EB5A22CCE569000D31AF /* AnnouncementManager.swift */; };
 		9884EB5C22CCE569000D31AF /* AnnouncementManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9884EB5A22CCE569000D31AF /* AnnouncementManager.swift */; };
 		B0A563F6FE1007A2716DC876 /* Pods_Clew_Dev.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3532E390954571B93729786A /* Pods_Clew_Dev.framework */; };
@@ -144,6 +148,9 @@
 		85A1A72DC19F87F15B738291 /* Pods-Clew Dev.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew Dev.release.xcconfig"; path = "Pods/Target Support Files/Pods-Clew Dev/Pods-Clew Dev.release.xcconfig"; sourceTree = "<group>"; };
 		942F73299DA8DCF97FAA974A /* Pods_Clew.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Clew.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9884EB5022BA9383000D31AF /* Storyboard.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Storyboard.storyboard; sourceTree = "<group>"; };
+		AD13576822CCEDA800EE36E2 /* Storyboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Storyboard.storyboard; path = Clew/Storyboard.storyboard; sourceTree = SOURCE_ROOT; };
+		ADE90D4722CCE48C001CD52C /* Tutorial.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Tutorial.storyboard; path = Clew/Tutorial.storyboard; sourceTree = SOURCE_ROOT; };
+		ADE90D4922CCE48C001CD52C /* UILabelDesign.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UILabelDesign.swift; path = Clew/UILabelDesign.swift; sourceTree = SOURCE_ROOT; };
 		9884EB5A22CCE569000D31AF /* AnnouncementManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnouncementManager.swift; sourceTree = "<group>"; };
 		B7EB59EC20F693EB00FBBC6A /* Clew Dev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Clew Dev.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C68778047D8E263D2FB04989 /* Pods-Clew Dev.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew Dev.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Clew Dev/Pods-Clew Dev.debug.xcconfig"; sourceTree = "<group>"; };
@@ -526,11 +533,13 @@
 				E5F4C36622C4035200E0D94E /* StartRecording.aiff in Resources */,
 				E5F4C35C22C4035200E0D94E /* LaunchScreen.strings in Resources */,
 				4D6B00E51F33C9B800952242 /* Crumb.obj in Resources */,
+				AD13576922CCEDA800EE36E2 /* Storyboard.storyboard in Resources */,
 				E5F4C36A22C4035200E0D94E /* GoogleService-Info.plist in Resources */,
 				E5F4C3A622C4035200E0D94E /* GoogleService-Info_dev.plist in Resources */,
 				E5F4C35E22C4035200E0D94E /* Localizable.strings in Resources */,
 				E5F4C39822C4035200E0D94E /* SettingsAndHelp.storyboard in Resources */,
 				E5F4C35A22C4035200E0D94E /* Settings.bundle in Resources */,
+				ADE90D4A22CCE48C001CD52C /* Tutorial.storyboard in Resources */,
 				82569F4E22187E6500448B45 /* help in Resources */,
 				E5F4C36222C4035200E0D94E /* Assets.xcassets in Resources */,
 				E5F4C36822C4035200E0D94E /* StopRecording.aiff in Resources */,

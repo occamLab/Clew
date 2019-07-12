@@ -11,6 +11,7 @@ import SceneKit
 import UIKit
 
 class TutorialViewController: UIViewController, ClewObserver {
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view = TransparentTouchView(frame:CGRect(x: 0,

@@ -8,13 +8,21 @@
 
 import Foundation
 import SceneKit
+import SRCountdownTimer
 
 
+<<<<<<< HEAD
 class PhoneOrientationTrainingVC: TutorialChildViewController {
     
     var nextButton: UIButton!
     var backgroundShadow: UIView! = TutorialShadowBackground()
     
+=======
+class PhoneOrientationTrainingVC: TutorialChildViewController, SRCountdownTimerDelegate {
+    /// Called when the view appears on screen.
+    ///
+    /// - Parameter animated: True if the appearance is animated
+>>>>>>> 2e312ed92d53defe96210b6c3004567155393fc8
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
@@ -36,41 +44,78 @@ class PhoneOrientationTrainingVC: TutorialChildViewController {
          tutorialParent?.state = .readyToRecordSingleRoute
     }
     
+    
+    /// Callback function for when `countdownTimer` updates.  This allows us to announce the new value via voice
+    ///
+    /// - Parameter newValue: the new value (in seconds) displayed on the countdown timer
+    @objc func timerDidUpdateCounterValue(newValue: Int) {
+        UIAccessibility.post(notification: UIAccessibility.Notification.announcement, argument: String(newValue))
+    }
+
+    
     var lastHapticFeedbackTime = Date()
     
+    /// Circle timer that is visible to the user on the screen
+    var countdownTimer: SRCountdownTimer!
+    
+    /// Timer that is used in conjunction with the 'countdownTimer'. Used to trigger state transition
+    var countdown:Timer?
+    
+    /// Callback function for when 'countdown' = 0. This triggers the transition to the next state of the tutorial
+    @objc func timerCalled() {
+        print("timer finished")
+        tutorialParent?.state = .optimalOrientationAchieved
+        countdownTimer.isHidden = true
+    }
+    
+    /// Called when the view has loaded. Make new countdownTimer that will only be used in PhoneorientationTrainingVC
+    override func viewDidLoad() {
+        countdownTimer = SRCountdownTimer(frame: CGRect(x: UIConstants.buttonFrameWidth*1/10,
+                                                        y: UIConstants.yOriginOfButtonFrame/10,
+                                                        width: UIConstants.buttonFrameWidth*8/10,
+                                                        height: UIConstants.buttonFrameWidth*8/10))
+        countdownTimer.labelFont = UIFont(name: "HelveticaNeue-Light", size: 100)
+        countdownTimer.labelTextColor = UIColor.white
+        countdownTimer.timerFinishingText = "End"
+        countdownTimer.lineWidth = 10
+        countdownTimer.lineColor = UIColor.white
+        countdownTimer.backgroundColor = UIColor.black.withAlphaComponent(0.4)
+        countdownTimer.isHidden = true
+        countdownTimer.delegate = self
+        countdownTimer.accessibilityElementsHidden = true
+        view.addSubview(countdownTimer)
+    }
+    
+    /// Send haptic feedback with different frequencies depending on the angle of the phone. Handle transition to the next state when the angle of the phone falls in the range of optimal angle. As the user orients the phone closer to the desired range of the angle, haptic feedback becomes faster. When optimal angle is achieved for a desired amount of time, state transition takes place.
+    ///
+    /// - Parameter transform: the position and orientation of the phone
     override func didReceiveNewCameraPose(transform: simd_float4x4) {
         // UIAccessibility.post(notification: UIAccessibility.Notification.announcement, argument: NSLocalizedString("Trying to figure out haptic feedback", comment: "Message to user during tutorial"))
         
         let angleFromVertical = acos(-transform.columns.0.y)
         let feedbackGenerator = UIImpactFeedbackGenerator(style: .heavy)
-        
         let intendedInterval = TimeInterval(1/(4*exp(-pow(angleFromVertical, 2))))
-        print("intendedInterval", intendedInterval)
-        // if abs(angleFromVertical) < 0.1 {
         let now = Date()
         let timeInterval = now.timeIntervalSince(lastHapticFeedbackTime)
-        print("timeInterval", timeInterval)
+        
+        // handles when the angle the user is holding the phone falls in between the desired optimal angle
+        if abs(angleFromVertical) < 0.5 {
+            if countdown == nil {
+                print("angle falls in range")
+                countdownTimer.isHidden = false
+                /// NOTE: to change the time that the user needs to hold the phone in the optimal angle for state transition to happen, change both the 'beginingValue' and 'timeInterval'
+                countdownTimer.start(beginingValue: 3, interval: 1)
+                countdown = Timer.scheduledTimer(timeInterval: 3.0, target: self, selector: #selector(timerCalled), userInfo: nil, repeats: false) }
+        } else {
+            countdownTimer.isHidden = true
+            countdown?.invalidate()
+            countdown = nil
+        }
+        
+        /// send haptic feedback in varying frequency depending on how accurate the angle the user is holding up their phone
         if timeInterval > intendedInterval {
             feedbackGenerator.impactOccurred()
             lastHapticFeedbackTime = now
-            // if (the user is done with the experience) <- some condition can also be outside the if statement
-             tutorialParent?.state = .optimalOrientationAchieved
         }
-         /* if abs(angleFromVertical) < 0.1 {
-            Timer.scheduledTimer(withTimeInterval: 0.1, repeats: false) {_ in
-            feedbackGenerator.impactOccurred()
-            self.tutorialParent?.state = .optimalOrientationAchieved
-            UIAccessibility.post(notification: UIAccessibility.Notification.announcement, argument: NSLocalizedString("Great job.  you have the phone positioned properly!", comment: "Message to user during tutorial"))
-
-         }
-         if abs(angleFromVertical) < 0.5 && abs(angleFromVertical) > 0.1 {
-         Timer.scheduledTimer(withTimeInterval: 3.0, repeats: false) {_ in
-         feedbackGenerator.impactOccurred()
-         }
-         }
-         print("angleFromVertical", angleFromVertical) */
-    
     }
-        /* if case .mainScreen(let announceArrival) = newState, case .optimalOrientationReached? = tutorialParent?.state {
-            (parent as? TutorialViewController)?.state = .readyToRecordSingleRoute } */
 }
