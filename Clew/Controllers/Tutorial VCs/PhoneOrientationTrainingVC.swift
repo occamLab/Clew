@@ -9,35 +9,16 @@
 import Foundation
 import SceneKit
 import SRCountdownTimer
-
-
-<<<<<<< HEAD
-class PhoneOrientationTrainingVC: TutorialChildViewController {
-    
-    var nextButton: UIButton!
-    var backgroundShadow: UIView! = TutorialShadowBackground()
-    
-=======
+      
 class PhoneOrientationTrainingVC: TutorialChildViewController, SRCountdownTimerDelegate {
     /// Called when the view appears on screen.
     ///
     /// - Parameter animated: True if the appearance is animated
->>>>>>> 2e312ed92d53defe96210b6c3004567155393fc8
+    
+    var backgroundShadow: UIView! = TutorialShadowBackground()
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
-        // test button to figure out state transition
-        let button = UIButton(frame: CGRect(x: 100, y: 100, width: 200, height: 50))
-        button.backgroundColor = .white
-        button.setTitle("Next state", for: .normal)
-        button.setTitleColor(.black, for: .normal)
-        button.layer.masksToBounds = true
-        button.layer.cornerRadius = 8.0
-        button.addTarget(self, action: #selector(buttonAction), for: .touchUpInside)
-        
-        self.view.addSubview(backgroundShadow)
-        self.view.addSubview(button)
-        //
     }
     
     @objc func buttonAction(sender: UIButton!) {
@@ -83,6 +64,7 @@ class PhoneOrientationTrainingVC: TutorialChildViewController, SRCountdownTimerD
         countdownTimer.isHidden = true
         countdownTimer.delegate = self
         countdownTimer.accessibilityElementsHidden = true
+        view.addSubview(backgroundShadow)
         view.addSubview(countdownTimer)
     }
     

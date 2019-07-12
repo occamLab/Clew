@@ -59,10 +59,10 @@ class TutorialViewController: UIViewController, ClewObserver {
                 removeAllChildVCs()
                 add(phoneOrientationTrainingChildVC)
             case .optimalOrientationAchieved:
-                print("optimal orientation achieved")
-            case .readyToRecordSingleRoute:
                 removeAllChildVCs()
                 add(singleRouteChildVC)
+            case .readyToRecordSingleRoute:
+                break
                 print("in readyToRecordState")
             case .recordingSingleRoute:
                 print("in recording state")
