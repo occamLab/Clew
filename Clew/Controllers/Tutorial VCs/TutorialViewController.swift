@@ -62,8 +62,8 @@ class TutorialViewController: UIViewController, ClewObserver {
                 removeAllChildVCs()
                 add(singleRouteChildVC)
             case .readyToRecordSingleRoute:
-                break
                 print("in readyToRecordState")
+                break
             case .recordingSingleRoute:
                 print("in recording state")
                 break

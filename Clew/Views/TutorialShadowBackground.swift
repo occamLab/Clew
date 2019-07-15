@@ -28,6 +28,6 @@ class TutorialShadowBackground: UIView {
                             width: UIScreen.main.bounds.width,
                             height: UIScreen.main.bounds.height)
         
-        self.backgroundColor = UIColor.black.withAlphaComponent(0.6)
+        self.backgroundColor = UIColor.black.withAlphaComponent(0.4)
     }
 }

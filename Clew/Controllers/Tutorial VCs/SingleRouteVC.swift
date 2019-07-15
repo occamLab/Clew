@@ -90,8 +90,11 @@ class SingleRouteVC: TutorialChildViewController {
         landmarkLabel.textAlignment = .center
         landmarkLabel.numberOfLines = 0
         landmarkLabel.lineBreakMode = .byWordWrapping
+//        landmarkLabel.layoutMargins = UIEdgeInsets(top: 0.0, left: 10.0, bottom: 0.0, right: 10.0)
         landmarkLabel.layer.masksToBounds = true
         landmarkLabel.layer.cornerRadius = 8.0
+        landmarkLabel.layer.borderColor = UIColor.black.cgColor
+        landmarkLabel.layer.borderWidth = 3.0
         landmarkView.addSubview(landmarkLabel)
         
         nextButton = UIButton(frame: CGRect(x: 150, y: 350, width: 100, height: 50))
