@@ -96,7 +96,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     // MARK: Properties and subview declarations
     
     /// How long to wait (in seconds) between the alignment request and grabbing the transform
-    static let alignmentWaitingPeriod = 5
+    static var alignmentWaitingPeriod = 5
     
     /// The state of the ARKit tracking session as last communicated to us through the delgate protocol.  This is useful if you want to do something different in the delegate method depending on the previous state
     var trackingSessionState : ARCamera.TrackingState?
@@ -346,6 +346,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// Handler for the pauseWaitingPeriod app state
     func handleStateTransitionToPauseWaitingPeriod() {
         hideAllViewsHelper()
+        ViewController.alignmentWaitingPeriod = timerLength
         rootContainerView.countdownTimer.isHidden = false
         rootContainerView.countdownTimer.start(beginingValue: ViewController.alignmentWaitingPeriod, interval: 1)
         delayTransition()
@@ -597,6 +598,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
 
         // make sure this happens after the view is created!
         rootContainerView.countdownTimer.delegate = self
+        ViewController.alignmentWaitingPeriod = timerLength
         
         addGestures()
         setupFirebaseObservers()
@@ -924,7 +926,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// Register settings bundle
     func registerSettingsBundle(){
-        let appDefaults = ["crumbColor": 0, "hapticFeedback": true, "sendLogs": true, "voiceFeedback": true, "soundFeedback": true, "units": 0] as [String : Any]
+        let appDefaults = ["crumbColor": 0, "hapticFeedback": true, "sendLogs": true, "voiceFeedback": true, "soundFeedback": true, "units": 0, "timerLength":5] as [String : Any]
         UserDefaults.standard.register(defaults: appDefaults)
     }
 
@@ -938,6 +940,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         voiceFeedback = defaults.bool(forKey: "voiceFeedback")
         hapticFeedback = defaults.bool(forKey: "hapticFeedback")
         sendLogs = defaults.bool(forKey: "sendLogs")
+        timerLength = defaults.integer(forKey: "timerLength")
     }
     
     /// Handles updates to the app settings.
@@ -1285,6 +1288,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
 
     /// true if we should prompt the user to rate route navigation and then send log data to the cloud
     var sendLogs: Bool!
+    
+    /// The length of time that the timer will run for
+    var timerLength: Int!
 
     /// This keeps track of the paused transform while the current session is being realigned to the saved route
     var pausedTransform : simd_float4x4?
