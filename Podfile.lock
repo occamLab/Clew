@@ -37,6 +37,7 @@ PODS:
     - FirebaseAuthInterop (~> 1.0)
     - FirebaseCore (~> 6.0)
     - GTMSessionFetcher/Core (~> 1.1)
+  - FLAnimatedImage (1.0.12)
   - GoogleAppMeasurement (6.0.0):
     - GoogleUtilities/AppDelegateSwizzler (~> 6.0)
     - GoogleUtilities/MethodSwizzler (~> 6.0)
@@ -72,6 +73,7 @@ PODS:
   - nanopb/encode (0.3.901)
   - PRTween (0.1.0)
   - SRCountdownTimer (1.1)
+  - SwiftGifOrigin (1.7.0)
   - VectorMath (0.4.0):
     - VectorMath/Core (= 0.4.0)
     - VectorMath/MapKit (= 0.4.0)
@@ -90,10 +92,12 @@ DEPENDENCIES:
   - Firebase/Core
   - Firebase/Database
   - Firebase/Storage
+  - FLAnimatedImage
   - InAppSettingsKit
   - Instructions (~> 1.3.1)
   - PRTween (~> 0.1)
   - SRCountdownTimer
+  - SwiftGifOrigin (~> 1.7.0)
   - VectorMath (~> 0.3)
 
 SPEC REPOS:
@@ -105,6 +109,7 @@ SPEC REPOS:
     - FirebaseDatabase
     - FirebaseInstanceID
     - FirebaseStorage
+    - FLAnimatedImage
     - GoogleAppMeasurement
     - GoogleUtilities
     - GTMSessionFetcher
@@ -114,6 +119,7 @@ SPEC REPOS:
     - nanopb
     - PRTween
     - SRCountdownTimer
+    - SwiftGifOrigin
     - VectorMath
 
 SPEC CHECKSUMS:
@@ -124,6 +130,7 @@ SPEC CHECKSUMS:
   FirebaseDatabase: f48e067716864be2b855cf716b927ef375d6cfa0
   FirebaseInstanceID: 0e0348a3c00a734fa376a070f5ad4533ad975cb5
   FirebaseStorage: ff1e8f1f6cf1557a8694b0ef39d3e72cb60c42ac
+  FLAnimatedImage: 4a0b56255d9b05f18b6dd7ee06871be5d3b89e31
   GoogleAppMeasurement: 7f028ea162b72c8f326daec74afc95d94f7a47d6
   GoogleUtilities: 84df567c76ca84f67b7bb40e769fdd4acc746a10
   GTMSessionFetcher: 61bb0f61a4cb560030f1222021178008a5727a23
@@ -133,8 +140,9 @@ SPEC CHECKSUMS:
   nanopb: 2901f78ea1b7b4015c860c2fdd1ea2fee1a18d48
   PRTween: 6c58c7e32ebcf31e33e6a6e6bc727ebef3b668ef
   SRCountdownTimer: 9c92e444b5403c92f01dd6610299b8c634bc8562
+  SwiftGifOrigin: fbd6cf37afcfcf97a5c3db996ddc0492e5c5c145
   VectorMath: 2768d3f60f96db22d61cc25446ffe6e43681b045
 
-PODFILE CHECKSUM: 6a5f30ca96be21768c453802ee9c3293dcb40a40
+PODFILE CHECKSUM: 447468edfb474ca3792b810a3c49944734608240
 
-COCOAPODS: 1.7.1
+COCOAPODS: 1.7.4
