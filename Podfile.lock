@@ -1,4 +1,5 @@
 PODS:
+  - eigen (3.2.10)
   - Firebase/Analytics (6.0.0):
     - Firebase/Core
   - Firebase/Core (6.0.0):
@@ -86,6 +87,7 @@ PODS:
     - VectorMath/Core
 
 DEPENDENCIES:
+  - eigen
   - Firebase/Analytics
   - Firebase/Core
   - Firebase/Database
@@ -98,6 +100,7 @@ DEPENDENCIES:
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
+    - eigen
     - Firebase
     - FirebaseAnalytics
     - FirebaseAuthInterop
@@ -117,6 +120,7 @@ SPEC REPOS:
     - VectorMath
 
 SPEC CHECKSUMS:
+  eigen: e2d5ffb7be5a884d4608ebe35a97b6f65e13ed8b
   Firebase: fa80b9d987ca014a1ba9357496ef2a0178b28b12
   FirebaseAnalytics: 1743c5f4de3687d0745709dfdc4b1dea1484f44c
   FirebaseAuthInterop: 0ffa57668be100582bb7643d4fcb7615496c41fc
@@ -135,6 +139,6 @@ SPEC CHECKSUMS:
   SRCountdownTimer: 9c92e444b5403c92f01dd6610299b8c634bc8562
   VectorMath: 2768d3f60f96db22d61cc25446ffe6e43681b045
 
-PODFILE CHECKSUM: 7e6b54f9d9c7dca3b3aa49cc214b8a4f1e26dc9c
+PODFILE CHECKSUM: 42eb273b49456189aa06cd504c8ece8d05040b45
 
 COCOAPODS: 1.6.1

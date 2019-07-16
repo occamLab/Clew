@@ -90,25 +90,8 @@ enum AppState {
 }
 
 /// The view controller that handles the main Clew window.  This view controller is always active and handles the various views that are used for different app functionalities.
-class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDelegate, AVSpeechSynthesizerDelegate, ARSessionDelegate {
-    func session(_ session: ARSession, didUpdate frame: ARFrame) {
-        var cgImage: CGImage?
-        let pixelBuffer: CVPixelBuffer? = sceneView.session.currentFrame?.capturedImage
-        
-        // Convert the current pixel buffer to a CGImage
-        // This is the portion which introduces the most lag.
-        // Using CIImages has no lag, but the conversion to a cv::Mat implemented in OpenCV requires a CGImage.
-        if let pixelBuffer = pixelBuffer {
-            VTCreateCGImageFromCVPixelBuffer(pixelBuffer, options: nil, imageOut: &cgImage)
-            baseImage = cgImage.map{UIImage(cgImage: $0, scale: 10, orientation: .up)}
-        }
-        
-        if let baseImage = baseImage {
-            imageView.image = VisualAlignment.visualAlignmentImage(baseImage)
-            imageView.frame = CGRect(x: 0, y: 100, width: baseImage.size.width, height: baseImage.size.height)
-
-        }
-    }
+class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDelegate, AVSpeechSynthesizerDelegate {
+    
     // MARK: - Refactoring UI definition
     
     // MARK: Properties and subview declarations
@@ -572,15 +555,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// stop route navigation VC
     var stopNavigationController: StopNavigationController!
-    
-    var baseImage: UIImage?
-    var imageView = UIImageView()
 
     /// called when the view has loaded.  We setup various app elements in here.
     override func viewDidLoad() {
         super.viewDidLoad()
-       
-       // var image: UIImage =
         
         // set the main view as active
         view = RootContainerView(frame: UIScreen.main.bounds)
@@ -598,7 +576,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         // Add the scene to the view, which is a RootContainerView
         sceneView.frame = view.frame
         view.addSubview(sceneView)
-   
+
         setupAudioPlayers()
         loadAssets()
         createSettingsBundle()
@@ -608,6 +586,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         view.sendSubviewToBack(sceneView)
         
         // targets for global buttons
+        rootContainerView.collectBaseButton.addTarget(self, action: #selector(getBaseImage), for: .touchUpInside)
+        rootContainerView.collectNewButton.addTarget(self, action: #selector(getNewImage), for: .touchUpInside)
         rootContainerView.settingsButton.addTarget(self, action: #selector(settingsButtonPressed), for: .touchUpInside)
 
         rootContainerView.helpButton.addTarget(self, action: #selector(helpButtonPressed), for: .touchUpInside)
@@ -637,11 +617,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         NotificationCenter.default.addObserver(forName: Notification.Name("ClewPopoverDismissed"), object: nil, queue: nil) { (notification) -> Void in
             self.suppressTrackingWarnings = false
         }
-
-        imageView = UIImageView(image: baseImage)
-        //imageView.frame = CGRect
-        view.addSubview(imageView)
-
+        
     }
     
     /// Create the audio player objdcts for the various app sounds.  Creating them ahead of time helps reduce latency when playing them later.
@@ -980,7 +956,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
 
         sceneView.session.run(configuration)
         sceneView.delegate = self
-        sceneView.session.delegate = self
     }
     
     /// Handle the user clicking the confirm alignment to a saved landmark.  Depending on the app state, the behavior of this function will differ (e.g., if the route is being resumed versus reloaded)
@@ -1803,6 +1778,45 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             hideAllViewsHelper()
             self.state = .mainScreen(announceArrival: false)
         }
+    }
+    
+    var baseImage: UIImage?
+    var baseIntrinsics: simd_float3x3?
+    
+    @objc func getBaseImage() {
+        let pixelBuffer = sceneView.session.currentFrame?.capturedImage
+        baseIntrinsics = sceneView.session.currentFrame?.camera.intrinsics
+        let y = baseIntrinsics![1, 2]
+        
+        var cgImage: CGImage?
+        
+        if let pixelBuffer = pixelBuffer {
+            VTCreateCGImageFromCVPixelBuffer(pixelBuffer, options: nil, imageOut: &cgImage)
+            baseImage = cgImage.map{UIImage(cgImage: $0)}
+        }
+    }
+    
+    @objc func getNewImage() {
+        guard let baseImage = baseImage else {
+            return
+        }
+        
+        guard let baseIntrinsics = baseIntrinsics else {
+            return
+        }
+        
+        let pixelBuffer = sceneView.session.currentFrame?.capturedImage
+        let newIntrinsics = sceneView.session.currentFrame?.camera.intrinsics
+        var cgImage: CGImage?
+        var newImage: UIImage?
+        
+        if let pixelBuffer = pixelBuffer {
+            VTCreateCGImageFromCVPixelBuffer(pixelBuffer, options: nil, imageOut: &cgImage)
+            newImage = cgImage.map{UIImage(cgImage: $0)}
+        }
+        
+        let yaw = VisualAlignment.visualAlignment(baseImage, baseIntrinsics[0, 0], baseIntrinsics[2, 0], baseIntrinsics[2, 1],
+                                                  newImage!, newIntrinsics![0, 0], newIntrinsics![2, 0], newIntrinsics![2, 1])
     }
     
     /// Called when the settings button is pressed.  This function will display the settings view (managed by SettingsViewController) as a popover.

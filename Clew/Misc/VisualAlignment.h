@@ -8,13 +8,14 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
+//#import <opencv2/opencv.hpp>
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface VisualAlignment : NSObject
-+ (UIImage *)visualAlignmentImage :(UIImage *)base_image;
++ (float) visualAlignment :(UIImage *)base_image :(float)base_focal_length :(float)base_ppx :(float)base_ppy
+                          :(UIImage *)new_image :(float)new_focal_length :(float)new_ppx :(float)new_ppy;
 + (NSString *)openCVVersionString;
-
 @end
 
 NS_ASSUME_NONNULL_END

@@ -26,6 +26,8 @@ class RootContainerView: UIView {
 
     // MARK: - UIViews for all UI button containers
     
+    var collectBaseButton, collectNewButton: UIButton!
+    
     /// button for getting directions to the next keypoint
     var getDirectionButton: UIButton!
     
@@ -60,6 +62,18 @@ class RootContainerView: UIView {
     /// like buttons
     override init(frame: CGRect) {
         super.init(frame: frame)
+        
+        collectBaseButton = UIButton(frame: CGRect(x: UIConstants.buttonFrameWidth / (10 / 0.5),
+                                                   y: 200,
+                                                   width: UIConstants.buttonFrameWidth/7,
+                                                   height: UIConstants.buttonFrameWidth/7))
+        collectBaseButton.setImage(UIImage(named: "HelpButton"), for: .normal)
+        
+        collectNewButton = UIButton(frame: CGRect(x: 300,
+                                                   y: 200,
+                                                   width: UIConstants.buttonFrameWidth/7,
+                                                   height: UIConstants.buttonFrameWidth/7))
+        collectNewButton.setImage(UIImage(named: "HelpButton"), for: .normal)
         
         // MARK: Settings Button
         settingsButton = UIButton(frame: CGRect(x: UIConstants.buttonFrameWidth/(10/0.5),
@@ -147,6 +161,8 @@ class RootContainerView: UIView {
         countdownTimer.accessibilityElementsHidden = true
         
         /// add all sub views
+        addSubview(collectBaseButton)
+        addSubview(collectNewButton)
         addSubview(announcementText)
         addSubview(getDirectionButton)
         addSubview(settingsButton)
