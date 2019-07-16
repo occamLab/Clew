@@ -346,6 +346,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// Handler for the pauseWaitingPeriod app state
     func handleStateTransitionToPauseWaitingPeriod() {
         hideAllViewsHelper()
+        ///sets the length of the timer to be equal to what the person has in their settings
         ViewController.alignmentWaitingPeriod = timerLength
         rootContainerView.countdownTimer.isHidden = false
         rootContainerView.countdownTimer.start(beginingValue: ViewController.alignmentWaitingPeriod, interval: 1)
@@ -598,6 +599,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
 
         // make sure this happens after the view is created!
         rootContainerView.countdownTimer.delegate = self
+        ///sets the length of the timer to be equal to what the person has in their settings
         ViewController.alignmentWaitingPeriod = timerLength
         
         addGestures()
