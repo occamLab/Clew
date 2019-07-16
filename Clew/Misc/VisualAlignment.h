@@ -13,9 +13,8 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface VisualAlignment : NSObject
-+ (float) visualAlignment :(UIImage *)base_image :(float)base_focal_length :(float)base_ppx :(float)base_ppy
++ (float) visualYaw :(UIImage *)base_image :(float)base_focal_length :(float)base_ppx :(float)base_ppy
                           :(UIImage *)new_image :(float)new_focal_length :(float)new_ppx :(float)new_ppy;
-+ (NSString *)openCVVersionString;
 @end
 
 NS_ASSUME_NONNULL_END

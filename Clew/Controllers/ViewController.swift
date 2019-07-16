@@ -1815,8 +1815,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             newImage = cgImage.map{UIImage(cgImage: $0)}
         }
         
-        let yaw = VisualAlignment.visualAlignment(baseImage, baseIntrinsics[0, 0], baseIntrinsics[2, 0], baseIntrinsics[2, 1],
-                                                  newImage!, newIntrinsics![0, 0], newIntrinsics![2, 0], newIntrinsics![2, 1])
+        let yaw = VisualAlignment.visualYaw(baseImage, baseIntrinsics[0, 0], baseIntrinsics[2, 0], baseIntrinsics[2, 1],
+                                            newImage!, newIntrinsics![0, 0], newIntrinsics![2, 0], newIntrinsics![2, 1])
     }
     
     /// Called when the settings button is pressed.  This function will display the settings view (managed by SettingsViewController) as a popover.
