@@ -27,10 +27,10 @@
     - base_focal_length: The focal length of the camera used to take the base image.
     - base_ppx: The x coordinate of the base image's principle point.
     - base_ppy: The y coordinate of the base image's principle point.
-     - new_image: The image the returned yaw rotates to.
-     - new_focal_length: The focal length of the camera used to take the new image.
-     - new_ppx: The x coordinate of the new image's principle point.
-     - new_ppy: The y coordinate of the new image's principle point.
+    - new_image: The image the returned yaw rotates to.
+    - new_focal_length: The focal length of the camera used to take the new image.
+    - new_ppx: The x coordinate of the new image's principle point.
+    - new_ppy: The y coordinate of the new image's principle point.
  */
 + (float) visualYaw :(UIImage *)base_image :(float)base_focal_length :(float)base_ppx :(float)base_ppy
                                    :(UIImage *)new_image :(float)new_focal_length :(float)new_ppx :(float)new_ppy {
