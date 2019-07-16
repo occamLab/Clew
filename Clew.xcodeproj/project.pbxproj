@@ -24,6 +24,8 @@
 		77A30FE622C66998008EEAAB /* CoachMarks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77A30FE422C66998008EEAAB /* CoachMarks.swift */; };
 		77A30FE822C66C3A008EEAAB /* PhoneOrientationTrainingVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77A30FE722C66C3A008EEAAB /* PhoneOrientationTrainingVC.swift */; };
 		77A30FE922C66C3A008EEAAB /* PhoneOrientationTrainingVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77A30FE722C66C3A008EEAAB /* PhoneOrientationTrainingVC.swift */; };
+		77BC833F22DE5B61000F55EB /* PhoneOrientation.gif in Resources */ = {isa = PBXBuildFile; fileRef = 77BC833E22DE5B61000F55EB /* PhoneOrientation.gif */; };
+		77BC834022DE5B61000F55EB /* PhoneOrientation.gif in Resources */ = {isa = PBXBuildFile; fileRef = 77BC833E22DE5B61000F55EB /* PhoneOrientation.gif */; };
 		82569F4E22187E6500448B45 /* help in Resources */ = {isa = PBXBuildFile; fileRef = 82569F4D22187E6500448B45 /* help */; };
 		82569F4F22187E6500448B45 /* help in Resources */ = {isa = PBXBuildFile; fileRef = 82569F4D22187E6500448B45 /* help */; };
 		9884EB5B22CCE569000D31AF /* AnnouncementManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9884EB5A22CCE569000D31AF /* AnnouncementManager.swift */; };
@@ -31,8 +33,6 @@
 		AD13576922CCEDA800EE36E2 /* Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AD13576822CCEDA800EE36E2 /* Storyboard.storyboard */; };
 		AD8EBB9922D7CB0700B76BA0 /* PhoneOrientationStoryboardVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD8EBB9822D7CB0700B76BA0 /* PhoneOrientationStoryboardVC.swift */; };
 		AD8EBB9A22D7CB0700B76BA0 /* PhoneOrientationStoryboardVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD8EBB9822D7CB0700B76BA0 /* PhoneOrientationStoryboardVC.swift */; };
-		AD8EBBA022D8DEFD00B76BA0 /* PhoneOrientation.gif in Resources */ = {isa = PBXBuildFile; fileRef = AD8EBB9F22D8DEFD00B76BA0 /* PhoneOrientation.gif */; };
-		AD8EBBA122D8DEFD00B76BA0 /* PhoneOrientation.gif in Resources */ = {isa = PBXBuildFile; fileRef = AD8EBB9F22D8DEFD00B76BA0 /* PhoneOrientation.gif */; };
 		ADE90D4A22CCE48C001CD52C /* Tutorial.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = ADE90D4722CCE48C001CD52C /* Tutorial.storyboard */; };
 		B0A563F6FE1007A2716DC876 /* Pods_Clew_Dev.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3532E390954571B93729786A /* Pods_Clew_Dev.framework */; };
 		B7EB59E220F693EB00FBBC6A /* Confirm.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4DF05CC71F34EB56008B0E31 /* Confirm.mp3 */; };
@@ -145,6 +145,7 @@
 		7793DE1D22CBE7B8003A0BF7 /* TipsAndWarningsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TipsAndWarningsViewController.swift; sourceTree = "<group>"; };
 		77A30FE422C66998008EEAAB /* CoachMarks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoachMarks.swift; sourceTree = "<group>"; };
 		77A30FE722C66C3A008EEAAB /* PhoneOrientationTrainingVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneOrientationTrainingVC.swift; sourceTree = "<group>"; };
+		77BC833E22DE5B61000F55EB /* PhoneOrientation.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = PhoneOrientation.gif; sourceTree = "<group>"; };
 		822E27F8210E3F260024A5E3 /* Clew Dev-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Clew Dev-Info.plist"; sourceTree = "<group>"; };
 		82569F4D22187E6500448B45 /* help */ = {isa = PBXFileReference; lastKnownFileType = folder; path = help; sourceTree = "<group>"; };
 		85A1A72DC19F87F15B738291 /* Pods-Clew Dev.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew Dev.release.xcconfig"; path = "Pods/Target Support Files/Pods-Clew Dev/Pods-Clew Dev.release.xcconfig"; sourceTree = "<group>"; };
@@ -153,8 +154,6 @@
 		9884EB5A22CCE569000D31AF /* AnnouncementManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnouncementManager.swift; sourceTree = "<group>"; };
 		AD13576822CCEDA800EE36E2 /* Storyboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Storyboard.storyboard; path = Clew/Storyboard.storyboard; sourceTree = SOURCE_ROOT; };
 		AD8EBB9822D7CB0700B76BA0 /* PhoneOrientationStoryboardVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneOrientationStoryboardVC.swift; sourceTree = "<group>"; };
-		AD8EBB9B22D7CEB300B76BA0 /* PhoneOrientation1.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = PhoneOrientation1.gif; sourceTree = "<group>"; };
-		AD8EBB9F22D8DEFD00B76BA0 /* PhoneOrientation.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; name = PhoneOrientation.gif; path = ../../Downloads/PhoneOrientation.gif; sourceTree = "<group>"; };
 		ADE90D4722CCE48C001CD52C /* Tutorial.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Tutorial.storyboard; path = Clew/Tutorial.storyboard; sourceTree = SOURCE_ROOT; };
 		B7EB59EC20F693EB00FBBC6A /* Clew Dev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Clew Dev.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C68778047D8E263D2FB04989 /* Pods-Clew Dev.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew Dev.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Clew Dev/Pods-Clew Dev.debug.xcconfig"; sourceTree = "<group>"; };
@@ -247,7 +246,6 @@
 			children = (
 				E5F4C2EF22C4035200E0D94E /* Clew */,
 				77467DAE22BBC1D300FA7DEE /* Default-568h@2x.png */,
-				AD8EBB9F22D8DEFD00B76BA0 /* PhoneOrientation.gif */,
 				82569F4D22187E6500448B45 /* help */,
 				4DF05CC71F34EB56008B0E31 /* Confirm.mp3 */,
 				4D6B00E41F33C85500952242 /* Crumb.obj */,
@@ -284,7 +282,7 @@
 			children = (
 				77A30FE722C66C3A008EEAAB /* PhoneOrientationTrainingVC.swift */,
 				AD8EBB9822D7CB0700B76BA0 /* PhoneOrientationStoryboardVC.swift */,
-				AD8EBB9B22D7CEB300B76BA0 /* PhoneOrientation1.gif */,
+				77BC833E22DE5B61000F55EB /* PhoneOrientation.gif */,
 				E5F4C31C22C4035200E0D94E /* SingleRouteVC.swift */,
 				77A30FE422C66998008EEAAB /* CoachMarks.swift */,
 			);
@@ -541,7 +539,7 @@
 				E5F4C39C22C4035200E0D94E /* LaunchScreen.storyboard in Resources */,
 				E5F4C36622C4035200E0D94E /* StartRecording.aiff in Resources */,
 				E5F4C35C22C4035200E0D94E /* LaunchScreen.strings in Resources */,
-				AD8EBBA022D8DEFD00B76BA0 /* PhoneOrientation.gif in Resources */,
+				77BC833F22DE5B61000F55EB /* PhoneOrientation.gif in Resources */,
 				4D6B00E51F33C9B800952242 /* Crumb.obj in Resources */,
 				AD13576922CCEDA800EE36E2 /* Storyboard.storyboard in Resources */,
 				E5F4C36A22C4035200E0D94E /* GoogleService-Info.plist in Resources */,
@@ -566,7 +564,7 @@
 				E5F4C36B22C4035200E0D94E /* GoogleService-Info.plist in Resources */,
 				E5F4C36922C4035200E0D94E /* StopRecording.aiff in Resources */,
 				B7EB59E220F693EB00FBBC6A /* Confirm.mp3 in Resources */,
-				AD8EBBA122D8DEFD00B76BA0 /* PhoneOrientation.gif in Resources */,
+				77BC834022DE5B61000F55EB /* PhoneOrientation.gif in Resources */,
 				E5F4C36322C4035200E0D94E /* Assets.xcassets in Resources */,
 				77000C3322CCE8F2004AC60B /* Storyboard.storyboard in Resources */,
 				B7EB59E320F693EB00FBBC6A /* Crumb.obj in Resources */,
