@@ -21,7 +21,7 @@ class TutorialChildViewController: UIViewController, ClewObserver {
                                                  width: UIScreen.main.bounds.size.width,
                                                  height: UIScreen.main.bounds.size.height))
     }
-    
+
     func finishAnnouncement(announcement: String) { }
     func didReceiveNewCameraPose(transform: simd_float4x4)  {}
     func didTransitionTo(newState: AppState) {}

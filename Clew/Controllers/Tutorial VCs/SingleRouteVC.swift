@@ -60,11 +60,12 @@ class SingleRouteVC: TutorialChildViewController {
         if case .recordingRoute = newState {
             tutorialParent?.state = .recordingSingleRoute
             recordLabel.removeFromSuperview()
+            print("is record label still here")
 //            announcementManager.announce(announcement: "Walk forward for a few meters turn right and continue for a few meters press the 'stop' button when finished!")
         }
         
         if case .readyToNavigateOrPause = newState {
-            self.view.addSubview(backgroundShadow)
+            self.view.addSubview(backgroundShadow)  
             tutorialParent?.state = .teachTheNavigationOfASingleRoute
             pauseView = createPauseView()
             self.view.addSubview(pauseView)
@@ -74,6 +75,12 @@ class SingleRouteVC: TutorialChildViewController {
             tutorialParent?.state = .teachTheNavigationOfASingleRoute
             navigateLabel.removeFromSuperview()
         }
+        
+        if case .ratingRoute = newState {
+            tutorialParent?.state = .endTutorial
+            announcementManager.remove()
+        }
+        
     }
     
     func createLandmarkView() -> UIView {

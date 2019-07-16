@@ -57,6 +57,9 @@ enum AppState {
     case startingResumeProcedure(route: SavedRoute, mapAsAny: Any?, navigateStartToEnd: Bool)
     /// the AR session has entered the relocalizing state, which means that we can now realign the session
     case readyForFinalResumeAlignment
+    /// The app is in the tutorial state, either because it is the user's first launch or that they launched the tutorial
+//    case followingTutorial
+    
     
     /// rawValue is useful for serializing state values, which we are currently using for our logging feature
     var rawValue: String {
@@ -85,6 +88,8 @@ enum AppState {
             return "startingResumeProcedure(route=notloggedhere, map=notlogged, navigateStartToEnd=\(navigateStartToEnd))"
         case .readyForFinalResumeAlignment:
             return "readyForFinalResumeAlignment"
+//        case .followingTutorial:
+//            return "followingTutorial"
         }
     }
 }
@@ -134,6 +139,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 break
             case .initializing:
                 break
+//            case .followingTutorial:
+//                break
             }
         }
     }

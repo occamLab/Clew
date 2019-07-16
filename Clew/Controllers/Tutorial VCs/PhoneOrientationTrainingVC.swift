@@ -21,9 +21,9 @@ class PhoneOrientationTrainingVC: TutorialChildViewController, SRCountdownTimerD
         super.viewDidAppear(animated)
     }
     
-    @objc func buttonAction(sender: UIButton!) {
-         tutorialParent?.state = .readyToRecordSingleRoute
-    }
+//    @objc func buttonAction(sender: UIButton!) {
+//         tutorialParent?.state = .readyToRecordSingleRoute
+//    }
     
     
     /// Callback function for when `countdownTimer` updates.  This allows us to announce the new value via voice

@@ -23,6 +23,7 @@ class TutorialViewController: UIViewController, ClewObserver {
     let singleRouteChildVC = SingleRouteVC()
     let phoneOrientationTrainingChildVC  = PhoneOrientationTrainingVC()
     let tipsAndWarningsChildVC = TipsAndWarningsViewController()
+    var window: UIWindow?
     
     /// A custom enumeration type that describes the exact state of the tutorial.
     enum TutorialState {
@@ -33,6 +34,7 @@ class TutorialViewController: UIViewController, ClewObserver {
         case recordingSingleRoute
         case teachTheNavigationOfASingleRoute
         case initializing
+        case endTutorial
         /*
         /// rawValue is useful for serializing state values, which we are currently using for our logging feature
         var rawValue: String {
@@ -50,6 +52,7 @@ class TutorialViewController: UIViewController, ClewObserver {
         }*/
     }
     
+//    var appState: AppState = .followingTutorial
     
     var state = TutorialState.initializing {
         didSet {
@@ -72,6 +75,8 @@ class TutorialViewController: UIViewController, ClewObserver {
                 break
             case .initializing:
                 initialize()
+            case .endTutorial:
+                self.remove()
             }
         }
     }
