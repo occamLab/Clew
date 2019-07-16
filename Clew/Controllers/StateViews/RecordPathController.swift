@@ -20,6 +20,12 @@ class RecordPathController: UIViewController {
     /// button for accessing saved routes
     var routesButton: UIButton!
 
+    /// called when view appears (any time)
+    override func viewDidAppear(_ animated: Bool) {
+        /// set thumbsUpButton as initially active voiceover button
+        UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: self.recordPathButton)
+    }
+    
     /// called when the view has loaded.  We setup various app elements in here.
     override func viewDidLoad() {
         super.viewDidLoad()

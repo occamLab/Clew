@@ -14,6 +14,12 @@ class StopRecordingController: UIViewController {
     /// Button for stopping a route recording
     var stopRecordingButton: UIButton!
 
+    /// called when the view appears (any time)
+    override func viewDidAppear(_ animated: Bool) {
+        /// set thumbsUpButton as initially active voiceover button
+        UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: self.stopRecordingButton)
+    }
+    
     /// called when the view has loaded.  We setup various app elements in here.
     override func viewDidLoad() {
         super.viewDidLoad()

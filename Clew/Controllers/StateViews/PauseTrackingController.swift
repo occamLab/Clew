@@ -30,6 +30,10 @@ class PauseTrackingController: UIViewController, UIScrollViewDelegate {
         /// update label font
         /// TODO: is this a safe implementation? Might crash if label has no body, unclear.
         label.font = UIFont.preferredFont(forTextStyle: .body)
+        
+        /// set confirm alignment button as initially active voiceover button
+        UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: self.confirmAlignmentButton)
+
     }
     
     /// called when the view has loaded the first time.  We setup various app elements in here.

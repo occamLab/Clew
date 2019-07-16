@@ -26,6 +26,10 @@ class RouteRatingController: UIViewController {
         /// update label font
         /// TODO: is this a safe implementation? Might crash if label has no body, unclear.
         label.font = UIFont.preferredFont(forTextStyle: .body)
+        
+        /// set thumbsUpButton as initially active voiceover button
+        UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: self.thumbsUpButton)
+
     }
     
     /// called when the view has loaded.  We setup various app elements in here.

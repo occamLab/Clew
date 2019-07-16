@@ -22,6 +22,9 @@ class ResumeTrackingController: UIViewController {
         /// update label font
         /// TODO: is this a safe implementation? Might crash if label has no body, unclear.
         label.font = UIFont.preferredFont(forTextStyle: .body)
+        
+        /// set resumeButton as initially active voiceover button
+        UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: self.resumeButton)
     }
 
     /// called when the view has loaded.  We setup various app elements in here.

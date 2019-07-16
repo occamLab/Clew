@@ -24,7 +24,11 @@ class ResumeTrackingConfirmController: UIViewController, UIScrollViewDelegate {
     override func viewDidAppear(_ animated: Bool) {
         /// update label font
         /// TODO: is this a safe implementation? Might crash if label has no body, unclear.
+        /// called when the view loads (any time)
         label.font = UIFont.preferredFont(forTextStyle: .body)
+        
+        /// set confirm alignment button as initially active voiceover button
+        UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: self.confirmAlignmentButton)
     }
     
     /// called when the view has loaded.  We setup various app elements in here.
