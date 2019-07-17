@@ -11,14 +11,15 @@ import SceneKit
 
 
 class PhoneOrientationTrainingVC: TutorialChildViewController {
-    var presentedCallout: UIView?
+    var secondaryArrow: UIView?
     
     var secondaryCallout: UIView?
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        presentedCallout = createCalloutToView(withTagID: 0xFEEDDAD, calloutText: "This button will allow you to record a path. Click it to move on to the next phase of the tutorial!")
-//        secondaryCallout = createCalloutToView(withTagID: 0xFADEFAD, calloutText: "This button allows the creation of Landmarks. This will be useful when we want to save recorded routes!")
+//        presentedCallout = createCalloutToView(withTagID: 0xFEEDDAD, calloutText: "This button will allow you to record a path. Click it to move on to the next phase of the tutorial!")
+        secondaryCallout = createCalloutToView(withTagID: 0xFEEDDAD, calloutText: "This button allows the creation of Landmarks. This will be useful when we want to save recorded routes!")
+        secondaryArrow = createCalloutArrowToView(withTagID: 0xFEEDDAD)
     }
         
     

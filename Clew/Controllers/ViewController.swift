@@ -561,7 +561,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         view.sendSubviewToBack(sceneView)
         
         // targets for global buttons
-//        rootContainerView.settingsButton.addTarget(self, action: #selector(settingsButtonPressed), for: .touchUpInside)
+        rootContainerView.settingsButton.addTarget(self, action: #selector(settingsButtonPressed), for: .touchUpInside)
         
 //        .checkButton.addTarget(self, action: #selector(checkButtonPressed), for: .touchUpInside)
 

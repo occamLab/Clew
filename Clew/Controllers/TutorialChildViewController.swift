@@ -43,17 +43,17 @@ class TutorialChildViewController: UIViewController, ClewObserver {
         buttonLabel.isHidden = false
         buttonLabel.tag = 0xCADFACE
         
-        let arrowImage = UIImage(named: "calloutArrow")
-        let imageView = UIImageView(image: arrowImage!)
-        view.addSubview(imageView)
-        imageView.isHidden = false
+//        let arrowImage = UIImage(named: "calloutArrow")
+//        let imageView = UIImageView(image: arrowImage!)
+//        view.addSubview(imageView)
+//        imageView.isHidden = false
         
         let xCenter = viewToCallout.frame.midX
         let yCenter = viewToCallout.frame.maxY + 50
         print("1 - locationText")
         print(viewToCallout.frame.minX)
-        buttonLabel.center = CGPoint(x: 210, y: 200)
-        imageView.frame = CGRect(x: xCenter - imageView.frame.width/4, y: 325, width: 100, height: 100)
+        buttonLabel.center = CGPoint(x: xCenter, y: 200)
+//        imageView.frame = CGRect(x: xCenter - imageView.frame.width/4, y: 325, width: 100, height: 100)
         
         /// button to hide the existing UILabel
 //        var checkButton: UIButton!
@@ -68,6 +68,20 @@ class TutorialChildViewController: UIViewController, ClewObserver {
         view.addSubview(buttonLabel)
         view.sendSubviewToBack(buttonLabel)
          return buttonLabel
+    }
+    
+    func createCalloutArrowToView(withTagID tagID: Int, arrowTilt: Int)-> UIView? {
+        guard let grandParent = tutorialParent?.parent as? ViewController,
+            let viewToCallout = grandParent.view.viewWithTag(tagID) else {
+                return nil
+            }
+        let arrowImage = UIImage(named: "calloutArrow")
+        let imageView = UIImageView(image: arrowImage!)
+        view.addSubview(imageView)
+        imageView.isHidden = false
+        let xCenter = viewToCallout.frame.midX
+        imageView.frame = CGRect(x: xCenter - imageView.frame.width/4, y: 325, width: 100, height: 100)
+        return imageView
     }
     
     func finishAnnouncement(announcement: String) { }
