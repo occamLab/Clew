@@ -106,7 +106,7 @@
 
 "Landmarks allow you to save or pause your route. You will need to return to the landmark to load or unpause your route. Before creating the landmark, specify text or voice to help you remember its location. To create a landmark, hold your device flat with the screen facing up. Press the top (short) edge flush against a flat vertical surface (such as a wall).  The \"align\" button starts a %lu-second countdown. During this time, do not move the device." = "地标允许您保存或暂停路线。您需要返回地标以加载或取消暂停您的路线。在创建地标之前，请指定文本或语音以帮助您记住其位置。要创建地标，请将设备平放，屏幕朝上。按下顶部（短）边缘与平坦的垂直表面（例如墙壁）齐平。\“align\” 按钮将开始%lu秒倒计时。 在此期间，请勿移动设备。";
 
-"Hold your device flat with the screen facing up. Press the top (short) edge flush against the same vertical surface that you used to create the landmark.  When you are ready, activate the align button to start the %lu-second alignment countdown that will complete the procedure. Do not move the device until the phone provides confirmation via a vibration or sound cue." = "将设备平放，屏幕朝上。 按顶部（短）边缘与您用于创建地标的垂直表面齐平。 准备就绪后，激活对齐按钮以启动将完成该过程的%lu-秒对齐倒计时。 在手机通过振动或声音提示进行确认之前，请勿移动设备。";
+"Hold your device flat with the screen facing up. Press the top (short) edge flush against the same vertical surface that you used to create the landmark.  When you are ready, activate the align button to start the alignment countdown that will complete the procedure. Do not move the device until the phone provides confirmation via a vibration or sound cue." = "将设备平放，屏幕朝上。 按顶部（短）边缘与您用于创建地标的垂直表面齐平。 准备就绪后，激活对齐按钮以启动将完成该过程的%lu-秒对齐倒计时。 在手机通过振动或声音提示进行确认之前，请勿移动设备。";
 
 "Settings" = "设置"; // Comments: Title/header of the settings menu.
 

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1F2971A522DF60F700B896C6 /* HelpCompiler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2B9D7022C3B50D00317DC8 /* HelpCompiler.swift */; };
 		1F2B9D7222C3B50D00317DC8 /* HelpCompiler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2B9D7022C3B50D00317DC8 /* HelpCompiler.swift */; };
 		1F2B9D8722C5446B00317DC8 /* (null) in Resources */ = {isa = PBXBuildFile; };
 		2748B8490FCBA95C7AA028D7 /* Pods_Clew.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 942F73299DA8DCF97FAA974A /* Pods_Clew.framework */; };
@@ -671,6 +672,7 @@
 				E5470F0022C119F5001092A4 /* PathLogger.swift in Sources */,
 				E5470F2422C119F5001092A4 /* UIButtonExtensions.swift in Sources */,
 				E5470EF822C119F5001092A4 /* AudioVisualizerView.swift in Sources */,
+				1F2971A522DF60F700B896C6 /* HelpCompiler.swift in Sources */,
 				E5470F1E22C119F5001092A4 /* NSStringExtension.swift in Sources */,
 				E5470F3222C119F5001092A4 /* ResumeTrackingController.swift in Sources */,
 			);
