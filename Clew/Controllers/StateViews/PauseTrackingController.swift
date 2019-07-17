@@ -61,7 +61,7 @@ class PauseTrackingController: UIViewController {
         confirmAlignmentButton = UIButton.makeImageButton(view,
                                                           alignment: UIConstants.ButtonContainerHorizontalAlignment.center,
                                                           appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "Align")!),
-                                                          label: "Start \(ViewController.alignmentWaitingPeriod)-second alignment countdown")
+                                                          label: "Start alignment countdown")
         
         if let parent: UIViewController = parent {
             enterLandmarkDescriptionButton.addTarget(parent,
