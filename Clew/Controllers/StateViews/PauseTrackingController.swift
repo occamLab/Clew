@@ -110,7 +110,7 @@ class PauseTrackingController: UIViewController, UIScrollViewDelegate {
         confirmAlignmentButton = UIButton.makeConstraintButton(view,
                                                           alignment: UIConstants.ButtonContainerHorizontalAlignment.center,
                                                           appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "Align")!),
-                                                          label: "Start \(ViewController.alignmentWaitingPeriod)-second alignment countdown")
+                                                          label: "Start alignment countdown")
         
         /// create stack view for aligning and distributing bottom layer buttons
         let stackView   = UIStackView()

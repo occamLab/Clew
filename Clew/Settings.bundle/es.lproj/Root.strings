@@ -34,3 +34,5 @@
 "Help us improve the app by logging your Clew experience. These logs will not include any images or personal information." = "Ayúdanos a mejorar la aplicación al registrar tu experiencia Clew. Estos registros no incluirán ninguna imagen o información personal."; // Comments: A comment on what turning on the button of "Send Logs" does.
 
 //"Settings" = "Ajustes"; // Comments: Title/header of the settings menu.
+
+"Alignment Timer Options" = "Alignment Timer Options"; //Comments: A header for the slider which adjusts the length of the alignment timer

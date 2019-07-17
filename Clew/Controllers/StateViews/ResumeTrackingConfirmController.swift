@@ -53,7 +53,7 @@ class ResumeTrackingConfirmController: UIViewController, UIScrollViewDelegate {
         
         /// label details
         let waitingPeriod = ViewController.alignmentWaitingPeriod
-        let alignInfo = String.localizedStringWithFormat(NSLocalizedString("Hold your device flat with the screen facing up. Press the top (short) edge flush against the same vertical surface that you used to create the landmark.  When you are ready, activate the align button to start the %lu-second alignment countdown that will complete the procedure. Do not move the device until the phone provides confirmation via a vibration or sound cue.", comment: "Info for user"), waitingPeriod)
+        let alignInfo = String.localizedStringWithFormat(NSLocalizedString("Hold your device flat with the screen facing up. Press the top (short) edge flush against the same vertical surface that you used to create the landmark.  When you are ready, activate the align button to start the alignment countdown that will complete the procedure. Do not move the device until the phone provides confirmation via a vibration or sound cue.", comment: "Info for user"), waitingPeriod)
 
         // var mainText: String?
         let mainText = alignInfo
@@ -104,7 +104,7 @@ class ResumeTrackingConfirmController: UIViewController, UIScrollViewDelegate {
         confirmAlignmentButton = UIButton.makeConstraintButton(view,
                                                                alignment: UIConstants.ButtonContainerHorizontalAlignment.center,
                                                                appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "Align")!),
-                                                               label: "Start \(ViewController.alignmentWaitingPeriod)-second alignment countdown")
+                                                               label: "Start alignment countdown")
         
         /// create stack view for aligning and distributing bottom layer buttons
         let stackView   = UIStackView()
