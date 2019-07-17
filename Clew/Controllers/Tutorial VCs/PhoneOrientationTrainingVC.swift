@@ -74,6 +74,7 @@ class PhoneOrientationTrainingVC: TutorialChildViewController, SRCountdownTimerD
         congratsLabel.layer.masksToBounds = true
         congratsLabel.layer.cornerRadius = 8.0
         congratsLabel.font = UIFont.systemFont(ofSize: 24.0)
+        congratsLabel.layer.borderWidth = 3.0
         congratsLabel.isAccessibilityElement = true
         congratsLabel.accessibilityLabel = "Congratulations! You have successfully oriented your phone. Now you will be recording a simple single route."
         congratsView.addSubview(congratsLabel)
@@ -83,11 +84,12 @@ class PhoneOrientationTrainingVC: TutorialChildViewController, SRCountdownTimerD
         nextButton.setTitleColor(.white, for: .normal)
         nextButton.setTitle("Next", for: .normal)
         nextButton.layer.masksToBounds = true
-        nextButton.layer.cornerRadius = 8.0
+        nextButton.layer.cornerRadius = 10.0
         nextButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 30.0)
         nextButton.isAccessibilityElement = true
         nextButton.isUserInteractionEnabled = true
         nextButton.addTarget(self, action: #selector(nextButtonAction), for: .touchUpInside)
+        nextButton.layer.borderWidth = 3.0
         congratsView.addSubview(nextButton)
         
         return congratsView
