@@ -35,4 +35,4 @@
 
 //"Settings" = "Ajustes"; // Comments: Title/header of the settings menu.
 
-"Alignment Timer Duration" = "Alignment Timer Duration"; //Comments: A header for the slider which adjusts the length of the alignment timer
+"Alignment Timer Options" = "Alignment Timer Options"; //Comments: A header for the slider which adjusts the length of the alignment timer

@@ -8,23 +8,9 @@
 	<array>
 		<dict>
 			<key>Type</key>
-			<string>PSTitleValueSpecifier</string>
+			<string>PSGroupSpecifier</string>
 			<key>Title</key>
-			<string>Alignment Timer Duration</string>
-			<key>Key</key>
-			<string></string>
-		</dict>
-		<dict>
-			<key>Type</key>
-			<string>PSSliderSpecifier</string>
-			<key>Key</key>
-			<string>timerLength</string>
-			<key>DefaultValue</key>
-			<integer>5</integer>
-			<key>MinimumValue</key>
-			<integer>1</integer>
-			<key>MaximumValue</key>
-			<integer>10</integer>
+			<string>General Options</string>
 		</dict>
 		<dict>
 			<key>Type</key>
@@ -69,6 +55,24 @@
 				<string>Blue</string>
 				<string>Random</string>
 			</array>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>Title</key>
+			<string>Alignment Timer Options</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSSliderSpecifier</string>
+			<key>Key</key>
+			<string>timerLength</string>
+			<key>DefaultValue</key>
+			<integer>5</integer>
+			<key>MinimumValue</key>
+			<integer>1</integer>
+			<key>MaximumValue</key>
+			<integer>10</integer>
 		</dict>
 		<dict>
 			<key>Type</key>
