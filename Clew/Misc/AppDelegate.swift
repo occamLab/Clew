@@ -15,7 +15,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     /// A handle to the app's main window
     var window: UIWindow?
-
+    
     /// Called when the app finishes launching.  Currently, this is where we setup Firebase and make sure the phone screen doesn't lock while we are using the app.
     ///
     /// - Parameters:
@@ -39,10 +39,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let firstTimeLoggingIn: Bool? = userDefaults.object(forKey: "firstTimeLogin") as? Bool
         
 //        if (firstTimeLoggingIn == nil) {
+//        var appState: AppState = .followingTutorial
             userDefaults.set(true, forKey: "firstTimeLogin")
             window = UIWindow(frame:UIScreen.main.bounds)
             window?.makeKeyAndVisible()
-            window?.rootViewController = safetyContent
+            window?.rootViewController = safetyContent //Remember to change it back to safetyContent
             UIApplication.shared.isIdleTimerDisabled = true
             return true
 //        } else {

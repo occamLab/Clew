@@ -11,6 +11,7 @@ import SceneKit
 import UIKit
 
 class TutorialViewController: UIViewController, ClewObserver {
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view = TransparentTouchView(frame:CGRect(x: 0,
@@ -22,6 +23,7 @@ class TutorialViewController: UIViewController, ClewObserver {
     let singleRouteChildVC = SingleRouteVC()
     let phoneOrientationTrainingChildVC  = PhoneOrientationTrainingVC()
     let tipsAndWarningsChildVC = TipsAndWarningsViewController()
+    let announcementManager = AnnouncementManager()
     
     /// A custom enumeration type that describes the exact state of the tutorial.
     enum TutorialState {
@@ -32,6 +34,7 @@ class TutorialViewController: UIViewController, ClewObserver {
         case recordingSingleRoute
         case teachTheNavigationOfASingleRoute
         case initializing
+        case endTutorial
         /*
         /// rawValue is useful for serializing state values, which we are currently using for our logging feature
         var rawValue: String {
@@ -49,24 +52,33 @@ class TutorialViewController: UIViewController, ClewObserver {
         }*/
     }
     
+//    var appState: AppState = .followingTutorial
     
     var state = TutorialState.initializing {
         didSet {
             //        logger.logStateTransition(newState: state)
             switch state {
             case .startOrientationTraining:
+                removeAllChildVCs()
                 add(phoneOrientationTrainingChildVC)
             case .optimalOrientationAchieved:
-                print("nothing")
+                state = .readyToRecordSingleRoute
+                break
             case .readyToRecordSingleRoute:
                 removeAllChildVCs()
                 add(singleRouteChildVC)
+                print("in readyToRecordState")
+                break
             case .recordingSingleRoute:
-                print("recording single route")
+                print("in recording state")
+                break
             case .teachTheNavigationOfASingleRoute:
-                print("placeholder")
+                print("in teaching navigation state")
+                break
             case .initializing:
                 initialize()
+            case .endTutorial:
+                self.remove()
             }
         }
     }
@@ -115,5 +127,4 @@ class TutorialViewController: UIViewController, ClewObserver {
     
 
 }
-
 

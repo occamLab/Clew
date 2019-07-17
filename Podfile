@@ -15,6 +15,8 @@ def all_pods
   pod 'PRTween', '~> 0.1'
   pod 'Firebase/Analytics'
   pod 'Instructions', '~> 1.3.1'
+  pod 'FLAnimatedImage'
+  pod 'SwiftGifOrigin', '~> 1.7.0'
 end
 
 target 'Clew' do
