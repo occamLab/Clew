@@ -16,6 +16,10 @@ class StartNavigationController: UIViewController {
     
     /// button for pausing navigation
     var pauseButton: UIButton!
+    
+    var stackView: UIStackView!
+    
+    var fillerSpace: UIView!
 
     /// called when view appears (any time)
     override func viewDidAppear(_ animated: Bool) {
@@ -61,14 +65,14 @@ class StartNavigationController: UIViewController {
                                                appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "Pause")!),
                                                label: "Pause session")
         
-        let fillerSpace = UIView()
+        fillerSpace = UIView()
         fillerSpace.translatesAutoresizingMaskIntoConstraints = false
         /// set width of button and constaint height to be equal to width
         fillerSpace.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 3.50).isActive = true
         fillerSpace.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 3.50).isActive = true
         
         /// create stack view for aligning and distributing bottom layer buttons
-        let stackView   = UIStackView()
+        stackView = UIStackView()
         view.addSubview(stackView)
         stackView.translatesAutoresizingMaskIntoConstraints = false;
         

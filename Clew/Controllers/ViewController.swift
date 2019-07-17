@@ -1087,7 +1087,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         stopRecordingController.remove()
         add(startNavigationController)
         startNavigationController.pauseButton.isHidden = !allowPause
-        delayTransition()
+        startNavigationController.fillerSpace.isHidden = !allowPause
+        startNavigationController.stackView.layoutIfNeeded()
+        UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: startNavigationController.startNavigationButton)
     }
 
     /// Display the pause tracking view/hide all other views
