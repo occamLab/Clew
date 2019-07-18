@@ -78,6 +78,7 @@ class TutorialViewController: UIViewController, ClewObserver {
             case .initializing:
                 initialize()
             case .endTutorial:
+                removeAllChildVCs()
                 self.remove()
             }
         }

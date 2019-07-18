@@ -29,11 +29,23 @@ class PhoneOrientationTrainingVC: TutorialChildViewController, SRCountdownTimerD
     // Button for moving to the next state of the tutorial
     var nextButton: UIButton!
     
+    var skipButton: UIButton!
+    
     // View for giving a darker tint on the screen
     var backgroundShadow: UIView! = TutorialShadowBackground()
     
+    // Timer for tracking time since PhoneOrientationTrainingVC was first opened
+    var timeSinceOpen : Date?
+    
+    // Time to delay displaying the 'countdownTimer' to prevent the VoiceOver of the timer and the initial tracking session announcement from overlapping
+    var timeAfterTrackingSessionMessage : TimeInterval?
+    
+    // Used to control enabling/disabling haptic feedback
+    var runHapticFeedback : Bool? = true
+    
     // Color used in other colors in Clew
     var clewGreen = UIColor(red: 103/255, green: 188/255, blue: 71/255, alpha: 1.0)
+    var skipYellow = UIColor(red: 254/255, green: 243/255, blue: 62/255, alpha: 1.0)
     
     
     /// Callback function for when `countdownTimer` updates.  This allows us to announce the new value via voice
@@ -47,15 +59,19 @@ class PhoneOrientationTrainingVC: TutorialChildViewController, SRCountdownTimerD
         tutorialParent?.state = .readyToRecordSingleRoute
     }
     
-    /// Callback function for when 'countdown' = 0. This triggers a popup to be shown that congratulates the user for completing phone orientation training
+    // Callback function for when the 'skip' button is tapped
+    @objc func skipButtonAction(sender: UIButton!) {
+        tutorialParent?.state = .endTutorial
+    }
+    
+    /// Callback function for when 'countdown' = 0. This stops haptic feedback and triggers a popup to be shown that congratulates the user for completing phone orientation training.
     @objc func timerCalled() {
-        print("timer finished")
-        countdownTimer.isHidden = true
+        runHapticFeedback = false
         countdownTimer.removeFromSuperview()
         congratsView = createCongratsView()
+        self.view.addSubview(congratsView)
         // start VoiceOver at 'congratsLabel'
         UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: congratsLabel)
-        self.view.addSubview(congratsView)
     }
     
     /// Initializes a view and the button in that view. The view will be shown after the user completes phone orientation training
@@ -90,13 +106,26 @@ class PhoneOrientationTrainingVC: TutorialChildViewController, SRCountdownTimerD
         nextButton.addTarget(self, action: #selector(nextButtonAction), for: .touchUpInside)
         congratsView.addSubview(nextButton)
         
+        skipButton = UIButton(frame: CGRect(x: UIScreen.main.bounds.size.width*7/8 - UIScreen.main.bounds.size.width*1/5, y: UIScreen.main.bounds.size.width*1/6, width: UIScreen.main.bounds.size.width*2/5, height: UIScreen.main.bounds.size.height*1/10))
+        skipButton.backgroundColor = clewGreen
+        skipButton.setTitleColor(skipYellow, for: .normal)
+        skipButton.setTitle("SKIP", for: .normal)
+        skipButton.layer.masksToBounds = true
+        skipButton.layer.cornerRadius = 8.0
+        skipButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 25.0)
+        skipButton.isAccessibilityElement = true
+        skipButton.isUserInteractionEnabled = true
+        skipButton.addTarget(self, action: #selector(skipButtonAction), for: .touchUpInside)
+        congratsView.addSubview(skipButton)
+        
         return congratsView
     }
     
-    /// Called when the view appears on screen.
+    /// Called when the view appears on screen. Initializes and starts 'timeSinceOpen'.
     /// - Parameter animated: True if the appearance is animated
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        timeSinceOpen = Date()
     }
     
     /// Called when the view has loaded. Make new countdownTimer that will only be used in PhoneorientationTrainingVC
@@ -129,24 +158,27 @@ class PhoneOrientationTrainingVC: TutorialChildViewController, SRCountdownTimerD
         let now = Date()
         let timeInterval = now.timeIntervalSince(lastHapticFeedbackTime)
         
+        timeAfterTrackingSessionMessage = 3.0
+        
         // handles when the angle the user is holding the phone falls in between the desired optimal angle
-        if abs(angleFromVertical) < 0.5 {
-            if countdown == nil {
-                print("angle falls in range")
-                countdownTimer.isHidden = false
-                /// NOTE: to change the time that the user needs to hold the phone in the optimal angle for state transition to happen, change both the 'beginingValue' and 'timeInterval'
-                countdownTimer.start(beginingValue: 3, interval: 1)
-                countdown = Timer.scheduledTimer(timeInterval: 3.0, target: self, selector: #selector(timerCalled), userInfo: nil, repeats: false) }
-        } else {
+        if abs(timeSinceOpen!.timeIntervalSinceNow) > timeAfterTrackingSessionMessage! {
+            if abs(angleFromVertical) < 0.5 {
+                if countdown == nil {
+                    print("angle falls in range")
+                    countdownTimer.isHidden = false
+                    /// NOTE: to change the time that the user needs to hold the phone in the optimal angle for state transition to happen, change both the 'beginingValue' and 'timeInterval'
+                    countdownTimer.start(beginingValue: 3, interval: 1)
+                    countdown = Timer.scheduledTimer(timeInterval: 3.0, target: self, selector: #selector(timerCalled), userInfo: nil, repeats: false) }
+            } else {
             countdownTimer.isHidden = true
             countdown?.invalidate()
-            countdown = nil
+            countdown = nil }
         }
-        
         /// send haptic feedback in varying frequency depending on how accurate the angle the user is holding up their phone
-        if timeInterval > intendedInterval {
-            feedbackGenerator.impactOccurred()
-            lastHapticFeedbackTime = now
+        if runHapticFeedback! {
+            if timeInterval > intendedInterval {
+                feedbackGenerator.impactOccurred()
+                lastHapticFeedbackTime = now }
         }
     }
 }
