@@ -20,6 +20,12 @@ class RecordPathController: UIViewController {
     /// button for accessing saved routes
     var routesButton: UIButton!
 
+    /// called when view appears (any time)
+    override func viewDidAppear(_ animated: Bool) {
+        /// set thumbsUpButton as initially active voiceover button
+        UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: self.recordPathButton)
+    }
+    
     /// called when the view has loaded.  We setup various app elements in here.
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -48,20 +54,41 @@ class RecordPathController: UIViewController {
             view.addSubview(label)
         }
 
-        recordPathButton = UIButton.makeImageButton(view,
+        recordPathButton = UIButton.makeConstraintButton(view,
                                                     alignment: UIConstants.ButtonContainerHorizontalAlignment.center,
                                                     appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "Record")!),
                                                     label: NSLocalizedString("Record path", comment: "A button that allows user to video record a path to a destination"))
         
-        addLandmarkButton = UIButton.makeImageButton(view,
+        addLandmarkButton = UIButton.makeConstraintButton(view,
                                                      alignment: UIConstants.ButtonContainerHorizontalAlignment.right,
                                                      appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "Landmark")!),
                                                      label: NSLocalizedString("Landmark", comment: "A button that allows user to create a landmark for a saving a route"))
         
-        routesButton = UIButton.makeImageButton(view,
+        routesButton = UIButton.makeConstraintButton(view,
                                                 alignment: UIConstants.ButtonContainerHorizontalAlignment.left,
                                                 appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "route")!),
                                                 label: NSLocalizedString("Saved routes list", comment: "A button that opens a menu which displays all the saved routes created by the user"))
+        
+        /// create stack view for aligning and distributing bottom layer buttons
+        let stackView   = UIStackView()
+        view.addSubview(stackView)
+        stackView.translatesAutoresizingMaskIntoConstraints = false;
+        
+        /// define horizonal, centered, and equal alignment of elements
+        /// inside the bottom stack
+        stackView.axis = NSLayoutConstraint.Axis.horizontal
+        stackView.distribution  = UIStackView.Distribution.equalSpacing
+        stackView.alignment = UIStackView.Alignment.center
+        
+        /// add elements to the stack
+        stackView.addArrangedSubview(routesButton)
+        stackView.addArrangedSubview(recordPathButton)
+        stackView.addArrangedSubview(addLandmarkButton)
+        
+        /// size the stack
+        stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: UIConstants.yButtonFrameMargin).isActive = true
+        stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -UIConstants.yButtonFrameMargin).isActive = true
+        stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -12).isActive = true
         
         if let parent: UIViewController = parent {
             routesButton.addTarget(parent,
@@ -74,10 +101,5 @@ class RecordPathController: UIViewController {
                                           action: #selector(ViewController.recordPath),
                                           for: .touchUpInside)
         }
-        
-        // Do any additional setup after loading the view.
-        view.addSubview(routesButton)
-        view.addSubview(addLandmarkButton)
-        view.addSubview(recordPathButton)
     }
 }

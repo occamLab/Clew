@@ -16,7 +16,17 @@ class StartNavigationController: UIViewController {
     
     /// button for pausing navigation
     var pauseButton: UIButton!
+    
+    var stackView: UIStackView!
+    
+    var fillerSpace: UIView!
 
+    /// called when view appears (any time)
+    override func viewDidAppear(_ animated: Bool) {
+        /// set thumbsUpButton as initially active voiceover button
+        UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: self.startNavigationButton)
+    }
+    
     /// called when the view has loaded.  We setup various app elements in here.
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -45,16 +55,44 @@ class StartNavigationController: UIViewController {
             view.addSubview(label)
         }
         
-        startNavigationButton = UIButton.makeImageButton(view,
+        startNavigationButton = UIButton.makeConstraintButton(view,
                                                          alignment: UIConstants.ButtonContainerHorizontalAlignment.center,
                                                          appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "StartNavigation")!),
                                                          label: NSLocalizedString("Start navigation", comment: "The name of the button that allows user to start navigating."))
         
-        pauseButton = UIButton.makeImageButton(view,
+        pauseButton = UIButton.makeConstraintButton(view,
                                                alignment: UIConstants.ButtonContainerHorizontalAlignment.right,
                                                appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "Pause")!),
                                                label: "Pause session")
         
+        fillerSpace = UIView()
+        fillerSpace.translatesAutoresizingMaskIntoConstraints = false
+        /// set width of button and constaint height to be equal to width
+        fillerSpace.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 3.50).isActive = true
+        fillerSpace.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 3.50).isActive = true
+        
+        /// create stack view for aligning and distributing bottom layer buttons
+        stackView = UIStackView()
+        view.addSubview(stackView)
+        stackView.translatesAutoresizingMaskIntoConstraints = false;
+        
+        /// define horizonal, centered, and equal alignment of elements
+        /// inside the bottom stack
+        stackView.axis = NSLayoutConstraint.Axis.horizontal
+        stackView.distribution  = UIStackView.Distribution.equalSpacing
+        stackView.alignment = UIStackView.Alignment.center
+        
+        /// add elements to the stack
+        stackView.addArrangedSubview(pauseButton)
+        stackView.addArrangedSubview(startNavigationButton)
+        stackView.addArrangedSubview(fillerSpace)
+        
+        /// size the stack
+        stackView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: UIConstants.yButtonFrameMargin).isActive = true
+        stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -UIConstants.yButtonFrameMargin).isActive = true
+        stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+
         if let parent: UIViewController = parent {
             startNavigationButton.addTarget(parent,
                                    action: #selector(ViewController.startNavigation),
@@ -63,9 +101,5 @@ class StartNavigationController: UIViewController {
                                         action: #selector(ViewController.startPauseProcedure),
                                         for: .touchUpInside)
         }
-        
-        // Do any additional setup after loading the view.
-        view.addSubview(startNavigationButton)
-        view.addSubview(pauseButton)
     }
 }
