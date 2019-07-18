@@ -64,7 +64,7 @@ class PhoneOrientationTrainingVC: TutorialChildViewController, SRCountdownTimerD
                                            y: 0,
                                            width: UIScreen.main.bounds.size.width,
                                            height: UIScreen.main.bounds.size.height))
-        congratsLabel = UILabel(frame: CGRect(x: UIScreen.main.bounds.size.width/2 - UIScreen.main.bounds.size.width*2/5, y: UIScreen.main.bounds.size.height/6, width: UIScreen.main.bounds.size.width*4/5, height: 200))
+        congratsLabel = UILabel(frame: CGRect(x: UIScreen.main.bounds.size.width/2 - UIScreen.main.bounds.size.width*2/5, y: UIScreen.main.bounds.size.height/8, width: UIScreen.main.bounds.size.width*4/5, height: 200))
         congratsLabel.text = "Congratulations! \n You have successfully oriented your phone. \n Now you will be recording a simple single route."
         congratsLabel.textColor = UIColor.black
         congratsLabel.backgroundColor = UIColor.white
@@ -79,7 +79,7 @@ class PhoneOrientationTrainingVC: TutorialChildViewController, SRCountdownTimerD
         congratsLabel.accessibilityLabel = "Congratulations! You have successfully oriented your phone. Now you will be recording a simple single route."
         congratsView.addSubview(congratsLabel)
 
-        nextButton = UIButton(frame: CGRect(x: UIScreen.main.bounds.size.width/2 - UIScreen.main.bounds.size.width*1/5, y: UIScreen.main.bounds.size.width*2/5 + UIScreen.main.bounds.size.height*1/10 + 100, width: UIScreen.main.bounds.size.width*2/5, height: UIScreen.main.bounds.size.height*1/10))
+        nextButton = UIButton(frame: CGRect(x: UIScreen.main.bounds.size.width/2 - UIScreen.main.bounds.size.width*1/5, y: UIScreen.main.bounds.size.width*3/10 + UIScreen.main.bounds.size.height*1/10 + 100, width: UIScreen.main.bounds.size.width*2/5, height: UIScreen.main.bounds.size.height*1/10))
         nextButton.backgroundColor = clewGreen
         nextButton.setTitleColor(.white, for: .normal)
         nextButton.setTitle("Next", for: .normal)

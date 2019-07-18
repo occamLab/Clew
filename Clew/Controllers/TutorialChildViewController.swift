@@ -27,7 +27,6 @@ class TutorialChildViewController: UIViewController, ClewObserver {
             let viewToCallout = grandParent.view.viewWithTag(tagID) else {
                 return nil
         }
-
         
         let buttonLabel = UILabel(frame: CGRect(x: UIScreen.main.bounds.size.width/2 - UIScreen.main.bounds.size.width*2/5, y: UIScreen.main.bounds.size.height/6, width: UIScreen.main.bounds.size.width*4/5, height: 200))
         buttonLabel.text = calloutText
@@ -54,7 +53,7 @@ class TutorialChildViewController: UIViewController, ClewObserver {
         let yCenter = viewToCallout.frame.maxY + 50
         print("1 - locationText")
         print(viewToCallout.frame.minX)
-        buttonLabel.center = CGPoint(x: xCenter, y: UIScreen.main.bounds.size.height/6)
+        buttonLabel.center = CGPoint(x: xCenter, y: UIScreen.main.bounds.size.height/8 + 100)
 //        imageView.frame = CGRect(x: xCenter - imageView.frame.width/4, y: 325, width: 100, height: 100)
 
         /// button to hide the existing UILabel
@@ -69,7 +68,7 @@ class TutorialChildViewController: UIViewController, ClewObserver {
 
         view.addSubview(buttonLabel)
 //        view.sendSubviewToBack(buttonLabel)
-         return buttonLabel
+        return buttonLabel
     }
 
     func createCalloutArrowToView(withTagID tagID: Int)-> UIView? {
@@ -82,7 +81,7 @@ class TutorialChildViewController: UIViewController, ClewObserver {
         view.addSubview(imageView)
         imageView.isHidden = false
         let xCenter = viewToCallout.frame.midX
-        imageView.frame = CGRect(x: xCenter - imageView.frame.width/4, y: 325, width: 100, height: 100)
+        imageView.frame = CGRect(x: xCenter - imageView.frame.width/4, y: 375, width: 100, height: 100)
         return imageView
     }
 

@@ -55,6 +55,9 @@ class StartNavigationController: UIViewController {
                                                appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "Pause")!),
                                                label: "Pause session")
         
+        pauseButton.tag = UIView.pauseSessionButtonTag
+        startNavigationButton.tag = 0xBADBEAD
+        
         if let parent: UIViewController = parent {
             startNavigationButton.addTarget(parent,
                                    action: #selector(ViewController.startNavigation),

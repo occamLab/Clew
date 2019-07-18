@@ -16,6 +16,18 @@ extension UIView {
     static let pauseButtonTag: Int = 1002
     /// Used to identify the read voice note button tag so that it can be enabled or disabled
     static let readVoiceNoteButtonTag: Int = 1003
+    /// Used to identify the record path button so it can be located for callouts
+    static let recordPathButtonTag: Int = 0xFABDEED
+    /// Used to identify the add landmark button so it can be located for callouts
+    static let addLandmarkButtonTag: Int = 0xBADFACE
+    // Used to identify the saved routes list so it can be located for callouts
+    static let routesButtonTag = 0xBEEFAD
+    // Used to identify the pause button so it can be located for callouts
+    static let pauseSessionButtonTag = 0xACEDABE
+    // Used to identify the start navigation button so it can be located for callouts
+    static let startNavigationButtonTag = 0xBADBEAD
+    
+    
 
     /// Custom fade used for direction text UILabel.
     func fadeTransition(_ duration: CFTimeInterval) {
