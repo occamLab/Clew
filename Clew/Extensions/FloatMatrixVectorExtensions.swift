@@ -107,6 +107,15 @@ extension float4x4 {
     }
 }
 
+// MARK: - Extensions for 3D floating point vector type
+
+extension float3 {
+    /// convert from a 3-element inhomogeneous vector to a 4-element homogeneous one.
+    var homogeneous: float4 {
+        return float4(x, y, z, 1)
+    }
+}
+
 // MARK: - Extensions for 4D floating point vector type
 
 extension float4 {

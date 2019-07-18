@@ -231,6 +231,18 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         showStartNavigationButton(allowPause: allowPause)
     }
     
+    /// Removes all of the follow crumbs that have been built-up in the system
+    func clearAllFollowCrumbs() {
+        guard let anchors = sceneView.session.currentFrame?.anchors else {
+            return
+        }
+        for anchor in anchors {
+            if let name = anchor.name, name == "followCrumb" {
+                sceneView.session.remove(anchor: anchor)
+            }
+        }
+    }
+    
     /// Handler for the navigatingRoute app state
     func handleStateTransitionToNavigatingRoute() {
         // navigate the recorded path
@@ -239,8 +251,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         routeName = nil
         beginRouteLandmark = RouteLandmark()
         endRouteLandmark = RouteLandmark()
-        followCrumbs = []
-        //removeFollowCrumbNodes()
+        clearAllFollowCrumbs()
         logger.resetNavigationLog()
 
         // generate path from PathFinder class
@@ -1135,7 +1146,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     var crumbs: [LocationInfo]!
     
     /// list of crumbs dropped when following path
-    var followCrumbs: [LocationInfo]!
+    var followCrumbs: [LocationInfo] {
+        guard let anchors = sceneView.session.currentFrame?.anchors else {
+            return []
+        }
+        return anchors.compactMap({$0.name != nil && $0.name! == "followCrumb" ? LocationInfo(transform: $0.transform) : nil })
+    }
     
     /// list of keypoints calculated after path completion
     var keypoints: [KeypointInfo]!
@@ -1145,9 +1161,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// SCNNode of the next keypoint
     var keypointNode: SCNNode!
-    
-    /// follow crumb nodes
-    var followCrumbNodes: [SCNNode] = []
     
     /// previous keypoint location - originally set to current location
     var prevKeypointPosition: LocationInfo!
@@ -1389,23 +1402,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     ///
     /// - Parameter send: the sender of the button pressed event
     @objc func snapToRoute(_ send: UIButton) {
-        // initially we start with identity
-        
         var keypointsToUse: [KeypointInfo] = checkedOffKeypoints
+        // always append the next point to check off
         if let firstKeypoint = keypoints.first {
             keypointsToUse.append(firstKeypoint)
         }
 
         let optimalTransform = pathMatcher.match(points: followCrumbs, toPath: keypointsToUse)
-        updateWorldOrigin(relativeTransform: optimalTransform.inverse)
-    }
-    
-    /// This function should be used whenever the world origin should be realigned.  Don't call the ARSession method directly as it will skip vital steps.
-    ///
-    /// - Parameter relativeTransform: the relative transform to apply to the axes of the world tracking session
-    func updateWorldOrigin(relativeTransform: simd_float4x4) {
-        sceneView.session.setWorldOrigin(relativeTransform: relativeTransform)
-        followCrumbs = followCrumbs?.map({ LocationInfo(transform: relativeTransform.inverse*$0.transform) })
+        sceneView.session.setWorldOrigin(relativeTransform: optimalTransform.inverse)
     }
     
     /// handles the user pressing the pause button
@@ -1462,7 +1466,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 }
                 
                 let relativeTransform = leveledCameraPose * leveledAlignPose.inverse
-                self.updateWorldOrigin(relativeTransform: relativeTransform)
+                self.sceneView.session.setWorldOrigin(relativeTransform: relativeTransform)
                 Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(self.playSound)), userInfo: nil, repeats: false)
                 self.isResumedRoute = true
                 self.state = .readyToNavigateOrPause(allowPause: false)
@@ -1509,8 +1513,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             // TODO: might want to indicate that something is wrong to the user
             return
         }
-        
-        followCrumbs.append(curLocation.location)
+        let minDistance = followCrumbs.map({sqrt(pow($0.x - curLocation.location.x, 2) + pow($0.y - curLocation.location.y, 2) + pow($0.z - curLocation.location.z, 2)) }).min()
+        // always allow this for now if minDistance == nil || minDistance! > 0.2 {
+        sceneView.session.add(anchor: ARAnchor(name: "followCrumb", transform: curLocation.location.transform))
+       // }
         var directionToNextKeypoint = getDirectionToNextKeypoint(currentLocation: curLocation)
         
         if (directionToNextKeypoint.targetState == PositionState.atTarget) {
@@ -2030,7 +2036,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                     announce(announcement: NSLocalizedString("Successfully matched current environment to saved route.", comment: "Let user know that their surroundings match up to the surroundings of a saved route and that they can begin navigating."))
                 }
                 // We clear out `followCrumbs` as we have no way to update their position relative to the updated world origin.  We could potentially circumvent this if we inserted them as proper SCNNodes
-                followCrumbs = []
                 attemptingRelocalization = false
             } else if case let .limited(reason)? = trackingSessionState {
                 if !suppressTrackingWarnings {
