@@ -97,7 +97,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     // MARK: Properties and subview declarations
     
     /// How long to wait (in seconds) between the alignment request and grabbing the transform
-    static let alignmentWaitingPeriod = 5
+    static let alignmentWaitingPeriod = 1
     
     /// The state of the ARKit tracking session as last communicated to us through the delgate protocol.  This is useful if you want to do something different in the delegate method depending on the previous state
     var trackingSessionState : ARCamera.TrackingState?
@@ -309,10 +309,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
 
         if navigateStartToEnd {
             crumbs = route.crumbs.reversed()
-            pausedTransform = route.beginRouteLandmark.transform
+            pausedLandmark = route.beginRouteLandmark
         } else {
             crumbs = route.crumbs
-            pausedTransform = route.endRouteLandmark.transform
+            pausedLandmark = route.endRouteLandmark
         }
         // make sure to clear out any relative transform that was saved before so we accurately align
         sceneView.session.setWorldOrigin(relativeTransform: simd_float4x4.makeTranslation(0, 0, 0))
@@ -346,7 +346,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// Handler for the pauseWaitingPeriod app state
     func handleStateTransitionToPauseWaitingPeriod() {
-        hideAllViewsHelper()
+         hideAllViewsHelper()
         rootContainerView.countdownTimer.isHidden = false
         rootContainerView.countdownTimer.start(beginingValue: ViewController.alignmentWaitingPeriod, interval: 1)
         delayTransition()
@@ -368,18 +368,28 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             }
             beginRouteLandmark.transform = currentTransform
             print("setting transform", beginRouteLandmark.transform)
+            
+            if let currentFrame = sceneView.session.currentFrame {
+                beginRouteLandmark.image = pixelBufferToUIImage(pixelBuffer: currentFrame.capturedImage)
+                let intrinsics = currentFrame.camera.intrinsics
+                beginRouteLandmark.intrinsics = simd_float4(intrinsics[0, 0], intrinsics[1, 1], intrinsics[2, 0], intrinsics[2, 1])
+            }
+           
 
             Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(playSound)), userInfo: nil, repeats: false)
 //            rootContainerView.pauseTrackingView.isHidden = true
             pauseTrackingController.remove()
             state = .mainScreen(announceArrival: false)
             return
-        } else if let currentTransform = sceneView.session.currentFrame?.camera.transform {
-            endRouteLandmark.transform = currentTransform
+        } else if let currentFrame = sceneView.session.currentFrame {
+            endRouteLandmark.transform = currentFrame.camera.transform
+            endRouteLandmark.image = pixelBufferToUIImage(pixelBuffer: currentFrame.capturedImage)
+            let intrinsics = currentFrame.camera.intrinsics
+            endRouteLandmark.intrinsics = simd_float4(intrinsics[0, 0], intrinsics[1, 1], intrinsics[2, 0], intrinsics[2, 1])
 
             if #available(iOS 12.0, *) {
                 sceneView.session.getCurrentWorldMap { worldMap, error in
-                    self.getRouteNameAndSaveRouteHelper(mapAsAny: worldMap)
+                    self.getRouteNameAndSaveRouteHelper(mapAsAny: nil)
                     self.showResumeTrackingButton()
                     Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(self.playSound)), userInfo: nil, repeats: false)
                     self.state = .pauseProcedureCompleted
@@ -586,8 +596,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         view.sendSubviewToBack(sceneView)
         
         // targets for global buttons
-        rootContainerView.collectBaseButton.addTarget(self, action: #selector(getBaseImage), for: .touchUpInside)
-        rootContainerView.collectNewButton.addTarget(self, action: #selector(getNewImage), for: .touchUpInside)
         rootContainerView.settingsButton.addTarget(self, action: #selector(settingsButtonPressed), for: .touchUpInside)
 
         rootContainerView.helpButton.addTarget(self, action: #selector(helpButtonPressed), for: .touchUpInside)
@@ -953,7 +961,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         configuration = ARWorldTrackingConfiguration()
         configuration.planeDetection = [.horizontal, .vertical]
         configuration.isAutoFocusEnabled = false
-
+        sceneView.debugOptions = .showWorldOrigin
         sceneView.session.run(configuration)
         sceneView.delegate = self
     }
@@ -1290,7 +1298,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     var sendLogs: Bool!
 
     /// This keeps track of the paused transform while the current session is being realigned to the saved route
-    var pausedTransform : simd_float4x4?
+    var pausedLandmark : RouteLandmark?
     
     /// the landmark to use to mark the beginning of the route currently being recorded
     var beginRouteLandmark = RouteLandmark()
@@ -1340,7 +1348,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             print("Attempting to save route")
             if #available(iOS 12.0, *) {
                 sceneView.session.getCurrentWorldMap { worldMap, error in
-                    self.getRouteNameAndSaveRouteHelper(mapAsAny: worldMap)
+                    self.getRouteNameAndSaveRouteHelper(mapAsAny: nil)
                 }
             } else {
                 getRouteNameAndSaveRouteHelper(mapAsAny: nil)
@@ -1410,7 +1418,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         creatingRouteLandmark = true
         // make sure to clear out any relative transform and paused transform so the alignment is accurate
         print("starting pause procedure", creatingRouteLandmark)
-        sceneView.session.setWorldOrigin(relativeTransform: simd_float4x4.makeTranslation(0, 0, 0))
+//        sceneView.session.setWorldOrigin(relativeTransform: simd_float4x4.makeTranslation(0, 0, 0))
         state = .startingPauseProcedure
     }
     
@@ -1431,24 +1439,72 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(ViewController.alignmentWaitingPeriod)) {
             self.rootContainerView.countdownTimer.isHidden = true
             // The first check is necessary in case the phone relocalizes before this code executes
-            if case .readyForFinalResumeAlignment = self.state, let alignTransform = self.pausedTransform, let camera = self.sceneView.session.currentFrame?.camera {
+            if case .readyForFinalResumeAlignment = self.state, let alignLandmark = self.pausedLandmark, let alignTransform = alignLandmark.transform, let frame = self.sceneView.session.currentFrame {
                 // yaw can be determined by projecting the camera's z-axis into the ground plane and using arc tangent (note: the camera coordinate conventions of ARKit https://developer.apple.com/documentation/arkit/arsessionconfiguration/worldalignment/camera
-                let alignYaw = self.getYawHelper(alignTransform)
-                let cameraYaw = self.getYawHelper(camera.transform)
+                DispatchQueue.global(qos: .background).async {
+                    let alignYaw = self.getYawHelper(alignTransform)
+                    let intrinsics = frame.camera.intrinsics
+                    let visualYaw = VisualAlignment.visualYaw(alignLandmark.image!, alignLandmark.intrinsics!, self.pixelBufferToUIImage(pixelBuffer: frame.capturedImage)!, simd_float4(intrinsics[0, 0], intrinsics[1, 1], intrinsics[2, 0], intrinsics[2, 1]))
+                    
+                    DispatchQueue.main.async {
 
-                var leveledCameraPose = simd_float4x4.makeRotate(radians: cameraYaw, 0, 1, 0)
-                leveledCameraPose.columns.3 = camera.transform.columns.3
-                
-                var leveledAlignPose =  simd_float4x4.makeRotate(radians: alignYaw, 0, 1, 0)
-                leveledAlignPose.columns.3 = alignTransform.columns.3
-                
-                let relativeTransform = leveledCameraPose * leveledAlignPose.inverse
-                self.sceneView.session.setWorldOrigin(relativeTransform: relativeTransform)
-                
-                Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(self.playSound)), userInfo: nil, repeats: false)
-                self.isResumedRoute = true
-                self.state = .readyToNavigateOrPause(allowPause: false)
+                        self.announce(announcement: "aligned with yaw " + String(visualYaw*180/3.1415))
+                        
+                        
+                        //                var leveledCameraPose = simd_float4x4.makeRotate(radians: cameraYaw, 0, 1, 0)
+                        //                leveledCameraPose.columns.3 = frame.camera.transform.columns.3
+//                        let leveledCameraTransform
+                        
+                        var leveledAlignPose =  simd_float4x4.makeRotate(radians: alignYaw, 0, 1, 0)
+                        leveledAlignPose.columns.3 = alignTransform.columns.3
+                        let yawRotation = simd_float4x4.makeRotate(radians: visualYaw, 0, 1, 0)
+                        let cameraYaw = self.getYawHelper(frame.camera.transform)
+                        var leveledCameraPose = simd_float4x4.makeRotate(radians: cameraYaw, 0, 1, 0)
+                        leveledCameraPose.columns.3 = frame.camera.transform.columns.3
+
+                        
+                        
+//                        let relativeTransform = frame.camera.transform * yawRotation.inverse * alignTransform.inverse
+                        let relativeTransform = leveledCameraPose * yawRotation.inverse * leveledAlignPose.inverse
+                        self.sceneView.session.setWorldOrigin(relativeTransform: relativeTransform)
+                        
+                        Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(self.playSound)), userInfo: nil, repeats: false)
+                        self.isResumedRoute = true
+                        self.state = .readyToNavigateOrPause(allowPause: false)
+                    }
+                }
+
             }
+//        // resume pose tracking with existing ARSessionConfiguration
+//        hideAllViewsHelper()
+//        pauseTrackingController.remove()
+//        rootContainerView.countdownTimer.isHidden = false
+//        rootContainerView.countdownTimer.start(beginingValue: ViewController.alignmentWaitingPeriod, interval: 1)
+//        delayTransition()
+//        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(ViewController.alignmentWaitingPeriod)) {
+//            self.rootContainerView.countdownTimer.isHidden = true
+//            // The first check is necessary in case the phone relocalizes before this code executes
+//            if case .readyForFinalResumeAlignment = self.state, let alignLandmark = self.pausedLandmark, let frame = self.sceneView.session.currentFrame, let alignTransform = alignLandmark.transform {
+//                // yaw can be determined by projecting the camera's z-axis into the ground plane and using arc tangent (note: the camera coordinate conventions of ARKit https://developer.apple.com/documentation/arkit/arsessionconfiguration/worldalignment/camera
+//                let intrinsics = frame.camera.intrinsics
+////                let visualYaw = VisualAlignment.visualYaw(alignLandmark.image!, alignLandmark.intrinsics!, self.pixelBufferToUIImage(pixelBuffer: frame.capturedImage)!, simd_float4(intrinsics[0, 0], intrinsics[1, 1], intrinsics[2, 0], intrinsics[2, 1]))
+////                let alignYaw = visualYaw
+//                let cameraYaw = Float(0)
+////                self.announce(announcement: "aligned with yaw " + String(visualYaw*180/3.1415))
+//                var leveledCameraPose = simd_float4x4.makeRotate(radians: cameraYaw, 0, 1, 0)
+//                leveledCameraPose.columns.3 = frame.camera.transform.columns.3
+//
+//                var leveledAlignPose =  simd_float4x4.makeRotate(radians: 0, 0, 1, 0)
+//                leveledAlignPose.columns.3 = alignTransform.columns.3
+//
+////                let relativeTransform = leveledCameraPose * leveledAlignPose.inverse
+//                let relativeTransform = simd_mul(frame.camera.transform.inverse, alignTransform)
+//                self.sceneView.session.setWorldOrigin(relativeTransform: relativeTransform)
+//
+//                Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(self.playSound)), userInfo: nil, repeats: false)
+//                self.isResumedRoute = true
+//                self.state = .readyToNavigateOrPause(allowPause: false)
+//            }
         }
     }
     
@@ -1780,43 +1836,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
     }
     
-    var baseImage: UIImage?
-    var baseIntrinsics: simd_float3x3?
-    
-    @objc func getBaseImage() {
-        let pixelBuffer = sceneView.session.currentFrame?.capturedImage
-        baseIntrinsics = sceneView.session.currentFrame?.camera.intrinsics
-        let y = baseIntrinsics![1, 2]
-        
+    func pixelBufferToUIImage(pixelBuffer: CVPixelBuffer) -> UIImage? {
         var cgImage: CGImage?
-        
-        if let pixelBuffer = pixelBuffer {
-            VTCreateCGImageFromCVPixelBuffer(pixelBuffer, options: nil, imageOut: &cgImage)
-            baseImage = cgImage.map{UIImage(cgImage: $0)}
-        }
-    }
-    
-    @objc func getNewImage() {
-        guard let baseImage = baseImage else {
-            return
-        }
-        
-        guard let baseIntrinsics = baseIntrinsics else {
-            return
-        }
-        
-        let pixelBuffer = sceneView.session.currentFrame?.capturedImage
-        let newIntrinsics = sceneView.session.currentFrame?.camera.intrinsics
-        var cgImage: CGImage?
-        var newImage: UIImage?
-        
-        if let pixelBuffer = pixelBuffer {
-            VTCreateCGImageFromCVPixelBuffer(pixelBuffer, options: nil, imageOut: &cgImage)
-            newImage = cgImage.map{UIImage(cgImage: $0)}
-        }
-        
-        let yaw = VisualAlignment.visualYaw(baseImage, baseIntrinsics[0, 0], baseIntrinsics[2, 0], baseIntrinsics[2, 1],
-                                            newImage!, newIntrinsics![0, 0], newIntrinsics![2, 0], newIntrinsics![2, 1])
+        VTCreateCGImageFromCVPixelBuffer(pixelBuffer, options: nil, imageOut: &cgImage)
+        return cgImage.map{UIImage(cgImage: $0)}
     }
     
     /// Called when the settings button is pressed.  This function will display the settings view (managed by SettingsViewController) as a popover.

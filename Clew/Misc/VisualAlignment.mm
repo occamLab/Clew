@@ -32,8 +32,8 @@
     - new_ppx: The x coordinate of the new image's principle point.
     - new_ppy: The y coordinate of the new image's principle point.
  */
-+ (float) visualYaw :(UIImage *)base_image :(float)base_focal_length :(float)base_ppx :(float)base_ppy
-                                   :(UIImage *)new_image :(float)new_focal_length :(float)new_ppx :(float)new_ppy {
++ (float) visualYaw :(UIImage *)base_image :(simd_float4) base_intrinsics
+                    :(UIImage *)new_image :(simd_float4)new_intrinsics {
     
     // Convert the UIImages to cv::Mats
     cv::Mat base_mat, new_mat;
@@ -75,10 +75,10 @@
     for (const auto& match : good_matches) {
         const auto base_keypoint = base_keypoints[match.queryIdx];
         const auto new_keypoint = new_keypoints[match.trainIdx];
-        base_key_vectors.push_back(cv::Point2f((base_keypoint.pt.x - base_ppx) / base_focal_length,
-                                               (base_keypoint.pt.y - base_ppy) / base_focal_length));
-        new_key_vectors.push_back(cv::Point2f((new_keypoint.pt.x - new_ppx) / new_focal_length,
-                                              (new_keypoint.pt.y - new_ppy) / new_focal_length));
+        base_key_vectors.push_back(cv::Point2f((base_keypoint.pt.x - base_intrinsics.z) / base_intrinsics.x,
+                                               (base_keypoint.pt.y - base_intrinsics.w) / base_intrinsics.y));
+        new_key_vectors.push_back(cv::Point2f((new_keypoint.pt.x - new_intrinsics.z) / new_intrinsics.x,
+                                              (new_keypoint.pt.y - new_intrinsics.w) / new_intrinsics.y));
     }
     
     const auto essential_mat = cv::findEssentialMat(base_key_vectors, new_key_vectors);

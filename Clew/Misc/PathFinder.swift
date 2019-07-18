@@ -158,6 +158,10 @@ class RouteLandmark: NSObject, NSSecureCoding {
     /// Needs to be declared and assigned true to support `NSSecureCoding`
     static var supportsSecureCoding = true
     
+    /// The image associated with the landmark
+    public var image: UIImage?
+    /// The intrinsics used to take the landmark image
+    public var intrinsics: simd_float4?
     /// The position and orientation as a 4x4 matrix
     public var transform: simd_float4x4?
     /// Text to help user remember the landmark
@@ -171,7 +175,9 @@ class RouteLandmark: NSObject, NSSecureCoding {
     ///   - transform: the position and orientation
     ///   - information: textual description
     ///   - voiceNote: URL to auditory description
-    public init(transform: simd_float4x4? = nil, information: NSString? = nil, voiceNote: NSString? = nil) {
+    public init(image: UIImage? = nil, intrinsics: simd_float4? = nil, transform: simd_float4x4? = nil, information: NSString? = nil, voiceNote: NSString? = nil) {
+        self.image = image
+        self.intrinsics = intrinsics
         self.transform = transform
         self.information = information
         self.voiceNote = voiceNote
@@ -184,6 +190,15 @@ class RouteLandmark: NSObject, NSSecureCoding {
         if transform != nil {
             aCoder.encode(ARAnchor(transform: transform!), forKey: "transformAsARAnchor")
         }
+        
+        if image != nil {
+            aCoder.encode(image, forKey: "image")
+        }
+        
+        if let intrinsics = intrinsics {
+            aCoder.encode([intrinsics.x, intrinsics.y, intrinsics.z, intrinsics.w], forKey: "intrinsics")
+        }
+        
         aCoder.encode(information, forKey: "information")
         aCoder.encode(voiceNote, forKey: "voiceNote")
     }
@@ -192,16 +207,23 @@ class RouteLandmark: NSObject, NSSecureCoding {
     ///
     /// - Parameter aDecoder: the decoder
     required convenience init?(coder aDecoder: NSCoder) {
-        var transform : simd_float4x4? = nil
-        var information : NSString? = nil
-        var voiceNote : NSString? = nil
+        var image : UIImage?
+        var intrinsics : simd_float4?
+        var transform : simd_float4x4?
+        var information : NSString?
+        var voiceNote : NSString?
         
         if let transformAsARAnchor = aDecoder.decodeObject(of: ARAnchor.self, forKey: "transformAsARAnchor") {
             transform = transformAsARAnchor.transform
         }
+        image = aDecoder.decodeObject(of: UIImage.self, forKey: "image")
+        
+        if let intrinsicsArray = aDecoder.decodeObject(forKey: "intrinsics") as? [Float] {
+            intrinsics = simd_float4(intrinsicsArray[0], intrinsicsArray[1], intrinsicsArray[2], intrinsicsArray[3])
+        }
         information = aDecoder.decodeObject(of: NSString.self, forKey: "information")
         voiceNote = aDecoder.decodeObject(of: NSString.self, forKey: "voiceNote")
-        self.init(transform: transform, information: information, voiceNote: voiceNote)
+        self.init(image: image, intrinsics: intrinsics, transform: transform, information: information, voiceNote: voiceNote)
     }
     
 }
@@ -211,6 +233,7 @@ class SavedRoute: NSObject, NSSecureCoding {
     /// This is needed to use NSSecureCoding
     static var supportsSecureCoding = true
     
+
     /// The id of the route (should be unique)
     public var id: NSString
     /// The name of the route (as displayed by the `RoutesViewController`)
@@ -220,7 +243,7 @@ class SavedRoute: NSObject, NSSecureCoding {
     /// The crumbs that make up the route.  The densely sampled positions (crumbs) are stored and the keypoints (sparser goal positionsare calculated on demand when navigation is requested.
     public var crumbs: [LocationInfo]
     /// The landmark the marks the beginning of the route (needed for start to end navigation)
-    public var beginRouteLandmark : RouteLandmark
+    public var beginRouteLandmark: RouteLandmark
     /// The landmark the marks the beginning of the route (needed for end to start navigation)
     public var endRouteLandmark: RouteLandmark
 

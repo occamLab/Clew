@@ -8,13 +8,13 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
+#import <simd/SIMD.h>
 //#import <opencv2/opencv.hpp>
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface VisualAlignment : NSObject
-+ (float) visualYaw :(UIImage *)base_image :(float)base_focal_length :(float)base_ppx :(float)base_ppy
-                          :(UIImage *)new_image :(float)new_focal_length :(float)new_ppx :(float)new_ppy;
++ (float) visualYaw :(UIImage *)base_image :(simd_float4)base_intrinsics :(UIImage *)new_image :(simd_float4)new_intrinsics;
 @end
 
 NS_ASSUME_NONNULL_END
