@@ -12,10 +12,6 @@ import SRCountdownTimer
 
 class PhoneOrientationTrainingVC: TutorialChildViewController, SRCountdownTimerDelegate {
 
-    var secondaryArrow: UIView?
-
-    var secondaryCallout: UIView?
-
     var lastHapticFeedbackTime = Date()
 
     /// Timer that is visible to the user on the screen during phone orientation training
@@ -104,8 +100,6 @@ class PhoneOrientationTrainingVC: TutorialChildViewController, SRCountdownTimerD
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 //        presentedCallout = createCalloutToView(withTagID: 0xFEEDDAD, calloutText: "This button will allow you to record a path. Click it to move on to the next phase of the tutorial!")
-        secondaryCallout = createCalloutToView(withTagID: 0xFEEDDAD, calloutText: "This button allows the creation of Landmarks. This will be useful when we want to save recorded routes!")
-        secondaryArrow = createCalloutArrowToView(withTagID: 0xFEEDDAD)
     }
 
 

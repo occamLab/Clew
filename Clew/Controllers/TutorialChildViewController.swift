@@ -28,20 +28,22 @@ class TutorialChildViewController: UIViewController, ClewObserver {
                 return nil
         }
 
-        let buttonLabel = UILabel(frame: CGRect(x: 0, y:0, width: 300, height: 150))
-
-
+        
+        let buttonLabel = UILabel(frame: CGRect(x: UIScreen.main.bounds.size.width/2 - UIScreen.main.bounds.size.width*2/5, y: UIScreen.main.bounds.size.height/6, width: UIScreen.main.bounds.size.width*4/5, height: 200))
+        buttonLabel.text = calloutText
+        buttonLabel.textColor = UIColor.black
+        buttonLabel.backgroundColor = UIColor.white
+        buttonLabel.textAlignment = .center
+        buttonLabel.numberOfLines = 0
+        buttonLabel.lineBreakMode = .byWordWrapping
+        //        landmarkLabel.layoutMargins = UIEdgeInsets(top: 0.0, left: 10.0, bottom: 0.0, right: 10.0)
         buttonLabel.layer.masksToBounds = true
         buttonLabel.layer.cornerRadius = 8.0
-        buttonLabel.numberOfLines = 0
-        //        buttonLabel.center = CGPoint(x: xCenter, y: 275)
-        //        buttonLabel.center = CGPoint(x: 200, y: 275)
-        buttonLabel.textAlignment = .center
-        buttonLabel.text = calloutText
-        buttonLabel.backgroundColor = UIColor.white
-        //self.sendSubviewToBack(buttonLabel)
-        buttonLabel.isHidden = false
-        buttonLabel.tag = 0xCADFACE
+        buttonLabel.font = UIFont.systemFont(ofSize: 24.0)
+        buttonLabel.layer.borderColor = UIColor.black.cgColor
+        buttonLabel.layer.borderWidth = 3.0
+        
+        view.addSubview(buttonLabel)
 
 //        let arrowImage = UIImage(named: "calloutArrow")
 //        let imageView = UIImageView(image: arrowImage!)
@@ -52,7 +54,7 @@ class TutorialChildViewController: UIViewController, ClewObserver {
         let yCenter = viewToCallout.frame.maxY + 50
         print("1 - locationText")
         print(viewToCallout.frame.minX)
-        buttonLabel.center = CGPoint(x: xCenter, y: 200)
+        buttonLabel.center = CGPoint(x: xCenter, y: UIScreen.main.bounds.size.height/6)
 //        imageView.frame = CGRect(x: xCenter - imageView.frame.width/4, y: 325, width: 100, height: 100)
 
         /// button to hide the existing UILabel
@@ -66,11 +68,11 @@ class TutorialChildViewController: UIViewController, ClewObserver {
 
 
         view.addSubview(buttonLabel)
-        view.sendSubviewToBack(buttonLabel)
+//        view.sendSubviewToBack(buttonLabel)
          return buttonLabel
     }
 
-    func createCalloutArrowToView(withTagID tagID: Int, arrowTilt: Int)-> UIView? {
+    func createCalloutArrowToView(withTagID tagID: Int)-> UIView? {
         guard let grandParent = tutorialParent?.parent as? ViewController,
             let viewToCallout = grandParent.view.viewWithTag(tagID) else {
                 return nil
