@@ -99,14 +99,6 @@
 		E5470F4B22C119F5001092A4 /* RouteTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470EF322C119F4001092A4 /* RouteTableViewCell.swift */; };
 		E5470F4E22C119F5001092A4 /* GoogleService-Info_dev.plist in Resources */ = {isa = PBXBuildFile; fileRef = E5470EF522C119F4001092A4 /* GoogleService-Info_dev.plist */; };
 		E5470F4F22C119F5001092A4 /* GoogleService-Info_dev.plist in Resources */ = {isa = PBXBuildFile; fileRef = E5470EF522C119F4001092A4 /* GoogleService-Info_dev.plist */; };
-		E59DA6B522C65F4A00FCD5A1 /* LaunchScreen.strings in Resources */ = {isa = PBXBuildFile; fileRef = E59DA69822C65F4A00FCD5A1 /* LaunchScreen.strings */; };
-		E59DA6B622C65F4A00FCD5A1 /* LaunchScreen.strings in Resources */ = {isa = PBXBuildFile; fileRef = E59DA69822C65F4A00FCD5A1 /* LaunchScreen.strings */; };
-		E59DA6B722C65F4A00FCD5A1 /* SettingsAndHelp.strings in Resources */ = {isa = PBXBuildFile; fileRef = E59DA69A22C65F4A00FCD5A1 /* SettingsAndHelp.strings */; };
-		E59DA6B822C65F4A00FCD5A1 /* SettingsAndHelp.strings in Resources */ = {isa = PBXBuildFile; fileRef = E59DA69A22C65F4A00FCD5A1 /* SettingsAndHelp.strings */; };
-		E59DA6B922C65F4A00FCD5A1 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E59DA69C22C65F4A00FCD5A1 /* Localizable.strings */; };
-		E59DA6BA22C65F4A00FCD5A1 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E59DA69C22C65F4A00FCD5A1 /* Localizable.strings */; };
-		E59DA6BB22C65F4A00FCD5A1 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E59DA69E22C65F4A00FCD5A1 /* Info.plist */; };
-		E59DA6BC22C65F4A00FCD5A1 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E59DA69E22C65F4A00FCD5A1 /* Info.plist */; };
 		E59DA6BF22C65F5900FCD5A1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E59DA6BD22C65F5900FCD5A1 /* LaunchScreen.storyboard */; };
 		E59DA6C022C65F5900FCD5A1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E59DA6BD22C65F5900FCD5A1 /* LaunchScreen.storyboard */; };
 		E59DA6C122C65F5900FCD5A1 /* SettingsAndHelp.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E59DA6BE22C65F5900FCD5A1 /* SettingsAndHelp.storyboard */; };
@@ -173,31 +165,6 @@
 		E5470EF322C119F4001092A4 /* RouteTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteTableViewCell.swift; sourceTree = "<group>"; };
 		E5470EF422C119F4001092A4 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E5470EF522C119F4001092A4 /* GoogleService-Info_dev.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info_dev.plist"; sourceTree = "<group>"; };
-		E59DA69922C65F4A00FCD5A1 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
-		E59DA69B22C65F4A00FCD5A1 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/SettingsAndHelp.strings"; sourceTree = "<group>"; };
-		E59DA69D22C65F4A00FCD5A1 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		E59DA69F22C65F4A00FCD5A1 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "zh-Hans"; path = "zh-Hans.lproj/Info.plist"; sourceTree = "<group>"; };
-		E59DA6A022C65F4A00FCD5A1 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
-		E59DA6A122C65F4A00FCD5A1 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/SettingsAndHelp.strings; sourceTree = "<group>"; };
-		E59DA6A222C65F4A00FCD5A1 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
-		E59DA6A322C65F4A00FCD5A1 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/SettingsAndHelp.strings; sourceTree = "<group>"; };
-		E59DA6A422C65F4A00FCD5A1 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
-		E59DA6A522C65F4A00FCD5A1 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = en; path = en.lproj/Info.plist; sourceTree = "<group>"; };
-		E59DA6A622C65F4A00FCD5A1 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
-		E59DA6A722C65F4A00FCD5A1 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/SettingsAndHelp.strings; sourceTree = "<group>"; };
-		E59DA6A822C65F4A00FCD5A1 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
-		E59DA6A922C65F4A00FCD5A1 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = es; path = es.lproj/Info.plist; sourceTree = "<group>"; };
-		E59DA6AA22C65F4A00FCD5A1 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
-		E59DA6AB22C65F4A00FCD5A1 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/SettingsAndHelp.strings; sourceTree = "<group>"; };
-		E59DA6AC22C65F4A00FCD5A1 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
-		E59DA6AD22C65F4A00FCD5A1 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
-		E59DA6AE22C65F4A00FCD5A1 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/SettingsAndHelp.strings; sourceTree = "<group>"; };
-		E59DA6AF22C65F4A00FCD5A1 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
-		E59DA6B022C65F4A00FCD5A1 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = ru; path = ru.lproj/Info.plist; sourceTree = "<group>"; };
-		E59DA6B122C65F4A00FCD5A1 /* th */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = th; path = th.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
-		E59DA6B222C65F4A00FCD5A1 /* th */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = th; path = th.lproj/SettingsAndHelp.strings; sourceTree = "<group>"; };
-		E59DA6B322C65F4A00FCD5A1 /* th */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = th; path = th.lproj/Localizable.strings; sourceTree = "<group>"; };
-		E59DA6B422C65F4A00FCD5A1 /* th */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = th; path = th.lproj/Info.plist; sourceTree = "<group>"; };
 		E59DA6BD22C65F5900FCD5A1 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		E59DA6BE22C65F5900FCD5A1 /* SettingsAndHelp.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = SettingsAndHelp.storyboard; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -269,7 +236,6 @@
 		E5470EA922C119F4001092A4 /* Clew */ = {
 			isa = PBXGroup;
 			children = (
-				E59DA69722C65F4A00FCD5A1 /* localizations */,
 				E5470EAA22C119F4001092A4 /* Voice Notes */,
 				E5470EAF22C119F4001092A4 /* Misc */,
 				E5470EB722C119F4001092A4 /* SettingsViewController.m */,
@@ -386,17 +352,6 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
-		E59DA69722C65F4A00FCD5A1 /* localizations */ = {
-			isa = PBXGroup;
-			children = (
-				E59DA69822C65F4A00FCD5A1 /* LaunchScreen.strings */,
-				E59DA69A22C65F4A00FCD5A1 /* SettingsAndHelp.strings */,
-				E59DA69C22C65F4A00FCD5A1 /* Localizable.strings */,
-				E59DA69E22C65F4A00FCD5A1 /* Info.plist */,
-			);
-			path = localizations;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -488,10 +443,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E59DA6BB22C65F4A00FCD5A1 /* Info.plist in Resources */,
 				4DF05CC81F34EB6B008B0E31 /* Confirm.mp3 in Resources */,
 				E5470F1822C119F5001092A4 /* StartRecording.aiff in Resources */,
-				E59DA6B522C65F4A00FCD5A1 /* LaunchScreen.strings in Resources */,
 				4D6B00E51F33C9B800952242 /* Crumb.obj in Resources */,
 				E5470F1C22C119F5001092A4 /* GoogleService-Info.plist in Resources */,
 				E5470F0E22C119F5001092A4 /* Settings.bundle in Resources */,
@@ -501,9 +454,7 @@
 				E5470F4E22C119F5001092A4 /* GoogleService-Info_dev.plist in Resources */,
 				1F2B9D8722C5446B00317DC8 /* (null) in Resources */,
 				E59DA6C122C65F5900FCD5A1 /* SettingsAndHelp.storyboard in Resources */,
-				E59DA6B922C65F4A00FCD5A1 /* Localizable.strings in Resources */,
 				E5470F1A22C119F5001092A4 /* StopRecording.aiff in Resources */,
-				E59DA6B722C65F4A00FCD5A1 /* SettingsAndHelp.strings in Resources */,
 				77467DAF22BBC1D300FA7DEE /* Default-568h@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -514,15 +465,11 @@
 			files = (
 				E59DA6C222C65F5900FCD5A1 /* SettingsAndHelp.storyboard in Resources */,
 				E5470F0F22C119F5001092A4 /* Settings.bundle in Resources */,
-				E59DA6B622C65F4A00FCD5A1 /* LaunchScreen.strings in Resources */,
 				E5470F1922C119F5001092A4 /* StartRecording.aiff in Resources */,
 				E5470F1B22C119F5001092A4 /* StopRecording.aiff in Resources */,
 				B7EB59E220F693EB00FBBC6A /* Confirm.mp3 in Resources */,
 				B7EB59E320F693EB00FBBC6A /* Crumb.obj in Resources */,
-				E59DA6BC22C65F4A00FCD5A1 /* Info.plist in Resources */,
 				E5470F4F22C119F5001092A4 /* GoogleService-Info_dev.plist in Resources */,
-				E59DA6B822C65F4A00FCD5A1 /* SettingsAndHelp.strings in Resources */,
-				E59DA6BA22C65F4A00FCD5A1 /* Localizable.strings in Resources */,
 				82569F4F22187E6500448B45 /* help in Resources */,
 				E59DA6C022C65F5900FCD5A1 /* LaunchScreen.storyboard in Resources */,
 				E5470F1D22C119F5001092A4 /* GoogleService-Info.plist in Resources */,
@@ -721,62 +668,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXVariantGroup section */
-		E59DA69822C65F4A00FCD5A1 /* LaunchScreen.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				E59DA69922C65F4A00FCD5A1 /* zh-Hans */,
-				E59DA6A022C65F4A00FCD5A1 /* ja */,
-				E59DA6A622C65F4A00FCD5A1 /* es */,
-				E59DA6AA22C65F4A00FCD5A1 /* ko */,
-				E59DA6AD22C65F4A00FCD5A1 /* ru */,
-				E59DA6B122C65F4A00FCD5A1 /* th */,
-			);
-			name = LaunchScreen.strings;
-			sourceTree = "<group>";
-		};
-		E59DA69A22C65F4A00FCD5A1 /* SettingsAndHelp.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				E59DA69B22C65F4A00FCD5A1 /* zh-Hans */,
-				E59DA6A122C65F4A00FCD5A1 /* ja */,
-				E59DA6A322C65F4A00FCD5A1 /* en */,
-				E59DA6A722C65F4A00FCD5A1 /* es */,
-				E59DA6AB22C65F4A00FCD5A1 /* ko */,
-				E59DA6AE22C65F4A00FCD5A1 /* ru */,
-				E59DA6B222C65F4A00FCD5A1 /* th */,
-			);
-			name = SettingsAndHelp.strings;
-			sourceTree = "<group>";
-		};
-		E59DA69C22C65F4A00FCD5A1 /* Localizable.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				E59DA69D22C65F4A00FCD5A1 /* zh-Hans */,
-				E59DA6A222C65F4A00FCD5A1 /* ja */,
-				E59DA6A422C65F4A00FCD5A1 /* en */,
-				E59DA6A822C65F4A00FCD5A1 /* es */,
-				E59DA6AC22C65F4A00FCD5A1 /* ko */,
-				E59DA6AF22C65F4A00FCD5A1 /* ru */,
-				E59DA6B322C65F4A00FCD5A1 /* th */,
-			);
-			name = Localizable.strings;
-			sourceTree = "<group>";
-		};
-		E59DA69E22C65F4A00FCD5A1 /* Info.plist */ = {
-			isa = PBXVariantGroup;
-			children = (
-				E59DA69F22C65F4A00FCD5A1 /* zh-Hans */,
-				E59DA6A522C65F4A00FCD5A1 /* en */,
-				E59DA6A922C65F4A00FCD5A1 /* es */,
-				E59DA6B022C65F4A00FCD5A1 /* ru */,
-				E59DA6B422C65F4A00FCD5A1 /* th */,
-			);
-			name = Info.plist;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		4D6B00D01F33C1C400952242 /* Debug */ = {
