@@ -35,7 +35,6 @@ class TutorialChildViewController: UIViewController, ClewObserver {
         buttonLabel.textAlignment = .center
         buttonLabel.numberOfLines = 0
         buttonLabel.lineBreakMode = .byWordWrapping
-        //        landmarkLabel.layoutMargins = UIEdgeInsets(top: 0.0, left: 10.0, bottom: 0.0, right: 10.0)
         buttonLabel.layer.masksToBounds = true
         buttonLabel.layer.cornerRadius = 8.0
         buttonLabel.font = UIFont.systemFont(ofSize: 24.0)
@@ -44,30 +43,18 @@ class TutorialChildViewController: UIViewController, ClewObserver {
         
         view.addSubview(buttonLabel)
 
-//        let arrowImage = UIImage(named: "calloutArrow")
-//        let imageView = UIImageView(image: arrowImage!)
-//        view.addSubview(imageView)
-//        imageView.isHidden = false
+
 
         let xCenter = viewToCallout.frame.midX
+        let 
         let yCenter = viewToCallout.frame.maxY + 50
         print("1 - locationText")
         print(viewToCallout.frame.minX)
         buttonLabel.center = CGPoint(x: xCenter, y: UIScreen.main.bounds.size.height/8 + 100)
-//        imageView.frame = CGRect(x: xCenter - imageView.frame.width/4, y: 325, width: 100, height: 100)
 
-        /// button to hide the existing UILabel
-//        var checkButton: UIButton!
-//        checkButton = UIButton(frame: CGRect(x: viewToCallout.frame.midX, y: 310, width: 100, height: 30))
-//        checkButton.isAccessibilityElement = true
-//        checkButton.setTitle("Check", for: .normal)
-//        checkButton.accessibilityLabel = "Check"
-//        checkButton.setImage(UIImage(named: "CheckMark"), for: .normal)
-//
 
 
         view.addSubview(buttonLabel)
-//        view.sendSubviewToBack(buttonLabel)
         return buttonLabel
     }
 
@@ -81,7 +68,7 @@ class TutorialChildViewController: UIViewController, ClewObserver {
         view.addSubview(imageView)
         imageView.isHidden = false
         let xCenter = viewToCallout.frame.midX
-        imageView.frame = CGRect(x: xCenter - imageView.frame.width/4, y: 375, width: 100, height: 100)
+        imageView.frame = CGRect(x: xCenter - imageView.frame.width/8, y: 375, width: 100, height: 100)
         return imageView
     }
 
