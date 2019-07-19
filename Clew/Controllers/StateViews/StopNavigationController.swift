@@ -17,6 +17,9 @@ class StopNavigationController: UIViewController {
     /// Button for snapping to route
     var snapToRouteButton: UIButton!
 
+    /// A view to act as filler to make the stack view layout look good
+    var fillerSpace: UIView!
+    
     /// called when view appears
     override func viewDidAppear(_ animated: Bool) {
         /// set stopnavigationbutton as initially active voiceover button
@@ -56,6 +59,18 @@ class StopNavigationController: UIViewController {
                                                         appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "StopNavigation")!),
                                                         label: NSLocalizedString("Stop navigation", comment: "The name of the button that allows user to stop navigating."))
         
+        
+        snapToRouteButton = UIButton.makeConstraintButton(view,
+                                                     alignment: UIConstants.ButtonContainerHorizontalAlignment.right,
+                                                     appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "Align")!),
+                                                     label: NSLocalizedString("Snap to route", comment: "The name of the button that allows user to snap to route."))
+        
+        fillerSpace = UIView()
+        fillerSpace.translatesAutoresizingMaskIntoConstraints = false
+        /// set width of button and constaint height to be equal to width
+        fillerSpace.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 3.50).isActive = true
+        fillerSpace.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 3.50).isActive = true
+        
         /// create stack view for aligning and distributing bottom layer buttons
         let stackView   = UIStackView()
         view.addSubview(stackView)
@@ -68,8 +83,10 @@ class StopNavigationController: UIViewController {
         stackView.alignment = UIStackView.Alignment.center
         
         /// add elements to the stack
+        stackView.addArrangedSubview(fillerSpace)
         stackView.addArrangedSubview(stopNavigationButton)
-        
+        stackView.addArrangedSubview(snapToRouteButton)
+
         /// size the stack
         stackView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: UIConstants.yButtonFrameMargin).isActive = true
@@ -82,18 +99,10 @@ class StopNavigationController: UIViewController {
                                             for: .touchUpInside)
         }
         
-        snapToRouteButton = UIButton.makeImageButton(view,
-                                                     alignment: UIConstants.ButtonContainerHorizontalAlignment.right,
-                                                     appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "Align")!),
-                                                     label: NSLocalizedString("Snap to route", comment: "The name of the button that allows user to snap to route."))
         if let parent: UIViewController = parent {
             snapToRouteButton.addTarget(parent,
                                         action: #selector(ViewController.snapToRoute),
                                         for: .touchUpInside)
         }
-        
-        // Do any additional setup after loading the view.
-        view.addSubview(stopNavigationButton)
-        view.addSubview(snapToRouteButton)
     }
 }

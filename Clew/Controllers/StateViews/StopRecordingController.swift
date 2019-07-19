@@ -78,8 +78,5 @@ class StopRecordingController: UIViewController {
                                           action: #selector(ViewController.stopRecording),
                                           for: .touchUpInside)
         }
-
-        // Do any additional setup after loading the view.
-        view.addSubview(stopRecordingButton)
     }
 }
