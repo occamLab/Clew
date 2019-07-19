@@ -126,7 +126,7 @@ class RouteRatingController: UIViewController {
         stackView.addArrangedSubview(thumbsUpButton)
         
         /// size the stack
-        stackView.topAnchor.constraint(equalTo: view.topAnchor, constant: UIScreen.main.bounds.size.height * (1/3)).isActive = true
+        stackView.topAnchor.constraint(equalTo: view.topAnchor, constant: UIScreen.main.bounds.size.height * (2/3)).isActive = true
         stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: UIConstants.yButtonFrameMargin).isActive = true
         stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -UIConstants.yButtonFrameMargin).isActive = true
         stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -UIConstants.buttonFrameWidth/7 * 2).isActive = true
