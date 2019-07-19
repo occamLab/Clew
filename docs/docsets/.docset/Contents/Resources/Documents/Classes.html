@@ -47,6 +47,9 @@
                 <a href="Classes/FeedbackViewController.html">FeedbackViewController</a>
               </li>
               <li class="nav-group-task">
+                <a href="Classes/HelpCompiler.html">HelpCompiler</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="Classes/HelpViewController.html">HelpViewController</a>
               </li>
               <li class="nav-group-task">
@@ -200,6 +203,9 @@
                 <a href="Extensions/float2x2.html">float2x2</a>
               </li>
               <li class="nav-group-task">
+                <a href="Extensions/float3.html">float3</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="Extensions/float4.html">float4</a>
               </li>
               <li class="nav-group-task">
@@ -351,34 +357,6 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:@M@Clew@objc(cs)TransparentTouchView"></a>
-                    <a name="//apple_ref/swift/Class/TransparentTouchView" class="dashAnchor"></a>
-                    <a class="token" href="#/c:@M@Clew@objc(cs)TransparentTouchView">TransparentTouchView</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>Undocumented</p>
-
-                        <a href="Classes/TransparentTouchView.html" class="slightly-smaller">See more</a>
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">class</span> <span class="kt">TransparentTouchView</span> <span class="p">:</span> <span class="kt">UIView</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
                     <a name="/c:@M@Clew@objc(cs)PauseTrackingController"></a>
                     <a name="//apple_ref/swift/Class/PauseTrackingController" class="dashAnchor"></a>
                     <a class="token" href="#/c:@M@Clew@objc(cs)PauseTrackingController">PauseTrackingController</a>
@@ -398,7 +376,7 @@ also handles associated buttons</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">class</span> <span class="kt">PauseTrackingController</span> <span class="p">:</span> <span class="kt">UIViewController</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">class</span> <span class="kt">PauseTrackingController</span> <span class="p">:</span> <span class="kt">UIViewController</span><span class="p">,</span> <span class="kt">UIScrollViewDelegate</span></code></pre>
 
                         </div>
                       </div>
@@ -462,7 +440,7 @@ also handles associated buttons</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">class</span> <span class="kt">ResumeTrackingConfirmController</span> <span class="p">:</span> <span class="kt">UIViewController</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">class</span> <span class="kt">ResumeTrackingConfirmController</span> <span class="p">:</span> <span class="kt">UIViewController</span><span class="p">,</span> <span class="kt">UIScrollViewDelegate</span></code></pre>
 
                         </div>
                       </div>
@@ -669,6 +647,40 @@ functionality and route that was just navigated</p>
                 <li class="item">
                   <div>
                     <code>
+                    <a name="/c:@M@Clew@objc(cs)TransparentTouchView"></a>
+                    <a name="//apple_ref/swift/Class/TransparentTouchView" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@Clew@objc(cs)TransparentTouchView">TransparentTouchView</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>class which, when used as a uiview in a view controller, passes all touch events
+down the view hierarchy. Only applies to specific instances of this class, not to
+any child subviews. Child subviews still recieve touch events properly.</p>
+
+                        <a href="Classes/TransparentTouchView.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">class</span> <span class="kt">TransparentTouchView</span> <span class="p">:</span> <span class="kt">UIView</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
                     <a name="/c:@M@Clew@objc(cs)AppDelegate"></a>
                     <a name="//apple_ref/swift/Class/AppDelegate" class="dashAnchor"></a>
                     <a class="token" href="#/c:@M@Clew@objc(cs)AppDelegate">AppDelegate</a>
@@ -754,6 +766,38 @@ TODO: make this a singleton</p>
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">class</span> <span class="kt">FeedbackLogger</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Clew12HelpCompilerC"></a>
+                    <a name="//apple_ref/swift/Class/HelpCompiler" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Clew12HelpCompilerC">HelpCompiler</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>and external class which contains the information necessary for loading the help documentation website</p>
+
+                        <a href="Classes/HelpCompiler.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">class</span> <span class="kt">HelpCompiler</span></code></pre>
 
                         </div>
                       </div>
@@ -1204,7 +1248,7 @@ for routes list popover</p>
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2019 <a class="link" href="" target="_blank" rel="external"></a>. All rights reserved. (Last updated: 2019-07-03)</p>
+          <p>&copy; 2019 <a class="link" href="" target="_blank" rel="external"></a>. All rights reserved. (Last updated: 2019-07-19)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.9.6</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
         </section>
       </article>

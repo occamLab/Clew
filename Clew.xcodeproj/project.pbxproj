@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1F2971A522DF60F700B896C6 /* HelpCompiler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2B9D7022C3B50D00317DC8 /* HelpCompiler.swift */; };
 		1F2B9D7222C3B50D00317DC8 /* HelpCompiler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2B9D7022C3B50D00317DC8 /* HelpCompiler.swift */; };
 		1F2B9D8722C5446B00317DC8 /* (null) in Resources */ = {isa = PBXBuildFile; };
 		2748B8490FCBA95C7AA028D7 /* Pods_Clew.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 942F73299DA8DCF97FAA974A /* Pods_Clew.framework */; };
@@ -20,6 +21,8 @@
 		B0A563F6FE1007A2716DC876 /* Pods_Clew_Dev.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3532E390954571B93729786A /* Pods_Clew_Dev.framework */; };
 		B7EB59E220F693EB00FBBC6A /* Confirm.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4DF05CC71F34EB56008B0E31 /* Confirm.mp3 */; };
 		B7EB59E320F693EB00FBBC6A /* Crumb.obj in Resources */ = {isa = PBXBuildFile; fileRef = 4D6B00E41F33C85500952242 /* Crumb.obj */; };
+		E538EF4F22D3BFEC004216E9 /* TransparentTouchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E538EF4E22D3BFEC004216E9 /* TransparentTouchView.swift */; };
+		E538EF5022D3BFEC004216E9 /* TransparentTouchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E538EF4E22D3BFEC004216E9 /* TransparentTouchView.swift */; };
 		E5470EF622C119F5001092A4 /* RecordButtonKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470EAB22C119F4001092A4 /* RecordButtonKit.swift */; };
 		E5470EF722C119F5001092A4 /* RecordButtonKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470EAB22C119F4001092A4 /* RecordButtonKit.swift */; };
 		E5470EF822C119F5001092A4 /* AudioVisualizerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470EAC22C119F4001092A4 /* AudioVisualizerView.swift */; };
@@ -98,18 +101,16 @@
 		E5470F4B22C119F5001092A4 /* RouteTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470EF322C119F4001092A4 /* RouteTableViewCell.swift */; };
 		E5470F4E22C119F5001092A4 /* GoogleService-Info_dev.plist in Resources */ = {isa = PBXBuildFile; fileRef = E5470EF522C119F4001092A4 /* GoogleService-Info_dev.plist */; };
 		E5470F4F22C119F5001092A4 /* GoogleService-Info_dev.plist in Resources */ = {isa = PBXBuildFile; fileRef = E5470EF522C119F4001092A4 /* GoogleService-Info_dev.plist */; };
-		E59DA6B522C65F4A00FCD5A1 /* LaunchScreen.strings in Resources */ = {isa = PBXBuildFile; fileRef = E59DA69822C65F4A00FCD5A1 /* LaunchScreen.strings */; };
-		E59DA6B622C65F4A00FCD5A1 /* LaunchScreen.strings in Resources */ = {isa = PBXBuildFile; fileRef = E59DA69822C65F4A00FCD5A1 /* LaunchScreen.strings */; };
-		E59DA6B722C65F4A00FCD5A1 /* SettingsAndHelp.strings in Resources */ = {isa = PBXBuildFile; fileRef = E59DA69A22C65F4A00FCD5A1 /* SettingsAndHelp.strings */; };
-		E59DA6B822C65F4A00FCD5A1 /* SettingsAndHelp.strings in Resources */ = {isa = PBXBuildFile; fileRef = E59DA69A22C65F4A00FCD5A1 /* SettingsAndHelp.strings */; };
-		E59DA6B922C65F4A00FCD5A1 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E59DA69C22C65F4A00FCD5A1 /* Localizable.strings */; };
-		E59DA6BA22C65F4A00FCD5A1 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E59DA69C22C65F4A00FCD5A1 /* Localizable.strings */; };
-		E59DA6BB22C65F4A00FCD5A1 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E59DA69E22C65F4A00FCD5A1 /* Info.plist */; };
-		E59DA6BC22C65F4A00FCD5A1 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E59DA69E22C65F4A00FCD5A1 /* Info.plist */; };
 		E59DA6BF22C65F5900FCD5A1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E59DA6BD22C65F5900FCD5A1 /* LaunchScreen.storyboard */; };
 		E59DA6C022C65F5900FCD5A1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E59DA6BD22C65F5900FCD5A1 /* LaunchScreen.storyboard */; };
 		E59DA6C122C65F5900FCD5A1 /* SettingsAndHelp.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E59DA6BE22C65F5900FCD5A1 /* SettingsAndHelp.storyboard */; };
 		E59DA6C222C65F5900FCD5A1 /* SettingsAndHelp.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E59DA6BE22C65F5900FCD5A1 /* SettingsAndHelp.storyboard */; };
+		E5D1695C22E103A0008754D0 /* SettingsAndHelp.strings in Resources */ = {isa = PBXBuildFile; fileRef = E5D1695622E103A0008754D0 /* SettingsAndHelp.strings */; };
+		E5D1695D22E103A0008754D0 /* SettingsAndHelp.strings in Resources */ = {isa = PBXBuildFile; fileRef = E5D1695622E103A0008754D0 /* SettingsAndHelp.strings */; };
+		E5D1695E22E103A0008754D0 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E5D1695822E103A0008754D0 /* Localizable.strings */; };
+		E5D1695F22E103A0008754D0 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E5D1695822E103A0008754D0 /* Localizable.strings */; };
+		E5D1696022E103A0008754D0 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E5D1695A22E103A0008754D0 /* Info.plist */; };
+		E5D1696122E103A0008754D0 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E5D1695A22E103A0008754D0 /* Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -128,6 +129,7 @@
 		B7EB59EC20F693EB00FBBC6A /* Clew Dev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Clew Dev.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C68778047D8E263D2FB04989 /* Pods-Clew Dev.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew Dev.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Clew Dev/Pods-Clew Dev.debug.xcconfig"; sourceTree = "<group>"; };
 		D89DDB87A8AE1A9ECEAFCEC6 /* Pods-Clew.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew.release.xcconfig"; path = "Pods/Target Support Files/Pods-Clew/Pods-Clew.release.xcconfig"; sourceTree = "<group>"; };
+		E538EF4E22D3BFEC004216E9 /* TransparentTouchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransparentTouchView.swift; sourceTree = "<group>"; };
 		E5470EAB22C119F4001092A4 /* RecordButtonKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecordButtonKit.swift; sourceTree = "<group>"; };
 		E5470EAC22C119F4001092A4 /* AudioVisualizerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioVisualizerView.swift; sourceTree = "<group>"; };
 		E5470EAD22C119F4001092A4 /* RecorderViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecorderViewController.swift; sourceTree = "<group>"; };
@@ -172,33 +174,11 @@
 		E5470EF322C119F4001092A4 /* RouteTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteTableViewCell.swift; sourceTree = "<group>"; };
 		E5470EF422C119F4001092A4 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E5470EF522C119F4001092A4 /* GoogleService-Info_dev.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info_dev.plist"; sourceTree = "<group>"; };
-		E59DA69922C65F4A00FCD5A1 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
-		E59DA69B22C65F4A00FCD5A1 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/SettingsAndHelp.strings"; sourceTree = "<group>"; };
-		E59DA69D22C65F4A00FCD5A1 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		E59DA69F22C65F4A00FCD5A1 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "zh-Hans"; path = "zh-Hans.lproj/Info.plist"; sourceTree = "<group>"; };
-		E59DA6A022C65F4A00FCD5A1 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
-		E59DA6A122C65F4A00FCD5A1 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/SettingsAndHelp.strings; sourceTree = "<group>"; };
-		E59DA6A222C65F4A00FCD5A1 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
-		E59DA6A322C65F4A00FCD5A1 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/SettingsAndHelp.strings; sourceTree = "<group>"; };
-		E59DA6A422C65F4A00FCD5A1 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
-		E59DA6A522C65F4A00FCD5A1 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = en; path = en.lproj/Info.plist; sourceTree = "<group>"; };
-		E59DA6A622C65F4A00FCD5A1 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
-		E59DA6A722C65F4A00FCD5A1 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/SettingsAndHelp.strings; sourceTree = "<group>"; };
-		E59DA6A822C65F4A00FCD5A1 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
-		E59DA6A922C65F4A00FCD5A1 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = es; path = es.lproj/Info.plist; sourceTree = "<group>"; };
-		E59DA6AA22C65F4A00FCD5A1 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
-		E59DA6AB22C65F4A00FCD5A1 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/SettingsAndHelp.strings; sourceTree = "<group>"; };
-		E59DA6AC22C65F4A00FCD5A1 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
-		E59DA6AD22C65F4A00FCD5A1 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
-		E59DA6AE22C65F4A00FCD5A1 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/SettingsAndHelp.strings; sourceTree = "<group>"; };
-		E59DA6AF22C65F4A00FCD5A1 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
-		E59DA6B022C65F4A00FCD5A1 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = ru; path = ru.lproj/Info.plist; sourceTree = "<group>"; };
-		E59DA6B122C65F4A00FCD5A1 /* th */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = th; path = th.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
-		E59DA6B222C65F4A00FCD5A1 /* th */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = th; path = th.lproj/SettingsAndHelp.strings; sourceTree = "<group>"; };
-		E59DA6B322C65F4A00FCD5A1 /* th */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = th; path = th.lproj/Localizable.strings; sourceTree = "<group>"; };
-		E59DA6B422C65F4A00FCD5A1 /* th */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = th; path = th.lproj/Info.plist; sourceTree = "<group>"; };
 		E59DA6BD22C65F5900FCD5A1 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		E59DA6BE22C65F5900FCD5A1 /* SettingsAndHelp.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = SettingsAndHelp.storyboard; sourceTree = "<group>"; };
+		E5D1695722E103A0008754D0 /* base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = base; path = base.lproj/SettingsAndHelp.strings; sourceTree = "<group>"; };
+		E5D1695922E103A0008754D0 /* base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = base; path = base.lproj/Localizable.strings; sourceTree = "<group>"; };
+		E5D1695B22E103A0008754D0 /* base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = base; path = base.lproj/Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -268,7 +248,7 @@
 		E5470EA922C119F4001092A4 /* Clew */ = {
 			isa = PBXGroup;
 			children = (
-				E59DA69722C65F4A00FCD5A1 /* localizations */,
+				E5D1695522E103A0008754D0 /* localizations */,
 				E5470EAA22C119F4001092A4 /* Voice Notes */,
 				E5470EAF22C119F4001092A4 /* Misc */,
 				E5470EB722C119F4001092A4 /* SettingsViewController.m */,
@@ -333,6 +313,7 @@
 				E5470ED822C119F4001092A4 /* UIViewExtensions.swift */,
 				E5470ED922C119F4001092A4 /* UIButtonExtensions.swift */,
 				E5470EDA22C119F4001092A4 /* FloatMatrixVectorExtensions.swift */,
+				E538EF4E22D3BFEC004216E9 /* TransparentTouchView.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -385,13 +366,12 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
-		E59DA69722C65F4A00FCD5A1 /* localizations */ = {
+		E5D1695522E103A0008754D0 /* localizations */ = {
 			isa = PBXGroup;
 			children = (
-				E59DA69822C65F4A00FCD5A1 /* LaunchScreen.strings */,
-				E59DA69A22C65F4A00FCD5A1 /* SettingsAndHelp.strings */,
-				E59DA69C22C65F4A00FCD5A1 /* Localizable.strings */,
-				E59DA69E22C65F4A00FCD5A1 /* Info.plist */,
+				E5D1695622E103A0008754D0 /* SettingsAndHelp.strings */,
+				E5D1695822E103A0008754D0 /* Localizable.strings */,
+				E5D1695A22E103A0008754D0 /* Info.plist */,
 			);
 			path = localizations;
 			sourceTree = "<group>";
@@ -470,6 +450,7 @@
 				ko,
 				ja,
 				ru,
+				base,
 			);
 			mainGroup = 4D6B00B71F33C1C400952242;
 			productRefGroup = 4D6B00C11F33C1C400952242 /* Products */;
@@ -487,10 +468,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E59DA6BB22C65F4A00FCD5A1 /* Info.plist in Resources */,
+				E5D1696022E103A0008754D0 /* Info.plist in Resources */,
 				4DF05CC81F34EB6B008B0E31 /* Confirm.mp3 in Resources */,
 				E5470F1822C119F5001092A4 /* StartRecording.aiff in Resources */,
-				E59DA6B522C65F4A00FCD5A1 /* LaunchScreen.strings in Resources */,
 				4D6B00E51F33C9B800952242 /* Crumb.obj in Resources */,
 				E5470F1C22C119F5001092A4 /* GoogleService-Info.plist in Resources */,
 				E5470F0E22C119F5001092A4 /* Settings.bundle in Resources */,
@@ -499,10 +479,10 @@
 				E59DA6BF22C65F5900FCD5A1 /* LaunchScreen.storyboard in Resources */,
 				E5470F4E22C119F5001092A4 /* GoogleService-Info_dev.plist in Resources */,
 				1F2B9D8722C5446B00317DC8 /* (null) in Resources */,
+				E5D1695E22E103A0008754D0 /* Localizable.strings in Resources */,
 				E59DA6C122C65F5900FCD5A1 /* SettingsAndHelp.storyboard in Resources */,
-				E59DA6B922C65F4A00FCD5A1 /* Localizable.strings in Resources */,
 				E5470F1A22C119F5001092A4 /* StopRecording.aiff in Resources */,
-				E59DA6B722C65F4A00FCD5A1 /* SettingsAndHelp.strings in Resources */,
+				E5D1695C22E103A0008754D0 /* SettingsAndHelp.strings in Resources */,
 				77467DAF22BBC1D300FA7DEE /* Default-568h@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -513,16 +493,15 @@
 			files = (
 				E59DA6C222C65F5900FCD5A1 /* SettingsAndHelp.storyboard in Resources */,
 				E5470F0F22C119F5001092A4 /* Settings.bundle in Resources */,
-				E59DA6B622C65F4A00FCD5A1 /* LaunchScreen.strings in Resources */,
 				E5470F1922C119F5001092A4 /* StartRecording.aiff in Resources */,
 				E5470F1B22C119F5001092A4 /* StopRecording.aiff in Resources */,
 				B7EB59E220F693EB00FBBC6A /* Confirm.mp3 in Resources */,
 				B7EB59E320F693EB00FBBC6A /* Crumb.obj in Resources */,
-				E59DA6BC22C65F4A00FCD5A1 /* Info.plist in Resources */,
+				E5D1696122E103A0008754D0 /* Info.plist in Resources */,
 				E5470F4F22C119F5001092A4 /* GoogleService-Info_dev.plist in Resources */,
-				E59DA6B822C65F4A00FCD5A1 /* SettingsAndHelp.strings in Resources */,
-				E59DA6BA22C65F4A00FCD5A1 /* Localizable.strings in Resources */,
 				82569F4F22187E6500448B45 /* help in Resources */,
+				E5D1695D22E103A0008754D0 /* SettingsAndHelp.strings in Resources */,
+				E5D1695F22E103A0008754D0 /* Localizable.strings in Resources */,
 				E59DA6C022C65F5900FCD5A1 /* LaunchScreen.storyboard in Resources */,
 				E5470F1D22C119F5001092A4 /* GoogleService-Info.plist in Resources */,
 				E5470F1722C119F5001092A4 /* Assets.xcassets in Resources */,
@@ -646,6 +625,7 @@
 				E5470F2E22C119F5001092A4 /* StopRecordingController.swift in Sources */,
 				E5470F0A22C119F5001092A4 /* AppDelegate.swift in Sources */,
 				E5470F2222C119F5001092A4 /* UIViewExtensions.swift in Sources */,
+				E538EF4F22D3BFEC004216E9 /* TransparentTouchView.swift in Sources */,
 				E5470F3C22C119F5001092A4 /* FeedbackViewController.swift in Sources */,
 				E5470F3422C119F5001092A4 /* StopNavigationController.swift in Sources */,
 				E5470F3E22C119F5001092A4 /* RoutesViewController.swift in Sources */,
@@ -675,6 +655,7 @@
 				E5470F2422C119F5001092A4 /* UIButtonExtensions.swift in Sources */,
 				E5470EF822C119F5001092A4 /* AudioVisualizerView.swift in Sources */,
 				825C7D6822CCDDA600545605 /* PathMatcher.swift in Sources */,
+				1F2971A522DF60F700B896C6 /* HelpCompiler.swift in Sources */,
 				E5470F1E22C119F5001092A4 /* NSStringExtension.swift in Sources */,
 				E5470F3222C119F5001092A4 /* ResumeTrackingController.swift in Sources */,
 			);
@@ -684,6 +665,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E538EF5022D3BFEC004216E9 /* TransparentTouchView.swift in Sources */,
 				E5470F2F22C119F5001092A4 /* StopRecordingController.swift in Sources */,
 				E5470F0B22C119F5001092A4 /* AppDelegate.swift in Sources */,
 				825C7D6922CCDDA600545605 /* PathMatcher.swift in Sources */,
@@ -725,55 +707,26 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		E59DA69822C65F4A00FCD5A1 /* LaunchScreen.strings */ = {
+		E5D1695622E103A0008754D0 /* SettingsAndHelp.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
-				E59DA69922C65F4A00FCD5A1 /* zh-Hans */,
-				E59DA6A022C65F4A00FCD5A1 /* ja */,
-				E59DA6A622C65F4A00FCD5A1 /* es */,
-				E59DA6AA22C65F4A00FCD5A1 /* ko */,
-				E59DA6AD22C65F4A00FCD5A1 /* ru */,
-				E59DA6B122C65F4A00FCD5A1 /* th */,
-			);
-			name = LaunchScreen.strings;
-			sourceTree = "<group>";
-		};
-		E59DA69A22C65F4A00FCD5A1 /* SettingsAndHelp.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				E59DA69B22C65F4A00FCD5A1 /* zh-Hans */,
-				E59DA6A122C65F4A00FCD5A1 /* ja */,
-				E59DA6A322C65F4A00FCD5A1 /* en */,
-				E59DA6A722C65F4A00FCD5A1 /* es */,
-				E59DA6AB22C65F4A00FCD5A1 /* ko */,
-				E59DA6AE22C65F4A00FCD5A1 /* ru */,
-				E59DA6B222C65F4A00FCD5A1 /* th */,
+				E5D1695722E103A0008754D0 /* base */,
 			);
 			name = SettingsAndHelp.strings;
 			sourceTree = "<group>";
 		};
-		E59DA69C22C65F4A00FCD5A1 /* Localizable.strings */ = {
+		E5D1695822E103A0008754D0 /* Localizable.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
-				E59DA69D22C65F4A00FCD5A1 /* zh-Hans */,
-				E59DA6A222C65F4A00FCD5A1 /* ja */,
-				E59DA6A422C65F4A00FCD5A1 /* en */,
-				E59DA6A822C65F4A00FCD5A1 /* es */,
-				E59DA6AC22C65F4A00FCD5A1 /* ko */,
-				E59DA6AF22C65F4A00FCD5A1 /* ru */,
-				E59DA6B322C65F4A00FCD5A1 /* th */,
+				E5D1695922E103A0008754D0 /* base */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
 		};
-		E59DA69E22C65F4A00FCD5A1 /* Info.plist */ = {
+		E5D1695A22E103A0008754D0 /* Info.plist */ = {
 			isa = PBXVariantGroup;
 			children = (
-				E59DA69F22C65F4A00FCD5A1 /* zh-Hans */,
-				E59DA6A522C65F4A00FCD5A1 /* en */,
-				E59DA6A922C65F4A00FCD5A1 /* es */,
-				E59DA6B022C65F4A00FCD5A1 /* ru */,
-				E59DA6B422C65F4A00FCD5A1 /* th */,
+				E5D1695B22E103A0008754D0 /* base */,
 			);
 			name = Info.plist;
 			sourceTree = "<group>";
@@ -833,7 +786,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -888,7 +841,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
@@ -904,7 +857,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
 				INFOPLIST_FILE = Clew/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = edu.occam.Clew;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -923,7 +876,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
 				INFOPLIST_FILE = Clew/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = edu.occam.Clew;
 				PRODUCT_NAME = "$(TARGET_NAME)";

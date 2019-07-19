@@ -78,7 +78,7 @@ class HelpCompiler {
                         border: none;
                         text-align: left;
                         outline: none;
-                        font-size: 15px;
+                        font: -apple-system-subheadline;
                     }
                 
                     .active, .collapsible:hover {
@@ -90,6 +90,7 @@ class HelpCompiler {
                         display: none;
                         overflow: hidden;
                         background-color: #f1f1f1;
+                        font: -apple-system-body;
                     }
                     img.image {
                         display: block;
@@ -100,6 +101,7 @@ class HelpCompiler {
                     }
                     .pageTitle {
                         text-align: Center;
+                        font: -apple-system-headline;
                     }
                 </style>
             </head>

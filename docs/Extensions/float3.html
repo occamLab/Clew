@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>StopRecordingController Class Reference</title>
+    <title>float3 Extension Reference</title>
     <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
     <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
     <meta charset='utf-8'>
@@ -10,8 +10,8 @@
     
   </head>
   <body>
-    <a name="//apple_ref/swift/Class/StopRecordingController" class="dashAnchor"></a>
-    <a title="StopRecordingController Class Reference"></a>
+    <a name="//apple_ref/swift/Extension/float3" class="dashAnchor"></a>
+    <a title="float3 Extension Reference"></a>
     <header>
       <div class="content-wrapper">
         <p><a href="../index.html"> Docs</a> (97% documented)</p>
@@ -22,7 +22,7 @@
       <p id="breadcrumbs">
         <a href="../index.html"> Reference</a>
         <img id="carat" src="../img/carat.png" />
-        StopRecordingController Class Reference
+        float3 Extension Reference
       </p>
     </div>
     <div class="content-wrapper">
@@ -251,15 +251,14 @@
       <article class="main-content">
         <section>
           <section class="section">
-            <h1>StopRecordingController</h1>
+            <h1>float3</h1>
               <div class="declaration">
                 <div class="language">
-                  <pre class="highlight swift"><code><span class="kd">class</span> <span class="kt">StopRecordingController</span> <span class="p">:</span> <span class="kt">UIViewController</span></code></pre>
+                  <pre class="highlight swift"><code><span class="kd">typealias</span> <span class="n">float3</span> <span class="o">=</span> <span class="kt">SIMD3</span><span class="o">&lt;</span><span class="kt">Float</span><span class="o">&gt;</span></code></pre>
 
                 </div>
               </div>
-            <p>A View Controller for handling the stop recording state</p>
-
+            
           </section>
           <section class="section task-group-section">
             <div class="task-group">
@@ -267,9 +266,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:4Clew23StopRecordingControllerC04stopC6ButtonSo8UIButtonCSgvp"></a>
-                    <a name="//apple_ref/swift/Property/stopRecordingButton" class="dashAnchor"></a>
-                    <a class="token" href="#/s:4Clew23StopRecordingControllerC04stopC6ButtonSo8UIButtonCSgvp">stopRecordingButton</a>
+                    <a name="/s:s5SIMD3V4ClewSfRszrlE11homogeneouss5SIMD4VySfGvp"></a>
+                    <a name="//apple_ref/swift/Property/homogeneous" class="dashAnchor"></a>
+                    <a class="token" href="#/s:s5SIMD3V4ClewSfRszrlE11homogeneouss5SIMD4VySfGvp">homogeneous</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -277,68 +276,14 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Button for stopping a route recording</p>
+                        <p>convert from a 3-element inhomogeneous vector to a 4-element homogeneous one.</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">stopRecordingButton</span><span class="p">:</span> <span class="kt">UIButton</span><span class="o">!</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/c:@M@Clew@objc(cs)StopRecordingController(im)viewDidAppear:"></a>
-                    <a name="//apple_ref/swift/Method/viewDidAppear(_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/c:@M@Clew@objc(cs)StopRecordingController(im)viewDidAppear:">viewDidAppear(_:)</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>called when the view appears (any time)</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">override</span> <span class="kd">func</span> <span class="nf">viewDidAppear</span><span class="p">(</span><span class="n">_</span> <span class="nv">animated</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">)</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/c:@M@Clew@objc(cs)StopRecordingController(im)viewDidLoad"></a>
-                    <a name="//apple_ref/swift/Method/viewDidLoad()" class="dashAnchor"></a>
-                    <a class="token" href="#/c:@M@Clew@objc(cs)StopRecordingController(im)viewDidLoad">viewDidLoad()</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>called when the view has loaded.  We setup various app elements in here.</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">override</span> <span class="kd">func</span> <span class="nf">viewDidLoad</span><span class="p">()</span></code></pre>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">homogeneous</span><span class="p">:</span> <span class="n">float4</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>

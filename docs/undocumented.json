@@ -50,24 +50,31 @@
       "warning": "undocumented"
     },
     {
-      "file": "/Users/pruvolo/Software/Clew/Clew/Controllers/StateViews/PauseTrackingController.swift",
-      "line": 11,
-      "symbol": "TransparentTouchView",
-      "symbol_kind": "source.lang.swift.decl.class",
+      "file": "/Users/pruvolo/Software/Clew/Clew/Controllers/StateViews/StartNavigationController.swift",
+      "line": 20,
+      "symbol": "StartNavigationController.stackView",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/pruvolo/Software/Clew/Clew/Controllers/StateViews/PauseTrackingController.swift",
-      "line": 12,
-      "symbol": "TransparentTouchView.point(inside:with:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "file": "/Users/pruvolo/Software/Clew/Clew/Controllers/StateViews/StartNavigationController.swift",
+      "line": 22,
+      "symbol": "StartNavigationController.fillerSpace",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/pruvolo/Software/Clew/Clew/Controllers/ViewController.swift",
-      "line": 1729,
+      "line": 1745,
       "symbol": "ViewController.homeButtonPressed()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/pruvolo/Software/Clew/Clew/Extensions/UIButtonExtensions.swift",
+      "line": 69,
+      "symbol": "UIButton.makeConstraintButton(_:alignment:appearance:label:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.static",
       "warning": "undocumented"
     },
     {
@@ -82,6 +89,20 @@
       "line": 55,
       "symbol": "PathLogger.currentLocale()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/pruvolo/Software/Clew/Clew/Views/UIConstants.swift",
+      "line": 68,
+      "symbol": "UIConstants.yButtonFrameMargin",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/pruvolo/Software/Clew/Clew/Views/UIConstants.swift",
+      "line": 72,
+      "symbol": "UIConstants.topButtonFrameMargin",
+      "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     }
   ],
