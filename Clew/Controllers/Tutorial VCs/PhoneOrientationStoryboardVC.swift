@@ -11,15 +11,14 @@ import UIKit
 import FLAnimatedImage
 
 class PhoneOrientationStoryboardVC: UIViewController {
-    let tutorialViewController = TutorialViewController()
-    let tipsAndWarningsViewController = TipsAndWarningsViewController()
-    let viewController = ViewController()
-    let phoneOrientationTrainingVC = PhoneOrientationTrainingVC()
-    
     @IBOutlet weak var PhoneOrientationGIF: FLAnimatedImageView!
     
     /// Closes the viewcontroller
     @IBAction func CloseTips(_ sender: UIButton) {
+       transitionToMainApp()
+    }
+    
+    func transitionToMainApp() {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         appDelegate.window?.rootViewController?.dismiss(animated: false)
         appDelegate.window = UIWindow(frame:UIScreen.main.bounds)
@@ -31,10 +30,15 @@ class PhoneOrientationStoryboardVC: UIViewController {
 //        tutorialViewController.state = .readyToRecordSingleRoute
 //        tipsAndWarningsViewController.remove()
 //        self.dismiss(animated: false, completion: nil)
-        self.view.window!.rootViewController?.dismiss(animated: false, completion: nil)
-       UIApplication.shared.keyWindow?.rootViewController = viewController
-        tutorialViewController.state = .readyToRecordSingleRoute
-        print("the state is", tutorialViewController.state)
+        //self.view.window!.rootViewController?.dismiss(animated: false, completion: nil)
+       //UIApplication.shared.keyWindow?.rootViewController = viewController
+        transitionToMainApp()
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+
+        (appDelegate.window?.rootViewController as? ViewController)?.tutorialViewController.state = .readyToRecordSingleRoute
+        
+        //tutorialViewController.state = .readyToRecordSingleRoute
+        //print("the state is", tutorialViewController.state)
     }
     
     
