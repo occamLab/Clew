@@ -10,7 +10,7 @@ import Foundation
 import SceneKit
 import UIKit
 
-class TutorialViewController: UIViewController, ClewObserver {
+class TutorialViewController: UIViewController, ClewDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -126,6 +126,14 @@ class TutorialViewController: UIViewController, ClewObserver {
         }
     }
     
+    func allowRouteRating()->Bool {
+        for child in children {
+            if let delegate = child as? ClewDelegate {
+                return delegate.allowRouteRating()
+            }
+        }
+        return true
+    }
 
 }
 

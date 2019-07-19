@@ -110,7 +110,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// The state of the app.  This should be constantly referenced and updated as the app transitions
     var state = AppState.initializing {
         didSet {
-            observer?.didTransitionTo(newState: state)
+            delegate?.didTransitionTo(newState: state)
             logger.logStateTransition(newState: state)
             switch state {
             case .recordingRoute:
@@ -144,8 +144,18 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             }
         }
     }
-    /// Observer of Clew App
-    var observer: ClewObserver?
+    /// Delegate of Clew App
+    var delegate: ClewDelegate?
+    /// The default delegate to use if `delegate` is not set
+    fileprivate var defaultDelegate = DefaultDelegate()
+
+    /// Delegate proxy that gives us the delegate set in `delegate` or a default implementation if `delegate` is nil
+    var delegateProxy: ClewDelegate {
+        if let delegate = delegate {
+            return delegate
+        }
+        return defaultDelegate
+    }
     
     /// A boolean that tracks whether or not to suppress tracking warnings.  By default we don't suppress, but when the help popover is presented we do.
     var suppressTrackingWarnings = false
@@ -586,7 +596,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         
         addGestures()
         setupFirebaseObservers()
-        observer = tutorialViewController
+        delegate = tutorialViewController
         announcementViewController.observer = tutorialViewController
         
         // we use a custom notification to communicate from the help controller to the main view controller that the help was dismissed
@@ -1357,7 +1367,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         // erase nearest keypoint
         keypointNode.removeFromParentNode()
         
-        if(sendLogs) {
+        if sendLogs && delegateProxy.allowRouteRating() {
             state = .ratingRoute(announceArrival: false)
         } else {
             state = .mainScreen(announceArrival: false)
@@ -1533,7 +1543,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 restartSessionIfFailedToRelocalize()
                 
                 // update text and stop navigation
-                if(sendLogs) {
+                if sendLogs && delegateProxy.allowRouteRating() {
                     state = .ratingRoute(announceArrival: true)
                 } else {
                     state = .mainScreen(announceArrival: true)
@@ -2041,7 +2051,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
 extension ViewController: ARSessionDelegate {
     func session(_: ARSession, didUpdate frame: ARFrame) {
         print("got new frame")
-        observer?.didReceiveNewCameraPose(transform: frame.camera.transform)
+        delegate?.didReceiveNewCameraPose(transform: frame.camera.transform)
     }
 }
 

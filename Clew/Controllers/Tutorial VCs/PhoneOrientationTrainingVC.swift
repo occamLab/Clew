@@ -80,6 +80,7 @@ class PhoneOrientationTrainingVC: TutorialChildViewController, SRCountdownTimerD
                                            y: 0,
                                            width: UIScreen.main.bounds.size.width,
                                            height: UIScreen.main.bounds.size.height))
+        congratsView.backgroundColor = clewGreen
         congratsLabel = UILabel(frame: CGRect(x: UIScreen.main.bounds.size.width/2 - UIScreen.main.bounds.size.width*2/5, y: UIScreen.main.bounds.size.height/8, width: UIScreen.main.bounds.size.width*4/5, height: 200))
         congratsLabel.text = "Congratulations! \n You have successfully oriented your phone. \n Now you will be recording a simple single route."
         congratsLabel.textColor = UIColor.black
@@ -108,12 +109,13 @@ class PhoneOrientationTrainingVC: TutorialChildViewController, SRCountdownTimerD
         nextButton.layer.borderWidth = 3.0
         congratsView.addSubview(nextButton)
         
-        skipButton = UIButton(frame: CGRect(x: UIScreen.main.bounds.size.width*7/8 - UIScreen.main.bounds.size.width*1/5, y: UIScreen.main.bounds.size.width*1/6, width: UIScreen.main.bounds.size.width*2/5, height: UIScreen.main.bounds.size.height*1/10))
+        skipButton = UIButton(frame: CGRect(x: UIScreen.main.bounds.size.width*7/8 - UIScreen.main.bounds.size.width*1/5, y: UIScreen.main.bounds.size.width*1/12, width: UIScreen.main.bounds.size.width*2/5, height: UIScreen.main.bounds.size.height*1/14))
         skipButton.backgroundColor = clewGreen
         skipButton.setTitleColor(skipYellow, for: .normal)
         skipButton.setTitle("SKIP", for: .normal)
         skipButton.layer.masksToBounds = true
         skipButton.layer.cornerRadius = 8.0
+        skipButton.titleLabel?.font = UIFont(name: "HelveticaNeueCondensedBold", size: 25.0)
         skipButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 25.0)
         skipButton.isAccessibilityElement = true
         skipButton.isUserInteractionEnabled = true

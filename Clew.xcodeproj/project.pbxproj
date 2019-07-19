@@ -31,6 +31,10 @@
 		9884EB5B22CCE569000D31AF /* AnnouncementManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9884EB5A22CCE569000D31AF /* AnnouncementManager.swift */; };
 		9884EB5C22CCE569000D31AF /* AnnouncementManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9884EB5A22CCE569000D31AF /* AnnouncementManager.swift */; };
 		AD13576922CCEDA800EE36E2 /* Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AD13576822CCEDA800EE36E2 /* Storyboard.storyboard */; };
+		AD8CE98722E24CE2007399D1 /* ClewDelegateProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD8CE98622E24CE2007399D1 /* ClewDelegateProtocol.swift */; };
+		AD8CE98822E24CE2007399D1 /* ClewDelegateProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD8CE98622E24CE2007399D1 /* ClewDelegateProtocol.swift */; };
+		AD8CE98A22E25275007399D1 /* DefaultDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD8CE98922E25275007399D1 /* DefaultDelegate.swift */; };
+		AD8CE98B22E25275007399D1 /* DefaultDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD8CE98922E25275007399D1 /* DefaultDelegate.swift */; };
 		AD8EBB9922D7CB0700B76BA0 /* PhoneOrientationStoryboardVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD8EBB9822D7CB0700B76BA0 /* PhoneOrientationStoryboardVC.swift */; };
 		AD8EBB9A22D7CB0700B76BA0 /* PhoneOrientationStoryboardVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD8EBB9822D7CB0700B76BA0 /* PhoneOrientationStoryboardVC.swift */; };
 		ADE90D4A22CCE48C001CD52C /* Tutorial.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = ADE90D4722CCE48C001CD52C /* Tutorial.storyboard */; };
@@ -153,6 +157,8 @@
 		9884EB5022BA9383000D31AF /* Storyboard.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Storyboard.storyboard; sourceTree = "<group>"; };
 		9884EB5A22CCE569000D31AF /* AnnouncementManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnouncementManager.swift; sourceTree = "<group>"; };
 		AD13576822CCEDA800EE36E2 /* Storyboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Storyboard.storyboard; path = Clew/Storyboard.storyboard; sourceTree = SOURCE_ROOT; };
+		AD8CE98622E24CE2007399D1 /* ClewDelegateProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClewDelegateProtocol.swift; sourceTree = "<group>"; };
+		AD8CE98922E25275007399D1 /* DefaultDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultDelegate.swift; sourceTree = "<group>"; };
 		AD8EBB9822D7CB0700B76BA0 /* PhoneOrientationStoryboardVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneOrientationStoryboardVC.swift; sourceTree = "<group>"; };
 		ADE90D4722CCE48C001CD52C /* Tutorial.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Tutorial.storyboard; path = Clew/Tutorial.storyboard; sourceTree = SOURCE_ROOT; };
 		B7EB59EC20F693EB00FBBC6A /* Clew Dev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Clew Dev.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -323,6 +329,8 @@
 				E5F4C34122C4035200E0D94E /* GoogleService-Info_dev.plist */,
 				E5F4C32422C4035200E0D94E /* Clew-Bridging-Header.h */,
 				E5F4C31722C4035200E0D94E /* ClewObserverProtocol.swift */,
+				AD8CE98622E24CE2007399D1 /* ClewDelegateProtocol.swift */,
+				AD8CE98922E25275007399D1 /* DefaultDelegate.swift */,
 				E5F4C31B22C4035200E0D94E /* GoogleService-Info.plist */,
 				E5F4C32722C4035200E0D94E /* Controllers */,
 				E5F4C33722C4035200E0D94E /* Views */,
@@ -433,7 +441,6 @@
 			isa = PBXGroup;
 			children = (
 				77000C3122CCE8F1004AC60B /* Storyboard.storyboard */,
-				98A5DF0B22D7C28E00A7F71F /* routeFinished.storyboard */,
 				7754322D22CBEDBE006E2159 /* UILabelDesign.swift */,
 				E5F4C33822C4035200E0D94E /* UIConstants.swift */,
 				E5F4C33922C4035200E0D94E /* SettingsAndHelp.storyboard */,
@@ -546,7 +553,6 @@
 				E5F4C36A22C4035200E0D94E /* GoogleService-Info.plist in Resources */,
 				E5F4C3A622C4035200E0D94E /* GoogleService-Info_dev.plist in Resources */,
 				E5F4C35E22C4035200E0D94E /* Localizable.strings in Resources */,
-				98A5DF0C22D7C28E00A7F71F /* routeFinished.storyboard in Resources */,
 				E5F4C39822C4035200E0D94E /* SettingsAndHelp.storyboard in Resources */,
 				E5F4C35A22C4035200E0D94E /* Settings.bundle in Resources */,
 				ADE90D4A22CCE48C001CD52C /* Tutorial.storyboard in Resources */,
@@ -705,6 +711,7 @@
 				77A30FE822C66C3A008EEAAB /* PhoneOrientationTrainingVC.swift in Sources */,
 				9884EB5B22CCE569000D31AF /* AnnouncementManager.swift in Sources */,
 				E5F4C37022C4035200E0D94E /* UIViewControllerExtensions.swift in Sources */,
+				AD8CE98722E24CE2007399D1 /* ClewDelegateProtocol.swift in Sources */,
 				E5F4C39E22C4035200E0D94E /* RouteTableViewCell.swift in Sources */,
 				7758D72122D7906600A2312F /* TutorialShadowBackground.swift in Sources */,
 				E5F4C38622C4035200E0D94E /* ResumeTrackingController.swift in Sources */,
@@ -741,6 +748,7 @@
 				E5F4C34A22C4035200E0D94E /* DataPersistence.swift in Sources */,
 				E5F4C37222C4035200E0D94E /* UIViewExtensions.swift in Sources */,
 				E5F4C37422C4035200E0D94E /* UIButtonExtensions.swift in Sources */,
+				AD8CE98A22E25275007399D1 /* DefaultDelegate.swift in Sources */,
 				AD8EBB9922D7CB0700B76BA0 /* PhoneOrientationStoryboardVC.swift in Sources */,
 				E5F4C39022C4035200E0D94E /* FeedbackViewController.swift in Sources */,
 				E5F4C37C22C4035200E0D94E /* ViewController.swift in Sources */,
@@ -758,6 +766,7 @@
 				E5F4C37122C4035200E0D94E /* UIViewControllerExtensions.swift in Sources */,
 				E5F4C39F22C4035200E0D94E /* RouteTableViewCell.swift in Sources */,
 				E5F4C38722C4035200E0D94E /* ResumeTrackingController.swift in Sources */,
+				AD8CE98822E24CE2007399D1 /* ClewDelegateProtocol.swift in Sources */,
 				E5F4C35722C4035200E0D94E /* AppDelegate.swift in Sources */,
 				E5F4C35522C4035200E0D94E /* Utility.swift in Sources */,
 				E5F4C39522C4035200E0D94E /* StateController.swift in Sources */,
@@ -781,6 +790,7 @@
 				E5F4C38522C4035200E0D94E /* RouteRatingController.swift in Sources */,
 				AD8EBB9A22D7CB0700B76BA0 /* PhoneOrientationStoryboardVC.swift in Sources */,
 				E5F4C38F22C4035200E0D94E /* HelpViewController.swift in Sources */,
+				AD8CE98B22E25275007399D1 /* DefaultDelegate.swift in Sources */,
 				E5F4C38322C4035200E0D94E /* StopRecordingController.swift in Sources */,
 				7793DE1F22CBE7B8003A0BF7 /* TipsAndWarningsViewController.swift in Sources */,
 				E5F4C39B22C4035200E0D94E /* RootContainerView.swift in Sources */,
