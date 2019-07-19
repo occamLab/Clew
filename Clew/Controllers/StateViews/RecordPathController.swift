@@ -56,12 +56,16 @@ class RecordPathController: UIViewController {
         addLandmarkButton = UIButton.makeImageButton(view,
                                                      alignment: UIConstants.ButtonContainerHorizontalAlignment.right,
                                                      appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "Landmark")!),
-                                                     label: "Saved routes list")
+                                                     label: "Landmark")
         
         routesButton = UIButton.makeImageButton(view,
                                                 alignment: UIConstants.ButtonContainerHorizontalAlignment.left,
                                                 appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "route")!),
                                                 label: "Saved routes list")
+        
+        recordPathButton.tag = 0xFABDEED
+        addLandmarkButton.tag = 0xBADFACE
+        routesButton.tag = 0xBEEFAD
         
         if let parent: UIViewController = parent {
             routesButton.addTarget(parent,
