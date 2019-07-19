@@ -107,7 +107,7 @@ class ResumeTrackingController: UIViewController {
         scrollView.flashScrollIndicators()
         
         /// size the stack
-        stackView.topAnchor.constraint(equalTo: view.topAnchor, constant: 450.0).isActive = true
+        stackView.topAnchor.constraint(equalTo: view.topAnchor, constant: UIScreen.main.bounds.size.height * (2/3)).isActive = true
         stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8.0).isActive = true
         stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8.0).isActive = true
         stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -UIConstants.buttonFrameWidth/7 * 2).isActive = true
