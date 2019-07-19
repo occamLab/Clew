@@ -105,7 +105,6 @@ class TutorialViewController: UIViewController, ClewObserver {
     }
 
 
-
     func didTransitionTo(newState: AppState) {
         for child in children {
             if let observer = child as? ClewObserver {
@@ -114,6 +113,7 @@ class TutorialViewController: UIViewController, ClewObserver {
         }
     }
 
+    
     func didReceiveNewCameraPose(transform: simd_float4x4) {
         print("received new camera pose")
         
@@ -126,6 +126,4 @@ class TutorialViewController: UIViewController, ClewObserver {
         }
     }
     
-
 }
-
