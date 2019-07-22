@@ -36,6 +36,7 @@ class SingleRouteVC: TutorialChildViewController {
         self.view.addSubview(backgroundShadow)
         
         createObjects()
+        UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: landmarkCallout)
         
         self.view.addSubview(landmarkCallout!)
         self.view.addSubview(landmarkNextButton)
@@ -43,17 +44,10 @@ class SingleRouteVC: TutorialChildViewController {
         UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: nil)
     }
     
-//    /// Used to identify the record path button so it can be located for callouts
-//    static let recordPathButtonTag: Int = 0xFABDEED
-//    /// Used to identify the landmark button so it can be located for callouts
-//    static let landmarkButtonTag: Int = 0xBADFACE
-//    /// Used to identify the saved routes list so it can be located for callouts
-//    static let routesButtonTag = 0xBEEFAD
-    
     func createObjects() {
-        landmarkCallout = createCalloutToView(withTagID: UIView.recordPathButtonTag, calloutText: "Landmark button helps create saved routes. We'll return to this later, for now click on the 'next' button.")
+        landmarkCallout = createCalloutToView(withTagID: UIView.recordPathButtonTag, calloutText: "The Landmark button helps create saved routes. We'll return to this later, for now click on the 'next' button.", buttonAccessibilityName: "Landmark Button")
         landmarkArrow = createCalloutArrowToView(withTagID: UIView.addLandmarkButtonTag)
-        recordCallout = createCalloutToView(withTagID: UIView.recordPathButtonTag, calloutText: "Record button allows you to start recording a route, click the 'record' button to continue.")
+        recordCallout = createCalloutToView(withTagID: UIView.recordPathButtonTag, calloutText: "The Record button allows you to start recording a route, click the 'record' button to continue.", buttonAccessibilityName: "Record Button")
         recordArrow = createCalloutArrowToView(withTagID: UIView.recordPathButtonTag)
         
         landmarkNextButton = createNextButton(buttonAction: #selector(landmarkNextButtonAction))
@@ -83,10 +77,12 @@ class SingleRouteVC: TutorialChildViewController {
         landmarkNextButton.removeFromSuperview()
         self.view.addSubview(recordCallout!)
         self.view.addSubview(recordNextButton)
+        UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: recordCallout)
     }
     
     @objc func recordNextButtonAction(sender: UIButton!) {
         recordNextButton.removeFromSuperview()
+        UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: recordCallout)
         self.view.addSubview(recordArrow!)
         backgroundShadow.removeFromSuperview()
     }
@@ -95,9 +91,10 @@ class SingleRouteVC: TutorialChildViewController {
         pauseNextButton.removeFromSuperview()
         pauseArrow!.removeFromSuperview()
         pauseCallout!.removeFromSuperview()
-        navigateCallout = createCalloutToView(withTagID: UIView.startNavigationButtonTag, calloutText: "Navigate button allows you to navigate the route, click the button to continue")
+        navigateCallout = createCalloutToView(withTagID: UIView.startNavigationButtonTag, calloutText: "Navigate button allows you to navigate the route, click the next button and then click the navigate button to continue", buttonAccessibilityName: "Navigate Button")
         self.view.addSubview(navigateCallout!)
         self.view.addSubview(navigateNextButton!)
+        UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: navigateCallout)
     }
     
     @objc func navigateNextButtonAction(sender: UIButton!) {
@@ -105,6 +102,7 @@ class SingleRouteVC: TutorialChildViewController {
         backgroundShadow.removeFromSuperview()
         navigateArrow = createCalloutArrowToView(withTagID: UIView.startNavigationButtonTag)
         self.view.addSubview(navigateArrow!)
+        UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: navigateCallout)
     }
     
     override func didTransitionTo(newState: AppState) {
@@ -120,10 +118,11 @@ class SingleRouteVC: TutorialChildViewController {
             // Delaying the callout introduction until after the view has successfully been added
             // TODO: think about healthier ways this can be done
             DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(1)) {
-                self.pauseCallout = self.createCalloutToView(withTagID: UIView.startNavigationButtonTag, calloutText: "Pause button allows you to create saved routes, we'll return to this later, click the 'next' button to continue.")
+                self.pauseCallout = self.createCalloutToView(withTagID: UIView.startNavigationButtonTag, calloutText: "The Pause button allows you to create saved routes, we'll return to this later, click the 'next' button to continue.", buttonAccessibilityName: "Pause Button")
                 self.pauseArrow = self.createCalloutArrowToView(withTagID: UIView.pauseSessionButtonTag)
                 self.view.addSubview(self.pauseCallout!)
                 self.view.addSubview(self.pauseArrow!)
+                UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: self.pauseCallout)
             }
             
             self.view.addSubview(pauseNextButton!)

@@ -31,6 +31,10 @@ class PhoneOrientationTrainingVC: TutorialChildViewController, SRCountdownTimerD
     
     var skipButton: UIButton!
     
+    // Label that describes the task in the phone orientation state
+    
+    var phoneOrientationLabel: UILabel!
+    
     // View for giving a darker tint on the screen
     var backgroundShadow: UIView! = TutorialShadowBackground()
     
@@ -108,7 +112,7 @@ class PhoneOrientationTrainingVC: TutorialChildViewController, SRCountdownTimerD
         nextButton.layer.borderWidth = 3.0
         congratsView.addSubview(nextButton)
         
-        skipButton = UIButton(frame: CGRect(x: UIScreen.main.bounds.size.width*7/8 - UIScreen.main.bounds.size.width*1/5, y: UIScreen.main.bounds.size.width*1/6, width: UIScreen.main.bounds.size.width*2/5, height: UIScreen.main.bounds.size.height*1/10))
+        skipButton = UIButton(frame: CGRect(x: UIScreen.main.bounds.size.width*4/8 - UIScreen.main.bounds.size.width*1/5, y: UIScreen.main.bounds.size.width * 12/13, width: UIScreen.main.bounds.size.width*2/5, height: UIScreen.main.bounds.size.height*1/10))
         skipButton.backgroundColor = clewGreen
         skipButton.setTitleColor(skipYellow, for: .normal)
         skipButton.setTitle("SKIP", for: .normal)
@@ -128,6 +132,8 @@ class PhoneOrientationTrainingVC: TutorialChildViewController, SRCountdownTimerD
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         timeSinceOpen = Date()
+
+
     }
 
 
@@ -153,7 +159,6 @@ class PhoneOrientationTrainingVC: TutorialChildViewController, SRCountdownTimerD
     /// Send haptic feedback with different frequencies depending on the angle of the phone. Handle transition to the next state when the angle of the phone falls in the range of optimal angle. As the user orients the phone closer to the desired range of the angle, haptic feedback becomes faster. When optimal angle is achieved for a desired amount of time, state transition takes place.
     /// - Parameter transform: the position and orientation of the phone
     override func didReceiveNewCameraPose(transform: simd_float4x4) {
-        // UIAccessibility.post(notification: UIAccessibility.Notification.announcement, argument: NSLocalizedString("Trying to figure out haptic feedback", comment: "Message to user during tutorial"))
 
         let angleFromVertical = acos(-transform.columns.0.y)
         let feedbackGenerator = UIImpactFeedbackGenerator(style: .heavy)
@@ -161,7 +166,7 @@ class PhoneOrientationTrainingVC: TutorialChildViewController, SRCountdownTimerD
         let now = Date()
         let timeInterval = now.timeIntervalSince(lastHapticFeedbackTime)
         
-        timeAfterTrackingSessionMessage = 3.0
+        timeAfterTrackingSessionMessage = 3
         
         // handles when the angle the user is holding the phone falls in between the desired optimal angle
         if abs(timeSinceOpen!.timeIntervalSinceNow) > timeAfterTrackingSessionMessage! {
@@ -181,7 +186,8 @@ class PhoneOrientationTrainingVC: TutorialChildViewController, SRCountdownTimerD
         if runHapticFeedback! {
             if timeInterval > intendedInterval {
                 feedbackGenerator.impactOccurred()
-                lastHapticFeedbackTime = now }
+                lastHapticFeedbackTime = now
+            }
         }
     }
 }

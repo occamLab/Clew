@@ -339,7 +339,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             print("setting transform", beginRouteLandmark.transform)
 
             Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(playSound)), userInfo: nil, repeats: false)
-//            rootContainerView.pauseTrackingView.isHidden = true
             pauseTrackingController.remove()
             state = .mainScreen(announceArrival: false)
             return
@@ -552,7 +551,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         startNavigationController = StartNavigationController()
         stopNavigationController = StopNavigationController()
         tutorialViewController = TutorialViewController()
-//        tutorialChildViewController = TutorialChildViewController()
         
         // Add the scene to the view, which is a RootContainerView
         sceneView.frame = view.frame
@@ -569,8 +567,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         
         // targets for global buttons
         rootContainerView.settingsButton.addTarget(self, action: #selector(settingsButtonPressed), for: .touchUpInside)
-        
-//        .checkButton.addTarget(self, action: #selector(checkButtonPressed), for: .touchUpInside)
 
         rootContainerView.helpButton.addTarget(self, action: #selector(helpButtonPressed), for: .touchUpInside)
         
@@ -804,7 +800,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// Show the dialog that allows the user to enter textual information to help them remember a landmark.
     @objc func showLandmarkInformationDialog() {
         rootContainerView.homeButton.isHidden = false
-//        backButton.isHidden = true
         // Set title and message for the alert dialog
         let alertController = UIAlertController(title: NSLocalizedString("Landmark information", comment: "The header of a pop-up menu"), message: NSLocalizedString("Enter text about the landmark that will help you find it later.", comment: "Prompts user to enter information"), preferredStyle: .alert)
         // The confirm action taking the inputs
@@ -1005,13 +1000,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     ///   - subview transitions?
     /// display RECORD PATH button/hide all other views
     @objc func showRecordPathButton(announceArrival: Bool) {
-//        rootContainerView.recordPathView.isHidden = false
-//        rootContainerView.routeRatingView.isHidden = true
-//        rootContainerView.stopNavigationView.isHidden = true
         add(recordPathController)
-        /// handling main screen transitions outside of the first load
-        /// add the view of the child to the view of the parent
-        //recordPathController.view.isHidden = false
         routeRatingController.remove()
         stopNavigationController.remove()
         
@@ -1115,7 +1104,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 } catch {}
             }
         }
-//        rootContainerView.resumeTrackingConfirmView.getButtonByTag(tag: UIView.readVoiceNoteButtonTag)?.isHidden = voiceNoteToPlay == nil
         resumeTrackingConfirmController.readVoiceNoteButton?.isHidden = voiceNoteToPlay == nil
         let waitingPeriod = ViewController.alignmentWaitingPeriod
         resumeTrackingConfirmController.view.mainText?.text?.append(String.localizedStringWithFormat(NSLocalizedString("Hold your device flat with the screen facing up. Press the top (short) edge flush against the same vertical surface that you used to create the landmark.  When you are ready, activate the align button to start the %lu-second alignment countdown that will complete the procedure. Do not move the device until the phone provides confirmation via a vibration or sound cue.", comment: "Informative mssage that appears to the user."), waitingPeriod))

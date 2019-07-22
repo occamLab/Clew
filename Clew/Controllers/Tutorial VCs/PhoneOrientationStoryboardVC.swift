@@ -27,18 +27,10 @@ class PhoneOrientationStoryboardVC: UIViewController {
     }
     
     @IBAction func SkipTutorial(_ sender: UIButton) {
-//        tutorialViewController.state = .readyToRecordSingleRoute
-//        tipsAndWarningsViewController.remove()
-//        self.dismiss(animated: false, completion: nil)
-        //self.view.window!.rootViewController?.dismiss(animated: false, completion: nil)
-       //UIApplication.shared.keyWindow?.rootViewController = viewController
         transitionToMainApp()
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
 
         (appDelegate.window?.rootViewController as? ViewController)?.tutorialViewController.state = .readyToRecordSingleRoute
-        
-        //tutorialViewController.state = .readyToRecordSingleRoute
-        //print("the state is", tutorialViewController.state)
     }
     
     

@@ -22,7 +22,7 @@ class TutorialChildViewController: UIViewController, ClewObserver {
                                                  height: UIScreen.main.bounds.size.height))
     }
 
-    func createCalloutToView(withTagID tagID: Int, calloutText: String)->UIView? {
+    func createCalloutToView(withTagID tagID: Int, calloutText: String, buttonAccessibilityName: String? = nil)->UIView? {
         guard let grandParent = tutorialParent?.parent as? ViewController,
             let viewToCallout = grandParent.view.viewWithTag(tagID) else {
                 return nil
@@ -40,9 +40,11 @@ class TutorialChildViewController: UIViewController, ClewObserver {
         buttonLabel.font = UIFont.systemFont(ofSize: 24.0)
         buttonLabel.layer.borderColor = UIColor.black.cgColor
         buttonLabel.layer.borderWidth = 3.0
+        if buttonAccessibilityName != nil {
+            buttonLabel.accessibilityLabel = "Description for" +  buttonAccessibilityName! + ":" + calloutText
+        }
 
         let xCenter = viewToCallout.frame.midX
-        let
         let yCenter = viewToCallout.frame.maxY + 50
         print("1 - locationText")
         print(viewToCallout.frame.minX)
@@ -60,7 +62,7 @@ class TutorialChildViewController: UIViewController, ClewObserver {
         let imageView = UIImageView(image: arrowImage!)
         imageView.isHidden = false
         let xCenter = viewToCallout.frame.midX
-        imageView.frame = CGRect(x: xCenter - imageView.frame.width/4, y: 375, width: 100, height: 100)
+        imageView.frame = CGRect(x: xCenter - imageView.frame.width/8, y: 375, width: 100, height: 100)
 
         return imageView
     }
