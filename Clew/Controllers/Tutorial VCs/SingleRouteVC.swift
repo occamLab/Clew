@@ -160,10 +160,10 @@ class SingleRouteVC: TutorialChildViewController {
                 self.pauseArrow = self.createCalloutArrowToView(withTagID: UIView.pauseSessionButtonTag)
                 self.view.addSubview(self.pauseCallout!)
                 self.view.addSubview(self.pauseArrow!)
-                UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: self.pauseCallout)
+                self.view.addSubview(self.pauseNextButton!)
+                // Brings tutorialViewController to the front so that the shadow can be added onto it and thus cover the startNavigationViewController
+            self.tutorialParent?.parent?.view.bringSubviewToFront(self.tutorialParent!.view)
             }
-            
-            self.view.addSubview(pauseNextButton!)
         }
         
         if case .navigatingRoute = newState {
