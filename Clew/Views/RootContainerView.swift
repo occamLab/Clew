@@ -96,7 +96,7 @@ class RootContainerView: UIView {
         helpButton.titleLabel?.font = UIFont.systemFont(ofSize: 24.0)
         helpButton.accessibilityLabel = "Help"
         helpButton.setImage(UIImage(named: "HelpButton"), for: .normal)
-        helpButton.tag = 0xFEEDDAD
+        helpButton.tag = UIView.helpButtonTag
         print(helpButton.tag)
 
         // MARK: Home Button
@@ -155,15 +155,5 @@ class RootContainerView: UIView {
         addSubview(countdownTimer)
         addSubview(feedbackButton)
         addSubview(homeButton)
-        //addSubview(buttonLabel)
-//        addSubview(checkButton)
-        
-        
-      /*  if let foundView = self.viewWithTag(0xDEADBEEF) {
-            let xCenter = foundView.frame.minX
-            print("1 - locationText")
-            print(foundView.frame.minX)
-            buttonLabel.center = CGPoint(x: xCenter, y: 275)
-        }*/
     }
 }

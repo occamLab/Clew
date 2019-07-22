@@ -20,8 +20,6 @@
 		7793DE1C22CBD1D5003A0BF7 /* TutorialChildViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7793DE1A22CBD1D5003A0BF7 /* TutorialChildViewController.swift */; };
 		7793DE1E22CBE7B8003A0BF7 /* TipsAndWarningsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7793DE1D22CBE7B8003A0BF7 /* TipsAndWarningsViewController.swift */; };
 		7793DE1F22CBE7B8003A0BF7 /* TipsAndWarningsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7793DE1D22CBE7B8003A0BF7 /* TipsAndWarningsViewController.swift */; };
-		77A30FE522C66998008EEAAB /* CoachMarks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77A30FE422C66998008EEAAB /* CoachMarks.swift */; };
-		77A30FE622C66998008EEAAB /* CoachMarks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77A30FE422C66998008EEAAB /* CoachMarks.swift */; };
 		77A30FE822C66C3A008EEAAB /* PhoneOrientationTrainingVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77A30FE722C66C3A008EEAAB /* PhoneOrientationTrainingVC.swift */; };
 		77A30FE922C66C3A008EEAAB /* PhoneOrientationTrainingVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77A30FE722C66C3A008EEAAB /* PhoneOrientationTrainingVC.swift */; };
 		77BC833F22DE5B61000F55EB /* PhoneOrientation.gif in Resources */ = {isa = PBXBuildFile; fileRef = 77BC833E22DE5B61000F55EB /* PhoneOrientation.gif */; };
@@ -147,7 +145,6 @@
 		7758D72022D7906600A2312F /* TutorialShadowBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialShadowBackground.swift; sourceTree = "<group>"; };
 		7793DE1A22CBD1D5003A0BF7 /* TutorialChildViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialChildViewController.swift; sourceTree = "<group>"; };
 		7793DE1D22CBE7B8003A0BF7 /* TipsAndWarningsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TipsAndWarningsViewController.swift; sourceTree = "<group>"; };
-		77A30FE422C66998008EEAAB /* CoachMarks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoachMarks.swift; sourceTree = "<group>"; };
 		77A30FE722C66C3A008EEAAB /* PhoneOrientationTrainingVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneOrientationTrainingVC.swift; sourceTree = "<group>"; };
 		77BC833E22DE5B61000F55EB /* PhoneOrientation.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = PhoneOrientation.gif; sourceTree = "<group>"; };
 		822E27F8210E3F260024A5E3 /* Clew Dev-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Clew Dev-Info.plist"; sourceTree = "<group>"; };
@@ -290,7 +287,6 @@
 				AD8EBB9822D7CB0700B76BA0 /* PhoneOrientationStoryboardVC.swift */,
 				77BC833E22DE5B61000F55EB /* PhoneOrientation.gif */,
 				E5F4C31C22C4035200E0D94E /* SingleRouteVC.swift */,
-				77A30FE422C66998008EEAAB /* CoachMarks.swift */,
 			);
 			path = "Tutorial VCs";
 			sourceTree = "<group>";
@@ -732,7 +728,6 @@
 				E5F4C36422C4035200E0D94E /* ClewObserverProtocol.swift in Sources */,
 				E5F4C36E22C4035200E0D94E /* NSStringExtension.swift in Sources */,
 				E5F4C38022C4035200E0D94E /* StartNavigationController.swift in Sources */,
-				77A30FE522C66998008EEAAB /* CoachMarks.swift in Sources */,
 				E5F4C36C22C4035200E0D94E /* SingleRouteVC.swift in Sources */,
 				E5F4C38422C4035200E0D94E /* RouteRatingController.swift in Sources */,
 				E5F4C38E22C4035200E0D94E /* HelpViewController.swift in Sources */,
@@ -785,7 +780,6 @@
 				E5F4C36522C4035200E0D94E /* ClewObserverProtocol.swift in Sources */,
 				E5F4C36F22C4035200E0D94E /* NSStringExtension.swift in Sources */,
 				E5F4C38122C4035200E0D94E /* StartNavigationController.swift in Sources */,
-				77A30FE622C66998008EEAAB /* CoachMarks.swift in Sources */,
 				E5F4C36D22C4035200E0D94E /* SingleRouteVC.swift in Sources */,
 				E5F4C38522C4035200E0D94E /* RouteRatingController.swift in Sources */,
 				AD8EBB9A22D7CB0700B76BA0 /* PhoneOrientationStoryboardVC.swift in Sources */,

@@ -12,15 +12,4 @@ import SceneKit
 import FLAnimatedImage
 
 class TipsAndWarningsViewController: UIViewController {
-//    @IBOutlet weak var staticLabel2: DesignableLabel!
-
-    /*
-    @IBAction func CloseTips(_ sender: UIButton) {
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        appDelegate.window?.rootViewController?.dismiss(animated: false)
-        appDelegate.window = UIWindow(frame:UIScreen.main.bounds)
-        appDelegate.window?.makeKeyAndVisible()
-        appDelegate.window?.rootViewController = ViewController()
-    }
-     */
 }

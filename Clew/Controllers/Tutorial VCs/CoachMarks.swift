@@ -35,6 +35,7 @@ class CoachMarks: UIViewController, CoachMarksControllerDataSource, CoachMarksCo
     func coachMarksController(_ coachMarksController: CoachMarksController, coachMarkViewsAt index: Int, madeFrom coachMark: CoachMark) -> (bodyView: CoachMarkBodyView, arrowView: CoachMarkArrowView?) {
         let coachViews = coachMarksController.helper.makeDefaultCoachViews(withArrow: true, arrowOrientation: coachMark.arrowOrientation)
         
+        
         coachViews.bodyView.hintLabel.text = "Click here when you're ready!"
         coachViews.bodyView.nextLabel.text = "Ok!"
         

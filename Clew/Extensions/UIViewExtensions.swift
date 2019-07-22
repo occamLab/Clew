@@ -26,6 +26,8 @@ extension UIView {
     static let pauseSessionButtonTag = 0xACEDABE
     // Used to identify the start navigation button so it can be located for callouts
     static let startNavigationButtonTag = 0xBADBEAD
+    // Used to identify the help button so it can be located for callouts
+    static let helpButtonTag = 0xDADB0D
     
     
 

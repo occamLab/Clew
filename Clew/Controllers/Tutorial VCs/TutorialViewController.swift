@@ -95,7 +95,6 @@ class TutorialViewController: UIViewController, ClewDelegate {
     
     // TODO: double check that overriding the default implementation actually gets called
     func finishAnnouncement(announcement: String) {
-        // if let currentAnnouncement = current
         
         for child in children {
             if let observer = child as? ClewObserver {
@@ -103,7 +102,6 @@ class TutorialViewController: UIViewController, ClewDelegate {
             }
         }
     }
-
 
 
     func didTransitionTo(newState: AppState) {
@@ -114,6 +112,7 @@ class TutorialViewController: UIViewController, ClewDelegate {
         }
     }
 
+    
     func didReceiveNewCameraPose(transform: simd_float4x4) {
         print("received new camera pose")
         
@@ -136,4 +135,3 @@ class TutorialViewController: UIViewController, ClewDelegate {
     }
 
 }
-

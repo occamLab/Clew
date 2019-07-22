@@ -56,7 +56,7 @@ class StartNavigationController: UIViewController {
                                                label: "Pause session")
         
         pauseButton.tag = UIView.pauseSessionButtonTag
-        startNavigationButton.tag = 0xBADBEAD
+        startNavigationButton.tag = UIView.startNavigationButtonTag
         
         if let parent: UIViewController = parent {
             startNavigationButton.addTarget(parent,

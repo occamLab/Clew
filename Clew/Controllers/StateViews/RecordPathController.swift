@@ -63,9 +63,9 @@ class RecordPathController: UIViewController {
                                                 appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "route")!),
                                                 label: "Saved routes list")
         
-        recordPathButton.tag = 0xFABDEED
-        addLandmarkButton.tag = 0xBADFACE
-        routesButton.tag = 0xBEEFAD
+        recordPathButton.tag = UIView.recordPathButtonTag
+        addLandmarkButton.tag = UIView.addLandmarkButtonTag
+        routesButton.tag = UIView.routesButtonTag
         
         if let parent: UIViewController = parent {
             routesButton.addTarget(parent,
