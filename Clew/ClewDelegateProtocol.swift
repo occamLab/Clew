@@ -2,7 +2,7 @@
 //  ClewDelegateProtocol.swift
 //  Clew
 //
-//  Created by SCOPE on 7/19/19.
+//  Created by OccamLab on 7/19/19.
 //  Copyright © 2019 OccamLab. All rights reserved.
 //
 

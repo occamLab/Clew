@@ -37,6 +37,8 @@ class SingleRouteVC: TutorialChildViewController {
     /////
     var skipButton: UIButton!
     var skipYellow = UIColor(red: 254/255, green: 243/255, blue: 62/255, alpha: 1.0)
+    var congratsView: UIView!
+    var congratsLabel: UILabel!
     /////
     
     override func viewDidAppear(_ animated: Bool) {
