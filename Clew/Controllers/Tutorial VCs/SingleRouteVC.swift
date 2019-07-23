@@ -181,7 +181,8 @@ class SingleRouteVC: TutorialChildViewController {
     }
     
     @objc func endTutorialNextButtonAction(sender: UIButton!) {
-        
+        print("YOYO")
+        tutorialParent?.state = .endTutorial
     }
     
     override func didTransitionTo(newState: AppState) {
@@ -223,7 +224,7 @@ class SingleRouteVC: TutorialChildViewController {
                 DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(1)) {
                     self.tutorialParent?.parent?.view.bringSubviewToFront(self.tutorialParent!.view)
                 }
-                tutorialParent?.state = .endTutorial
+                tutorialParent?.state = .displayCongratsView
             }
         }
         

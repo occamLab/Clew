@@ -32,6 +32,7 @@ class TutorialViewController: UIViewController, ClewDelegate {
         case recordingSingleRoute
         case teachTheNavigationOfASingleRoute
         case initializing
+        case displayCongratsView
         case endTutorial
         /*
         /// rawValue is useful for serializing state values, which we are currently using for our logging feature
@@ -75,8 +76,12 @@ class TutorialViewController: UIViewController, ClewDelegate {
                 break
             case .initializing:
                 initialize()
-            case .endTutorial:
+            case .displayCongratsView:
                 print("in end tutorial state")
+//                DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(5)){
+//                    self.removeAllChildVCs()}
+            case .endTutorial:
+                removeAllChildVCs()
             }
         }
     }
