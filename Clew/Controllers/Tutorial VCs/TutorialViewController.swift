@@ -19,11 +19,9 @@ class TutorialViewController: UIViewController, ClewDelegate {
                                                  width: UIScreen.main.bounds.size.width,
                                                  height: UIScreen.main.bounds.size.height))
     }
-    
     let singleRouteChildVC = SingleRouteVC()
     let phoneOrientationTrainingChildVC  = PhoneOrientationTrainingVC()
     let tipsAndWarningsChildVC = TipsAndWarningsViewController()
-    let announcementManager = AnnouncementManager()
     
     /// A custom enumeration type that describes the exact state of the tutorial.
     enum TutorialState {

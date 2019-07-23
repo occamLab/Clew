@@ -561,7 +561,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         resumeTrackingConfirmController = ResumeTrackingConfirmController()
         stopRecordingController = StopRecordingController()
         recordPathController = RecordPathController()
-        announcementViewController = AnnouncementManager()
+        announcementViewController = AnnouncementManager.shared
         startNavigationController = StartNavigationController()
         stopNavigationController = StopNavigationController()
         tutorialViewController = TutorialViewController()
@@ -1040,9 +1040,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: initialFocus)
         if let announcement = announcement {
             if UIAccessibility.isVoiceOverRunning {
-                announce(announcement: announcement, delayInSeconds: 2.0)
+                AnnouncementManager.shared.announce(announcement: announcement, delayInSeconds: 2.0)
             } else {
-                announce(announcement: announcement)
+                AnnouncementManager.shared.announce(announcement: announcement)
             }
         }
     }
@@ -1177,7 +1177,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         if case .navigatingRoute = state {
             logger.logSpeech(utterance: altText)
         }
-        announce(announcement: altText)
+        AnnouncementManager.shared.announce(announcement: altText)
     }
     
     // MARK: - BreadCrumbs
@@ -1333,7 +1333,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     func restartSessionIfFailedToRelocalize() {
         if attemptingRelocalization {
             if !suppressTrackingWarnings {
-                announce(announcement: NSLocalizedString("Could not match environment to the saved route. Starting new tracking session.", comment: "Current environment does not match up with the environment in previously saved route. About to start a new tracking session."))
+                AnnouncementManager.shared.announce(announcement: NSLocalizedString("Could not match environment to the saved route. Starting new tracking session.", comment: "Current environment does not match up with the environment in previously saved route. About to start a new tracking session."))
             }
             if #available(iOS 12.0, *) {
                 configuration.initialWorldMap = nil
@@ -1658,15 +1658,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
     }
     
-    /// Communicates a message to the user via speech.  If VoiceOver is active, then VoiceOver is used to communicate the announcement, otherwise we use the AVSpeechEngine
-    ///
-    /// - Parameter announcement: the text to read to the user
-    func announce(announcement: String, delayInSeconds: Double? = nil) {
-        NotificationCenter.default.post(name: Notification.Name("makeClewAnnouncement"), object: self, userInfo: ["announcementText": announcement, "delayInSeconds": delayInSeconds])
-        // Method 2 (requires access to the particular object)
-        //announcementViewController.announce(announcement: announcement)
-    }
-    
     /// Get direction to next keypoint based on the current location
     ///
     /// - Parameter currentLocation: the current location of the device
@@ -1965,7 +1956,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 logString = "ExcessiveMotion"
                 print("Excessive motion")
                 if !suppressTrackingWarnings {
-                    announce(announcement: NSLocalizedString("Excessive motion.\nTracking performance is degraded.", comment: "Let user know that there is too much movement of their phone and thus the app's ability to track a route has been lowered."))
+                    AnnouncementManager.shared.announce(announcement: NSLocalizedString("Excessive motion.\nTracking performance is degraded.", comment: "Let user know that there is too much movement of their phone and thus the app's ability to track a route has been lowered."))
                     if soundFeedback {
                         playSystemSound(id: 1050)
                     }
@@ -1974,7 +1965,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 logString = "InsufficientFeatures"
                 print("InsufficientFeatures")
                 if !suppressTrackingWarnings {
-                    announce(announcement: NSLocalizedString("Insufficient visual features.\nTracking performance is degraded.", comment: "Let user know that their current surroundings do not have enough visual markers and thus the app's ability to track a route has been lowered."))
+                    AnnouncementManager.shared.announce(announcement: NSLocalizedString("Insufficient visual features.\nTracking performance is degraded.", comment: "Let user know that their current surroundings do not have enough visual markers and thus the app's ability to track a route has been lowered."))
                     if soundFeedback {
                         playSystemSound(id: 1050)
                     }
@@ -1992,15 +1983,15 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             logString = "Normal"
             if #available(iOS 12.0, *), configuration.initialWorldMap != nil, attemptingRelocalization {
                 if !suppressTrackingWarnings {
-                    announce(announcement: NSLocalizedString("Successfully matched current environment to saved route.", comment: "Let user know that their surroundings match up to the surroundings of a saved route and that they can begin navigating."))
+                    AnnouncementManager.shared.announce(announcement: NSLocalizedString("Successfully matched current environment to saved route.", comment: "Let user know that their surroundings match up to the surroundings of a saved route and that they can begin navigating."))
                 }
                 attemptingRelocalization = false
             } else if case let .limited(reason)? = trackingSessionState {
                 if !suppressTrackingWarnings {
                     if reason == .initializing {
-                        announce(announcement: NSLocalizedString("Tracking session initialized.", comment: "Let user know that the tracking session has started."))
+                        AnnouncementManager.shared.announce(announcement: NSLocalizedString("Tracking session initialized.", comment: "Let user know that the tracking session has started."))
                     } else {
-                        announce(announcement: NSLocalizedString("Tracking performance normal.", comment: "Let user know that the ability to track and record a route is normal."))
+                        AnnouncementManager.shared.announce(announcement: NSLocalizedString("Tracking performance normal.", comment: "Let user know that the ability to track and record a route is normal."))
                         if soundFeedback {
                             playSystemSound(id: 1025)
                         }
