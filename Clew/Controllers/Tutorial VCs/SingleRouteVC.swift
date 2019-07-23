@@ -12,7 +12,6 @@ class SingleRouteVC: TutorialChildViewController {
     
     var nextButton: UIButton!
     var backgroundShadow: UIView! = TutorialShadowBackground()
-    var announcementManager = AnnouncementManager()
     var clewGreen = UIColor(red: 103/255, green: 188/255, blue: 71/255, alpha: 1.0)
     var landmarkNextButton: UIButton!
     var recordNextButton: UIButton!

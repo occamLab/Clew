@@ -30,6 +30,9 @@ class AnnouncementManager : UIViewController, AVSpeechSynthesizerDelegate {
     /// When VoiceOver is not active, we use AVSpeechSynthesizer for speech feedback
     let synth = AVSpeechSynthesizer()
     
+    /// Instance to use to make announcements
+    static let shared = AnnouncementManager()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view = TransparentTouchView(frame:CGRect(x: 0,
@@ -81,6 +84,15 @@ class AnnouncementManager : UIViewController, AVSpeechSynthesizerDelegate {
         view.addSubview(announcementText)
     }
     
+    /*/// Communicates a message to the user via speech.  If VoiceOver is active, then VoiceOver is used to communicate the announcement, otherwise we use the AVSpeechEngine
+    ///
+    /// - Parameter announcement: the text to read to the user
+    static func announce(announcement: String, delayInSeconds: Double? = nil) {
+        NotificationCenter.default.post(name: Notification.Name("makeClewAnnouncement"), object: self, userInfo: ["announcementText": announcement, "delayInSeconds": delayInSeconds])
+        // Method 2 (requires access to the particular object)
+        //announcementViewController.announce(announcement: announcement)
+    }
+    */
     // MARK: - Speech Synthesizer Delegate
     
     /// Called when an utterance is finished.  We implement this function so that we can keep track of
