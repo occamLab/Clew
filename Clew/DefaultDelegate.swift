@@ -10,6 +10,10 @@ import Foundation
 import SceneKit
 
 class DefaultDelegate : ClewDelegate {
+    func allowRoutesList() -> Bool {
+        return true
+    }
+    
     func allowRouteRating() -> Bool {
         return true
     }

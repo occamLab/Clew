@@ -73,4 +73,7 @@ class TutorialChildViewController: UIViewController, ClewDelegate {
     func allowRouteRating() -> Bool {
         return true
     }
+    func allowRoutesList() -> Bool {
+        return true
+    }
 }

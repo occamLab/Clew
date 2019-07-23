@@ -134,4 +134,12 @@ class TutorialViewController: UIViewController, ClewDelegate {
         return true
     }
 
+    func allowRoutesList() -> Bool {
+        for child in children {
+            if let delegate = child as? ClewDelegate {
+                return delegate.allowRoutesList()
+            }
+        }
+        return true
+    }
 }

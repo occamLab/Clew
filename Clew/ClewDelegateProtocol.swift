@@ -9,5 +9,6 @@
 import Foundation
 
 protocol ClewDelegate : ClewObserver {
-    func allowRouteRating()->Bool
+    func allowRouteRating() -> Bool
+    func allowRoutesList() -> Bool
 }

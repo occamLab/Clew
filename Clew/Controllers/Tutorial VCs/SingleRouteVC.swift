@@ -181,7 +181,12 @@ class SingleRouteVC: TutorialChildViewController {
         }
         
     }
+    
     override func allowRouteRating() -> Bool {
+        return false
+    }
+    
+    override func allowRoutesList() -> Bool {
         return false
     }
 }
