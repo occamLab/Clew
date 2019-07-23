@@ -76,8 +76,7 @@ class TutorialViewController: UIViewController, ClewDelegate {
             case .initializing:
                 initialize()
             case .endTutorial:
-                removeAllChildVCs()
-                self.remove()
+                print("in end tutorial state")
             }
         }
     }
@@ -136,6 +135,60 @@ class TutorialViewController: UIViewController, ClewDelegate {
         for child in children {
             if let delegate = child as? ClewDelegate {
                 return delegate.allowRoutesList()
+            }
+        }
+        return true
+    }
+    
+    func allowLandmarkProcedure() -> Bool {
+        for child in children {
+            if let delegate = child as? ClewDelegate {
+                return delegate.allowLandmarkProcedure()
+            }
+        }
+        return true
+    }
+    
+    func allowSettingsPressed() -> Bool {
+        for child in children {
+            if let delegate = child as? ClewDelegate {
+                return delegate.allowSettingsPressed()
+            }
+        }
+        return true
+    }
+
+    func allowFeedbackPressed() -> Bool {
+        for child in children {
+            if let delegate = child as? ClewDelegate {
+                return delegate.allowFeedbackPressed()
+            }
+        }
+        return true
+    }
+
+    func allowHelpPressed() -> Bool {
+        for child in children {
+            if let delegate = child as? ClewDelegate {
+                return delegate.allowHelpPressed()
+            }
+        }
+        return true
+    }
+
+    func allowHomeButtonPressed() -> Bool {
+        for child in children {
+            if let delegate = child as? ClewDelegate {
+                return delegate.allowHomeButtonPressed()
+            }
+        }
+        return true
+    }
+    
+    func allowAnnouncements() -> Bool {
+        for child in children {
+            if let delegate = child as? ClewDelegate {
+                return delegate.allowAnnouncements()
             }
         }
         return true
