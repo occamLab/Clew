@@ -604,6 +604,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             self.suppressTrackingWarnings = false
         }
 
+        // we use a custom notification to communicate from the tutorial view controller to the main view controller that the tutorial was completed
+        NotificationCenter.default.addObserver(forName: Notification.Name("ClewTutorialCompleted"), object: nil, queue: nil) { (notification) -> Void in
+            self.tutorialViewController.remove()
+            self.delegate = nil
+        }
+
         add(announcementViewController)
         /*print("always start tutorial!!  This is a hack")
         add(tutorialViewController)

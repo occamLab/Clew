@@ -77,11 +77,10 @@ class TutorialViewController: UIViewController, ClewDelegate {
             case .initializing:
                 initialize()
             case .displayCongratsView:
-                print("in end tutorial state")
-//                DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(5)){
-//                    self.removeAllChildVCs()}
+                print("in display congrats view state")
             case .endTutorial:
                 removeAllChildVCs()
+                NotificationCenter.default.post(name: Notification.Name("ClewTutorialCompleted"), object: nil)
             }
         }
     }
