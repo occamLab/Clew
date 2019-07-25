@@ -590,6 +590,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
 
         rootContainerView.feedbackButton.addTarget(self, action: #selector(feedbackButtonPressed), for: .touchUpInside)
         
+        rootContainerView.tutorialButton.addTarget(self, action: #selector(tutorialButtonPressed), for: .touchUpInside)
 
         // make sure this happens after the view is created!
         rootContainerView.countdownTimer.delegate = self
@@ -1805,6 +1806,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             let directionToNextKeypoint = getDirectionToNextKeypoint(currentLocation: curLocation)
             setDirectionText(currentLocation: curLocation.location, direction: directionToNextKeypoint, displayDistance: true)
         }
+    }
+    
+    @objc func tutorialButtonPressed() {
+        add(tutorialViewController)
+        tutorialViewController.state = .startOrientationTraining
     }
     
     /// Set the direction text based on the current location and direction info.
