@@ -10,6 +10,8 @@ import Foundation
 import SceneKit
 import UIKit
 
+var scrollView: UIScrollView!
+
 class TutorialChildViewController: UIViewController, ClewDelegate {
 
     var tutorialParent: TutorialViewController? {
@@ -28,8 +30,8 @@ class TutorialChildViewController: UIViewController, ClewDelegate {
             let viewToCallout = grandParent.view.viewWithTag(tagID) else {
                 return nil
         }
-
-        let buttonLabel = UILabel(frame: CGRect(x: UIScreen.main.bounds.size.width/2 - UIScreen.main.bounds.size.width*2/5, y: UIScreen.main.bounds.size.height/6, width: UIScreen.main.bounds.size.width*4/5, height: 200))
+        
+        let buttonLabel = UILabel(frame: CGRect(x: UIScreen.main.bounds.size.width/2 - UIScreen.main.bounds.size.width*2/5, y: UIScreen.main.bounds.size.height/6, width: UIScreen.main.bounds.size.width*4/5 + 50, height: 200))
         buttonLabel.text = calloutText
         buttonLabel.textColor = UIColor.black
         buttonLabel.backgroundColor = UIColor.white
@@ -44,9 +46,27 @@ class TutorialChildViewController: UIViewController, ClewDelegate {
         if buttonAccessibilityName != nil {
             buttonLabel.accessibilityLabel = "Description for" +  buttonAccessibilityName! + ":" + calloutText
         }
-
         let xCenter = viewToCallout.frame.midX
         let yCenter = viewToCallout.frame.maxY + 50
+        
+//        NSLayoutConstraint.activate([
+//            scrollView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+//            scrollView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+//            scrollView.topAnchor.constraint(equalTo: self.view.topAnchor),
+//            scrollView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
+//            ])
+//        scrollView.addSubview(buttonLabel)
+//
+//            buttonLabel.translatesAutoresizingMaskIntoConstraints = false
+//        NSLayoutConstraint.activate([
+//            buttonLabel.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+//            buttonLabel.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+//            buttonLabel.topAnchor.constraint(equalTo: scrollView.topAnchor),
+//            buttonLabel.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor)
+//            buttonLabel.heightAnchor.constraint(equalToConstant: 2000).isActive = true
+//            buttonLabel.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
+//            ])
+
         print("1 - locationText")
         print(viewToCallout.frame.minX)
         buttonLabel.center = CGPoint(x: xCenter, y: UIScreen.main.bounds.size.height/8 + 100)
