@@ -13,6 +13,7 @@ import UIKit
 var scrollView: UIScrollView!
 
 class TutorialChildViewController: UIViewController, ClewDelegate {
+
     var tutorialParent: TutorialViewController? {
         return parent as? TutorialViewController
     }
@@ -90,7 +91,29 @@ class TutorialChildViewController: UIViewController, ClewDelegate {
     func finishAnnouncement(announcement: String) { }
     func didReceiveNewCameraPose(transform: simd_float4x4)  {}
     func didTransitionTo(newState: AppState) {}
+    
     func allowRouteRating() -> Bool {
+        return true
+    }
+    func allowRoutesList() -> Bool {
+        return true
+    }
+    func allowLandmarkProcedure() -> Bool {
+        return true
+    }
+    func allowSettingsPressed() -> Bool {
+        return true
+    }
+    func allowFeedbackPressed() -> Bool {
+        return true
+    }
+    func allowHelpPressed() -> Bool {
+        return true
+    }
+    func allowHomeButtonPressed() -> Bool {
+        return true
+    }
+    func allowAnnouncements() -> Bool {
         return true
     }
 }

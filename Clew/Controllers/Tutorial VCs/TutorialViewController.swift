@@ -32,6 +32,7 @@ class TutorialViewController: UIViewController, ClewDelegate {
         case recordingSingleRoute
         case teachTheNavigationOfASingleRoute
         case initializing
+        case displayCongratsView
         case endTutorial
         /*
         /// rawValue is useful for serializing state values, which we are currently using for our logging feature
@@ -75,9 +76,11 @@ class TutorialViewController: UIViewController, ClewDelegate {
                 break
             case .initializing:
                 initialize()
+            case .displayCongratsView:
+                print("in display congrats view state")
             case .endTutorial:
                 removeAllChildVCs()
-                self.remove()
+                NotificationCenter.default.post(name: Notification.Name("ClewTutorialCompleted"), object: nil)
             }
         }
     }
@@ -132,4 +135,66 @@ class TutorialViewController: UIViewController, ClewDelegate {
         return true
     }
 
+    func allowRoutesList() -> Bool {
+        for child in children {
+            if let delegate = child as? ClewDelegate {
+                return delegate.allowRoutesList()
+            }
+        }
+        return true
+    }
+    
+    func allowLandmarkProcedure() -> Bool {
+        for child in children {
+            if let delegate = child as? ClewDelegate {
+                return delegate.allowLandmarkProcedure()
+            }
+        }
+        return true
+    }
+    
+    func allowSettingsPressed() -> Bool {
+        for child in children {
+            if let delegate = child as? ClewDelegate {
+                return delegate.allowSettingsPressed()
+            }
+        }
+        return true
+    }
+
+    func allowFeedbackPressed() -> Bool {
+        for child in children {
+            if let delegate = child as? ClewDelegate {
+                return delegate.allowFeedbackPressed()
+            }
+        }
+        return true
+    }
+
+    func allowHelpPressed() -> Bool {
+        for child in children {
+            if let delegate = child as? ClewDelegate {
+                return delegate.allowHelpPressed()
+            }
+        }
+        return true
+    }
+
+    func allowHomeButtonPressed() -> Bool {
+        for child in children {
+            if let delegate = child as? ClewDelegate {
+                return delegate.allowHomeButtonPressed()
+            }
+        }
+        return true
+    }
+    
+    func allowAnnouncements() -> Bool {
+        for child in children {
+            if let delegate = child as? ClewDelegate {
+                return delegate.allowAnnouncements()
+            }
+        }
+        return true
+    }
 }

@@ -391,10 +391,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// Called when the user presses the routes button.  The function will display the `Routes` view, which is managed by `RoutesViewController`.
     @objc func routesButtonPressed() {
-//        guard delegateProxy.allowRoutesList() else {
-//            AnnouncementManager.announce("This is diallowed in tutorial mode")
-//            return
-//        }
+        guard delegateProxy.allowRoutesList() else {
+            AnnouncementManager.shared.announce(announcement: "This is disallowed in tutorial mode")
+            return
+        }
         let storyBoard: UIStoryboard = UIStoryboard(name: "SettingsAndHelp", bundle: nil)
         let popoverContent = storyBoard.instantiateViewController(withIdentifier: "Routes") as! RoutesViewController
         popoverContent.preferredContentSize = CGSize(width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height)
@@ -590,6 +590,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
 
         rootContainerView.feedbackButton.addTarget(self, action: #selector(feedbackButtonPressed), for: .touchUpInside)
         
+        rootContainerView.tutorialButton.addTarget(self, action: #selector(tutorialButtonPressed), for: .touchUpInside)
 
         // make sure this happens after the view is created!
         rootContainerView.countdownTimer.delegate = self
@@ -604,10 +605,16 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             self.suppressTrackingWarnings = false
         }
 
+        // we use a custom notification to communicate from the tutorial view controller to the main view controller that the tutorial was completed
+        NotificationCenter.default.addObserver(forName: Notification.Name("ClewTutorialCompleted"), object: nil, queue: nil) { (notification) -> Void in
+            self.tutorialViewController.remove()
+            self.delegate = nil
+        }
+
         add(announcementViewController)
-        print("always start tutorial!!  This is a hack")
+        /*print("always start tutorial!!  This is a hack")
         add(tutorialViewController)
-        tutorialViewController.state = .startOrientationTraining
+        tutorialViewController.state = .startOrientationTraining*/
     }
     
     /// Create the audio player objdcts for the various app sounds.  Creating them ahead of time helps reduce latency when playing them later.
@@ -1375,6 +1382,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// handles the user pressing the landmark button
     @objc func startCreateLandmarkProcedure() {
+        guard delegateProxy.allowLandmarkProcedure() else {
+            AnnouncementManager.shared.announce(announcement: "This is disallowed in tutorial mode")
+            return
+        }
         rootContainerView.homeButton.isHidden = false
 //        backButton.isHidden = true
         creatingRouteLandmark = true
@@ -1677,6 +1688,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     // Called when home button is pressed
     // Chooses the states in which the home page alerts pop up
     @objc func homeButtonPressed() {
+        guard delegateProxy.allowHomeButtonPressed() else {
+            AnnouncementManager.shared.announce(announcement: "This is disallowed in tutorial mode")
+            return
+        }
     // if the state case needs to have a home button alert, send it to the function that creates the relevant alert
         if case .navigatingRoute = self.state {
             homePageNavigationProcesses()
@@ -1715,6 +1730,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// Called when the settings button is pressed.  This function will display the settings view (managed by SettingsViewController) as a popover.
     @objc func settingsButtonPressed() {
+        guard delegateProxy.allowSettingsPressed() else {
+            AnnouncementManager.shared.announce(announcement: "This is disallowed in tutorial mode")
+            return
+        }
         let storyBoard: UIStoryboard = UIStoryboard(name: "SettingsAndHelp", bundle: nil)
         let popoverContent = storyBoard.instantiateViewController(withIdentifier: "Settings") as! SettingsViewController
         popoverContent.preferredContentSize = CGSize(width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height)
@@ -1740,6 +1759,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// Called when the help button is pressed.  This function will display the help view (managed by HelpViewController) as a popover.
     @objc func helpButtonPressed() {
+        guard delegateProxy.allowHelpPressed() else {
+            AnnouncementManager.shared.announce(announcement: "This is disallowed in tutorial mode")
+            return
+        }
         let storyBoard: UIStoryboard = UIStoryboard(name: "SettingsAndHelp", bundle: nil)
         let popoverContent = storyBoard.instantiateViewController(withIdentifier: "Help") as! HelpViewController
         popoverContent.preferredContentSize = CGSize(width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height)
@@ -1756,6 +1779,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// Called when the Feedback button is pressed.  This function will display the Feedback view (managed by FeedbackViewController) as a popover.
     @objc func feedbackButtonPressed() {
+        guard delegateProxy.allowFeedbackPressed() else {
+            AnnouncementManager.shared.announce(announcement: "This is disallowed in tutorial mode")
+            return
+        }
         let storyBoard: UIStoryboard = UIStoryboard(name: "SettingsAndHelp", bundle: nil)
         let popoverContent = storyBoard.instantiateViewController(withIdentifier: "Feedback") as! FeedbackViewController
         popoverContent.preferredContentSize = CGSize(width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height)
@@ -1779,6 +1806,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             let directionToNextKeypoint = getDirectionToNextKeypoint(currentLocation: curLocation)
             setDirectionText(currentLocation: curLocation.location, direction: directionToNextKeypoint, displayDistance: true)
         }
+    }
+    
+    @objc func tutorialButtonPressed() {
+        add(tutorialViewController)
+        tutorialViewController.state = .startOrientationTraining
     }
     
     /// Set the direction text based on the current location and direction info.
@@ -1955,7 +1987,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             case .excessiveMotion:
                 logString = "ExcessiveMotion"
                 print("Excessive motion")
-                if !suppressTrackingWarnings {
+                if !suppressTrackingWarnings && delegateProxy.allowAnnouncements(){
                     AnnouncementManager.shared.announce(announcement: NSLocalizedString("Excessive motion.\nTracking performance is degraded.", comment: "Let user know that there is too much movement of their phone and thus the app's ability to track a route has been lowered."))
                     if soundFeedback {
                         playSystemSound(id: 1050)
@@ -1964,7 +1996,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             case .insufficientFeatures:
                 logString = "InsufficientFeatures"
                 print("InsufficientFeatures")
-                if !suppressTrackingWarnings {
+                if !suppressTrackingWarnings && delegateProxy.allowAnnouncements(){
                     AnnouncementManager.shared.announce(announcement: NSLocalizedString("Insufficient visual features.\nTracking performance is degraded.", comment: "Let user know that their current surroundings do not have enough visual markers and thus the app's ability to track a route has been lowered."))
                     if soundFeedback {
                         playSystemSound(id: 1050)
@@ -1987,7 +2019,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 }
                 attemptingRelocalization = false
             } else if case let .limited(reason)? = trackingSessionState {
-                if !suppressTrackingWarnings {
+                if !suppressTrackingWarnings && delegateProxy.allowAnnouncements(){
                     if reason == .initializing {
                         AnnouncementManager.shared.announce(announcement: NSLocalizedString("Tracking session initialized.", comment: "Let user know that the tracking session has started."))
                     } else {

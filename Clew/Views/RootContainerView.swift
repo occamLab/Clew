@@ -59,6 +59,9 @@ class RootContainerView: UIView {
     
     /// button Coordinates
     var xCenter: Int!
+    
+    /// tutorial button to display tutorial
+    var tutorialButton: UIButton!
 
     /// required for non storyboard UIView
     /// objects
@@ -147,6 +150,16 @@ class RootContainerView: UIView {
         /// and announce through VoiceOver by posting appropriate notifications
         countdownTimer.accessibilityElementsHidden = true
 
+        // MARK: Tutorial Button
+        tutorialButton = UIButton(frame: CGRect(x: UIConstants.buttonFrameWidth/(3),
+                                                y: 10,
+                                                width: UIConstants.buttonFrameWidth/2,
+                                                height: UIConstants.buttonFrameWidth/7))
+        tutorialButton.isAccessibilityElement = true
+        tutorialButton.setTitle("Tutorial", for: .normal)
+        tutorialButton.accessibilityLabel = "Tutorial"
+        tutorialButton.titleLabel?.font = UIFont.systemFont(ofSize: 24.0)
+//        tutorialButton.tag = 0xFADEFAD
         
         /// add all sub views
         addSubview(getDirectionButton)
@@ -155,5 +168,6 @@ class RootContainerView: UIView {
         addSubview(countdownTimer)
         addSubview(feedbackButton)
         addSubview(homeButton)
+        addSubview(tutorialButton)
     }
 }

@@ -108,6 +108,44 @@ class SingleRouteVC: TutorialChildViewController {
     }
     /////
     
+    /// Initializes a view and the button in that view. The view will be shown after the user completes single route training
+    func createCongratsView() -> UIView {
+        congratsView = UIView(frame:CGRect(x: 0,
+                                           y: 0,
+                                           width: UIScreen.main.bounds.size.width,
+                                           height: UIScreen.main.bounds.size.height))
+        congratsView.backgroundColor = clewGreen
+        congratsLabel = UILabel(frame: CGRect(x: UIScreen.main.bounds.size.width/2 - UIScreen.main.bounds.size.width*2/5, y: UIScreen.main.bounds.size.height/8, width: UIScreen.main.bounds.size.width*4/5, height: 200))
+        congratsLabel.text = "Congratulations! \n You have completed the tutorial. \n Now you can get started with the app!"
+        congratsLabel.textColor = UIColor.black
+        congratsLabel.backgroundColor = UIColor.white
+        congratsLabel.textAlignment = .center
+        congratsLabel.numberOfLines = 0
+        congratsLabel.lineBreakMode = .byWordWrapping
+        congratsLabel.layer.masksToBounds = true
+        congratsLabel.layer.cornerRadius = 8.0
+        congratsLabel.font = UIFont.systemFont(ofSize: 24.0)
+        congratsLabel.layer.borderWidth = 3.0
+        congratsLabel.isAccessibilityElement = true
+        congratsLabel.accessibilityLabel = "Congratulations! You have completed the tutorial. Now you can get started with the app!"
+        congratsView.addSubview(congratsLabel)
+        
+        nextButton = UIButton(frame: CGRect(x: UIScreen.main.bounds.size.width/2 - UIScreen.main.bounds.size.width*1/5, y: UIScreen.main.bounds.size.width*3/10 + UIScreen.main.bounds.size.height*1/10 + 100, width: UIScreen.main.bounds.size.width*2/5, height: UIScreen.main.bounds.size.height*1/10))
+        nextButton.backgroundColor = clewGreen
+        nextButton.setTitleColor(.white, for: .normal)
+        nextButton.setTitle("Next", for: .normal)
+        nextButton.layer.masksToBounds = true
+        nextButton.layer.cornerRadius = 10.0
+        nextButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 30.0)
+        nextButton.isAccessibilityElement = true
+        nextButton.isUserInteractionEnabled = true
+        nextButton.addTarget(self, action: #selector(endTutorialNextButtonAction), for: .touchUpInside)
+        nextButton.layer.borderWidth = 3.0
+        congratsView.addSubview(nextButton)
+    
+        return congratsView
+    }
+    
     @objc func landmarkNextButtonAction(sender: UIButton!) {
         landmarkArrow!.removeFromSuperview()
         landmarkCallout!.removeFromSuperview()
@@ -142,6 +180,10 @@ class SingleRouteVC: TutorialChildViewController {
         UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: navigateCallout)
     }
     
+    @objc func endTutorialNextButtonAction(sender: UIButton!) {
+        tutorialParent?.state = .endTutorial
+    }
+    
     override func didTransitionTo(newState: AppState) {
         if case .recordingRoute = newState {
             tutorialParent?.state = .recordingSingleRoute
@@ -161,7 +203,7 @@ class SingleRouteVC: TutorialChildViewController {
                 self.view.addSubview(self.pauseArrow!)
                 self.view.addSubview(self.pauseNextButton!)
                 // Brings tutorialViewController to the front so that the shadow can be added onto it and thus cover the startNavigationViewController
-            self.tutorialParent?.parent?.view.bringSubviewToFront(self.tutorialParent!.view)
+                self.tutorialParent?.parent?.view.bringSubviewToFront(self.tutorialParent!.view)
             }
         }
         
@@ -171,16 +213,51 @@ class SingleRouteVC: TutorialChildViewController {
             navigateCallout!.removeFromSuperview()
         }
         
-        if case .ratingRoute = newState {
-            ///////
-            //tutorialParent?.parent?.RouteRatingController.remove()
-            ///////
-            tutorialParent?.state = .endTutorial
-            //            removeObserver(tutorialViewController) TODO: fix
+        
+        if case .mainScreen = newState {
+            // Double check that we are in tutorial mode to safe guard against future changes to the main app state that might inadvertently affect the tutorial.
+            if tutorialParent?.state == .teachTheNavigationOfASingleRoute {
+                self.congratsView = self.createCongratsView()
+                self.view.addSubview(self.congratsView)
+                // Delays bringing the TutorialViewController to the front until recordPathController has been added to the main ViewController. By bringing the TutorialViewController to the front, the congratsView added will also appear at the front.
+                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(1)) {
+                    self.tutorialParent?.parent?.view.bringSubviewToFront(self.tutorialParent!.view)
+                }
+                tutorialParent?.state = .displayCongratsView
+            }
         }
         
     }
+    
     override func allowRouteRating() -> Bool {
+        return false
+    }
+    
+    override func allowRoutesList() -> Bool {
+        return false
+    }
+    
+    override func allowLandmarkProcedure() -> Bool {
+        return false
+    }
+    
+    override func allowSettingsPressed() -> Bool {
+        return false
+    }
+    
+    override func allowFeedbackPressed() -> Bool {
+        return false
+    }
+    
+    override func allowHelpPressed() -> Bool {
+        return false
+    }
+    
+    override func allowHomeButtonPressed() -> Bool {
+        return false
+    }
+    
+    override func allowAnnouncements() -> Bool {
         return false
     }
 }

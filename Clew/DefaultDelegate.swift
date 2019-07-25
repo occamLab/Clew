@@ -10,7 +10,35 @@ import Foundation
 import SceneKit
 
 class DefaultDelegate : ClewDelegate {
+    func allowRoutesList() -> Bool {
+        return true
+    }
+    
     func allowRouteRating() -> Bool {
+        return true
+    }
+    
+    func allowLandmarkProcedure() -> Bool {
+        return true
+    }
+    
+    func allowSettingsPressed() -> Bool {
+        return true
+    }
+    
+    func allowFeedbackPressed() -> Bool {
+        return true
+    }
+    
+    func allowHelpPressed() -> Bool {
+        return true
+    }
+    
+    func allowHomeButtonPressed() -> Bool {
+        return true
+    }
+    
+    func allowAnnouncements() -> Bool {
         return true
     }
     
