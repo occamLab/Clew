@@ -65,7 +65,8 @@ class PhoneOrientationTrainingVC: TutorialChildViewController, SRCountdownTimerD
     
     // Callback function for when the 'skip' button is tapped
     @objc func skipButtonAction(sender: UIButton!) {
-        tutorialParent?.state = .endTutorial
+        skipNavigationProcesses()
+//        tutorialParent?.state = .readyToRecordSingleRoute
     }
     
     /// Callback function for when 'countdown' = 0. This stops haptic feedback and triggers a popup to be shown that congratulates the user for completing phone orientation training.
@@ -113,21 +114,27 @@ class PhoneOrientationTrainingVC: TutorialChildViewController, SRCountdownTimerD
         nextButton.layer.borderWidth = 3.0
         congratsView.addSubview(nextButton)
         
-        skipButton = UIButton(frame: CGRect(x: UIScreen.main.bounds.size.width*4/8 - UIScreen.main.bounds.size.width*1/5, y: UIScreen.main.bounds.size.width * 12/13, width: UIScreen.main.bounds.size.width*2/5, height: UIScreen.main.bounds.size.height*1/10))
-        skipButton.backgroundColor = clewGreen
-        skipButton.setTitleColor(skipYellow, for: .normal)
-        skipButton.setTitle("SKIP", for: .normal)
-        skipButton.layer.masksToBounds = true
-        skipButton.layer.cornerRadius = 8.0
-        skipButton.titleLabel?.font = UIFont(name: "HelveticaNeueCondensedBold", size: 25.0)
-        skipButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 25.0)
-        skipButton.isAccessibilityElement = true
-        skipButton.isUserInteractionEnabled = true
-        skipButton.addTarget(self, action: #selector(skipButtonAction), for: .touchUpInside)
-        congratsView.addSubview(skipButton)
-        
         return congratsView
     }
+    
+    /// function that creates alerts for the home button
+    func skipNavigationProcesses() {
+        // Create alert to warn users of lost information
+        let alert = UIAlertController(title: "Are you sure?",
+                                      message: "If you exit this process right now, you won't be orienting your phone.",
+                                      preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Skip this part of the tutorial.", style: .default, handler: { action -> Void in
+            // proceed to home page
+            self.tutorialParent?.state = .readyToRecordSingleRoute
+        }
+        ))
+        alert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: { action -> Void in
+            // nothing to do, just stay on the page
+        }
+        ))
+        self.present(alert, animated: true, completion: nil)
+    }
+    
     
     /// Called when the view appears on screen. Initializes and starts 'timeSinceOpen'.
     /// - Parameter animated: True if the appearance is animated

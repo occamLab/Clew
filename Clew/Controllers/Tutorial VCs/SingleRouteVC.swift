@@ -79,7 +79,7 @@ class SingleRouteVC: TutorialChildViewController {
     
     /////
     func createSkipButton() -> UIButton {
-        skipButton = UIButton(frame: CGRect(x: UIScreen.main.bounds.size.width*1/2 - UIScreen.main.bounds.size.width*1/5, y: UIScreen.main.bounds.size.width*1/10, width: UIScreen.main.bounds.size.width*2/5, height: UIScreen.main.bounds.size.height*1/10))
+        skipButton = UIButton(frame: CGRect(x: UIScreen.main.bounds.size.width*1/2 - UIScreen.main.bounds.size.width*1/5, y: UIScreen.main.bounds.size.width*1/14, width: UIScreen.main.bounds.size.width*2/5, height: UIScreen.main.bounds.size.height*1/10))
         skipButton.backgroundColor = .white
         skipButton.setTitleColor(skipYellow, for: .normal)
         skipButton.setTitle("SKIP", for: .normal)
@@ -144,6 +144,27 @@ class SingleRouteVC: TutorialChildViewController {
         congratsView.addSubview(nextButton)
     
         return congratsView
+    }
+    
+    /// function that creates alerts for the home button
+    func skipNavigationProcesses() {
+        // Create alert to warn users of lost information
+        let alert = UIAlertController(title: "Are you sure?",
+                                      message: "If you exit this process right now, you will be skipping the process of recording and navigating a simple route.",
+                                      preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Skip this part of the tutorial.", style: .default, handler: { action -> Void in
+            // proceed to home page
+            self.transitionToMainApp()
+            
+            let appDelegate = UIApplication.shared.delegate as! AppDelegate
+            (appDelegate.window?.rootViewController as? ViewController)?.tutorialViewController.state = .endTutorial
+        }
+        ))
+        alert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: { action -> Void in
+            // nothing to do, just stay on the page
+        }
+        ))
+        self.present(alert, animated: true, completion: nil)
     }
     
     @objc func landmarkNextButtonAction(sender: UIButton!) {
