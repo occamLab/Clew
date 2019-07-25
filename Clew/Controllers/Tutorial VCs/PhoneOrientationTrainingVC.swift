@@ -9,6 +9,7 @@
 import Foundation
 import SceneKit
 import SRCountdownTimer
+import FLAnimatedImage
 
 class PhoneOrientationTrainingVC: TutorialChildViewController, SRCountdownTimerDelegate {
 
@@ -22,18 +23,23 @@ class PhoneOrientationTrainingVC: TutorialChildViewController, SRCountdownTimerD
 
     // View that contains 'congratsLabel' and 'nextButton'
     var congratsView: UIView!
+    var introView: UIView!
 
     // Label that congratulates user for completing phone orientation training and provides details on the next part of the tutorial
     var congratsLabel: UILabel!
+    var alignLabel: UILabel!
 
     // Button for moving to the next state of the tutorial
     var nextButton: UIButton!
+    
+    var gotItButton: UIButton!
     
     var skipButton: UIButton!
     
     // Label that describes the task in the phone orientation state
     
     var phoneOrientationLabel: UILabel!
+    var phoneOrientationGIF: FLAnimatedImageView!
     
     // View for giving a darker tint on the screen
     var backgroundShadow: UIView! = TutorialShadowBackground()
@@ -79,6 +85,55 @@ class PhoneOrientationTrainingVC: TutorialChildViewController, SRCountdownTimerD
         UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: congratsLabel)
     }
 
+    func createIntroView() -> UIView {
+        introView = UIView(frame:CGRect(x: 0,
+                                           y: 0,
+                                           width: UIScreen.main.bounds.size.width,
+                                           height: UIScreen.main.bounds.size.height))
+        introView.backgroundColor = clewGreen
+        alignLabel = UILabel(frame: CGRect(x: UIScreen.main.bounds.size.width/2 - UIScreen.main.bounds.size.width*2/5, y: UIScreen.main.bounds.size.height/8, width: UIScreen.main.bounds.size.width*4/5, height: 200))
+        alignLabel.text = "ALIGN YOUR PHONE!"
+        alignLabel.textColor = UIColor.white
+//        alignLabel.backgroundColor = UIColor.white
+        alignLabel.textAlignment = .center
+        alignLabel.numberOfLines = 0
+        alignLabel.lineBreakMode = .byWordWrapping
+        alignLabel.layer.masksToBounds = true
+//        alignLabel.layer.cornerRadius = 8.0
+        alignLabel.font = UIFont.systemFont(ofSize: 35.0)
+//        alignLabel.layer.borderWidth = 3.0
+        alignLabel.isAccessibilityElement = true
+        alignLabel.accessibilityLabel = "Congratulations! You have successfully oriented your phone. Now you will be recording a simple single route."
+        introView.addSubview(alignLabel)
+        
+        gotItButton = UIButton(frame: CGRect(x: UIConstants.buttonFrameWidth/(7/3),
+                                            y: UIConstants.yOriginOfSettingsAndHelpButton + 10,
+                                            width: UIConstants.buttonFrameWidth/5,
+                                            height: UIConstants.buttonFrameWidth/7))
+        gotItButton.isAccessibilityElement = true
+//        gotItButton.setTitle("Got it", for: .normal)
+        gotItButton.titleLabel?.font = UIFont.systemFont(ofSize: 24.0)
+        gotItButton.accessibilityLabel = "Got It"
+        gotItButton.setImage(UIImage(named: "buttonBackground2"), for: .normal)
+        introView.addSubview(gotItButton)
+        
+        skipButton = UIButton(frame: CGRect(x: UIScreen.main.bounds.size.width*3/4 - UIScreen.main.bounds.size.width*1/5, y: UIScreen.main.bounds.size.width*1/14, width: UIScreen.main.bounds.size.width*2/5, height: UIScreen.main.bounds.size.height*1/10))
+        skipButton.setTitleColor(skipYellow, for: .normal)
+        skipButton.setTitle("SKIP", for: .normal)
+        skipButton.layer.masksToBounds = true
+        skipButton.layer.cornerRadius = 8.0
+        skipButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 30.0)
+        skipButton.isAccessibilityElement = true
+        skipButton.isUserInteractionEnabled = true
+        skipButton.addTarget(self, action: #selector(skipButtonAction), for: .touchUpInside)
+        introView.addSubview(skipButton)
+        
+//        let imageData = try! Data(contentsOf: Bundle.main.url(forResource: "PhoneOrientation", withExtension: "gif")!)
+//        phoneOrientationGIF.animatedImage = FLAnimatedImage(animatedGIFData: imageData)
+        
+        return introView
+    }
+    
     /// Initializes a view and the button in that view. The view will be shown after the user completes phone orientation training
     func createCongratsView() -> UIView {
         congratsView = UIView(frame:CGRect(x: 0,
@@ -117,6 +172,14 @@ class PhoneOrientationTrainingVC: TutorialChildViewController, SRCountdownTimerD
         return congratsView
     }
     
+    func transitionToMainApp() {
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        appDelegate.window?.rootViewController?.dismiss(animated: false)
+        appDelegate.window = UIWindow(frame:UIScreen.main.bounds)
+        appDelegate.window?.makeKeyAndVisible()
+        appDelegate.window?.rootViewController = ViewController()
+    }
+    
     /// function that creates alerts for the home button
     func skipNavigationProcesses() {
         // Create alert to warn users of lost information
@@ -125,7 +188,11 @@ class PhoneOrientationTrainingVC: TutorialChildViewController, SRCountdownTimerD
                                       preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Skip this part of the tutorial.", style: .default, handler: { action -> Void in
             // proceed to home page
-            self.tutorialParent?.state = .readyToRecordSingleRoute
+            self.transitionToMainApp()
+            
+            let appDelegate = UIApplication.shared.delegate as! AppDelegate
+            (appDelegate.window?.rootViewController as? ViewController)?.tutorialViewController.state = .readyToRecordSingleRoute
+//            self.tutorialParent?.state = .readyToRecordSingleRoute
         }
         ))
         alert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: { action -> Void in
@@ -140,6 +207,7 @@ class PhoneOrientationTrainingVC: TutorialChildViewController, SRCountdownTimerD
     /// - Parameter animated: True if the appearance is animated
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        
         timeSinceOpen = Date()
 
 
@@ -148,6 +216,9 @@ class PhoneOrientationTrainingVC: TutorialChildViewController, SRCountdownTimerD
 
     /// Called when the view has loaded. Make new countdownTimer that will only be used in PhoneorientationTrainingVC
     override func viewDidLoad() {
+        introView = createIntroView()
+        self.view.addSubview(introView)
+        
         countdownTimer = SRCountdownTimer(frame: CGRect(x: UIConstants.buttonFrameWidth*1/10,
                                                         y: UIConstants.yOriginOfButtonFrame/10,
                                                         width: UIConstants.buttonFrameWidth*8/10,

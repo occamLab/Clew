@@ -612,9 +612,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
 
         add(announcementViewController)
-        print("always start tutorial!!  This is a hack")
+        /*print("always start tutorial!!  This is a hack")
         add(tutorialViewController)
-        tutorialViewController.state = .startOrientationTraining
+        tutorialViewController.state = .startOrientationTraining*/
     }
     
     /// Create the audio player objdcts for the various app sounds.  Creating them ahead of time helps reduce latency when playing them later.
