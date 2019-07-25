@@ -181,7 +181,6 @@ class SingleRouteVC: TutorialChildViewController {
     }
     
     @objc func endTutorialNextButtonAction(sender: UIButton!) {
-        print("YOYO")
         tutorialParent?.state = .endTutorial
     }
     
