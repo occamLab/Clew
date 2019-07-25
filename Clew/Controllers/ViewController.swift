@@ -374,7 +374,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 let intrinsics = currentFrame.camera.intrinsics
                 beginRouteLandmark.intrinsics = simd_float4(intrinsics[0, 0], intrinsics[1, 1], intrinsics[2, 0], intrinsics[2, 1])
             }
-           
+
 
             Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(playSound)), userInfo: nil, repeats: false)
 //            rootContainerView.pauseTrackingView.isHidden = true
@@ -1441,26 +1441,55 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             // The first check is necessary in case the phone relocalizes before this code executes
             if case .readyForFinalResumeAlignment = self.state, let alignLandmark = self.pausedLandmark, let alignTransform = alignLandmark.transform, let frame = self.sceneView.session.currentFrame {
                 // yaw can be determined by projecting the camera's z-axis into the ground plane and using arc tangent (note: the camera coordinate conventions of ARKit https://developer.apple.com/documentation/arkit/arsessionconfiguration/worldalignment/camera
+                
                 DispatchQueue.global(qos: .background).async {
+//                    guard let data = alignLandmark.image!.pngData() else {
+//                        return
+//                    }
+//                    guard let directory = try? FileManager.default.url(for: .docu
                     let alignYaw = self.getYawHelper(alignTransform)
                     let intrinsics = frame.camera.intrinsics
-                    let visualYaw = VisualAlignment.visualYaw(alignLandmark.image!, alignLandmark.intrinsics!, self.pixelBufferToUIImage(pixelBuffer: frame.capturedImage)!, simd_float4(intrinsics[0, 0], intrinsics[1, 1], intrinsics[2, 0], intrinsics[2, 1]))
+                    let visualYawReturn = VisualAlignment.visualYaw(alignLandmark.image!, alignLandmark.intrinsics!, alignTransform,
+                                                              self.pixelBufferToUIImage(pixelBuffer: frame.capturedImage)!,
+                                                              simd_float4(intrinsics[0, 0], intrinsics[1, 1], intrinsics[2, 0], intrinsics[2, 1]),
+                                                              frame.camera.transform)
                     
                     DispatchQueue.main.async {
 
-                        self.announce(announcement: "aligned with yaw " + String(visualYaw*180/3.1415))
+                        self.announce(announcement: "aligned with yaw " + String(visualYawReturn.yaw*180/3.1415))
                         
                         
                         //                var leveledCameraPose = simd_float4x4.makeRotate(radians: cameraYaw, 0, 1, 0)
                         //                leveledCameraPose.columns.3 = frame.camera.transform.columns.3
 //                        let leveledCameraTransform
+                        let alignRotation = simd_float3x3(simd_float3(alignTransform[0, 0], alignTransform[0, 1], alignTransform[0, 2]),
+                            simd_float3(alignTransform[1, 0], alignTransform[1, 1], alignTransform[1, 2]),
+                            simd_float3(alignTransform[2, 0], alignTransform[2, 1], alignTransform[2, 2]))
                         
-                        var leveledAlignPose =  simd_float4x4.makeRotate(radians: alignYaw, 0, 1, 0)
-                        leveledAlignPose.columns.3 = alignTransform.columns.3
-                        let yawRotation = simd_float4x4.makeRotate(radians: visualYaw, 0, 1, 0)
+                        let leveledAlignRotation = visualYawReturn.square_rotation1.inverse * alignRotation;
+                        
+                        let leveledAlignPose = simd_float4x4(simd_float4(leveledAlignRotation[0, 0], leveledAlignRotation[0, 1], leveledAlignRotation[0, 2], alignTransform[0, 3]),
+                                                             simd_float4(leveledAlignRotation[1, 0], leveledAlignRotation[1, 1], leveledAlignRotation[1, 2], alignTransform[1, 3]),
+                                                             simd_float4(leveledAlignRotation[2, 0], leveledAlignRotation[2, 1], leveledAlignRotation[2, 2], alignTransform[2, 3]),
+                                                             simd_float4(alignTransform[3, 0], alignTransform[3, 1], alignTransform[3, 2], alignTransform[3, 3]))
+                        
+                        let cameraTransform = frame.camera.transform
+                        let cameraRotation = simd_float3x3(simd_float3(cameraTransform[0, 0], cameraTransform[0, 1], cameraTransform[0, 2]),
+                                                           simd_float3(cameraTransform[1, 0], cameraTransform[1, 1], cameraTransform[1, 2]),
+                                                           simd_float3(cameraTransform[2, 0], cameraTransform[2, 1], cameraTransform[2, 2]))
+                        let leveledCameraRotation = visualYawReturn.square_rotation2.inverse * cameraRotation;
+                        let leveledCameraPose = simd_float4x4(simd_float4(leveledCameraRotation[0, 0], leveledCameraRotation[0, 1], leveledCameraRotation[0, 2], cameraTransform[0, 3]),
+                                                              simd_float4(leveledCameraRotation[1, 0], leveledCameraRotation[1, 1], leveledCameraRotation[1, 2], cameraTransform[1, 3]),
+                                                              simd_float4(leveledCameraRotation[2, 0], leveledCameraRotation[2, 1], leveledCameraRotation[2, 2], cameraTransform[2, 3]),
+                                                              simd_float4(cameraTransform[3, 0], cameraTransform[3, 1], cameraTransform[3, 2], cameraTransform[3, 3]))
+                                                              
+//                        var leveledAlignPose =  simd_float4x4.makeRotate(radians: alignYaw, 0, 1, 0)
+                        
+//                        leveledAlignPose.columns.3 = alignTransform.columns.3
+                        let yawRotation = simd_float4x4.makeRotate(radians: visualYawReturn.yaw, -1, 0, 0)
                         let cameraYaw = self.getYawHelper(frame.camera.transform)
-                        var leveledCameraPose = simd_float4x4.makeRotate(radians: cameraYaw, 0, 1, 0)
-                        leveledCameraPose.columns.3 = frame.camera.transform.columns.3
+//                        var leveledCameraPose = simd_float4x4.makeRotate(radians: cameraYaw, 0, 1, 0)
+//                        leveledCameraPose.columns.3 = frame.camera.transform.columns.3
 
                         
                         
@@ -1473,38 +1502,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                         self.state = .readyToNavigateOrPause(allowPause: false)
                     }
                 }
-
             }
-//        // resume pose tracking with existing ARSessionConfiguration
-//        hideAllViewsHelper()
-//        pauseTrackingController.remove()
-//        rootContainerView.countdownTimer.isHidden = false
-//        rootContainerView.countdownTimer.start(beginingValue: ViewController.alignmentWaitingPeriod, interval: 1)
-//        delayTransition()
-//        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(ViewController.alignmentWaitingPeriod)) {
-//            self.rootContainerView.countdownTimer.isHidden = true
-//            // The first check is necessary in case the phone relocalizes before this code executes
-//            if case .readyForFinalResumeAlignment = self.state, let alignLandmark = self.pausedLandmark, let frame = self.sceneView.session.currentFrame, let alignTransform = alignLandmark.transform {
-//                // yaw can be determined by projecting the camera's z-axis into the ground plane and using arc tangent (note: the camera coordinate conventions of ARKit https://developer.apple.com/documentation/arkit/arsessionconfiguration/worldalignment/camera
-//                let intrinsics = frame.camera.intrinsics
-////                let visualYaw = VisualAlignment.visualYaw(alignLandmark.image!, alignLandmark.intrinsics!, self.pixelBufferToUIImage(pixelBuffer: frame.capturedImage)!, simd_float4(intrinsics[0, 0], intrinsics[1, 1], intrinsics[2, 0], intrinsics[2, 1]))
-////                let alignYaw = visualYaw
-//                let cameraYaw = Float(0)
-////                self.announce(announcement: "aligned with yaw " + String(visualYaw*180/3.1415))
-//                var leveledCameraPose = simd_float4x4.makeRotate(radians: cameraYaw, 0, 1, 0)
-//                leveledCameraPose.columns.3 = frame.camera.transform.columns.3
-//
-//                var leveledAlignPose =  simd_float4x4.makeRotate(radians: 0, 0, 1, 0)
-//                leveledAlignPose.columns.3 = alignTransform.columns.3
-//
-////                let relativeTransform = leveledCameraPose * leveledAlignPose.inverse
-//                let relativeTransform = simd_mul(frame.camera.transform.inverse, alignTransform)
-//                self.sceneView.session.setWorldOrigin(relativeTransform: relativeTransform)
-//
-//                Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(self.playSound)), userInfo: nil, repeats: false)
-//                self.isResumedRoute = true
-//                self.state = .readyToNavigateOrPause(allowPause: false)
-//            }
         }
     }
     

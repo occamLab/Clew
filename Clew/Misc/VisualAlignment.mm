@@ -7,11 +7,13 @@
 //
 
 #import "VisualAlignment.h"
+#import "VisualAlignmentUtils.hpp"
 #import <opencv2/opencv.hpp>
 #import <opencv2/imgcodecs/ios.h>
 #import <opencv2/features2d.hpp>
 #import <opencv2/core/eigen.hpp>
 #import <Eigen/Core>
+#import <Eigen/Geometry>
 #import <UIKit/UIKit.h>
 
 
@@ -23,81 +25,90 @@
  - returns: The yaw in radians between the pictures assuming portrait orientation.
  
  - parameters:
-    - base_image: The image the returned yaw is relative to.
-    - base_focal_length: The focal length of the camera used to take the base image.
-    - base_ppx: The x coordinate of the base image's principle point.
-    - base_ppy: The y coordinate of the base image's principle point.
-    - new_image: The image the returned yaw rotates to.
-    - new_focal_length: The focal length of the camera used to take the new image.
-    - new_ppx: The x coordinate of the new image's principle point.
-    - new_ppy: The y coordinate of the new image's principle point.
+    - image1: The image the returned yaw is relative to.
+    - intrinsics1: The camera intrinsics used to take image1 in the format [fx, fy, ppx, ppy].
+    - pose1: The pose of the camera in the arsession used to take the first image.
+    - image2: The image the returned yaw rotates to.
+    - intrinsics2: The camera intrinsics used to take image2 in the format [fx, fy, ppx, ppy].
+    - pose2: The pose of the camera in the arsession used to take the second image.
  */
-+ (float) visualYaw :(UIImage *)base_image :(simd_float4) base_intrinsics
-                    :(UIImage *)new_image :(simd_float4)new_intrinsics {
++ (VisualAlignmentReturn) visualYaw :(UIImage *)image1 :(simd_float4)intrinsics1 :(simd_float4x4)pose1
+                    :(UIImage *)image2 :(simd_float4)intrinsics2 :(simd_float4x4)pose2 {
     
-    // Convert the UIImages to cv::Mats
-    cv::Mat base_mat, new_mat;
-    UIImageToMat(base_image, base_mat);
-    UIImageToMat(new_image, new_mat);
-    cv::cvtColor(base_mat, base_mat, cv::COLOR_RGB2GRAY);
-    cv::cvtColor(new_mat, new_mat, cv::COLOR_RGB2GRAY);
+    // Convert the UIImages to cv::Mats and rotate them.
+    cv::Mat image_mat1, image_mat2;
+    UIImageToMat(image1, image_mat1);
+    UIImageToMat(image2, image_mat2);
+
+    cv::cvtColor(image_mat1, image_mat1, cv::COLOR_RGB2GRAY);
+    cv::rotate(image_mat1, image_mat1, cv::ROTATE_90_CLOCKWISE);
+    cv::cvtColor(image_mat2, image_mat2, cv::COLOR_RGB2GRAY);
+    cv::rotate(image_mat2, image_mat2, cv::ROTATE_90_CLOCKWISE);
     
-    // Get feature matches
-    const float ratio = 0.6;
-    auto feature_descriptor = cv::AKAZE::create();
-    std::vector<cv::KeyPoint> base_keypoints, new_keypoints;
-    cv::Mat base_descriptors, new_descriptors;
+    Eigen::Matrix3f intrinsics1_matrix_unrotated = intrinsicsToMatrix(intrinsics1);
+    Eigen::Matrix3f intrinsics2_matrix_unrotated = intrinsicsToMatrix(intrinsics2);
     
-    feature_descriptor->detectAndCompute(base_mat, cv::Mat(), base_keypoints, base_descriptors);
-    feature_descriptor->detectAndCompute(new_mat, cv::Mat(), new_keypoints, new_descriptors);
+    // Since the image was rotated clockwise, we have to swap entries in the intrinsic matrices as well.
+    // I use matrix multiplication for this.
+    Eigen::Matrix3f swap_matrix;
+    swap_matrix << 0, 1, 0, 1, 0, 0, 0, 0, 1;
     
-    auto matcher = cv::BFMatcher();
-    std::vector<std::vector<cv::DMatch>> matches;
-    std::vector<cv::DMatch> good_matches;
+    Eigen::Matrix3f intrinsics1_matrix = swap_matrix * intrinsics1_matrix_unrotated * swap_matrix;
+    Eigen::Matrix3f intrinsics2_matrix = swap_matrix * intrinsics2_matrix_unrotated * swap_matrix;
     
-    matcher.knnMatch(base_descriptors, new_descriptors, matches, 2);
+    intrinsics1_matrix(0, 2) = image_mat1.cols - intrinsics1_matrix(0, 2);
+    intrinsics2_matrix(0, 2) = image_mat2.cols - intrinsics2_matrix(0, 2);
     
-    for (const auto& match : matches)
-        if (match[0].distance < ratio * match[1].distance)
-            good_matches.push_back(match[0]);
+    const Eigen::Matrix4f pose1_matrix = poseToMatrix(pose1);
+    const Eigen::Matrix4f pose2_matrix = poseToMatrix(pose2);
     
+    const Eigen::AngleAxisf square_rotation1 = squareImageRotation(pose1_matrix);
+    const Eigen::AngleAxisf square_rotation2 = squareImageRotation(pose2_matrix);
+    Eigen::Matrix3f test1 = (Eigen::Matrix3f) square_rotation1;
+    Eigen::Matrix3f test2 = (Eigen::Matrix3f) square_rotation2;
     
-    
-    cv::Mat match_img;
-    cv::drawMatches(base_mat, base_keypoints, new_mat, new_keypoints, good_matches, match_img);
-    
-    // The following image is for use with the debugger to visualize the found matches.
-    auto matchImage = MatToUIImage(match_img);
-    
-    // Order the matched points and turn them into vectors with z = 1
-    std::vector<cv::Point2f> base_key_vectors, new_key_vectors;
+    const auto square_image_mat1 = squareImageGlobalRotation(image_mat1, intrinsics1_matrix, pose1_matrix.block(0, 0, 3, 3), square_rotation1);
+    const auto square_image_mat2 = squareImageGlobalRotation(image_mat2, intrinsics2_matrix, pose2_matrix.block(0, 0, 3, 3), square_rotation2);
+
+    auto debug_square_image1 = MatToUIImage(square_image_mat1);
+    auto debug_square_image2 = MatToUIImage(square_image_mat2);
+//    auto debug_square_image1 = MatToUIImage(square_image_mat1);
+//    auto debug_square_image2 = MatToUIImage(square_image_mat2);
+
+    const auto keypoints_and_descriptors1 = getKeyPointsAndDescriptors(square_image_mat1);
+    const auto keypoints_and_descriptors2 = getKeyPointsAndDescriptors(square_image_mat2);
+
+    const auto matches = getMatches(keypoints_and_descriptors1.descriptors, keypoints_and_descriptors2.descriptors);
+
+    cv::Mat debug_match_image;
+    cv::drawMatches(square_image_mat1, keypoints_and_descriptors1.keypoints, square_image_mat2, keypoints_and_descriptors2.keypoints, matches, debug_match_image);
+    std::vector<cv::Point2f> vectors1, vectors2;
+
+
     cv::Point2f temp_vector;
-    for (const auto& match : good_matches) {
-        const auto base_keypoint = base_keypoints[match.queryIdx];
-        const auto new_keypoint = new_keypoints[match.trainIdx];
-        base_key_vectors.push_back(cv::Point2f((base_keypoint.pt.x - base_intrinsics.z) / base_intrinsics.x,
-                                               (base_keypoint.pt.y - base_intrinsics.w) / base_intrinsics.y));
-        new_key_vectors.push_back(cv::Point2f((new_keypoint.pt.x - new_intrinsics.z) / new_intrinsics.x,
-                                              (new_keypoint.pt.y - new_intrinsics.w) / new_intrinsics.y));
+    for (const auto& match : matches) {
+        const auto keypoint1 = keypoints_and_descriptors1.keypoints[match.queryIdx];
+        const auto keypoint2 = keypoints_and_descriptors2.keypoints[match.trainIdx];
+//        vectors1.push_back(cv::Point2f((keypoint1.pt.x - intrinsics1_matrix(0, 2)) / intrinsics1_matrix(0, 0),
+//                                               (keypoint1.pt.y - intrinsics1_matrix(1, 2)) / intrinsics1_matrix(1, 1)));
+//        vectors2.push_back(cv::Point2f((keypoint2.pt.x - intrinsics2_matrix(0, 2)) / intrinsics2_matrix(0, 0),
+//                                       (keypoint2.pt.y - intrinsics2_matrix(1, 2)) / intrinsics2_matrix(1, 1)));
+        vectors1.push_back(keypoint1.pt);
+        vectors2.push_back(keypoint2.pt);
     }
-    
-    const auto essential_mat = cv::findEssentialMat(base_key_vectors, new_key_vectors);
-    
-    cv::Mat dcm_mat, translation_mat;
-    cv::recoverPose(essential_mat, base_key_vectors, new_key_vectors, dcm_mat, translation_mat);
-    
-    // Get the relative yaw between the two images.
-    // Since the image is taken in portrait mode, yaw is actually a rotation around the x axis.
-    Eigen::Matrix3f dcm;
 
-    cv2eigen(dcm_mat, dcm);
-    // Usually dcm.eulerAngles(0, 1, 2) would get the euler angles.
-    // However, eulerAngles is not available for the architecture so rotating a unit vector is done instead.
-    const auto rotated = dcm * Eigen::Vector3f::UnitY();
-
-    const auto yaw = atan2(rotated(2), rotated(1));
-
-    return yaw;
+    const auto yaw = getYaw(vectors1, vectors2);
+    debug_square_image1 = MatToUIImage(square_image_mat1);
+    debug_square_image2 = MatToUIImage(square_image_mat2);
+    auto debug_match_image_ui = MatToUIImage(debug_match_image);
+//    const Eigen::Matrix3f intrintiscs1_eigen = intrinsicsToMatrix(intrinsics1);
+//    const auto matches = getMatches(image1, image2);
+//
+    VisualAlignmentReturn ret;
+    ret.yaw = yaw;
+    ret.square_rotation1 = rotationToSIMD((Eigen::Matrix3f) square_rotation1);
+    ret.square_rotation2 = rotationToSIMD((Eigen::Matrix3f) square_rotation2);
+    return ret;
 }
 
 @end

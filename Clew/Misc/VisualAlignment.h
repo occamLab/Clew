@@ -9,12 +9,17 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 #import <simd/SIMD.h>
-//#import <opencv2/opencv.hpp>
 
 NS_ASSUME_NONNULL_BEGIN
 
+typedef struct {
+    float yaw;
+    simd_float3x3 square_rotation1;
+    simd_float3x3 square_rotation2;
+} VisualAlignmentReturn;
+
 @interface VisualAlignment : NSObject
-+ (float) visualYaw :(UIImage *)base_image :(simd_float4)base_intrinsics :(UIImage *)new_image :(simd_float4)new_intrinsics;
++ (VisualAlignmentReturn) visualYaw :(UIImage *)image1 :(simd_float4)intrinsics1 :(simd_float4x4)pose1 :(UIImage *)image2 :(simd_float4)intrinsics2 :(simd_float4x4)pose2;
 @end
 
 NS_ASSUME_NONNULL_END
