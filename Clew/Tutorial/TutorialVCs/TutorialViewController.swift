@@ -59,13 +59,11 @@ class TutorialViewController: UIViewController, ClewDelegate {
             //        logger.logStateTransition(newState: state)
             switch state {
             case .explainOrientationTraining:
-                print("tutorial button pressed")
                 removeAllChildVCs()
                 add(phoneOrientationGIFChildVC)
             case .startOrientationTraining:
                 removeAllChildVCs()
                 add(phoneOrientationTrainingChildVC)
-                print("haptic starts")
             case .optimalOrientationAchieved:
                 state = .readyToRecordSingleRoute
             case .readyToRecordSingleRoute:

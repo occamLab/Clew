@@ -14,16 +14,12 @@ class PhoneOrientationGIFVC: TutorialChildViewController {
     var introView: UIView!
     var alignLabel: UILabel!
     var gotItButton: UIButton!
+    var skipButton: UIButton!
     
     var clewGreen = UIColor(red: 103/255, green: 188/255, blue: 71/255, alpha: 1.0)
     
     
     @IBOutlet weak var PhoneOrientationGIF: FLAnimatedImageView!
-    
-    /// Closes the viewcontroller
-    @IBAction func CloseTips(_ sender: UIButton) {
-       transitionToMainApp()
-    }
     
     func createIntroView() -> UIView {
         introView = UIView(frame:CGRect(x: 0,
@@ -55,9 +51,9 @@ class PhoneOrientationGIFVC: TutorialChildViewController {
         gotItButton.addTarget(self, action: #selector(gotItButtonAction), for: .touchUpInside)
         introView.addSubview(gotItButton)
         
-//        skipButton = SkipButton().createSkipButton(buttonAction:
-//            #selector(skipButtonAction))
-//        introView.addSubview(skipButton)
+        skipButton = SkipButton().createSkipButton(buttonAction:
+            #selector(skipButtonAction))
+        introView.addSubview(skipButton)
 //
 //        gifView.frame = CGRect(x: 0.0, y: 0.0, width: 100.0, height: 100.0)
 //        let imageData = try! Data(contentsOf: Bundle.main.url(forResource: "PhoneOrientation", withExtension: "gif")!)
@@ -86,7 +82,6 @@ class PhoneOrientationGIFVC: TutorialChildViewController {
             
             let appDelegate = UIApplication.shared.delegate as! AppDelegate
             (appDelegate.window?.rootViewController as? ViewController)?.tutorialViewController.state = .readyToRecordSingleRoute
-            //            self.tutorialParent?.state = .readyToRecordSingleRoute
         }
         ))
         alert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: { action -> Void in

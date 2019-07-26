@@ -601,8 +601,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         
         addGestures()
         setupFirebaseObservers()
-        delegate = tutorialViewController
-        announcementViewController.observer = tutorialViewController
         
         // we use a custom notification to communicate from the help controller to the main view controller that the help was dismissed
         NotificationCenter.default.addObserver(forName: Notification.Name("ClewPopoverDismissed"), object: nil, queue: nil) { (notification) -> Void in
@@ -613,6 +611,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         NotificationCenter.default.addObserver(forName: Notification.Name("ClewTutorialCompleted"), object: nil, queue: nil) { (notification) -> Void in
             self.tutorialViewController.remove()
             self.delegate = nil
+            self.announcementViewController.observer = nil
         }
 
         add(announcementViewController)
@@ -1814,6 +1813,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     @objc func tutorialButtonPressed() {
         add(tutorialViewController)
+        delegate = tutorialViewController
+        announcementViewController.observer = tutorialViewController
         tutorialViewController.state = .explainOrientationTraining
         print("what's tutorial state")
     }

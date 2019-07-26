@@ -32,20 +32,10 @@ class PhoneOrientationTrainingVC: TutorialChildViewController, SRCountdownTimerD
     
     var skipButton: UIButton!
     
-    // Label that describes the task in the phone orientation state
-    
     let gifView = FLAnimatedImageView()
-    var phoneOrientationLabel: UILabel!
-    var phoneOrientationGIF: FLAnimatedImage!
     
     // View for giving a darker tint on the screen
     var backgroundShadow: UIView! = TutorialShadowBackground()
-    
-    // Timer for tracking time since PhoneOrientationTrainingVC was first opened
-    var timeSinceOpen : Date?
-    
-    // Time to delay displaying the 'countdownTimer' to prevent the VoiceOver of the timer and the initial tracking session announcement from overlapping
-    var timeAfterTrackingSessionMessage : TimeInterval?
     
     // Used to control enabling/disabling haptic feedback
     var runHapticFeedback : Bool? = true
@@ -111,8 +101,6 @@ class PhoneOrientationTrainingVC: TutorialChildViewController, SRCountdownTimerD
     /// - Parameter animated: True if the appearance is animated
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
-        timeSinceOpen = Date()
     }
 
 
@@ -145,21 +133,19 @@ class PhoneOrientationTrainingVC: TutorialChildViewController, SRCountdownTimerD
         let now = Date()
         let timeInterval = now.timeIntervalSince(lastHapticFeedbackTime)
         
-        timeAfterTrackingSessionMessage = 3
-        
         // handles when the angle the user is holding the phone falls in between the desired optimal angle
-        if abs(timeSinceOpen!.timeIntervalSinceNow) > timeAfterTrackingSessionMessage! {
-            if abs(angleFromVertical) < 0.5 {
-                if countdown == nil {
-                    print("angle falls in range")
-                    countdownTimer.isHidden = false
-                    /// NOTE: to change the time that the user needs to hold the phone in the optimal angle for state transition to happen, change both the 'beginingValue' and 'timeInterval'
-                    countdownTimer.start(beginingValue: 3, interval: 1)
-                    countdown = Timer.scheduledTimer(timeInterval: 3.0, target: self, selector: #selector(timerCalled), userInfo: nil, repeats: false) }
-            } else {
+        if abs(angleFromVertical) < 0.5 {
+            print("heeeeee")
+            if countdown == nil {
+                print("angle falls in range")
+                countdownTimer.isHidden = false
+                /// NOTE: to change the time that the user needs to hold the phone in the optimal angle for state transition to happen, change both the 'beginingValue' and 'timeInterval'
+                countdownTimer.start(beginingValue: 3, interval: 1)
+                countdown = Timer.scheduledTimer(timeInterval: 3.0, target: self, selector: #selector(timerCalled), userInfo: nil, repeats: false) }
+        } else {
             countdownTimer.isHidden = true
             countdown?.invalidate()
-            countdown = nil }
+            countdown = nil
         }
         /// send haptic feedback in varying frequency depending on how accurate the angle the user is holding up their phone
         if runHapticFeedback! {
