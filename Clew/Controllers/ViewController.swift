@@ -1443,16 +1443,45 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 // yaw can be determined by projecting the camera's z-axis into the ground plane and using arc tangent (note: the camera coordinate conventions of ARKit https://developer.apple.com/documentation/arkit/arsessionconfiguration/worldalignment/camera
                 
                 DispatchQueue.global(qos: .background).async {
-//                    guard let data = alignLandmark.image!.pngData() else {
-//                        return
-//                    }
-//                    guard let directory = try? FileManager.default.url(for: .docu
+                    
+                    let formatter = DateFormatter()
+                    formatter.dateFormat = "yyyy-MM-dd-HH-mm-ss"
+                    let timeString = formatter.string(from: Date())
+                    print(timeString)
+                    guard let landmarkImagePNG = alignLandmark.image!.pngData(), let cameraImagePNG = self.pixelBufferToUIImage(pixelBuffer: frame.capturedImage)!.pngData() else {
+                        return
+                    }
+                    
+                    guard let directory = try? FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false) as NSURL else {
+                        return
+                    }
+                    let newdir = directory.appendingPathComponent(timeString)!
+                    do {
+    
+
+                        try FileManager.default.createDirectory(atPath: newdir.path, withIntermediateDirectories: true, attributes: nil)
+                        try landmarkImagePNG.write(to: newdir.appendingPathComponent("align-image.png"))
+                        try cameraImagePNG.write(to: newdir.appendingPathComponent("camera-image.png"))
+                        try alignTransform.toString().write(to: newdir.appendingPathComponent("align-pose.txt"), atomically: true, encoding: String.Encoding.utf8)
+                        try frame.camera.transform.toString().write(to: newdir.appendingPathComponent("camera-pose.txt"), atomically: true, encoding: String.Encoding.utf8)
+
+                        try alignLandmark.intrinsics!.toString().write(to: newdir.appendingPathComponent("align-intrinsics.txt"), atomically: true, encoding: String.Encoding.utf8)
+                        try frame.camera.intrinsics.toString().write(to: newdir.appendingPathComponent("camera-intrinsics.txt"), atomically: true, encoding: String.Encoding.utf8)
+                    } catch {
+                        return
+                    }
+                    
                     let alignYaw = self.getYawHelper(alignTransform)
                     let intrinsics = frame.camera.intrinsics
-                    let visualYawReturn = VisualAlignment.visualYaw(alignLandmark.image!, alignLandmark.intrinsics!, alignTransform,
+                    let visualYawReturn = VisualAlignment.visualYaw(newdir.path, alignLandmark.image!, alignLandmark.intrinsics!, alignTransform,
                                                               self.pixelBufferToUIImage(pixelBuffer: frame.capturedImage)!,
                                                               simd_float4(intrinsics[0, 0], intrinsics[1, 1], intrinsics[2, 0], intrinsics[2, 1]),
                                                               frame.camera.transform)
+                    do {
+                        try "\(visualYawReturn.yaw)".write(to: newdir.appendingPathComponent("yaw.txt"), atomically: true, encoding: String.Encoding.utf8)
+                    } catch {
+                        return
+                    }
                     
                     DispatchQueue.main.async {
 

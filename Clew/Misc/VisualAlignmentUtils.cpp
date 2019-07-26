@@ -11,8 +11,8 @@
 #include <Eigen/Geometry>
 #include <opencv2/opencv.hpp>
 #include <opencv2/core/eigen.hpp>
-//#include <opencv2/precomp.hpp>
 #include <simd/SIMD.h>
+#include <fstream>
 
 KeyPointsAndDescriptors getKeyPointsAndDescriptors(cv::Mat image) {
     // Acquire features and their descriptors, and match them.
@@ -25,6 +25,13 @@ KeyPointsAndDescriptors getKeyPointsAndDescriptors(cv::Mat image) {
     return {.keypoints = keypoints, .descriptors = descriptors};
 }
 
+cv::Point2f normalizePoint(Eigen::Matrix3f intrinsics, cv::Point2f point) {
+    Eigen::Vector3f vector;
+    vector << point.x, point.y, 1;
+    Eigen::Vector3f normalized_point = intrinsics.inverse() * vector;
+    return cv::Point2f(normalized_point(0), normalized_point(1));
+}
+
 std::vector<cv::DMatch> getMatches(cv::Mat descriptors1, cv::Mat descriptors2) {
     auto matcher = cv::BFMatcher();
     std::vector<std::vector<cv::DMatch>> matches;
@@ -33,7 +40,7 @@ std::vector<cv::DMatch> getMatches(cv::Mat descriptors1, cv::Mat descriptors2) {
     
     // Use Lowe's ratio test to select the good matches.
     for (const auto& match : matches)
-        if (match[0].distance < 0.65 * match[1].distance)
+        if (match[0].distance < 0.6 * match[1].distance)
             good_matches.push_back(match[0]);
     
     return good_matches;
@@ -82,15 +89,29 @@ Eigen::Matrix4f poseToMatrix(simd_float4x4 pose) {
     return matrix;
 }
 
-float getYaw(std::vector<cv::Point2f> vectors1, std::vector<cv::Point2f> vectors2) {
-    const auto essential_mat = cv::findEssentialMat(vectors1, vectors2, 1559.217, cv::Point2d(718.3415, 933.4793));
+float getYaw(std::string dir, std::vector<cv::Point2f> vectors1, std::vector<cv::Point2f> vectors2) {
+    const auto essential_mat = cv::findEssentialMat(vectors1, vectors2);
     cv::Mat dcm_mat, translation_mat;
-    int inliers = cv::recoverPose(essential_mat, vectors1, vectors2, dcm_mat, translation_mat, 1559.217, cv::Point2d(718.3415, 933.4793));
+    Eigen::Matrix3f essential_matrix;
+    cv2eigen(essential_mat, essential_matrix);
+    std::ofstream file(dir + "/matrices.txt");
+
+    int inliers = cv::recoverPose(essential_mat, vectors1, vectors2, dcm_mat, translation_mat);
     
     Eigen::Matrix3f dcm;
     cv2eigen(dcm_mat, dcm);
     const auto rotated = dcm * Eigen::Vector3f::UnitZ();
     const float yaw = atan2(rotated(0), rotated(2));
+    
+    if (file.is_open()) {
+        file << "Essential Matrix:" << std::endl;
+        file << essential_matrix << std::endl;
+        file << "Rotation Matrix:" << std::endl;
+        file << dcm << std::endl;
+        file << "Translation Matrix:" << std::endl;
+        file << "Inliers" << std::endl;
+        file << inliers << std::endl;
+    }
 
     return yaw;
 }

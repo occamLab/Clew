@@ -25,6 +25,8 @@
 		DD2F524322D7D9B800C49FAB /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD2F524222D7D9B800C49FAB /* CoreMedia.framework */; };
 		DD2F524522D7D9C000C49FAB /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD2F524422D7D9C000C49FAB /* AssetsLibrary.framework */; };
 		DD2F524722D7D9C700C49FAB /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD2F524622D7D9C700C49FAB /* CoreFoundation.framework */; };
+		DD2F954C22EA34C20017E649 /* Float4Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD2F954B22EA34C20017E649 /* Float4Extension.swift */; };
+		DD2F954E22EA37610017E649 /* Float3x3Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD2F954D22EA37610017E649 /* Float3x3Extension.swift */; };
 		DDDD3B0522D500620000CF7C /* HelpCompiler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2B9D7022C3B50D00317DC8 /* HelpCompiler.swift */; };
 		DDDD3B0922D501E20000CF7C /* VisualAlignment.mm in Sources */ = {isa = PBXBuildFile; fileRef = DDDD3B0822D501E20000CF7C /* VisualAlignment.mm */; };
 		DDDD3B0F22D507430000CF7C /* VisualAlignment.mm in Sources */ = {isa = PBXBuildFile; fileRef = DDDD3B0822D501E20000CF7C /* VisualAlignment.mm */; };
@@ -144,6 +146,8 @@
 		DD2F524222D7D9B800C49FAB /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		DD2F524422D7D9C000C49FAB /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 		DD2F524622D7D9C700C49FAB /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
+		DD2F954B22EA34C20017E649 /* Float4Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Float4Extension.swift; sourceTree = "<group>"; };
+		DD2F954D22EA37610017E649 /* Float3x3Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Float3x3Extension.swift; sourceTree = "<group>"; };
 		DDDD3B0722D501E20000CF7C /* VisualAlignment.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VisualAlignment.h; sourceTree = "<group>"; };
 		DDDD3B0822D501E20000CF7C /* VisualAlignment.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = VisualAlignment.mm; sourceTree = "<group>"; };
 		DDDD3B0B22D5023E0000CF7C /* PrefixHeader.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
@@ -344,9 +348,9 @@
 				DD272F6C22E234360072E447 /* VisualAlignmentUtils.cpp */,
 				DD272F6D22E234360072E447 /* VisualAlignmentUtils.hpp */,
 				E5470EB522C119F4001092A4 /* Utility.swift */,
+				1F2B9D7022C3B50D00317DC8 /* HelpCompiler.swift */,
 				DDDD3B0822D501E20000CF7C /* VisualAlignment.mm */,
 				DDDD3B0722D501E20000CF7C /* VisualAlignment.h */,
-				1F2B9D7022C3B50D00317DC8 /* HelpCompiler.swift */,
 				E5470EB622C119F4001092A4 /* AppDelegate.swift */,
 			);
 			path = Misc;
@@ -369,6 +373,8 @@
 				E5470ED822C119F4001092A4 /* UIViewExtensions.swift */,
 				E5470ED922C119F4001092A4 /* UIButtonExtensions.swift */,
 				E5470EDA22C119F4001092A4 /* Float4x4Extension.swift */,
+				DD2F954B22EA34C20017E649 /* Float4Extension.swift */,
+				DD2F954D22EA37610017E649 /* Float3x3Extension.swift */,
 				E538EF4E22D3BFEC004216E9 /* TransparentTouchView.swift */,
 			);
 			path = Extensions;
@@ -697,6 +703,7 @@
 				E5470F3A22C119F5001092A4 /* HelpViewController.swift in Sources */,
 				E5470F0222C119F5001092A4 /* Navigation.swift in Sources */,
 				E5470F3822C119F5001092A4 /* ResumeTrackingConfirmController.swift in Sources */,
+				DD2F954C22EA34C20017E649 /* Float4Extension.swift in Sources */,
 				E5470EFA22C119F5001092A4 /* RecorderViewController.swift in Sources */,
 				E5470F4622C119F5001092A4 /* RootContainerView.swift in Sources */,
 				E5470F4022C119F5001092A4 /* StateController.swift in Sources */,
@@ -711,6 +718,7 @@
 				E5470F2422C119F5001092A4 /* UIButtonExtensions.swift in Sources */,
 				E5470EF822C119F5001092A4 /* AudioVisualizerView.swift in Sources */,
 				DDDD3B0522D500620000CF7C /* HelpCompiler.swift in Sources */,
+				DD2F954E22EA37610017E649 /* Float3x3Extension.swift in Sources */,
 				E5470F1E22C119F5001092A4 /* NSStringExtension.swift in Sources */,
 				E5470F3222C119F5001092A4 /* ResumeTrackingController.swift in Sources */,
 			);

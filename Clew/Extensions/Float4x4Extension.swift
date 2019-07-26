@@ -57,6 +57,15 @@ extension float4x4 {
     func translate(x: Float, _ y: Float, _ z: Float) -> float4x4 {
         return self * float4x4.makeTranslation(x, y, z)
     }
+    
+    func toString() -> String {
+        return """
+        \(self[0, 0]),\(self[1, 0]),\(self[2, 0]),\(self[3, 0])
+        \(self[0, 1]),\(self[1, 1]),\(self[2, 1]),\(self[3, 1])
+        \(self[0, 2]),\(self[1, 2]),\(self[2, 2]),\(self[3, 2])
+        \(self[0, 3]),\(self[1, 3]),\(self[2, 3]),\(self[3, 3])
+        """
+    }
 
     /// The x translation specified by the transform
     var x: Float {

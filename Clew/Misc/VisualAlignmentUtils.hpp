@@ -26,7 +26,8 @@ Eigen::Matrix3f intrinsicsToMatrix(simd_float4 intrinsics);
 Eigen::AngleAxisf squareImageRotation(Eigen::Matrix4f pose);
 cv::Mat squareImageGlobalRotation(cv::Mat image, Eigen::Matrix3f intrinsics, Eigen::Matrix3f pose_rotation, Eigen::AngleAxisf rotation_in_global);
 Eigen::Matrix4f poseToMatrix(simd_float4x4 pose);
-float getYaw(std::vector<cv::Point2f> vectors1, std::vector<cv::Point2f> vectors2);
+float getYaw(std::string dir, std::vector<cv::Point2f> vectors1, std::vector<cv::Point2f> vectors2);
 simd_float3x3 rotationToSIMD(Eigen::Matrix3f matrix);
+cv::Point2f normalizePoint(Eigen::Matrix3f intrinsics, cv::Point2f point);
 
 #endif /* VisualAlignmentUtils_hpp */
