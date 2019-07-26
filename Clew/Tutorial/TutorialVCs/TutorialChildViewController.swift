@@ -116,4 +116,10 @@ class TutorialChildViewController: UIViewController, ClewDelegate {
     func allowAnnouncements() -> Bool {
         return true
     }
+    func allowFirstTimePopups() -> Bool {
+        return true
+    }
+    func allowPauseButtonPressed() -> Bool {
+        return true
+    }
 }

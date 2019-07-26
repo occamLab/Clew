@@ -135,15 +135,8 @@ class PhoneOrientationTrainingVC: TutorialChildViewController, SRCountdownTimerD
         gotItButton.addTarget(self, action: #selector(gotItButtonAction), for: .touchUpInside)
         introView.addSubview(gotItButton)
         
-        skipButton = UIButton(frame: CGRect(x: UIScreen.main.bounds.size.width*3/4 - UIScreen.main.bounds.size.width*1/5, y: UIScreen.main.bounds.size.width*1/14, width: UIScreen.main.bounds.size.width*2/5, height: UIScreen.main.bounds.size.height*1/10))
-        skipButton.setTitleColor(skipYellow, for: .normal)
-        skipButton.setTitle("SKIP", for: .normal)
-        skipButton.layer.masksToBounds = true
-        skipButton.layer.cornerRadius = 8.0
-        skipButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 30.0)
-        skipButton.isAccessibilityElement = true
-        skipButton.isUserInteractionEnabled = true
-        skipButton.addTarget(self, action: #selector(skipButtonAction), for: .touchUpInside)
+        skipButton = SkipButton().createSkipButton(buttonAction:
+            #selector(skipButtonAction))
         introView.addSubview(skipButton)
         
         gifView.frame = CGRect(x: 0.0, y: 0.0, width: 100.0, height: 100.0)
@@ -175,17 +168,7 @@ class PhoneOrientationTrainingVC: TutorialChildViewController, SRCountdownTimerD
         congratsLabel.accessibilityLabel = "Congratulations! You have successfully oriented your phone. Now you will be recording a simple single route."
         congratsView.addSubview(congratsLabel)
 
-        nextButton = UIButton(frame: CGRect(x: UIScreen.main.bounds.size.width/2 - UIScreen.main.bounds.size.width*1/5, y: UIScreen.main.bounds.size.width*3/10 + UIScreen.main.bounds.size.height*1/10 + 100, width: UIScreen.main.bounds.size.width*2/5, height: UIScreen.main.bounds.size.height*1/10))
-        nextButton.backgroundColor = clewGreen
-        nextButton.setTitleColor(.white, for: .normal)
-        nextButton.setTitle("Next", for: .normal)
-        nextButton.layer.masksToBounds = true
-        nextButton.layer.cornerRadius = 10.0
-        nextButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 30.0)
-        nextButton.isAccessibilityElement = true
-        nextButton.isUserInteractionEnabled = true
-        nextButton.addTarget(self, action: #selector(nextButtonAction), for: .touchUpInside)
-        nextButton.layer.borderWidth = 3.0
+        nextButton = NextButton().createNextButton(buttonAction: #selector(nextButtonAction))
         congratsView.addSubview(nextButton)
         
         return congratsView
