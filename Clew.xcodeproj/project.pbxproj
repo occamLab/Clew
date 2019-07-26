@@ -37,8 +37,8 @@
 		AD8CE98822E24CE2007399D1 /* ClewDelegateProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD8CE98622E24CE2007399D1 /* ClewDelegateProtocol.swift */; };
 		AD8CE98A22E25275007399D1 /* DefaultDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD8CE98922E25275007399D1 /* DefaultDelegate.swift */; };
 		AD8CE98B22E25275007399D1 /* DefaultDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD8CE98922E25275007399D1 /* DefaultDelegate.swift */; };
-		AD8EBB9922D7CB0700B76BA0 /* PhoneOrientationStoryboardVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD8EBB9822D7CB0700B76BA0 /* PhoneOrientationStoryboardVC.swift */; };
-		AD8EBB9A22D7CB0700B76BA0 /* PhoneOrientationStoryboardVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD8EBB9822D7CB0700B76BA0 /* PhoneOrientationStoryboardVC.swift */; };
+		AD8EBB9922D7CB0700B76BA0 /* PhoneOrientationGIFVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD8EBB9822D7CB0700B76BA0 /* PhoneOrientationGIFVC.swift */; };
+		AD8EBB9A22D7CB0700B76BA0 /* PhoneOrientationGIFVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD8EBB9822D7CB0700B76BA0 /* PhoneOrientationGIFVC.swift */; };
 		ADE90D4A22CCE48C001CD52C /* Tutorial.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = ADE90D4722CCE48C001CD52C /* Tutorial.storyboard */; };
 		B0A563F6FE1007A2716DC876 /* Pods_Clew_Dev.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3532E390954571B93729786A /* Pods_Clew_Dev.framework */; };
 		B7EB59E220F693EB00FBBC6A /* Confirm.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4DF05CC71F34EB56008B0E31 /* Confirm.mp3 */; };
@@ -162,7 +162,7 @@
 		AD13576822CCEDA800EE36E2 /* Storyboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Storyboard.storyboard; path = Clew/Storyboard.storyboard; sourceTree = SOURCE_ROOT; };
 		AD8CE98622E24CE2007399D1 /* ClewDelegateProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClewDelegateProtocol.swift; sourceTree = "<group>"; };
 		AD8CE98922E25275007399D1 /* DefaultDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultDelegate.swift; sourceTree = "<group>"; };
-		AD8EBB9822D7CB0700B76BA0 /* PhoneOrientationStoryboardVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneOrientationStoryboardVC.swift; sourceTree = "<group>"; };
+		AD8EBB9822D7CB0700B76BA0 /* PhoneOrientationGIFVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneOrientationGIFVC.swift; sourceTree = "<group>"; };
 		ADE90D4722CCE48C001CD52C /* Tutorial.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Tutorial.storyboard; path = Clew/Tutorial.storyboard; sourceTree = SOURCE_ROOT; };
 		B7EB59EC20F693EB00FBBC6A /* Clew Dev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Clew Dev.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C68778047D8E263D2FB04989 /* Pods-Clew Dev.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew Dev.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Clew Dev/Pods-Clew Dev.debug.xcconfig"; sourceTree = "<group>"; };
@@ -302,7 +302,7 @@
 				7793DE1A22CBD1D5003A0BF7 /* TutorialChildViewController.swift */,
 				7793DE1D22CBE7B8003A0BF7 /* TipsAndWarningsViewController.swift */,
 				77A30FE722C66C3A008EEAAB /* PhoneOrientationTrainingVC.swift */,
-				AD8EBB9822D7CB0700B76BA0 /* PhoneOrientationStoryboardVC.swift */,
+				AD8EBB9822D7CB0700B76BA0 /* PhoneOrientationGIFVC.swift */,
 				E5F4C31C22C4035200E0D94E /* SingleRouteVC.swift */,
 			);
 			path = TutorialVCs;
@@ -770,7 +770,7 @@
 				E5F4C37222C4035200E0D94E /* UIViewExtensions.swift in Sources */,
 				E5F4C37422C4035200E0D94E /* UIButtonExtensions.swift in Sources */,
 				AD8CE98A22E25275007399D1 /* DefaultDelegate.swift in Sources */,
-				AD8EBB9922D7CB0700B76BA0 /* PhoneOrientationStoryboardVC.swift in Sources */,
+				AD8EBB9922D7CB0700B76BA0 /* PhoneOrientationGIFVC.swift in Sources */,
 				E5F4C39022C4035200E0D94E /* FeedbackViewController.swift in Sources */,
 				E5F4C37C22C4035200E0D94E /* ViewController.swift in Sources */,
 				E5F4C34C22C4035200E0D94E /* PathLogger.swift in Sources */,
@@ -810,7 +810,7 @@
 				E5F4C38122C4035200E0D94E /* StartNavigationController.swift in Sources */,
 				E5F4C36D22C4035200E0D94E /* SingleRouteVC.swift in Sources */,
 				E5F4C38522C4035200E0D94E /* RouteRatingController.swift in Sources */,
-				AD8EBB9A22D7CB0700B76BA0 /* PhoneOrientationStoryboardVC.swift in Sources */,
+				AD8EBB9A22D7CB0700B76BA0 /* PhoneOrientationGIFVC.swift in Sources */,
 				E5F4C38F22C4035200E0D94E /* HelpViewController.swift in Sources */,
 				AD8CE98B22E25275007399D1 /* DefaultDelegate.swift in Sources */,
 				E5F4C38322C4035200E0D94E /* StopRecordingController.swift in Sources */,

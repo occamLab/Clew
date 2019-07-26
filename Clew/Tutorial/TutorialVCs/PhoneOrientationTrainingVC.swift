@@ -23,16 +23,12 @@ class PhoneOrientationTrainingVC: TutorialChildViewController, SRCountdownTimerD
 
     // View that contains 'congratsLabel' and 'nextButton'
     var congratsView: UIView!
-    var introView: UIView!
 
     // Label that congratulates user for completing phone orientation training and provides details on the next part of the tutorial
     var congratsLabel: UILabel!
-    var alignLabel: UILabel!
 
     // Button for moving to the next state of the tutorial
     var nextButton: UIButton!
-    
-    var gotItButton: UIButton!
     
     var skipButton: UIButton!
     
@@ -69,31 +65,7 @@ class PhoneOrientationTrainingVC: TutorialChildViewController, SRCountdownTimerD
     @objc func nextButtonAction(sender: UIButton!) {
         tutorialParent?.state = .readyToRecordSingleRoute
     }
-    
-    // Callback function for when the 'skip' button is tapped
-    @objc func skipButtonAction(sender: UIButton!) {
-        skipNavigationProcesses()
-//        tutorialParent?.state = .readyToRecordSingleRoute
-    }
-    
-    @objc func gotItButtonAction(sender: UIButton!) {
-        introView.removeFromSuperview()
-        countdownTimer = SRCountdownTimer(frame: CGRect(x: UIConstants.buttonFrameWidth*1/10,
-                                                        y: UIConstants.yOriginOfButtonFrame/10,
-                                                        width: UIConstants.buttonFrameWidth*8/10,
-                                                        height: UIConstants.buttonFrameWidth*8/10))
-        countdownTimer.labelFont = UIFont(name: "HelveticaNeue-Light", size: 100)
-        countdownTimer.labelTextColor = UIColor.white
-        countdownTimer.timerFinishingText = "End"
-        countdownTimer.lineWidth = 10
-        countdownTimer.lineColor = UIColor.white
-        countdownTimer.backgroundColor = UIColor.black.withAlphaComponent(0.4)
-        countdownTimer.isHidden = true
-        countdownTimer.delegate = self
-        countdownTimer.accessibilityElementsHidden = true
-        self.view.addSubview(backgroundShadow)
-        self.view.addSubview(countdownTimer)
-    }
+
     
     /// Callback function for when 'countdown' = 0. This stops haptic feedback and triggers a popup to be shown that congratulates the user for completing phone orientation training.
     @objc func timerCalled() {
@@ -105,46 +77,6 @@ class PhoneOrientationTrainingVC: TutorialChildViewController, SRCountdownTimerD
         UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: congratsLabel)
     }
 
-    func createIntroView() -> UIView {
-        introView = UIView(frame:CGRect(x: 0,
-                                           y: 0,
-                                           width: UIScreen.main.bounds.size.width,
-                                           height: UIScreen.main.bounds.size.height))
-        introView.backgroundColor = clewGreen
-        alignLabel = UILabel(frame: CGRect(x: UIScreen.main.bounds.size.width/2 - UIScreen.main.bounds.size.width*2/5, y: UIScreen.main.bounds.size.height/8, width: UIScreen.main.bounds.size.width*4/5, height: 200))
-        alignLabel.text = "ALIGN YOUR PHONE!"
-        alignLabel.textColor = UIColor.white
-        alignLabel.textAlignment = .center
-        alignLabel.numberOfLines = 0
-        alignLabel.lineBreakMode = .byWordWrapping
-        alignLabel.layer.masksToBounds = true
-        alignLabel.font = UIFont.systemFont(ofSize: 35.0)
-        alignLabel.isAccessibilityElement = true
-        alignLabel.accessibilityLabel = "Congratulations! You have successfully oriented your phone. Now you will be recording a simple single route."
-        introView.addSubview(alignLabel)
-        
-        gotItButton = UIButton(frame: CGRect(x: UIConstants.buttonFrameWidth/(7/3),
-                                            y: UIConstants.yOriginOfSettingsAndHelpButton + 10,
-                                            width: UIConstants.buttonFrameWidth/5,
-                                            height: UIConstants.buttonFrameWidth/7))
-        gotItButton.isAccessibilityElement = true
-        gotItButton.setTitle("Got it", for: .normal)
-        gotItButton.titleLabel?.font = UIFont.systemFont(ofSize: 24.0)
-        gotItButton.accessibilityLabel = "Got It"
-        gotItButton.setImage(UIImage(named: "buttonBackground2"), for: .normal)
-        gotItButton.addTarget(self, action: #selector(gotItButtonAction), for: .touchUpInside)
-        introView.addSubview(gotItButton)
-        
-        skipButton = SkipButton().createSkipButton(buttonAction:
-            #selector(skipButtonAction))
-        introView.addSubview(skipButton)
-        
-        gifView.frame = CGRect(x: 0.0, y: 0.0, width: 100.0, height: 100.0)
-        let imageData = try! Data(contentsOf: Bundle.main.url(forResource: "PhoneOrientation", withExtension: "gif")!)
-        phoneOrientationGIF = FLAnimatedImage(animatedGIFData: imageData)
-        
-        return introView
-    }
     
     /// Initializes a view and the button in that view. The view will be shown after the user completes phone orientation training
     func createCongratsView() -> UIView {
@@ -174,36 +106,6 @@ class PhoneOrientationTrainingVC: TutorialChildViewController, SRCountdownTimerD
         return congratsView
     }
     
-    func transitionToMainApp() {
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        appDelegate.window?.rootViewController?.dismiss(animated: false)
-        appDelegate.window = UIWindow(frame:UIScreen.main.bounds)
-        appDelegate.window?.makeKeyAndVisible()
-        appDelegate.window?.rootViewController = ViewController()
-    }
-    
-    /// function that creates alerts for the home button
-    func skipNavigationProcesses() {
-        // Create alert to warn users of lost information
-        let alert = UIAlertController(title: "Are you sure?",
-                                      message: "If you exit this process right now, you won't be orienting your phone.",
-                                      preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "Skip this part of the tutorial.", style: .default, handler: { action -> Void in
-            // proceed to home page
-            self.transitionToMainApp()
-            
-            let appDelegate = UIApplication.shared.delegate as! AppDelegate
-            (appDelegate.window?.rootViewController as? ViewController)?.tutorialViewController.state = .readyToRecordSingleRoute
-//            self.tutorialParent?.state = .readyToRecordSingleRoute
-        }
-        ))
-        alert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: { action -> Void in
-            // nothing to do, just stay on the page
-        }
-        ))
-        self.present(alert, animated: true, completion: nil)
-    }
-    
     
     /// Called when the view appears on screen. Initializes and starts 'timeSinceOpen'.
     /// - Parameter animated: True if the appearance is animated
@@ -211,31 +113,26 @@ class PhoneOrientationTrainingVC: TutorialChildViewController, SRCountdownTimerD
         super.viewDidAppear(animated)
         
         timeSinceOpen = Date()
-
-
     }
 
 
     /// Called when the view has loaded. Make new countdownTimer that will only be used in PhoneorientationTrainingVC
     override func viewDidLoad() {
-        introView = createIntroView()
-        self.view.addSubview(introView)
-        
-//        countdownTimer = SRCountdownTimer(frame: CGRect(x: UIConstants.buttonFrameWidth*1/10,
-//                                                        y: UIConstants.yOriginOfButtonFrame/10,
-//                                                        width: UIConstants.buttonFrameWidth*8/10,
-//                                                        height: UIConstants.buttonFrameWidth*8/10))
-//        countdownTimer.labelFont = UIFont(name: "HelveticaNeue-Light", size: 100)
-//        countdownTimer.labelTextColor = UIColor.white
-//        countdownTimer.timerFinishingText = "End"
-//        countdownTimer.lineWidth = 10
-//        countdownTimer.lineColor = UIColor.white
-//        countdownTimer.backgroundColor = UIColor.black.withAlphaComponent(0.4)
-//        countdownTimer.isHidden = true
-//        countdownTimer.delegate = self
-//        countdownTimer.accessibilityElementsHidden = true
-//        view.addSubview(backgroundShadow)
-//        view.addSubview(countdownTimer)
+        countdownTimer = SRCountdownTimer(frame: CGRect(x: UIConstants.buttonFrameWidth*1/10,
+                                                        y: UIConstants.yOriginOfButtonFrame/10,
+                                                        width: UIConstants.buttonFrameWidth*8/10,
+                                                        height: UIConstants.buttonFrameWidth*8/10))
+        countdownTimer.labelFont = UIFont(name: "HelveticaNeue-Light", size: 100)
+        countdownTimer.labelTextColor = UIColor.white
+        countdownTimer.timerFinishingText = "End"
+        countdownTimer.lineWidth = 10
+        countdownTimer.lineColor = UIColor.white
+        countdownTimer.backgroundColor = UIColor.black.withAlphaComponent(0.4)
+        countdownTimer.isHidden = true
+        countdownTimer.delegate = self
+        countdownTimer.accessibilityElementsHidden = true
+        self.view.addSubview(backgroundShadow)
+        self.view.addSubview(countdownTimer)
     }
 
     /// Send haptic feedback with different frequencies depending on the angle of the phone. Handle transition to the next state when the angle of the phone falls in the range of optimal angle. As the user orients the phone closer to the desired range of the angle, haptic feedback becomes faster. When optimal angle is achieved for a desired amount of time, state transition takes place.

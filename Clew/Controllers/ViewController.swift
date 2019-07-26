@@ -1814,7 +1814,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     @objc func tutorialButtonPressed() {
         add(tutorialViewController)
-        tutorialViewController.state = .startOrientationTraining
+        tutorialViewController.state = .explainOrientationTraining
+        print("what's tutorial state")
     }
     
     /// Set the direction text based on the current location and direction info.

@@ -23,9 +23,11 @@ class TutorialViewController: UIViewController, ClewDelegate {
     let singleRouteChildVC = SingleRouteVC()
     let phoneOrientationTrainingChildVC  = PhoneOrientationTrainingVC()
     let tipsAndWarningsChildVC = TipsAndWarningsViewController()
+    let phoneOrientationGIFChildVC = PhoneOrientationGIFVC()
     
     /// A custom enumeration type that describes the exact state of the tutorial.
     enum TutorialState {
+        case explainOrientationTraining
         case startOrientationTraining
         case optimalOrientationAchieved
         /// This is the screen that comes up immediately after the phone orientation training
@@ -56,9 +58,14 @@ class TutorialViewController: UIViewController, ClewDelegate {
         didSet {
             //        logger.logStateTransition(newState: state)
             switch state {
+            case .explainOrientationTraining:
+                print("tutorial button pressed")
+                removeAllChildVCs()
+                add(phoneOrientationGIFChildVC)
             case .startOrientationTraining:
                 removeAllChildVCs()
                 add(phoneOrientationTrainingChildVC)
+                print("haptic starts")
             case .optimalOrientationAchieved:
                 state = .readyToRecordSingleRoute
             case .readyToRecordSingleRoute:

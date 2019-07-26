@@ -24,7 +24,7 @@ class SkipButton: UIButton {
         skipButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 30.0)
         skipButton.isAccessibilityElement = true
         skipButton.isUserInteractionEnabled = true
-        skipButton.addTarget(self, action: #selector(skipButtonAction), for: .touchUpInside)
+        skipButton.addTarget(self, action: buttonAction, for: .touchUpInside)
         return skipButton
     }
 }
