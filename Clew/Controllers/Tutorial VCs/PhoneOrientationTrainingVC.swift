@@ -38,8 +38,9 @@ class PhoneOrientationTrainingVC: TutorialChildViewController, SRCountdownTimerD
     
     // Label that describes the task in the phone orientation state
     
+    let gifView = FLAnimatedImageView()
     var phoneOrientationLabel: UILabel!
-    var phoneOrientationGIF: FLAnimatedImageView!
+    var phoneOrientationGIF: FLAnimatedImage!
     
     // View for giving a darker tint on the screen
     var backgroundShadow: UIView! = TutorialShadowBackground()
@@ -75,6 +76,25 @@ class PhoneOrientationTrainingVC: TutorialChildViewController, SRCountdownTimerD
 //        tutorialParent?.state = .readyToRecordSingleRoute
     }
     
+    @objc func gotItButtonAction(sender: UIButton!) {
+        introView.removeFromSuperview()
+        countdownTimer = SRCountdownTimer(frame: CGRect(x: UIConstants.buttonFrameWidth*1/10,
+                                                        y: UIConstants.yOriginOfButtonFrame/10,
+                                                        width: UIConstants.buttonFrameWidth*8/10,
+                                                        height: UIConstants.buttonFrameWidth*8/10))
+        countdownTimer.labelFont = UIFont(name: "HelveticaNeue-Light", size: 100)
+        countdownTimer.labelTextColor = UIColor.white
+        countdownTimer.timerFinishingText = "End"
+        countdownTimer.lineWidth = 10
+        countdownTimer.lineColor = UIColor.white
+        countdownTimer.backgroundColor = UIColor.black.withAlphaComponent(0.4)
+        countdownTimer.isHidden = true
+        countdownTimer.delegate = self
+        countdownTimer.accessibilityElementsHidden = true
+        self.view.addSubview(backgroundShadow)
+        self.view.addSubview(countdownTimer)
+    }
+    
     /// Callback function for when 'countdown' = 0. This stops haptic feedback and triggers a popup to be shown that congratulates the user for completing phone orientation training.
     @objc func timerCalled() {
         runHapticFeedback = false
@@ -94,14 +114,11 @@ class PhoneOrientationTrainingVC: TutorialChildViewController, SRCountdownTimerD
         alignLabel = UILabel(frame: CGRect(x: UIScreen.main.bounds.size.width/2 - UIScreen.main.bounds.size.width*2/5, y: UIScreen.main.bounds.size.height/8, width: UIScreen.main.bounds.size.width*4/5, height: 200))
         alignLabel.text = "ALIGN YOUR PHONE!"
         alignLabel.textColor = UIColor.white
-//        alignLabel.backgroundColor = UIColor.white
         alignLabel.textAlignment = .center
         alignLabel.numberOfLines = 0
         alignLabel.lineBreakMode = .byWordWrapping
         alignLabel.layer.masksToBounds = true
-//        alignLabel.layer.cornerRadius = 8.0
         alignLabel.font = UIFont.systemFont(ofSize: 35.0)
-//        alignLabel.layer.borderWidth = 3.0
         alignLabel.isAccessibilityElement = true
         alignLabel.accessibilityLabel = "Congratulations! You have successfully oriented your phone. Now you will be recording a simple single route."
         introView.addSubview(alignLabel)
@@ -111,10 +128,11 @@ class PhoneOrientationTrainingVC: TutorialChildViewController, SRCountdownTimerD
                                             width: UIConstants.buttonFrameWidth/5,
                                             height: UIConstants.buttonFrameWidth/7))
         gotItButton.isAccessibilityElement = true
-//        gotItButton.setTitle("Got it", for: .normal)
+        gotItButton.setTitle("Got it", for: .normal)
         gotItButton.titleLabel?.font = UIFont.systemFont(ofSize: 24.0)
         gotItButton.accessibilityLabel = "Got It"
         gotItButton.setImage(UIImage(named: "buttonBackground2"), for: .normal)
+        gotItButton.addTarget(self, action: #selector(gotItButtonAction), for: .touchUpInside)
         introView.addSubview(gotItButton)
         
         skipButton = UIButton(frame: CGRect(x: UIScreen.main.bounds.size.width*3/4 - UIScreen.main.bounds.size.width*1/5, y: UIScreen.main.bounds.size.width*1/14, width: UIScreen.main.bounds.size.width*2/5, height: UIScreen.main.bounds.size.height*1/10))
@@ -128,8 +146,9 @@ class PhoneOrientationTrainingVC: TutorialChildViewController, SRCountdownTimerD
         skipButton.addTarget(self, action: #selector(skipButtonAction), for: .touchUpInside)
         introView.addSubview(skipButton)
         
-//        let imageData = try! Data(contentsOf: Bundle.main.url(forResource: "PhoneOrientation", withExtension: "gif")!)
-//        phoneOrientationGIF.animatedImage = FLAnimatedImage(animatedGIFData: imageData)
+        gifView.frame = CGRect(x: 0.0, y: 0.0, width: 100.0, height: 100.0)
+        let imageData = try! Data(contentsOf: Bundle.main.url(forResource: "PhoneOrientation", withExtension: "gif")!)
+        phoneOrientationGIF = FLAnimatedImage(animatedGIFData: imageData)
         
         return introView
     }
@@ -219,21 +238,21 @@ class PhoneOrientationTrainingVC: TutorialChildViewController, SRCountdownTimerD
         introView = createIntroView()
         self.view.addSubview(introView)
         
-        countdownTimer = SRCountdownTimer(frame: CGRect(x: UIConstants.buttonFrameWidth*1/10,
-                                                        y: UIConstants.yOriginOfButtonFrame/10,
-                                                        width: UIConstants.buttonFrameWidth*8/10,
-                                                        height: UIConstants.buttonFrameWidth*8/10))
-        countdownTimer.labelFont = UIFont(name: "HelveticaNeue-Light", size: 100)
-        countdownTimer.labelTextColor = UIColor.white
-        countdownTimer.timerFinishingText = "End"
-        countdownTimer.lineWidth = 10
-        countdownTimer.lineColor = UIColor.white
-        countdownTimer.backgroundColor = UIColor.black.withAlphaComponent(0.4)
-        countdownTimer.isHidden = true
-        countdownTimer.delegate = self
-        countdownTimer.accessibilityElementsHidden = true
-        view.addSubview(backgroundShadow)
-        view.addSubview(countdownTimer)
+//        countdownTimer = SRCountdownTimer(frame: CGRect(x: UIConstants.buttonFrameWidth*1/10,
+//                                                        y: UIConstants.yOriginOfButtonFrame/10,
+//                                                        width: UIConstants.buttonFrameWidth*8/10,
+//                                                        height: UIConstants.buttonFrameWidth*8/10))
+//        countdownTimer.labelFont = UIFont(name: "HelveticaNeue-Light", size: 100)
+//        countdownTimer.labelTextColor = UIColor.white
+//        countdownTimer.timerFinishingText = "End"
+//        countdownTimer.lineWidth = 10
+//        countdownTimer.lineColor = UIColor.white
+//        countdownTimer.backgroundColor = UIColor.black.withAlphaComponent(0.4)
+//        countdownTimer.isHidden = true
+//        countdownTimer.delegate = self
+//        countdownTimer.accessibilityElementsHidden = true
+//        view.addSubview(backgroundShadow)
+//        view.addSubview(countdownTimer)
     }
 
     /// Send haptic feedback with different frequencies depending on the angle of the phone. Handle transition to the next state when the angle of the phone falls in the range of optimal angle. As the user orients the phone closer to the desired range of the angle, haptic feedback becomes faster. When optimal angle is achieved for a desired amount of time, state transition takes place.

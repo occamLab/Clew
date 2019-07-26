@@ -79,6 +79,7 @@ class SingleRouteVC: TutorialChildViewController {
     
     /////
     func createSkipButton() -> UIButton {
+        print("skip created")
         skipButton = UIButton(frame: CGRect(x: UIScreen.main.bounds.size.width*1/2 - UIScreen.main.bounds.size.width*1/5, y: UIScreen.main.bounds.size.width*1/14, width: UIScreen.main.bounds.size.width*2/5, height: UIScreen.main.bounds.size.height*1/10))
         skipButton.backgroundColor = .white
         skipButton.setTitleColor(skipYellow, for: .normal)
@@ -89,6 +90,7 @@ class SingleRouteVC: TutorialChildViewController {
         skipButton.isAccessibilityElement = true
         skipButton.isUserInteractionEnabled = true
         skipButton.addTarget(self, action: #selector(skipButtonAction), for: .touchUpInside)
+        skipButton.isHidden = false
         return skipButton
     }
     
