@@ -207,7 +207,7 @@ class SingleRouteVC: TutorialChildViewController {
                     self.tutorialParent?.parent?.view.bringSubviewToFront(self.tutorialParent!.view)
                 }
                 tutorialParent?.state = .displayCongratsView
-            }
+            } 
         }
         
     }

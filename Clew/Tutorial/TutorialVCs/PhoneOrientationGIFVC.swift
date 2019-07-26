@@ -14,6 +14,7 @@ class PhoneOrientationGIFVC: TutorialChildViewController {
     var introView: UIView!
     var alignLabel: UILabel!
     var gotItButton: UIButton!
+    var skipButton: UIButton!
     
     var clewGreen = UIColor(red: 103/255, green: 188/255, blue: 71/255, alpha: 1.0)
     
@@ -55,9 +56,9 @@ class PhoneOrientationGIFVC: TutorialChildViewController {
         gotItButton.addTarget(self, action: #selector(gotItButtonAction), for: .touchUpInside)
         introView.addSubview(gotItButton)
         
-//        skipButton = SkipButton().createSkipButton(buttonAction:
-//            #selector(skipButtonAction))
-//        introView.addSubview(skipButton)
+        skipButton = SkipButton().createSkipButton(buttonAction:
+            #selector(skipButtonAction))
+        introView.addSubview(skipButton)
 //
 //        gifView.frame = CGRect(x: 0.0, y: 0.0, width: 100.0, height: 100.0)
 //        let imageData = try! Data(contentsOf: Bundle.main.url(forResource: "PhoneOrientation", withExtension: "gif")!)
@@ -81,12 +82,9 @@ class PhoneOrientationGIFVC: TutorialChildViewController {
                                       message: "If you exit this process right now, you won't be orienting your phone.",
                                       preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Skip this part of the tutorial.", style: .default, handler: { action -> Void in
-            // proceed to home page
-            self.transitionToMainApp()
-            
+            // proceed to readyToRecordSingleRoute state
             let appDelegate = UIApplication.shared.delegate as! AppDelegate
             (appDelegate.window?.rootViewController as? ViewController)?.tutorialViewController.state = .readyToRecordSingleRoute
-            //            self.tutorialParent?.state = .readyToRecordSingleRoute
         }
         ))
         alert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: { action -> Void in
@@ -106,7 +104,6 @@ class PhoneOrientationGIFVC: TutorialChildViewController {
     // Callback function for when the 'skip' button is tapped
     @objc func skipButtonAction(sender: UIButton!) {
         skipNavigationProcesses()
-        //        tutorialParent?.state = .readyToRecordSingleRoute
     }
     
     @objc func gotItButtonAction(sender: UIButton!) {
