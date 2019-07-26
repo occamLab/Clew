@@ -310,6 +310,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// Handler for the startingPauseProcedure app state
     func handleStateTransitionToStartingPauseProcedure() {
+        guard delegateProxy.allowPauseButtonPressed() else {
+            AnnouncementManager.shared.announce(announcement: "This is disallowed in tutorial mode")
+            return
+        }
         // clear out these variables in case they had already been created
         if creatingRouteLandmark {
             beginRouteLandmark = RouteLandmark()
@@ -714,7 +718,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     func showNavigatePathWithoutLandmarkWarning() {
         let userDefaults: UserDefaults = UserDefaults.standard
         let showedNavigatePathWithoutLandmarkWarning: Bool? = userDefaults.object(forKey: "showedNavigatePathWithoutLandmarkWarning") as? Bool
-        if showedNavigatePathWithoutLandmarkWarning == nil && endRouteLandmark.transform == nil && !isResumedRoute {
+        if showedNavigatePathWithoutLandmarkWarning == nil && endRouteLandmark.transform == nil && !isResumedRoute && delegateProxy.allowFirstTimePopups() {
             userDefaults.set(true, forKey: "showedNavigatePathWithoutLandmarkWarning")
             // Show logging disclaimer when user opens app for the first time
             let alert = UIAlertController(title: NSLocalizedString("Creating reusable routes", comment: "Header of a pop-up message"),

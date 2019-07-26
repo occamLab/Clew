@@ -42,6 +42,14 @@ class DefaultDelegate : ClewDelegate {
         return true
     }
     
+    func allowFirstTimePopups() -> Bool {
+        return true
+    }
+    
+    func allowPauseButtonPressed() -> Bool {
+        return true
+    }
+    
     func finishAnnouncement(announcement: String) { }
     
     func didTransitionTo(newState: AppState) { }

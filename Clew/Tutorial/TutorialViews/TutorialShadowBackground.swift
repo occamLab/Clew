@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-/// A view that adds a shadow to the background for the tutorial
+/// A class that adds a shadow UIView to the background for the tutorial
 class TutorialShadowBackground: UIView {
     
     /// required for non storyboard UIView
