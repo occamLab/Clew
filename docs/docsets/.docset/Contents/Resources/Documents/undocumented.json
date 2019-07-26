@@ -4,8 +4,8 @@
 <<<<<<< HEAD
       "file": "/Users/pruvolo/Software/Clew/Clew/Controllers/PopOvers/FeedbackViewController.swift",
 =======
-      "file": "/Users/tad/Desktop/tnovak/Clew/Clew/Controllers/PopOvers/FeedbackViewController.swift",
->>>>>>> f29d0a4a3041a017e1117df0bd8e6e05dfa2a3ce
+      "file": "/Users/pruvolo/Software/ClewMaster/Clew/Controllers/PopOvers/FeedbackViewController.swift",
+>>>>>>> 4a8a445d37cc0a1392dccd1a77d231bc4df9622b
       "line": 11,
       "symbol": "FeedbackViewController",
       "symbol_kind": "source.lang.swift.decl.class",
@@ -15,8 +15,8 @@
 <<<<<<< HEAD
       "file": "/Users/pruvolo/Software/Clew/Clew/Controllers/PopOvers/FeedbackViewController.swift",
 =======
-      "file": "/Users/tad/Desktop/tnovak/Clew/Clew/Controllers/PopOvers/FeedbackViewController.swift",
->>>>>>> f29d0a4a3041a017e1117df0bd8e6e05dfa2a3ce
+      "file": "/Users/pruvolo/Software/ClewMaster/Clew/Controllers/PopOvers/FeedbackViewController.swift",
+>>>>>>> 4a8a445d37cc0a1392dccd1a77d231bc4df9622b
       "line": 14,
       "symbol": "FeedbackViewController.scrollView",
       "symbol_kind": "source.lang.swift.decl.var.instance",
@@ -26,8 +26,8 @@
 <<<<<<< HEAD
       "file": "/Users/pruvolo/Software/Clew/Clew/Controllers/PopOvers/FeedbackViewController.swift",
 =======
-      "file": "/Users/tad/Desktop/tnovak/Clew/Clew/Controllers/PopOvers/FeedbackViewController.swift",
->>>>>>> f29d0a4a3041a017e1117df0bd8e6e05dfa2a3ce
+      "file": "/Users/pruvolo/Software/ClewMaster/Clew/Controllers/PopOvers/FeedbackViewController.swift",
+>>>>>>> 4a8a445d37cc0a1392dccd1a77d231bc4df9622b
       "line": 15,
       "symbol": "FeedbackViewController.nameTextField",
       "symbol_kind": "source.lang.swift.decl.var.instance",
@@ -37,8 +37,8 @@
 <<<<<<< HEAD
       "file": "/Users/pruvolo/Software/Clew/Clew/Controllers/PopOvers/FeedbackViewController.swift",
 =======
-      "file": "/Users/tad/Desktop/tnovak/Clew/Clew/Controllers/PopOvers/FeedbackViewController.swift",
->>>>>>> f29d0a4a3041a017e1117df0bd8e6e05dfa2a3ce
+      "file": "/Users/pruvolo/Software/ClewMaster/Clew/Controllers/PopOvers/FeedbackViewController.swift",
+>>>>>>> 4a8a445d37cc0a1392dccd1a77d231bc4df9622b
       "line": 16,
       "symbol": "FeedbackViewController.countryTextField",
       "symbol_kind": "source.lang.swift.decl.var.instance",
@@ -48,8 +48,8 @@
 <<<<<<< HEAD
       "file": "/Users/pruvolo/Software/Clew/Clew/Controllers/PopOvers/FeedbackViewController.swift",
 =======
-      "file": "/Users/tad/Desktop/tnovak/Clew/Clew/Controllers/PopOvers/FeedbackViewController.swift",
->>>>>>> f29d0a4a3041a017e1117df0bd8e6e05dfa2a3ce
+      "file": "/Users/pruvolo/Software/ClewMaster/Clew/Controllers/PopOvers/FeedbackViewController.swift",
+>>>>>>> 4a8a445d37cc0a1392dccd1a77d231bc4df9622b
       "line": 17,
       "symbol": "FeedbackViewController.feedbackTextField",
       "symbol_kind": "source.lang.swift.decl.var.instance",
@@ -59,8 +59,8 @@
 <<<<<<< HEAD
       "file": "/Users/pruvolo/Software/Clew/Clew/Controllers/PopOvers/FeedbackViewController.swift",
 =======
-      "file": "/Users/tad/Desktop/tnovak/Clew/Clew/Controllers/PopOvers/FeedbackViewController.swift",
->>>>>>> f29d0a4a3041a017e1117df0bd8e6e05dfa2a3ce
+      "file": "/Users/pruvolo/Software/ClewMaster/Clew/Controllers/PopOvers/FeedbackViewController.swift",
+>>>>>>> 4a8a445d37cc0a1392dccd1a77d231bc4df9622b
       "line": 18,
       "symbol": "FeedbackViewController.phoneNumberTextField",
       "symbol_kind": "source.lang.swift.decl.var.instance",
@@ -70,8 +70,8 @@
 <<<<<<< HEAD
       "file": "/Users/pruvolo/Software/Clew/Clew/Controllers/PopOvers/FeedbackViewController.swift",
 =======
-      "file": "/Users/tad/Desktop/tnovak/Clew/Clew/Controllers/PopOvers/FeedbackViewController.swift",
->>>>>>> f29d0a4a3041a017e1117df0bd8e6e05dfa2a3ce
+      "file": "/Users/pruvolo/Software/ClewMaster/Clew/Controllers/PopOvers/FeedbackViewController.swift",
+>>>>>>> 4a8a445d37cc0a1392dccd1a77d231bc4df9622b
       "line": 19,
       "symbol": "FeedbackViewController.emailTextField",
       "symbol_kind": "source.lang.swift.decl.var.instance",
@@ -79,46 +79,55 @@
     },
     {
 <<<<<<< HEAD
-      "file": "/Users/pruvolo/Software/Clew/Clew/Controllers/StateViews/PauseTrackingController.swift",
+      "file": "/Users/pruvolo/Software/Clew/Clew/Controllers/StateViews/StartNavigationController.swift",
 =======
-      "file": "/Users/tad/Desktop/tnovak/Clew/Clew/Controllers/ViewController.swift",
-      "line": 1751,
-      "symbol": "ViewController.homeButtonPressed()",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/tad/Desktop/tnovak/Clew/Clew/Extensions/TransparentTouchView.swift",
->>>>>>> f29d0a4a3041a017e1117df0bd8e6e05dfa2a3ce
-      "line": 11,
-      "symbol": "TransparentTouchView",
-      "symbol_kind": "source.lang.swift.decl.class",
+      "file": "/Users/pruvolo/Software/ClewMaster/Clew/Controllers/StateViews/StartNavigationController.swift",
+>>>>>>> 4a8a445d37cc0a1392dccd1a77d231bc4df9622b
+      "line": 20,
+      "symbol": "StartNavigationController.stackView",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
 <<<<<<< HEAD
-      "file": "/Users/pruvolo/Software/Clew/Clew/Controllers/StateViews/PauseTrackingController.swift",
+      "file": "/Users/pruvolo/Software/Clew/Clew/Controllers/StateViews/StartNavigationController.swift",
 =======
-      "file": "/Users/tad/Desktop/tnovak/Clew/Clew/Extensions/TransparentTouchView.swift",
->>>>>>> f29d0a4a3041a017e1117df0bd8e6e05dfa2a3ce
-      "line": 12,
-      "symbol": "TransparentTouchView.point(inside:with:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "file": "/Users/pruvolo/Software/ClewMaster/Clew/Controllers/StateViews/StartNavigationController.swift",
+>>>>>>> 4a8a445d37cc0a1392dccd1a77d231bc4df9622b
+      "line": 22,
+      "symbol": "StartNavigationController.fillerSpace",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
 <<<<<<< HEAD
       "file": "/Users/pruvolo/Software/Clew/Clew/Controllers/ViewController.swift",
-      "line": 1729,
+      "line": 1745,
+=======
+      "file": "/Users/pruvolo/Software/ClewMaster/Clew/Controllers/ViewController.swift",
+      "line": 1753,
+>>>>>>> 4a8a445d37cc0a1392dccd1a77d231bc4df9622b
       "symbol": "ViewController.homeButtonPressed()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
+<<<<<<< HEAD
+      "file": "/Users/pruvolo/Software/Clew/Clew/Extensions/UIButtonExtensions.swift",
+=======
+      "file": "/Users/pruvolo/Software/ClewMaster/Clew/Extensions/UIButtonExtensions.swift",
+>>>>>>> 4a8a445d37cc0a1392dccd1a77d231bc4df9622b
+      "line": 69,
+      "symbol": "UIButton.makeConstraintButton(_:alignment:appearance:label:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.static",
+      "warning": "undocumented"
+    },
+    {
+<<<<<<< HEAD
       "file": "/Users/pruvolo/Software/Clew/Clew/Misc/FeedbackLogger.swift",
 =======
-      "file": "/Users/tad/Desktop/tnovak/Clew/Clew/Misc/FeedbackLogger.swift",
->>>>>>> f29d0a4a3041a017e1117df0bd8e6e05dfa2a3ce
+      "file": "/Users/pruvolo/Software/ClewMaster/Clew/Misc/FeedbackLogger.swift",
+>>>>>>> 4a8a445d37cc0a1392dccd1a77d231bc4df9622b
       "line": 13,
       "symbol": "FeedbackLogger",
       "symbol_kind": "source.lang.swift.decl.class",
@@ -128,17 +137,39 @@
 <<<<<<< HEAD
       "file": "/Users/pruvolo/Software/Clew/Clew/Misc/PathLogger.swift",
 =======
-      "file": "/Users/tad/Desktop/tnovak/Clew/Clew/Misc/PathLogger.swift",
->>>>>>> f29d0a4a3041a017e1117df0bd8e6e05dfa2a3ce
+      "file": "/Users/pruvolo/Software/ClewMaster/Clew/Misc/PathLogger.swift",
+>>>>>>> 4a8a445d37cc0a1392dccd1a77d231bc4df9622b
       "line": 55,
       "symbol": "PathLogger.currentLocale()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+<<<<<<< HEAD
+      "file": "/Users/pruvolo/Software/Clew/Clew/Views/UIConstants.swift",
+=======
+      "file": "/Users/pruvolo/Software/ClewMaster/Clew/Views/UIConstants.swift",
+>>>>>>> 4a8a445d37cc0a1392dccd1a77d231bc4df9622b
+      "line": 68,
+      "symbol": "UIConstants.yButtonFrameMargin",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+<<<<<<< HEAD
+      "file": "/Users/pruvolo/Software/Clew/Clew/Views/UIConstants.swift",
+=======
+      "file": "/Users/pruvolo/Software/ClewMaster/Clew/Views/UIConstants.swift",
+>>>>>>> 4a8a445d37cc0a1392dccd1a77d231bc4df9622b
+      "line": 72,
+      "symbol": "UIConstants.topButtonFrameMargin",
+      "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     }
   ],
 <<<<<<< HEAD
   "source_directory": "/Users/pruvolo/Software/Clew"
 =======
-  "source_directory": "/Users/tad/Desktop/tnovak/Clew"
->>>>>>> f29d0a4a3041a017e1117df0bd8e6e05dfa2a3ce
+  "source_directory": "/Users/pruvolo/Software/ClewMaster"
+>>>>>>> 4a8a445d37cc0a1392dccd1a77d231bc4df9622b
 }
