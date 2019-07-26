@@ -51,6 +51,43 @@ class DataPersistence {
         }
     }
     
+    static func importData(from url: URL) {
+        guard
+            let savedArray = try? NSArray(contentsOf: url as URL) as! [[Any]]
+            else { return }
+        
+        /// add to the saved route list here
+        
+        /// remove from temp storage the file gets automatically placed into
+        try? FileManager.default.removeItem(at: url)
+    }
+    
+    func exportToURL(route: SavedRoute) -> URL? {
+        /// assemble object we want to write, (all route info)
+        let routeData = [[route.name, route.id, route.crumbs, route.dateCreated,route.beginRouteLandmark, route.endRouteLandmark]]
+        
+        /// fetch the documents directory
+        let documents = FileManager.default.urls(
+            for: .documentDirectory,
+            in: .userDomainMask
+            ).first
+        
+        /// set temp path as name of route
+        /// will be sent via the share menu
+        guard let path = documents?.appendingPathComponent("/\(route.name).crd") else {
+            return nil
+        }
+        
+        /// write route to file
+        do {
+            try (routeData as NSArray).write(to: path as URL, atomically: true)
+            return path
+        } catch {
+            print(error.localizedDescription)
+            return nil
+        }
+    }
+    
     /// Load the map from the app's local storage.  If we are on a platform that doesn't support ARWorldMap, this function always returns nil
     ///
     /// - Parameter id: the map id to fetch
