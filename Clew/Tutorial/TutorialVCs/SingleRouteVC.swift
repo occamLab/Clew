@@ -10,7 +10,6 @@ import UIKit
 
 class SingleRouteVC: TutorialChildViewController {
     
-    var nextButton: UIButton!
     var backgroundShadow: UIView! = TutorialShadowBackground()
     var clewGreen = UIColor(red: 103/255, green: 188/255, blue: 71/255, alpha: 1.0)
     var landmarkNextButton: UIButton!
@@ -27,7 +26,6 @@ class SingleRouteVC: TutorialChildViewController {
     var navigateCallout: UIView?
     /////
     var skipButton: UIButton!
-    var skipYellow = UIColor(red: 254/255, green: 243/255, blue: 62/255, alpha: 1.0)
     var congratsView: UIView!
     var congratsLabel: UILabel!
     /////
@@ -46,6 +44,7 @@ class SingleRouteVC: TutorialChildViewController {
         self.view.addSubview(landmarkCallout!)
         self.view.addSubview(landmarkNextButton)
         self.view.addSubview(landmarkArrow!)
+        self.view.addSubview(skipButton!)
         UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: nil)
     }
     
@@ -55,41 +54,12 @@ class SingleRouteVC: TutorialChildViewController {
         recordCallout = createCalloutToView(withTagID: UIView.recordPathButtonTag, calloutText: "The Record button allows you to start recording a route. Click the 'record' button to continue.", buttonAccessibilityName: "Record Button")
         recordArrow = createCalloutArrowToView(withTagID: UIView.recordPathButtonTag)
         
-        landmarkNextButton = createNextButton(buttonAction: #selector(landmarkNextButtonAction))
-        recordNextButton = createNextButton(buttonAction: #selector(recordNextButtonAction))
-        pauseNextButton = createNextButton(buttonAction: #selector(pauseNextButtonAction))
-        navigateNextButton = createNextButton(buttonAction: #selector(navigateNextButtonAction))
-        skipButton = createSkipButton()
-    }
-    
-    func createNextButton(buttonAction: Selector) -> UIButton {
-        nextButton = UIButton(frame: CGRect(x: UIScreen.main.bounds.size.width/2 - UIScreen.main.bounds.size.width*1/5, y: UIScreen.main.bounds.size.width*3/10 + UIScreen.main.bounds.size.height*1/10 + 100, width: UIScreen.main.bounds.size.width*2/5, height: UIScreen.main.bounds.size.height*1/10))
-        nextButton.backgroundColor = clewGreen
-        nextButton.setTitleColor(.white, for: .normal)
-        nextButton.setTitle("Next", for: .normal)
-        nextButton.layer.masksToBounds = true
-        nextButton.layer.cornerRadius = 10.0
-        nextButton.layer.borderWidth = 3.0
-        nextButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 30.0)
-        nextButton.isAccessibilityElement = true
-        nextButton.isUserInteractionEnabled = true
-        nextButton.addTarget(self, action: buttonAction, for: .touchUpInside)
-        return nextButton
-    }
-    
-    /////
-    func createSkipButton() -> UIButton {
-        skipButton = UIButton(frame: CGRect(x: UIScreen.main.bounds.size.width*1/2 - UIScreen.main.bounds.size.width*1/5, y: UIScreen.main.bounds.size.width*1/14, width: UIScreen.main.bounds.size.width*2/5, height: UIScreen.main.bounds.size.height*1/10))
-        skipButton.backgroundColor = .white
-        skipButton.setTitleColor(skipYellow, for: .normal)
-        skipButton.setTitle("SKIP", for: .normal)
-        skipButton.layer.masksToBounds = true
-        skipButton.layer.cornerRadius = 8.0
-        skipButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 30.0)
-        skipButton.isAccessibilityElement = true
-        skipButton.isUserInteractionEnabled = true
-        skipButton.addTarget(self, action: #selector(skipButtonAction), for: .touchUpInside)
-        return skipButton
+        landmarkNextButton = NextButton().createNextButton(buttonAction: #selector(landmarkNextButtonAction))
+        recordNextButton = NextButton().createNextButton(buttonAction: #selector(recordNextButtonAction))
+        pauseNextButton = NextButton().createNextButton(buttonAction: #selector(pauseNextButtonAction))
+        navigateNextButton = NextButton().createNextButton(buttonAction: #selector(navigateNextButtonAction))
+        skipButton = SkipButton().createSkipButton(buttonAction:
+            #selector(skipButtonAction))
     }
     
     func transitionToMainApp() {
@@ -130,18 +100,10 @@ class SingleRouteVC: TutorialChildViewController {
         congratsLabel.accessibilityLabel = "Congratulations! You have completed the tutorial. Now you can get started with the app!"
         congratsView.addSubview(congratsLabel)
         
-        nextButton = UIButton(frame: CGRect(x: UIScreen.main.bounds.size.width/2 - UIScreen.main.bounds.size.width*1/5, y: UIScreen.main.bounds.size.width*3/10 + UIScreen.main.bounds.size.height*1/10 + 100, width: UIScreen.main.bounds.size.width*2/5, height: UIScreen.main.bounds.size.height*1/10))
-        nextButton.backgroundColor = clewGreen
-        nextButton.setTitleColor(.white, for: .normal)
-        nextButton.setTitle("Next", for: .normal)
-        nextButton.layer.masksToBounds = true
-        nextButton.layer.cornerRadius = 10.0
-        nextButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 30.0)
-        nextButton.isAccessibilityElement = true
-        nextButton.isUserInteractionEnabled = true
-        nextButton.addTarget(self, action: #selector(endTutorialNextButtonAction), for: .touchUpInside)
-        nextButton.layer.borderWidth = 3.0
-        congratsView.addSubview(nextButton)
+        var congratsNextButton: UIButton!
+        
+        congratsNextButton = NextButton().createNextButton(buttonAction: #selector(endTutorialNextButtonAction))
+        congratsView.addSubview(congratsNextButton)
     
         return congratsView
     }
@@ -279,6 +241,14 @@ class SingleRouteVC: TutorialChildViewController {
     }
     
     override func allowAnnouncements() -> Bool {
+        return false
+    }
+    
+    override func allowFirstTimePopups() -> Bool {
+        return false
+    }
+    
+    override func allowPauseButtonPressed() -> Bool {
         return false
     }
 }

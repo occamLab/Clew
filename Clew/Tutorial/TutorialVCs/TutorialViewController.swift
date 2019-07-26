@@ -19,12 +19,15 @@ class TutorialViewController: UIViewController, ClewDelegate {
                                                  width: UIScreen.main.bounds.size.width,
                                                  height: UIScreen.main.bounds.size.height))
     }
+    
     let singleRouteChildVC = SingleRouteVC()
     let phoneOrientationTrainingChildVC  = PhoneOrientationTrainingVC()
     let tipsAndWarningsChildVC = TipsAndWarningsViewController()
+    let phoneOrientationGIFChildVC = PhoneOrientationGIFVC()
     
     /// A custom enumeration type that describes the exact state of the tutorial.
     enum TutorialState {
+        case explainOrientationTraining
         case startOrientationTraining
         case optimalOrientationAchieved
         /// This is the screen that comes up immediately after the phone orientation training
@@ -51,23 +54,24 @@ class TutorialViewController: UIViewController, ClewDelegate {
         }*/
     }
     
-//    var appState: AppState = .followingTutorial
-    
     var state = TutorialState.initializing {
         didSet {
             //        logger.logStateTransition(newState: state)
             switch state {
+            case .explainOrientationTraining:
+                print("tutorial button pressed")
+                removeAllChildVCs()
+                add(phoneOrientationGIFChildVC)
             case .startOrientationTraining:
                 removeAllChildVCs()
                 add(phoneOrientationTrainingChildVC)
+                print("haptic starts")
             case .optimalOrientationAchieved:
                 state = .readyToRecordSingleRoute
-                break
             case .readyToRecordSingleRoute:
                 removeAllChildVCs()
                 add(singleRouteChildVC)
                 print("in readyToRecordState")
-                break
             case .recordingSingleRoute:
                 print("in recording state")
                 break
@@ -104,7 +108,6 @@ class TutorialViewController: UIViewController, ClewDelegate {
         }
     }
 
-
     func didTransitionTo(newState: AppState) {
         for child in children {
             if let observer = child as? ClewObserver {
@@ -112,7 +115,6 @@ class TutorialViewController: UIViewController, ClewDelegate {
             }
         }
     }
-
     
     func didReceiveNewCameraPose(transform: simd_float4x4) {
         print("received new camera pose")
@@ -189,10 +191,28 @@ class TutorialViewController: UIViewController, ClewDelegate {
         return true
     }
     
+    func allowPauseButtonPressed() -> Bool {
+        for child in children {
+            if let delegate = child as? ClewDelegate {
+                return delegate.allowPauseButtonPressed()
+            }
+        }
+        return true
+    }
+    
     func allowAnnouncements() -> Bool {
         for child in children {
             if let delegate = child as? ClewDelegate {
                 return delegate.allowAnnouncements()
+            }
+        }
+        return true
+    }
+    
+    func allowFirstTimePopups() -> Bool {
+        for child in children {
+            if let delegate = child as? ClewDelegate {
+                return delegate.allowFirstTimePopups()
             }
         }
         return true

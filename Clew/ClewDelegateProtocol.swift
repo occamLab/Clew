@@ -17,4 +17,6 @@ protocol ClewDelegate : ClewObserver {
     func allowHelpPressed() -> Bool
     func allowHomeButtonPressed() -> Bool
     func allowAnnouncements() -> Bool
+    func allowFirstTimePopups() -> Bool
+    func allowPauseButtonPressed() -> Bool
 }
