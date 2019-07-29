@@ -691,7 +691,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     func showRecordPathWithoutLandmarkWarning() {
         let userDefaults: UserDefaults = UserDefaults.standard
         let showedRecordPathWithoutLandmarkWarning: Bool? = userDefaults.object(forKey: "showedRecordPathWithoutLandmarkWarning") as? Bool
-        if showedRecordPathWithoutLandmarkWarning == nil && beginRouteLandmark.transform == nil {
+        if showedRecordPathWithoutLandmarkWarning == nil && beginRouteLandmark.transform == nil && delegateProxy.allowFirstTimePopups(){
             userDefaults.set(true, forKey: "showedRecordPathWithoutLandmarkWarning")
             // Show logging disclaimer when user opens app for the first time
             let alert = UIAlertController(title: "Creating reusable routes",

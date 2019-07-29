@@ -77,9 +77,7 @@ class PhoneOrientationGIFVC: TutorialChildViewController {
                                       message: "If you exit this process right now, you won't be orienting your phone.",
                                       preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Skip this part of the tutorial.", style: .default, handler: { action -> Void in
-            // proceed to home page
-            self.transitionToMainApp()
-            
+            // proceed to readyToRecordSingleRoute state
             let appDelegate = UIApplication.shared.delegate as! AppDelegate
             (appDelegate.window?.rootViewController as? ViewController)?.tutorialViewController.state = .readyToRecordSingleRoute
         }
@@ -101,7 +99,6 @@ class PhoneOrientationGIFVC: TutorialChildViewController {
     // Callback function for when the 'skip' button is tapped
     @objc func skipButtonAction(sender: UIButton!) {
         skipNavigationProcesses()
-        //        tutorialParent?.state = .readyToRecordSingleRoute
     }
     
     @objc func gotItButtonAction(sender: UIButton!) {
