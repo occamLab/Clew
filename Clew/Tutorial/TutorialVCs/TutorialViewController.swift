@@ -81,7 +81,9 @@ class TutorialViewController: UIViewController, ClewDelegate {
             case .displayCongratsView:
                 print("in display congrats view state")
             case .endTutorial:
+                print("in end tutorial state")
                 removeAllChildVCs()
+//                phoneOrientationGIFChildVC.remove()
                 NotificationCenter.default.post(name: Notification.Name("ClewTutorialCompleted"), object: nil)
             }
         }

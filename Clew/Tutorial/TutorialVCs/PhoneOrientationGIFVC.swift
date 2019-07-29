@@ -107,13 +107,12 @@ class PhoneOrientationGIFVC: TutorialChildViewController {
         // TODO: state change
     }
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-//        let imageData = try! Data(contentsOf: Bundle.main.url(forResource: "PhoneOrientation", withExtension: "gif")!)
-//        PhoneOrientationGIF.animatedImage = FLAnimatedImage(animatedGIFData: imageData)
-        
+    override func viewDidAppear(_ animated: Bool) {
         introView = createIntroView()
         self.view.addSubview(introView)
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
     }
 }
