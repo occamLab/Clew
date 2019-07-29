@@ -371,9 +371,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             print("setting transform", beginRouteLandmark.transform)
 
             Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(playSound)), userInfo: nil, repeats: false)
-//            rootContainerView.pauseTrackingView.isHidden = true
+            //rootContainerView.pauseTrackingView.isHidden = true
             pauseTrackingController.remove()
-            state = .mainScreen(announceArrival: false)
+            //start the route recording
+            showRecordPathWithoutLandmarkWarning()
             return
         } else if let currentTransform = sceneView.session.currentFrame?.camera.transform {
             endRouteLandmark.transform = currentTransform
@@ -1336,7 +1337,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// handles the user pressing the record path button.
     @objc func recordPath() {
-        showRecordPathWithoutLandmarkWarning()
+        //set variables which declare that this is creating a landmark at the begining of the route.
+        creatingRouteLandmark = true
+        
+        //send the navigation to the landmark screen
+        state = .startingPauseProcedure
+        handleStateTransitionToStartingPauseProcedure()
     }
     
     /// handles the user pressing the stop recording button.
@@ -1771,7 +1777,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             homePageNavigationProcesses()
         }
         else if case .pauseProcedureCompleted = self.state {
-            homePageNavigationProcesses()
+            showRecordPathWithoutLandmarkWarning()
+            //homePageNavigationProcesses()
         }
         else if case .readyForFinalResumeAlignment = self.state {
             homePageNavigationProcesses()
