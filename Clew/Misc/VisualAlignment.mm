@@ -85,7 +85,10 @@
     std::vector<cv::Point2f> vectors1, vectors2;
     Eigen::MatrixX2f vectors1_matrix(matches.size(), 2);
     Eigen::MatrixX2f vectors2_matrix(matches.size(), 2);
-
+    std::ofstream vecfile1(std::string([dir UTF8String]) + "/vectors1.txt");
+    std::ofstream vecfile2(std::string([dir UTF8String]) + "/vectors2.txt");
+    std::ofstream veceigenfile1(std::string([dir UTF8String]) + "/vectorseigen1.txt");
+    std::ofstream veceigenfile2(std::string([dir UTF8String]) + "/vectorseigen2.txt");
     int counter = 0;
     for (const auto& match : matches) {
         const auto keypoint1 = keypoints_and_descriptors1.keypoints[match.queryIdx];
@@ -95,6 +98,8 @@
         vectors1.push_back(normalized1);
         vectors2.push_back(normalized2);
         
+        vecfile1 << normalized1.x << "\t" << normalized1.y << std::endl;
+        vecfile2 << normalized2.x << "\t" << normalized2.y << std::endl;
         vectors1_matrix.row(counter) << normalized1.x, normalized1.y;
         vectors2_matrix.row(counter) << normalized2.x, normalized2.y;
         counter++;
@@ -104,21 +109,23 @@
     }
 
     const auto yaw = getYaw(std::string([dir UTF8String]), vectors1, vectors2);
-    debug_square_image1 = MatToUIImage(square_image_mat1);
-    debug_square_image2 = MatToUIImage(square_image_mat2);
+//    debug_square_image1 = MatToUIImage(square_image_mat1);
+//    debug_square_image2 = MatToUIImage(square_image_mat2);
     UIImage *debug_match_image_ui = MatToUIImage(debug_match_image);
     NSData *debug_png = UIImagePNGRepresentation(debug_match_image_ui);
     [debug_png writeToFile:[dir stringByAppendingPathComponent:@"correspondence.png"] atomically: YES];
     std::ofstream file(std::string([dir UTF8String]) + "/intrinsics.txt");
-    std::ofstream vecfile1(std::string([dir UTF8String]) + "/vectors1.txt");
-    std::ofstream vecfile2(std::string([dir UTF8String]) + "/vectors2.txt");
-    vecfile1 << vectors1_matrix << std::endl;
-    vecfile2 << vectors2_matrix << std::endl;
-    
+//
+    veceigenfile1 << vectors1_matrix << std::endl;
+    veceigenfile2 << vectors2_matrix << std::endl;
+
     if (file.is_open()) {
         file << "Intrinsics1" << std::endl << intrinsics1_matrix << std::endl;
         file << "Intrinsics2" << std::endl << intrinsics2_matrix << std::endl;
     }
+    file.close();
+    vecfile1.close();
+    vecfile2.close();
     
 //    const Eigen::Matrix3f intrintiscs1_eigen = intrinsicsToMatrix(intrinsics1);
 //    const auto matches = getMatches(image1, image2);
