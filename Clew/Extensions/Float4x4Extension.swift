@@ -66,6 +66,13 @@ extension float4x4 {
         \(self[0, 3]),\(self[1, 3]),\(self[2, 3]),\(self[3, 3])
         """
     }
+    
+    /// Get the rotation component of the transform.
+    func rotation() -> float3x3 {
+        return simd_float3x3(simd_float3(self[0, 0], self[0, 1], self[0, 2]),
+                             simd_float3(self[1, 0], self[1, 1], self[1, 2]),
+                             simd_float3(self[2, 0], self[2, 1], self[2, 2]))
+    }
 
     /// The x translation specified by the transform
     var x: Float {

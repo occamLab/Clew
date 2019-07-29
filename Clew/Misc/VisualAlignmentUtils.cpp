@@ -25,13 +25,6 @@ KeyPointsAndDescriptors getKeyPointsAndDescriptors(cv::Mat image) {
     return {.keypoints = keypoints, .descriptors = descriptors};
 }
 
-cv::Point2f normalizePoint(Eigen::Matrix3f intrinsics, cv::Point2f point) {
-    Eigen::Vector3f vector;
-    vector << point.x, point.y, 1;
-    Eigen::Vector3f normalized_point = intrinsics.inverse() * vector;
-    return cv::Point2f(normalized_point(0), normalized_point(1));
-}
-
 std::vector<cv::DMatch> getMatches(cv::Mat descriptors1, cv::Mat descriptors2) {
     auto matcher = cv::BFMatcher();
     std::vector<std::vector<cv::DMatch>> matches;
@@ -55,7 +48,7 @@ Eigen::Matrix3f intrinsicsToMatrix(simd_float4 intrinsics) {
     return intrinsics_matrix;
 }
 
-Eigen::AngleAxisf squareImageRotation(Eigen::Matrix4f pose) {
+Eigen::AngleAxisf getIdealRotation(Eigen::Matrix4f pose) {
     // The phone's x axis is from the front facing camera to the home button, so the desired polar angle is between the global y axis and the phone's -x axis.
     const auto polar_angle = acos(-pose(1, 0));
     Eigen::Vector3f terst = pose.col(0).head(3);
@@ -65,7 +58,7 @@ Eigen::AngleAxisf squareImageRotation(Eigen::Matrix4f pose) {
     return Eigen::AngleAxisf(polar_angle, rotation_axis);
 }
 
-cv::Mat squareImageGlobalRotation(cv::Mat image, Eigen::Matrix3f intrinsics, Eigen::Matrix3f pose_rotation, Eigen::AngleAxisf rotation_in_global) {
+cv::Mat warpPerspectiveWithGlobalRotation(cv::Mat image, Eigen::Matrix3f intrinsics, Eigen::Matrix3f pose_rotation, Eigen::AngleAxisf rotation_in_global) {
     Eigen::Matrix3f phone_to_camera;
     phone_to_camera << 0, 1, 0, 1, 0, 0, 0, 0, -1;
     const Eigen::Vector3f rotation_in_camera_axis = (pose_rotation * phone_to_camera).inverse() * rotation_in_global.axis();
@@ -78,8 +71,6 @@ cv::Mat squareImageGlobalRotation(cv::Mat image, Eigen::Matrix3f intrinsics, Eig
     return squared;
 }
 
-
-
 Eigen::Matrix4f poseToMatrix(simd_float4x4 pose) {
     Eigen::Matrix4f matrix;
     matrix << pose.columns[0].x, pose.columns[1].x, pose.columns[2].x, pose.columns[3].x,
@@ -89,30 +80,19 @@ Eigen::Matrix4f poseToMatrix(simd_float4x4 pose) {
     return matrix;
 }
 
-float getYaw(std::string dir, std::vector<cv::Point2f> vectors1, std::vector<cv::Point2f> vectors2) {
-    const auto essential_mat = cv::findEssentialMat(vectors1, vectors2);
+float getYaw(std::vector<cv::Point2f> points1, std::vector<cv::Point2f> points2, Eigen::Matrix3f intrinsics) {
+    const auto essential_mat = cv::findEssentialMat(points1, points2, intrinsics(0, 0), cv::Point2f(intrinsics(0, 2), intrinsics(1, 2)));
     cv::Mat dcm_mat, translation_mat;
     Eigen::Matrix3f essential_matrix;
     cv2eigen(essential_mat, essential_matrix);
-    std::ofstream file(dir + "/matrices.txt");
 
-    int inliers = cv::recoverPose(essential_mat, vectors1, vectors2, dcm_mat, translation_mat);
+    int inliers = cv::recoverPose(essential_mat, points1, points2, dcm_mat, translation_mat, intrinsics(0, 0), cv::Point2f(intrinsics(0, 2), intrinsics(1, 2)));
     
     Eigen::Matrix3f dcm;
     cv2eigen(dcm_mat, dcm);
     const auto rotated = dcm * Eigen::Vector3f::UnitZ();
     const float yaw = atan2(rotated(0), rotated(2));
     
-    if (file.is_open()) {
-        file << "Essential Matrix:" << std::endl;
-        file << essential_matrix << std::endl;
-        file << "Rotation Matrix:" << std::endl;
-        file << dcm << std::endl;
-        file << "Translation Matrix:" << std::endl;
-        file << "Inliers" << std::endl;
-        file << inliers << std::endl;
-    }
-
     return yaw;
 }
 simd_float3x3 rotationToSIMD(Eigen::Matrix3f matrix) {
