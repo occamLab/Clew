@@ -71,10 +71,7 @@ class SingleRouteVC: TutorialChildViewController {
     }
     
     @objc func skipButtonAction(sender: UIButton!) {
-        transitionToMainApp()
-        
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        (appDelegate.window?.rootViewController as? ViewController)?.tutorialViewController.state = .endTutorial
+        skipNavigationProcesses()
     }
     /////
     
