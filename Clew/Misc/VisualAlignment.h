@@ -16,6 +16,7 @@ typedef struct {
     float yaw;
     simd_float3x3 square_rotation1;
     simd_float3x3 square_rotation2;
+    bool is_valid;
 } VisualAlignmentReturn;
 
 @interface VisualAlignment : NSObject

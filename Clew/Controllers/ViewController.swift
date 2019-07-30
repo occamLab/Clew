@@ -1473,7 +1473,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 // yaw can be determined by projecting the camera's z-axis into the ground plane and using arc tangent (note: the camera coordinate conventions of ARKit https://developer.apple.com/documentation/arkit/arsessionconfiguration/worldalignment/camera
                 
                 DispatchQueue.global(qos: .background).async {
-                    let numMatches = VisualAlignment.numMatches(alignLandmark.image!, self.pixelBufferToUIImage(pixelBuffer: frame.capturedImage)!)
+//                    let numMatches = VisualAlignment.numMatches(alignLandmark.image!, self.pixelBufferToUIImage(pixelBuffer: frame.capturedImage)!)
                     let intrinsics = frame.camera.intrinsics
                     let visualYawReturn = VisualAlignment.visualYaw(alignLandmark.image!, alignLandmark.intrinsics!, alignTransform,
                                                               self.pixelBufferToUIImage(pixelBuffer: frame.capturedImage)!,
@@ -1481,9 +1481,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                                                               frame.camera.transform)
                     
                     DispatchQueue.main.async {
-
+                        if (!visualYawReturn.is_valid) {
+                            self.announce(announcement: "Insufficient matches found, try pointing the camera in a different direction.")
+                        }
 //                        self.announce(announcement: "aligned with yaw " + String(visualYawReturn.yaw*180/3.1415))
-                        self.announce(announcement: "Number of found matches: \(numMatches)")
                         let alignRotation = simd_float3x3(simd_float3(alignTransform[0, 0], alignTransform[0, 1], alignTransform[0, 2]),
                             simd_float3(alignTransform[1, 0], alignTransform[1, 1], alignTransform[1, 2]),
                             simd_float3(alignTransform[2, 0], alignTransform[2, 1], alignTransform[2, 2]))

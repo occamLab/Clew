@@ -32,9 +32,13 @@ std::vector<cv::DMatch> getMatches(cv::Mat descriptors1, cv::Mat descriptors2) {
     std::vector<cv::DMatch> good_matches;
     
     // Use Lowe's ratio test to select the good matches.
-    for (const auto& match : matches)
+    for (const auto match : matches)
         if (match[0].distance < 0.6 * match[1].distance)
+        {
+            std::cout << "counter" << std::endl;
             good_matches.push_back(match[0]);
+        }
+
     
     return good_matches;
 }
@@ -51,8 +55,6 @@ Eigen::Matrix3f intrinsicsToMatrix(simd_float4 intrinsics) {
 Eigen::AngleAxisf getIdealRotation(Eigen::Matrix4f pose) {
     // The phone's x axis is from the front facing camera to the home button, so the desired polar angle is between the global y axis and the phone's -x axis.
     const auto polar_angle = acos(-pose(1, 0));
-    Eigen::Vector3f terst = pose.col(0).head(3);
-    const float x = terst.norm();
     Eigen::Vector3f rotation_axis = Eigen::Vector3f::UnitY().cross((Eigen::Vector3f) -pose.col(0).head(3));
     rotation_axis = rotation_axis / rotation_axis.norm();
     return Eigen::AngleAxisf(polar_angle, rotation_axis);

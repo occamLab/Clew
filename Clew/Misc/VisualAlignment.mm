@@ -23,6 +23,7 @@
 + (VisualAlignmentReturn) visualYaw :(UIImage *)image1 :(simd_float4)intrinsics1 :(simd_float4x4)pose1
                     :(UIImage *)image2 :(simd_float4)intrinsics2 :(simd_float4x4)pose2 {
     
+    VisualAlignmentReturn ret;
     // Convert the UIImages to cv::Mats and rotate them.
     cv::Mat image_mat1, image_mat2;
     UIImageToMat(image1, image_mat1);
@@ -52,6 +53,9 @@
     const Eigen::AngleAxisf square_rotation1 = getIdealRotation(pose1_matrix);
     const Eigen::AngleAxisf square_rotation2 = getIdealRotation(pose2_matrix);
     
+    ret.square_rotation1 = rotationToSIMD((Eigen::Matrix3f) square_rotation1);
+    ret.square_rotation2 = rotationToSIMD((Eigen::Matrix3f) square_rotation2);
+    
     const auto square_image_mat1 = warpPerspectiveWithGlobalRotation(image_mat1, intrinsics1_matrix, pose1_matrix.block(0, 0, 3, 3), square_rotation1);
     const auto square_image_mat2 = warpPerspectiveWithGlobalRotation(image_mat2, intrinsics2_matrix, pose2_matrix.block(0, 0, 3, 3), square_rotation2);
 
@@ -60,6 +64,12 @@
     const auto keypoints_and_descriptors2 = getKeyPointsAndDescriptors(square_image_mat2);
 
     const auto matches = getMatches(keypoints_and_descriptors1.descriptors, keypoints_and_descriptors2.descriptors);
+    
+    if (matches.size() < 8) {
+        ret.is_valid = false;
+        ret.yaw = 0;
+        return ret;
+    }
 
 
     std::vector<cv::Point2f> vectors1, vectors2;
@@ -76,6 +86,7 @@
         vectors2.push_back(cv::Point2f(keypoint2projected(0), keypoint2projected(1)));
     }
 
+    ret.is_valid = true;
     const auto yaw = getYaw(vectors1, vectors2, intrinsics1_matrix);
     
     // Uncomment the lines below and add a breakpoint to see the found matches between the perspective-warped images.
@@ -83,10 +94,8 @@
 //    cv::drawMatches(square_image_mat1, keypoints_and_descriptors1.keypoints, square_image_mat2, keypoints_and_descriptors2.keypoints, matches, debug_match_image);
 //    UIImage *debug_match_image_ui = MatToUIImage(debug_match_image);
 
-    VisualAlignmentReturn ret;
     ret.yaw = yaw;
-    ret.square_rotation1 = rotationToSIMD((Eigen::Matrix3f) square_rotation1);
-    ret.square_rotation2 = rotationToSIMD((Eigen::Matrix3f) square_rotation2);
+
     return ret;
 }
 
