@@ -99,6 +99,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// How long to wait (in seconds) between the alignment request and grabbing the transform
     static let alignmentWaitingPeriod = 1
     
+    /// Used for synchrony when saving in background threads.
+    let routeSaveGroup = DispatchGroup()
+    
     /// The state of the ARKit tracking session as last communicated to us through the delgate protocol.  This is useful if you want to do something different in the delegate method depending on the previous state
     var trackingSessionState : ARCamera.TrackingState?
     
@@ -411,12 +414,20 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             // get a route name
             showRouteNamingDialog(mapAsAny: mapAsAny)
         } else {
-            do {
-                // TODO: factor this out since it shows up in a few places
-                let id = String(Int64(NSDate().timeIntervalSince1970 * 1000)) as NSString
-                try archive(routeId: id, beginRouteLandmark: beginRouteLandmark, endRouteLandmark: endRouteLandmark, worldMapAsAny: mapAsAny)
-            } catch {
-                fatalError("Can't archive route: \(error.localizedDescription)")
+            routeSaveGroup.enter()
+            DispatchQueue.global(qos: .background).async {
+                do {
+                    // TODO: factor this out since it shows up in a few places
+                    let id = String(Int64(NSDate().timeIntervalSince1970 * 1000)) as NSString
+                    try self.archive(routeId: id, beginRouteLandmark: self.beginRouteLandmark, endRouteLandmark: self.endRouteLandmark, worldMapAsAny: mapAsAny)
+                    self.routeSaveGroup.leave()
+                } catch {
+                    fatalError("Can't archive route: \(error.localizedDescription)")
+                }
+                
+                DispatchQueue.main.async {
+                    self.announce(announcement: "End landmark saved")
+                }
             }
         }
     }
@@ -813,9 +824,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         // The confirm action taking the inputs
         let saveAction = UIAlertAction(title: NSLocalizedString("Save", comment: "An option for the user to select"), style: .default) { (_) in
             let id = String(Int64(NSDate().timeIntervalSince1970 * 1000)) as NSString
-            // Get the input values from user, if it's nil then use timestamp
             self.routeName = alertController.textFields?[0].text as NSString? ?? id
-            try! self.archive(routeId: id, beginRouteLandmark: self.beginRouteLandmark, endRouteLandmark: self.endRouteLandmark, worldMapAsAny: mapAsAny)
+            // Get the input values from user, if it's nil then use timestamp
+            
+            self.routeSaveGroup.enter()
+            DispatchQueue.global(qos: .background).async {
+                try! self.archive(routeId: id, beginRouteLandmark: self.beginRouteLandmark, endRouteLandmark: self.endRouteLandmark, worldMapAsAny: mapAsAny)
+                self.routeSaveGroup.leave()
+                DispatchQueue.main.async {
+                    self.announce(announcement: "Route saved")
+                }
+            }
         }
             
         // The cancel action saves the just traversed route so you can navigate back along it later
@@ -1113,11 +1132,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// Display the resume tracking view/hide all other views
     @objc func showResumeTrackingButton() {
-        rootContainerView.homeButton.isHidden = false // no home button here
-        pauseTrackingController.remove()
-        add(resumeTrackingController)
-        UIApplication.shared.keyWindow!.bringSubviewToFront(rootContainerView)
-        delayTransition()
+        routeSaveGroup.notify(queue: .main) {
+            self.rootContainerView.homeButton.isHidden = false // no home button here
+            self.pauseTrackingController.remove()
+            self.add(self.resumeTrackingController)
+            UIApplication.shared.keyWindow!.bringSubviewToFront(self.rootContainerView)
+            self.delayTransition()
+        }
     }
     
     /// Display the resume tracking confirm view/hide all other views.
@@ -1451,7 +1472,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                     
                     DispatchQueue.main.async {
 
-                        self.announce(announcement: "aligned with yaw " + String(visualYawReturn.yaw*180/3.1415))
+//                        self.announce(announcement: "aligned with yaw " + String(visualYawReturn.yaw*180/3.1415))
                         let alignRotation = simd_float3x3(simd_float3(alignTransform[0, 0], alignTransform[0, 1], alignTransform[0, 2]),
                             simd_float3(alignTransform[1, 0], alignTransform[1, 1], alignTransform[1, 2]),
                             simd_float3(alignTransform[2, 0], alignTransform[2, 1], alignTransform[2, 2]))
