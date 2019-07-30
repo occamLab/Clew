@@ -378,11 +378,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                     let numFeatures = self.beginRouteLandmark.image.map{VisualAlignment.numFeatures($0)}
                     
                     DispatchQueue.main.async {
-                        self.announce(announcement: "\(numFeatures)")
+                        if let numFeatures = numFeatures, numFeatures < 600 {
+                            self.announce(announcement: "Low amount of visual features, consider using a different landmark.")
+                        }
+
                     }
                 }
-                
-                announce(announcement: "\(beginRouteLandmark.image.map{VisualAlignment.numFeatures($0)})")
+
                 let intrinsics = currentFrame.camera.intrinsics
                 beginRouteLandmark.intrinsics = simd_float4(intrinsics[0, 0], intrinsics[1, 1], intrinsics[2, 0], intrinsics[2, 1])
             }
