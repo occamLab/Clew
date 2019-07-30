@@ -104,7 +104,6 @@ class PhoneOrientationGIFVC: TutorialChildViewController {
     @objc func gotItButtonAction(sender: UIButton!) {
         introView.removeFromSuperview()
         tutorialParent?.state = .startOrientationTraining
-        // TODO: state change
     }
     
     override func viewDidAppear(_ animated: Bool) {

@@ -26,16 +26,13 @@ class SingleRouteVC: TutorialChildViewController {
     var navigateCallout: UIView?
     /////
     var skipButton: UIButton!
-    var congratsView: UIView!
+    var singleRouteCongratsView: UIView!
     var congratsLabel: UILabel!
+    var congratsNextButton: UIButton!
     /////
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
         self.view.addSubview(backgroundShadow)
         
         createObjects()
@@ -46,6 +43,10 @@ class SingleRouteVC: TutorialChildViewController {
         self.view.addSubview(landmarkArrow!)
         self.view.addSubview(skipButton!)
         UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: nil)
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
     }
     
     func createObjects() {
@@ -60,6 +61,10 @@ class SingleRouteVC: TutorialChildViewController {
         navigateNextButton = NextButton().createNextButton(buttonAction: #selector(navigateNextButtonAction))
         skipButton = SkipButton().createSkipButton(buttonAction:
             #selector(skipButtonAction))
+        congratsNextButton = NextButton().createNextButton(buttonAction: #selector(endTutorialNextButtonAction))
+        
+        singleRouteCongratsView = CongratsView().createCongratsView(congratsText: "Congratulations! \n You have completed the tutorial. \n Now you can get started with the app!", congratsAccessibilityLabel: "Congratulations! You have completed the tutorial. Now you can get started with the app!")
+        singleRouteCongratsView.addSubview(congratsNextButton)
     }
     
     func transitionToMainApp() {
@@ -73,37 +78,7 @@ class SingleRouteVC: TutorialChildViewController {
     @objc func skipButtonAction(sender: UIButton!) {
         skipNavigationProcesses()
     }
-    /////
-    
-    /// Initializes a view and the button in that view. The view will be shown after the user completes single route training
-    func createCongratsView() -> UIView {
-        congratsView = UIView(frame:CGRect(x: 0,
-                                           y: 0,
-                                           width: UIScreen.main.bounds.size.width,
-                                           height: UIScreen.main.bounds.size.height))
-        congratsView.backgroundColor = clewGreen
-        congratsLabel = UILabel(frame: CGRect(x: UIScreen.main.bounds.size.width/2 - UIScreen.main.bounds.size.width*2/5, y: UIScreen.main.bounds.size.height/8, width: UIScreen.main.bounds.size.width*4/5, height: 200))
-        congratsLabel.text = "Congratulations! \n You have completed the tutorial. \n Now you can get started with the app!"
-        congratsLabel.textColor = UIColor.black
-        congratsLabel.backgroundColor = UIColor.white
-        congratsLabel.textAlignment = .center
-        congratsLabel.numberOfLines = 0
-        congratsLabel.lineBreakMode = .byWordWrapping
-        congratsLabel.layer.masksToBounds = true
-        congratsLabel.layer.cornerRadius = 8.0
-        congratsLabel.font = UIFont.systemFont(ofSize: 24.0)
-        congratsLabel.layer.borderWidth = 3.0
-        congratsLabel.isAccessibilityElement = true
-        congratsLabel.accessibilityLabel = "Congratulations! You have completed the tutorial. Now you can get started with the app!"
-        congratsView.addSubview(congratsLabel)
-        
-        var congratsNextButton: UIButton!
-        
-        congratsNextButton = NextButton().createNextButton(buttonAction: #selector(endTutorialNextButtonAction))
-        congratsView.addSubview(congratsNextButton)
-    
-        return congratsView
-    }
+
     
     /// function that creates alerts for the home button
     func skipNavigationProcesses() {
@@ -161,6 +136,12 @@ class SingleRouteVC: TutorialChildViewController {
     }
     
     @objc func endTutorialNextButtonAction(sender: UIButton!) {
+        
+        // remove all subviews after the end of single route tutorial portion
+        for view in self.view.subviews {
+            view.removeFromSuperview()
+        }
+
         tutorialParent?.state = .endTutorial
     }
     
@@ -197,8 +178,8 @@ class SingleRouteVC: TutorialChildViewController {
         if case .mainScreen = newState {
             // Double check that we are in tutorial mode to safe guard against future changes to the main app state that might inadvertently affect the tutorial.
             if tutorialParent?.state == .teachTheNavigationOfASingleRoute {
-                self.congratsView = self.createCongratsView()
-                self.view.addSubview(self.congratsView)
+                self.view.addSubview(singleRouteCongratsView)
+                
                 // Delays bringing the TutorialViewController to the front until recordPathController has been added to the main ViewController. By bringing the TutorialViewController to the front, the congratsView added will also appear at the front.
                 DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(1)) {
                     self.tutorialParent?.parent?.view.bringSubviewToFront(self.tutorialParent!.view)
