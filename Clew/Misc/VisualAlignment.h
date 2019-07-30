@@ -33,6 +33,8 @@ typedef struct {
  - pose2: The pose of the camera in the arsession used to take the second image.
  */
 + (VisualAlignmentReturn) visualYaw :(UIImage *)image1 :(simd_float4)intrinsics1 :(simd_float4x4)pose1 :(UIImage *)image2 :(simd_float4)intrinsics2 :(simd_float4x4)pose2;
++ (int) numFeatures :(UIImage *)image;
++ (int) numMatches :(UIImage *)image1 :(UIImage *)image2;
 @end
 
 NS_ASSUME_NONNULL_END

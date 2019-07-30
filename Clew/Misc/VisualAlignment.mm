@@ -90,4 +90,25 @@
     return ret;
 }
 
++ (int) numFeatures :(UIImage *)image {
+    cv::Mat mat;
+    UIImageToMat(image, mat);
+    cv::cvtColor(mat, mat, cv::COLOR_RGB2GRAY);
+    const auto keypoints_and_descriptors = getKeyPointsAndDescriptors(mat);
+    return keypoints_and_descriptors.keypoints.size();
+}
+
++ (int) numMatches :(UIImage *)image1 :(UIImage *)image2 {
+    cv::Mat mat1, mat2;
+    UIImageToMat(image1, mat1);
+    UIImageToMat(image2, mat2);
+    cv::cvtColor(mat1, mat1, cv::COLOR_RGB2GRAY);
+    cv::cvtColor(mat2, mat2, cv::COLOR_RGB2GRAY);
+    const auto keypoints_and_descriptors1 = getKeyPointsAndDescriptors(mat1);
+    const auto keypoints_and_descriptors2 = getKeyPointsAndDescriptors(mat2);
+    
+    const auto matches = getMatches(keypoints_and_descriptors1.descriptors, keypoints_and_descriptors2.descriptors);
+    return matches.size();
+}
+
 @end
