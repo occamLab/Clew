@@ -22,7 +22,7 @@ class PhoneOrientationTrainingVC: TutorialChildViewController, SRCountdownTimerD
     var countdown:Timer?
 
     // View that contains 'congratsLabel' and 'nextButton'
-    var congratsView: UIView!
+    var phoneOrientationTrainingCongratsView: UIView!
 
     // Label that congratulates user for completing phone orientation training and provides details on the next part of the tutorial
     var congratsLabel: UILabel!
@@ -42,7 +42,8 @@ class PhoneOrientationTrainingVC: TutorialChildViewController, SRCountdownTimerD
     
     // Color used in other colors in Clew
     var clewGreen = UIColor(red: 103/255, green: 188/255, blue: 71/255, alpha: 1.0)
-    var skipYellow = UIColor(red: 254/255, green: 243/255, blue: 62/255, alpha: 1.0)
+    var clewLightGreen = UIColor(red: 198/255, green: 225/255, blue: 167/255, alpha: 1.0)
+    var clewYellow = UIColor(red: 254/255, green: 243/255, blue: 62/255, alpha: 1.0)
     
     
     /// Callback function for when `countdownTimer` updates.  This allows us to announce the new value via voice
@@ -69,10 +70,12 @@ class PhoneOrientationTrainingVC: TutorialChildViewController, SRCountdownTimerD
         countdownTimer.removeFromSuperview()
         
         // create congrats view
-        congratsView = CongratsView().createCongratsView(congratsText: "Congratulations! \n You have successfully oriented your phone. \n Now you will be recording a simple single route.", congratsAccessibilityLabel: "Congratulations! You have successfully oriented your phone. Now you will be recording a simple single route.")
+        phoneOrientationTrainingCongratsView = CongratsView().createCongratsView(congratsText: "Congratulations! \n You have successfully oriented your phone. \n Now you will be recording a simple single route.", congratsAccessibilityLabel: "Congratulations! You have successfully oriented your phone. Now you will be recording a simple single route.")
         nextButton = NextButton().createNextButton(buttonAction: #selector(nextButtonAction))
-        congratsView.addSubview(nextButton)
-        self.view.addSubview(congratsView)
+        nextButton.backgroundColor = UIColor.white
+        nextButton.setTitleColor(clewGreen, for: .normal)
+        phoneOrientationTrainingCongratsView.addSubview(nextButton)
+        self.view.addSubview(phoneOrientationTrainingCongratsView)
         
         // start VoiceOver at 'congratsLabel'
         UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: congratsLabel)
