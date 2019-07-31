@@ -1359,7 +1359,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
 
         isResumedRoute = false
-        state = .readyToNavigateOrPause(allowPause: true)
+        //TODO add conditional for one way route
+        //PATHPOINT two way route recording finished -> create end landmark
+        startPauseProcedure()
+        //state = .readyToNavigateOrPause(allowPause: true)
     }
     
     /// handles the user pressing the start navigation button.
