@@ -42,6 +42,7 @@ class SingleRouteVC: TutorialChildViewController {
         self.view.addSubview(landmarkNextButton)
         self.view.addSubview(landmarkArrow!)
         self.view.addSubview(skipButton!)
+        self.view.bringSubviewToFront(skipButton!)
         UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: nil)
     }
     
@@ -52,9 +53,9 @@ class SingleRouteVC: TutorialChildViewController {
     func createObjects() {
         landmarkCallout = createCalloutToView(withTagID: UIView.recordPathButtonTag, calloutText: "The Landmark button helps create saved routes. For now, let's just create a single use route.", buttonAccessibilityName: "Landmark Button")
         landmarkArrow = createCalloutArrowToView(withTagID: UIView.addLandmarkButtonTag)
-        recordCallout = createCalloutToView(withTagID: UIView.recordPathButtonTag, calloutText: "The Record button allows you to start recording a route. Click the 'record' button to continue.", buttonAccessibilityName: "Record Button")
+
         recordArrow = createCalloutArrowToView(withTagID: UIView.recordPathButtonTag)
-        
+
         landmarkNextButton = NextButton().createNextButton(buttonAction: #selector(landmarkNextButtonAction))
         recordNextButton = NextButton().createNextButton(buttonAction: #selector(recordNextButtonAction))
         pauseNextButton = NextButton().createNextButton(buttonAction: #selector(pauseNextButtonAction))
@@ -105,6 +106,10 @@ class SingleRouteVC: TutorialChildViewController {
         landmarkArrow!.removeFromSuperview()
         landmarkCallout!.removeFromSuperview()
         landmarkNextButton.removeFromSuperview()
+        
+        // Create record callout here instead of under createObjects() to prevent it from being added to view hiearchy upon initializing readyToRecordSingleRoute state.
+        recordCallout = createCalloutToView(withTagID: UIView.recordPathButtonTag, calloutText: "The Record button allows you to start recording a route. Click the 'record' button to continue.", buttonAccessibilityName: "Record Button")
+        
         self.view.addSubview(recordCallout!)
         self.view.addSubview(recordNextButton)
         UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: recordCallout)
@@ -165,6 +170,7 @@ class SingleRouteVC: TutorialChildViewController {
                 self.view.addSubview(self.pauseNextButton!)
                 // Brings tutorialViewController to the front so that the shadow can be added onto it and thus cover the startNavigationViewController
                 self.tutorialParent?.parent?.view.bringSubviewToFront(self.tutorialParent!.view)
+                self.view.bringSubviewToFront(self.skipButton!)
             }
         }
         

@@ -30,8 +30,6 @@ class PhoneOrientationTrainingVC: TutorialChildViewController, SRCountdownTimerD
     // Button for moving to the next state of the tutorial
     var nextButton: UIButton!
     
-    var skipButton: UIButton!
-    
     let gifView = FLAnimatedImageView()
     
     // View for giving a darker tint on the screen
