@@ -53,6 +53,12 @@ class PhoneOrientationTrainingVC: TutorialChildViewController, SRCountdownTimerD
 
     /// Callback function for when the 'next' button in the congratsView popup is tapped. This changes the state of the TutorialViewController.
     @objc func nextButtonAction(sender: UIButton!) {
+        
+        // remove all subviews after the end of phone orientation training tutorial portion
+        for view in self.view.subviews {
+            view.removeFromSuperview()
+        }
+        
         tutorialParent?.state = .readyToRecordSingleRoute
     }
 
@@ -61,39 +67,15 @@ class PhoneOrientationTrainingVC: TutorialChildViewController, SRCountdownTimerD
     @objc func timerCalled() {
         runHapticFeedback = false
         countdownTimer.removeFromSuperview()
-        congratsView = createCongratsView()
-        self.view.addSubview(congratsView)
-        // start VoiceOver at 'congratsLabel'
-        UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: congratsLabel)
-    }
-
-    
-    /// Initializes a view and the button in that view. The view will be shown after the user completes phone orientation training
-    func createCongratsView() -> UIView {
-        congratsView = UIView(frame:CGRect(x: 0,
-                                           y: 0,
-                                           width: UIScreen.main.bounds.size.width,
-                                           height: UIScreen.main.bounds.size.height))
-        congratsView.backgroundColor = clewGreen
-        congratsLabel = UILabel(frame: CGRect(x: UIScreen.main.bounds.size.width/2 - UIScreen.main.bounds.size.width*2/5, y: UIScreen.main.bounds.size.height/8, width: UIScreen.main.bounds.size.width*4/5, height: 200))
-        congratsLabel.text = "Congratulations! \n You have successfully oriented your phone. \n Now you will be recording a simple single route."
-        congratsLabel.textColor = UIColor.black
-        congratsLabel.backgroundColor = UIColor.white
-        congratsLabel.textAlignment = .center
-        congratsLabel.numberOfLines = 0
-        congratsLabel.lineBreakMode = .byWordWrapping
-        congratsLabel.layer.masksToBounds = true
-        congratsLabel.layer.cornerRadius = 8.0
-        congratsLabel.font = UIFont.systemFont(ofSize: 24.0)
-        congratsLabel.layer.borderWidth = 3.0
-        congratsLabel.isAccessibilityElement = true
-        congratsLabel.accessibilityLabel = "Congratulations! You have successfully oriented your phone. Now you will be recording a simple single route."
-        congratsView.addSubview(congratsLabel)
-
+        
+        // create congrats view
+        congratsView = CongratsView().createCongratsView(congratsText: "Congratulations! \n You have successfully oriented your phone. \n Now you will be recording a simple single route.", congratsAccessibilityLabel: "Congratulations! You have successfully oriented your phone. Now you will be recording a simple single route.")
         nextButton = NextButton().createNextButton(buttonAction: #selector(nextButtonAction))
         congratsView.addSubview(nextButton)
+        self.view.addSubview(congratsView)
         
-        return congratsView
+        // start VoiceOver at 'congratsLabel'
+        UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: congratsLabel)
     }
     
     
@@ -101,11 +83,7 @@ class PhoneOrientationTrainingVC: TutorialChildViewController, SRCountdownTimerD
     /// - Parameter animated: True if the appearance is animated
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-    }
-
-
-    /// Called when the view has loaded. Make new countdownTimer that will only be used in PhoneorientationTrainingVC
-    override func viewDidLoad() {
+        
         countdownTimer = SRCountdownTimer(frame: CGRect(x: UIConstants.buttonFrameWidth*1/10,
                                                         y: UIConstants.yOriginOfButtonFrame/10,
                                                         width: UIConstants.buttonFrameWidth*8/10,
@@ -121,6 +99,11 @@ class PhoneOrientationTrainingVC: TutorialChildViewController, SRCountdownTimerD
         countdownTimer.accessibilityElementsHidden = true
         self.view.addSubview(backgroundShadow)
         self.view.addSubview(countdownTimer)
+    }
+
+
+    /// Called when the view has loaded. Make new countdownTimer that will only be used in PhoneorientationTrainingVC
+    override func viewDidLoad() {
     }
 
     /// Send haptic feedback with different frequencies depending on the angle of the phone. Handle transition to the next state when the angle of the phone falls in the range of optimal angle. As the user orients the phone closer to the desired range of the angle, haptic feedback becomes faster. When optimal angle is achieved for a desired amount of time, state transition takes place.

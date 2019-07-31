@@ -12,6 +12,8 @@
 		4DF05CC81F34EB6B008B0E31 /* Confirm.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4DF05CC71F34EB56008B0E31 /* Confirm.mp3 */; };
 		77000C3222CCE8F2004AC60B /* Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 77000C3122CCE8F1004AC60B /* Storyboard.storyboard */; };
 		77000C3322CCE8F2004AC60B /* Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 77000C3122CCE8F1004AC60B /* Storyboard.storyboard */; };
+		773AE4AC22F08AD60027D18C /* CongratsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 773AE4AB22F08AD60027D18C /* CongratsView.swift */; };
+		773AE4AD22F08AD60027D18C /* CongratsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 773AE4AB22F08AD60027D18C /* CongratsView.swift */; };
 		77467DAF22BBC1D300FA7DEE /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 77467DAE22BBC1D300FA7DEE /* Default-568h@2x.png */; };
 		77469B7822EB45B500477519 /* NextButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77469B7722EB45B500477519 /* NextButtonView.swift */; };
 		77469B7922EB45B500477519 /* NextButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77469B7722EB45B500477519 /* NextButtonView.swift */; };
@@ -160,6 +162,7 @@
 		4D6B00E41F33C85500952242 /* Crumb.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = Crumb.obj; sourceTree = "<group>"; };
 		4DF05CC71F34EB56008B0E31 /* Confirm.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = Confirm.mp3; sourceTree = "<group>"; };
 		77000C3122CCE8F1004AC60B /* Storyboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Storyboard.storyboard; path = Clew/Tutorial/TutorialViews/Storyboard.storyboard; sourceTree = SOURCE_ROOT; };
+		773AE4AB22F08AD60027D18C /* CongratsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CongratsView.swift; sourceTree = "<group>"; };
 		77467DAE22BBC1D300FA7DEE /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		77469B7722EB45B500477519 /* NextButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NextButtonView.swift; sourceTree = "<group>"; };
 		77469B7A22EB5A2200477519 /* SkipButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkipButtonView.swift; sourceTree = "<group>"; };
@@ -339,6 +342,7 @@
 				7758D72022D7906600A2312F /* TutorialShadowBackground.swift */,
 				77469B7722EB45B500477519 /* NextButtonView.swift */,
 				77469B7A22EB5A2200477519 /* SkipButtonView.swift */,
+				773AE4AB22F08AD60027D18C /* CongratsView.swift */,
 				77000C3122CCE8F1004AC60B /* Storyboard.storyboard */,
 			);
 			path = TutorialViews;
@@ -809,6 +813,7 @@
 				E5F4C36422C4035200E0D94E /* ClewObserverProtocol.swift in Sources */,
 				E5F4C36E22C4035200E0D94E /* NSStringExtension.swift in Sources */,
 				E5F4C38022C4035200E0D94E /* StartNavigationController.swift in Sources */,
+				773AE4AC22F08AD60027D18C /* CongratsView.swift in Sources */,
 				E5F4C36C22C4035200E0D94E /* SingleRouteVC.swift in Sources */,
 				E5F4C38422C4035200E0D94E /* RouteRatingController.swift in Sources */,
 				E5F4C38E22C4035200E0D94E /* HelpViewController.swift in Sources */,
@@ -860,6 +865,7 @@
 				E5F4C34322C4035200E0D94E /* RecordButtonKit.swift in Sources */,
 				E5F4C35322C4035200E0D94E /* PathFinder.swift in Sources */,
 				E5F4C34F22C4035200E0D94E /* Navigation.swift in Sources */,
+				773AE4AD22F08AD60027D18C /* CongratsView.swift in Sources */,
 				7793DE1C22CBD1D5003A0BF7 /* TutorialChildViewController.swift in Sources */,
 				E5F4C36522C4035200E0D94E /* ClewObserverProtocol.swift in Sources */,
 				E5F4C36F22C4035200E0D94E /* NSStringExtension.swift in Sources */,
