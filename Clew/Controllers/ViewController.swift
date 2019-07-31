@@ -385,7 +385,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                     self.getRouteNameAndSaveRouteHelper(mapAsAny: worldMap)
                     self.showResumeTrackingButton()
                     Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(self.playSound)), userInfo: nil, repeats: false)
-                    self.state = .pauseProcedureCompleted
+                    self.state = .readyToNavigateOrPause(allowPause: true)
                 }
             } else {
                 getRouteNameAndSaveRouteHelper(mapAsAny: nil)
