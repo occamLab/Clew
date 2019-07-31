@@ -364,6 +364,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     func handleStateTransitionToCompletingPauseProcedure() {
         // TODO: we should not be able to create a route landmark if we are in the relocalizing state... (might want to handle this when the user stops navigation on a route they loaded.... This would obviate the need to handle this in the recordPath code as well
         print("completing pause procedure")
+
         if creatingRouteLandmark {
             guard let currentTransform = sceneView.session.currentFrame?.camera.transform else {
                 print("can't properly save landmark: TODO communicate this to the user somehow")
@@ -379,12 +380,18 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                     
                     DispatchQueue.main.async {
                         if let numFeatures = numFeatures, numFeatures < 600 {
-                            self.announce(announcement: "Low amount of visual features, consider using a different landmark.")
+                            let retakeRouteLandmarkAlert = UIAlertController(title: "Few Visual Features", message: "Would you like to retake the landmark?", preferredStyle: .alert)
+                            retakeRouteLandmarkAlert.addAction(UIAlertAction(title: "Yes", style: .default, handler: {action in
+                                self.state = .startingPauseProcedure
+                                return
+                            }))
+                            retakeRouteLandmarkAlert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
+                            self.present(retakeRouteLandmarkAlert, animated: true)
                         }
-
+                        
                     }
                 }
-
+                
                 let intrinsics = currentFrame.camera.intrinsics
                 beginRouteLandmark.intrinsics = simd_float4(intrinsics[0, 0], intrinsics[1, 1], intrinsics[2, 0], intrinsics[2, 1])
             }

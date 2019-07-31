@@ -33,12 +33,11 @@ std::vector<cv::DMatch> getMatches(cv::Mat descriptors1, cv::Mat descriptors2) {
     
     // Use Lowe's ratio test to select the good matches.
     for (const auto match : matches)
-        if (match[0].distance < 0.6 * match[1].distance)
+        if (match.size() > 1 && match[0].distance < 0.6 * match[1].distance)
         {
             std::cout << "counter" << std::endl;
             good_matches.push_back(match[0]);
         }
-
     
     return good_matches;
 }
