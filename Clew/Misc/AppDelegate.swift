@@ -15,14 +15,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     /// A handle to the app's main window
     var window: UIWindow?
+    
+    var vc = ViewController()
 
     /// Called when the app finishes launching.  Currently, this is where we setup Firebase and make sure the phone screen doesn't lock while we are using the app.
     ///
     /// - Parameters:
     /// - Parameter application: a handle the application object
     ///   - launchOptions: the launch options
+    ///   - options: additional options, for share menu specifically here
     /// - Returns: a Boolean indicating whether the app can continue to handle user activity.
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?, open url: URL, options: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
+        
         // Use Firebase library to configure APIs
         #if IS_DEV_TARGET
             let filePath = Bundle.main.path(forResource: "GoogleService-Info_dev", ofType: "plist")!
@@ -36,8 +40,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         window = UIWindow(frame:UIScreen.main.bounds)
         window?.makeKeyAndVisible()
-        window?.rootViewController = ViewController()
+        window?.rootViewController = vc
         UIApplication.shared.isIdleTimerDisabled = true
+        
+        /// check imported file extension
+        guard url.pathExtension == "crd" else { return false }
+        
+        /// import the file here
+        if #available(iOS 12.0, *) {
+            vc.dataPersistence.importData(from: url)
+        } else {
+            // Fallback on earlier versions
+        }
+        
         return true
     }
 
