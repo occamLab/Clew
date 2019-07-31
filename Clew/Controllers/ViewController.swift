@@ -105,6 +105,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// The state of the ARKit tracking session as last communicated to us through the delgate protocol.  This is useful if you want to do something different in the delegate method depending on the previous state
     var trackingSessionState : ARCamera.TrackingState?
     
+    var loadedRoute : SavedRoute?
+    var loadedRouteStartToEnd : Bool?
+    
     /// The state of the app.  This should be constantly referenced and updated as the app transitions
     var state = AppState.initializing {
         didSet {
@@ -294,6 +297,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     ///   - navigateStartToEnd: a Boolean that is true if we want to navigate from the start to the end and false if we want to navigate from the end to the start.
     func handleStateTransitionToStartingResumeProcedure(route: SavedRoute, mapAsAny: Any?, navigateStartToEnd: Bool) {
         // load the world map and restart the session so that things have a chance to quiet down before putting it up to the wall
+        loadedRoute = route
+        loadedRouteStartToEnd = navigateStartToEnd
         let isTrackingPerformanceNormal: Bool
         if case .normal? = sceneView.session.currentFrame?.camera.trackingState {
             isTrackingPerformanceNormal = true
@@ -1490,8 +1495,18 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                                                               frame.camera.transform)
                     
                     DispatchQueue.main.async {
+                        
+                        // Prompt the user to retake the landmark if not enough matches are found.
                         if (!visualYawReturn.is_valid) {
                             self.announce(announcement: "Insufficient matches found, try pointing the camera in a different direction.")
+                            
+                            let retakeRouteLandmarkAlert = UIAlertController(title: "Few Visual Matches", message: "Would you like to retake the landmark?", preferredStyle: .alert)
+                            retakeRouteLandmarkAlert.addAction(UIAlertAction(title: "Yes", style: .default, handler: {action in
+                                self.state = .startingResumeProcedure(route: self.loadedRoute!, mapAsAny: self.justUsedMapAsAny, navigateStartToEnd: self.loadedRouteStartToEnd!)
+                                return
+                            }))
+                            retakeRouteLandmarkAlert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
+                            self.present(retakeRouteLandmarkAlert, animated: true)
                         }
 //                        self.announce(announcement: "aligned with yaw " + String(visualYawReturn.yaw*180/3.1415))
                         let alignRotation = simd_float3x3(simd_float3(alignTransform[0, 0], alignTransform[0, 1], alignTransform[0, 2]),
