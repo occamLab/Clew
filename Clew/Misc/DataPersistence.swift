@@ -54,15 +54,21 @@ class DataPersistence {
     /// handler for importing routes from an external temporary file
     /// called in the case of a route being shared from the UIActivityViewController
     /// library
+    @available(iOS 12.0, *)
     static func importData(from url: URL) {
+        var documentData: RouteDocumentData
+        
         /// attempt to fetch data from temporary import from external source
-        /// TODO: convert to a NSSecureCoding Decoding object instead of plain writing the data to the file.
-        guard
-            let savedArray = try? NSArray(contentsOf: url as URL) as! [[Any]]
-            else { return }
-        
-        /// add to the saved route list here
-        
+        do {
+            // if anything goes wrong with the unarchiving, stick with an emptly list of routes
+            let data = try Data(contentsOf: url)
+            if let document = try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data) as? RouteDocumentData {
+                documentData = document
+            }
+        } catch {
+            print("couldn't unarchive route document")
+        }
+
         /// remove from temp storage the file gets automatically placed into
         /// otherwise the file sticks there and won't be deleted automatically,
         /// causing app bloat.
@@ -72,18 +78,17 @@ class DataPersistence {
     /// handler for exporting routes to a external temporary file
     /// called in the case of a route being shared from the UIActivityViewController
     /// library
+    @available(iOS 12.0, *)
     func exportToURL(route: SavedRoute) -> URL? {
         /// fetch the world map if it exists
         /// is this legal given that unarchiveMap can be nil
         let worldMap = self.unarchiveMap(id: route.id as String)
         
-        /// aggregated file data
-        /// assemble object we want to write, (all route info with world map)
-        /// voice note data is contained in the landmark crumbs
-        /// TODO: convert to a NSSecureCoding Encoded object instead of plain writing the data to the file.
-        let sharedData = [[route.name, route.id, route.crumbs, route.dateCreated,route.beginRouteLandmark, route.endRouteLandmark, worldMap]]
+        /// need to fix to include functionality for phones which don't support
+        /// world maps (> iOS 12)
+        let routeData = RouteDocumentData(route: route, map: worldMap as! ARWorldMap)
         
-        /// fetch the documents directory where apple stores temp files
+        /// fetch the documents directory where apple stores temp files for apps
         let documents = FileManager.default.urls(
             for: .documentDirectory,
             in: .userDomainMask
@@ -95,12 +100,14 @@ class DataPersistence {
             return nil
         }
         
+        /// create the coded data
+        let codedData = try! NSKeyedArchiver.archivedData(withRootObject: routeData, requiringSecureCoding: true)
+        
         /// write route to file
         /// and return the path of the created temp file
         /// TODO: error handling with NSArrays?
         do {
-            (sharedData as NSArray).write(to: path as URL, atomically: true)
-//            try (routeData as NSArray).write(to: path as URL, atomically: true)
+            try codedData.write(to: path as URL)
             return path
         } catch {
             print(error.localizedDescription)
