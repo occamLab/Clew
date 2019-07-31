@@ -36,13 +36,13 @@ class DataPersistence {
     ///   - worldMapAsAny: an optional ARWorldMap.  The Any? type is used to allow for backward compatibility with iOS 11.3
     /// - Throws: an error if the route could not be saved
     func archive(route: SavedRoute, worldMapAsAny: Any?) throws {
-        // Save route to the route list
+        /// Save route to the route list
         if !update(route: route) {
             self.routes.append(route)
         }
         let data = try NSKeyedArchiver.archivedData(withRootObject: self.routes, requiringSecureCoding: true)
         try data.write(to: self.getRoutesURL(), options: [.atomic])
-        // Save the world map corresponding to the route
+        /// Save the world map corresponding to the route
         if #available(iOS 12.0, *) {
             if let worldMapAsAny = worldMapAsAny {
                 let data = try NSKeyedArchiver.archivedData(withRootObject: worldMapAsAny, requiringSecureCoding: true)
@@ -54,8 +54,9 @@ class DataPersistence {
     /// handler for importing routes from an external temporary file
     /// called in the case of a route being shared from the UIActivityViewController
     /// library
+    /// TODO: Does this need to be a static function?
     @available(iOS 12.0, *)
-    static func importData(from url: URL) {
+    func importData(from url: URL) {
         var documentData: RouteDocumentData
         
         /// attempt to fetch data from temporary import from external source
@@ -64,11 +65,14 @@ class DataPersistence {
             let data = try Data(contentsOf: url)
             if let document = try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data) as? RouteDocumentData {
                 documentData = document
+                
+                /// save into the route storage
+                try archive(route: documentData.route, worldMapAsAny: documentData.map)
             }
         } catch {
             print("couldn't unarchive route document")
         }
-
+        
         /// remove from temp storage the file gets automatically placed into
         /// otherwise the file sticks there and won't be deleted automatically,
         /// causing app bloat.
