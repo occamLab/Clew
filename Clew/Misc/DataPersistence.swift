@@ -51,7 +51,12 @@ class DataPersistence {
         }
     }
     
+    /// handler for importing routes from an external temporary file
+    /// called in the case of a route being shared from the UIActivityViewController
+    /// library
     static func importData(from url: URL) {
+        /// attempt to fetch data from temporary import from external source
+        /// TODO: convert to a NSSecureCoding Decoding object instead of plain writing the data to the file.
         guard
             let savedArray = try? NSArray(contentsOf: url as URL) as! [[Any]]
             else { return }
@@ -59,14 +64,26 @@ class DataPersistence {
         /// add to the saved route list here
         
         /// remove from temp storage the file gets automatically placed into
+        /// otherwise the file sticks there and won't be deleted automatically,
+        /// causing app bloat.
         try? FileManager.default.removeItem(at: url)
     }
     
+    /// handler for exporting routes to a external temporary file
+    /// called in the case of a route being shared from the UIActivityViewController
+    /// library
     func exportToURL(route: SavedRoute) -> URL? {
-        /// assemble object we want to write, (all route info)
-        let routeData = [[route.name, route.id, route.crumbs, route.dateCreated,route.beginRouteLandmark, route.endRouteLandmark]]
+        /// fetch the world map if it exists
+        /// is this legal given that unarchiveMap can be nil
+        let worldMap = self.unarchiveMap(id: route.id as String)
         
-        /// fetch the documents directory
+        /// aggregated file data
+        /// assemble object we want to write, (all route info with world map)
+        /// voice note data is contained in the landmark crumbs
+        /// TODO: convert to a NSSecureCoding Encoded object instead of plain writing the data to the file.
+        let sharedData = [[route.name, route.id, route.crumbs, route.dateCreated,route.beginRouteLandmark, route.endRouteLandmark, worldMap]]
+        
+        /// fetch the documents directory where apple stores temp files
         let documents = FileManager.default.urls(
             for: .documentDirectory,
             in: .userDomainMask
@@ -79,8 +96,11 @@ class DataPersistence {
         }
         
         /// write route to file
+        /// and return the path of the created temp file
+        /// TODO: error handling with NSArrays?
         do {
-            try (routeData as NSArray).write(to: path as URL, atomically: true)
+            (sharedData as NSArray).write(to: path as URL, atomically: true)
+//            try (routeData as NSArray).write(to: path as URL, atomically: true)
             return path
         } catch {
             print(error.localizedDescription)
