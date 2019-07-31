@@ -1361,6 +1361,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         isResumedRoute = false
         //TODO add conditional for one way route
         //PATHPOINT two way route recording finished -> create end landmark
+        rootContainerView.homeButton.isHidden = false // home button here
+        resumeTrackingController.remove()
+        resumeTrackingConfirmController.remove()
+        stopRecordingController.remove()
         startPauseProcedure()
         //state = .readyToNavigateOrPause(allowPause: true)
     }
