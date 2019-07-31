@@ -1336,7 +1336,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// handles the user pressing the record path button.
     @objc func recordPath() {
-        showRecordPathWithoutLandmarkWarning()
+        //PATHPOINT record two way path -> create Landmark
+        //sends the user to create a landmark
+        startCreateLandmarkProcedure()
     }
     
     /// handles the user pressing the stop recording button.
