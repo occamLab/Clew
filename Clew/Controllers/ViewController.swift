@@ -373,7 +373,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(playSound)), userInfo: nil, repeats: false)
 //            rootContainerView.pauseTrackingView.isHidden = true
             pauseTrackingController.remove()
-            state = .mainScreen(announceArrival: false)
+            //PATHPOINT creating beginining two way landmark -> record route
+            //sends the user to a route recording of the program is creating a beginning route landmark
+            state = .recordingRoute
             return
         } else if let currentTransform = sceneView.session.currentFrame?.camera.transform {
             endRouteLandmark.transform = currentTransform
