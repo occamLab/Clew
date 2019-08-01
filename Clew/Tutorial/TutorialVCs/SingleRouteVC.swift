@@ -63,6 +63,8 @@ class SingleRouteVC: TutorialChildViewController {
         skipButton = SkipButton().createSkipButton(buttonAction:
             #selector(skipButtonAction))
         congratsNextButton = NextButton().createNextButton(buttonAction: #selector(endTutorialNextButtonAction))
+        congratsNextButton.backgroundColor = UIColor.white
+        congratsNextButton.setTitleColor(clewGreen, for: .normal)
         
         singleRouteCongratsView = CongratsView().createCongratsView(congratsText: "Congratulations! \n You have completed the tutorial. \n Now you can get started with the app!", congratsAccessibilityLabel: "Congratulations! You have completed the tutorial. Now you can get started with the app!")
         singleRouteCongratsView.addSubview(congratsNextButton)

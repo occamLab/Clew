@@ -13,21 +13,45 @@ import FLAnimatedImage
 class PhoneOrientationGIFVC: TutorialChildViewController {
     var introView: UIView!
     var alignLabel: UILabel!
+    var instructionLabel: UILabel!
     var gotItButton: UIButton!
     var skipButton: UIButton!
-    
+    var gifView: UIImageView?
+    var gifImages: [UIImage]! = []
     var clewGreen = UIColor(red: 103/255, green: 188/255, blue: 71/255, alpha: 1.0)
     
     
-    @IBOutlet weak var PhoneOrientationGIF: FLAnimatedImageView!
+    /// function that creates an array of images
+    /// used for putting all the frames that consist a gif into an array
+    func createImageArray(total: Int, imagePrefix: String) -> [UIImage] {
+        var imageArray: [UIImage] = []
+
+        for imageCount in 1..<total {
+            let imageName = "\(imagePrefix)\(imageCount).png"
+            let image = UIImage(named: imageName)
+            imageArray.append(image!)
+        }
+        return imageArray
+    }
     
+    /// function that animates an array of images
+    func animateGIF(imageView: UIImageView, images: [UIImage]) {
+        imageView.animationImages = images
+        imageView.animationDuration = 5.0
+        imageView.startAnimating()
+    }
+    
+    /// function that creates a view that explains how to complete the phone orientation part of the tutorial
     func createIntroView() -> UIView {
+        // initialize view where all the labels and buttons will be added as a subview
         introView = UIView(frame:CGRect(x: 0,
                                         y: 0,
                                         width: UIScreen.main.bounds.size.width,
                                         height: UIScreen.main.bounds.size.height))
         introView.backgroundColor = clewGreen
-        alignLabel = UILabel(frame: CGRect(x: UIScreen.main.bounds.size.width/2 - UIScreen.main.bounds.size.width*2/5, y: UIScreen.main.bounds.size.height/8, width: UIScreen.main.bounds.size.width*4/5, height: 200))
+        
+        // Align Your Phone
+        alignLabel = UILabel(frame: CGRect(x: UIScreen.main.bounds.size.width/2 - UIScreen.main.bounds.size.width*2/5, y: UIScreen.main.bounds.size.height/15, width: UIScreen.main.bounds.size.width*4/5, height: 200))
         alignLabel.text = "ALIGN YOUR PHONE!"
         alignLabel.textColor = UIColor.white
         alignLabel.textAlignment = .center
@@ -39,40 +63,53 @@ class PhoneOrientationGIFVC: TutorialChildViewController {
         alignLabel.accessibilityLabel = "Congratulations! You have successfully oriented your phone. Now you will be recording a simple single route."
         introView.addSubview(alignLabel)
         
-        gotItButton = UIButton(frame: CGRect(x: UIConstants.buttonFrameWidth/(7/3),
-                                             y: UIConstants.yOriginOfSettingsAndHelpButton + 10,
-                                             width: UIConstants.buttonFrameWidth/5,
-                                             height: UIConstants.buttonFrameWidth/7))
+        // Detailed Instruction
+        instructionLabel = UILabel(frame: CGRect(x: UIScreen.main.bounds.size.width/2 - UIScreen.main.bounds.size.width*2/5, y: UIScreen.main.bounds.size.height/5, width: UIScreen.main.bounds.size.width*4/5, height: 200))
+        instructionLabel.text = "Use the speed of the vibrations to determine whether the phone is in the correct orientation. The faster the vibration, the closer you are to proper orientation."
+        instructionLabel.textColor = UIColor.black
+        instructionLabel.backgroundColor = UIColor.white
+        instructionLabel.textAlignment = .center
+        instructionLabel.numberOfLines = 0
+        instructionLabel.layer.cornerRadius = 8.0
+        instructionLabel.layer.borderColor = UIColor.black.cgColor
+        instructionLabel.layer.borderWidth = 3.0
+        instructionLabel.lineBreakMode = .byWordWrapping
+        instructionLabel.layer.masksToBounds = true
+        instructionLabel.font = UIFont.systemFont(ofSize:17.0)
+        instructionLabel.accessibilityLabel = "Use the speed of the vibrations to determine whether the phone is in the correct orientation. The faster the vibration, the closer you are to proper orientation."
+        introView.addSubview(instructionLabel)
+        
+        // GotIt Button
+        gotItButton = UIButton(frame: CGRect(x: UIScreen.main.bounds.size.width/2 - UIConstants.buttonFrameWidth/6,
+                                             y: UIConstants.yOriginOfSettingsAndHelpButton,
+                                             width: UIConstants.buttonFrameWidth/3,
+                                             height: UIConstants.buttonFrameWidth/5))
         gotItButton.isAccessibilityElement = true
         gotItButton.setTitle("Got it", for: .normal)
         gotItButton.titleLabel?.font = UIFont.systemFont(ofSize: 24.0)
         gotItButton.accessibilityLabel = "Got It"
-        gotItButton.setImage(UIImage(named: "buttonBackground2"), for: .normal)
+        gotItButton.setImage(UIImage(named: "GotIt"), for: .normal)
         gotItButton.addTarget(self, action: #selector(gotItButtonAction), for: .touchUpInside)
         introView.addSubview(gotItButton)
         
+        // Skip Button
         skipButton = SkipButton().createSkipButton(buttonAction:
             #selector(skipButtonAction))
         introView.addSubview(skipButton)
-//
-//        gifView.frame = CGRect(x: 0.0, y: 0.0, width: 100.0, height: 100.0)
-//        let imageData = try! Data(contentsOf: Bundle.main.url(forResource: "PhoneOrientation", withExtension: "gif")!)
-//        phoneOrientationGIF = FLAnimatedImage(animatedGIFData: imageData)
+        
+        // GIF
+        let gifView = UIImageView(image: UIImage(named: "phoneOrientationGIF1"))
+        let gifImages = createImageArray(total: 9, imagePrefix: "phoneOrientationGIF")
+        gifView.frame = CGRect(x: UIScreen.main.bounds.size.width/2 - 125, y: UIScreen.main.bounds.size.height*3/7, width: 250, height: 250)
+        animateGIF(imageView: gifView, images: gifImages)
+        introView.addSubview(gifView)
         
         return introView
     }
     
-    func transitionToMainApp() {
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        appDelegate.window?.rootViewController?.dismiss(animated: false)
-        appDelegate.window = UIWindow(frame:UIScreen.main.bounds)
-        appDelegate.window?.makeKeyAndVisible()
-        appDelegate.window?.rootViewController = ViewController()
-    }
     
-    /// function that creates alerts for the home button
+    /// function that creates alerts for the skip button
     func skipNavigationProcesses() {
-        // Create alert to warn users of lost information
         let alert = UIAlertController(title: "Are you sure?",
                                       message: "If you exit this process right now, you won't be orienting your phone.",
                                       preferredStyle: .alert)
@@ -89,18 +126,13 @@ class PhoneOrientationGIFVC: TutorialChildViewController {
         self.present(alert, animated: true, completion: nil)
     }
     
-    @IBAction func SkipTutorial(_ sender: UIButton) {
-        transitionToMainApp()
-        
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        (appDelegate.window?.rootViewController as? ViewController)?.tutorialViewController.state = .readyToRecordSingleRoute
-    }
 
     // Callback function for when the 'skip' button is tapped
     @objc func skipButtonAction(sender: UIButton!) {
         skipNavigationProcesses()
     }
     
+    // Callback function for when the 'got it" button is tapped
     @objc func gotItButtonAction(sender: UIButton!) {
         introView.removeFromSuperview()
         tutorialParent?.state = .startOrientationTraining
