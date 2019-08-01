@@ -86,7 +86,7 @@ class RoutesViewController : UIViewController, UITableViewDataSource, UITableVie
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         
         let delete = UITableViewRowAction(style: .destructive, title: "Delete") { (action, indexPath) in
-            // delete item at indexPath
+            /// delete item at indexPath
             do {
                 try self.rootViewController?.dataPersistence.delete(route: self.routes[indexPath.row])
                 self.routes.remove(at: indexPath.row)
@@ -95,7 +95,20 @@ class RoutesViewController : UIViewController, UITableViewDataSource, UITableVie
                 print("Unexpectedly failed to persist the new routes data")
             }
         }
-        return [delete]
+        
+        let share = UITableViewRowAction(style: .normal, title: "Share") { (action, indexPath) in
+            /// share item
+            do {
+                if #available(iOS 12.0, *) {
+                    try self.rootViewController?.dataPersistence.exportToURL(route: self.routes[indexPath.row])
+                } else {
+                    // Fallback on earlier versions
+                }
+            } catch {
+                print("well that didn't work!")
+            }
+        }
+        return [delete, share]
         
     }
     

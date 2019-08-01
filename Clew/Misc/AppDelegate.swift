@@ -44,14 +44,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UIApplication.shared.isIdleTimerDisabled = true
         
         /// check imported file extension
-        guard url.pathExtension == "crd" else { return false }
-        
-        /// import the file here
-        if #available(iOS 12.0, *) {
-            vc.dataPersistence.importData(from: url)
-        } else {
-            // Fallback on earlier versions
-        }
+//        guard url.pathExtension == "crd" else { return false }
+//
+//        /// import the file here
+//        if #available(iOS 12.0, *) {
+//            vc.dataPersistence.importData(from: url)
+//        } else {
+//            // Fallback on earlier versions
+//        }
         
         return true
     }
