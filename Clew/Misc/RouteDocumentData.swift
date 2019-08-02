@@ -12,7 +12,7 @@ import SceneKit
 
 /// class for handling the selection of data to be stored in UIActivityShare Menus
 @available(iOS 12.0, *)
-class RouteDocumentData: NSObject, NSCoding {
+class RouteDocumentData: NSObject, NSSecureCoding {
     /// This is needed to use NSSecureCoding
     static var supportsSecureCoding = true
     
@@ -38,6 +38,7 @@ class RouteDocumentData: NSObject, NSCoding {
     func encode(with aCoder: NSCoder) {
         aCoder.encode(route, forKey: "route")
         aCoder.encode(map, forKey: "map")
+        print("route document encoded!")
     }
     
     /// Initialize an object based using data from a decoder

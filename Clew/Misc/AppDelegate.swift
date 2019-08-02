@@ -16,8 +16,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     /// A handle to the app's main window
     var window: UIWindow?
     
-    var vc = ViewController()
-
     /// Called when the app finishes launching.  Currently, this is where we setup Firebase and make sure the phone screen doesn't lock while we are using the app.
     ///
     /// - Parameters:
@@ -25,7 +23,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     ///   - launchOptions: the launch options
     ///   - options: additional options, for share menu specifically here
     /// - Returns: a Boolean indicating whether the app can continue to handle user activity.
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?, open url: URL, options: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
+//    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?, open url: URL, options: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
         // Use Firebase library to configure APIs
         #if IS_DEV_TARGET
@@ -36,22 +35,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             FirebaseApp.configure()
         #endif
         logUserProperties()
+        
+        let vc = ViewController()
 
         // Override point for customization after application launch.
         window = UIWindow(frame:UIScreen.main.bounds)
-        window?.makeKeyAndVisible()
         window?.rootViewController = vc
+        window?.makeKeyAndVisible()
         UIApplication.shared.isIdleTimerDisabled = true
         
         /// check imported file extension
 //        guard url.pathExtension == "crd" else { return false }
-//
-//        /// import the file here
-//        if #available(iOS 12.0, *) {
+
+        /// import the file here
+        if #available(iOS 12.0, *) {
 //            vc.dataPersistence.importData(from: url)
-//        } else {
-//            // Fallback on earlier versions
-//        }
+        } else {
+            // Fallback on earlier versions
+        }
         
         return true
     }
