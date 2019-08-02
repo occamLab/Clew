@@ -1,0 +1,33 @@
+
+/* Class = "UILabel"; text = "Please give us your feedback!"; ObjectID = "9cz-vg-ExE"; */
+///A prompt that tells the user to use the form to give us feedback
+"9cz-vg-ExE.text" = "Please give us your feedback!";
+
+///A prompt which tells the user that the buttons below are used to record a voice note
+/* Class = "UILabel"; text = "Attach a voice recording"; ObjectID = "AwY-9g-fYn"; */
+"AwY-9g-fYn.text" = "Attach a voice recording";
+
+/* Class = "UIButton"; accessibilityLabel = "Send Feedback"; ObjectID = "Yh2-1z-izX"; */
+
+///This is tha accessability label that is read when the user hovers over the send feedback button
+"Yh2-1z-izX.accessibilityLabel" = "Send Feedback";
+
+/* Class = "UIButton"; normalTitle = "Send >"; ObjectID = "Yh2-1z-izX"; */
+///This is the text on the send feedback button the ">" symbol is included to represent action
+"Yh2-1z-izX.normalTitle" = "Send >";
+
+/* Class = "UITextField"; placeholder = "Email (optional)"; ObjectID = "gdh-cx-htS"; */
+///This is the place holder text which tell sthe user what sort of information to input into the respective text field
+"gdh-cx-htS.placeholder" = "Email (optional)";
+
+/* Class = "UITextField"; placeholder = "Phone Number (optional)"; ObjectID = "ona-NU-g6a"; */
+///This is the place holder text which tell sthe user what sort of information to input into the respective text field
+"ona-NU-g6a.placeholder" = "Phone Number (optional)";
+
+/* Class = "UITextField"; placeholder = "Name"; ObjectID = "rLz-VJ-aNK"; */
+///This is the place holder text which tell sthe user what sort of information to input into the respective text field
+"rLz-VJ-aNK.placeholder" = "Name";
+
+/* Class = "UITextField"; placeholder = "Country (optional)"; ObjectID = "u2H-bu-ac3"; */
+///This is the place holder text which tell sthe user what sort of information to input into the respective text field
+"u2H-bu-ac3.placeholder" = "Country (optional)";

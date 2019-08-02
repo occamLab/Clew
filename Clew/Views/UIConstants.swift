@@ -65,6 +65,14 @@ enum UIConstants {
         return UIScreen.main.bounds.size.height/15
     }
     
+    static var yButtonFrameMargin: CGFloat {
+        return 25.0
+    }
+    
+    static var topButtonFrameMargin: CGFloat {
+        return 450.0
+    }
+    
     /// How to align the button horizontally within the button frame
     enum ButtonContainerHorizontalAlignment {
         /// put the button in the center
