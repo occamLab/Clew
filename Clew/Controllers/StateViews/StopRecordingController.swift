@@ -45,7 +45,7 @@ class StopRecordingController: UIViewController {
         stopRecordingButton = UIButton.makeImageButton(view,
                                                        alignment: UIConstants.ButtonContainerHorizontalAlignment.center,
                                                        appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "StopRecording")!),
-                                                       label: NSLocalizedString("Stop recording", comment: "The name of the button that allows user to stop recording."))
+                                                       label: NSLocalizedString("stop-recording.button.label", comment: "The name of the button that allows user to stop recording."))
         
         if let parent: UIViewController = parent {
             stopRecordingButton.addTarget(parent,

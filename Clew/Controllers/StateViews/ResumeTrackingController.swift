@@ -30,7 +30,7 @@ class ResumeTrackingController: UIViewController {
         
         view.backgroundColor = UIColor.black.withAlphaComponent(0.4)
         
-        let mainText = NSLocalizedString("Return to the last paused location and press Resume for further instructions.", comment: "A message displayed to the user")
+        let mainText = NSLocalizedString("resume-tracking.message", comment: "A message displayed to the user")
         label.textColor = UIColor.white
         label.textAlignment = .center
         label.numberOfLines = 0
@@ -45,7 +45,7 @@ class ResumeTrackingController: UIViewController {
         resumeButton = UIButton.makeImageButton(view,
                                                 alignment: UIConstants.ButtonContainerHorizontalAlignment.center,
                                                 appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "Resume")!),
-                                                label: NSLocalizedString("Resume", comment: "Resume paused route"))
+                                                label: NSLocalizedString("resume-paused-route.button.label", comment: "Resume paused route"))
         
         
         if let parent: UIViewController = parent {

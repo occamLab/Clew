@@ -45,7 +45,7 @@ class StopNavigationController: UIViewController {
         stopNavigationButton = UIButton.makeImageButton(view,
                                                         alignment: UIConstants.ButtonContainerHorizontalAlignment.center,
                                                         appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "StopNavigation")!),
-                                                        label: NSLocalizedString("Stop navigation", comment: "The name of the button that allows user to stop navigating."))
+                                                        label: NSLocalizedString("stop-navigation.button.label", comment: "The name of the button that allows user to stop navigating."))
         
         if let parent: UIViewController = parent {
             stopNavigationButton.addTarget(parent,

@@ -50,7 +50,7 @@ class PauseTrackingController: UIViewController {
         view.backgroundColor = UIColor.black.withAlphaComponent(0.4)
         
         let waitingPeriod = ViewController.alignmentWaitingPeriod
-        let mainText = String.localizedStringWithFormat(NSLocalizedString("Landmarks allow you to save or pause your route. You will need to return to the landmark to load or unpause your route. Before creating the landmark, specify text or voice to help you remember its location. To create a landmark, hold your device flat with the screen facing up. Press the top (short) edge flush against a flat vertical surface (such as a wall).  The \"align\" button starts a %lu-second countdown. During this time, do not move the device.", comment: "Info for user"), waitingPeriod)
+        let mainText = String.localizedStringWithFormat(NSLocalizedString("landmark-instruction.message", comment: "Info for user"), waitingPeriod)
         label.textColor = UIColor.white
         label.textAlignment = .center
         label.numberOfLines = 0

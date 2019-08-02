@@ -48,12 +48,12 @@ class StartNavigationController: UIViewController {
         startNavigationButton = UIButton.makeImageButton(view,
                                                          alignment: UIConstants.ButtonContainerHorizontalAlignment.center,
                                                          appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "StartNavigation")!),
-                                                         label: NSLocalizedString("Start navigation", comment: "The name of the button that allows user to start navigating."))
+                                                         label: NSLocalizedString("start-navigation.button.label", comment: "The name of the button that allows user to start navigating."))
         
         pauseButton = UIButton.makeImageButton(view,
                                                alignment: UIConstants.ButtonContainerHorizontalAlignment.right,
                                                appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "Pause")!),
-                                               label: NSLocalizedString("Pause session", comment: "A button that allows user to pause the navigation session"))
+                                               label: NSLocalizedString("pause-session.button.label", comment: "A button that allows user to pause the navigation session"))
         
         if let parent: UIViewController = parent {
             startNavigationButton.addTarget(parent,

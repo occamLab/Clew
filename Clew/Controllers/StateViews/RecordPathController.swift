@@ -51,17 +51,17 @@ class RecordPathController: UIViewController {
         recordPathButton = UIButton.makeImageButton(view,
                                                     alignment: UIConstants.ButtonContainerHorizontalAlignment.center,
                                                     appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "Record")!),
-                                                    label: NSLocalizedString("Record path", comment: "A button that allows you to video record path to a destination"))
+                                                    label: NSLocalizedString("record-path.button.label", comment: "A button that allows you to video record path to a destination"))
         
         addLandmarkButton = UIButton.makeImageButton(view,
                                                      alignment: UIConstants.ButtonContainerHorizontalAlignment.right,
                                                      appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "Landmark")!),
-                                                     label: NSLocalizedString("Landmark", comment: "A button that allows you to create a landmark to save a route"))
+                                                     label: NSLocalizedString("landmark.button.label", comment: "A button that allows you to create a landmark to save a route"))
         
         routesButton = UIButton.makeImageButton(view,
                                                 alignment: UIConstants.ButtonContainerHorizontalAlignment.left,
                                                 appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "route")!),
-                                                label: NSLocalizedString("Saved Routes List", comment: "A button that allows you to access your list of saved routes"))
+                                                label: NSLocalizedString("open-saved-routes.button.label", comment: "The label of a button that allows you to access your list of saved routes"))
         
         if let parent: UIViewController = parent {
             routesButton.addTarget(parent,

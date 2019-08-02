@@ -47,11 +47,11 @@ class RouteRatingController: UIViewController {
         thumbsDownButton = UIButton.makeImageButton(view,
                                                     alignment: UIConstants.ButtonContainerHorizontalAlignment.leftcenter,
                                                     appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "thumbs_down")!),
-                                                    label: NSLocalizedString("Bad", comment: "Unsatisfactory service"))
+                                                    label: NSLocalizedString("thumbs-down.label", comment: "Unsatisfactory service"))
         thumbsUpButton = UIButton.makeImageButton(view,
                                                   alignment: UIConstants.ButtonContainerHorizontalAlignment.rightcenter,
                                                   appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "thumbs_up")!),
-                                                  label: NSLocalizedString("Good", comment: "Satisfactory service"))
+                                                  label: NSLocalizedString("thumbs-up.label", comment: "Satisfactory service"))
         
         if let parent: UIViewController = parent {
             thumbsUpButton.addTarget(parent,

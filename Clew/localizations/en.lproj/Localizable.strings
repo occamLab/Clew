@@ -6,134 +6,141 @@
   Copyright © 2019 OccamLab. All rights reserved.
 */
 
+// Unique keys provide context through the words seperated by "."
+// Feedback and Help keys however have been formatted using camel case.
 
 // When opening the app for the first time
-"Sharing your experience with Clew" = "Sharing your experience with Clew";
+"share-experience.popup.title" = "Sharing your experience with Clew";
 
-"Help us improve the app by logging your Clew experience. These logs will not include any images or personal information. You can turn this off in Settings." = "Help us improve the app by logging your Clew experience. These logs will not include any images or personal information. You can turn this off in Settings.";
+"share-experience.popup.message" = "Help us improve the app by logging your Clew experience. These logs will not include any images or personal information. You can turn this off in Settings.";
 
-"For your safety" = "For your safety";
+"safety-disclaimer.popup.title" = "For your safety";
 
-"While using the app, please be aware of your surroundings. You agree that your use of the App is at your own risk, and it is solely your responsibility to maintain your personal safety. Visit www.clewapp.org for more information on how to use the app." = "While using the app, please be aware of your surroundings. You agree that your use of the App is at your own risk, and it is solely your responsibility to maintain your personal safety. Visit www.clewapp.org for more information on how to use the app.";
+"safety-disclaimer.popup.message" = "While using the app, please be aware of your surroundings. You agree that your use of the App is at your own risk, and it is solely your responsibility to maintain your personal safety. Visit www.clewapp.org for more information on how to use the app.";
 
-"Continue with single-use route" = "Continue with single-use route";
+"single-route.popup.action" = "Continue with single-use route";
 
-"Cancel recording" = "Cancel recording";
+"cancel-recording.popup.action" = "Cancel recording";
 
-"Creating reusable routes" = "Creating reusable routes";
+"create-reusable-routes.popup.title" = "Creating reusable routes";
 
-"Continue with single-use route" = "Continue with single-use route";
+"cancel-navigation.popup.action" = "Cancel navigation";
 
-"Cancel navigation" = "Cancel navigation";
+// Accessibility
+"stop-voice-recording.accessibility.label" = "Stop Recording";
+"record-voice-note.accessibility.label" = "Record Voice Note";
 
 // Strings from ViewController
     // Voicing directions
-"Tracking session initialized." = "Tracking session initialized.";
-"Tracking performance normal." = "Tracking performance normal.";
-"Hold vertically with the rear camera facing forward." = "Hold vertically with the rear camera facing forward.";
-"You've arrived." = "You've arrived.";
+"tracking-session-initialized.announcement" = "Tracking session initialized.";
+"tracking-performance-normal.announcement" = "Tracking performance normal.";
+"hold-phone-vertically.announcement" = "Hold vertically with the rear camera facing forward.";
+"you-have-arrived.announcement" = "You've arrived.";
 
     // Name of labels that appear in UI
-"Record path" = "Record path";
-"Bad" = "Bad";
-"Good" = "Good";
-"Resume" = "Resume";
-"Saved Routes List" = "Saved Routes List";
-"Stop navigation" = "Stop navigation";
-"Start navigation" = "Start navigation";
-"Stop recording" = "Stop recording";
-"Landmark" = "Landmark";
-"Help" = "Help";
-"Clew Home Screen" = "Clew Home Screen";
-"Feedback" = "Feedback";
-"Get Directions" = "Get Directions";
-"Pause session" = "Pause session";
+"record-path.button.label" = "Record path";
+"thumbs-down.label" = "Bad";
+"thumbs-up.label" = "Good";
+"resume-paused-route.button.label" = "Resume";
+"open-saved-routes.button.label" = "Saved Routes List";
+"stop-navigation.button.label" = "Stop navigation";
+"start-navigation.button.label" = "Start navigation";
+"stop-recording.button.label" = "Stop recording";
+"landmark.button.label" = "Landmark";
+"help.button.accessibility.label" = "Help";
+"clew-home-screen.button.accessibility.label" = "Clew Home Screen";
+"feedback.button.accessibility.label" = "Feedback";
+"get-directions.button.acessibility.label" = "Get Directions";
+"pause-session.button.label" = "Pause session";
 
     // Home button function
-"Are you sure?" = "Are you sure?";
-"If you exit this process right now, your active route information will be lost." = "If you exit this process right now, your active route information will be lost.";
-"Go to the Home Page" = "Go to the Home Page";
+"home-are-you-sure.popup.title" = "Are you sure?";
+"home-are-you-sure.popup.message" = "If you exit this process right now, your active route information will be lost.";
+"go-home.popup.action" = "Go to the Home Page";
+"home-cancel.popup.action" = "Cancel";
 
     // Save routes
-"Save route" = "Save route";
-"Enter the name of the route" = "Enter the name of the route";
-"Saved Routes List" = "Saved Routes List";
-"Enter route title" = "Enter route title";
-"Save" = "Save";
-"Cancel" = "Cancel";
+"save-a-route.popup.title" = "Save route";
+"save-a-route.popup.message" = "Enter the name of the route";
+"saved-routes-list.title" = "Saved Routes List";
+"enter-route-title.placeholder" = "Enter route title";
+"save.action" = "Save";
+"cancel.action" = "Cancel";
 
     // Resume
-"Return to the last paused location and press Resume for further instructions." = "Return to the last paused location and press Resume for further instructions.";
+"resume-tracking.message" = "Return to the last paused location and press Resume for further instructions.";
 
     // Rating service view
-"You've arrived. Please rate your service." = "You've arrived. Please rate your service.";
-"Please rate your service." = "Please rate your service.";
+"arrived-and-rate-service.message" = "You've arrived. Please rate your service.";
+"rate-service.message" = "Please rate your service.";
 
     // Other
-"Successfully matched current environment to saved route." = "Successfully matched current environment to saved route.";
-"Could not match environment to the saved route. Starting new tracking session." = "Could not match environment to the saved route. Starting new tracking session.";
-"Excessive motion.\nTracking performance is degraded." = "Excessive motion.\nTracking performance is degraded.";
-"Insufficient visual features.\nTracking performance is degraded." = "Insufficient visual features.\nTracking performance is degraded.";
+"successful-match-to-saved-route.announcement" = "Successfully matched current environment to saved route.";
+"could-not-match-to-saved-route.announcement" = "Could not match environment to the saved route. Starting new tracking session.";
+"excessive-motion.announcement" = "Excessive motion.\nTracking performance is degraded.";
+"insufficient-visual-features.announcement" = "Insufficient visual features.\nTracking performance is degraded.";
 
 
 // Strings from Navigation
-" and proceed upstairs" = " and proceed upstairs";
-" and proceed downstairs" = " and proceed downstairs";
+"proceed-upstairs.message" = " and proceed upstairs";
+"proceed-downstairs.message" = " and proceed downstairs";
+
     // Version of directions given when haptic feedback function is turned on (Simpler)
-"Continue straight" = "Continue straight";
-"Slight right" = "Slight right";
-"Turn right" = "Turn right";
-"Turn around" = "Turn around";
-"Turn left" = "Turn left"; 
-"Slight left" = "Slight left";
+"continue-straight.message" = "Continue straight";
+"slight-right-1-o'clock.message" = "Slight right";
+"turn-right.message" = "Turn right";
+"turn-around.message" = "Turn around";
+"turn-left.message" = "Turn left";
+"slight-left.message" = "Slight left";
 
     // Version of directions given when haptic feedback function is turned off (Clock directions)
-"Continue straight" = "Continue straight";
-"Slight right towards 1 o'clock" = "Slight right towards 1 o'clock";
-"Slight right towards 2 o'clock" = "Slight right towards 2 o'clock";
-"Turn right" = "Turn right";
-"Turn towards 4 o'clock" = "Turn towards 4 o'clock";
-"Turn around towards 5 o'clock" = "Turn around towards 5 o'clock";
-"Turn around towards 6 o'clock" = "Turn around towards 6 o'clock";
-"Turn around towards 7 o'clock" = "Turn around towards 7 o'clock";
-"Turn towards 8 o'clock" = "Turn towards 8 o'clock";
-"Turn left" = "Turn left";
-"Slight left towards 10 o'clock" = "Slight left towards 10 o'clock";
-"Slight left towards 11 o'clock" = "Slight left towards 11 o'clock";
+"continue-straight.message" = "Continue straight";
+"slight-right-1-o'clock.message" = "Slight right towards 1 o'clock";
+"slight-right-2-o'clock.message" = "Slight right towards 2 o'clock";
+"turn-right.message" = "Turn right";
+"turn-to-4-o'clock.message" = "Turn towards 4 o'clock";
+"turn-to-5-o'clock.message" = "Turn around towards 5 o'clock";
+"turn-to-6-o'clock.message" = "Turn around towards 6 o'clock";
+"turn-to-7-o'clock.message" = "Turn around towards 7 o'clock";
+"turn-to-8-o'clock.message" = "Turn towards 8 o'clock";
+"turn-left.message" = "Turn left";
+"slight-left-10-o'clock.message" = "Slight left towards 10 o'clock";
+"slight-left-11-o'clock.message" = "Slight left towards 11 o'clock";
 
 
 // Landmarks
-"To navigate this route in the forward direction at a later time, you must create a landmark before starting the recording." = "To navigate this route in the forward direction at a later time, you must create a landmark before starting the recording.";
+"navigate-forward-instruction.message" = "To navigate this route in the forward direction at a later time, you must create a landmark before starting the recording.";
 
-"To navigate this route in the reverse direction at a later time, you must activate the pause button before navigating the route." = "To navigate this route in the reverse direction at a later time, you must activate the pause button before navigating the route.";
+"navigate-backwards-instruction.message" = "To navigate this route in the reverse direction at a later time, you must activate the pause button before navigating the route.";
 
-"Landmark information" = "Landmark information";
+"landmark-information.popup.title" = "Landmark information";
 
-"Enter text about the landmark that will help you find it later." = "Enter text about the landmark that will help you find it later.";
+"landmark-information.popup.message" = "Enter text about the landmark that will help you find it later.";
 
-"Ok" = "Ok";
+"ok.button" = "Ok";
 
-"Don't specify this information" = "Don't specify this information";
+"don't-specify-information.button" = "Don't specify this information";
 
-"Enter landmark information" = "Enter landmark information";
+"enter-landmark-information.placeholder" = "Enter landmark information";
 
-"Landmarks allow you to save or pause your route. You will need to return to the landmark to load or unpause your route. Before creating the landmark, specify text or voice to help you remember its location. To create a landmark, hold your device flat with the screen facing up. Press the top (short) edge flush against a flat vertical surface (such as a wall).  The \"align\" button starts a %lu-second countdown. During this time, do not move the device." = "Landmarks allow you to save or pause your route. You will need to return to the landmark to load or unpause your route. Before creating the landmark, specify text or voice to help you remember its location. To create a landmark, hold your device flat with the screen facing up. Press the top (short) edge flush against a flat vertical surface (such as a wall).  The \"align\" button starts a %lu-second countdown. During this time, do not move the device.";
+"landmark-instruction.message" = "Landmarks allow you to save or pause your route. You will need to return to the landmark to load or unpause your route. Before creating the landmark, specify text or voice to help you remember its location. To create a landmark, hold your device flat with the screen facing up. Press the top (short) edge flush against a flat vertical surface (such as a wall).  The \"align\" button starts a %lu-second countdown. During this time, do not move the device.";
 
-"Hold your device flat with the screen facing up. Press the top (short) edge flush against the same vertical surface that you used to create the landmark.  When you are ready, activate the align button to start the %lu-second alignment countdown that will complete the procedure. Do not move the device until the phone provides confirmation via a vibration or sound cue." = "Hold your device flat with the screen facing up. Press the top (short) edge flush against the same vertical surface that you used to create the landmark.  When you are ready, activate the align button to start the %lu-second alignment countdown that will complete the procedure. Do not move the device until the phone provides confirmation via a vibration or sound cue.";
+"align-instruction.message" = "Hold your device flat with the screen facing up. Press the top (short) edge flush against the same vertical surface that you used to create the landmark.  When you are ready, activate the align button to start the %lu-second alignment countdown that will complete the procedure. Do not move the device until the phone provides confirmation via a vibration or sound cue.";
 
-"Settings" = "Settings"; // Comments: Title/header of the settings menu.
+"settings.button.accessibility.label" = "Settings"; // Comments: Title/header of the settings menu.
 
 // Voicenote
-"Voice Note Recorder" = "Voice Note Recorder";
+"voice-note-recorder.popup.title" = "Voice Note Recorder";
 
 // RoutesViewController
-"Route direction" = "Route direction";
+"route-direction.popup.title" = "Route direction";
 
-"Start to End" = "Start to End";
+"start-to-end.action" = "Start to End";
 
-"End to Start" = "End to Start";
+"end-to-start.action" = "End to Start";
 
 // Info.plist
+// Not sure if keys can be edited for strings in Info.plist
 "Clew needs to access your camera to track your orientation." = "Clew needs to access your camera to track your orientation.";
 "Permission to use the microphone is required to use the voice notes feature." = "Permission to use the microphone is required to use the voice notes feature.";
 
