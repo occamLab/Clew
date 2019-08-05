@@ -91,13 +91,13 @@ enum AppState {
 
 /// The view controller that handles the main Clew window.  This view controller is always active and handles the various views that are used for different app functionalities.
 class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDelegate, AVSpeechSynthesizerDelegate, ARSessionDelegate {
-
+    
     // MARK: - Refactoring UI definition
     
     // MARK: Properties and subview declarations
     
     /// How long to wait (in seconds) between the alignment request and grabbing the transform
-    static let alignmentWaitingPeriod = 1
+    static let alignmentWaitingPeriod = 5
     
     /// Used for synchrony when saving in background threads.
     let routeSaveGroup = DispatchGroup()
@@ -107,6 +107,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     var loadedRoute : SavedRoute?
     var loadedRouteStartToEnd : Bool?
+    
+    var phoneVertical : Bool = false
     
     /// The state of the app.  This should be constantly referenced and updated as the app transitions
     var state = AppState.initializing {
@@ -142,6 +144,40 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             }
         }
     }
+    
+    func session(_ session: ARSession, didUpdate: ARFrame) {
+        
+        guard let poseRotation = sceneView.session.currentFrame?.camera.transform.rotation() else {
+            return
+        }
+        
+        let unitY = simd_float3(-1, 0, 0)
+        let projectedPhoneZ = poseRotation * simd_float3(0, 0, 1)
+        let polar = asin(simd_dot(projectedPhoneZ, simd_normalize(simd_float3(projectedPhoneZ.x, projectedPhoneZ.y, 0))))
+        let phoneCurrentlyVertical = polar < 0.4
+        let nowVerticalVibration = UIImpactFeedbackGenerator(style: .light)
+        let nowNotVerticalVibration = UIImpactFeedbackGenerator(style: .heavy)
+        
+        switch state {
+        case .startingPauseProcedure:
+            if phoneCurrentlyVertical && !phoneVertical {
+                nowVerticalVibration.impactOccurred()
+            }
+        case .pauseWaitingPeriod:
+            if !phoneCurrentlyVertical && phoneVertical {
+                playAlignmentConfirmation?.cancel()
+                handleStateTransitionToPauseWaitingPeriod()
+                nowNotVerticalVibration.impactOccurred()
+                announce(announcement: "Camera no longer vertical, restarting countdown")
+            }
+        default:
+            break
+        }
+        
+        phoneVertical = phoneCurrentlyVertical
+    }
+    
+
 
     /// When VoiceOver is not active, we use AVSpeechSynthesizer for speech feedback
     let synth = AVSpeechSynthesizer()
@@ -604,6 +640,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        sceneView.session.delegate = self
+        
         // set the main view as active
         view = RootContainerView(frame: UIScreen.main.bounds)
         
@@ -859,7 +897,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 }
             }
         }
-            
+        
         // The cancel action saves the just traversed route so you can navigate back along it later
         let cancelAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: "An option for the user to select"), style: .cancel) { (_) in
             self.justTraveledRoute = SavedRoute(id: "dummyid", name: "Last route", crumbs: self.crumbs, dateCreated: Date() as NSDate, beginRouteLandmark: self.beginRouteLandmark, endRouteLandmark: self.endRouteLandmark)
