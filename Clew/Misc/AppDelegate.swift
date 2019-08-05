@@ -16,14 +16,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     /// A handle to the app's main window
     var window: UIWindow?
     
+    /// view controller!
+    var vc: ViewController!
+    
     /// Called when the app finishes launching.  Currently, this is where we setup Firebase and make sure the phone screen doesn't lock while we are using the app.
     ///
     /// - Parameters:
     /// - Parameter application: a handle the application object
     ///   - launchOptions: the launch options
-    ///   - options: additional options, for share menu specifically here
     /// - Returns: a Boolean indicating whether the app can continue to handle user activity.
-//    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?, open url: URL, options: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
         // Use Firebase library to configure APIs
@@ -36,7 +37,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         #endif
         logUserProperties()
         
-        let vc = ViewController()
+        vc = ViewController()
 
         // Override point for customization after application launch.
         window = UIWindow(frame:UIScreen.main.bounds)
@@ -44,12 +45,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window?.makeKeyAndVisible()
         UIApplication.shared.isIdleTimerDisabled = true
         
+        return true
+    }
+    
+    /// entry point for when a file is opened from outside the app
+    func application(_ app: UIApplication,
+                     open url: URL,
+                     options: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
+        print("opening a file!")
+        
         /// check imported file extension
-//        guard url.pathExtension == "crd" else { return false }
-
+        guard url.pathExtension == "crd" else { return false }
+        
         /// import the file here
         if #available(iOS 12.0, *) {
-//            vc.dataPersistence.importData(from: url)
+            print("attempting to persist!")
+            vc.dataPersistence.importData(from: url)
         } else {
             // Fallback on earlier versions
         }

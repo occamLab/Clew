@@ -67,6 +67,7 @@ class DataPersistence {
                 documentData = document
                 
                 /// save into the route storage
+                print("name of import route:", documentData.route.name)
                 try archive(route: documentData.route, worldMapAsAny: documentData.map)
             }
         } catch {
