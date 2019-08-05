@@ -1362,7 +1362,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         ///tells the program that it is recording a two way route
         recordingSingleUseRoute = false
         ///sends the user to create a landmark
-        startCreateLandmarkProcedure()
+        rootContainerView.homeButton.isHidden = false
+        //        backButton.isHidden = true
+        creatingRouteLandmark = true
+        
+        // make sure to clear out any relative transform and paused transform so the alignment is accurate
+        print("starting pause procedure", creatingRouteLandmark)
+        sceneView.session.setWorldOrigin(relativeTransform: simd_float4x4.makeTranslation(0, 0, 0))
+        state = .startingPauseProcedure
     }
     
     /// handles the user pressing the stop recording button.
@@ -1387,12 +1394,19 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         resumeTrackingConfirmController.remove()
         stopRecordingController.remove()
         
-        ///PATHPOINT two way route recording finished -> create end landmark
-        ///sets the variable tracking whether the route is paused to be false
-        paused = false
-        creatingRouteLandmark = false
-        //sends the user to the process where they create an end anchorpoint
-        state = .startingPauseProcedure
+        ///checks if the route is a single use route or a multiple use route
+        if recordingSingleUseRoute == false{
+            ///PATHPOINT two way route recording finished -> create end landmark
+            ///sets the variable tracking whether the route is paused to be false
+            paused = false
+            creatingRouteLandmark = false
+            ///sends the user to the process where they create an end anchorpoint
+            state = .startingPauseProcedure
+        } else {
+            ///PATHPOINT one way route recording finished -> play/pause
+            state = .readyToNavigateOrPause(allowPause: true)
+        }
+        
     }
     
     /// handles the user pressing the start navigation button.
@@ -1464,10 +1478,18 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         rootContainerView.homeButton.isHidden = false
 //        backButton.isHidden = true
         creatingRouteLandmark = true
+        ///tell the program that a single use route is being recorded
+        recordingSingleUseRoute = true
+        ///PATHPOINT single use route -> prep for recording a route screen
+        ///hide all other views
+        hideAllViewsHelper()
+        //sends the user to the screen where they can start recording a route
+        state = .recordingRoute
+        
         // make sure to clear out any relative transform and paused transform so the alignment is accurate
-        print("starting pause procedure", creatingRouteLandmark)
-        sceneView.session.setWorldOrigin(relativeTransform: simd_float4x4.makeTranslation(0, 0, 0))
-        state = .startingPauseProcedure
+        //print("starting pause procedure", creatingRouteLandmark)
+        //sceneView.session.setWorldOrigin(relativeTransform: simd_float4x4.makeTranslation(0, 0, 0))
+        //state = .startingPauseProcedure
     }
     
     /// this is called after the alignment countdown timer finishes in order to complete the pause tracking procedure
