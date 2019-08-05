@@ -118,11 +118,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 handleStateTransitionToMainScreen(announceArrival: announceArrival)
             case .startingPauseProcedure:
                 handleStateTransitionToStartingPauseProcedure()
+
             case .pauseWaitingPeriod:
                 handleStateTransitionToPauseWaitingPeriod()
             case .completingPauseProcedure:
                 handleStateTransitionToCompletingPauseProcedure()
             case .pauseProcedureCompleted:
+                //update the state of the variable to indicate that the route has been unpaused
+                paused = false
                 // nothing happens currently
                 break
             case .startingResumeProcedure(let route, let mapAsAny, let navigateStartToEnd):
@@ -156,6 +159,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// Set to true when the user is attempting to load a saved route that has a map associated with it. Once relocalization succeeds, this flag should be set back to false
     var attemptingRelocalization: Bool = false
+    
+    ///this boolian marks whether the curent route is 'paused' or not from the use of the pause button
+    var paused: Bool = false
+    
+    /// this boolina marks whether or not the app is recording a multi use route
+    var recordingSingleUseRoute: Bool = false
     
     /// This is an audio player that queues up the voice note associated with a particular route landmark. The player is created whenever a saved route is loaded. Loading it before the user clicks the "Play Voice Note" button allows us to call the prepareToPlay function which reduces the latency when the user clicks the "Play Voice Note" button.
     var voiceNoteToPlay: AVAudioPlayer?
@@ -371,10 +380,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             print("setting transform", beginRouteLandmark.transform)
 
             Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(playSound)), userInfo: nil, repeats: false)
-            //rootContainerView.pauseTrackingView.isHidden = true
+//            rootContainerView.pauseTrackingView.isHidden = true
             pauseTrackingController.remove()
-            //start the route recording
-            showRecordPathWithoutLandmarkWarning()
+            ///PATHPOINT creating beginining two way landmark -> record route
+            ///sends the user to a route recording of the program is creating a beginning route landmark
+            state = .recordingRoute
             return
         } else if let currentTransform = sceneView.session.currentFrame?.camera.transform {
             endRouteLandmark.transform = currentTransform
@@ -384,7 +394,18 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                     self.getRouteNameAndSaveRouteHelper(mapAsAny: worldMap)
                     self.showResumeTrackingButton()
                     Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(self.playSound)), userInfo: nil, repeats: false)
-                    self.state = .pauseProcedureCompleted
+                    
+                    //check whether or not the path was called from the pause menu or not
+                    if self.paused {
+                        
+                        //procede as normal with the pause structure (single use route)
+                        self.state = .pauseProcedureCompleted
+                        
+                    } else {
+                        ///PATHPOINT Alignment timer -> play/pause
+                        ///sends the user to the play/pause screen
+                        self.state = .readyToNavigateOrPause(allowPause: true)
+                    }
                 }
             } else {
                 getRouteNameAndSaveRouteHelper(mapAsAny: nil)
@@ -1337,12 +1358,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// handles the user pressing the record path button.
     @objc func recordPath() {
-        //set variables which declare that this is creating a landmark at the begining of the route.
-        creatingRouteLandmark = true
-        
-        //send the navigation to the landmark screen
-        state = .startingPauseProcedure
-        handleStateTransitionToStartingPauseProcedure()
+        ///PATHPOINT record two way path -> create Landmark
+        ///tells the program that it is recording a two way route
+        recordingSingleUseRoute = false
+        ///sends the user to create a landmark
+        startCreateLandmarkProcedure()
     }
     
     /// handles the user pressing the stop recording button.
@@ -1361,7 +1381,18 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
 
         isResumedRoute = false
-        state = .readyToNavigateOrPause(allowPause: true)
+        //TODO add conditional for one way route
+        rootContainerView.homeButton.isHidden = false // home button here
+        resumeTrackingController.remove()
+        resumeTrackingConfirmController.remove()
+        stopRecordingController.remove()
+        
+        ///PATHPOINT two way route recording finished -> create end landmark
+        ///sets the variable tracking whether the route is paused to be false
+        paused = false
+        creatingRouteLandmark = false
+        //sends the user to the process where they create an end anchorpoint
+        state = .startingPauseProcedure
     }
     
     /// handles the user pressing the start navigation button.
@@ -1413,7 +1444,19 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// handles the user pressing the pause button
     @objc func startPauseProcedure() {
         creatingRouteLandmark = false
-        state = .startingPauseProcedure
+        paused = true
+        
+        //checks if the pause button has been called from inside a recording a multi use route
+        if recordingSingleUseRoute == false {
+            hideAllViewsHelper()
+            ///PATHPOINT multi use route pause -> resume route
+            self.pauseTracking()
+        }else {
+            ///PATHPOINT single use route pause -> record end landmark
+            state = .startingPauseProcedure
+        }
+       
+        
     }
     
     /// handles the user pressing the landmark button
@@ -1777,8 +1820,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             homePageNavigationProcesses()
         }
         else if case .pauseProcedureCompleted = self.state {
-            showRecordPathWithoutLandmarkWarning()
-            //homePageNavigationProcesses()
+            homePageNavigationProcesses()
         }
         else if case .readyForFinalResumeAlignment = self.state {
             homePageNavigationProcesses()
