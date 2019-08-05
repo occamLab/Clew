@@ -170,3 +170,18 @@
 "providingFeedbackToTheDevelopmentTeamContent" = "Please send all feedback to the development team through the feedback popover in the Clew app. The feedback popover is accessible by tapping the feedback button in the app. We take your feedback seriously and will do our best to act on it.";
 "contractSectionAccessabilityTag" = "contract section";
 "expandSectionAccessabilityTag" = "expand section";
+
+
+// TutorialVCs
+    // PhoneOrientationTrainingVC
+"Congratulations! \n You have successfully oriented your phone. \n Now you will be recording a simple single route." = "Congratulations! \n You have successfully oriented your phone. \n Now you will be recording a simple single route.";
+"Congratulations! You have successfully oriented your phone. Now you will be recording a simple single route." = "Congratulations! You have successfully oriented your phone. Now you will be recording a simple single route.";
+
+    // PhoneOrientationGIFVC
+"ALIGN YOUR PHONE!" = "ALIGN YOUR PHONE!";
+"Use the speed of the vibrations to determine whether the phone is in the correct orientation. The faster the vibration, the closer you are to proper orientation." = "Use the speed of the vibrations to determine whether the phone is in the correct orientation. The faster the vibration, the closer you are to proper orientation.";
+"Cancel" = "Cancel";
+"Are you sure?" = "Are you sure?";
+"If you exit this process right now, you won't be orienting your phone." = "If you exit this process right now, you won't be orienting your phone.";
+"Skip this part of the tutorial." = "Skip this part of the tutorial.";
+"Cancel" = "Cancel";

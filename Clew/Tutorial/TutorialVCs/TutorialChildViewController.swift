@@ -33,7 +33,7 @@ class TutorialChildViewController: UIViewController, ClewDelegate {
                 return nil
         }
         
-        let buttonLabel = UILabel(frame: CGRect(x: UIScreen.main.bounds.size.width/2 - UIScreen.main.bounds.size.width*2/5, y: UIScreen.main.bounds.size.height/6, width: UIScreen.main.bounds.size.width*4/5 + 50, height: 200))
+        let buttonLabel = UILabel(frame: CGRect(x: 50 + UIScreen.main.bounds.size.width/2 - UIScreen.main.bounds.size.width*2/5, y: UIScreen.main.bounds.size.height/6, width: UIScreen.main.bounds.size.width*4/5 + 50, height: 200))
         buttonLabel.text = calloutText
         buttonLabel.textAlignment = .center
         buttonLabel.textColor = UIColor.black
@@ -158,7 +158,8 @@ class TutorialChildViewController: UIViewController, ClewDelegate {
         let imageView = UIImageView(image: arrowImage!)
         imageView.isHidden = false
         let xCenter = viewToCallout.frame.midX
-        imageView.frame = CGRect(x: xCenter - imageView.frame.width/8, y: 375, width: 100, height: 100)
+        let yCenter = viewToCallout.frame.maxY + 50
+        imageView.frame = CGRect(x: xCenter - imageView.frame.width/16, y: yCenter + imageView.frame.width*1/2, width: 100, height: 100)
 
         return imageView
     }

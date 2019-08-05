@@ -50,6 +50,7 @@ class PhoneOrientationTrainingVC: TutorialChildViewController, SRCountdownTimerD
         UIAccessibility.post(notification: UIAccessibility.Notification.announcement, argument: String(newValue))
     }
 
+    
     /// Callback function for when the 'next' button in the congratsView popup is tapped. This changes the state of the TutorialViewController.
     @objc func nextButtonAction(sender: UIButton!) {
         
@@ -68,7 +69,7 @@ class PhoneOrientationTrainingVC: TutorialChildViewController, SRCountdownTimerD
         countdownTimer.removeFromSuperview()
         
         // create congrats view
-        phoneOrientationTrainingCongratsView = CongratsView().createCongratsView(congratsText: "Congratulations! \n You have successfully oriented your phone. \n Now you will be recording a simple single route.", congratsAccessibilityLabel: "Congratulations! You have successfully oriented your phone. Now you will be recording a simple single route.")
+        phoneOrientationTrainingCongratsView = CongratsView().createCongratsView(congratsText: NSLocalizedString("Congratulations! \n You have successfully oriented your phone. \n Now you will be recording a simple single route.", comment: "Congratulations! \n You have successfully oriented your phone. \n Now you will be recording a simple single route."), congratsAccessibilityLabel: NSLocalizedString("Congratulations! You have successfully oriented your phone. Now you will be recording a simple single route.", comment: "Congratulations! You have successfully oriented your phone. Now you will be recording a simple single route."))
         nextButton = NextButton().createNextButton(buttonAction: #selector(nextButtonAction))
         nextButton.backgroundColor = UIColor.white
         nextButton.setTitleColor(clewGreen, for: .normal)
@@ -107,6 +108,7 @@ class PhoneOrientationTrainingVC: TutorialChildViewController, SRCountdownTimerD
     override func viewDidLoad() {
     }
 
+    
     /// Send haptic feedback with different frequencies depending on the angle of the phone. Handle transition to the next state when the angle of the phone falls in the range of optimal angle. As the user orients the phone closer to the desired range of the angle, haptic feedback becomes faster. When optimal angle is achieved for a desired amount of time, state transition takes place.
     /// - Parameter transform: the position and orientation of the phone
     override func didReceiveNewCameraPose(transform: simd_float4x4) {
@@ -119,7 +121,6 @@ class PhoneOrientationTrainingVC: TutorialChildViewController, SRCountdownTimerD
         
         // handles when the angle the user is holding the phone falls in between the desired optimal angle
         if abs(angleFromVertical) < 0.5 {
-            print("heeeeee")
             if countdown == nil {
                 print("angle falls in range")
                 countdownTimer.isHidden = false

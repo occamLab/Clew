@@ -1,8 +1,12 @@
+var tut = document.getElementsByClassName("tutorial");
 //finds all of the collapseable elements in the menu
 var coll = document.getElementsByClassName("collapsible");
 //creates an index counter variable
 var i;
 
+tut[0].addEventListener("click", function() {
+                        // TODO: dismiss popover and pull up tutorial
+                        });
 
 //itterates through all of the collapseable elements
 for (i = 0; i < coll.length; i++) {

@@ -112,19 +112,19 @@ class HelpCompiler {
         
         ///itterates through the dictionary of help sections and their content
         for (key,value) in contentDictioanry{
-            
-            //for each section this adds it to the html as a collapseable section with the proper content
-            let section = """
-            
-            <!--creates an accordian menu heading which needs to be exapanded by defualt.-->
-            <button class="collapsible" aria-label = "\(key): \(NSLocalizedString("expandSectionAccessabilityTag", comment: "This is a tag that is spoken by the accessability elements. This tag describes the action a user must take to expand one of the sections in the help documentation"))"> \(key) </button>
-            <!-- the content that is hidden goes here -->
-            <div class="content">
+                //for each section this adds it to the html as a collapseable section with the proper content
+                let section = """
+                
+                <!--creates an accordian menu heading which needs to be exapanded by defualt.-->
+                <button class="collapsible" aria-label = "\(key): \(NSLocalizedString("expandSectionAccessabilityTag", comment: "This is a tag that is spoken by the accessability elements. This tag describes the action a user must take to expand one of the sections in the help documentation"))"> \(key) </button>
+                <!-- the content that is hidden goes here -->
+                <div class="content">
                 \(value)
-            </div>
-            """
-            /// appends the latest section to the stack of sections
-            result = result + section
+                </div>
+                """
+                
+                /// appends the latest section to the stack of sections
+                result = result + section
         }
         ///appends the footer information to the html string. this includes adding the javascript for handeling accesability (included inside this folder rather than a remote javascript file so it can be localized) and the javascript which handels the expanding and contracting menus.
         result = result + """
