@@ -70,6 +70,30 @@ class DataPersistence {
                 /// save into the route storage
                 print("name of import route:", documentData.route.name)
                 try archive(route: documentData.route, worldMapAsAny: documentData.map)
+                
+                if let beginNote = documentData.beginVoiceNote {
+                    let voiceData = Data(base64Encoded: beginNote)
+                    let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+                    let path = documentData.route.beginRouteLandmark.voiceNote! as String
+                    let url = documentsDirectory.appendingPathComponent(path)
+                    do {
+                        try voiceData?.write(to: url)
+                    } catch {
+                        print("couldn't write file")
+                    }
+                }
+                
+                if let endNote = documentData.endVoiceNote {
+                    let voiceData = Data(base64Encoded: endNote)
+                    let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+                    let path = documentData.route.endRouteLandmark.voiceNote! as String
+                    let url = documentsDirectory.appendingPathComponent(path)
+                    do {
+                        try voiceData?.write(to: url)
+                    } catch {
+                        print("couldn't write file")
+                    }
+                }
             }
         } catch {
             print("couldn't unarchive route document")
@@ -90,9 +114,34 @@ class DataPersistence {
         /// is this legal given that unarchiveMap can be nil
         let worldMap = self.unarchiveMap(id: route.id as String)
         
+        var beginVoiceFile: String?
+        var endVoiceFile: String?
+        
+        /// begin crumb audio
+        
+        /// fetch begginning voice notefile if it exists
+        if let beginVoiceURL = route.beginRouteLandmark.voiceNote {
+            let voiceurl = beginVoiceURL.documentURL
+            if let data = try? Data(contentsOf: voiceurl) {
+                beginVoiceFile = data.base64EncodedString()
+            }
+        }
+        
+        /// fetch beginning voice notefile if it exists
+        if let endVoiceURL = route.endRouteLandmark.voiceNote {
+            let voiceurl = endVoiceURL.documentURL
+            if let data = try? Data(contentsOf: voiceurl) {
+                endVoiceFile = data.base64EncodedString()
+            }
+        }
+        
         /// need to fix to include functionality for phones which don't support
         /// world maps (> iOS 12)
-        let routeData = RouteDocumentData(route: route, map: worldMap as! ARWorldMap)
+        let routeData = RouteDocumentData(route: route,
+                                          map: worldMap as! ARWorldMap,
+                                          beginVoiceNote: beginVoiceFile,
+                                          endVoiceNote: endVoiceFile)
+        
         
         /// fetch the documents directory where apple stores temp files for apps
         let documents = FileManager.default.urls(

@@ -254,7 +254,6 @@
 				E5470EB722C119F4001092A4 /* SettingsViewController.m */,
 				E5470EB822C119F4001092A4 /* Clew Dev-Bridging-Header.h */,
 				E5470EB922C119F4001092A4 /* Settings.bundle */,
-				E5470EBA22C119F4001092A4 /* SettingsTableViewController.h */,
 				E5470ED022C119F4001092A4 /* Assets.xcassets */,
 				E5470ED122C119F4001092A4 /* Sound Effects */,
 				E5470ED422C119F4001092A4 /* GoogleService-Info.plist */,
@@ -299,6 +298,7 @@
 		E5470ED122C119F4001092A4 /* Sound Effects */ = {
 			isa = PBXGroup;
 			children = (
+				E5470EBA22C119F4001092A4 /* SettingsTableViewController.h */,
 				E5470ED222C119F4001092A4 /* StartRecording.aiff */,
 				E5470ED322C119F4001092A4 /* StopRecording.aiff */,
 			);

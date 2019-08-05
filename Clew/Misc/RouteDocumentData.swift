@@ -22,14 +22,27 @@ class RouteDocumentData: NSObject, NSSecureCoding {
     /// the world map
     public var map: ARWorldMap
     
+    /// first landmark audio note
+    public var beginVoiceNote: String?
+    
+    /// second landmark audio note
+    public var endVoiceNote: String?
+    
     /// Initialize the sharing document.
     ///
     /// - Parameters:
     ///   - route: the route data
     ///   - map: the arkit world map
-    public init(route: SavedRoute, map: ARWorldMap) {
+//    public init(route: SavedRoute, map: ARWorldMap) {
+//        self.route = route
+//        self.map = map
+//    }
+    
+    public init(route: SavedRoute, map: ARWorldMap, beginVoiceNote: String? = nil, endVoiceNote: String? = nil) {
         self.route = route
         self.map = map
+        self.beginVoiceNote = beginVoiceNote
+        self.endVoiceNote = endVoiceNote
     }
     
     /// Encodes the object to the specified coder object
@@ -38,6 +51,8 @@ class RouteDocumentData: NSObject, NSSecureCoding {
     func encode(with aCoder: NSCoder) {
         aCoder.encode(route, forKey: "route")
         aCoder.encode(map, forKey: "map")
+        aCoder.encode(beginVoiceNote as NSString?, forKey: "beginVoiceNote")
+        aCoder.encode(endVoiceNote as NSString?, forKey: "endVoiceNote")
         print("route document encoded!")
     }
     
@@ -51,6 +66,8 @@ class RouteDocumentData: NSObject, NSSecureCoding {
         guard let map = aDecoder.decodeObject(of: ARWorldMap.self, forKey: "map") else {
             return nil
         }
-        self.init(route: route, map: map)
+        let beginNote = aDecoder.decodeObject(of: NSString.self, forKey: "beginVoiceNote")
+        let endNote = aDecoder.decodeObject(of: NSString.self, forKey: "endVoiceNote")
+        self.init(route: route, map: map, beginVoiceNote: beginNote as String?, endVoiceNote: endNote as String?)
     }
 }
