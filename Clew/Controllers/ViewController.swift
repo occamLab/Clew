@@ -153,7 +153,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         
         let unitY = simd_float3(-1, 0, 0)
         let projectedPhoneZ = poseRotation * simd_float3(0, 0, 1)
-        let polar = asin(simd_dot(projectedPhoneZ, simd_normalize(simd_float3(projectedPhoneZ.x, projectedPhoneZ.y, 0))))
+//        let polar = acos((poseRotation * simd_float3(-1, 0, 0)).y)
+        let polar = acos(simd_dot(projectedPhoneZ, simd_normalize(simd_float3(projectedPhoneZ.x, 0, projectedPhoneZ.z))))
         let phoneCurrentlyVertical = polar < 0.4
         let nowVerticalVibration = UIImpactFeedbackGenerator(style: .light)
         let nowNotVerticalVibration = UIImpactFeedbackGenerator(style: .heavy)
