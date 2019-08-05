@@ -61,6 +61,7 @@ class DataPersistence {
         
         /// attempt to fetch data from temporary import from external source
         do {
+            print("attempting unarchive")
             // if anything goes wrong with the unarchiving, stick with an emptly list of routes
             let data = try Data(contentsOf: url)
             if let document = try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data) as? RouteDocumentData {

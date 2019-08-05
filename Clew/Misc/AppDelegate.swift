@@ -26,7 +26,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     ///   - launchOptions: the launch options
     /// - Returns: a Boolean indicating whether the app can continue to handle user activity.
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        
+        print("init app!")
+
         // Use Firebase library to configure APIs
         #if IS_DEV_TARGET
             let filePath = Bundle.main.path(forResource: "GoogleService-Info_dev", ofType: "plist")!

@@ -100,7 +100,19 @@ class RoutesViewController : UIViewController, UITableViewDataSource, UITableVie
             /// share item
             do {
                 if #available(iOS 12.0, *) {
-                    try self.rootViewController?.dataPersistence.exportToURL(route: self.routes[indexPath.row])
+                    print("exporting route")
+                    let url = self.rootViewController?.dataPersistence.exportToURL(route: self.routes[indexPath.row])
+                    
+                    let activity = UIActivityViewController(
+                        activityItems: ["Check out this route!", url as Any],
+                        applicationActivities: nil
+                    )
+                    
+                    /// anchor popup to a button
+//                    activity.popoverPresentationController?.barButtonItem = sender
+
+                    /// show the share menu
+                    self.present(activity, animated: true, completion: nil)
                 } else {
                     // Fallback on earlier versions
                 }
