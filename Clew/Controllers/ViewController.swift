@@ -124,8 +124,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             case .completingPauseProcedure:
                 handleStateTransitionToCompletingPauseProcedure()
             case .pauseProcedureCompleted:
-                //update the state of the variable to indicate that the route has been unpaused
-                paused = false
                 // nothing happens currently
                 break
             case .startingResumeProcedure(let route, let mapAsAny, let navigateStartToEnd):
@@ -1421,6 +1419,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     ///
     /// - Parameter sender: the button that generated the event
     @objc func startNavigation(_ sender: UIButton) {
+        ///LOCALIZE
+        ///announce to the user that they have sucessfully saved an anchor point.
+        self.delayTransition(announcement: "Starting return navigation", initialFocus: nil)
         // this will handle the appropriate state transition if we pass the warning
         showNavigatePathWithoutLandmarkWarning()
     }
@@ -1533,12 +1534,24 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 
                 Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(self.playSound)), userInfo: nil, repeats: false)
                 self.isResumedRoute = true
-                ///PATHPOINT paused route -> return navigation
-                
-                ///LOCALIZE
-                ///announce to the user that they have sucessfully saved an anchor point.
-                self.delayTransition(announcement: "Aligned to anchor point. Starting return navigation.", initialFocus: nil)
-                self.showNavigatePathWithoutLandmarkWarning()
+                if self.paused {
+                    ///PATHPOINT paused route -> return navigation
+                    
+                    ///LOCALIZE
+                    ///announce to the user that they have sucessfully saved an anchor point.
+                    self.paused = false
+                    self.delayTransition(announcement: "Aligned to anchor point. Starting return navigation.", initialFocus: nil)
+                    self.showNavigatePathWithoutLandmarkWarning()
+
+                } else {
+                    ///PATHPOINT saved route -> start navigation
+                    
+                    ///LOCALIZE
+                    ///announce to the user that they have sucessfully saved an anchor point.
+                    self.delayTransition(announcement: "Aligned to anchor point. Starting navigation.", initialFocus: nil)
+                    self.showNavigatePathWithoutLandmarkWarning()
+
+                }
             }
         }
     }
