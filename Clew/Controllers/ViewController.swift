@@ -360,9 +360,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         delayTransition()
         playAlignmentConfirmation = DispatchWorkItem{
             self.rootContainerView.countdownTimer.isHidden = true
-            ///LOCALIZE
-            ///announce to the user that they have sucessfully saved an anchor point.
-            self.delayTransition(announcement: "Anchor point saved. You may now close the app and return later for return navigation.", initialFocus: nil)
+            if self.paused && self.recordingSingleUseRoute{
+                ///announce to the user that they have sucessfully saved an anchor point.
+                self.delayTransition(announcement: NSLocalizedString("Anchor point saved. You may now close the app and return later for return navigation.", comment: "This is the announcement which is spoken after creating an anchor point in the process of pausing the tracking session of recording a single use route"), initialFocus: nil)
+            }
+
             self.pauseTracking()
         }
         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(ViewController.alignmentWaitingPeriod), execute: playAlignmentConfirmation!)
@@ -384,9 +386,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
 //            rootContainerView.pauseTrackingView.isHidden = true
             pauseTrackingController.remove()
             ///PATHPOINT creating beginining two way landmark -> record route
-            ///LOCALIZE
             ///announce to the user that they have sucessfully saved an anchor point.
-            delayTransition(announcement: "Anchor point saved. You are now recording a route.", initialFocus: nil)
+            delayTransition(announcement: NSLocalizedString("Anchor point saved. You are now recording a route.", comment: "This is the announcement which is spoken after the first anchor point of a multiple use route is saved. this signifies the completeion of the saving an anchor point procedure and the start of recording a route to be saved."), initialFocus: nil)
             ///sends the user to a route recording of the program is creating a beginning route landmark
             state = .recordingRoute
             return
@@ -407,8 +408,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                         
                     } else {
                         ///PATHPOINT Alignment timer -> play/pause
-                        ///LOCALIZE
-                        self.delayTransition(announcement: "Anchor point saved. You may now pause the tracking session or perform return navigation.", initialFocus: nil)
+                        self.delayTransition(announcement: NSLocalizedString("Anchor point saved. You may now pause the tracking session or perform return navigation.", comment: "This is an announcement which is spoken when the user saves the end anchor point for a multiple use route. this signifies the transition form saving an anchor point to the option ot pause your AR Session or to perform return navigation"), initialFocus: nil)
                         ///sends the user to the play/pause screen
                         self.state = .readyToNavigateOrPause(allowPause: true)
                     }
@@ -1419,9 +1419,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     ///
     /// - Parameter sender: the button that generated the event
     @objc func startNavigation(_ sender: UIButton) {
-        ///LOCALIZE
-        ///announce to the user that they have sucessfully saved an anchor point.
-        self.delayTransition(announcement: "Starting return navigation", initialFocus: nil)
+        ///announce to the user that return navigation has started.
+        self.delayTransition(announcement: NSLocalizedString("Starting return navigation", comment: "This is an anouncement which is played when the user performs return navigation from the play pause menu. It signifies the start of a navigation session."), initialFocus: nil)
         // this will handle the appropriate state transition if we pass the warning
         showNavigatePathWithoutLandmarkWarning()
     }
@@ -1536,19 +1535,16 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 self.isResumedRoute = true
                 if self.paused {
                     ///PATHPOINT paused route -> return navigation
-                    
-                    ///LOCALIZE
-                    ///announce to the user that they have sucessfully saved an anchor point.
+                    ///announce to the user that they have aligned to the anchor point sucessfully and are starting return navigation.
                     self.paused = false
-                    self.delayTransition(announcement: "Aligned to anchor point. Starting return navigation.", initialFocus: nil)
+                    self.delayTransition(announcement: NSLocalizedString("Aligned to anchor point. Starting return navigation.", comment: "This is an Announcement which indicates that the pause session is complete, that the prgram was able to align with the anchor point, and that return navigation has started."), initialFocus: nil)
                     self.showNavigatePathWithoutLandmarkWarning()
 
                 } else {
                     ///PATHPOINT saved route -> start navigation
-                    
-                    ///LOCALIZE
-                    ///announce to the user that they have sucessfully saved an anchor point.
-                    self.delayTransition(announcement: "Aligned to anchor point. Starting navigation.", initialFocus: nil)
+
+                    ///announce to the user that they have sucessfully aligned with their saved anchor point.
+                    self.delayTransition(announcement: NSLocalizedString("Aligned to anchor point. Starting navigation.", comment: "This is an announcement that is played when the user is loading a saved route. this signifies the transition between saving an anchor point and starting route navigation."), initialFocus: nil)
                     self.showNavigatePathWithoutLandmarkWarning()
 
                 }
