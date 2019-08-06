@@ -5,7 +5,6 @@
     </device>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
-        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -38,10 +37,14 @@
                                                     <rect key="frame" x="9" y="9" width="50" height="50"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 </imageView>
+                                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XSB-Wi-qXB">
+                                                    <rect key="frame" x="0.0" y="-2" width="375" height="72"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <connections>
+                                                        <action selector="settingsTappedWithSender:" destination="STY-aH-xNd" eventType="touchUpInside" id="1mW-Hr-9L3"/>
+                                                    </connections>
+                                                </button>
                                             </subviews>
-                                            <connections>
-                                                <action selector="settingsTappedWithSender:" destination="STY-aH-xNd" eventType="touchUpInside" id="T9Q-Lo-Qdm"/>
-                                            </connections>
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="70" id="6Uv-b0-lXA">
@@ -63,9 +66,6 @@
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 </imageView>
                                             </subviews>
-                                            <connections>
-                                                <action selector="tutorialTappedWithSender:" destination="STY-aH-xNd" eventType="valueChanged" id="9tu-fS-RUk"/>
-                                            </connections>
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="70" id="JQr-zY-LSR">
@@ -86,6 +86,13 @@
                                                     <rect key="frame" x="9" y="9" width="50" height="50"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 </imageView>
+                                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kzG-Yv-N5e">
+                                                    <rect key="frame" x="0.0" y="-2" width="375" height="72"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <connections>
+                                                        <action selector="feedbackButtonTappedWithSender:" destination="STY-aH-xNd" eventType="touchUpInside" id="NpM-RP-750"/>
+                                                    </connections>
+                                                </button>
                                             </subviews>
                                         </tableViewCellContentView>
                                     </tableViewCell>
@@ -99,28 +106,15 @@
                     </tableView>
                     <connections>
                         <outlet property="Feedback" destination="vR0-nB-3NC" id="EYf-i0-I8C"/>
+                        <outlet property="FeedbackButton" destination="kzG-Yv-N5e" id="ehD-Ly-GvO"/>
                         <outlet property="Settings" destination="oqb-CN-Xqn" id="D6R-Tq-WuM"/>
+                        <outlet property="SettingsButton" destination="XSB-Wi-qXB" id="U6c-IQ-B78"/>
                         <outlet property="Tutorial" destination="lZt-aE-5cf" id="QgX-m6-oWr"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="olm-6i-iy6" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="728.79999999999995" y="-8.5457271364317844"/>
-        </scene>
-        <!--View Controller-->
-        <scene sceneID="Iki-2I-KNV">
-            <objects>
-                <viewController id="5J7-3W-Zee" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="fOo-lz-jUc">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <viewLayoutGuide key="safeArea" id="j4a-IN-ZYB"/>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="exc-pi-inV" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1408.8" y="-8.5457271364317844"/>
         </scene>
     </scenes>
     <resources>
