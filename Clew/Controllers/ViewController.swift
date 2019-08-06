@@ -167,6 +167,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                     announce(announcement: "Camera not vertical, hold phone vertically to begin countdown")
                     handleStateTransitionToPauseWaitingPeriod()
                     rootContainerView.countdownTimer.pause()
+                    rootContainerView.countdownTimer.setNeedsDisplay()
                     nowNotVerticalVibration.impactOccurred()
                 }
                 return
