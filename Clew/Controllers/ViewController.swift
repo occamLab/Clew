@@ -108,7 +108,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     var loadedRoute : SavedRoute?
     var loadedRouteStartToEnd : Bool?
     
-    var phoneVertical : Bool = false
+    var phoneVertical : Bool? = false
     
     /// The state of the app.  This should be constantly referenced and updated as the app transitions
     var state = AppState.initializing {
@@ -151,31 +151,45 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             return
         }
         
-        let unitY = simd_float3(-1, 0, 0)
         let projectedPhoneZ = poseRotation * simd_float3(0, 0, 1)
-//        let polar = acos((poseRotation * simd_float3(-1, 0, 0)).y)
         let polar = acos(simd_dot(projectedPhoneZ, simd_normalize(simd_float3(projectedPhoneZ.x, 0, projectedPhoneZ.z))))
         let phoneCurrentlyVertical = polar < 0.4
         let nowVerticalVibration = UIImpactFeedbackGenerator(style: .light)
         let nowNotVerticalVibration = UIImpactFeedbackGenerator(style: .heavy)
         
-        switch state {
-        case .startingPauseProcedure:
-            if phoneCurrentlyVertical && !phoneVertical {
-                nowVerticalVibration.impactOccurred()
-            }
-        case .pauseWaitingPeriod:
-            if !phoneCurrentlyVertical && phoneVertical {
-                playAlignmentConfirmation?.cancel()
-                handleStateTransitionToPauseWaitingPeriod()
-                nowNotVerticalVibration.impactOccurred()
-                announce(announcement: "Camera no longer vertical, restarting countdown")
-            }
-        default:
-            break
-        }
+
         
-        phoneVertical = phoneCurrentlyVertical
+        switch state {
+        case .pauseWaitingPeriod:
+            guard let unwrappedPhoneVertical = phoneVertical else {
+                phoneVertical = phoneCurrentlyVertical
+                if !phoneCurrentlyVertical {
+                    announce(announcement: "Camera not vertical, hold phone vertically to begin countdown")
+                    handleStateTransitionToPauseWaitingPeriod()
+                    rootContainerView.countdownTimer.pause()
+                    nowNotVerticalVibration.impactOccurred()
+                }
+                return
+            }
+            if !phoneCurrentlyVertical && unwrappedPhoneVertical {
+                announce(announcement: "Camera no longer vertical, restarting and pausing countdown")
+                recordRouteLandmarkTimer?.invalidate()
+                handleStateTransitionToPauseWaitingPeriod()
+                rootContainerView.countdownTimer.pause()
+                nowNotVerticalVibration.impactOccurred()
+            }
+            
+            if phoneCurrentlyVertical && !unwrappedPhoneVertical {
+                announce(announcement: "Camera now vertical, starting countdown")
+                nowVerticalVibration.impactOccurred()
+                startRecordRouteLandmarkTimer()
+                handleStateTransitionToPauseWaitingPeriod()
+            }
+            phoneVertical = phoneCurrentlyVertical
+        default:
+            phoneVertical = nil
+        }
+
     }
     
 
@@ -388,18 +402,32 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             // nothing to fall back on
         }
     }
+    weak var recordRouteLandmarkTimer: Timer?
+    
+    /// Handler for beginning alignment computations after the alignment period
+    @objc
+    func playAlignmentConfirmation(_ timer: Timer) {
+        self.rootContainerView.countdownTimer.isHidden = true
+        self.pauseTracking()
+    }
+    
+    /// Start the route landmark recording timer
+    func startRecordRouteLandmarkTimer() {
+        recordRouteLandmarkTimer = Timer.scheduledTimer(
+            timeInterval: 5.0,
+            target: self,
+            selector: #selector(playAlignmentConfirmation(_:)),
+            userInfo: nil,
+            repeats: false)
+    }
     
     /// Handler for the pauseWaitingPeriod app state
     func handleStateTransitionToPauseWaitingPeriod() {
          hideAllViewsHelper()
         rootContainerView.countdownTimer.isHidden = false
         rootContainerView.countdownTimer.start(beginingValue: ViewController.alignmentWaitingPeriod, interval: 1)
+
         delayTransition()
-        playAlignmentConfirmation = DispatchWorkItem{
-            self.rootContainerView.countdownTimer.isHidden = true
-            self.pauseTracking()
-        }
-        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(ViewController.alignmentWaitingPeriod), execute: playAlignmentConfirmation!)
     }
     
     /// Handler for the completingPauseProcedure app state
@@ -440,7 +468,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
 
 
             Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(playSound)), userInfo: nil, repeats: false)
-//            rootContainerView.pauseTrackingView.isHidden = true
             pauseTrackingController.remove()
             state = .mainScreen(announceArrival: false)
             return
@@ -630,9 +657,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// start route navigation VC
     var startNavigationController: StartNavigationController!
-    
-    /// work item for playing alignment confirmation sound
-    var playAlignmentConfirmation: DispatchWorkItem?
     
     /// stop route navigation VC
     var stopNavigationController: StopNavigationController!
@@ -841,7 +865,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         routeName = nil
         beginRouteLandmark = RouteLandmark()
         endRouteLandmark = RouteLandmark()
-        playAlignmentConfirmation?.cancel()
+        recordRouteLandmarkTimer?.invalidate()
         rootContainerView.announcementText.isHidden = true
         nav.headingOffset = 0.0
         headingRingBuffer.clear()
