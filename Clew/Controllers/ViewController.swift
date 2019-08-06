@@ -362,6 +362,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         delayTransition()
         playAlignmentConfirmation = DispatchWorkItem{
             self.rootContainerView.countdownTimer.isHidden = true
+            ///LOCALIZE
+            ///announce to the user that they have sucessfully saved an anchor point.
+            self.delayTransition(announcement: "Anchor point saved. You may now close the app and return later for return navigation.", initialFocus: nil)
             self.pauseTracking()
         }
         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(ViewController.alignmentWaitingPeriod), execute: playAlignmentConfirmation!)
@@ -383,6 +386,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
 //            rootContainerView.pauseTrackingView.isHidden = true
             pauseTrackingController.remove()
             ///PATHPOINT creating beginining two way landmark -> record route
+            ///LOCALIZE
+            ///announce to the user that they have sucessfully saved an anchor point.
+            delayTransition(announcement: "Anchor point saved. You are now recording a route.", initialFocus: nil)
             ///sends the user to a route recording of the program is creating a beginning route landmark
             state = .recordingRoute
             return
@@ -403,6 +409,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                         
                     } else {
                         ///PATHPOINT Alignment timer -> play/pause
+                        ///LOCALIZE
+                        self.delayTransition(announcement: "Anchor point saved. You may now pause the tracking session or perform return navigation.", initialFocus: nil)
                         ///sends the user to the play/pause screen
                         self.state = .readyToNavigateOrPause(allowPause: true)
                     }
@@ -1525,7 +1533,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 
                 Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(self.playSound)), userInfo: nil, repeats: false)
                 self.isResumedRoute = true
-                self.state = .readyToNavigateOrPause(allowPause: false)
+                ///PATHPOINT paused route -> return navigation
+                
+                ///LOCALIZE
+                ///announce to the user that they have sucessfully saved an anchor point.
+                self.delayTransition(announcement: "Aligned to anchor point. Starting return navigation.", initialFocus: nil)
+                self.showNavigatePathWithoutLandmarkWarning()
             }
         }
     }
