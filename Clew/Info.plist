@@ -31,6 +31,7 @@
 			<key>UTTypeConformsTo</key>
 			<array>
 				<string>public.data</string>
+				<string>public.text</string>
 			</array>
 			<key>UTTypeIdentifier</key>
 			<string>edu.occam.Clew.crd</string>
