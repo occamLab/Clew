@@ -95,6 +95,9 @@ var paused: Bool = false
 /// this boolina marks whether or not the app is recording a multi use route
 var recordingSingleUseRoute: Bool = false
 
+///this boolian marks whether or not the app is saving a starting anchor point
+var startAnchorPoint: Bool = false
+
 
 /// The view controller that handles the main Clew window.  This view controller is always active and handles the various views that are used for different app functionalities.
 class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDelegate, AVSpeechSynthesizerDelegate {
@@ -211,7 +214,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// Handler for the recordingRoute app state
     func handleStateTransitionToRecordingRoute() {
         // records a new path
-        
+        ///updates the state boolian to signifiy that the program is no longer saving the first anchor point
+        startAnchorPoint = false
         // make sure to never record a path with a transform set
         sceneView.session.setWorldOrigin(relativeTransform: simd_float4x4.makeTranslation(0, 0, 0))
         attemptingRelocalization = false
@@ -387,6 +391,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(playSound)), userInfo: nil, repeats: false)
 //            rootContainerView.pauseTrackingView.isHidden = true
             pauseTrackingController.remove()
+            
             ///PATHPOINT creating beginining two way Anchor Point -> record route
             ///announce to the user that they have sucessfully saved an anchor point.
             delayTransition(announcement: NSLocalizedString("Anchor point saved. You are now recording a route.", comment: "This is the announcement which is spoken after the first anchor point of a multiple use route is saved. this signifies the completeion of the saving an anchor point procedure and the start of recording a route to be saved."), initialFocus: nil)
@@ -1325,7 +1330,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         ///PATHPOINT record two way path -> create Anchor Point
         ///tells the program that it is recording a two way route
         recordingSingleUseRoute = false
+        //update the state boolian to say that this is not paused
         paused = false
+        ///update the state boolian to say that this is recording the first anchor point
+        startAnchorPoint = true
+
         ///sends the user to create a Anchor Point
         rootContainerView.homeButton.isHidden = false
         //        backButton.isHidden = true
