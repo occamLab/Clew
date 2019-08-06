@@ -727,53 +727,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// Display a warning that tells the user they must create a Anchor Point to be able to use this route again in the forward direction
     func showRecordPathWithoutAnchorPointWarning() {
-        let userDefaults: UserDefaults = UserDefaults.standard
-        let showedRecordPathWithoutAnchorPointWarning: Bool? = userDefaults.object(forKey: "showedRecordPathWithoutAnchorPointWarning") as? Bool
-        if showedRecordPathWithoutAnchorPointWarning == nil && beginRouteAnchorPoint.transform == nil {
-            userDefaults.set(true, forKey: "showedRecordPathWithoutAnchorPointWarning")
-            // Show logging disclaimer when user opens app for the first time
-            let alert = UIAlertController(title: "Creating reusable routes",
-                                          message: NSLocalizedString("To navigate this route in the forward direction at a later time, you must create a Anchor Point before starting the recording.", comment: "A message to the user"),
-                                          preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: NSLocalizedString("Continue with single-use route", comment: "The label of an option for the user"), style: .default, handler: { action -> Void in
-                // proceed to recording
-                self.state = .recordingRoute
-            }
-            ))
-            alert.addAction(UIAlertAction(title: NSLocalizedString("Cancel recording", comment: "The label of an option for the user"), style: .default, handler: { action -> Void in
-                // nothing to do, just stay on the main screen
-            }
-            ))
-            self.present(alert, animated: true, completion: nil)
-        } else {
-            state = .recordingRoute
-        }
         
-    }
-    
-    /// Display a warning that tells the user they must create a Anchor Point to be able to use this route again in the reverse direction
-    func showNavigatePathWithoutAnchorPointWarning() {
-        let userDefaults: UserDefaults = UserDefaults.standard
-        let showedNavigatePathWithoutAnchorPointWarning: Bool? = userDefaults.object(forKey: "showedNavigatePathWithoutAnchorPointWarning") as? Bool
-        if showedNavigatePathWithoutAnchorPointWarning == nil && endRouteAnchorPoint.transform == nil && !isResumedRoute {
-            userDefaults.set(true, forKey: "showedNavigatePathWithoutAnchorPointWarning")
-            // Show logging disclaimer when user opens app for the first time
-            let alert = UIAlertController(title: NSLocalizedString("Creating reusable routes", comment: "Header of a pop-up message"),
-                                          message: NSLocalizedString("To navigate this route in the reverse direction at a later time, you must activate the pause button before navigating the route.", comment: "A message to the user"),
-                                          preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: NSLocalizedString("Continue with single-use route", comment: "Option for user to select"), style: .default, handler: { action -> Void in
-                // proceed to navigation
-                self.state = .navigatingRoute
-            }
-            ))
-            alert.addAction(UIAlertAction(title: NSLocalizedString("Cancel navigation", comment: "Option for user to select"), style: .default, handler: { action -> Void in
-                // nothing to do, just stay on the current screen
-            }
-            ))
-            self.present(alert, animated: true, completion: nil)
-        } else {
-            state = .navigatingRoute
-        }
+        state = .recordingRoute
+        
     }
     
     /// func that prepares the state transition to home by clearing active processes and data
@@ -1422,7 +1378,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         ///announce to the user that return navigation has started.
         self.delayTransition(announcement: NSLocalizedString("Starting return navigation", comment: "This is an anouncement which is played when the user performs return navigation from the play pause menu. It signifies the start of a navigation session."), initialFocus: nil)
         // this will handle the appropriate state transition if we pass the warning
-        showNavigatePathWithoutAnchorPointWarning()
+        state = .navigatingRoute
     }
     
     /// This helper function will restart the tracking session if a relocalization was in progress but did not succeed.  This is useful in the case when you want to allow for the recording of a new route and don't want to have the possibility achieving relocalization halfway through recording the route.
@@ -1538,14 +1494,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                     ///announce to the user that they have aligned to the anchor point sucessfully and are starting return navigation.
                     self.paused = false
                     self.delayTransition(announcement: NSLocalizedString("Aligned to anchor point. Starting return navigation.", comment: "This is an Announcement which indicates that the pause session is complete, that the prgram was able to align with the anchor point, and that return navigation has started."), initialFocus: nil)
-                    self.showNavigatePathWithoutAnchorPointWarning()
+                    self.state = .navigatingRoute
 
                 } else {
                     ///PATHPOINT saved route -> start navigation
 
                     ///announce to the user that they have sucessfully aligned with their saved anchor point.
                     self.delayTransition(announcement: NSLocalizedString("Aligned to anchor point. Starting navigation.", comment: "This is an announcement that is played when the user is loading a saved route. this signifies the transition between saving an anchor point and starting route navigation."), initialFocus: nil)
-                    self.showNavigatePathWithoutAnchorPointWarning()
+                    self.state = .navigatingRoute
 
                 }
             }
