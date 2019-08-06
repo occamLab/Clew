@@ -88,6 +88,14 @@ enum AppState {
     }
 }
 
+///Declare some global variables related to the state
+///this boolian marks whether the curent route is 'paused' or not from the use of the pause button
+var paused: Bool = false
+
+/// this boolina marks whether or not the app is recording a multi use route
+var recordingSingleUseRoute: Bool = false
+
+
 /// The view controller that handles the main Clew window.  This view controller is always active and handles the various views that are used for different app functionalities.
 class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDelegate, AVSpeechSynthesizerDelegate {
     
@@ -157,12 +165,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// Set to true when the user is attempting to load a saved route that has a map associated with it. Once relocalization succeeds, this flag should be set back to false
     var attemptingRelocalization: Bool = false
-    
-    ///this boolian marks whether the curent route is 'paused' or not from the use of the pause button
-    var paused: Bool = false
-    
-    /// this boolina marks whether or not the app is recording a multi use route
-    var recordingSingleUseRoute: Bool = false
     
     /// This is an audio player that queues up the voice note associated with a particular route Anchor Point. The player is created whenever a saved route is loaded. Loading it before the user clicks the "Play Voice Note" button allows us to call the prepareToPlay function which reduces the latency when the user clicks the "Play Voice Note" button.
     var voiceNoteToPlay: AVAudioPlayer?
@@ -360,7 +362,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         delayTransition()
         playAlignmentConfirmation = DispatchWorkItem{
             self.rootContainerView.countdownTimer.isHidden = true
-            if self.paused && self.recordingSingleUseRoute{
+            if paused && recordingSingleUseRoute{
                 ///announce to the user that they have sucessfully saved an anchor point.
                 self.delayTransition(announcement: NSLocalizedString("Anchor point saved. You may now close the app and return later for return navigation.", comment: "This is the announcement which is spoken after creating an anchor point in the process of pausing the tracking session of recording a single use route"), initialFocus: nil)
             }
@@ -401,7 +403,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                     Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(self.playSound)), userInfo: nil, repeats: false)
                     
                     //check whether or not the path was called from the pause menu or not
-                    if self.paused {
+                    if paused {
                         
                         //procede as normal with the pause structure (single use route)
                         self.state = .pauseProcedureCompleted
@@ -1489,10 +1491,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 
                 Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(self.playSound)), userInfo: nil, repeats: false)
                 self.isResumedRoute = true
-                if self.paused {
+                if paused {
                     ///PATHPOINT paused route -> return navigation
                     ///announce to the user that they have aligned to the anchor point sucessfully and are starting return navigation.
-                    self.paused = false
+                    paused = false
                     self.delayTransition(announcement: NSLocalizedString("Aligned to anchor point. Starting return navigation.", comment: "This is an Announcement which indicates that the pause session is complete, that the prgram was able to align with the anchor point, and that return navigation has started."), initialFocus: nil)
                     self.state = .navigatingRoute
 
