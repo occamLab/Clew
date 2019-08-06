@@ -176,6 +176,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 recordRouteLandmarkTimer?.invalidate()
                 handleStateTransitionToPauseWaitingPeriod()
                 rootContainerView.countdownTimer.pause()
+                rootContainerView.countdownTimer.setNeedsDisplay()
                 nowNotVerticalVibration.impactOccurred()
             }
             
