@@ -145,8 +145,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
     }
     
-    func session(_ session: ARSession, didUpdate: ARFrame) {
-        
+    func recordRouteLandmarkHelper() {
         guard let poseRotation = sceneView.session.currentFrame?.camera.transform.rotation() else {
             return
         }
@@ -157,37 +156,50 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         let nowVerticalVibration = UIImpactFeedbackGenerator(style: .light)
         let nowNotVerticalVibration = UIImpactFeedbackGenerator(style: .heavy)
         
-
-        
-        switch state {
-        case .pauseWaitingPeriod:
-            guard let unwrappedPhoneVertical = phoneVertical else {
-                phoneVertical = phoneCurrentlyVertical
-                if !phoneCurrentlyVertical {
-                    announce(announcement: "Camera not vertical, hold phone vertically to begin countdown")
-                    handleStateTransitionToPauseWaitingPeriod()
-                    rootContainerView.countdownTimer.pause()
-                    rootContainerView.countdownTimer.setNeedsDisplay()
-                    nowNotVerticalVibration.impactOccurred()
-                }
-                return
-            }
-            if !phoneCurrentlyVertical && unwrappedPhoneVertical {
-                announce(announcement: "Camera no longer vertical, restarting and pausing countdown")
-                recordRouteLandmarkTimer?.invalidate()
-                handleStateTransitionToPauseWaitingPeriod()
+        guard let unwrappedPhoneVertical = phoneVertical else {
+            phoneVertical = phoneCurrentlyVertical
+            if !phoneCurrentlyVertical {
+                announce(announcement: "Camera not vertical, hold phone vertically to begin countdown")
+                state = .pauseWaitingPeriod
+                //                    handleStateTransitionToPauseWaitingPeriod()
                 rootContainerView.countdownTimer.pause()
                 rootContainerView.countdownTimer.setNeedsDisplay()
                 nowNotVerticalVibration.impactOccurred()
             }
-            
-            if phoneCurrentlyVertical && !unwrappedPhoneVertical {
-                announce(announcement: "Camera now vertical, starting countdown")
-                nowVerticalVibration.impactOccurred()
+            else {
                 startRecordRouteLandmarkTimer()
-                handleStateTransitionToPauseWaitingPeriod()
             }
-            phoneVertical = phoneCurrentlyVertical
+            return
+        }
+        
+        if !phoneCurrentlyVertical && unwrappedPhoneVertical {
+            announce(announcement: "Camera no longer vertical, restarting and pausing countdown")
+            recordRouteLandmarkTimer?.invalidate()
+            state = .pauseWaitingPeriod
+            //                handleStateTransitionToPauseWaitingPeriod()
+            rootContainerView.countdownTimer.pause()
+            rootContainerView.countdownTimer.setNeedsDisplay()
+            nowNotVerticalVibration.impactOccurred()
+        }
+        
+        if phoneCurrentlyVertical && !unwrappedPhoneVertical {
+            announce(announcement: "Camera now vertical, starting countdown")
+            nowVerticalVibration.impactOccurred()
+            startRecordRouteLandmarkTimer()
+            state = .pauseWaitingPeriod
+            //                handleStateTransitionToPauseWaitingPeriod()
+        }
+        phoneVertical = phoneCurrentlyVertical
+    }
+    
+    func session(_ session: ARSession, didUpdate: ARFrame) {
+        switch state {
+        case .pauseWaitingPeriod:
+            recordRouteLandmarkHelper()
+            
+        case .readyForFinalResumeAlignment:
+            recordRouteLandmarkHelper()
+
         default:
             phoneVertical = nil
         }
@@ -436,26 +448,43 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     func handleStateTransitionToCompletingPauseProcedure() {
         // TODO: we should not be able to create a route landmark if we are in the relocalizing state... (might want to handle this when the user stops navigation on a route they loaded.... This would obviate the need to handle this in the recordPath code as well
         print("completing pause procedure")
-
+        guard let documentsDirectoryURL = try? FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false) as NSURL else {
+            print("Could not find documents directory")
+            return
+        }
+        
         if creatingRouteLandmark {
             guard let currentTransform = sceneView.session.currentFrame?.camera.transform else {
-                print("can't properly save landmark: TODO communicate this to the user somehow")
+                print("could not properly save landmark: TODO communicate this to the user somehow")
                 return
             }
             beginRouteLandmark.transform = currentTransform
             print("setting transform", beginRouteLandmark.transform)
-            
+
             if let currentFrame = sceneView.session.currentFrame {
-                beginRouteLandmark.image = pixelBufferToUIImage(pixelBuffer: currentFrame.capturedImage)
+
+                let beginRouteLandmarkImageIdentifier = UUID()
+                guard let beginRouteLandmarkImageURL = documentsDirectoryURL.appendingPathComponent("\(beginRouteLandmarkImageIdentifier).jpg") else {
+                    print("Could not find url to save begin route landmark image to")
+                    return
+                }
+                guard let beginRouteLandmarkImage = pixelBufferToUIImage(pixelBuffer: currentFrame.capturedImage) else {
+                    return
+                }
+                
+                let beginRouteLandmarkJpeg = beginRouteLandmarkImage.jpegData(compressionQuality: 1)
+                try! beginRouteLandmarkJpeg?.write(to: beginRouteLandmarkImageURL, options: .atomic)
+                beginRouteLandmark.imageURL = beginRouteLandmarkImageURL.path as NSString
+                beginRouteLandmark.loadImage()
+
                 DispatchQueue.global(qos: .background).async {
-                    let numFeatures = self.beginRouteLandmark.image.map{VisualAlignment.numFeatures($0)}
+                    let numFeatures = VisualAlignment.numFeatures(beginRouteLandmarkImage)
                     
                     DispatchQueue.main.async {
-                        if let numFeatures = numFeatures, numFeatures < 600 {
+                        if numFeatures < 600 {
                             let retakeRouteLandmarkAlert = UIAlertController(title: "Few Visual Features", message: "Would you like to retake the landmark?", preferredStyle: .alert)
                             retakeRouteLandmarkAlert.addAction(UIAlertAction(title: "Yes", style: .default, handler: {action in
                                 self.state = .startingPauseProcedure
-                                return
                             }))
                             retakeRouteLandmarkAlert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
                             self.present(retakeRouteLandmarkAlert, animated: true)
@@ -474,8 +503,23 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             state = .mainScreen(announceArrival: false)
             return
         } else if let currentFrame = sceneView.session.currentFrame {
+            let endRouteLandmarkImageIdentifier = UUID()
+            guard let endRouteLandmarkImageURL = documentsDirectoryURL.appendingPathComponent("\(endRouteLandmarkImageIdentifier).jpg") else {
+                print("Could not find url to save end route landmark image to")
+                return
+            }
+            
+            guard let endRouteLandmarkImage = pixelBufferToUIImage(pixelBuffer: currentFrame.capturedImage) else {
+                return
+            }
+            
+            let endRouteLandmarkJpeg = endRouteLandmarkImage.jpegData(compressionQuality: 1)
+            try! endRouteLandmarkJpeg?.write(to: endRouteLandmarkImageURL, options: .atomic)
+            endRouteLandmark.imageURL = endRouteLandmarkImageURL.absoluteString as NSString
+            endRouteLandmark.loadImage()
+            
             endRouteLandmark.transform = currentFrame.camera.transform
-            endRouteLandmark.image = pixelBufferToUIImage(pixelBuffer: currentFrame.capturedImage)
+
             let intrinsics = currentFrame.camera.intrinsics
             endRouteLandmark.intrinsics = simd_float4(intrinsics[0, 0], intrinsics[1, 1], intrinsics[2, 0], intrinsics[2, 1])
 
@@ -1548,17 +1592,20 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(ViewController.alignmentWaitingPeriod)) {
             self.rootContainerView.countdownTimer.isHidden = true
             // The first check is necessary in case the phone relocalizes before this code executes
-            if case .readyForFinalResumeAlignment = self.state, let alignLandmark = self.pausedLandmark, let alignTransform = alignLandmark.transform, let frame = self.sceneView.session.currentFrame {
+            self.pausedLandmark?.loadImage()
+            if case .readyForFinalResumeAlignment = self.state, let alignLandmark = self.pausedLandmark, let alignLandmarkImage = alignLandmark.image, let alignTransform = alignLandmark.transform, let frame = self.sceneView.session.currentFrame {
                 // yaw can be determined by projecting the camera's z-axis into the ground plane and using arc tangent (note: the camera coordinate conventions of ARKit https://developer.apple.com/documentation/arkit/arsessionconfiguration/worldalignment/camera
                 
                 DispatchQueue.global(qos: .background).async {
 //                    let numMatches = VisualAlignment.numMatches(alignLandmark.image!, self.pixelBufferToUIImage(pixelBuffer: frame.capturedImage)!)
                     let intrinsics = frame.camera.intrinsics
-                    let visualYawReturn = VisualAlignment.visualYaw(alignLandmark.image!, alignLandmark.intrinsics!, alignTransform,
-                                                              self.pixelBufferToUIImage(pixelBuffer: frame.capturedImage)!,
-                                                              simd_float4(intrinsics[0, 0], intrinsics[1, 1], intrinsics[2, 0], intrinsics[2, 1]),
-                                                              frame.camera.transform)
+                    var visualYawReturn: VisualAlignmentReturn
                     
+                    visualYawReturn = VisualAlignment.visualYaw(alignLandmarkImage, alignLandmark.intrinsics!, alignTransform,
+                                                                self.pixelBufferToUIImage(pixelBuffer: frame.capturedImage)!,
+                                                                simd_float4(intrinsics[0, 0], intrinsics[1, 1], intrinsics[2, 0], intrinsics[2, 1]),
+                                                                frame.camera.transform)
+                
                     DispatchQueue.main.async {
                         
                         // Prompt the user to retake the landmark if not enough matches are found.
@@ -1568,7 +1615,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                             let retakeRouteLandmarkAlert = UIAlertController(title: "Few Visual Matches", message: "Would you like to retake the landmark?", preferredStyle: .alert)
                             retakeRouteLandmarkAlert.addAction(UIAlertAction(title: "Yes", style: .default, handler: {action in
                                 self.state = .startingResumeProcedure(route: self.loadedRoute!, mapAsAny: self.justUsedMapAsAny, navigateStartToEnd: self.loadedRouteStartToEnd!)
-                                return
                             }))
                             retakeRouteLandmarkAlert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
                             self.present(retakeRouteLandmarkAlert, animated: true)

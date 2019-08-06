@@ -159,6 +159,8 @@ class RouteLandmark: NSObject, NSSecureCoding {
     static var supportsSecureCoding = true
     
     /// The image associated with the landmark
+    public var imageURL: NSString?
+//    public lazy var image: UIImage? = nil
     public var image: UIImage?
     /// The intrinsics used to take the landmark image
     public var intrinsics: simd_float4?
@@ -175,12 +177,16 @@ class RouteLandmark: NSObject, NSSecureCoding {
     ///   - transform: the position and orientation
     ///   - information: textual description
     ///   - voiceNote: URL to auditory description
-    public init(image: UIImage? = nil, intrinsics: simd_float4? = nil, transform: simd_float4x4? = nil, information: NSString? = nil, voiceNote: NSString? = nil) {
-        self.image = image
+    public init(imageURL: NSString? = nil, intrinsics: simd_float4? = nil, transform: simd_float4x4? = nil, information: NSString? = nil, voiceNote: NSString? = nil) {
+        self.imageURL = imageURL
         self.intrinsics = intrinsics
         self.transform = transform
         self.information = information
         self.voiceNote = voiceNote
+        
+        if let imageURL = imageURL {
+            self.image = UIImage(contentsOfFile: URL(fileURLWithPath: imageURL as String).path)
+        }
     }
     
     /// Encode the landmark.
@@ -191,8 +197,8 @@ class RouteLandmark: NSObject, NSSecureCoding {
             aCoder.encode(ARAnchor(transform: transform!), forKey: "transformAsARAnchor")
         }
         
-        if image != nil {
-            aCoder.encode(image, forKey: "image")
+        if imageURL != nil {
+            aCoder.encode(imageURL, forKey: "image")
         }
         
         if let intrinsics = intrinsics {
@@ -203,11 +209,17 @@ class RouteLandmark: NSObject, NSSecureCoding {
         aCoder.encode(voiceNote, forKey: "voiceNote")
     }
     
+    func loadImage() {
+        if let imageURL = imageURL {
+            self.image = UIImage(contentsOfFile: URL(fileURLWithPath: imageURL as String).path)
+        }
+    }
+    
     /// Decode the landmark.
     ///
     /// - Parameter aDecoder: the decoder
     required convenience init?(coder aDecoder: NSCoder) {
-        var image : UIImage?
+        var imageURL : NSString?
         var intrinsics : simd_float4?
         var transform : simd_float4x4?
         var information : NSString?
@@ -216,16 +228,17 @@ class RouteLandmark: NSObject, NSSecureCoding {
         if let transformAsARAnchor = aDecoder.decodeObject(of: ARAnchor.self, forKey: "transformAsARAnchor") {
             transform = transformAsARAnchor.transform
         }
-        image = aDecoder.decodeObject(of: UIImage.self, forKey: "image")
+        imageURL = aDecoder.decodeObject(of: NSString.self, forKey: "image")
         
         if let intrinsicsArray = aDecoder.decodeObject(forKey: "intrinsics") as? [Float] {
             intrinsics = simd_float4(intrinsicsArray[0], intrinsicsArray[1], intrinsicsArray[2], intrinsicsArray[3])
         }
+        
         information = aDecoder.decodeObject(of: NSString.self, forKey: "information")
         voiceNote = aDecoder.decodeObject(of: NSString.self, forKey: "voiceNote")
-        self.init(image: image, intrinsics: intrinsics, transform: transform, information: information, voiceNote: voiceNote)
+        
+        self.init(imageURL: imageURL, intrinsics: intrinsics, transform: transform, information: information, voiceNote: voiceNote)
     }
-    
 }
 
 /// This class encapsulates a route that can be persisted to storage and reloaded as needed.
