@@ -53,7 +53,7 @@ class ResumeTrackingConfirmController: UIViewController, UIScrollViewDelegate {
         
         /// label details
         let waitingPeriod = ViewController.alignmentWaitingPeriod
-        let alignInfo = String.localizedStringWithFormat(NSLocalizedString("Hold your device flat with the screen facing up. Press the top (short) edge flush against the same vertical surface that you used to create the Anchor Point.  When you are ready, activate the align button to start the alignment countdown that will complete the procedure. Do not move the device until the phone provides confirmation via a vibration or sound cue.", comment: "Info for user"), waitingPeriod)
+        let alignInfo = String.localizedStringWithFormat(NSLocalizedString("Please align your device with your previously recorded anchor point. To do this Hold your device flat with the screen pointing up. Press the top (short) edge flush with the same vertical surface that you used to create the landmark. Activating the align button will start an alignment countdown this is intended to give you time to make final adjustments to the positioning of your device. At the end of the countdown the alignment will be taken and the device will provide confirmation via a vibration or sound cue.", comment: "Info for user"), waitingPeriod)
 
         // var mainText: String?
         let mainText = alignInfo

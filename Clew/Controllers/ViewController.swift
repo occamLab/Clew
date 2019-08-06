@@ -1137,7 +1137,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
 //        rootContainerView.resumeTrackingConfirmView.getButtonByTag(tag: UIView.readVoiceNoteButtonTag)?.isHidden = voiceNoteToPlay == nil
         resumeTrackingConfirmController.readVoiceNoteButton?.isHidden = voiceNoteToPlay == nil
         let waitingPeriod = ViewController.alignmentWaitingPeriod
-        resumeTrackingConfirmController.view.mainText?.text?.append(String.localizedStringWithFormat(NSLocalizedString("Hold your device flat with the screen facing up. Press the top (short) edge flush against the same vertical surface that you used to create the Anchor Point.  When you are ready, activate the align button to start the alignment countdown that will complete the procedure. Do not move the device until the phone provides confirmation via a vibration or sound cue.", comment: "Informative mssage that appears to the user."), waitingPeriod))
+        resumeTrackingConfirmController.view.mainText?.text?.append(String.localizedStringWithFormat(NSLocalizedString("Please align your device with your previously recorded anchor point. To do this Hold your device flat with the screen pointing up. Press the top (short) edge flush with the same vertical surface that you used to create the landmark. Activating the align button will start an alignment countdown this is intended to give you time to make final adjustments to the positioning of your device. At the end of the countdown the alignment will be taken and the device will provide confirmation via a vibration or sound cue.", comment: "Informative mssage that appears to the user."), waitingPeriod))
         delayTransition()
     }
     
@@ -1325,6 +1325,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         ///PATHPOINT record two way path -> create Anchor Point
         ///tells the program that it is recording a two way route
         recordingSingleUseRoute = false
+        paused = false
         ///sends the user to create a Anchor Point
         rootContainerView.homeButton.isHidden = false
         //        backButton.isHidden = true
@@ -1446,6 +1447,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         creatingRouteAnchorPoint = true
         ///tell the program that a single use route is being recorded
         recordingSingleUseRoute = true
+        paused = false
         ///PATHPOINT single use route -> prep for recording a route screen
         ///hide all other views
         hideAllViewsHelper()
