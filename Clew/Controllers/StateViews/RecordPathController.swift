@@ -14,8 +14,8 @@ class RecordPathController: UIViewController {
     /// Button for recording a route
     var recordPathButton: UIButton!
     
-    /// button for creating a new landmark
-    var addLandmarkButton: UIButton!
+    /// button for creating a new Anchor Point
+    var addAnchorPointButton: UIButton!
 
     /// button for accessing saved routes
     var routesButton: UIButton!
@@ -59,10 +59,10 @@ class RecordPathController: UIViewController {
                                                     appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "Record")!),
                                                     label: NSLocalizedString("Record path", comment: "A button that allows user to video record a path to a destination"))
         
-        addLandmarkButton = UIButton.makeConstraintButton(view,
+        addAnchorPointButton = UIButton.makeConstraintButton(view,
                                                      alignment: UIConstants.ButtonContainerHorizontalAlignment.right,
                                                      appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "Landmark")!),
-                                                     label: NSLocalizedString("Landmark", comment: "A button that allows user to create a landmark for a saving a route"))
+                                                     label: NSLocalizedString("AnchorPoint", comment: "A button that allows user to create a Anchor Point for a saving a route"))
         
         routesButton = UIButton.makeConstraintButton(view,
                                                 alignment: UIConstants.ButtonContainerHorizontalAlignment.left,
@@ -83,7 +83,7 @@ class RecordPathController: UIViewController {
         /// add elements to the stack
         stackView.addArrangedSubview(routesButton)
         stackView.addArrangedSubview(recordPathButton)
-        stackView.addArrangedSubview(addLandmarkButton)
+        stackView.addArrangedSubview(addAnchorPointButton)
         
         /// size the stack
         stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: UIConstants.yButtonFrameMargin).isActive = true
@@ -94,8 +94,8 @@ class RecordPathController: UIViewController {
             routesButton.addTarget(parent,
                                           action: #selector(ViewController.routesButtonPressed),
                                           for: .touchUpInside)
-            addLandmarkButton.addTarget(parent,
-                                          action: #selector(ViewController.startCreateLandmarkProcedure),
+            addAnchorPointButton.addTarget(parent,
+                                          action: #selector(ViewController.startCreateAnchorPointProcedure),
                                           for: .touchUpInside)
             recordPathButton.addTarget(parent,
                                           action: #selector(ViewController.recordPath),

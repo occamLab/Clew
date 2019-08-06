@@ -12,11 +12,11 @@ import UIKit
 /// also handles associated buttons
 class PauseTrackingController: UIViewController, UIScrollViewDelegate {
 
-    /// button for storing landmark descriptions
-    var enterLandmarkDescriptionButton: UIButton!
+    /// button for storing Anchor Point descriptions
+    var enterAnchorPointDescriptionButton: UIButton!
     
     /// button for recording a voice note about a
-    /// landmark
+    /// Anchor Point
     var recordVoiceNoteButton: UIButton!
     
     /// button for aligning phone position in space
@@ -60,7 +60,7 @@ class PauseTrackingController: UIViewController, UIScrollViewDelegate {
         
         /// label details
         let waitingPeriod = ViewController.alignmentWaitingPeriod
-        let mainText = String.localizedStringWithFormat(NSLocalizedString("Landmarks allow you to save or pause your route. You will need to return to the landmark to load or unpause your route. Before creating the landmark, specify text or voice to help you remember its location. To create a landmark, hold your device flat with the screen facing up. Press the top (short) edge flush against a flat vertical surface (such as a wall).  The \"align\" button starts a %lu-second countdown. During this time, do not move the device.", comment: "Info for user"), waitingPeriod)
+        let mainText = String.localizedStringWithFormat(NSLocalizedString("Anchor Points allow you to save or pause your route. You will need to return to the Anchor Point to load or unpause your route. Before creating the Anchor Point, specify text or voice to help you remember its location. To create a Anchor Point, hold your device flat with the screen facing up. Press the top (short) edge flush against a flat vertical surface (such as a wall).  The \"align\" button starts a %lu-second countdown. During this time, do not move the device.", comment: "Info for user"), waitingPeriod)
         label.textColor = UIColor.white
         label.textAlignment = .center
         label.numberOfLines = 0
@@ -97,15 +97,15 @@ class PauseTrackingController: UIViewController, UIScrollViewDelegate {
         label.lineBreakMode = NSLineBreakMode.byWordWrapping
 
         /// initialize buttons with some basic size constaints
-        enterLandmarkDescriptionButton = UIButton.makeConstraintButton(view,
+        enterAnchorPointDescriptionButton = UIButton.makeConstraintButton(view,
                                                                   alignment: UIConstants.ButtonContainerHorizontalAlignment.left,
                                                                   appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "Describe")!),
-                                                                  label: "Enter text to help you remember this landmark")
+                                                                  label: "Enter text to help you remember this Anchor Point")
         
         recordVoiceNoteButton = UIButton.makeConstraintButton(view,
                                                          alignment: UIConstants.ButtonContainerHorizontalAlignment.right,
                                                          appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "VoiceNote")!),
-                                                         label: "Record audio to help you remember this landmark")
+                                                         label: "Record audio to help you remember this Anchor Point")
         
         confirmAlignmentButton = UIButton.makeConstraintButton(view,
                                                           alignment: UIConstants.ButtonContainerHorizontalAlignment.center,
@@ -124,7 +124,7 @@ class PauseTrackingController: UIViewController, UIScrollViewDelegate {
         stackView.alignment = UIStackView.Alignment.center
         
         /// add elements to the stack
-        stackView.addArrangedSubview(enterLandmarkDescriptionButton)
+        stackView.addArrangedSubview(enterAnchorPointDescriptionButton)
         stackView.addArrangedSubview(recordVoiceNoteButton)
         stackView.addArrangedSubview(confirmAlignmentButton)
         
@@ -137,8 +137,8 @@ class PauseTrackingController: UIViewController, UIScrollViewDelegate {
         
         /// set function targets for the functions in this state
         if let parent: UIViewController = parent {
-            enterLandmarkDescriptionButton.addTarget(parent,
-                                     action: #selector(ViewController.showLandmarkInformationDialog),
+            enterAnchorPointDescriptionButton.addTarget(parent,
+                                     action: #selector(ViewController.showAnchorPointInformationDialog),
                                      for: .touchUpInside)
             recordVoiceNoteButton.addTarget(parent,
                                        action: #selector(ViewController.recordVoiceNote),
