@@ -55,7 +55,6 @@ class DataPersistence {
     /// called in the case of a route being shared from the UIActivityViewController
     /// library
     /// TODO: Does this need to be a static function?
-    @available(iOS 12.0, *)
     func importData(from url: URL) {
         var documentData: RouteDocumentData
         
@@ -108,20 +107,21 @@ class DataPersistence {
     /// handler for exporting routes to a external temporary file
     /// called in the case of a route being shared from the UIActivityViewController
     /// library
-    @available(iOS 12.0, *)
     func exportToURL(route: SavedRoute) -> URL? {
-        /// fetch the world map if it exists
-        /// is this legal given that unarchiveMap can be nil
+        /// fetch the world map if it exists. Otherwise, value is nil
         let worldMap = self.unarchiveMap(id: route.id as String)
         
+        /// paths to the beginning and ending landmark files
         var beginVoiceFile: String?
         var endVoiceFile: String?
         
-        /// begin crumb audio
-        
         /// fetch begginning voice notefile if it exists
         if let beginVoiceURL = route.beginRouteLandmark.voiceNote {
+            /// build a full valid path the found url from the landmark
             let voiceurl = beginVoiceURL.documentURL
+            
+            /// encode audio file into a base64 string to be written to
+            /// a shareable file
             if let data = try? Data(contentsOf: voiceurl) {
                 beginVoiceFile = data.base64EncodedString()
             }
@@ -129,38 +129,40 @@ class DataPersistence {
         
         /// fetch beginning voice notefile if it exists
         if let endVoiceURL = route.endRouteLandmark.voiceNote {
+            /// build a full valid path the found url from the landmark
             let voiceurl = endVoiceURL.documentURL
+            
+            /// encode audio file into a base64 string to be written to
+            /// a shareable file
             if let data = try? Data(contentsOf: voiceurl) {
                 endVoiceFile = data.base64EncodedString()
             }
         }
         
-        /// need to fix to include functionality for phones which don't support
+        /// TODO: need to fix to include functionality for phones which don't support
         /// world maps (> iOS 12)
-        let routeData = RouteDocumentData(route: route,
-                                          map: worldMap as! ARWorldMap,
-                                          beginVoiceNote: beginVoiceFile,
-                                          endVoiceNote: endVoiceFile)
-        
-        
-        /// fetch the documents directory where apple stores temp files for apps
+            let routeData = RouteDocumentData(route: route,
+                                              map: worldMap,
+                                              beginVoiceNote: beginVoiceFile,
+                                              endVoiceNote: endVoiceFile)
+
+        /// fetch the documents directory where apple stores temporary files
         let documents = FileManager.default.urls(
             for: .documentDirectory,
             in: .userDomainMask
             ).first
         
-        /// set temp path as name of route
-        /// will be sent via the share menu
+        /// set temporary path as name of route
+        /// will then later be sent via the share menu
         guard let path = documents?.appendingPathComponent("/\(route.name).crd") else {
             return nil
         }
         
-        /// create the coded data
+        /// encode our route data before writing to disk
         let codedData = try! NSKeyedArchiver.archivedData(withRootObject: routeData, requiringSecureCoding: true)
         
         /// write route to file
         /// and return the path of the created temp file
-        /// TODO: error handling with NSArrays?
         do {
             try codedData.write(to: path as URL)
             return path

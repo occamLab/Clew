@@ -26,7 +26,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     ///   - launchOptions: the launch options
     /// - Returns: a Boolean indicating whether the app can continue to handle user activity.
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        print("init app!")
 
         // Use Firebase library to configure APIs
         #if IS_DEV_TARGET
@@ -53,18 +52,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ app: UIApplication,
                      open url: URL,
                      options: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
-        print("opening a file!")
         
         /// check imported file extension
         guard url.pathExtension == "crd" else { return false }
         
         /// import the file here
-        if #available(iOS 12.0, *) {
-            print("attempting to persist!")
-            vc.dataPersistence.importData(from: url)
-        } else {
-            // Fallback on earlier versions
-        }
+        vc.dataPersistence.importData(from: url)
         
         return true
     }

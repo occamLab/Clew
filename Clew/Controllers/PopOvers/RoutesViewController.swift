@@ -98,27 +98,17 @@ class RoutesViewController : UIViewController, UITableViewDataSource, UITableVie
         
         let share = UITableViewRowAction(style: .normal, title: "Share") { (action, indexPath) in
             /// share item
-            do {
-                if #available(iOS 12.0, *) {
-                    print("exporting route")
-                    let url = self.rootViewController?.dataPersistence.exportToURL(route: self.routes[indexPath.row])
-                    
-                    let activity = UIActivityViewController(
-                        activityItems: ["Check out this route!", url as Any],
-                        applicationActivities: nil
-                    )
-                    
-                    /// anchor popup to a button
-//                    activity.popoverPresentationController?.barButtonItem = sender
+            let url = self.rootViewController?.dataPersistence.exportToURL(route: self.routes[indexPath.row])
+            
+            /// define share menu content and a message to show with it
+            /// TODO: localize
+            let activity = UIActivityViewController(
+                activityItems: ["Check out this route!", url as Any],
+                applicationActivities: nil
+            )
 
-                    /// show the share menu
-                    self.present(activity, animated: true, completion: nil)
-                } else {
-                    // Fallback on earlier versions
-                }
-            } catch {
-                print("well that didn't work!")
-            }
+            /// show the share menu
+            self.present(activity, animated: true, completion: nil)
         }
         return [delete, share]
         
