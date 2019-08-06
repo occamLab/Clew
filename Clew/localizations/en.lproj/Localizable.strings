@@ -87,7 +87,7 @@
 
 "Anchor Point information" = "Anchor Point information";
 
-"Enter text about the Anchor Point that will help you find it later." = "Enter text about the Anchor Point that will help you find it later.";
+"Enter text about the Anchor Point that will allow you to find the exact same point later on." = "Enter text about the Anchor Point that will allow you to find the exact same point later on.";
 
 "Ok" = "Ok";
 
@@ -221,3 +221,9 @@
 "Aligned to anchor point. Starting return navigation." = "Aligned to anchor point. Starting return navigation.";
 
 "Aligned to anchor point. Starting navigation." = "Aligned to anchor point. Starting navigation.";
+
+//Play/Pause text
+
+"In order to immediately navigate back along the path you recorded, simply press the play button and follow the instructions provided. In order to pause the session to perform return navigation at a later point, press the pause button and complete the anchor point procedure." = "In order to immediately navigate back along the path you recorded, simply press the play button and follow the instructions provided. In order to pause the session to perform return navigation at a later point, press the pause button and complete the anchor point procedure.";
+
+"In order to immediately navigate back along the path you recorded, simply press the play button and follow the instructions provided. In order to pause the session to perform return navigation at a later point, press the pause button." = "In order to immediately navigate back along the path you recorded, simply press the play button and follow the instructions provided. In order to pause the session to perform return navigation at a later point, press the pause button.";

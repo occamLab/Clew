@@ -827,7 +827,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         rootContainerView.homeButton.isHidden = false
 //        backButton.isHidden = true
         // Set title and message for the alert dialog
-        let alertController = UIAlertController(title: NSLocalizedString("Anchor Point information", comment: "The header of a pop-up menu"), message: NSLocalizedString("Enter text about the Anchor Point that will help you find it later.", comment: "Prompts user to enter information"), preferredStyle: .alert)
+        let alertController = UIAlertController(title: NSLocalizedString("Anchor Point information", comment: "The header of a pop-up menu"), message: NSLocalizedString("Enter text about the Anchor Point that will allow you to find the exact same point later on.", comment: "Prompts user to enter information"), preferredStyle: .alert)
         // The confirm action taking the inputs
         let saveAction = UIAlertAction(title: NSLocalizedString("Ok", comment: "A button for user to click to acknowledge and close a pop-up"), style: .default) { (_) in
             if self.creatingRouteAnchorPoint {
