@@ -125,8 +125,8 @@ class PauseTrackingController: UIViewController, UIScrollViewDelegate {
         
         /// add elements to the stack
         stackView.addArrangedSubview(enterLandmarkDescriptionButton)
-        stackView.addArrangedSubview(confirmAlignmentButton)
         stackView.addArrangedSubview(recordVoiceNoteButton)
+        stackView.addArrangedSubview(confirmAlignmentButton)
         
         scrollView.flashScrollIndicators()
 
