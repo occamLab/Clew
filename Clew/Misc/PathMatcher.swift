@@ -77,6 +77,7 @@ class PathMatcher {
             // this sets the translation based on the appropriate formula
             additionalTransform.columns.3 = meanOfClosestMatches - additionalTransform*meanOfFollowCrumbs
             
+            
             // this will accidentally change element (4, 4) to 0
             additionalTransform.columns.3.w = 1
 
