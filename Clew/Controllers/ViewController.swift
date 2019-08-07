@@ -519,7 +519,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
 
             if #available(iOS 12.0, *) {
                 sceneView.session.getCurrentWorldMap { worldMap, error in
-                    self.getRouteNameAndSaveRouteHelper(mapAsAny: nil)
+                    self.getRouteNameAndSaveRouteHelper(mapAsAny: worldMap)
                     self.showResumeTrackingButton()
                     Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(self.playSound)), userInfo: nil, repeats: false)
                     self.state = .pauseProcedureCompleted
