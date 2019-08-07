@@ -168,6 +168,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         guard let unwrappedPhoneVertical = phoneVertical else {
             phoneVertical = phoneCurrentlyVertical
             if !phoneCurrentlyVertical {
+                rootContainerView.countdownTimer.isHidden = true
                 announce(announcement: "Camera not vertical, hold phone vertically to begin countdown")
                 rootContainerView.countdownTimer.start(beginingValue: ViewController.alignmentWaitingPeriod, interval: 1)
                 rootContainerView.countdownTimer.pause()
@@ -181,7 +182,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
         
         if !phoneCurrentlyVertical && unwrappedPhoneVertical {
-            announce(announcement: "Camera no longer vertical, restarting and pausing countdown")
+            announce(announcement: "Camera no longer vertical, restarting and stopping countdown")
+            rootContainerView.countdownTimer.isHidden = true
             timer?.invalidate()
             rootContainerView.countdownTimer.start(beginingValue: ViewController.alignmentWaitingPeriod, interval: 1)
             rootContainerView.countdownTimer.pause()
@@ -190,6 +192,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
         
         if phoneCurrentlyVertical && !unwrappedPhoneVertical {
+            rootContainerView.countdownTimer.isHidden = false
             announce(announcement: "Camera now vertical, starting countdown")
             rootContainerView.countdownTimer.resume()
             nowVerticalVibration.impactOccurred()
@@ -476,22 +479,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 let beginRouteLandmarkJpeg = beginRouteLandmarkImage.jpegData(compressionQuality: 1)
                 try! beginRouteLandmarkJpeg?.write(to: beginRouteLandmark.imageFileName!.documentURL, options: .atomic)
                 beginRouteLandmark.loadImage()
-
-                DispatchQueue.global(qos: .background).async {
-                    let numFeatures = VisualAlignment.numFeatures(beginRouteLandmarkImage)
-                    
-                    DispatchQueue.main.async {
-                        if numFeatures < 600 {
-                            let retakeRouteLandmarkAlert = UIAlertController(title: "Few Visual Features", message: "Would you like to retake the landmark?", preferredStyle: .alert)
-                            retakeRouteLandmarkAlert.addAction(UIAlertAction(title: "Yes", style: .default, handler: {action in
-                                self.state = .startingPauseProcedure
-                            }))
-                            retakeRouteLandmarkAlert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
-                            self.present(retakeRouteLandmarkAlert, animated: true)
-                        }
-                        
-                    }
-                }
                 
                 let intrinsics = currentFrame.camera.intrinsics
                 beginRouteLandmark.intrinsics = simd_float4(intrinsics[0, 0], intrinsics[1, 1], intrinsics[2, 0], intrinsics[2, 1])
@@ -669,7 +656,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     ///
     /// - Parameter newValue: the new value (in seconds) displayed on the countdown timer
     @objc func timerDidUpdateCounterValue(newValue: Int) {
-        UIAccessibility.post(notification: UIAccessibility.Notification.announcement, argument: String(newValue))
+        if UIAccessibility.isVoiceOverRunning {
+            if currentAnnouncement == nil {
+                UIAccessibility.post(notification: UIAccessibility.Notification.announcement, argument: String(newValue))
+            }
+//            announce(announcement: String(newValue))
+        }
     }
     
     /// Hook in the view class as a view, so that we can access its variables easily
@@ -1257,7 +1249,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         rootContainerView.homeButton.isHidden = false // home button here
         recordPathController.remove()
         startNavigationController.remove()
+        
         add(pauseTrackingController)
+        pauseTrackingController.setMainText(direction: creatingRouteLandmark)
         
         delayTransition()
     }
@@ -1622,19 +1616,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                                                             frame.camera.transform)
                 
                 DispatchQueue.main.async {
-                    
-                    // Prompt the user to retake the landmark if not enough matches are found.
-                    if (!visualYawReturn.is_valid) {
-                        self.announce(announcement: "Insufficient matches found, try pointing the camera in a different direction.")
-                        
-                        let retakeRouteLandmarkAlert = UIAlertController(title: "Few Visual Matches", message: "Would you like to retake the landmark?", preferredStyle: .alert)
-                        retakeRouteLandmarkAlert.addAction(UIAlertAction(title: "Yes", style: .default, handler: {action in
-                            self.state = .startingResumeProcedure(route: self.loadedRoute!, mapAsAny: self.justUsedMapAsAny, navigateStartToEnd: self.loadedRouteStartToEnd!)
-                        }))
-                        retakeRouteLandmarkAlert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
-                        self.present(retakeRouteLandmarkAlert, animated: true)
-                    }
-                    //                        self.announce(announcement: "aligned with yaw " + String(visualYawReturn.yaw*180/3.1415))
                     let alignRotation = simd_float3x3(simd_float3(alignTransform[0, 0], alignTransform[0, 1], alignTransform[0, 2]),
                                                       simd_float3(alignTransform[1, 0], alignTransform[1, 1], alignTransform[1, 2]),
                                                       simd_float3(alignTransform[2, 0], alignTransform[2, 1], alignTransform[2, 2]))
@@ -1935,6 +1916,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         if UIAccessibility.isVoiceOverRunning {
             // use the VoiceOver API instead of text to speech
             currentAnnouncement = announcement
+        
             UIAccessibility.post(notification: UIAccessibility.Notification.announcement, argument: announcement)
         } else if voiceFeedback {
             let audioSession = AVAudioSession.sharedInstance()

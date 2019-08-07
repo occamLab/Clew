@@ -36,6 +36,8 @@ class PauseTrackingController: UIViewController, UIScrollViewDelegate {
 
     }
     
+
+    
     /// called when the view has loaded the first time.  We setup various app elements in here.
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -59,14 +61,13 @@ class PauseTrackingController: UIViewController, UIScrollViewDelegate {
         view.backgroundColor = UIColor.black.withAlphaComponent(0.4)
         
         /// label details
-        let waitingPeriod = ViewController.alignmentWaitingPeriod
-        let mainText = String.localizedStringWithFormat(NSLocalizedString("Landmarks allow you to save or pause your route. You will need to return to the landmark to load or unpause your route. Before creating the landmark, specify text or voice to help you remember its location. To create a landmark, hold your device flat with the screen facing up. Press the top (short) edge flush against a flat vertical surface (such as a wall).  The \"align\" button starts a %lu-second countdown. During this time, do not move the device.", comment: "Info for user"), waitingPeriod)
+        
         label.textColor = UIColor.white
         label.textAlignment = .center
         label.numberOfLines = 0
         label.lineBreakMode = .byWordWrapping
         label.font = UIFont.preferredFont(forTextStyle: .body)
-        label.text = mainText
+        label.text = "Set this text by calling setMainText"
         label.tag = UIView.mainTextTag
         
         /// place label inside of the scrollview
@@ -146,6 +147,17 @@ class PauseTrackingController: UIViewController, UIScrollViewDelegate {
             confirmAlignmentButton.addTarget(parent,
                                             action: #selector(ViewController.confirmAlignment),
                                             for: .touchUpInside)
+        }
+    }
+    
+    func setMainText(direction: Bool) {
+        let beginRouteString = String.localizedStringWithFormat(NSLocalizedString("Landmarks allow you to save or pause your route. You will need to return to the landmark to load or unpause your route. Before creating the landmark, specify text or voice to help you remember its location. To create a landmark, hold your device flat with the screen facing up. Press the top (short) edge flush against a flat vertical surface (such as a wall).  The \"align\" button starts a %lu-second countdown. During this time, do not move the device.", comment: "Info for user"), ViewController.alignmentWaitingPeriod)
+        let endRouteString = String.localizedStringWithFormat(NSLocalizedString("RecordEndLandmark", comment: "Instructs user how to create an end landmark"), ViewController.alignmentWaitingPeriod)
+        if direction {
+            label.text = beginRouteString
+        }
+        else {
+            label.text = endRouteString
         }
     }
 }
