@@ -66,6 +66,17 @@ class RecordPathController: UIViewController {
             addAnchorPointButton.accessibilityLabel = NSLocalizedString("Save a Route", comment: "A button that allows the user to save a path to a destination.")
         
 
+<<<<<<< HEAD
+        recordPathButton = UIButton.makeConstraintButton(view,
+                                                    alignment: UIConstants.ButtonContainerHorizontalAlignment.center,
+                                                    appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "Record")!),
+                                                    label: NSLocalizedString("saveARouteButtonAccessabilityLabel", comment: "The accessability label for the save a route button"))
+        
+        addAnchorPointButton = UIButton.makeConstraintButton(view,
+                                                     alignment: UIConstants.ButtonContainerHorizontalAlignment.right,
+                                                     appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "Landmark")!),
+                                                     label: NSLocalizedString("recordSingleUseRouteButtonAccessabilityLabel", comment: "The accessability label for a button which allows the user to record a single use route."))
+=======
         
 
         
@@ -82,6 +93,7 @@ class RecordPathController: UIViewController {
         recordPathButton.titleLabel?.font = UIFont(name: "HelveticaNeue-Bold", size: 35)!
         recordPathButton.accessibilityLabel = NSLocalizedString("Record a single use route", comment: "A button that allows the user to navigate a route one time.")
 
+>>>>>>> 0c77d54faffb81853184799c5da39f5a2a488c27
         
         let routesButton = UIButton(type: .custom)
         routesButton.layer.cornerRadius = 0.75 * routesButton.bounds.size.width
