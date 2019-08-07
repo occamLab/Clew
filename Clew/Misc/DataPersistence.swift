@@ -98,8 +98,17 @@ class DataPersistence {
         if let beginRouteLandmarkVoiceNote = route.beginRouteLandmark.voiceNote {
             try? FileManager().removeItem(at: beginRouteLandmarkVoiceNote.documentURL)
         }
+        
         if let endRouteLandmarkVoiceNote = route.endRouteLandmark.voiceNote {
             try? FileManager().removeItem(at: endRouteLandmarkVoiceNote.documentURL)
+        }
+        
+        if let beginRouteLandmarkImageFileName = route.beginRouteLandmark.imageFileName {
+            try? FileManager().removeItem(at: beginRouteLandmarkImageFileName.documentURL)
+        }
+        
+        if let endRouteLandmarkImageFileName = route.endRouteLandmark.imageFileName {
+            try? FileManager().removeItem(at: endRouteLandmarkImageFileName.documentURL)
         }
     }
     

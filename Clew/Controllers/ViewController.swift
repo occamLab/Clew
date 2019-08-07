@@ -58,6 +58,9 @@ enum AppState {
     /// the AR session has entered the relocalizing state, which means that we can now realign the session
     case readyForFinalResumeAlignment
     
+    /// user has initiated landmark realignment countdown
+    case resumeWaitingPeriod
+    
     /// rawValue is useful for serializing state values, which we are currently using for our logging feature
     var rawValue: String {
         switch self {
@@ -81,6 +84,9 @@ enum AppState {
             return "completingPauseProcedure"
         case .pauseProcedureCompleted:
             return "pauseProcedureCompleted"
+            
+        case .resumeWaitingPeriod:
+            return "resumeWaitingPeriod"
         case .startingResumeProcedure(_, _, let navigateStartToEnd):
             return "startingResumeProcedure(route=notloggedhere, map=notlogged, navigateStartToEnd=\(navigateStartToEnd))"
         case .readyForFinalResumeAlignment:
@@ -139,13 +145,16 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             case .readyForFinalResumeAlignment:
                 // nothing happens currently
                 break
+                
+            case .resumeWaitingPeriod:
+                break
             case .initializing:
                 break
             }
         }
     }
     
-    func recordRouteLandmarkHelper() {
+    func recordRouteLandmarkHelper(timer: Timer?, startTimerFunc: () -> ()) {
         guard let poseRotation = sceneView.session.currentFrame?.camera.transform.rotation() else {
             return
         }
@@ -160,23 +169,21 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             phoneVertical = phoneCurrentlyVertical
             if !phoneCurrentlyVertical {
                 announce(announcement: "Camera not vertical, hold phone vertically to begin countdown")
-                state = .pauseWaitingPeriod
-                //                    handleStateTransitionToPauseWaitingPeriod()
+                rootContainerView.countdownTimer.start(beginingValue: ViewController.alignmentWaitingPeriod, interval: 1)
                 rootContainerView.countdownTimer.pause()
                 rootContainerView.countdownTimer.setNeedsDisplay()
                 nowNotVerticalVibration.impactOccurred()
             }
             else {
-                startRecordRouteLandmarkTimer()
+                startTimerFunc()
             }
             return
         }
         
         if !phoneCurrentlyVertical && unwrappedPhoneVertical {
             announce(announcement: "Camera no longer vertical, restarting and pausing countdown")
-            recordRouteLandmarkTimer?.invalidate()
-            state = .pauseWaitingPeriod
-            //                handleStateTransitionToPauseWaitingPeriod()
+            timer?.invalidate()
+            rootContainerView.countdownTimer.start(beginingValue: ViewController.alignmentWaitingPeriod, interval: 1)
             rootContainerView.countdownTimer.pause()
             rootContainerView.countdownTimer.setNeedsDisplay()
             nowNotVerticalVibration.impactOccurred()
@@ -184,10 +191,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         
         if phoneCurrentlyVertical && !unwrappedPhoneVertical {
             announce(announcement: "Camera now vertical, starting countdown")
+            rootContainerView.countdownTimer.resume()
             nowVerticalVibration.impactOccurred()
-            startRecordRouteLandmarkTimer()
-            state = .pauseWaitingPeriod
-            //                handleStateTransitionToPauseWaitingPeriod()
+            startTimerFunc()
         }
         phoneVertical = phoneCurrentlyVertical
     }
@@ -195,10 +201,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     func session(_ session: ARSession, didUpdate: ARFrame) {
         switch state {
         case .pauseWaitingPeriod:
-            recordRouteLandmarkHelper()
-            
-        case .readyForFinalResumeAlignment:
-            recordRouteLandmarkHelper()
+            recordRouteLandmarkHelper(timer: recordRouteLandmarkTimer, startTimerFunc: startRecordRouteLandmarkTimer)
+
+        case .resumeWaitingPeriod:
+            recordRouteLandmarkHelper(timer: resumeRouteTimer, startTimerFunc: startResumeRouteTimer)
 
         default:
             phoneVertical = nil
@@ -464,17 +470,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             if let currentFrame = sceneView.session.currentFrame {
 
                 let beginRouteLandmarkImageIdentifier = UUID()
-                guard let beginRouteLandmarkImageURL = documentsDirectoryURL.appendingPathComponent("\(beginRouteLandmarkImageIdentifier).jpg") else {
-                    print("Could not find url to save begin route landmark image to")
-                    return
-                }
+                beginRouteLandmark.imageFileName = "\(beginRouteLandmarkImageIdentifier).jpg" as NSString
+                
                 guard let beginRouteLandmarkImage = pixelBufferToUIImage(pixelBuffer: currentFrame.capturedImage) else {
                     return
                 }
                 
                 let beginRouteLandmarkJpeg = beginRouteLandmarkImage.jpegData(compressionQuality: 1)
-                try! beginRouteLandmarkJpeg?.write(to: beginRouteLandmarkImageURL, options: .atomic)
-                beginRouteLandmark.imageURL = beginRouteLandmarkImageURL.path as NSString
+                try! beginRouteLandmarkJpeg?.write(to: beginRouteLandmark.imageFileName!.documentURL, options: .atomic)
                 beginRouteLandmark.loadImage()
 
                 DispatchQueue.global(qos: .background).async {
@@ -504,18 +507,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             return
         } else if let currentFrame = sceneView.session.currentFrame {
             let endRouteLandmarkImageIdentifier = UUID()
-            guard let endRouteLandmarkImageURL = documentsDirectoryURL.appendingPathComponent("\(endRouteLandmarkImageIdentifier).jpg") else {
-                print("Could not find url to save end route landmark image to")
-                return
-            }
+            endRouteLandmark.imageFileName = "\(endRouteLandmarkImageIdentifier).jpg" as NSString
             
             guard let endRouteLandmarkImage = pixelBufferToUIImage(pixelBuffer: currentFrame.capturedImage) else {
                 return
             }
             
             let endRouteLandmarkJpeg = endRouteLandmarkImage.jpegData(compressionQuality: 1)
-            try! endRouteLandmarkJpeg?.write(to: endRouteLandmarkImageURL, options: .atomic)
-            endRouteLandmark.imageURL = endRouteLandmarkImageURL.absoluteString as NSString
+            try! endRouteLandmarkJpeg?.write(to: endRouteLandmark.imageFileName!.documentURL, options: .atomic)
             endRouteLandmark.loadImage()
             
             endRouteLandmark.transform = currentFrame.camera.transform
@@ -1581,73 +1580,95 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         state = .completingPauseProcedure
     }
     
+    
+    /// Timer for resuming route landmark action
+    weak var resumeRouteTimer: Timer?
+    
+    /// Start the route landmark recording timer
+    func startResumeRouteTimer() {
+        resumeRouteTimer = Timer.scheduledTimer(
+            timeInterval: Double(ViewController.alignmentWaitingPeriod),
+            target: self,
+            selector: #selector(afterResumeTimerAction(_:)),
+            userInfo: nil,
+            repeats: false)
+    }
+    
+    
+    /// Action to take place after route resume countdown
+    @objc
+    func afterResumeTimerAction(_ timer: Timer) {
+        self.rootContainerView.countdownTimer.isHidden = true
+        // The first check is necessary in case the phone relocalizes before this code executes
+        self.pausedLandmark?.loadImage()
+        if case .resumeWaitingPeriod = self.state, let alignLandmark = self.pausedLandmark, let alignLandmarkImage = alignLandmark.image, let alignTransform = alignLandmark.transform, let frame = self.sceneView.session.currentFrame {
+            // yaw can be determined by projecting the camera's z-axis into the ground plane and using arc tangent (note: the camera coordinate conventions of ARKit https://developer.apple.com/documentation/arkit/arsessionconfiguration/worldalignment/camera
+            
+            DispatchQueue.global(qos: .background).async {
+                //                    let numMatches = VisualAlignment.numMatches(alignLandmark.image!, self.pixelBufferToUIImage(pixelBuffer: frame.capturedImage)!)
+                let intrinsics = frame.camera.intrinsics
+                var visualYawReturn: VisualAlignmentReturn
+                
+                visualYawReturn = VisualAlignment.visualYaw(alignLandmarkImage, alignLandmark.intrinsics!, alignTransform,
+                                                            self.pixelBufferToUIImage(pixelBuffer: frame.capturedImage)!,
+                                                            simd_float4(intrinsics[0, 0], intrinsics[1, 1], intrinsics[2, 0], intrinsics[2, 1]),
+                                                            frame.camera.transform)
+                
+                DispatchQueue.main.async {
+                    
+                    // Prompt the user to retake the landmark if not enough matches are found.
+                    if (!visualYawReturn.is_valid) {
+                        self.announce(announcement: "Insufficient matches found, try pointing the camera in a different direction.")
+                        
+                        let retakeRouteLandmarkAlert = UIAlertController(title: "Few Visual Matches", message: "Would you like to retake the landmark?", preferredStyle: .alert)
+                        retakeRouteLandmarkAlert.addAction(UIAlertAction(title: "Yes", style: .default, handler: {action in
+                            self.state = .startingResumeProcedure(route: self.loadedRoute!, mapAsAny: self.justUsedMapAsAny, navigateStartToEnd: self.loadedRouteStartToEnd!)
+                        }))
+                        retakeRouteLandmarkAlert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
+                        self.present(retakeRouteLandmarkAlert, animated: true)
+                    }
+                    //                        self.announce(announcement: "aligned with yaw " + String(visualYawReturn.yaw*180/3.1415))
+                    let alignRotation = simd_float3x3(simd_float3(alignTransform[0, 0], alignTransform[0, 1], alignTransform[0, 2]),
+                                                      simd_float3(alignTransform[1, 0], alignTransform[1, 1], alignTransform[1, 2]),
+                                                      simd_float3(alignTransform[2, 0], alignTransform[2, 1], alignTransform[2, 2]))
+                    
+                    let leveledAlignRotation = visualYawReturn.square_rotation1.inverse * alignRotation;
+                    
+                    var leveledAlignPose = leveledAlignRotation.toPose()
+                    leveledAlignPose[3] = alignTransform[3]
+                    
+                    
+                    let cameraTransform = frame.camera.transform
+                    let cameraRotation = cameraTransform.rotation()
+                    let leveledCameraRotation = visualYawReturn.square_rotation2.inverse * cameraRotation;
+                    var leveledCameraPose = leveledCameraRotation.toPose()
+                    leveledCameraPose[3] = cameraTransform[3]
+                    
+                    let yawRotation = simd_float4x4.makeRotate(radians: visualYawReturn.yaw, -1, 0, 0)
+                    
+                    let relativeTransform = leveledCameraPose * yawRotation.inverse * leveledAlignPose.inverse
+                    self.sceneView.session.setWorldOrigin(relativeTransform: relativeTransform)
+                    
+                    Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(self.playSound)), userInfo: nil, repeats: false)
+                    self.isResumedRoute = true
+                    self.state = .readyToNavigateOrPause(allowPause: false)
+                }
+            }
+        }
+    }
+    
     /// this is called when the user has confirmed the alignment and is the alignment countdown should begin.  Once the alignment countdown has finished, the alignment will be performed and the app will move to the ready to navigate view.
     func resumeTracking() {
         // resume pose tracking with existing ARSessionConfiguration
         hideAllViewsHelper()
         pauseTrackingController.remove()
+        state = .resumeWaitingPeriod
         rootContainerView.countdownTimer.isHidden = false
         rootContainerView.countdownTimer.start(beginingValue: ViewController.alignmentWaitingPeriod, interval: 1)
         delayTransition()
-        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(ViewController.alignmentWaitingPeriod)) {
-            self.rootContainerView.countdownTimer.isHidden = true
-            // The first check is necessary in case the phone relocalizes before this code executes
-            self.pausedLandmark?.loadImage()
-            if case .readyForFinalResumeAlignment = self.state, let alignLandmark = self.pausedLandmark, let alignLandmarkImage = alignLandmark.image, let alignTransform = alignLandmark.transform, let frame = self.sceneView.session.currentFrame {
-                // yaw can be determined by projecting the camera's z-axis into the ground plane and using arc tangent (note: the camera coordinate conventions of ARKit https://developer.apple.com/documentation/arkit/arsessionconfiguration/worldalignment/camera
-                
-                DispatchQueue.global(qos: .background).async {
-//                    let numMatches = VisualAlignment.numMatches(alignLandmark.image!, self.pixelBufferToUIImage(pixelBuffer: frame.capturedImage)!)
-                    let intrinsics = frame.camera.intrinsics
-                    var visualYawReturn: VisualAlignmentReturn
-                    
-                    visualYawReturn = VisualAlignment.visualYaw(alignLandmarkImage, alignLandmark.intrinsics!, alignTransform,
-                                                                self.pixelBufferToUIImage(pixelBuffer: frame.capturedImage)!,
-                                                                simd_float4(intrinsics[0, 0], intrinsics[1, 1], intrinsics[2, 0], intrinsics[2, 1]),
-                                                                frame.camera.transform)
-                
-                    DispatchQueue.main.async {
-                        
-                        // Prompt the user to retake the landmark if not enough matches are found.
-                        if (!visualYawReturn.is_valid) {
-                            self.announce(announcement: "Insufficient matches found, try pointing the camera in a different direction.")
-                            
-                            let retakeRouteLandmarkAlert = UIAlertController(title: "Few Visual Matches", message: "Would you like to retake the landmark?", preferredStyle: .alert)
-                            retakeRouteLandmarkAlert.addAction(UIAlertAction(title: "Yes", style: .default, handler: {action in
-                                self.state = .startingResumeProcedure(route: self.loadedRoute!, mapAsAny: self.justUsedMapAsAny, navigateStartToEnd: self.loadedRouteStartToEnd!)
-                            }))
-                            retakeRouteLandmarkAlert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
-                            self.present(retakeRouteLandmarkAlert, animated: true)
-                        }
-//                        self.announce(announcement: "aligned with yaw " + String(visualYawReturn.yaw*180/3.1415))
-                        let alignRotation = simd_float3x3(simd_float3(alignTransform[0, 0], alignTransform[0, 1], alignTransform[0, 2]),
-                            simd_float3(alignTransform[1, 0], alignTransform[1, 1], alignTransform[1, 2]),
-                            simd_float3(alignTransform[2, 0], alignTransform[2, 1], alignTransform[2, 2]))
-                        
-                        let leveledAlignRotation = visualYawReturn.square_rotation1.inverse * alignRotation;
- 
-                        var leveledAlignPose = leveledAlignRotation.toPose()
-                        leveledAlignPose[3] = alignTransform[3]
-
-                        
-                        let cameraTransform = frame.camera.transform
-                        let cameraRotation = cameraTransform.rotation()
-                        let leveledCameraRotation = visualYawReturn.square_rotation2.inverse * cameraRotation;
-                        var leveledCameraPose = leveledCameraRotation.toPose()
-                        leveledCameraPose[3] = cameraTransform[3]
-                                                              
-                        let yawRotation = simd_float4x4.makeRotate(radians: visualYawReturn.yaw, -1, 0, 0)
-
-                        let relativeTransform = leveledCameraPose * yawRotation.inverse * leveledAlignPose.inverse
-                        self.sceneView.session.setWorldOrigin(relativeTransform: relativeTransform)
-                        
-                        Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(self.playSound)), userInfo: nil, repeats: false)
-                        self.isResumedRoute = true
-                        self.state = .readyToNavigateOrPause(allowPause: false)
-                    }
-                }
-            }
-        }
+//        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(ViewController.alignmentWaitingPeriod)) {
+//            self.afterResumeTimerAction()
+//        }
     }
     
     /// handles the user pressing the resume tracking confirmation button.
