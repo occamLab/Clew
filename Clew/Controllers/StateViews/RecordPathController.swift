@@ -91,10 +91,11 @@ class RecordPathController: UIViewController {
         routesButton.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 2.5).isActive = true
         routesButton.setBackgroundImage(UIImage(named: "WhiteButtonBackground"), for: .normal)
         routesButton.imageView?.contentMode = .scaleAspectFit
+        ///LOCALIZE
         routesButton.setTitle("Saved Routes List",for: .normal)
         routesButton.setTitleColor(.black, for: .normal)
         routesButton.titleLabel?.font = UIFont(name: "HelveticaNeue-Bold", size: 35)!
-        routesButton.accessibilityLabel = NSLocalizedString("Saved Routes List", comment: "A button that opens a menu which displays all the saved routes created by the user.")
+        routesButton.accessibilityLabel = NSLocalizedString("savedRoutesListButtonAccessabilityLabel", comment: "The acessability tag for a button which opens a menu which displays all the saved routes created by the user.")
         
         /// create stack view for aligning and distributing bottom layer buttons
         let stackView   = UIStackView()

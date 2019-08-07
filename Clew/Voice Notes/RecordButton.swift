@@ -102,6 +102,7 @@ class RecordButton: UIButton {
     }
     
     /// specifies the accessibility label to be reflective of the current button state.
+    ///LOCALIZE
     fileprivate func setAccessibilityLabel() {
         if isRecording {
             self.accessibilityLabel = "Stop Recording"

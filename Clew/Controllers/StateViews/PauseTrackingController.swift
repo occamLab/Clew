@@ -51,7 +51,6 @@ class PauseTrackingController: UIViewController, UIScrollViewDelegate {
         label.font = UIFont.preferredFont(forTextStyle: .body)
         label.text = mainText
         label.tag = UIView.mainTextTag
-        label.font = UIFont.preferredFont(forTextStyle: .body)
         
         /// set confirm alignment button as initially active voiceover button
         UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: self.confirmAlignmentButton)

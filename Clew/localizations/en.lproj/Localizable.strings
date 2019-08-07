@@ -29,72 +29,66 @@
 "goodServiceButtonAccessabilityLabel" = "Good";
 "resumePausedRouteBUttonAccessabilityLabel" = "Resume";
 "recordSingleUseRouteButtonAccessabilityLabel" = "Record a single use route";
-"Saved Routes List" = "Saved Routes List";
-"Stop navigation" = "Stop navigation";
-"Start return navigation" = "Start return navigation";
-"Stop recording" = "Stop recording";
+"savedRoutesListButtonAccessabilityLabel" = "Saved Routes List";
+"stopNavigationButtonAcessabilityLabel" = "Stop navigation";
+"startReturnNavigationButtonAcessabilityLabel" = "Start return navigation";
+"stopRecordingButtonAcessabilityLabel" = "Stop recording";
 
     // Save routes
-"Save route" = "Save route";
-"Enter the name of the route" = "Enter the name of the route";
-"Saved Routes List" = "Saved Routes List";
-"Enter route title" = "Enter route title";
-"Save" = "Save";
-"Cancel" = "Cancel";
+"saveRoutePop-UpTitle" = "Save route";
+"saveRoutePop-UpTextBoxPrompt" = "Enter the name of the route";
+"savedRoutesListPop-UpHeading" = "Saved Routes List";
+"routeNamePlaceholder" = "Enter route title";
+"saveRouteConfirmationLabel" = "Save";
+"CcancelPop-UpButtonLabel" = "Cancel";
 
     // Resume
-"Your route tracking is now paused. When you would like to navigate back, return to the location of your last anchor point and press the resume button." = "Your route tracking is now paused. When you would like to navigate back, return to the location of your last anchor point and press the resume button.";
+"resumeRouteViewText" = "Your route tracking is now paused. When you would like to navigate back, return to the location of your last anchor point and press the resume button.";
 
     // Rating service view
-"Navigation complete. Please rate the quality of your navigation experience." = "Navigation complete. Please rate the quality of your navigation experience.";
+"ratingYourServiceViewText" = "Navigation complete. Please rate the quality of your navigation experience.";
 
     // Other
-"Successfully matched current environment to saved route." = "Successfully matched current environment to saved route.";
-"Could not match environment to the saved route. Starting new tracking session." = "Could not match environment to the saved route. Starting new tracking session.";
-"Excessive motion.\nTracking performance is degraded." = "Excessive motion.\nTracking performance is degraded.";
-"Insufficient visual features.\nTracking performance is degraded." = "Insufficient visual features.\nTracking performance is degraded.";
+"realignToSavedRouteAnnouncement" = "Successfully matched current environment to saved route.";
+"noEnvironmentMatchAnnouncement" = "Could not match environment to the saved route. Starting new tracking session.";
+"excessiveMotionDegradedTrackingAnnouncemnt" = "Excessive motion.\nTracking performance is degraded.";
+"insuficientFeaturesDegradedTrackingAnnouncemnt" = "Insufficient visual features.\nTracking performance is degraded.";
 
 
 // Strings from Navigation
-" and proceed upstairs" = " and proceed upstairs";
-" and proceed downstairs" = " and proceed downstairs";
-    // Version of directions given when haptic feedback function is turned on (Simpler)
-"Continue straight" = "Continue straight";
-"Slight right" = "Slight right";
-"Turn right" = "Turn right";
-"Turn around" = "Turn around";
-"Turn left" = "Turn left"; 
-"Slight left" = "Slight left";
+"climbStairsDirection" = " and proceed upstairs";
+"descendStairsDirection" = " and proceed downstairs";
+// Version of directions given when haptic feedback function is turned on (Simpler)
+"straightDirection" = "Continue straight";
+"slightRightDirection" = "Slight right";
+"rightDirection" = "Turn right";
+"uTurnDirection" = "Turn around";
+"leftDirection" = "Turn left";
+"slightLeftDirection" = "Slight left";
 
     // Version of directions given when haptic feedback function is turned off (Clock directions)
-"Continue straight" = "Continue straight";
-"Slight right towards 1 o'clock" = "Slight right towards 1 o'clock";
-"Slight right towards 2 o'clock" = "Slight right towards 2 o'clock";
-"Turn right" = "Turn right";
-"Turn towards 4 o'clock" = "Turn towards 4 o'clock";
-"Turn around towards 5 o'clock" = "Turn around towards 5 o'clock";
-"Turn around towards 6 o'clock" = "Turn around towards 6 o'clock";
-"Turn around towards 7 o'clock" = "Turn around towards 7 o'clock";
-"Turn towards 8 o'clock" = "Turn towards 8 o'clock";
-"Turn left" = "Turn left";
-"Slight left towards 10 o'clock" = "Slight left towards 10 o'clock";
-"Slight left towards 11 o'clock" = "Slight left towards 11 o'clock";
+"1o'clockDirection" = "Slight right towards 1 o'clock";
+"2o'clockDirection" = "Slight right towards 2 o'clock";
+"4o'clockDirection" = "Turn towards 4 o'clock";
+"5o'clockDirection" = "Turn around towards 5 o'clock";
+"6o'clockDirection" = "Turn around towards 6 o'clock";
+"7o'clockDirection" = "Turn around towards 7 o'clock";
+"8o'clockDirection" = "Turn towards 8 o'clock";
+"10o'clockDirection" = "Slight left towards 10 o'clock";
+"11o'clockDirection" = "Slight left towards 11 o'clock";
 
 
 // Anchor Points
-"To navigate this route in the forward direction at a later time, you must create a Anchor Point before starting the recording." = "To navigate this route in the forward direction at a later time, you must create a Anchor Point before starting the recording.";
 
-"To navigate this route in the reverse direction at a later time, you must activate the pause button before navigating the route." = "To navigate this route in the reverse direction at a later time, you must activate the pause button before navigating the route.";
+"anchorPointTextHeading" = "Anchor Point information";
 
-"Anchor Point information" = "Anchor Point information";
+"anchorPointTextPrompt" = "Enter text about the Anchor Point that will allow you to find the exact same point later on.";
 
-"Enter text about the Anchor Point that will allow you to find the exact same point later on." = "Enter text about the Anchor Point that will allow you to find the exact same point later on.";
+"anchorPointTextPop-UpConfirmation" = "Ok";
 
-"Ok" = "Ok";
+"anchorPointPop-UpCancel" = "Don't specify this information";
 
-"Don't specify this information" = "Don't specify this information";
-
-"Enter Anchor Point information" = "Enter Anchor Point information";
+"anchorPointTextPlaceholder" = "Enter Anchor Point information";
 
 "To be able to resume your tracking at a later point you need to record an anchor point for the end of your route. An anchor point records the position and alignment of your device so the app can reload your route from a temporary file. As a result the accuracy of your return navigation relies entirely on how accurately you can realign and position your phone with your saved anchor point at a later point. We suggest using the text and voice note buttons to record a text note and/or a voice recording which can help you realign your device to the anchor point you recorded at a later time.\nTo create an anchor point, hold your device flat with the screen facing up. Press the top (short) edge flush against a flat vertical surface (such as a wall) the ”align” button starts a %lu-second countdown. The countdown is intended to give you time to position your device; the Anchor point will be saved at the end of the countdown." = "To be able to resume your tracking at a later point you need to record an anchor point for the end of your route. An anchor point records the position and alignment of your device so the app can reload your route from a temporary file. As a result the accuracy of your return navigation relies entirely on how accurately you can realign and position your phone with your saved anchor point at a later point. We suggest using the text and voice note buttons to record a text note and/or a voice recording which can help you realign your device to the anchor point you recorded at a later time.\nTo create an anchor point, hold your device flat with the screen facing up. Press the top (short) edge flush against a flat vertical surface (such as a wall) the \”align\” button starts a %lu-second countdown. The countdown is intended to give you time to position your device; the Anchor point will be saved at the end of the countdown.";
 

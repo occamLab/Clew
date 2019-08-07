@@ -51,7 +51,7 @@ class StopNavigationController: UIViewController {
         stopNavigationButton = UIButton.makeConstraintButton(view,
                                                         alignment: UIConstants.ButtonContainerHorizontalAlignment.center,
                                                         appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "StopNavigation")!),
-                                                        label: NSLocalizedString("Stop navigation", comment: "The name of the button that allows user to stop navigating."))
+                                                        label: NSLocalizedString("stopNavigationButtonAcessabilityLabel", comment: "The acessability label of the button that allows user to stop navigating."))
         
         /// create stack view for aligning and distributing bottom layer buttons
         let stackView   = UIStackView()

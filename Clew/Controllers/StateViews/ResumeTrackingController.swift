@@ -47,7 +47,7 @@ class ResumeTrackingController: UIViewController {
         
         view.backgroundColor = UIColor.black.withAlphaComponent(0.4)
         
-        let mainText = NSLocalizedString("Your route tracking is now paused. When you would like to navigate back, return to the location of your last anchor point and press the resume button.", comment: "A message displayed to the user when they have paused the route")
+        let mainText = NSLocalizedString("resumeRouteViewText", comment: "A message displayed to the user when they have paused the route")
         label.textColor = UIColor.white
         label.textAlignment = .center
         label.numberOfLines = 0

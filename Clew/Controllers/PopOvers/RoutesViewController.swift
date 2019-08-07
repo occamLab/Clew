@@ -25,7 +25,7 @@ class RoutesViewController : UIViewController, UITableViewDataSource, UITableVie
         super.viewDidLoad()
         self.tableView.delegate = self
         self.tableView.dataSource = self
-        title = NSLocalizedString("Saved Routes List", comment: "The title to a list of routes that have been saved by the user.")
+        title = NSLocalizedString("savedRoutesListPop-UpHeading", comment: "The title to a list of routes that have been saved by the user.")
     }
     
     /// Called when the user selects an element from the routes table.
@@ -51,7 +51,7 @@ class RoutesViewController : UIViewController, UITableViewDataSource, UITableVie
             self.dismiss(animated: true, completion: nil)
         }
         
-        let cancelAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: "Option for user to select"), style: .default) {action -> Void in
+        let cancelAction = UIAlertAction(title: NSLocalizedString("cancelPop-UpButtonLabel", comment: "A button which closes the current pop up"), style: .default) {action -> Void in
         }
         
         if routes[indexPath.row].endRouteAnchorPoint.transform == nil {

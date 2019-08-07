@@ -51,7 +51,7 @@ class RouteRatingController: UIViewController {
         
         view.backgroundColor = UIColor.black.withAlphaComponent(0.4)
         
-        let mainText = NSLocalizedString("Navigation complete. Please rate the quality of your navigation experience.", comment: "Message for user")
+        let mainText = NSLocalizedString("ratingYourServiceViewText", comment: "The text that is displayed when the user has completed navigation of their route. This prompts the user to rate their navigation experience.")
         label.textColor = UIColor.white
         label.textAlignment = .center
         label.numberOfLines = 0
