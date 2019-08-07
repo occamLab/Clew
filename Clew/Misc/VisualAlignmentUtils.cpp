@@ -7,10 +7,10 @@
 //
 
 #include "VisualAlignmentUtils.hpp"
-#include <Eigen/Core>
-#include <Eigen/Geometry>
 #include <opencv2/opencv.hpp>
 #include <opencv2/core/eigen.hpp>
+#include <Eigen/Core>
+#include <Eigen/Geometry>
 #include <simd/SIMD.h>
 #include <fstream>
 

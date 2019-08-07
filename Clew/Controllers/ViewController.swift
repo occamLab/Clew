@@ -434,7 +434,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// Start the route landmark recording timer
     func startRecordRouteLandmarkTimer() {
         recordRouteLandmarkTimer = Timer.scheduledTimer(
-            timeInterval: 5.0,
+            timeInterval: Double(ViewController.alignmentWaitingPeriod),
             target: self,
             selector: #selector(playAlignmentConfirmation(_:)),
             userInfo: nil,

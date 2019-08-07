@@ -9,11 +9,12 @@
 #ifndef VisualAlignmentUtils_hpp
 #define VisualAlignmentUtils_hpp
 
+#include <opencv2/opencv.hpp>
 #include <stdio.h>
 #include <Eigen/Core>
 #include <Eigen/Geometry>
 #include <simd/SIMD.h>
-#include <opencv2/opencv.hpp>
+
 
 typedef struct {
     std::vector<cv::KeyPoint> keypoints;
