@@ -95,8 +95,6 @@ class ResumeTrackingConfirmController: UIViewController, UIScrollViewDelegate {
         landmarkLabel.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 8.0).isActive = true
         landmarkLabel.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 8.0).isActive = true
         landmarkLabel.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -8.0).isActive = true
-//        landmarkLabel.bottomAnchor.constraint(equalTo: label.bottomAnchor, constant: -8.0).isActive = true
-
 
         /// set top, left, right AND bottom constraints on label to
         /// scrollView + 8.0 padding on each side
