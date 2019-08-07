@@ -1125,7 +1125,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         voiceNoteToPlay = nil
         if navigateStartToEnd {
             if let landmarkInformation = route.beginRouteLandmark.information as String? {
-                resumeTrackingConfirmController.view.mainText?.text?.append("The landmark information you entered is: " + landmarkInformation + ".\n\n")
+                let infoString = "\n\n" + "The landmark information you entered is: " + landmarkInformation + "\n\n"
+                resumeTrackingConfirmController.landmarkLabel.text = infoString
+
             }
             if let beginRouteLandmarkVoiceNote = route.beginRouteLandmark.voiceNote {
                 let voiceNoteToPlayURL = beginRouteLandmarkVoiceNote.documentURL
@@ -1137,7 +1139,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             }
         } else {
             if let landmarkInformation = route.endRouteLandmark.information as String? {
-                resumeTrackingConfirmController.view.mainText?.text?.append("The landmark information you entered is: " + landmarkInformation + ".\n\n")
+                let infoString = "\n\n" + "The landmark information you entered is: " + landmarkInformation + "\n\n"
+                resumeTrackingConfirmController.landmarkLabel.text = infoString
             }
             if let endRouteLandmarkVoiceNote = route.endRouteLandmark.voiceNote {
                 let voiceNoteToPlayURL = endRouteLandmarkVoiceNote.documentURL
