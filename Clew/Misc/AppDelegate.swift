@@ -31,6 +31,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         #else
             FirebaseApp.configure()
         #endif
+        logUserProperties()
+
         // Override point for customization after application launch.
         window = UIWindow(frame:UIScreen.main.bounds)
         window?.makeKeyAndVisible()
@@ -76,5 +78,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
     
+    /// Send user properties to Firebase
+    func logUserProperties() {
+        Analytics.setUserProperty(String(UIAccessibility.isVoiceOverRunning), forName: "isVoiceOverRunning")
+    }
 }
 

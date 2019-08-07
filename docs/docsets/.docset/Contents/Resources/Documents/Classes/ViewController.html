@@ -15,7 +15,6 @@
     <header>
       <div class="content-wrapper">
         <p><a href="../index.html"> Docs</a> (97% documented)</p>
-        <p class="header-right"><a href="https://github.com/occamLab/Clew"><img src="../img/gh.png"/>View on GitHub</a></p>
       </div>
     </header>
     <div class="content-wrapper">
@@ -45,6 +44,9 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/FeedbackViewController.html">FeedbackViewController</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/HelpCompiler.html">HelpCompiler</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/HelpViewController.html">HelpViewController</a>
@@ -133,13 +135,13 @@
                 <a href="../Global Variables.html#/s:4Clew16HapticDirectionsSDySiSSGvp">HapticDirections</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Global Variables.html#/s:4Clew11targetDepthSfvp">targetDepth</a>
+                <a href="../Global Variables.html#/s:4Clew11targetDepthXevp">targetDepth</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Global Variables.html#/s:4Clew12targetHeightSfvp">targetHeight</a>
+                <a href="../Global Variables.html#/s:4Clew12targetHeightXevp">targetHeight</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Global Variables.html#/s:4Clew11targetWidthSfvp">targetWidth</a>
+                <a href="../Global Variables.html#/s:4Clew11targetWidthXevp">targetWidth</a>
               </li>
             </ul>
           </li>
@@ -273,7 +275,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">static</span> <span class="k">let</span> <span class="nv">alignmentWaitingPeriod</span><span class="p">:</span> <span class="kt">Int</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">static</span> <span class="k">var</span> <span class="nv">alignmentWaitingPeriod</span><span class="p">:</span> <span class="kt">Int</span></code></pre>
 
                         </div>
                       </div>
@@ -1381,9 +1383,9 @@ whether or not an announcement is currently being read to the user.</p>
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:4Clew14ViewControllerC18locationRingBufferAA0eF0Cy10VectorMath7Vector3VGvp"></a>
+                    <a name="/s:4Clew14ViewControllerC18locationRingBufferXevp"></a>
                     <a name="//apple_ref/swift/Property/locationRingBuffer" class="dashAnchor"></a>
-                    <a class="token" href="#/s:4Clew14ViewControllerC18locationRingBufferAA0eF0Cy10VectorMath7Vector3VGvp">locationRingBuffer</a>
+                    <a class="token" href="#/s:4Clew14ViewControllerC18locationRingBufferXevp">locationRingBuffer</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1398,7 +1400,7 @@ whether or not an announcement is currently being read to the user.</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">locationRingBuffer</span><span class="p">:</span> <span class="kt"><a href="../Classes/RingBuffer.html">RingBuffer</a></span><span class="o">&lt;</span><span class="kt">Vector3</span><span class="o">&gt;</span></code></pre>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">locationRingBuffer</span><span class="p">:</span> <span class="o">&lt;&lt;</span><span class="n">error</span> <span class="n">type</span><span class="o">&gt;&gt;</span></code></pre>
 
                         </div>
                       </div>
@@ -1435,9 +1437,9 @@ whether or not an announcement is currently being read to the user.</p>
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:4Clew14ViewControllerC14databaseHandleSo11FIRDatabaseCvp"></a>
+                    <a name="/s:4Clew14ViewControllerC14databaseHandleXevp"></a>
                     <a name="//apple_ref/swift/Property/databaseHandle" class="dashAnchor"></a>
-                    <a class="token" href="#/s:4Clew14ViewControllerC14databaseHandleSo11FIRDatabaseCvp">databaseHandle</a>
+                    <a class="token" href="#/s:4Clew14ViewControllerC14databaseHandleXevp">databaseHandle</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1452,7 +1454,7 @@ whether or not an announcement is currently being read to the user.</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">databaseHandle</span><span class="p">:</span> <span class="kt">Database</span></code></pre>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">databaseHandle</span><span class="p">:</span> <span class="o">&lt;&lt;</span><span class="n">error</span> <span class="n">type</span><span class="o">&gt;&gt;</span></code></pre>
 
                         </div>
                       </div>
@@ -2115,9 +2117,9 @@ route rating VC</p>
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:4Clew14ViewControllerC15handleNewConfig8snapshotySo15FIRDataSnapshotC_tF"></a>
+                    <a name="/s:4Clew14ViewControllerC15handleNewConfigyyXe_tcACF"></a>
                     <a name="//apple_ref/swift/Method/handleNewConfig(snapshot:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:4Clew14ViewControllerC15handleNewConfig8snapshotySo15FIRDataSnapshotC_tF">handleNewConfig(snapshot:)</a>
+                    <a class="token" href="#/s:4Clew14ViewControllerC15handleNewConfigyyXe_tcACF">handleNewConfig(snapshot:)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -3875,6 +3877,33 @@ list of crumbs dropped when recording path</p>
                 <li class="item">
                   <div>
                     <code>
+                    <a name="/s:4Clew14ViewControllerC11timerLengthSiSgvp"></a>
+                    <a name="//apple_ref/swift/Property/timerLength" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Clew14ViewControllerC11timerLengthSiSgvp">timerLength</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The length of time that the timer will run for</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">timerLength</span><span class="p">:</span> <span class="kt">Int</span><span class="o">!</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
                     <a name="/s:4Clew14ViewControllerC15pausedTransformSo13simd_float4x4aSgvp"></a>
                     <a name="//apple_ref/swift/Property/pausedTransform" class="dashAnchor"></a>
                     <a class="token" href="#/s:4Clew14ViewControllerC15pausedTransformSo13simd_float4x4aSgvp">pausedTransform</a>
@@ -5465,7 +5494,7 @@ TODO: not sure if this is actually what we should be doing.  Perhaps we should c
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2019 <a class="link" href="" target="_blank" rel="external"></a>. All rights reserved. (Last updated: 2019-06-28)</p>
+          <p>&copy; 2019 <a class="link" href="" target="_blank" rel="external"></a>. All rights reserved. (Last updated: 2019-08-01)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.9.6</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
         </section>
       </article>

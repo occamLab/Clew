@@ -70,7 +70,6 @@ PODS:
     - nanopb/encode (= 0.3.901)
   - nanopb/decode (0.3.901)
   - nanopb/encode (0.3.901)
-  - OpenCV (4.1.0)
   - PRTween (0.1.0)
   - SRCountdownTimer (1.1)
   - VectorMath (0.4.0):
@@ -93,7 +92,6 @@ DEPENDENCIES:
   - Firebase/Database
   - Firebase/Storage
   - InAppSettingsKit
-  - OpenCV
   - PRTween (~> 0.1)
   - SRCountdownTimer
   - VectorMath (~> 0.3)
@@ -114,7 +112,6 @@ SPEC REPOS:
     - InAppSettingsKit
     - leveldb-library
     - nanopb
-    - OpenCV
     - PRTween
     - SRCountdownTimer
     - VectorMath
@@ -134,11 +131,10 @@ SPEC CHECKSUMS:
   InAppSettingsKit: d965e29be941eb19857271e4625de3fba6e23c9f
   leveldb-library: 08cba283675b7ed2d99629a4bc5fd052cd2bb6a5
   nanopb: 2901f78ea1b7b4015c860c2fdd1ea2fee1a18d48
-  OpenCV: 52cd4d72ff29e2be83421477aec5447320b7fb19
   PRTween: 6c58c7e32ebcf31e33e6a6e6bc727ebef3b668ef
   SRCountdownTimer: 9c92e444b5403c92f01dd6610299b8c634bc8562
   VectorMath: 2768d3f60f96db22d61cc25446ffe6e43681b045
 
 PODFILE CHECKSUM: 42eb273b49456189aa06cd504c8ece8d05040b45
 
-COCOAPODS: 1.6.1
+COCOAPODS: 1.7.4

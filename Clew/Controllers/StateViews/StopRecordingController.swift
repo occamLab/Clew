@@ -14,6 +14,12 @@ class StopRecordingController: UIViewController {
     /// Button for stopping a route recording
     var stopRecordingButton: UIButton!
 
+    /// called when the view appears (any time)
+    override func viewDidAppear(_ animated: Bool) {
+        /// set thumbsUpButton as initially active voiceover button
+        UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: self.stopRecordingButton)
+    }
+    
     /// called when the view has loaded.  We setup various app elements in here.
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -42,18 +48,35 @@ class StopRecordingController: UIViewController {
             view.addSubview(label)
         }
         
-        stopRecordingButton = UIButton.makeImageButton(view,
+        stopRecordingButton = UIButton.makeConstraintButton(view,
                                                        alignment: UIConstants.ButtonContainerHorizontalAlignment.center,
                                                        appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "StopRecording")!),
                                                        label: NSLocalizedString("Stop recording", comment: "The name of the button that allows user to stop recording."))
         
+        /// create stack view for aligning and distributing bottom layer buttons
+        let stackView   = UIStackView()
+        view.addSubview(stackView)
+        stackView.translatesAutoresizingMaskIntoConstraints = false;
+        
+        /// define horizonal, centered, and equal alignment of elements
+        /// inside the bottom stack
+        stackView.axis = NSLayoutConstraint.Axis.horizontal
+        stackView.distribution  = UIStackView.Distribution.equalSpacing
+        stackView.alignment = UIStackView.Alignment.center
+        
+        /// add elements to the stack
+        stackView.addArrangedSubview(stopRecordingButton)
+        
+        /// size the stack
+        stackView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: UIConstants.yButtonFrameMargin).isActive = true
+        stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -UIConstants.yButtonFrameMargin).isActive = true
+        stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+
         if let parent: UIViewController = parent {
             stopRecordingButton.addTarget(parent,
                                           action: #selector(ViewController.stopRecording),
                                           for: .touchUpInside)
         }
-        
-        // Do any additional setup after loading the view.
-        view.addSubview(stopRecordingButton)
     }
 }
