@@ -51,7 +51,7 @@ class SingleRouteVC: TutorialChildViewController {
     }
     
     func createObjects() {
-        landmarkCallout = createCalloutToView(withTagID: UIView.recordPathButtonTag, calloutText: "The Landmark button helps create saved routes. For now, let's just create a single use route.", buttonAccessibilityName: "Landmark Button")
+        landmarkCallout = createCalloutToView(withTagID: UIView.recordPathButtonTag, calloutText: NSLocalizedString("The Landmark button helps create saved routes. For now, let's just create a single use route.", comment: "Landmark callout during tutorial."), buttonAccessibilityName: NSLocalizedString("Landmark Button", comment: "Landmark Button"))
         landmarkArrow = createCalloutArrowToView(withTagID: UIView.addLandmarkButtonTag)
 
         recordArrow = createCalloutArrowToView(withTagID: UIView.recordPathButtonTag)
@@ -66,7 +66,7 @@ class SingleRouteVC: TutorialChildViewController {
         congratsNextButton.backgroundColor = UIColor.white
         congratsNextButton.setTitleColor(clewGreen, for: .normal)
         
-        singleRouteCongratsView = CongratsView().createCongratsView(congratsText: "Congratulations! \n You have completed the tutorial. \n Now you can get started with the app!", congratsAccessibilityLabel: "Congratulations! You have completed the tutorial. Now you can get started with the app!")
+        singleRouteCongratsView = CongratsView().createCongratsView(congratsText: NSLocalizedString("Congratulations! \n You have completed the tutorial. \n Now you can get started with the app!", comment: "Congratulations callout for completing the tutorial."), congratsAccessibilityLabel: NSLocalizedString("Congratulations! You have completed the tutorial. Now you can get started with the app!", comment: "Congratulations callout for completing the tutorial accessibility label."))
         singleRouteCongratsView.addSubview(congratsNextButton)
     }
     
@@ -86,10 +86,10 @@ class SingleRouteVC: TutorialChildViewController {
     /// function that creates alerts for the home button
     func skipNavigationProcesses() {
         // Create alert to warn users of lost information
-        let alert = UIAlertController(title: "Are you sure?",
-                                      message: "If you exit this process right now, you will be skipping the process of recording and navigating a simple route.",
+        let alert = UIAlertController(title: NSLocalizedString("Are you sure?", comment: "Are you sure?"),
+                                      message: NSLocalizedString("If you exit this process right now, you will be skipping the process of recording and navigating a simple route.", comment: "warning message"),
                                       preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "Skip this part of the tutorial.", style: .default, handler: { action -> Void in
+        alert.addAction(UIAlertAction(title: NSLocalizedString("Skip this part of the tutorial.", comment: "Skip this part of the tutorial."), style: .default, handler: { action -> Void in
             // proceed to home page
             self.transitionToMainApp()
             
@@ -97,7 +97,7 @@ class SingleRouteVC: TutorialChildViewController {
             (appDelegate.window?.rootViewController as? ViewController)?.tutorialViewController.state = .endTutorial
         }
         ))
-        alert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: { action -> Void in
+        alert.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel"), style: .default, handler: { action -> Void in
             // nothing to do, just stay on the page
         }
         ))
@@ -110,7 +110,7 @@ class SingleRouteVC: TutorialChildViewController {
         landmarkNextButton.removeFromSuperview()
         
         // Create record callout here instead of under createObjects() to prevent it from being added to view hiearchy upon initializing readyToRecordSingleRoute state.
-        recordCallout = createCalloutToView(withTagID: UIView.recordPathButtonTag, calloutText: "The Record button allows you to start recording a route. Click the 'record' button to continue.", buttonAccessibilityName: "Record Button")
+        recordCallout = createCalloutToView(withTagID: UIView.recordPathButtonTag, calloutText: NSLocalizedString("The Record button allows you to start recording a route. Click the 'record' button to continue.", comment: "The Record button allows you to start recording a route. Click the 'record' button to continue."), buttonAccessibilityName: NSLocalizedString("Record Button", comment: "Record Button"))
         
         self.view.addSubview(recordCallout!)
         self.view.addSubview(recordNextButton)
@@ -128,7 +128,7 @@ class SingleRouteVC: TutorialChildViewController {
         pauseNextButton.removeFromSuperview()
         pauseArrow!.removeFromSuperview()
         pauseCallout!.removeFromSuperview()
-        navigateCallout = createCalloutToView(withTagID: UIView.startNavigationButtonTag, calloutText: "The navigate button allows you to navigate the route, click the next button and then click the navigate button to continue", buttonAccessibilityName: "Navigate Button")
+        navigateCallout = createCalloutToView(withTagID: UIView.startNavigationButtonTag, calloutText: NSLocalizedString("The navigate button allows you to navigate the route, click the next button and then click the navigate button to continue", comment: "The navigate button allows you to navigate the route, click the next button and then click the navigate button to continue"), buttonAccessibilityName: NSLocalizedString("Navigate Button", comment: "Navigate Button"))
         self.view.addSubview(navigateCallout!)
         self.view.addSubview(navigateNextButton!)
         UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: navigateCallout)
@@ -165,7 +165,7 @@ class SingleRouteVC: TutorialChildViewController {
             // Delaying the callout introduction until after the view has successfully been added
             // TODO: think about healthier ways this can be done
             DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(1)) {
-                self.pauseCallout = self.createCalloutToView(withTagID: UIView.startNavigationButtonTag, calloutText: "The Pause button is also important to saving routes, but let's just keep recording a single use route for now. Click the next button.", buttonAccessibilityName: "Pause Button")
+                self.pauseCallout = self.createCalloutToView(withTagID: UIView.startNavigationButtonTag, calloutText: NSLocalizedString("The Pause button is also important to saving routes, but let's just keep recording a single use route for now. Click the next button.", comment: "The Pause button is also important to saving routes, but let's just keep recording a single use route for now. Click the next button."), buttonAccessibilityName: NSLocalizedString("Pause Button", comment: "Pause Button"))
                 self.pauseArrow = self.createCalloutArrowToView(withTagID: UIView.pauseSessionButtonTag)
                 self.view.addSubview(self.pauseCallout!)
                 self.view.addSubview(self.pauseArrow!)

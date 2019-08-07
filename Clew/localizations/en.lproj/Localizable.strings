@@ -176,7 +176,7 @@
     // PhoneOrientationTrainingVC
 "Congratulations! \n You have successfully oriented your phone. \n Now you will be recording a simple single route." = "Congratulations! \n You have successfully oriented your phone. \n Now you will be recording a simple single route.";
 "Congratulations! You have successfully oriented your phone. Now you will be recording a simple single route." = "Congratulations! You have successfully oriented your phone. Now you will be recording a simple single route.";
-"End" = "End"
+"End" = "End";
 
     // PhoneOrientationGIFVC
 "ALIGN YOUR PHONE!" = "ALIGN YOUR PHONE!";
@@ -186,3 +186,20 @@
 "If you exit this process right now, you won't be orienting your phone." = "If you exit this process right now, you won't be orienting your phone.";
 "Skip this part of the tutorial." = "Skip this part of the tutorial.";
 "Cancel" = "Cancel";
+
+// SingleRouteVC
+"The Landmark button helps create saved routes. For now, let's just create a single use route." = "The Landmark button helps create saved routes. For now, let's just create a single use route.";
+"Landmark Button" = "Landmark Button";
+"Congratulations! \n You have completed the tutorial. \n Now you can get started with the app!" = "Congratulations! \n You have completed the tutorial. \n Now you can get started with the app!";
+"Congratulations! You have completed the tutorial. Now you can get started with the app!" = "Congratulations! You have completed the tutorial. Now you can get started with the app!";
+"Are you sure?" = "Are you sure?";
+"If you exit this process right now, you will be skipping the process of recording and navigating a simple route." = "If you exit this process right now, you will be skipping the process of recording and navigating a simple route.";
+"Skip this part of the tutorial." = "Skip this part of the tutorial.";
+"Cancel" = "Cancel";
+"The Record button allows you to start recording a route. Click the 'record' button to continue." = "The Record button allows you to start recording a route. Click the 'record' button to continue.";
+"Record Button" = "Record Button";
+"The navigate button allows you to navigate the route, click the next button and then click the navigate button to continue" = "The navigate button allows you to navigate the route, click the next button and then click the navigate button to continue";
+"Navigate Button" = "Navigate Button";
+"The Pause button is also important to saving routes, but let's just keep recording a single use route for now. Click the next button." = "The Pause button is also important to saving routes, but let's just keep recording a single use route for now. Click the next button.";
+"Pause Button" = "Pause Button";
+
