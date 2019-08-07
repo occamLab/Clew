@@ -8,27 +8,27 @@
 
 
 // When opening the app for the first time
-"Sharing your experience with Clew" = "Sharing your experience with Clew";
+"sharingYourExperiencePop-UpHeading" = "Sharing your experience with Clew";
 
-"Help us improve the app by logging your Clew experience. These logs will not include any images or personal information. You can turn this off in Settings." = "Help us improve the app by logging your Clew experience. These logs will not include any images or personal information. You can turn this off in Settings.";
+"sharingYourExperiencePop-UpContent" = "Help us improve the app by logging your Clew experience. These logs will not include any images or personal information. You can turn this off in Settings.";
 
-"For your safety" = "For your safety";
+"forYourSafetyPop-UpHeading" = "For your safety";
 
-"While using the app, please be aware of your surroundings. You agree that your use of the App is at your own risk, and it is solely your responsibility to maintain your personal safety. Visit www.clewapp.org for more information on how to use the app." = "While using the app, please be aware of your surroundings. You agree that your use of the App is at your own risk, and it is solely your responsibility to maintain your personal safety. Visit www.clewapp.org for more information on how to use the app.";
+"forYourSafetyPop-UpHeading" = "While using the app, please be aware of your surroundings. You agree that your use of the App is at your own risk, and it is solely your responsibility to maintain your personal safety. Visit www.clewapp.org for more information on how to use the app.";
 
 // Strings from ViewController
     // Voicing directions
-"Tracking session initialized." = "Tracking session initialized.";
-"Tracking performance normal." = "Tracking performance normal.";
-"Hold vertically with the rear camera facing forward." = "Hold vertically with the rear camera facing forward.";
-"You've arrived." = "You've arrived.";
+"startedTrackingSessionAnnouncement" = "Tracking session initialized.";
+"fixedTrackingAnnouncement" = "Tracking performance normal.";
+"properDevicePositioningAnnouncement" = "Hold vertically with the rear camera facing forward.";
+"completedNavigationAnnouncement" = "You've arrived.";
 
     // Name of labels that appear in UI
-"Save a route" = "Save a route";
-"Bad" = "Bad";
-"Good" = "Good";
-"Resume" = "Resume";
-"Record a single use route" = "Record a single use route";
+"saveARouteButtonAccessabilityLabel" = "Save a route";
+"badServiceButtonAccessabilityLabel" = "Bad";
+"goodServiceButtonAccessabilityLabel" = "Good";
+"resumePausedRouteBUttonAccessabilityLabel" = "Resume";
+"recordSingleUseRouteButtonAccessabilityLabel" = "Record a single use route";
 "Saved Routes List" = "Saved Routes List";
 "Stop navigation" = "Stop navigation";
 "Start return navigation" = "Start return navigation";

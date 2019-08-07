@@ -91,11 +91,11 @@ class RouteRatingController: UIViewController {
         thumbsDownButton = UIButton.makeConstraintButton(view,
                                                     alignment: UIConstants.ButtonContainerHorizontalAlignment.leftcenter,
                                                     appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "thumbs_down")!),
-                                                    label: NSLocalizedString("Bad", comment: "Unsatisfactory service"))
+                                                    label: NSLocalizedString("badServiceButtonAccessabilityLabel", comment: "The accessability label on the button denoting that the route navigation provided unsatisfactory service"))
         thumbsUpButton = UIButton.makeConstraintButton(view,
                                                   alignment: UIConstants.ButtonContainerHorizontalAlignment.rightcenter,
                                                   appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "thumbs_up")!),
-                                                  label: NSLocalizedString("Good", comment: "Satisfactory service"))
+                                                  label: NSLocalizedString("goodServiceButtonAccessabilityLabel", comment: "The accessability label on the button denoting that the route navigation provided satisfactory service"))
         
         let fillerSpace = UIView()
         fillerSpace.translatesAutoresizingMaskIntoConstraints = false

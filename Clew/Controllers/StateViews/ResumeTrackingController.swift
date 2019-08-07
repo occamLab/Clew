@@ -88,7 +88,7 @@ class ResumeTrackingController: UIViewController {
         resumeButton = UIButton.makeConstraintButton(view,
                                                 alignment: UIConstants.ButtonContainerHorizontalAlignment.center,
                                                 appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "Resume")!),
-                                                label: NSLocalizedString("Resume", comment: "Resume paused route"))
+                                                label: NSLocalizedString("resumePausedRouteBUttonAccessabilityLabel", comment: "Accesability label for button allowing the user to resume a paused route"))
         
         /// create stack view for aligning and distributing bottom layer buttons
         let stackView   = UIStackView()
