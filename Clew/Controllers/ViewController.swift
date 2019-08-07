@@ -1116,7 +1116,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         voiceNoteToPlay = nil
         if navigateStartToEnd {
             if let AnchorPointInformation = route.beginRouteAnchorPoint.information as String? {
-                resumeTrackingConfirmController.view.mainText?.text?.append("The Anchor Point information you entered is: " + AnchorPointInformation + ".\n\n")
+                let infoString = "\n\n" + "The Anchor Point information you entered is: " + AnchorPointInformation + "\n\n"
+                resumeTrackingConfirmController.landmarkLabel.text = infoString
             }
             if let beginRouteAnchorPointVoiceNote = route.beginRouteAnchorPoint.voiceNote {
                 let voiceNoteToPlayURL = beginRouteAnchorPointVoiceNote.documentURL
@@ -1128,7 +1129,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             }
         } else {
             if let AnchorPointInformation = route.endRouteAnchorPoint.information as String? {
-                resumeTrackingConfirmController.view.mainText?.text?.append("The Anchor Point information you entered is: " + AnchorPointInformation + ".\n\n")
+                let infoString = "\n\n" + "The Anchor Point information you entered is: " + AnchorPointInformation + "\n\n"
+                resumeTrackingConfirmController.landmarkLabel.text = infoString
             }
             if let endRouteAnchorPointVoiceNote = route.endRouteAnchorPoint.voiceNote {
                 let voiceNoteToPlayURL = endRouteAnchorPointVoiceNote.documentURL
