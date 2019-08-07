@@ -20,8 +20,8 @@ class ResumeTrackingConfirmController: UIViewController, UIScrollViewDelegate {
     /// text label for the state
     var label: UILabel!
     
-    /// text for landmark information
-    var landmarkLabel: UILabel!
+    /// text for Anchor Point information
+    var anchorPointLabel: UILabel!
     
     /// called when the view loads (any time)
     override func viewDidAppear(_ animated: Bool) {
@@ -29,7 +29,7 @@ class ResumeTrackingConfirmController: UIViewController, UIScrollViewDelegate {
         /// TODO: is this a safe implementation? Might crash if label has no body, unclear.
         /// called when the view loads (any time)
         label.font = UIFont.preferredFont(forTextStyle: .body)
-        landmarkLabel.font = UIFont.preferredFont(forTextStyle: .body)
+        anchorPointLabel.font = UIFont.preferredFont(forTextStyle: .body)
 
         /// set confirm alignment button as initially active voiceover button
         UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: self.confirmAlignmentButton)
@@ -45,14 +45,14 @@ class ResumeTrackingConfirmController: UIViewController, UIScrollViewDelegate {
                                                 height: UIScreen.main.bounds.size.height))
         
         label = UILabel()
-        landmarkLabel = UILabel()
+        anchorPointLabel = UILabel()
         let scrollView = UIScrollView()
         
         /// allow for constraints to be applied to label, scrollview
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.indicatorStyle = .white;
         label.translatesAutoresizingMaskIntoConstraints = false
-        landmarkLabel.translatesAutoresizingMaskIntoConstraints = false
+        anchorPointLabel.translatesAutoresizingMaskIntoConstraints = false
         
         /// darken background of view
         view.backgroundColor = UIColor.black.withAlphaComponent(0.4)
@@ -71,14 +71,14 @@ class ResumeTrackingConfirmController: UIViewController, UIScrollViewDelegate {
         label.text = mainText
         label.tag = UIView.mainTextTag
         
-        landmarkLabel.textColor = UIColor.white
-        landmarkLabel.textAlignment = .center
-        landmarkLabel.numberOfLines = 0
-        landmarkLabel.lineBreakMode = .byWordWrapping
-        landmarkLabel.font = UIFont.preferredFont(forTextStyle: .body)
+        anchorPointLabel.textColor = UIColor.white
+        anchorPointLabel.textAlignment = .center
+        anchorPointLabel.numberOfLines = 0
+        anchorPointLabel.lineBreakMode = .byWordWrapping
+        anchorPointLabel.font = UIFont.preferredFont(forTextStyle: .body)
         
         /// place label inside of the scrollview
-        scrollView.addSubview(landmarkLabel)
+        scrollView.addSubview(anchorPointLabel)
         scrollView.addSubview(label)
         view.addSubview(scrollView)
         
@@ -91,14 +91,14 @@ class ResumeTrackingConfirmController: UIViewController, UIScrollViewDelegate {
         /// set the height constraint on the scrollView to 0.5 * the main view height
         scrollView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.5).isActive = true
         
-        /// constraints for landmarkLabel
-        landmarkLabel.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 8.0).isActive = true
-        landmarkLabel.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 8.0).isActive = true
-        landmarkLabel.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -8.0).isActive = true
+        /// constraints for anchorPointLabel
+        anchorPointLabel.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 8.0).isActive = true
+        anchorPointLabel.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 8.0).isActive = true
+        anchorPointLabel.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -8.0).isActive = true
 
         /// set top, left, right AND bottom constraints on label to
         /// scrollView + 8.0 padding on each side
-        label.topAnchor.constraint(equalTo: landmarkLabel.bottomAnchor, constant: 8.0).isActive = true
+        label.topAnchor.constraint(equalTo: anchorPointLabel.bottomAnchor, constant: 8.0).isActive = true
         label.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 8.0).isActive = true
         label.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -8.0).isActive = true
         label.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -8.0).isActive = true
@@ -106,13 +106,13 @@ class ResumeTrackingConfirmController: UIViewController, UIScrollViewDelegate {
         /// set the width of the label to the width of the scrollView (-16 for 8.0 padding on each side)
         label.widthAnchor.constraint(equalTo: scrollView.widthAnchor, constant: -16.0).isActive = true
         
-        /// constraints for landmarkLabel
+        /// constraints for anchorPointLabel
         
         /// configure label: Zero lines + Word Wrapping
         label.numberOfLines = 0
         label.lineBreakMode = NSLineBreakMode.byWordWrapping
-        landmarkLabel.numberOfLines = 0
-        landmarkLabel.lineBreakMode = NSLineBreakMode.byWordWrapping
+        anchorPointLabel.numberOfLines = 0
+        anchorPointLabel.lineBreakMode = NSLineBreakMode.byWordWrapping
         
         // MARK: ReadVoiceNoteButton
         /// The button that plays back the recorded voice note associated with a Anchor Point
