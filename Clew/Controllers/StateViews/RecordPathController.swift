@@ -31,12 +31,10 @@ class RecordPathController: UIViewController {
         super.viewDidLoad()
 
         view.frame = CGRect(x: 0,
-                            y: UIConstants.yOriginOfButtonFrame,
-                            width: UIConstants.buttonFrameWidth,
-                            height: UIConstants.buttonFrameHeight)
-        
-        view.backgroundColor = UIColor.black.withAlphaComponent(0.4)
-        
+                            y: 0,
+                            width: UIConstants.buttonFrameWidth * 1,
+                            height: UIConstants.buttonFrameWidth * 1.5)
+
         let label = UILabel(frame: CGRect(x: 15,
                                           y: UIScreen.main.bounds.size.height/5,
                                           width: UIScreen.main.bounds.size.width-30,
@@ -54,20 +52,46 @@ class RecordPathController: UIViewController {
             view.addSubview(label)
         }
 
-        recordPathButton = UIButton.makeConstraintButton(view,
-                                                    alignment: UIConstants.ButtonContainerHorizontalAlignment.center,
-                                                    appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "Record")!),
-                                                    label: NSLocalizedString("Record path", comment: "A button that allows user to video record a path to a destination"))
         
-        addLandmarkButton = UIButton.makeConstraintButton(view,
-                                                     alignment: UIConstants.ButtonContainerHorizontalAlignment.right,
-                                                     appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "Landmark")!),
-                                                     label: NSLocalizedString("Landmark", comment: "A button that allows user to create a landmark for a saving a route"))
+        let recordPathButton = UIButton(type: .custom)
+            recordPathButton.layer.cornerRadius = 0.5 * recordPathButton.bounds.size.width
+            recordPathButton.clipsToBounds = true
+            recordPathButton.translatesAutoresizingMaskIntoConstraints = false
+            recordPathButton.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 1.1).isActive = true
+            recordPathButton.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 2.5).isActive = true
+            recordPathButton.setBackgroundImage(UIImage(named: "WhiteButtonBackground"), for: .normal)
+            recordPathButton.imageView?.contentMode = .scaleAspectFit
+            recordPathButton.setTitle("Single Use Route",for: .normal)
+            recordPathButton.setTitleColor(.black, for: .normal)
+            recordPathButton.titleLabel?.font = UIFont(name: "HelveticaNeue-Bold", size: 35)!
         
-        routesButton = UIButton.makeConstraintButton(view,
-                                                alignment: UIConstants.ButtonContainerHorizontalAlignment.left,
-                                                appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "route")!),
-                                                label: NSLocalizedString("Saved routes list", comment: "A button that opens a menu which displays all the saved routes created by the user"))
+
+        
+
+        
+        let addLandmarkButton = UIButton(type: .custom)
+        addLandmarkButton.layer.cornerRadius = 0.75 * addLandmarkButton.bounds.size.width
+        addLandmarkButton.clipsToBounds = true
+        addLandmarkButton.translatesAutoresizingMaskIntoConstraints = false
+        addLandmarkButton.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 1.1).isActive = true
+        addLandmarkButton.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 2.5).isActive = true
+        addLandmarkButton.setBackgroundImage(UIImage(named: "WhiteButtonBackground"), for: .normal)
+        addLandmarkButton.imageView?.contentMode = .scaleAspectFit
+        addLandmarkButton.setTitle("Save a Route",for: .normal)
+        addLandmarkButton.setTitleColor(.black, for: .normal)
+        addLandmarkButton.titleLabel?.font = UIFont(name: "HelveticaNeue-Bold", size: 35)!
+        
+        let routesButton = UIButton(type: .custom)
+        routesButton.layer.cornerRadius = 0.75 * addLandmarkButton.bounds.size.width
+        routesButton.clipsToBounds = true
+        routesButton.translatesAutoresizingMaskIntoConstraints = false
+        routesButton.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 1.1).isActive = true
+        routesButton.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 2.5).isActive = true
+        routesButton.setBackgroundImage(UIImage(named: "WhiteButtonBackground"), for: .normal)
+        routesButton.imageView?.contentMode = .scaleAspectFit
+        routesButton.setTitle("Saved Routes List",for: .normal)
+        routesButton.setTitleColor(.black, for: .normal)
+        routesButton.titleLabel?.font = UIFont(name: "HelveticaNeue-Bold", size: 35)!
         
         /// create stack view for aligning and distributing bottom layer buttons
         let stackView   = UIStackView()
@@ -76,19 +100,20 @@ class RecordPathController: UIViewController {
         
         /// define horizonal, centered, and equal alignment of elements
         /// inside the bottom stack
-        stackView.axis = NSLayoutConstraint.Axis.horizontal
+        stackView.axis = NSLayoutConstraint.Axis.vertical
         stackView.distribution  = UIStackView.Distribution.equalSpacing
         stackView.alignment = UIStackView.Alignment.center
         
         /// add elements to the stack
-        stackView.addArrangedSubview(routesButton)
-        stackView.addArrangedSubview(recordPathButton)
         stackView.addArrangedSubview(addLandmarkButton)
+        stackView.addArrangedSubview(recordPathButton)
+        stackView.addArrangedSubview(routesButton)
         
         /// size the stack
-        stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: UIConstants.yButtonFrameMargin).isActive = true
-        stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -UIConstants.yButtonFrameMargin).isActive = true
-        stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -12).isActive = true
+        stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 5).isActive = true
+        stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -5).isActive = true
+        stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 20).isActive = true
+        stackView.topAnchor.constraint(equalTo: view.topAnchor, constant: 115).isActive = true
         
         if let parent: UIViewController = parent {
             routesButton.addTarget(parent,
