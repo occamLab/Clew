@@ -36,9 +36,9 @@ class RoutesViewController : UIViewController, UITableViewDataSource, UITableVie
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         self.tableView.deselectRow(at: indexPath, animated: true)
         // Set title and message for the alert dialog
-        let alertController = UIAlertController(title: NSLocalizedString("Route direction", comment: "The header of a pop-up"), message: "", preferredStyle: .alert)
+        let alertController = UIAlertController(title: NSLocalizedString("routeDirectionPop-UpHeader", comment: "The header of a pop-up where the user selects which direction they want to navigate their route"), message: "", preferredStyle: .alert)
         // The confirm action taking the inputs
-        let startToEndAction = UIAlertAction(title: NSLocalizedString("Start to End", comment: "Option for user to select"), style: .default) { (_) in
+        let startToEndAction = UIAlertAction(title: NSLocalizedString("routeDirectionStartToEndButtonLabel", comment: "the text on a button in the select navigational direction menu pf the app. This button allows the user to navigate a route in the same direction as it was originally recorded."), style: .default) { (_) in
             self.rootViewController?.onRouteTableViewCellClicked(route: self.routes[indexPath.row], navigateStartToEnd: true)
             self.dismiss(animated: true, completion: nil)
         }
@@ -46,7 +46,7 @@ class RoutesViewController : UIViewController, UITableViewDataSource, UITableVie
             startToEndAction.isEnabled = false
         }
         
-        let endToStartAction = UIAlertAction(title: NSLocalizedString("End to Start", comment: "Option for user to select"), style: .default) { (_) in
+        let endToStartAction = UIAlertAction(title: NSLocalizedString("routeDirectionEndToStartButtonLabel", comment: "The text on a button in the select navigational direction menu of the app. This button allows the user to navigate a route in the opposite direction as it was originally recorded."), style: .default) { (_) in
             self.rootViewController?.onRouteTableViewCellClicked(route: self.routes[indexPath.row], navigateStartToEnd: false)
             self.dismiss(animated: true, completion: nil)
         }

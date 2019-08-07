@@ -28,9 +28,9 @@ class StartNavigationController: UIViewController {
         
         var mainText : String = "nil"
         if recordingSingleUseRoute{
-            mainText = NSLocalizedString("In order to immediately navigate back along the path you recorded, simply press the play button and follow the instructions provided. In order to pause the session to perform return navigation at a later point, press the pause button and complete the anchor point procedure.", comment: "Information displayed to the user on the play pause screen. This describes the functionality of the play and pause buttons.")
+            mainText = NSLocalizedString("singleUsePlayPauseViewText", comment: "Information displayed to the user on the play pause screenafter they have recorded a single use route. This describes the functionality of the play and pause buttons.")
         } else {
-            mainText = NSLocalizedString("In order to immediately navigate back along the path you recorded, simply press the play button and follow the instructions provided. In order to pause the session to perform return navigation at a later point, press the pause button.", comment: "Information displayed to the user on the play pause screen. This describes the functionality of the play and pause buttons.")
+            mainText = NSLocalizedString("multipleUseRoutePlayPauseViewText", comment: "Information displayed to the user on the play pause screen after they have just recorded a multiple use route. This describes the functionality of the play and pause buttons.")
         }
         
         label.textColor = UIColor.white
@@ -70,9 +70,9 @@ class StartNavigationController: UIViewController {
         
         var mainText : String = "nil"
         if recordingSingleUseRoute{
-            mainText = NSLocalizedString("In order to immediately navigate back along the path you recorded, simply press the play button and follow the instructions provided. In order to pause the session to perform return navigation at a later point, press the pause button and complete the anchor point procedure.", comment: "Information displayed to the user on the play pause screen. This describes the functionality of the play and pause buttons.")
+            mainText = NSLocalizedString("singleUsePlayPauseViewText", comment: "Information displayed to the user on the play pause screen after they have recorded a single use route. This describes the functionality of the play and pause buttons.")
         } else {
-            mainText = NSLocalizedString("In order to immediately navigate back along the path you recorded, simply press the play button and follow the instructions provided. In order to pause the session to perform return navigation at a later point, press the pause button.", comment: "Information displayed to the user on the play pause screen. This describes the functionality of the play and pause buttons.")
+            mainText = NSLocalizedString("multipleUseRoutePlayPauseViewText", comment: "Information displayed to the user on the play pause screen after they have just recorded a multiple use route. This describes the functionality of the play and pause buttons.")
         }
         
         label.textColor = UIColor.white

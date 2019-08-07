@@ -67,6 +67,7 @@ class RootContainerView: UIView {
                                                 width: UIConstants.buttonFrameWidth/7,
                                                 height: UIConstants.buttonFrameWidth/7))
         settingsButton.isAccessibilityElement = true
+///LOCALIZE
         settingsButton.setTitle("Settings", for: .normal)
         settingsButton.accessibilityLabel = "Settings"
         settingsButton.titleLabel?.font = UIFont.systemFont(ofSize: 24.0)
