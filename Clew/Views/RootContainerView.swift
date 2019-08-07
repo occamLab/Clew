@@ -67,8 +67,9 @@ class RootContainerView: UIView {
                                                 width: UIConstants.buttonFrameWidth/7,
                                                 height: UIConstants.buttonFrameWidth/7))
         settingsButton.isAccessibilityElement = true
+///LOCALIZE
         settingsButton.setTitle("Settings", for: .normal)
-        settingsButton.accessibilityLabel = "Settings"
+        settingsButton.accessibilityLabel = NSLocalizedString("settingsButtonAccesabilityLabel", comment: "This is the acessability label for the settings button")
         settingsButton.titleLabel?.font = UIFont.systemFont(ofSize: 24.0)
         settingsButton.setImage(UIImage(named: "settingsGear"), for: .normal)
 
@@ -81,7 +82,7 @@ class RootContainerView: UIView {
         helpButton.isAccessibilityElement = true
         helpButton.setTitle("Help", for: .normal)
         helpButton.titleLabel?.font = UIFont.systemFont(ofSize: 24.0)
-        helpButton.accessibilityLabel = "Help"
+        helpButton.accessibilityLabel = NSLocalizedString("helpButtonAccesabilityLabel", comment: "This is the acessability label for the help button")
         helpButton.setImage(UIImage(named: "HelpButton"), for: .normal)
 
         // MARK: Home Button
@@ -92,7 +93,7 @@ class RootContainerView: UIView {
         homeButton.isAccessibilityElement = true
         homeButton.setTitle("Home Button", for: .normal)
         homeButton.titleLabel?.font = UIFont.systemFont(ofSize: 24.0)
-        homeButton.accessibilityLabel = "Clew Home Screen"
+        homeButton.accessibilityLabel = NSLocalizedString("homeButtonAccesabilityLabel", comment: "This is the acessability label for the home button")
         homeButton.setImage(UIImage(named: "homeButton"), for: .normal)
         
         feedbackButton = UIButton(frame: CGRect(x: UIConstants.buttonFrameWidth/(10/8),
@@ -102,7 +103,7 @@ class RootContainerView: UIView {
         feedbackButton.isAccessibilityElement = true
         feedbackButton.setTitle("Feedback", for: .normal)
         feedbackButton.titleLabel?.font = UIFont.systemFont(ofSize: 24.0)
-        feedbackButton.accessibilityLabel = "Feedback"
+        feedbackButton.accessibilityLabel = NSLocalizedString("feedbackButtonAccesabilityLabel", comment: "This is the acessability label for the feedback button")
         feedbackButton.setImage(UIImage(named: "Contact"), for: .normal)
 
 
@@ -112,7 +113,7 @@ class RootContainerView: UIView {
                                                     height: UIConstants.buttonFrameWidth/7))
 
         getDirectionButton.isAccessibilityElement = true
-        getDirectionButton.accessibilityLabel = "Get Directions"
+        getDirectionButton.accessibilityLabel = NSLocalizedString("getDirectionsButtonAccesabilityLabel", comment: "This is the acessability label for the get directions button")
         getDirectionButton.setImage(UIImage(named: "GetDirection"), for: .normal)
         getDirectionButton.isHidden = true
 

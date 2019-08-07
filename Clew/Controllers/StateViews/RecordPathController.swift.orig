@@ -24,20 +24,16 @@ class RecordPathController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         /// set thumbsUpButton as initially active voiceover button
         UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: self.recordPathButton)
-        addAnchorPointButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .largeTitle)
-        routesButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .largeTitle)
-        recordPathButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .largeTitle)
     }
     
     /// called when the view has loaded.  We setup various app elements in here.
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        view = TransparentTouchView(frame:CGRect(x: 0,
-                                                 y: 0,
-                                                 width: UIConstants.buttonFrameWidth * 1,
-                                                 height: UIConstants.buttonFrameWidth * 1.5))
 
+        view.frame = CGRect(x: 0,
+                            y: 0,
+                            width: UIConstants.buttonFrameWidth * 1,
+                            height: UIConstants.buttonFrameWidth * 1.5)
 
         let label = UILabel(frame: CGRect(x: 15,
                                           y: UIScreen.main.bounds.size.height/5,
@@ -56,29 +52,35 @@ class RecordPathController: UIViewController {
             view.addSubview(label)
         }
         
-        addAnchorPointButton = UIButton(type: .custom)
-        addAnchorPointButton.layer.cornerRadius = 0.5 * addAnchorPointButton.bounds.size.width
-        addAnchorPointButton.clipsToBounds = true
-        addAnchorPointButton.translatesAutoresizingMaskIntoConstraints = false
-        addAnchorPointButton.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 1.1).isActive = true
-        addAnchorPointButton.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 2.5).isActive = true
-        addAnchorPointButton.setBackgroundImage(UIImage(named: "WhiteButtonBackground"), for: .normal)
-        addAnchorPointButton.imageView?.contentMode = .scaleAspectFit
-        addAnchorPointButton.setTitle(NSLocalizedString("saveARouteButtonText", comment: "This is the text which appears on the save a route buttton"),for: .normal)
-        addAnchorPointButton.setTitleColor(.black, for: .normal)
-        addAnchorPointButton.titleLabel?.font = UIFont(name: "HelveticaNeue-Bold", size: 35)!
-        addAnchorPointButton.accessibilityLabel = NSLocalizedString("saveARouteButtonAccessabilityLabel", comment: "A button that allows the user to save a path to a destination.")
-        addAnchorPointButton.titleLabel?.textAlignment = .center
-        addAnchorPointButton.titleLabel?.numberOfLines = 0
-        addAnchorPointButton.titleLabel?.lineBreakMode = .byWordWrapping
-        addAnchorPointButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .largeTitle)
-        addAnchorPointButton.titleEdgeInsets.top = 0
-        addAnchorPointButton.titleEdgeInsets.left = 5
-        addAnchorPointButton.titleEdgeInsets.bottom = 0
-        addAnchorPointButton.titleEdgeInsets.right = 5
+        let addAnchorPointButton = UIButton(type: .custom)
+            addAnchorPointButton.layer.cornerRadius = 0.5 * addAnchorPointButton.bounds.size.width
+            addAnchorPointButton.clipsToBounds = true
+            addAnchorPointButton.translatesAutoresizingMaskIntoConstraints = false
+            addAnchorPointButton.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 1.1).isActive = true
+            addAnchorPointButton.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 2.5).isActive = true
+            addAnchorPointButton.setBackgroundImage(UIImage(named: "WhiteButtonBackground"), for: .normal)
+            addAnchorPointButton.imageView?.contentMode = .scaleAspectFit
+            addAnchorPointButton.setTitle("Save a Route",for: .normal)
+            addAnchorPointButton.setTitleColor(.black, for: .normal)
+            addAnchorPointButton.titleLabel?.font = UIFont(name: "HelveticaNeue-Bold", size: 35)!
+            addAnchorPointButton.accessibilityLabel = NSLocalizedString("Save a Route", comment: "A button that allows the user to save a path to a destination.")
+        
+
+<<<<<<< HEAD
+        recordPathButton = UIButton.makeConstraintButton(view,
+                                                    alignment: UIConstants.ButtonContainerHorizontalAlignment.center,
+                                                    appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "Record")!),
+                                                    label: NSLocalizedString("saveARouteButtonAccessabilityLabel", comment: "The accessability label for the save a route button"))
+        
+        addAnchorPointButton = UIButton.makeConstraintButton(view,
+                                                     alignment: UIConstants.ButtonContainerHorizontalAlignment.right,
+                                                     appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "Landmark")!),
+                                                     label: NSLocalizedString("recordSingleUseRouteButtonAccessabilityLabel", comment: "The accessability label for a button which allows the user to record a single use route."))
+=======
+        
 
         
-        recordPathButton = UIButton(type: .custom)
+        let recordPathButton = UIButton(type: .custom)
         recordPathButton.layer.cornerRadius = 0.75 * addAnchorPointButton.bounds.size.width
         recordPathButton.clipsToBounds = true
         recordPathButton.translatesAutoresizingMaskIntoConstraints = false
@@ -86,21 +88,14 @@ class RecordPathController: UIViewController {
         recordPathButton.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 2.5).isActive = true
         recordPathButton.setBackgroundImage(UIImage(named: "WhiteButtonBackground"), for: .normal)
         recordPathButton.imageView?.contentMode = .scaleAspectFit
-        recordPathButton.setTitle(NSLocalizedString("singleUseRouteButtonText", comment: "This is the text which appears on the single use route buttton"),for: .normal)
+        recordPathButton.setTitle("Single Use Route",for: .normal)
         recordPathButton.setTitleColor(.black, for: .normal)
         recordPathButton.titleLabel?.font = UIFont(name: "HelveticaNeue-Bold", size: 35)!
         recordPathButton.accessibilityLabel = NSLocalizedString("Record a single use route", comment: "A button that allows the user to navigate a route one time.")
-        recordPathButton.titleLabel?.textAlignment = .center
-        recordPathButton.titleLabel?.numberOfLines = 0
-        recordPathButton.titleLabel?.lineBreakMode = .byWordWrapping
-        recordPathButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .largeTitle)
-        recordPathButton.titleEdgeInsets.top = 0
-        recordPathButton.titleEdgeInsets.left = 5
-        recordPathButton.titleEdgeInsets.bottom = 0
-        recordPathButton.titleEdgeInsets.right = 5
 
+>>>>>>> 0c77d54faffb81853184799c5da39f5a2a488c27
         
-        routesButton = UIButton(type: .custom)
+        let routesButton = UIButton(type: .custom)
         routesButton.layer.cornerRadius = 0.75 * routesButton.bounds.size.width
         routesButton.clipsToBounds = true
         routesButton.translatesAutoresizingMaskIntoConstraints = false
@@ -108,20 +103,10 @@ class RecordPathController: UIViewController {
         routesButton.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 2.5).isActive = true
         routesButton.setBackgroundImage(UIImage(named: "WhiteButtonBackground"), for: .normal)
         routesButton.imageView?.contentMode = .scaleAspectFit
-        ///LOCALIZE
-        routesButton.setTitle(NSLocalizedString("savedRoutesListButtonText", comment: "This is the text which appears on the Saved routes List buttton"),for: .normal)
+        routesButton.setTitle("Saved Routes List",for: .normal)
         routesButton.setTitleColor(.black, for: .normal)
         routesButton.titleLabel?.font = UIFont(name: "HelveticaNeue-Bold", size: 35)!
-
-        routesButton.accessibilityLabel = NSLocalizedString("savedRoutesListButtonAccessabilityLabel", comment: "The acessability tag for a button which opens a menu which displays all the saved routes created by the user.")
-        routesButton.titleLabel?.textAlignment = .center
-        routesButton.titleLabel?.numberOfLines = 0
-        routesButton.titleLabel?.lineBreakMode = .byWordWrapping
-        routesButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .largeTitle)
-        routesButton.titleEdgeInsets.top = 0
-        routesButton.titleEdgeInsets.left = 5
-        routesButton.titleEdgeInsets.bottom = 0
-        routesButton.titleEdgeInsets.right = 5
+        routesButton.accessibilityLabel = NSLocalizedString("Saved Routes List", comment: "A button that opens a menu which displays all the saved routes created by the user.")
         
         /// create stack view for aligning and distributing bottom layer buttons
         let stackView   = UIStackView()

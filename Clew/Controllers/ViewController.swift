@@ -368,7 +368,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             self.rootContainerView.countdownTimer.isHidden = true
             if paused && recordingSingleUseRoute{
                 ///announce to the user that they have sucessfully saved an anchor point.
-                self.delayTransition(announcement: NSLocalizedString("Anchor point saved. You may now close the app and return later for return navigation.", comment: "This is the announcement which is spoken after creating an anchor point in the process of pausing the tracking session of recording a single use route"), initialFocus: nil)
+                self.delayTransition(announcement: NSLocalizedString("singleUseRouteAnchorPointToPausedStateAnnouncement", comment: "This is the announcement which is spoken after creating an anchor point in the process of pausing the tracking session of recording a single use route"), initialFocus: nil)
             }
 
             self.pauseTracking()
@@ -394,7 +394,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             
             ///PATHPOINT creating beginining two way Anchor Point -> record route
             ///announce to the user that they have sucessfully saved an anchor point.
-            delayTransition(announcement: NSLocalizedString("Anchor point saved. You are now recording a route.", comment: "This is the announcement which is spoken after the first anchor point of a multiple use route is saved. this signifies the completeion of the saving an anchor point procedure and the start of recording a route to be saved."), initialFocus: nil)
+            delayTransition(announcement: NSLocalizedString("multipleUseRouteAnchorPointToRecordingRouteAnnouncement", comment: "This is the announcement which is spoken after the first anchor point of a multiple use route is saved. this signifies the completeion of the saving an anchor point procedure and the start of recording a route to be saved."), initialFocus: nil)
             ///sends the user to a route recording of the program is creating a beginning route Anchor Point
             state = .recordingRoute
             return
@@ -415,7 +415,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                         
                     } else {
                         ///PATHPOINT End route Alignment timer -> play/pause
-                        self.delayTransition(announcement: NSLocalizedString("Anchor point saved. You may now pause the tracking session or perform return navigation.", comment: "This is an announcement which is spoken when the user saves the end anchor point for a multiple use route. this signifies the transition form saving an anchor point to the option ot pause your AR Session or to perform return navigation"), initialFocus: nil)
+                        self.delayTransition(announcement: NSLocalizedString("multipleUseRouteAnchorPointToPlayPauseAnnouncement", comment: "This is an announcement which is spoken when the user saves the end anchor point for a multiple use route. this signifies the transition form saving an anchor point to the option ot pause your AR Session or to perform return navigation"), initialFocus: nil)
                         ///sends the user to the play/pause screen
                         self.state = .readyToNavigateOrPause(allowPause: true)
                     }
@@ -793,9 +793,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         if #available(iOS 12.0, *) {
             justUsedMap = mapAsAny as! ARWorldMap?
         }
-        let alertController = UIAlertController(title: NSLocalizedString("Save route", comment: "The title of a popup window where user enters a name for the route they want to save."), message: NSLocalizedString("Enter the name of the route", comment: "Ask user to provide a descriptive name for the route they want to save."), preferredStyle: .alert)
+        let alertController = UIAlertController(title: NSLocalizedString("saveRoutePop-UpTitle", comment: "The title of a popup window where user enters a name for the route they want to save."), message: NSLocalizedString("saveRoutePop-UpTextBoxPrompt", comment: "Asks the user to provide a descriptive name for the route they want to save."), preferredStyle: .alert)
         // The confirm action taking the inputs
-        let saveAction = UIAlertAction(title: NSLocalizedString("Save", comment: "An option for the user to select"), style: .default) { (_) in
+        let saveAction = UIAlertAction(title: NSLocalizedString("saveRouteConfirmationLabel", comment: "The text for a button which allws the user to confirm saving their route from the save a route pop-up"), style: .default) { (_) in
             let id = String(Int64(NSDate().timeIntervalSince1970 * 1000)) as NSString
             // Get the input values from user, if it's nil then use timestamp
             self.routeName = alertController.textFields?[0].text as NSString? ?? id
@@ -803,14 +803,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
             
         // The cancel action saves the just traversed route so you can navigate back along it later
-        let cancelAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: "An option for the user to select"), style: .cancel) { (_) in
+        let cancelAction = UIAlertAction(title: NSLocalizedString("cancelPop-UpButtonLabel", comment: "A button which closes the current pop up"), style: .cancel) { (_) in
             self.justTraveledRoute = SavedRoute(id: "dummyid", name: "Last route", crumbs: self.crumbs, dateCreated: Date() as NSDate, beginRouteAnchorPoint: self.beginRouteAnchorPoint, endRouteAnchorPoint: self.endRouteAnchorPoint)
         }
         
         // Add textfield to our dialog box
         alertController.addTextField { (textField) in
             textField.becomeFirstResponder()
-            textField.placeholder = NSLocalizedString("Enter route title", comment: "A placeholder before user enters text in textbox")
+            textField.placeholder = NSLocalizedString("routeNamePlaceholder", comment: "A placeholder in the route name textbox before the user enters a name for their route in the textbox.")
         }
             
         // Add the action to dialogbox
@@ -827,9 +827,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         rootContainerView.homeButton.isHidden = false
 //        backButton.isHidden = true
         // Set title and message for the alert dialog
-        let alertController = UIAlertController(title: NSLocalizedString("Anchor Point information", comment: "The header of a pop-up menu"), message: NSLocalizedString("Enter text about the Anchor Point that will allow you to find the exact same point later on.", comment: "Prompts user to enter information"), preferredStyle: .alert)
+        let alertController = UIAlertController(title: NSLocalizedString("anchorPointTextHeading", comment: "The header of a pop-up menu which prompts the user to write descriptive text about their route anchor point"), message: NSLocalizedString("anchorPointTextPrompt", comment: "Prompts user to enter descriptive text about their anchor point"), preferredStyle: .alert)
         // The confirm action taking the inputs
-        let saveAction = UIAlertAction(title: NSLocalizedString("Ok", comment: "A button for user to click to acknowledge and close a pop-up"), style: .default) { (_) in
+        let saveAction = UIAlertAction(title: NSLocalizedString("anchorPointTextPop-UpConfirmation", comment: "A button for user to click to confirm the text note they added to their anchor point and close a pop-up"), style: .default) { (_) in
             if self.creatingRouteAnchorPoint {
                 self.beginRouteAnchorPoint.information = alertController.textFields?[0].text as NSString?
             } else {
@@ -838,13 +838,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
         
         // The cancel action saves the just traversed route so you can navigate back along it later
-        let cancelAction = UIAlertAction(title: NSLocalizedString("Don't specify this information", comment: "A button for user to click"), style: .cancel) { (_) in
+        let cancelAction = UIAlertAction(title: NSLocalizedString("anchorPointPop-UpCancel", comment: "A button for user to click which will close the pop up without saving any information the user put in"), style: .cancel) { (_) in
         }
         
         // Add textfield to our dialog box
         alertController.addTextField { (textField) in
             textField.becomeFirstResponder()
-            textField.placeholder = NSLocalizedString("Enter Anchor Point information", comment: "A placeholder that appears in text box before user enters any text.")
+            textField.placeholder = NSLocalizedString("anchorPointTextPlaceholder", comment: "A placeholder that appears in text box which the user uses to enter a text label for an anchor point.")
         }
         
         // Add the action to dialogbox
@@ -888,8 +888,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// Show logging disclaimer when user opens app for the first time.
     func showLogAlert() {
-        let logAlertVC = UIAlertController(title: NSLocalizedString("Sharing your experience with Clew", comment: "The heading of a pop-up"),
-                                           message: NSLocalizedString("Help us improve the app by logging your Clew experience. These logs will not include any images or personal information. You can turn this off in Settings.", comment: "Disclaimer shown to the user when they open the app for the first time"),
+        let logAlertVC = UIAlertController(title: NSLocalizedString("sharingYourExperiencePop-UpHeading", comment: "The heading of a pop-up telling the user that their data is being saved with error logs"),
+                                           message: NSLocalizedString("sharingYourExperiencePop-UpContent", comment: "Disclaimer shown to the user when they open the app for the first time"),
                                            preferredStyle: .alert)
         logAlertVC.addAction(UIAlertAction(title: NSLocalizedString("Ok", comment: "What the user clicks to acknowledge a message and dismiss pop-up"), style: .default, handler: { action -> Void in
             self.showSafetyAlert()
@@ -900,8 +900,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// Show safety disclaimer when user opens app for the first time.
     func showSafetyAlert() {
-        let safetyAlertVC = UIAlertController(title: NSLocalizedString("For your safety", comment: "The heading of a pop-up"),
-                                              message: NSLocalizedString("While using the app, please be aware of your surroundings. You agree that your use of the App is at your own risk, and it is solely your responsibility to maintain your personal safety. Visit www.clewapp.org for more information on how to use the app.", comment: "Disclaimer shown to the user when they open the app for the first time"),
+        let safetyAlertVC = UIAlertController(title: NSLocalizedString("forYourSafetyPop-UpHeading", comment: "The heading of a pop-up telling the user to be aware of their surroundings while using clew"),
+                                              message: NSLocalizedString("forYourSafetyPop-UpContent", comment: "Disclaimer shown to the user when they open the app for the first time"),
                                               preferredStyle: .alert)
         safetyAlertVC.addAction(UIAlertAction(title: NSLocalizedString("Ok", comment: "What the user clicks to acknowledge a message and dismiss pop-up"), style: .default, handler: nil))
         self.present(safetyAlertVC, animated: true, completion: nil)
@@ -1043,7 +1043,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         rootContainerView.homeButton.isHidden = true
 
         if announceArrival {
-            delayTransition(announcement: NSLocalizedString("You've arrived.", comment: "You have arrived at your destination."))
+            delayTransition(announcement: NSLocalizedString("completedNavigationAnnouncement", comment: "An announcement which is played to notify the user that they have arrived at the end of their route."))
         } else {
             delayTransition()
         }
@@ -1072,7 +1072,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         recordPathController.remove()
         recordPathController.view.isAccessibilityElement = false
         add(stopRecordingController)
-        delayTransition(announcement: NSLocalizedString("Hold vertically with the rear camera facing forward.", comment: "Hold the phone vertically with the rear camera facing forward."))
+        delayTransition(announcement: NSLocalizedString("properDevicePositioningAnnouncement", comment: "This is an announcement which plays to tell the user the best practices for aligning the phone"))
     }
     
     /// Display start navigation view/hide all other views
@@ -1142,7 +1142,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
 //        rootContainerView.resumeTrackingConfirmView.getButtonByTag(tag: UIView.readVoiceNoteButtonTag)?.isHidden = voiceNoteToPlay == nil
         resumeTrackingConfirmController.readVoiceNoteButton?.isHidden = voiceNoteToPlay == nil
         let waitingPeriod = ViewController.alignmentWaitingPeriod
-        resumeTrackingConfirmController.view.mainText?.text?.append(String.localizedStringWithFormat(NSLocalizedString("Please align your device with your previously recorded anchor point. To do this Hold your device flat with the screen pointing up. Press the top (short) edge flush with the same vertical surface that you used to create the landmark. Activating the align button will start an alignment countdown this is intended to give you time to make final adjustments to the positioning of your device. At the end of the countdown the alignment will be taken and the device will provide confirmation via a vibration or sound cue.", comment: "Informative mssage that appears to the user."), waitingPeriod))
+        resumeTrackingConfirmController.view.mainText?.text?.append(String.localizedStringWithFormat(NSLocalizedString("anchorPointAlignmentText", comment: "Text describing the process of aligning to an anchorpoint. This text shows up on the alignment screen."), waitingPeriod))
         delayTransition()
     }
     
@@ -1164,9 +1164,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         stopNavigationController.remove()
         add(routeRatingController)
         if announceArrival {
-            routeRatingController.view.mainText?.text = NSLocalizedString("Navigation complete. Please rate the quality of your navigation experience.", comment: "Announce to the user that they have arrived at their destination and ask user to rate their experience.")
+            routeRatingController.view.mainText?.text = NSLocalizedString("ratingYourServiceViewText", comment: "The text that is displayed when the user has completed navigation of their route. This prompts the user to rate their navigation experience.")
         } else {
-            routeRatingController.view.mainText?.text = NSLocalizedString("Navigation complete. Please rate the quality of your navigation experience.", comment: "Announce to the user that they have arrived at their destination and ask user to rate their experience.")
+            routeRatingController.view.mainText?.text = NSLocalizedString("ratingYourServiceViewText", comment: "The text that is displayed when the user has completed navigation of their route. This prompts the user to rate their navigation experience.")
         }
         
         feedbackGenerator = nil
@@ -1388,7 +1388,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// - Parameter sender: the button that generated the event
     @objc func startNavigation(_ sender: UIButton) {
         ///announce to the user that return navigation has started.
-        self.delayTransition(announcement: NSLocalizedString("Starting return navigation", comment: "This is an anouncement which is played when the user performs return navigation from the play pause menu. It signifies the start of a navigation session."), initialFocus: nil)
+        self.delayTransition(announcement: NSLocalizedString("startingReturnNavigationAnnouncement", comment: "This is an anouncement which is played when the user performs return navigation from the play pause menu. It signifies the start of a navigation session."), initialFocus: nil)
         // this will handle the appropriate state transition if we pass the warning
         state = .navigatingRoute
     }
@@ -1397,7 +1397,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     func restartSessionIfFailedToRelocalize() {
         if attemptingRelocalization {
             if !suppressTrackingWarnings {
-                announce(announcement: NSLocalizedString("Could not match environment to the saved route. Starting new tracking session.", comment: "Current environment does not match up with the environment in previously saved route. About to start a new tracking session."))
+                announce(announcement: NSLocalizedString("noEnvironmentMatchAnnouncement", comment: "An announcement notifying the user that their current environment does not match up with an environment in a previously saved route, and that a new ARKit tracking session has been started."))
             }
             if #available(iOS 12.0, *) {
                 configuration.initialWorldMap = nil
@@ -1457,9 +1457,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         ///tell the program that a single use route is being recorded
         recordingSingleUseRoute = true
         paused = false
-        ///PATHPOINT single use route -> prep for recording a route screen
+        ///PATHPOINT single use route -> recording a route
         ///hide all other views
         hideAllViewsHelper()
+        ///platy an announcemnt which tells the user that a route is being recorded
+        self.delayTransition(announcement: NSLocalizedString("singleUseRouteToRecordingRouteAnnouncement", comment: "This is an announcement which is spoken when the user starts recording a single use route. it informs the user that they are recording a single use route."), initialFocus: nil)
+        
         //sends the user to the screen where they can start recording a route
         state = .recordingRoute
         
@@ -1506,7 +1509,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                     ///PATHPOINT paused route -> return navigation
                     ///announce to the user that they have aligned to the anchor point sucessfully and are starting return navigation.
                     paused = false
-                    self.delayTransition(announcement: NSLocalizedString("Aligned to anchor point. Starting return navigation.", comment: "This is an Announcement which indicates that the pause session is complete, that the prgram was able to align with the anchor point, and that return navigation has started."), initialFocus: nil)
+                    self.delayTransition(announcement: NSLocalizedString("resumeAnchorPointToReturnNavigationAnnouncement", comment: "This is an Announcement which indicates that the pause session is complete, that the prgram was able to align with the anchor point, and that return navigation has started."), initialFocus: nil)
                     self.state = .navigatingRoute
 
                 } else {
@@ -1924,16 +1927,16 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         
         if(slope > 0.3) { // Go upstairs
             if(hapticFeedback) {
-                dir += "\(Directions[direction.hapticDirection]!)" + NSLocalizedString(" and proceed upstairs", comment: "Additional directions given to user")
+                dir += "\(Directions[direction.hapticDirection]!)" + NSLocalizedString("climbStairsDirection", comment: "Additional directions given to user discussing climbing stairs")
             } else {
-                dir += "\(Directions[direction.clockDirection]!)" + NSLocalizedString(" and proceed upstairs", comment: "Additional directions given to user")
+                dir += "\(Directions[direction.clockDirection]!)" + NSLocalizedString(" and proceed upstairs", comment: "Additional directions given to user telling them to climb stairs")
             }
             updateDirectionText(dir, distance: 0, displayDistance: false)
         } else if (slope < -0.3) { // Go downstairs
             if(hapticFeedback) {
-                dir += "\(Directions[direction.hapticDirection]!) and proceed downstairs"
+                dir += "\(Directions[direction.hapticDirection]!)\(NSLocalizedString("descendStairsDirection" , comment: "This is a direction which instructs the user to descend stairs"))"
             } else {
-                dir += "\(Directions[direction.clockDirection]!) and proceed downstairs"
+                dir += "\(Directions[direction.clockDirection]!)\(NSLocalizedString("descendStairsDirection" , comment: "This is a direction which instructs the user to descend stairs"))"
             }
             updateDirectionText(dir, distance: direction.distance, displayDistance: false)
         } else { // nromal directions
@@ -2085,7 +2088,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 logString = "ExcessiveMotion"
                 print("Excessive motion")
                 if !suppressTrackingWarnings {
-                    announce(announcement: NSLocalizedString("Excessive motion.\nTracking performance is degraded.", comment: "Let user know that there is too much movement of their phone and thus the app's ability to track a route has been lowered."))
+                    announce(announcement: NSLocalizedString("excessiveMotionDegradedTrackingAnnouncemnt", comment: "An announcement which lets the user know that there is too much movement of their device and thus the app's ability to track a route has been lowered."))
                     if soundFeedback {
                         playSystemSound(id: 1050)
                     }
@@ -2094,7 +2097,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 logString = "InsufficientFeatures"
                 print("InsufficientFeatures")
                 if !suppressTrackingWarnings {
-                    announce(announcement: NSLocalizedString("Insufficient visual features.\nTracking performance is degraded.", comment: "Let user know that their current surroundings do not have enough visual markers and thus the app's ability to track a route has been lowered."))
+                    announce(announcement: NSLocalizedString("insuficientFeaturesDegradedTrackingAnnouncemnt", comment: "An announcement which lets the user know  that their current surroundings do not have enough visual markers and thus the app's ability to track a route has been lowered."))
                     if soundFeedback {
                         playSystemSound(id: 1050)
                     }
@@ -2112,15 +2115,15 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             logString = "Normal"
             if #available(iOS 12.0, *), configuration.initialWorldMap != nil, attemptingRelocalization {
                 if !suppressTrackingWarnings {
-                    announce(announcement: NSLocalizedString("Successfully matched current environment to saved route.", comment: "Let user know that their surroundings match up to the surroundings of a saved route and that they can begin navigating."))
+                    announce(announcement: NSLocalizedString("realignToSavedRouteAnnouncement", comment: "An announcement which lets the user know that their surroundings have been matched to a saved route"))
                 }
                 attemptingRelocalization = false
             } else if case let .limited(reason)? = trackingSessionState {
                 if !suppressTrackingWarnings {
                     if reason == .initializing {
-                        announce(announcement: NSLocalizedString("Tracking session initialized.", comment: "Let user know that the tracking session has started."))
+                        announce(announcement: NSLocalizedString("startedTrackingSessionAnnouncement", comment: "Announcemnt that lets user know that the ARKit tracking session (used for generating the user's position and how it changes) has started."))
                     } else {
-                        announce(announcement: NSLocalizedString("Tracking performance normal.", comment: "Let user know that the ability to track and record a route is normal."))
+                        announce(announcement: NSLocalizedString("fixedTrackingAnnouncement", comment: "Let user know that the ARKit tracking session has returned to its normal quality (this is played after the tracking has been restored from thir being insuficent visual features or excessive motion which degrade the tracking)"))
                         if soundFeedback {
                             playSystemSound(id: 1025)
                         }
