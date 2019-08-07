@@ -224,7 +224,7 @@
 "startingReturnNavigationAnnouncement" = "Starting return navigation";
 
 "resumeAnchorPointToReturnNavigationAnnouncement" = "Aligned to anchor point. Starting return navigation.";
-
+"singleUseRouteToRecordingRouteAnnouncement" = "Now recording a single use route.";
 
 //Play/Pause text
 

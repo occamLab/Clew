@@ -1457,9 +1457,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         ///tell the program that a single use route is being recorded
         recordingSingleUseRoute = true
         paused = false
-        ///PATHPOINT single use route -> prep for recording a route screen
+        ///PATHPOINT single use route -> recording a route
         ///hide all other views
         hideAllViewsHelper()
+        ///platy an announcemnt which tells the user that a route is being recorded
+        self.delayTransition(announcement: NSLocalizedString("singleUseRouteToRecordingRouteAnnouncement", comment: "This is an announcement which is spoken when the user starts recording a single use route. it informs the user that they are recording a single use route."), initialFocus: nil)
+        
         //sends the user to the screen where they can start recording a route
         state = .recordingRoute
         
