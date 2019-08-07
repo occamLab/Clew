@@ -12,8 +12,6 @@
 		1F2B9D8722C5446B00317DC8 /* (null) in Resources */ = {isa = PBXBuildFile; };
 		2748B8490FCBA95C7AA028D7 /* Pods_Clew.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 942F73299DA8DCF97FAA974A /* Pods_Clew.framework */; };
 		4DF05CC81F34EB6B008B0E31 /* Confirm.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4DF05CC71F34EB56008B0E31 /* Confirm.mp3 */; };
-		77000C3222CCE8F2004AC60B /* Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 77000C3122CCE8F1004AC60B /* Storyboard.storyboard */; };
-		77000C3322CCE8F2004AC60B /* Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 77000C3122CCE8F1004AC60B /* Storyboard.storyboard */; };
 		773AE4AC22F08AD60027D18C /* CongratsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 773AE4AB22F08AD60027D18C /* CongratsView.swift */; };
 		773AE4AD22F08AD60027D18C /* CongratsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 773AE4AB22F08AD60027D18C /* CongratsView.swift */; };
 		77467DAF22BBC1D300FA7DEE /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 77467DAE22BBC1D300FA7DEE /* Default-568h@2x.png */; };
@@ -32,6 +30,10 @@
 		77A30FE922C66C3A008EEAAB /* PhoneOrientationTrainingVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77A30FE722C66C3A008EEAAB /* PhoneOrientationTrainingVC.swift */; };
 		9884EB5B22CCE569000D31AF /* AnnouncementManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9884EB5A22CCE569000D31AF /* AnnouncementManager.swift */; };
 		9884EB5C22CCE569000D31AF /* AnnouncementManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9884EB5A22CCE569000D31AF /* AnnouncementManager.swift */; };
+		AD020F8A22FB68BA00D665F3 /* Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AD020F8D22FB68BA00D665F3 /* Storyboard.storyboard */; };
+		AD020F8B22FB68BA00D665F3 /* Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AD020F8D22FB68BA00D665F3 /* Storyboard.storyboard */; };
+		AD020F9222FB690300D665F3 /* Storyboard.strings in Resources */ = {isa = PBXBuildFile; fileRef = AD020F9022FB690200D665F3 /* Storyboard.strings */; };
+		AD020F9322FB690300D665F3 /* Storyboard.strings in Resources */ = {isa = PBXBuildFile; fileRef = AD020F9022FB690200D665F3 /* Storyboard.strings */; };
 		AD551EA422F1E83A00DDC395 /* phoneOrientationGIF4.png in Resources */ = {isa = PBXBuildFile; fileRef = AD551E9C22F1E83A00DDC395 /* phoneOrientationGIF4.png */; };
 		AD551EA522F1E83A00DDC395 /* phoneOrientationGIF4.png in Resources */ = {isa = PBXBuildFile; fileRef = AD551E9C22F1E83A00DDC395 /* phoneOrientationGIF4.png */; };
 		AD551EA622F1E83A00DDC395 /* phoneOrientationGIF6.png in Resources */ = {isa = PBXBuildFile; fileRef = AD551E9D22F1E83A00DDC395 /* phoneOrientationGIF6.png */; };
@@ -170,7 +172,6 @@
 		4D6B00C01F33C1C400952242 /* Clew.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Clew.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4D6B00E41F33C85500952242 /* Crumb.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = Crumb.obj; sourceTree = "<group>"; };
 		4DF05CC71F34EB56008B0E31 /* Confirm.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = Confirm.mp3; sourceTree = "<group>"; };
-		77000C3122CCE8F1004AC60B /* Storyboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Storyboard.storyboard; path = Clew/Tutorial/TutorialViews/Storyboard.storyboard; sourceTree = SOURCE_ROOT; };
 		773AE4AB22F08AD60027D18C /* CongratsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CongratsView.swift; sourceTree = "<group>"; };
 		77467DAE22BBC1D300FA7DEE /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		77469B7722EB45B500477519 /* NextButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NextButtonView.swift; sourceTree = "<group>"; };
@@ -188,6 +189,9 @@
 		942F73299DA8DCF97FAA974A /* Pods_Clew.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Clew.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9884EB5022BA9383000D31AF /* Storyboard.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Storyboard.storyboard; sourceTree = "<group>"; };
 		9884EB5A22CCE569000D31AF /* AnnouncementManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnouncementManager.swift; sourceTree = "<group>"; };
+		AD020F8C22FB68BA00D665F3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Storyboard.storyboard; sourceTree = "<group>"; };
+		AD020F8F22FB68DE00D665F3 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Storyboard.strings; sourceTree = "<group>"; };
+		AD020F9122FB690200D665F3 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Clew/Tutorial/TutorialViews/en.lproj/Storyboard.strings; sourceTree = SOURCE_ROOT; };
 		AD13576822CCEDA800EE36E2 /* Storyboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Storyboard.storyboard; path = Clew/Storyboard.storyboard; sourceTree = SOURCE_ROOT; };
 		AD551E9C22F1E83A00DDC395 /* phoneOrientationGIF4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = phoneOrientationGIF4.png; sourceTree = "<group>"; };
 		AD551E9D22F1E83A00DDC395 /* phoneOrientationGIF6.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = phoneOrientationGIF6.png; sourceTree = "<group>"; };
@@ -388,7 +392,7 @@
 				77469B7722EB45B500477519 /* NextButtonView.swift */,
 				77469B7A22EB5A2200477519 /* SkipButtonView.swift */,
 				773AE4AB22F08AD60027D18C /* CongratsView.swift */,
-				77000C3122CCE8F1004AC60B /* Storyboard.storyboard */,
+				AD020F8D22FB68BA00D665F3 /* Storyboard.storyboard */,
 			);
 			path = TutorialViews;
 			sourceTree = "<group>";
@@ -430,6 +434,7 @@
 		E5D1695522E103A0008754D0 /* localizations */ = {
 			isa = PBXGroup;
 			children = (
+				AD020F9022FB690200D665F3 /* Storyboard.strings */,
 				E5D1695622E103A0008754D0 /* SettingsAndHelp.strings */,
 				E5D1695822E103A0008754D0 /* Localizable.strings */,
 			);
@@ -682,6 +687,7 @@
 				ja,
 				ru,
 				base,
+				Base,
 			);
 			mainGroup = 4D6B00B71F33C1C400952242;
 			productRefGroup = 4D6B00C11F33C1C400952242 /* Products */;
@@ -710,6 +716,7 @@
 				E5F4C35E22C4035200E0D94E /* (null) in Resources */,
 				AD551EB022F1E83A00DDC395 /* phoneOrientationGIF2.png in Resources */,
 				ADE90D4A22CCE48C001CD52C /* Tutorial.storyboard in Resources */,
+				AD020F9222FB690300D665F3 /* Storyboard.strings in Resources */,
 				AD551EB222F1E83A00DDC395 /* phoneOrientationGIF7.png in Resources */,
 				E5F4C36822C4035200E0D94E /* StopRecording.aiff in Resources */,
 				AD551EAC22F1E83A00DDC395 /* phoneOrientationGIF3.png in Resources */,
@@ -725,7 +732,7 @@
 				77467DAF22BBC1D300FA7DEE /* Default-568h@2x.png in Resources */,
 				AD551EA422F1E83A00DDC395 /* phoneOrientationGIF4.png in Resources */,
 				AD551EA822F1E83A00DDC395 /* phoneOrientationGIF8.png in Resources */,
-				77000C3222CCE8F2004AC60B /* Storyboard.storyboard in Resources */,
+				AD020F8A22FB68BA00D665F3 /* Storyboard.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -734,11 +741,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				AD8AA00722F8BA7F00FC026E /* help in Resources */,
+				AD020F9322FB690300D665F3 /* Storyboard.strings in Resources */,
 				E5F4C36922C4035200E0D94E /* StopRecording.aiff in Resources */,
 				E59DA6C222C65F5900FCD5A1 /* SettingsAndHelp.storyboard in Resources */,
 				B7EB59E220F693EB00FBBC6A /* Confirm.mp3 in Resources */,
 				AD551EB122F1E83A00DDC395 /* phoneOrientationGIF2.png in Resources */,
-				77000C3322CCE8F2004AC60B /* Storyboard.storyboard in Resources */,
+				AD020F8B22FB68BA00D665F3 /* Storyboard.storyboard in Resources */,
 				B7EB59E320F693EB00FBBC6A /* Crumb.obj in Resources */,
 				E5F4C39D22C4035200E0D94E /* (null) in Resources */,
 				AD551EA722F1E83A00DDC395 /* phoneOrientationGIF6.png in Resources */,
@@ -996,6 +1004,24 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
+		AD020F8D22FB68BA00D665F3 /* Storyboard.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				AD020F8C22FB68BA00D665F3 /* Base */,
+				AD020F8F22FB68DE00D665F3 /* en */,
+			);
+			name = Storyboard.storyboard;
+			path = Clew/Tutorial/TutorialViews;
+			sourceTree = SOURCE_ROOT;
+		};
+		AD020F9022FB690200D665F3 /* Storyboard.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				AD020F9122FB690200D665F3 /* en */,
+			);
+			name = Storyboard.strings;
+			sourceTree = "<group>";
+		};
 		E5D1695622E103A0008754D0 /* SettingsAndHelp.strings */ = {
 			isa = PBXVariantGroup;
 			children = (

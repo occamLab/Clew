@@ -1,0 +1,43 @@
+
+/* Class = "UILabel"; text = "Clew needs to see in front of you to function properly. Make sure your camera has an unrestricted view in front of you during recording."; ObjectID = "10J-WF-b2F"; */
+"10J-WF-b2F.text" = "Clew needs to see in front of you to function properly. Make sure your camera has an unrestricted view in front of you during recording.";
+
+/* Class = "UIButton"; normalTitle = "GOT IT!"; ObjectID = "2E6-tb-gjS"; */
+"2E6-tb-gjS.normalTitle" = "GOT IT!";
+
+/* Class = "UITextView"; text = "SAFETY NOTICE"; ObjectID = "DEo-3r-7EW"; */
+"DEo-3r-7EW.text" = "SAFETY NOTICE";
+
+/* Class = "UILabel"; text = "Clew is not a replacement for a cane or guide dog. Mobility devices should still be used."; ObjectID = "E0a-r9-Ew3"; */
+"E0a-r9-Ew3.text" = "Clew is not a replacement for a cane or guide dog. Mobility devices should still be used.";
+
+/* Class = "UILabel"; text = "Clew has route saving! Save your most common paths and navigate them as many times as you want afterward with no re-recording!"; ObjectID = "EyK-CY-7X1"; */
+"EyK-CY-7X1.text" = "Clew has route saving! Save your most common paths and navigate them as many times as you want afterward with no re-recording!";
+
+/* Class = "UIButton"; normalTitle = "SKIP"; ObjectID = "MNp-Vg-Qtn"; */
+"MNp-Vg-Qtn.normalTitle" = "SKIP";
+
+/* Class = "UIButton"; normalTitle = "GOT IT!"; ObjectID = "MVZ-8U-ZE6"; */
+"MVZ-8U-ZE6.normalTitle" = "GOT IT!";
+
+/* Class = "UIButton"; normalTitle = "GOT IT!"; ObjectID = "SpT-ee-DoY"; */
+"SpT-ee-DoY.normalTitle" = "GOT IT!";
+
+/* Class = "UILabel"; text = "Use Clew in proper lighting to achieve full functionality."; ObjectID = "ZwH-qp-LiI"; */
+"ZwH-qp-LiI.text" = "Use Clew in proper lighting to achieve full functionality.";
+
+/* Class = "UITextView"; text = "TIPS FOR USE"; ObjectID = "aE1-5y-kal"; */
+"aE1-5y-kal.text" = "TIPS FOR USE";
+
+/* Class = "UILabel"; text = "Clew can only be used indoors. Navigating outdoors will be inaccurate and drains battery life."; ObjectID = "hhz-zf-BN9"; */
+"hhz-zf-BN9.text" = "Clew can only be used indoors. Navigating outdoors will be inaccurate and drains battery life.";
+
+/* Class = "UILabel"; text = "Use Clew in combination with another assistive navigation app to find your way back!"; ObjectID = "j06-9K-5E2"; */
+"j06-9K-5E2.text" = "Use Clew in combination with another assistive navigation app to find your way back!";
+
+
+/* Class = "UILabel"; text = "ALIGN YOUR PHONE!"; ObjectID = "mRf-yi-euW"; */
+"mRf-yi-euW.text" = "ALIGN YOUR PHONE!";
+
+/* Class = "UILabel"; text = "Use the speed of the vibrations to determine whether the phone is in the correct orientation. The faster the vibration, the closer you are to proper orientation."; ObjectID = "xdo-zP-uE8"; */
+"xdo-zP-uE8.text" = "Use the speed of the vibrations to determine whether the phone is in the correct orientation. The faster the vibration, the closer you are to proper orientation.";
