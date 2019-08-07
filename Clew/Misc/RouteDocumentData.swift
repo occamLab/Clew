@@ -32,9 +32,6 @@ class RouteDocumentData: NSObject, NSSecureCoding {
     /// second landmark audio note
     public var endVoiceNote: String?
     
-    /// device flag
-    public var deviceFlag: Bool
-    
     /// Initialize the sharing document.
     ///
     /// - Parameters:
@@ -45,13 +42,6 @@ class RouteDocumentData: NSObject, NSSecureCoding {
         self.map = map
         self.beginVoiceNote = beginVoiceNote
         self.endVoiceNote = endVoiceNote
-        
-        if #available(iOS 12.0, *) {
-            self.deviceFlag = true
-        } else {
-            self.deviceFlag = false
-        }
-        
     }
     
     /// Encodes the object to the specified coder object. Here, we combine each essential element
@@ -63,7 +53,6 @@ class RouteDocumentData: NSObject, NSSecureCoding {
         if #available(iOS 12.0, *) {
             aCoder.encode(map, forKey: "map")
         }
-        aCoder.encode(deviceFlag, forKey: "deviceFlag")
         aCoder.encode(beginVoiceNote as NSString?, forKey: "beginVoiceNote")
         aCoder.encode(endVoiceNote as NSString?, forKey: "endVoiceNote")
     }
@@ -77,22 +66,13 @@ class RouteDocumentData: NSObject, NSSecureCoding {
             return nil
         }
         
-        /// grab flag from source device to see whether it was ios12 or not
-        let deviceFlag = aDecoder.decodeBool(forKey: "deviceFlag")
-        
         /// decode map, beginning landmark voice note, and ending landmark voice note,
         /// knowing that the map will not necessarily exist when a route is shared
         /// from an older device
         var newMap: Any? = nil
         
         /// only attempt to decode map on iOS 12
-        /// TODO: create flag in decoding for source device ios version.
-        ///       this current system will fail if a route was
-        ///       created shared from an ios 11 device to an ios
-        ///       12 one. Can't just decode as Any?, as Any doesn't
-        ///       support NSSecureCoding.
-        /// solved? added device flag
-        if deviceFlag == true {
+        if #available(iOS 12.0, *) {
             newMap = aDecoder.decodeObject(of: ARWorldMap.self, forKey: "map")
         }
         let beginNote = aDecoder.decodeObject(of: NSString.self, forKey: "beginVoiceNote")
