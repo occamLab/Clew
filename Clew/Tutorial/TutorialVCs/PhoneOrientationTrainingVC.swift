@@ -92,7 +92,7 @@ class PhoneOrientationTrainingVC: TutorialChildViewController, SRCountdownTimerD
                                                         height: UIConstants.buttonFrameWidth*8/10))
         countdownTimer.labelFont = UIFont(name: "HelveticaNeue-Light", size: 100)
         countdownTimer.labelTextColor = UIColor.white
-        countdownTimer.timerFinishingText = "End"
+        countdownTimer.timerFinishingText = NSLocalizedString("End", comment: "End")
         countdownTimer.lineWidth = 10
         countdownTimer.lineColor = UIColor.white
         countdownTimer.backgroundColor = UIColor.black.withAlphaComponent(0.4)

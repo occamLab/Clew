@@ -69,21 +69,16 @@ class TutorialViewController: UIViewController, ClewDelegate {
             case .readyToRecordSingleRoute:
                 removeAllChildVCs()
                 add(singleRouteChildVC)
-                print("in readyToRecordState")
             case .recordingSingleRoute:
-                print("in recording state")
                 break
             case .teachTheNavigationOfASingleRoute:
-                print("in teaching navigation state")
                 break
             case .initializing:
                 initialize()
             case .displayCongratsView:
                 print("in display congrats view state")
             case .endTutorial:
-                print("in end tutorial state")
                 removeAllChildVCs()
-//                phoneOrientationGIFChildVC.remove()
                 NotificationCenter.default.post(name: Notification.Name("ClewTutorialCompleted"), object: nil)
             }
         }

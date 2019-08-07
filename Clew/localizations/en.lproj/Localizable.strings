@@ -176,6 +176,7 @@
     // PhoneOrientationTrainingVC
 "Congratulations! \n You have successfully oriented your phone. \n Now you will be recording a simple single route." = "Congratulations! \n You have successfully oriented your phone. \n Now you will be recording a simple single route.";
 "Congratulations! You have successfully oriented your phone. Now you will be recording a simple single route." = "Congratulations! You have successfully oriented your phone. Now you will be recording a simple single route.";
+"End" = "End"
 
     // PhoneOrientationGIFVC
 "ALIGN YOUR PHONE!" = "ALIGN YOUR PHONE!";
