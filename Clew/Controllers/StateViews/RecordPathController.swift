@@ -14,8 +14,8 @@ class RecordPathController: UIViewController {
     /// Button for recording a route
     var recordPathButton: UIButton!
     
-    /// button for creating a new landmark
-    var addLandmarkButton: UIButton!
+    /// button for creating a new Anchor Point
+    var addAnchorPointButton: UIButton!
 
     /// button for accessing saved routes
     var routesButton: UIButton!
@@ -51,38 +51,40 @@ class RecordPathController: UIViewController {
             label.tag = UIView.mainTextTag
             view.addSubview(label)
         }
+        
+        let addAnchorPointButton = UIButton(type: .custom)
+            addAnchorPointButton.layer.cornerRadius = 0.5 * addAnchorPointButton.bounds.size.width
+            addAnchorPointButton.clipsToBounds = true
+            addAnchorPointButton.translatesAutoresizingMaskIntoConstraints = false
+            addAnchorPointButton.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 1.1).isActive = true
+            addAnchorPointButton.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 2.5).isActive = true
+            addAnchorPointButton.setBackgroundImage(UIImage(named: "WhiteButtonBackground"), for: .normal)
+            addAnchorPointButton.imageView?.contentMode = .scaleAspectFit
+            addAnchorPointButton.setTitle("Save a Route",for: .normal)
+            addAnchorPointButton.setTitleColor(.black, for: .normal)
+            addAnchorPointButton.titleLabel?.font = UIFont(name: "HelveticaNeue-Bold", size: 35)!
+            addAnchorPointButton.accessibilityLabel = NSLocalizedString("Save a Route", comment: "A button that allows the user to save a path to a destination.")
+        
+
+        
 
         
         let recordPathButton = UIButton(type: .custom)
-            recordPathButton.layer.cornerRadius = 0.5 * recordPathButton.bounds.size.width
-            recordPathButton.clipsToBounds = true
-            recordPathButton.translatesAutoresizingMaskIntoConstraints = false
-            recordPathButton.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 1.1).isActive = true
-            recordPathButton.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 2.5).isActive = true
-            recordPathButton.setBackgroundImage(UIImage(named: "WhiteButtonBackground"), for: .normal)
-            recordPathButton.imageView?.contentMode = .scaleAspectFit
-            recordPathButton.setTitle("Single Use Route",for: .normal)
-            recordPathButton.setTitleColor(.black, for: .normal)
-            recordPathButton.titleLabel?.font = UIFont(name: "HelveticaNeue-Bold", size: 35)!
-        
+        recordPathButton.layer.cornerRadius = 0.75 * addAnchorPointButton.bounds.size.width
+        recordPathButton.clipsToBounds = true
+        recordPathButton.translatesAutoresizingMaskIntoConstraints = false
+        recordPathButton.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 1.1).isActive = true
+        recordPathButton.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 2.5).isActive = true
+        recordPathButton.setBackgroundImage(UIImage(named: "WhiteButtonBackground"), for: .normal)
+        recordPathButton.imageView?.contentMode = .scaleAspectFit
+        recordPathButton.setTitle("Single Use Route",for: .normal)
+        recordPathButton.setTitleColor(.black, for: .normal)
+        recordPathButton.titleLabel?.font = UIFont(name: "HelveticaNeue-Bold", size: 35)!
+        recordPathButton.accessibilityLabel = NSLocalizedString("Record a single use route", comment: "A button that allows the user to navigate a route one time.")
 
-        
-
-        
-        let addLandmarkButton = UIButton(type: .custom)
-        addLandmarkButton.layer.cornerRadius = 0.75 * addLandmarkButton.bounds.size.width
-        addLandmarkButton.clipsToBounds = true
-        addLandmarkButton.translatesAutoresizingMaskIntoConstraints = false
-        addLandmarkButton.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 1.1).isActive = true
-        addLandmarkButton.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 2.5).isActive = true
-        addLandmarkButton.setBackgroundImage(UIImage(named: "WhiteButtonBackground"), for: .normal)
-        addLandmarkButton.imageView?.contentMode = .scaleAspectFit
-        addLandmarkButton.setTitle("Save a Route",for: .normal)
-        addLandmarkButton.setTitleColor(.black, for: .normal)
-        addLandmarkButton.titleLabel?.font = UIFont(name: "HelveticaNeue-Bold", size: 35)!
         
         let routesButton = UIButton(type: .custom)
-        routesButton.layer.cornerRadius = 0.75 * addLandmarkButton.bounds.size.width
+        routesButton.layer.cornerRadius = 0.75 * routesButton.bounds.size.width
         routesButton.clipsToBounds = true
         routesButton.translatesAutoresizingMaskIntoConstraints = false
         routesButton.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 1.1).isActive = true
@@ -92,6 +94,7 @@ class RecordPathController: UIViewController {
         routesButton.setTitle("Saved Routes List",for: .normal)
         routesButton.setTitleColor(.black, for: .normal)
         routesButton.titleLabel?.font = UIFont(name: "HelveticaNeue-Bold", size: 35)!
+        routesButton.accessibilityLabel = NSLocalizedString("Saved Routes List", comment: "A button that opens a menu which displays all the saved routes created by the user.")
         
         /// create stack view for aligning and distributing bottom layer buttons
         let stackView   = UIStackView()
@@ -105,9 +108,11 @@ class RecordPathController: UIViewController {
         stackView.alignment = UIStackView.Alignment.center
         
         /// add elements to the stack
-        stackView.addArrangedSubview(addLandmarkButton)
+
+        stackView.addArrangedSubview(addAnchorPointButton)
         stackView.addArrangedSubview(recordPathButton)
         stackView.addArrangedSubview(routesButton)
+
         
         /// size the stack
         stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 5).isActive = true
@@ -116,14 +121,17 @@ class RecordPathController: UIViewController {
         stackView.topAnchor.constraint(equalTo: view.topAnchor, constant: 115).isActive = true
         
         if let parent: UIViewController = parent {
+            
+            
+            /// TODO: Fix the naming of the selectors
             routesButton.addTarget(parent,
                                           action: #selector(ViewController.routesButtonPressed),
                                           for: .touchUpInside)
-            addLandmarkButton.addTarget(parent,
-                                          action: #selector(ViewController.startCreateLandmarkProcedure),
+            addAnchorPointButton.addTarget(parent,
+                                          action: #selector(ViewController.recordPath),
                                           for: .touchUpInside)
             recordPathButton.addTarget(parent,
-                                          action: #selector(ViewController.recordPath),
+                                          action: #selector(ViewController.startCreateAnchorPointProcedure),
                                           for: .touchUpInside)
         }
     }

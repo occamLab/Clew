@@ -41,11 +41,6 @@ class RouteRatingController: UIViewController {
                             width: UIConstants.buttonFrameWidth,
                             height: UIScreen.main.bounds.size.height)
         
-//        let label = UILabel(frame: CGRect(x: 15,
-//                                          y: UIScreen.main.bounds.size.height/5,
-//                                          width: UIScreen.main.bounds.size.width-30,
-//                                          height: UIScreen.main.bounds.size.height/2))
-        
         label = UILabel()
         let scrollView = UIScrollView()
 
@@ -56,7 +51,7 @@ class RouteRatingController: UIViewController {
         
         view.backgroundColor = UIColor.black.withAlphaComponent(0.4)
         
-        let mainText = NSLocalizedString("Please rate your service.", comment: "Message for user")
+        let mainText = NSLocalizedString("Navigation complete. Please rate the quality of your navigation experience.", comment: "Message for user")
         label.textColor = UIColor.white
         label.textAlignment = .center
         label.numberOfLines = 0

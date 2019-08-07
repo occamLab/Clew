@@ -12,11 +12,11 @@ import UIKit
 /// also handles associated buttons
 class PauseTrackingController: UIViewController, UIScrollViewDelegate {
 
-    /// button for storing landmark descriptions
-    var enterLandmarkDescriptionButton: UIButton!
+    /// button for storing Anchor Point descriptions
+    var enterAnchorPointDescriptionButton: UIButton!
     
     /// button for recording a voice note about a
-    /// landmark
+    /// Anchor Point
     var recordVoiceNoteButton: UIButton!
     
     /// button for aligning phone position in space
@@ -28,7 +28,29 @@ class PauseTrackingController: UIViewController, UIScrollViewDelegate {
     /// called when the view loads (any time)
     override func viewDidAppear(_ animated: Bool) {
         /// update label font
-        /// TODO: is this a safe implementation? Might crash if label has no body, unclear.
+        
+        /// label details
+        let waitingPeriod = ViewController.alignmentWaitingPeriod
+        var mainText:String = "nil"
+        
+        if (paused == true && recordingSingleUseRoute == true){
+            mainText = String.localizedStringWithFormat(NSLocalizedString("To be able to resume your tracking at a later point you need to record an anchor point for the end of your route. An anchor point records the position and alignment of your device so the app can reload your route from a temporary file. As a result the accuracy of your return navigation relies entirely on how accurately you can realign and position your phone with your saved anchor point at a later point. We suggest using the text and voice note buttons to record a text note and/or a voice recording which can help you realign your device to the anchor point you recorded at a later time.\nTo create an anchor point, hold your device flat with the screen facing up. Press the top (short) edge flush against a flat vertical surface (such as a wall) the ”align” button starts a %lu-second countdown. The countdown is intended to give you time to position your device; the Anchor point will be saved at the end of the countdown.", comment: "Info for user"), waitingPeriod)
+        } else {
+            if startAnchorPoint{
+                mainText = String.localizedStringWithFormat(NSLocalizedString("To allow your route to be navigated at a later point you need to record an anchor point for the start of your route. An anchor point records the position and alignment of your device so the app can reload your route from a saved file. As a result the accuracy of your saved route navigation relies entirely on how accurately you can realign and position your phone with your saved anchor point at a later point. We suggest using the text and voice note buttons to record a text note and/or a voice recording which can help you realign your device to the anchor point you recorded at a later time.\nTo create an anchor point, hold your device flat with the screen facing up. Press the top (short) edge flush against a flat vertical surface (such as a wall) the ”align” button starts a %lu-second countdown. The countdown is intended to give you time to position your device; the Anchor point will be saved at the end of the countdown.", comment: "Info for user"), waitingPeriod)
+            } else {
+                mainText = String.localizedStringWithFormat(NSLocalizedString("To allow your route to be navigated in the reverse direction you need to record an anchor point for the end of your route. An anchor point records the position and alignment of your device so the app can reload your route from a saved file. As a result the accuracy of your saved route navigation relies entirely on how accurately you can realign and position your phone with your saved anchor point at a later point. We suggest using the text and voice note buttons to record a text note and/or a voice recording which can help you realign your device to the anchor point you recorded at a later time.\nTo create an anchor point, hold your device flat with the screen facing up. Press the top (short) edge flush against a flat vertical surface (such as a wall) the ”align” button starts a %lu-second countdown. The countdown is intended to give you time to position your device; the Anchor point will be saved at the end of the countdown.", comment: "Info for user"), waitingPeriod)
+            }
+            
+        }
+        
+        label.textColor = UIColor.white
+        label.textAlignment = .center
+        label.numberOfLines = 0
+        label.lineBreakMode = .byWordWrapping
+        label.font = UIFont.preferredFont(forTextStyle: .body)
+        label.text = mainText
+        label.tag = UIView.mainTextTag
         label.font = UIFont.preferredFont(forTextStyle: .body)
         
         /// set confirm alignment button as initially active voiceover button
@@ -60,7 +82,19 @@ class PauseTrackingController: UIViewController, UIScrollViewDelegate {
         
         /// label details
         let waitingPeriod = ViewController.alignmentWaitingPeriod
-        let mainText = String.localizedStringWithFormat(NSLocalizedString("Landmarks allow you to save or pause your route. You will need to return to the landmark to load or unpause your route. Before creating the landmark, specify text or voice to help you remember its location. To create a landmark, hold your device flat with the screen facing up. Press the top (short) edge flush against a flat vertical surface (such as a wall).  The \"align\" button starts a %lu-second countdown. During this time, do not move the device.", comment: "Info for user"), waitingPeriod)
+        var mainText:String = "nil"
+        
+        if (paused == true && recordingSingleUseRoute == true){
+            mainText = String.localizedStringWithFormat(NSLocalizedString("To be able to resume your tracking at a later point you need to record an anchor point for the end of your route. An anchor point records the position and alignment of your device so the app can reload your route from a temporary file. As a result the accuracy of your return navigation relies entirely on how accurately you can realign and position your phone with your saved anchor point at a later point. We suggest using the text and voice note buttons to record a text note and/or a voice recording which can help you realign your device to the anchor point you recorded at a later time.\nTo create an anchor point, hold your device flat with the screen facing up. Press the top (short) edge flush against a flat vertical surface (such as a wall) the ”align” button starts a %lu-second countdown. The countdown is intended to give you time to position your device; the Anchor point will be saved at the end of the countdown.", comment: "Info for user"), waitingPeriod)
+        } else {
+            if startAnchorPoint{
+                mainText = String.localizedStringWithFormat(NSLocalizedString("To allow your route to be navigated at a later point you need to record an anchor point for the start of your route. An anchor point records the position and alignment of your device so the app can reload your route from a saved file. As a result the accuracy of your saved route navigation relies entirely on how accurately you can realign and position your phone with your saved anchor point at a later point. We suggest using the text and voice note buttons to record a text note and/or a voice recording which can help you realign your device to the anchor point you recorded at a later time.\nTo create an anchor point, hold your device flat with the screen facing up. Press the top (short) edge flush against a flat vertical surface (such as a wall) the ”align” button starts a %lu-second countdown. The countdown is intended to give you time to position your device; the Anchor point will be saved at the end of the countdown.", comment: "Info for user"), waitingPeriod)
+            } else {
+                mainText = String.localizedStringWithFormat(NSLocalizedString("To allow your route to be navigated in the reverse direction you need to record an anchor point for the end of your route. An anchor point records the position and alignment of your device so the app can reload your route from a saved file. As a result the accuracy of your saved route navigation relies entirely on how accurately you can realign and position your phone with your saved anchor point at a later point. We suggest using the text and voice note buttons to record a text note and/or a voice recording which can help you realign your device to the anchor point you recorded at a later time.\nTo create an anchor point, hold your device flat with the screen facing up. Press the top (short) edge flush against a flat vertical surface (such as a wall) the ”align” button starts a %lu-second countdown. The countdown is intended to give you time to position your device; the Anchor point will be saved at the end of the countdown.", comment: "Info for user"), waitingPeriod)
+            }
+            
+        }
+        
         label.textColor = UIColor.white
         label.textAlignment = .center
         label.numberOfLines = 0
@@ -97,15 +131,15 @@ class PauseTrackingController: UIViewController, UIScrollViewDelegate {
         label.lineBreakMode = NSLineBreakMode.byWordWrapping
 
         /// initialize buttons with some basic size constaints
-        enterLandmarkDescriptionButton = UIButton.makeConstraintButton(view,
+        enterAnchorPointDescriptionButton = UIButton.makeConstraintButton(view,
                                                                   alignment: UIConstants.ButtonContainerHorizontalAlignment.left,
                                                                   appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "Describe")!),
-                                                                  label: "Enter text to help you remember this landmark")
+                                                                  label: "Enter text to help you remember this Anchor Point")
         
         recordVoiceNoteButton = UIButton.makeConstraintButton(view,
                                                          alignment: UIConstants.ButtonContainerHorizontalAlignment.right,
                                                          appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "VoiceNote")!),
-                                                         label: "Record audio to help you remember this landmark")
+                                                         label: "Record audio to help you remember this Anchor Point")
         
         confirmAlignmentButton = UIButton.makeConstraintButton(view,
                                                           alignment: UIConstants.ButtonContainerHorizontalAlignment.center,
@@ -124,9 +158,9 @@ class PauseTrackingController: UIViewController, UIScrollViewDelegate {
         stackView.alignment = UIStackView.Alignment.center
         
         /// add elements to the stack
-        stackView.addArrangedSubview(enterLandmarkDescriptionButton)
-        stackView.addArrangedSubview(confirmAlignmentButton)
+        stackView.addArrangedSubview(enterAnchorPointDescriptionButton)
         stackView.addArrangedSubview(recordVoiceNoteButton)
+        stackView.addArrangedSubview(confirmAlignmentButton)
         
         scrollView.flashScrollIndicators()
 
@@ -137,8 +171,8 @@ class PauseTrackingController: UIViewController, UIScrollViewDelegate {
         
         /// set function targets for the functions in this state
         if let parent: UIViewController = parent {
-            enterLandmarkDescriptionButton.addTarget(parent,
-                                     action: #selector(ViewController.showLandmarkInformationDialog),
+            enterAnchorPointDescriptionButton.addTarget(parent,
+                                     action: #selector(ViewController.showAnchorPointInformationDialog),
                                      for: .touchUpInside)
             recordVoiceNoteButton.addTarget(parent,
                                        action: #selector(ViewController.recordVoiceNote),

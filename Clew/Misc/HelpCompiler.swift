@@ -23,9 +23,9 @@ class HelpCompiler {
         """),("\(NSLocalizedString("howWellDoesClewWorkHeader", comment: "This is a section heading in the help documentation menu"))","""
             <p>\(NSLocalizedString("howWellDoesClewWorkContentParagraph1", comment: "This is a paragraph in the How well does Clew work? section of the help documentation. This paragraph describes how the app actually works"))</p>
             <p>\(NSLocalizedString("howWellDoesClewWorkContentParagraph2", comment: "This is a paragraph in the How well does Clew work section of the help documentation. This paragraph describes how users should use CLew to supplement their orientation and mobility skills rather than using the app as a replacement for their traditional. orientation and mobility skills" ))</p>
-            """),("\(NSLocalizedString("PausingARouteOrRecordingALandmarkHeader", comment: "This is a section heading in the help documentation menu"))","""
-            <p>\(NSLocalizedString("PausingARouteOrRecordingALandmarkContentParagraph1", comment: "This is a content paragraph in the Pausing a Route or Recording a Landmark section of the help menu which talks about why an allignment process is necessary"))</p>
-            <p>\(NSLocalizedString("PausingARouteOrRecordingALandmarkContentParagraph2", comment: "This is the second paragraph in the Pausing a Route and Recording a Landmark section of the help menu. This paragraph discusses the process of creating a landmark including reasoning for why a landmarks are necessary and some tips for most effective use of the feature."))</p>
+            """),("\(NSLocalizedString("PausingARouteOrRecordingAAnchorPointHeader", comment: "This is a section heading in the help documentation menu"))","""
+            <p>\(NSLocalizedString("PausingARouteOrRecordingAAnchorPointContentParagraph1", comment: "This is a content paragraph in the Pausing a Route or Recording a Anchor Point section of the help menu which talks about why an allignment process is necessary"))</p>
+            <p>\(NSLocalizedString("PausingARouteOrRecordingAAnchorPointContentParagraph2", comment: "This is the second paragraph in the Pausing a Route and Recording a Anchor Point section of the help menu. This paragraph discusses the process of creating a Anchor Point including reasoning for why a Anchor Points are necessary and some tips for most effective use of the feature."))</p>
             
             
         """),("\(NSLocalizedString("recordingARouteHeader", comment: "This is a section heading in the help documentation menu"))","""

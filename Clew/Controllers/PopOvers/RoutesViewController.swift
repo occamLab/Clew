@@ -42,7 +42,7 @@ class RoutesViewController : UIViewController, UITableViewDataSource, UITableVie
             self.rootViewController?.onRouteTableViewCellClicked(route: self.routes[indexPath.row], navigateStartToEnd: true)
             self.dismiss(animated: true, completion: nil)
         }
-        if routes[indexPath.row].beginRouteLandmark.transform == nil {
+        if routes[indexPath.row].beginRouteAnchorPoint.transform == nil {
             startToEndAction.isEnabled = false
         }
         
@@ -54,7 +54,7 @@ class RoutesViewController : UIViewController, UITableViewDataSource, UITableVie
         let cancelAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: "Option for user to select"), style: .default) {action -> Void in
         }
         
-        if routes[indexPath.row].endRouteLandmark.transform == nil {
+        if routes[indexPath.row].endRouteAnchorPoint.transform == nil {
             endToStartAction.isEnabled = false
         }
         
