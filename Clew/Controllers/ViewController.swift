@@ -1111,7 +1111,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         configuration = ARWorldTrackingConfiguration()
         configuration.planeDetection = [.horizontal, .vertical]
         configuration.isAutoFocusEnabled = false
-        sceneView.debugOptions = .showWorldOrigin
         sceneView.session.run(configuration)
         sceneView.delegate = self
     }
