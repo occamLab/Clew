@@ -92,7 +92,7 @@ class RootContainerView: UIView {
         feedbackButton.setTitle("Feedback", for: .normal)
         feedbackButton.titleLabel?.font = UIFont.systemFont(ofSize: 24.0)
         feedbackButton.accessibilityLabel = "Feedback"
-        feedbackButton.setImage(UIImage(named: "Contact"), for: .normal)*/
+        feedbackButton.setImage(UIImage(named: "Contact"), for: .normal)
 
         
         // MARK: Help Button
@@ -104,11 +104,11 @@ class RootContainerView: UIView {
         helpButton.setTitle("Help", for: .normal)
         helpButton.titleLabel?.font = UIFont.systemFont(ofSize: 24.0)
         helpButton.accessibilityLabel = "Help"
-        helpButton.setImage(UIImage(named: "HelpButton"), for: .normal)
+        helpButton.setImage(UIImage(named: "HelpButton"), for: .normal)*/
 
         // MARK: Home Button
-        homeButton = UIButton(frame: CGRect(x: UIConstants.buttonFrameWidth/7,
-                                            y: UIConstants.yOriginOfSettingsAndHelpButton + 10,
+        homeButton = UIButton(frame: CGRect(x: UIConstants.buttonFrameWidth/(10/8),
+                                            y: 10,
                                             width: UIConstants.buttonFrameWidth/7,
                                             height: UIConstants.buttonFrameWidth/7))
         homeButton.isAccessibilityElement = true
@@ -163,9 +163,9 @@ class RootContainerView: UIView {
         addSubview(getDirectionButton)
         addSubview(countdownTimer)
         addSubview(homeButton)
-        addSubview(helpButton)
         addSubview(burgerMenuButton)
 //        addSubview(settingsButton)
 //        addSubview(feedbackButton)
+//        addSubview(helpButton)
     }
 }
