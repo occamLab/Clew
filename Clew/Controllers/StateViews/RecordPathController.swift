@@ -57,12 +57,12 @@ class RecordPathController: UIViewController {
         recordPathButton = UIButton.makeConstraintButton(view,
                                                     alignment: UIConstants.ButtonContainerHorizontalAlignment.center,
                                                     appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "Record")!),
-                                                    label: NSLocalizedString("Record path", comment: "A button that allows user to video record a path to a destination"))
+                                                    label: NSLocalizedString("Save a route", comment: "A button that allows user to video save a path to a destination"))
         
         addAnchorPointButton = UIButton.makeConstraintButton(view,
                                                      alignment: UIConstants.ButtonContainerHorizontalAlignment.right,
                                                      appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "Landmark")!),
-                                                     label: NSLocalizedString("AnchorPoint", comment: "A button that allows user to create a Anchor Point for a saving a route"))
+                                                     label: NSLocalizedString("Record a single use route", comment: "A button that allows the user to navigate a route one time."))
         
         routesButton = UIButton.makeConstraintButton(view,
                                                 alignment: UIConstants.ButtonContainerHorizontalAlignment.left,

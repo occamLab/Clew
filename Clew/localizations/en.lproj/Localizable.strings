@@ -24,13 +24,14 @@
 "You've arrived." = "You've arrived.";
 
     // Name of labels that appear in UI
-"Record path" = "Record path";
+"Save a route" = "Save a route";
 "Bad" = "Bad";
 "Good" = "Good";
 "Resume" = "Resume";
+"Record a single use route" = "Record a single use route";
 "Saved Routes List" = "Saved Routes List";
 "Stop navigation" = "Stop navigation";
-"Start navigation" = "Start navigation";
+"Start return navigation" = "Start return navigation";
 "Stop recording" = "Stop recording";
 
     // Save routes
