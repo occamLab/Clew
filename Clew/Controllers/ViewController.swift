@@ -454,11 +454,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     func handleStateTransitionToCompletingPauseProcedure() {
         // TODO: we should not be able to create a route landmark if we are in the relocalizing state... (might want to handle this when the user stops navigation on a route they loaded.... This would obviate the need to handle this in the recordPath code as well
         print("completing pause procedure")
-        guard let documentsDirectoryURL = try? FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false) as NSURL else {
-            print("Could not find documents directory")
-            return
-        }
-        
         if creatingRouteLandmark {
             guard let currentTransform = sceneView.session.currentFrame?.camera.transform else {
                 print("could not properly save landmark: TODO communicate this to the user somehow")
