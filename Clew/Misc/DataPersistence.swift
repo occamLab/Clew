@@ -68,7 +68,12 @@ class DataPersistence {
                 
                 /// save into the route storage
                 print("name of import route:", documentData.route.name)
-                try archive(route: documentData.route, worldMapAsAny: documentData.map)
+                
+                do {
+                    try archive(route: documentData.route, worldMapAsAny: documentData.map)
+                } catch {
+                    print("failed to archive import route")
+                }
                 
                 if let beginNote = documentData.beginVoiceNote {
                     let voiceData = Data(base64Encoded: beginNote)

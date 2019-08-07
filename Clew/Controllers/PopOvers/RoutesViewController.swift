@@ -129,6 +129,7 @@ class RoutesViewController : UIViewController, UITableViewDataSource, UITableVie
     /// - Parameter routes: the new set of routes.
     func updateRoutes(routes: [SavedRoute]) {
         self.routes = routes.sorted(by: { $0.dateCreated as Date > $1.dateCreated as Date})
+        self.tableView.reloadData()
     }
     
     /// Called to dismiss the routes menu
