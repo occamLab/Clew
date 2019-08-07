@@ -24,15 +24,23 @@
 "completedNavigationAnnouncement" = "You've arrived.";
 
     // Name of labels that appear in UI
+"saveARouteButtonText" = "Save a Route";
 "saveARouteButtonAccessabilityLabel" = "Save a route";
 "badServiceButtonAccessabilityLabel" = "Bad";
 "goodServiceButtonAccessabilityLabel" = "Good";
 "resumePausedRouteBUttonAccessabilityLabel" = "Resume";
+"singleUseRouteButtonText" = "Single Use Route";
 "recordSingleUseRouteButtonAccessabilityLabel" = "Record a single use route";
+"savedRoutesListButtonText" = "Saved Routes List";
 "savedRoutesListButtonAccessabilityLabel" = "Saved Routes List";
 "stopNavigationButtonAcessabilityLabel" = "Stop navigation";
 "startReturnNavigationButtonAcessabilityLabel" = "Start return navigation";
 "stopRecordingButtonAcessabilityLabel" = "Stop recording";
+"settingsButtonAccesabilityLabel" = "Settings";
+"helpButtonAccesabilityLabel" = "Help";
+"homeButtonAccesabilityLabel" = "Clew Home Screen";
+"feedbackButtonAccesabilityLabel" = "Feedback";
+"getDirectionsButtonAccesabilityLabel" = "Get Directions";
 
     // Save routes
 "saveRoutePop-UpTitle" = "Save route";
@@ -102,6 +110,8 @@
 
 // Voicenote
 "voiceNoteRecorderPop-UpHeader" = "Voice Note Recorder";
+"stopRecordingVoiceNoteAccessabilityLabel" = "Stop Recording";
+"startRecordingVoiceNoteAccessabilityLabel" = "Record Voice Note";
 
 // RoutesViewController
 "routeDirectionPop-UpHeader" = "Route direction";
@@ -221,3 +231,4 @@
 "singleUsePlayPauseViewText" = "In order to immediately perform return navigation, simply press the play button and follow the instructions provided. In order to pause the session to perform return navigation at a later point, press the pause button and complete the anchor point procedure.";
 
 "multipleUseRoutePlayPauseViewText" = "In order to immediately navigate back along the path you recorded, simply press the play button and follow the instructions provided. In order to pause the session to perform return navigation at a later point, press the pause button.";
+

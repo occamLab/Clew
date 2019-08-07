@@ -102,12 +102,11 @@ class RecordButton: UIButton {
     }
     
     /// specifies the accessibility label to be reflective of the current button state.
-    ///LOCALIZE
     fileprivate func setAccessibilityLabel() {
         if isRecording {
-            self.accessibilityLabel = "Stop Recording"
+            self.accessibilityLabel = NSLocalizedString("stopRecordingVoiceNoteAccessabilityLabel", comment: "This is the acessability label which is played when a user with voice over selects the button to stop their voice recording")
         } else {
-            self.accessibilityLabel = "Record Voice Note"
+            self.accessibilityLabel = NSLocalizedString("startRecordingVoiceNoteAccessabilityLabel", comment: "This is the acessability label which is played when a user with voice over selects the button to record a voice recording in the voice recorder view")
         }
     }
 

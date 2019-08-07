@@ -60,10 +60,10 @@ class RecordPathController: UIViewController {
             addAnchorPointButton.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 2.5).isActive = true
             addAnchorPointButton.setBackgroundImage(UIImage(named: "WhiteButtonBackground"), for: .normal)
             addAnchorPointButton.imageView?.contentMode = .scaleAspectFit
-            addAnchorPointButton.setTitle("Save a Route",for: .normal)
+            addAnchorPointButton.setTitle(NSLocalizedString("saveARouteButtonText", comment: "This is the text which appears on the save a route buttton"),for: .normal)
             addAnchorPointButton.setTitleColor(.black, for: .normal)
             addAnchorPointButton.titleLabel?.font = UIFont(name: "HelveticaNeue-Bold", size: 35)!
-            addAnchorPointButton.accessibilityLabel = NSLocalizedString("Save a Route", comment: "A button that allows the user to save a path to a destination.")
+            addAnchorPointButton.accessibilityLabel = NSLocalizedString("saveARouteButtonAccessabilityLabel", comment: "A button that allows the user to save a path to a destination.")
         
 
         
@@ -77,7 +77,7 @@ class RecordPathController: UIViewController {
         recordPathButton.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 2.5).isActive = true
         recordPathButton.setBackgroundImage(UIImage(named: "WhiteButtonBackground"), for: .normal)
         recordPathButton.imageView?.contentMode = .scaleAspectFit
-        recordPathButton.setTitle("Single Use Route",for: .normal)
+        recordPathButton.setTitle(NSLocalizedString("singleUseRouteButtonText", comment: "This is the text which appears on the single use route buttton"),for: .normal)
         recordPathButton.setTitleColor(.black, for: .normal)
         recordPathButton.titleLabel?.font = UIFont(name: "HelveticaNeue-Bold", size: 35)!
         recordPathButton.accessibilityLabel = NSLocalizedString("Record a single use route", comment: "A button that allows the user to navigate a route one time.")
@@ -92,7 +92,7 @@ class RecordPathController: UIViewController {
         routesButton.setBackgroundImage(UIImage(named: "WhiteButtonBackground"), for: .normal)
         routesButton.imageView?.contentMode = .scaleAspectFit
         ///LOCALIZE
-        routesButton.setTitle("Saved Routes List",for: .normal)
+        routesButton.setTitle(NSLocalizedString("savedRoutesListButtonText", comment: "This is the text which appears on the Saved routes List buttton"),for: .normal)
         routesButton.setTitleColor(.black, for: .normal)
         routesButton.titleLabel?.font = UIFont(name: "HelveticaNeue-Bold", size: 35)!
         routesButton.accessibilityLabel = NSLocalizedString("savedRoutesListButtonAccessabilityLabel", comment: "The acessability tag for a button which opens a menu which displays all the saved routes created by the user.")
