@@ -22,7 +22,7 @@
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="15" rowHeight="70" id="b0q-WH-0Ce">
                                         <rect key="frame" x="0.0" y="28" width="375" height="70"/>
                                         <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="b0q-WH-0Ce" id="oqb-CN-Xqn" customClass="UIButton" customModule="Clew" customModuleProvider="target">
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="b0q-WH-0Ce" id="oqb-CN-Xqn" customClass="UIControl">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="69.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
@@ -114,11 +114,6 @@
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="boolean" keyPath="showDoneButton" value="NO"/>
                     </userDefinedRuntimeAttributes>
-                    <connections>
-                        <outlet property="Feedback" destination="vR0-nB-3NC" id="EYf-i0-I8C"/>
-                        <outlet property="Settings" destination="oqb-CN-Xqn" id="D6R-Tq-WuM"/>
-                        <outlet property="Tutorial" destination="lZt-aE-5cf" id="QgX-m6-oWr"/>
-                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="olm-6i-iy6" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
