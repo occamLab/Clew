@@ -27,12 +27,8 @@ class BurgerMenuViewController: UITableViewController, UIPopoverPresentationCont
             settingsButtonPressed()
         }
         if indexPath == [0,1] {
-            // TODO: start tutorial
-            
             tutorialButtonPressed()
             doneWithBurgerMenu()
-
-//            #selector(tutorialButtonPressed)
         }
         if indexPath == [0,2] {
             helpButtonPressed()

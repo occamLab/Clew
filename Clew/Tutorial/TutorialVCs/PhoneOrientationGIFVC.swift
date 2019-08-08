@@ -138,8 +138,15 @@ class PhoneOrientationGIFVC: TutorialChildViewController {
     }
     
     override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         introView = createIntroView()
         self.view.addSubview(introView)
+        NotificationCenter.default.post(name: Notification.Name("HideMainScreenAccessibilityElements"), object: nil)
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        NotificationCenter.default.post(name: Notification.Name("UnhideMainScreenAccessibilityElements"), object: nil)
     }
     
     override func viewDidLoad() {

@@ -625,6 +625,19 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             self.delegate = nil
             self.announcementViewController.observer = nil
         }
+        
+        // we use a custom notification to communicate from the tutorial view controller to the main view controller that the main screen accessibility elements have to be hidden
+        NotificationCenter.default.addObserver(forName: Notification.Name("HideMainScreenAccessibilityElements"), object: nil, queue: nil) { (notification) -> Void in
+            self.rootContainerView.burgerMenuButton.accessibilityElementsHidden = true
+            self.recordPathController.view.accessibilityElementsHidden = true
+        }
+        
+        
+        // we use a custom notification to communicate from the tutorial view controller to the main view controller that the main screen accessibility elements have to be unhidden
+        NotificationCenter.default.addObserver(forName: Notification.Name("UnhideMainScreenAccessibilityElements"), object: nil, queue: nil) { (notification) -> Void in
+            self.rootContainerView.burgerMenuButton.accessibilityElementsHidden = false
+            self.recordPathController.view.accessibilityElementsHidden = false
+        }
 
         add(announcementViewController)
         /*print("always start tutorial!!  This is a hack")
