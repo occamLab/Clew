@@ -105,6 +105,7 @@
 "multipleUseRouteEndAnchorPointText" = "To allow your route to be navigated in the reverse direction you need to record an anchor point for the end of your route. An anchor point records the position and alignment of your device so the app can reload your route from a saved file. As a result the accuracy of your saved route navigation relies entirely on how accurately you can realign and position your phone with your saved anchor point at a later point. We suggest using the text and voice note buttons to record a text note and/or a voice recording which can help you realign your device to the anchor point you recorded at a later time.\nTo create an anchor point, hold your device flat with the screen facing up. Press the top (short) edge flush against a flat vertical surface (such as a wall) the \”align\” button starts a %lu-second countdown. The countdown is intended to give you time to position your device; the Anchor point will be saved at the end of the countdown.";
 
 "anchorPointAlignmentText" = "Please align your device with your previously recorded anchor point. To do this Hold your device flat with the screen pointing up. Press the top (short) edge flush with the same vertical surface that you used to create the Anchor Point. Activating the align button will start an alignment countdown this is intended to give you time to make final adjustments to the positioning of your device. At the end of the countdown the alignment will be taken and the device will provide confirmation via a vibration or sound cue.";
+"anchorPointIntroductionToSavedText" = "The Anchor Point information you entered is: ";
 
 "Settings" = "Settings"; // Comments: Title/header of the settings menu.
 
@@ -112,6 +113,12 @@
 "voiceNoteRecorderPop-UpHeader" = "Voice Note Recorder";
 "stopRecordingVoiceNoteAccessabilityLabel" = "Stop Recording";
 "startRecordingVoiceNoteAccessabilityLabel" = "Record Voice Note";
+
+//GoHomeAlert
+"homeAlertTitle" = "Are you sure?";
+"homeAlertContent" = "If you exit this process right now, your active route information will be lost.";
+"homeAlertConfirmNavigationButton" = "Go to the Home Page";
+
 
 // RoutesViewController
 "routeDirectionPop-UpHeader" = "Route direction";
