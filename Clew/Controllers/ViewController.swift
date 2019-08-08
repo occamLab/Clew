@@ -415,8 +415,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                         self.state = .pauseProcedureCompleted
                         
                     } else {
-                        ///PATHPOINT End route Alignment timer -> play/pause
-                        self.delayTransition(announcement: NSLocalizedString("multipleUseRouteAnchorPointToPlayPauseAnnouncement", comment: "This is an announcement which is spoken when the user saves the end anchor point for a multiple use route. this signifies the transition form saving an anchor point to the option ot pause your AR Session or to perform return navigation"), initialFocus: nil)
+                        ///PATHPOINT End route Alignment timer -> Save Route View
+                        self.delayTransition(announcement: NSLocalizedString("multipleUseRouteAnchorPointToSaveARouteAnnouncement", comment: "This is an announcement which is spoken when the user saves the end anchor point for a multiple use route. this signifies the transition from saving an anchor point to the screen where the suer can name and save their route"), initialFocus: nil)
                         ///sends the user to the play/pause screen
                         self.state = .readyToNavigateOrPause(allowPause: true)
                     }
