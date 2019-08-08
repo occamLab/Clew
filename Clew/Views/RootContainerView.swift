@@ -107,6 +107,7 @@ class RootContainerView: UIView {
         helpButton.accessibilityLabel = NSLocalizedString("helpButtonAccesabilityLabel", comment: "This is the acessability label for the help button")
         helpButton.setImage(UIImage(named: "HelpButton"), for: .normal)*/
 
+
         // MARK: Home Button
         homeButton = UIButton(frame: CGRect(x: UIConstants.buttonFrameWidth/(10/8),
                                             y: 10,

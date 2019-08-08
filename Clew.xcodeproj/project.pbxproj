@@ -16,12 +16,8 @@
 		77467DAF22BBC1D300FA7DEE /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 77467DAE22BBC1D300FA7DEE /* Default-568h@2x.png */; };
 		82569F4E22187E6500448B45 /* help in Resources */ = {isa = PBXBuildFile; fileRef = 82569F4D22187E6500448B45 /* help */; };
 		82569F4F22187E6500448B45 /* help in Resources */ = {isa = PBXBuildFile; fileRef = 82569F4D22187E6500448B45 /* help */; };
-		AD020F7D22FB54E500D665F3 /* BurgerMenu.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AD020F8022FB54E500D665F3 /* BurgerMenu.storyboard */; };
-		AD020F7E22FB54E500D665F3 /* BurgerMenu.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AD020F8022FB54E500D665F3 /* BurgerMenu.storyboard */; };
-		AD020F8822FB553500D665F3 /* BurgerMenu.strings in Resources */ = {isa = PBXBuildFile; fileRef = AD020F8622FB553500D665F3 /* BurgerMenu.strings */; };
-		AD020F8922FB553500D665F3 /* BurgerMenu.strings in Resources */ = {isa = PBXBuildFile; fileRef = AD020F8622FB553500D665F3 /* BurgerMenu.strings */; };
-		AD8AA00C22F9C15700FC026E /* BurgerMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD8AA00B22F9C15700FC026E /* BurgerMenuViewController.swift */; };
-		AD8AA00D22F9C15700FC026E /* BurgerMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD8AA00B22F9C15700FC026E /* BurgerMenuViewController.swift */; };
+		986640CE22FB68F2005AA1F6 /* NameSavedRouteController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986640CD22FB68F2005AA1F6 /* NameSavedRouteController.swift */; };
+		986640CF22FC9606005AA1F6 /* NameSavedRouteController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986640CD22FB68F2005AA1F6 /* NameSavedRouteController.swift */; };
 		B0A563F6FE1007A2716DC876 /* Pods_Clew_Dev.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3532E390954571B93729786A /* Pods_Clew_Dev.framework */; };
 		B7EB59E220F693EB00FBBC6A /* Confirm.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4DF05CC71F34EB56008B0E31 /* Confirm.mp3 */; };
 		B7EB59E320F693EB00FBBC6A /* Crumb.obj in Resources */ = {isa = PBXBuildFile; fileRef = 4D6B00E41F33C85500952242 /* Crumb.obj */; };
@@ -129,10 +125,7 @@
 		82F2DDD322E26A44005CD7D0 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/SettingsAndHelp.strings; sourceTree = "<group>"; };
 		85A1A72DC19F87F15B738291 /* Pods-Clew Dev.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew Dev.release.xcconfig"; path = "Pods/Target Support Files/Pods-Clew Dev/Pods-Clew Dev.release.xcconfig"; sourceTree = "<group>"; };
 		942F73299DA8DCF97FAA974A /* Pods_Clew.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Clew.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		AD020F7F22FB54E500D665F3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/BurgerMenu.storyboard; sourceTree = "<group>"; };
-		AD020F8222FB54E700D665F3 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/BurgerMenu.strings; sourceTree = "<group>"; };
-		AD020F8722FB553500D665F3 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Clew/Views/en.lproj/BurgerMenu.strings; sourceTree = SOURCE_ROOT; };
-		AD8AA00B22F9C15700FC026E /* BurgerMenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BurgerMenuViewController.swift; sourceTree = "<group>"; };
+		986640CD22FB68F2005AA1F6 /* NameSavedRouteController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NameSavedRouteController.swift; sourceTree = "<group>"; };
 		B7EB59EC20F693EB00FBBC6A /* Clew Dev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Clew Dev.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C68778047D8E263D2FB04989 /* Pods-Clew Dev.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew Dev.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Clew Dev/Pods-Clew Dev.debug.xcconfig"; sourceTree = "<group>"; };
 		D89DDB87A8AE1A9ECEAFCEC6 /* Pods-Clew.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew.release.xcconfig"; path = "Pods/Target Support Files/Pods-Clew/Pods-Clew.release.xcconfig"; sourceTree = "<group>"; };
@@ -340,6 +333,7 @@
 				E5470EE222C119F4001092A4 /* StopRecordingController.swift */,
 				E5470EE322C119F4001092A4 /* RouteRatingController.swift */,
 				E5470EE422C119F4001092A4 /* ResumeTrackingController.swift */,
+				986640CD22FB68F2005AA1F6 /* NameSavedRouteController.swift */,
 				E5470EE522C119F4001092A4 /* StopNavigationController.swift */,
 				E5470EE622C119F4001092A4 /* PauseTrackingController.swift */,
 				E5470EE722C119F4001092A4 /* ResumeTrackingConfirmController.swift */,
@@ -654,6 +648,7 @@
 				E5470F2822C119F5001092A4 /* ViewController.swift in Sources */,
 				E5470F3622C119F5001092A4 /* PauseTrackingController.swift in Sources */,
 				E5470F2A22C119F5001092A4 /* RecordPathController.swift in Sources */,
+				986640CE22FB68F2005AA1F6 /* NameSavedRouteController.swift in Sources */,
 				E5470EFE22C119F5001092A4 /* DataPersistence.swift in Sources */,
 				E5470F0022C119F5001092A4 /* PathLogger.swift in Sources */,
 				E5470F2422C119F5001092A4 /* UIButtonExtensions.swift in Sources */,
@@ -697,6 +692,7 @@
 				E5470F0522C119F5001092A4 /* FeedbackLogger.swift in Sources */,
 				E5470F2922C119F5001092A4 /* ViewController.swift in Sources */,
 				E5470F3722C119F5001092A4 /* PauseTrackingController.swift in Sources */,
+				986640CF22FC9606005AA1F6 /* NameSavedRouteController.swift in Sources */,
 				E5470F2B22C119F5001092A4 /* RecordPathController.swift in Sources */,
 				E5470EFF22C119F5001092A4 /* DataPersistence.swift in Sources */,
 				E5470F0122C119F5001092A4 /* PathLogger.swift in Sources */,
