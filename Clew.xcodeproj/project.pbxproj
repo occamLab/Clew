@@ -18,6 +18,8 @@
 		82569F4F22187E6500448B45 /* help in Resources */ = {isa = PBXBuildFile; fileRef = 82569F4D22187E6500448B45 /* help */; };
 		986640CE22FB68F2005AA1F6 /* NameSavedRouteController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986640CD22FB68F2005AA1F6 /* NameSavedRouteController.swift */; };
 		986640CF22FC9606005AA1F6 /* NameSavedRouteController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986640CD22FB68F2005AA1F6 /* NameSavedRouteController.swift */; };
+		986640D122FCC345005AA1F6 /* BurgerMenu.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 986640D022FCC344005AA1F6 /* BurgerMenu.storyboard */; };
+		986640D222FCC365005AA1F6 /* BurgerMenu.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 986640D022FCC344005AA1F6 /* BurgerMenu.storyboard */; };
 		B0A563F6FE1007A2716DC876 /* Pods_Clew_Dev.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3532E390954571B93729786A /* Pods_Clew_Dev.framework */; };
 		B7EB59E220F693EB00FBBC6A /* Confirm.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4DF05CC71F34EB56008B0E31 /* Confirm.mp3 */; };
 		B7EB59E320F693EB00FBBC6A /* Crumb.obj in Resources */ = {isa = PBXBuildFile; fileRef = 4D6B00E41F33C85500952242 /* Crumb.obj */; };
@@ -126,6 +128,7 @@
 		85A1A72DC19F87F15B738291 /* Pods-Clew Dev.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew Dev.release.xcconfig"; path = "Pods/Target Support Files/Pods-Clew Dev/Pods-Clew Dev.release.xcconfig"; sourceTree = "<group>"; };
 		942F73299DA8DCF97FAA974A /* Pods_Clew.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Clew.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		986640CD22FB68F2005AA1F6 /* NameSavedRouteController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NameSavedRouteController.swift; sourceTree = "<group>"; };
+		986640D022FCC344005AA1F6 /* BurgerMenu.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = BurgerMenu.storyboard; sourceTree = "<group>"; };
 		B7EB59EC20F693EB00FBBC6A /* Clew Dev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Clew Dev.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C68778047D8E263D2FB04989 /* Pods-Clew Dev.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew Dev.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Clew Dev/Pods-Clew Dev.debug.xcconfig"; sourceTree = "<group>"; };
 		D89DDB87A8AE1A9ECEAFCEC6 /* Pods-Clew.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew.release.xcconfig"; path = "Pods/Target Support Files/Pods-Clew/Pods-Clew.release.xcconfig"; sourceTree = "<group>"; };
@@ -347,7 +350,6 @@
 				E5470EE922C119F4001092A4 /* HelpViewController.swift */,
 				E5470EEA22C119F4001092A4 /* FeedbackViewController.swift */,
 				E5470EEB22C119F4001092A4 /* RoutesViewController.swift */,
-				AD8AA00B22F9C15700FC026E /* BurgerMenuViewController.swift */,
 			);
 			path = PopOvers;
 			sourceTree = "<group>";
@@ -360,7 +362,7 @@
 				E5470EEE22C119F4001092A4 /* UIConstants.swift */,
 				E5470EF022C119F4001092A4 /* RootContainerView.swift */,
 				E5470EF322C119F4001092A4 /* RouteTableViewCell.swift */,
-				AD020F8022FB54E500D665F3 /* BurgerMenu.storyboard */,
+				986640D022FCC344005AA1F6 /* BurgerMenu.storyboard */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -475,13 +477,12 @@
 				82569F4E22187E6500448B45 /* help in Resources */,
 				E5470F1622C119F5001092A4 /* Assets.xcassets in Resources */,
 				E59DA6BF22C65F5900FCD5A1 /* LaunchScreen.storyboard in Resources */,
-				AD020F7D22FB54E500D665F3 /* BurgerMenu.storyboard in Resources */,
+				986640D122FCC345005AA1F6 /* BurgerMenu.storyboard in Resources */,
 				E5470F4E22C119F5001092A4 /* GoogleService-Info_dev.plist in Resources */,
 				1F2B9D8722C5446B00317DC8 /* (null) in Resources */,
 				E5D1695E22E103A0008754D0 /* Localizable.strings in Resources */,
 				E59DA6C122C65F5900FCD5A1 /* SettingsAndHelp.storyboard in Resources */,
 				E5470F1A22C119F5001092A4 /* StopRecording.aiff in Resources */,
-				AD020F8822FB553500D665F3 /* BurgerMenu.strings in Resources */,
 				E5D1695C22E103A0008754D0 /* SettingsAndHelp.strings in Resources */,
 				77467DAF22BBC1D300FA7DEE /* Default-568h@2x.png in Resources */,
 			);
@@ -491,10 +492,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AD020F8922FB553500D665F3 /* BurgerMenu.strings in Resources */,
 				E59DA6C222C65F5900FCD5A1 /* SettingsAndHelp.storyboard in Resources */,
 				E5470F0F22C119F5001092A4 /* Settings.bundle in Resources */,
-				AD020F7E22FB54E500D665F3 /* BurgerMenu.storyboard in Resources */,
+				986640D222FCC365005AA1F6 /* BurgerMenu.storyboard in Resources */,
 				E5470F1922C119F5001092A4 /* StartRecording.aiff in Resources */,
 				E5470F1B22C119F5001092A4 /* StopRecording.aiff in Resources */,
 				B7EB59E220F693EB00FBBC6A /* Confirm.mp3 in Resources */,
@@ -635,7 +635,6 @@
 				E5470F2C22C119F5001092A4 /* StartNavigationController.swift in Sources */,
 				E5470F3022C119F5001092A4 /* RouteRatingController.swift in Sources */,
 				E5470F4222C119F5001092A4 /* UIConstants.swift in Sources */,
-				AD8AA00C22F9C15700FC026E /* BurgerMenuViewController.swift in Sources */,
 				E5470F2022C119F5001092A4 /* UIViewControllerExtensions.swift in Sources */,
 				E5470F3A22C119F5001092A4 /* HelpViewController.swift in Sources */,
 				E5470F0222C119F5001092A4 /* Navigation.swift in Sources */,
@@ -679,7 +678,6 @@
 				E5470F2D22C119F5001092A4 /* StartNavigationController.swift in Sources */,
 				1F2B9D7222C3B50D00317DC8 /* HelpCompiler.swift in Sources */,
 				E5470F3122C119F5001092A4 /* RouteRatingController.swift in Sources */,
-				AD8AA00D22F9C15700FC026E /* BurgerMenuViewController.swift in Sources */,
 				E5470F4322C119F5001092A4 /* UIConstants.swift in Sources */,
 				E5470F2122C119F5001092A4 /* UIViewControllerExtensions.swift in Sources */,
 				E5470F3B22C119F5001092A4 /* HelpViewController.swift in Sources */,
@@ -706,19 +704,9 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		AD020F8022FB54E500D665F3 /* BurgerMenu.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				AD020F7F22FB54E500D665F3 /* Base */,
-				AD020F8222FB54E700D665F3 /* en */,
-			);
-			name = BurgerMenu.storyboard;
-			sourceTree = "<group>";
-		};
 		AD020F8622FB553500D665F3 /* BurgerMenu.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
-				AD020F8722FB553500D665F3 /* en */,
 			);
 			name = BurgerMenu.strings;
 			sourceTree = "<group>";
