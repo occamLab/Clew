@@ -1474,31 +1474,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     ///
     /// - Parameter sender: the button that generated the event
     @objc func stopRecording(_ sender: UIButton) {
-        // fill out landmarks with the first and last crumb
-        let p = PathFinder(crumbs: crumbs, hapticFeedback: hapticFeedback, voiceFeedback: voiceFeedback)
-        let keypoints = p.keypoints
-        if beginRouteLandmark.transform == nil, let firstKeypointTransform = keypoints.first?.location.transform {
-            beginRouteLandmark.information = "Route start"
-            var secondKeypointTransform: simd_float4x4? = nil
-
-            if keypoints.count > 1 {
-                secondKeypointTransform = keypoints[1].location.transform
-            }
-            
-            beginRouteLandmark.transform = getSoftAlignment(firstTransformToUse: firstKeypointTransform, secondTransformToUse: secondKeypointTransform, isReversed: false)
-        }
-        
-        if endRouteLandmark.transform == nil, let lastKeypointTransform = keypoints.last?.location.transform {
-            endRouteLandmark.information = "Route end"
-            var secondToLastKeypointTransform: simd_float4x4? = nil
-
-            if keypoints.count > 1 {
-                secondToLastKeypointTransform = keypoints[keypoints.endIndex - 2].location.transform
-            }
-            
-            endRouteLandmark.transform = getSoftAlignment(firstTransformToUse: lastKeypointTransform, secondTransformToUse: secondToLastKeypointTransform, isReversed: true)
-        }
-        
         if beginRouteLandmark.transform != nil {
             if #available(iOS 12.0, *) {
                 sceneView.session.getCurrentWorldMap {

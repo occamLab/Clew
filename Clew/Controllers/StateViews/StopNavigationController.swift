@@ -63,7 +63,8 @@ class StopNavigationController: UIViewController {
         snapToRouteButton = UIButton.makeConstraintButton(view,
                                                      alignment: UIConstants.ButtonContainerHorizontalAlignment.right,
                                                      appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "Align")!),
-                                                     label: NSLocalizedString("Snap to route", comment: "The name of the button that allows user to snap to route."))
+                                                     label: NSLocalizedString("SnapToRoute", comment: "The name of the button that allows user to snap to route."))
+        snapToRouteButton.accessibilityHint = NSLocalizedString("SnapToRouteHint", comment: "A longer description of snap to route")
         
         fillerSpace = UIView()
         fillerSpace.translatesAutoresizingMaskIntoConstraints = false
