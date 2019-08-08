@@ -30,6 +30,8 @@
 		77A30FE922C66C3A008EEAAB /* PhoneOrientationTrainingVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77A30FE722C66C3A008EEAAB /* PhoneOrientationTrainingVC.swift */; };
 		9884EB5B22CCE569000D31AF /* AnnouncementManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9884EB5A22CCE569000D31AF /* AnnouncementManager.swift */; };
 		9884EB5C22CCE569000D31AF /* AnnouncementManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9884EB5A22CCE569000D31AF /* AnnouncementManager.swift */; };
+		AD020F7D22FB54E500D665F3 /* BurgerMenu.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AD020F8022FB54E500D665F3 /* BurgerMenu.storyboard */; };
+		AD020F7E22FB54E500D665F3 /* BurgerMenu.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AD020F8022FB54E500D665F3 /* BurgerMenu.storyboard */; };
 		AD020F8A22FB68BA00D665F3 /* Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AD020F8D22FB68BA00D665F3 /* Storyboard.storyboard */; };
 		AD020F8B22FB68BA00D665F3 /* Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AD020F8D22FB68BA00D665F3 /* Storyboard.storyboard */; };
 		AD020F9222FB690300D665F3 /* Storyboard.strings in Resources */ = {isa = PBXBuildFile; fileRef = AD020F9022FB690200D665F3 /* Storyboard.strings */; };
@@ -40,8 +42,6 @@
 		AD551EA722F1E83A00DDC395 /* phoneOrientationGIF6.png in Resources */ = {isa = PBXBuildFile; fileRef = AD551E9D22F1E83A00DDC395 /* phoneOrientationGIF6.png */; };
 		AD551EA822F1E83A00DDC395 /* phoneOrientationGIF8.png in Resources */ = {isa = PBXBuildFile; fileRef = AD551E9E22F1E83A00DDC395 /* phoneOrientationGIF8.png */; };
 		AD551EA922F1E83A00DDC395 /* phoneOrientationGIF8.png in Resources */ = {isa = PBXBuildFile; fileRef = AD551E9E22F1E83A00DDC395 /* phoneOrientationGIF8.png */; };
-		AD551EAA22F1E83A00DDC395 /* phoneOrientationGIF1.png in Resources */ = {isa = PBXBuildFile; fileRef = AD551E9F22F1E83A00DDC395 /* phoneOrientationGIF1.png */; };
-		AD551EAB22F1E83A00DDC395 /* phoneOrientationGIF1.png in Resources */ = {isa = PBXBuildFile; fileRef = AD551E9F22F1E83A00DDC395 /* phoneOrientationGIF1.png */; };
 		AD551EAC22F1E83A00DDC395 /* phoneOrientationGIF3.png in Resources */ = {isa = PBXBuildFile; fileRef = AD551EA022F1E83A00DDC395 /* phoneOrientationGIF3.png */; };
 		AD551EAD22F1E83A00DDC395 /* phoneOrientationGIF3.png in Resources */ = {isa = PBXBuildFile; fileRef = AD551EA022F1E83A00DDC395 /* phoneOrientationGIF3.png */; };
 		AD551EAE22F1E83A00DDC395 /* phoneOrientationGIF5.png in Resources */ = {isa = PBXBuildFile; fileRef = AD551EA122F1E83A00DDC395 /* phoneOrientationGIF5.png */; };
@@ -52,7 +52,13 @@
 		AD551EB322F1E83A00DDC395 /* phoneOrientationGIF7.png in Resources */ = {isa = PBXBuildFile; fileRef = AD551EA322F1E83A00DDC395 /* phoneOrientationGIF7.png */; };
 		AD551EB522F1E89900DDC395 /* phoneOrientationGIF9.png in Resources */ = {isa = PBXBuildFile; fileRef = AD551EB422F1E89900DDC395 /* phoneOrientationGIF9.png */; };
 		AD551EB622F1E89900DDC395 /* phoneOrientationGIF9.png in Resources */ = {isa = PBXBuildFile; fileRef = AD551EB422F1E89900DDC395 /* phoneOrientationGIF9.png */; };
+		AD72896C22FC7139007E65DC /* BurgerMenu.strings in Resources */ = {isa = PBXBuildFile; fileRef = AD72896A22FC7139007E65DC /* BurgerMenu.strings */; };
+		AD72896D22FC7139007E65DC /* BurgerMenu.strings in Resources */ = {isa = PBXBuildFile; fileRef = AD72896A22FC7139007E65DC /* BurgerMenu.strings */; };
+		AD72896F22FC7242007E65DC /* phoneOrientationGIF1.png in Resources */ = {isa = PBXBuildFile; fileRef = AD72896E22FC7242007E65DC /* phoneOrientationGIF1.png */; };
+		AD72897022FC7242007E65DC /* phoneOrientationGIF1.png in Resources */ = {isa = PBXBuildFile; fileRef = AD72896E22FC7242007E65DC /* phoneOrientationGIF1.png */; };
 		AD8AA00722F8BA7F00FC026E /* help in Resources */ = {isa = PBXBuildFile; fileRef = 82569F4D22187E6500448B45 /* help */; };
+		AD8AA00C22F9C15700FC026E /* BurgerMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD8AA00B22F9C15700FC026E /* BurgerMenuViewController.swift */; };
+		AD8AA00D22F9C15700FC026E /* BurgerMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD8AA00B22F9C15700FC026E /* BurgerMenuViewController.swift */; };
 		AD8CE98722E24CE2007399D1 /* ClewDelegateProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD8CE98622E24CE2007399D1 /* ClewDelegateProtocol.swift */; };
 		AD8CE98822E24CE2007399D1 /* ClewDelegateProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD8CE98622E24CE2007399D1 /* ClewDelegateProtocol.swift */; };
 		AD8CE98A22E25275007399D1 /* DefaultDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD8CE98922E25275007399D1 /* DefaultDelegate.swift */; };
@@ -189,6 +195,7 @@
 		942F73299DA8DCF97FAA974A /* Pods_Clew.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Clew.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9884EB5022BA9383000D31AF /* Storyboard.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Storyboard.storyboard; sourceTree = "<group>"; };
 		9884EB5A22CCE569000D31AF /* AnnouncementManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnouncementManager.swift; sourceTree = "<group>"; };
+		AD020F7F22FB54E500D665F3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/BurgerMenu.storyboard; sourceTree = "<group>"; };
 		AD020F8C22FB68BA00D665F3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Storyboard.storyboard; sourceTree = "<group>"; };
 		AD020F8F22FB68DE00D665F3 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Storyboard.strings; sourceTree = "<group>"; };
 		AD020F9122FB690200D665F3 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Clew/Tutorial/TutorialViews/en.lproj/Storyboard.strings; sourceTree = SOURCE_ROOT; };
@@ -196,12 +203,14 @@
 		AD551E9C22F1E83A00DDC395 /* phoneOrientationGIF4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = phoneOrientationGIF4.png; sourceTree = "<group>"; };
 		AD551E9D22F1E83A00DDC395 /* phoneOrientationGIF6.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = phoneOrientationGIF6.png; sourceTree = "<group>"; };
 		AD551E9E22F1E83A00DDC395 /* phoneOrientationGIF8.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = phoneOrientationGIF8.png; sourceTree = "<group>"; };
-		AD551E9F22F1E83A00DDC395 /* phoneOrientationGIF1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = phoneOrientationGIF1.png; sourceTree = "<group>"; };
 		AD551EA022F1E83A00DDC395 /* phoneOrientationGIF3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = phoneOrientationGIF3.png; sourceTree = "<group>"; };
 		AD551EA122F1E83A00DDC395 /* phoneOrientationGIF5.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = phoneOrientationGIF5.png; sourceTree = "<group>"; };
 		AD551EA222F1E83A00DDC395 /* phoneOrientationGIF2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = phoneOrientationGIF2.png; sourceTree = "<group>"; };
 		AD551EA322F1E83A00DDC395 /* phoneOrientationGIF7.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = phoneOrientationGIF7.png; sourceTree = "<group>"; };
 		AD551EB422F1E89900DDC395 /* phoneOrientationGIF9.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = phoneOrientationGIF9.png; sourceTree = "<group>"; };
+		AD72896B22FC7139007E65DC /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/BurgerMenu.strings; sourceTree = "<group>"; };
+		AD72896E22FC7242007E65DC /* phoneOrientationGIF1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = phoneOrientationGIF1.png; sourceTree = "<group>"; };
+		AD8AA00B22F9C15700FC026E /* BurgerMenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BurgerMenuViewController.swift; sourceTree = "<group>"; };
 		AD8CE98622E24CE2007399D1 /* ClewDelegateProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClewDelegateProtocol.swift; sourceTree = "<group>"; };
 		AD8CE98922E25275007399D1 /* DefaultDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultDelegate.swift; sourceTree = "<group>"; };
 		AD8EBB9822D7CB0700B76BA0 /* PhoneOrientationGIFVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneOrientationGIFVC.swift; sourceTree = "<group>"; };
@@ -400,7 +409,7 @@
 		AD551E9B22F1E56000DDC395 /* GIFframes */ = {
 			isa = PBXGroup;
 			children = (
-				AD551E9F22F1E83A00DDC395 /* phoneOrientationGIF1.png */,
+				AD72896E22FC7242007E65DC /* phoneOrientationGIF1.png */,
 				AD551EA222F1E83A00DDC395 /* phoneOrientationGIF2.png */,
 				AD551EA022F1E83A00DDC395 /* phoneOrientationGIF3.png */,
 				AD551E9C22F1E83A00DDC395 /* phoneOrientationGIF4.png */,
@@ -434,8 +443,8 @@
 		E5D1695522E103A0008754D0 /* localizations */ = {
 			isa = PBXGroup;
 			children = (
-				AD020F9022FB690200D665F3 /* Storyboard.strings */,
 				E5D1695622E103A0008754D0 /* SettingsAndHelp.strings */,
+				AD72896A22FC7139007E65DC /* BurgerMenu.strings */,
 				E5D1695822E103A0008754D0 /* Localizable.strings */,
 			);
 			path = localizations;
@@ -466,6 +475,7 @@
 				E5470EE422C119F4001092A4 /* ResumeTrackingController.swift */,
 				E5470ED222C119F4001092A4 /* StartRecording.aiff */,
 				E5470ED322C119F4001092A4 /* StopRecording.aiff */,
+				AD020F9022FB690200D665F3 /* Storyboard.strings */,
 			);
 			name = "Recovered References";
 			sourceTree = "<group>";
@@ -592,6 +602,7 @@
 				E5F4C33322C4035200E0D94E /* HelpViewController.swift */,
 				E5F4C33422C4035200E0D94E /* FeedbackViewController.swift */,
 				E5F4C33522C4035200E0D94E /* RoutesViewController.swift */,
+				AD8AA00B22F9C15700FC026E /* BurgerMenuViewController.swift */,
 			);
 			path = PopOvers;
 			sourceTree = "<group>";
@@ -609,6 +620,7 @@
 				E5470EEE22C119F4001092A4 /* UIConstants.swift */,
 				E5470EF022C119F4001092A4 /* RootContainerView.swift */,
 				E5470EF322C119F4001092A4 /* RouteTableViewCell.swift */,
+				AD020F8022FB54E500D665F3 /* BurgerMenu.storyboard */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -705,7 +717,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AD551EAA22F1E83A00DDC395 /* phoneOrientationGIF1.png in Resources */,
+				AD72896C22FC7139007E65DC /* BurgerMenu.strings in Resources */,
 				4DF05CC81F34EB6B008B0E31 /* Confirm.mp3 in Resources */,
 				E5F4C39C22C4035200E0D94E /* (null) in Resources */,
 				E5F4C36622C4035200E0D94E /* StartRecording.aiff in Resources */,
@@ -715,6 +727,7 @@
 				AD551EA622F1E83A00DDC395 /* phoneOrientationGIF6.png in Resources */,
 				E5F4C35E22C4035200E0D94E /* (null) in Resources */,
 				AD551EB022F1E83A00DDC395 /* phoneOrientationGIF2.png in Resources */,
+				AD72896F22FC7242007E65DC /* phoneOrientationGIF1.png in Resources */,
 				ADE90D4A22CCE48C001CD52C /* Tutorial.storyboard in Resources */,
 				AD020F9222FB690300D665F3 /* Storyboard.strings in Resources */,
 				AD551EB222F1E83A00DDC395 /* phoneOrientationGIF7.png in Resources */,
@@ -724,6 +737,7 @@
 				E5470F0E22C119F5001092A4 /* Settings.bundle in Resources */,
 				E5470F1622C119F5001092A4 /* Assets.xcassets in Resources */,
 				E59DA6BF22C65F5900FCD5A1 /* LaunchScreen.storyboard in Resources */,
+				AD020F7D22FB54E500D665F3 /* BurgerMenu.storyboard in Resources */,
 				E5470F4E22C119F5001092A4 /* GoogleService-Info_dev.plist in Resources */,
 				1F2B9D8722C5446B00317DC8 /* (null) in Resources */,
 				E5D1695E22E103A0008754D0 /* Localizable.strings in Resources */,
@@ -740,13 +754,17 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AD72896D22FC7139007E65DC /* BurgerMenu.strings in Resources */,
 				AD8AA00722F8BA7F00FC026E /* help in Resources */,
 				AD020F9322FB690300D665F3 /* Storyboard.strings in Resources */,
 				E5F4C36922C4035200E0D94E /* StopRecording.aiff in Resources */,
 				E59DA6C222C65F5900FCD5A1 /* SettingsAndHelp.storyboard in Resources */,
+				E59DA6C222C65F5900FCD5A1 /* SettingsAndHelp.storyboard in Resources */,
+				AD020F7E22FB54E500D665F3 /* BurgerMenu.storyboard in Resources */,
 				B7EB59E220F693EB00FBBC6A /* Confirm.mp3 in Resources */,
 				AD551EB122F1E83A00DDC395 /* phoneOrientationGIF2.png in Resources */,
 				AD020F8B22FB68BA00D665F3 /* Storyboard.storyboard in Resources */,
+				AD72897022FC7242007E65DC /* phoneOrientationGIF1.png in Resources */,
 				B7EB59E320F693EB00FBBC6A /* Crumb.obj in Resources */,
 				E5F4C39D22C4035200E0D94E /* (null) in Resources */,
 				AD551EA722F1E83A00DDC395 /* phoneOrientationGIF6.png in Resources */,
@@ -759,7 +777,6 @@
 				AD551EA922F1E83A00DDC395 /* phoneOrientationGIF8.png in Resources */,
 				E5F4C35B22C4035200E0D94E /* Settings.bundle in Resources */,
 				E5F4C36722C4035200E0D94E /* StartRecording.aiff in Resources */,
-				AD551EAB22F1E83A00DDC395 /* phoneOrientationGIF1.png in Resources */,
 				AD551EB322F1E83A00DDC395 /* phoneOrientationGIF7.png in Resources */,
 				E5470F4F22C119F5001092A4 /* GoogleService-Info_dev.plist in Resources */,
 				E5D1695D22E103A0008754D0 /* SettingsAndHelp.strings in Resources */,
@@ -932,6 +949,7 @@
 				E5470F2622C119F5001092A4 /* Float4x4Extension.swift in Sources */,
 				E5470F0622C119F5001092A4 /* PathFinder.swift in Sources */,
 				E5470F4222C119F5001092A4 /* UIConstants.swift in Sources */,
+				AD8AA00C22F9C15700FC026E /* BurgerMenuViewController.swift in Sources */,
 				E5470F2022C119F5001092A4 /* UIViewControllerExtensions.swift in Sources */,
 				E5470F0222C119F5001092A4 /* Navigation.swift in Sources */,
 				E5470F4622C119F5001092A4 /* RootContainerView.swift in Sources */,
@@ -988,6 +1006,7 @@
 				E5470F2722C119F5001092A4 /* Float4x4Extension.swift in Sources */,
 				E5470F0722C119F5001092A4 /* PathFinder.swift in Sources */,
 				1F2B9D7222C3B50D00317DC8 /* HelpCompiler.swift in Sources */,
+				AD8AA00D22F9C15700FC026E /* BurgerMenuViewController.swift in Sources */,
 				E5470F4322C119F5001092A4 /* UIConstants.swift in Sources */,
 				E5470F2122C119F5001092A4 /* UIViewControllerExtensions.swift in Sources */,
 				E5470F0322C119F5001092A4 /* Navigation.swift in Sources */,
@@ -1004,6 +1023,14 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
+		AD020F8022FB54E500D665F3 /* BurgerMenu.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				AD020F7F22FB54E500D665F3 /* Base */,
+			);
+			name = BurgerMenu.storyboard;
+			sourceTree = "<group>";
+		};
 		AD020F8D22FB68BA00D665F3 /* Storyboard.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -1020,6 +1047,14 @@
 				AD020F9122FB690200D665F3 /* en */,
 			);
 			name = Storyboard.strings;
+			sourceTree = "<unknown>";
+		};
+		AD72896A22FC7139007E65DC /* BurgerMenu.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				AD72896B22FC7139007E65DC /* en */,
+			);
+			name = BurgerMenu.strings;
 			sourceTree = "<group>";
 		};
 		E5D1695622E103A0008754D0 /* SettingsAndHelp.strings */ = {
