@@ -2254,13 +2254,26 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                     }
                 }
             }
-            if case .readyForFinalResumeAlignment = state, configuration.initialWorldMap != nil {
-                // this will cancel any realignment if it hasn't happened yet and go straight to route navigation mode.  This only applies if there an initial map (which would employ relocalization has occurred)
-                rootContainerView.countdownTimer.isHidden = true
-                isResumedRoute = true
-                
-                state = .readyToNavigateOrPause(allowPause: false)
+            
+            if configuration.initialWorldMap != nil {
+                let skipToNavigationScreen = {
+                    // this will cancel any realignment if it hasn't happened yet and go straight to route navigation mode.  This only applies if there an initial map (which would employ relocalization has occurred)
+                    self.rootContainerView.countdownTimer.isHidden = true
+                    self.isResumedRoute = true
+                    
+                    self.state = .readyToNavigateOrPause(allowPause: false)
+                }
+                if case .startingResumeProcedure = state {
+                    skipToNavigationScreen()
+                }
+                else if case .resumeWaitingPeriod = state {
+                    skipToNavigationScreen()
+                }
+                else if case .readyForFinalResumeAlignment = state {
+                    skipToNavigationScreen()
+                }
             }
+
             print("normal")
         case .notAvailable:
             logString = "NotAvailable"
