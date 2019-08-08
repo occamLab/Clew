@@ -70,7 +70,7 @@ class RootContainerView: UIView {
                                                   width: UIConstants.buttonFrameWidth/7,
                                                   height: UIConstants.buttonFrameWidth/7))
         burgerMenuButton.isAccessibilityElement = true
-        burgerMenuButton.accessibilityLabel = "Burger Menu"
+        burgerMenuButton.accessibilityLabel = "More Options"
         burgerMenuButton.setImage(UIImage(named: "burgerMenu"), for: .normal)
         
         // MARK: Settings Button
