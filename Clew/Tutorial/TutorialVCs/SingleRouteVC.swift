@@ -37,6 +37,7 @@ class SingleRouteVC: TutorialChildViewController {
         
         createObjects()
         UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: landmarkCallout)
+        NotificationCenter.default.post(name: Notification.Name("UnhideMainScreenAccessibilityElements"), object: nil)
         
         self.view.addSubview(landmarkCallout!)
         self.view.addSubview(landmarkNextButton)
@@ -66,6 +67,7 @@ class SingleRouteVC: TutorialChildViewController {
         congratsNextButton.backgroundColor = UIColor.white
         congratsNextButton.setTitleColor(clewGreen, for: .normal)
         
+        // TODO: disable VoiceOver for rootContainerView and recordPathController in the CongratsView
         singleRouteCongratsView = CongratsView().createCongratsView(congratsText: NSLocalizedString("Congratulations! \n You have completed the tutorial. \n Now you can get started with the app!", comment: "Congratulations callout for completing the tutorial."), congratsAccessibilityLabel: NSLocalizedString("Congratulations! You have completed the tutorial. Now you can get started with the app!", comment: "Congratulations callout for completing the tutorial accessibility label."))
         singleRouteCongratsView.addSubview(congratsNextButton)
     }

@@ -17,6 +17,8 @@ class CongratsView: UIView {
     var congratsLabel: UILabel!
     
     func createCongratsView(congratsText: String, congratsAccessibilityLabel: String) -> UIView {
+        NotificationCenter.default.post(name: Notification.Name("HideMainScreenAccessibilityElements"), object: nil)
+        
         congratsView = UIView(frame:CGRect(x: 0,
                                            y: 0,
                                            width: UIScreen.main.bounds.size.width,

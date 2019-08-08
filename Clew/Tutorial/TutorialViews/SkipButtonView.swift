@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 
 /// A class that creates the "skip" buttons in the tutorial
+// TODO: reposition the button so that it doesn't overlap the home button and the announcement text
 class SkipButton: UIButton {
     var skipButton: UIButton!
     var clewYellow = UIColor(red: 254/255, green: 243/255, blue: 62/255, alpha: 1.0)

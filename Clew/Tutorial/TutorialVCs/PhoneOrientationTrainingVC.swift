@@ -69,6 +69,7 @@ class PhoneOrientationTrainingVC: TutorialChildViewController, SRCountdownTimerD
         countdownTimer.removeFromSuperview()
         
         // create congrats view
+        // TODO: disable countdown timer when the CongratsView shows up (with VoiceOver the timer is running in the background)
         phoneOrientationTrainingCongratsView = CongratsView().createCongratsView(congratsText: NSLocalizedString("Congratulations! \n You have successfully oriented your phone. \n Now you will be recording a simple single route.", comment: "Congratulations! \n You have successfully oriented your phone. \n Now you will be recording a simple single route."), congratsAccessibilityLabel: NSLocalizedString("Congratulations! You have successfully oriented your phone. Now you will be recording a simple single route.", comment: "Congratulations! You have successfully oriented your phone. Now you will be recording a simple single route."))
         nextButton = NextButton().createNextButton(buttonAction: #selector(nextButtonAction))
         nextButton.backgroundColor = UIColor.white
@@ -85,6 +86,8 @@ class PhoneOrientationTrainingVC: TutorialChildViewController, SRCountdownTimerD
     /// - Parameter animated: True if the appearance is animated
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        
+        NotificationCenter.default.post(name: Notification.Name("HideMainScreenAccessibilityElements"), object: nil)
         
         countdownTimer = SRCountdownTimer(frame: CGRect(x: UIConstants.buttonFrameWidth*1/10,
                                                         y: UIConstants.yOriginOfButtonFrame/10,
@@ -108,6 +111,10 @@ class PhoneOrientationTrainingVC: TutorialChildViewController, SRCountdownTimerD
     override func viewDidLoad() {
     }
 
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        NotificationCenter.default.post(name: Notification.Name("UnhideMainScreenAccessibilityElements"), object: nil)
+    }
     
     /// Send haptic feedback with different frequencies depending on the angle of the phone. Handle transition to the next state when the angle of the phone falls in the range of optimal angle. As the user orients the phone closer to the desired range of the angle, haptic feedback becomes faster. When optimal angle is achieved for a desired amount of time, state transition takes place.
     /// - Parameter transform: the position and orientation of the phone
