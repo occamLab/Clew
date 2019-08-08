@@ -61,10 +61,10 @@ extension float4x4 {
 
     func toString() -> String {
         return """
-        \(self[0, 0]),\(self[1, 0]),\(self[2, 0]),\(self[3, 0])
-        \(self[0, 1]),\(self[1, 1]),\(self[2, 1]),\(self[3, 1])
-        \(self[0, 2]),\(self[1, 2]),\(self[2, 2]),\(self[3, 2])
-        \(self[0, 3]),\(self[1, 3]),\(self[2, 3]),\(self[3, 3])
+        \(self[0, 0])\t\(self[1, 0])\t\(self[2, 0])\t\(self[3, 0])
+        \(self[0, 1])\t\(self[1, 1])\t\(self[2, 1])\t\(self[3, 1])
+        \(self[0, 2])\t\(self[1, 2])\t\(self[2, 2])\t\(self[3, 2])
+        \(self[0, 3])\t\(self[1, 3])\t\(self[2, 3])\t\(self[3, 3])
         """
     }
     
@@ -127,9 +127,9 @@ extension float3x3 {
     /// Convert the matrix to csv format.
     func toString()->String {
         return """
-        \(self[0, 0]),\(self[1, 0]),\(self[2, 0])
-        \(self[0, 1]),\(self[1, 1]),\(self[2, 1])
-        \(self[0, 2]),\(self[1, 2]),\(self[2, 2])
+        \(self[0, 0])\t\(self[1, 0])\t\(self[2, 0])
+        \(self[0, 1])\t\(self[1, 1])\t\(self[2, 1])
+        \(self[0, 2])\t\(self[1, 2])\t\(self[2, 2])
         """
     }
     
@@ -157,6 +157,10 @@ extension float4 {
     /// convert from a 4-element homogeneous vector to a 3-element inhomogeneous one.  This attribute only makes sense if the 4-element vector is a homogeneous representation of a 3D point.
     var inhomogeneous: float3 {
         return float3(x/w, y/w, z/w)
+    }
+    
+    func toString()->String {
+        return "\(self.x)\t\(self.y)\t\(self.z)\t\(self.w)"
     }
 }
 

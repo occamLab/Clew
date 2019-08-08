@@ -20,6 +20,8 @@
 		B0A563F6FE1007A2716DC876 /* Pods_Clew_Dev.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3532E390954571B93729786A /* Pods_Clew_Dev.framework */; };
 		B7EB59E220F693EB00FBBC6A /* Confirm.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4DF05CC71F34EB56008B0E31 /* Confirm.mp3 */; };
 		B7EB59E320F693EB00FBBC6A /* Crumb.obj in Resources */ = {isa = PBXBuildFile; fileRef = 4D6B00E41F33C85500952242 /* Crumb.obj */; };
+		DD10038E22FCA6F500904E42 /* TestFlightLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD10038D22FCA6F500904E42 /* TestFlightLogger.swift */; };
+		DD10038F22FCA6F500904E42 /* TestFlightLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD10038D22FCA6F500904E42 /* TestFlightLogger.swift */; };
 		DD272F6E22E234360072E447 /* VisualAlignmentUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DD272F6C22E234360072E447 /* VisualAlignmentUtils.cpp */; };
 		DD272F6F22E234360072E447 /* VisualAlignmentUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DD272F6C22E234360072E447 /* VisualAlignmentUtils.cpp */; };
 		DD2F523F22D7D9A400C49FAB /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD2F523E22D7D9A400C49FAB /* Accelerate.framework */; };
@@ -139,6 +141,7 @@
 		B7EB59EC20F693EB00FBBC6A /* Clew Dev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Clew Dev.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C68778047D8E263D2FB04989 /* Pods-Clew Dev.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew Dev.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Clew Dev/Pods-Clew Dev.debug.xcconfig"; sourceTree = "<group>"; };
 		D89DDB87A8AE1A9ECEAFCEC6 /* Pods-Clew.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew.release.xcconfig"; path = "Pods/Target Support Files/Pods-Clew/Pods-Clew.release.xcconfig"; sourceTree = "<group>"; };
+		DD10038D22FCA6F500904E42 /* TestFlightLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestFlightLogger.swift; sourceTree = "<group>"; };
 		DD272F6C22E234360072E447 /* VisualAlignmentUtils.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = VisualAlignmentUtils.cpp; sourceTree = "<group>"; };
 		DD272F6D22E234360072E447 /* VisualAlignmentUtils.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = VisualAlignmentUtils.hpp; sourceTree = "<group>"; };
 		DD2F523E22D7D9A400C49FAB /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
@@ -291,8 +294,8 @@
 				E5D1695522E103A0008754D0 /* localizations */,
 				E5470EAA22C119F4001092A4 /* Voice Notes */,
 				E5470EAF22C119F4001092A4 /* Misc */,
-				E5470EB722C119F4001092A4 /* SettingsViewController.m */,
 				E5470EB822C119F4001092A4 /* Clew Dev-Bridging-Header.h */,
+				E5470EB722C119F4001092A4 /* SettingsViewController.m */,
 				E5470EB922C119F4001092A4 /* Settings.bundle */,
 				E5470EBA22C119F4001092A4 /* SettingsTableViewController.h */,
 				E5470ED022C119F4001092A4 /* Assets.xcassets */,
@@ -327,6 +330,7 @@
 				E5470EB122C119F4001092A4 /* PathLogger.swift */,
 				E5470EB222C119F4001092A4 /* Navigation.swift */,
 				E5470EB322C119F4001092A4 /* FeedbackLogger.swift */,
+				DD10038D22FCA6F500904E42 /* TestFlightLogger.swift */,
 				E5470EB422C119F4001092A4 /* PathFinder.swift */,
 				DD272F6D22E234360072E447 /* VisualAlignmentUtils.hpp */,
 				DD272F6C22E234360072E447 /* VisualAlignmentUtils.cpp */,
@@ -687,6 +691,7 @@
 				E5470EFA22C119F5001092A4 /* RecorderViewController.swift in Sources */,
 				E5470F4622C119F5001092A4 /* RootContainerView.swift in Sources */,
 				E5470F4022C119F5001092A4 /* StateController.swift in Sources */,
+				DD10038E22FCA6F500904E42 /* TestFlightLogger.swift in Sources */,
 				E5470F4A22C119F5001092A4 /* RouteTableViewCell.swift in Sources */,
 				E5470F0422C119F5001092A4 /* FeedbackLogger.swift in Sources */,
 				E5470F2822C119F5001092A4 /* ViewController.swift in Sources */,
@@ -730,6 +735,7 @@
 				E5470F3B22C119F5001092A4 /* HelpViewController.swift in Sources */,
 				E5470F0322C119F5001092A4 /* Navigation.swift in Sources */,
 				DD8623E022FB71430036D39E /* Float3x3Extension.swift in Sources */,
+				DD10038F22FCA6F500904E42 /* TestFlightLogger.swift in Sources */,
 				E5470F3922C119F5001092A4 /* ResumeTrackingConfirmController.swift in Sources */,
 				E5470EFB22C119F5001092A4 /* RecorderViewController.swift in Sources */,
 				E5470F4722C119F5001092A4 /* RootContainerView.swift in Sources */,

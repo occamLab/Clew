@@ -48,6 +48,9 @@ class HelpCompiler {
                     <h3>\(NSLocalizedString("followingARouteSpeechFeedbackHeader", comment: "This is a header inside the following a route section of the help documentation"))</h3>
                     <p>\(NSLocalizedString("followingARouteSpeechFeedbackContent", comment: "this is a paragraph in the following a route section of the help documentation which describes the meaning of auditory speech feedback during navigation."))
                     </p>
+                    <h3>\(NSLocalizedString("snapToRouteHeader", comment: "This is a header inside the following a route section of the help documentation"))</h3>
+                    <p>\(NSLocalizedString("snapToRouteContent", comment: "this is a paragraph in the following a route section of the help documentation which describes the meaning of auditory speech feedback during navigation."))
+                    </p>
                     </p>
                     </h3>
                     """),("\(NSLocalizedString("appSoundsAndTheirMeaningsHeader", comment: "This is a section header in the help documentation"))","""

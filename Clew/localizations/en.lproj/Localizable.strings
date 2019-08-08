@@ -54,7 +54,7 @@
     // Resume
 "Return to the last paused location and press Resume for further instructions." = "Return to the last paused location and press Resume for further instructions.";
 "noVisualMatchesUseSnapToRoute" = "No visual matches found, use snap to route to localize the map";
-"SnapToRouteHint" = "Snap to route adjusts the position of the waypoints to match your current trajectory";
+"SnapToRouteHint" = "Snap to route adjusts the position of the waypoints to match your current trajectory. See the help menu entry under following routes for more information.";
 "SnapToRoute" = "Snap to route";
 
     // Rating service view
@@ -164,6 +164,8 @@
 "followingARouteAuditoryBeepsContent" = "Assuming you have enabled sound feedback in the app settings and your iphone doesn't have system sounds muted, the phone will make a beeping sound when it is facing in the correct direction of travel for the route. It is important to keep in mind that this feedback is relative to the direction of the phone, rather than your body. When you achieve a milestone in the route (we call these waypoints), you will hear a different sound effect.";
 "followingARouteSpeechFeedbackHeader" = "Speech feedback";
 "followingARouteSpeechFeedbackContent" = "Assuming you have enabled speech feedback in the app settings and voice over is on, the phone will provide you with voice directions whenever you encounter a waypoint on your route, start a route, or complete a route. If you want to hear voice directions again, you can use the &quot;Get Directions&quot; button.";
+"snapToRouteHeader" = "Snap to Route";
+"snapToRouteContent" = "Snap to route allows you to tell Clew that you are walking in the correct direction and that the navigation markers should adjust their positions accordingly. To use this feature, simply walk in the direction of your route and then hit the snap to route button indicated by the framing square on the lower right corner. In the case that the initial alignment procedure cannot visually deduce a connection between the saved route and the device's current position, use snap to route to correctly align the route.";
 "appSoundsAndTheirMeaningsHeader" = "App sounds and their meanings";
 "appSoundsAndTheirMeaningsContent" = "In addition to the auditory guidance that you get when navigating along a route (described previously), there are some additional sounds that help you understand what is currently happening with the app. If you have enabled the speech feedback option in the app settings, each of these sounds is accompanied by speech that briefly explains the sounds meaning. Note that these sounds are not delivered when you are in the help menu (to avoid distracting you while you are reading through the help information).";
 "appSoundsAndTheirMeaningsNormalMotionTrackingSoundBullet" = "Normal motion tracking sound: this sound is a short recording of a brass instrument. It indicates that the app's position tracking has entered into the &quot;normal&quot; state. If the app has just started up this means that the motion tracking is now active. If the app previously experienced diminished accuracy, see next sound description, it means that the motion tracking has recovered. If you hear this sound after loading or resuming a route, this means that ARKit has been able to automatically align the route to the recording.";

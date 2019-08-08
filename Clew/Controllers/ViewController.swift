@@ -1256,6 +1256,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         rootContainerView.getDirectionButton.isHidden = true
         rootContainerView.homeButton.isHidden = true
         stopNavigationController.remove()
+        
+        if let loadedRoute = loadedRoute, let currentImage = currentImage, let currentIntrinsics = currentIntrinsics, let currentPose = currentPose {
+            let sendToDevAlert = UIAlertController(title: "Help out your devs?", message: "It would really help out us developers if you sent route data", preferredStyle: .alert)
+            sendToDevAlert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { action in TestFlightLogger.uploadData(savedRoute: loadedRoute, image: currentImage, intrinsics: currentIntrinsics, pose: currentPose) }))
+            sendToDevAlert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
+            present(sendToDevAlert, animated: true)
+        }
+
         add(routeRatingController)
         if announceArrival {
             routeRatingController.view.mainText?.text = NSLocalizedString("You've arrived. Please rate your service.", comment: "Announce to the user that they have arrived at their destination and ask user to rate their experience.")
@@ -1584,6 +1592,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     }
     
     
+    /// Alignment content to be sent to firebase
+    var currentIntrinsics: simd_float3x3?
+    var currentImage: UIImage?
+    var currentPose: simd_float4x4?
+    
     /// Action to take place after route resume countdown
     @objc
     func afterResumeTimerAction(_ timer: Timer) {
@@ -1595,10 +1608,15 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             
             DispatchQueue.global(qos: .background).async {
                 let intrinsics = frame.camera.intrinsics
+                let capturedUIImage = self.pixelBufferToUIImage(pixelBuffer: frame.capturedImage)!
                 var visualYawReturn: VisualAlignmentReturn
                 
+                self.currentIntrinsics = intrinsics
+                self.currentImage = capturedUIImage
+                self.currentPose = frame.camera.transform
+                
                 visualYawReturn = VisualAlignment.visualYaw(alignLandmarkImage, alignLandmark.intrinsics!, alignTransform,
-                                                            self.pixelBufferToUIImage(pixelBuffer: frame.capturedImage)!,
+                                                            capturedUIImage,
                                                             simd_float4(intrinsics[0, 0], intrinsics[1, 1], intrinsics[2, 0], intrinsics[2, 1]),
                                                             frame.camera.transform)
                 
