@@ -29,6 +29,9 @@ class RootContainerView: UIView {
     /// button for getting directions to the next keypoint
     var getDirectionButton: UIButton!
     
+    /// button for the burger menu
+    var burgerMenuButton: UIButton!
+    
     /// button for bringing up the settings menu
     var settingsButton: UIButton!
     
@@ -61,8 +64,17 @@ class RootContainerView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
+        // MARK: Burger Menu Button
+        burgerMenuButton = UIButton(frame: CGRect(x: UIConstants.buttonFrameWidth/(10/0.5),
+                                                  y: 10,
+                                                  width: UIConstants.buttonFrameWidth/7,
+                                                  height: UIConstants.buttonFrameWidth/7))
+        burgerMenuButton.isAccessibilityElement = true
+        burgerMenuButton.accessibilityLabel = "More Options"
+        burgerMenuButton.setImage(UIImage(named: "burgerMenu"), for: .normal)
+        
         // MARK: Settings Button
-        settingsButton = UIButton(frame: CGRect(x: UIConstants.buttonFrameWidth/(10/0.5),
+        /*settingsButton = UIButton(frame: CGRect(x: UIConstants.buttonFrameWidth/(10/0.5),
                                                 y: 10,
                                                 width: UIConstants.buttonFrameWidth/7,
                                                 height: UIConstants.buttonFrameWidth/7))
@@ -72,6 +84,16 @@ class RootContainerView: UIView {
         settingsButton.accessibilityLabel = NSLocalizedString("settingsButtonAccesabilityLabel", comment: "This is the acessability label for the settings button")
         settingsButton.titleLabel?.font = UIFont.systemFont(ofSize: 24.0)
         settingsButton.setImage(UIImage(named: "settingsGear"), for: .normal)
+         
+        feedbackButton = UIButton(frame: CGRect(x: UIConstants.buttonFrameWidth/(10/8),
+                                                y: 10,
+                                                width: UIConstants.buttonFrameWidth/7,
+                                                height: UIConstants.buttonFrameWidth/7))
+        feedbackButton.isAccessibilityElement = true
+        feedbackButton.setTitle("Feedback", for: .normal)
+        feedbackButton.titleLabel?.font = UIFont.systemFont(ofSize: 24.0)
+        feedbackButton.accessibilityLabel = "Feedback"
+        feedbackButton.setImage(UIImage(named: "Contact"), for: .normal)
 
         
         // MARK: Help Button
@@ -83,11 +105,11 @@ class RootContainerView: UIView {
         helpButton.setTitle("Help", for: .normal)
         helpButton.titleLabel?.font = UIFont.systemFont(ofSize: 24.0)
         helpButton.accessibilityLabel = NSLocalizedString("helpButtonAccesabilityLabel", comment: "This is the acessability label for the help button")
-        helpButton.setImage(UIImage(named: "HelpButton"), for: .normal)
+        helpButton.setImage(UIImage(named: "HelpButton"), for: .normal)*/
 
         // MARK: Home Button
-        homeButton = UIButton(frame: CGRect(x: UIConstants.buttonFrameWidth/7,
-                                            y: UIConstants.yOriginOfSettingsAndHelpButton + 10,
+        homeButton = UIButton(frame: CGRect(x: UIConstants.buttonFrameWidth/(10/8),
+                                            y: 10,
                                             width: UIConstants.buttonFrameWidth/7,
                                             height: UIConstants.buttonFrameWidth/7))
         homeButton.isAccessibilityElement = true
@@ -95,18 +117,8 @@ class RootContainerView: UIView {
         homeButton.titleLabel?.font = UIFont.systemFont(ofSize: 24.0)
         homeButton.accessibilityLabel = NSLocalizedString("homeButtonAccesabilityLabel", comment: "This is the acessability label for the home button")
         homeButton.setImage(UIImage(named: "homeButton"), for: .normal)
-        
-        feedbackButton = UIButton(frame: CGRect(x: UIConstants.buttonFrameWidth/(10/8),
-                                                y: 10,
-                                                width: UIConstants.buttonFrameWidth/7,
-                                                height: UIConstants.buttonFrameWidth/7))
-        feedbackButton.isAccessibilityElement = true
-        feedbackButton.setTitle("Feedback", for: .normal)
-        feedbackButton.titleLabel?.font = UIFont.systemFont(ofSize: 24.0)
-        feedbackButton.accessibilityLabel = NSLocalizedString("feedbackButtonAccesabilityLabel", comment: "This is the acessability label for the feedback button")
-        feedbackButton.setImage(UIImage(named: "Contact"), for: .normal)
 
-
+        // MARK: Get Directions Button
         getDirectionButton = UIButton(frame: CGRect(x: UIConstants.buttonFrameWidth/(7/5),
                                                     y: UIConstants.yOriginOfSettingsAndHelpButton + 10,
                                                     width: UIConstants.buttonFrameWidth/7,
@@ -150,10 +162,11 @@ class RootContainerView: UIView {
         /// add all sub views
         addSubview(announcementText)
         addSubview(getDirectionButton)
-        addSubview(settingsButton)
-        addSubview(helpButton)
         addSubview(countdownTimer)
-        addSubview(feedbackButton)
         addSubview(homeButton)
+        addSubview(burgerMenuButton)
+//        addSubview(settingsButton)
+//        addSubview(feedbackButton)
+//        addSubview(helpButton)
     }
 }
