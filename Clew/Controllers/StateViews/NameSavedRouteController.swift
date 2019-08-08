@@ -20,7 +20,7 @@ class NameSavedRouteController: UIViewController {
     /// Text Field for typing the name you want to save your route as.
     var textField: UITextField!
     
-    /// The ARWorldMap represented as an Any? to allow for backwards compatibility with iOS 11.3 and 11.4
+    /// The ARWorldMap represented as an Any? to allow for backwards compatibility with iOS 11.3 and 11.4don
     var mapAsAny: Any?
     
     override func viewDidAppear(_ animated: Bool){
