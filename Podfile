@@ -15,6 +15,7 @@ def all_pods
   pod 'Firebase/Analytics'
   pod 'OpenCV'
   pod 'eigen'
+  pod 'LASwift'
 end
 
 target 'Clew' do

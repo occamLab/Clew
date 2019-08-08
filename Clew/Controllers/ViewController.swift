@@ -18,6 +18,12 @@
 //  - Possibly create a warning if the phone doesn't appear to be in the correct orientation
 //  - revisit turn warning feature.  It doesn't seem to actually help all that much at the moment.
 
+// Path alignment
+// TODO: implement local suppression so we don't get to many alignment points in one place.
+// TODO: implement something to keep the points moving in the proper direction (avoid reversing the route on mistake)
+// TODO: automatically add the first keypoint of the route (probably this would also involve an alignment at that point as well)
+// TODO: recency of path alignment
+
 import UIKit
 import ARKit
 import SceneKit
@@ -283,9 +289,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// Handler for the recordingRoute app state
     func handleStateTransitionToRecordingRoute() {
         // records a new path
-        
-        // make sure to never record a path with a transform set
-        sceneView.session.setWorldOrigin(relativeTransform: simd_float4x4.makeTranslation(0, 0, 0))
         attemptingRelocalization = false
         
         crumbs = []
@@ -309,6 +312,18 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         showStartNavigationButton(allowPause: allowPause)
     }
     
+    /// Removes all of the follow crumbs that have been built-up in the system
+    func clearAllFollowCrumbs() {
+        guard let anchors = sceneView.session.currentFrame?.anchors else {
+            return
+        }
+        for anchor in anchors {
+            if let name = anchor.name, name == "followCrumb" {
+                sceneView.session.remove(anchor: anchor)
+            }
+        }
+    }
+    
     /// Handler for the navigatingRoute app state
     func handleStateTransitionToNavigatingRoute() {
         // navigate the recorded path
@@ -317,13 +332,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         routeName = nil
         beginRouteLandmark = RouteLandmark()
         endRouteLandmark = RouteLandmark()
-
+        clearAllFollowCrumbs()
         logger.resetNavigationLog()
 
         // generate path from PathFinder class
         // enabled hapticFeedback generates more keypoints
         let path = PathFinder(crumbs: crumbs.reversed(), hapticFeedback: hapticFeedback, voiceFeedback: voiceFeedback)
         keypoints = path.keypoints
+        checkedOffKeypoints = []
         
         // save keypoints data for debug log
         logger.logKeypoints(keypoints: keypoints)
@@ -354,6 +370,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         headingRingBuffer.clear()
         locationRingBuffer.clear()
         hapticTimer = Timer.scheduledTimer(timeInterval: 0.01, target: self, selector: (#selector(getHapticFeedback)), userInfo: nil, repeats: true)
+        print("turning off auto snap to route")
+        //snapToRouteTimer = Timer.scheduledTimer(timeInterval: 5, target: self, selector: (#selector(snapToRoute)), userInfo: nil, repeats: true)
     }
     
     /// Handler for the route rating app state
@@ -396,8 +414,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             crumbs = route.crumbs
             pausedLandmark = route.endRouteLandmark
         }
-        // make sure to clear out any relative transform that was saved before so we accurately align
-        sceneView.session.setWorldOrigin(relativeTransform: simd_float4x4.makeTranslation(0, 0, 0))
+        // TODO: we may need to revisit whether we need to undo previously applied relativeTransforms (I suspect not though)
         sceneView.session.run(configuration, options: [.removeExistingAnchors])
 
         if isTrackingPerformanceNormal, isSameMap {
@@ -483,8 +500,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 let intrinsics = currentFrame.camera.intrinsics
                 beginRouteLandmark.intrinsics = simd_float4(intrinsics[0, 0], intrinsics[1, 1], intrinsics[2, 0], intrinsics[2, 1])
             }
-
-
             Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(playSound)), userInfo: nil, repeats: false)
             pauseTrackingController.remove()
             state = .mainScreen(announceArrival: false)
@@ -606,6 +621,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         justTraveledRoute = savedRoute
     }
 
+    /// A threshold to determine when a segment is long enough to use for soft alignment
+    var softAlignmentSegmentLengthThreshold = 1.0
+    
     /// While recording, every 0.01s, check to see if we should reset the heading offset
     var angleOffsetTimer: Timer?
     
@@ -637,9 +655,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// True if we should use a cone of pi/12 and false if we should use a cone of pi/6 when deciding whether to issue haptic feedback
     var strictHaptic = true
-    
-    /// True if we should add anchors ahead of the user to encourage more ARWorldMap detail.  In limited testing this did not show promise, therefore it is disabled
-    var shouldDropMappingAnchors = false
     
     /// This is embeds an AR scene.  The ARSession is a part of the scene view, which allows us to capture where the phone is in space and the state of the world tracking.  The scene also allows us to insert virtual objects
     var sceneView = ARSCNView()
@@ -698,9 +713,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// called when the view has loaded.  We setup various app elements in here.
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         sceneView.session.delegate = self
-        
+
         // set the main view as active
         view = RootContainerView(frame: UIScreen.main.bounds)
         
@@ -758,10 +772,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         NotificationCenter.default.addObserver(forName: Notification.Name("ClewPopoverDismissed"), object: nil, queue: nil) { (notification) -> Void in
             self.suppressTrackingWarnings = false
         }
-        
     }
     
-    /// Create the audio player objdcts for the various app sounds.  Creating them ahead of time helps reduce latency when playing them later.
+    /// Create the audio player objects for the various app sounds.  Creating them ahead of time helps reduce latency when playing them later.
     func setupAudioPlayers() {
         do {
             audioPlayers[1103] = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: "/System/Library/Audio/UISounds/Tink.caf"))
@@ -776,7 +789,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             print("count not setup audio players", error)
         }
     }
-
     
     /// Load the crumb 3D model
     func loadAssets() {
@@ -837,56 +849,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
     }
     
-    /// Display a warning that tells the user they must create a landmark to be able to use this route again in the forward direction
-    func showRecordPathWithoutLandmarkWarning() {
-        let userDefaults: UserDefaults = UserDefaults.standard
-        let showedRecordPathWithoutLandmarkWarning: Bool? = userDefaults.object(forKey: "showedRecordPathWithoutLandmarkWarning") as? Bool
-        if showedRecordPathWithoutLandmarkWarning == nil && beginRouteLandmark.transform == nil {
-            userDefaults.set(true, forKey: "showedRecordPathWithoutLandmarkWarning")
-            // Show logging disclaimer when user opens app for the first time
-            let alert = UIAlertController(title: "Creating reusable routes",
-                                          message: NSLocalizedString("To navigate this route in the forward direction at a later time, you must create a landmark before starting the recording.", comment: "A message to the user"),
-                                          preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: NSLocalizedString("Continue with single-use route", comment: "The label of an option for the user"), style: .default, handler: { action -> Void in
-                // proceed to recording
-                self.state = .recordingRoute
-            }
-            ))
-            alert.addAction(UIAlertAction(title: NSLocalizedString("Cancel recording", comment: "The label of an option for the user"), style: .default, handler: { action -> Void in
-                // nothing to do, just stay on the main screen
-            }
-            ))
-            self.present(alert, animated: true, completion: nil)
-        } else {
-            state = .recordingRoute
-        }
-        
-    }
-    
-    /// Display a warning that tells the user they must create a landmark to be able to use this route again in the reverse direction
-    func showNavigatePathWithoutLandmarkWarning() {
-        let userDefaults: UserDefaults = UserDefaults.standard
-        let showedNavigatePathWithoutLandmarkWarning: Bool? = userDefaults.object(forKey: "showedNavigatePathWithoutLandmarkWarning") as? Bool
-        if showedNavigatePathWithoutLandmarkWarning == nil && endRouteLandmark.transform == nil && !isResumedRoute {
-            userDefaults.set(true, forKey: "showedNavigatePathWithoutLandmarkWarning")
-            // Show logging disclaimer when user opens app for the first time
-            let alert = UIAlertController(title: NSLocalizedString("Creating reusable routes", comment: "Header of a pop-up message"),
-                                          message: NSLocalizedString("To navigate this route in the reverse direction at a later time, you must activate the pause button before navigating the route.", comment: "A message to the user"),
-                                          preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: NSLocalizedString("Continue with single-use route", comment: "Option for user to select"), style: .default, handler: { action -> Void in
-                // proceed to navigation
-                self.state = .navigatingRoute
-            }
-            ))
-            alert.addAction(UIAlertAction(title: NSLocalizedString("Cancel navigation", comment: "Option for user to select"), style: .default, handler: { action -> Void in
-                // nothing to do, just stay on the current screen
-            }
-            ))
-            self.present(alert, animated: true, completion: nil)
-        } else {
-            state = .navigatingRoute
-        }
-    }
     
     /// func that prepares the state transition to home by clearing active processes and data
     func clearState() {
@@ -909,6 +871,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         logger.resetNavigationLog()
         logger.resetPathLog()
         hapticTimer?.invalidate()
+        snapToRouteTimer?.invalidate()
         logger.resetStateSequenceLog()
     }
     
@@ -1152,42 +1115,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         self.view.addGestureRecognizer(tapGestureRecognizer)
     }
 
-    // MARK: - drawUI() temp mark for navigation
-    
-    /// Initializes, configures, and adds all subviews defined programmatically.
-    ///
-    /// Subviews:
-    /// - `getDirectionButton` (`UIButton`)
-    /// - `directionText` (`UILabel`)
-    /// - `recordPathView` (`UIView`):
-    ///   - configured with `UIView.setupButtonContainer(withButton:)`
-    ///   - contains record path button, with information stored in `recordPathButton` instance of `ActionButtonComponents`
-    /// - `stopRecordingView` (`UIView`):
-    ///   - configured with `UIView.setupButtonContainer(withButton:)`
-    ///   - contains record path button, with information stored in `stopRecordingButton` instance of `ActionButtonComponents`
-    /// - `startNavigationView` (`UIView`)
-    /// - `stopNavigationView` (`UIView`):
-    ///   - configured with `UIView.setupButtonContainer(withButton:)`
-    ///   - contains record path button, with information stored in `stopNavigationButton` instance of `ActionButtonComponents`
-    /// - `pauseTrackingView` (`UIView`)
-    /// - `resumeTrackingView` (`UIView`)
-    /// - `resumeTrackingConfirmView` (`UIView`)
-    /// - `routeRatingView` (`UIView`)
-    ///
-    /// - TODO:
-    ///   - DRY
-    ///   - AutoLayout
-    ///   - `startNavigationView` pause button configuration
-    ///   - subview transitions?
     /// display RECORD PATH button/hide all other views
     @objc func showRecordPathButton(announceArrival: Bool) {
-//        rootContainerView.recordPathView.isHidden = false
-//        rootContainerView.routeRatingView.isHidden = true
-//        rootContainerView.stopNavigationView.isHidden = true
         add(recordPathController)
         /// handling main screen transitions outside of the first load
         /// add the view of the child to the view of the parent
-        //recordPathController.view.isHidden = false
         routeRatingController.remove()
         stopNavigationController.remove()
         
@@ -1302,7 +1234,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 } catch {}
             }
         }
-//        rootContainerView.resumeTrackingConfirmView.getButtonByTag(tag: UIView.readVoiceNoteButtonTag)?.isHidden = voiceNoteToPlay == nil
         resumeTrackingConfirmController.readVoiceNoteButton?.isHidden = voiceNoteToPlay == nil
         let waitingPeriod = ViewController.alignmentWaitingPeriod
         resumeTrackingConfirmController.view.mainText?.text?.append(String.localizedStringWithFormat(NSLocalizedString("Hold your device flat with the screen facing up. Press the top (short) edge flush against the same vertical surface that you used to create the landmark.  When you are ready, activate the align button to start the alignment countdown that will complete the procedure. Do not move the device until the phone provides confirmation via a vibration or sound cue.", comment: "Informative mssage that appears to the user."), waitingPeriod))
@@ -1372,11 +1303,22 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// MARK: - Clew internal datastructures
     
-    /// list of crumbs dropped when recording path
+    /// list of crumbs dropped when recording pth
     var crumbs: [LocationInfo]!
+    
+    /// list of crumbs dropped when following path
+    var followCrumbs: [LocationInfo] {
+        guard let anchors = sceneView.session.currentFrame?.anchors else {
+            return []
+        }
+        return anchors.compactMap({$0.name != nil && $0.name! == "followCrumb" ? LocationInfo(transform: $0.transform) : nil })
+    }
     
     /// list of keypoints calculated after path completion
     var keypoints: [KeypointInfo]!
+    
+    /// stores the keypoints that have been checked off along the route thus far
+    var checkedOffKeypoints: [KeypointInfo]!
     
     /// SCNNode of the next keypoint
     var keypointNode: SCNNode!
@@ -1386,6 +1328,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
 
     /// Interface for logging data about the session and the path
     var logger = PathLogger()
+    
+    /// Interface for matching points to a saved route
+    var pathMatcher = PathMatcher()
     
     // MARK: - Timers for background functions
     
@@ -1397,6 +1342,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// times the generation of haptic feedback
     var hapticTimer: Timer?
+    
+    /// times the generation of snap to route
+    var snapToRouteTimer: Timer?
     
     /// times when an announcement should be removed.  These announcements are displayed on the `announcementText` label.
     var announcementRemovalTimer: Timer?
@@ -1490,18 +1438,74 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// handles the user pressing the record path button.
     @objc func recordPath() {
-        showRecordPathWithoutLandmarkWarning()
+        state = .recordingRoute
+    }
+    
+    /// Gets a transform suitable for soft alignment.  The transform that is returned will be based on  `firstTransformToUse` if `secondTransformToUse` is not specified or if the translation between the two is less than `softAlignmentSegmentLengthThreshold`.  The transform returned from this function is preleveled use in the realignment step (i.e., no leveling should be performed during the realignemnt process).
+    ///
+    /// - Parameters:
+    ///   - firstTransformToUse: the first transform to use for soft alignment (this should be the first or last keypoint depending on direction)
+    ///   - secondTransformToUse: the second transform to use for soft alignment (this should be the second or second to- last-keypoint if one exists)
+    ///   - isReversed: true if the path is reversed
+    /// - Returns: a leveled transform suitable for alignment
+    func getSoftAlignment(firstTransformToUse: simd_float4x4, secondTransformToUse: simd_float4x4?, isReversed: Bool)->simd_float4x4 {
+        guard let secondTransformToUse = secondTransformToUse else {
+            if isReversed {
+                return firstTransformToUse.level.flipOrientationAboutYAxis
+            } else {
+                return firstTransformToUse.level
+            }
+        }
+
+        if simd_length(firstTransformToUse.level.columns.3 - secondTransformToUse.level.columns.3) < Float(softAlignmentSegmentLengthThreshold) {
+            if isReversed {
+                return firstTransformToUse.level.flipOrientationAboutYAxis
+            } else {
+                return firstTransformToUse.level
+            }
+        }
+        let alignmentYaw = atan2(firstTransformToUse.x - secondTransformToUse.x, firstTransformToUse.z - secondTransformToUse.z)
+        var alignmentTransform = simd_float4x4.makeRotate(radians: alignmentYaw, 0, 1, 0)
+        alignmentTransform.columns.3 = firstTransformToUse.columns.3
+        return alignmentTransform
     }
     
     /// handles the user pressing the stop recording button.
     ///
     /// - Parameter sender: the button that generated the event
     @objc func stopRecording(_ sender: UIButton) {
+        // fill out landmarks with the first and last crumb
+        let p = PathFinder(crumbs: crumbs, hapticFeedback: hapticFeedback, voiceFeedback: voiceFeedback)
+        let keypoints = p.keypoints
+        if beginRouteLandmark.transform == nil, let firstKeypointTransform = keypoints.first?.location.transform {
+            beginRouteLandmark.information = "Route start"
+            var secondKeypointTransform: simd_float4x4? = nil
+
+            if keypoints.count > 1 {
+                secondKeypointTransform = keypoints[1].location.transform
+            }
+            
+            beginRouteLandmark.transform = getSoftAlignment(firstTransformToUse: firstKeypointTransform, secondTransformToUse: secondKeypointTransform, isReversed: false)
+            beginRouteLandmark.isSoftAlignment = true
+        }
+        
+        if endRouteLandmark.transform == nil, let lastKeypointTransform = keypoints.last?.location.transform {
+            endRouteLandmark.information = "Route end"
+            var secondToLastKeypointTransform: simd_float4x4? = nil
+
+            if keypoints.count > 1 {
+                secondToLastKeypointTransform = keypoints[keypoints.endIndex - 2].location.transform
+            }
+            
+            endRouteLandmark.transform = getSoftAlignment(firstTransformToUse: lastKeypointTransform, secondTransformToUse: secondToLastKeypointTransform, isReversed: true)
+            endRouteLandmark.isSoftAlignment = true
+        }
+        
         if beginRouteLandmark.transform != nil {
-            print("Attempting to save route")
             if #available(iOS 12.0, *) {
-                sceneView.session.getCurrentWorldMap { worldMap, error in
-                    self.getRouteNameAndSaveRouteHelper(mapAsAny: nil)
+                sceneView.session.getCurrentWorldMap {
+                    worldMap, error in
+                    self.getRouteNameAndSaveRouteHelper(mapAsAny: worldMap)
                 }
             } else {
                 getRouteNameAndSaveRouteHelper(mapAsAny: nil)
@@ -1516,8 +1520,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     ///
     /// - Parameter sender: the button that generated the event
     @objc func startNavigation(_ sender: UIButton) {
-        // this will handle the appropriate state transition if we pass the warning
-        showNavigatePathWithoutLandmarkWarning()
+        state = .navigatingRoute
     }
     
     /// This helper function will restart the tracking session if a relocalization was in progress but did not succeed.  This is useful in the case when you want to allow for the recording of a new route and don't want to have the possibility achieving relocalization halfway through recording the route.
@@ -1541,6 +1544,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         // stop navigation
         followingCrumbs?.invalidate()
         hapticTimer?.invalidate()
+        snapToRouteTimer?.invalidate()
         
         feedbackGenerator = nil
         waypointFeedbackGenerator = nil
@@ -1558,6 +1562,20 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
     }
     
+    /// The handler for the snap to route button.
+    ///
+    /// - Parameter send: the sender of the button pressed event
+    @objc func snapToRoute(_ send: UIButton) {
+        var keypointsToUse: [KeypointInfo] = checkedOffKeypoints
+        // always append the next point to check off
+        if let firstKeypoint = keypoints.first {
+            keypointsToUse.append(firstKeypoint)
+        }
+
+        let optimalTransform = pathMatcher.match(points: followCrumbs, toPath: keypointsToUse)
+        sceneView.session.setWorldOrigin(relativeTransform: optimalTransform.inverse)
+    }
+    
     /// handles the user pressing the pause button
     @objc func startPauseProcedure() {
         creatingRouteLandmark = false
@@ -1569,9 +1587,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         rootContainerView.homeButton.isHidden = false
 //        backButton.isHidden = true
         creatingRouteLandmark = true
-        // make sure to clear out any relative transform and paused transform so the alignment is accurate
-        print("starting pause procedure", creatingRouteLandmark)
-//        sceneView.session.setWorldOrigin(relativeTransform: simd_float4x4.makeTranslation(0, 0, 0))
         state = .startingPauseProcedure
     }
     
@@ -1648,15 +1663,45 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// this is called when the user has confirmed the alignment and is the alignment countdown should begin.  Once the alignment countdown has finished, the alignment will be performed and the app will move to the ready to navigate view.
     func resumeTracking() {
         // resume pose tracking with existing ARSessionConfiguration
+        guard let pausedLandmark = pausedLandmark else {
+            return
+        }
         hideAllViewsHelper()
+        let deadline: DispatchTime
+        
+        if !pausedLandmark.isSoftAlignment {
+            deadline = .now() + .seconds(ViewController.alignmentWaitingPeriod)
+        } else {
+            deadline = .now()
+        }
+        
         pauseTrackingController.remove()
         state = .resumeWaitingPeriod
         rootContainerView.countdownTimer.isHidden = false
         rootContainerView.countdownTimer.start(beginingValue: ViewController.alignmentWaitingPeriod, interval: 1)
         delayTransition()
-//        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(ViewController.alignmentWaitingPeriod)) {
-//            self.afterResumeTimerAction()
-//        }
+        // Put this in afterResumeAction
+        // DispatchQueue.main.asyncAfter(deadline: deadline) {
+        //     self.rootContainerView.countdownTimer.isHidden = true
+
+        //     // The first check is necessary in case the phone relocalizes before this code executes
+        //     if case .readyForFinalResumeAlignment = self.state, let alignTransform = self.pausedLandmark?.transform, let camera = self.sceneView.session.currentFrame?.camera {
+        //     // yaw can be determined by projecting the camera's z-axis into the ground plane and using arc tangent (note: the camera coordinate conventions of ARKit https://developer.apple.com/documentation/arkit/arsessionconfiguration/worldalignment/camera
+        //         let leveledCameraPose = camera.transform.level
+                
+        //         var leveledAlignPose = alignTransform
+        //         if !pausedLandmark.isSoftAlignment {
+        //             // soft alignments are preleveled, so we only level if we are doing hard alignment
+        //             leveledAlignPose = alignTransform.level
+        //         }
+                
+        //         let relativeTransform = leveledCameraPose * leveledAlignPose.inverse
+        //         self.sceneView.session.setWorldOrigin(relativeTransform: relativeTransform)
+        //         Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(self.playSound)), userInfo: nil, repeats: false)
+        //         self.isResumedRoute = true
+        //         self.state = .readyToNavigateOrPause(allowPause: false)
+        //     }
+        // }
     }
     
     /// handles the user pressing the resume tracking confirmation button.
@@ -1690,45 +1735,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         // TODO: gracefully handle error
         let curLocation = getRealCoordinates(record: true)!.location
         crumbs.append(curLocation)
-
-        if shouldDropMappingAnchors {
-            // This was an experiment that I (Paul) did to see if adding anchors would improve relocalization performance.  I don't believe that it does.
-            let headingVector = getProjectedHeading(curLocation.transform)
-            let leftToRightVector = simd_make_float4(-headingVector.z, 0, headingVector.x, 0)
-            
-            let aheadAndDown = simd_float4x4.init(columns: (curLocation.transform.columns.0, curLocation.transform.columns.1, curLocation.transform.columns.2, curLocation.transform.columns.3 + 2*headingVector +
-                simd_make_float4(0, -1, 0, 0)))
-            var shouldAddAnchor = true
-            if let mappingAnchors = sceneView.session.currentFrame?.anchors.compactMap({ $0 as? LocationInfo }) {
-                for anchor in mappingAnchors.reversed() {
-                    if simd_norm_one(anchor.transform.columns.3 - aheadAndDown.columns.3) < 1.0 {
-                        shouldAddAnchor = false
-                        break
-                    }
-                }
-            }
-            // only add this as an anchor if there aren't any other ones within 1.0m (L1 distance) of the one we plan to add
-            if shouldAddAnchor {
-                let aheadAndUp = simd_float4x4.init(columns: (curLocation.transform.columns.0, curLocation.transform.columns.1, curLocation.transform.columns.2, curLocation.transform.columns.3 + 2*headingVector +
-                    simd_make_float4(0, 2, 0, 0)))
-                
-                let ahead = simd_float4x4.init(columns: (curLocation.transform.columns.0, curLocation.transform.columns.1, curLocation.transform.columns.2, curLocation.transform.columns.3 + 2*headingVector))
-                
-                let aheadAndLeft = simd_float4x4.init(columns: (curLocation.transform.columns.0, curLocation.transform.columns.1, curLocation.transform.columns.2, curLocation.transform.columns.3 + 2*headingVector - 2*leftToRightVector))
-                
-                let aheadAndRight = simd_float4x4.init(columns: (curLocation.transform.columns.0, curLocation.transform.columns.1, curLocation.transform.columns.2, curLocation.transform.columns.3 + 2*headingVector + 2*leftToRightVector))
-                
-                let anchorTransforms = [aheadAndDown, aheadAndUp, ahead, aheadAndRight, aheadAndLeft]
-                
-                for anchorTransform in anchorTransforms {
-                    sceneView.session.add(anchor: LocationInfo(transform: anchorTransform))
-                    let box = SCNBox(width: 0.1, height: 0.1, length: 0.1, chamferRadius: 0)
-                    let node = SCNNode(geometry: box)
-                    node.transform = SCNMatrix4(anchorTransform)
-                    sceneView.scene.rootNode.addChildNode(node)
-                }
-            }
-        }
     }
     
     /// checks to see if user is on the right path during navigation.
@@ -1737,6 +1743,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             // TODO: might want to indicate that something is wrong to the user
             return
         }
+        let minDistance = followCrumbs.map({sqrt(pow($0.x - curLocation.location.x, 2) + pow($0.y - curLocation.location.y, 2) + pow($0.z - curLocation.location.z, 2)) }).min()
+        // always allow this for now if minDistance == nil || minDistance! > 0.2 {
+        sceneView.session.add(anchor: ARAnchor(name: "followCrumb", transform: curLocation.location.transform))
+       // }
         var directionToNextKeypoint = getDirectionToNextKeypoint(currentLocation: curLocation)
         
         if (directionToNextKeypoint.targetState == PositionState.atTarget) {
@@ -1748,6 +1758,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 
                 // remove current visited keypont from keypoint list
                 prevKeypointPosition = keypoints[0].location
+                checkedOffKeypoints.append(keypoints[0])
                 keypoints.remove(at: 0)
                 
                 // erase current keypoint and render next keypoint node
@@ -1768,6 +1779,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 
                 followingCrumbs?.invalidate()
                 hapticTimer?.invalidate()
+                snapToRouteTimer?.invalidate()
                 
                 restartSessionIfFailedToRelocalize()
                 
@@ -1847,7 +1859,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     ///
     /// - Parameter transform: the position and orientation of the phone
     /// - Returns: the heading vector as a 4 dimensional vector (y-component and w-component will necessarily be 0)
-    func getProjectedHeading(_ transform: simd_float4x4) -> simd_float4 {
+    static func getProjectedHeading(_ transform: simd_float4x4) -> simd_float4 {
         if abs(transform.columns.2.y) < abs(transform.columns.0.y) {
             return -simd_make_float4(transform.columns.2.x, 0, transform.columns.2.z, 0)
         } else {
@@ -1861,7 +1873,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     }
     
     /// this gets the yaw of the phone using the heading vector returned by `getProjectedHeading`.
-    func getYawHelper(_ transform: simd_float4x4) -> Float {
+    static func getYawHelper(_ transform: simd_float4x4) -> Float {
         let projectedHeading = getProjectedHeading(transform)
         return atan2f(-projectedHeading.x, -projectedHeading.z)
     }
@@ -2199,9 +2211,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// - Parameter record: a Boolean indicating whether to record the computed position (true if it should be computed, false otherwise)
     /// - Returns: the current location as a `CurrentCoordinateInfo` object
     func getRealCoordinates(record: Bool) -> CurrentCoordinateInfo? {
-        guard let currTransform = sceneView.session.currentFrame?.camera.transform else {
+        guard var currTransform = sceneView.session.currentFrame?.camera.transform else {
             return nil
         }
+
         // returns current location & orientation based on starting origin
         let scn = SCNMatrix4(currTransform)
         let transMatrix = Matrix3([scn.m11, scn.m12, scn.m13,
@@ -2259,6 +2272,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 if !suppressTrackingWarnings {
                     announce(announcement: NSLocalizedString("Successfully matched current environment to saved route.", comment: "Let user know that their surroundings match up to the surroundings of a saved route and that they can begin navigating."))
                 }
+                // We clear out `followCrumbs` as we have no way to update their position relative to the updated world origin.  We could potentially circumvent this if we inserted them as proper SCNNodes
                 attemptingRelocalization = false
             } else if case let .limited(reason)? = trackingSessionState {
                 if !suppressTrackingWarnings {
@@ -2272,10 +2286,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                     }
                 }
             }
-            // resetting the origin is needed in the case when we realigned to a saved route
-            session.setWorldOrigin(relativeTransform: simd_float4x4.makeTranslation(0,0,0))
-            if case .readyForFinalResumeAlignment = state {
-                // this will cancel any realignment if it hasn't happened yet and go straight to route navigation mode
+            if case .readyForFinalResumeAlignment = state, configuration.initialWorldMap != nil {
+                // this will cancel any realignment if it hasn't happened yet and go straight to route navigation mode.  This only applies if there an initial map (which would employ relocalization has occurred)
                 rootContainerView.countdownTimer.isHidden = true
                 isResumedRoute = true
                 
@@ -2366,5 +2378,4 @@ extension ViewController: UIPopoverPresentationControllerDelegate {
             popoverController.sourceRect = button.bounds
         }
     }
-    
 }

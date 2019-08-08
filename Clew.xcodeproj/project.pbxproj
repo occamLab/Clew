@@ -15,6 +15,8 @@
 		77467DAF22BBC1D300FA7DEE /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 77467DAE22BBC1D300FA7DEE /* Default-568h@2x.png */; };
 		82569F4E22187E6500448B45 /* help in Resources */ = {isa = PBXBuildFile; fileRef = 82569F4D22187E6500448B45 /* help */; };
 		82569F4F22187E6500448B45 /* help in Resources */ = {isa = PBXBuildFile; fileRef = 82569F4D22187E6500448B45 /* help */; };
+		825C7D6822CCDDA600545605 /* PathMatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 825C7D6722CCDDA600545605 /* PathMatcher.swift */; };
+		825C7D6922CCDDA600545605 /* PathMatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 825C7D6722CCDDA600545605 /* PathMatcher.swift */; };
 		B0A563F6FE1007A2716DC876 /* Pods_Clew_Dev.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3532E390954571B93729786A /* Pods_Clew_Dev.framework */; };
 		B7EB59E220F693EB00FBBC6A /* Confirm.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4DF05CC71F34EB56008B0E31 /* Confirm.mp3 */; };
 		B7EB59E320F693EB00FBBC6A /* Crumb.obj in Resources */ = {isa = PBXBuildFile; fileRef = 4D6B00E41F33C85500952242 /* Crumb.obj */; };
@@ -74,8 +76,8 @@
 		E5470F2322C119F5001092A4 /* UIViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470ED822C119F4001092A4 /* UIViewExtensions.swift */; };
 		E5470F2422C119F5001092A4 /* UIButtonExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470ED922C119F4001092A4 /* UIButtonExtensions.swift */; };
 		E5470F2522C119F5001092A4 /* UIButtonExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470ED922C119F4001092A4 /* UIButtonExtensions.swift */; };
-		E5470F2622C119F5001092A4 /* Float4x4Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470EDA22C119F4001092A4 /* Float4x4Extension.swift */; };
-		E5470F2722C119F5001092A4 /* Float4x4Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470EDA22C119F4001092A4 /* Float4x4Extension.swift */; };
+		E5470F2622C119F5001092A4 /* FloatMatrixVectorExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470EDA22C119F4001092A4 /* FloatMatrixVectorExtensions.swift */; };
+		E5470F2722C119F5001092A4 /* FloatMatrixVectorExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470EDA22C119F4001092A4 /* FloatMatrixVectorExtensions.swift */; };
 		E5470F2822C119F5001092A4 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470EDE22C119F4001092A4 /* ViewController.swift */; };
 		E5470F2922C119F5001092A4 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470EDE22C119F4001092A4 /* ViewController.swift */; };
 		E5470F2A22C119F5001092A4 /* RecordPathController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470EE022C119F4001092A4 /* RecordPathController.swift */; };
@@ -130,6 +132,7 @@
 		77467DAE22BBC1D300FA7DEE /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		822E27F8210E3F260024A5E3 /* Clew Dev-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Clew Dev-Info.plist"; sourceTree = "<group>"; };
 		82569F4D22187E6500448B45 /* help */ = {isa = PBXFileReference; lastKnownFileType = folder; path = help; sourceTree = "<group>"; };
+		825C7D6722CCDDA600545605 /* PathMatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PathMatcher.swift; sourceTree = "<group>"; };
 		82F2DDD122E26A44005CD7D0 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		82F2DDD322E26A44005CD7D0 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/SettingsAndHelp.strings; sourceTree = "<group>"; };
 		85A1A72DC19F87F15B738291 /* Pods-Clew Dev.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew Dev.release.xcconfig"; path = "Pods/Target Support Files/Pods-Clew Dev/Pods-Clew Dev.release.xcconfig"; sourceTree = "<group>"; };
@@ -173,7 +176,7 @@
 		E5470ED722C119F4001092A4 /* UIViewControllerExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIViewControllerExtensions.swift; sourceTree = "<group>"; };
 		E5470ED822C119F4001092A4 /* UIViewExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIViewExtensions.swift; sourceTree = "<group>"; };
 		E5470ED922C119F4001092A4 /* UIButtonExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIButtonExtensions.swift; sourceTree = "<group>"; };
-		E5470EDA22C119F4001092A4 /* Float4x4Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Float4x4Extension.swift; sourceTree = "<group>"; };
+		E5470EDA22C119F4001092A4 /* FloatMatrixVectorExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FloatMatrixVectorExtensions.swift; sourceTree = "<group>"; };
 		E5470EDB22C119F4001092A4 /* SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
 		E5470EDC22C119F4001092A4 /* Clew-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Clew-Bridging-Header.h"; sourceTree = "<group>"; };
 		E5470EDE22C119F4001092A4 /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -324,6 +327,7 @@
 				DDDD3B0822D501E20000CF7C /* VisualAlignment.mm */,
 				DDDD3B0722D501E20000CF7C /* VisualAlignment.h */,
 				E5470EB622C119F4001092A4 /* AppDelegate.swift */,
+				825C7D6722CCDDA600545605 /* PathMatcher.swift */,
 			);
 			path = Misc;
 			sourceTree = "<group>";
@@ -344,8 +348,7 @@
 				E5470ED722C119F4001092A4 /* UIViewControllerExtensions.swift */,
 				E5470ED822C119F4001092A4 /* UIViewExtensions.swift */,
 				E5470ED922C119F4001092A4 /* UIButtonExtensions.swift */,
-				E5470EDA22C119F4001092A4 /* Float4x4Extension.swift */,
-				DD2F954D22EA37610017E649 /* Float3x3Extension.swift */,
+				E5470EDA22C119F4001092A4 /* FloatMatrixVectorExtensions.swift */,
 				E538EF4E22D3BFEC004216E9 /* TransparentTouchView.swift */,
 			);
 			path = Extensions;
@@ -550,6 +553,7 @@
 				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
 				"${BUILT_PRODUCTS_DIR}/GoogleUtilities/GoogleUtilities.framework",
 				"${BUILT_PRODUCTS_DIR}/InAppSettingsKit/InAppSettingsKit.framework",
+				"${BUILT_PRODUCTS_DIR}/LASwift/LASwift.framework",
 				"${BUILT_PRODUCTS_DIR}/PRTween/PRTween.framework",
 				"${BUILT_PRODUCTS_DIR}/SRCountdownTimer/SRCountdownTimer.framework",
 				"${BUILT_PRODUCTS_DIR}/VectorMath/VectorMath.framework",
@@ -561,6 +565,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleUtilities.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/InAppSettingsKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/LASwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PRTween.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SRCountdownTimer.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/VectorMath.framework",
@@ -600,6 +605,7 @@
 				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
 				"${BUILT_PRODUCTS_DIR}/GoogleUtilities/GoogleUtilities.framework",
 				"${BUILT_PRODUCTS_DIR}/InAppSettingsKit/InAppSettingsKit.framework",
+				"${BUILT_PRODUCTS_DIR}/LASwift/LASwift.framework",
 				"${BUILT_PRODUCTS_DIR}/PRTween/PRTween.framework",
 				"${BUILT_PRODUCTS_DIR}/SRCountdownTimer/SRCountdownTimer.framework",
 				"${BUILT_PRODUCTS_DIR}/VectorMath/VectorMath.framework",
@@ -611,6 +617,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleUtilities.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/InAppSettingsKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/LASwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PRTween.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SRCountdownTimer.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/VectorMath.framework",
@@ -658,7 +665,7 @@
 				E5470F0822C119F5001092A4 /* Utility.swift in Sources */,
 				E5470EFC22C119F5001092A4 /* RecordButton.swift in Sources */,
 				E5470F0C22C119F5001092A4 /* SettingsViewController.m in Sources */,
-				E5470F2622C119F5001092A4 /* Float4x4Extension.swift in Sources */,
+				E5470F2622C119F5001092A4 /* FloatMatrixVectorExtensions.swift in Sources */,
 				E5470EF622C119F5001092A4 /* RecordButtonKit.swift in Sources */,
 				E5470F0622C119F5001092A4 /* PathFinder.swift in Sources */,
 				E5470F2C22C119F5001092A4 /* StartNavigationController.swift in Sources */,
@@ -682,7 +689,7 @@
 				E5470F2422C119F5001092A4 /* UIButtonExtensions.swift in Sources */,
 				E5470EF822C119F5001092A4 /* AudioVisualizerView.swift in Sources */,
 				DDDD3B0522D500620000CF7C /* HelpCompiler.swift in Sources */,
-				DD2F954E22EA37610017E649 /* Float3x3Extension.swift in Sources */,
+				825C7D6822CCDDA600545605 /* PathMatcher.swift in Sources */,
 				E5470F1E22C119F5001092A4 /* NSStringExtension.swift in Sources */,
 				E5470F3222C119F5001092A4 /* ResumeTrackingController.swift in Sources */,
 			);
@@ -695,6 +702,7 @@
 				E538EF5022D3BFEC004216E9 /* TransparentTouchView.swift in Sources */,
 				E5470F2F22C119F5001092A4 /* StopRecordingController.swift in Sources */,
 				E5470F0B22C119F5001092A4 /* AppDelegate.swift in Sources */,
+				825C7D6922CCDDA600545605 /* PathMatcher.swift in Sources */,
 				E5470F2322C119F5001092A4 /* UIViewExtensions.swift in Sources */,
 				E5470F3D22C119F5001092A4 /* FeedbackViewController.swift in Sources */,
 				E5470F3522C119F5001092A4 /* StopNavigationController.swift in Sources */,
@@ -702,7 +710,7 @@
 				E5470F0922C119F5001092A4 /* Utility.swift in Sources */,
 				E5470EFD22C119F5001092A4 /* RecordButton.swift in Sources */,
 				E5470F0D22C119F5001092A4 /* SettingsViewController.m in Sources */,
-				E5470F2722C119F5001092A4 /* Float4x4Extension.swift in Sources */,
+				E5470F2722C119F5001092A4 /* FloatMatrixVectorExtensions.swift in Sources */,
 				E5470EF722C119F5001092A4 /* RecordButtonKit.swift in Sources */,
 				E5470F0722C119F5001092A4 /* PathFinder.swift in Sources */,
 				E5470F2D22C119F5001092A4 /* StartNavigationController.swift in Sources */,
