@@ -655,7 +655,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         
         // targets for global buttons
         ///// TRACK
-        rootContainerView.burgerMenuButton.addTarget(self, action: #selector(burgerMenuButtonPressed), for: .touchUpInside)
+//        rootContainerView.burgerMenuButton.addTarget(self, action: #selector(burgerMenuButtonPressed), for: .touchUpInside)
         
 //        rootContainerView.settingsButton.addTarget(self, action: #selector(settingsButtonPressed), for: .touchUpInside)
 
@@ -1896,20 +1896,20 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
     }
     
-    @objc func burgerMenuButtonPressed() {
-        let storyBoard: UIStoryboard = UIStoryboard(name: "BurgerMenu", bundle: nil)
-        let popoverContent = storyBoard.instantiateViewController(withIdentifier: "burgerMenuTapped") as! BurgerMenuViewController
-        popoverContent.preferredContentSize = CGSize(width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height)
-        popoverContent.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: popoverContent, action: #selector(popoverContent.doneWithBurgerMenu))
-        let nav = UINavigationController(rootViewController: popoverContent)
-        nav.modalPresentationStyle = .popover
-        let popover = nav.popoverPresentationController
-        popover?.delegate = self
-        popover?.sourceView = self.view
-        popover?.sourceRect = CGRect(x: 0, y: UIConstants.settingsAndHelpFrameHeight/2, width: 0,height: 0)
-        
-        self.present(nav, animated: true, completion: nil)
-    }
+//    @objc func burgerMenuButtonPressed() {
+//        let storyBoard: UIStoryboard = UIStoryboard(name: "BurgerMenu", bundle: nil)
+//        let popoverContent = storyBoard.instantiateViewController(withIdentifier: "burgerMenuTapped") as! BurgerMenuViewController
+//        popoverContent.preferredContentSize = CGSize(width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height)
+//        popoverContent.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: popoverContent, action: #selector(popoverContent.doneWithBurgerMenu))
+//        let nav = UINavigationController(rootViewController: popoverContent)
+//        nav.modalPresentationStyle = .popover
+//        let popover = nav.popoverPresentationController
+//        popover?.delegate = self
+//        popover?.sourceView = self.view
+//        popover?.sourceRect = CGRect(x: 0, y: UIConstants.settingsAndHelpFrameHeight/2, width: 0,height: 0)
+//
+//        self.present(nav, animated: true, completion: nil)
+//    }
     
     /// Called when the settings button is pressed.  This function will display the settings view (managed by SettingsViewController) as a popover.
     @objc func settingsButtonPressed() {

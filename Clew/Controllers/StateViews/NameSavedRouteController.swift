@@ -26,7 +26,9 @@ class NameSavedRouteController: UIViewController {
     override func viewDidAppear(_ animated: Bool){
         super.viewDidAppear(animated)
         
-        label.font = UIFont.preferredFont(forTextStyle: .body)
+        label.font = UIFont.preferredFont(forTextStyle: .headline)
+        textField.font = UIFont.preferredFont(forTextStyle: .body)
+        saveRouteButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .largeTitle)
     }
     
    override func viewDidLoad() {
@@ -67,7 +69,7 @@ class NameSavedRouteController: UIViewController {
         label.textAlignment = .center
         label.numberOfLines = 0
         label.lineBreakMode = .byWordWrapping
-        label.font = UIFont.preferredFont(forTextStyle: .body)
+        label.font = UIFont.preferredFont(forTextStyle: .headline)
         label.text = mainText
         label.tag = UIView.mainTextTag
         label.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 1.1).isActive = true
@@ -75,9 +77,12 @@ class NameSavedRouteController: UIViewController {
     
         textField = UITextField()
         textField.translatesAutoresizingMaskIntoConstraints = false
-        textField.text = NSLocalizedString("nameSavedRouteTextField", comment: "Message displayed to the user when typing to save a route by name.")
         textField.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 1.1).isActive = true
-        textField.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 4).isActive = true
+        textField.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 8).isActive = true
+        textField.placeholder = NSLocalizedString("nameSavedRouteTextField", comment: "Message displayed to the user when typing to save a route by name.")
+        textField.borderStyle = .roundedRect
+        textField.font = UIFont.preferredFont(forTextStyle: .body)
+
         
         /// create stack view for aligning and distributing bottom layer buttons
         let stackView   = UIStackView()
