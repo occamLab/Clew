@@ -403,7 +403,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
 
             if #available(iOS 12.0, *) {
                 sceneView.session.getCurrentWorldMap { worldMap, error in
-                    self.getRouteNameAndSaveRouteHelper(mapAsAny: worldMap)
+                    //DELETEPOINT
+                    //self.getRouteNameAndSaveRouteHelper(mapAsAny: worldMap)
                     self.showResumeTrackingButton()
                     Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(self.playSound)), userInfo: nil, repeats: false)
                     
@@ -421,7 +422,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                     }
                 }
             } else {
-                getRouteNameAndSaveRouteHelper(mapAsAny: nil)
+                //DELETEPOINT
+                //getRouteNameAndSaveRouteHelper(mapAsAny: nil)
                 showResumeTrackingButton()
                 Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(self.playSound)), userInfo: nil, repeats: false)
                 state = .pauseProcedureCompleted
@@ -1356,10 +1358,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             print("Attempting to save route")
             if #available(iOS 12.0, *) {
                 sceneView.session.getCurrentWorldMap { worldMap, error in
-                    self.getRouteNameAndSaveRouteHelper(mapAsAny: worldMap)
+                    //DELETEPOINT
+                    //self.getRouteNameAndSaveRouteHelper(mapAsAny: worldMap)
                 }
             } else {
-                getRouteNameAndSaveRouteHelper(mapAsAny: nil)
+                //DELETEPOINT
+                //getRouteNameAndSaveRouteHelper(mapAsAny: nil)
             }
         }
 
