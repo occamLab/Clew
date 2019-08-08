@@ -90,7 +90,7 @@ class RoutesViewController : UIViewController, UITableViewDataSource, UITableVie
     /// - Returns: a list of actions that were performed.
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         
-        let delete = UITableViewRowAction(style: .destructive, title: "Delete") { (action, indexPath) in
+        let delete = UITableViewRowAction(style: .destructive, title: NSLocalizedString("deleteActionText", comment: "this is the text that appears when a user tries to delete a saved route. This text is used in an option menu when a route is selected and it describes the delete route action.")) { (action, indexPath) in
             // delete item at indexPath
             do {
                 try self.rootViewController?.dataPersistence.delete(route: self.routes[indexPath.row])

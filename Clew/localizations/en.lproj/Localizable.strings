@@ -41,6 +41,10 @@
 "homeButtonAccesabilityLabel" = "Clew Home Screen";
 "feedbackButtonAccesabilityLabel" = "Feedback";
 "getDirectionsButtonAccesabilityLabel" = "Get Directions";
+"enterAnchorPointDescriptionButtonAccessabilityLabel" = "Enter text to help you remember this Anchor Point";
+"enterAnchorPointVoiceNoteButtonAccessabilityLabel" = "Record audio to help you remember this Anchor Point";
+"startAlignmentCountdownButtonAcessabilityLabel" = "Start alignment countdown";
+"playVoiceNoteButtonAcessabilityLabel" = "Play recorded voice note";
 
     // Save routes
 "saveRoutePop-UpTitle" = "Save route";
@@ -107,7 +111,10 @@
 "anchorPointAlignmentText" = "Please align your device with your previously recorded anchor point. To do this Hold your device flat with the screen pointing up. Press the top (short) edge flush with the same vertical surface that you used to create the Anchor Point. Activating the align button will start an alignment countdown this is intended to give you time to make final adjustments to the positioning of your device. At the end of the countdown the alignment will be taken and the device will provide confirmation via a vibration or sound cue.";
 "anchorPointIntroductionToSavedText" = "The Anchor Point information you entered is: ";
 
+//Settings
 "Settings" = "Settings"; // Comments: Title/header of the settings menu.
+"imperialUnitText" = " feet";
+"metricUnitText" = " meters";
 
 // Voicenote
 "voiceNoteRecorderPop-UpHeader" = "Voice Note Recorder";
@@ -126,6 +133,8 @@
 "routeDirectionStartToEndButtonLabel" = "Start to End";
 
 "routeDirectionEndToStartButtonLabel" = "End to Start";
+
+"deleteActionText" = "Delete";
 
 // Info.plist
 "Clew needs to access your camera to track your orientation." = "Clew needs to access your camera to track your orientation.";
