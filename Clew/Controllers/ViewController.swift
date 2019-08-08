@@ -1258,7 +1258,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         stopNavigationController.remove()
         
         if let loadedRoute = loadedRoute, let currentImage = currentImage, let currentIntrinsics = currentIntrinsics, let currentPose = currentPose {
-            let sendToDevAlert = UIAlertController(title: "Help out your devs?", message: "It would really help out us developers if you sent route data", preferredStyle: .alert)
+            let sendToDevAlert = UIAlertController(title: NSLocalizedString("TestFlightHelpDevsTitle", comment: "Title to ask users to send data"), message: NSLocalizedString("TestFlightHelpDevsContent", comment: "Ask users to send data"), preferredStyle: .alert)
             sendToDevAlert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { action in TestFlightLogger.uploadData(savedRoute: loadedRoute, image: currentImage, intrinsics: currentIntrinsics, pose: currentPose) }))
             sendToDevAlert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
             present(sendToDevAlert, animated: true)

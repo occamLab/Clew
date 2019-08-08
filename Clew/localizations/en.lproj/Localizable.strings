@@ -60,6 +60,8 @@
     // Rating service view
 "You've arrived. Please rate your service." = "You've arrived. Please rate your service.";
 "Please rate your service." = "Please rate your service.";
+"TestFlightHelpDevsTitle" = "Help out your devs?";
+"TestFlightHelpDevsContent" = "Sending us this route's data would really help us understand how our app is being used as well as how to improve it. The route data includes locations, camera info, and up to three images: one for the begin and end landmarks if they exist, and the one used for the initial route alignment.";
 
     // Other
 "Successfully matched current environment to saved route." = "Successfully matched current environment to saved route.";
