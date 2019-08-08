@@ -20,6 +20,9 @@ class StopNavigationController: UIViewController {
     /// A view to act as filler to make the stack view layout look good
     var fillerSpace: UIView!
     
+    /// create stack view for aligning and distributing bottom layer buttons
+    var stackView: UIStackView!
+    
     /// called when view appears
     override func viewDidAppear(_ animated: Bool) {
         /// set stopnavigationbutton as initially active voiceover button
@@ -41,6 +44,7 @@ class StopNavigationController: UIViewController {
                                           y: UIScreen.main.bounds.size.height/5,
                                           width: UIScreen.main.bounds.size.width-30,
                                           height: UIScreen.main.bounds.size.height/2))
+
         
         var mainText: String?
         if let mainText: String = mainText {
@@ -71,8 +75,7 @@ class StopNavigationController: UIViewController {
         fillerSpace.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 3.50).isActive = true
         fillerSpace.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 3.50).isActive = true
         
-        /// create stack view for aligning and distributing bottom layer buttons
-        let stackView   = UIStackView()
+        stackView = UIStackView()
         view.addSubview(stackView)
         stackView.translatesAutoresizingMaskIntoConstraints = false;
         
@@ -83,9 +86,9 @@ class StopNavigationController: UIViewController {
         stackView.alignment = UIStackView.Alignment.center
         
         /// add elements to the stack
-        stackView.addArrangedSubview(fillerSpace)
+
         stackView.addArrangedSubview(stopNavigationButton)
-        stackView.addArrangedSubview(snapToRouteButton)
+
 
         /// size the stack
         stackView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
@@ -104,5 +107,12 @@ class StopNavigationController: UIViewController {
                                         action: #selector(ViewController.snapToRoute),
                                         for: .touchUpInside)
         }
+    }
+    
+    func addSnapToRouteElements() {
+        stackView.removeArrangedSubview(stopNavigationButton)
+        stackView.addArrangedSubview(fillerSpace)
+        stackView.addArrangedSubview(stopNavigationButton)
+        stackView.addArrangedSubview(snapToRouteButton)
     }
 }

@@ -27,7 +27,6 @@
 		DD2F524322D7D9B800C49FAB /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD2F524222D7D9B800C49FAB /* CoreMedia.framework */; };
 		DD2F524522D7D9C000C49FAB /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD2F524422D7D9C000C49FAB /* AssetsLibrary.framework */; };
 		DD2F524722D7D9C700C49FAB /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD2F524622D7D9C700C49FAB /* CoreFoundation.framework */; };
-		DD2F954E22EA37610017E649 /* Float3x3Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD2F954D22EA37610017E649 /* Float3x3Extension.swift */; };
 		DD8623D922FB176C0036D39E /* VisualAlignment.mm in Sources */ = {isa = PBXBuildFile; fileRef = DDDD3B0822D501E20000CF7C /* VisualAlignment.mm */; };
 		DD8623DA22FB176D0036D39E /* VisualAlignment.mm in Sources */ = {isa = PBXBuildFile; fileRef = DDDD3B0822D501E20000CF7C /* VisualAlignment.mm */; };
 		DD8623E022FB71430036D39E /* Float3x3Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD2F954D22EA37610017E649 /* Float3x3Extension.swift */; };
@@ -238,6 +237,7 @@
 				645269AB241294DCBFA0E1B0 /* Pods */,
 				C63B435EA8A32350A76E47DD /* Frameworks */,
 				822E27F8210E3F260024A5E3 /* Clew Dev-Info.plist */,
+				DD10038C22FC6B0A00904E42 /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};
@@ -274,6 +274,14 @@
 				3532E390954571B93729786A /* Pods_Clew_Dev.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		DD10038C22FC6B0A00904E42 /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+				DD2F954D22EA37610017E649 /* Float3x3Extension.swift */,
+			);
+			name = "Recovered References";
 			sourceTree = "<group>";
 		};
 		E5470EA922C119F4001092A4 /* Clew */ = {
@@ -887,7 +895,7 @@
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/Clew/PrefixHeader.pch";
 				INFOPLIST_FILE = Clew/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = edu.occam.Clew;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -907,7 +915,7 @@
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/Clew/PrefixHeader.pch";
 				INFOPLIST_FILE = Clew/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = edu.occam.Clew;
 				PRODUCT_NAME = "$(TARGET_NAME)";

@@ -1246,6 +1246,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         rootContainerView.getDirectionButton.isHidden = false
         startNavigationController.remove()
         add(stopNavigationController)
+        if !useVisualAlignment {
+            stopNavigationController.addSnapToRouteElements()
+        }
         
         // this does not auto update, so don't use it as an accessibility element
         delayTransition()
@@ -1415,6 +1418,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// this is a generically typed placeholder for the justUsedMap computed property.  This is needed due to the fact that @available cannot be used for stored attributes
     private var justUsedMapAsAny: Any?
+    
+    /// This is used to controll whether the route resume functionality assumes visual or snap to route alignment
+    var useVisualAlignment: Bool = false
 
     /// the most recently used map.  This helps us determine whether a route the user is attempting to load requires alignment.  If we have already aligned within a particular map, we can skip the alignment procedure.
     @available(iOS 12.0, *)
@@ -1486,7 +1492,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             }
             
             beginRouteLandmark.transform = getSoftAlignment(firstTransformToUse: firstKeypointTransform, secondTransformToUse: secondKeypointTransform, isReversed: false)
-            beginRouteLandmark.isSoftAlignment = true
         }
         
         if endRouteLandmark.transform == nil, let lastKeypointTransform = keypoints.last?.location.transform {
@@ -1498,7 +1503,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             }
             
             endRouteLandmark.transform = getSoftAlignment(firstTransformToUse: lastKeypointTransform, secondTransformToUse: secondToLastKeypointTransform, isReversed: true)
-            endRouteLandmark.isSoftAlignment = true
         }
         
         if beginRouteLandmark.transform != nil {
@@ -1631,26 +1635,35 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                                                             frame.camera.transform)
                 
                 DispatchQueue.main.async {
-                    let alignRotation = simd_float3x3(simd_float3(alignTransform[0, 0], alignTransform[0, 1], alignTransform[0, 2]),
-                                                      simd_float3(alignTransform[1, 0], alignTransform[1, 1], alignTransform[1, 2]),
-                                                      simd_float3(alignTransform[2, 0], alignTransform[2, 1], alignTransform[2, 2]))
+                    if visualYawReturn.is_valid {
+                        self.useVisualAlignment = true
+                        let alignRotation = simd_float3x3(simd_float3(alignTransform[0, 0], alignTransform[0, 1], alignTransform[0, 2]),
+                                                          simd_float3(alignTransform[1, 0], alignTransform[1, 1], alignTransform[1, 2]),
+                                                          simd_float3(alignTransform[2, 0], alignTransform[2, 1], alignTransform[2, 2]))
+                        
+                        let leveledAlignRotation = visualYawReturn.square_rotation1.inverse * alignRotation;
+                        
+                        var leveledAlignPose = leveledAlignRotation.toPose()
+                        leveledAlignPose[3] = alignTransform[3]
+                        
+                        
+                        let cameraTransform = frame.camera.transform
+                        let cameraRotation = cameraTransform.rotation()
+                        let leveledCameraRotation = visualYawReturn.square_rotation2.inverse * cameraRotation;
+                        var leveledCameraPose = leveledCameraRotation.toPose()
+                        leveledCameraPose[3] = cameraTransform[3]
+                        
+                        let yawRotation = simd_float4x4.makeRotate(radians: visualYawReturn.yaw, -1, 0, 0)
+                        
+                        let relativeTransform = leveledCameraPose * yawRotation.inverse * leveledAlignPose.inverse
+                        self.sceneView.session.setWorldOrigin(relativeTransform: relativeTransform)
+                    }
                     
-                    let leveledAlignRotation = visualYawReturn.square_rotation1.inverse * alignRotation;
-                    
-                    var leveledAlignPose = leveledAlignRotation.toPose()
-                    leveledAlignPose[3] = alignTransform[3]
-                    
-                    
-                    let cameraTransform = frame.camera.transform
-                    let cameraRotation = cameraTransform.rotation()
-                    let leveledCameraRotation = visualYawReturn.square_rotation2.inverse * cameraRotation;
-                    var leveledCameraPose = leveledCameraRotation.toPose()
-                    leveledCameraPose[3] = cameraTransform[3]
-                    
-                    let yawRotation = simd_float4x4.makeRotate(radians: visualYawReturn.yaw, -1, 0, 0)
-                    
-                    let relativeTransform = leveledCameraPose * yawRotation.inverse * leveledAlignPose.inverse
-                    self.sceneView.session.setWorldOrigin(relativeTransform: relativeTransform)
+                    else {
+                        self.announce(announcement: "Could not find visual matches, using snap-to-route.")
+                        self.useVisualAlignment = false
+                    }
+
                     
                     Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(self.playSound)), userInfo: nil, repeats: false)
                     self.isResumedRoute = true
@@ -1667,13 +1680,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             return
         }
         hideAllViewsHelper()
-        let deadline: DispatchTime
-        
-        if !pausedLandmark.isSoftAlignment {
-            deadline = .now() + .seconds(ViewController.alignmentWaitingPeriod)
-        } else {
-            deadline = .now()
-        }
         
         pauseTrackingController.remove()
         state = .resumeWaitingPeriod
