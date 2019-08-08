@@ -587,15 +587,18 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         view.sendSubviewToBack(sceneView)
         
         // targets for global buttons
-        rootContainerView.settingsButton.addTarget(self, action: #selector(settingsButtonPressed), for: .touchUpInside)
+        ///// TRACK
+        rootContainerView.burgerMenuButton.addTarget(self, action: #selector(burgerMenuButtonPressed), for: .touchUpInside)
+        
+//        rootContainerView.settingsButton.addTarget(self, action: #selector(settingsButtonPressed), for: .touchUpInside)
 
-        rootContainerView.helpButton.addTarget(self, action: #selector(helpButtonPressed), for: .touchUpInside)
+//        rootContainerView.helpButton.addTarget(self, action: #selector(helpButtonPressed), for: .touchUpInside)
         
         rootContainerView.homeButton.addTarget(self, action: #selector(homeButtonPressed), for: .touchUpInside)
 
         rootContainerView.getDirectionButton.addTarget(self, action: #selector(announceDirectionHelpPressed), for: .touchUpInside)
 
-        rootContainerView.feedbackButton.addTarget(self, action: #selector(feedbackButtonPressed), for: .touchUpInside)
+//        rootContainerView.feedbackButton.addTarget(self, action: #selector(feedbackButtonPressed), for: .touchUpInside)
 
         // make sure this happens after the view is created!
         rootContainerView.countdownTimer.delegate = self
@@ -1046,9 +1049,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         
         rootContainerView.getDirectionButton.isHidden = true
         // the options button is hidden if the route rating shows up
-        rootContainerView.settingsButton.isHidden = false
-        rootContainerView.helpButton.isHidden = false
-        rootContainerView.feedbackButton.isHidden = false
+        ///// TRACK
+//        rootContainerView.settingsButton.isHidden = false
+//        rootContainerView.helpButton.isHidden = false
+//        rootContainerView.feedbackButton.isHidden = false
         rootContainerView.homeButton.isHidden = true
 
         if announceArrival {
@@ -1125,7 +1129,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         voiceNoteToPlay = nil
         if navigateStartToEnd {
             if let landmarkInformation = route.beginRouteLandmark.information as String? {
-                resumeTrackingConfirmController.view.mainText?.text?.append("The landmark information you entered is: " + landmarkInformation + ".\n\n")
+                let infoString = "\n\n" + "The landmark information you entered is: " + landmarkInformation + "\n\n"
+                resumeTrackingConfirmController.landmarkLabel.text = infoString
+
             }
             if let beginRouteLandmarkVoiceNote = route.beginRouteLandmark.voiceNote {
                 let voiceNoteToPlayURL = beginRouteLandmarkVoiceNote.documentURL
@@ -1137,7 +1143,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             }
         } else {
             if let landmarkInformation = route.endRouteLandmark.information as String? {
-                resumeTrackingConfirmController.view.mainText?.text?.append("The landmark information you entered is: " + landmarkInformation + ".\n\n")
+                let infoString = "\n\n" + "The landmark information you entered is: " + landmarkInformation + "\n\n"
+                resumeTrackingConfirmController.landmarkLabel.text = infoString
             }
             if let endRouteLandmarkVoiceNote = route.endRouteLandmark.voiceNote {
                 let voiceNoteToPlayURL = endRouteLandmarkVoiceNote.documentURL
@@ -1785,6 +1792,21 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             hideAllViewsHelper()
             self.state = .mainScreen(announceArrival: false)
         }
+    }
+    
+    @objc func burgerMenuButtonPressed() {
+        let storyBoard: UIStoryboard = UIStoryboard(name: "BurgerMenu", bundle: nil)
+        let popoverContent = storyBoard.instantiateViewController(withIdentifier: "burgerMenuTapped") as! BurgerMenuViewController
+        popoverContent.preferredContentSize = CGSize(width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height)
+        popoverContent.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: popoverContent, action: #selector(popoverContent.doneWithBurgerMenu))
+        let nav = UINavigationController(rootViewController: popoverContent)
+        nav.modalPresentationStyle = .popover
+        let popover = nav.popoverPresentationController
+        popover?.delegate = self
+        popover?.sourceView = self.view
+        popover?.sourceRect = CGRect(x: 0, y: UIConstants.settingsAndHelpFrameHeight/2, width: 0,height: 0)
+        
+        self.present(nav, animated: true, completion: nil)
     }
     
     /// Called when the settings button is pressed.  This function will display the settings view (managed by SettingsViewController) as a popover.

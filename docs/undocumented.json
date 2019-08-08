@@ -1,6 +1,13 @@
 {
   "warnings": [
     {
+      "file": "/Users/dieterbrehm/git/occam/Clew/Clew/Controllers/PopOvers/BurgerMenuViewController.swift",
+      "line": 11,
+      "symbol": "BurgerMenuViewController",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
       "file": "/Users/dieterbrehm/git/occam/Clew/Clew/Controllers/PopOvers/FeedbackViewController.swift",
       "line": 11,
       "symbol": "FeedbackViewController",
@@ -65,8 +72,15 @@
     },
     {
       "file": "/Users/dieterbrehm/git/occam/Clew/Clew/Controllers/ViewController.swift",
-      "line": 1753,
+      "line": 1760,
       "symbol": "ViewController.homeButtonPressed()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/dieterbrehm/git/occam/Clew/Clew/Controllers/ViewController.swift",
+      "line": 1797,
+      "symbol": "ViewController.burgerMenuButtonPressed()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
@@ -88,13 +102,6 @@
       "file": "/Users/dieterbrehm/git/occam/Clew/Clew/Misc/PathLogger.swift",
       "line": 55,
       "symbol": "PathLogger.currentLocale()",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/dieterbrehm/git/occam/Clew/Clew/Misc/RouteDocumentData.swift",
-      "line": 41,
-      "symbol": "RouteDocumentData.init(route:map:beginVoiceNote:endVoiceNote:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
