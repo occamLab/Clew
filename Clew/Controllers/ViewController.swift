@@ -1246,9 +1246,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         rootContainerView.getDirectionButton.isHidden = false
         startNavigationController.remove()
         add(stopNavigationController)
-        if !useVisualAlignment {
-            stopNavigationController.addSnapToRouteElements()
-        }
         
         // this does not auto update, so don't use it as an accessibility element
         delayTransition()
@@ -1418,9 +1415,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// this is a generically typed placeholder for the justUsedMap computed property.  This is needed due to the fact that @available cannot be used for stored attributes
     private var justUsedMapAsAny: Any?
-    
-    /// This is used to controll whether the route resume functionality assumes visual or snap to route alignment
-    var useVisualAlignment: Bool = false
 
     /// the most recently used map.  This helps us determine whether a route the user is attempting to load requires alignment.  If we have already aligned within a particular map, we can skip the alignment procedure.
     @available(iOS 12.0, *)
@@ -1625,7 +1619,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             // yaw can be determined by projecting the camera's z-axis into the ground plane and using arc tangent (note: the camera coordinate conventions of ARKit https://developer.apple.com/documentation/arkit/arsessionconfiguration/worldalignment/camera
             
             DispatchQueue.global(qos: .background).async {
-                //                    let numMatches = VisualAlignment.numMatches(alignLandmark.image!, self.pixelBufferToUIImage(pixelBuffer: frame.capturedImage)!)
                 let intrinsics = frame.camera.intrinsics
                 var visualYawReturn: VisualAlignmentReturn
                 
@@ -1636,7 +1629,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 
                 DispatchQueue.main.async {
                     if visualYawReturn.is_valid {
-                        self.useVisualAlignment = true
                         let alignRotation = simd_float3x3(simd_float3(alignTransform[0, 0], alignTransform[0, 1], alignTransform[0, 2]),
                                                           simd_float3(alignTransform[1, 0], alignTransform[1, 1], alignTransform[1, 2]),
                                                           simd_float3(alignTransform[2, 0], alignTransform[2, 1], alignTransform[2, 2]))
@@ -1660,8 +1652,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                     }
                     
                     else {
-                        self.announce(announcement: "Could not find visual matches, using snap-to-route.")
-                        self.useVisualAlignment = false
+                        self.announce(announcement: NSLocalizedString("noVisualMatchesUseSnapToRoute", comment: "Instruct to use snap-to-route when no visual matches are found"))
                     }
 
                     
@@ -1686,28 +1677,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         rootContainerView.countdownTimer.isHidden = false
         rootContainerView.countdownTimer.start(beginingValue: ViewController.alignmentWaitingPeriod, interval: 1)
         delayTransition()
-        // Put this in afterResumeAction
-        // DispatchQueue.main.asyncAfter(deadline: deadline) {
-        //     self.rootContainerView.countdownTimer.isHidden = true
-
-        //     // The first check is necessary in case the phone relocalizes before this code executes
-        //     if case .readyForFinalResumeAlignment = self.state, let alignTransform = self.pausedLandmark?.transform, let camera = self.sceneView.session.currentFrame?.camera {
-        //     // yaw can be determined by projecting the camera's z-axis into the ground plane and using arc tangent (note: the camera coordinate conventions of ARKit https://developer.apple.com/documentation/arkit/arsessionconfiguration/worldalignment/camera
-        //         let leveledCameraPose = camera.transform.level
-                
-        //         var leveledAlignPose = alignTransform
-        //         if !pausedLandmark.isSoftAlignment {
-        //             // soft alignments are preleveled, so we only level if we are doing hard alignment
-        //             leveledAlignPose = alignTransform.level
-        //         }
-                
-        //         let relativeTransform = leveledCameraPose * leveledAlignPose.inverse
-        //         self.sceneView.session.setWorldOrigin(relativeTransform: relativeTransform)
-        //         Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(self.playSound)), userInfo: nil, repeats: false)
-        //         self.isResumedRoute = true
-        //         self.state = .readyToNavigateOrPause(allowPause: false)
-        //     }
-        // }
     }
     
     /// handles the user pressing the resume tracking confirmation button.

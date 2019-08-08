@@ -53,6 +53,7 @@
 
     // Resume
 "Return to the last paused location and press Resume for further instructions." = "Return to the last paused location and press Resume for further instructions.";
+"noVisualMatchesUseSnapToRoute" = "No visual matches found, use snap to route to localize the map";
 
     // Rating service view
 "You've arrived. Please rate your service." = "You've arrived. Please rate your service.";
