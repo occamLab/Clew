@@ -41,6 +41,8 @@
 "homeButtonAccesabilityLabel" = "Clew Home Screen";
 "feedbackButtonAccesabilityLabel" = "Feedback";
 "getDirectionsButtonAccesabilityLabel" = "Get Directions";
+"nameSavedRouteLabel" = "Please type into the field below whatever you would like to name your route.";
+"nameSavedRouteTextField" = "Enter route name here";
 
     // Save routes
 "saveRoutePop-UpTitle" = "Save route";

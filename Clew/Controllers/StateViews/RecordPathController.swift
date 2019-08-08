@@ -56,6 +56,7 @@ class RecordPathController: UIViewController {
             view.addSubview(label)
         }
         
+        /// Creating a button that can be used to start the creation of a saved route.
         addAnchorPointButton = UIButton(type: .custom)
         addAnchorPointButton.layer.cornerRadius = 0.5 * addAnchorPointButton.bounds.size.width
         addAnchorPointButton.clipsToBounds = true
@@ -77,7 +78,7 @@ class RecordPathController: UIViewController {
         addAnchorPointButton.titleEdgeInsets.bottom = 0
         addAnchorPointButton.titleEdgeInsets.right = 5
 
-        
+        /// Creating a button that can be used to start the creation of a single use route.
         recordPathButton = UIButton(type: .custom)
         recordPathButton.layer.cornerRadius = 0.75 * addAnchorPointButton.bounds.size.width
         recordPathButton.clipsToBounds = true
@@ -99,7 +100,7 @@ class RecordPathController: UIViewController {
         recordPathButton.titleEdgeInsets.bottom = 0
         recordPathButton.titleEdgeInsets.right = 5
 
-        
+        /// Creating a button that can be used to access the saved routes list.
         routesButton = UIButton(type: .custom)
         routesButton.layer.cornerRadius = 0.75 * routesButton.bounds.size.width
         routesButton.clipsToBounds = true

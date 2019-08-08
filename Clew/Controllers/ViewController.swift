@@ -56,6 +56,8 @@ enum AppState {
     case startingResumeProcedure(route: SavedRoute, mapAsAny: Any?, navigateStartToEnd: Bool)
     /// the AR session has entered the relocalizing state, which means that we can now realign the session
     case readyForFinalResumeAlignment
+    /// the user is attempting to name the route they're in the process of saving
+    case startingNameSavedRouteProcedure(mapAsAny: Any?)
     
     /// rawValue is useful for serializing state values, which we are currently using for our logging feature
     var rawValue: String {
@@ -84,6 +86,8 @@ enum AppState {
             return "startingResumeProcedure(route=notloggedhere, map=notlogged, navigateStartToEnd=\(navigateStartToEnd))"
         case .readyForFinalResumeAlignment:
             return "readyForFinalResumeAlignment"
+        case .startingNameSavedRouteProcedure:
+            return "startingNameSavedRouteProcedure"
         }
     }
 }
@@ -142,6 +146,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             case .readyForFinalResumeAlignment:
                 // nothing happens currently
                 break
+            case .startingNameSavedRouteProcedure(let mapAsAny):
+                handleStateTransitionToStartingNameSavedRouteProcedure(mapAsAny: mapAsAny)
             case .initializing:
                 break
             }
@@ -341,6 +347,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
     }
     
+    /// Handler for the startingNameSavedRouteProcedure app state
+    func handleStateTransitionToStartingNameSavedRouteProcedure(mapAsAny: Any?){
+        hideAllViewsHelper()
+        nameSavedRouteController.mapAsAny = mapAsAny
+        add(nameSavedRouteController)
+    }
+    
     /// Handler for the startingPauseProcedure app state
     func handleStateTransitionToStartingPauseProcedure() {
         // clear out these variables in case they had already been created
@@ -403,21 +416,21 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
 
             if #available(iOS 12.0, *) {
                 sceneView.session.getCurrentWorldMap { worldMap, error in
-                    self.getRouteNameAndSaveRouteHelper(mapAsAny: worldMap)
-                    self.showResumeTrackingButton()
-                    Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(self.playSound)), userInfo: nil, repeats: false)
+                    //self.getRouteNameAndSaveRouteHelper(mapAsAny: worldMap)
+                    //self.showResumeTrackingButton()
+                    //Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(self.playSound)), userInfo: nil, repeats: false)
                     
                     //check whether or not the path was called from the pause menu or not
                     if paused {
-                        
                         //procede as normal with the pause structure (single use route)
                         self.state = .pauseProcedureCompleted
                         
                     } else {
-                        ///PATHPOINT End route Alignment timer -> play/pause
+                        ///PATHPOINT End route Alignment timer -> play/pause CASEY THIS IS WHERE YOU NEED TO BE
                         self.delayTransition(announcement: NSLocalizedString("multipleUseRouteAnchorPointToPlayPauseAnnouncement", comment: "This is an announcement which is spoken when the user saves the end anchor point for a multiple use route. this signifies the transition form saving an anchor point to the option ot pause your AR Session or to perform return navigation"), initialFocus: nil)
                         ///sends the user to the play/pause screen
-                        self.state = .readyToNavigateOrPause(allowPause: true)
+                        self.state = .startingNameSavedRouteProcedure(mapAsAny: worldMap)
+//                        self.state = .readyToNavigateOrPause(allowPause: true)
                     }
                 }
             } else {
@@ -467,6 +480,16 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         self.present(nav, animated: true, completion: nil)
     }
     
+    @objc func saveRouteButtonPressed() {
+        let id = String(Int64(NSDate().timeIntervalSince1970 * 1000)) as NSString
+        // Get the input values from user, if it's nil then use timestamp
+        self.routeName = nameSavedRouteController.textField.text as NSString? ?? id
+        try! self.archive(routeId: id, beginRouteAnchorPoint: self.beginRouteAnchorPoint, endRouteAnchorPoint: self.endRouteAnchorPoint, worldMapAsAny: nameSavedRouteController.mapAsAny)
+        hideAllViewsHelper()
+        /// PATHPOINT Save Route View -> play/pause
+        self.state = .readyToNavigateOrPause(allowPause: true)
+    }
+    
     /// Hide all the subviews.  TODO: This should probably eventually refactored so it happens more automatically.
     func hideAllViewsHelper() {
         recordPathController.remove()
@@ -477,6 +500,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         pauseTrackingController.remove()
         resumeTrackingConfirmController.remove()
         resumeTrackingController.remove()
+        nameSavedRouteController.remove()
         rootContainerView.countdownTimer.isHidden = true
     }
     
@@ -583,6 +607,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// route recording VC (called on app start)
     var recordPathController: RecordPathController!
     
+    /// saving route name VC
+    var nameSavedRouteController: NameSavedRouteController!
+    
     /// start route navigation VC
     var startNavigationController: StartNavigationController!
     
@@ -608,6 +635,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         recordPathController = RecordPathController()
         startNavigationController = StartNavigationController()
         stopNavigationController = StopNavigationController()
+        nameSavedRouteController = NameSavedRouteController()
         
         // Add the scene to the view, which is a RootContainerView
         sceneView.frame = view.frame
@@ -1350,6 +1378,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     ///
     /// - Parameter sender: the button that generated the event
     @objc func stopRecording(_ sender: UIButton) {
+        /*
         if beginRouteAnchorPoint.transform != nil {
             print("Attempting to save route")
             if #available(iOS 12.0, *) {
@@ -1359,7 +1388,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             } else {
                 getRouteNameAndSaveRouteHelper(mapAsAny: nil)
             }
-        }
+        }*/
 
         isResumedRoute = false
         //TODO add conditional for one way route
@@ -1842,6 +1871,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             homePageNavigationProcesses()
         }
         else if case .startingResumeProcedure = self.state {
+            homePageNavigationProcesses()
+        }
+        else if case .startingNameSavedRouteProcedure = self.state {
             homePageNavigationProcesses()
         }
         else {
