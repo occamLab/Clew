@@ -105,8 +105,7 @@ class RootContainerView: UIView {
         helpButton.setTitle("Help", for: .normal)
         helpButton.titleLabel?.font = UIFont.systemFont(ofSize: 24.0)
         helpButton.accessibilityLabel = NSLocalizedString("helpButtonAccesabilityLabel", comment: "This is the acessability label for the help button")
-        helpButton.setImage(UIImage(named: "HelpButton"), for: .normal)
-        */
+        helpButton.setImage(UIImage(named: "HelpButton"), for: .normal)*/
 
 
         // MARK: Home Button
