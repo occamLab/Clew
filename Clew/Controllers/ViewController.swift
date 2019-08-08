@@ -92,7 +92,7 @@ enum AppState {
     }
 }
 
-///Declare some global variables related to the state
+///Declare some global boolina flags related to the state
 ///this boolian marks whether the curent route is 'paused' or not from the use of the pause button
 var paused: Bool = false
 
@@ -419,6 +419,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                     //self.getRouteNameAndSaveRouteHelper(mapAsAny: worldMap)
                     //self.showResumeTrackingButton()
                     //Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(self.playSound)), userInfo: nil, repeats: false)
+
+
                     
                     //check whether or not the path was called from the pause menu or not
                     if paused {
@@ -426,15 +428,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                         self.state = .pauseProcedureCompleted
                         
                     } else {
-                        ///PATHPOINT End route Alignment timer -> play/pause CASEY THIS IS WHERE YOU NEED TO BE
-                        self.delayTransition(announcement: NSLocalizedString("multipleUseRouteAnchorPointToPlayPauseAnnouncement", comment: "This is an announcement which is spoken when the user saves the end anchor point for a multiple use route. this signifies the transition form saving an anchor point to the option ot pause your AR Session or to perform return navigation"), initialFocus: nil)
+
+                        ///PATHPOINT End route Alignment timer -> Save Route View
+                        self.delayTransition(announcement: NSLocalizedString("multipleUseRouteAnchorPointToSaveARouteAnnouncement", comment: "This is an announcement which is spoken when the user saves the end anchor point for a multiple use route. this signifies the transition from saving an anchor point to the screen where the suer can name and save their route"), initialFocus: nil)
                         ///sends the user to the play/pause screen
                         self.state = .startingNameSavedRouteProcedure(mapAsAny: worldMap)
 //                        self.state = .readyToNavigateOrPause(allowPause: true)
                     }
                 }
             } else {
-                getRouteNameAndSaveRouteHelper(mapAsAny: nil)
+                //DELETEPOINT
+                //getRouteNameAndSaveRouteHelper(mapAsAny: nil)
                 showResumeTrackingButton()
                 Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(self.playSound)), userInfo: nil, repeats: false)
                 state = .pauseProcedureCompleted
@@ -794,17 +798,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// function that creates alerts for the home button
     func homePageNavigationProcesses() {
         // Create alert to warn users of lost information
-        let alert = UIAlertController(title: "Are you sure?",
-                                      message: "If you exit this process right now, your active route information will be lost.",
+        let alert = UIAlertController(title: NSLocalizedString("homeAlertTitle", comment: "This is the title of an alert which shows up when the user tries to go home from inside an active process."),
+                                      message: NSLocalizedString("homeAlertContent", comment: "this is the content of an alert which tells the user that if they continue with going to the home page the current process will be stopped."),
                                       preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "Go to the Home Page", style: .default, handler: { action -> Void in
+        alert.addAction(UIAlertAction(title: NSLocalizedString("homeAlertConfirmNavigationButton", comment: "This text appears on a button in an alert notifying the user that if they navigate to the home page they will stop their curent process. This text appears on the button which signifies that the user wants to continue to the home screen"), style: .default, handler: { action -> Void in
             // proceed to home page
             self.clearState()
             self.hideAllViewsHelper()
             self.state = .mainScreen(announceArrival: false)
         }
         ))
-        alert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: { action -> Void in
+        alert.addAction(UIAlertAction(title: NSLocalizedString("cancelPop-UpButtonLabel", comment: "A button which closes the current pop up"), style: .default, handler: { action -> Void in
             // nothing to do, just stay on the page
         }
         ))
@@ -919,7 +923,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         let logAlertVC = UIAlertController(title: NSLocalizedString("sharingYourExperiencePop-UpHeading", comment: "The heading of a pop-up telling the user that their data is being saved with error logs"),
                                            message: NSLocalizedString("sharingYourExperiencePop-UpContent", comment: "Disclaimer shown to the user when they open the app for the first time"),
                                            preferredStyle: .alert)
-        logAlertVC.addAction(UIAlertAction(title: NSLocalizedString("Ok", comment: "What the user clicks to acknowledge a message and dismiss pop-up"), style: .default, handler: { action -> Void in
+        logAlertVC.addAction(UIAlertAction(title: NSLocalizedString("anchorPointTextPop-UpConfirmation", comment: "What the user clicks to acknowledge a message and dismiss pop-up"), style: .default, handler: { action -> Void in
             self.showSafetyAlert()
         }
         ))
@@ -931,7 +935,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         let safetyAlertVC = UIAlertController(title: NSLocalizedString("forYourSafetyPop-UpHeading", comment: "The heading of a pop-up telling the user to be aware of their surroundings while using clew"),
                                               message: NSLocalizedString("forYourSafetyPop-UpContent", comment: "Disclaimer shown to the user when they open the app for the first time"),
                                               preferredStyle: .alert)
-        safetyAlertVC.addAction(UIAlertAction(title: NSLocalizedString("Ok", comment: "What the user clicks to acknowledge a message and dismiss pop-up"), style: .default, handler: nil))
+        safetyAlertVC.addAction(UIAlertAction(title: NSLocalizedString("anchorPointTextPop-UpConfirmation", comment: "What the user clicks to acknowledge a message and dismiss pop-up"), style: .default, handler: nil))
         self.present(safetyAlertVC, animated: true, completion: nil)
     }
     
@@ -1144,7 +1148,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         voiceNoteToPlay = nil
         if navigateStartToEnd {
             if let AnchorPointInformation = route.beginRouteAnchorPoint.information as String? {
-                resumeTrackingConfirmController.view.mainText?.text?.append("The Anchor Point information you entered is: " + AnchorPointInformation + ".\n\n")
+                let infoString = "\n\n" + NSLocalizedString("anchorPointIntroductionToSavedText", comment: "This is the text which delineates the text that a user saved witht their saved anchor point. This text is shown when a suer loads an anchor point and the text that the user saved with their anchor point appears right after this string.") + AnchorPointInformation + "\n\n"
+                resumeTrackingConfirmController.anchorPointLabel.text = infoString
             }
             if let beginRouteAnchorPointVoiceNote = route.beginRouteAnchorPoint.voiceNote {
                 let voiceNoteToPlayURL = beginRouteAnchorPointVoiceNote.documentURL
@@ -1156,7 +1161,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             }
         } else {
             if let AnchorPointInformation = route.endRouteAnchorPoint.information as String? {
-                resumeTrackingConfirmController.view.mainText?.text?.append("The Anchor Point information you entered is: " + AnchorPointInformation + ".\n\n")
+                let infoString = "\n\n" + NSLocalizedString("anchorPointIntroductionToSavedText", comment: "This is the text which delineates the text that a user saved witht their saved anchor point. This text is shown when a suer loads an anchor point and the text that the user saved with their anchor point appears right after this string.") + AnchorPointInformation + "\n\n"
+                resumeTrackingConfirmController.anchorPointLabel.text = infoString
             }
             if let endRouteAnchorPointVoiceNote = route.endRouteAnchorPoint.voiceNote {
                 let voiceNoteToPlayURL = endRouteAnchorPointVoiceNote.documentURL
@@ -1289,7 +1295,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     let unit = [0: "ft", 1: "m"]
     
     /// the text to display for each possible unit
-    let unitText = [0: " feet", 1: " meters"]
+    let unitText = [0: NSLocalizedString("imperialUnitText", comment: "this is the text which is displayed in the settings to show the user the option of imperial measurements"), 1: NSLocalizedString("metricUnitText", comment: "this is the text which is displayed in the settings to show the user the option of metric measurements")] as [Int : String]
     
     /// the converstion factor to apply to distances as reported by ARKit so that they are expressed in the user's chosen distance units.  ARKit's unit of distance is meters.
     let unitConversionFactor = [0: Float(100.0/2.54/12.0), 1: Float(1.0)]
@@ -1383,10 +1389,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             print("Attempting to save route")
             if #available(iOS 12.0, *) {
                 sceneView.session.getCurrentWorldMap { worldMap, error in
-                    self.getRouteNameAndSaveRouteHelper(mapAsAny: worldMap)
+                    //DELETEPOINT
+                    //self.getRouteNameAndSaveRouteHelper(mapAsAny: worldMap)
                 }
             } else {
-                getRouteNameAndSaveRouteHelper(mapAsAny: nil)
+                //DELETEPOINT
+                //getRouteNameAndSaveRouteHelper(mapAsAny: nil)
             }
         }*/
 
