@@ -11,6 +11,15 @@ import Firebase
 
 class TestFlightLogger {
     
+    public struct TestFlightJSON: Codable {
+        var beginRouteLandmarkIntrinsics: String?
+        var beginRouteLandmarkPose: String?
+        var endRouteLandmarkIntrinsics: String?
+        var endRouteLandmarkPose: String?
+        var intrinsics: String?
+        var pose: String?
+    }
+    
     /// Log landmark alignment info and return the filename of the logged folder.
     static func uploadData(savedRoute: SavedRoute, image: UIImage, intrinsics: simd_float3x3, pose: simd_float4x4) -> String {
         let storageref = Storage.storage().reference().child("testflightdata")
@@ -20,41 +29,18 @@ class TestFlightLogger {
         let subref = storageref.child(subdir)
         let beginRouteLandmark = savedRoute.beginRouteLandmark
         let endRouteLandmark = savedRoute.endRouteLandmark
+        var testFlightJSON = TestFlightJSON()
         
         if let beginRouteLandmarkImageFileName = beginRouteLandmark.imageFileName {
             let metadata = StorageMetadata()
             metadata.contentType = "image/jpeg"
             subref.child("beginRouteLandmarkImage.jpg").putFile(from: beginRouteLandmarkImageFileName.documentURL, metadata: metadata)
         }
-        
-        if let beginRouteLandmarkPoseData = beginRouteLandmark.transform?.toString().data(using: .utf8) {
-            let metadata = StorageMetadata()
-            metadata.contentType = "text/plain"
-            subref.child("beginRouteLandmarkPose.txt").putData(beginRouteLandmarkPoseData, metadata: metadata)
-        }
-        
-        if let beginRouteLandmarkIntrinsicsData = beginRouteLandmark.intrinsics?.toString().data(using: .utf8) {
-            let metadata = StorageMetadata()
-            metadata.contentType = "text/plain"
-            subref.child("beginRouteLandmarkIntrinsics.txt").putData(beginRouteLandmarkIntrinsicsData, metadata: metadata)
-        }
-        
+
         if let endRouteLandmarkImageFileName = endRouteLandmark.imageFileName {
             let metadata = StorageMetadata()
             metadata.contentType = "image/jpeg"
             subref.child("endRouteLandmarkImage.jpg").putFile(from: endRouteLandmarkImageFileName.documentURL, metadata: metadata)
-        }
-        
-        if let endRouteLandmarkPoseData = endRouteLandmark.transform?.toString().data(using: .utf8) {
-            let metadata = StorageMetadata()
-            metadata.contentType = "text/plain"
-            subref.child("endRouteLandmarkPose.txt").putData(endRouteLandmarkPoseData, metadata: metadata)
-        }
-        
-        if let endRouteLandmarkIntrinsicsData = endRouteLandmark.intrinsics?.toString().data(using: .utf8) {
-            let metadata = StorageMetadata()
-            metadata.contentType = "text/plain"
-            subref.child("endRouteLandmarkIntrinsics.txt").putData(endRouteLandmarkIntrinsicsData, metadata: metadata)
         }
         
         if let imageData = image.jpegData(compressionQuality: 1) {
@@ -63,16 +49,17 @@ class TestFlightLogger {
             subref.child("image.jpg").putData(imageData, metadata: metadata)
         }
         
-        if let intrinsicsData = intrinsics.toString().data(using: .utf8) {
-            let metadata = StorageMetadata()
-            metadata.contentType = "text/plain"
-            subref.child("intrinsics.txt").putData(intrinsicsData, metadata: metadata)
-        }
+        testFlightJSON.beginRouteLandmarkIntrinsics = beginRouteLandmark.intrinsics?.toString()
+        testFlightJSON.beginRouteLandmarkPose = beginRouteLandmark.transform?.toString()
+        testFlightJSON.endRouteLandmarkIntrinsics = endRouteLandmark.intrinsics?.toString()
+        testFlightJSON.endRouteLandmarkPose = endRouteLandmark.transform?.toString()
+        testFlightJSON.intrinsics = intrinsics.toString()
+        testFlightJSON.pose = pose.toString()
         
-        if let poseData = pose.toString().data(using: .utf8) {
+        if let data = try? JSONEncoder().encode(testFlightJSON) {
             let metadata = StorageMetadata()
-            metadata.contentType = "text/plain"
-            subref.child("poseData.txt").putData(poseData, metadata: metadata)
+            metadata.contentType = "application/json"
+            subref.child("matrices.json").putData(data, metadata: metadata)
         }
         
         return subdir
