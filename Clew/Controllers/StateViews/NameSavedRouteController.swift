@@ -78,7 +78,7 @@ class NameSavedRouteController: UIViewController, UITextFieldDelegate {
         saveRouteButton.setTitle(NSLocalizedString("saveARouteButtonText", comment: "This is the text which appears on the save a route buttton"),for: .normal)
         saveRouteButton.setTitleColor(.black, for: .normal)
         saveRouteButton.titleLabel?.font = UIFont(name: "HelveticaNeue-Bold", size: 35)!
-        saveRouteButton.accessibilityLabel = NSLocalizedString("saveARouteButtonAccessabilityLabel", comment: "A button that allows the user to save a path to a destination.")
+        saveRouteButton.accessibilityLabel = NSLocalizedString("saveARouteButtonAccessibilityLabel", comment: "A button that allows the user to save a path to a destination.")
         saveRouteButton.titleLabel?.textAlignment = .center
         saveRouteButton.titleLabel?.numberOfLines = 0
         saveRouteButton.titleLabel?.lineBreakMode = .byWordWrapping

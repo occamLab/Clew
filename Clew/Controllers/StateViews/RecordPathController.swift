@@ -68,7 +68,7 @@ class RecordPathController: UIViewController {
         addAnchorPointButton.setTitle(NSLocalizedString("saveARouteButtonText", comment: "This is the text which appears on the save a route buttton"),for: .normal)
         addAnchorPointButton.setTitleColor(.black, for: .normal)
         addAnchorPointButton.titleLabel?.font = UIFont(name: "HelveticaNeue-Bold", size: 35)!
-        addAnchorPointButton.accessibilityLabel = NSLocalizedString("saveARouteButtonAccessabilityLabel", comment: "A button that allows the user to save a path to a destination.")
+        addAnchorPointButton.accessibilityLabel = NSLocalizedString("saveARouteButtonAccessibilityLabel", comment: "A button that allows the user to save a path to a destination.")
         addAnchorPointButton.titleLabel?.textAlignment = .center
         addAnchorPointButton.titleLabel?.numberOfLines = 0
         addAnchorPointButton.titleLabel?.lineBreakMode = .byWordWrapping
@@ -114,7 +114,7 @@ class RecordPathController: UIViewController {
         routesButton.setTitleColor(.black, for: .normal)
         routesButton.titleLabel?.font = UIFont(name: "HelveticaNeue-Bold", size: 35)!
 
-        routesButton.accessibilityLabel = NSLocalizedString("savedRoutesListButtonAccessabilityLabel", comment: "The accessability tag for a button which opens a menu which displays all the saved routes created by the user.")
+        routesButton.accessibilityLabel = NSLocalizedString("savedRoutesListButtonAccessibilityLabel", comment: "The accessibility tag for a button which opens a menu which displays all the saved routes created by the user.")
         routesButton.titleLabel?.textAlignment = .center
         routesButton.titleLabel?.numberOfLines = 0
         routesButton.titleLabel?.lineBreakMode = .byWordWrapping

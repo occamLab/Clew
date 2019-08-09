@@ -119,13 +119,13 @@ class ResumeTrackingConfirmController: UIViewController, UIScrollViewDelegate {
         readVoiceNoteButton = UIButton.makeConstraintButton(view,
                                                        alignment: UIConstants.ButtonContainerHorizontalAlignment.left,
                                                        appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "Read")!),
-                                                       label: NSLocalizedString("playVoiceNoteButtonAccessabilityLabel", comment: "This is the accessability label for the button which allows the user to replay their recorded voice note when loading an anchor point."))
+                                                       label: NSLocalizedString("playVoiceNoteButtonAccessibilityLabel", comment: "This is the accessibility label for the button which allows the user to replay their recorded voice note when loading an anchor point."))
         
         // MARK: ConfirmAlignmentButton
         confirmAlignmentButton = UIButton.makeConstraintButton(view,
                                                                alignment: UIConstants.ButtonContainerHorizontalAlignment.center,
                                                                appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "Align")!),
-                                                               label: NSLocalizedString("startAlignmentCountdownButtonAccessabilityLabel", comment: "this is athe accessability label for the button which allows the user to start an alignment procedure when saving an anchor point"))
+                                                               label: NSLocalizedString("startAlignmentCountdownButtonAccessibilityLabel", comment: "this is athe accessibility label for the button which allows the user to start an alignment procedure when saving an anchor point"))
         
         /// create stack view for aligning and distributing bottom layer buttons
         let stackView   = UIStackView()

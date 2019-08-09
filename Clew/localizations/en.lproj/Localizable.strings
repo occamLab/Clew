@@ -25,14 +25,14 @@
 
     // Name of labels that appear in UI
 "saveARouteButtonText" = "Save Route";
-"saveARouteButtonAccessabilityLabel" = "Save a route";
-"badServiceButtonAccessabilityLabel" = "Bad";
-"goodServiceButtonAccessabilityLabel" = "Good";
-"resumePausedRouteBUttonAccessabilityLabel" = "Resume";
+"saveARouteButtonAccessibilityLabel" = "Save a route";
+"badServiceButtonAccessibilityLabel" = "Bad";
+"goodServiceButtonAccessibilityLabel" = "Good";
+"resumePausedRouteBUttonAccessibilityLabel" = "Resume";
 "singleUseRouteButtonText" = "Single Use Route";
-"recordSingleUseRouteButtonAccessabilityLabel" = "Record a single use route";
+"recordSingleUseRouteButtonAccessibilityLabel" = "Record a single use route";
 "savedRoutesListButtonText" = "Saved Routes List";
-"savedRoutesListButtonAccessabilityLabel" = "Saved Routes List";
+"savedRoutesListButtonAccessibilityLabel" = "Saved Routes List";
 "stopNavigationButtonAcessabilityLabel" = "Stop navigation";
 "startReturnNavigationButtonAcessabilityLabel" = "Start return navigation";
 "stopRecordingButtonAcessabilityLabel" = "Stop recording";
@@ -43,10 +43,10 @@
 "getDirectionsButtonAccesabilityLabel" = "Get Directions";
 "nameSavedRouteLabel" = "Type your route name below";
 "nameSavedRouteTextField" = "Enter route name here";
-"enterAnchorPointDescriptionButtonAccessabilityLabel" = "Enter text to help you remember this Anchor Point";
-"enterAnchorPointVoiceNoteButtonAccessabilityLabel" = "Record audio to help you remember this Anchor Point";
-"startAlignmentCountdownButtonAccessabilityLabel" = "Start alignment countdown";
-"playVoiceNoteButtonAccessabilityLabel" = "Play recorded voice note";
+"enterAnchorPointDescriptionButtonAccessibilityLabel" = "Enter text to help you remember this Anchor Point";
+"enterAnchorPointVoiceNoteButtonAccessibilityLabel" = "Record audio to help you remember this Anchor Point";
+"startAlignmentCountdownButtonAccessibilityLabel" = "Start alignment countdown";
+"playVoiceNoteButtonAccessibilityLabel" = "Play recorded voice note";
 
 
     // Save routes
@@ -121,8 +121,8 @@
 
 // Voicenote
 "voiceNoteRecorderPop-UpHeader" = "Voice Note Recorder";
-"stopRecordingVoiceNoteAccessabilityLabel" = "Stop Recording";
-"startRecordingVoiceNoteAccessabilityLabel" = "Record Voice Note";
+"stopRecordingVoiceNoteAccessibilityLabel" = "Stop Recording";
+"startRecordingVoiceNoteAccessibilityLabel" = "Record Voice Note";
 
 //GoHomeAlert
 "homeAlertTitle" = "Are you sure?";
@@ -147,7 +147,7 @@
 "feedbackMenuTitle" = "Clew Feedback";
 
 // HelpCompiler.swift
-"clewAppLogoAccessabilityText" = "The Clew App Logo";
+"clewAppLogoAccessibilityText" = "The Clew App Logo";
 
 "clewHelpTitle" = "Clew Help";
 
@@ -229,9 +229,9 @@
 
 "PausingARouteOrRecordingAAnchorPointContentParagraph2" = "In order to register your position in such cases you be able to place the phone in a position and orientation such that you can reliably return the phone to that same position and orientation when reusing a saved route. While it is not crucial that you position the phone in exactly the same place (although the more accurately you can do this, the better the app will work), you must be able to place the phone in the precisely the same orientation. To make it easy to return the phone to the same orientation, you should hold your phone flat with the screen facing up and press the top (short-edge) of your phone flush with a vertical surface (like a wall). More instructions are provided in the app when you activate the pause feature or the create Anchor Point feature.";
 
-"contractSectionAccessabilityTag" = "contract section";
+"contractSectionAccessibilityTag" = "contract section";
 
-"expandSectionAccessabilityTag" = "expand section";
+"expandSectionAccessibilityTag" = "expand section";
 
 //Announcements which signify the end of a process
 "singleUseRouteAnchorPointToPausedStateAnnouncement" = "Anchor point saved. You may now close the app and return later for return navigation.";

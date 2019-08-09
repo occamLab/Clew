@@ -51,7 +51,7 @@ class StopRecordingController: UIViewController {
         stopRecordingButton = UIButton.makeConstraintButton(view,
                                                        alignment: UIConstants.ButtonContainerHorizontalAlignment.center,
                                                        appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "StopRecording")!),
-                                                       label: NSLocalizedString("stopRecordingButtonAccessabilityLabel", comment: "The accessability label of the button that allows user to stop recording a route."))
+                                                       label: NSLocalizedString("stopRecordingButtonAccessibilityLabel", comment: "The accessibility label of the button that allows user to stop recording a route."))
         
         /// create stack view for aligning and distributing bottom layer buttons
         let stackView   = UIStackView()

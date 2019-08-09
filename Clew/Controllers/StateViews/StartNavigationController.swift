@@ -121,7 +121,7 @@ class StartNavigationController: UIViewController {
         startNavigationButton = UIButton.makeConstraintButton(view,
                                                          alignment: UIConstants.ButtonContainerHorizontalAlignment.left,
                                                          appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "StartNavigation")!),
-                                                         label: NSLocalizedString("startReturnNavigationButtonAccessabilityLabel", comment: "The accessability label for the button that allows user to start navigating back along their route."))
+                                                         label: NSLocalizedString("startReturnNavigationButtonAccessibilityLabel", comment: "The accessibility label for the button that allows user to start navigating back along their route."))
         
         pauseButton = UIButton.makeConstraintButton(view,
                                                alignment: UIConstants.ButtonContainerHorizontalAlignment.right,

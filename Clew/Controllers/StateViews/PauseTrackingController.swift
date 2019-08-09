@@ -134,17 +134,17 @@ class PauseTrackingController: UIViewController, UIScrollViewDelegate {
         enterAnchorPointDescriptionButton = UIButton.makeConstraintButton(view,
                                                                   alignment: UIConstants.ButtonContainerHorizontalAlignment.left,
                                                                   appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "Describe")!),
-                                                                  label: NSLocalizedString("enterAnchorPointDescriptionButtonAccessabilityLabel", comment: "This is the accessability label for the button which allows the user to save a text based description of their anchor point when saving a route. This feature should allow the user to more easily realign with their anchorpoint."))
+                                                                  label: NSLocalizedString("enterAnchorPointDescriptionButtonAccessibilityLabel", comment: "This is the accessibility label for the button which allows the user to save a text based description of their anchor point when saving a route. This feature should allow the user to more easily realign with their anchorpoint."))
         
         recordVoiceNoteButton = UIButton.makeConstraintButton(view,
                                                          alignment: UIConstants.ButtonContainerHorizontalAlignment.right,
                                                          appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "VoiceNote")!),
-                                                         label: NSLocalizedString("enterAnchorPointVoiceNoteButtonAccessabilityLabel", comment: "This is the accessability label for the button which allows the user to save a voice note description of their anchor point when saving a route. This feature should allow the user to more easily realign with their anchorpoint."))
+                                                         label: NSLocalizedString("enterAnchorPointVoiceNoteButtonAccessibilityLabel", comment: "This is the accessibility label for the button which allows the user to save a voice note description of their anchor point when saving a route. This feature should allow the user to more easily realign with their anchorpoint."))
         
         confirmAlignmentButton = UIButton.makeConstraintButton(view,
                                                           alignment: UIConstants.ButtonContainerHorizontalAlignment.center,
                                                           appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "Align")!),
-                                                          label: NSLocalizedString("startAlignmentCountdownButtonAccessabilityLabel", comment: "this is athe accessability label for the button which allows the user to start an alignment procedure when saving an anchor point"))
+                                                          label: NSLocalizedString("startAlignmentCountdownButtonAccessibilityLabel", comment: "this is athe accessibility label for the button which allows the user to start an alignment procedure when saving an anchor point"))
         
         /// create stack view for aligning and distributing bottom layer buttons
         let stackView   = UIStackView()

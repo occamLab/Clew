@@ -14,7 +14,7 @@ import WebKit
 class HelpCompiler {
     
     ///creates a dictionry which sets up the HTML structure for all of the help menu sections. the format for a section is (NSLocalizedString describing the section header, html describing section content with NSLocalized strings for relevant sections)
-    let contentDictioanry = [("\(NSLocalizedString("appFeaturesHeading", comment: "this is a heading in the help documentation. it is also used for the creation of the accessability labels used to inform the user as to how to interact with the help documantatio's accordian menu"))","""
+    let contentDictioanry = [("\(NSLocalizedString("appFeaturesHeading", comment: "this is a heading in the help documentation. it is also used for the creation of the accessibility labels used to inform the user as to how to interact with the help documantatio's accordian menu"))","""
         <h3>\(NSLocalizedString("appFeaturesCurrentVersionHeading", comment: "this is a heading in the help documentation and part of the app features section."))</h3>
         <p>\(NSLocalizedString("appfeaturesCurrentVersionContent", comment: "this is a paragraph in the app features section of the help menu which describes the main features of Clew"))</p>
         <p>\(NSLocalizedString("appFeaturesNewFeaturesContent", comment: "This is a short section which describes the latest features added to the clew app."))</p>
@@ -111,7 +111,7 @@ class HelpCompiler {
         </style>
         </head>
         <body>
-        <img class = "image" src="./clewLogo.png" alt="\(NSLocalizedString("clewAppLogoAccessabilityText", comment: "This is the accessability text placed over the clew app logo in the help documentation"))">
+        <img class = "image" src="./clewLogo.png" alt="\(NSLocalizedString("clewAppLogoAccessibilityText", comment: "This is the accessibility text placed over the clew app logo in the help documentation"))">
         <h1 class = "pageTitle"> \(NSLocalizedString("clewHelpTitle", comment: "This is the top heading of the help documentation"))</h1>
         """
         
@@ -122,7 +122,7 @@ class HelpCompiler {
             let section = """
             
             <!--creates an accordian menu heading which needs to be exapanded by defualt.-->
-            <button class="collapsible" aria-label = "\(key): \(NSLocalizedString("expandSectionAccessabilityTag", comment: "This is a tag that is spoken by the accessability elements. This tag describes the action a user must take to expand one of the sections in the help documentation"))"> \(key) </button>
+            <button class="collapsible" aria-label = "\(key): \(NSLocalizedString("expandSectionAccessibilityTag", comment: "This is a tag that is spoken by the accessibility elements. This tag describes the action a user must take to expand one of the sections in the help documentation"))"> \(key) </button>
             <!-- the content that is hidden goes here -->
             <div class="content">
             \(value)
@@ -131,22 +131,22 @@ class HelpCompiler {
             /// appends the latest section to the stack of sections
             result = result + section
         }
-        ///appends the footer information to the html string. this includes adding the javascript for handeling accessability (included inside this folder rather than a remote javascript file so it can be localized) and the javascript which handels the expanding and contracting menus.
+        ///appends the footer information to the html string. this includes adding the javascript for handeling accessibility (included inside this folder rather than a remote javascript file so it can be localized) and the javascript which handels the expanding and contracting menus.
         result = result + """
-        <!--Loads the Javascript which handles the accessability tags.-->
+        <!--Loads the Javascript which handles the accessibility tags.-->
         <script>
-        //updates the accessability labels
-        function updateAccessabilityLabels (htmlElement,action){
+        //updates the accessibility labels
+        function updateAccessibilityLabels (htmlElement,action){
         //if the user just opened a section
         if (action == "open"){
-        //set the accessability label
-        htmlElement.setAttribute("aria-Label", htmlElement.innerHTML + ":" + "\(NSLocalizedString("contractSectionAccessabilityTag", comment: "This is a tag that is spoken by the accessability elements. This tag describes the action a user must take to collapse one of the sections in the help documentation"))");
+        //set the accessibility label
+        htmlElement.setAttribute("aria-Label", htmlElement.innerHTML + ":" + "\(NSLocalizedString("contractSectionAccessibilityTag", comment: "This is a tag that is spoken by the accessibility elements. This tag describes the action a user must take to collapse one of the sections in the help documentation"))");
         return 0
         }
         //if the user is closing the section
         if (action == "close"){
-        //set the accessability label
-        htmlElement.setAttribute("aria-Label",htmlElement.innerHTML + ":" + "\(NSLocalizedString("expandSectionAccessabilityTag", comment: "This is a tag that is spoken by the accessability elements. This tag describes the action a user must take to expand one of the sections in the help documentation"))");
+        //set the accessibility label
+        htmlElement.setAttribute("aria-Label",htmlElement.innerHTML + ":" + "\(NSLocalizedString("expandSectionAccessibilityTag", comment: "This is a tag that is spoken by the accessibility elements. This tag describes the action a user must take to expand one of the sections in the help documentation"))");
         return 0
         }
         
