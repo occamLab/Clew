@@ -424,6 +424,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                     if paused {
                         ///PATHPOINT pause recording anchor point alignment timer -> resume tracking
                         //proceed as normal with the pause structure (single use route)
+                        self.justTraveledRoute = SavedRoute(id: "single use", name: "single use", crumbs: self.crumbs, dateCreated: Date() as NSDate, beginRouteAnchorPoint: self.beginRouteAnchorPoint, endRouteAnchorPoint: self.endRouteAnchorPoint)
                         self.showResumeTrackingButton()
                         self.state = .pauseProcedureCompleted
                         
@@ -440,24 +441,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 showResumeTrackingButton()
                 Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(self.playSound)), userInfo: nil, repeats: false)
                 state = .pauseProcedureCompleted
-            }
-        }
-    }
-    
-    /// Prompt the user for the name of a route and persist the route data if the user supplies one.  If the user cancels, no action is taken.
-    ///
-    /// - Parameter mapAsAny: the world map (the `Any?` type is used since it is optional and we want to maintain backward compatibility with iOS 11.3
-    func getRouteNameAndSaveRouteHelper(mapAsAny: Any?) {
-        if routeName == nil {
-            // get a route name
-            showRouteNamingDialog(mapAsAny: mapAsAny)
-        } else {
-            do {
-                // TODO: factor this out since it shows up in a few places
-                let id = String(Int64(NSDate().timeIntervalSince1970 * 1000)) as NSString
-                try archive(routeId: id, beginRouteAnchorPoint: beginRouteAnchorPoint, endRouteAnchorPoint: endRouteAnchorPoint, worldMapAsAny: mapAsAny)
-            } catch {
-                fatalError("Can't archive route: \(error.localizedDescription)")
             }
         }
     }
@@ -823,44 +806,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
         ))
         self.present(alert, animated: true, completion: nil)
-    }
-
-    
-    /// Display a warning that tells the user they must create a Anchor Point to be able to use this route again in the forward direction
-    /// Display the dialog that prompts the user to enter a route name.  If the user enters a route name, the route along with the optional world map will be persisted.
-    ///
-    /// - Parameter mapAsAny: the world map to save (the `Any?` type is used to indicate that the map is optional and to preserve backwards compatibility with iOS 11.3)
-    @objc func showRouteNamingDialog(mapAsAny: Any?) {
-        // Set title and message for the alert dialog
-        if #available(iOS 12.0, *) {
-            justUsedMap = mapAsAny as! ARWorldMap?
-        }
-        let alertController = UIAlertController(title: NSLocalizedString("saveRoutePop-UpTitle", comment: "The title of a popup window where user enters a name for the route they want to save."), message: NSLocalizedString("saveRoutePop-UpTextBoxPrompt", comment: "Asks the user to provide a descriptive name for the route they want to save."), preferredStyle: .alert)
-        // The confirm action taking the inputs
-        let saveAction = UIAlertAction(title: NSLocalizedString("saveRouteConfirmationLabel", comment: "The text for a button which allws the user to confirm saving their route from the save a route pop-up"), style: .default) { (_) in
-            let id = String(Int64(NSDate().timeIntervalSince1970 * 1000)) as NSString
-            // Get the input values from user, if it's nil then use timestamp
-            self.routeName = alertController.textFields?[0].text as NSString? ?? id
-            try! self.archive(routeId: id, beginRouteAnchorPoint: self.beginRouteAnchorPoint, endRouteAnchorPoint: self.endRouteAnchorPoint, worldMapAsAny: mapAsAny)
-        }
-            
-        // The cancel action saves the just traversed route so you can navigate back along it later
-        let cancelAction = UIAlertAction(title: NSLocalizedString("cancelPop-UpButtonLabel", comment: "A button which closes the current pop up"), style: .cancel) { (_) in
-            self.justTraveledRoute = SavedRoute(id: "dummyid", name: "Last route", crumbs: self.crumbs, dateCreated: Date() as NSDate, beginRouteAnchorPoint: self.beginRouteAnchorPoint, endRouteAnchorPoint: self.endRouteAnchorPoint)
-        }
-        
-        // Add textfield to our dialog box
-        alertController.addTextField { (textField) in
-            textField.becomeFirstResponder()
-            textField.placeholder = NSLocalizedString("routeNamePlaceholder", comment: "A placeholder in the route name textbox before the user enters a name for their route in the textbox.")
-        }
-            
-        // Add the action to dialogbox
-        alertController.addAction(saveAction)
-        alertController.addAction(cancelAction)
-            
-        // Finally, present the dialog box
-        present(alertController, animated: true, completion: nil)
     }
 
     
