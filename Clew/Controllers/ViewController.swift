@@ -96,12 +96,14 @@ enum AppState {
 ///this boolian marks whether the curent route is 'paused' or not from the use of the pause button
 var paused: Bool = false
 
-/// this boolina marks whether or not the app is recording a multi use route
+/// this boolean marks whether or not the app is recording a multi use route
 var recordingSingleUseRoute: Bool = false
 
-///this boolian marks whether or not the app is saving a starting anchor point
+///this boolean marks whether or not the app is saving a starting anchor point
 var startAnchorPoint: Bool = false
 
+///this boolean denotes whether or not the app is loading a route from an automatic alignment
+var isAutomaticAlignment: Bool = false
 
 /// The view controller that handles the main Clew window.  This view controller is always active and handles the various views that are used for different app functionalities.
 class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDelegate, AVSpeechSynthesizerDelegate {
@@ -420,7 +422,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                     
                     //check whether or not the path was called from the pause menu or not
                     if paused {
-                        //procede as normal with the pause structure (single use route)
+                        ///PATHPOINT pause recording anchor point alignment timer -> resume tracking
+                        //proceed as normal with the pause structure (single use route)
                         self.showResumeTrackingButton()
                         self.state = .pauseProcedureCompleted
                         
@@ -461,6 +464,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// Called when the user presses the routes button.  The function will display the `Routes` view, which is managed by `RoutesViewController`.
     @objc func routesButtonPressed() {
+        ///update state boolians
+        paused = false
+        isAutomaticAlignment = false
+        recordingSingleUseRoute = false
+        
+        
         let storyBoard: UIStoryboard = UIStoryboard(name: "SettingsAndHelp", bundle: nil)
         let popoverContent = storyBoard.instantiateViewController(withIdentifier: "Routes") as! RoutesViewController
         popoverContent.preferredContentSize = CGSize(width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height)
@@ -1364,6 +1373,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// handles the user pressing the record path button.
     @objc func recordPath() {
         ///PATHPOINT record two way path button -> create Anchor Point
+        ///route has not been auto aligned
+        isAutomaticAlignment = false
         ///tells the program that it is recording a two way route
         recordingSingleUseRoute = false
         //update the state boolian to say that this is not paused
@@ -1492,6 +1503,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         rootContainerView.homeButton.isHidden = false
 //        backButton.isHidden = true
         creatingRouteAnchorPoint = true
+        
+        ///the route has not been resumed automaticly from a saved route
+        isAutomaticAlignment = false
         ///tell the program that a single use route is being recorded
         recordingSingleUseRoute = true
         paused = false
@@ -2186,6 +2200,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 rootContainerView.countdownTimer.isHidden = true
                 isResumedRoute = true
                 
+                isAutomaticAlignment = true
+                
+                ///PATHPOINT: Auto Alignment -> resume route
                 state = .readyToNavigateOrPause(allowPause: false)
             }
             print("normal")

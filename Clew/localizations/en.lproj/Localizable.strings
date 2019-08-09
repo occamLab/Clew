@@ -247,6 +247,7 @@
 "saveRouteToPlayPauseAnnouncement" = "Route saved. You may now perform return navigation or pause your tracking session to navigate back at a later time.";
 
 //Play/Pause text
+"automaticAlignmentPlayPauseViewText" = "You have been automatically realigned with your route, simply press the play button to perform navigation.";
 
 "singleUsePlayPauseViewText" = "In order to immediately perform return navigation, simply press the play button and follow the instructions provided. In order to pause the session to perform return navigation at a later point, press the pause button and complete the anchor point procedure.";
 
