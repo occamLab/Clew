@@ -222,8 +222,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         // records a new path
         ///updates the state boolian to signifiy that the program is no longer saving the first anchor point
         startAnchorPoint = false
-        // make sure to never record a path with a transform set
-        sceneView.session.setWorldOrigin(relativeTransform: simd_float4x4.makeTranslation(0, 0, 0))
         attemptingRelocalization = false
         
         crumbs = []
@@ -1383,7 +1381,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         
         // make sure to clear out any relative transform and paused transform so the alignment is accurate
         print("starting pause procedure", creatingRouteAnchorPoint)
-        sceneView.session.setWorldOrigin(relativeTransform: simd_float4x4.makeTranslation(0, 0, 0))
         state = .startingPauseProcedure
     }
     
@@ -1509,11 +1506,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         
         //sends the user to the screen where they can start recording a route
         state = .recordingRoute
-        
-        // make sure to clear out any relative transform and paused transform so the alignment is accurate
-        //print("starting pause procedure", creatingRouteAnchorPoint)
-        //sceneView.session.setWorldOrigin(relativeTransform: simd_float4x4.makeTranslation(0, 0, 0))
-        //state = .startingPauseProcedure
     }
     
     /// this is called after the alignment countdown timer finishes in order to complete the pause tracking procedure
@@ -2192,8 +2184,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                     }
                 }
             }
-            // resetting the origin is needed in the case when we realigned to a saved route
-            session.setWorldOrigin(relativeTransform: simd_float4x4.makeTranslation(0,0,0))
             if case .readyForFinalResumeAlignment = state {
                 // this will cancel any realignment if it hasn't happened yet and go straight to route navigation mode
                 rootContainerView.countdownTimer.isHidden = true
