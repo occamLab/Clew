@@ -158,7 +158,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 break
                 
             case .resumeWaitingPeriod:
-                resumeWaitingPeriodHandler()
+                break
             case .visualAlignmentWaitingPeriod:
                 break
             case .initializing:
@@ -1667,11 +1667,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
     }
     
-    func resumeWaitingPeriodHandler() {
-        rootContainerView.countdownTimer.isHidden = false
-        rootContainerView.countdownTimer.start(beginingValue: ViewController.alignmentWaitingPeriod, interval: 1)
-        delayTransition()
-    }
+    
     
     /// this is called when the user has confirmed the alignment and is the alignment countdown should begin.  Once the alignment countdown has finished, the alignment will be performed and the app will move to the ready to navigate view.
     func resumeTracking() {
@@ -1680,6 +1676,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         
         pauseTrackingController.remove()
         state = .resumeWaitingPeriod
+        rootContainerView.countdownTimer.isHidden = false
+        rootContainerView.countdownTimer.start(beginingValue: ViewController.alignmentWaitingPeriod, interval: 1)
+        delayTransition()
     }
     
     /// handles the user pressing the resume tracking confirmation button.

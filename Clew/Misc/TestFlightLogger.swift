@@ -12,7 +12,9 @@ import Firebase
 class TestFlightLogger {
     static func uploadData(savedRoute: SavedRoute, image: UIImage, intrinsics: simd_float3x3, pose: simd_float4x4) {
         let storageref = Storage.storage().reference().child("testflightdata")
-        let subdir = UUID().uuidString
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        let subdir = "\(dateFormatter.string(from: Date()))-\(UUID().uuidString)"
         let subref = storageref.child(subdir)
         let beginRouteLandmark = savedRoute.beginRouteLandmark
         let endRouteLandmark = savedRoute.endRouteLandmark
