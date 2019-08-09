@@ -244,6 +244,7 @@
 
 "resumeAnchorPointToReturnNavigationAnnouncement" = "Aligned to anchor point. Starting return navigation.";
 "singleUseRouteToRecordingRouteAnnouncement" = "Now recording a single use route.";
+"saveRouteToPlayPauseAnnouncement" = "Route saved. You may now perform return navigation or pause your tracking session to navigate back at a later time.";
 
 //Play/Pause text
 

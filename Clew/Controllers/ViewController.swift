@@ -405,7 +405,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
 //            rootContainerView.pauseTrackingView.isHidden = true
             pauseTrackingController.remove()
             
-            ///PATHPOINT creating beginining two way Anchor Point -> record route
+            ///PATHPOINT begining anchor point alignment timer -> record route
             ///announce to the user that they have sucessfully saved an anchor point.
             delayTransition(announcement: NSLocalizedString("multipleUseRouteAnchorPointToRecordingRouteAnnouncement", comment: "This is the announcement which is spoken after the first anchor point of a multiple use route is saved. this signifies the completeion of the saving an anchor point procedure and the start of recording a route to be saved."), initialFocus: nil)
             ///sends the user to a route recording of the program is creating a beginning route Anchor Point
@@ -429,8 +429,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                         
                     } else {
 
-                        ///PATHPOINT End route Alignment timer -> Save Route View
-                        self.delayTransition(announcement: NSLocalizedString("multipleUseRouteAnchorPointToSaveARouteAnnouncement", comment: "This is an announcement which is spoken when the user saves the end anchor point for a multiple use route. this signifies the transition from saving an anchor point to the screen where the suer can name and save their route"), initialFocus: nil)
+                        ///PATHPOINT end anchor point alignment timer -> Save Route View
+                        self.delayTransition(announcement: NSLocalizedString("multipleUseRouteAnchorPointToSaveARouteAnnouncement", comment: "This is an announcement which is spoken when the user saves the end anchor point for a multiple use route. This signifies the transition from saving an anchor point to the screen where the user can name and save their route"), initialFocus: nil)
                         ///sends the user to the play/pause screen
                         self.state = .startingNameSavedRouteProcedure(mapAsAny: worldMap)
 //                        self.state = .readyToNavigateOrPause(allowPause: true)
@@ -491,6 +491,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         try! self.archive(routeId: id, beginRouteAnchorPoint: self.beginRouteAnchorPoint, endRouteAnchorPoint: self.endRouteAnchorPoint, worldMapAsAny: nameSavedRouteController.mapAsAny)
         hideAllViewsHelper()
         /// PATHPOINT Save Route View -> play/pause
+        ///Announce to the user that they have finished the alignment process and are now at the play pause screen
+        self.delayTransition(announcement: NSLocalizedString("saveRouteToPlayPauseAnnouncement", comment: "This is an announcement which is spoken when the user finishes saving their route. This announcement signifies the transition from the view where the user can name or save their route to the screen where the user can either pause the AR session tracking or they can perform return navigation."), initialFocus: nil)
+        ///perform the state transition
         self.state = .readyToNavigateOrPause(allowPause: true)
     }
     
@@ -1365,7 +1368,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// handles the user pressing the record path button.
     @objc func recordPath() {
-        ///PATHPOINT record two way path -> create Anchor Point
+        ///PATHPOINT record two way path button -> create Anchor Point
         ///tells the program that it is recording a two way route
         recordingSingleUseRoute = false
         //update the state boolian to say that this is not paused
@@ -1498,7 +1501,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         ///tell the program that a single use route is being recorded
         recordingSingleUseRoute = true
         paused = false
-        ///PATHPOINT single use route -> recording a route
+        ///PATHPOINT single use route button -> recording a route
         ///hide all other views
         hideAllViewsHelper()
         ///platy an announcemnt which tells the user that a route is being recorded
@@ -1547,14 +1550,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(self.playSound)), userInfo: nil, repeats: false)
                 self.isResumedRoute = true
                 if paused {
-                    ///PATHPOINT paused route -> return navigation
+                    ///PATHPOINT paused anchor point alignment timer -> return navigation
                     ///announce to the user that they have aligned to the anchor point sucessfully and are starting return navigation.
                     paused = false
                     self.delayTransition(announcement: NSLocalizedString("resumeAnchorPointToReturnNavigationAnnouncement", comment: "This is an Announcement which indicates that the pause session is complete, that the prgram was able to align with the anchor point, and that return navigation has started."), initialFocus: nil)
                     self.state = .navigatingRoute
 
                 } else {
-                    ///PATHPOINT saved route -> start navigation
+                    ///PATHPOINT load saved route -> start navigation
 
                     ///announce to the user that they have sucessfully aligned with their saved anchor point.
                     self.delayTransition(announcement: NSLocalizedString("Aligned to anchor point. Starting navigation.", comment: "This is an announcement that is played when the user is loading a saved route. this signifies the transition between saving an anchor point and starting route navigation."), initialFocus: nil)
