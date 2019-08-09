@@ -24,6 +24,8 @@ class PathLogger {
     var pathDataTime: [Double] = []
     /// path data taken during NAVIGATEPATH - [[1x16 transform matrix]]
     var navigationData: [[Float]] = []
+    /// time stamps for snap to route during navigation phase
+    var snapToRouteTime: [Double] = []
     /// time stamps for navigationData
     var navigationDataTime: [Double] = []
     /// timer to use for logging
@@ -58,6 +60,9 @@ class PathLogger {
         return preferredLanguage
     }
     
+    func logSnapToRoute() {
+        snapToRouteTime.append(-dataTimer.timeIntervalSinceNow)
+    }
     /// Add the specified state transition to the log.
     ///
     /// - Parameter newState: the new state of the app
@@ -144,6 +149,7 @@ class PathLogger {
         navigationDataTime = []
         speechData = []
         speechDataTime = []
+        snapToRouteTime = []
         dataTimer = Date()
     }
     
@@ -229,7 +235,8 @@ class PathLogger {
                                     "navigationData": navigationData,
                                     "navigationDataTime": navigationDataTime,
                                     "speechData": speechData,
-                                    "speechDataTime": speechDataTime]
+                                    "speechDataTime": speechDataTime,
+                                    "snapToRouteTime": snapToRouteTime]
         
         do {
             let jsonData = try JSONSerialization.data(withJSONObject: body, options: .prettyPrinted)
