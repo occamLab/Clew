@@ -53,9 +53,9 @@
 
     // Resume
 "Return to the last paused location and press Resume for further instructions." = "Return to the last paused location and press Resume for further instructions.";
-"noVisualMatchesUseSnapToRoute" = "No visual matches found, use snap to route to localize the map";
-"SnapToRouteHint" = "Snap to route adjusts the position of the waypoints to match your current trajectory. See the help menu entry under following routes for more information.";
-"SnapToRoute" = "Snap to route";
+noVisualMatchesUseSnapToRoute = "No visual matches found, press the snap-to-route button after you have walked in the correct direction to align the route.";
+SnapToRouteHint = "Snap to route adjusts the position of the waypoints to match your current trajectory. See the help menu entry under following routes for more information.";
+SnapToRoute = "Snap to route";
 visualAlignmentConfirmation = "Visually aligning to saved route";
 
     // Rating service view
