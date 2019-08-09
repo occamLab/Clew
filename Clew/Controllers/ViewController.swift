@@ -336,7 +336,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
 
         if isTrackingPerformanceNormal, isSameMap {
             // we can skip the whole process of relocalization since we are already using the correct map and tracking is normal.  It helps to strip out old anchors to reduce jitter though
+            ///PATHPOINT load route from automatic alignment -> start navigation
+            
             isResumedRoute = true
+            isAutomaticAlignment = true
             state = .readyToNavigateOrPause(allowPause: false)
         } else {
             // setting this flag after entering the .limited(reason: .relocalizing) state is a bit error prone.  Since there is a waiting period, there is no way that we will ever finish the alignment countdown before the session has successfully restarted
@@ -434,7 +437,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                         self.delayTransition(announcement: NSLocalizedString("multipleUseRouteAnchorPointToSaveARouteAnnouncement", comment: "This is an announcement which is spoken when the user saves the end anchor point for a multiple use route. This signifies the transition from saving an anchor point to the screen where the user can name and save their route"), initialFocus: nil)
                         ///sends the user to the play/pause screen
                         self.state = .startingNameSavedRouteProcedure(mapAsAny: worldMap)
-//                        self.state = .readyToNavigateOrPause(allowPause: true)
                     }
                 }
             } else {

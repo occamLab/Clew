@@ -77,7 +77,12 @@ class StartNavigationController: UIViewController {
         if recordingSingleUseRoute{
             mainText = NSLocalizedString("singleUsePlayPauseViewText", comment: "Information displayed to the user on the play pause screen after they have recorded a single use route. This describes the functionality of the play and pause buttons.")
         } else {
-            mainText = NSLocalizedString("multipleUseRoutePlayPauseViewText", comment: "Information displayed to the user on the play pause screen after they have just recorded a multiple use route. This describes the functionality of the play and pause buttons.")
+            if isAutomaticAlignment {
+                mainText = NSLocalizedString("automaticAlignmentPlayPauseViewText", comment: "Information displayed to the user on the play pause screen after they have sucessfully aligned to their route automatically.")
+            }else {
+                mainText = NSLocalizedString("multipleUseRoutePlayPauseViewText", comment: "Information displayed to the user on the play pause screen after they have just recorded a multiple use route. This describes the functionality of the play and pause buttons.")
+            }
+            
         }
         
         label.textColor = UIColor.white
