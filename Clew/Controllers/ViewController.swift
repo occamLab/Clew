@@ -1658,7 +1658,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                         let yawRotation = simd_float4x4.makeRotate(radians: visualYawReturn.yaw, -1, 0, 0)
                         
                         let relativeTransform = leveledCameraPose * yawRotation.inverse * leveledAlignPose.inverse
-                        self.sceneView.session.setWorldOrigin(relativeTransform: relativeTransform)
+                        if self.configuration.initialWorldMap == nil {
+                            self.sceneView.session.setWorldOrigin(relativeTransform: relativeTransform)
+                        }
+
                     }
                     
                     else {
