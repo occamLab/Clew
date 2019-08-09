@@ -1348,22 +1348,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     ///
     /// - Parameter sender: the button that generated the event
     @objc func stopRecording(_ sender: UIButton) {
-        /*
-        if beginRouteAnchorPoint.transform != nil {
-            print("Attempting to save route")
-            if #available(iOS 12.0, *) {
-                sceneView.session.getCurrentWorldMap { worldMap, error in
-                    //DELETEPOINT
-                    //self.getRouteNameAndSaveRouteHelper(mapAsAny: worldMap)
-                }
-            } else {
-                //DELETEPOINT
-                //getRouteNameAndSaveRouteHelper(mapAsAny: nil)
-            }
-        }*/
 
         isResumedRoute = false
-        //TODO add conditional for one way route
+
         rootContainerView.homeButton.isHidden = false // home button here
         resumeTrackingController.remove()
         resumeTrackingConfirmController.remove()
