@@ -47,7 +47,7 @@ class ResumeTrackingController: UIViewController {
         
         view.backgroundColor = UIColor.black.withAlphaComponent(0.4)
         
-        let mainText = NSLocalizedString("Return to the last paused location and press Resume for further instructions.", comment: "A message displayed to the user")
+        let mainText = NSLocalizedString("resumeRouteViewText", comment: "A message displayed to the user when they have paused the route")
         label.textColor = UIColor.white
         label.textAlignment = .center
         label.numberOfLines = 0
@@ -88,7 +88,7 @@ class ResumeTrackingController: UIViewController {
         resumeButton = UIButton.makeConstraintButton(view,
                                                 alignment: UIConstants.ButtonContainerHorizontalAlignment.center,
                                                 appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "Resume")!),
-                                                label: NSLocalizedString("Resume", comment: "Resume paused route"))
+                                                label: NSLocalizedString("resumePausedRouteBUttonAccessibilityLabel", comment: "Accessibility label for button allowing the user to resume a paused route"))
         
         /// create stack view for aligning and distributing bottom layer buttons
         let stackView   = UIStackView()

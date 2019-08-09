@@ -56,6 +56,8 @@ enum AppState {
     case startingResumeProcedure(route: SavedRoute, mapAsAny: Any?, navigateStartToEnd: Bool)
     /// the AR session has entered the relocalizing state, which means that we can now realign the session
     case readyForFinalResumeAlignment
+    /// the user is attempting to name the route they're in the process of saving
+    case startingNameSavedRouteProcedure(mapAsAny: Any?)
     
     /// rawValue is useful for serializing state values, which we are currently using for our logging feature
     var rawValue: String {
@@ -84,9 +86,24 @@ enum AppState {
             return "startingResumeProcedure(route=notloggedhere, map=notlogged, navigateStartToEnd=\(navigateStartToEnd))"
         case .readyForFinalResumeAlignment:
             return "readyForFinalResumeAlignment"
+        case .startingNameSavedRouteProcedure:
+            return "startingNameSavedRouteProcedure"
         }
     }
 }
+
+///Declare some global boolina flags related to the state
+///this boolian marks whether the curent route is 'paused' or not from the use of the pause button
+var paused: Bool = false
+
+/// this boolean marks whether or not the app is recording a multi use route
+var recordingSingleUseRoute: Bool = false
+
+///this boolean marks whether or not the app is saving a starting anchor point
+var startAnchorPoint: Bool = false
+
+///this boolean denotes whether or not the app is loading a route from an automatic alignment
+var isAutomaticAlignment: Bool = false
 
 /// The view controller that handles the main Clew window.  This view controller is always active and handles the various views that are used for different app functionalities.
 class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDelegate, AVSpeechSynthesizerDelegate {
@@ -118,6 +135,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 handleStateTransitionToMainScreen(announceArrival: announceArrival)
             case .startingPauseProcedure:
                 handleStateTransitionToStartingPauseProcedure()
+
             case .pauseWaitingPeriod:
                 handleStateTransitionToPauseWaitingPeriod()
             case .completingPauseProcedure:
@@ -130,6 +148,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             case .readyForFinalResumeAlignment:
                 // nothing happens currently
                 break
+            case .startingNameSavedRouteProcedure(let mapAsAny):
+                handleStateTransitionToStartingNameSavedRouteProcedure(mapAsAny: mapAsAny)
             case .initializing:
                 break
             }
@@ -148,8 +168,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// A boolean that tracks whether or not to suppress tracking warnings.  By default we don't suppress, but when the help popover is presented we do.
     var suppressTrackingWarnings = false
     
-    /// This Boolean marks whether or not the pause procedure is being used to create a landmark at the start of a route (true) or if it is being used to pause an already recorded route
-    var creatingRouteLandmark: Bool = false
+    /// This Boolean marks whether or not the pause procedure is being used to create a Anchor Point at the start of a route (true) or if it is being used to pause an already recorded route
+    var creatingRouteAnchorPoint: Bool = false
     
     /// This Boolean marks whether or not the user is resuming a route
     var isResumedRoute: Bool = false
@@ -157,7 +177,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// Set to true when the user is attempting to load a saved route that has a map associated with it. Once relocalization succeeds, this flag should be set back to false
     var attemptingRelocalization: Bool = false
     
-    /// This is an audio player that queues up the voice note associated with a particular route landmark. The player is created whenever a saved route is loaded. Loading it before the user clicks the "Play Voice Note" button allows us to call the prepareToPlay function which reduces the latency when the user clicks the "Play Voice Note" button.
+    /// This is an audio player that queues up the voice note associated with a particular route Anchor Point. The player is created whenever a saved route is loaded. Loading it before the user clicks the "Play Voice Note" button allows us to call the prepareToPlay function which reduces the latency when the user clicks the "Play Voice Note" button.
     var voiceNoteToPlay: AVAudioPlayer?
     
     // MARK: - Speech Synthesizer Delegate
@@ -202,9 +222,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// Handler for the recordingRoute app state
     func handleStateTransitionToRecordingRoute() {
         // records a new path
-        
-        // make sure to never record a path with a transform set
-        sceneView.session.setWorldOrigin(relativeTransform: simd_float4x4.makeTranslation(0, 0, 0))
+        ///updates the state boolian to signifiy that the program is no longer saving the first anchor point
+        startAnchorPoint = false
         attemptingRelocalization = false
         
         crumbs = []
@@ -234,8 +253,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
 
         // If the route has not yet been saved, we can no longer save this route
         routeName = nil
-        beginRouteLandmark = RouteLandmark()
-        endRouteLandmark = RouteLandmark()
+        beginRouteAnchorPoint = RouteAnchorPoint()
+        endRouteAnchorPoint = RouteAnchorPoint()
 
         logger.resetNavigationLog()
 
@@ -308,18 +327,19 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
 
         if navigateStartToEnd {
             crumbs = route.crumbs.reversed()
-            pausedTransform = route.beginRouteLandmark.transform
+            pausedTransform = route.beginRouteAnchorPoint.transform
         } else {
             crumbs = route.crumbs
-            pausedTransform = route.endRouteLandmark.transform
+            pausedTransform = route.endRouteAnchorPoint.transform
         }
-        // make sure to clear out any relative transform that was saved before so we accurately align
-        sceneView.session.setWorldOrigin(relativeTransform: simd_float4x4.makeTranslation(0, 0, 0))
         sceneView.session.run(configuration, options: [.removeExistingAnchors])
 
         if isTrackingPerformanceNormal, isSameMap {
             // we can skip the whole process of relocalization since we are already using the correct map and tracking is normal.  It helps to strip out old anchors to reduce jitter though
+            ///PATHPOINT load route from automatic alignment -> start navigation
+            
             isResumedRoute = true
+            isAutomaticAlignment = true
             state = .readyToNavigateOrPause(allowPause: false)
         } else {
             // setting this flag after entering the .limited(reason: .relocalizing) state is a bit error prone.  Since there is a waiting period, there is no way that we will ever finish the alignment countdown before the session has successfully restarted
@@ -328,13 +348,20 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
     }
     
+    /// Handler for the startingNameSavedRouteProcedure app state
+    func handleStateTransitionToStartingNameSavedRouteProcedure(mapAsAny: Any?){
+        hideAllViewsHelper()
+        nameSavedRouteController.mapAsAny = mapAsAny
+        add(nameSavedRouteController)
+    }
+    
     /// Handler for the startingPauseProcedure app state
     func handleStateTransitionToStartingPauseProcedure() {
         // clear out these variables in case they had already been created
-        if creatingRouteLandmark {
-            beginRouteLandmark = RouteLandmark()
+        if creatingRouteAnchorPoint {
+            beginRouteAnchorPoint = RouteAnchorPoint()
         } else {
-            endRouteLandmark = RouteLandmark()
+            endRouteAnchorPoint = RouteAnchorPoint()
         }
         do {
             try showPauseTrackingButton()
@@ -353,6 +380,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         delayTransition()
         playAlignmentConfirmation = DispatchWorkItem{
             self.rootContainerView.countdownTimer.isHidden = true
+            if paused && recordingSingleUseRoute{
+                ///announce to the user that they have sucessfully saved an anchor point.
+                self.delayTransition(announcement: NSLocalizedString("singleUseRouteAnchorPointToPausedStateAnnouncement", comment: "This is the announcement which is spoken after creating an anchor point in the process of pausing the tracking session of recording a single use route"), initialFocus: nil)
+            }
+
             self.pauseTracking()
         }
         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(ViewController.alignmentWaitingPeriod), execute: playAlignmentConfirmation!)
@@ -360,33 +392,54 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// Handler for the completingPauseProcedure app state
     func handleStateTransitionToCompletingPauseProcedure() {
-        // TODO: we should not be able to create a route landmark if we are in the relocalizing state... (might want to handle this when the user stops navigation on a route they loaded.... This would obviate the need to handle this in the recordPath code as well
+        // TODO: we should not be able to create a route Anchor Point if we are in the relocalizing state... (might want to handle this when the user stops navigation on a route they loaded.... This would obviate the need to handle this in the recordPath code as well
         print("completing pause procedure")
-        if creatingRouteLandmark {
+        if creatingRouteAnchorPoint {
             guard let currentTransform = sceneView.session.currentFrame?.camera.transform else {
-                print("can't properly save landmark: TODO communicate this to the user somehow")
+                print("can't properly save Anchor Point: TODO communicate this to the user somehow")
                 return
             }
-            beginRouteLandmark.transform = currentTransform
-            print("setting transform", beginRouteLandmark.transform)
+            beginRouteAnchorPoint.transform = currentTransform
+            print("setting transform", beginRouteAnchorPoint.transform)
 
             Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(playSound)), userInfo: nil, repeats: false)
 //            rootContainerView.pauseTrackingView.isHidden = true
             pauseTrackingController.remove()
-            state = .mainScreen(announceArrival: false)
+            
+            ///PATHPOINT begining anchor point alignment timer -> record route
+            ///announce to the user that they have sucessfully saved an anchor point.
+            delayTransition(announcement: NSLocalizedString("multipleUseRouteAnchorPointToRecordingRouteAnnouncement", comment: "This is the announcement which is spoken after the first anchor point of a multiple use route is saved. this signifies the completeion of the saving an anchor point procedure and the start of recording a route to be saved."), initialFocus: nil)
+            ///sends the user to a route recording of the program is creating a beginning route Anchor Point
+            state = .recordingRoute
             return
         } else if let currentTransform = sceneView.session.currentFrame?.camera.transform {
-            endRouteLandmark.transform = currentTransform
+            endRouteAnchorPoint.transform = currentTransform
 
             if #available(iOS 12.0, *) {
                 sceneView.session.getCurrentWorldMap { worldMap, error in
-                    self.getRouteNameAndSaveRouteHelper(mapAsAny: worldMap)
-                    self.showResumeTrackingButton()
-                    Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(self.playSound)), userInfo: nil, repeats: false)
-                    self.state = .pauseProcedureCompleted
+                    //self.getRouteNameAndSaveRouteHelper(mapAsAny: worldMap)
+                    //self.showResumeTrackingButton()
+                    //Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(self.playSound)), userInfo: nil, repeats: false)
+
+
+                    
+                    //check whether or not the path was called from the pause menu or not
+                    if paused {
+                        ///PATHPOINT pause recording anchor point alignment timer -> resume tracking
+                        //proceed as normal with the pause structure (single use route)
+                        self.justTraveledRoute = SavedRoute(id: "single use", name: "single use", crumbs: self.crumbs, dateCreated: Date() as NSDate, beginRouteAnchorPoint: self.beginRouteAnchorPoint, endRouteAnchorPoint: self.endRouteAnchorPoint)
+                        self.showResumeTrackingButton()
+                        self.state = .pauseProcedureCompleted
+                        
+                    } else {
+
+                        ///PATHPOINT end anchor point alignment timer -> Save Route View
+                        self.delayTransition(announcement: NSLocalizedString("multipleUseRouteAnchorPointToSaveARouteAnnouncement", comment: "This is an announcement which is spoken when the user saves the end anchor point for a multiple use route. This signifies the transition from saving an anchor point to the screen where the user can name and save their route"), initialFocus: nil)
+                        ///sends the user to the play/pause screen
+                        self.state = .startingNameSavedRouteProcedure(mapAsAny: worldMap)
+                    }
                 }
             } else {
-                getRouteNameAndSaveRouteHelper(mapAsAny: nil)
                 showResumeTrackingButton()
                 Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(self.playSound)), userInfo: nil, repeats: false)
                 state = .pauseProcedureCompleted
@@ -394,26 +447,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
     }
     
-    /// Prompt the user for the name of a route and persist the route data if the user supplies one.  If the user cancels, no action is taken.
-    ///
-    /// - Parameter mapAsAny: the world map (the `Any?` type is used since it is optional and we want to maintain backward compatibility with iOS 11.3
-    func getRouteNameAndSaveRouteHelper(mapAsAny: Any?) {
-        if routeName == nil {
-            // get a route name
-            showRouteNamingDialog(mapAsAny: mapAsAny)
-        } else {
-            do {
-                // TODO: factor this out since it shows up in a few places
-                let id = String(Int64(NSDate().timeIntervalSince1970 * 1000)) as NSString
-                try archive(routeId: id, beginRouteLandmark: beginRouteLandmark, endRouteLandmark: endRouteLandmark, worldMapAsAny: mapAsAny)
-            } catch {
-                fatalError("Can't archive route: \(error.localizedDescription)")
-            }
-        }
-    }
-    
     /// Called when the user presses the routes button.  The function will display the `Routes` view, which is managed by `RoutesViewController`.
     @objc func routesButtonPressed() {
+        ///update state boolians
+        paused = false
+        isAutomaticAlignment = false
+        recordingSingleUseRoute = false
+        
+        
         let storyBoard: UIStoryboard = UIStoryboard(name: "SettingsAndHelp", bundle: nil)
         let popoverContent = storyBoard.instantiateViewController(withIdentifier: "Routes") as! RoutesViewController
         popoverContent.preferredContentSize = CGSize(width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height)
@@ -432,6 +473,21 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         self.present(nav, animated: true, completion: nil)
     }
     
+    @objc func saveRouteButtonPressed() {
+        let id = String(Int64(NSDate().timeIntervalSince1970 * 1000)) as NSString
+        // Get the input values from user, if it's nil then use timestamp
+        self.routeName = nameSavedRouteController.textField.text as NSString? ?? id
+        try! self.archive(routeId: id, beginRouteAnchorPoint: self.beginRouteAnchorPoint, endRouteAnchorPoint: self.endRouteAnchorPoint, worldMapAsAny: nameSavedRouteController.mapAsAny)
+        hideAllViewsHelper()
+        /// PATHPOINT Save Route View -> play/pause
+        ///Announce to the user that they have finished the alignment process and are now at the play pause screen
+        self.delayTransition(announcement: NSLocalizedString("saveRouteToPlayPauseAnnouncement", comment: "This is an announcement which is spoken when the user finishes saving their route. This announcement signifies the transition from the view where the user can name or save their route to the screen where the user can either pause the AR session tracking or they can perform return navigation."), initialFocus: nil)
+        ///Clearing the save route text field
+        nameSavedRouteController.textField.text = ""
+        ///perform the state transition
+        self.state = .readyToNavigateOrPause(allowPause: true)
+    }
+    
     /// Hide all the subviews.  TODO: This should probably eventually refactored so it happens more automatically.
     func hideAllViewsHelper() {
         recordPathController.remove()
@@ -442,6 +498,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         pauseTrackingController.remove()
         resumeTrackingConfirmController.remove()
         resumeTrackingController.remove()
+        nameSavedRouteController.remove()
         rootContainerView.countdownTimer.isHidden = true
     }
     
@@ -460,12 +517,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     ///
     /// - Parameters:
     ///   - routeId: the ID of the route
-    ///   - beginRouteLandmark: the route landmark for the beginning (if there is no route landmark at the beginning, the elements of this struct can be nil)
-    ///   - endRouteLandmark: the route landmark for the end (if there is no route landmark at the end, the elements of this struct can be nil)
+    ///   - beginRouteAnchorPoint: the route Anchor Point for the beginning (if there is no route Anchor Point at the beginning, the elements of this struct can be nil)
+    ///   - endRouteAnchorPoint: the route Anchor Point for the end (if there is no route Anchor Point at the end, the elements of this struct can be nil)
     ///   - worldMapAsAny: the world map (we use `Any?` since it is optional and we want to maintain backward compatibility with iOS 11.3)
     /// - Throws: an error if something goes wrong
-    func archive(routeId: NSString, beginRouteLandmark: RouteLandmark, endRouteLandmark: RouteLandmark, worldMapAsAny: Any?) throws {
-        let savedRoute = SavedRoute(id: routeId, name: routeName!, crumbs: crumbs, dateCreated: Date() as NSDate, beginRouteLandmark: beginRouteLandmark, endRouteLandmark: endRouteLandmark)
+    func archive(routeId: NSString, beginRouteAnchorPoint: RouteAnchorPoint, endRouteAnchorPoint: RouteAnchorPoint, worldMapAsAny: Any?) throws {
+        let savedRoute = SavedRoute(id: routeId, name: routeName!, crumbs: crumbs, dateCreated: Date() as NSDate, beginRouteAnchorPoint: beginRouteAnchorPoint, endRouteAnchorPoint: endRouteAnchorPoint)
         try dataPersistence.archive(route: savedRoute, worldMapAsAny: worldMapAsAny)
         justTraveledRoute = savedRoute
     }
@@ -548,6 +605,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// route recording VC (called on app start)
     var recordPathController: RecordPathController!
     
+    /// saving route name VC
+    var nameSavedRouteController: NameSavedRouteController!
+    
     /// start route navigation VC
     var startNavigationController: StartNavigationController!
     
@@ -573,6 +633,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         recordPathController = RecordPathController()
         startNavigationController = StartNavigationController()
         stopNavigationController = StopNavigationController()
+        nameSavedRouteController = NameSavedRouteController()
         
         // Add the scene to the view, which is a RootContainerView
         sceneView.frame = view.frame
@@ -700,55 +761,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
     }
     
-    /// Display a warning that tells the user they must create a landmark to be able to use this route again in the forward direction
-    func showRecordPathWithoutLandmarkWarning() {
-        let userDefaults: UserDefaults = UserDefaults.standard
-        let showedRecordPathWithoutLandmarkWarning: Bool? = userDefaults.object(forKey: "showedRecordPathWithoutLandmarkWarning") as? Bool
-        if showedRecordPathWithoutLandmarkWarning == nil && beginRouteLandmark.transform == nil {
-            userDefaults.set(true, forKey: "showedRecordPathWithoutLandmarkWarning")
-            // Show logging disclaimer when user opens app for the first time
-            let alert = UIAlertController(title: "Creating reusable routes",
-                                          message: NSLocalizedString("To navigate this route in the forward direction at a later time, you must create a landmark before starting the recording.", comment: "A message to the user"),
-                                          preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: NSLocalizedString("Continue with single-use route", comment: "The label of an option for the user"), style: .default, handler: { action -> Void in
-                // proceed to recording
-                self.state = .recordingRoute
-            }
-            ))
-            alert.addAction(UIAlertAction(title: NSLocalizedString("Cancel recording", comment: "The label of an option for the user"), style: .default, handler: { action -> Void in
-                // nothing to do, just stay on the main screen
-            }
-            ))
-            self.present(alert, animated: true, completion: nil)
-        } else {
-            state = .recordingRoute
-        }
+    /// Display a warning that tells the user they must create a Anchor Point to be able to use this route again in the forward direction
+    func showRecordPathWithoutAnchorPointWarning() {
         
-    }
-    
-    /// Display a warning that tells the user they must create a landmark to be able to use this route again in the reverse direction
-    func showNavigatePathWithoutLandmarkWarning() {
-        let userDefaults: UserDefaults = UserDefaults.standard
-        let showedNavigatePathWithoutLandmarkWarning: Bool? = userDefaults.object(forKey: "showedNavigatePathWithoutLandmarkWarning") as? Bool
-        if showedNavigatePathWithoutLandmarkWarning == nil && endRouteLandmark.transform == nil && !isResumedRoute {
-            userDefaults.set(true, forKey: "showedNavigatePathWithoutLandmarkWarning")
-            // Show logging disclaimer when user opens app for the first time
-            let alert = UIAlertController(title: NSLocalizedString("Creating reusable routes", comment: "Header of a pop-up message"),
-                                          message: NSLocalizedString("To navigate this route in the reverse direction at a later time, you must activate the pause button before navigating the route.", comment: "A message to the user"),
-                                          preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: NSLocalizedString("Continue with single-use route", comment: "Option for user to select"), style: .default, handler: { action -> Void in
-                // proceed to navigation
-                self.state = .navigatingRoute
-            }
-            ))
-            alert.addAction(UIAlertAction(title: NSLocalizedString("Cancel navigation", comment: "Option for user to select"), style: .default, handler: { action -> Void in
-                // nothing to do, just stay on the current screen
-            }
-            ))
-            self.present(alert, animated: true, completion: nil)
-        } else {
-            state = .navigatingRoute
-        }
+        state = .recordingRoute
+        
     }
     
     /// func that prepares the state transition to home by clearing active processes and data
@@ -762,8 +779,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
         followingCrumbs?.invalidate()
         routeName = nil
-        beginRouteLandmark = RouteLandmark()
-        endRouteLandmark = RouteLandmark()
+        beginRouteAnchorPoint = RouteAnchorPoint()
+        endRouteAnchorPoint = RouteAnchorPoint()
         playAlignmentConfirmation?.cancel()
         rootContainerView.announcementText.isHidden = true
         nav.headingOffset = 0.0
@@ -778,17 +795,20 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// function that creates alerts for the home button
     func homePageNavigationProcesses() {
         // Create alert to warn users of lost information
-        let alert = UIAlertController(title: "Are you sure?",
-                                      message: "If you exit this process right now, your active route information will be lost.",
+        let alert = UIAlertController(title: NSLocalizedString("homeAlertTitle", comment: "This is the title of an alert which shows up when the user tries to go home from inside an active process."),
+                                      message: NSLocalizedString("homeAlertContent", comment: "this is the content of an alert which tells the user that if they continue with going to the home page the current process will be stopped."),
                                       preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "Go to the Home Page", style: .default, handler: { action -> Void in
+        alert.addAction(UIAlertAction(title: NSLocalizedString("homeAlertConfirmNavigationButton", comment: "This text appears on a button in an alert notifying the user that if they navigate to the home page they will stop their curent process. This text appears on the button which signifies that the user wants to continue to the home screen"), style: .default, handler: { action -> Void in
             // proceed to home page
             self.clearState()
             self.hideAllViewsHelper()
+            if case .startingNameSavedRouteProcedure = self.state {
+                self.nameSavedRouteController.textField.text = ""
+            }
             self.state = .mainScreen(announceArrival: false)
         }
         ))
-        alert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: { action -> Void in
+        alert.addAction(UIAlertAction(title: NSLocalizedString("cancelPop-UpButtonLabel", comment: "A button which closes the current pop up"), style: .default, handler: { action -> Void in
             // nothing to do, just stay on the page
         }
         ))
@@ -796,67 +816,29 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     }
 
     
-    /// Display a warning that tells the user they must create a landmark to be able to use this route again in the forward direction
-    /// Display the dialog that prompts the user to enter a route name.  If the user enters a route name, the route along with the optional world map will be persisted.
-    ///
-    /// - Parameter mapAsAny: the world map to save (the `Any?` type is used to indicate that the map is optional and to preserve backwards compatibility with iOS 11.3)
-    @objc func showRouteNamingDialog(mapAsAny: Any?) {
-        // Set title and message for the alert dialog
-        if #available(iOS 12.0, *) {
-            justUsedMap = mapAsAny as! ARWorldMap?
-        }
-        let alertController = UIAlertController(title: NSLocalizedString("Save route", comment: "The title of a popup window where user enters a name for the route they want to save."), message: NSLocalizedString("Enter the name of the route", comment: "Ask user to provide a descriptive name for the route they want to save."), preferredStyle: .alert)
-        // The confirm action taking the inputs
-        let saveAction = UIAlertAction(title: NSLocalizedString("Save", comment: "An option for the user to select"), style: .default) { (_) in
-            let id = String(Int64(NSDate().timeIntervalSince1970 * 1000)) as NSString
-            // Get the input values from user, if it's nil then use timestamp
-            self.routeName = alertController.textFields?[0].text as NSString? ?? id
-            try! self.archive(routeId: id, beginRouteLandmark: self.beginRouteLandmark, endRouteLandmark: self.endRouteLandmark, worldMapAsAny: mapAsAny)
-        }
-            
-        // The cancel action saves the just traversed route so you can navigate back along it later
-        let cancelAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: "An option for the user to select"), style: .cancel) { (_) in
-            self.justTraveledRoute = SavedRoute(id: "dummyid", name: "Last route", crumbs: self.crumbs, dateCreated: Date() as NSDate, beginRouteLandmark: self.beginRouteLandmark, endRouteLandmark: self.endRouteLandmark)
-        }
-        
-        // Add textfield to our dialog box
-        alertController.addTextField { (textField) in
-            textField.becomeFirstResponder()
-            textField.placeholder = NSLocalizedString("Enter route title", comment: "A placeholder before user enters text in textbox")
-        }
-            
-        // Add the action to dialogbox
-        alertController.addAction(saveAction)
-        alertController.addAction(cancelAction)
-            
-        // Finally, present the dialog box
-        present(alertController, animated: true, completion: nil)
-    }
-
-    
-    /// Show the dialog that allows the user to enter textual information to help them remember a landmark.
-    @objc func showLandmarkInformationDialog() {
+    /// Show the dialog that allows the user to enter textual information to help them remember a Anchor Point.
+    @objc func showAnchorPointInformationDialog() {
         rootContainerView.homeButton.isHidden = false
 //        backButton.isHidden = true
         // Set title and message for the alert dialog
-        let alertController = UIAlertController(title: NSLocalizedString("Landmark information", comment: "The header of a pop-up menu"), message: NSLocalizedString("Enter text about the landmark that will help you find it later.", comment: "Prompts user to enter information"), preferredStyle: .alert)
+        let alertController = UIAlertController(title: NSLocalizedString("anchorPointTextHeading", comment: "The header of a pop-up menu which prompts the user to write descriptive text about their route anchor point"), message: NSLocalizedString("anchorPointTextPrompt", comment: "Prompts user to enter descriptive text about their anchor point"), preferredStyle: .alert)
         // The confirm action taking the inputs
-        let saveAction = UIAlertAction(title: NSLocalizedString("Ok", comment: "A button for user to click to acknowledge and close a pop-up"), style: .default) { (_) in
-            if self.creatingRouteLandmark {
-                self.beginRouteLandmark.information = alertController.textFields?[0].text as NSString?
+        let saveAction = UIAlertAction(title: NSLocalizedString("anchorPointTextPop-UpConfirmation", comment: "A button for user to click to confirm the text note they added to their anchor point and close a pop-up"), style: .default) { (_) in
+            if self.creatingRouteAnchorPoint {
+                self.beginRouteAnchorPoint.information = alertController.textFields?[0].text as NSString?
             } else {
-                self.endRouteLandmark.information = alertController.textFields?[0].text as NSString?
+                self.endRouteAnchorPoint.information = alertController.textFields?[0].text as NSString?
             }
         }
         
         // The cancel action saves the just traversed route so you can navigate back along it later
-        let cancelAction = UIAlertAction(title: NSLocalizedString("Don't specify this information", comment: "A button for user to click"), style: .cancel) { (_) in
+        let cancelAction = UIAlertAction(title: NSLocalizedString("anchorPointPop-UpCancel", comment: "A button for user to click which will close the pop up without saving any information the user put in"), style: .cancel) { (_) in
         }
         
         // Add textfield to our dialog box
         alertController.addTextField { (textField) in
             textField.becomeFirstResponder()
-            textField.placeholder = NSLocalizedString("Enter landmark information", comment: "A placeholder that appears in text box before user enters any text.")
+            textField.placeholder = NSLocalizedString("anchorPointTextPlaceholder", comment: "A placeholder that appears in text box which the user uses to enter a text label for an anchor point.")
         }
         
         // Add the action to dialogbox
@@ -900,10 +882,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// Show logging disclaimer when user opens app for the first time.
     func showLogAlert() {
-        let logAlertVC = UIAlertController(title: NSLocalizedString("Sharing your experience with Clew", comment: "The heading of a pop-up"),
-                                           message: NSLocalizedString("Help us improve the app by logging your Clew experience. These logs will not include any images or personal information. You can turn this off in Settings.", comment: "Disclaimer shown to the user when they open the app for the first time"),
+        let logAlertVC = UIAlertController(title: NSLocalizedString("sharingYourExperiencePop-UpHeading", comment: "The heading of a pop-up telling the user that their data is being saved with error logs"),
+                                           message: NSLocalizedString("sharingYourExperiencePop-UpContent", comment: "Disclaimer shown to the user when they open the app for the first time"),
                                            preferredStyle: .alert)
-        logAlertVC.addAction(UIAlertAction(title: NSLocalizedString("Ok", comment: "What the user clicks to acknowledge a message and dismiss pop-up"), style: .default, handler: { action -> Void in
+        logAlertVC.addAction(UIAlertAction(title: NSLocalizedString("anchorPointTextPop-UpConfirmation", comment: "What the user clicks to acknowledge a message and dismiss pop-up"), style: .default, handler: { action -> Void in
             self.showSafetyAlert()
         }
         ))
@@ -912,10 +894,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// Show safety disclaimer when user opens app for the first time.
     func showSafetyAlert() {
-        let safetyAlertVC = UIAlertController(title: NSLocalizedString("For your safety", comment: "The heading of a pop-up"),
-                                              message: NSLocalizedString("While using the app, please be aware of your surroundings. You agree that your use of the App is at your own risk, and it is solely your responsibility to maintain your personal safety. Visit www.clewapp.org for more information on how to use the app.", comment: "Disclaimer shown to the user when they open the app for the first time"),
+        let safetyAlertVC = UIAlertController(title: NSLocalizedString("forYourSafetyPop-UpHeading", comment: "The heading of a pop-up telling the user to be aware of their surroundings while using clew"),
+                                              message: NSLocalizedString("forYourSafetyPop-UpContent", comment: "Disclaimer shown to the user when they open the app for the first time"),
                                               preferredStyle: .alert)
-        safetyAlertVC.addAction(UIAlertAction(title: NSLocalizedString("Ok", comment: "What the user clicks to acknowledge a message and dismiss pop-up"), style: .default, handler: nil))
+        safetyAlertVC.addAction(UIAlertAction(title: NSLocalizedString("anchorPointTextPop-UpConfirmation", comment: "What the user clicks to acknowledge a message and dismiss pop-up"), style: .default, handler: nil))
         self.present(safetyAlertVC, animated: true, completion: nil)
     }
     
@@ -963,7 +945,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         sceneView.delegate = self
     }
     
-    /// Handle the user clicking the confirm alignment to a saved landmark.  Depending on the app state, the behavior of this function will differ (e.g., if the route is being resumed versus reloaded)
+    /// Handle the user clicking the confirm alignment to a saved Anchor Point.  Depending on the app state, the behavior of this function will differ (e.g., if the route is being resumed versus reloaded)
     @objc func confirmAlignment() {
         if case .startingPauseProcedure = state {
             state = .pauseWaitingPeriod
@@ -1056,7 +1038,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         rootContainerView.homeButton.isHidden = true
 
         if announceArrival {
-            delayTransition(announcement: NSLocalizedString("You've arrived.", comment: "You have arrived at your destination."))
+            delayTransition(announcement: NSLocalizedString("completedNavigationAnnouncement", comment: "An announcement which is played to notify the user that they have arrived at the end of their route."))
         } else {
             delayTransition()
         }
@@ -1085,7 +1067,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         recordPathController.remove()
         recordPathController.view.isAccessibilityElement = false
         add(stopRecordingController)
-        delayTransition(announcement: NSLocalizedString("Hold vertically with the rear camera facing forward.", comment: "Hold the phone vertically with the rear camera facing forward."))
+        delayTransition(announcement: NSLocalizedString("properDevicePositioningAnnouncement", comment: "This is an announcement which plays to tell the user the best practices for aligning the phone"))
     }
     
     /// Display start navigation view/hide all other views
@@ -1128,13 +1110,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         resumeTrackingConfirmController.view.mainText?.text = ""
         voiceNoteToPlay = nil
         if navigateStartToEnd {
-            if let landmarkInformation = route.beginRouteLandmark.information as String? {
-                let infoString = "\n\n" + "The landmark information you entered is: " + landmarkInformation + "\n\n"
-                resumeTrackingConfirmController.landmarkLabel.text = infoString
-
+            if let AnchorPointInformation = route.beginRouteAnchorPoint.information as String? {
+                let infoString = "\n\n" + NSLocalizedString("anchorPointIntroductionToSavedText", comment: "This is the text which delineates the text that a user saved witht their saved anchor point. This text is shown when a suer loads an anchor point and the text that the user saved with their anchor point appears right after this string.") + AnchorPointInformation + "\n\n"
+                resumeTrackingConfirmController.anchorPointLabel.text = infoString
             }
-            if let beginRouteLandmarkVoiceNote = route.beginRouteLandmark.voiceNote {
-                let voiceNoteToPlayURL = beginRouteLandmarkVoiceNote.documentURL
+            if let beginRouteAnchorPointVoiceNote = route.beginRouteAnchorPoint.voiceNote {
+                let voiceNoteToPlayURL = beginRouteAnchorPointVoiceNote.documentURL
                 do {
                     let data = try Data(contentsOf: voiceNoteToPlayURL)
                     voiceNoteToPlay = try AVAudioPlayer(data: data, fileTypeHint: AVFileType.caf.rawValue)
@@ -1142,12 +1123,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 } catch {}
             }
         } else {
-            if let landmarkInformation = route.endRouteLandmark.information as String? {
-                let infoString = "\n\n" + "The landmark information you entered is: " + landmarkInformation + "\n\n"
-                resumeTrackingConfirmController.landmarkLabel.text = infoString
+            if let AnchorPointInformation = route.endRouteAnchorPoint.information as String? {
+                let infoString = "\n\n" + NSLocalizedString("anchorPointIntroductionToSavedText", comment: "This is the text which delineates the text that a user saved witht their saved anchor point. This text is shown when a suer loads an anchor point and the text that the user saved with their anchor point appears right after this string.") + AnchorPointInformation + "\n\n"
+                resumeTrackingConfirmController.anchorPointLabel.text = infoString
             }
-            if let endRouteLandmarkVoiceNote = route.endRouteLandmark.voiceNote {
-                let voiceNoteToPlayURL = endRouteLandmarkVoiceNote.documentURL
+            if let endRouteAnchorPointVoiceNote = route.endRouteAnchorPoint.voiceNote {
+                let voiceNoteToPlayURL = endRouteAnchorPointVoiceNote.documentURL
                 do {
                     let data = try Data(contentsOf: voiceNoteToPlayURL)
                     voiceNoteToPlay = try AVAudioPlayer(data: data, fileTypeHint: AVFileType.caf.rawValue)
@@ -1158,7 +1139,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
 //        rootContainerView.resumeTrackingConfirmView.getButtonByTag(tag: UIView.readVoiceNoteButtonTag)?.isHidden = voiceNoteToPlay == nil
         resumeTrackingConfirmController.readVoiceNoteButton?.isHidden = voiceNoteToPlay == nil
         let waitingPeriod = ViewController.alignmentWaitingPeriod
-        resumeTrackingConfirmController.view.mainText?.text?.append(String.localizedStringWithFormat(NSLocalizedString("Hold your device flat with the screen facing up. Press the top (short) edge flush against the same vertical surface that you used to create the landmark.  When you are ready, activate the align button to start the alignment countdown that will complete the procedure. Do not move the device until the phone provides confirmation via a vibration or sound cue.", comment: "Informative mssage that appears to the user."), waitingPeriod))
+        resumeTrackingConfirmController.view.mainText?.text?.append(String.localizedStringWithFormat(NSLocalizedString("anchorPointAlignmentText", comment: "Text describing the process of aligning to an anchorpoint. This text shows up on the alignment screen."), waitingPeriod))
         delayTransition()
     }
     
@@ -1180,9 +1161,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         stopNavigationController.remove()
         add(routeRatingController)
         if announceArrival {
-            routeRatingController.view.mainText?.text = NSLocalizedString("You've arrived. Please rate your service.", comment: "Announce to the user that they have arrived at their destination and ask user to rate their experience.")
+            routeRatingController.view.mainText?.text = NSLocalizedString("ratingYourServiceViewText", comment: "The text that is displayed when the user has completed navigation of their route. This prompts the user to rate their navigation experience.")
         } else {
-            routeRatingController.view.mainText?.text = NSLocalizedString("Please rate your service.", comment: "Ask user to rate their experience.")
+            routeRatingController.view.mainText?.text = NSLocalizedString("ratingYourServiceViewText", comment: "The text that is displayed when the user has completed navigation of their route. This prompts the user to rate their navigation experience.")
         }
         
         feedbackGenerator = nil
@@ -1277,7 +1258,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     let unit = [0: "ft", 1: "m"]
     
     /// the text to display for each possible unit
-    let unitText = [0: " feet", 1: " meters"]
+    let unitText = [0: NSLocalizedString("imperialUnitText", comment: "this is the text which is displayed in the settings to show the user the option of imperial measurements"), 1: NSLocalizedString("metricUnitText", comment: "this is the text which is displayed in the settings to show the user the option of metric measurements")] as [Int : String]
     
     /// the converstion factor to apply to distances as reported by ARKit so that they are expressed in the user's chosen distance units.  ARKit's unit of distance is meters.
     let unitConversionFactor = [0: Float(100.0/2.54/12.0), 1: Float(1.0)]
@@ -1306,11 +1287,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// This keeps track of the paused transform while the current session is being realigned to the saved route
     var pausedTransform : simd_float4x4?
     
-    /// the landmark to use to mark the beginning of the route currently being recorded
-    var beginRouteLandmark = RouteLandmark()
+    /// the Anchor Point to use to mark the beginning of the route currently being recorded
+    var beginRouteAnchorPoint = RouteAnchorPoint()
     
-    /// the landmark to use to mark the end of the route currently being recorded
-    var endRouteLandmark = RouteLandmark()
+    /// the Anchor Point to use to mark the end of the route currently being recorded
+    var endRouteAnchorPoint = RouteAnchorPoint()
 
     /// the name of the route being recorded
     var routeName: NSString?
@@ -1343,41 +1324,68 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// handles the user pressing the record path button.
     @objc func recordPath() {
-        showRecordPathWithoutLandmarkWarning()
+        ///PATHPOINT record two way path button -> create Anchor Point
+        ///route has not been auto aligned
+        isAutomaticAlignment = false
+        ///tells the program that it is recording a two way route
+        recordingSingleUseRoute = false
+        //update the state boolian to say that this is not paused
+        paused = false
+        ///update the state boolian to say that this is recording the first anchor point
+        startAnchorPoint = true
+
+        ///sends the user to create a Anchor Point
+        rootContainerView.homeButton.isHidden = false
+        //        backButton.isHidden = true
+        creatingRouteAnchorPoint = true
+        
+        // make sure to clear out any relative transform and paused transform so the alignment is accurate
+        print("starting pause procedure", creatingRouteAnchorPoint)
+        state = .startingPauseProcedure
     }
     
     /// handles the user pressing the stop recording button.
     ///
     /// - Parameter sender: the button that generated the event
     @objc func stopRecording(_ sender: UIButton) {
-        if beginRouteLandmark.transform != nil {
-            print("Attempting to save route")
-            if #available(iOS 12.0, *) {
-                sceneView.session.getCurrentWorldMap { worldMap, error in
-                    self.getRouteNameAndSaveRouteHelper(mapAsAny: worldMap)
-                }
-            } else {
-                getRouteNameAndSaveRouteHelper(mapAsAny: nil)
-            }
-        }
 
         isResumedRoute = false
-        state = .readyToNavigateOrPause(allowPause: true)
+
+        rootContainerView.homeButton.isHidden = false // home button here
+        resumeTrackingController.remove()
+        resumeTrackingConfirmController.remove()
+        stopRecordingController.remove()
+        
+        ///checks if the route is a single use route or a multiple use route
+        if recordingSingleUseRoute == false{
+            ///PATHPOINT two way route recording finished -> create end Anchor Point
+            ///sets the variable tracking whether the route is paused to be false
+            paused = false
+            creatingRouteAnchorPoint = false
+            ///sends the user to the process where they create an end anchorpoint
+            state = .startingPauseProcedure
+        } else {
+            ///PATHPOINT one way route recording finished -> play/pause
+            state = .readyToNavigateOrPause(allowPause: true)
+        }
+        
     }
     
     /// handles the user pressing the start navigation button.
     ///
     /// - Parameter sender: the button that generated the event
     @objc func startNavigation(_ sender: UIButton) {
+        ///announce to the user that return navigation has started.
+        self.delayTransition(announcement: NSLocalizedString("startingReturnNavigationAnnouncement", comment: "This is an anouncement which is played when the user performs return navigation from the play pause menu. It signifies the start of a navigation session."), initialFocus: nil)
         // this will handle the appropriate state transition if we pass the warning
-        showNavigatePathWithoutLandmarkWarning()
+        state = .navigatingRoute
     }
     
     /// This helper function will restart the tracking session if a relocalization was in progress but did not succeed.  This is useful in the case when you want to allow for the recording of a new route and don't want to have the possibility achieving relocalization halfway through recording the route.
     func restartSessionIfFailedToRelocalize() {
         if attemptingRelocalization {
             if !suppressTrackingWarnings {
-                announce(announcement: NSLocalizedString("Could not match environment to the saved route. Starting new tracking session.", comment: "Current environment does not match up with the environment in previously saved route. About to start a new tracking session."))
+                announce(announcement: NSLocalizedString("noEnvironmentMatchAnnouncement", comment: "An announcement notifying the user that their current environment does not match up with an environment in a previously saved route, and that a new ARKit tracking session has been started."))
             }
             if #available(iOS 12.0, *) {
                 configuration.initialWorldMap = nil
@@ -1413,19 +1421,41 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// handles the user pressing the pause button
     @objc func startPauseProcedure() {
-        creatingRouteLandmark = false
-        state = .startingPauseProcedure
+        creatingRouteAnchorPoint = false
+        paused = true
+        
+        //checks if the pause button has been called from inside a recording a multi use route
+        if recordingSingleUseRoute == false {
+            hideAllViewsHelper()
+            ///PATHPOINT multi use route pause -> resume route
+            self.pauseTracking()
+        }else {
+            ///PATHPOINT single use route pause -> record end Anchor Point
+            state = .startingPauseProcedure
+        }
+       
+        
     }
     
-    /// handles the user pressing the landmark button
-    @objc func startCreateLandmarkProcedure() {
+    /// handles the user pressing the Anchor Point button
+    @objc func startCreateAnchorPointProcedure() {
         rootContainerView.homeButton.isHidden = false
 //        backButton.isHidden = true
-        creatingRouteLandmark = true
-        // make sure to clear out any relative transform and paused transform so the alignment is accurate
-        print("starting pause procedure", creatingRouteLandmark)
-        sceneView.session.setWorldOrigin(relativeTransform: simd_float4x4.makeTranslation(0, 0, 0))
-        state = .startingPauseProcedure
+        creatingRouteAnchorPoint = true
+        
+        ///the route has not been resumed automaticly from a saved route
+        isAutomaticAlignment = false
+        ///tell the program that a single use route is being recorded
+        recordingSingleUseRoute = true
+        paused = false
+        ///PATHPOINT single use route button -> recording a route
+        ///hide all other views
+        hideAllViewsHelper()
+        ///platy an announcemnt which tells the user that a route is being recorded
+        self.delayTransition(announcement: NSLocalizedString("singleUseRouteToRecordingRouteAnnouncement", comment: "This is an announcement which is spoken when the user starts recording a single use route. it informs the user that they are recording a single use route."), initialFocus: nil)
+        
+        //sends the user to the screen where they can start recording a route
+        state = .recordingRoute
     }
     
     /// this is called after the alignment countdown timer finishes in order to complete the pause tracking procedure
@@ -1461,7 +1491,21 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 
                 Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(self.playSound)), userInfo: nil, repeats: false)
                 self.isResumedRoute = true
-                self.state = .readyToNavigateOrPause(allowPause: false)
+                if paused {
+                    ///PATHPOINT paused anchor point alignment timer -> return navigation
+                    ///announce to the user that they have aligned to the anchor point sucessfully and are starting return navigation.
+                    paused = false
+                    self.delayTransition(announcement: NSLocalizedString("resumeAnchorPointToReturnNavigationAnnouncement", comment: "This is an Announcement which indicates that the pause session is complete, that the prgram was able to align with the anchor point, and that return navigation has started."), initialFocus: nil)
+                    self.state = .navigatingRoute
+
+                } else {
+                    ///PATHPOINT load saved route -> start navigation
+
+                    ///announce to the user that they have sucessfully aligned with their saved anchor point.
+                    self.delayTransition(announcement: NSLocalizedString("Aligned to anchor point. Starting navigation.", comment: "This is an announcement that is played when the user is loading a saved route. this signifies the transition between saving an anchor point and starting route navigation."), initialFocus: nil)
+                    self.state = .navigatingRoute
+
+                }
             }
         }
     }
@@ -1650,7 +1694,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
     }
     
-    /// Compute the heading vector of the phone.  When the phone is mostly upright, this is just the project of the negative z-axis of the device into the x-z plane.  When the phone is mostly flat, this is the y-axis of the phone projected into the x-z plane after the pitch and roll of the phone are undone.  The case where the phone is mostly flat is used primarily for alignment to and creation of landmarks.
+    /// Compute the heading vector of the phone.  When the phone is mostly upright, this is just the project of the negative z-axis of the device into the x-z plane.  When the phone is mostly flat, this is the y-axis of the phone projected into the x-z plane after the pitch and roll of the phone are undone.  The case where the phone is mostly flat is used primarily for alignment to and creation of Anchor Points.
     ///
     /// - Parameter transform: the position and orientation of the phone
     /// - Returns: the heading vector as a 4 dimensional vector (y-component and w-component will necessarily be 0)
@@ -1786,6 +1830,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         else if case .startingResumeProcedure = self.state {
             homePageNavigationProcesses()
         }
+        else if case .startingNameSavedRouteProcedure = self.state {
+            homePageNavigationProcesses()
+        }
         else {
             // proceed to home page
             clearState()
@@ -1805,7 +1852,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         popover?.delegate = self
         popover?.sourceView = self.view
         popover?.sourceRect = CGRect(x: 0, y: UIConstants.settingsAndHelpFrameHeight/2, width: 0,height: 0)
-        
+
         self.present(nav, animated: true, completion: nil)
     }
     
@@ -1884,16 +1931,16 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         
         if(slope > 0.3) { // Go upstairs
             if(hapticFeedback) {
-                dir += "\(Directions[direction.hapticDirection]!)" + NSLocalizedString(" and proceed upstairs", comment: "Additional directions given to user")
+                dir += "\(Directions[direction.hapticDirection]!)" + NSLocalizedString("climbStairsDirection", comment: "Additional directions given to user discussing climbing stairs")
             } else {
-                dir += "\(Directions[direction.clockDirection]!)" + NSLocalizedString(" and proceed upstairs", comment: "Additional directions given to user")
+                dir += "\(Directions[direction.clockDirection]!)" + NSLocalizedString(" and proceed upstairs", comment: "Additional directions given to user telling them to climb stairs")
             }
             updateDirectionText(dir, distance: 0, displayDistance: false)
         } else if (slope < -0.3) { // Go downstairs
             if(hapticFeedback) {
-                dir += "\(Directions[direction.hapticDirection]!) and proceed downstairs"
+                dir += "\(Directions[direction.hapticDirection]!)\(NSLocalizedString("descendStairsDirection" , comment: "This is a direction which instructs the user to descend stairs"))"
             } else {
-                dir += "\(Directions[direction.clockDirection]!) and proceed downstairs"
+                dir += "\(Directions[direction.clockDirection]!)\(NSLocalizedString("descendStairsDirection" , comment: "This is a direction which instructs the user to descend stairs"))"
             }
             updateDirectionText(dir, distance: direction.distance, displayDistance: false)
         } else { // nromal directions
@@ -2045,7 +2092,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 logString = "ExcessiveMotion"
                 print("Excessive motion")
                 if !suppressTrackingWarnings {
-                    announce(announcement: NSLocalizedString("Excessive motion.\nTracking performance is degraded.", comment: "Let user know that there is too much movement of their phone and thus the app's ability to track a route has been lowered."))
+                    announce(announcement: NSLocalizedString("excessiveMotionDegradedTrackingAnnouncemnt", comment: "An announcement which lets the user know that there is too much movement of their device and thus the app's ability to track a route has been lowered."))
                     if soundFeedback {
                         playSystemSound(id: 1050)
                     }
@@ -2054,7 +2101,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 logString = "InsufficientFeatures"
                 print("InsufficientFeatures")
                 if !suppressTrackingWarnings {
-                    announce(announcement: NSLocalizedString("Insufficient visual features.\nTracking performance is degraded.", comment: "Let user know that their current surroundings do not have enough visual markers and thus the app's ability to track a route has been lowered."))
+                    announce(announcement: NSLocalizedString("insuficientFeaturesDegradedTrackingAnnouncemnt", comment: "An announcement which lets the user know  that their current surroundings do not have enough visual markers and thus the app's ability to track a route has been lowered."))
                     if soundFeedback {
                         playSystemSound(id: 1050)
                     }
@@ -2072,28 +2119,29 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             logString = "Normal"
             if #available(iOS 12.0, *), configuration.initialWorldMap != nil, attemptingRelocalization {
                 if !suppressTrackingWarnings {
-                    announce(announcement: NSLocalizedString("Successfully matched current environment to saved route.", comment: "Let user know that their surroundings match up to the surroundings of a saved route and that they can begin navigating."))
+                    announce(announcement: NSLocalizedString("realignToSavedRouteAnnouncement", comment: "An announcement which lets the user know that their surroundings have been matched to a saved route"))
                 }
                 attemptingRelocalization = false
             } else if case let .limited(reason)? = trackingSessionState {
                 if !suppressTrackingWarnings {
                     if reason == .initializing {
-                        announce(announcement: NSLocalizedString("Tracking session initialized.", comment: "Let user know that the tracking session has started."))
+                        announce(announcement: NSLocalizedString("startedTrackingSessionAnnouncement", comment: "Announcemnt that lets user know that the ARKit tracking session (used for generating the user's position and how it changes) has started."))
                     } else {
-                        announce(announcement: NSLocalizedString("Tracking performance normal.", comment: "Let user know that the ability to track and record a route is normal."))
+                        announce(announcement: NSLocalizedString("fixedTrackingAnnouncement", comment: "Let user know that the ARKit tracking session has returned to its normal quality (this is played after the tracking has been restored from thir being insuficent visual features or excessive motion which degrade the tracking)"))
                         if soundFeedback {
                             playSystemSound(id: 1025)
                         }
                     }
                 }
             }
-            // resetting the origin is needed in the case when we realigned to a saved route
-            session.setWorldOrigin(relativeTransform: simd_float4x4.makeTranslation(0,0,0))
             if case .readyForFinalResumeAlignment = state {
                 // this will cancel any realignment if it hasn't happened yet and go straight to route navigation mode
                 rootContainerView.countdownTimer.isHidden = true
                 isResumedRoute = true
                 
+                isAutomaticAlignment = true
+                
+                ///PATHPOINT: Auto Alignment -> resume route
                 state = .readyToNavigateOrPause(allowPause: false)
             }
             print("normal")
@@ -2126,26 +2174,26 @@ extension ViewController: RecorderViewControllerDelegate {
     func didStartRecording() {
     }
     
-    /// Called when the user finishes recording a voice note.  This function adds the voice note to the `RouteLandmark` object.
+    /// Called when the user finishes recording a voice note.  This function adds the voice note to the `RouteAnchorPoint` object.
     ///
     /// - Parameter audioFileURL: <#audioFileURL description#>
     func didFinishRecording(audioFileURL: URL) {
-        if creatingRouteLandmark {
+        if creatingRouteAnchorPoint {
             // delete the file since we are re-recording it
-            if let beginRouteLandmarkVoiceNote = self.beginRouteLandmark.voiceNote {
+            if let beginRouteAnchorPointVoiceNote = self.beginRouteAnchorPoint.voiceNote {
                 do {
-                    try FileManager.default.removeItem(at: beginRouteLandmarkVoiceNote.documentURL)
+                    try FileManager.default.removeItem(at: beginRouteAnchorPointVoiceNote.documentURL)
                 } catch { }
             }
-            beginRouteLandmark.voiceNote = audioFileURL.lastPathComponent as NSString
+            beginRouteAnchorPoint.voiceNote = audioFileURL.lastPathComponent as NSString
         } else {
             // delete the file since we are re-recording it
-            if let endRouteLandmarkVoiceNote = self.endRouteLandmark.voiceNote {
+            if let endRouteAnchorPointVoiceNote = self.endRouteAnchorPoint.voiceNote {
                 do {
-                    try FileManager.default.removeItem(at: endRouteLandmarkVoiceNote.documentURL)
+                    try FileManager.default.removeItem(at: endRouteAnchorPointVoiceNote.documentURL)
                 } catch { }
             }
-            endRouteLandmark.voiceNote = audioFileURL.lastPathComponent as NSString
+            endRouteAnchorPoint.voiceNote = audioFileURL.lastPathComponent as NSString
         }
     }
 }

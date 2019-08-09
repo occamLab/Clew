@@ -66,18 +66,18 @@ public struct DirectionInfo {
 /// * Keys (`Int` from 1 to 12 inclusive): clock position
 /// * Values (`String`): corresponding spoken direction (e.g. "Slight right towards 2 o'clock")
 public let ClockDirections = [
-                              12: NSLocalizedString("Continue straight", comment: "Continue moving in forward direction"),
-                              1: NSLocalizedString("Slight right towards 1 o'clock", comment: "Angle your body towards the 1 o'clock direction"),
-                              2: NSLocalizedString("Slight right towards 2 o'clock", comment: "Angle your body towards the 2 o'clock direction"),
-                              3: NSLocalizedString("Turn right", comment: "Turn to your right"),
-                              4: NSLocalizedString("Turn towards 4 o'clock", comment: "Angle your body towards 4 o'clock direction"),
-                              5: NSLocalizedString("Turn around towards 5 o'clock", comment: "Angle your body towards 5 o'clock direction"),
-                              6: NSLocalizedString("Turn around towards 6 o'clock", comment: "Angle your body towards 6 o'clock direction"),
-                              7: NSLocalizedString("Turn around towards 7 o'clock", comment: "Angle your body towards 7 o'clock direction"),
-                              8: NSLocalizedString("Turn towards 8 o'clock", comment: "Angle your body towards 8 o'clock direction"),
-                              9: NSLocalizedString("Turn left", comment: "Turn to your left"),
-                              10: NSLocalizedString("Slight left towards 10 o'clock", comment: "Angle your body towards the 10 o'clock direction"),
-                              11: NSLocalizedString("Slight left towards 11 o'clock", comment: "Angle your body towards the 11 o'clock direction")
+                              12: NSLocalizedString("straightDirection", comment: "Direction to user to continue moving in forward direction"),
+                              1: NSLocalizedString("1o'clockDirection", comment: "direction to the user to turn towards the 1 o'clock direction"),
+                              2: NSLocalizedString("2o'clockDirection", comment: "direction to the user to turn towards the 2 o'clock direction"),
+                              3: NSLocalizedString("rightDirection", comment: "Direction to the user to make an approximately 90 degree right turn."),
+                              4: NSLocalizedString("4o'clockDirection", comment: "direction to the user to turn towards the 4 o'clock direction"),
+                              5: NSLocalizedString("5o'clockDirection", comment: "direction to the user to turn towards the 5 o'clock direction"),
+                              6: NSLocalizedString("6o'clockDirection", comment: "direction to the user to turn towards the 6 o'clock direction"),
+                              7: NSLocalizedString("7o'clockDirection", comment: "direction to the user to turn towards the 7 o'clock direction"),
+                              8: NSLocalizedString("8o'clockDirection", comment: "direction to the user to turn towards the 8 o'clock direction"),
+                              9: NSLocalizedString("leftDirection", comment: "Direction to the user to make an approximately 90 degree left turn."),
+                              10: NSLocalizedString("10o'clockDirection", comment: "direction to the user to turn towards the 10 o'clock direction"),
+                              11: NSLocalizedString("11o'clockDirection", comment: "direction to the user to turn towards the 11 o'clock direction")
                              ]
 
 /// Dictionary of directions, somehow based on haptic feedback.
@@ -89,12 +89,12 @@ public let ClockDirections = [
 ///  - Explain the rationale of this division
 ///  - Consider restructuring this
 public let HapticDirections = [
-                               1: NSLocalizedString("Continue straight", comment: "Continue moving in forward direction"),
-                               2: NSLocalizedString("Slight right", comment: "Angle your body slightly towards the right"),
-                               3: NSLocalizedString("Turn right", comment: "Turn to your right"),
-                               4: NSLocalizedString("Turn around", comment: "Turn completely around"),
-                               5: NSLocalizedString("Turn left", comment: "Turn to your left"),
-                               6: NSLocalizedString("Slight left", comment: "Angle your body slightly towards the left"),
+                               1: NSLocalizedString("straightDirection", comment: "Direction to user to continue moving in forward direction"),
+                               2: NSLocalizedString("slightRightDirection", comment: "Direction to user to take a slight right turn"),
+                               3: NSLocalizedString("rightDirection", comment: "Direction to the user to make an approximately 90 degree right turn."),
+                               4: NSLocalizedString("uTurnDirection", comment: "Direction to the user to turn around"),
+                               5: NSLocalizedString("leftDirection", comment: "Direction to the user to make an approximately 90 degree left turn."),
+                               6: NSLocalizedString("slightLeftDirection", comment: "Direction to user to take a slight left turn"),
                                0: "ERROR"
                               ] 
 

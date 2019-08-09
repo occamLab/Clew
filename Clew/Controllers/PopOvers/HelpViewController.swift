@@ -20,7 +20,7 @@ class HelpViewController : UIViewController, WKUIDelegate, WKNavigationDelegate 
 
     /// When the view has loaded, the index.html file will be loaded and rendered by webContent.
     override func viewDidLoad() {
-        title = "Clew Help"
+        title = NSLocalizedString("clewHelpTitle", comment: "This is the top heading of the help documentation")
         ///creates and loads the website
         helpCompiler.loadWebContent(webView: webContent)
     }

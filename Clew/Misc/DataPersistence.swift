@@ -95,11 +95,11 @@ class DataPersistence {
         try data.write(to: self.getRoutesURL(), options: [.atomic])
         // Remove the world map corresponding to the route.  We use try? to continue execution even if this fails, since it is not strictly necessary for continued operation
         try? FileManager().removeItem(atPath: self.getWorldMapURL(id: route.id as String).path)
-        if let beginRouteLandmarkVoiceNote = route.beginRouteLandmark.voiceNote {
-            try? FileManager().removeItem(at: beginRouteLandmarkVoiceNote.documentURL)
+        if let beginRouteAnchorPointVoiceNote = route.beginRouteAnchorPoint.voiceNote {
+            try? FileManager().removeItem(at: beginRouteAnchorPointVoiceNote.documentURL)
         }
-        if let endRouteLandmarkVoiceNote = route.endRouteLandmark.voiceNote {
-            try? FileManager().removeItem(at: endRouteLandmarkVoiceNote.documentURL)
+        if let endRouteAnchorPointVoiceNote = route.endRouteAnchorPoint.voiceNote {
+            try? FileManager().removeItem(at: endRouteAnchorPointVoiceNote.documentURL)
         }
     }
     
