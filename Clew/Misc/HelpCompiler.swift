@@ -131,7 +131,7 @@ class HelpCompiler {
             /// appends the latest section to the stack of sections
             result = result + section
         }
-        ///appends the footer information to the html string. this includes adding the javascript for handeling accesability (included inside this folder rather than a remote javascript file so it can be localized) and the javascript which handels the expanding and contracting menus.
+        ///appends the footer information to the html string. this includes adding the javascript for handeling accessability (included inside this folder rather than a remote javascript file so it can be localized) and the javascript which handels the expanding and contracting menus.
         result = result + """
         <!--Loads the Javascript which handles the accessability tags.-->
         <script>

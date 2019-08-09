@@ -33,20 +33,20 @@
 "recordSingleUseRouteButtonAccessabilityLabel" = "Record a single use route";
 "savedRoutesListButtonText" = "Saved Routes List";
 "savedRoutesListButtonAccessabilityLabel" = "Saved Routes List";
-"stopNavigationButtonAcessabilityLabel" = "Stop navigation";
-"startReturnNavigationButtonAcessabilityLabel" = "Start return navigation";
-"stopRecordingButtonAcessabilityLabel" = "Stop recording";
-"settingsButtonAccesabilityLabel" = "Settings";
-"helpButtonAccesabilityLabel" = "Help";
-"homeButtonAccesabilityLabel" = "Clew Home Screen";
-"feedbackButtonAccesabilityLabel" = "Feedback";
-"getDirectionsButtonAccesabilityLabel" = "Get Directions";
+"stopNavigationButtonAccessabilityLabel" = "Stop navigation";
+"startReturnNavigationButtonAccessabilityLabel" = "Start return navigation";
+"stopRecordingButtonAccessabilityLabel" = "Stop recording";
+"settingsButtonAccessabilityLabel" = "Settings";
+"helpButtonAccessabilityLabel" = "Help";
+"homeButtonAccessabilityLabel" = "Clew Home Screen";
+"feedbackButtonAccessabilityLabel" = "Feedback";
+"getDirectionsButtonAccessabilityLabel" = "Get Directions";
 "nameSavedRouteLabel" = "Please type into the field below whatever you would like to name your route.";
 "nameSavedRouteTextField" = "Enter route name here";
 "enterAnchorPointDescriptionButtonAccessabilityLabel" = "Enter text to help you remember this Anchor Point";
 "enterAnchorPointVoiceNoteButtonAccessabilityLabel" = "Record audio to help you remember this Anchor Point";
-"startAlignmentCountdownButtonAcessabilityLabel" = "Start alignment countdown";
-"playVoiceNoteButtonAcessabilityLabel" = "Play recorded voice note";
+"startAlignmentCountdownButtonAccessabilityLabel" = "Start alignment countdown";
+"playVoiceNoteButtonAccessabilityLabel" = "Play recorded voice note";
 
 
     // Save routes
