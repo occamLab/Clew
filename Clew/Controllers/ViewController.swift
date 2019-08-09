@@ -330,8 +330,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             crumbs = route.crumbs
             pausedTransform = route.endRouteAnchorPoint.transform
         }
-        // make sure to clear out any relative transform that was saved before so we accurately align
-        sceneView.session.setWorldOrigin(relativeTransform: simd_float4x4.makeTranslation(0, 0, 0))
         sceneView.session.run(configuration, options: [.removeExistingAnchors])
 
         if isTrackingPerformanceNormal, isSameMap {
