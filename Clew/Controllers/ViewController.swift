@@ -1264,9 +1264,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         rootContainerView.homeButton.isHidden = true
         stopNavigationController.remove()
         
-        if let loadedRoute = loadedRoute, let currentImage = currentImage, let currentIntrinsics = currentIntrinsics, let currentPose = currentPose {
+        if sendLogs, let loadedRoute = loadedRoute, let currentImage = currentImage, let currentIntrinsics = currentIntrinsics, let currentPose = currentPose {
             let sendToDevAlert = UIAlertController(title: NSLocalizedString("TestFlightHelpDevsTitle", comment: "Title to ask users to send data"), message: NSLocalizedString("TestFlightHelpDevsContent", comment: "Ask users to send data"), preferredStyle: .alert)
-            sendToDevAlert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { action in TestFlightLogger.uploadData(savedRoute: loadedRoute, image: currentImage, intrinsics: currentIntrinsics, pose: currentPose) }))
+            sendToDevAlert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { action in
+                let subdir = TestFlightLogger.uploadData(savedRoute: loadedRoute, image: currentImage, intrinsics: currentIntrinsics, pose: currentPose)
+                self.logger.logAlignmentInfo(path: subdir)
+            }))
             sendToDevAlert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
             present(sendToDevAlert, animated: true)
         }

@@ -10,10 +10,12 @@ import Foundation
 import Firebase
 
 class TestFlightLogger {
-    static func uploadData(savedRoute: SavedRoute, image: UIImage, intrinsics: simd_float3x3, pose: simd_float4x4) {
+    
+    /// Log landmark alignment info and return the filename of the logged folder.
+    static func uploadData(savedRoute: SavedRoute, image: UIImage, intrinsics: simd_float3x3, pose: simd_float4x4) -> String {
         let storageref = Storage.storage().reference().child("testflightdata")
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd"
+        dateFormatter.dateFormat = "yyyy-MM-dd:hh:mm:ss"
         let subdir = "\(dateFormatter.string(from: Date()))-\(UUID().uuidString)"
         let subref = storageref.child(subdir)
         let beginRouteLandmark = savedRoute.beginRouteLandmark
@@ -72,5 +74,7 @@ class TestFlightLogger {
             metadata.contentType = "text/plain"
             subref.child("poseData.txt").putData(poseData, metadata: metadata)
         }
+        
+        return subdir
     }
 }

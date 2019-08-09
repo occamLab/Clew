@@ -51,6 +51,8 @@ class PathLogger {
     /// list of keypoints - [[(LocationInfo)x, y, z, yaw]]
     var keypointData: [Array<Any>] = []
     
+    var alignmentInfo: String?
+    
     /// language used in recording
 //    var langData: [String] = []
 //    let langData = Locale.preferredLanguages[0]
@@ -121,6 +123,10 @@ class PathLogger {
         }
     }
     
+    func logAlignmentInfo(path: String) {
+        alignmentInfo = path
+    }
+    
     /// Log language used by user in recording.
     //
     ///
@@ -150,6 +156,7 @@ class PathLogger {
         speechData = []
         speechDataTime = []
         snapToRouteTime = []
+        alignmentInfo = nil
         dataTimer = Date()
     }
     
@@ -236,7 +243,8 @@ class PathLogger {
                                     "navigationDataTime": navigationDataTime,
                                     "speechData": speechData,
                                     "speechDataTime": speechDataTime,
-                                    "snapToRouteTime": snapToRouteTime]
+                                    "snapToRouteTime": snapToRouteTime,
+                                    "alignmentInfo": alignmentInfo]
         
         do {
             let jsonData = try JSONSerialization.data(withJSONObject: body, options: .prettyPrinted)
