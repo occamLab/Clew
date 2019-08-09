@@ -149,9 +149,7 @@ class RecordPathController: UIViewController {
         stackView.topAnchor.constraint(equalTo: view.topAnchor, constant: 115).isActive = true
         
         if let parent: UIViewController = parent {
-            
-            
-            /// TODO: Fix the naming of the selectors
+
             routesButton.addTarget(parent,
                                           action: #selector(ViewController.routesButtonPressed),
                                           for: .touchUpInside)

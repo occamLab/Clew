@@ -35,7 +35,7 @@
 "savedRoutesListButtonAccessibilityLabel" = "Saved Routes List";
 "stopNavigationButtonAcessabilityLabel" = "Stop navigation";
 "startReturnNavigationButtonAcessabilityLabel" = "Start return navigation";
-"stopRecordingButtonAcessabilityLabel" = "Stop recording";
+"stopRecordingButtonAccessibilityLabel" = "Stop recording";
 "settingsButtonAccesabilityLabel" = "Settings";
 "helpButtonAccesabilityLabel" = "Help";
 "homeButtonAccesabilityLabel" = "Clew Home Screen";

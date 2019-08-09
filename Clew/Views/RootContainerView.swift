@@ -72,40 +72,6 @@ class RootContainerView: UIView {
         burgerMenuButton.isAccessibilityElement = true
         burgerMenuButton.accessibilityLabel = "More Options"
         burgerMenuButton.setImage(UIImage(named: "burgerMenu"), for: .normal)
-        
-        // MARK: Settings Button
-        /*settingsButton = UIButton(frame: CGRect(x: UIConstants.buttonFrameWidth/(10/0.5),
-                                                y: 10,
-                                                width: UIConstants.buttonFrameWidth/7,
-                                                height: UIConstants.buttonFrameWidth/7))
-        settingsButton.isAccessibilityElement = true
-///LOCALIZE
-        settingsButton.setTitle("Settings", for: .normal)
-        settingsButton.accessibilityLabel = NSLocalizedString("settingsButtonAccessibilityLabel", comment: "This is the accessibility label for the settings button")
-        settingsButton.titleLabel?.font = UIFont.systemFont(ofSize: 24.0)
-        settingsButton.setImage(UIImage(named: "settingsGear"), for: .normal)
-         
-        feedbackButton = UIButton(frame: CGRect(x: UIConstants.buttonFrameWidth/(10/8),
-                                                y: 10,
-                                                width: UIConstants.buttonFrameWidth/7,
-                                                height: UIConstants.buttonFrameWidth/7))
-        feedbackButton.isAccessibilityElement = true
-        feedbackButton.setTitle("Feedback", for: .normal)
-        feedbackButton.titleLabel?.font = UIFont.systemFont(ofSize: 24.0)
-        feedbackButton.accessibilityLabel = "Feedback"
-        feedbackButton.setImage(UIImage(named: "Contact"), for: .normal)
-
-        
-        // MARK: Help Button
-        helpButton = UIButton(frame: CGRect(x: UIConstants.buttonFrameWidth/(7/3),
-                                            y: UIConstants.yOriginOfSettingsAndHelpButton + 10,
-                                            width: UIConstants.buttonFrameWidth/7,
-                                            height: UIConstants.buttonFrameWidth/7))
-        helpButton.isAccessibilityElement = true
-        helpButton.setTitle("Help", for: .normal)
-        helpButton.titleLabel?.font = UIFont.systemFont(ofSize: 24.0)
-        helpButton.accessibilityLabel = NSLocalizedString("helpButtonAccessibilityLabel", comment: "This is the accessibility label for the help button")
-        helpButton.setImage(UIImage(named: "HelpButton"), for: .normal)*/
 
 
         // MARK: Home Button

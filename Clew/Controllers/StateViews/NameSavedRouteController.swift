@@ -20,7 +20,7 @@ class NameSavedRouteController: UIViewController, UITextFieldDelegate {
     /// Text Field for typing the name you want to save your route as.
     var textField: UITextField!
     
-    /// The ARWorldMap represented as an Any? to allow for backwards compatibility with iOS 11.3 and 11.4don
+    /// The ARWorldMap represented as an Any? to allow for backwards compatibility with iOS 11.3 and 11.4 on
     var mapAsAny: Any?
     
     
@@ -100,7 +100,6 @@ class NameSavedRouteController: UIViewController, UITextFieldDelegate {
         label.text = mainText
         label.tag = UIView.mainTextTag
         label.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 1.1).isActive = true
-//        label.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 1.9).isActive = true
         
     
         textField = UITextField()
