@@ -36,7 +36,7 @@ Please read all of this! It's important.
 
 Get the repository on your computer: clone the `assistive_apps` repository and `cd` into the Clew directory (`cd assistive_apps/navigation/ios_apps/ClewApp`).
 
-Install the Pods: if you don't have CocoaPods on your Mac, run `sudo gem install cocoapods`. Then, to install the Pods for Clew, run `pod install` from inside the `ClewApp` directory.
+Install the Pods: if you don't have CocoaPods on your Mac, run `sudo gem install cocoapods`. Then, to install the Pods for Clew, run `pod install` from inside the `ClewApp` directory. One of our pods, `Eigen`, relies on having mercurial (`hg`) installed, so install it with homebrew.
 
 Open the project: from the `ClewApp` directory, run `open Clew.xcworkspace`. Because this project uses CocoaPods, it's important to always open the workspace, instead of the Xcode project. (If you use the filesystem GUI instead of the Terminal, double click on Clew.xcworkspace to open it.)
 
