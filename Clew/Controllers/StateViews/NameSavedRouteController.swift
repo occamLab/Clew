@@ -9,7 +9,7 @@
 import UIKit
 
 /// A view controller for handling the route saving naming process.
-class NameSavedRouteController: UIViewController {
+class NameSavedRouteController: UIViewController, UITextFieldDelegate {
     
     /// button for finalizing your saved route name
     var saveRouteButton: UIButton!
@@ -23,6 +23,8 @@ class NameSavedRouteController: UIViewController {
     /// The ARWorldMap represented as an Any? to allow for backwards compatibility with iOS 11.3 and 11.4don
     var mapAsAny: Any?
     
+    
+    
     override func viewDidAppear(_ animated: Bool){
         super.viewDidAppear(animated)
         
@@ -31,13 +33,37 @@ class NameSavedRouteController: UIViewController {
         saveRouteButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .largeTitle)
     }
     
-   override func viewDidLoad() {
+    
+    @objc func dismissKeyboard(){
+        view.endEditing(true)
+    }
+
+    /// Get keyboard to disappear
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        self.textField.endEditing(true)
+        return true
+    }
+    
+    
+  
+    override func viewDidLoad() {
         super.viewDidLoad()
         /// Creating a view that allows buttons to be tapped through it.
         view = TransparentTouchView(frame:CGRect(x: 0,
                                                  y: 0,
                                                  width: UIScreen.main.bounds.size.width,
                                                  height: UIScreen.main.bounds.size.height))
+    
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.dismissKeyboard))
+        self.view.addGestureRecognizer(tapGesture)
+        
+        func dismissKeyboard(){
+            view.endEditing(true)
+        }
+    
+
+        
         
         
         /// Creating a button that can be used to save the name of your route
@@ -68,12 +94,14 @@ class NameSavedRouteController: UIViewController {
         label.textColor = UIColor.white
         label.textAlignment = .center
         label.numberOfLines = 0
+        label.lineBreakMode = NSLineBreakMode.byWordWrapping
         label.lineBreakMode = .byWordWrapping
         label.font = UIFont.preferredFont(forTextStyle: .title1)
         label.text = mainText
         label.tag = UIView.mainTextTag
         label.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 1.1).isActive = true
-        label.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 2.5).isActive = true
+//        label.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 1.9).isActive = true
+        
     
         textField = UITextField()
         textField.translatesAutoresizingMaskIntoConstraints = false
@@ -82,12 +110,26 @@ class NameSavedRouteController: UIViewController {
         textField.placeholder = NSLocalizedString("nameSavedRouteTextField", comment: "Message displayed to the user when typing to save a route by name.")
         textField.borderStyle = .roundedRect
         textField.font = UIFont.preferredFont(forTextStyle: .body)
-
+    
+    
+        textField.delegate = self
         
+        let scrollView = UIScrollView()
+
+        /// allow for constraints to be applied to label, scrollview
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.indicatorStyle = .white;
+
+        /// add scrollview height constraint
+        scrollView.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width/2.5).isActive = true
+        scrollView.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width).isActive = true
+
+
         /// create stack view for aligning and distributing bottom layer buttons
         let stackView   = UIStackView()
         view.addSubview(stackView)
         stackView.translatesAutoresizingMaskIntoConstraints = false;
+        
         
         /// define horizonal, centered, and equal alignment of elements
         /// inside the bottom stack
@@ -95,19 +137,24 @@ class NameSavedRouteController: UIViewController {
         stackView.distribution  = UIStackView.Distribution.equalSpacing
         stackView.alignment = UIStackView.Alignment.center
         
-        /// add elements to the stack
+        /// add elements to the stack and scroll views
         
-        stackView.addArrangedSubview(label)
+        scrollView.addSubview(label)
+        
+        label.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 8.0).isActive = true
+        label.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 8.0).isActive = true
+        label.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -8.0).isActive = true
+        label.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -8.0).isActive = true
+
+        stackView.addArrangedSubview(scrollView)
         stackView.addArrangedSubview(textField)
         stackView.addArrangedSubview(saveRouteButton)
-
-        
-        
+    
         /// size the stack
         stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 5).isActive = true
         stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -5).isActive = true
         stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -150).isActive = true
-        stackView.topAnchor.constraint(equalTo: view.topAnchor, constant: 115).isActive = true
+        stackView.topAnchor.constraint(equalTo: view.topAnchor, constant: 150).isActive = true
     
         view.backgroundColor = UIColor.black.withAlphaComponent(0.4)
     

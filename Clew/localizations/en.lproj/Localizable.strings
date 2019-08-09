@@ -24,7 +24,7 @@
 "completedNavigationAnnouncement" = "You've arrived.";
 
     // Name of labels that appear in UI
-"saveARouteButtonText" = "Save a Route";
+"saveARouteButtonText" = "Save Route";
 "saveARouteButtonAccessabilityLabel" = "Save a route";
 "badServiceButtonAccessabilityLabel" = "Bad";
 "goodServiceButtonAccessabilityLabel" = "Good";
@@ -33,15 +33,15 @@
 "recordSingleUseRouteButtonAccessabilityLabel" = "Record a single use route";
 "savedRoutesListButtonText" = "Saved Routes List";
 "savedRoutesListButtonAccessabilityLabel" = "Saved Routes List";
-"stopNavigationButtonAccessabilityLabel" = "Stop navigation";
-"startReturnNavigationButtonAccessabilityLabel" = "Start return navigation";
-"stopRecordingButtonAccessabilityLabel" = "Stop recording";
-"settingsButtonAccessabilityLabel" = "Settings";
-"helpButtonAccessabilityLabel" = "Help";
-"homeButtonAccessabilityLabel" = "Clew Home Screen";
-"feedbackButtonAccessabilityLabel" = "Feedback";
-"getDirectionsButtonAccessabilityLabel" = "Get Directions";
-"nameSavedRouteLabel" = "Please type into the field below whatever you would like to name your route.";
+"stopNavigationButtonAcessabilityLabel" = "Stop navigation";
+"startReturnNavigationButtonAcessabilityLabel" = "Start return navigation";
+"stopRecordingButtonAcessabilityLabel" = "Stop recording";
+"settingsButtonAccesabilityLabel" = "Settings";
+"helpButtonAccesabilityLabel" = "Help";
+"homeButtonAccesabilityLabel" = "Clew Home Screen";
+"feedbackButtonAccesabilityLabel" = "Feedback";
+"getDirectionsButtonAccesabilityLabel" = "Get Directions";
+"nameSavedRouteLabel" = "Type your route name below";
 "nameSavedRouteTextField" = "Enter route name here";
 "enterAnchorPointDescriptionButtonAccessabilityLabel" = "Enter text to help you remember this Anchor Point";
 "enterAnchorPointVoiceNoteButtonAccessabilityLabel" = "Record audio to help you remember this Anchor Point";

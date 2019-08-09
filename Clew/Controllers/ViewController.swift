@@ -482,6 +482,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         /// PATHPOINT Save Route View -> play/pause
         ///Announce to the user that they have finished the alignment process and are now at the play pause screen
         self.delayTransition(announcement: NSLocalizedString("saveRouteToPlayPauseAnnouncement", comment: "This is an announcement which is spoken when the user finishes saving their route. This announcement signifies the transition from the view where the user can name or save their route to the screen where the user can either pause the AR session tracking or they can perform return navigation."), initialFocus: nil)
+        ///Clearing the save route text field
+        nameSavedRouteController.textField.text = ""
         ///perform the state transition
         self.state = .readyToNavigateOrPause(allowPause: true)
     }
@@ -800,6 +802,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             // proceed to home page
             self.clearState()
             self.hideAllViewsHelper()
+            if case .startingNameSavedRouteProcedure = self.state {
+                self.nameSavedRouteController.textField.text = ""
+            }
             self.state = .mainScreen(announceArrival: false)
         }
         ))
