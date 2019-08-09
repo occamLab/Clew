@@ -421,6 +421,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                     //check whether or not the path was called from the pause menu or not
                     if paused {
                         //procede as normal with the pause structure (single use route)
+                        self.showResumeTrackingButton()
                         self.state = .pauseProcedureCompleted
                         
                     } else {
@@ -433,8 +434,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                     }
                 }
             } else {
-                //DELETEPOINT
-                //getRouteNameAndSaveRouteHelper(mapAsAny: nil)
                 showResumeTrackingButton()
                 Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(self.playSound)), userInfo: nil, repeats: false)
                 state = .pauseProcedureCompleted
