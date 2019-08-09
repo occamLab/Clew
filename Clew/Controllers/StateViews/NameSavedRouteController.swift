@@ -26,7 +26,7 @@ class NameSavedRouteController: UIViewController {
     override func viewDidAppear(_ animated: Bool){
         super.viewDidAppear(animated)
         
-        label.font = UIFont.preferredFont(forTextStyle: .headline)
+        label.font = UIFont.preferredFont(forTextStyle: .largeTitle)
         textField.font = UIFont.preferredFont(forTextStyle: .body)
         saveRouteButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .largeTitle)
     }
@@ -69,7 +69,7 @@ class NameSavedRouteController: UIViewController {
         label.textAlignment = .center
         label.numberOfLines = 0
         label.lineBreakMode = .byWordWrapping
-        label.font = UIFont.preferredFont(forTextStyle: .headline)
+        label.font = UIFont.preferredFont(forTextStyle: .title1)
         label.text = mainText
         label.tag = UIView.mainTextTag
         label.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 1.1).isActive = true
@@ -106,8 +106,10 @@ class NameSavedRouteController: UIViewController {
         /// size the stack
         stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 5).isActive = true
         stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -5).isActive = true
-        stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -250).isActive = true
+        stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -150).isActive = true
         stackView.topAnchor.constraint(equalTo: view.topAnchor, constant: 115).isActive = true
+    
+        view.backgroundColor = UIColor.black.withAlphaComponent(0.4)
     
     
         saveRouteButton.addTarget(parent,
