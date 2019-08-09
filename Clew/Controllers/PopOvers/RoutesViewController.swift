@@ -38,7 +38,7 @@ class RoutesViewController : UIViewController, UITableViewDataSource, UITableVie
         // Set title and message for the alert dialog
         let alertController = UIAlertController(title: NSLocalizedString("routeDirectionPop-UpHeader", comment: "The header of a pop-up where the user selects which direction they want to navigate their route"), message: "", preferredStyle: .alert)
         // The confirm action taking the inputs
-        let startToEndAction = UIAlertAction(title: NSLocalizedString("routeDirectionStartToEndButtonLabel", comment: "the text on a button in the select navigational direction menu pf the app. This button allows the user to navigate a route in the same direction as it was originally recorded."), style: .default) { (_) in
+        let startToEndAction = UIAlertAction(title: NSLocalizedString("routeDirectionStartToEndButtonLabel", comment: "The text on a button in the select navigational direction menu of the app. This button allows the user to navigate a route in the same direction as it was originally recorded."), style: .default) { (_) in
             self.rootViewController?.onRouteTableViewCellClicked(route: self.routes[indexPath.row], navigateStartToEnd: true)
             self.dismiss(animated: true, completion: nil)
         }
@@ -90,7 +90,7 @@ class RoutesViewController : UIViewController, UITableViewDataSource, UITableVie
     /// - Returns: a list of actions that were performed.
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         
-        let delete = UITableViewRowAction(style: .destructive, title: NSLocalizedString("deleteActionText", comment: "this is the text that appears when a user tries to delete a saved route. This text is used in an option menu when a route is selected and it describes the delete route action.")) { (action, indexPath) in
+        let delete = UITableViewRowAction(style: .destructive, title: NSLocalizedString("deleteActionText", comment: "This is the text that appears when a user tries to delete a saved route. This text is used in an option menu when a route is selected and it describes the action for deleting a route.")) { (action, indexPath) in
             // delete item at indexPath
             do {
                 try self.rootViewController?.dataPersistence.delete(route: self.routes[indexPath.row])

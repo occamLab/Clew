@@ -28,9 +28,14 @@ class StartNavigationController: UIViewController {
         
         var mainText : String = "nil"
         if recordingSingleUseRoute{
-            mainText = NSLocalizedString("singleUsePlayPauseViewText", comment: "Information displayed to the user on the play pause screenafter they have recorded a single use route. This describes the functionality of the play and pause buttons.")
+            mainText = NSLocalizedString("singleUsePlayPauseViewText", comment: "Information displayed to the user on the play pause screen after they have recorded a single use route. This describes the functionality of the play and pause buttons.")
         } else {
-            mainText = NSLocalizedString("multipleUseRoutePlayPauseViewText", comment: "Information displayed to the user on the play pause screen after they have just recorded a multiple use route. This describes the functionality of the play and pause buttons.")
+            if isAutomaticAlignment {
+                mainText = NSLocalizedString("automaticAlignmentPlayPauseViewText", comment: "Information displayed to the user on the play pause screen after they have sucessfully aligned to their route automatically.")
+            }else {
+                mainText = NSLocalizedString("multipleUseRoutePlayPauseViewText", comment: "Information displayed to the user on the play pause screen after they have just recorded a multiple use route. This describes the functionality of the play and pause buttons.")
+            }
+            
         }
         
         label.textColor = UIColor.white
@@ -111,7 +116,7 @@ class StartNavigationController: UIViewController {
         startNavigationButton = UIButton.makeConstraintButton(view,
                                                          alignment: UIConstants.ButtonContainerHorizontalAlignment.left,
                                                          appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "StartNavigation")!),
-                                                         label: NSLocalizedString("startReturnNavigationButtonAcessabilityLabel", comment: "The accessability label for the button that allows user to start navigating back along their route."))
+                                                         label: NSLocalizedString("startReturnNavigationButtonAccessabilityLabel", comment: "The accessability label for the button that allows user to start navigating back along their route."))
         
         pauseButton = UIButton.makeConstraintButton(view,
                                                alignment: UIConstants.ButtonContainerHorizontalAlignment.right,

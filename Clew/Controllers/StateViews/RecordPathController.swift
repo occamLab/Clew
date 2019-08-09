@@ -114,7 +114,7 @@ class RecordPathController: UIViewController {
         routesButton.setTitleColor(.black, for: .normal)
         routesButton.titleLabel?.font = UIFont(name: "HelveticaNeue-Bold", size: 35)!
 
-        routesButton.accessibilityLabel = NSLocalizedString("savedRoutesListButtonAccessabilityLabel", comment: "The acessability tag for a button which opens a menu which displays all the saved routes created by the user.")
+        routesButton.accessibilityLabel = NSLocalizedString("savedRoutesListButtonAccessabilityLabel", comment: "The accessability tag for a button which opens a menu which displays all the saved routes created by the user.")
         routesButton.titleLabel?.textAlignment = .center
         routesButton.titleLabel?.numberOfLines = 0
         routesButton.titleLabel?.lineBreakMode = .byWordWrapping

@@ -81,7 +81,7 @@ class RootContainerView: UIView {
         settingsButton.isAccessibilityElement = true
 ///LOCALIZE
         settingsButton.setTitle("Settings", for: .normal)
-        settingsButton.accessibilityLabel = NSLocalizedString("settingsButtonAccesabilityLabel", comment: "This is the acessability label for the settings button")
+        settingsButton.accessibilityLabel = NSLocalizedString("settingsButtonAccessabilityLabel", comment: "This is the accessability label for the settings button")
         settingsButton.titleLabel?.font = UIFont.systemFont(ofSize: 24.0)
         settingsButton.setImage(UIImage(named: "settingsGear"), for: .normal)
          
@@ -104,7 +104,7 @@ class RootContainerView: UIView {
         helpButton.isAccessibilityElement = true
         helpButton.setTitle("Help", for: .normal)
         helpButton.titleLabel?.font = UIFont.systemFont(ofSize: 24.0)
-        helpButton.accessibilityLabel = NSLocalizedString("helpButtonAccesabilityLabel", comment: "This is the acessability label for the help button")
+        helpButton.accessibilityLabel = NSLocalizedString("helpButtonAccessabilityLabel", comment: "This is the accessability label for the help button")
         helpButton.setImage(UIImage(named: "HelpButton"), for: .normal)*/
 
 
@@ -116,7 +116,7 @@ class RootContainerView: UIView {
         homeButton.isAccessibilityElement = true
         homeButton.setTitle("Home Button", for: .normal)
         homeButton.titleLabel?.font = UIFont.systemFont(ofSize: 24.0)
-        homeButton.accessibilityLabel = NSLocalizedString("homeButtonAccesabilityLabel", comment: "This is the acessability label for the home button")
+        homeButton.accessibilityLabel = NSLocalizedString("homeButtonAccessabilityLabel", comment: "This is the accessability label for the home button")
         homeButton.setImage(UIImage(named: "homeButton"), for: .normal)
 
         // MARK: Get Directions Button
@@ -126,7 +126,7 @@ class RootContainerView: UIView {
                                                     height: UIConstants.buttonFrameWidth/7))
 
         getDirectionButton.isAccessibilityElement = true
-        getDirectionButton.accessibilityLabel = NSLocalizedString("getDirectionsButtonAccesabilityLabel", comment: "This is the acessability label for the get directions button")
+        getDirectionButton.accessibilityLabel = NSLocalizedString("getDirectionsButtonAccessabilityLabel", comment: "This is the accessability label for the get directions button")
         getDirectionButton.setImage(UIImage(named: "GetDirection"), for: .normal)
         getDirectionButton.isHidden = true
 
