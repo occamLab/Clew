@@ -56,6 +56,7 @@
 "noVisualMatchesUseSnapToRoute" = "No visual matches found, use snap to route to localize the map";
 "SnapToRouteHint" = "Snap to route adjusts the position of the waypoints to match your current trajectory. See the help menu entry under following routes for more information.";
 "SnapToRoute" = "Snap to route";
+visualAlignmentConfirmation = "Visually aligning to saved route";
 
     // Rating service view
 "You've arrived. Please rate your service." = "You've arrived. Please rate your service.";

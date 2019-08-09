@@ -67,6 +67,9 @@ enum AppState {
     /// user has initiated landmark realignment countdown
     case resumeWaitingPeriod
     
+    /// The timer has expired and visual alignment is computing
+    case visualAlignmentWaitingPeriod
+    
     /// rawValue is useful for serializing state values, which we are currently using for our logging feature
     var rawValue: String {
         switch self {
@@ -93,6 +96,8 @@ enum AppState {
             
         case .resumeWaitingPeriod:
             return "resumeWaitingPeriod"
+        case .visualAlignmentWaitingPeriod:
+            return "visualAlignmentWaitingPeriod"
         case .startingResumeProcedure(_, _, let navigateStartToEnd):
             return "startingResumeProcedure(route=notloggedhere, map=notlogged, navigateStartToEnd=\(navigateStartToEnd))"
         case .readyForFinalResumeAlignment:
@@ -153,6 +158,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 break
                 
             case .resumeWaitingPeriod:
+                resumeWaitingPeriodHandler()
+            case .visualAlignmentWaitingPeriod:
                 break
             case .initializing:
                 break
@@ -1547,6 +1554,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     ///
     /// - Parameter send: the sender of the button pressed event
     @objc func snapToRoute(_ send: UIButton) {
+        logger.logSnapToRoute()
         var keypointsToUse: [KeypointInfo] = checkedOffKeypoints
         // always append the next point to check off
         if let firstKeypoint = keypoints.first {
@@ -1600,10 +1608,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// Action to take place after route resume countdown
     @objc
     func afterResumeTimerAction(_ timer: Timer) {
+        state = .visualAlignmentWaitingPeriod
         self.rootContainerView.countdownTimer.isHidden = true
-        // The first check is necessary in case the phone relocalizes before this code executes
         self.pausedLandmark?.loadImage()
-        if case .resumeWaitingPeriod = self.state, let alignLandmark = self.pausedLandmark, let alignLandmarkImage = alignLandmark.image, let alignTransform = alignLandmark.transform, let frame = self.sceneView.session.currentFrame {
+        // The first check is necessary in case the phone relocalizes before this code executes
+        if case .visualAlignmentWaitingPeriod = self.state, let alignLandmark = self.pausedLandmark, let alignLandmarkImage = alignLandmark.image, let alignTransform = alignLandmark.transform, let frame = self.sceneView.session.currentFrame {
+            announce(announcement: NSLocalizedString("visualAlignmentConfirmation", comment: "Announce that visual alignment process has began"))
             // yaw can be determined by projecting the camera's z-axis into the ground plane and using arc tangent (note: the camera coordinate conventions of ARKit https://developer.apple.com/documentation/arkit/arsessionconfiguration/worldalignment/camera
             
             DispatchQueue.global(qos: .background).async {
@@ -1657,19 +1667,19 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
     }
     
+    func resumeWaitingPeriodHandler() {
+        rootContainerView.countdownTimer.isHidden = false
+        rootContainerView.countdownTimer.start(beginingValue: ViewController.alignmentWaitingPeriod, interval: 1)
+        delayTransition()
+    }
+    
     /// this is called when the user has confirmed the alignment and is the alignment countdown should begin.  Once the alignment countdown has finished, the alignment will be performed and the app will move to the ready to navigate view.
     func resumeTracking() {
         // resume pose tracking with existing ARSessionConfiguration
-        guard let pausedLandmark = pausedLandmark else {
-            return
-        }
         hideAllViewsHelper()
         
         pauseTrackingController.remove()
         state = .resumeWaitingPeriod
-        rootContainerView.countdownTimer.isHidden = false
-        rootContainerView.countdownTimer.start(beginingValue: ViewController.alignmentWaitingPeriod, interval: 1)
-        delayTransition()
     }
     
     /// handles the user pressing the resume tracking confirmation button.
