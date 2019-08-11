@@ -78,7 +78,7 @@ class DataPersistence {
                 if let beginNote = documentData.beginVoiceNote {
                     let voiceData = Data(base64Encoded: beginNote)
                     let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-                    let path = documentData.route.beginRouteLandmark.voiceNote! as String
+                    let path = documentData.route.beginRouteAnchorPoint.voiceNote! as String
                     let url = documentsDirectory.appendingPathComponent(path)
                     do {
                         try voiceData?.write(to: url)
@@ -90,7 +90,7 @@ class DataPersistence {
                 if let endNote = documentData.endVoiceNote {
                     let voiceData = Data(base64Encoded: endNote)
                     let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-                    let path = documentData.route.endRouteLandmark.voiceNote! as String
+                    let path = documentData.route.endRouteAnchorPoint.voiceNote! as String
                     let url = documentsDirectory.appendingPathComponent(path)
                     do {
                         try voiceData?.write(to: url)
@@ -121,7 +121,7 @@ class DataPersistence {
         var endVoiceFile: String?
         
         /// fetch begginning voice notefile if it exists
-        if let beginVoiceURL = route.beginRouteLandmark.voiceNote {
+        if let beginVoiceURL = route.beginRouteAnchorPoint.voiceNote {
             /// build a full valid path the found url from the landmark
             let voiceurl = beginVoiceURL.documentURL
             
@@ -133,7 +133,7 @@ class DataPersistence {
         }
         
         /// fetch beginning voice notefile if it exists
-        if let endVoiceURL = route.endRouteLandmark.voiceNote {
+        if let endVoiceURL = route.endRouteAnchorPoint.voiceNote {
             /// build a full valid path the found url from the landmark
             let voiceurl = endVoiceURL.documentURL
             
@@ -221,11 +221,11 @@ class DataPersistence {
         try data.write(to: self.getRoutesURL(), options: [.atomic])
         // Remove the world map corresponding to the route.  We use try? to continue execution even if this fails, since it is not strictly necessary for continued operation
         try? FileManager().removeItem(atPath: self.getWorldMapURL(id: route.id as String).path)
-        if let beginRouteLandmarkVoiceNote = route.beginRouteLandmark.voiceNote {
-            try? FileManager().removeItem(at: beginRouteLandmarkVoiceNote.documentURL)
+        if let beginRouteAnchorPointVoiceNote = route.beginRouteAnchorPoint.voiceNote {
+            try? FileManager().removeItem(at: beginRouteAnchorPointVoiceNote.documentURL)
         }
-        if let endRouteLandmarkVoiceNote = route.endRouteLandmark.voiceNote {
-            try? FileManager().removeItem(at: endRouteLandmarkVoiceNote.documentURL)
+        if let endRouteAnchorPointVoiceNote = route.endRouteAnchorPoint.voiceNote {
+            try? FileManager().removeItem(at: endRouteAnchorPointVoiceNote.documentURL)
         }
     }
     

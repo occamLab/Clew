@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1F27632322FCBB6E00E1FCF8 /* BurgerMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F27632222FCBB6E00E1FCF8 /* BurgerMenuViewController.swift */; };
+		1F27632422FCBB9900E1FCF8 /* BurgerMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F27632222FCBB6E00E1FCF8 /* BurgerMenuViewController.swift */; };
+		1F27632622FCBD6100E1FCF8 /* SettingsAndHelp.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1F27632522FCBD6100E1FCF8 /* SettingsAndHelp.storyboard */; };
+		1F27632722FCBD6A00E1FCF8 /* SettingsAndHelp.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1F27632522FCBD6100E1FCF8 /* SettingsAndHelp.storyboard */; };
+		1F27633B22FCC0B100E1FCF8 /* BurgerMenu.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1F27633A22FCC0B100E1FCF8 /* BurgerMenu.storyboard */; };
+		1F27633C22FCC0B100E1FCF8 /* BurgerMenu.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1F27633A22FCC0B100E1FCF8 /* BurgerMenu.storyboard */; };
 		1F2971A522DF60F700B896C6 /* HelpCompiler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2B9D7022C3B50D00317DC8 /* HelpCompiler.swift */; };
 		1F2B9D7222C3B50D00317DC8 /* HelpCompiler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2B9D7022C3B50D00317DC8 /* HelpCompiler.swift */; };
 		1F2B9D8722C5446B00317DC8 /* (null) in Resources */ = {isa = PBXBuildFile; };
@@ -16,12 +22,10 @@
 		77467DAF22BBC1D300FA7DEE /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 77467DAE22BBC1D300FA7DEE /* Default-568h@2x.png */; };
 		82569F4E22187E6500448B45 /* help in Resources */ = {isa = PBXBuildFile; fileRef = 82569F4D22187E6500448B45 /* help */; };
 		82569F4F22187E6500448B45 /* help in Resources */ = {isa = PBXBuildFile; fileRef = 82569F4D22187E6500448B45 /* help */; };
-		AD020F7D22FB54E500D665F3 /* BurgerMenu.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AD020F8022FB54E500D665F3 /* BurgerMenu.storyboard */; };
-		AD020F7E22FB54E500D665F3 /* BurgerMenu.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AD020F8022FB54E500D665F3 /* BurgerMenu.storyboard */; };
-		AD020F8822FB553500D665F3 /* BurgerMenu.strings in Resources */ = {isa = PBXBuildFile; fileRef = AD020F8622FB553500D665F3 /* BurgerMenu.strings */; };
-		AD020F8922FB553500D665F3 /* BurgerMenu.strings in Resources */ = {isa = PBXBuildFile; fileRef = AD020F8622FB553500D665F3 /* BurgerMenu.strings */; };
-		AD8AA00C22F9C15700FC026E /* BurgerMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD8AA00B22F9C15700FC026E /* BurgerMenuViewController.swift */; };
-		AD8AA00D22F9C15700FC026E /* BurgerMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD8AA00B22F9C15700FC026E /* BurgerMenuViewController.swift */; };
+		986640CE22FB68F2005AA1F6 /* NameSavedRouteController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986640CD22FB68F2005AA1F6 /* NameSavedRouteController.swift */; };
+		986640CF22FC9606005AA1F6 /* NameSavedRouteController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986640CD22FB68F2005AA1F6 /* NameSavedRouteController.swift */; };
+		986640D122FCC345005AA1F6 /* BurgerMenu.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 986640D022FCC344005AA1F6 /* BurgerMenu.storyboard */; };
+		986640D222FCC365005AA1F6 /* BurgerMenu.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 986640D022FCC344005AA1F6 /* BurgerMenu.storyboard */; };
 		B0A563F6FE1007A2716DC876 /* Pods_Clew_Dev.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3532E390954571B93729786A /* Pods_Clew_Dev.framework */; };
 		B7EB59E220F693EB00FBBC6A /* Confirm.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4DF05CC71F34EB56008B0E31 /* Confirm.mp3 */; };
 		B7EB59E320F693EB00FBBC6A /* Crumb.obj in Resources */ = {isa = PBXBuildFile; fileRef = 4D6B00E41F33C85500952242 /* Crumb.obj */; };
@@ -109,8 +113,6 @@
 		E565A10922F2173400C1998E /* RouteDocumentData.swift in Sources */ = {isa = PBXBuildFile; fileRef = E565A10722F2173400C1998E /* RouteDocumentData.swift */; };
 		E59DA6BF22C65F5900FCD5A1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E59DA6BD22C65F5900FCD5A1 /* LaunchScreen.storyboard */; };
 		E59DA6C022C65F5900FCD5A1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E59DA6BD22C65F5900FCD5A1 /* LaunchScreen.storyboard */; };
-		E59DA6C122C65F5900FCD5A1 /* SettingsAndHelp.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E59DA6BE22C65F5900FCD5A1 /* SettingsAndHelp.storyboard */; };
-		E59DA6C222C65F5900FCD5A1 /* SettingsAndHelp.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E59DA6BE22C65F5900FCD5A1 /* SettingsAndHelp.storyboard */; };
 		E5D1695C22E103A0008754D0 /* SettingsAndHelp.strings in Resources */ = {isa = PBXBuildFile; fileRef = E5D1695622E103A0008754D0 /* SettingsAndHelp.strings */; };
 		E5D1695D22E103A0008754D0 /* SettingsAndHelp.strings in Resources */ = {isa = PBXBuildFile; fileRef = E5D1695622E103A0008754D0 /* SettingsAndHelp.strings */; };
 		E5D1695E22E103A0008754D0 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E5D1695822E103A0008754D0 /* Localizable.strings */; };
@@ -149,6 +151,9 @@
 
 /* Begin PBXFileReference section */
 		08FA9C31721F9F8CDCC23AE9 /* Pods-Clew.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Clew/Pods-Clew.debug.xcconfig"; sourceTree = "<group>"; };
+		1F27632222FCBB6E00E1FCF8 /* BurgerMenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BurgerMenuViewController.swift; sourceTree = "<group>"; };
+		1F27632522FCBD6100E1FCF8 /* SettingsAndHelp.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = SettingsAndHelp.storyboard; sourceTree = "<group>"; };
+		1F27633A22FCC0B100E1FCF8 /* BurgerMenu.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = BurgerMenu.storyboard; sourceTree = "<group>"; };
 		1F2B9D7022C3B50D00317DC8 /* HelpCompiler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HelpCompiler.swift; sourceTree = "<group>"; };
 		3532E390954571B93729786A /* Pods_Clew_Dev.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Clew_Dev.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4D6B00C01F33C1C400952242 /* Clew.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Clew.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -161,10 +166,8 @@
 		82F2DDD322E26A44005CD7D0 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/SettingsAndHelp.strings; sourceTree = "<group>"; };
 		85A1A72DC19F87F15B738291 /* Pods-Clew Dev.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew Dev.release.xcconfig"; path = "Pods/Target Support Files/Pods-Clew Dev/Pods-Clew Dev.release.xcconfig"; sourceTree = "<group>"; };
 		942F73299DA8DCF97FAA974A /* Pods_Clew.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Clew.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		AD020F7F22FB54E500D665F3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/BurgerMenu.storyboard; sourceTree = "<group>"; };
-		AD020F8222FB54E700D665F3 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/BurgerMenu.strings; sourceTree = "<group>"; };
-		AD020F8722FB553500D665F3 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Clew/Views/en.lproj/BurgerMenu.strings; sourceTree = SOURCE_ROOT; };
-		AD8AA00B22F9C15700FC026E /* BurgerMenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BurgerMenuViewController.swift; sourceTree = "<group>"; };
+		986640CD22FB68F2005AA1F6 /* NameSavedRouteController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NameSavedRouteController.swift; sourceTree = "<group>"; };
+		986640D022FCC344005AA1F6 /* BurgerMenu.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = BurgerMenu.storyboard; sourceTree = "<group>"; };
 		B7EB59EC20F693EB00FBBC6A /* Clew Dev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Clew Dev.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C68778047D8E263D2FB04989 /* Pods-Clew Dev.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew Dev.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Clew Dev/Pods-Clew Dev.debug.xcconfig"; sourceTree = "<group>"; };
 		D89DDB87A8AE1A9ECEAFCEC6 /* Pods-Clew.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew.release.xcconfig"; path = "Pods/Target Support Files/Pods-Clew/Pods-Clew.release.xcconfig"; sourceTree = "<group>"; };
@@ -390,6 +393,7 @@
 				E5470EE222C119F4001092A4 /* StopRecordingController.swift */,
 				E5470EE322C119F4001092A4 /* RouteRatingController.swift */,
 				E5470EE422C119F4001092A4 /* ResumeTrackingController.swift */,
+				986640CD22FB68F2005AA1F6 /* NameSavedRouteController.swift */,
 				E5470EE522C119F4001092A4 /* StopNavigationController.swift */,
 				E5470EE622C119F4001092A4 /* PauseTrackingController.swift */,
 				E5470EE722C119F4001092A4 /* ResumeTrackingConfirmController.swift */,
@@ -401,9 +405,9 @@
 			isa = PBXGroup;
 			children = (
 				E5470EE922C119F4001092A4 /* HelpViewController.swift */,
+				1F27632222FCBB6E00E1FCF8 /* BurgerMenuViewController.swift */,
 				E5470EEA22C119F4001092A4 /* FeedbackViewController.swift */,
 				E5470EEB22C119F4001092A4 /* RoutesViewController.swift */,
-				AD8AA00B22F9C15700FC026E /* BurgerMenuViewController.swift */,
 			);
 			path = PopOvers;
 			sourceTree = "<group>";
@@ -412,11 +416,11 @@
 			isa = PBXGroup;
 			children = (
 				E59DA6BD22C65F5900FCD5A1 /* LaunchScreen.storyboard */,
-				E59DA6BE22C65F5900FCD5A1 /* SettingsAndHelp.storyboard */,
 				E5470EEE22C119F4001092A4 /* UIConstants.swift */,
+				1F27632522FCBD6100E1FCF8 /* SettingsAndHelp.storyboard */,
+				1F27633A22FCC0B100E1FCF8 /* BurgerMenu.storyboard */,
 				E5470EF022C119F4001092A4 /* RootContainerView.swift */,
 				E5470EF322C119F4001092A4 /* RouteTableViewCell.swift */,
-				AD020F8022FB54E500D665F3 /* BurgerMenu.storyboard */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -557,6 +561,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1F27632622FCBD6100E1FCF8 /* SettingsAndHelp.storyboard in Resources */,
 				4DF05CC81F34EB6B008B0E31 /* Confirm.mp3 in Resources */,
 				E5470F1822C119F5001092A4 /* StartRecording.aiff in Resources */,
 				4D6B00E51F33C9B800952242 /* Crumb.obj in Resources */,
@@ -564,14 +569,12 @@
 				E5470F0E22C119F5001092A4 /* Settings.bundle in Resources */,
 				82569F4E22187E6500448B45 /* help in Resources */,
 				E5470F1622C119F5001092A4 /* Assets.xcassets in Resources */,
+				1F27633B22FCC0B100E1FCF8 /* BurgerMenu.storyboard in Resources */,
 				E59DA6BF22C65F5900FCD5A1 /* LaunchScreen.storyboard in Resources */,
-				AD020F7D22FB54E500D665F3 /* BurgerMenu.storyboard in Resources */,
 				E5470F4E22C119F5001092A4 /* GoogleService-Info_dev.plist in Resources */,
 				1F2B9D8722C5446B00317DC8 /* (null) in Resources */,
 				E5D1695E22E103A0008754D0 /* Localizable.strings in Resources */,
-				E59DA6C122C65F5900FCD5A1 /* SettingsAndHelp.storyboard in Resources */,
 				E5470F1A22C119F5001092A4 /* StopRecording.aiff in Resources */,
-				AD020F8822FB553500D665F3 /* BurgerMenu.strings in Resources */,
 				E5D1695C22E103A0008754D0 /* SettingsAndHelp.strings in Resources */,
 				77467DAF22BBC1D300FA7DEE /* Default-568h@2x.png in Resources */,
 			);
@@ -581,11 +584,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AD020F8922FB553500D665F3 /* BurgerMenu.strings in Resources */,
-				E59DA6C222C65F5900FCD5A1 /* SettingsAndHelp.storyboard in Resources */,
 				E5470F0F22C119F5001092A4 /* Settings.bundle in Resources */,
-				AD020F7E22FB54E500D665F3 /* BurgerMenu.storyboard in Resources */,
 				E5470F1922C119F5001092A4 /* StartRecording.aiff in Resources */,
+				1F27633C22FCC0B100E1FCF8 /* BurgerMenu.storyboard in Resources */,
 				E5470F1B22C119F5001092A4 /* StopRecording.aiff in Resources */,
 				B7EB59E220F693EB00FBBC6A /* Confirm.mp3 in Resources */,
 				B7EB59E320F693EB00FBBC6A /* Crumb.obj in Resources */,
@@ -594,6 +595,7 @@
 				E5D1695D22E103A0008754D0 /* SettingsAndHelp.strings in Resources */,
 				E5D1695F22E103A0008754D0 /* Localizable.strings in Resources */,
 				E59DA6C022C65F5900FCD5A1 /* LaunchScreen.storyboard in Resources */,
+				1F27632722FCBD6A00E1FCF8 /* SettingsAndHelp.storyboard in Resources */,
 				E5470F1D22C119F5001092A4 /* GoogleService-Info.plist in Resources */,
 				E5470F1722C119F5001092A4 /* Assets.xcassets in Resources */,
 			);
@@ -726,6 +728,7 @@
 				E5470F3E22C119F5001092A4 /* RoutesViewController.swift in Sources */,
 				E5470F0822C119F5001092A4 /* Utility.swift in Sources */,
 				E5470EFC22C119F5001092A4 /* RecordButton.swift in Sources */,
+				1F27632322FCBB6E00E1FCF8 /* BurgerMenuViewController.swift in Sources */,
 				E5470F0C22C119F5001092A4 /* SettingsViewController.m in Sources */,
 				E5470F2622C119F5001092A4 /* Float4x4Extension.swift in Sources */,
 				E5470EF622C119F5001092A4 /* RecordButtonKit.swift in Sources */,
@@ -733,7 +736,6 @@
 				E5470F2C22C119F5001092A4 /* StartNavigationController.swift in Sources */,
 				E5470F3022C119F5001092A4 /* RouteRatingController.swift in Sources */,
 				E5470F4222C119F5001092A4 /* UIConstants.swift in Sources */,
-				AD8AA00C22F9C15700FC026E /* BurgerMenuViewController.swift in Sources */,
 				E5470F2022C119F5001092A4 /* UIViewControllerExtensions.swift in Sources */,
 				E5470F3A22C119F5001092A4 /* HelpViewController.swift in Sources */,
 				E565A10822F2173400C1998E /* RouteDocumentData.swift in Sources */,
@@ -747,6 +749,7 @@
 				E5470F2822C119F5001092A4 /* ViewController.swift in Sources */,
 				E5470F3622C119F5001092A4 /* PauseTrackingController.swift in Sources */,
 				E5470F2A22C119F5001092A4 /* RecordPathController.swift in Sources */,
+				986640CE22FB68F2005AA1F6 /* NameSavedRouteController.swift in Sources */,
 				E5470EFE22C119F5001092A4 /* DataPersistence.swift in Sources */,
 				E5470F0022C119F5001092A4 /* PathLogger.swift in Sources */,
 				E5470F2422C119F5001092A4 /* UIButtonExtensions.swift in Sources */,
@@ -770,6 +773,7 @@
 				E5470F3F22C119F5001092A4 /* RoutesViewController.swift in Sources */,
 				E5470F0922C119F5001092A4 /* Utility.swift in Sources */,
 				E5470EFD22C119F5001092A4 /* RecordButton.swift in Sources */,
+				1F27632422FCBB9900E1FCF8 /* BurgerMenuViewController.swift in Sources */,
 				E5470F0D22C119F5001092A4 /* SettingsViewController.m in Sources */,
 				E5470F2722C119F5001092A4 /* Float4x4Extension.swift in Sources */,
 				E5470EF722C119F5001092A4 /* RecordButtonKit.swift in Sources */,
@@ -777,7 +781,6 @@
 				E5470F2D22C119F5001092A4 /* StartNavigationController.swift in Sources */,
 				1F2B9D7222C3B50D00317DC8 /* HelpCompiler.swift in Sources */,
 				E5470F3122C119F5001092A4 /* RouteRatingController.swift in Sources */,
-				AD8AA00D22F9C15700FC026E /* BurgerMenuViewController.swift in Sources */,
 				E5470F4322C119F5001092A4 /* UIConstants.swift in Sources */,
 				E5470F2122C119F5001092A4 /* UIViewControllerExtensions.swift in Sources */,
 				E565A10922F2173400C1998E /* RouteDocumentData.swift in Sources */,
@@ -791,6 +794,7 @@
 				E5470F0522C119F5001092A4 /* FeedbackLogger.swift in Sources */,
 				E5470F2922C119F5001092A4 /* ViewController.swift in Sources */,
 				E5470F3722C119F5001092A4 /* PauseTrackingController.swift in Sources */,
+				986640CF22FC9606005AA1F6 /* NameSavedRouteController.swift in Sources */,
 				E5470F2B22C119F5001092A4 /* RecordPathController.swift in Sources */,
 				E5470EFF22C119F5001092A4 /* DataPersistence.swift in Sources */,
 				E5470F0122C119F5001092A4 /* PathLogger.swift in Sources */,
@@ -820,19 +824,9 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		AD020F8022FB54E500D665F3 /* BurgerMenu.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				AD020F7F22FB54E500D665F3 /* Base */,
-				AD020F8222FB54E700D665F3 /* en */,
-			);
-			name = BurgerMenu.storyboard;
-			sourceTree = "<group>";
-		};
 		AD020F8622FB553500D665F3 /* BurgerMenu.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
-				AD020F8722FB553500D665F3 /* en */,
 			);
 			name = BurgerMenu.strings;
 			sourceTree = "<group>";

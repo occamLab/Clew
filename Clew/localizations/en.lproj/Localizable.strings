@@ -8,119 +8,136 @@
 
 
 // When opening the app for the first time
-"Sharing your experience with Clew" = "Sharing your experience with Clew";
+"sharingYourExperiencePop-UpHeading" = "Sharing your experience with Clew";
 
-"Help us improve the app by logging your Clew experience. These logs will not include any images or personal information. You can turn this off in Settings." = "Help us improve the app by logging your Clew experience. These logs will not include any images or personal information. You can turn this off in Settings.";
+"sharingYourExperiencePop-UpContent" = "Help us improve the app by logging your Clew experience. These logs will not include any images or personal information. You can turn this off in Settings.";
 
-"For your safety" = "For your safety";
+"forYourSafetyPop-UpHeading" = "For your safety";
 
-"While using the app, please be aware of your surroundings. You agree that your use of the App is at your own risk, and it is solely your responsibility to maintain your personal safety. Visit www.clewapp.org for more information on how to use the app." = "While using the app, please be aware of your surroundings. You agree that your use of the App is at your own risk, and it is solely your responsibility to maintain your personal safety. Visit www.clewapp.org for more information on how to use the app.";
-
-"Continue with single-use route" = "Continue with single-use route";
-
-"Cancel recording" = "Cancel recording";
-
-"Creating reusable routes" = "Creating reusable routes";
-
-"Continue with single-use route" = "Continue with single-use route";
-
-"Cancel navigation" = "Cancel navigation";
+"forYourSafetyPop-UpHeading" = "While using the app, please be aware of your surroundings. You agree that your use of the App is at your own risk, and it is solely your responsibility to maintain your personal safety. Visit www.clewapp.org for more information on how to use the app.";
 
 // Strings from ViewController
     // Voicing directions
-"Tracking session initialized." = "Tracking session initialized.";
-"Tracking performance normal." = "Tracking performance normal.";
-"Hold vertically with the rear camera facing forward." = "Hold vertically with the rear camera facing forward.";
-"You've arrived." = "You've arrived.";
+"startedTrackingSessionAnnouncement" = "Tracking session initialized.";
+"fixedTrackingAnnouncement" = "Tracking performance normal.";
+"properDevicePositioningAnnouncement" = "Hold vertically with the rear camera facing forward.";
+"completedNavigationAnnouncement" = "You've arrived.";
 
     // Name of labels that appear in UI
-"Record path" = "Record path";
-"Bad" = "Bad";
-"Good" = "Good";
-"Resume" = "Resume";
-"Saved Routes List" = "Saved Routes List";
-"Stop navigation" = "Stop navigation";
-"Start navigation" = "Start navigation";
-"Stop recording" = "Stop recording";
+"saveARouteButtonText" = "Save Route";
+"saveARouteButtonAccessibilityLabel" = "Save a route";
+"badServiceButtonAccessibilityLabel" = "Bad";
+"goodServiceButtonAccessibilityLabel" = "Good";
+"resumePausedRouteBUttonAccessibilityLabel" = "Resume";
+"singleUseRouteButtonText" = "Single Use Route";
+"recordSingleUseRouteButtonAccessibilityLabel" = "Record a single use route";
+"savedRoutesListButtonText" = "Saved Routes List";
+"savedRoutesListButtonAccessibilityLabel" = "Saved Routes List";
+"stopNavigationButtonAcessabilityLabel" = "Stop navigation";
+"startReturnNavigationButtonAcessabilityLabel" = "Start return navigation";
+"stopRecordingButtonAccessibilityLabel" = "Stop recording";
+"settingsButtonAccesabilityLabel" = "Settings";
+"helpButtonAccesabilityLabel" = "Help";
+"homeButtonAccesabilityLabel" = "Clew Home Screen";
+"feedbackButtonAccesabilityLabel" = "Feedback";
+"getDirectionsButtonAccesabilityLabel" = "Get Directions";
+"nameSavedRouteLabel" = "Type your route name below";
+"nameSavedRouteTextField" = "Enter route name here";
+"enterAnchorPointDescriptionButtonAccessibilityLabel" = "Enter text to help you remember this Anchor Point";
+"enterAnchorPointVoiceNoteButtonAccessibilityLabel" = "Record audio to help you remember this Anchor Point";
+"startAlignmentCountdownButtonAccessibilityLabel" = "Start alignment countdown";
+"playVoiceNoteButtonAccessibilityLabel" = "Play recorded voice note";
+
 
     // Save routes
-"Save route" = "Save route";
-"Enter the name of the route" = "Enter the name of the route";
-"Saved Routes List" = "Saved Routes List";
-"Enter route title" = "Enter route title";
-"Save" = "Save";
-"Cancel" = "Cancel";
+"saveRoutePop-UpTitle" = "Save route";
+"saveRoutePop-UpTextBoxPrompt" = "Enter the name of the route";
+"savedRoutesListPop-UpHeading" = "Saved Routes List";
+"routeNamePlaceholder" = "Enter route title";
+"saveRouteConfirmationLabel" = "Save";
+"cancelPop-UpButtonLabel" = "Cancel";
 
     // Resume
-"Return to the last paused location and press Resume for further instructions." = "Return to the last paused location and press Resume for further instructions.";
+"resumeRouteViewText" = "Your route tracking is now paused. When you would like to navigate back, return to the location of your last anchor point and press the resume button.";
 
     // Rating service view
-"You've arrived. Please rate your service." = "You've arrived. Please rate your service.";
-"Please rate your service." = "Please rate your service.";
+"ratingYourServiceViewText" = "Navigation complete. Please rate the quality of your navigation experience.";
 
     // Other
-"Successfully matched current environment to saved route." = "Successfully matched current environment to saved route.";
-"Could not match environment to the saved route. Starting new tracking session." = "Could not match environment to the saved route. Starting new tracking session.";
-"Excessive motion.\nTracking performance is degraded." = "Excessive motion.\nTracking performance is degraded.";
-"Insufficient visual features.\nTracking performance is degraded." = "Insufficient visual features.\nTracking performance is degraded.";
+"realignToSavedRouteAnnouncement" = "Successfully matched current environment to saved route.";
+"noEnvironmentMatchAnnouncement" = "Could not match environment to the saved route. Starting new tracking session.";
+"excessiveMotionDegradedTrackingAnnouncemnt" = "Excessive motion.\nTracking performance is degraded.";
+"insuficientFeaturesDegradedTrackingAnnouncemnt" = "Insufficient visual features.\nTracking performance is degraded.";
 
 
 // Strings from Navigation
-" and proceed upstairs" = " and proceed upstairs";
-" and proceed downstairs" = " and proceed downstairs";
-    // Version of directions given when haptic feedback function is turned on (Simpler)
-"Continue straight" = "Continue straight";
-"Slight right" = "Slight right";
-"Turn right" = "Turn right";
-"Turn around" = "Turn around";
-"Turn left" = "Turn left"; 
-"Slight left" = "Slight left";
+"climbStairsDirection" = " and proceed upstairs";
+"descendStairsDirection" = " and proceed downstairs";
+// Version of directions given when haptic feedback function is turned on (Simpler)
+"straightDirection" = "Continue straight";
+"slightRightDirection" = "Slight right";
+"rightDirection" = "Turn right";
+"uTurnDirection" = "Turn around";
+"leftDirection" = "Turn left";
+"slightLeftDirection" = "Slight left";
 
     // Version of directions given when haptic feedback function is turned off (Clock directions)
-"Continue straight" = "Continue straight";
-"Slight right towards 1 o'clock" = "Slight right towards 1 o'clock";
-"Slight right towards 2 o'clock" = "Slight right towards 2 o'clock";
-"Turn right" = "Turn right";
-"Turn towards 4 o'clock" = "Turn towards 4 o'clock";
-"Turn around towards 5 o'clock" = "Turn around towards 5 o'clock";
-"Turn around towards 6 o'clock" = "Turn around towards 6 o'clock";
-"Turn around towards 7 o'clock" = "Turn around towards 7 o'clock";
-"Turn towards 8 o'clock" = "Turn towards 8 o'clock";
-"Turn left" = "Turn left";
-"Slight left towards 10 o'clock" = "Slight left towards 10 o'clock";
-"Slight left towards 11 o'clock" = "Slight left towards 11 o'clock";
+"1o'clockDirection" = "Slight right towards 1 o'clock";
+"2o'clockDirection" = "Slight right towards 2 o'clock";
+"4o'clockDirection" = "Turn towards 4 o'clock";
+"5o'clockDirection" = "Turn around towards 5 o'clock";
+"6o'clockDirection" = "Turn around towards 6 o'clock";
+"7o'clockDirection" = "Turn around towards 7 o'clock";
+"8o'clockDirection" = "Turn towards 8 o'clock";
+"10o'clockDirection" = "Slight left towards 10 o'clock";
+"11o'clockDirection" = "Slight left towards 11 o'clock";
 
 
-// Landmarks
-"To navigate this route in the forward direction at a later time, you must create a landmark before starting the recording." = "To navigate this route in the forward direction at a later time, you must create a landmark before starting the recording.";
+// Anchor Points
 
-"To navigate this route in the reverse direction at a later time, you must activate the pause button before navigating the route." = "To navigate this route in the reverse direction at a later time, you must activate the pause button before navigating the route.";
+"anchorPointTextHeading" = "Anchor Point information";
 
-"Landmark information" = "Landmark information";
+"anchorPointTextPrompt" = "Enter text about the Anchor Point that will allow you to find the exact same point later on.";
 
-"Enter text about the landmark that will help you find it later." = "Enter text about the landmark that will help you find it later.";
+"anchorPointTextPop-UpConfirmation" = "Ok";
 
-"Ok" = "Ok";
+"anchorPointPop-UpCancel" = "Don't specify this information";
 
-"Don't specify this information" = "Don't specify this information";
+"anchorPointTextPlaceholder" = "Enter Anchor Point information";
 
-"Enter landmark information" = "Enter landmark information";
+"singleUseRouteAnchorPointText" = "To be able to resume your tracking at a later point you need to record an anchor point for the end of your route. An anchor point records the position and alignment of your device so the app can reload your route from a temporary file. As a result the accuracy of your return navigation relies entirely on how accurately you can realign and position your phone with your saved anchor point at a later point. We suggest using the text and voice note buttons to record a text note and/or a voice recording which can help you realign your device to the anchor point you recorded at a later time.\nTo create an anchor point, hold your device flat with the screen facing up. Press the top (short) edge flush against a flat vertical surface (such as a wall) the \”align\” button starts a %lu-second countdown. The countdown is intended to give you time to position your device; the Anchor point will be saved at the end of the countdown.";
 
-"Landmarks allow you to save or pause your route. You will need to return to the landmark to load or unpause your route. Before creating the landmark, specify text or voice to help you remember its location. To create a landmark, hold your device flat with the screen facing up. Press the top (short) edge flush against a flat vertical surface (such as a wall).  The \"align\" button starts a %lu-second countdown. During this time, do not move the device." = "Landmarks allow you to save or pause your route. You will need to return to the landmark to load or unpause your route. Before creating the landmark, specify text or voice to help you remember its location. To create a landmark, hold your device flat with the screen facing up. Press the top (short) edge flush against a flat vertical surface (such as a wall).  The \"align\" button starts a %lu-second countdown. During this time, do not move the device.";
+"multipleUseRouteStartAnchorPointText" = "To allow your route to be navigated at a later point you need to record an anchor point for the start of your route. An anchor point records the position and alignment of your device so the app can reload your route from a saved file. As a result the accuracy of your saved route navigation relies entirely on how accurately you can realign and position your phone with your saved anchor point at a later point. We suggest using the text and voice note buttons to record a text note and/or a voice recording which can help you realign your device to the anchor point you recorded at a later time.\nTo create an anchor point, hold your device flat with the screen facing up. Press the top (short) edge flush against a flat vertical surface (such as a wall) the \”align\” button starts a %lu-second countdown. The countdown is intended to give you time to position your device; the Anchor point will be saved at the end of the countdown.";
 
-"Hold your device flat with the screen facing up. Press the top (short) edge flush against the same vertical surface that you used to create the landmark.  When you are ready, activate the align button to start the alignment countdown that will complete the procedure. Do not move the device until the phone provides confirmation via a vibration or sound cue." = "Hold your device flat with the screen facing up. Press the top (short) edge flush against the same vertical surface that you used to create the landmark.  When you are ready, activate the align button to start the alignment countdown that will complete the procedure. Do not move the device until the phone provides confirmation via a vibration or sound cue.";
+"multipleUseRouteEndAnchorPointText" = "To allow your route to be navigated in the reverse direction you need to record an anchor point for the end of your route. An anchor point records the position and alignment of your device so the app can reload your route from a saved file. As a result the accuracy of your saved route navigation relies entirely on how accurately you can realign and position your phone with your saved anchor point at a later point. We suggest using the text and voice note buttons to record a text note and/or a voice recording which can help you realign your device to the anchor point you recorded at a later time.\nTo create an anchor point, hold your device flat with the screen facing up. Press the top (short) edge flush against a flat vertical surface (such as a wall) the \”align\” button starts a %lu-second countdown. The countdown is intended to give you time to position your device; the Anchor point will be saved at the end of the countdown.";
 
+"anchorPointAlignmentText" = "Please align your device with your previously recorded anchor point. To do this Hold your device flat with the screen pointing up. Press the top (short) edge flush with the same vertical surface that you used to create the Anchor Point. Activating the align button will start an alignment countdown this is intended to give you time to make final adjustments to the positioning of your device. At the end of the countdown the alignment will be taken and the device will provide confirmation via a vibration or sound cue.";
+"anchorPointIntroductionToSavedText" = "The Anchor Point information you entered is: ";
+
+//Settings
 "Settings" = "Settings"; // Comments: Title/header of the settings menu.
+"imperialUnitText" = " feet";
+"metricUnitText" = " meters";
 
 // Voicenote
-"Voice Note Recorder" = "Voice Note Recorder";
+"voiceNoteRecorderPop-UpHeader" = "Voice Note Recorder";
+"stopRecordingVoiceNoteAccessibilityLabel" = "Stop Recording";
+"startRecordingVoiceNoteAccessibilityLabel" = "Record Voice Note";
+
+//GoHomeAlert
+"homeAlertTitle" = "Are you sure?";
+"homeAlertContent" = "If you exit this process right now, your active route information will be lost.";
+"homeAlertConfirmNavigationButton" = "Go to the Home Page";
+
 
 // RoutesViewController
-"Route direction" = "Route direction";
+"routeDirectionPop-UpHeader" = "Route direction";
 
-"Start to End" = "Start to End";
+"routeDirectionStartToEndButtonLabel" = "Start to End";
 
-"End to Start" = "End to Start";
+"routeDirectionEndToStartButtonLabel" = "End to Start";
+
+"deleteActionText" = "Delete";
 
 // Info.plist
 "Clew needs to access your camera to track your orientation." = "Clew needs to access your camera to track your orientation.";
@@ -130,50 +147,108 @@
 "feedbackMenuTitle" = "Clew Feedback";
 
 // HelpCompiler.swift
-"clewAppLogoAccessabilityText" = "The Clew App Logo";
+"clewAppLogoAccessibilityText" = "The Clew App Logo";
+
 "clewHelpTitle" = "Clew Help";
+
 "appFeaturesHeading" = "App features";
+
 "appFeaturesCurrentVersionHeading" = "Current Version";
+
 "appfeaturesCurrentVersionContent" = "Clew allows you to record routes using your phone that you can then navigate (either in the forward or reverse direction) at a later point in time. Clew can be used in situations where you want to immediately navigate back to your starting location (e.g., if you went somewhere with a sighted guide or if it is harder to navigate the reverse journey) or when you want to remember a route that you are learning so you can navigate it more confidently in the future.  Importantly, Clew does not use your phone's GPS, so it can be used indoors.";
+
 "appFeaturesNewFeaturesContent" = "The ability to save routes is a new feature for Clew.";
+
 "appFeaturesFutureVersionsHeader" = "Future Versions";
 
 "appFeaturesFutureVersionsContent" = "We are working on improving alignment mechanisms to make it easier and quicker to begin navigation of routes.";
 
 "howWellDoesClewWorkHeader" = "How well does Clew work?";
+
 "howWellDoesClewWorkContentParagraph1" = "Clew relies on the position tracking technology provided by Apple's ARKit. These motion estimates are based on tracking elements in the environment visually (using your phone's camera) and on motion estimates from inertial sensors in your phone. While this technology is advanced, it does not work perfectly. You should expect that over very long routes, particular ones with limited visual features or poor lighting, that the accuracy of the tracking (and hence the app's guidance) will decrease. We have found that Clew works best when you navigate routes along the same direction as they were originally recorded (&quot;Start to End &quot; rather than &quot;End to Start &quot; navigation mode).";
+
 "howWellDoesClewWorkContentParagraph2" = "Given the limitations of Clew, you should always use your orientation and mobility skills to ensure your personal safety when using Clew. We are working on additional strategies for improving the accuracy of Clew.";
+
 "recordingARouteHeader" = "Recording a route";
-"recordingARouteContent" = "As soon as the app launches, the app will present three buttons: saved routes, record route, and create landmark. To record a route that you don't need to save, or if you only want to be able to save the route in the reverse direction, you can simply activate the record button and move along the route you'd like to record. If you want to be able to save the route so that you can receive automatic guidance along it at a later time, activate the create landmark button and follow the procedure for landmark creation and route pausing described later in this document. If at any point you want to cancel an activity and return to this recording screen from any other part of the app, either the home button, or in some cases a “done” button, can be pressed to reset the app status and return to the recording view.";
+
+"recordingARouteContent" = "As soon as the app launches, the app will present three buttons: saved routes, record route, and create Anchor Point. To record a route that you don't need to save, or if you only want to be able to save the route in the reverse direction, you can simply activate the record button and move along the route you'd like to record. If you want to be able to save the route so that you can receive automatic guidance along it at a later time, activate the create Anchor Point button and follow the procedure for Anchor Point creation and route pausing described later in this document. If at any point you want to cancel an activity and return to this recording screen from any other part of the app, either the home button, or in some cases a “done” button, can be pressed to reset the app status and return to the recording view.";
+
 "recordingARouteProperPositioningHeading" = "Properly positioning your phone when using Clew";
+
 "recordingARouteProperPositioningContent" = "The app's motion estimates are based primarily on analyzing images from your phone's camera. The app will not work unless your phone's rear camera is capturing images of your environment. The app will not work if the phone is in your pocket or if any part of your body is blocking your phone's rear camera. We have found that the app works best when you hold the phone in portrait orientation with the rear camera facing directly ahead of you and the phone oriented vertically. Other orientations can work, but may result in diminished accuracy.";
+
 "savedRoutesHeader" = "Saved routes";
+
 "savedRoutesContent" = "The saved routes menu is a new feature for Clew. It allows you to load previously traveled routes and navigate along them in either the forward or reverse direction.";
+
 "savedRoutesLoadingARouteHeader" = "Loading a route";
-"savedRoutesLoadingARouteContent" = "The saved routes menu provides you with a list of previously recorded routes ordered from most to least recent. Once you tap on a route, you will be prompted to navigate the route in &quot;start to end&quot; or &quot;end to start&quot; mode. &quot;Start to end&quot; means that you would navigate along the route in the same direction as it was initially recorded. &quot;End to start&quot; means that you would navigate the route in the reverse direction as it was initially recorded. If either option is dimmed (i.e., not able to be activated), it means that an appropriate landmark was not created at either the start or end of the route.";
+
+"savedRoutesLoadingARouteContent" = "The saved routes menu provides you with a list of previously recorded routes ordered from most to least recent. Once you tap on a route, you will be prompted to navigate the route in &quot;start to end&quot; or &quot;end to start&quot; mode. &quot;Start to end&quot; means that you would navigate along the route in the same direction as it was initially recorded. &quot;End to start&quot; means that you would navigate the route in the reverse direction as it was initially recorded. If either option is dimmed (i.e., not able to be activated), it means that an appropriate Anchor Point was not created at either the start or end of the route.";
+
 "savedRoutesDeletingASavedRouteHeader" = "Deleting a saved route";
 "savedRoutesDeletingASavedRouteContent" = "You can delete routes from this menu either by swiping left (if not using VoiceOver) or by activating the secondary action on the route (if you are using VoiceOver).";
 "savedRoutesSharingASavedRouteHeader" = "Sharing a saved route";
 "savedRoutesSharingASavedRouteContent" = "You can share routes from this menu either by swiping left (if not using VoiceOver) or by activating the secondary action on the route (if you are using VoiceOver). Pressing on the share button will then open a share selector which lets you share a route over text, email, airdrop, or through many other apps.";
 "followingARouteHeader" = "Following a route";
+
 "followingARouteContent" = "Once you activate the start navigation feature, the app will provide you with instructions to navigate back to your starting location. The app provides feedback in the following formats.";
+
 "followingARouteHapticFeedbackHeader" = "Haptic feedback";
+
 "followingARouteHapticFeedbackContent" = "Assuming you have enabled haptic feedback in the app settings and you have an iPhone that supports haptics (iPhone 7 or later should work), the phone will provide haptic vibration when it is facing in the correct direction of travel for the route. It is important to keep in mind that this feedback is relative to the direction of the phone, rather than your body. When you achieve a milestone in the route (we call these waypoints), you will feel a stronger haptic vibration.";
+
 "followingARouteAuditoryBeepsHeader" = "Auditory beeps";
+
 "followingARouteAuditoryBeepsContent" = "Assuming you have enabled sound feedback in the app settings and your iphone doesn't have system sounds muted, the phone will make a beeping sound when it is facing in the correct direction of travel for the route. It is important to keep in mind that this feedback is relative to the direction of the phone, rather than your body. When you achieve a milestone in the route (we call these waypoints), you will hear a different sound effect.";
+
 "followingARouteSpeechFeedbackHeader" = "Speech feedback";
+
 "followingARouteSpeechFeedbackContent" = "Assuming you have enabled speech feedback in the app settings and voice over is on, the phone will provide you with voice directions whenever you encounter a waypoint on your route, start a route, or complete a route. If you want to hear voice directions again, you can use the &quot;Get Directions&quot; button.";
+
 "appSoundsAndTheirMeaningsHeader" = "App sounds and their meanings";
+
 "appSoundsAndTheirMeaningsContent" = "In addition to the auditory guidance that you get when navigating along a route (described previously), there are some additional sounds that help you understand what is currently happening with the app. If you have enabled the speech feedback option in the app settings, each of these sounds is accompanied by speech that briefly explains the sounds meaning. Note that these sounds are not delivered when you are in the help menu (to avoid distracting you while you are reading through the help information).";
+
 "appSoundsAndTheirMeaningsNormalMotionTrackingSoundBullet" = "Normal motion tracking sound: this sound is a short recording of a brass instrument. It indicates that the app's position tracking has entered into the &quot;normal&quot; state. If the app has just started up this means that the motion tracking is now active. If the app previously experienced diminished accuracy, see next sound description, it means that the motion tracking has recovered. If you hear this sound after loading or resuming a route, this means that ARKit has been able to automatically align the route to the recording.";
+
 "appSoundsAndTheirMeaningsMotionTrackingWarningSoundBullet" = "Motion tracking warning sound: this sound is a short recording of a stringed instrument playing a slightly scratchy note. This sound indicates that the app's position tracking has been degraded either due to the phone moving too rapidly or due to the environment not having an adequate amount of visual detail. The latter condition occurs if your environment is too dark or if the camera is occluded.";
+
 "ratingYourNavigationExperienceHeader" = "Rating your navigation experience";
+
 "ratingYourNavigationExperienceContent" = "Once you are done navigating, assuming you have enabled the &quot;Send Logs&quot; setting, the app will ask you to rate your service. These ratings help us improve the app experience and the app's accuracy. Along with your rating, your phone's path will be sent in the log. Please note that this data is not linked to you in any way and it does not contain any information about the location where the path was recorded (e.g., no GPS coordinates are logged). Further, no images or other sensitive information are logged by the app. If you have any concerns about the data in the logs, please contact us (or simply switch off the &quot;Send Logs&quot; feature in the app settings).";
+
 "providingFeedbackToTheDevelopmentTeamHeader" = "Once you are done navigating, assuming you have enabled the &quot;Send Logs&quot; setting, the app will ask you to rate your service. These ratings help us improve the app experience and the app's accuracy. Along with your rating, your phone's path will be sent in the log. Please note that this data is not linked to you in any way and it does not contain any information about the location where the path was recorded (e.g., no GPS coordinates are logged). Further, no images or other sensitive information are logged by the app. If you have any concerns about the data in the logs, please contact us (or simply switch off the &quot;Send Logs&quot; feature in the app settings).";
+
 "providingFeedbackToTheDevelopmentTeamHeader" = "Providing feedback to the development team";
+
 "providingFeedbackToTheDevelopmentTeamContent" = "Please send all feedback to the development team through the feedback popover in the Clew app. The feedback popover is accessible by tapping the feedback button in the app. We take your feedback seriously and will do our best to act on it.";
-"PausingARouteOrRecordingALandmarkHeader" = "Pausing a route or recording a landmark";
-"PausingARouteOrRecordingALandmarkContentParagraph1" = "The procedure for pausing the route and recording a landmark are the same. The key idea is that in order to reuse routes, your phone must be able to align its current position with a position from the recorded route. In some cases, Apple's ARKit will be able to automatically do this registration (for example, when the camera sees a distinctive visual feature that can be matched to the recording); however, in many situations this will not be possible.";
-"PausingARouteOrRecordingALandmarkContentParagraph2" = "In order to register your position in such cases you be able to place the phone in a position and orientation such that you can reliably return the phone to that same position and orientation when reusing a saved route. While it is not crucial that you position the phone in exactly the same place (although the more accurately you can do this, the better the app will work), you must be able to place the phone in the precisely the same orientation. To make it easy to return the phone to the same orientation, you should hold your phone flat with the screen facing up and press the top (short-edge) of your phone flush with a vertical surface (like a wall). More instructions are provided in the app when you activate the pause feature or the create landmark feature.";
-"contractSectionAccessabilityTag" = "contract section";
-"expandSectionAccessabilityTag" = "expand section";
+
+"PausingARouteOrRecordingAAnchorPointHeader" = "Pausing a route or recording a Anchor Point";
+
+"PausingARouteOrRecordingAAnchorPointContentParagraph1" = "The procedure for pausing the route and recording a Anchor Point are the same. The key idea is that in order to reuse routes, your phone must be able to align its current position with a position from the recorded route. In some cases, Apple's ARKit will be able to automatically do this registration (for example, when the camera sees a distinctive visual feature that can be matched to the recording); however, in many situations this will not be possible.";
+
+"PausingARouteOrRecordingAAnchorPointContentParagraph2" = "In order to register your position in such cases you be able to place the phone in a position and orientation such that you can reliably return the phone to that same position and orientation when reusing a saved route. While it is not crucial that you position the phone in exactly the same place (although the more accurately you can do this, the better the app will work), you must be able to place the phone in the precisely the same orientation. To make it easy to return the phone to the same orientation, you should hold your phone flat with the screen facing up and press the top (short-edge) of your phone flush with a vertical surface (like a wall). More instructions are provided in the app when you activate the pause feature or the create Anchor Point feature.";
+
+"contractSectionAccessibilityTag" = "contract section";
+
+"expandSectionAccessibilityTag" = "expand section";
+
+//Announcements which signify the end of a process
+"singleUseRouteAnchorPointToPausedStateAnnouncement" = "Anchor point saved. You may now close the app and return later for return navigation.";
+
+"multipleUseRouteAnchorPointToRecordingRouteAnnouncement" = "Anchor point saved. You are now recording a route.";
+
+"multipleUseRouteAnchorPointToSaveARouteAnnouncement" = "Anchor point saved. You may now name your saved route.";
+
+"startingReturnNavigationAnnouncement" = "Starting return navigation";
+
+"resumeAnchorPointToReturnNavigationAnnouncement" = "Aligned to anchor point. Starting return navigation.";
+"singleUseRouteToRecordingRouteAnnouncement" = "Now recording a single use route.";
+"saveRouteToPlayPauseAnnouncement" = "Route saved. You may now perform return navigation or pause your tracking session to navigate back at a later time.";
+
+//Play/Pause text
+"automaticAlignmentPlayPauseViewText" = "You have been automatically realigned with your route, simply press the play button to perform navigation.";
+
+"singleUsePlayPauseViewText" = "In order to immediately perform return navigation, simply press the play button and follow the instructions provided. In order to pause the session to perform return navigation at a later point, press the pause button and complete the anchor point procedure.";
+
+"multipleUseRoutePlayPauseViewText" = "In order to immediately navigate back along the path you recorded, simply press the play button and follow the instructions provided. In order to pause the session to perform return navigation at a later point, press the pause button.";
