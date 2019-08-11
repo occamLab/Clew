@@ -137,7 +137,9 @@
 "appfeaturesCurrentVersionContent" = "Clew allows you to record routes using your phone that you can then navigate (either in the forward or reverse direction) at a later point in time. Clew can be used in situations where you want to immediately navigate back to your starting location (e.g., if you went somewhere with a sighted guide or if it is harder to navigate the reverse journey) or when you want to remember a route that you are learning so you can navigate it more confidently in the future.  Importantly, Clew does not use your phone's GPS, so it can be used indoors.";
 "appFeaturesNewFeaturesContent" = "The ability to save routes is a new feature for Clew.";
 "appFeaturesFutureVersionsHeader" = "Future Versions";
-"appFeaturesFutureVersionsContent" = "We are working on a route sharing feature so that you can send routes to other users.";
+
+"appFeaturesFutureVersionsContent" = "We are working on improving alignment mechanisms to make it easier and quicker to begin navigation of routes.";
+
 "howWellDoesClewWorkHeader" = "How well does Clew work?";
 "howWellDoesClewWorkContentParagraph1" = "Clew relies on the position tracking technology provided by Apple's ARKit. These motion estimates are based on tracking elements in the environment visually (using your phone's camera) and on motion estimates from inertial sensors in your phone. While this technology is advanced, it does not work perfectly. You should expect that over very long routes, particular ones with limited visual features or poor lighting, that the accuracy of the tracking (and hence the app's guidance) will decrease. We have found that Clew works best when you navigate routes along the same direction as they were originally recorded (&quot;Start to End &quot; rather than &quot;End to Start &quot; navigation mode).";
 "howWellDoesClewWorkContentParagraph2" = "Given the limitations of Clew, you should always use your orientation and mobility skills to ensure your personal safety when using Clew. We are working on additional strategies for improving the accuracy of Clew.";
@@ -150,7 +152,9 @@
 "savedRoutesLoadingARouteHeader" = "Loading a route";
 "savedRoutesLoadingARouteContent" = "The saved routes menu provides you with a list of previously recorded routes ordered from most to least recent. Once you tap on a route, you will be prompted to navigate the route in &quot;start to end&quot; or &quot;end to start&quot; mode. &quot;Start to end&quot; means that you would navigate along the route in the same direction as it was initially recorded. &quot;End to start&quot; means that you would navigate the route in the reverse direction as it was initially recorded. If either option is dimmed (i.e., not able to be activated), it means that an appropriate landmark was not created at either the start or end of the route.";
 "savedRoutesDeletingASavedRouteHeader" = "Deleting a saved route";
-"savedRoutesDeletingASavedRouteContent" = "You can delete routes from this menu either swiping left (if not using VoiceOver) or by activating the secondary action on the route (if you are using VoiceOver).";
+"savedRoutesDeletingASavedRouteContent" = "You can delete routes from this menu either by swiping left (if not using VoiceOver) or by activating the secondary action on the route (if you are using VoiceOver).";
+"savedRoutesSharingASavedRouteHeader" = "Sharing a saved route";
+"savedRoutesSharingASavedRouteContent" = "You can share routes from this menu either by swiping left (if not using VoiceOver) or by activating the secondary action on the route (if you are using VoiceOver). Pressing on the share button will then open a share selector which lets you share a route over text, email, airdrop, or through many other apps.";
 "followingARouteHeader" = "Following a route";
 "followingARouteContent" = "Once you activate the start navigation feature, the app will provide you with instructions to navigate back to your starting location. The app provides feedback in the following formats.";
 "followingARouteHapticFeedbackHeader" = "Haptic feedback";
