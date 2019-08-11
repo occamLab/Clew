@@ -400,10 +400,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 return
             }
             beginRouteAnchorPoint.transform = currentTransform
-            print("setting transform", beginRouteAnchorPoint.transform)
-
             Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(playSound)), userInfo: nil, repeats: false)
-//            rootContainerView.pauseTrackingView.isHidden = true
             pauseTrackingController.remove()
             
             ///PATHPOINT begining anchor point alignment timer -> record route
@@ -956,11 +953,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
     }
     
-    /// Play audio feedback and system sound.  This is used currently when the user is facing the appropriate direction along the route.
+    /// Play audio feedback and system sound.  This is used currently when the user has aligned to the route.
     @objc func playSound() {
-        feedbackGenerator = UIImpactFeedbackGenerator(style: .heavy)
-        feedbackGenerator?.impactOccurred()
-        feedbackGenerator = nil
+        let confirmAlignmentFeedbackGenerator = UIImpactFeedbackGenerator(style: .heavy)
+        confirmAlignmentFeedbackGenerator.impactOccurred()
         playSystemSound(id: 1103)
     }
     
@@ -1244,9 +1240,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     // MARK: - Haptic generators
     
     /// The haptic feedback generator to use when facing towards the keypoint
-    var feedbackGenerator : UIImpactFeedbackGenerator? = nil
+    var feedbackGenerator : UIImpactFeedbackGenerator?
     /// The haptic feedback generator to use when a keypoint is reached
-    var waypointFeedbackGenerator: UINotificationFeedbackGenerator? = nil
+    var waypointFeedbackGenerator: UINotificationFeedbackGenerator?
     /// The time of last haptic feedback
     var feedbackTimer: Date!
     /// The delay between haptic feedback pulses in seconds
