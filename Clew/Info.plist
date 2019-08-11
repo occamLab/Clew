@@ -7,6 +7,10 @@
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>
+			<key>CFBundleTypeIconFiles</key>
+			<array>
+				<string>Icon-App-29x29@3x.png</string>
+			</array>
 			<key>CFBundleTypeExtensions</key>
 			<array>
 				<string></string>
@@ -26,6 +30,10 @@
 	<key>UTExportedTypeDeclarations</key>
 	<array>
 		<dict>
+			<key>UTTypeIconFile</key>
+			<array>
+				<string>Icon-App-29x29@3x.png</string>
+			</array>
 			<key>UTTypeDescription</key>
 			<string>Clew Route Document</string>
 			<key>UTTypeConformsTo</key>
