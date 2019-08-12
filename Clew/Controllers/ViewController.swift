@@ -618,6 +618,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        sceneView.accessibilityIgnoresInvertColors = true
+        
         // set the main view as active
         view = RootContainerView(frame: UIScreen.main.bounds)
         
@@ -1015,22 +1017,15 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     ///   - subview transitions?
     /// display RECORD PATH button/hide all other views
     @objc func showRecordPathButton(announceArrival: Bool) {
-//        rootContainerView.recordPathView.isHidden = false
-//        rootContainerView.routeRatingView.isHidden = true
-//        rootContainerView.stopNavigationView.isHidden = true
         add(recordPathController)
         /// handling main screen transitions outside of the first load
         /// add the view of the child to the view of the parent
-        //recordPathController.view.isHidden = false
         routeRatingController.remove()
         stopNavigationController.remove()
         
         rootContainerView.getDirectionButton.isHidden = true
         // the options button is hidden if the route rating shows up
         ///// TRACK
-//        rootContainerView.settingsButton.isHidden = false
-//        rootContainerView.helpButton.isHidden = false
-//        rootContainerView.feedbackButton.isHidden = false
         rootContainerView.homeButton.isHidden = true
 
         if announceArrival {
