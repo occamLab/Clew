@@ -376,12 +376,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         delayTransition()
         playAlignmentConfirmation = DispatchWorkItem{
             self.rootContainerView.countdownTimer.isHidden = true
+            self.pauseTracking()
             if paused && recordingSingleUseRoute{
                 ///announce to the user that they have sucessfully saved an anchor point.
                 self.delayTransition(announcement: NSLocalizedString("singleUseRouteAnchorPointToPausedStateAnnouncement", comment: "This is the announcement which is spoken after creating an anchor point in the process of pausing the tracking session of recording a single use route"), initialFocus: nil)
             }
-
-            self.pauseTracking()
         }
         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(ViewController.alignmentWaitingPeriod), execute: playAlignmentConfirmation!)
     }
@@ -396,7 +395,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 return
             }
             beginRouteAnchorPoint.transform = currentTransform
-            Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(playSound)), userInfo: nil, repeats: false)
             pauseTrackingController.remove()
             
             ///PATHPOINT begining anchor point alignment timer -> record route
@@ -937,14 +935,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             resumeTracking()
         }
     }
-    
-    /// Play audio feedback and system sound.  This is used currently when the user has aligned to the route.
-    @objc func playSound() {
-        let confirmAlignmentFeedbackGenerator = UIImpactFeedbackGenerator(style: .heavy)
-        confirmAlignmentFeedbackGenerator.impactOccurred()
-        playSystemSound(id: 1103)
-    }
-    
+
     /// Play the specified system sound.  If the system sound has been preloaded as an audio player, then play using the AVAudioSession.  If there is no corresponding player, use the `AudioServicesPlaySystemSound` function.
     ///
     /// - Parameter id: the id of the system sound to play
@@ -1451,7 +1442,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 let relativeTransform = leveledCameraPose * leveledAlignPose.inverse
                 self.sceneView.session.setWorldOrigin(relativeTransform: relativeTransform)
                 
-                Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(self.playSound)), userInfo: nil, repeats: false)
                 self.isResumedRoute = true
                 if paused {
                     ///PATHPOINT paused anchor point alignment timer -> return navigation
