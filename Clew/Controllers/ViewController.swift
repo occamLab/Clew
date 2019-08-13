@@ -640,8 +640,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
 
         rootContainerView.getDirectionButton.addTarget(self, action: #selector(announceDirectionHelpPressed), for: .touchUpInside)
 
-//        rootContainerView.feedbackButton.addTarget(self, action: #selector(feedbackButtonPressed), for: .touchUpInside)
-
         // make sure this happens after the view is created!
         rootContainerView.countdownTimer.delegate = self
         ///sets the length of the timer to be equal to what the person has in their settings

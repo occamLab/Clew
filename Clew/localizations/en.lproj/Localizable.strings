@@ -36,18 +36,18 @@
 "stopNavigationButtonAcessabilityLabel" = "Stop navigation";
 "startReturnNavigationButtonAcessabilityLabel" = "Start return navigation";
 "stopRecordingButtonAccessibilityLabel" = "Stop recording";
-"settingsButtonAccesabilityLabel" = "Settings";
-"helpButtonAccesabilityLabel" = "Help";
-"homeButtonAccesabilityLabel" = "Clew Home Screen";
-"feedbackButtonAccesabilityLabel" = "Feedback";
-"getDirectionsButtonAccesabilityLabel" = "Get Directions";
+"settingsButtonAccessibilityLabel" = "Settings";
+"helpButtonAccessibilityLabel" = "Help";
+"homeButtonAccessibilityLabel" = "Clew Home Screen";
+"feedbackButtonAccessibilityLabel" = "Feedback";
+"getDirectionsButtonAccessibilityLabel" = "Get Directions";
 "nameSavedRouteLabel" = "Type your route name below";
 "nameSavedRouteTextField" = "Enter route name here";
 "enterAnchorPointDescriptionButtonAccessibilityLabel" = "Enter text to help you remember this Anchor Point";
 "enterAnchorPointVoiceNoteButtonAccessibilityLabel" = "Record audio to help you remember this Anchor Point";
 "startAlignmentCountdownButtonAccessibilityLabel" = "Start alignment countdown";
 "playVoiceNoteButtonAccessibilityLabel" = "Play recorded voice note";
-
+"startReturnNavigationButtonAccessibilityLabel" = "Start navigation";
 
     // Save routes
 "saveRoutePop-UpTitle" = "Save route";

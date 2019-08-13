@@ -23,7 +23,7 @@ class RecordPathController: UIViewController {
     /// called when view appears (any time)
     override func viewDidAppear(_ animated: Bool) {
         /// set thumbsUpButton as initially active voiceover button
-        UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: self.recordPathButton)
+        UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: self.addAnchorPointButton)
         addAnchorPointButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .largeTitle)
         routesButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .largeTitle)
         recordPathButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .largeTitle)

@@ -63,7 +63,7 @@ class PauseTrackingController: UIViewController, UIScrollViewDelegate {
         label.tag = UIView.mainTextTag
         
         /// set confirm alignment button as initially active voiceover button
-        UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: self.confirmAlignmentButton)
+        UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: self.enterAnchorPointDescriptionButton)
 
     }
     
