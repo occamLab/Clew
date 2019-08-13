@@ -132,8 +132,5 @@ class RootContainerView: UIView {
         addSubview(countdownTimer)
         addSubview(homeButton)
         addSubview(burgerMenuButton)
-//        addSubview(settingsButton)
-//        addSubview(feedbackButton)
-//        addSubview(helpButton)
     }
 }

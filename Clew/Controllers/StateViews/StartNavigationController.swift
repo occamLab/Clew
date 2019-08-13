@@ -22,12 +22,18 @@ class StartNavigationController: UIViewController {
     var fillerSpace: UIView!
 
     var label: UILabel!
+    
+    /// the recordingSingleUseRoute Boolean that should be passed in from the ViewController before this view is presented
+    var recordingSingleUseRoute: Bool!
 
+    /// the isAutomaticAlignment Boolean that should be passed in from the ViewController before this view is presented
+    var isAutomaticAlignment: Bool!
+    
     /// called when view appears (any time)
     override func viewDidAppear(_ animated: Bool) {
         
         var mainText : String = "nil"
-        if recordingSingleUseRoute{
+        if recordingSingleUseRoute {
             mainText = NSLocalizedString("singleUsePlayPauseViewText", comment: "Information displayed to the user on the play pause screen after they have recorded a single use route. This describes the functionality of the play and pause buttons.")
         } else {
             if isAutomaticAlignment {
