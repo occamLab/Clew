@@ -101,7 +101,7 @@ class RoutesViewController : UIViewController, UITableViewDataSource, UITableVie
             }
         }
         
-        let share = UITableViewRowAction(style: .normal, title: "Share") { (action, indexPath) in
+        let share = UITableViewRowAction(style: .normal, title: NSLocalizedString("shareActionText", comment: "This is the text that appears when a user tries to share a saved route. This text is used in an option menu when a route is selected and it describes the action for share a route.")) { (action, indexPath) in
             /// share item
             let url = self.rootViewController?.dataPersistence.exportToURL(route: self.routes[indexPath.row])
             

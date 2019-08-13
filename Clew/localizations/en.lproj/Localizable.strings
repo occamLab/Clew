@@ -139,6 +139,8 @@
 
 "deleteActionText" = "Delete";
 
+"shareActionText" = "Share";
+
 // Info.plist
 "Clew needs to access your camera to track your orientation." = "Clew needs to access your camera to track your orientation.";
 "Permission to use the microphone is required to use the voice notes feature." = "Permission to use the microphone is required to use the voice notes feature.";
