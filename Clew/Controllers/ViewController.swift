@@ -92,19 +92,6 @@ enum AppState {
     }
 }
 
-///Declare some global boolina flags related to the state
-///this boolian marks whether the curent route is 'paused' or not from the use of the pause button
-var paused: Bool = false
-
-/// this boolean marks whether or not the app is recording a multi use route
-var recordingSingleUseRoute: Bool = false
-
-///this boolean marks whether or not the app is saving a starting anchor point
-var startAnchorPoint: Bool = false
-
-///this boolean denotes whether or not the app is loading a route from an automatic alignment
-var isAutomaticAlignment: Bool = false
-
 /// The view controller that handles the main Clew window.  This view controller is always active and handles the various views that are used for different app functionalities.
 class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDelegate, AVSpeechSynthesizerDelegate {
     
@@ -168,6 +155,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// A boolean that tracks whether or not to suppress tracking warnings.  By default we don't suppress, but when the help popover is presented we do.
     var suppressTrackingWarnings = false
     
+    // TODO: the number of Booleans is a bit out of control.  We need a better way to manage them.  Some of them may be redundant with each other at this point.
+    
     /// This Boolean marks whether or not the pause procedure is being used to create a Anchor Point at the start of a route (true) or if it is being used to pause an already recorded route
     var creatingRouteAnchorPoint: Bool = false
     
@@ -176,6 +165,18 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// Set to true when the user is attempting to load a saved route that has a map associated with it. Once relocalization succeeds, this flag should be set back to false
     var attemptingRelocalization: Bool = false
+    
+    /// this Boolean marks whether the curent route is 'paused' or not from the use of the pause button
+    var paused: Bool = false
+    
+    /// this Boolean marks whether or not the app is recording a multi use route
+    var recordingSingleUseRoute: Bool = false
+    
+    ///this Boolean marks whether or not the app is saving a starting anchor point
+    var startAnchorPoint: Bool = false
+    
+    ///this boolean denotes whether or not the app is loading a route from an automatic alignment
+    var isAutomaticAlignment: Bool = false
     
     /// This is an audio player that queues up the voice note associated with a particular route Anchor Point. The player is created whenever a saved route is loaded. Loading it before the user clicks the "Play Voice Note" button allows us to call the prepareToPlay function which reduces the latency when the user clicks the "Play Voice Note" button.
     var voiceNoteToPlay: AVAudioPlayer?
@@ -222,7 +223,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// Handler for the recordingRoute app state
     func handleStateTransitionToRecordingRoute() {
         // records a new path
-        ///updates the state boolian to signifiy that the program is no longer saving the first anchor point
+        // updates the state Boolean to signifiy that the program is no longer saving the first anchor point
         startAnchorPoint = false
         attemptingRelocalization = false
         
@@ -377,7 +378,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         playAlignmentConfirmation = DispatchWorkItem{
             self.rootContainerView.countdownTimer.isHidden = true
             self.pauseTracking()
-            if paused && recordingSingleUseRoute{
+            if self.paused && self.recordingSingleUseRoute{
                 ///announce to the user that they have sucessfully saved an anchor point.
                 self.delayTransition(announcement: NSLocalizedString("singleUseRouteAnchorPointToPausedStateAnnouncement", comment: "This is the announcement which is spoken after creating an anchor point in the process of pausing the tracking session of recording a single use route"), initialFocus: nil)
             }
@@ -408,7 +409,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
 
             sceneView.session.getCurrentWorldMap { worldMap, error in
                 //check whether or not the path was called from the pause menu or not
-                if paused {
+                if self.paused {
                     ///PATHPOINT pause recording anchor point alignment timer -> resume tracking
                     //proceed as normal with the pause structure (single use route)
                     self.justTraveledRoute = SavedRoute(id: "single use", name: "single use", crumbs: self.crumbs, dateCreated: Date() as NSDate, beginRouteAnchorPoint: self.beginRouteAnchorPoint, endRouteAnchorPoint: self.endRouteAnchorPoint)
@@ -1041,6 +1042,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         resumeTrackingController.remove()
         resumeTrackingConfirmController.remove()
         stopRecordingController.remove()
+        
+        // set appropriate Boolean flags for context
+        startNavigationController.isAutomaticAlignment = isAutomaticAlignment
+        startNavigationController.recordingSingleUseRoute = recordingSingleUseRoute
         add(startNavigationController)
         startNavigationController.pauseButton.isHidden = !allowPause
         startNavigationController.fillerSpace.isHidden = !allowPause
@@ -1050,9 +1055,15 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
 
     /// Display the pause tracking view/hide all other views
     func showPauseTrackingButton() throws {
-        rootContainerView.homeButton.isHidden = false // home button here
+        rootContainerView.homeButton.isHidden = false
         recordPathController.remove()
         startNavigationController.remove()
+
+        // set appropriate Boolean flags
+        pauseTrackingController.paused = paused
+        pauseTrackingController.recordingSingleUseRoute = recordingSingleUseRoute
+        pauseTrackingController.startAnchorPoint = startAnchorPoint
+        
         add(pauseTrackingController)
         
         delayTransition()
@@ -1284,18 +1295,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         isAutomaticAlignment = false
         ///tells the program that it is recording a two way route
         recordingSingleUseRoute = false
-        //update the state boolian to say that this is not paused
+        //update the state Boolean to say that this is not paused
         paused = false
-        ///update the state boolian to say that this is recording the first anchor point
+        ///update the state Boolean to say that this is recording the first anchor point
         startAnchorPoint = true
 
         ///sends the user to create a Anchor Point
         rootContainerView.homeButton.isHidden = false
-        //        backButton.isHidden = true
         creatingRouteAnchorPoint = true
-        
-        // make sure to clear out any relative transform and paused transform so the alignment is accurate
-        print("starting pause procedure", creatingRouteAnchorPoint)
         state = .startingPauseProcedure
     }
     
@@ -1312,7 +1319,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         stopRecordingController.remove()
         
         ///checks if the route is a single use route or a multiple use route
-        if recordingSingleUseRoute == false{
+        if !recordingSingleUseRoute {
             ///PATHPOINT two way route recording finished -> create end Anchor Point
             ///sets the variable tracking whether the route is paused to be false
             paused = false
@@ -1378,7 +1385,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         paused = true
         
         //checks if the pause button has been called from inside a recording a multi use route
-        if recordingSingleUseRoute == false {
+        if !recordingSingleUseRoute {
             hideAllViewsHelper()
             ///PATHPOINT multi use route pause -> resume route
             self.pauseTracking()
@@ -1393,7 +1400,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// handles the user pressing the Anchor Point button
     @objc func startCreateAnchorPointProcedure() {
         rootContainerView.homeButton.isHidden = false
-//        backButton.isHidden = true
         creatingRouteAnchorPoint = true
         
         ///the route has not been resumed automaticly from a saved route
@@ -1443,10 +1449,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 self.sceneView.session.setWorldOrigin(relativeTransform: relativeTransform)
                 
                 self.isResumedRoute = true
-                if paused {
+                if self.paused {
                     ///PATHPOINT paused anchor point alignment timer -> return navigation
                     ///announce to the user that they have aligned to the anchor point sucessfully and are starting return navigation.
-                    paused = false
+                    self.paused = false
                     self.delayTransition(announcement: NSLocalizedString("resumeAnchorPointToReturnNavigationAnnouncement", comment: "This is an Announcement which indicates that the pause session is complete, that the prgram was able to align with the anchor point, and that return navigation has started."), initialFocus: nil)
                     self.state = .navigatingRoute
 
