@@ -2,23 +2,23 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>LSSupportsOpeningDocumentsInPlace</key>
-	<true/>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>
-			<key>CFBundleTypeIconFiles</key>
-			<array>
-				<string>Icon-App-29x29@3x.png</string>
-			</array>
 			<key>CFBundleTypeExtensions</key>
 			<array>
 				<string></string>
 			</array>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
+			<key>CFBundleTypeIconFiles</key>
+			<array>
+				<string>Icon-App-29x29@3x.png</string>
+			</array>
 			<key>CFBundleTypeName</key>
 			<string>Clew Route Document</string>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
 			<key>LSHandlerRank</key>
 			<string>Owner</string>
 			<key>LSItemContentTypes</key>
@@ -27,33 +27,6 @@
 			</array>
 		</dict>
 	</array>
-	<key>UTExportedTypeDeclarations</key>
-	<array>
-		<dict>
-			<key>UTTypeIconFile</key>
-			<array>
-				<string>Icon-App-29x29@3x.png</string>
-			</array>
-			<key>UTTypeDescription</key>
-			<string>Clew Route Document</string>
-			<key>UTTypeConformsTo</key>
-			<array>
-				<string>public.data</string>
-				<string>public.text</string>
-			</array>
-			<key>UTTypeIdentifier</key>
-			<string>edu.occam.Clew.crd</string>
-			<key>UTTypeTagSpecification</key>
-			<dict>
-				<key>public.filename-extension</key>
-				<string>crd</string>
-				<key>public.mime-type</key>
-				<string>application/clew</string>
-			</dict>
-		</dict>
-	</array>
-	<key>CFBundleDevelopmentRegion</key>
-	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -65,10 +38,12 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.9</string>
+	<string>2.0</string>
 	<key>CFBundleVersion</key>
-	<string>21</string>
+	<string>22</string>
 	<key>LSRequiresIPhoneOS</key>
+	<true/>
+	<key>LSSupportsOpeningDocumentsInPlace</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
 	<string>Clew needs to access your camera to track your orientation.</string>
@@ -90,6 +65,31 @@
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
+	</array>
+	<key>UTExportedTypeDeclarations</key>
+	<array>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.data</string>
+				<string>public.text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Clew Route Document</string>
+			<key>UTTypeIconFile</key>
+			<array>
+				<string>Icon-App-29x29@3x.png</string>
+			</array>
+			<key>UTTypeIdentifier</key>
+			<string>edu.occam.Clew.crd</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<string>crd</string>
+				<key>public.mime-type</key>
+				<string>application/clew</string>
+			</dict>
+		</dict>
 	</array>
 </dict>
 </plist>
