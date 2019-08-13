@@ -22,9 +22,7 @@ class RouteDocumentData: NSObject, NSSecureCoding {
     public var route: SavedRoute
     
     /// the world map
-    /// type is optional any to support
-    /// the lack of ARWorldMap support in ios12
-    public var map: Any?
+    public var map: ARWorldMap?
     
     /// first landmark audio note
     public var beginVoiceNote: String?
@@ -37,7 +35,7 @@ class RouteDocumentData: NSObject, NSSecureCoding {
     /// - Parameters:
     ///   - route: the route data
     ///   - map: the arkit world map
-    public init(route: SavedRoute, map: Any? = nil, beginVoiceNote: String? = nil, endVoiceNote: String? = nil) {
+    public init(route: SavedRoute, map: ARWorldMap? = nil, beginVoiceNote: String? = nil, endVoiceNote: String? = nil) {
         self.route = route
         self.map = map
         self.beginVoiceNote = beginVoiceNote
@@ -50,9 +48,7 @@ class RouteDocumentData: NSObject, NSSecureCoding {
     /// - Parameter aCoder: the object used for encoding
     func encode(with aCoder: NSCoder) {
         aCoder.encode(route, forKey: "route")
-        if #available(iOS 12.0, *) {
-            aCoder.encode(map, forKey: "map")
-        }
+        aCoder.encode(map, forKey: "map")
         aCoder.encode(beginVoiceNote as NSString?, forKey: "beginVoiceNote")
         aCoder.encode(endVoiceNote as NSString?, forKey: "endVoiceNote")
     }
@@ -67,14 +63,10 @@ class RouteDocumentData: NSObject, NSSecureCoding {
         }
         
         /// decode map, beginning landmark voice note, and ending landmark voice note,
-        /// knowing that the map will not necessarily exist when a route is shared
-        /// from an older device
-        var newMap: Any? = nil
+        /// knowing that the map may not necessarily exist
         
-        /// only attempt to decode map on iOS 12
-        if #available(iOS 12.0, *) {
-            newMap = aDecoder.decodeObject(of: ARWorldMap.self, forKey: "map")
-        }
+        var newMap = aDecoder.decodeObject(of: ARWorldMap.self, forKey: "map")
+
         let beginNote = aDecoder.decodeObject(of: NSString.self, forKey: "beginVoiceNote")
         let endNote = aDecoder.decodeObject(of: NSString.self, forKey: "endVoiceNote")
         

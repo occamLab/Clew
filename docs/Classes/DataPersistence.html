@@ -14,7 +14,7 @@
     <a title="DataPersistence Class Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html"> Docs</a> (96% documented)</p>
+        <p><a href="../index.html"> Docs</a> (95% documented)</p>
         <p class="header-right"><a href="https://github.com/occamLab/Clew"><img src="../img/gh.png"/>View on GitHub</a></p>
       </div>
     </header>
@@ -59,6 +59,9 @@
                 <a href="../Classes/LocationInfo.html">LocationInfo</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Classes/NameSavedRouteController.html">NameSavedRouteController</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Classes/Navigation.html">Navigation</a>
               </li>
               <li class="nav-group-task">
@@ -98,10 +101,10 @@
                 <a href="../Classes/RootContainerView.html">RootContainerView</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Classes/RouteDocumentData.html">RouteDocumentData</a>
+                <a href="../Classes/RouteAnchorPoint.html">RouteAnchorPoint</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Classes/RouteLandmark.html">RouteLandmark</a>
+                <a href="../Classes/RouteDocumentData.html">RouteDocumentData</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/RouteRatingController.html">RouteRatingController</a>
@@ -140,6 +143,18 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Global Variables.html#/s:4Clew16HapticDirectionsSDySiSSGvp">HapticDirections</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global Variables.html#/s:4Clew20isAutomaticAlignmentSbvp">isAutomaticAlignment</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global Variables.html#/s:4Clew6pausedSbvp">paused</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global Variables.html#/s:4Clew23recordingSingleUseRouteSbvp">recordingSingleUseRoute</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global Variables.html#/s:4Clew16startAnchorPointSbvp">startAnchorPoint</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Global Variables.html#/s:4Clew11targetDepthSfvp">targetDepth</a>
@@ -313,9 +328,9 @@ TODO: make this a singleton</p>
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:4Clew15DataPersistenceC7archive5route13worldMapAsAnyyAA10SavedRouteC_ypSgtKF"></a>
-                    <a name="//apple_ref/swift/Method/archive(route:worldMapAsAny:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:4Clew15DataPersistenceC7archive5route13worldMapAsAnyyAA10SavedRouteC_ypSgtKF">archive(route:worldMapAsAny:)</a>
+                    <a name="/s:4Clew15DataPersistenceC7archive5route8worldMapyAA10SavedRouteC_So07ARWorldG0CSgtKF"></a>
+                    <a name="//apple_ref/swift/Method/archive(route:worldMap:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Clew15DataPersistenceC7archive5route8worldMapyAA10SavedRouteC_So07ARWorldG0CSgtKF">archive(route:worldMap:)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -335,7 +350,7 @@ TODO: make this a singleton</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">archive</span><span class="p">(</span><span class="nv">route</span><span class="p">:</span> <span class="kt"><a href="../Classes/SavedRoute.html">SavedRoute</a></span><span class="p">,</span> <span class="nv">worldMapAsAny</span><span class="p">:</span> <span class="kt">Any</span><span class="p">?)</span> <span class="k">throws</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">archive</span><span class="p">(</span><span class="nv">route</span><span class="p">:</span> <span class="kt"><a href="../Classes/SavedRoute.html">SavedRoute</a></span><span class="p">,</span> <span class="nv">worldMap</span><span class="p">:</span> <span class="kt">ARWorldMap</span><span class="p">?)</span> <span class="k">throws</span></code></pre>
 
                         </div>
                       </div>
@@ -358,12 +373,12 @@ TODO: make this a singleton</p>
                             <tr>
                               <td>
                                 <code>
-                                <em>worldMapAsAny</em>
+                                <em>worldMap</em>
                                 </code>
                               </td>
                               <td>
                                 <div>
-                                  <p>an optional ARWorldMap.  The Any? type is used to allow for backward compatibility with iOS 11.3</p>
+                                  <p>an optional ARWorldMap to associate with the route</p>
                                 </div>
                               </td>
                             </tr>
@@ -435,9 +450,9 @@ library</p>
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:4Clew15DataPersistenceC12unarchiveMap2idypSgSS_tF"></a>
+                    <a name="/s:4Clew15DataPersistenceC12unarchiveMap2idSo07ARWorldE0CSgSS_tF"></a>
                     <a name="//apple_ref/swift/Method/unarchiveMap(id:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:4Clew15DataPersistenceC12unarchiveMap2idypSgSS_tF">unarchiveMap(id:)</a>
+                    <a class="token" href="#/s:4Clew15DataPersistenceC12unarchiveMap2idSo07ARWorldE0CSgSS_tF">unarchiveMap(id:)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -452,7 +467,7 @@ library</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">unarchiveMap</span><span class="p">(</span><span class="nv">id</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Any</span><span class="p">?</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">unarchiveMap</span><span class="p">(</span><span class="nv">id</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">ARWorldMap</span><span class="p">?</span></code></pre>
 
                         </div>
                       </div>
@@ -477,7 +492,7 @@ library</p>
                       </div>
                       <div>
                         <h4>Return Value</h4>
-                        <p>the stored map as Any?</p>
+                        <p>the stored map</p>
                       </div>
                     </section>
                   </div>
@@ -588,7 +603,7 @@ library</p>
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2019 <a class="link" href="" target="_blank" rel="external"></a>. All rights reserved. (Last updated: 2019-08-08)</p>
+          <p>&copy; 2019 <a class="link" href="" target="_blank" rel="external"></a>. All rights reserved. (Last updated: 2019-08-13)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.9.6</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
         </section>
       </article>

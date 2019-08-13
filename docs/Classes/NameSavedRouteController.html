@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>RecordButtonKit Class Reference</title>
+    <title>NameSavedRouteController Class Reference</title>
     <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
     <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
     <meta charset='utf-8'>
@@ -10,8 +10,8 @@
     
   </head>
   <body>
-    <a name="//apple_ref/swift/Class/RecordButtonKit" class="dashAnchor"></a>
-    <a title="RecordButtonKit Class Reference"></a>
+    <a name="//apple_ref/swift/Class/NameSavedRouteController" class="dashAnchor"></a>
+    <a title="NameSavedRouteController Class Reference"></a>
     <header>
       <div class="content-wrapper">
         <p><a href="../index.html"> Docs</a> (95% documented)</p>
@@ -22,7 +22,7 @@
       <p id="breadcrumbs">
         <a href="../index.html"> Reference</a>
         <img id="carat" src="../img/carat.png" />
-        RecordButtonKit Class Reference
+        NameSavedRouteController Class Reference
       </p>
     </div>
     <div class="content-wrapper">
@@ -257,32 +257,25 @@
       <article class="main-content">
         <section>
           <section class="section">
-            <h1>RecordButtonKit</h1>
+            <h1>NameSavedRouteController</h1>
               <div class="declaration">
                 <div class="language">
-                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">RecordButtonKit</span> <span class="p">:</span> <span class="kt">NSObject</span></code></pre>
+                  <pre class="highlight swift"><code><span class="kd">class</span> <span class="kt">NameSavedRouteController</span> <span class="p">:</span> <span class="kt">UIViewController</span><span class="p">,</span> <span class="kt">UITextFieldDelegate</span></code></pre>
 
                 </div>
               </div>
-            <p>Encapsulates various properties needed to define the record button&rsquo;s appearance.</p>
+            <p>A view controller for handling the route saving naming process.</p>
 
           </section>
           <section class="section task-group-section">
             <div class="task-group">
-              <div class="task-name-container">
-                <a name="/Colors"></a>
-                <a name="//apple_ref/swift/Section/Colors" class="dashAnchor"></a>
-                <a href="#/Colors">
-                  <h3 class="section-name">Colors</h3>
-                </a>
-              </div>
               <ul>
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:@M@Clew@objc(cs)RecordButtonKit(cpy)recordButtonColor"></a>
-                    <a name="//apple_ref/swift/Variable/recordButtonColor" class="dashAnchor"></a>
-                    <a class="token" href="#/c:@M@Clew@objc(cs)RecordButtonKit(cpy)recordButtonColor">recordButtonColor</a>
+                    <a name="/s:4Clew24NameSavedRouteControllerC04saveD6ButtonSo8UIButtonCSgvp"></a>
+                    <a name="//apple_ref/swift/Property/saveRouteButton" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Clew24NameSavedRouteControllerC04saveD6ButtonSo8UIButtonCSgvp">saveRouteButton</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -290,15 +283,14 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>the color of the record button</p>
+                        <p>button for finalizing your saved route name</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">@objc</span>
-<span class="kd">public</span> <span class="kd">dynamic</span> <span class="kd">class</span> <span class="k">var</span> <span class="nv">recordButtonColor</span><span class="p">:</span> <span class="kt">UIColor</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">saveRouteButton</span><span class="p">:</span> <span class="kt">UIButton</span><span class="o">!</span></code></pre>
 
                         </div>
                       </div>
@@ -308,9 +300,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:@M@Clew@objc(cs)RecordButtonKit(cpy)recordButtonHighlightedColor"></a>
-                    <a name="//apple_ref/swift/Variable/recordButtonHighlightedColor" class="dashAnchor"></a>
-                    <a class="token" href="#/c:@M@Clew@objc(cs)RecordButtonKit(cpy)recordButtonHighlightedColor">recordButtonHighlightedColor</a>
+                    <a name="/s:4Clew24NameSavedRouteControllerC5labelSo7UILabelCSgvp"></a>
+                    <a name="//apple_ref/swift/Property/label" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Clew24NameSavedRouteControllerC5labelSo7UILabelCSgvp">label</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -318,15 +310,14 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>the color of the record button&rsquo;s highlight</p>
+                        <p>Label for description of what to do to name your route</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">@objc</span>
-<span class="kd">public</span> <span class="kd">dynamic</span> <span class="kd">class</span> <span class="k">var</span> <span class="nv">recordButtonHighlightedColor</span><span class="p">:</span> <span class="kt">UIColor</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">label</span><span class="p">:</span> <span class="kt">UILabel</span><span class="o">!</span></code></pre>
 
                         </div>
                       </div>
@@ -336,9 +327,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:@M@Clew@objc(cs)RecordButtonKit(cpy)recordFrameColor"></a>
-                    <a name="//apple_ref/swift/Variable/recordFrameColor" class="dashAnchor"></a>
-                    <a class="token" href="#/c:@M@Clew@objc(cs)RecordButtonKit(cpy)recordFrameColor">recordFrameColor</a>
+                    <a name="/s:4Clew24NameSavedRouteControllerC9textFieldSo06UITextG0CSgvp"></a>
+                    <a name="//apple_ref/swift/Property/textField" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Clew24NameSavedRouteControllerC9textFieldSo06UITextG0CSgvp">textField</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -346,15 +337,14 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>the color of the record button&rsquo;s frame</p>
+                        <p>Text Field for typing the name you want to save your route as.</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">@objc</span>
-<span class="kd">public</span> <span class="kd">dynamic</span> <span class="kd">class</span> <span class="k">var</span> <span class="nv">recordFrameColor</span><span class="p">:</span> <span class="kt">UIColor</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">textField</span><span class="p">:</span> <span class="kt">UITextField</span><span class="o">!</span></code></pre>
 
                         </div>
                       </div>
@@ -364,9 +354,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:@M@Clew@objc(cs)RecordButtonKit(cpy)recordButtonNormalColor"></a>
-                    <a name="//apple_ref/swift/Variable/recordButtonNormalColor" class="dashAnchor"></a>
-                    <a class="token" href="#/c:@M@Clew@objc(cs)RecordButtonKit(cpy)recordButtonNormalColor">recordButtonNormalColor</a>
+                    <a name="/s:4Clew24NameSavedRouteControllerC8worldMapSo07ARWorldG0CSgvp"></a>
+                    <a name="//apple_ref/swift/Property/worldMap" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Clew24NameSavedRouteControllerC8worldMapSo07ARWorldG0CSgvp">worldMap</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -374,149 +364,14 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>the record button&rsquo;s normal color</p>
+                        <p>The ARWorldMap to associate with this route</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">@objc</span>
-<span class="kd">public</span> <span class="kd">dynamic</span> <span class="kd">class</span> <span class="k">var</span> <span class="nv">recordButtonNormalColor</span><span class="p">:</span> <span class="kt">UIColor</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <div class="task-name-container">
-                <a name="/Drawing%20Methods"></a>
-                <a name="//apple_ref/swift/Section/Drawing Methods" class="dashAnchor"></a>
-                <a href="#/Drawing%20Methods">
-                  <h3 class="section-name">Drawing Methods</h3>
-                </a>
-              </div>
-              <ul>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/c:@M@Clew@objc(cs)RecordButtonKit(cm)drawRecordButtonWithFrame:resizing:recordButtonFrameColor:isRecording:isPressed:"></a>
-                    <a name="//apple_ref/swift/Method/drawRecordButton(frame:resizing:recordButtonFrameColor:isRecording:isPressed:)" class="dashAnchor"></a>
-                    <a class="token" href="#/c:@M@Clew@objc(cs)RecordButtonKit(cm)drawRecordButtonWithFrame:resizing:recordButtonFrameColor:isRecording:isPressed:">drawRecordButton(frame:resizing:recordButtonFrameColor:isRecording:isPressed:)</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>Draw the record button.</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">@objc</span>
-<span class="kd">public</span> <span class="kd">dynamic</span> <span class="kd">class</span> <span class="kd">func</span> <span class="nf">drawRecordButton</span><span class="p">(</span><span class="n">frame</span> <span class="nv">targetFrame</span><span class="p">:</span> <span class="kt">CGRect</span> <span class="o">=</span> <span class="kt">CGRect</span><span class="p">(</span><span class="nv">x</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="nv">y</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="nv">width</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span> <span class="nv">height</span><span class="p">:</span> <span class="mi">100</span><span class="p">),</span> <span class="nv">resizing</span><span class="p">:</span> <span class="kt"><a href="../Classes/RecordButtonKit/ResizingBehavior.html">ResizingBehavior</a></span> <span class="o">=</span> <span class="o">.</span><span class="n">aspectFit</span><span class="p">,</span> <span class="nv">recordButtonFrameColor</span><span class="p">:</span> <span class="kt">UIColor</span> <span class="o">=</span> <span class="kt">UIColor</span><span class="p">(</span><span class="nv">red</span><span class="p">:</span> <span class="mf">1.000</span><span class="p">,</span> <span class="nv">green</span><span class="p">:</span> <span class="mf">1.000</span><span class="p">,</span> <span class="nv">blue</span><span class="p">:</span> <span class="mf">1.000</span><span class="p">,</span> <span class="nv">alpha</span><span class="p">:</span> <span class="mf">1.000</span><span class="p">),</span> <span class="nv">isRecording</span><span class="p">:</span> <span class="kt">CGFloat</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="nv">isPressed</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">)</span></code></pre>
-
-                        </div>
-                      </div>
-                      <div>
-                        <h4>Parameters</h4>
-                        <table class="graybox">
-                          <tbody>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>targetFrame</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>the frame to draw into</p>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>resizing</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>the resizing behavior to use for the button</p>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>recordButtonFrameColor</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>the frame color of the record button</p>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>isRecording</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>true if button is in the recording state, false otherwise</p>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>isPressed</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>true if the button is pressed, false otherwise</p>
-                                </div>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/c:@M@Clew@objc(cs)RecordButtonKit(cm)imageOfRecordButtonWithRecordButtonFrameColor:isRecording:isPressed:"></a>
-                    <a name="//apple_ref/swift/Method/imageOfRecordButton(recordButtonFrameColor:isRecording:isPressed:)" class="dashAnchor"></a>
-                    <a class="token" href="#/c:@M@Clew@objc(cs)RecordButtonKit(cm)imageOfRecordButtonWithRecordButtonFrameColor:isRecording:isPressed:">imageOfRecordButton(recordButtonFrameColor:isRecording:isPressed:)</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>/ Generated Images</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">@objc</span>
-<span class="kd">public</span> <span class="kd">dynamic</span> <span class="kd">class</span> <span class="kd">func</span> <span class="nf">imageOfRecordButton</span><span class="p">(</span><span class="nv">recordButtonFrameColor</span><span class="p">:</span> <span class="kt">UIColor</span> <span class="o">=</span> <span class="kt">UIColor</span><span class="p">(</span><span class="nv">red</span><span class="p">:</span> <span class="mf">1.000</span><span class="p">,</span> <span class="nv">green</span><span class="p">:</span> <span class="mf">1.000</span><span class="p">,</span> <span class="nv">blue</span><span class="p">:</span> <span class="mf">1.000</span><span class="p">,</span> <span class="nv">alpha</span><span class="p">:</span> <span class="mf">1.000</span><span class="p">),</span> <span class="nv">isRecording</span><span class="p">:</span> <span class="kt">CGFloat</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="nv">isPressed</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UIImage</span></code></pre>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">worldMap</span><span class="p">:</span> <span class="kt">ARWorldMap</span><span class="p">?</span></code></pre>
 
                         </div>
                       </div>
@@ -526,9 +381,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:4Clew15RecordButtonKitC16ResizingBehaviorO"></a>
-                    <a name="//apple_ref/swift/Enum/ResizingBehavior" class="dashAnchor"></a>
-                    <a class="token" href="#/s:4Clew15RecordButtonKitC16ResizingBehaviorO">ResizingBehavior</a>
+                    <a name="/c:@M@Clew@objc(cs)NameSavedRouteController(im)viewDidAppear:"></a>
+                    <a name="//apple_ref/swift/Method/viewDidAppear(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@Clew@objc(cs)NameSavedRouteController(im)viewDidAppear:">viewDidAppear(_:)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -536,16 +391,96 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>the resizing behavior of the record button.</p>
+                        <p>Undocumented</p>
 
-                        <a href="../Classes/RecordButtonKit/ResizingBehavior.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">override</span> <span class="kd">func</span> <span class="nf">viewDidAppear</span><span class="p">(</span><span class="n">_</span> <span class="nv">animated</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@Clew@objc(cs)NameSavedRouteController(im)dismissKeyboard"></a>
+                    <a name="//apple_ref/swift/Method/dismissKeyboard()" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@Clew@objc(cs)NameSavedRouteController(im)dismissKeyboard">dismissKeyboard()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc</span>
-<span class="kd">public</span> <span class="kd">enum</span> <span class="kt">ResizingBehavior</span> <span class="p">:</span> <span class="kt">Int</span></code></pre>
+<span class="kd">func</span> <span class="nf">dismissKeyboard</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@Clew@objc(cs)NameSavedRouteController(im)textFieldShouldReturn:"></a>
+                    <a name="//apple_ref/swift/Method/textFieldShouldReturn(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@Clew@objc(cs)NameSavedRouteController(im)textFieldShouldReturn:">textFieldShouldReturn(_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Get keyboard to disappear</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">textFieldShouldReturn</span><span class="p">(</span><span class="n">_</span> <span class="nv">textField</span><span class="p">:</span> <span class="kt">UITextField</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@Clew@objc(cs)NameSavedRouteController(im)viewDidLoad"></a>
+                    <a name="//apple_ref/swift/Method/viewDidLoad()" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@Clew@objc(cs)NameSavedRouteController(im)viewDidLoad">viewDidLoad()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">override</span> <span class="kd">func</span> <span class="nf">viewDidLoad</span><span class="p">()</span></code></pre>
 
                         </div>
                       </div>

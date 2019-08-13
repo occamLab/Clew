@@ -14,7 +14,7 @@
     <a title="Classes  Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="index.html"> Docs</a> (96% documented)</p>
+        <p><a href="index.html"> Docs</a> (95% documented)</p>
         <p class="header-right"><a href="https://github.com/occamLab/Clew"><img src="img/gh.png"/>View on GitHub</a></p>
       </div>
     </header>
@@ -59,6 +59,9 @@
                 <a href="Classes/LocationInfo.html">LocationInfo</a>
               </li>
               <li class="nav-group-task">
+                <a href="Classes/NameSavedRouteController.html">NameSavedRouteController</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="Classes/Navigation.html">Navigation</a>
               </li>
               <li class="nav-group-task">
@@ -98,10 +101,10 @@
                 <a href="Classes/RootContainerView.html">RootContainerView</a>
               </li>
               <li class="nav-group-task">
-                <a href="Classes/RouteDocumentData.html">RouteDocumentData</a>
+                <a href="Classes/RouteAnchorPoint.html">RouteAnchorPoint</a>
               </li>
               <li class="nav-group-task">
-                <a href="Classes/RouteLandmark.html">RouteLandmark</a>
+                <a href="Classes/RouteDocumentData.html">RouteDocumentData</a>
               </li>
               <li class="nav-group-task">
                 <a href="Classes/RouteRatingController.html">RouteRatingController</a>
@@ -140,6 +143,18 @@
               </li>
               <li class="nav-group-task">
                 <a href="Global Variables.html#/s:4Clew16HapticDirectionsSDySiSSGvp">HapticDirections</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Global Variables.html#/s:4Clew20isAutomaticAlignmentSbvp">isAutomaticAlignment</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Global Variables.html#/s:4Clew6pausedSbvp">paused</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Global Variables.html#/s:4Clew23recordingSingleUseRouteSbvp">recordingSingleUseRoute</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Global Variables.html#/s:4Clew16startAnchorPointSbvp">startAnchorPoint</a>
               </li>
               <li class="nav-group-task">
                 <a href="Global Variables.html#/s:4Clew11targetDepthSfvp">targetDepth</a>
@@ -367,6 +382,38 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">class</span> <span class="kt">RoutesViewController</span> <span class="p">:</span> <span class="kt">UIViewController</span><span class="p">,</span> <span class="kt">UITableViewDataSource</span><span class="p">,</span> <span class="kt">UITableViewDelegate</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@Clew@objc(cs)NameSavedRouteController"></a>
+                    <a name="//apple_ref/swift/Class/NameSavedRouteController" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@Clew@objc(cs)NameSavedRouteController">NameSavedRouteController</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>A view controller for handling the route saving naming process.</p>
+
+                        <a href="Classes/NameSavedRouteController.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">class</span> <span class="kt">NameSavedRouteController</span> <span class="p">:</span> <span class="kt">UIViewController</span><span class="p">,</span> <span class="kt">UITextFieldDelegate</span></code></pre>
 
                         </div>
                       </div>
@@ -894,9 +941,9 @@ TODO: make this a singleton</p>
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:@M@Clew@objc(cs)RouteLandmark"></a>
-                    <a name="//apple_ref/swift/Class/RouteLandmark" class="dashAnchor"></a>
-                    <a class="token" href="#/c:@M@Clew@objc(cs)RouteLandmark">RouteLandmark</a>
+                    <a name="/c:@M@Clew@objc(cs)RouteAnchorPoint"></a>
+                    <a name="//apple_ref/swift/Class/RouteAnchorPoint" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@Clew@objc(cs)RouteAnchorPoint">RouteAnchorPoint</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -904,15 +951,15 @@ TODO: make this a singleton</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>An encapsulation of a route landmark, including position, text, and audio information.</p>
+                        <p>An encapsulation of a route Anchor Point, including position, text, and audio information.</p>
 
-                        <a href="Classes/RouteLandmark.html" class="slightly-smaller">See more</a>
+                        <a href="Classes/RouteAnchorPoint.html" class="slightly-smaller">See more</a>
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">class</span> <span class="kt">RouteLandmark</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt">NSSecureCoding</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">class</span> <span class="kt">RouteAnchorPoint</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt">NSSecureCoding</span></code></pre>
 
                         </div>
                       </div>
@@ -1274,7 +1321,7 @@ for routes list popover</p>
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2019 <a class="link" href="" target="_blank" rel="external"></a>. All rights reserved. (Last updated: 2019-08-08)</p>
+          <p>&copy; 2019 <a class="link" href="" target="_blank" rel="external"></a>. All rights reserved. (Last updated: 2019-08-13)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.9.6</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
         </section>
       </article>

@@ -14,7 +14,7 @@
     <a title="ViewController Class Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html"> Docs</a> (96% documented)</p>
+        <p><a href="../index.html"> Docs</a> (95% documented)</p>
         <p class="header-right"><a href="https://github.com/occamLab/Clew"><img src="../img/gh.png"/>View on GitHub</a></p>
       </div>
     </header>
@@ -59,6 +59,9 @@
                 <a href="../Classes/LocationInfo.html">LocationInfo</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Classes/NameSavedRouteController.html">NameSavedRouteController</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Classes/Navigation.html">Navigation</a>
               </li>
               <li class="nav-group-task">
@@ -98,10 +101,10 @@
                 <a href="../Classes/RootContainerView.html">RootContainerView</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Classes/RouteDocumentData.html">RouteDocumentData</a>
+                <a href="../Classes/RouteAnchorPoint.html">RouteAnchorPoint</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Classes/RouteLandmark.html">RouteLandmark</a>
+                <a href="../Classes/RouteDocumentData.html">RouteDocumentData</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/RouteRatingController.html">RouteRatingController</a>
@@ -140,6 +143,18 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Global Variables.html#/s:4Clew16HapticDirectionsSDySiSSGvp">HapticDirections</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global Variables.html#/s:4Clew20isAutomaticAlignmentSbvp">isAutomaticAlignment</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global Variables.html#/s:4Clew6pausedSbvp">paused</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global Variables.html#/s:4Clew23recordingSingleUseRouteSbvp">recordingSingleUseRoute</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global Variables.html#/s:4Clew16startAnchorPointSbvp">startAnchorPoint</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Global Variables.html#/s:4Clew11targetDepthSfvp">targetDepth</a>
@@ -454,9 +469,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:4Clew14ViewControllerC21creatingRouteLandmarkSbvp"></a>
-                    <a name="//apple_ref/swift/Property/creatingRouteLandmark" class="dashAnchor"></a>
-                    <a class="token" href="#/s:4Clew14ViewControllerC21creatingRouteLandmarkSbvp">creatingRouteLandmark</a>
+                    <a name="/s:4Clew14ViewControllerC24creatingRouteAnchorPointSbvp"></a>
+                    <a name="//apple_ref/swift/Property/creatingRouteAnchorPoint" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Clew14ViewControllerC24creatingRouteAnchorPointSbvp">creatingRouteAnchorPoint</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -464,14 +479,14 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>This Boolean marks whether or not the pause procedure is being used to create a landmark at the start of a route (true) or if it is being used to pause an already recorded route</p>
+                        <p>This Boolean marks whether or not the pause procedure is being used to create a Anchor Point at the start of a route (true) or if it is being used to pause an already recorded route</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">creatingRouteLandmark</span><span class="p">:</span> <span class="kt">Bool</span></code></pre>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">creatingRouteAnchorPoint</span><span class="p">:</span> <span class="kt">Bool</span></code></pre>
 
                         </div>
                       </div>
@@ -545,7 +560,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>This is an audio player that queues up the voice note associated with a particular route landmark. The player is created whenever a saved route is loaded. Loading it before the user clicks the <q>Play Voice Note</q> button allows us to call the prepareToPlay function which reduces the latency when the user clicks the <q>Play Voice Note</q> button.</p>
+                        <p>This is an audio player that queues up the voice note associated with a particular route Anchor Point. The player is created whenever a saved route is loaded. Loading it before the user clicks the <q>Play Voice Note</q> button allows us to call the prepareToPlay function which reduces the latency when the user clicks the <q>Play Voice Note</q> button.</p>
 
                       </div>
                       <div class="declaration">
@@ -885,9 +900,9 @@ whether or not an announcement is currently being read to the user.</p>
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:4Clew14ViewControllerC46handleStateTransitionToStartingResumeProcedure5route8mapAsAny013navigateStartG3EndyAA10SavedRouteC_ypSgSbtF"></a>
-                    <a name="//apple_ref/swift/Method/handleStateTransitionToStartingResumeProcedure(route:mapAsAny:navigateStartToEnd:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:4Clew14ViewControllerC46handleStateTransitionToStartingResumeProcedure5route8mapAsAny013navigateStartG3EndyAA10SavedRouteC_ypSgSbtF">handleStateTransitionToStartingResumeProcedure(route:mapAsAny:navigateStartToEnd:)</a>
+                    <a name="/s:4Clew14ViewControllerC46handleStateTransitionToStartingResumeProcedure5route8worldMap013navigateStartG3EndyAA10SavedRouteC_So07ARWorldM0CSgSbtF"></a>
+                    <a name="//apple_ref/swift/Method/handleStateTransitionToStartingResumeProcedure(route:worldMap:navigateStartToEnd:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Clew14ViewControllerC46handleStateTransitionToStartingResumeProcedure5route8worldMap013navigateStartG3EndyAA10SavedRouteC_So07ARWorldM0CSgSbtF">handleStateTransitionToStartingResumeProcedure(route:worldMap:navigateStartToEnd:)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -902,7 +917,7 @@ whether or not an announcement is currently being read to the user.</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">handleStateTransitionToStartingResumeProcedure</span><span class="p">(</span><span class="nv">route</span><span class="p">:</span> <span class="kt"><a href="../Classes/SavedRoute.html">SavedRoute</a></span><span class="p">,</span> <span class="nv">mapAsAny</span><span class="p">:</span> <span class="kt">Any</span><span class="p">?,</span> <span class="nv">navigateStartToEnd</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">handleStateTransitionToStartingResumeProcedure</span><span class="p">(</span><span class="nv">route</span><span class="p">:</span> <span class="kt"><a href="../Classes/SavedRoute.html">SavedRoute</a></span><span class="p">,</span> <span class="nv">worldMap</span><span class="p">:</span> <span class="kt">ARWorldMap</span><span class="p">?,</span> <span class="nv">navigateStartToEnd</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -925,12 +940,12 @@ whether or not an announcement is currently being read to the user.</p>
                             <tr>
                               <td>
                                 <code>
-                                <em>mapAsAny</em>
+                                <em>worldMap</em>
                                 </code>
                               </td>
                               <td>
                                 <div>
-                                  <p>the world map to use (expressed as <code>Any?</code> since it is optional and we want to maintain backwards compatibility with iOS 11.3)</p>
+                                  <p>the world map to use</p>
                                 </div>
                               </td>
                             </tr>
@@ -948,6 +963,33 @@ whether or not an announcement is currently being read to the user.</p>
                             </tr>
                           </tbody>
                         </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Clew14ViewControllerC54handleStateTransitionToStartingNameSavedRouteProcedure8worldMapySo07ARWorldN0CSg_tF"></a>
+                    <a name="//apple_ref/swift/Method/handleStateTransitionToStartingNameSavedRouteProcedure(worldMap:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Clew14ViewControllerC54handleStateTransitionToStartingNameSavedRouteProcedure8worldMapySo07ARWorldN0CSg_tF">handleStateTransitionToStartingNameSavedRouteProcedure(worldMap:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Handler for the startingNameSavedRouteProcedure app state</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">handleStateTransitionToStartingNameSavedRouteProcedure</span><span class="p">(</span><span class="nv">worldMap</span><span class="p">:</span> <span class="kt">ARWorldMap</span><span class="p">?)</span></code></pre>
+
+                        </div>
                       </div>
                     </section>
                   </div>
@@ -1036,52 +1078,6 @@ whether or not an announcement is currently being read to the user.</p>
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:4Clew14ViewControllerC019getRouteNameAndSaveE6Helper8mapAsAnyyypSg_tF"></a>
-                    <a name="//apple_ref/swift/Method/getRouteNameAndSaveRouteHelper(mapAsAny:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:4Clew14ViewControllerC019getRouteNameAndSaveE6Helper8mapAsAnyyypSg_tF">getRouteNameAndSaveRouteHelper(mapAsAny:)</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>Prompt the user for the name of a route and persist the route data if the user supplies one.  If the user cancels, no action is taken.</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">getRouteNameAndSaveRouteHelper</span><span class="p">(</span><span class="nv">mapAsAny</span><span class="p">:</span> <span class="kt">Any</span><span class="p">?)</span></code></pre>
-
-                        </div>
-                      </div>
-                      <div>
-                        <h4>Parameters</h4>
-                        <table class="graybox">
-                          <tbody>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>mapAsAny</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>the world map (the <code>Any?</code> type is used since it is optional and we want to maintain backward compatibility with iOS 11.3</p>
-                                </div>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
                     <a name="/c:@M@Clew@objc(cs)ViewController(im)routesButtonPressed"></a>
                     <a name="//apple_ref/swift/Method/routesButtonPressed()" class="dashAnchor"></a>
                     <a class="token" href="#/c:@M@Clew@objc(cs)ViewController(im)routesButtonPressed">routesButtonPressed()</a>
@@ -1101,6 +1097,34 @@ whether or not an announcement is currently being read to the user.</p>
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc</span>
 <span class="kd">func</span> <span class="nf">routesButtonPressed</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@Clew@objc(cs)ViewController(im)saveRouteButtonPressed"></a>
+                    <a name="//apple_ref/swift/Method/saveRouteButtonPressed()" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@Clew@objc(cs)ViewController(im)saveRouteButtonPressed">saveRouteButtonPressed()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">func</span> <span class="nf">saveRouteButtonPressed</span><span class="p">()</span></code></pre>
 
                         </div>
                       </div>
@@ -1195,9 +1219,9 @@ whether or not an announcement is currently being read to the user.</p>
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:4Clew14ViewControllerC7archive7routeId18beginRouteLandmark03endhI013worldMapAsAnyySo8NSStringC_AA0hI0CALypSgtKF"></a>
-                    <a name="//apple_ref/swift/Method/archive(routeId:beginRouteLandmark:endRouteLandmark:worldMapAsAny:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:4Clew14ViewControllerC7archive7routeId18beginRouteLandmark03endhI013worldMapAsAnyySo8NSStringC_AA0hI0CALypSgtKF">archive(routeId:beginRouteLandmark:endRouteLandmark:worldMapAsAny:)</a>
+                    <a name="/s:4Clew14ViewControllerC7archive7routeId21beginRouteAnchorPoint03endhiJ08worldMapySo8NSStringC_AA0hiJ0CALSo07ARWorldM0CSgtKF"></a>
+                    <a name="//apple_ref/swift/Method/archive(routeId:beginRouteAnchorPoint:endRouteAnchorPoint:worldMap:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Clew14ViewControllerC7archive7routeId21beginRouteAnchorPoint03endhiJ08worldMapySo8NSStringC_AA0hiJ0CALSo07ARWorldM0CSgtKF">archive(routeId:beginRouteAnchorPoint:endRouteAnchorPoint:worldMap:)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1217,7 +1241,7 @@ whether or not an announcement is currently being read to the user.</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">archive</span><span class="p">(</span><span class="nv">routeId</span><span class="p">:</span> <span class="kt">NSString</span><span class="p">,</span> <span class="nv">beginRouteLandmark</span><span class="p">:</span> <span class="kt"><a href="../Classes/RouteLandmark.html">RouteLandmark</a></span><span class="p">,</span> <span class="nv">endRouteLandmark</span><span class="p">:</span> <span class="kt"><a href="../Classes/RouteLandmark.html">RouteLandmark</a></span><span class="p">,</span> <span class="nv">worldMapAsAny</span><span class="p">:</span> <span class="kt">Any</span><span class="p">?)</span> <span class="k">throws</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">archive</span><span class="p">(</span><span class="nv">routeId</span><span class="p">:</span> <span class="kt">NSString</span><span class="p">,</span> <span class="nv">beginRouteAnchorPoint</span><span class="p">:</span> <span class="kt"><a href="../Classes/RouteAnchorPoint.html">RouteAnchorPoint</a></span><span class="p">,</span> <span class="nv">endRouteAnchorPoint</span><span class="p">:</span> <span class="kt"><a href="../Classes/RouteAnchorPoint.html">RouteAnchorPoint</a></span><span class="p">,</span> <span class="nv">worldMap</span><span class="p">:</span> <span class="kt">ARWorldMap</span><span class="p">?)</span> <span class="k">throws</span></code></pre>
 
                         </div>
                       </div>
@@ -1240,36 +1264,36 @@ whether or not an announcement is currently being read to the user.</p>
                             <tr>
                               <td>
                                 <code>
-                                <em>beginRouteLandmark</em>
+                                <em>beginRouteAnchorPoint</em>
                                 </code>
                               </td>
                               <td>
                                 <div>
-                                  <p>the route landmark for the beginning (if there is no route landmark at the beginning, the elements of this struct can be nil)</p>
+                                  <p>the route Anchor Point for the beginning (if there is no route Anchor Point at the beginning, the elements of this struct can be nil)</p>
                                 </div>
                               </td>
                             </tr>
                             <tr>
                               <td>
                                 <code>
-                                <em>endRouteLandmark</em>
+                                <em>endRouteAnchorPoint</em>
                                 </code>
                               </td>
                               <td>
                                 <div>
-                                  <p>the route landmark for the end (if there is no route landmark at the end, the elements of this struct can be nil)</p>
+                                  <p>the route Anchor Point for the end (if there is no route Anchor Point at the end, the elements of this struct can be nil)</p>
                                 </div>
                               </td>
                             </tr>
                             <tr>
                               <td>
                                 <code>
-                                <em>worldMapAsAny</em>
+                                <em>worldMap</em>
                                 </code>
                               </td>
                               <td>
                                 <div>
-                                  <p>the world map (we use <code>Any?</code> since it is optional and we want to maintain backward compatibility with iOS 11.3)</p>
+                                  <p>the world map</p>
                                 </div>
                               </td>
                             </tr>
@@ -1935,6 +1959,33 @@ route rating VC</p>
                 <li class="item">
                   <div>
                     <code>
+                    <a name="/s:4Clew14ViewControllerC014nameSavedRouteC0AA04NameefC0CSgvp"></a>
+                    <a name="//apple_ref/swift/Property/nameSavedRouteController" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Clew14ViewControllerC014nameSavedRouteC0AA04NameefC0CSgvp">nameSavedRouteController</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>saving route name VC</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">nameSavedRouteController</span><span class="p">:</span> <span class="kt"><a href="../Classes/NameSavedRouteController.html">NameSavedRouteController</a></span><span class="o">!</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
                     <a name="/s:4Clew14ViewControllerC015startNavigationC0AA05StarteC0CSgvp"></a>
                     <a name="//apple_ref/swift/Property/startNavigationController" class="dashAnchor"></a>
                     <a class="token" href="#/s:4Clew14ViewControllerC015startNavigationC0AA05StarteC0CSgvp">startNavigationController</a>
@@ -2216,9 +2267,9 @@ route rating VC</p>
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:4Clew14ViewControllerC36showRecordPathWithoutLandmarkWarningyyF"></a>
-                    <a name="//apple_ref/swift/Method/showRecordPathWithoutLandmarkWarning()" class="dashAnchor"></a>
-                    <a class="token" href="#/s:4Clew14ViewControllerC36showRecordPathWithoutLandmarkWarningyyF">showRecordPathWithoutLandmarkWarning()</a>
+                    <a name="/s:4Clew14ViewControllerC39showRecordPathWithoutAnchorPointWarningyyF"></a>
+                    <a name="//apple_ref/swift/Method/showRecordPathWithoutAnchorPointWarning()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Clew14ViewControllerC39showRecordPathWithoutAnchorPointWarningyyF">showRecordPathWithoutAnchorPointWarning()</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -2226,41 +2277,14 @@ route rating VC</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Display a warning that tells the user they must create a landmark to be able to use this route again in the forward direction</p>
+                        <p>Display a warning that tells the user they must create a Anchor Point to be able to use this route again in the forward direction</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">showRecordPathWithoutLandmarkWarning</span><span class="p">()</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:4Clew14ViewControllerC38showNavigatePathWithoutLandmarkWarningyyF"></a>
-                    <a name="//apple_ref/swift/Method/showNavigatePathWithoutLandmarkWarning()" class="dashAnchor"></a>
-                    <a class="token" href="#/s:4Clew14ViewControllerC38showNavigatePathWithoutLandmarkWarningyyF">showNavigatePathWithoutLandmarkWarning()</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>Display a warning that tells the user they must create a landmark to be able to use this route again in the reverse direction</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">showNavigatePathWithoutLandmarkWarning</span><span class="p">()</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">showRecordPathWithoutAnchorPointWarning</span><span class="p">()</span></code></pre>
 
                         </div>
                       </div>
@@ -2324,9 +2348,9 @@ route rating VC</p>
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:@M@Clew@objc(cs)ViewController(im)showRouteNamingDialogWithMapAsAny:"></a>
-                    <a name="//apple_ref/swift/Method/showRouteNamingDialog(mapAsAny:)" class="dashAnchor"></a>
-                    <a class="token" href="#/c:@M@Clew@objc(cs)ViewController(im)showRouteNamingDialogWithMapAsAny:">showRouteNamingDialog(mapAsAny:)</a>
+                    <a name="/c:@M@Clew@objc(cs)ViewController(im)showAnchorPointInformationDialog"></a>
+                    <a name="//apple_ref/swift/Method/showAnchorPointInformationDialog()" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@Clew@objc(cs)ViewController(im)showAnchorPointInformationDialog">showAnchorPointInformationDialog()</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -2334,8 +2358,7 @@ route rating VC</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Display a warning that tells the user they must create a landmark to be able to use this route again in the forward direction
-Display the dialog that prompts the user to enter a route name.  If the user enters a route name, the route along with the optional world map will be persisted.</p>
+                        <p>Show the dialog that allows the user to enter textual information to help them remember a Anchor Point.</p>
 
                       </div>
                       <div class="declaration">
@@ -2343,54 +2366,7 @@ Display the dialog that prompts the user to enter a route name.  If the user ent
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc</span>
-<span class="kd">func</span> <span class="nf">showRouteNamingDialog</span><span class="p">(</span><span class="nv">mapAsAny</span><span class="p">:</span> <span class="kt">Any</span><span class="p">?)</span></code></pre>
-
-                        </div>
-                      </div>
-                      <div>
-                        <h4>Parameters</h4>
-                        <table class="graybox">
-                          <tbody>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>mapAsAny</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>the world map to save (the <code>Any?</code> type is used to indicate that the map is optional and to preserve backwards compatibility with iOS 11.3)</p>
-                                </div>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/c:@M@Clew@objc(cs)ViewController(im)showLandmarkInformationDialog"></a>
-                    <a name="//apple_ref/swift/Method/showLandmarkInformationDialog()" class="dashAnchor"></a>
-                    <a class="token" href="#/c:@M@Clew@objc(cs)ViewController(im)showLandmarkInformationDialog">showLandmarkInformationDialog()</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>Show the dialog that allows the user to enter textual information to help them remember a landmark.</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">@objc</span>
-<span class="kd">func</span> <span class="nf">showLandmarkInformationDialog</span><span class="p">()</span></code></pre>
+<span class="kd">func</span> <span class="nf">showAnchorPointInformationDialog</span><span class="p">()</span></code></pre>
 
                         </div>
                       </div>
@@ -2656,7 +2632,7 @@ Display the dialog that prompts the user to enter a route name.  If the user ent
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Handle the user clicking the confirm alignment to a saved landmark.  Depending on the app state, the behavior of this function will differ (e.g., if the route is being resumed versus reloaded)</p>
+                        <p>Handle the user clicking the confirm alignment to a saved Anchor Point.  Depending on the app state, the behavior of this function will differ (e.g., if the route is being resumed versus reloaded)</p>
 
                       </div>
                       <div class="declaration">
@@ -2665,34 +2641,6 @@ Display the dialog that prompts the user to enter a route name.  If the user ent
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc</span>
 <span class="kd">func</span> <span class="nf">confirmAlignment</span><span class="p">()</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/c:@M@Clew@objc(cs)ViewController(im)playSound"></a>
-                    <a name="//apple_ref/swift/Method/playSound()" class="dashAnchor"></a>
-                    <a class="token" href="#/c:@M@Clew@objc(cs)ViewController(im)playSound">playSound()</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>Play audio feedback and system sound.  This is used currently when the user is facing the appropriate direction along the route.</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">@objc</span>
-<span class="kd">func</span> <span class="nf">playSound</span><span class="p">()</span></code></pre>
 
                         </div>
                       </div>
@@ -3938,9 +3886,9 @@ list of crumbs dropped when recording path</p>
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:4Clew14ViewControllerC18beginRouteLandmarkAA0eF0Cvp"></a>
-                    <a name="//apple_ref/swift/Property/beginRouteLandmark" class="dashAnchor"></a>
-                    <a class="token" href="#/s:4Clew14ViewControllerC18beginRouteLandmarkAA0eF0Cvp">beginRouteLandmark</a>
+                    <a name="/s:4Clew14ViewControllerC21beginRouteAnchorPointAA0efG0Cvp"></a>
+                    <a name="//apple_ref/swift/Property/beginRouteAnchorPoint" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Clew14ViewControllerC21beginRouteAnchorPointAA0efG0Cvp">beginRouteAnchorPoint</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -3948,14 +3896,14 @@ list of crumbs dropped when recording path</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>the landmark to use to mark the beginning of the route currently being recorded</p>
+                        <p>the Anchor Point to use to mark the beginning of the route currently being recorded</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">beginRouteLandmark</span><span class="p">:</span> <span class="kt"><a href="../Classes/RouteLandmark.html">RouteLandmark</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">beginRouteAnchorPoint</span><span class="p">:</span> <span class="kt"><a href="../Classes/RouteAnchorPoint.html">RouteAnchorPoint</a></span></code></pre>
 
                         </div>
                       </div>
@@ -3965,9 +3913,9 @@ list of crumbs dropped when recording path</p>
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:4Clew14ViewControllerC16endRouteLandmarkAA0eF0Cvp"></a>
-                    <a name="//apple_ref/swift/Property/endRouteLandmark" class="dashAnchor"></a>
-                    <a class="token" href="#/s:4Clew14ViewControllerC16endRouteLandmarkAA0eF0Cvp">endRouteLandmark</a>
+                    <a name="/s:4Clew14ViewControllerC19endRouteAnchorPointAA0efG0Cvp"></a>
+                    <a name="//apple_ref/swift/Property/endRouteAnchorPoint" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Clew14ViewControllerC19endRouteAnchorPointAA0efG0Cvp">endRouteAnchorPoint</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -3975,14 +3923,14 @@ list of crumbs dropped when recording path</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>the landmark to use to mark the end of the route currently being recorded</p>
+                        <p>the Anchor Point to use to mark the end of the route currently being recorded</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">endRouteLandmark</span><span class="p">:</span> <span class="kt"><a href="../Classes/RouteLandmark.html">RouteLandmark</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">endRouteAnchorPoint</span><span class="p">:</span> <span class="kt"><a href="../Classes/RouteAnchorPoint.html">RouteAnchorPoint</a></span></code></pre>
 
                         </div>
                       </div>
@@ -4063,8 +4011,7 @@ list of crumbs dropped when recording path</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">@available(iOS 12.0, *)</span>
-<span class="k">var</span> <span class="nv">justUsedMap</span><span class="p">:</span> <span class="kt">ARWorldMap</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">justUsedMap</span><span class="p">:</span> <span class="kt">ARWorldMap</span><span class="p">?</span></code></pre>
 
                         </div>
                       </div>
@@ -4325,9 +4272,9 @@ list of crumbs dropped when recording path</p>
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:@M@Clew@objc(cs)ViewController(im)startCreateLandmarkProcedure"></a>
-                    <a name="//apple_ref/swift/Method/startCreateLandmarkProcedure()" class="dashAnchor"></a>
-                    <a class="token" href="#/c:@M@Clew@objc(cs)ViewController(im)startCreateLandmarkProcedure">startCreateLandmarkProcedure()</a>
+                    <a name="/c:@M@Clew@objc(cs)ViewController(im)startCreateAnchorPointProcedure"></a>
+                    <a name="//apple_ref/swift/Method/startCreateAnchorPointProcedure()" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@Clew@objc(cs)ViewController(im)startCreateAnchorPointProcedure">startCreateAnchorPointProcedure()</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -4335,7 +4282,7 @@ list of crumbs dropped when recording path</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>handles the user pressing the landmark button</p>
+                        <p>handles the user pressing the Anchor Point button</p>
 
                       </div>
                       <div class="declaration">
@@ -4343,7 +4290,7 @@ list of crumbs dropped when recording path</p>
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc</span>
-<span class="kd">func</span> <span class="nf">startCreateLandmarkProcedure</span><span class="p">()</span></code></pre>
+<span class="kd">func</span> <span class="nf">startCreateAnchorPointProcedure</span><span class="p">()</span></code></pre>
 
                         </div>
                       </div>
@@ -4628,7 +4575,7 @@ list of crumbs dropped when recording path</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Compute the heading vector of the phone.  When the phone is mostly upright, this is just the project of the negative z-axis of the device into the x-z plane.  When the phone is mostly flat, this is the y-axis of the phone projected into the x-z plane after the pitch and roll of the phone are undone.  The case where the phone is mostly flat is used primarily for alignment to and creation of landmarks.</p>
+                        <p>Compute the heading vector of the phone.  When the phone is mostly upright, this is just the project of the negative z-axis of the device into the x-z plane.  When the phone is mostly flat, this is the y-axis of the phone projected into the x-z plane after the pitch and roll of the phone are undone.  The case where the phone is mostly flat is used primarily for alignment to and creation of Anchor Points.</p>
 
                       </div>
                       <div class="declaration">
@@ -5326,7 +5273,7 @@ TODO: not sure if this is actually what we should be doing.  Perhaps we should c
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Called when the user finishes recording a voice note.  This function adds the voice note to the <code><a href="../Classes/RouteLandmark.html">RouteLandmark</a></code> object.</p>
+                        <p>Called when the user finishes recording a voice note.  This function adds the voice note to the <code><a href="../Classes/RouteAnchorPoint.html">RouteAnchorPoint</a></code> object.</p>
 
                       </div>
                       <div class="declaration">
@@ -5529,7 +5476,7 @@ TODO: not sure if this is actually what we should be doing.  Perhaps we should c
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2019 <a class="link" href="" target="_blank" rel="external"></a>. All rights reserved. (Last updated: 2019-08-08)</p>
+          <p>&copy; 2019 <a class="link" href="" target="_blank" rel="external"></a>. All rights reserved. (Last updated: 2019-08-13)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.9.6</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
         </section>
       </article>

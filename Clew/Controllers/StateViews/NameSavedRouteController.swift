@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import ARKit
 
 /// A view controller for handling the route saving naming process.
 class NameSavedRouteController: UIViewController, UITextFieldDelegate {
@@ -20,10 +21,8 @@ class NameSavedRouteController: UIViewController, UITextFieldDelegate {
     /// Text Field for typing the name you want to save your route as.
     var textField: UITextField!
     
-    /// The ARWorldMap represented as an Any? to allow for backwards compatibility with iOS 11.3 and 11.4 on
-    var mapAsAny: Any?
-    
-    
+    /// The ARWorldMap to associate with this route
+    var worldMap: ARWorldMap?
     
     override func viewDidAppear(_ animated: Bool){
         super.viewDidAppear(animated)
@@ -43,8 +42,6 @@ class NameSavedRouteController: UIViewController, UITextFieldDelegate {
         self.textField.endEditing(true)
         return true
     }
-    
-    
   
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -53,7 +50,6 @@ class NameSavedRouteController: UIViewController, UITextFieldDelegate {
                                                  y: 0,
                                                  width: UIScreen.main.bounds.size.width,
                                                  height: UIScreen.main.bounds.size.height))
-    
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.dismissKeyboard))
         self.view.addGestureRecognizer(tapGesture)
@@ -61,10 +57,6 @@ class NameSavedRouteController: UIViewController, UITextFieldDelegate {
         func dismissKeyboard(){
             view.endEditing(true)
         }
-    
-
-        
-        
         
         /// Creating a button that can be used to save the name of your route
         saveRouteButton = UIButton(type: .custom)

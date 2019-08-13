@@ -24,8 +24,6 @@
 		82569F4F22187E6500448B45 /* help in Resources */ = {isa = PBXBuildFile; fileRef = 82569F4D22187E6500448B45 /* help */; };
 		986640CE22FB68F2005AA1F6 /* NameSavedRouteController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986640CD22FB68F2005AA1F6 /* NameSavedRouteController.swift */; };
 		986640CF22FC9606005AA1F6 /* NameSavedRouteController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986640CD22FB68F2005AA1F6 /* NameSavedRouteController.swift */; };
-		986640D122FCC345005AA1F6 /* BurgerMenu.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 986640D022FCC344005AA1F6 /* BurgerMenu.storyboard */; };
-		986640D222FCC365005AA1F6 /* BurgerMenu.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 986640D022FCC344005AA1F6 /* BurgerMenu.storyboard */; };
 		B0A563F6FE1007A2716DC876 /* Pods_Clew_Dev.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3532E390954571B93729786A /* Pods_Clew_Dev.framework */; };
 		B7EB59E220F693EB00FBBC6A /* Confirm.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4DF05CC71F34EB56008B0E31 /* Confirm.mp3 */; };
 		B7EB59E320F693EB00FBBC6A /* Crumb.obj in Resources */ = {isa = PBXBuildFile; fileRef = 4D6B00E41F33C85500952242 /* Crumb.obj */; };
@@ -99,8 +97,6 @@
 		E5470F3D22C119F5001092A4 /* FeedbackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470EEA22C119F4001092A4 /* FeedbackViewController.swift */; };
 		E5470F3E22C119F5001092A4 /* RoutesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470EEB22C119F4001092A4 /* RoutesViewController.swift */; };
 		E5470F3F22C119F5001092A4 /* RoutesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470EEB22C119F4001092A4 /* RoutesViewController.swift */; };
-		E5470F4022C119F5001092A4 /* StateController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470EEC22C119F4001092A4 /* StateController.swift */; };
-		E5470F4122C119F5001092A4 /* StateController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470EEC22C119F4001092A4 /* StateController.swift */; };
 		E5470F4222C119F5001092A4 /* UIConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470EEE22C119F4001092A4 /* UIConstants.swift */; };
 		E5470F4322C119F5001092A4 /* UIConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470EEE22C119F4001092A4 /* UIConstants.swift */; };
 		E5470F4622C119F5001092A4 /* RootContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470EF022C119F4001092A4 /* RootContainerView.swift */; };
@@ -167,7 +163,6 @@
 		85A1A72DC19F87F15B738291 /* Pods-Clew Dev.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew Dev.release.xcconfig"; path = "Pods/Target Support Files/Pods-Clew Dev/Pods-Clew Dev.release.xcconfig"; sourceTree = "<group>"; };
 		942F73299DA8DCF97FAA974A /* Pods_Clew.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Clew.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		986640CD22FB68F2005AA1F6 /* NameSavedRouteController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NameSavedRouteController.swift; sourceTree = "<group>"; };
-		986640D022FCC344005AA1F6 /* BurgerMenu.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = BurgerMenu.storyboard; sourceTree = "<group>"; };
 		B7EB59EC20F693EB00FBBC6A /* Clew Dev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Clew Dev.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C68778047D8E263D2FB04989 /* Pods-Clew Dev.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew Dev.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Clew Dev/Pods-Clew Dev.debug.xcconfig"; sourceTree = "<group>"; };
 		D89DDB87A8AE1A9ECEAFCEC6 /* Pods-Clew.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew.release.xcconfig"; path = "Pods/Target Support Files/Pods-Clew/Pods-Clew.release.xcconfig"; sourceTree = "<group>"; };
@@ -210,7 +205,6 @@
 		E5470EE922C119F4001092A4 /* HelpViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HelpViewController.swift; sourceTree = "<group>"; };
 		E5470EEA22C119F4001092A4 /* FeedbackViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedbackViewController.swift; sourceTree = "<group>"; };
 		E5470EEB22C119F4001092A4 /* RoutesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoutesViewController.swift; sourceTree = "<group>"; };
-		E5470EEC22C119F4001092A4 /* StateController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StateController.swift; sourceTree = "<group>"; };
 		E5470EEE22C119F4001092A4 /* UIConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIConstants.swift; sourceTree = "<group>"; };
 		E5470EF022C119F4001092A4 /* RootContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootContainerView.swift; sourceTree = "<group>"; };
 		E5470EF322C119F4001092A4 /* RouteTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteTableViewCell.swift; sourceTree = "<group>"; };
@@ -380,7 +374,6 @@
 				E5470EDE22C119F4001092A4 /* ViewController.swift */,
 				E5470EDF22C119F4001092A4 /* StateViews */,
 				E5470EE822C119F4001092A4 /* PopOvers */,
-				E5470EEC22C119F4001092A4 /* StateController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -743,7 +736,6 @@
 				E5470F3822C119F5001092A4 /* ResumeTrackingConfirmController.swift in Sources */,
 				E5470EFA22C119F5001092A4 /* RecorderViewController.swift in Sources */,
 				E5470F4622C119F5001092A4 /* RootContainerView.swift in Sources */,
-				E5470F4022C119F5001092A4 /* StateController.swift in Sources */,
 				E5470F4A22C119F5001092A4 /* RouteTableViewCell.swift in Sources */,
 				E5470F0422C119F5001092A4 /* FeedbackLogger.swift in Sources */,
 				E5470F2822C119F5001092A4 /* ViewController.swift in Sources */,
@@ -789,7 +781,6 @@
 				E5470F3922C119F5001092A4 /* ResumeTrackingConfirmController.swift in Sources */,
 				E5470EFB22C119F5001092A4 /* RecorderViewController.swift in Sources */,
 				E5470F4722C119F5001092A4 /* RootContainerView.swift in Sources */,
-				E5470F4122C119F5001092A4 /* StateController.swift in Sources */,
 				E5470F4B22C119F5001092A4 /* RouteTableViewCell.swift in Sources */,
 				E5470F0522C119F5001092A4 /* FeedbackLogger.swift in Sources */,
 				E5470F2922C119F5001092A4 /* ViewController.swift in Sources */,
@@ -990,7 +981,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
 				INFOPLIST_FILE = Clew/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = edu.occam.Clew;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1010,7 +1001,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
 				INFOPLIST_FILE = Clew/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = edu.occam.Clew;
 				PRODUCT_NAME = "$(TARGET_NAME)";

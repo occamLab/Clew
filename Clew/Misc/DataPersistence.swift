@@ -33,21 +33,19 @@ class DataPersistence {
     ///
     /// - Parameters:
     ///   - route: the route to save
-    ///   - worldMapAsAny: an optional ARWorldMap.  The Any? type is used to allow for backward compatibility with iOS 11.3
+    ///   - worldMap: an optional ARWorldMap to associate with the route
     /// - Throws: an error if the route could not be saved
-    func archive(route: SavedRoute, worldMapAsAny: Any?) throws {
-        /// Save route to the route list
+    func archive(route: SavedRoute, worldMap: ARWorldMap?) throws {
+        // Save route to the route list
         if !update(route: route) {
             self.routes.append(route)
         }
         let data = try NSKeyedArchiver.archivedData(withRootObject: self.routes, requiringSecureCoding: true)
         try data.write(to: self.getRoutesURL(), options: [.atomic])
-        /// Save the world map corresponding to the route
-        if #available(iOS 12.0, *) {
-            if let worldMapAsAny = worldMapAsAny {
-                let data = try NSKeyedArchiver.archivedData(withRootObject: worldMapAsAny, requiringSecureCoding: true)
-                try data.write(to: self.getWorldMapURL(id: route.id as String), options: [.atomic])
-            }
+        // Save the world map corresponding to the route
+        if let worldMap = worldMap {
+            let data = try NSKeyedArchiver.archivedData(withRootObject: worldMap, requiringSecureCoding: true)
+            try data.write(to: self.getWorldMapURL(id: route.id as String), options: [.atomic])
         }
     }
     
@@ -70,7 +68,7 @@ class DataPersistence {
                 print("name of import route:", documentData.route.name)
                 
                 do {
-                    try archive(route: documentData.route, worldMapAsAny: documentData.map)
+                    try archive(route: documentData.route, worldMap: documentData.map)
                 } catch {
                     print("failed to archive import route")
                 }
@@ -180,19 +178,15 @@ class DataPersistence {
     /// Load the map from the app's local storage.  If we are on a platform that doesn't support ARWorldMap, this function always returns nil
     ///
     /// - Parameter id: the map id to fetch
-    /// - Returns: the stored map as Any?
-    func unarchiveMap(id: String) -> Any? {
-        if #available(iOS 12.0, *) {
-            do {
-                let data = try Data(contentsOf: getWorldMapURL(id: id))
-                guard let unarchivedObject = ((try? NSKeyedUnarchiver.unarchivedObject(ofClass: ARWorldMap.self, from: data)) as ARWorldMap??),
-                    let worldMap = unarchivedObject else { return nil }
-                return worldMap
-            } catch {
-                print("Error retrieving world map data.")
-                return nil
-            }
-        } else {
+    /// - Returns: the stored map
+    func unarchiveMap(id: String) -> ARWorldMap? {
+        do {
+            let data = try Data(contentsOf: getWorldMapURL(id: id))
+            guard let unarchivedObject = ((try? NSKeyedUnarchiver.unarchivedObject(ofClass: ARWorldMap.self, from: data)) as ARWorldMap??),
+                let worldMap = unarchivedObject else { return nil }
+            return worldMap
+        } catch {
+            print("Error retrieving world map data.")
             return nil
         }
     }
