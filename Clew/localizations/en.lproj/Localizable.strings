@@ -139,6 +139,8 @@
 
 "deleteActionText" = "Delete";
 
+"shareActionText" = "Share";
+
 // Info.plist
 "Clew needs to access your camera to track your orientation." = "Clew needs to access your camera to track your orientation.";
 "Permission to use the microphone is required to use the voice notes feature." = "Permission to use the microphone is required to use the voice notes feature.";
@@ -161,7 +163,7 @@
 
 "appFeaturesFutureVersionsHeader" = "Future Versions";
 
-"appFeaturesFutureVersionsContent" = "We are working on a route sharing feature so that you can send routes to other users.";
+"appFeaturesFutureVersionsContent" = "We are working on improving alignment mechanisms to make it easier and quicker to begin navigation of routes.";
 
 "howWellDoesClewWorkHeader" = "How well does Clew work?";
 
@@ -186,9 +188,9 @@
 "savedRoutesLoadingARouteContent" = "The saved routes menu provides you with a list of previously recorded routes ordered from most to least recent. Once you tap on a route, you will be prompted to navigate the route in &quot;start to end&quot; or &quot;end to start&quot; mode. &quot;Start to end&quot; means that you would navigate along the route in the same direction as it was initially recorded. &quot;End to start&quot; means that you would navigate the route in the reverse direction as it was initially recorded. If either option is dimmed (i.e., not able to be activated), it means that an appropriate Anchor Point was not created at either the start or end of the route.";
 
 "savedRoutesDeletingASavedRouteHeader" = "Deleting a saved route";
-
-"savedRoutesDeletingASavedRouteContent" = "You can delete routes from this menu either swiping left (if not using VoiceOver) or by activating the secondary action on the route (if you are using VoiceOver).";
-
+"savedRoutesDeletingASavedRouteContent" = "You can delete routes from this menu either by swiping left (if not using VoiceOver) or by activating the secondary action on the route (if you are using VoiceOver).";
+"savedRoutesSharingASavedRouteHeader" = "Sharing a saved route";
+"savedRoutesSharingASavedRouteContent" = "You can share routes from this menu either by swiping left (if not using VoiceOver) or by activating the secondary action on the route (if you are using VoiceOver). Pressing on the share button will then open a share selector which lets you share a route over text, email, airdrop, or through many other apps.";
 "followingARouteHeader" = "Following a route";
 
 "followingARouteContent" = "Once you activate the start navigation feature, the app will provide you with instructions to navigate back to your starting location. The app provides feedback in the following formats.";

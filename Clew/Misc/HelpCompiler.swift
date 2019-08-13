@@ -38,6 +38,8 @@ class HelpCompiler {
                 <p>\(NSLocalizedString("savedRoutesLoadingARouteContent", comment: "This is a paragraph in the saving routes section of the help menu which describes the process for loading a saved route for navigation."))</p>
                 <h3>\(NSLocalizedString("savedRoutesDeletingASavedRouteHeader", comment: "This is a header in the saved routes section of the help documentation"))</h3>
                 <p>\(NSLocalizedString("savedRoutesDeletingASavedRouteContent", comment: "This is a paragraph in the saved routes section of the help documentation. This paragraph describes how to delete a saved route."))</p>
+                <h3>\(NSLocalizedString("savedRoutesSharingASavedRouteHeader", comment: "This is a header in the saved routes section of the help documentation"))</h3>
+                <p>\(NSLocalizedString("savedRoutesSharingASavedRouteContent", comment: "This is a paragraph in the saved routes section of the help documentation. This paragraph describes how to share a saved route."))</p>
                 """),("\(NSLocalizedString("followingARouteHeader", comment: "This is a header for the following a route section of the help documentation."))","""
                     <p>\(NSLocalizedString("followingARouteContent", comment: "This is a paragraph which is in the following a route section of the help documentation."))</p>
                     <h3>\(NSLocalizedString("followingARouteHapticFeedbackHeader", comment: "This is a header inside the following a route section of the help documentation"))</h3>
