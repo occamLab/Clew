@@ -113,8 +113,6 @@
 		E5D1695D22E103A0008754D0 /* SettingsAndHelp.strings in Resources */ = {isa = PBXBuildFile; fileRef = E5D1695622E103A0008754D0 /* SettingsAndHelp.strings */; };
 		E5D1695E22E103A0008754D0 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E5D1695822E103A0008754D0 /* Localizable.strings */; };
 		E5D1695F22E103A0008754D0 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E5D1695822E103A0008754D0 /* Localizable.strings */; };
-		E5D1696022E103A0008754D0 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E5D1695A22E103A0008754D0 /* Info.plist */; };
-		E5D1696122E103A0008754D0 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E5D1695A22E103A0008754D0 /* Info.plist */; };
 		E5E9016822FB4D4A00AD0E95 /* QuickLook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E5E9015322FB4CEB00AD0E95 /* QuickLook.framework */; };
 		E5E9016B22FB4D4A00AD0E95 /* PreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E9016A22FB4D4A00AD0E95 /* PreviewViewController.swift */; };
 		E5E9016E22FB4D4A00AD0E95 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E5E9016C22FB4D4A00AD0E95 /* MainInterface.storyboard */; };
@@ -212,7 +210,6 @@
 		E5470EF522C119F4001092A4 /* GoogleService-Info_dev.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info_dev.plist"; sourceTree = "<group>"; };
 		E565A10722F2173400C1998E /* RouteDocumentData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteDocumentData.swift; sourceTree = "<group>"; };
 		E59DA6BD22C65F5900FCD5A1 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
-		E59DA6BE22C65F5900FCD5A1 /* SettingsAndHelp.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = SettingsAndHelp.storyboard; sourceTree = "<group>"; };
 		E5E9015322FB4CEB00AD0E95 /* QuickLook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickLook.framework; path = System/Library/Frameworks/QuickLook.framework; sourceTree = SDKROOT; };
 		E5E9016722FB4D4A00AD0E95 /* route-quicklook.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "route-quicklook.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E5E9016A22FB4D4A00AD0E95 /* PreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewViewController.swift; sourceTree = "<group>"; };
@@ -838,14 +835,6 @@
 			name = Localizable.strings;
 			sourceTree = "<group>";
 		};
-		E5D1695A22E103A0008754D0 /* Info.plist */ = {
-			isa = PBXVariantGroup;
-			children = (
-				82F2DDD222E26A44005CD7D0 /* en */,
-			);
-			name = Info.plist;
-			sourceTree = "<group>";
-		};
 		E5E9016C22FB4D4A00AD0E95 /* MainInterface.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -1066,7 +1055,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
 				INFOPLIST_FILE = "route-quicklook/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 12.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -1085,7 +1074,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
 				INFOPLIST_FILE = "route-quicklook/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 12.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "edu.occam.Clew.route-quicklook";
