@@ -14,7 +14,8 @@
     <a title="AppDelegate Class Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html"> Docs</a> (97% documented)</p>
+        <p><a href="../index.html"> Docs</a> (95% documented)</p>
+        <p class="header-right"><a href="https://github.com/occamLab/Clew"><img src="../img/gh.png"/>View on GitHub</a></p>
       </div>
     </header>
     <div class="content-wrapper">
@@ -37,6 +38,9 @@
                 <a href="../Classes/AudioVisualizerView.html">AudioVisualizerView</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Classes/BurgerMenuViewController.html">BurgerMenuViewController</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Classes/DataPersistence.html">DataPersistence</a>
               </li>
               <li class="nav-group-task">
@@ -53,6 +57,9 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/LocationInfo.html">LocationInfo</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/NameSavedRouteController.html">NameSavedRouteController</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/Navigation.html">Navigation</a>
@@ -94,7 +101,10 @@
                 <a href="../Classes/RootContainerView.html">RootContainerView</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Classes/RouteLandmark.html">RouteLandmark</a>
+                <a href="../Classes/RouteAnchorPoint.html">RouteAnchorPoint</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/RouteDocumentData.html">RouteDocumentData</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/RouteRatingController.html">RouteRatingController</a>
@@ -135,13 +145,25 @@
                 <a href="../Global Variables.html#/s:4Clew16HapticDirectionsSDySiSSGvp">HapticDirections</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Global Variables.html#/s:4Clew11targetDepthXevp">targetDepth</a>
+                <a href="../Global Variables.html#/s:4Clew20isAutomaticAlignmentSbvp">isAutomaticAlignment</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Global Variables.html#/s:4Clew12targetHeightXevp">targetHeight</a>
+                <a href="../Global Variables.html#/s:4Clew6pausedSbvp">paused</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Global Variables.html#/s:4Clew11targetWidthXevp">targetWidth</a>
+                <a href="../Global Variables.html#/s:4Clew23recordingSingleUseRouteSbvp">recordingSingleUseRoute</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global Variables.html#/s:4Clew16startAnchorPointSbvp">startAnchorPoint</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global Variables.html#/s:4Clew11targetDepthSfvp">targetDepth</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global Variables.html#/s:4Clew12targetHeightSfvp">targetHeight</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global Variables.html#/s:4Clew11targetWidthSfvp">targetWidth</a>
               </li>
             </ul>
           </li>
@@ -279,6 +301,33 @@
                 <li class="item">
                   <div>
                     <code>
+                    <a name="/s:4Clew11AppDelegateC2vcAA14ViewControllerCSgvp"></a>
+                    <a name="//apple_ref/swift/Property/vc" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Clew11AppDelegateC2vcAA14ViewControllerCSgvp">vc</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>view controller!</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">vc</span><span class="p">:</span> <span class="kt"><a href="../Classes/ViewController.html">ViewController</a></span><span class="o">!</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
                     <a name="/c:@M@Clew@objc(cs)AppDelegate(im)application:didFinishLaunchingWithOptions:"></a>
                     <a name="//apple_ref/swift/Method/application(_:didFinishLaunchingWithOptions:)" class="dashAnchor"></a>
                     <a class="token" href="#/c:@M@Clew@objc(cs)AppDelegate(im)application:didFinishLaunchingWithOptions:">application(_:didFinishLaunchingWithOptions:)</a>
@@ -326,6 +375,35 @@
                       <div>
                         <h4>Return Value</h4>
                         <p>a Boolean indicating whether the app can continue to handle user activity.</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@Clew@objc(cs)AppDelegate(im)application:openURL:options:"></a>
+                    <a name="//apple_ref/swift/Method/application(_:open:options:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@Clew@objc(cs)AppDelegate(im)application:openURL:options:">application(_:open:options:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>entry point for when a file is opened from outside the app</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">application</span><span class="p">(</span><span class="n">_</span> <span class="nv">app</span><span class="p">:</span> <span class="kt">UIApplication</span><span class="p">,</span>
+                 <span class="kd">open</span> <span class="nv">url</span><span class="p">:</span> <span class="kt">URL</span><span class="p">,</span>
+                 <span class="nv">options</span><span class="p">:</span> <span class="p">[</span><span class="kt">UIApplication</span><span class="o">.</span><span class="kt">OpenURLOptionsKey</span><span class="p">:</span> <span class="kt">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">[:])</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
                       </div>
                     </section>
                   </div>
@@ -592,7 +670,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2019 <a class="link" href="" target="_blank" rel="external"></a>. All rights reserved. (Last updated: 2019-08-01)</p>
+          <p>&copy; 2019 <a class="link" href="" target="_blank" rel="external"></a>. All rights reserved. (Last updated: 2019-08-13)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.9.6</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
         </section>
       </article>

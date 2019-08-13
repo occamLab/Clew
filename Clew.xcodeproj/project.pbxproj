@@ -105,13 +105,45 @@
 		E5470F4B22C119F5001092A4 /* RouteTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470EF322C119F4001092A4 /* RouteTableViewCell.swift */; };
 		E5470F4E22C119F5001092A4 /* GoogleService-Info_dev.plist in Resources */ = {isa = PBXBuildFile; fileRef = E5470EF522C119F4001092A4 /* GoogleService-Info_dev.plist */; };
 		E5470F4F22C119F5001092A4 /* GoogleService-Info_dev.plist in Resources */ = {isa = PBXBuildFile; fileRef = E5470EF522C119F4001092A4 /* GoogleService-Info_dev.plist */; };
+		E565A10822F2173400C1998E /* RouteDocumentData.swift in Sources */ = {isa = PBXBuildFile; fileRef = E565A10722F2173400C1998E /* RouteDocumentData.swift */; };
+		E565A10922F2173400C1998E /* RouteDocumentData.swift in Sources */ = {isa = PBXBuildFile; fileRef = E565A10722F2173400C1998E /* RouteDocumentData.swift */; };
 		E59DA6BF22C65F5900FCD5A1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E59DA6BD22C65F5900FCD5A1 /* LaunchScreen.storyboard */; };
 		E59DA6C022C65F5900FCD5A1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E59DA6BD22C65F5900FCD5A1 /* LaunchScreen.storyboard */; };
 		E5D1695C22E103A0008754D0 /* SettingsAndHelp.strings in Resources */ = {isa = PBXBuildFile; fileRef = E5D1695622E103A0008754D0 /* SettingsAndHelp.strings */; };
 		E5D1695D22E103A0008754D0 /* SettingsAndHelp.strings in Resources */ = {isa = PBXBuildFile; fileRef = E5D1695622E103A0008754D0 /* SettingsAndHelp.strings */; };
 		E5D1695E22E103A0008754D0 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E5D1695822E103A0008754D0 /* Localizable.strings */; };
 		E5D1695F22E103A0008754D0 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E5D1695822E103A0008754D0 /* Localizable.strings */; };
+		E5D1696022E103A0008754D0 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E5D1695A22E103A0008754D0 /* Info.plist */; };
+		E5D1696122E103A0008754D0 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E5D1695A22E103A0008754D0 /* Info.plist */; };
+		E5E9016822FB4D4A00AD0E95 /* QuickLook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E5E9015322FB4CEB00AD0E95 /* QuickLook.framework */; };
+		E5E9016B22FB4D4A00AD0E95 /* PreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E9016A22FB4D4A00AD0E95 /* PreviewViewController.swift */; };
+		E5E9016E22FB4D4A00AD0E95 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E5E9016C22FB4D4A00AD0E95 /* MainInterface.storyboard */; };
+		E5E9017222FB4D4A00AD0E95 /* route-quicklook.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = E5E9016722FB4D4A00AD0E95 /* route-quicklook.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		E5E9017022FB4D4A00AD0E95 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4D6B00B81F33C1C400952242 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E5E9016622FB4D4A00AD0E95;
+			remoteInfo = "route-quicklook";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		E5E9016222FB4CEB00AD0E95 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				E5E9017222FB4D4A00AD0E95 /* route-quicklook.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		08FA9C31721F9F8CDCC23AE9 /* Pods-Clew.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Clew/Pods-Clew.debug.xcconfig"; sourceTree = "<group>"; };
@@ -178,7 +210,14 @@
 		E5470EF322C119F4001092A4 /* RouteTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteTableViewCell.swift; sourceTree = "<group>"; };
 		E5470EF422C119F4001092A4 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E5470EF522C119F4001092A4 /* GoogleService-Info_dev.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info_dev.plist"; sourceTree = "<group>"; };
+		E565A10722F2173400C1998E /* RouteDocumentData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteDocumentData.swift; sourceTree = "<group>"; };
 		E59DA6BD22C65F5900FCD5A1 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		E59DA6BE22C65F5900FCD5A1 /* SettingsAndHelp.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = SettingsAndHelp.storyboard; sourceTree = "<group>"; };
+		E5E9015322FB4CEB00AD0E95 /* QuickLook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickLook.framework; path = System/Library/Frameworks/QuickLook.framework; sourceTree = SDKROOT; };
+		E5E9016722FB4D4A00AD0E95 /* route-quicklook.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "route-quicklook.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		E5E9016A22FB4D4A00AD0E95 /* PreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewViewController.swift; sourceTree = "<group>"; };
+		E5E9016D22FB4D4A00AD0E95 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
+		E5E9016F22FB4D4A00AD0E95 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -198,6 +237,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		E5E9016422FB4D4A00AD0E95 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E5E9016822FB4D4A00AD0E95 /* QuickLook.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -209,6 +256,7 @@
 				82569F4D22187E6500448B45 /* help */,
 				4DF05CC71F34EB56008B0E31 /* Confirm.mp3 */,
 				4D6B00E41F33C85500952242 /* Crumb.obj */,
+				E5E9016922FB4D4A00AD0E95 /* route-quicklook */,
 				4D6B00C11F33C1C400952242 /* Products */,
 				645269AB241294DCBFA0E1B0 /* Pods */,
 				C63B435EA8A32350A76E47DD /* Frameworks */,
@@ -221,6 +269,7 @@
 			children = (
 				4D6B00C01F33C1C400952242 /* Clew.app */,
 				B7EB59EC20F693EB00FBBC6A /* Clew Dev.app */,
+				E5E9016722FB4D4A00AD0E95 /* route-quicklook.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -241,6 +290,7 @@
 			children = (
 				942F73299DA8DCF97FAA974A /* Pods_Clew.framework */,
 				3532E390954571B93729786A /* Pods_Clew_Dev.framework */,
+				E5E9015322FB4CEB00AD0E95 /* QuickLook.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -254,7 +304,6 @@
 				E5470EB722C119F4001092A4 /* SettingsViewController.m */,
 				E5470EB822C119F4001092A4 /* Clew Dev-Bridging-Header.h */,
 				E5470EB922C119F4001092A4 /* Settings.bundle */,
-				E5470EBA22C119F4001092A4 /* SettingsTableViewController.h */,
 				E5470ED022C119F4001092A4 /* Assets.xcassets */,
 				E5470ED122C119F4001092A4 /* Sound Effects */,
 				E5470ED422C119F4001092A4 /* GoogleService-Info.plist */,
@@ -291,6 +340,7 @@
 				E5470EB522C119F4001092A4 /* Utility.swift */,
 				1F2B9D7022C3B50D00317DC8 /* HelpCompiler.swift */,
 				E5470EB622C119F4001092A4 /* AppDelegate.swift */,
+				E565A10722F2173400C1998E /* RouteDocumentData.swift */,
 			);
 			path = Misc;
 			sourceTree = "<group>";
@@ -298,6 +348,7 @@
 		E5470ED122C119F4001092A4 /* Sound Effects */ = {
 			isa = PBXGroup;
 			children = (
+				E5470EBA22C119F4001092A4 /* SettingsTableViewController.h */,
 				E5470ED222C119F4001092A4 /* StartRecording.aiff */,
 				E5470ED322C119F4001092A4 /* StopRecording.aiff */,
 			);
@@ -377,6 +428,16 @@
 			path = localizations;
 			sourceTree = "<group>";
 		};
+		E5E9016922FB4D4A00AD0E95 /* route-quicklook */ = {
+			isa = PBXGroup;
+			children = (
+				E5E9016A22FB4D4A00AD0E95 /* PreviewViewController.swift */,
+				E5E9016C22FB4D4A00AD0E95 /* MainInterface.storyboard */,
+				E5E9016F22FB4D4A00AD0E95 /* Info.plist */,
+			);
+			path = "route-quicklook";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -389,10 +450,12 @@
 				4D6B00BD1F33C1C400952242 /* Frameworks */,
 				4D6B00BE1F33C1C400952242 /* Resources */,
 				7D513714488F266F881D7CB7 /* [CP] Embed Pods Frameworks */,
+				E5E9016222FB4CEB00AD0E95 /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				E5E9017122FB4D4A00AD0E95 /* PBXTargetDependency */,
 			);
 			name = Clew;
 			productName = Clew;
@@ -418,13 +481,30 @@
 			productReference = B7EB59EC20F693EB00FBBC6A /* Clew Dev.app */;
 			productType = "com.apple.product-type.application";
 		};
+		E5E9016622FB4D4A00AD0E95 /* route-quicklook */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E5E9017322FB4D4A00AD0E95 /* Build configuration list for PBXNativeTarget "route-quicklook" */;
+			buildPhases = (
+				E5E9016322FB4D4A00AD0E95 /* Sources */,
+				E5E9016422FB4D4A00AD0E95 /* Frameworks */,
+				E5E9016522FB4D4A00AD0E95 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "route-quicklook";
+			productName = "route-quicklook";
+			productReference = E5E9016722FB4D4A00AD0E95 /* route-quicklook.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
 		4D6B00B81F33C1C400952242 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 0900;
+				LastSwiftUpdateCheck = 1020;
 				LastUpgradeCheck = 1020;
 				ORGANIZATIONNAME = OccamLab;
 				TargetAttributes = {
@@ -434,6 +514,10 @@
 					};
 					B7EB59D720F693EB00FBBC6A = {
 						LastSwiftMigration = 1010;
+						ProvisioningStyle = Automatic;
+					};
+					E5E9016622FB4D4A00AD0E95 = {
+						CreatedOnToolsVersion = 10.2.1;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -460,6 +544,7 @@
 			targets = (
 				4D6B00BF1F33C1C400952242 /* Clew */,
 				B7EB59D720F693EB00FBBC6A /* Clew Dev */,
+				E5E9016622FB4D4A00AD0E95 /* route-quicklook */,
 			);
 		};
 /* End PBXProject section */
@@ -506,6 +591,14 @@
 				1F27632722FCBD6A00E1FCF8 /* SettingsAndHelp.storyboard in Resources */,
 				E5470F1D22C119F5001092A4 /* GoogleService-Info.plist in Resources */,
 				E5470F1722C119F5001092A4 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E5E9016522FB4D4A00AD0E95 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E5E9016E22FB4D4A00AD0E95 /* MainInterface.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -638,6 +731,7 @@
 				E5470F4222C119F5001092A4 /* UIConstants.swift in Sources */,
 				E5470F2022C119F5001092A4 /* UIViewControllerExtensions.swift in Sources */,
 				E5470F3A22C119F5001092A4 /* HelpViewController.swift in Sources */,
+				E565A10822F2173400C1998E /* RouteDocumentData.swift in Sources */,
 				E5470F0222C119F5001092A4 /* Navigation.swift in Sources */,
 				E5470F3822C119F5001092A4 /* ResumeTrackingConfirmController.swift in Sources */,
 				E5470EFA22C119F5001092A4 /* RecorderViewController.swift in Sources */,
@@ -681,6 +775,7 @@
 				E5470F3122C119F5001092A4 /* RouteRatingController.swift in Sources */,
 				E5470F4322C119F5001092A4 /* UIConstants.swift in Sources */,
 				E5470F2122C119F5001092A4 /* UIViewControllerExtensions.swift in Sources */,
+				E565A10922F2173400C1998E /* RouteDocumentData.swift in Sources */,
 				E5470F3B22C119F5001092A4 /* HelpViewController.swift in Sources */,
 				E5470F0322C119F5001092A4 /* Navigation.swift in Sources */,
 				E5470F3922C119F5001092A4 /* ResumeTrackingConfirmController.swift in Sources */,
@@ -701,7 +796,23 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		E5E9016322FB4D4A00AD0E95 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E5E9016B22FB4D4A00AD0E95 /* PreviewViewController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		E5E9017122FB4D4A00AD0E95 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = E5E9016622FB4D4A00AD0E95 /* route-quicklook */;
+			targetProxy = E5E9017022FB4D4A00AD0E95 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		AD020F8622FB553500D665F3 /* BurgerMenu.strings */ = {
@@ -725,6 +836,22 @@
 				82F2DDD122E26A44005CD7D0 /* en */,
 			);
 			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		E5D1695A22E103A0008754D0 /* Info.plist */ = {
+			isa = PBXVariantGroup;
+			children = (
+				82F2DDD222E26A44005CD7D0 /* en */,
+			);
+			name = Info.plist;
+			sourceTree = "<group>";
+		};
+		E5E9016C22FB4D4A00AD0E95 /* MainInterface.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E5E9016D22FB4D4A00AD0E95 /* Base */,
+			);
+			name = MainInterface.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -849,6 +976,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 08FA9C31721F9F8CDCC23AE9 /* Pods-Clew.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
@@ -868,6 +996,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D89DDB87A8AE1A9ECEAFCEC6 /* Pods-Clew.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
@@ -929,6 +1058,44 @@
 			};
 			name = Release;
 		};
+		E5E9017422FB4D4A00AD0E95 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 787TUDMR8Q;
+				INFOPLIST_FILE = "route-quicklook/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "edu.occam.Clew.route-quicklook";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		E5E9017522FB4D4A00AD0E95 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 787TUDMR8Q;
+				INFOPLIST_FILE = "route-quicklook/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "edu.occam.Clew.route-quicklook";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -955,6 +1122,15 @@
 			buildConfigurations = (
 				B7EB59EA20F693EB00FBBC6A /* Debug */,
 				B7EB59EB20F693EB00FBBC6A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E5E9017322FB4D4A00AD0E95 /* Build configuration list for PBXNativeTarget "route-quicklook" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E5E9017422FB4D4A00AD0E95 /* Debug */,
+				E5E9017522FB4D4A00AD0E95 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
