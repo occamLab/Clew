@@ -12,9 +12,15 @@
 
 "sharingYourExperiencePop-UpContent" = "Help us improve the app by logging your Clew experience. These logs will not include any images or personal information. You can turn this off in Settings.";
 
+"significantVersionChangesPop-UpHeading" = "Important Changes";
+
+"significantVersionChangesPop-UpContent" = "This new version of Clew features a route sharing feature and a redesigned workflow for saving routes. Please note that \"landmarks\" are now called \"anchor points\". Also, some menus previously on the main screen are now available through the \"more options\" menu. See the help menu for more details.";
+
+"significantVersionChanges-Confirmation" = "Ok";
+
 "forYourSafetyPop-UpHeading" = "For your safety";
 
-"forYourSafetyPop-UpHeading" = "While using the app, please be aware of your surroundings. You agree that your use of the App is at your own risk, and it is solely your responsibility to maintain your personal safety. Visit www.clewapp.org for more information on how to use the app.";
+"forYourSafetyPop-UpContent" = "While using the app, please be aware of your surroundings. You agree that your use of the App is at your own risk, and it is solely your responsibility to maintain your personal safety. Visit www.clewapp.org for more information on how to use the app.";
 
 // Strings from ViewController
     // Voicing directions
@@ -111,7 +117,7 @@
 
 "multipleUseRouteEndAnchorPointText" = "To allow your route to be navigated in the reverse direction you need to record an anchor point for the end of your route. An anchor point records the position and alignment of your device so the app can reload your route from a saved file. As a result the accuracy of your saved route navigation relies entirely on how accurately you can realign and position your phone with your saved anchor point at a later point. We suggest using the text and voice note buttons to record a text note and/or a voice recording which can help you realign your device to the anchor point you recorded at a later time.\nTo create an anchor point, hold your device flat with the screen facing up. Press the top (short) edge flush against a flat vertical surface (such as a wall) the \”align\” button starts a %lu-second countdown. The countdown is intended to give you time to position your device; the Anchor point will be saved at the end of the countdown.";
 
-"anchorPointAlignmentText" = "Please align your device with your previously recorded anchor point. To do this Hold your device flat with the screen pointing up. Press the top (short) edge flush with the same vertical surface that you used to create the Anchor Point. Activating the align button will start an alignment countdown this is intended to give you time to make final adjustments to the positioning of your device. At the end of the countdown the alignment will be taken and the device will provide confirmation via a vibration or sound cue.";
+"anchorPointAlignmentText" = "Please align your device with your previously recorded anchor point. To do this hold your device flat with the screen pointing up. Press the top (short) edge flush with the same vertical surface that you used to create the anchor point. Activating the align button will start an alignment countdown this is intended to give you time to make final adjustments to the positioning of your device. At the end of the countdown the alignment will be taken and the device will provide an announcement indicating that the anchor point was saved.";
 "anchorPointIntroductionToSavedText" = "The Anchor Point information you entered is: ";
 
 //Settings
@@ -157,9 +163,7 @@
 
 "appFeaturesCurrentVersionHeading" = "Current Version";
 
-"appfeaturesCurrentVersionContent" = "Clew allows you to record routes using your phone that you can then navigate (either in the forward or reverse direction) at a later point in time. Clew can be used in situations where you want to immediately navigate back to your starting location (e.g., if you went somewhere with a sighted guide or if it is harder to navigate the reverse journey) or when you want to remember a route that you are learning so you can navigate it more confidently in the future.  Importantly, Clew does not use your phone's GPS, so it can be used indoors.";
-
-"appFeaturesNewFeaturesContent" = "The ability to save routes is a new feature for Clew.";
+"appfeaturesCurrentVersionContent" = "Clew allows you to record routes using your phone so that you can then navigate them at a later point in time with precise, automatic guidance from the app. Clew can be used in situations where you want to immediately navigate back to your starting location (e.g., if you went somewhere with a sighted guide or if it is harder to navigate the reverse journey) or when you want to remember a route that you are learning so you can navigate it more confidently in the future.  Importantly, Clew does not use your phone's GPS, so it can be used indoors.";
 
 "appFeaturesFutureVersionsHeader" = "Future Versions";
 
@@ -173,7 +177,7 @@
 
 "recordingARouteHeader" = "Recording a route";
 
-"recordingARouteContent" = "As soon as the app launches, the app will present three buttons: saved routes, record route, and create Anchor Point. To record a route that you don't need to save, or if you only want to be able to save the route in the reverse direction, you can simply activate the record button and move along the route you'd like to record. If you want to be able to save the route so that you can receive automatic guidance along it at a later time, activate the create Anchor Point button and follow the procedure for Anchor Point creation and route pausing described later in this document. If at any point you want to cancel an activity and return to this recording screen from any other part of the app, either the home button, or in some cases a “done” button, can be pressed to reset the app status and return to the recording view.";
+"recordingARouteContent" = "As soon as the app launches, the app will present three buttons: save route, single use route, and saved routes list. To navigate a route that you don't need to save, simply press the single use route button and follow the app's instructions. To save a route, activate the save route button. The app will walk you through the process of saving a route by first asking you to create an anchor point. The procedure for creating an anchor point is described later in this document and also through in-app instructions. If at any point you want to cancel an activity and return to this recording screen from any other part of the app, either the home button, or in some cases a “done” button, can be pressed to reset the app status and return to the recording view.";
 
 "recordingARouteProperPositioningHeading" = "Properly positioning your phone when using Clew";
 
@@ -181,16 +185,16 @@
 
 "savedRoutesHeader" = "Saved routes";
 
-"savedRoutesContent" = "The saved routes menu is a new feature for Clew. It allows you to load previously traveled routes and navigate along them in either the forward or reverse direction.";
+"savedRoutesContent" = "The saved routes menu allows you to load recorded routes and navigate along them in either the forward or reverse direction.";
 
 "savedRoutesLoadingARouteHeader" = "Loading a route";
 
-"savedRoutesLoadingARouteContent" = "The saved routes menu provides you with a list of previously recorded routes ordered from most to least recent. Once you tap on a route, you will be prompted to navigate the route in &quot;start to end&quot; or &quot;end to start&quot; mode. &quot;Start to end&quot; means that you would navigate along the route in the same direction as it was initially recorded. &quot;End to start&quot; means that you would navigate the route in the reverse direction as it was initially recorded. If either option is dimmed (i.e., not able to be activated), it means that an appropriate Anchor Point was not created at either the start or end of the route.";
+"savedRoutesLoadingARouteContent" = "The saved routes menu provides you with a list of recorded routes ordered from most to least recent. Once you tap on a route, you can select navigation in &quot;start to end&quot; or &quot;end to start&quot; mode. &quot;Start to end&quot; means that you navigate along the route in the same direction as it was recorded. &quot;End to start&quot; means that you navigate the route in the reverse direction as it was recorded.";
 
 "savedRoutesDeletingASavedRouteHeader" = "Deleting a saved route";
 "savedRoutesDeletingASavedRouteContent" = "You can delete routes from this menu either by swiping left (if not using VoiceOver) or by activating the secondary action on the route (if you are using VoiceOver).";
 "savedRoutesSharingASavedRouteHeader" = "Sharing a saved route";
-"savedRoutesSharingASavedRouteContent" = "You can share routes from this menu either by swiping left (if not using VoiceOver) or by activating the secondary action on the route (if you are using VoiceOver). Pressing on the share button will then open a share selector which lets you share a route over text, email, airdrop, or through many other apps.";
+"savedRoutesSharingASavedRouteContent" = "You can share routes from this menu either by swiping left (if not using VoiceOver) or by activating the secondary action on the route (if you are using VoiceOver). Pressing on the share button will then open a share selector which lets you share a route over text, email, airdrop, or through many other apps. When sharing a route please be sure that you have entered detailed instructions (either as a voice note or as text) to help the person you are sharing the route with find the route's anchor points. If this person cannot accurately find the anchor points, the app will not provide accurate guidance.";
 "followingARouteHeader" = "Following a route";
 
 "followingARouteContent" = "Once you activate the start navigation feature, the app will provide you with instructions to navigate back to your starting location. The app provides feedback in the following formats.";
@@ -227,9 +231,9 @@
 
 "PausingARouteOrRecordingAAnchorPointHeader" = "Pausing a route or recording a Anchor Point";
 
-"PausingARouteOrRecordingAAnchorPointContentParagraph1" = "The procedure for pausing the route and recording a Anchor Point are the same. The key idea is that in order to reuse routes, your phone must be able to align its current position with a position from the recorded route. In some cases, Apple's ARKit will be able to automatically do this registration (for example, when the camera sees a distinctive visual feature that can be matched to the recording); however, in many situations this will not be possible.";
+"PausingARouteOrRecordingAAnchorPointContentParagraph1" = "The procedure for pausing the route and recording an anchor point are the same. The key idea is that in order to reuse routes, your phone must be able to align its current position with a position from the recorded route. In some cases, Apple's ARKit will be able to automatically do this alignment (for example, when the camera sees a distinctive visual feature that can be matched to the recording); however, in many situations this will not be possible.";
 
-"PausingARouteOrRecordingAAnchorPointContentParagraph2" = "In order to register your position in such cases you be able to place the phone in a position and orientation such that you can reliably return the phone to that same position and orientation when reusing a saved route. While it is not crucial that you position the phone in exactly the same place (although the more accurately you can do this, the better the app will work), you must be able to place the phone in the precisely the same orientation. To make it easy to return the phone to the same orientation, you should hold your phone flat with the screen facing up and press the top (short-edge) of your phone flush with a vertical surface (like a wall). More instructions are provided in the app when you activate the pause feature or the create Anchor Point feature.";
+"PausingARouteOrRecordingAAnchorPointContentParagraph2" = "In order to align your position in such cases you must be able to place the phone in a position and orientation such that you can reliably return the phone to that same position and orientation when reloading a saved route. While it is not crucial that you position the phone in exactly the same place (although the more accurately you can do this, the better the app will work), you must be able to place the phone in precisely the same orientation. To make it easy to return the phone to the same orientation, you should hold your phone flat with the screen facing up and press the top (short-edge) of your phone flush with a vertical surface (like a wall). More instructions are provided in the app when you activate the pause feature or the create anchor point feature.";
 
 "contractSectionAccessibilityTag" = "contract section";
 
@@ -240,7 +244,7 @@
 
 "multipleUseRouteAnchorPointToRecordingRouteAnnouncement" = "Anchor point saved. You are now recording a route.";
 
-"multipleUseRouteAnchorPointToSaveARouteAnnouncement" = "Anchor point saved. You may now name your saved route.";
+"multipleUseRouteAnchorPointToSaveARouteAnnouncement" = "Anchor point saved. You may now name your route.";
 
 "startingReturnNavigationAnnouncement" = "Starting return navigation";
 
@@ -249,8 +253,8 @@
 "saveRouteToPlayPauseAnnouncement" = "Route saved. You may now perform return navigation or pause your tracking session to navigate back at a later time.";
 
 //Play/Pause text
-"automaticAlignmentPlayPauseViewText" = "You have been automatically realigned with your route, simply press the play button to perform navigation.";
+"automaticAlignmentPlayPauseViewText" = "You have been automatically realigned with your route. Press the play button to perform navigation.";
 
-"singleUsePlayPauseViewText" = "In order to immediately perform return navigation, simply press the play button and follow the instructions provided. In order to pause the session to perform return navigation at a later point, press the pause button and complete the anchor point procedure.";
+"singleUsePlayPauseViewText" = "In order to immediately perform return navigation, press the play button and follow the instructions provided. In order to pause the session to perform return navigation at a later point, press the pause button and complete the anchor point procedure.";
 
-"multipleUseRoutePlayPauseViewText" = "In order to immediately navigate back along the path you recorded, simply press the play button and follow the instructions provided. In order to pause the session to perform return navigation at a later point, press the pause button.";
+"multipleUseRoutePlayPauseViewText" = "In order to immediately navigate back along the path you recorded, press the play button and follow the instructions provided. In order to pause the session to perform return navigation at a later point, press the pause button.";

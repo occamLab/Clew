@@ -724,10 +724,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         
         let userDefaults: UserDefaults = UserDefaults.standard
         let firstTimeLoggingIn: Bool? = userDefaults.object(forKey: "firstTimeLogin") as? Bool
+        let showedSignificantChangesAlert: Bool? = userDefaults.object(forKey: "showedSignificantChangesAlertv1_3") as? Bool
         
-        if (firstTimeLoggingIn == nil) {
+        if firstTimeLoggingIn == nil {
             userDefaults.set(true, forKey: "firstTimeLogin")
+            // make sure not to show the significant changes alert in the future
+            userDefaults.set(true, forKey: "showedSignificantChangesAlertv1_3")
             showLogAlert()
+        } else if showedSignificantChangesAlert == nil {
+            // we only show the significant changes alert if this is an old installation
+            userDefaults.set(true, forKey: "showedSignificantChangesAlertv1_3")
+            showSignificantChangesAlert()
         }
         
         synth.delegate = self
@@ -878,6 +885,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                                               preferredStyle: .alert)
         safetyAlertVC.addAction(UIAlertAction(title: NSLocalizedString("anchorPointTextPop-UpConfirmation", comment: "What the user clicks to acknowledge a message and dismiss pop-up"), style: .default, handler: nil))
         self.present(safetyAlertVC, animated: true, completion: nil)
+    }
+    
+    /// Show significant changes alert so the user is not surprised by new app features.
+    func showSignificantChangesAlert() {
+        let changesAlertVC = UIAlertController(title: NSLocalizedString("significantVersionChangesPop-UpHeading", comment: "The heading of a pop-up telling the user that significant changes have been made to this app version"),
+                                               message: NSLocalizedString("significantVersionChangesPop-UpContent", comment: "An alert shown to the user to alert them to the fact that significant changes have been made to the app."),
+                                               preferredStyle: .alert)
+        changesAlertVC.addAction(UIAlertAction(title: NSLocalizedString("significantVersionChanges-Confirmation", comment: "What the user clicks to acknowledge the significant changes message and dismiss pop-up"), style: .default, handler: { action -> Void in
+        }
+        ))
+        self.present(changesAlertVC, animated: true, completion: nil)
     }
     
     /// Configure Settings Bundle
