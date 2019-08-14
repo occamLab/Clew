@@ -17,7 +17,6 @@ class HelpCompiler {
     let contentDictioanry = [("\(NSLocalizedString("appFeaturesHeading", comment: "this is a heading in the help documentation. it is also used for the creation of the accessibility labels used to inform the user as to how to interact with the help documantatio's accordian menu"))","""
         <h3>\(NSLocalizedString("appFeaturesCurrentVersionHeading", comment: "this is a heading in the help documentation and part of the app features section."))</h3>
         <p>\(NSLocalizedString("appfeaturesCurrentVersionContent", comment: "this is a paragraph in the app features section of the help menu which describes the main features of Clew"))</p>
-        <p>\(NSLocalizedString("appFeaturesNewFeaturesContent", comment: "This is a short section which describes the latest features added to the clew app."))</p>
         <h3>\(NSLocalizedString("appFeaturesFutureVersionsHeader", comment: "This is a heading in the app features section of the help documentation."))</h3>
         <p>\(NSLocalizedString("appFeaturesFutureVersionsContent", comment: "this is a paragraph in the app Features section of the help documentation which describes the features which are under development for future versions of the app."))</p>
         """),("\(NSLocalizedString("howWellDoesClewWorkHeader", comment: "This is a section heading in the help documentation menu"))","""
