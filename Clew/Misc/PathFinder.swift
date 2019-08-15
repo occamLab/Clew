@@ -206,6 +206,58 @@ class RouteAnchorPoint: NSObject, NSSecureCoding {
     
 }
 
+/// [Deprecated] [Needed to load old routes] An encapsulation of a route landmark, including position, text, and audio information.
+class RouteLandmark: NSObject, NSSecureCoding {
+    /// Needs to be declared and assigned true to support `NSSecureCoding`
+    static var supportsSecureCoding = true
+    
+    /// The position and orientation as a 4x4 matrix
+    public var transform: simd_float4x4?
+    /// Text to help user remember the landmark
+    public var information: NSString?
+    /// The URL to an audio file that contains information to help the user remember a landmark
+    public var voiceNote: NSString?
+    
+    /// Initialize the landmark.
+    ///
+    /// - Parameters:
+    ///   - transform: the position and orientation
+    ///   - information: textual description
+    ///   - voiceNote: URL to auditory description
+    public init(transform: simd_float4x4? = nil, information: NSString? = nil, voiceNote: NSString? = nil) {
+        self.transform = transform
+        self.information = information
+        self.voiceNote = voiceNote
+    }
+    
+    /// Encode the landmark.
+    ///
+    /// - Parameter aCoder: the encoder
+    func encode(with aCoder: NSCoder) {
+        if transform != nil {
+            aCoder.encode(ARAnchor(transform: transform!), forKey: "transformAsARAnchor")
+        }
+        aCoder.encode(information, forKey: "information")
+        aCoder.encode(voiceNote, forKey: "voiceNote")
+    }
+    
+    /// Decode the landmark.
+    ///
+    /// - Parameter aDecoder: the decoder
+    required convenience init?(coder aDecoder: NSCoder) {
+        var transform : simd_float4x4? = nil
+        var information : NSString? = nil
+        var voiceNote : NSString? = nil
+        
+        if let transformAsARAnchor = aDecoder.decodeObject(of: ARAnchor.self, forKey: "transformAsARAnchor") {
+            transform = transformAsARAnchor.transform
+        }
+        information = aDecoder.decodeObject(of: NSString.self, forKey: "information")
+        voiceNote = aDecoder.decodeObject(of: NSString.self, forKey: "voiceNote")
+        self.init(transform: transform, information: information, voiceNote: voiceNote)
+    }
+    
+}
 /// This class encapsulates a route that can be persisted to storage and reloaded as needed.
 class SavedRoute: NSObject, NSSecureCoding {
     /// This is needed to use NSSecureCoding
@@ -270,11 +322,29 @@ class SavedRoute: NSObject, NSSecureCoding {
         guard let dateCreated = aDecoder.decodeObject(of: NSDate.self, forKey: "dateCreated") else {
             return nil
         }
-        guard let beginRouteAnchorPoint = aDecoder.decodeObject(of: RouteAnchorPoint.self, forKey: "beginRouteAnchorPoint") else {
-            return nil
+
+        let beginRouteAnchorPoint: RouteAnchorPoint
+        if let anchorPoint = aDecoder.decodeObject(of: RouteAnchorPoint.self, forKey: "beginRouteAnchorPoint") {
+            beginRouteAnchorPoint = anchorPoint
+        } else {
+            // check to see if we have a route in the old format
+            guard let beginRouteLandmark = aDecoder.decodeObject(of: RouteLandmark.self, forKey: "beginRouteLandmark") else {
+                    return nil
+            }
+            // convert to the new format
+            beginRouteAnchorPoint = RouteAnchorPoint(transform: beginRouteLandmark.transform, information: beginRouteLandmark.information, voiceNote: beginRouteLandmark.voiceNote)
         }
-        guard let endRouteAnchorPoint = aDecoder.decodeObject(of: RouteAnchorPoint.self, forKey: "endRouteAnchorPoint") else {
-            return nil
+        let endRouteAnchorPoint: RouteAnchorPoint
+
+        if let anchorPoint = aDecoder.decodeObject(of: RouteAnchorPoint.self, forKey: "endRouteAnchorPoint") {
+            endRouteAnchorPoint = anchorPoint
+        } else {
+            // check to see if we have a route in the old format
+            guard let endRouteLandmark = aDecoder.decodeObject(of: RouteLandmark.self, forKey: "endRouteLandmark") else {
+                return nil
+            }
+            // convert to the new format
+            endRouteAnchorPoint = RouteAnchorPoint(transform: endRouteLandmark.transform, information: endRouteLandmark.information, voiceNote: endRouteLandmark.voiceNote)
         }
 
         self.init(id: id, name: name, crumbs: crumbs, dateCreated: dateCreated, beginRouteAnchorPoint: beginRouteAnchorPoint, endRouteAnchorPoint: endRouteAnchorPoint)
