@@ -17,9 +17,10 @@ class StartNavigationController: UIViewController {
     /// button for pausing navigation
     var pauseButton: UIButton!
     
+    /// button for pausing navigation
+    var largeHomeButton: UIButton!
+
     var stackView: UIStackView!
-    
-    var fillerSpace: UIView!
 
     var label: UILabel!
     
@@ -30,15 +31,16 @@ class StartNavigationController: UIViewController {
     var isAutomaticAlignment: Bool!
     
     /// called when view appears (any time)
-    override func viewDidAppear(_ animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         
         var mainText : String = "nil"
         if recordingSingleUseRoute {
             mainText = NSLocalizedString("singleUsePlayPauseViewText", comment: "Information displayed to the user on the play pause screen after they have recorded a single use route. This describes the functionality of the play and pause buttons.")
+            largeHomeButton.isHidden = true
         } else {
             if isAutomaticAlignment {
                 mainText = NSLocalizedString("automaticAlignmentPlayPauseViewText", comment: "Information displayed to the user on the play pause screen after they have sucessfully aligned to their route automatically.")
-            }else {
+            } else {
                 mainText = NSLocalizedString("multipleUseRoutePlayPauseViewText", comment: "Information displayed to the user on the play pause screen after they have just recorded a multiple use route. This describes the functionality of the play and pause buttons.")
             }
             
@@ -53,7 +55,7 @@ class StartNavigationController: UIViewController {
         label.tag = UIView.mainTextTag
         label.font = UIFont.preferredFont(forTextStyle: .body)
 
-        /// set thumbsUpButton as initially active voiceover button
+        /// set startNavigation as initially active voiceover button
         UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: self.startNavigationButton)
     }
     
@@ -134,11 +136,10 @@ class StartNavigationController: UIViewController {
                                                appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "Pause")!),
                                                label: "Pause session")
         
-        fillerSpace = UIView()
-        fillerSpace.translatesAutoresizingMaskIntoConstraints = false
-        /// set width of button and constaint height to be equal to width
-        fillerSpace.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 3.50).isActive = true
-        fillerSpace.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 3.50).isActive = true
+        largeHomeButton = UIButton.makeConstraintButton(view,
+                                                    alignment: UIConstants.ButtonContainerHorizontalAlignment.right,
+                                                    appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "homeButton")!),
+                                                    label: "Return to home screen")
         
         /// create stack view for aligning and distributing bottom layer buttons
         stackView = UIStackView()
@@ -153,8 +154,8 @@ class StartNavigationController: UIViewController {
         
         /// add elements to the stack
         stackView.addArrangedSubview(pauseButton)
-        stackView.addArrangedSubview(fillerSpace)
         stackView.addArrangedSubview(startNavigationButton)
+        stackView.addArrangedSubview(largeHomeButton)
         
         scrollView.flashScrollIndicators()
         
@@ -171,6 +172,9 @@ class StartNavigationController: UIViewController {
             pauseButton.addTarget(parent,
                                         action: #selector(ViewController.startPauseProcedure),
                                         for: .touchUpInside)
+            largeHomeButton.addTarget(parent,
+                                  action: #selector(ViewController.goHome),
+                                  for: .touchUpInside)
         }
     }
 }
