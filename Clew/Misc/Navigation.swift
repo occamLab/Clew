@@ -96,27 +96,40 @@ public let HapticDirections = [
                                5: NSLocalizedString("leftDirection", comment: "Direction to the user to make an approximately 90 degree left turn."),
                                6: NSLocalizedString("slightLeftDirection", comment: "Direction to user to take a slight left turn"),
                                0: "ERROR"
-                              ] 
-
-/// Keypoint target dimension (width)
-///
-/// Further instructions will be given to the user once they pass inside this bounding box
-///
-/// - TODO: Determine units (meters?)
-public var targetWidth: Scalar = 2
-
-/// Keypoint target dimension (depth)
-///
-/// Further instructions will be given to the user once they pass inside this bounding box
-public var targetDepth: Scalar = 0.5
-
-/// Keypoint target dimension (height)
-///
-/// Further instructions will be given to the user once they pass inside this bounding box
-public var targetHeight: Scalar = 3
+                              ]
 
 /// Navigation class that provides direction information given 2 LocationInfo position
 class Navigation {
+    
+    /// Keypoint target dimension (width) in meters
+    ///
+    /// Further instructions will be given to the user once they pass inside this bounding box
+    public var targetWidth: Scalar = 2
+    
+    /// Keypoint target dimension (depth) in meters
+    ///
+    /// Further instructions will be given to the user once they pass inside this bounding box
+    public var targetDepth: Scalar = 0.5
+    
+    /// Keypoint target dimension (height) in meters
+    ///
+    /// Further instructions will be given to the user once they pass inside this bounding box
+    public var targetHeight: Scalar = 3
+    
+    /// Keypoint target dimension (width) in meters
+    ///
+    /// Further instructions will be given to the user once they pass inside this bounding box
+    public var lastKeypointTargetWidth: Scalar = 1
+    
+    /// Keypoint target dimension (depth) in meters
+    ///
+    /// Further instructions will be given to the user once they pass inside this bounding box
+    public var lastKeypointTargetDepth: Scalar = 1
+    
+    /// Keypoint target dimension (height) in meters
+    ///
+    /// Further instructions will be given to the user once they pass inside this bounding box
+    public var lastKeypointTargetHeight: Scalar = 3
     
     /// The offset between the user's direction of travel (assumed to be aligned with the front of their body and the phone's orientation)
     var headingOffset: Float?
@@ -147,8 +160,14 @@ class Navigation {
     /// - Parameters:
     ///   - currentLocation
     ///   - nextKeypoint
+    ///   - isLastKeypoint (true if the keypoint is the last one in the route, false otherwise)
     /// - Returns: relative position of next keypoint as `DirectionInfo` object
-    public func getDirections(currentLocation: CurrentCoordinateInfo, nextKeypoint: KeypointInfo) -> DirectionInfo {
+    public func getDirections(currentLocation: CurrentCoordinateInfo, nextKeypoint: KeypointInfo, isLastKeypoint: Bool) -> DirectionInfo {
+        // these tolerances are set depending on whether it is the last keypoint or not
+        let keypointTargetDepth = isLastKeypoint ? lastKeypointTargetDepth : targetDepth
+        let keypointTargetHeight = isLastKeypoint ? lastKeypointTargetHeight : targetHeight
+        let keypointTargetWidth = isLastKeypoint ? lastKeypointTargetWidth : targetWidth
+
         let trueYaw  = getPhoneHeadingYaw(currentLocation: currentLocation) + (headingOffset != nil ? headingOffset! : Float(0.0))
         
         //  Distance to next keypoint in meters
@@ -178,7 +197,7 @@ class Navigation {
         var direction = DirectionInfo(distance: dist, angleDiff: angleDiff, clockDirection: clockDirection, hapticDirection: hapticDirection)
         
         //  Determine whether the phone is inside the bounding box of the keypoint
-        if (xDiff <= targetDepth && yDiff <= targetHeight && zDiff <= targetWidth) {
+        if (xDiff <= keypointTargetDepth && yDiff <= keypointTargetHeight && zDiff <= keypointTargetWidth) {
             direction.targetState = .atTarget
         } else if (sqrtf(powf(Float(xDiff), 2) + powf(Float(zDiff), 2)) <= 4) {
             direction.targetState = .closeToTarget

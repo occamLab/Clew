@@ -113,7 +113,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             case .recordingRoute:
                 handleStateTransitionToRecordingRoute()
             case .readyToNavigateOrPause:
-                handleStateTransitionToReadyToNavigateOrPause(allowPause: !isResumedRoute)
+                handleStateTransitionToReadyToNavigateOrPause(allowPause: recordingSingleUseRoute)
             case .navigatingRoute:
                 handleStateTransitionToNavigatingRoute()
             case .ratingRoute(let announceArrival):
@@ -778,6 +778,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         logger.resetStateSequenceLog()
     }
     
+    /// This finishes the process of pressing the home button (after user has given confirmation)
+    @objc func goHome() {
+        // proceed to home page
+        self.clearState()
+        self.hideAllViewsHelper()
+        if case .startingNameSavedRouteProcedure = self.state {
+            self.nameSavedRouteController.textField.text = ""
+        }
+        self.state = .mainScreen(announceArrival: false)
+    }
+    
     /// function that creates alerts for the home button
     func homePageNavigationProcesses() {
         // Create alert to warn users of lost information
@@ -786,12 +797,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                                       preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: NSLocalizedString("homeAlertConfirmNavigationButton", comment: "This text appears on a button in an alert notifying the user that if they navigate to the home page they will stop their curent process. This text appears on the button which signifies that the user wants to continue to the home screen"), style: .default, handler: { action -> Void in
             // proceed to home page
-            self.clearState()
-            self.hideAllViewsHelper()
-            if case .startingNameSavedRouteProcedure = self.state {
-                self.nameSavedRouteController.textField.text = ""
-            }
-            self.state = .mainScreen(announceArrival: false)
+            self.goHome()
         }
         ))
         alert.addAction(UIAlertAction(title: NSLocalizedString("cancelPop-UpButtonLabel", comment: "A button which closes the current pop up"), style: .default, handler: { action -> Void in
@@ -1054,7 +1060,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// Display start navigation view/hide all other views
     @objc func showStartNavigationButton(allowPause: Bool) {
-        rootContainerView.homeButton.isHidden = false // home button here
+        rootContainerView.homeButton.isHidden = !recordingSingleUseRoute // home button hidden if we are doing a multi use route (we use the large home button instead)
         resumeTrackingController.remove()
         resumeTrackingConfirmController.remove()
         stopRecordingController.remove()
@@ -1064,7 +1070,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         startNavigationController.recordingSingleUseRoute = recordingSingleUseRoute
         add(startNavigationController)
         startNavigationController.pauseButton.isHidden = !allowPause
-        startNavigationController.fillerSpace.isHidden = !allowPause
+        startNavigationController.largeHomeButton.isHidden = recordingSingleUseRoute
         startNavigationController.stackView.layoutIfNeeded()
         UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: startNavigationController.startNavigationButton)
     }
@@ -1467,7 +1473,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 self.isResumedRoute = true
                 if self.paused {
                     ///PATHPOINT paused anchor point alignment timer -> return navigation
-                    ///announce to the user that they have aligned to the anchor point sucessfully and are starting return navigation.
+                    ///announce to the user that they have aligned to the anchor point sucessfully and are starting  navigation.
                     self.paused = false
                     self.delayTransition(announcement: NSLocalizedString("resumeAnchorPointToReturnNavigationAnnouncement", comment: "This is an Announcement which indicates that the pause session is complete, that the prgram was able to align with the anchor point, and that return navigation has started."), initialFocus: nil)
                     self.state = .navigatingRoute
@@ -1763,7 +1769,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// - Returns: the direction to the next keypoint with the distance rounded to the nearest tenth of a meter
     func getDirectionToNextKeypoint(currentLocation: CurrentCoordinateInfo) -> DirectionInfo {
         // returns direction to next keypoint from current location
-        var dir = nav.getDirections(currentLocation: currentLocation, nextKeypoint: keypoints[0])
+        var dir = nav.getDirections(currentLocation: currentLocation, nextKeypoint: keypoints[0], isLastKeypoint: keypoints.count == 1)
         dir.distance = roundToTenths(dir.distance)
         return dir
     }
@@ -1901,23 +1907,24 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         // Set direction text for text label and VoiceOver
         let xzNorm = sqrtf(powf(currentLocation.x - keypoints[0].location.x, 2) + powf(currentLocation.z - keypoints[0].location.z, 2))
         let slope = (keypoints[0].location.y - prevKeypointPosition.y) / xzNorm
+        let yDistance = abs(keypoints[0].location.y - prevKeypointPosition.y)
         var dir = ""
         
-        if(slope > 0.3) { // Go upstairs
+        if yDistance > 1 && slope > 0.3 { // Go upstairs
             if(hapticFeedback) {
                 dir += "\(Directions[direction.hapticDirection]!)" + NSLocalizedString("climbStairsDirection", comment: "Additional directions given to user discussing climbing stairs")
             } else {
                 dir += "\(Directions[direction.clockDirection]!)" + NSLocalizedString(" and proceed upstairs", comment: "Additional directions given to user telling them to climb stairs")
             }
             updateDirectionText(dir, distance: 0, displayDistance: false)
-        } else if (slope < -0.3) { // Go downstairs
+        } else if yDistance > 1 && slope < -0.3 { // Go downstairs
             if(hapticFeedback) {
                 dir += "\(Directions[direction.hapticDirection]!)\(NSLocalizedString("descendStairsDirection" , comment: "This is a direction which instructs the user to descend stairs"))"
             } else {
                 dir += "\(Directions[direction.clockDirection]!)\(NSLocalizedString("descendStairsDirection" , comment: "This is a direction which instructs the user to descend stairs"))"
             }
             updateDirectionText(dir, distance: direction.distance, displayDistance: false)
-        } else { // nromal directions
+        } else { // normal directions
             if(hapticFeedback) {
                 dir += "\(Directions[direction.hapticDirection]!)"
             } else {
@@ -2092,6 +2099,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         case .normal:
             logString = "Normal"
             if configuration.initialWorldMap != nil, attemptingRelocalization {
+                // This call is necessary to cancel any pending setWorldOrigin call from the alignment procedure.  Depending on timing, it's possible for the relocalization *and* the realignment to both be applied.  This results in the origin essentially being shifted twice and things are then way off
+                session.setWorldOrigin(relativeTransform: matrix_identity_float4x4)
                 if !suppressTrackingWarnings {
                     announce(announcement: NSLocalizedString("realignToSavedRouteAnnouncement", comment: "An announcement which lets the user know that their surroundings have been matched to a saved route"))
                 }

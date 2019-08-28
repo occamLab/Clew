@@ -14,7 +14,7 @@
 
 "significantVersionChangesPop-UpHeading" = "Important Changes";
 
-"significantVersionChangesPop-UpContent" = "This new version of Clew features a route sharing feature and a redesigned workflow for saving routes. Please note that \"landmarks\" are now called \"anchor points\". Also, some menus previously on the main screen are now available through the \"more options\" menu. See the help menu for more details.";
+"significantVersionChangesPop-UpContent" = "This new version of Clew features a route sharing feature and a redesigned workflow for saving routes. Please note that \"landmarks\" are now called \"anchor points\". Also, some menus previously on the home screen are now available through the \"options\" menu. See the help menu for more details.";
 
 "significantVersionChanges-Confirmation" = "Ok";
 
@@ -246,15 +246,15 @@
 
 "multipleUseRouteAnchorPointToSaveARouteAnnouncement" = "Anchor point saved. You may now name your route.";
 
-"startingReturnNavigationAnnouncement" = "Starting return navigation";
+"startingReturnNavigationAnnouncement" = "Starting navigation";
 
-"resumeAnchorPointToReturnNavigationAnnouncement" = "Aligned to anchor point. Starting return navigation.";
+"resumeAnchorPointToReturnNavigationAnnouncement" = "Aligned to anchor point. Starting navigation.";
 "singleUseRouteToRecordingRouteAnnouncement" = "Now recording a single use route.";
-"saveRouteToPlayPauseAnnouncement" = "Route saved. You may now perform return navigation or pause your tracking session to navigate back at a later time.";
+"saveRouteToPlayPauseAnnouncement" = "Route saved. You may now perform return navigation or return to the home screen.";
 
 //Play/Pause text
 "automaticAlignmentPlayPauseViewText" = "You have been automatically realigned with your route. Press the play button to perform navigation.";
 
 "singleUsePlayPauseViewText" = "In order to immediately perform return navigation, press the play button and follow the instructions provided. In order to pause the session to perform return navigation at a later point, press the pause button and complete the anchor point procedure.";
 
-"multipleUseRoutePlayPauseViewText" = "In order to immediately navigate back along the path you recorded, press the play button and follow the instructions provided. In order to pause the session to perform return navigation at a later point, press the pause button.";
+"multipleUseRoutePlayPauseViewText" = "In order to immediately navigate back along the path you recorded, press the play button and follow the instructions provided. If you'd like to navigate the route later, youc an return to the home screen and load the route you've just saved when you're ready to navigate along it.";
