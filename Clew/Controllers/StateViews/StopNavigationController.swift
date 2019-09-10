@@ -57,7 +57,7 @@ class StopNavigationController: UIViewController {
         stopNavigationButton = UIButton.makeConstraintButton(view,
                                                         alignment: UIConstants.ButtonContainerHorizontalAlignment.center,
                                                         appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "StopNavigation")!),
-                                                        label: NSLocalizedString("Stop navigation", comment: "The name of the button that allows user to stop navigating."))
+                                                        label: NSLocalizedString("stopNavigationButtonAccessibilityLabel", comment: "The accessibility label of the button that allows user to stop navigating."))
         
         
         snapToRouteButton = UIButton.makeConstraintButton(view,

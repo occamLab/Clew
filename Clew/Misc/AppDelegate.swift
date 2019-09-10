@@ -15,7 +15,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     /// A handle to the app's main window
     var window: UIWindow?
-
+    
+    /// view controller!
+    var vc: ViewController!
+    
     /// Called when the app finishes launching.  Currently, this is where we setup Firebase and make sure the phone screen doesn't lock while we are using the app.
     ///
     /// - Parameters:
@@ -23,6 +26,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     ///   - launchOptions: the launch options
     /// - Returns: a Boolean indicating whether the app can continue to handle user activity.
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+
         // Use Firebase library to configure APIs
         #if IS_DEV_TARGET
             let filePath = Bundle.main.path(forResource: "GoogleService-Info_dev", ofType: "plist")!
@@ -32,12 +36,29 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             FirebaseApp.configure()
         #endif
         logUserProperties()
+        
+        vc = ViewController()
 
         // Override point for customization after application launch.
         window = UIWindow(frame:UIScreen.main.bounds)
+        window?.rootViewController = vc
         window?.makeKeyAndVisible()
-        window?.rootViewController = ViewController()
         UIApplication.shared.isIdleTimerDisabled = true
+        
+        return true
+    }
+    
+    /// entry point for when a file is opened from outside the app
+    func application(_ app: UIApplication,
+                     open url: URL,
+                     options: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
+        
+        /// check imported file extension
+        guard url.pathExtension == "crd" else { return false }
+        
+        /// import the file here
+        vc.dataPersistence.importData(from: url)
+        
         return true
     }
 
