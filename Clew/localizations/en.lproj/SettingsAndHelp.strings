@@ -9,7 +9,7 @@
 
 /* Class = "UIButton"; accessibilityLabel = "Send Feedback"; ObjectID = "Yh2-1z-izX"; */
 
-///This is tha accessibility label that is read when the user hovers over the send feedback button
+///This is tha accessability label that is read when the user hovers over the send feedback button
 "Yh2-1z-izX.accessibilityLabel" = "Send Feedback";
 
 /* Class = "UIButton"; normalTitle = "Send >"; ObjectID = "Yh2-1z-izX"; */

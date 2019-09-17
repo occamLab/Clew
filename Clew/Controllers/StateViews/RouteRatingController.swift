@@ -41,6 +41,11 @@ class RouteRatingController: UIViewController {
                             width: UIConstants.buttonFrameWidth,
                             height: UIScreen.main.bounds.size.height)
         
+//        let label = UILabel(frame: CGRect(x: 15,
+//                                          y: UIScreen.main.bounds.size.height/5,
+//                                          width: UIScreen.main.bounds.size.width-30,
+//                                          height: UIScreen.main.bounds.size.height/2))
+        
         label = UILabel()
         let scrollView = UIScrollView()
 
@@ -51,7 +56,7 @@ class RouteRatingController: UIViewController {
         
         view.backgroundColor = UIColor.black.withAlphaComponent(0.4)
         
-        let mainText = NSLocalizedString("ratingYourServiceViewText", comment: "The text that is displayed when the user has completed navigation of their route. This prompts the user to rate their navigation experience.")
+        let mainText = NSLocalizedString("Please rate your service.", comment: "Message for user")
         label.textColor = UIColor.white
         label.textAlignment = .center
         label.numberOfLines = 0
@@ -91,11 +96,11 @@ class RouteRatingController: UIViewController {
         thumbsDownButton = UIButton.makeConstraintButton(view,
                                                     alignment: UIConstants.ButtonContainerHorizontalAlignment.leftcenter,
                                                     appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "thumbs_down")!),
-                                                    label: NSLocalizedString("badServiceButtonAccessibilityLabel", comment: "The accessibility label on the button denoting that the route navigation provided unsatisfactory service"))
+                                                    label: NSLocalizedString("Bad", comment: "Unsatisfactory service"))
         thumbsUpButton = UIButton.makeConstraintButton(view,
                                                   alignment: UIConstants.ButtonContainerHorizontalAlignment.rightcenter,
                                                   appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "thumbs_up")!),
-                                                  label: NSLocalizedString("goodServiceButtonAccessibilityLabel", comment: "The accessibility label on the button denoting that the route navigation provided satisfactory service"))
+                                                  label: NSLocalizedString("Good", comment: "Satisfactory service"))
         
         let fillerSpace = UIView()
         fillerSpace.translatesAutoresizingMaskIntoConstraints = false

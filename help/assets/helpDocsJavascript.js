@@ -16,14 +16,14 @@ coll[i].addEventListener("click", function() {
                          if (content.style.display === "block") {
                          //hide the content
                          content.style.display = "none";
-                         //change the accessibility tag
-                         updateAccessibilityLabels(this,"close");
+                         //change the accessability tag
+                         updateAccessabilityLabels(this,"close");
                          
                          } else {
                          //show the content
                          content.style.display = "block";
-                         //change the accessibility tag
-                         updateAccessibilityLabels(this,"open");
+                         //change the accessability tag
+                         updateAccessabilityLabels(this,"open");
                          }
                          });
 }

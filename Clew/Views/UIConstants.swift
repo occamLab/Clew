@@ -55,22 +55,6 @@ enum UIConstants {
         }
     }
     
-    /// y-origin of whole screen
-    static var yOriginOfScreen: CGFloat {
-        return UIScreen.main.bounds.size.height/6
-    }
-    
-    /// center of screen
-    static var verticalCenter: CGFloat {
-        return UIScreen.main.bounds.size.height/6/3
-    }
-    
-    static var bottomScreen: CGFloat {
-        return UIScreen.main.bounds.size.height/6/5
-    }
-    
-    
-    
     /// y-origin of button frame
     static var yOriginOfButtonFrame: CGFloat {
         return UIScreen.main.bounds.size.height - buttonFrameHeight - settingsAndHelpFrameHeight - settingsAndHelpMargin
