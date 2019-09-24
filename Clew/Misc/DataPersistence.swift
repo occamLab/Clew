@@ -223,11 +223,11 @@ class DataPersistence {
             try? FileManager().removeItem(at: endRouteAnchorPointVoiceNote.documentURL)
         }
         
-        if let beginRouteLandmarkImageFileName = route.beginRouteLandmark.imageFileName {
+        if let beginRouteLandmarkImageFileName = route.beginRouteAnchorPoint.imageFileName {
             try? FileManager().removeItem(at: beginRouteLandmarkImageFileName.documentURL)
         }
         
-        if let endRouteLandmarkImageFileName = route.endRouteLandmark.imageFileName {
+        if let endRouteLandmarkImageFileName = route.endRouteAnchorPoint.imageFileName {
             try? FileManager().removeItem(at: endRouteLandmarkImageFileName.documentURL)
         }
     }

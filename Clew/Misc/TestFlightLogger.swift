@@ -27,8 +27,8 @@ class TestFlightLogger {
         dateFormatter.dateFormat = "yyyy-MM-dd:hh:mm:ss"
         let subdir = "\(dateFormatter.string(from: Date()))-\(UUID().uuidString)"
         let subref = storageref.child(subdir)
-        let beginRouteLandmark = savedRoute.beginRouteLandmark
-        let endRouteLandmark = savedRoute.endRouteLandmark
+        let beginRouteLandmark = savedRoute.beginRouteAnchorPoint
+        let endRouteLandmark = savedRoute.endRouteAnchorPoint
         var testFlightJSON = TestFlightJSON()
         
         if let beginRouteLandmarkImageFileName = beginRouteLandmark.imageFileName {

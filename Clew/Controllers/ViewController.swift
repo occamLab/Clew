@@ -359,8 +359,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
 
         // If the route has not yet been saved, we can no longer save this route
         routeName = nil
-        beginRouteLandmark = RouteLandmark()
-        endRouteLandmark = RouteLandmark()
         beginRouteAnchorPoint = RouteAnchorPoint()
         endRouteAnchorPoint = RouteAnchorPoint()
         clearAllFollowCrumbs()
@@ -438,10 +436,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         if navigateStartToEnd {
             crumbs = route.crumbs.reversed()
             
-            pausedTransform = route.beginRouteAnchorPoint.transform
+            pausedAnchorPoint = route.beginRouteAnchorPoint
         } else {
             crumbs = route.crumbs
-            pausedTransform = route.endRouteAnchorPoint.transform
+            pausedAnchorPoint = route.endRouteAnchorPoint
         }
         sceneView.session.run(configuration, options: [.removeExistingAnchors])
 
@@ -580,11 +578,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                     ///sends the user to the play/pause screen
                     self.state = .startingNameSavedRouteProcedure(worldMap: worldMap)
                 }
-            } else {
-                getRouteNameAndSaveRouteHelper(mapAsAny: nil)
-                showResumeTrackingButton()
-                Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(self.playSound)), userInfo: nil, repeats: false)
-                state = .pauseProcedureCompleted
             }
         }
     }
@@ -602,7 +595,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 do {
                     // TODO: factor this out since it shows up in a few places
                     let id = String(Int64(NSDate().timeIntervalSince1970 * 1000)) as NSString
-                    try self.archive(routeId: id, beginRouteAnchorPoint: self.beginRouteAnchorPoint, endRouteAnchorPoint: self.endRouteAnchorPoint, worldMapAsAny: mapAsAny)
+                    try self.archive(routeId: id, beginRouteAnchorPoint: self.beginRouteAnchorPoint, endRouteAnchorPoint: self.endRouteAnchorPoint, worldMap: mapAsAny as! ARWorldMap?)
                     self.routeSaveGroup.leave()
                 } catch {
                     fatalError("Can't archive route: \(error.localizedDescription)")
@@ -950,7 +943,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         routeName = nil
         beginRouteAnchorPoint = RouteAnchorPoint()
         endRouteAnchorPoint = RouteAnchorPoint()
-        playAlignmentConfirmation?.cancel()
+        recordRouteLandmarkTimer?.invalidate()
         rootContainerView.announcementText.isHidden = true
         nav.headingOffset = 0.0
         headingRingBuffer.clear()
@@ -1010,7 +1003,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             
             self.routeSaveGroup.enter()
             DispatchQueue.global(qos: .background).async {
-                try! self.archive(routeId: id, beginRouteLandmark: self.beginRouteLandmark, endRouteLandmark: self.endRouteLandmark, worldMapAsAny: mapAsAny)
+                try! self.archive(routeId: id, beginRouteAnchorPoint: self.beginRouteAnchorPoint, endRouteAnchorPoint: self.endRouteAnchorPoint, worldMap: self.justUsedMap)
                 self.routeSaveGroup.leave()
                 DispatchQueue.main.async {
                     self.announce(announcement: "Route saved")
@@ -1020,7 +1013,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         
         // The cancel action saves the just traversed route so you can navigate back along it later
         let cancelAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: "An option for the user to select"), style: .cancel) { (_) in
-            self.justTraveledRoute = SavedRoute(id: "dummyid", name: "Last route", crumbs: self.crumbs, dateCreated: Date() as NSDate, beginRouteLandmark: self.beginRouteLandmark, endRouteLandmark: self.endRouteLandmark)
+            self.justTraveledRoute = SavedRoute(id: "dummyid", name: "Last route", crumbs: self.crumbs, dateCreated: Date() as NSDate, beginRouteAnchorPoint: self.beginRouteAnchorPoint, endRouteAnchorPoint: self.endRouteAnchorPoint)
         }
         
         // Add textfield to our dialog box
@@ -1186,6 +1179,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             resumeTracking()
         }
     }
+    
+    /// Play audio feedback and system sound.  This is used currently when the user is facing the appropriate direction along the route.
+    @objc func playSound() {
+        feedbackGenerator = UIImpactFeedbackGenerator(style: .heavy)
+        feedbackGenerator?.impactOccurred()
+        feedbackGenerator = nil
+        playSystemSound(id: 1103)
+    }
 
     /// Play the specified system sound.  If the system sound has been preloaded as an audio player, then play using the AVAudioSession.  If there is no corresponding player, use the `AudioServicesPlaySystemSound` function.
     ///
@@ -1288,7 +1289,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         pauseTrackingController.startAnchorPoint = startAnchorPoint
         
         add(pauseTrackingController)
-        pauseTrackingController.setMainText(direction: creatingRouteLandmark)
+        pauseTrackingController.setMainText(direction: creatingRouteAnchorPoint)
         
         delayTransition()
     }
@@ -1514,7 +1515,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     var timerLength: Int!
 
     /// This keeps track of the paused transform while the current session is being realigned to the saved route
-    var pausedLandmark : RouteLandmark?
+    var pausedAnchorPoint : RouteAnchorPoint?
     
     /// the Anchor Point to use to mark the beginning of the route currently being recorded
     var beginRouteAnchorPoint = RouteAnchorPoint()
@@ -1716,9 +1717,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     func afterResumeTimerAction(_ timer: Timer) {
         state = .visualAlignmentWaitingPeriod
         self.rootContainerView.countdownTimer.isHidden = true
-        self.pausedLandmark?.loadImage()
+        self.pausedAnchorPoint?.loadImage()
         // The first check is necessary in case the phone relocalizes before this code executes
-        if case .visualAlignmentWaitingPeriod = self.state, let alignLandmark = self.pausedLandmark, let alignLandmarkImage = alignLandmark.image, let alignTransform = alignLandmark.transform, let frame = self.sceneView.session.currentFrame {
+        if case .visualAlignmentWaitingPeriod = self.state, let alignAnchorPoint = self.pausedAnchorPoint, let alignAnchorPointImage = alignAnchorPoint.image, let alignTransform = alignAnchorPoint.transform, let frame = self.sceneView.session.currentFrame {
             announce(announcement: NSLocalizedString("visualAlignmentConfirmation", comment: "Announce that visual alignment process has began"))
             // yaw can be determined by projecting the camera's z-axis into the ground plane and using arc tangent (note: the camera coordinate conventions of ARKit https://developer.apple.com/documentation/arkit/arsessionconfiguration/worldalignment/camera
             
@@ -1731,7 +1732,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 self.currentImage = capturedUIImage
                 self.currentPose = frame.camera.transform
                 
-                visualYawReturn = VisualAlignment.visualYaw(alignLandmarkImage, alignLandmark.intrinsics!, alignTransform,
+                visualYawReturn = VisualAlignment.visualYaw(alignAnchorPointImage, alignAnchorPoint.intrinsics!, alignTransform,
                                                             capturedUIImage,
                                                             simd_float4(intrinsics[0, 0], intrinsics[1, 1], intrinsics[2, 0], intrinsics[2, 1]),
                                                             frame.camera.transform)
