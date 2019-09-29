@@ -71,7 +71,6 @@
 
     // Other
 "realignToSavedRouteAnnouncement" = "Successfully matched current environment to saved route.";
-"noEnvironmentMatchAnnouncement" = "Could not match environment to the saved route. Starting new tracking session.";
 "excessiveMotionDegradedTrackingAnnouncemnt" = "Excessive motion.\nTracking performance is degraded.";
 "insuficientFeaturesDegradedTrackingAnnouncemnt" = "Insufficient visual features.\nTracking performance is degraded.";
 

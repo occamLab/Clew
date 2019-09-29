@@ -329,7 +329,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             crumbs = route.crumbs
             pausedTransform = route.endRouteAnchorPoint.transform
         }
-        sceneView.session.run(configuration, options: [.removeExistingAnchors])
+        // don't reset tracking, but do switch to the new map
+        sceneView.session.run(configuration)
 
         if isTrackingPerformanceNormal, isSameMap {
             // we can skip the whole process of relocalization since we are already using the correct map and tracking is normal.  It helps to strip out old anchors to reduce jitter though
@@ -1368,11 +1369,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// This helper function will restart the tracking session if a relocalization was in progress but did not succeed.  This is useful in the case when you want to allow for the recording of a new route and don't want to have the possibility achieving relocalization halfway through recording the route.
     func restartSessionIfFailedToRelocalize() {
         if attemptingRelocalization {
-            if !suppressTrackingWarnings {
-                announce(announcement: NSLocalizedString("noEnvironmentMatchAnnouncement", comment: "An announcement notifying the user that their current environment does not match up with an environment in a previously saved route, and that a new ARKit tracking session has been started."))
-            }
             configuration.initialWorldMap = nil
-            sceneView.session.run(configuration, options: [.removeExistingAnchors, .resetTracking])
+            sceneView.session.run(configuration)
             attemptingRelocalization = false
         }
     }
@@ -1517,9 +1515,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// drop a crumb during path recording
     @objc func dropCrumb() {
-        // drop waypoint markers to record path
-        // TODO: gracefully handle error
-        let curLocation = getRealCoordinates(record: true)!.location
+        guard let curLocation = getRealCoordinates(record: true)?.location else {
+            return
+        }
         crumbs.append(curLocation)
 
         if shouldDropMappingAnchors {
