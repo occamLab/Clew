@@ -245,6 +245,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// The announcement that should be read immediately after this one finishes
     var nextAnnouncement: String?
     
+    /// Actions to perform after the tracking session is ready
+    var continuationAfterSessionIsReady: (()->())?
+    
     /// A boolean that tracks whether or not to suppress tracking warnings.  By default we don't suppress, but when the help popover is presented we do.
     var suppressTrackingWarnings = false
     
@@ -441,6 +444,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             crumbs = route.crumbs
             pausedAnchorPoint = route.endRouteAnchorPoint
         }
+        // don't reset tracking, but do clear anchors and switch to the new map
         sceneView.session.run(configuration, options: [.removeExistingAnchors])
 
         if isTrackingPerformanceNormal, isSameMap {
@@ -451,9 +455,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             isAutomaticAlignment = true
             state = .readyToNavigateOrPause(allowPause: false)
         } else {
-            // setting this flag after entering the .limited(reason: .relocalizing) state is a bit error prone.  Since there is a waiting period, there is no way that we will ever finish the alignment countdown before the session has successfully restarted
-            state = .readyForFinalResumeAlignment
-            showResumeTrackingConfirmButton(route: route, navigateStartToEnd: navigateStartToEnd)
+            // this makes sure that the user doens't resume the session until the session is initialized
+            continuationAfterSessionIsReady = {
+                self.state = .readyForFinalResumeAlignment
+                self.showResumeTrackingConfirmButton(route: route, navigateStartToEnd: navigateStartToEnd)
+            }
         }
     }
     
@@ -810,16 +816,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         createSettingsBundle()
         createARSession()
         
+        // TODO: we might want to make this wait on the AR session starting up, but since it happens pretty fast it's likely not a big deal
         state = .mainScreen(announceArrival: false)
         view.sendSubviewToBack(sceneView)
         
         // targets for global buttons
         ///// TRACK
         rootContainerView.burgerMenuButton.addTarget(self, action: #selector(burgerMenuButtonPressed), for: .touchUpInside)
-        
-//        rootContainerView.settingsButton.addTarget(self, action: #selector(settingsButtonPressed), for: .touchUpInside)
-
-//        rootContainerView.helpButton.addTarget(self, action: #selector(helpButtonPressed), for: .touchUpInside)
         
         rootContainerView.homeButton.addTarget(self, action: #selector(homeButtonPressed), for: .touchUpInside)
 
@@ -1599,11 +1602,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// This helper function will restart the tracking session if a relocalization was in progress but did not succeed.  This is useful in the case when you want to allow for the recording of a new route and don't want to have the possibility achieving relocalization halfway through recording the route.
     func restartSessionIfFailedToRelocalize() {
         if attemptingRelocalization {
-            if !suppressTrackingWarnings {
-                announce(announcement: NSLocalizedString("noEnvironmentMatchAnnouncement", comment: "An announcement notifying the user that their current environment does not match up with an environment in a previously saved route, and that a new ARKit tracking session has been started."))
-            }
             configuration.initialWorldMap = nil
-            sceneView.session.run(configuration, options: [.removeExistingAnchors, .resetTracking])
+            sceneView.session.run(configuration, options: [.removeExistingAnchors])
             attemptingRelocalization = false
         }
     }
@@ -1817,9 +1817,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// drop a crumb during path recording
     @objc func dropCrumb() {
-        // drop waypoint markers to record path
-        // TODO: gracefully handle error
-        let curLocation = getRealCoordinates(record: true)!.location
+        guard let curLocation = getRealCoordinates(record: true)?.location else {
+            return
+        }
         crumbs.append(curLocation)
     }
     
@@ -2366,6 +2366,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 // don't log anything
                 print("initializing")
             case .relocalizing:
+                // if we are waiting on the session, proceed now
+                if let continuation = continuationAfterSessionIsReady {
+                    continuationAfterSessionIsReady = nil
+                    continuation()
+                }
                 logString = "Relocalizing"
                 print("Relocalizing")
             @unknown default:
@@ -2373,6 +2378,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             }
         case .normal:
             logString = "Normal"
+            
+            // if we are waiting on the session, proceed now
+            if let continuation = continuationAfterSessionIsReady {
+                continuationAfterSessionIsReady = nil
+                continuation()
+            }
+            
             if configuration.initialWorldMap != nil, attemptingRelocalization {
                 // This call is necessary to cancel any pending setWorldOrigin call from the alignment procedure.  Depending on timing, it's possible for the relocalization *and* the realignment to both be applied.  This results in the origin essentially being shifted twice and things are then way off
                 session.setWorldOrigin(relativeTransform: matrix_identity_float4x4)
