@@ -88,15 +88,15 @@
 "slightLeftDirection" = "Gira ligeramente a la izquierda";
 
     // Version of directions given when haptic feedback function is turned off (Clock directions)
-"1o'clockDirection" = "Slight right towards 1 o'clock";
-"2o'clockDirection" = "Slight right towards 2 o'clock";
-"4o'clockDirection" = "Turn towards 4 o'clock";
-"5o'clockDirection" = "Turn around towards 5 o'clock";
-"6o'clockDirection" = "Turn around towards 6 o'clock";
-"7o'clockDirection" = "Turn around towards 7 o'clock";
-"8o'clockDirection" = "Turn towards 8 o'clock";
-"10o'clockDirection" = "Slight left towards 10 o'clock";
-"11o'clockDirection" = "Slight left towards 11 o'clock";
+"1o'clockDirection" = "Gira ligeramente a la derecha hacia la una";
+"2o'clockDirection" = "Gira ligeramente a la derecha hacia las dos";
+"4o'clockDirection" = "Gira hacia las cuatro";
+"5o'clockDirection" = "Date la vuelta hacia las cinco";
+"6o'clockDirection" = "Date la vuelta hacia las seis";
+"7o'clockDirection" = "Date la vuelta hacia las siete";
+"8o'clockDirection" = "Date la vuelta hacia las ocho";
+"10o'clockDirection" = "Gira ligeramente a la izquierda hacia las 10";
+"11o'clockDirection" = "Gira ligeramente a la izquierda hacia las 11";
 
 
 // Anchor Points
@@ -107,7 +107,7 @@
 
 "anchorPointTextPop-UpConfirmation" = "Ok";
 
-"anchorPointPop-UpCancel" = "Don't specify this information";
+"anchorPointPop-UpCancel" = "No especificar esta información";
 
 "anchorPointTextPlaceholder" = "Enter Anchor Point information";
 
@@ -121,13 +121,13 @@
 "anchorPointIntroductionToSavedText" = "The Anchor Point information you entered is: ";
 
 //Settings
-"Settings" = "Settings"; // Comments: Title/header of the settings menu.
+"Settings" = "Ajustes"; // Comments: Title/header of the settings menu.
 "imperialUnitText" = " feet";
 "metricUnitText" = " meters";
 
 // Voicenote
-"voiceNoteRecorderPop-UpHeader" = "Voice Note Recorder";
-"stopRecordingVoiceNoteAccessibilityLabel" = "Stop Recording";
+"voiceNoteRecorderPop-UpHeader" = "Grabadora de notas de voz";
+"stopRecordingVoiceNoteAccessibilityLabel" = "Detener la grabación";
 "startRecordingVoiceNoteAccessibilityLabel" = "Record Voice Note";
 
 //GoHomeAlert
@@ -137,97 +137,97 @@
 
 
 // RoutesViewController
-"routeDirectionPop-UpHeader" = "Route direction";
+"routeDirectionPop-UpHeader" = "Dirección de la ruta";
 
-"routeDirectionStartToEndButtonLabel" = "Start to End";
+"routeDirectionStartToEndButtonLabel" = "Del inicio al Final";
 
-"routeDirectionEndToStartButtonLabel" = "End to Start";
+"routeDirectionEndToStartButtonLabel" = "Del final al inicio";
 
 "deleteActionText" = "Delete";
 
 "shareActionText" = "Share";
 
 // Info.plist
-"Clew needs to access your camera to track your orientation." = "Clew needs to access your camera to track your orientation.";
-"Permission to use the microphone is required to use the voice notes feature." = "Permission to use the microphone is required to use the voice notes feature.";
+"Clew needs to access your camera to track your orientation." = "Clew necesita acceder a tu cámara para seguir tu orientación.";
+"Permission to use the microphone is required to use the voice notes feature." = "Se requiere permiso para acceder al micrófono para  usar la función de notas de voz.";
 
 // FeedbackViewController.swift
-"feedbackMenuTitle" = "Clew Feedback";
+"feedbackMenuTitle" = "Opina sobre Clew";
 
 // HelpCompiler.swift
-"clewAppLogoAccessibilityText" = "The Clew App Logo";
+"clewAppLogoAccessibilityText" = "Logo de la app Clew";
 
-"clewHelpTitle" = "Clew Help";
+"clewHelpTitle" = "Ayuda de Clew";
 
-"appFeaturesHeading" = "App features";
+"appFeaturesHeading" = "Características de la app";
 
-"appFeaturesCurrentVersionHeading" = "Current Version";
+"appFeaturesCurrentVersionHeading" = "Versión Actual";
 
-"appfeaturesCurrentVersionContent" = "Clew allows you to record routes using your phone so that you can then navigate them at a later point in time with precise, automatic guidance from the app. Clew can be used in situations where you want to immediately navigate back to your starting location (e.g., if you went somewhere with a sighted guide or if it is harder to navigate the reverse journey) or when you want to remember a route that you are learning so you can navigate it more confidently in the future.  Importantly, Clew does not use your phone's GPS, so it can be used indoors.";
+"appfeaturesCurrentVersionContent" = "Clew te permite usar tu teléfono para grabar rutas que puedes guardar para poder recorrerlas en momentos posteriores y en ambas direcciones. Puedes utilizarla en situaciones en las que desees navegar inmediatamente de vuelta a tu posición de partida (por ejemplo, si fuiste a algún lugar con un guía o si es más difícil recorrer la ruta inversa) o cuando desees recordar una ruta que estás aprendiendo para poder recorrerla con más confianza en el futuro.  Cabe destacar que Clew no utiliza el GPS del teléfono, por lo que puede utilizarse en interiores.";
 
-"appFeaturesFutureVersionsHeader" = "Future Versions";
+"appFeaturesFutureVersionsHeader" = "Versiones Futuras";
 
-"appFeaturesFutureVersionsContent" = "We are working on improving alignment mechanisms to make it easier and quicker to begin navigation of routes.";
+"appFeaturesFutureVersionsContent" = "Estamos trabajando en una nueva función para compartir rutas mediante la que puedas enviar rutas a otros usuarios.";
 
-"howWellDoesClewWorkHeader" = "How well does Clew work?";
+"howWellDoesClewWorkHeader" = "¿Qué tal funciona Clew?";
 
-"howWellDoesClewWorkContentParagraph1" = "Clew relies on the position tracking technology provided by Apple's ARKit. These motion estimates are based on tracking elements in the environment visually (using your phone's camera) and on motion estimates from inertial sensors in your phone. While this technology is advanced, it does not work perfectly. You should expect that over very long routes, particular ones with limited visual features or poor lighting, that the accuracy of the tracking (and hence the app's guidance) will decrease. We have found that Clew works best when you navigate routes along the same direction as they were originally recorded (&quot;Start to End &quot; rather than &quot;End to Start &quot; navigation mode).";
+"howWellDoesClewWorkContentParagraph1" = "Clew se basa en la tecnología de seguimiento de posición proporcionada por el ARKit de Apple. Estas estimaciones de movimiento se basan en el seguimiento visual de los elementos del entorno (utilizando la cámara del teléfono) y en estimaciones de movimiento de los sensores inerciales del móvil. Aunque esta tecnología es avanzada, no funciona perfectamente. Es de esperar que a lo largo de rutas muy largas, en particular aquellas con características visuales limitadas o con poca iluminación, la precisión del seguimiento (y por lo tanto el guiado de la aplicación) disminuya. Hemos descubierto que Clew funciona mejor cuando se navega por rutas en la misma dirección en la que fueron grabadas originalmente (&amp;quot;Del inicio al final&amp;quot;en lugar de &amp;quot;Del final al inicio&amp;quot;).";
 
-"howWellDoesClewWorkContentParagraph2" = "Given the limitations of Clew, you should always use your orientation and mobility skills to ensure your personal safety when using Clew. We are working on additional strategies for improving the accuracy of Clew.";
+"howWellDoesClewWorkContentParagraph2" = "Dadas las limitaciones de Clew, siempre debes utilizar tus habilidades de orientación y movilidad para garantizar tu seguridad personal cuando utilices Clew. Estamos trabajando en estrategias adicionales para mejorar la precisión de Clew.";
 
-"recordingARouteHeader" = "Recording a route";
+"recordingARouteHeader" = "Grabación de una ruta";
 
-"recordingARouteContent" = "As soon as the app launches, the app will present three buttons: save route, single use route, and saved routes list. To navigate a route that you don't need to save, simply press the single use route button and follow the app's instructions. To save a route, activate the save route button. The app will walk you through the process of saving a route by first asking you to create an anchor point. The procedure for creating an anchor point is described later in this document and also through in-app instructions. If at any point you want to cancel an activity and return to this recording screen from any other part of the app, either the home button, or in some cases a “done” button, can be pressed to reset the app status and return to the recording view.";
+"recordingARouteContent" = "Al iniciar la aplicación, ésta presenta tres botones: Rutas guardadas, Grabar una ruta y Crear un punto de referencia. Para grabar una ruta que no necesitas guardar, o si sólo deseas guardar la ruta en la dirección inversa, puedes simplemente activar el botón de grabación y desplazarte por el trayecto que quieres grabar. Si deseas guardar la ruta para poder recibir el guiado a lo largo de ella en futuras ocasiones, activa el botón Crear un punto de referencia y sigue el procedimiento para la creación de puntos de referencia y la pausa de ruta que se describe más adelante. Si en algún momento deseas cancelar lo que estás haciendo y volver a la pantalla principal de la aplicación, puedes pulsar el botón de Ir a la página de inicio o, en algunos casos, el botón Hecho para restablecer el estado de la aplicación.";
 
-"recordingARouteProperPositioningHeading" = "Properly positioning your phone when using Clew";
+"recordingARouteProperPositioningHeading" = "Posicionar correctamente el teléfono cuando se utiliza Clew";
 
-"recordingARouteProperPositioningContent" = "The app's motion estimates are based primarily on analyzing images from your phone's camera. The app will not work unless your phone's rear camera is capturing images of your environment. The app will not work if the phone is in your pocket or if any part of your body is blocking your phone's rear camera. We have found that the app works best when you hold the phone in portrait orientation with the rear camera facing directly ahead of you and the phone oriented vertically. Other orientations can work, but may result in diminished accuracy.";
+"recordingARouteProperPositioningContent" = "Las estimaciones de movimiento de la aplicación se basan principalmente en el análisis de imágenes de la cámara del teléfono. Clew no funcionará a menos que la cámara trasera de tu móvil esté capturando imágenes de tu entorno. Tampoco funcionará si éste está en el bolsillo o si alguna parte del cuerpo bloquea su cámara. Hemos descubierto que la aplicación funciona mejor cuando sostienes el teléfono en orientación vertical con la cámara trasera enfocada al frente. Otras orientaciones pueden funcionar, pero pueden resultar en una disminución de la precisión.";
 
-"savedRoutesHeader" = "Saved routes";
+"savedRoutesHeader" = "Rutas Guardadas";
 
-"savedRoutesContent" = "The saved routes menu allows you to load recorded routes and navigate along them in either the forward or reverse direction.";
+"savedRoutesContent" = "El menú de rutas guardadas es una nueva característica de Clew. Te permite cargar rutas previamente recorridas y navegar a lo largo de ellas, ya sea hacia adelante o hacia atrás.";
 
-"savedRoutesLoadingARouteHeader" = "Loading a route";
+"savedRoutesLoadingARouteHeader" = "Cargar una ruta";
 
-"savedRoutesLoadingARouteContent" = "The saved routes menu provides you with a list of recorded routes ordered from most to least recent. Once you tap on a route, you can select navigation in &quot;start to end&quot; or &quot;end to start&quot; mode. &quot;Start to end&quot; means that you navigate along the route in the same direction as it was recorded. &quot;End to start&quot; means that you navigate the route in the reverse direction as it was recorded.";
+"savedRoutesLoadingARouteContent" = "El menú de rutas guardadas te proporciona una lista de rutas previamente grabadas ordenadas de la más reciente a la menos reciente. Una vez que entres en una ruta, se te pedirá que navegues por la ruta &amp;quot;del inicio al final&amp;quot;o &amp;quot;del final al inicio&amp;quot;. &amp;quot;Del inicio al final&amp;quot; significa que navegarás por la ruta en la misma dirección en la que fue grabada inicialmente. &amp;quot;Del final al inicio&amp;quot;quot; significa que navegarás por la ruta en la dirección inversa a la que fue grabada inicialmente. Si alguna de las opciones está atenuada (es decir, no se puede activar), significa que no se ha creado un punto de referencia apropiado ni al principio ni al final de la ruta.";
 
-"savedRoutesDeletingASavedRouteHeader" = "Deleting a saved route";
-"savedRoutesDeletingASavedRouteContent" = "You can delete routes from this menu either by swiping left (if not using VoiceOver) or by activating the secondary action on the route (if you are using VoiceOver).";
+"savedRoutesDeletingASavedRouteHeader" = "Eliminar una ruta guardada";
+"savedRoutesDeletingASavedRouteContent" = "Puedes eliminar rutas desde este menú deslizándote hacia la izquierda (si no usas VoiceOver) o deslizando un dedo hacia abajo mientras está situado en la ruta que deseas eliminar (si usas VoiceOver).";
 "savedRoutesSharingASavedRouteHeader" = "Sharing a saved route";
 "savedRoutesSharingASavedRouteContent" = "You can share routes from this menu either by swiping left (if not using VoiceOver) or by activating the secondary action on the route (if you are using VoiceOver). Pressing on the share button will then open a share selector which lets you share a route over text, email, airdrop, or through many other apps. When sharing a route please be sure that you have entered detailed instructions (either as a voice note or as text) to help the person you are sharing the route with find the route's anchor points. If this person cannot accurately find the anchor points, the app will not provide accurate guidance.";
-"followingARouteHeader" = "Following a route";
+"followingARouteHeader" = "Siguiendo una Ruta";
 
-"followingARouteContent" = "Once you activate the start navigation feature, the app will provide you with instructions to navigate back to your starting location. The app provides feedback in the following formats.";
+"followingARouteContent" = "Una vez que actives la función de navegación, la aplicación te proporcionará instrucciones para navegar de vuelta a tu posición inicial. La app proporciona retroalimentación en los siguientes formatos.";
 
-"followingARouteHapticFeedbackHeader" = "Haptic feedback";
+"followingARouteHapticFeedbackHeader" = "Retroalimentación Háptica";
 
-"followingARouteHapticFeedbackContent" = "Assuming you have enabled haptic feedback in the app settings and you have an iPhone that supports haptics (iPhone 7 or later should work), the phone will provide haptic vibration when it is facing in the correct direction of travel for the route. It is important to keep in mind that this feedback is relative to the direction of the phone, rather than your body. When you achieve a milestone in the route (we call these waypoints), you will feel a stronger haptic vibration.";
+"followingARouteHapticFeedbackContent" = "Suponiendo que hayas activado la retroalimentación háptica en los ajustes de la aplicación y que tengas un iPhone compatible con esta tecnología (el iPhone 7 o posterior debería funcionar), el teléfono proporcionará una vibración háptica cuando esté orientado en la dirección correcta de navegación por la ruta. Es importante tener en cuenta que esta retroalimentación es relativa a la dirección del teléfono, no a la de tu cuerpo. Cuando pases por cada uno de los puntos clave de la ruta (los llamados waypoints) sentirás una vibración háptica más fuerte.";
 
-"followingARouteAuditoryBeepsHeader" = "Auditory beeps";
+"followingARouteAuditoryBeepsHeader" = "Pitidos audibles";
 
-"followingARouteAuditoryBeepsContent" = "Assuming you have enabled sound feedback in the app settings and your iphone doesn't have system sounds muted, the phone will make a beeping sound when it is facing in the correct direction of travel for the route. It is important to keep in mind that this feedback is relative to the direction of the phone, rather than your body. When you achieve a milestone in the route (we call these waypoints), you will hear a different sound effect.";
+"followingARouteAuditoryBeepsContent" = "Suponiendo que has habilitado la retroalimentación de sonido en los ajustes de la aplicación y que tu iPhone no tiene silenciado el sonido del sistema, el teléfono emitirá un sonido de pitido cuando esté orientado en la dirección correcta de navegación por la ruta. Es importante tener en cuenta que esta retroalimentación es relativa a la dirección del teléfono, no a la de tu cuerpo. Cuando pases por cada uno de los puntos clave de la ruta (los llamados waypoints) escucharás un efecto de sonido diferente.";
 
-"followingARouteSpeechFeedbackHeader" = "Speech feedback";
+"followingARouteSpeechFeedbackHeader" = "Retroalimentación por voz";
 
-"followingARouteSpeechFeedbackContent" = "Assuming you have enabled speech feedback in the app settings and voice over is on, the phone will provide you with voice directions whenever you encounter a waypoint on your route, start a route, or complete a route. If you want to hear voice directions again, you can use the &quot;Get Directions&quot; button.";
+"followingARouteSpeechFeedbackContent" = "Suponiendo que hayas habilitado la retroalimentación de voz en los ajustes de la aplicación y que la voz esté activada, el teléfono te proporcionará indicaciones verbales cada vez que pases por un punto clave (waypoint) o inicies/ completes una ruta. Si quieres volver a escuchar las instrucciones de voz, puedes usar el botón &amp;quot;Obtener direcciones&amp;quot;.";
 
-"appSoundsAndTheirMeaningsHeader" = "App sounds and their meanings";
+"appSoundsAndTheirMeaningsHeader" = "Sonidos de la app y su significado";
 
-"appSoundsAndTheirMeaningsContent" = "In addition to the auditory guidance that you get when navigating along a route (described previously), there are some additional sounds that help you understand what is currently happening with the app. If you have enabled the speech feedback option in the app settings, each of these sounds is accompanied by speech that briefly explains the sounds meaning. Note that these sounds are not delivered when you are in the help menu (to avoid distracting you while you are reading through the help information).";
+"appSoundsAndTheirMeaningsContent" = "Además de la guía sonora que recibes al navegar por una ruta (descrita anteriormente), hay algunos sonidos adicionales que te ayudan a entender lo que está sucediendo en la aplicación. Si has activado la opción de retroalimentación de voz en los ajustes de la app, cada uno de estos sonidos va acompañado de un mensaje verbal que explica brevemente su significado. Ten en cuenta que estos sonidos no se emiten cuando estás en el menú de ayuda (para evitar distraerte mientras lees su información).";
 
-"appSoundsAndTheirMeaningsNormalMotionTrackingSoundBullet" = "Normal motion tracking sound: this sound is a short recording of a brass instrument. It indicates that the app's position tracking has entered into the &quot;normal&quot; state. If the app has just started up this means that the motion tracking is now active. If the app previously experienced diminished accuracy, see next sound description, it means that the motion tracking has recovered. If you hear this sound after loading or resuming a route, this means that ARKit has been able to automatically align the route to the recording.";
+"appSoundsAndTheirMeaningsNormalMotionTrackingSoundBullet" = "Sonido de seguimiento de movimiento normal: este sonido es una grabación corta de un instrumento de viento. Indica que el seguimiento de la posición de la aplicación ha entrado en el estado &amp;quot;normal&amp;quot;. Si la app acaba de arrancar, esto significa que el seguimiento de movimiento está ahora activo. Si la aplicación experimentaba anteriormente una disminución en la precisión (mira la siguiente descripción de los sonidos) significa que el seguimiento del movimiento se ha recuperado. Si oyes este sonido después de cargar o reanudar una ruta, significa que ARKit ha sido capaz de alinear automáticamente la ruta con la grabación.";
 
-"appSoundsAndTheirMeaningsMotionTrackingWarningSoundBullet" = "Motion tracking warning sound: this sound is a short recording of a stringed instrument playing a slightly scratchy note. This sound indicates that the app's position tracking has been degraded either due to the phone moving too rapidly or due to the environment not having an adequate amount of visual detail. The latter condition occurs if your environment is too dark or if the camera is occluded.";
+"appSoundsAndTheirMeaningsMotionTrackingWarningSoundBullet" = "Sonido de advertencia de seguimiento de movimiento: este sonido es una grabación breve de un instrumento de cuerda que toca una nota ligeramente chirriante. Este sonido indica que el seguimiento de posición de la app se ha degradado debido a que el teléfono se movió demasiado rápido o a que el entorno no tiene una cantidad adecuada de detalles visuales. Esta última condición ocurre si tu entorno es demasiado oscuro o si la cámara está ocluida.";
 
-"ratingYourNavigationExperienceHeader" = "Rating your navigation experience";
+"ratingYourNavigationExperienceHeader" = "Valora tu experiencia de navegación ";
 
-"ratingYourNavigationExperienceContent" = "Once you are done navigating, assuming you have enabled the &quot;Send Logs&quot; setting, the app will ask you to rate your service. These ratings help us improve the app experience and the app's accuracy. Along with your rating, your phone's path will be sent in the log. Please note that this data is not linked to you in any way and it does not contain any information about the location where the path was recorded (e.g., no GPS coordinates are logged). Further, no images or other sensitive information are logged by the app. If you have any concerns about the data in the logs, please contact us (or simply switch off the &quot;Send Logs&quot; feature in the app settings).";
+"ratingYourNavigationExperienceContent" = "Una vez que hayas terminado de navegar, asumiendo que has habilitado la función para &amp;quot;Enviar registros&amp;quot;, la aplicación te pedirá que valores el servicio. Estas calificaciones nos ayudan a mejorar la experiencia de la aplicación y su precisión. Junto con tu puntuación, la ruta de tu teléfono se enviará en el registro. Ten en cuenta que estos datos no están vinculados a ti de ninguna manera y no contienen ninguna información sobre la ubicación donde se grabó la ruta (por ejemplo, no se envían coordenadas GPS). Además, la aplicación no registra ninguna imagen u otra información sensible. Si tienes alguna duda sobre los datos que se envían, ponte en contacto con nosotros (o simplemente desactiva esta función de &amp;quot;Enviar registros&amp;quot; en los ajustes de la aplicación).";
 
-"providingFeedbackToTheDevelopmentTeamHeader" = "Once you are done navigating, assuming you have enabled the &quot;Send Logs&quot; setting, the app will ask you to rate your service. These ratings help us improve the app experience and the app's accuracy. Along with your rating, your phone's path will be sent in the log. Please note that this data is not linked to you in any way and it does not contain any information about the location where the path was recorded (e.g., no GPS coordinates are logged). Further, no images or other sensitive information are logged by the app. If you have any concerns about the data in the logs, please contact us (or simply switch off the &quot;Send Logs&quot; feature in the app settings).";
+"providingFeedbackToTheDevelopmentTeamHeader" = "Una vez que hayas terminado de navegar, asumiendo que has habilitado la función para &amp;quot;Enviar registros&amp;quot;, la aplicación te pedirá que valores el servicio. Estas calificaciones nos ayudan a mejorar la experiencia de la aplicación y su precisión. Junto con tu puntuación, la ruta de tu teléfono se enviará en el registro. Ten en cuenta que estos datos no están vinculados a ti de ninguna manera y no contienen ninguna información sobre la ubicación donde se grabó la ruta (por ejemplo, no se envían coordenadas GPS). Además, la aplicación no registra ninguna imagen u otra información sensible. Si tienes alguna duda sobre los datos que se envían, ponte en contacto con nosotros (o simplemente desactiva esta función de &amp;quot;Enviar registros&amp;quot; en los ajustes de la aplicación).";
 
-"providingFeedbackToTheDevelopmentTeamHeader" = "Providing feedback to the development team";
+"providingFeedbackToTheDevelopmentTeamHeader" = "Proporcionar comentarios al equipo de desarrollo";
 
-"providingFeedbackToTheDevelopmentTeamContent" = "Please send all feedback to the development team through the feedback popover in the Clew app. The feedback popover is accessible by tapping the feedback button in the app. We take your feedback seriously and will do our best to act on it.";
+"providingFeedbackToTheDevelopmentTeamContent" = "Por favor, envíanos comentarios al equipo de desarrollo a través de la ventana emergente que hay para tal efecto. Se puede acceder a esta ventana desde el botón Enviar comentarios en la aplicación. Nos tomamos muy en serio tu opinión y haremos todo lo posible para actuar en consecuencia.";
 
 "PausingARouteOrRecordingAAnchorPointHeader" = "Pausing a route or recording a Anchor Point";
 
@@ -235,9 +235,9 @@
 
 "PausingARouteOrRecordingAAnchorPointContentParagraph2" = "In order to align your position in such cases you must be able to place the phone in a position and orientation such that you can reliably return the phone to that same position and orientation when reloading a saved route. While it is not crucial that you position the phone in exactly the same place (although the more accurately you can do this, the better the app will work), you must be able to place the phone in precisely the same orientation. To make it easy to return the phone to the same orientation, you should hold your phone flat with the screen facing up and press the top (short-edge) of your phone flush with a vertical surface (like a wall). More instructions are provided in the app when you activate the pause feature or the create anchor point feature.";
 
-"contractSectionAccessibilityTag" = "contract section";
+"contractSectionAccessibilityTag" = "contraer sección";
 
-"expandSectionAccessibilityTag" = "expand section";
+"expandSectionAccessibilityTag" = "Expandir sección";
 
 //Announcements which signify the end of a process
 "singleUseRouteAnchorPointToPausedStateAnnouncement" = "Anchor point saved. You may now close the app and return later for return navigation.";
