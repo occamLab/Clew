@@ -14,7 +14,7 @@
 
 "significantVersionChangesPop-UpHeading" = "Cambios importantes";
 
-"significantVersionChangesPop-UpContent" = "Esta nueva versión de Clew incluye una función para compartir rutas y un proceso distinto para guardarlas. Por favor, ten en cuenta que los \"puntos de referencia\" ahora se llaman \"puntos de anclaje\". Además, algunos menús que antes estaban en la pantalla de inicio ahora están disponibles a través del menú \"Ajustes\". Consulta el menú de ayuda para más detalles.";
+"significantVersionChangesPop-UpContent" = "Esta nueva versión de Clew incluye una función para compartir rutas y un proceso distinto para guardarlas. Por favor, ten en cuenta que los \"puntos de referencia\" ahora se llaman \"puntos de anclaje\". Además, algunos menús que antes estaban en la pantalla de inicio ahora están disponibles a través del menú \"Opciónes\". Consulta el menú de ayuda para más detalles.";
 
 "significantVersionChanges-Confirmation" = "Ok";
 
@@ -29,7 +29,7 @@
 "properDevicePositioningAnnouncement" = "Sujeta el dispositivo verticalmente con la cámara trasera mirando hacia adelante.";
 "completedNavigationAnnouncement" = "Ya has llegado.";
 
-    // Name of labels that appear in UI
+// Name of labels that appear in UI
 "saveARouteButtonText" = "Guardar ruta";
 "saveARouteButtonAccessibilityLabel" = "Guardar una ruta";
 "badServiceButtonAccessibilityLabel" = "Malo";
@@ -54,6 +54,7 @@
 "startAlignmentCountdownButtonAccessibilityLabel" = "Iniciar la cuenta atrás de la alineación";
 "playVoiceNoteButtonAccessibilityLabel" = "Reproducir nota de voz grabada";
 "startReturnNavigationButtonAccessibilityLabel" = "Iniciar la navegación";
+"optionsButtonAccessibilityLabel" = "Opciónes";
 
     // Save routes
 "saveRoutePop-UpTitle" = "Guardar ruta";

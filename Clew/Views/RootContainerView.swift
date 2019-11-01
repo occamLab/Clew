@@ -70,7 +70,7 @@ class RootContainerView: UIView {
                                                   width: UIConstants.buttonFrameWidth/7,
                                                   height: UIConstants.buttonFrameWidth/7))
         burgerMenuButton.isAccessibilityElement = true
-        burgerMenuButton.accessibilityLabel = "Options"
+        burgerMenuButton.accessibilityLabel = NSLocalizedString("optionsButtonAccessibilityLabel", comment: "This is the accessibility label for the home button")
         burgerMenuButton.setImage(UIImage(named: "burgerMenu"), for: .normal)
 
 

@@ -54,6 +54,7 @@
 "startAlignmentCountdownButtonAccessibilityLabel" = "Start alignment countdown";
 "playVoiceNoteButtonAccessibilityLabel" = "Play recorded voice note";
 "startReturnNavigationButtonAccessibilityLabel" = "Start navigation";
+"optionsButtonAccessibilityLabel" = "Options";
 
     // Save routes
 "saveRoutePop-UpTitle" = "Save route";
