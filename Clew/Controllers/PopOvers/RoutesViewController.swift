@@ -108,7 +108,7 @@ class RoutesViewController : UIViewController, UITableViewDataSource, UITableVie
             /// define share menu content and a message to show with it
             /// TODO: localize
             let activity = UIActivityViewController(
-                activityItems: ["Check out this route!", url as Any],
+                activityItems: [NSLocalizedString("automaticEmailTextWhenSharingRoutes", comment: "The text added to an email for sharing routes."), url as Any],
                 applicationActivities: nil
             )
 
