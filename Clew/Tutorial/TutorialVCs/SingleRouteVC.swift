@@ -53,7 +53,7 @@ class SingleRouteVC: TutorialChildViewController {
     
     func createObjects() {
         landmarkCallout = createCalloutToView(withTagID: UIView.recordPathButtonTag, calloutText: NSLocalizedString("The Landmark button helps create saved routes. For now, let's just create a single use route.", comment: "Landmark callout during tutorial."), buttonAccessibilityName: NSLocalizedString("Landmark Button", comment: "Landmark Button"))
-        landmarkArrow = createCalloutArrowToView(withTagID: UIView.addLandmarkButtonTag)
+        landmarkArrow = createCalloutArrowToView(withTagID: UIView.addAnchorPointButtonTag)
 
         recordArrow = createCalloutArrowToView(withTagID: UIView.recordPathButtonTag)
 

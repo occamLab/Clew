@@ -20,13 +20,17 @@ class ResumeTrackingConfirmController: UIViewController, UIScrollViewDelegate {
     /// text label for the state
     var label: UILabel!
     
+    /// text for Anchor Point information
+    var anchorPointLabel: UILabel!
+    
     /// called when the view loads (any time)
     override func viewDidAppear(_ animated: Bool) {
         /// update label font
         /// TODO: is this a safe implementation? Might crash if label has no body, unclear.
         /// called when the view loads (any time)
         label.font = UIFont.preferredFont(forTextStyle: .body)
-        
+        anchorPointLabel.font = UIFont.preferredFont(forTextStyle: .body)
+
         /// set confirm alignment button as initially active voiceover button
         UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: self.confirmAlignmentButton)
     }
@@ -41,19 +45,21 @@ class ResumeTrackingConfirmController: UIViewController, UIScrollViewDelegate {
                                                 height: UIScreen.main.bounds.size.height))
         
         label = UILabel()
+        anchorPointLabel = UILabel()
         let scrollView = UIScrollView()
         
         /// allow for constraints to be applied to label, scrollview
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.indicatorStyle = .white;
         label.translatesAutoresizingMaskIntoConstraints = false
+        anchorPointLabel.translatesAutoresizingMaskIntoConstraints = false
         
         /// darken background of view
         view.backgroundColor = UIColor.black.withAlphaComponent(0.4)
         
         /// label details
         let waitingPeriod = ViewController.alignmentWaitingPeriod
-        let alignInfo = String.localizedStringWithFormat(NSLocalizedString("Hold your device flat with the screen facing up. Press the top (short) edge flush against the same vertical surface that you used to create the landmark.  When you are ready, activate the align button to start the alignment countdown that will complete the procedure. Do not move the device until the phone provides confirmation via a vibration or sound cue.", comment: "Info for user"), waitingPeriod)
+        let alignInfo = String.localizedStringWithFormat(NSLocalizedString("anchorPointAlignmentText", comment: "Text describing the process of aligning to an anchorpoint. This text shows up on the alignment screen."), waitingPeriod)
 
         // var mainText: String?
         let mainText = alignInfo
@@ -65,8 +71,14 @@ class ResumeTrackingConfirmController: UIViewController, UIScrollViewDelegate {
         label.text = mainText
         label.tag = UIView.mainTextTag
         
+        anchorPointLabel.textColor = UIColor.white
+        anchorPointLabel.textAlignment = .center
+        anchorPointLabel.numberOfLines = 0
+        anchorPointLabel.lineBreakMode = .byWordWrapping
+        anchorPointLabel.font = UIFont.preferredFont(forTextStyle: .body)
         
         /// place label inside of the scrollview
+        scrollView.addSubview(anchorPointLabel)
         scrollView.addSubview(label)
         view.addSubview(scrollView)
         
@@ -79,9 +91,14 @@ class ResumeTrackingConfirmController: UIViewController, UIScrollViewDelegate {
         /// set the height constraint on the scrollView to 0.5 * the main view height
         scrollView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.5).isActive = true
         
+        /// constraints for anchorPointLabel
+        anchorPointLabel.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 8.0).isActive = true
+        anchorPointLabel.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 8.0).isActive = true
+        anchorPointLabel.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -8.0).isActive = true
+
         /// set top, left, right AND bottom constraints on label to
         /// scrollView + 8.0 padding on each side
-        label.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 8.0).isActive = true
+        label.topAnchor.constraint(equalTo: anchorPointLabel.bottomAnchor, constant: 8.0).isActive = true
         label.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 8.0).isActive = true
         label.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -8.0).isActive = true
         label.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -8.0).isActive = true
@@ -89,22 +106,26 @@ class ResumeTrackingConfirmController: UIViewController, UIScrollViewDelegate {
         /// set the width of the label to the width of the scrollView (-16 for 8.0 padding on each side)
         label.widthAnchor.constraint(equalTo: scrollView.widthAnchor, constant: -16.0).isActive = true
         
+        /// constraints for anchorPointLabel
+        
         /// configure label: Zero lines + Word Wrapping
         label.numberOfLines = 0
         label.lineBreakMode = NSLineBreakMode.byWordWrapping
+        anchorPointLabel.numberOfLines = 0
+        anchorPointLabel.lineBreakMode = NSLineBreakMode.byWordWrapping
         
         // MARK: ReadVoiceNoteButton
-        /// The button that plays back the recorded voice note associated with a landmark
+        /// The button that plays back the recorded voice note associated with a Anchor Point
         readVoiceNoteButton = UIButton.makeConstraintButton(view,
                                                        alignment: UIConstants.ButtonContainerHorizontalAlignment.left,
                                                        appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "Read")!),
-                                                       label: "Play recorded voice note")
+                                                       label: NSLocalizedString("playVoiceNoteButtonAccessibilityLabel", comment: "This is the accessibility label for the button which allows the user to replay their recorded voice note when loading an anchor point."))
         
         // MARK: ConfirmAlignmentButton
         confirmAlignmentButton = UIButton.makeConstraintButton(view,
                                                                alignment: UIConstants.ButtonContainerHorizontalAlignment.center,
                                                                appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "Align")!),
-                                                               label: "Start alignment countdown")
+                                                               label: NSLocalizedString("startAlignmentCountdownButtonAccessibilityLabel", comment: "this is athe accessibility label for the button which allows the user to start an alignment procedure when saving an anchor point"))
         
         /// create stack view for aligning and distributing bottom layer buttons
         let stackView   = UIStackView()

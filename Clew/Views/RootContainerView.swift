@@ -85,7 +85,7 @@ class RootContainerView: UIView {
                                                   width: UIConstants.buttonFrameWidth/7,
                                                   height: UIConstants.buttonFrameWidth/7))
         burgerMenuButton.isAccessibilityElement = true
-        burgerMenuButton.accessibilityLabel = "Burger Menu"
+        burgerMenuButton.accessibilityLabel = "Options"
         burgerMenuButton.setImage(UIImage(named: "burgerMenu"), for: .normal)
         
         // MARK: Settings Button
@@ -144,7 +144,7 @@ class RootContainerView: UIView {
         homeButton.isAccessibilityElement = true
         homeButton.setTitle("Home Button", for: .normal)
         homeButton.titleLabel?.font = UIFont.systemFont(ofSize: 24.0)
-        homeButton.accessibilityLabel = "Clew Home Screen"
+        homeButton.accessibilityLabel = NSLocalizedString("homeButtonAccessibilityLabel", comment: "This is the accessibility label for the home button")
         homeButton.setImage(UIImage(named: "homeButton"), for: .normal)
 
         // MARK: Get Directions Button
@@ -154,7 +154,7 @@ class RootContainerView: UIView {
                                                     height: UIConstants.buttonFrameWidth/7))
 
         getDirectionButton.isAccessibilityElement = true
-        getDirectionButton.accessibilityLabel = "Get Directions"
+        getDirectionButton.accessibilityLabel = NSLocalizedString("getDirectionsButtonAccessibilityLabel", comment: "This is the accessibility label for the get directions button")
         getDirectionButton.setImage(UIImage(named: "GetDirection"), for: .normal)
         getDirectionButton.isHidden = true
         

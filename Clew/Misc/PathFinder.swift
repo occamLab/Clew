@@ -153,7 +153,60 @@ public struct KeypointInfo {
     public var orientation: Vector3
 }
 
-/// An encapsulation of a route landmark, including position, text, and audio information.
+/// An encapsulation of a route Anchor Point, including position, text, and audio information.
+class RouteAnchorPoint: NSObject, NSSecureCoding {
+    /// Needs to be declared and assigned true to support `NSSecureCoding`
+    static var supportsSecureCoding = true
+    
+    /// The position and orientation as a 4x4 matrix
+    public var transform: simd_float4x4?
+    /// Text to help user remember the Anchor Point
+    public var information: NSString?
+    /// The URL to an audio file that contains information to help the user remember a Anchor Point
+    public var voiceNote: NSString?
+    
+    /// Initialize the Anchor Point.
+    ///
+    /// - Parameters:
+    ///   - transform: the position and orientation
+    ///   - information: textual description
+    ///   - voiceNote: URL to auditory description
+    public init(transform: simd_float4x4? = nil, information: NSString? = nil, voiceNote: NSString? = nil) {
+        self.transform = transform
+        self.information = information
+        self.voiceNote = voiceNote
+    }
+    
+    /// Encode the Anchor Point.
+    ///
+    /// - Parameter aCoder: the encoder
+    func encode(with aCoder: NSCoder) {
+        if transform != nil {
+            aCoder.encode(ARAnchor(transform: transform!), forKey: "transformAsARAnchor")
+        }
+        aCoder.encode(information, forKey: "information")
+        aCoder.encode(voiceNote, forKey: "voiceNote")
+    }
+    
+    /// Decode the Anchor Point.
+    ///
+    /// - Parameter aDecoder: the decoder
+    required convenience init?(coder aDecoder: NSCoder) {
+        var transform : simd_float4x4? = nil
+        var information : NSString? = nil
+        var voiceNote : NSString? = nil
+        
+        if let transformAsARAnchor = aDecoder.decodeObject(of: ARAnchor.self, forKey: "transformAsARAnchor") {
+            transform = transformAsARAnchor.transform
+        }
+        information = aDecoder.decodeObject(of: NSString.self, forKey: "information")
+        voiceNote = aDecoder.decodeObject(of: NSString.self, forKey: "voiceNote")
+        self.init(transform: transform, information: information, voiceNote: voiceNote)
+    }
+    
+}
+
+/// [Deprecated] [Needed to load old routes] An encapsulation of a route landmark, including position, text, and audio information.
 class RouteLandmark: NSObject, NSSecureCoding {
     /// Needs to be declared and assigned true to support `NSSecureCoding`
     static var supportsSecureCoding = true
@@ -205,7 +258,6 @@ class RouteLandmark: NSObject, NSSecureCoding {
     }
     
 }
-
 /// This class encapsulates a route that can be persisted to storage and reloaded as needed.
 class SavedRoute: NSObject, NSSecureCoding {
     /// This is needed to use NSSecureCoding
@@ -219,10 +271,10 @@ class SavedRoute: NSObject, NSSecureCoding {
     public var dateCreated: NSDate
     /// The crumbs that make up the route.  The densely sampled positions (crumbs) are stored and the keypoints (sparser goal positionsare calculated on demand when navigation is requested.
     public var crumbs: [LocationInfo]
-    /// The landmark the marks the beginning of the route (needed for start to end navigation)
-    public var beginRouteLandmark : RouteLandmark
-    /// The landmark the marks the beginning of the route (needed for end to start navigation)
-    public var endRouteLandmark: RouteLandmark
+    /// The Anchor Point marks the beginning of the route (needed for start to end navigation)
+    public var beginRouteAnchorPoint : RouteAnchorPoint
+    /// The Anchor Point marks the end of the route (needed for end to start navigation)
+    public var endRouteAnchorPoint: RouteAnchorPoint
 
     /// Initialize the route.
     ///
@@ -231,15 +283,15 @@ class SavedRoute: NSObject, NSSecureCoding {
     ///   - name: the route name
     ///   - crumbs: the crumbs for the route
     ///   - dateCreated: the route creation date
-    ///   - beginRouteLandmark: the landmark for the beginning of the route (pass a `RouteLandmark` with default initialization if no landmark was recorded at the beginning of the route)
-    ///   - endRouteLandmark: the landmark for the end of the route (pass a `RouteLandmark` with default initialization if no landmark was recorded at the end of the route)
-    public init(id: NSString, name: NSString, crumbs: [LocationInfo], dateCreated: NSDate = NSDate(), beginRouteLandmark: RouteLandmark, endRouteLandmark: RouteLandmark) {
+    ///   - beginRouteAnchorPoint: the Anchor Point for the beginning of the route (pass a `RouteAnchorPoint` with default initialization if no Anchor Point was recorded at the beginning of the route)
+    ///   - endRouteAnchorPoint: the Anchor Point for the end of the route (pass a `RouteAnchorPoint` with default initialization if no Anchor Point was recorded at the end of the route)
+    public init(id: NSString, name: NSString, crumbs: [LocationInfo], dateCreated: NSDate = NSDate(), beginRouteAnchorPoint: RouteAnchorPoint, endRouteAnchorPoint: RouteAnchorPoint) {
         self.id = id
         self.name = name
         self.crumbs = crumbs
         self.dateCreated = dateCreated
-        self.beginRouteLandmark = beginRouteLandmark
-        self.endRouteLandmark = endRouteLandmark
+        self.beginRouteAnchorPoint = beginRouteAnchorPoint
+        self.endRouteAnchorPoint = endRouteAnchorPoint
     }
     
     /// Encodes the object to the specified coder object
@@ -250,8 +302,8 @@ class SavedRoute: NSObject, NSSecureCoding {
         aCoder.encode(name, forKey: "name")
         aCoder.encode(crumbs, forKey: "crumbs")
         aCoder.encode(dateCreated, forKey: "dateCreated")
-        aCoder.encode(beginRouteLandmark, forKey: "beginRouteLandmark")
-        aCoder.encode(endRouteLandmark, forKey: "endRouteLandmark")
+        aCoder.encode(beginRouteAnchorPoint, forKey: "beginRouteAnchorPoint")
+        aCoder.encode(endRouteAnchorPoint, forKey: "endRouteAnchorPoint")
     }
     
     /// Initialize an object based using data from a decoder
@@ -270,14 +322,32 @@ class SavedRoute: NSObject, NSSecureCoding {
         guard let dateCreated = aDecoder.decodeObject(of: NSDate.self, forKey: "dateCreated") else {
             return nil
         }
-        guard let beginRouteLandmark = aDecoder.decodeObject(of: RouteLandmark.self, forKey: "beginRouteLandmark") else {
-            return nil
+
+        let beginRouteAnchorPoint: RouteAnchorPoint
+        if let anchorPoint = aDecoder.decodeObject(of: RouteAnchorPoint.self, forKey: "beginRouteAnchorPoint") {
+            beginRouteAnchorPoint = anchorPoint
+        } else {
+            // check to see if we have a route in the old format
+            guard let beginRouteLandmark = aDecoder.decodeObject(of: RouteLandmark.self, forKey: "beginRouteLandmark") else {
+                    return nil
+            }
+            // convert to the new format
+            beginRouteAnchorPoint = RouteAnchorPoint(transform: beginRouteLandmark.transform, information: beginRouteLandmark.information, voiceNote: beginRouteLandmark.voiceNote)
         }
-        guard let endRouteLandmark = aDecoder.decodeObject(of: RouteLandmark.self, forKey: "endRouteLandmark") else {
-            return nil
+        let endRouteAnchorPoint: RouteAnchorPoint
+
+        if let anchorPoint = aDecoder.decodeObject(of: RouteAnchorPoint.self, forKey: "endRouteAnchorPoint") {
+            endRouteAnchorPoint = anchorPoint
+        } else {
+            // check to see if we have a route in the old format
+            guard let endRouteLandmark = aDecoder.decodeObject(of: RouteLandmark.self, forKey: "endRouteLandmark") else {
+                return nil
+            }
+            // convert to the new format
+            endRouteAnchorPoint = RouteAnchorPoint(transform: endRouteLandmark.transform, information: endRouteLandmark.information, voiceNote: endRouteLandmark.voiceNote)
         }
 
-        self.init(id: id, name: name, crumbs: crumbs, dateCreated: dateCreated, beginRouteLandmark: beginRouteLandmark, endRouteLandmark: endRouteLandmark)
+        self.init(id: id, name: name, crumbs: crumbs, dateCreated: dateCreated, beginRouteAnchorPoint: beginRouteAnchorPoint, endRouteAnchorPoint: endRouteAnchorPoint)
     }
 }
 
@@ -417,5 +487,3 @@ class PathFinder {
     }
     
 }
-
-

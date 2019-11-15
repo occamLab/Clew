@@ -66,18 +66,18 @@ public struct DirectionInfo {
 /// * Keys (`Int` from 1 to 12 inclusive): clock position
 /// * Values (`String`): corresponding spoken direction (e.g. "Slight right towards 2 o'clock")
 public let ClockDirections = [
-                              12: NSLocalizedString("Continue straight", comment: "Continue moving in forward direction"),
-                              1: NSLocalizedString("Slight right towards 1 o'clock", comment: "Angle your body towards the 1 o'clock direction"),
-                              2: NSLocalizedString("Slight right towards 2 o'clock", comment: "Angle your body towards the 2 o'clock direction"),
-                              3: NSLocalizedString("Turn right", comment: "Turn to your right"),
-                              4: NSLocalizedString("Turn towards 4 o'clock", comment: "Angle your body towards 4 o'clock direction"),
-                              5: NSLocalizedString("Turn around towards 5 o'clock", comment: "Angle your body towards 5 o'clock direction"),
-                              6: NSLocalizedString("Turn around towards 6 o'clock", comment: "Angle your body towards 6 o'clock direction"),
-                              7: NSLocalizedString("Turn around towards 7 o'clock", comment: "Angle your body towards 7 o'clock direction"),
-                              8: NSLocalizedString("Turn towards 8 o'clock", comment: "Angle your body towards 8 o'clock direction"),
-                              9: NSLocalizedString("Turn left", comment: "Turn to your left"),
-                              10: NSLocalizedString("Slight left towards 10 o'clock", comment: "Angle your body towards the 10 o'clock direction"),
-                              11: NSLocalizedString("Slight left towards 11 o'clock", comment: "Angle your body towards the 11 o'clock direction")
+                              12: NSLocalizedString("straightDirection", comment: "Direction to user to continue moving in forward direction"),
+                              1: NSLocalizedString("1o'clockDirection", comment: "direction to the user to turn towards the 1 o'clock direction"),
+                              2: NSLocalizedString("2o'clockDirection", comment: "direction to the user to turn towards the 2 o'clock direction"),
+                              3: NSLocalizedString("rightDirection", comment: "Direction to the user to make an approximately 90 degree right turn."),
+                              4: NSLocalizedString("4o'clockDirection", comment: "direction to the user to turn towards the 4 o'clock direction"),
+                              5: NSLocalizedString("5o'clockDirection", comment: "direction to the user to turn towards the 5 o'clock direction"),
+                              6: NSLocalizedString("6o'clockDirection", comment: "direction to the user to turn towards the 6 o'clock direction"),
+                              7: NSLocalizedString("7o'clockDirection", comment: "direction to the user to turn towards the 7 o'clock direction"),
+                              8: NSLocalizedString("8o'clockDirection", comment: "direction to the user to turn towards the 8 o'clock direction"),
+                              9: NSLocalizedString("leftDirection", comment: "Direction to the user to make an approximately 90 degree left turn."),
+                              10: NSLocalizedString("10o'clockDirection", comment: "direction to the user to turn towards the 10 o'clock direction"),
+                              11: NSLocalizedString("11o'clockDirection", comment: "direction to the user to turn towards the 11 o'clock direction")
                              ]
 
 /// Dictionary of directions, somehow based on haptic feedback.
@@ -89,34 +89,47 @@ public let ClockDirections = [
 ///  - Explain the rationale of this division
 ///  - Consider restructuring this
 public let HapticDirections = [
-                               1: NSLocalizedString("Continue straight", comment: "Continue moving in forward direction"),
-                               2: NSLocalizedString("Slight right", comment: "Angle your body slightly towards the right"),
-                               3: NSLocalizedString("Turn right", comment: "Turn to your right"),
-                               4: NSLocalizedString("Turn around", comment: "Turn completely around"),
-                               5: NSLocalizedString("Turn left", comment: "Turn to your left"),
-                               6: NSLocalizedString("Slight left", comment: "Angle your body slightly towards the left"),
+                               1: NSLocalizedString("straightDirection", comment: "Direction to user to continue moving in forward direction"),
+                               2: NSLocalizedString("slightRightDirection", comment: "Direction to user to take a slight right turn"),
+                               3: NSLocalizedString("rightDirection", comment: "Direction to the user to make an approximately 90 degree right turn."),
+                               4: NSLocalizedString("uTurnDirection", comment: "Direction to the user to turn around"),
+                               5: NSLocalizedString("leftDirection", comment: "Direction to the user to make an approximately 90 degree left turn."),
+                               6: NSLocalizedString("slightLeftDirection", comment: "Direction to user to take a slight left turn"),
                                0: "ERROR"
-                              ] 
-
-/// Keypoint target dimension (width)
-///
-/// Further instructions will be given to the user once they pass inside this bounding box
-///
-/// - TODO: Determine units (meters?)
-public var targetWidth: Scalar = 2
-
-/// Keypoint target dimension (depth)
-///
-/// Further instructions will be given to the user once they pass inside this bounding box
-public var targetDepth: Scalar = 0.5
-
-/// Keypoint target dimension (height)
-///
-/// Further instructions will be given to the user once they pass inside this bounding box
-public var targetHeight: Scalar = 3
+                              ]
 
 /// Navigation class that provides direction information given 2 LocationInfo position
 class Navigation {
+    
+    /// Keypoint target dimension (width) in meters
+    ///
+    /// Further instructions will be given to the user once they pass inside this bounding box
+    public var targetWidth: Scalar = 2
+    
+    /// Keypoint target dimension (depth) in meters
+    ///
+    /// Further instructions will be given to the user once they pass inside this bounding box
+    public var targetDepth: Scalar = 0.5
+    
+    /// Keypoint target dimension (height) in meters
+    ///
+    /// Further instructions will be given to the user once they pass inside this bounding box
+    public var targetHeight: Scalar = 3
+    
+    /// Keypoint target dimension (width) in meters
+    ///
+    /// Further instructions will be given to the user once they pass inside this bounding box
+    public var lastKeypointTargetWidth: Scalar = 1
+    
+    /// Keypoint target dimension (depth) in meters
+    ///
+    /// Further instructions will be given to the user once they pass inside this bounding box
+    public var lastKeypointTargetDepth: Scalar = 1
+    
+    /// Keypoint target dimension (height) in meters
+    ///
+    /// Further instructions will be given to the user once they pass inside this bounding box
+    public var lastKeypointTargetHeight: Scalar = 3
     
     /// The offset between the user's direction of travel (assumed to be aligned with the front of their body and the phone's orientation)
     var headingOffset: Float?
@@ -147,8 +160,14 @@ class Navigation {
     /// - Parameters:
     ///   - currentLocation
     ///   - nextKeypoint
+    ///   - isLastKeypoint (true if the keypoint is the last one in the route, false otherwise)
     /// - Returns: relative position of next keypoint as `DirectionInfo` object
-    public func getDirections(currentLocation: CurrentCoordinateInfo, nextKeypoint: KeypointInfo) -> DirectionInfo {
+    public func getDirections(currentLocation: CurrentCoordinateInfo, nextKeypoint: KeypointInfo, isLastKeypoint: Bool) -> DirectionInfo {
+        // these tolerances are set depending on whether it is the last keypoint or not
+        let keypointTargetDepth = isLastKeypoint ? lastKeypointTargetDepth : targetDepth
+        let keypointTargetHeight = isLastKeypoint ? lastKeypointTargetHeight : targetHeight
+        let keypointTargetWidth = isLastKeypoint ? lastKeypointTargetWidth : targetWidth
+
         let trueYaw  = getPhoneHeadingYaw(currentLocation: currentLocation) + (headingOffset != nil ? headingOffset! : Float(0.0))
         
         //  Distance to next keypoint in meters
@@ -178,7 +197,7 @@ class Navigation {
         var direction = DirectionInfo(distance: dist, angleDiff: angleDiff, clockDirection: clockDirection, hapticDirection: hapticDirection)
         
         //  Determine whether the phone is inside the bounding box of the keypoint
-        if (xDiff <= targetDepth && yDiff <= targetHeight && zDiff <= targetWidth) {
+        if (xDiff <= keypointTargetDepth && yDiff <= keypointTargetHeight && zDiff <= keypointTargetWidth) {
             direction.targetState = .atTarget
         } else if (sqrtf(powf(Float(xDiff), 2) + powf(Float(zDiff), 2)) <= 4) {
             direction.targetState = .closeToTarget
