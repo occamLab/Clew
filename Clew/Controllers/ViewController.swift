@@ -265,6 +265,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// this Boolean marks whether or not the app is recording a multi use route
     var recordingSingleUseRoute: Bool = false
     
+    /// this Boolean marks whether or not the app is following a single use route
+    var followingSingleUseRoute: Bool = false
+    
     ///this Boolean marks whether or not the app is saving a starting anchor point
     var startAnchorPoint: Bool = false
     
@@ -382,7 +385,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         
         feedbackGenerator = UIImpactFeedbackGenerator(style: .light)
         waypointFeedbackGenerator = UINotificationFeedbackGenerator()
-        
         showStopNavigationButton()
 
         // wait a little bit before starting navigation to allow screen to transition and make room for the first direction announcement to be communicated
@@ -614,6 +616,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         paused = false
         isAutomaticAlignment = false
         recordingSingleUseRoute = false
+        followingSingleUseRoute = false
+        stopNavigationController.followingSingleUseRoute = followingSingleUseRoute
         
         
         let storyBoard: UIStoryboard = UIStoryboard(name: "SettingsAndHelp", bundle: nil)
@@ -1270,6 +1274,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         // set appropriate Boolean flags for context
         startNavigationController.isAutomaticAlignment = isAutomaticAlignment
         startNavigationController.recordingSingleUseRoute = recordingSingleUseRoute
+
         add(startNavigationController)
         startNavigationController.pauseButton.isHidden = !allowPause
         startNavigationController.largeHomeButton.isHidden = recordingSingleUseRoute
@@ -1675,6 +1680,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         isAutomaticAlignment = false
         ///tell the program that a single use route is being recorded
         recordingSingleUseRoute = true
+        followingSingleUseRoute = true
+        stopNavigationController.followingSingleUseRoute = followingSingleUseRoute
         paused = false
         ///PATHPOINT single use route button -> recording a route
         ///hide all other views

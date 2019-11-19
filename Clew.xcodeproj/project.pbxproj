@@ -13,7 +13,6 @@
 		1F27632722FCBD6A00E1FCF8 /* SettingsAndHelp.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1F27632522FCBD6100E1FCF8 /* SettingsAndHelp.storyboard */; };
 		1F27633B22FCC0B100E1FCF8 /* BurgerMenu.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1F27633A22FCC0B100E1FCF8 /* BurgerMenu.storyboard */; };
 		1F27633C22FCC0B100E1FCF8 /* BurgerMenu.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1F27633A22FCC0B100E1FCF8 /* BurgerMenu.storyboard */; };
-		1F2971A522DF60F700B896C6 /* HelpCompiler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2B9D7022C3B50D00317DC8 /* HelpCompiler.swift */; };
 		1F2B9D7222C3B50D00317DC8 /* HelpCompiler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2B9D7022C3B50D00317DC8 /* HelpCompiler.swift */; };
 		1F2B9D8722C5446B00317DC8 /* (null) in Resources */ = {isa = PBXBuildFile; };
 		2748B8490FCBA95C7AA028D7 /* Pods_Clew.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 942F73299DA8DCF97FAA974A /* Pods_Clew.framework */; };
@@ -24,12 +23,6 @@
 		82569F4F22187E6500448B45 /* help in Resources */ = {isa = PBXBuildFile; fileRef = 82569F4D22187E6500448B45 /* help */; };
 		825C7D6822CCDDA600545605 /* PathMatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 825C7D6722CCDDA600545605 /* PathMatcher.swift */; };
 		825C7D6922CCDDA600545605 /* PathMatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 825C7D6722CCDDA600545605 /* PathMatcher.swift */; };
-		AD020F7D22FB54E500D665F3 /* BurgerMenu.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AD020F8022FB54E500D665F3 /* BurgerMenu.storyboard */; };
-		AD020F7E22FB54E500D665F3 /* BurgerMenu.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AD020F8022FB54E500D665F3 /* BurgerMenu.storyboard */; };
-		AD020F8822FB553500D665F3 /* BurgerMenu.strings in Resources */ = {isa = PBXBuildFile; fileRef = AD020F8622FB553500D665F3 /* BurgerMenu.strings */; };
-		AD020F8922FB553500D665F3 /* BurgerMenu.strings in Resources */ = {isa = PBXBuildFile; fileRef = AD020F8622FB553500D665F3 /* BurgerMenu.strings */; };
-		AD8AA00C22F9C15700FC026E /* BurgerMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD8AA00B22F9C15700FC026E /* BurgerMenuViewController.swift */; };
-		AD8AA00D22F9C15700FC026E /* BurgerMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD8AA00B22F9C15700FC026E /* BurgerMenuViewController.swift */; };
 		986640CE22FB68F2005AA1F6 /* NameSavedRouteController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986640CD22FB68F2005AA1F6 /* NameSavedRouteController.swift */; };
 		986640CF22FC9606005AA1F6 /* NameSavedRouteController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986640CD22FB68F2005AA1F6 /* NameSavedRouteController.swift */; };
 		B0A563F6FE1007A2716DC876 /* Pods_Clew_Dev.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3532E390954571B93729786A /* Pods_Clew_Dev.framework */; };
@@ -790,7 +783,6 @@
 				E5470F3822C119F5001092A4 /* ResumeTrackingConfirmController.swift in Sources */,
 				E5470EFA22C119F5001092A4 /* RecorderViewController.swift in Sources */,
 				E5470F4622C119F5001092A4 /* RootContainerView.swift in Sources */,
-				E5470F4022C119F5001092A4 /* StateController.swift in Sources */,
 				DD10038E22FCA6F500904E42 /* TestFlightLogger.swift in Sources */,
 				E5470F4A22C119F5001092A4 /* RouteTableViewCell.swift in Sources */,
 				E5470F0422C119F5001092A4 /* FeedbackLogger.swift in Sources */,

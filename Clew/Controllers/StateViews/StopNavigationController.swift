@@ -20,10 +20,25 @@ class StopNavigationController: UIViewController {
     /// A view to act as filler to make the stack view layout look good
     var fillerSpace: UIView!
     
+    var followingSingleUseRoute: Bool!
+    
+    var stackView: UIStackView!
     /// called when view appears
-    override func viewDidAppear(_ animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         /// set stopnavigationbutton as initially active voiceover button
+        
+        if followingSingleUseRoute == true {
+
+            snapToRouteButton.isHidden = true
+            fillerSpace.isHidden = true
+        }
+        else {
+            fillerSpace.isHidden = false
+            snapToRouteButton.isHidden = false
+
+        }
         UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: self.stopNavigationButton)
+
     }
     
     /// called when the view has loaded.  We setup various app elements in here.
@@ -73,7 +88,7 @@ class StopNavigationController: UIViewController {
         fillerSpace.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 3.50).isActive = true
         
         /// create stack view for aligning and distributing bottom layer buttons
-        let stackView   = UIStackView()
+        stackView   = UIStackView()
         view.addSubview(stackView)
         stackView.translatesAutoresizingMaskIntoConstraints = false;
         
