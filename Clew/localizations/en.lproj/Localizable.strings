@@ -34,7 +34,7 @@
 "saveARouteButtonAccessibilityLabel" = "Save a route";
 "badServiceButtonAccessibilityLabel" = "Bad";
 "goodServiceButtonAccessibilityLabel" = "Good";
-"resumePausedRouteBUttonAccessibilityLabel" = "Resume";
+"resumePausedRouteButtonAccessibilityLabel" = "Resume";
 "singleUseRouteButtonText" = "Single Use Route";
 "recordSingleUseRouteButtonAccessibilityLabel" = "Record a single use route";
 "savedRoutesListButtonText" = "Saved Routes List";

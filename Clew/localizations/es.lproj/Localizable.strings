@@ -34,7 +34,7 @@
 "saveARouteButtonAccessibilityLabel" = "Guardar una ruta";
 "badServiceButtonAccessibilityLabel" = "Malo";
 "goodServiceButtonAccessibilityLabel" = "Bueno";
-"resumePausedRouteBUttonAccessibilityLabel" = "Reanudar";
+"resumePausedRouteButtonAccessibilityLabel" = "Reanudar";
 "singleUseRouteButtonText" = "Ruta de un solo uso";
 "recordSingleUseRouteButtonAccessibilityLabel" = "Grabar una ruta de un solo uso";
 "savedRoutesListButtonText" = "Listado de rutas guardadas";
