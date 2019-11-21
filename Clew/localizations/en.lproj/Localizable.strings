@@ -1,4 +1,4 @@
-/* 
+/*
   Localizable.strings
   Clew
 
@@ -34,7 +34,7 @@
 "saveARouteButtonAccessibilityLabel" = "Save a route";
 "badServiceButtonAccessibilityLabel" = "Bad";
 "goodServiceButtonAccessibilityLabel" = "Good";
-"resumePausedRouteBUttonAccessibilityLabel" = "Resume";
+"resumePausedRouteButtonAccessibilityLabel" = "Resume";
 "singleUseRouteButtonText" = "Single Use Route";
 "recordSingleUseRouteButtonAccessibilityLabel" = "Record a single use route";
 "savedRoutesListButtonText" = "Saved Routes List";
@@ -54,6 +54,7 @@
 "startAlignmentCountdownButtonAccessibilityLabel" = "Start alignment countdown";
 "playVoiceNoteButtonAccessibilityLabel" = "Play recorded voice note";
 "startReturnNavigationButtonAccessibilityLabel" = "Start navigation";
+"optionsButtonAccessibilityLabel" = "Options";
 
     // Save routes
 "saveRoutePop-UpTitle" = "Save route";
@@ -122,18 +123,16 @@ visualAlignmentConfirmation = "Visually aligning to saved route";
 
 "anchorPointTextPlaceholder" = "Enter Anchor Point information";
 
-"singleUseRouteAnchorPointText" = "To be able to resume your tracking at a later point you need to record an anchor point for the end of your route. An anchor point records the position and alignment of your device so the app can reload your route from a temporary file. As a result the accuracy of your return navigation relies entirely on how accurately you can realign and position your phone with your saved anchor point at a later point. We suggest using the text and voice note buttons to record a text note and/or a voice recording which can help you realign your device to the anchor point you recorded at a later time.\nTo create an anchor point, hold your device flat with the screen facing up. Press the top (short) edge flush against a flat vertical surface (such as a wall) the \”align\” button starts a %lu-second countdown. The countdown is intended to give you time to position your device; the Anchor point will be saved at the end of the countdown.";
-
-"Landmarks allow you to save or pause your route. You will need to return to the landmark to load or unpause your route. Before creating the landmark, specify text or voice to help you remember its location. To create a landmark, hold your device flat with the screen facing up. Press the top (short) edge flush against a flat vertical surface (such as a wall).  The \"align\" button starts a %lu-second countdown. During this time, do not move the device." = "Landmarks allow you to save or pause your route. You will need to return to the landmark to load or unpause your route. Before creating the landmark, specify text or voice to help you remember its location. To create a landmark, hold the device vertically and point the camera in the initial direction you intend to walk. The \"align\" button starts a %lu-second countdown. During this time, do not move the device.";
+"singleUseRouteAnchorPointText" = "To be able to resume your tracking at a later point you need to record an anchor point for the end of your route. An anchor point records the position and alignment of your device so the app can reload your route from a temporary file. As a result the accuracy of your return navigation relies entirely on how accurately you can realign and position your phone with your saved anchor point at a later point. We suggest using the text and voice note buttons to record a text note and/or a voice recording which can help you realign your device to the anchor point you recorded at a later time.\nTo create an anchor point, point the camera in the direction you came from. The %lu-second countdown starts after the device is vertical. The countdown is intended to give you time to position your device; the Anchor point will be saved at the end of the countdown.";
 
 "RecordEndLandmark" = "To create an ending landmark, hold the device vertically and point the camera in the direction you just came from. The \"align\" button starts a %lu-second countdown. During this time, do not move the device.";
 
-"Hold your device flat with the screen facing up. Press the top (short) edge flush against the same vertical surface that you used to create the landmark.  When you are ready, activate the align button to start the alignment countdown that will complete the procedure. Do not move the device until the phone provides confirmation via a vibration or sound cue." = "Hold the device vertically and point the camera in the initial direction you plan to walk. When you are ready, activate the align button to start the alignment countdown that will complete the procedure. Do not move the device until the phone provides confirmation via a vibration or sound cue.";
 "multipleUseRouteStartAnchorPointText" = "To allow your route to be navigated at a later point you need to record an anchor point for the start of your route. An anchor point records the position and alignment of your device so the app can reload your route from a saved file. As a result the accuracy of your saved route navigation relies entirely on how accurately you can realign and position your phone with your saved anchor point at a later point. We suggest using the text and voice note buttons to record a text note and/or a voice recording which can help you realign your device to the anchor point you recorded at a later time.\nTo create an anchor point, point the camera in the direction you plan to walk. Once your device is vertical, a %lu-second countdown starts. The countdown is intended to give you time to position your device; the Anchor point will be saved at the end of the countdown.";
 
 "multipleUseRouteEndAnchorPointText" = "To allow your route to be navigated in the reverse direction you need to record an anchor point for the end of your route. An anchor point records the position and alignment of your device so the app can reload your route from a saved file. As a result the accuracy of your saved route navigation relies entirely on how accurately you can realign and position your phone with your saved anchor point at a later point. We suggest using the text and voice note buttons to record a text note and/or a voice recording which can help you realign your device to the anchor point you recorded at a later time.\nTo create an anchor point, point the camera in the direction you came from. The %lu-second countdown starts after the device is vertical. The countdown is intended to give you time to position your device; the Anchor point will be saved at the end of the countdown.";
 
-"anchorPointAlignmentText" = "Please align your device with your previously recorded anchor point. To do this hold your device flat with the screen pointing up. Press the top (short) edge flush with the same vertical surface that you used to create the anchor point. Activating the align button will start an alignment countdown this is intended to give you time to make final adjustments to the positioning of your device. At the end of the countdown the alignment will be taken and the device will provide an announcement indicating that the anchor point was saved.";
+
+"anchorPointAlignmentText" = "Please align your device with your previously recorded anchor point. To do this, point the camera in same direction as you did when you recorded the anchor point. The %lu-second countdown starts after the device is vertical. The countdown is intended to give you time to position your device; the Anchor point will be saved at the end of the countdown.";
 "anchorPointIntroductionToSavedText" = "The Anchor Point information you entered is: ";
 
 //Settings
@@ -217,11 +216,11 @@ visualAlignmentConfirmation = "Visually aligning to saved route";
 
 "followingARouteHapticFeedbackHeader" = "Haptic feedback";
 
-"followingARouteHapticFeedbackContent" = "Assuming you have enabled haptic feedback in the app settings and you have an iPhone that supports haptics (iPhone 7 or later should work), the phone will provide haptic vibration when it is facing in the correct direction of travel for the route. It is important to keep in mind that this feedback is relative to the direction of the phone, rather than your body. When you achieve a milestone in the route (we call these waypoints), you will feel a stronger haptic vibration.";
+"followingARouteHapticFeedbackContent" = "Assuming you have enabled haptic feedback in the app settings and you have an iPhone that supports haptics (iPhone 7 or later should work), the phone will provide haptic vibration when it is facing in the correct direction of travel for the route. It is important to keep in mind that this feedback is relative to the direction of the phone, rather than your body. When you achieve a milestone in the route (we call these anchor points), you will feel a stronger haptic vibration.";
 
 "followingARouteAuditoryBeepsHeader" = "Auditory beeps";
 
-"followingARouteAuditoryBeepsContent" = "Assuming you have enabled sound feedback in the app settings and your iphone doesn't have system sounds muted, the phone will make a beeping sound when it is facing in the correct direction of travel for the route. It is important to keep in mind that this feedback is relative to the direction of the phone, rather than your body. When you achieve a milestone in the route (we call these waypoints), you will hear a different sound effect.";
+"followingARouteAuditoryBeepsContent" = "Assuming you have enabled sound feedback in the app settings and your iphone doesn't have system sounds muted, the phone will make a beeping sound when it is facing in the correct direction of travel for the route. It is important to keep in mind that this feedback is relative to the direction of the phone, rather than your body. When you achieve a milestone in the route (we call these anchor points), you will hear a different sound effect.";
 
 "followingARouteSpeechFeedbackHeader" = "Speech feedback";
 
@@ -251,7 +250,7 @@ visualAlignmentConfirmation = "Visually aligning to saved route";
 "contractSectionAccessabilityTag" = "contract section";
 "expandSectionAccessabilityTag" = "expand section";
 
-"PausingARouteOrRecordingAAnchorPointHeader" = "Pausing a route or recording a Anchor Point";
+"PausingARouteOrRecordingAAnchorPointHeader" = "Pausing a route or recording an Anchor Point";
 
 "PausingARouteOrRecordingAAnchorPointContentParagraph1" = "The procedure for pausing the route and recording an anchor point are the same. The key idea is that in order to reuse routes, your phone must be able to align its current position with a position from the recorded route. In some cases, Apple's ARKit will be able to automatically do this alignment (for example, when the camera sees a distinctive visual feature that can be matched to the recording); however, in many situations this will not be possible.";
 
@@ -280,3 +279,6 @@ visualAlignmentConfirmation = "Visually aligning to saved route";
 "singleUsePlayPauseViewText" = "In order to immediately perform return navigation, press the play button and follow the instructions provided. In order to pause the session to perform return navigation at a later point, press the pause button and complete the anchor point procedure.";
 
 "multipleUseRoutePlayPauseViewText" = "In order to immediately navigate back along the path you recorded, press the play button and follow the instructions provided. If you'd like to navigate the route later, you can return to the home screen and load the route you've just saved when you're ready to navigate along it.";
+
+//Sharing routes
+"automaticEmailTextWhenSharingRoutes" = "Check out this route!";

@@ -90,7 +90,7 @@ class RecordPathController: UIViewController {
         recordPathButton.setTitle(NSLocalizedString("singleUseRouteButtonText", comment: "This is the text which appears on the single use route buttton"),for: .normal)
         recordPathButton.setTitleColor(.black, for: .normal)
         recordPathButton.titleLabel?.font = UIFont(name: "HelveticaNeue-Bold", size: 35)!
-        recordPathButton.accessibilityLabel = NSLocalizedString("Record a single use route", comment: "A button that allows the user to navigate a route one time.")
+        recordPathButton.accessibilityLabel = NSLocalizedString("recordSingleUseRouteButtonAccessibilityLabel", comment: "A button that allows the user to navigate a route one time.")
         recordPathButton.titleLabel?.textAlignment = .center
         recordPathButton.titleLabel?.numberOfLines = 0
         recordPathButton.titleLabel?.lineBreakMode = .byWordWrapping

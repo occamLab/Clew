@@ -1,87 +1,103 @@
 PODS:
   - eigen (3.2.10)
-  - Firebase/Analytics (5.20.2):
+  - Firebase/Analytics (6.13.0):
     - Firebase/Core
-  - Firebase/Core (5.20.2):
+  - Firebase/Core (6.13.0):
     - Firebase/CoreOnly
-    - FirebaseAnalytics (= 5.8.1)
-  - Firebase/CoreOnly (5.20.2):
-    - FirebaseCore (= 5.4.1)
-  - Firebase/Database (5.20.2):
+    - FirebaseAnalytics (= 6.1.6)
+  - Firebase/CoreOnly (6.13.0):
+    - FirebaseCore (= 6.4.0)
+  - Firebase/Database (6.13.0):
     - Firebase/CoreOnly
-    - FirebaseDatabase (= 5.1.1)
-  - Firebase/Storage (5.20.2):
+    - FirebaseDatabase (~> 6.1.2)
+  - Firebase/Storage (6.13.0):
     - Firebase/CoreOnly
-    - FirebaseStorage (= 3.1.1)
-  - FirebaseAnalytics (5.8.1):
-    - FirebaseCore (~> 5.4)
-    - FirebaseInstanceID (~> 3.8)
-    - GoogleAppMeasurement (= 5.8.1)
-    - GoogleUtilities/AppDelegateSwizzler (~> 5.2)
-    - GoogleUtilities/MethodSwizzler (~> 5.2)
-    - GoogleUtilities/Network (~> 5.2)
-    - "GoogleUtilities/NSData+zlib (~> 5.2)"
-    - nanopb (~> 0.3)
+    - FirebaseStorage (~> 3.4.2)
+  - FirebaseAnalytics (6.1.6):
+    - FirebaseCore (~> 6.4)
+    - FirebaseInstanceID (~> 4.2)
+    - GoogleAppMeasurement (= 6.1.6)
+    - GoogleUtilities/AppDelegateSwizzler (~> 6.0)
+    - GoogleUtilities/MethodSwizzler (~> 6.0)
+    - GoogleUtilities/Network (~> 6.0)
+    - "GoogleUtilities/NSData+zlib (~> 6.0)"
+    - nanopb (= 0.3.9011)
   - FirebaseAuthInterop (1.0.0)
-  - FirebaseCore (5.4.1):
-    - GoogleUtilities/Environment (~> 5.2)
-    - GoogleUtilities/Logger (~> 5.2)
-  - FirebaseDatabase (5.1.1):
+  - FirebaseCore (6.4.0):
+    - FirebaseCoreDiagnostics (~> 1.0)
+    - FirebaseCoreDiagnosticsInterop (~> 1.0)
+    - GoogleUtilities/Environment (~> 6.2)
+    - GoogleUtilities/Logger (~> 6.2)
+  - FirebaseCoreDiagnostics (1.1.2):
+    - FirebaseCoreDiagnosticsInterop (~> 1.0)
+    - GoogleDataTransportCCTSupport (~> 1.0)
+    - GoogleUtilities/Environment (~> 6.2)
+    - GoogleUtilities/Logger (~> 6.2)
+    - nanopb (~> 0.3.901)
+  - FirebaseCoreDiagnosticsInterop (1.1.0)
+  - FirebaseDatabase (6.1.2):
     - FirebaseAuthInterop (~> 1.0)
-    - FirebaseCore (~> 5.2)
-    - leveldb-library (~> 1.18)
-  - FirebaseInstanceID (3.8.1):
-    - FirebaseCore (~> 5.2)
-    - GoogleUtilities/Environment (~> 5.2)
-    - GoogleUtilities/UserDefaults (~> 5.2)
-  - FirebaseStorage (3.1.1):
+    - FirebaseCore (~> 6.0)
+    - leveldb-library (~> 1.22)
+  - FirebaseInstanceID (4.2.7):
+    - FirebaseCore (~> 6.0)
+    - GoogleUtilities/Environment (~> 6.0)
+    - GoogleUtilities/UserDefaults (~> 6.0)
+  - FirebaseStorage (3.4.2):
     - FirebaseAuthInterop (~> 1.0)
-    - FirebaseCore (~> 5.2)
+    - FirebaseCore (~> 6.0)
     - GTMSessionFetcher/Core (~> 1.1)
-  - GoogleAppMeasurement (5.8.1):
-    - GoogleUtilities/AppDelegateSwizzler (~> 5.2)
-    - GoogleUtilities/MethodSwizzler (~> 5.2)
-    - GoogleUtilities/Network (~> 5.2)
-    - "GoogleUtilities/NSData+zlib (~> 5.2)"
-    - nanopb (~> 0.3)
-  - GoogleUtilities/AppDelegateSwizzler (5.7.0):
+  - GoogleAppMeasurement (6.1.6):
+    - GoogleUtilities/AppDelegateSwizzler (~> 6.0)
+    - GoogleUtilities/MethodSwizzler (~> 6.0)
+    - GoogleUtilities/Network (~> 6.0)
+    - "GoogleUtilities/NSData+zlib (~> 6.0)"
+    - nanopb (= 0.3.9011)
+  - GoogleDataTransport (3.2.0)
+  - GoogleDataTransportCCTSupport (1.2.2):
+    - GoogleDataTransport (~> 3.2)
+    - nanopb (~> 0.3.901)
+  - GoogleUtilities/AppDelegateSwizzler (6.3.2):
     - GoogleUtilities/Environment
     - GoogleUtilities/Logger
     - GoogleUtilities/Network
-  - GoogleUtilities/Environment (5.7.0)
-  - GoogleUtilities/Logger (5.7.0):
+  - GoogleUtilities/Environment (6.3.2)
+  - GoogleUtilities/Logger (6.3.2):
     - GoogleUtilities/Environment
-  - GoogleUtilities/MethodSwizzler (5.7.0):
+  - GoogleUtilities/MethodSwizzler (6.3.2):
     - GoogleUtilities/Logger
-  - GoogleUtilities/Network (5.7.0):
+  - GoogleUtilities/Network (6.3.2):
     - GoogleUtilities/Logger
     - "GoogleUtilities/NSData+zlib"
     - GoogleUtilities/Reachability
-  - "GoogleUtilities/NSData+zlib (5.7.0)"
-  - GoogleUtilities/Reachability (5.7.0):
+  - "GoogleUtilities/NSData+zlib (6.3.2)"
+  - GoogleUtilities/Reachability (6.3.2):
     - GoogleUtilities/Logger
-  - GoogleUtilities/UserDefaults (5.7.0):
+  - GoogleUtilities/UserDefaults (6.3.2):
     - GoogleUtilities/Logger
-  - GTMSessionFetcher/Core (1.2.1)
-  - InAppSettingsKit (2.10)
+  - GTMSessionFetcher/Core (1.3.0)
+  - InAppSettingsKit (2.14)
   - LASwift (0.2.2)
-  - leveldb-library (1.20)
-  - nanopb (0.3.901):
-    - nanopb/decode (= 0.3.901)
-    - nanopb/encode (= 0.3.901)
-  - nanopb/decode (0.3.901)
-  - nanopb/encode (0.3.901)
+  - leveldb-library (1.22)
+  - nanopb (0.3.9011):
+    - nanopb/decode (= 0.3.9011)
+    - nanopb/encode (= 0.3.9011)
+  - nanopb/decode (0.3.9011)
+  - nanopb/encode (0.3.9011)
   - OpenCV (4.1.0)
   - PRTween (0.1.0)
   - SRCountdownTimer (1.1)
-  - VectorMath (0.3.3):
-    - VectorMath/Core (= 0.3.3)
-    - VectorMath/Quartz (= 0.3.3)
-    - VectorMath/SceneKit (= 0.3.3)
-  - VectorMath/Core (0.3.3)
-  - VectorMath/Quartz (0.3.3):
+  - VectorMath (0.4.1):
+    - VectorMath/Core (= 0.4.1)
+    - VectorMath/MapKit (= 0.4.1)
+    - VectorMath/Quartz (= 0.4.1)
+    - VectorMath/SceneKit (= 0.4.1)
+  - VectorMath/Core (0.4.1)
+  - VectorMath/MapKit (0.4.1):
     - VectorMath/Core
-  - VectorMath/SceneKit (0.3.3):
+  - VectorMath/Quartz (0.4.1):
+    - VectorMath/Core
+  - VectorMath/SceneKit (0.4.1):
     - VectorMath/Core
 
 DEPENDENCIES:
@@ -98,16 +114,20 @@ DEPENDENCIES:
   - VectorMath (~> 0.3)
 
 SPEC REPOS:
-  https://github.com/cocoapods/specs.git:
+  trunk:
     - eigen
     - Firebase
     - FirebaseAnalytics
     - FirebaseAuthInterop
     - FirebaseCore
+    - FirebaseCoreDiagnostics
+    - FirebaseCoreDiagnosticsInterop
     - FirebaseDatabase
     - FirebaseInstanceID
     - FirebaseStorage
     - GoogleAppMeasurement
+    - GoogleDataTransport
+    - GoogleDataTransportCCTSupport
     - GoogleUtilities
     - GTMSessionFetcher
     - InAppSettingsKit
@@ -121,25 +141,29 @@ SPEC REPOS:
 
 SPEC CHECKSUMS:
   eigen: e2d5ffb7be5a884d4608ebe35a97b6f65e13ed8b
-  Firebase: 0c8cf33f266410c61ab3e2265cfa412200351d9c
-  FirebaseAnalytics: ece1aa57a4f43c64d53a648b5a5e05151aae947b
+  Firebase: 458d109512200d1aca2e1b9b6cf7d68a869a4a46
+  FirebaseAnalytics: 45f36d9c429fc91d206283900ab75390cd05ee8a
   FirebaseAuthInterop: 0ffa57668be100582bb7643d4fcb7615496c41fc
-  FirebaseCore: f1a9a8be1aee4bf71a2fc0f4096df6788bdfda61
-  FirebaseDatabase: 2c15b0ea6f2c6eb5e57413f9d6340f1e50b81ae3
-  FirebaseInstanceID: a122b0c258720cf250551bb2bedf48c699f80d90
-  FirebaseStorage: 6162ef4322502b818d9de0ec552f5226d283de43
-  GoogleAppMeasurement: ffe513e90551844a739e7bcbb1d2aca1c28a4338
-  GoogleUtilities: 273e67030e0de313e7304f6dcfa96fc5214f6c23
-  GTMSessionFetcher: 32aeca0aa144acea523e1c8e053089dec2cb98ca
-  InAppSettingsKit: d965e29be941eb19857271e4625de3fba6e23c9f
+  FirebaseCore: 307ea2508df730c5865334e41965bd9ea344b0e5
+  FirebaseCoreDiagnostics: 511f4f3ed7d440bb69127e8b97c2bc8befae639e
+  FirebaseCoreDiagnosticsInterop: e9b1b023157e3a2fc6418b5cb601e79b9af7b3a0
+  FirebaseDatabase: 963515d232ded06f36f6ce830507c94551866170
+  FirebaseInstanceID: ebd2ea79ee38db0cb5f5167b17a0d387e1cc7b6e
+  FirebaseStorage: 046abe9ac4e2a1a0e47d72f536490ffa50896632
+  GoogleAppMeasurement: dfe55efa543e899d906309eaaac6ca26d249862f
+  GoogleDataTransport: 8e9b210c97d55fbff306cc5468ff91b9cb32dcf5
+  GoogleDataTransportCCTSupport: ef79a4728b864946a8aafdbab770d5294faf3b5f
+  GoogleUtilities: 547a86735c6f0ee30ad17e94df4fc21f616b71cb
+  GTMSessionFetcher: 43b8b64263023d4f32caa0b40f4c8bfa3c5f36d8
+  InAppSettingsKit: 800853da39388780c15191846688c0974c5b13b5
   LASwift: ff1d512c72ab80d01d5f3ce7f4195f1d834eb1ba
-  leveldb-library: 08cba283675b7ed2d99629a4bc5fd052cd2bb6a5
-  nanopb: 2901f78ea1b7b4015c860c2fdd1ea2fee1a18d48
+  leveldb-library: 55d93ee664b4007aac644a782d11da33fba316f7
+  nanopb: 18003b5e52dab79db540fe93fe9579f399bd1ccd
   OpenCV: 52cd4d72ff29e2be83421477aec5447320b7fb19
   PRTween: 6c58c7e32ebcf31e33e6a6e6bc727ebef3b668ef
   SRCountdownTimer: 9c92e444b5403c92f01dd6610299b8c634bc8562
-  VectorMath: 9442bb470704903dd0343547454904ba66355302
+  VectorMath: 55dded3a69e5061add78d06275561bc25ead2999
 
 PODFILE CHECKSUM: 4de96d05ee20351d7855317c4d5d52a3a241c3df
 
-COCOAPODS: 1.6.1
+COCOAPODS: 1.8.4
