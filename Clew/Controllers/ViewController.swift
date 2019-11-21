@@ -313,13 +313,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     ///   - navigateStartToEnd: a Boolean that is true if we want to navigate from the start to the end and false if we want to navigate from the end to the start.
     func handleStateTransitionToStartingResumeProcedure(route: SavedRoute, worldMap: ARWorldMap?, navigateStartToEnd: Bool) {
         // load the world map and restart the session so that things have a chance to quiet down before putting it up to the wall
-        let isTrackingPerformanceNormal: Bool
+        var isTrackingPerformanceNormal = false
         if case .normal? = sceneView.session.currentFrame?.camera.trackingState {
             isTrackingPerformanceNormal = true
-        } else {
-            isTrackingPerformanceNormal = false
         }
-        
+        var isRelocalizing = false
+        if case .limited(reason: .relocalizing)? = sceneView.session.currentFrame?.camera.trackingState {
+            isRelocalizing = true
+        }
         let isSameMap = configuration.initialWorldMap != nil && configuration.initialWorldMap == worldMap
         configuration.initialWorldMap = worldMap
     
@@ -342,8 +343,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             isResumedRoute = true
             isAutomaticAlignment = true
             state = .readyToNavigateOrPause(allowPause: false)
+        } else if isRelocalizing && isSameMap || isTrackingPerformanceNormal && worldMap == nil  {
+            // we don't have to wait for the session to start up.  It will be created automatically.
+            self.state = .readyForFinalResumeAlignment
+            self.showResumeTrackingConfirmButton(route: route, navigateStartToEnd: navigateStartToEnd)
         } else {
-            // this makes sure that the user doens't resume the session until the session is initialized
+            // this makes sure that the user doesn't resume the session until the session is initialized
             continuationAfterSessionIsReady = {
                 self.state = .readyForFinalResumeAlignment
                 self.showResumeTrackingConfirmButton(route: route, navigateStartToEnd: navigateStartToEnd)
