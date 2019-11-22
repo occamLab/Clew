@@ -59,6 +59,20 @@
 		102FA8E9237F495B0028E5ED /* Storyboard.strings in Resources */ = {isa = PBXBuildFile; fileRef = 102FA8E7237F495B0028E5ED /* Storyboard.strings */; };
 		102FA8EA237F495B0028E5ED /* Storyboard.strings in Resources */ = {isa = PBXBuildFile; fileRef = 102FA8E7237F495B0028E5ED /* Storyboard.strings */; };
 		1036F79F23316BE4005F0625 /* Crumb.obj in Resources */ = {isa = PBXBuildFile; fileRef = 4D6B00E41F33C85500952242 /* Crumb.obj */; };
+		10A6CE692387D8B50080B3AE /* PathFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F4C2FA22C4035200E0D94E /* PathFinder.swift */; };
+		10A6CE6A2387D9970080B3AE /* DataPersistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F4C2F622C4035200E0D94E /* DataPersistence.swift */; };
+		10A6CE6B2387D9B90080B3AE /* Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F4C2FB22C4035200E0D94E /* Utility.swift */; };
+		10A6CE6C2387D9C70080B3AE /* Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F4C2FB22C4035200E0D94E /* Utility.swift */; };
+		10A6CE6D2387D9CC0080B3AE /* PathFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F4C2FA22C4035200E0D94E /* PathFinder.swift */; };
+		10A6CE6E2387D9D60080B3AE /* DataPersistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F4C2F622C4035200E0D94E /* DataPersistence.swift */; };
+		10A6CE6F2387DA0A0080B3AE /* Navigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F4C2F822C4035200E0D94E /* Navigation.swift */; };
+		10A6CE702387DA100080B3AE /* Navigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F4C2F822C4035200E0D94E /* Navigation.swift */; };
+		10A6CE712387DAA40080B3AE /* FeedbackLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F4C2F922C4035200E0D94E /* FeedbackLogger.swift */; };
+		10A6CE722387DAAA0080B3AE /* PathLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F4C2F722C4035200E0D94E /* PathLogger.swift */; };
+		10A6CE732387DAB50080B3AE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F4C2FC22C4035200E0D94E /* AppDelegate.swift */; };
+		10A6CE742387DABD0080B3AE /* FeedbackLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F4C2F922C4035200E0D94E /* FeedbackLogger.swift */; };
+		10A6CE752387DAC20080B3AE /* PathLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F4C2F722C4035200E0D94E /* PathLogger.swift */; };
+		10A6CE762387DAC60080B3AE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F4C2FC22C4035200E0D94E /* AppDelegate.swift */; };
 		1F27632322FCBB6E00E1FCF8 /* BurgerMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F27632222FCBB6E00E1FCF8 /* BurgerMenuViewController.swift */; };
 		1F27632422FCBB9900E1FCF8 /* BurgerMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F27632222FCBB6E00E1FCF8 /* BurgerMenuViewController.swift */; };
 		1F27632722FCBD6A00E1FCF8 /* SettingsAndHelp.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1F27632522FCBD6100E1FCF8 /* SettingsAndHelp.storyboard */; };
@@ -530,10 +544,10 @@
 			isa = PBXGroup;
 			children = (
 				E5F4C2F622C4035200E0D94E /* DataPersistence.swift */,
+				E5F4C2FA22C4035200E0D94E /* PathFinder.swift */,
 				E5F4C2F722C4035200E0D94E /* PathLogger.swift */,
 				E5F4C2F822C4035200E0D94E /* Navigation.swift */,
 				E5F4C2F922C4035200E0D94E /* FeedbackLogger.swift */,
-				E5F4C2FA22C4035200E0D94E /* PathFinder.swift */,
 				E5F4C2FB22C4035200E0D94E /* Utility.swift */,
 				E5F4C2FC22C4035200E0D94E /* AppDelegate.swift */,
 				1F2B9D7022C3B50D00317DC8 /* HelpCompiler.swift */,
@@ -927,6 +941,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				10A6CE762387DAC60080B3AE /* AppDelegate.swift in Sources */,
+				10A6CE752387DAC20080B3AE /* PathLogger.swift in Sources */,
+				10A6CE742387DABD0080B3AE /* FeedbackLogger.swift in Sources */,
+				10A6CE702387DA100080B3AE /* Navigation.swift in Sources */,
+				10A6CE6E2387D9D60080B3AE /* DataPersistence.swift in Sources */,
+				10A6CE6D2387D9CC0080B3AE /* PathFinder.swift in Sources */,
+				10A6CE6C2387D9C70080B3AE /* Utility.swift in Sources */,
 				102FA887237226100028E5ED /* TransparentTouchView.swift in Sources */,
 				1015E686235F968100F4F051 /* StopRecordingController.swift in Sources */,
 				1015E684235F95FE00F4F051 /* UIButtonExtensions.swift in Sources */,
@@ -980,6 +1001,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				10A6CE732387DAB50080B3AE /* AppDelegate.swift in Sources */,
+				10A6CE722387DAAA0080B3AE /* PathLogger.swift in Sources */,
+				10A6CE712387DAA40080B3AE /* FeedbackLogger.swift in Sources */,
+				10A6CE6F2387DA0A0080B3AE /* Navigation.swift in Sources */,
+				10A6CE6B2387D9B90080B3AE /* Utility.swift in Sources */,
+				10A6CE6A2387D9970080B3AE /* DataPersistence.swift in Sources */,
+				10A6CE692387D8B50080B3AE /* PathFinder.swift in Sources */,
 				102FA89F237AA2D00028E5ED /* StopRecordingController.swift in Sources */,
 				102FA8B1237AA6990028E5ED /* StateController.swift in Sources */,
 				102FA898237AA2360028E5ED /* UIButtonExtensions.swift in Sources */,
