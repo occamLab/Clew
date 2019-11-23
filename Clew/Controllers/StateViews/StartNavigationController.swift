@@ -33,7 +33,7 @@ class StartNavigationController: UIViewController {
     /// called when view appears (any time)
     override func viewWillAppear(_ animated: Bool) {
         
-        var mainText : String = "nil"
+        var mainText : String
         if recordingSingleUseRoute {
             mainText = NSLocalizedString("singleUsePlayPauseViewText", comment: "Information displayed to the user on the play pause screen after they have recorded a single use route. This describes the functionality of the play and pause buttons.")
             largeHomeButton.isHidden = true
@@ -63,11 +63,11 @@ class StartNavigationController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        /// create a main view which passes touch events down the hierarchy
+        // we subtract one pixel from the height to prevent accessibility elements in the parent view from being hidden (Warning: this is not documented behavior, so we may need to revisit this down the road)
         view = TransparentTouchView(frame:CGRect(x: 0,
                                                  y: 0,
                                                  width: UIScreen.main.bounds.size.width,
-                                                 height: UIScreen.main.bounds.size.height))
+                                                 height: UIScreen.main.bounds.size.height - 1))
         
         /// create a label, and a scrollview for it to live in
         label = UILabel()
@@ -81,13 +81,14 @@ class StartNavigationController: UIViewController {
         /// darken background of view
         view.backgroundColor = UIColor.black.withAlphaComponent(0.4)
         
-        var mainText : String = "nil"
+        // TODO: we can probably just use the code in viewDidAppear
+        var mainText : String
         if recordingSingleUseRoute{
             mainText = NSLocalizedString("singleUsePlayPauseViewText", comment: "Information displayed to the user on the play pause screen after they have recorded a single use route. This describes the functionality of the play and pause buttons.")
         } else {
             if isAutomaticAlignment {
                 mainText = NSLocalizedString("automaticAlignmentPlayPauseViewText", comment: "Information displayed to the user on the play pause screen after they have sucessfully aligned to their route automatically.")
-            }else {
+            } else {
                 mainText = NSLocalizedString("multipleUseRoutePlayPauseViewText", comment: "Information displayed to the user on the play pause screen after they have just recorded a multiple use route. This describes the functionality of the play and pause buttons.")
             }
             

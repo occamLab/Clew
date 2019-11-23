@@ -31,10 +31,11 @@ class ResumeTrackingController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        // we subtract one pixel from the height to prevent accessibility elements in the parent view from being hidden (Warning: this is not documented behavior, so we may need to revisit this down the road)
         view = TransparentTouchView(frame:CGRect(x: 0,
                                                  y: 0,
                                                  width: UIScreen.main.bounds.size.width,
-                                                 height: UIScreen.main.bounds.size.height))
+                                                 height: UIScreen.main.bounds.size.height - 1))
 
         label = UILabel()
         let scrollView = UIScrollView()
