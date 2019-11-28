@@ -37,24 +37,6 @@ class RecordPathController: UIViewController {
                                                  y: 0,
                                                  width: UIConstants.buttonFrameWidth * 1,
                                                  height: UIConstants.buttonFrameWidth * 1.5))
-
-
-        let label = UILabel(frame: CGRect(x: 15,
-                                          y: UIScreen.main.bounds.size.height/5,
-                                          width: UIScreen.main.bounds.size.width-30,
-                                          height: UIScreen.main.bounds.size.height/2))
-        
-        var mainText: String?
-        if let mainText: String = mainText {
-            label.textColor = UIColor.white
-            label.textAlignment = .center
-            label.numberOfLines = 0
-            label.lineBreakMode = .byWordWrapping
-            label.font = label.font.withSize(20)
-            label.text = mainText
-            label.tag = UIView.mainTextTag
-            view.addSubview(label)
-        }
         
         /// Creating a button that can be used to start the creation of a saved route.
         addAnchorPointButton = UIButton(type: .custom)
