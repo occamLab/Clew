@@ -40,7 +40,7 @@ class PauseTrackingController: UIViewController, UIScrollViewDelegate {
         
         /// label details
         let waitingPeriod = ViewController.alignmentWaitingPeriod
-        var mainText:String = "nil"
+        var mainText : String
         
         if paused  && recordingSingleUseRoute {
             mainText = String.localizedStringWithFormat(NSLocalizedString("singleUseRouteAnchorPointText", comment: "Information on how to record an anchor point when used for pausing a single use route"), waitingPeriod)
@@ -72,10 +72,11 @@ class PauseTrackingController: UIViewController, UIScrollViewDelegate {
         super.viewDidLoad()
         
         /// create a main view which passes touch events down the hierarchy
+        // we subtract one pixel from the height to prevent accessibility elements in the parent view from being hidden (Warning: this is not documented behavior, so we may need to revisit this down the road)
         view = TransparentTouchView(frame:CGRect(x: 0,
                                                  y: 0,
                                                  width: UIScreen.main.bounds.size.width,
-                                                 height: UIScreen.main.bounds.size.height))
+                                                 height: UIScreen.main.bounds.size.height - 1))
         
         /// create a label, and a scrollview for it to live in
         label = UILabel()
@@ -91,9 +92,10 @@ class PauseTrackingController: UIViewController, UIScrollViewDelegate {
         
         /// label details
         let waitingPeriod = ViewController.alignmentWaitingPeriod
-        var mainText:String = "nil"
+        // TODO: not sure why this code is duplicated
+        var mainText:String
         
-        if (paused == true && recordingSingleUseRoute == true){
+        if paused && recordingSingleUseRoute {
             mainText = String.localizedStringWithFormat(NSLocalizedString("singleUseRouteAnchorPointText", comment: "Information on how to record an anchor point when used for pausing a single use route"), waitingPeriod)
         } else {
             if startAnchorPoint {

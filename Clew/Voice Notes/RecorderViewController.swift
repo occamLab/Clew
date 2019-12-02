@@ -59,8 +59,6 @@ class RecorderViewController: UIViewController {
     var timeLabel = UILabel()
     /// the visualizer of the audio waveform
     var audioView = AudioVisualizerView()
-    /// the audio recording settings
-    let settings = [AVFormatIDKey: kAudioFormatLinearPCM, AVLinearPCMBitDepthKey: 16, AVLinearPCMIsFloatKey: true, AVSampleRateKey: Float64(44100), AVNumberOfChannelsKey: 1] as [String : Any]
     /// a handle to the `AVAudioEngine`
     let audioEngine = AVAudioEngine()
     private var renderTs: Double = 0
@@ -211,9 +209,11 @@ class RecorderViewController: UIViewController {
         self.recordingTs = NSDate().timeIntervalSince1970
         self.silenceTs = 0
         
+        let sampleRate: Double
         do {
             let session = AVAudioSession.sharedInstance()
-            try session.setCategory(.playAndRecord, mode: .default)
+            try session.setCategory(.playAndRecord, mode: .videoRecording)
+            sampleRate = session.sampleRate
             try session.setActive(true)
         } catch let error as NSError {
             print(error.localizedDescription)
@@ -221,7 +221,7 @@ class RecorderViewController: UIViewController {
         }
         
         let inputNode = self.audioEngine.inputNode
-        guard let format = self.format() else {
+        guard let format = self.format(sampleRate) else {
             return
         }
         
@@ -263,7 +263,7 @@ class RecorderViewController: UIViewController {
             let write = true
             if write {
                 if self.audioFile == nil {
-                    self.audioFile = self.createAudioRecordFile()
+                    self.audioFile = self.createAudioRecordFile(sampleRate)
                 }
                 if let f = self.audioFile {
                     do {
@@ -352,12 +352,19 @@ class RecorderViewController: UIViewController {
         return false
     }
     
-    /// Return the audio recording format / settings
+    
+    /// Return the audio recording  settings
     ///
     /// - Returns: the audio recording format / settings
-    private func format() -> AVAudioFormat? {
-        let format = AVAudioFormat(settings: self.settings)
-        return format
+    private func settings(_ sampleRate: Double)-> [String: Any] {
+        return [AVFormatIDKey: kAudioFormatLinearPCM, AVLinearPCMBitDepthKey: 16, AVLinearPCMIsFloatKey: true, AVSampleRateKey: Float64(sampleRate), AVNumberOfChannelsKey: 1]
+    }
+    
+    /// Return the audio recording format
+    ///
+    /// - Returns: the audio recording format / settings
+    private func format(_ sampleRate: Double) -> AVAudioFormat? {
+        return AVAudioFormat(settings: settings(sampleRate))
     }
     
     
@@ -374,12 +381,12 @@ class RecorderViewController: UIViewController {
     /// Create the audio file used for the recording.
     ///
     /// - Returns: the `AVAudioFile` object that can be used for recording
-    private func createAudioRecordFile() -> AVAudioFile? {
+    private func createAudioRecordFile(_ sampleRate: Double) -> AVAudioFile? {
         guard let path = self.createAudioRecordPath() else {
             return nil
         }
         do {
-            let file = try AVAudioFile(forWriting: path, settings: self.settings, commonFormat: .pcmFormatFloat32, interleaved: true)
+            let file = try AVAudioFile(forWriting: path, settings: settings(sampleRate), commonFormat: .pcmFormatFloat32, interleaved: true)
             return file
         } catch let error as NSError {
             print(error.localizedDescription)

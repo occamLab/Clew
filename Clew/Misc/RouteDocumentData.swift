@@ -65,7 +65,7 @@ class RouteDocumentData: NSObject, NSSecureCoding {
         /// decode map, beginning landmark voice note, and ending landmark voice note,
         /// knowing that the map may not necessarily exist
         
-        var newMap = aDecoder.decodeObject(of: ARWorldMap.self, forKey: "map")
+        let newMap = aDecoder.decodeObject(of: ARWorldMap.self, forKey: "map")
 
         let beginNote = aDecoder.decodeObject(of: NSString.self, forKey: "beginVoiceNote")
         let endNote = aDecoder.decodeObject(of: NSString.self, forKey: "endVoiceNote")
