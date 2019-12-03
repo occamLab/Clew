@@ -64,15 +64,39 @@
 		</dict>
 		<dict>
 			<key>Type</key>
-			<string>PSSliderSpecifier</string>
+			<string>PSMultiValueSpecifier</string>
+			<key>Title</key>
+			<string>Timer Length</string>
 			<key>Key</key>
 			<string>timerLength</string>
+			<key>Titles</key>
+			<array>
+				<string>1 second</string>
+				<string>2 seconds</string>
+				<string>3 seconds</string>
+				<string>4 seconds</string>
+				<string>5 seconds</string>
+				<string>6 seconds</string>
+				<string>7 seconds</string>
+				<string>8 seconds</string>
+				<string>9 seconds</string>
+				<string>10 seconds</string>
+			</array>
+			<key>Values</key>
+			<array>
+				<real>1</real>
+				<integer>2</integer>
+				<integer>3</integer>
+				<integer>4</integer>
+				<integer>5</integer>
+				<integer>6</integer>
+				<integer>7</integer>
+				<integer>8</integer>
+				<integer>9</integer>
+				<integer>10</integer>
+			</array>
 			<key>DefaultValue</key>
 			<integer>5</integer>
-			<key>MinimumValue</key>
-			<integer>1</integer>
-			<key>MaximumValue</key>
-			<integer>10</integer>
 		</dict>
 		<dict>
 			<key>Type</key>
