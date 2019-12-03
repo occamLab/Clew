@@ -665,9 +665,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             self.currentAnnouncement = nil
         }
         
-        // we use a custom notification to communicate from the help controller to the main view controller that the help was dismissed
+        // we use a custom notification to communicate from the help controller to the main view controller that a popover that should suppress tracking warnings was dimissed
         NotificationCenter.default.addObserver(forName: Notification.Name("ClewPopoverDismissed"), object: nil, queue: nil) { (notification) -> Void in
             self.suppressTrackingWarnings = false
+        }
+
+        // we use a custom notification to communicate from the help controller to the main view controller that a popover that should suppress tracking warnings was displayed
+        NotificationCenter.default.addObserver(forName: Notification.Name("ClewPopoverDisplayed"), object: nil, queue: nil) { (notification) -> Void in
+            self.suppressTrackingWarnings = true
         }
         
     }
@@ -1838,59 +1843,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         popover?.sourceView = self.view
         popover?.sourceRect = CGRect(x: 0, y: UIConstants.settingsAndHelpFrameHeight/2, width: 0,height: 0)
 
-        self.present(nav, animated: true, completion: nil)
-    }
-    
-    /// Called when the settings button is pressed.  This function will display the settings view (managed by SettingsViewController) as a popover.
-    @objc func settingsButtonPressed() {
-        let storyBoard: UIStoryboard = UIStoryboard(name: "SettingsAndHelp", bundle: nil)
-        let popoverContent = storyBoard.instantiateViewController(withIdentifier: "Settings") as! SettingsViewController
-        popoverContent.preferredContentSize = CGSize(width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height)
-        let nav = UINavigationController(rootViewController: popoverContent)
-        nav.modalPresentationStyle = .popover
-        let popover = nav.popoverPresentationController
-        popover?.delegate = self
-        popover?.sourceView = self.view
-        popover?.sourceRect = CGRect(x: 0, y: UIConstants.settingsAndHelpFrameHeight/2, width: 0,height: 0)
-        
-        popoverContent.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: popoverContent, action: #selector(popoverContent.doneWithSettings))
-
-        
-        self.present(nav, animated: true, completion: nil)
-    }
-    
-    /// Called when the help button is pressed.  This function will display the help view (managed by HelpViewController) as a popover.
-    @objc func helpButtonPressed() {
-        let storyBoard: UIStoryboard = UIStoryboard(name: "SettingsAndHelp", bundle: nil)
-        let popoverContent = storyBoard.instantiateViewController(withIdentifier: "Help") as! HelpViewController
-        popoverContent.preferredContentSize = CGSize(width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height)
-        let nav = UINavigationController(rootViewController: popoverContent)
-        nav.modalPresentationStyle = .popover
-        let popover = nav.popoverPresentationController
-        popover?.delegate = self
-        popover?.sourceView = self.view
-        popover?.sourceRect = CGRect(x: 0, y: 0, width: 0, height: 0)
-        popoverContent.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: popoverContent, action: #selector(popoverContent.doneWithHelp))
-        suppressTrackingWarnings = true
-        self.present(nav, animated: true, completion: nil)
-    }
-    
-    /// Called when the Feedback button is pressed.  This function will display the Feedback view (managed by FeedbackViewController) as a popover.
-    @objc func feedbackButtonPressed() {
-        let storyBoard: UIStoryboard = UIStoryboard(name: "SettingsAndHelp", bundle: nil)
-        let popoverContent = storyBoard.instantiateViewController(withIdentifier: "Feedback") as! FeedbackViewController
-        popoverContent.preferredContentSize = CGSize(width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height)
-        let nav = UINavigationController(rootViewController: popoverContent)
-        nav.modalPresentationStyle = .popover
-        let popover = nav.popoverPresentationController
-        popover?.delegate = self
-        popover?.sourceView = self.view
-        popover?.sourceRect = CGRect(x: 0,
-                                     y: UIConstants.settingsAndHelpFrameHeight/2,
-                                     width: 0,
-                                     height: 0)
-        popoverContent.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: popoverContent, action: #selector(popoverContent.closeFeedback))
-        suppressTrackingWarnings = true
         self.present(nav, animated: true, completion: nil)
     }
     
