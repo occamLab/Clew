@@ -316,6 +316,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     ///
     /// - Parameter announceArrival: a Boolean that indicates whether the user's arrival should be announced (true means the user has arrived)
     func handleStateTransitionToMainScreen(announceArrival: Bool) {
+        // if the ARSession is running, pause it to conserve battery
+        sceneView.session.pause()
+        // set this to nil to prevent the app from erroneously detecting that we can auto-align to the route
+        configuration.initialWorldMap = nil
         showRecordPathButton(announceArrival: announceArrival)
     }
     
@@ -485,11 +489,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         } else {
             endRouteAnchorPoint = RouteAnchorPoint()
         }
-        do {
-            try showPauseTrackingButton()
-        } catch {
-            // nothing to fall back on
-        }
+        try! showPauseTrackingButton()
     }
     weak var recordRouteLandmarkTimer: Timer?
     
@@ -823,7 +823,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         setupAudioPlayers()
         loadAssets()
         createSettingsBundle()
-        createARSession()
+        createARSessionConfiguration()
         
         // TODO: we might want to make this wait on the AR session starting up, but since it happens pretty fast it's likely not a big deal
         state = .mainScreen(announceArrival: false)
@@ -854,9 +854,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             self.currentAnnouncement = nil
         }
         
-        // we use a custom notification to communicate from the help controller to the main view controller that the help was dismissed
+        // we use a custom notification to communicate from the help controller to the main view controller that a popover that should suppress tracking warnings was dimissed
         NotificationCenter.default.addObserver(forName: Notification.Name("ClewPopoverDismissed"), object: nil, queue: nil) { (notification) -> Void in
             self.suppressTrackingWarnings = false
+        }
+        // we use a custom notification to communicate from the help controller to the main view controller that a popover that should suppress tracking warnings was displayed
+        NotificationCenter.default.addObserver(forName: Notification.Name("ClewPopoverDisplayed"), object: nil, queue: nil) { (notification) -> Void in
+            self.suppressTrackingWarnings = true
         }
     }
     
@@ -1173,11 +1177,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     }
     
     /// Create a new ARSession.
-    func createARSession() {
+    func createARSessionConfiguration() {
         configuration = ARWorldTrackingConfiguration()
         configuration.planeDetection = [.horizontal, .vertical]
         configuration.isAutoFocusEnabled = false
-        sceneView.session.run(configuration)
         sceneView.delegate = self
     }
     
@@ -1303,7 +1306,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         
         add(pauseTrackingController)
         pauseTrackingController.setMainText(direction: creatingRouteAnchorPoint)
-        
         delayTransition()
     }
     
@@ -1329,6 +1331,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             if let AnchorPointInformation = route.beginRouteAnchorPoint.information as String? {
                 let infoString = "\n\n" + NSLocalizedString("anchorPointIntroductionToSavedText", comment: "This is the text which delineates the text that a user saved witht their saved anchor point. This text is shown when a suer loads an anchor point and the text that the user saved with their anchor point appears right after this string.") + AnchorPointInformation + "\n\n"
                 resumeTrackingConfirmController.anchorPointLabel.text = infoString
+            } else {
+                // make sure to clear out any old labels that were stored here
+                resumeTrackingConfirmController.anchorPointLabel.text = nil
             }
             if let beginRouteAnchorPointVoiceNote = route.beginRouteAnchorPoint.voiceNote {
                 let voiceNoteToPlayURL = beginRouteAnchorPointVoiceNote.documentURL
@@ -1342,6 +1347,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             if let AnchorPointInformation = route.endRouteAnchorPoint.information as String? {
                 let infoString = "\n\n" + NSLocalizedString("anchorPointIntroductionToSavedText", comment: "This is the text which delineates the text that a user saved witht their saved anchor point. This text is shown when a suer loads an anchor point and the text that the user saved with their anchor point appears right after this string.") + AnchorPointInformation + "\n\n"
                 resumeTrackingConfirmController.anchorPointLabel.text = infoString
+            } else {
+                // make sure to clear out any old labels that were stored here
+                resumeTrackingConfirmController.anchorPointLabel.text = nil
             }
             if let endRouteAnchorPointVoiceNote = route.endRouteAnchorPoint.voiceNote {
                 let voiceNoteToPlayURL = endRouteAnchorPointVoiceNote.documentURL
@@ -1396,10 +1404,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         waypointFeedbackGenerator = nil
         delayTransition()
     }
-    
-    /*
-     *
-     */
     
     /// Announce the direction (both in text and using speech if appropriate).  The function will automatically use the appropriate units based on settings to convert `distance` from meters to the appropriate unit.
     ///
@@ -1570,7 +1574,15 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         ///sends the user to create a Anchor Point
         rootContainerView.homeButton.isHidden = false
         creatingRouteAnchorPoint = true
-        state = .startingPauseProcedure
+
+        hideAllViewsHelper()
+        // this makes sure that the user doesn't start recording the single use route until the session is initialized
+        continuationAfterSessionIsReady = {
+            //sends the user to the screen where they can start recording a route
+            self.state = .startingPauseProcedure
+        }
+        configuration.initialWorldMap = nil
+        sceneView.session.run(configuration, options: [.removeExistingAnchors])
     }
     
     /// handles the user pressing the stop recording button.
@@ -1672,8 +1684,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             ///PATHPOINT single use route pause -> record end Anchor Point
             state = .startingPauseProcedure
         }
-       
-        
     }
     
     /// handles the user pressing the Anchor Point button
@@ -1691,11 +1701,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         ///PATHPOINT single use route button -> recording a route
         ///hide all other views
         hideAllViewsHelper()
-        ///platy an announcemnt which tells the user that a route is being recorded
-        self.delayTransition(announcement: NSLocalizedString("singleUseRouteToRecordingRouteAnnouncement", comment: "This is an announcement which is spoken when the user starts recording a single use route. it informs the user that they are recording a single use route."), initialFocus: nil)
         
-        //sends the user to the screen where they can start recording a route
-        state = .recordingRoute
+        // this makes sure that the user doesn't start recording the single use route until the session is initialized
+        continuationAfterSessionIsReady = {
+            ///platy an announcemnt which tells the user that a route is being recorded
+            self.delayTransition(announcement: NSLocalizedString("singleUseRouteToRecordingRouteAnnouncement", comment: "This is an announcement which is spoken when the user starts recording a single use route. it informs the user that they are recording a single use route."), initialFocus: nil)
+            
+            //sends the user to the screen where they can start recording a route
+            self.state = .recordingRoute
+        }
+        configuration.initialWorldMap = nil
+        sceneView.session.run(configuration, options: [.removeExistingAnchors])
     }
     
     /// this is called after the alignment countdown timer finishes in order to complete the pause tracking procedure
@@ -2122,59 +2138,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         self.present(nav, animated: true, completion: nil)
     }
     
-    /// Called when the settings button is pressed.  This function will display the settings view (managed by SettingsViewController) as a popover.
-    @objc func settingsButtonPressed() {
-        let storyBoard: UIStoryboard = UIStoryboard(name: "SettingsAndHelp", bundle: nil)
-        let popoverContent = storyBoard.instantiateViewController(withIdentifier: "Settings") as! SettingsViewController
-        popoverContent.preferredContentSize = CGSize(width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height)
-        let nav = UINavigationController(rootViewController: popoverContent)
-        nav.modalPresentationStyle = .popover
-        let popover = nav.popoverPresentationController
-        popover?.delegate = self
-        popover?.sourceView = self.view
-        popover?.sourceRect = CGRect(x: 0, y: UIConstants.settingsAndHelpFrameHeight/2, width: 0,height: 0)
-        
-        popoverContent.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: popoverContent, action: #selector(popoverContent.doneWithSettings))
-
-        
-        self.present(nav, animated: true, completion: nil)
-    }
-    
-    /// Called when the help button is pressed.  This function will display the help view (managed by HelpViewController) as a popover.
-    @objc func helpButtonPressed() {
-        let storyBoard: UIStoryboard = UIStoryboard(name: "SettingsAndHelp", bundle: nil)
-        let popoverContent = storyBoard.instantiateViewController(withIdentifier: "Help") as! HelpViewController
-        popoverContent.preferredContentSize = CGSize(width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height)
-        let nav = UINavigationController(rootViewController: popoverContent)
-        nav.modalPresentationStyle = .popover
-        let popover = nav.popoverPresentationController
-        popover?.delegate = self
-        popover?.sourceView = self.view
-        popover?.sourceRect = CGRect(x: 0, y: 0, width: 0, height: 0)
-        popoverContent.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: popoverContent, action: #selector(popoverContent.doneWithHelp))
-        suppressTrackingWarnings = true
-        self.present(nav, animated: true, completion: nil)
-    }
-    
-    /// Called when the Feedback button is pressed.  This function will display the Feedback view (managed by FeedbackViewController) as a popover.
-    @objc func feedbackButtonPressed() {
-        let storyBoard: UIStoryboard = UIStoryboard(name: "SettingsAndHelp", bundle: nil)
-        let popoverContent = storyBoard.instantiateViewController(withIdentifier: "Feedback") as! FeedbackViewController
-        popoverContent.preferredContentSize = CGSize(width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height)
-        let nav = UINavigationController(rootViewController: popoverContent)
-        nav.modalPresentationStyle = .popover
-        let popover = nav.popoverPresentationController
-        popover?.delegate = self
-        popover?.sourceView = self.view
-        popover?.sourceRect = CGRect(x: 0,
-                                     y: UIConstants.settingsAndHelpFrameHeight/2,
-                                     width: 0,
-                                     height: 0)
-        popoverContent.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: popoverContent, action: #selector(popoverContent.closeFeedback))
-        suppressTrackingWarnings = true
-        self.present(nav, animated: true, completion: nil)
-    }
-    
     /// Announce directions at any given point to the next keypoint
     @objc func announceDirectionHelp() {
         if case .navigatingRoute = state, let curLocation = getRealCoordinates(record: false) {
@@ -2407,9 +2370,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 attemptingRelocalization = false
             } else if case let .limited(reason)? = trackingSessionState {
                 if !suppressTrackingWarnings {
-                    if reason == .initializing {
-                        announce(announcement: NSLocalizedString("startedTrackingSessionAnnouncement", comment: "Announcemnt that lets user know that the ARKit tracking session (used for generating the user's position and how it changes) has started."))
-                    } else {
+                    if reason != .initializing {
                         announce(announcement: NSLocalizedString("fixedTrackingAnnouncement", comment: "Let user know that the ARKit tracking session has returned to its normal quality (this is played after the tracking has been restored from thir being insuficent visual features or excessive motion which degrade the tracking)"))
                         if soundFeedback {
                             playSystemSound(id: 1025)
@@ -2461,7 +2422,7 @@ extension ViewController: RecorderViewControllerDelegate {
     
     /// Called when the user finishes recording a voice note.  This function adds the voice note to the `RouteAnchorPoint` object.
     ///
-    /// - Parameter audioFileURL: <#audioFileURL description#>
+    /// - Parameter audioFileURL: the URL to the audio recording
     func didFinishRecording(audioFileURL: URL) {
         if creatingRouteAnchorPoint {
             // delete the file since we are re-recording it
