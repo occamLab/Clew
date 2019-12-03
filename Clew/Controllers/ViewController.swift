@@ -222,6 +222,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     func handleStateTransitionToMainScreen(announceArrival: Bool) {
         // if the ARSession is running, pause it to conserve battery
         sceneView.session.pause()
+        // set this to nil to prevent the app from erroneously detecting that we can auto-align to the route
+        configuration.initialWorldMap = nil
         showRecordPathButton(announceArrival: announceArrival)
     }
     
