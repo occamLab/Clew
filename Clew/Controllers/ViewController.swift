@@ -220,6 +220,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     ///
     /// - Parameter announceArrival: a Boolean that indicates whether the user's arrival should be announced (true means the user has arrived)
     func handleStateTransitionToMainScreen(announceArrival: Bool) {
+        // if the ARSession is running, pause it to conserve battery
+        sceneView.session.pause()
         showRecordPathButton(announceArrival: announceArrival)
     }
     
@@ -371,11 +373,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         } else {
             endRouteAnchorPoint = RouteAnchorPoint()
         }
-        do {
-            try showPauseTrackingButton()
-        } catch {
-            // nothing to fall back on
-        }
+        try! showPauseTrackingButton()
     }
     
     /// Handler for the pauseWaitingPeriod app state
@@ -549,9 +547,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// True if we should use a cone of pi/12 and false if we should use a cone of pi/6 when deciding whether to issue haptic feedback
     var strictHaptic = true
     
-    /// True if we should add anchors ahead of the user to encourage more ARWorldMap detail.  In limited testing this did not show promise, therefore it is disabled
-    var shouldDropMappingAnchors = false
-    
     /// This is embeds an AR scene.  The ARSession is a part of the scene view, which allows us to capture where the phone is in space and the state of the world tracking.  The scene also allows us to insert virtual objects
     var sceneView = ARSCNView()
     
@@ -634,7 +629,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         setupAudioPlayers()
         loadAssets()
         createSettingsBundle()
-        createARSession()
+        createARSessionConfiguration()
         
         // TODO: we might want to make this wait on the AR session starting up, but since it happens pretty fast it's likely not a big deal
         state = .mainScreen(announceArrival: false)
@@ -762,9 +757,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// Display a warning that tells the user they must create a Anchor Point to be able to use this route again in the forward direction
     func showRecordPathWithoutAnchorPointWarning() {
-        
         state = .recordingRoute
-        
     }
     
     /// func that prepares the state transition to home by clearing active processes and data
@@ -952,12 +945,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     }
     
     /// Create a new ARSession.
-    func createARSession() {
+    func createARSessionConfiguration() {
         configuration = ARWorldTrackingConfiguration()
         configuration.planeDetection = [.horizontal, .vertical]
         configuration.isAutoFocusEnabled = false
-
-        sceneView.session.run(configuration)
         sceneView.delegate = self
     }
     
@@ -1100,7 +1091,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         pauseTrackingController.startAnchorPoint = startAnchorPoint
         
         add(pauseTrackingController)
-        
         delayTransition()
     }
     
@@ -1124,6 +1114,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             if let AnchorPointInformation = route.beginRouteAnchorPoint.information as String? {
                 let infoString = "\n\n" + NSLocalizedString("anchorPointIntroductionToSavedText", comment: "This is the text which delineates the text that a user saved witht their saved anchor point. This text is shown when a suer loads an anchor point and the text that the user saved with their anchor point appears right after this string.") + AnchorPointInformation + "\n\n"
                 resumeTrackingConfirmController.anchorPointLabel.text = infoString
+            } else {
+                // make sure to clear out any old labels that were stored here
+                resumeTrackingConfirmController.anchorPointLabel.text = nil
             }
             if let beginRouteAnchorPointVoiceNote = route.beginRouteAnchorPoint.voiceNote {
                 let voiceNoteToPlayURL = beginRouteAnchorPointVoiceNote.documentURL
@@ -1137,6 +1130,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             if let AnchorPointInformation = route.endRouteAnchorPoint.information as String? {
                 let infoString = "\n\n" + NSLocalizedString("anchorPointIntroductionToSavedText", comment: "This is the text which delineates the text that a user saved witht their saved anchor point. This text is shown when a suer loads an anchor point and the text that the user saved with their anchor point appears right after this string.") + AnchorPointInformation + "\n\n"
                 resumeTrackingConfirmController.anchorPointLabel.text = infoString
+            } else {
+                // make sure to clear out any old labels that were stored here
+                resumeTrackingConfirmController.anchorPointLabel.text = nil
             }
             if let endRouteAnchorPointVoiceNote = route.endRouteAnchorPoint.voiceNote {
                 let voiceNoteToPlayURL = endRouteAnchorPointVoiceNote.documentURL
@@ -1181,10 +1177,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         waypointFeedbackGenerator = nil
         delayTransition()
     }
-    
-    /*
-     *
-     */
     
     /// Announce the direction (both in text and using speech if appropriate).  The function will automatically use the appropriate units based on settings to convert `distance` from meters to the appropriate unit.
     ///
@@ -1338,7 +1330,15 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         ///sends the user to create a Anchor Point
         rootContainerView.homeButton.isHidden = false
         creatingRouteAnchorPoint = true
-        state = .startingPauseProcedure
+
+        hideAllViewsHelper()
+        // this makes sure that the user doesn't start recording the single use route until the session is initialized
+        continuationAfterSessionIsReady = {
+            //sends the user to the screen where they can start recording a route
+            self.state = .startingPauseProcedure
+        }
+        configuration.initialWorldMap = nil
+        sceneView.session.run(configuration, options: [.removeExistingAnchors])
     }
     
     /// handles the user pressing the stop recording button.
@@ -1425,8 +1425,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             ///PATHPOINT single use route pause -> record end Anchor Point
             state = .startingPauseProcedure
         }
-       
-        
     }
     
     /// handles the user pressing the Anchor Point button
@@ -1442,11 +1440,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         ///PATHPOINT single use route button -> recording a route
         ///hide all other views
         hideAllViewsHelper()
-        ///platy an announcemnt which tells the user that a route is being recorded
-        self.delayTransition(announcement: NSLocalizedString("singleUseRouteToRecordingRouteAnnouncement", comment: "This is an announcement which is spoken when the user starts recording a single use route. it informs the user that they are recording a single use route."), initialFocus: nil)
         
-        //sends the user to the screen where they can start recording a route
-        state = .recordingRoute
+        // this makes sure that the user doesn't start recording the single use route until the session is initialized
+        continuationAfterSessionIsReady = {
+            ///platy an announcemnt which tells the user that a route is being recorded
+            self.delayTransition(announcement: NSLocalizedString("singleUseRouteToRecordingRouteAnnouncement", comment: "This is an announcement which is spoken when the user starts recording a single use route. it informs the user that they are recording a single use route."), initialFocus: nil)
+            
+            //sends the user to the screen where they can start recording a route
+            self.state = .recordingRoute
+        }
+        configuration.initialWorldMap = nil
+        sceneView.session.run(configuration, options: [.removeExistingAnchors])
     }
     
     /// this is called after the alignment countdown timer finishes in order to complete the pause tracking procedure
@@ -1531,45 +1535,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             return
         }
         crumbs.append(curLocation)
-
-        if shouldDropMappingAnchors {
-            // This was an experiment that I (Paul) did to see if adding anchors would improve relocalization performance.  I don't believe that it does.
-            let headingVector = getProjectedHeading(curLocation.transform)
-            let leftToRightVector = simd_make_float4(-headingVector.z, 0, headingVector.x, 0)
-            
-            let aheadAndDown = simd_float4x4.init(columns: (curLocation.transform.columns.0, curLocation.transform.columns.1, curLocation.transform.columns.2, curLocation.transform.columns.3 + 2*headingVector +
-                simd_make_float4(0, -1, 0, 0)))
-            var shouldAddAnchor = true
-            if let mappingAnchors = sceneView.session.currentFrame?.anchors.compactMap({ $0 as? LocationInfo }) {
-                for anchor in mappingAnchors.reversed() {
-                    if simd_norm_one(anchor.transform.columns.3 - aheadAndDown.columns.3) < 1.0 {
-                        shouldAddAnchor = false
-                        break
-                    }
-                }
-            }
-            // only add this as an anchor if there aren't any other ones within 1.0m (L1 distance) of the one we plan to add
-            if shouldAddAnchor {
-                let aheadAndUp = simd_float4x4.init(columns: (curLocation.transform.columns.0, curLocation.transform.columns.1, curLocation.transform.columns.2, curLocation.transform.columns.3 + 2*headingVector +
-                    simd_make_float4(0, 2, 0, 0)))
-                
-                let ahead = simd_float4x4.init(columns: (curLocation.transform.columns.0, curLocation.transform.columns.1, curLocation.transform.columns.2, curLocation.transform.columns.3 + 2*headingVector))
-                
-                let aheadAndLeft = simd_float4x4.init(columns: (curLocation.transform.columns.0, curLocation.transform.columns.1, curLocation.transform.columns.2, curLocation.transform.columns.3 + 2*headingVector - 2*leftToRightVector))
-                
-                let aheadAndRight = simd_float4x4.init(columns: (curLocation.transform.columns.0, curLocation.transform.columns.1, curLocation.transform.columns.2, curLocation.transform.columns.3 + 2*headingVector + 2*leftToRightVector))
-                
-                let anchorTransforms = [aheadAndDown, aheadAndUp, ahead, aheadAndRight, aheadAndLeft]
-                
-                for anchorTransform in anchorTransforms {
-                    sceneView.session.add(anchor: LocationInfo(transform: anchorTransform))
-                    let box = SCNBox(width: 0.1, height: 0.1, length: 0.1, chamferRadius: 0)
-                    let node = SCNNode(geometry: box)
-                    node.transform = SCNMatrix4(anchorTransform)
-                    sceneView.scene.rootNode.addChildNode(node)
-                }
-            }
-        }
     }
     
     /// checks to see if user is on the right path during navigation.
@@ -2076,9 +2041,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 attemptingRelocalization = false
             } else if case let .limited(reason)? = trackingSessionState {
                 if !suppressTrackingWarnings {
-                    if reason == .initializing {
-                        announce(announcement: NSLocalizedString("startedTrackingSessionAnnouncement", comment: "Announcemnt that lets user know that the ARKit tracking session (used for generating the user's position and how it changes) has started."))
-                    } else {
+                    if reason != .initializing {
                         announce(announcement: NSLocalizedString("fixedTrackingAnnouncement", comment: "Let user know that the ARKit tracking session has returned to its normal quality (this is played after the tracking has been restored from thir being insuficent visual features or excessive motion which degrade the tracking)"))
                         if soundFeedback {
                             playSystemSound(id: 1025)
@@ -2128,7 +2091,7 @@ extension ViewController: RecorderViewControllerDelegate {
     
     /// Called when the user finishes recording a voice note.  This function adds the voice note to the `RouteAnchorPoint` object.
     ///
-    /// - Parameter audioFileURL: <#audioFileURL description#>
+    /// - Parameter audioFileURL: the URL to the audio recording
     func didFinishRecording(audioFileURL: URL) {
         if creatingRouteAnchorPoint {
             // delete the file since we are re-recording it
@@ -2181,5 +2144,4 @@ extension ViewController: UIPopoverPresentationControllerDelegate {
             popoverController.sourceRect = button.bounds
         }
     }
-    
 }
