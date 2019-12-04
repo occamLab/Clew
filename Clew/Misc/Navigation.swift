@@ -119,12 +119,12 @@ class Navigation {
     /// Keypoint target dimension (width) in meters
     ///
     /// Further instructions will be given to the user once they pass inside this bounding box
-    public var lastKeypointTargetWidth: Scalar = 1
+    public var lastKeypointTargetWidth: Scalar = 0.5
     
     /// Keypoint target dimension (depth) in meters
     ///
     /// Further instructions will be given to the user once they pass inside this bounding box
-    public var lastKeypointTargetDepth: Scalar = 1
+    public var lastKeypointTargetDepth: Scalar = 0.5
     
     /// Keypoint target dimension (height) in meters
     ///
