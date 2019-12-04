@@ -42,7 +42,6 @@ class BurgerMenuViewController: UITableViewController, UIPopoverPresentationCont
         
         popoverContent.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: popoverContent, action: #selector(popoverContent.doneWithSettings))
         
-        
         self.present(nav, animated: true, completion: nil)
     }
 
@@ -61,6 +60,7 @@ class BurgerMenuViewController: UITableViewController, UIPopoverPresentationCont
                                      width: 0,
                                      height: 0)
         popoverContent.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: popoverContent, action: #selector(popoverContent.closeFeedback))
+        NotificationCenter.default.post(name: Notification.Name("ClewPopoverDisplayed"), object: nil)
 
         self.present(nav, animated: true, completion: nil)
     }
@@ -77,6 +77,7 @@ class BurgerMenuViewController: UITableViewController, UIPopoverPresentationCont
         popover?.sourceView = self.view
         popover?.sourceRect = CGRect(x: 0, y: 0, width: 0, height: 0)
         popoverContent.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: popoverContent, action: #selector(popoverContent.doneWithHelp))
+        NotificationCenter.default.post(name: Notification.Name("ClewPopoverDisplayed"), object: nil)
 
         self.present(nav, animated: true, completion: nil)
     }
