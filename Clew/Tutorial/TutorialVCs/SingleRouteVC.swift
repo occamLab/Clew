@@ -16,6 +16,9 @@ class SingleRouteVC: TutorialChildViewController {
     var recordNextButton: UIButton!
     var pauseNextButton: UIButton!
     var navigateNextButton: UIButton!
+    var singleUseRouteNextButton: UIButton!
+    var singleUseRoute: UIView?
+    var singleUseRouteCallout: UIView?
     var landmarkArrow: UIView?
     var landmarkCallout: UIView?
     var recordArrow: UIView?
@@ -36,12 +39,14 @@ class SingleRouteVC: TutorialChildViewController {
         self.view.addSubview(backgroundShadow)
         
         createObjects()
-        UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: landmarkCallout)
+        UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: singleUseRouteCallout) // added: landmarkCallout -> singleUseRouteCallout
         NotificationCenter.default.post(name: Notification.Name("UnhideMainScreenAccessibilityElements"), object: nil)
         
-        self.view.addSubview(landmarkCallout!)
-        self.view.addSubview(landmarkNextButton)
-        self.view.addSubview(landmarkArrow!)
+        self.view.addSubview(singleUseRoute!)
+        self.view.addSubview(singleUseRouteNextButton!)
+//        self.view.addSubview(landmarkCallout!)
+//        self.view.addSubview(landmarkNextButton)
+//        self.view.addSubview(landmarkArrow!)
         self.view.addSubview(skipButton!)
         self.view.bringSubviewToFront(skipButton!)
         UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: nil)
@@ -52,12 +57,15 @@ class SingleRouteVC: TutorialChildViewController {
     }
     
     func createObjects() {
-        landmarkCallout = createCalloutToView(withTagID: UIView.recordPathButtonTag, calloutText: NSLocalizedString("The Landmark button helps create saved routes. For now, let's just create a single use route.", comment: "Landmark callout during tutorial."), buttonAccessibilityName: NSLocalizedString("Landmark Button", comment: "Landmark Button"))
+        singleUseRoute = createCalloutToView(withTagID: UIView.recordPathButtonTag, calloutText: "Press the button below to proceed on making a single use route. The single use route button enables you to quickly record a path without anchor points.") // added
+        singleUseRouteCallout = createCalloutToView(withTagID: UIView.recordPathButtonTag, calloutText: NSLocalizedString("Press the button below to proceed on making a single use route. The single use route button enables you to quickly record a path without anchor points.", comment: "Single Use Route Button"), buttonAccessibilityName: NSLocalizedString("Single Use Route Button", comment: "Single Use Route Button")) // added (for TagID use recordPathButtonTag for now)
+//        landmarkCallout = createCalloutToView(withTagID: UIView.recordPathButtonTag, calloutText: NSLocalizedString("The Landmark button helps create saved routes. For now, let's just create a single use route.", comment: "Landmark callout during tutorial."), buttonAccessibilityName: NSLocalizedString("Landmark Button", comment: "Landmark Button"))
         landmarkArrow = createCalloutArrowToView(withTagID: UIView.addAnchorPointButtonTag)
 
         recordArrow = createCalloutArrowToView(withTagID: UIView.recordPathButtonTag)
 
-        landmarkNextButton = NextButton().createNextButton(buttonAction: #selector(landmarkNextButtonAction))
+//        landmarkNextButton = NextButton().createNextButton(buttonAction: #selector(landmarkNextButtonAction))
+        singleUseRouteNextButton = NextButton().createNextButton(buttonAction: #selector(singleUseRouteNextButtonAction))
         recordNextButton = NextButton().createNextButton(buttonAction: #selector(recordNextButtonAction))
         pauseNextButton = NextButton().createNextButton(buttonAction: #selector(pauseNextButtonAction))
         navigateNextButton = NextButton().createNextButton(buttonAction: #selector(navigateNextButtonAction))
@@ -106,16 +114,20 @@ class SingleRouteVC: TutorialChildViewController {
         self.present(alert, animated: true, completion: nil)
     }
     
-    @objc func landmarkNextButtonAction(sender: UIButton!) {
-        landmarkArrow!.removeFromSuperview()
-        landmarkCallout!.removeFromSuperview()
-        landmarkNextButton.removeFromSuperview()
+//    @objc func landmarkNextButtonAction(sender: UIButton!) {
+    @objc func singleUseRouteNextButtonAction(sender: UIButton!) {
+        singleUseRoute!.removeFromSuperview() // added
+        singleUseRouteNextButton!.removeFromSuperview() // added
+//        landmarkArrow!.removeFromSuperview()
+//        landmarkCallout!.removeFromSuperview()
+//        landmarkNextButton.removeFromSuperview()
         
         // Create record callout here instead of under createObjects() to prevent it from being added to view hiearchy upon initializing readyToRecordSingleRoute state.
-        recordCallout = createCalloutToView(withTagID: UIView.recordPathButtonTag, calloutText: NSLocalizedString("The Record button allows you to start recording a route. Click the 'record' button to continue.", comment: "The Record button allows you to start recording a route. Click the 'record' button to continue."), buttonAccessibilityName: NSLocalizedString("Record Button", comment: "Record Button"))
-        
-        self.view.addSubview(recordCallout!)
-        self.view.addSubview(recordNextButton)
+//        recordCallout = createCalloutToView(withTagID: UIView.recordPathButtonTag, calloutText: NSLocalizedString("The Record button allows you to start recording a route. Click the 'record' button to continue.", comment: "The Record button allows you to start recording a route. Click the 'record' button to continue."), buttonAccessibilityName: NSLocalizedString("Record Button", comment: "Record Button"))
+//
+//        self.view.addSubview(recordCallout!)
+//        self.view.addSubview(recordNextButton)
+        backgroundShadow.removeFromSuperview()
         UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: recordCallout)
     }
     
@@ -157,12 +169,13 @@ class SingleRouteVC: TutorialChildViewController {
     override func didTransitionTo(newState: AppState) {
         if case .recordingRoute = newState {
             tutorialParent?.state = .recordingSingleRoute
-            recordCallout!.removeFromSuperview()
-            recordArrow!.removeFromSuperview()
+            singleUseRouteCallout!.removeFromSuperview()
+//            recordCallout!.removeFromSuperview()
+//            recordArrow!.removeFromSuperview()
         }
         
         if case .readyToNavigateOrPause = newState {
-            self.view.addSubview(backgroundShadow)  
+            self.view.addSubview(backgroundShadow)
             tutorialParent?.state = .teachTheNavigationOfASingleRoute
             // Delaying the callout introduction until after the view has successfully been added
             // TODO: think about healthier ways this can be done
@@ -195,7 +208,7 @@ class SingleRouteVC: TutorialChildViewController {
                     self.tutorialParent?.parent?.view.bringSubviewToFront(self.tutorialParent!.view)
                 }
                 tutorialParent?.state = .displayCongratsView
-            } 
+            }
         }
         
     }
@@ -209,7 +222,7 @@ class SingleRouteVC: TutorialChildViewController {
     }
     
     override func allowLandmarkProcedure() -> Bool {
-        return false
+        return true // set to true
     }
     
     override func allowSettingsPressed() -> Bool {
@@ -240,4 +253,5 @@ class SingleRouteVC: TutorialChildViewController {
         return false
     }
 }
+
 
