@@ -39,7 +39,7 @@
 "recordSingleUseRouteButtonAccessibilityLabel" = "Grabar una ruta de un solo uso";
 "savedRoutesListButtonText" = "Listado de rutas guardadas";
 "savedRoutesListButtonAccessibilityLabel" = "Listado de rutas guardadas";
-"stopNavigationButtonAcessabilityLabel" = "Detener la navegación";
+"stopNavigationButtonAccessibilityLabel" = "Detener la navegación";
 "startReturnNavigationButtonAcessabilityLabel" = "Iniciar navegación de retorno";
 "stopRecordingButtonAccessibilityLabel" = "Detener la grabación";
 "settingsButtonAccessibilityLabel" = "Ajustes";
