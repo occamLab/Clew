@@ -330,7 +330,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             isRelocalizing = true
         }
         var isSameMap = false
-        if #available(iOS 12.0, *), let worldMap = worldMap as? ARWorldMap {
+        if #available(iOS 12.0, *), let worldMap = worldMap as? ARWorldMap? {
             isSameMap = configuration.initialWorldMap != nil && configuration.initialWorldMap == worldMap
             configuration.initialWorldMap = worldMap
             attemptingRelocalization =  isSameMap && !isTrackingPerformanceNormal || worldMap != nil && !isSameMap
