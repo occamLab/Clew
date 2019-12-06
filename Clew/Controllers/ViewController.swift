@@ -225,7 +225,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         // if the ARSession is running, pause it to conserve battery
         sceneView.session.pause()
         // set this to nil to prevent the app from erroneously detecting that we can auto-align to the route
-        configuration.initialWorldMap = nil
+        if #available(iOS 12.0, *) {
+            configuration.initialWorldMap = nil
+        }
         showRecordPathButton(announceArrival: announceArrival)
     }
     
@@ -1390,7 +1392,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             //sends the user to the screen where they can start recording a route
             self.state = .startingPauseProcedure
         }
-        configuration.initialWorldMap = nil
+        if #available(iOS 12.0, *) {
+            configuration.initialWorldMap = nil
+        }
         sceneView.session.run(configuration, options: [.removeExistingAnchors, .resetTracking])
     }
     
@@ -1496,7 +1500,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             //sends the user to the screen where they can start recording a route
             self.state = .recordingRoute
         }
-        configuration.initialWorldMap = nil
+        if #available(iOS 12.0, *) {
+            configuration.initialWorldMap = nil
+        }
         sceneView.session.run(configuration, options: [.removeExistingAnchors, .resetTracking])
     }
     
