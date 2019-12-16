@@ -93,7 +93,7 @@ enum AppState {
 }
 
 /// The view controller that handles the main Clew window.  This view controller is always active and handles the various views that are used for different app functionalities.
-class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDelegate, AVSpeechSynthesizerDelegate {
+class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SRCountdownTimerDelegate, AVSpeechSynthesizerDelegate {
     
     // MARK: - Refactoring UI definition
     
@@ -101,6 +101,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// How long to wait (in seconds) between the alignment request and grabbing the transform
     static var alignmentWaitingPeriod = 5
+    
+    var transformCache = Dictionary<String, simd_float4x4>()
     
     /// The state of the ARKit tracking session as last communicated to us through the delgate protocol.  This is useful if you want to do something different in the delegate method depending on the previous state
     var trackingSessionState : ARCamera.TrackingState?
@@ -253,8 +255,24 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// - Parameter allowPause: a Boolean that determines whether the app should allow the user to pause the route (this is only allowed if it is the initial route recording)
     func handleStateTransitionToReadyToNavigateOrPause(allowPause: Bool) {
         droppingCrumbs?.invalidate()
+        print("STOPPING CRUMB DROPPING")
         updateHeadingOffsetTimer?.invalidate()
         showStartNavigationButton(allowPause: allowPause)
+    }
+    
+    func session(_ session: ARSession,
+                 didUpdate anchors: [ARAnchor]) {
+        print("UPDATING ANCHOR START")
+        for anchor in anchors {
+            if let name = anchor.name {
+                if let oldTransform = transformCache[name] {
+                    print("UPDATING ANCHOR TRANFORM DELTA:", oldTransform - anchor.transform)
+                } else {
+                    transformCache[name] = anchor.transform
+                }
+                print("UPDATING ANCHOR:", name)
+            }
+        }
     }
     
     /// Handler for the navigatingRoute app state
@@ -268,10 +286,21 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
 
         logger.resetNavigationLog()
 
+        if !isResumedRoute {
+            // grab the latest crumbs if we didn't resume the route (these should be active)
+            routeCrumbs = crumbs
+        }
+
         // generate path from PathFinder class
         // enabled hapticFeedback generates more keypoints
-        let path = PathFinder(crumbs: crumbs.reversed(), hapticFeedback: hapticFeedback, voiceFeedback: voiceFeedback)
+        let path = PathFinder(crumbs: routeCrumbs.reversed(), hapticFeedback: hapticFeedback, voiceFeedback: voiceFeedback)
         keypoints = path.keypoints
+        
+        for (index, keypoint) in keypoints.enumerated() {
+            cacheTransformAsAnchor(name: "keypoint_" + String(index), transform: keypoint.location.transform)
+        }
+        // after caching all of the AR transforms, make sure to record this fact
+        keypoints = keypoints.enumerated().map({KeypointInfo(location: $0.1.location, orientation: $0.1.orientation, anchorTag: $0.0)})
         
         // save keypoints data for debug log
         logger.logKeypoints(keypoints: keypoints)
@@ -333,10 +362,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         attemptingRelocalization =  isSameMap && !isTrackingPerformanceNormal || worldMap != nil && !isSameMap
 
         if navigateStartToEnd {
-            crumbs = route.crumbs.reversed()
+            routeCrumbs = route.crumbs.reversed()
             pausedTransform = route.beginRouteAnchorPoint.transform
         } else {
-            crumbs = route.crumbs
+            routeCrumbs = route.crumbs
             pausedTransform = route.endRouteAnchorPoint.transform
         }
         // don't reset tracking, but do clear anchors and switch to the new map
@@ -399,6 +428,37 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(ViewController.alignmentWaitingPeriod), execute: playAlignmentConfirmation!)
     }
     
+    func deleteCachedTransform(name: String) {
+        guard let anchors = sceneView.session.currentFrame?.anchors else {
+            return
+        }
+        for anchor in anchors {
+            if let anchorName = anchor.name, name == anchorName {
+                sceneView.session.remove(anchor: anchor)
+            }
+        }
+    }
+    
+    func cacheTransformAsAnchor(name: String, transform: simd_float4x4) {
+        // first remove the cached anchor (if it exists)
+        deleteCachedTransform(name: name)
+        sceneView.session.add(anchor: ARAnchor(name: name, transform: transform))
+        transformCache[name] = transform
+    }
+    
+    func retrieveTransformAsAnchor(name: String)->simd_float4x4? {
+        // first remove the cached anchor (if it exists)
+        guard let anchors = sceneView.session.currentFrame?.anchors else {
+            return nil
+        }
+        for anchor in anchors {
+            if let anchorName = anchor.name, name == anchorName {
+                return anchor.transform
+            }
+        }
+        return nil
+    }
+    
     /// Handler for the completingPauseProcedure app state
     func handleStateTransitionToCompletingPauseProcedure() {
         // TODO: we should not be able to create a route Anchor Point if we are in the relocalizing state... (might want to handle this when the user stops navigation on a route they loaded.... This would obviate the need to handle this in the recordPath code as well
@@ -408,7 +468,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 print("can't properly save Anchor Point: TODO communicate this to the user somehow")
                 return
             }
+            // need to store this somewhere and then reload it when we are ready to save the route
             beginRouteAnchorPoint.transform = currentTransform
+            cacheTransformAsAnchor(name: "beginRouteAnchorPoint", transform: currentTransform)
             pauseTrackingController.remove()
             
             ///PATHPOINT begining anchor point alignment timer -> record route
@@ -419,12 +481,16 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             return
         } else if let currentTransform = sceneView.session.currentFrame?.camera.transform {
             endRouteAnchorPoint.transform = currentTransform
+            cacheTransformAsAnchor(name: "endRouteAnchorPoint", transform: currentTransform)
+            // no more crumbs
+            droppingCrumbs?.invalidate()
 
             sceneView.session.getCurrentWorldMap { worldMap, error in
                 //check whether or not the path was called from the pause menu or not
                 if self.paused {
                     ///PATHPOINT pause recording anchor point alignment timer -> resume tracking
                     //proceed as normal with the pause structure (single use route)
+                    self.freshenAnchorPointTransforms()
                     self.justTraveledRoute = SavedRoute(id: "single use", name: "single use", crumbs: self.crumbs, dateCreated: Date() as NSDate, beginRouteAnchorPoint: self.beginRouteAnchorPoint, endRouteAnchorPoint: self.endRouteAnchorPoint)
                     self.justUsedMap = worldMap
                     self.showResumeTrackingButton()
@@ -514,11 +580,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     ///   - worldMap: the world map
     /// - Throws: an error if something goes wrong
     func archive(routeId: NSString, beginRouteAnchorPoint: RouteAnchorPoint, endRouteAnchorPoint: RouteAnchorPoint, worldMap: ARWorldMap?) throws {
+        freshenAnchorPointTransforms()
         let savedRoute = SavedRoute(id: routeId, name: routeName!, crumbs: crumbs, dateCreated: Date() as NSDate, beginRouteAnchorPoint: beginRouteAnchorPoint, endRouteAnchorPoint: endRouteAnchorPoint)
         try dataPersistence.archive(route: savedRoute, worldMap: worldMap)
         justTraveledRoute = savedRoute
     }
 
+    func freshenAnchorPointTransforms() {
+        beginRouteAnchorPoint.transform = retrieveTransformAsAnchor(name: "beginRouteAnchorPoint")
+        endRouteAnchorPoint.transform = retrieveTransformAsAnchor(name: "endRouteAnchorPoint")
+    }
+    
     /// Timer to periodically announce tracking errors
     var trackingErrorsAnnouncementTimer: Timer?
     
@@ -778,6 +850,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
         followingCrumbs?.invalidate()
         routeName = nil
+        deleteCachedTransform(name: "beginRouteAnchorPoint")
+        deleteCachedTransform(name: "endRouteAnchorPoint")
+
         beginRouteAnchorPoint = RouteAnchorPoint()
         endRouteAnchorPoint = RouteAnchorPoint()
         playAlignmentConfirmation?.cancel()
@@ -957,6 +1032,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         configuration.planeDetection = [.horizontal, .vertical]
         configuration.isAutoFocusEnabled = false
         sceneView.delegate = self
+        sceneView.session.delegate = self
     }
     
     /// Handle the user clicking the confirm alignment to a saved Anchor Point.  Depending on the app state, the behavior of this function will differ (e.g., if the route is being resumed versus reloaded)
@@ -1215,10 +1291,45 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     var configuration: ARWorldTrackingConfiguration!
     
     /// MARK: - Clew internal datastructures
+
+    /// Internal variable to keep track of the number of record crumbs that have been dropped.  This will automatically be updated as long as you use the sestter for crumbs and the addCrumb method
+    var recordCrumbCount = 0
     
-    /// list of crumbs dropped when recording path
-    var crumbs: [LocationInfo]!
-    
+    /// This is a parking lot for the loaded route crumbs before the keypoints are constructed.  This is only used when resuming a route
+    var routeCrumbs: [LocationInfo] = []
+
+    /// list of crumbs dropped when following path
+    var crumbs: [LocationInfo] {
+        get {
+            guard let anchors = sceneView.session.currentFrame?.anchors else {
+                return []
+            }
+            
+            let justRecordAnchors = anchors.compactMap({$0.name != nil && $0.name!.starts(with: "recordCrumb") ? $0: nil })
+            let justRecordAnchorsSorted = justRecordAnchors.sorted(by: {
+                Int($0.name![$0.name!.index($0.name!.firstIndex(of: "_")!, offsetBy: 1)...])! < Int($1.name![$1.name!.index($1.name!.firstIndex(of: "_")!, offsetBy: 1)...])!
+            })
+
+            return justRecordAnchorsSorted.map({LocationInfo(transform: $0.transform)})
+        }
+        set (newCrumbs) {
+            // first remove old crumbs
+            guard let anchors = sceneView.session.currentFrame?.anchors else {
+                return
+            }
+            for anchor in anchors {
+                if let name = anchor.name, name.starts(with: "recordCrumb") {
+                    sceneView.session.remove(anchor: anchor)
+                }
+            }
+            // now add new crumbs
+            for (index, newCrumb) in newCrumbs.enumerated() {
+                sceneView.session.add(anchor: ARAnchor(name: "recordCrumb_" + String(index), transform: newCrumb.transform))
+            }
+            recordCrumbCount = newCrumbs.count
+        }
+    }
+
     /// list of keypoints calculated after path completion
     var keypoints: [KeypointInfo]!
     
@@ -1565,12 +1676,18 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         state = .mainScreen(announceArrival: false)
     }
     
+    func addRecordCrumb(location: LocationInfo) {
+        sceneView.session.add(anchor: ARAnchor(name: "recordCrumb_" + String(recordCrumbCount), transform: location.transform))
+        transformCache["recordCrumb_" + String(recordCrumbCount)] = location.transform
+        recordCrumbCount += 1
+    }
+    
     /// drop a crumb during path recording
     @objc func dropCrumb() {
         guard let curLocation = getRealCoordinates(record: true)?.location else {
             return
         }
-        crumbs.append(curLocation)
+        addRecordCrumb(location: curLocation)
     }
     
     /// checks to see if user is on the right path during navigation.
@@ -1594,6 +1711,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 
                 // erase current keypoint and render next keypoint node
                 keypointNode.removeFromParentNode()
+                if let anchorTag = keypoints[0].anchorTag {
+                    print("UPDATING!!")
+                    keypoints[0].location = LocationInfo(transform: retrieveTransformAsAnchor(name: "keypoint_" + String(anchorTag))!)
+                }
                 renderKeypoint(keypoints[0].location)
                 
                 // update directions to next keypoint
