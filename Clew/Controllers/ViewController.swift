@@ -316,6 +316,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     ///
     /// - Parameter announceArrival: a Boolean that indicates whether the user's arrival should be announced (true means the user has arrived)
     func handleStateTransitionToMainScreen(announceArrival: Bool) {
+        // cancel the timer that announces tracking errors
+        trackingErrorsAnnouncementTimer?.invalidate()
         // if the ARSession is running, pause it to conserve battery
         sceneView.session.pause()
         // set this to nil to prevent the app from erroneously detecting that we can auto-align to the route
@@ -452,7 +454,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             pausedAnchorPoint = route.endRouteAnchorPoint
         }
         // don't reset tracking, but do clear anchors and switch to the new map
-        sceneView.session.run(configuration, options: [.removeExistingAnchors])
+        sceneView.session.run(configuration, options: [.removeExistingAnchors, .resetTracking])
 
         if isTrackingPerformanceNormal, isSameMap {
             // we can skip the whole process of relocalization since we are already using the correct map and tracking is normal.  It helps to strip out old anchors to reduce jitter though
@@ -705,6 +707,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
 
     /// A threshold to determine when a segment is long enough to use for soft alignment
     var softAlignmentSegmentLengthThreshold = 1.0
+
+    /// Timer to periodically announce tracking errors
+    var trackingErrorsAnnouncementTimer: Timer?
     
     /// While recording, every 0.01s, check to see if we should reset the heading offset
     var angleOffsetTimer: Timer?
@@ -1559,6 +1564,35 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
     }
     
+    /// Announces the any excessive motion or insufficient visual features errors as specified in the last observed tracking state
+    func announceCurrentTrackingErrors() {
+        switch self.trackingSessionState {
+        case .limited(let reason):
+            switch reason {
+            case .excessiveMotion:
+                print("Excessive motion")
+                if !self.suppressTrackingWarnings {
+                    self.announce(announcement: NSLocalizedString("excessiveMotionDegradedTrackingAnnouncemnt", comment: "An announcement which lets the user know that there is too much movement of their device and thus the app's ability to track a route has been lowered."))
+                    if self.soundFeedback {
+                        self.playSystemSound(id: 1050)
+                    }
+                }
+            case .insufficientFeatures:
+                print("InsufficientFeatures")
+                if !self.suppressTrackingWarnings {
+                    self.announce(announcement: NSLocalizedString("insuficientFeaturesDegradedTrackingAnnouncemnt", comment: "An announcement which lets the user know  that their current surroundings do not have enough visual markers and thus the app's ability to track a route has been lowered."))
+                    if self.soundFeedback {
+                        self.playSystemSound(id: 1050)
+                    }
+                }
+            default:
+                break
+            }
+        default:
+            break
+        }
+    }
+    
     /// handles the user pressing the record path button.
     @objc func recordPath() {
         ///PATHPOINT record two way path button -> create Anchor Point
@@ -1576,13 +1610,19 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         creatingRouteAnchorPoint = true
 
         hideAllViewsHelper()
+
+        // announce session state
+        trackingErrorsAnnouncementTimer = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: true) { timer in
+            self.announceCurrentTrackingErrors()
+        }
         // this makes sure that the user doesn't start recording the single use route until the session is initialized
         continuationAfterSessionIsReady = {
+            self.trackingErrorsAnnouncementTimer?.invalidate()
             //sends the user to the screen where they can start recording a route
             self.state = .startingPauseProcedure
         }
         configuration.initialWorldMap = nil
-        sceneView.session.run(configuration, options: [.removeExistingAnchors])
+        sceneView.session.run(configuration, options: [.removeExistingAnchors, .resetTracking])
     }
     
     /// handles the user pressing the stop recording button.
@@ -1621,15 +1661,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         state = .navigatingRoute
     }
     
-    /// This helper function will restart the tracking session if a relocalization was in progress but did not succeed.  This is useful in the case when you want to allow for the recording of a new route and don't want to have the possibility achieving relocalization halfway through recording the route.
-    func restartSessionIfFailedToRelocalize() {
-        if attemptingRelocalization {
-            configuration.initialWorldMap = nil
-            sceneView.session.run(configuration, options: [.removeExistingAnchors])
-            attemptingRelocalization = false
-        }
-    }
-    
     /// handles the user pressing the stop navigation button.
     ///
     /// - Parameter sender: the button that generated the event
@@ -1641,8 +1672,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         
         feedbackGenerator = nil
         waypointFeedbackGenerator = nil
-
-        restartSessionIfFailedToRelocalize()
         
         // erase nearest keypoint
         keypointNode.removeFromParentNode()
@@ -1702,8 +1731,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         ///hide all other views
         hideAllViewsHelper()
         
+        // announce session state
+        trackingErrorsAnnouncementTimer = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: true) { timer in
+            self.announceCurrentTrackingErrors()
+        }
         // this makes sure that the user doesn't start recording the single use route until the session is initialized
         continuationAfterSessionIsReady = {
+            self.trackingErrorsAnnouncementTimer?.invalidate()
             ///platy an announcemnt which tells the user that a route is being recorded
             self.delayTransition(announcement: NSLocalizedString("singleUseRouteToRecordingRouteAnnouncement", comment: "This is an announcement which is spoken when the user starts recording a single use route. it informs the user that they are recording a single use route."), initialFocus: nil)
             
@@ -1711,7 +1745,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             self.state = .recordingRoute
         }
         configuration.initialWorldMap = nil
-        sceneView.session.run(configuration, options: [.removeExistingAnchors])
+        sceneView.session.run(configuration, options: [.removeExistingAnchors, .resetTracking])
     }
     
     /// this is called after the alignment countdown timer finishes in order to complete the pause tracking procedure
@@ -1857,6 +1891,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             // TODO: might want to indicate that something is wrong to the user
             return
         }
+        print("adding follow crumb", curLocation.location.x, curLocation.location.y, curLocation.location.z)
         let minDistance = followCrumbs.map({sqrt(pow($0.x - curLocation.location.x, 2) + pow($0.y - curLocation.location.y, 2) + pow($0.z - curLocation.location.z, 2)) }).min()
         // always allow this for now if minDistance == nil || minDistance! > 0.2 {
         sceneView.session.add(anchor: ARAnchor(name: "followCrumb", transform: curLocation.location.transform))
@@ -1894,8 +1929,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 followingCrumbs?.invalidate()
                 hapticTimer?.invalidate()
                 snapToRouteTimer?.invalidate()
-                
-                restartSessionIfFailedToRelocalize()
                 
                 // update text and stop navigation
                 if(sendLogs) {
