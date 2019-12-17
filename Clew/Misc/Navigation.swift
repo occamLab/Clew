@@ -37,6 +37,8 @@ public enum PositionState {
 public struct DirectionInfo {
     /// the distance in meters to keypoint
     public var distance: Float
+    /// the ratio of lateral distance to the keypoint when the user passes it if they continue along their current heading versus the maximum allowable
+    public var lateralDistanceRatioWhenCrossingTarget: Float
     /// the angle in radians (yaw) to the next keypoint
     public var angleDiff: Float
     /// the description of angle to keypoint in clock position where straight forward is 12
@@ -53,11 +55,12 @@ public struct DirectionInfo {
     ///   - angleDiff: the angle (yaw) to the next keypoint
     ///   - clockDirection: the clock direction to the next keypoint
     ///   - hapticDirection: the state (at, near, or away from target) of the position relative to the keypoint
-    public init(distance: Float, angleDiff: Float, clockDirection: Int, hapticDirection: Int) {
+    public init(distance: Float, angleDiff: Float, clockDirection: Int, hapticDirection: Int, lateralDistanceRatioWhenCrossingTarget: Float) {
         self.distance = distance
         self.angleDiff = angleDiff
         self.clockDirection = clockDirection
         self.hapticDirection = hapticDirection
+        self.lateralDistanceRatioWhenCrossingTarget = lateralDistanceRatioWhenCrossingTarget
     }
 }
 
@@ -169,10 +172,11 @@ class Navigation {
         let keypointTargetWidth = isLastKeypoint ? lastKeypointTargetWidth : targetWidth
 
         let trueYaw  = getPhoneHeadingYaw(currentLocation: currentLocation) + (headingOffset != nil ? headingOffset! : Float(0.0))
-        
-        //  Distance to next keypoint in meters
-        let dist = sqrtf(powf((currentLocation.location.x - nextKeypoint.location.x), 2) +
-            powf((currentLocation.location.z - nextKeypoint.location.z), 2))
+        // planar heading vector
+        let planarHeading = Vector3([sin(trueYaw), 0, cos(trueYaw)])
+        let delta = currentLocation.location.translation - nextKeypoint.location.translation
+        let planarDelta = Vector3(delta.x, 0, delta.z)
+        let headingProjectedOntoKeypointXDirection = nextKeypoint.orientation.dot(planarHeading)
         
         // Finds angle from "forward"-looking towards the next keypoint in radians. Not sure which direction is negative vs. positive for now.
         let angle = atan2f((currentLocation.location.x - nextKeypoint.location.x), (currentLocation.location.z-nextKeypoint.location.z))
@@ -184,17 +188,18 @@ class Navigation {
         
         //  Determine the difference in position between the phone and the next
         //  keypoint in the frame of the keypoint.
-        let xDiff = Vector3([currentLocation.location.x - nextKeypoint.location.x,
-                             currentLocation.location.y - nextKeypoint.location.y,
-                             currentLocation.location.z - nextKeypoint.location.z]).dot(nextKeypoint.orientation)
-        let yDiff = Vector3([currentLocation.location.x - nextKeypoint.location.x,
-                             currentLocation.location.y - nextKeypoint.location.y,
-                             currentLocation.location.z - nextKeypoint.location.z]).dot(Vector3.y)
-        let zDiff = Vector3([currentLocation.location.x - nextKeypoint.location.x,
-                             currentLocation.location.y - nextKeypoint.location.y,
-                             currentLocation.location.z - nextKeypoint.location.z]).dot(nextKeypoint.orientation.cross(Vector3.y))
+        let xDiff = delta.dot(nextKeypoint.orientation)
+        let yDiff = delta.dot(Vector3.y)
+        let zDiff = delta.dot(nextKeypoint.orientation.cross(Vector3.y))
         
-        var direction = DirectionInfo(distance: dist, angleDiff: angleDiff, clockDirection: clockDirection, hapticDirection: hapticDirection)
+        let lateralDistanceRatioWhenCrossingTarget : Float
+        if headingProjectedOntoKeypointXDirection <= 0 {
+            lateralDistanceRatioWhenCrossingTarget = Float.infinity
+        } else {
+            lateralDistanceRatioWhenCrossingTarget = (-planarHeading*delta.dot(nextKeypoint.orientation)/headingProjectedOntoKeypointXDirection + currentLocation.location.translation - nextKeypoint.location.translation).length / keypointTargetWidth
+        }
+        
+        var direction = DirectionInfo(distance: planarDelta.length, angleDiff: angleDiff, clockDirection: clockDirection, hapticDirection: hapticDirection, lateralDistanceRatioWhenCrossingTarget: lateralDistanceRatioWhenCrossingTarget)
         
         //  Determine whether the phone is inside the bounding box of the keypoint
         if (xDiff <= keypointTargetDepth && yDiff <= keypointTargetHeight && zDiff <= keypointTargetWidth) {

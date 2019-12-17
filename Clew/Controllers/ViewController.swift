@@ -419,7 +419,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             return
         } else if let currentTransform = sceneView.session.currentFrame?.camera.transform {
             endRouteAnchorPoint.transform = currentTransform
-
+            // no more crumbs
+            droppingCrumbs?.invalidate()
             sceneView.session.getCurrentWorldMap { worldMap, error in
                 //check whether or not the path was called from the pause menu or not
                 if self.paused {
@@ -1717,14 +1718,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
         let directionToNextKeypoint = getDirectionToNextKeypoint(currentLocation: curLocation)
         let coneWidth: Float!
+        let lateralDisplacementToleranceRatio: Float
         if strictHaptic {
             coneWidth = Float.pi/12
+            lateralDisplacementToleranceRatio = 0.5          // this is the ratio between lateral distance when passing keypoint and the maximum acceptable lateral displacement
         } else {
             coneWidth = Float.pi/6
+            lateralDisplacementToleranceRatio = 1.0
         }
         
         // use a stricter criteria than 12 o'clock for providing haptic feedback
-        if abs(directionToNextKeypoint.angleDiff) < coneWidth {
+        if directionToNextKeypoint.lateralDistanceRatioWhenCrossingTarget < lateralDisplacementToleranceRatio || abs(directionToNextKeypoint.angleDiff) < coneWidth {
             let timeInterval = feedbackTimer.timeIntervalSinceNow
             if(-timeInterval > ViewController.FEEDBACKDELAY) {
                 // wait until desired time interval before sending another feedback
