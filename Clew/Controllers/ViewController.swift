@@ -245,6 +245,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         nav.headingOffset = 0.0
         headingRingBuffer.clear()
         locationRingBuffer.clear()
+        recordPhaseHeadingOffsets = []
         updateHeadingOffsetTimer = Timer.scheduledTimer(timeInterval: 0.01, target: self, selector: (#selector(updateHeadingOffset)), userInfo: nil, repeats: true)
     }
     
@@ -253,7 +254,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// - Parameter allowPause: a Boolean that determines whether the app should allow the user to pause the route (this is only allowed if it is the initial route recording)
     func handleStateTransitionToReadyToNavigateOrPause(allowPause: Bool) {
         droppingCrumbs?.invalidate()
-        setShouldSuggestAdjustOffset()
         updateHeadingOffsetTimer?.invalidate()
         showStartNavigationButton(allowPause: allowPause)
         suggestAdjustOffsetIfAppropriate()
@@ -401,12 +401,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(ViewController.alignmentWaitingPeriod), execute: playAlignmentConfirmation!)
     }
     
+    /// Checks to see if the user had the phone pointing consistently off-center when recording the route.  If this is the case, set a flag in UserDefaults so that the app can suggests the "Correct Offset of Phone / Body" feature.
     func setShouldSuggestAdjustOffset() {
         if recordPhaseHeadingOffsets.count > 6 && abs(recordPhaseHeadingOffsets.avg()) > 0.4 && recordPhaseHeadingOffsets.mean_abs_dev() < 0.2 {
             UserDefaults.standard.set(true, forKey: "shouldShowAdjustOffsetSuggestion")
         }
     }
     
+    /// If appropriate, suggest that the user activate the "Correct Offset of Phone / Body" feature.
     func suggestAdjustOffsetIfAppropriate() {
         let userDefaults: UserDefaults = UserDefaults.standard
         let shouldShowAdjustOffsetSuggestion: Bool? = userDefaults.object(forKey: "shouldShowAdjustOffsetSuggestion") as? Bool
@@ -414,6 +416,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
 
         if !adjustOffset && shouldShowAdjustOffsetSuggestion == true && showedAdjustOffsetSuggestion != true {
             showAdjustOffsetSuggestion()
+            // clear the flag
+            userDefaults.set(false, forKey: "shouldShowAdjustOffsetSuggestion")
+            // record that the alert has been shown
             userDefaults.set(true, forKey: "showedAdjustOffsetSuggestion")
         }
     }
@@ -440,8 +445,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             endRouteAnchorPoint.transform = currentTransform
             // no more crumbs
             droppingCrumbs?.invalidate()
-            updateHeadingOffsetTimer?.invalidate()
-            setShouldSuggestAdjustOffset()
             sceneView.session.getCurrentWorldMap { worldMap, error in
                 //check whether or not the path was called from the pause menu or not
                 if self.paused {
@@ -856,8 +859,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                                       preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: NSLocalizedString("turnOnAdjustOffsetButton", comment: "This text appears on a button that turns on the adjust offset feature"), style: .default, handler: { action -> Void in
             // turn on the adjust offset feature
-            print("SEE IF WE ACTUALLY NEED THIS")
-            self.adjustOffset = true
             UserDefaults.standard.set(true, forKey: "adjustOffset")
         }
         ))
@@ -872,7 +873,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// Show the dialog that allows the user to enter textual information to help them remember a Anchor Point.
     @objc func showAnchorPointInformationDialog() {
         rootContainerView.homeButton.isHidden = false
-//        backButton.isHidden = true
         // Set title and message for the alert dialog
         let alertController = UIAlertController(title: NSLocalizedString("anchorPointTextHeading", comment: "The header of a pop-up menu which prompts the user to write descriptive text about their route anchor point"), message: NSLocalizedString("anchorPointTextPrompt", comment: "Prompts user to enter descriptive text about their anchor point"), preferredStyle: .alert)
         // The confirm action taking the inputs
@@ -1442,6 +1442,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         resumeTrackingController.remove()
         resumeTrackingConfirmController.remove()
         stopRecordingController.remove()
+        setShouldSuggestAdjustOffset()
+        // heading offsets should not be updated from this point until route navigation starts
+        updateHeadingOffsetTimer?.invalidate()
+        recordPhaseHeadingOffsets = []
         
         ///checks if the route is a single use route or a multiple use route
         if !recordingSingleUseRoute {

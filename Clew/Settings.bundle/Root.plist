@@ -138,7 +138,7 @@
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
 			<key>Title</key>
-			<string>Correct for Offset of Phone and Body</string>
+			<string>Correct Offset of Phone / Body</string>
 			<key>Key</key>
 			<string>adjustOffset</string>
 			<key>DefaultValue</key>
