@@ -253,8 +253,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// - Parameter allowPause: a Boolean that determines whether the app should allow the user to pause the route (this is only allowed if it is the initial route recording)
     func handleStateTransitionToReadyToNavigateOrPause(allowPause: Bool) {
         droppingCrumbs?.invalidate()
+        setShouldSuggestAdjustOffset()
         updateHeadingOffsetTimer?.invalidate()
         showStartNavigationButton(allowPause: allowPause)
+        suggestAdjustOffsetIfAppropriate()
     }
     
     /// Handler for the navigatingRoute app state
@@ -399,6 +401,23 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(ViewController.alignmentWaitingPeriod), execute: playAlignmentConfirmation!)
     }
     
+    func setShouldSuggestAdjustOffset() {
+        if recordPhaseHeadingOffsets.count > 6 && abs(recordPhaseHeadingOffsets.avg()) > 0.4 && recordPhaseHeadingOffsets.mean_abs_dev() < 0.2 {
+            UserDefaults.standard.set(true, forKey: "shouldShowAdjustOffsetSuggestion")
+        }
+    }
+    
+    func suggestAdjustOffsetIfAppropriate() {
+        let userDefaults: UserDefaults = UserDefaults.standard
+        let shouldShowAdjustOffsetSuggestion: Bool? = userDefaults.object(forKey: "shouldShowAdjustOffsetSuggestion") as? Bool
+        let showedAdjustOffsetSuggestion: Bool? = userDefaults.object(forKey: "showedAdjustOffsetSuggestion") as? Bool
+
+        if !adjustOffset && shouldShowAdjustOffsetSuggestion == true && showedAdjustOffsetSuggestion != true {
+            showAdjustOffsetSuggestion()
+            userDefaults.set(true, forKey: "showedAdjustOffsetSuggestion")
+        }
+    }
+    
     /// Handler for the completingPauseProcedure app state
     func handleStateTransitionToCompletingPauseProcedure() {
         // TODO: we should not be able to create a route Anchor Point if we are in the relocalizing state... (might want to handle this when the user stops navigation on a route they loaded.... This would obviate the need to handle this in the recordPath code as well
@@ -421,6 +440,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             endRouteAnchorPoint.transform = currentTransform
             // no more crumbs
             droppingCrumbs?.invalidate()
+            updateHeadingOffsetTimer?.invalidate()
+            setShouldSuggestAdjustOffset()
             sceneView.session.getCurrentWorldMap { worldMap, error in
                 //check whether or not the path was called from the pause menu or not
                 if self.paused {
@@ -533,6 +554,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// A threshold to determine when a path is too curvy to update the angle offset
     let linearDeviationThreshold: Float = 0.05
     
+    /// an aray of heading offsets calculated during the record phase.  We use thsi to suggest that users enable the adjustOffest option
+    var recordPhaseHeadingOffsets: [Float] = []
+    /// the last time we stored the heading offset during the record phase (we want to make sure thesse are spaced out by at least a little bit
+    var lastRecordPhaseOffsetTime = Date()
     /// a ring buffer used to keep the last 50 positions of the phone
     var locationRingBuffer = RingBuffer<Vector3>(capacity: 50)
     /// a ring buffer used to keep the last 100 headings of the phone
@@ -550,7 +575,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     // MARK: - Parameters that can be controlled remotely via Firebase
     
     /// True if the offset between direction of travel and phone should be updated over time
-    var adjustOffset = false
+    var adjustOffset: Bool!
     
     /// True if we should use a cone of pi/12 and false if we should use a cone of pi/6 when deciding whether to issue haptic feedback
     var strictHaptic = true
@@ -750,7 +775,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         } else if showedSignificantChangesAlert == nil {
             // we only show the significant changes alert if this is an old installation
             userDefaults.set(true, forKey: "showedSignificantChangesAlertv1_3")
-            showSignificantChangesAlert()
+            // don't show this for now, but leave the plumbing in place for a future significant change
+            // showSignificantChangesAlert()
         }
         
         synth.delegate = self
@@ -778,6 +804,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             keypointNode.removeFromParentNode()
         }
         followingCrumbs?.invalidate()
+        recordPhaseHeadingOffsets = []
         routeName = nil
         beginRouteAnchorPoint = RouteAnchorPoint()
         endRouteAnchorPoint = RouteAnchorPoint()
@@ -815,6 +842,26 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
         ))
         alert.addAction(UIAlertAction(title: NSLocalizedString("cancelPop-UpButtonLabel", comment: "A button which closes the current pop up"), style: .default, handler: { action -> Void in
+            // nothing to do, just stay on the page
+        }
+        ))
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    /// function that creates alerts for the home button
+    func showAdjustOffsetSuggestion() {
+        // Create alert to warn users of lost information
+        let alert = UIAlertController(title: NSLocalizedString("showAdjustOffsetSuggestionTitle", comment: "This is the title of an alert which shows up when the user appears to hold their phone at a consistent offset to their direction of motion."),
+                                      message: NSLocalizedString("adjustOffsetAlertContent", comment: "this is the content of an alert which tells the user that they should consider enabling the adjust offset feature."),
+                                      preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: NSLocalizedString("turnOnAdjustOffsetButton", comment: "This text appears on a button that turns on the adjust offset feature"), style: .default, handler: { action -> Void in
+            // turn on the adjust offset feature
+            print("SEE IF WE ACTUALLY NEED THIS")
+            self.adjustOffset = true
+            UserDefaults.standard.set(true, forKey: "adjustOffset")
+        }
+        ))
+        alert.addAction(UIAlertAction(title: NSLocalizedString("declineTurnOnAdjustOffsetButton", comment: "A button which declines to turn on the adjust offset feature"), style: .default, handler: { action -> Void in
             // nothing to do, just stay on the page
         }
         ))
@@ -930,7 +977,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// Register settings bundle
     func registerSettingsBundle(){
-        let appDefaults = ["crumbColor": 0, "hapticFeedback": true, "sendLogs": true, "voiceFeedback": true, "soundFeedback": true, "units": 0, "timerLength":5] as [String : Any]
+        let appDefaults = ["crumbColor": 0, "hapticFeedback": true, "sendLogs": true, "voiceFeedback": true, "soundFeedback": true, "adjustOffset": false, "units": 0, "timerLength":5] as [String : Any]
         UserDefaults.standard.register(defaults: appDefaults)
     }
 
@@ -945,6 +992,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         hapticFeedback = defaults.bool(forKey: "hapticFeedback")
         sendLogs = defaults.bool(forKey: "sendLogs")
         timerLength = defaults.integer(forKey: "timerLength")
+        adjustOffset = defaults.bool(forKey: "adjustOffset")
     }
     
     /// Handles updates to the app settings.
@@ -1151,7 +1199,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 } catch {}
             }
         }
-//        rootContainerView.resumeTrackingConfirmView.getButtonByTag(tag: UIView.readVoiceNoteButtonTag)?.isHidden = voiceNoteToPlay == nil
         resumeTrackingConfirmController.readVoiceNoteButton?.isHidden = voiceNoteToPlay == nil
         let waitingPeriod = ViewController.alignmentWaitingPeriod
         resumeTrackingConfirmController.view.mainText?.text?.append(String.localizedStringWithFormat(NSLocalizedString("anchorPointAlignmentText", comment: "Text describing the process of aligning to an anchorpoint. This text shows up on the alignment screen."), waitingPeriod))
@@ -1678,6 +1725,15 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         locationRingBuffer.insert(Vector3(curLocation.location.x, curLocation.location.y, curLocation.location.z))
         
         if let newOffset = getHeadingOffset() {
+            if case .recordingRoute = state {
+                // see if it has been at least 1 second since we last recorded the offset
+                if -lastRecordPhaseOffsetTime.timeIntervalSinceNow > 1.0 {
+                    recordPhaseHeadingOffsets.append(newOffset)
+                    lastRecordPhaseOffsetTime = Date()
+                }
+            }// else if case .navigatingRoute = state {
+                // TODO: maybe add this here???  This will probably be much more variable and hard to detect.  Maybe start with an easier path
+            //}
             if adjustOffset {
                 nav.headingOffset = newOffset
             }

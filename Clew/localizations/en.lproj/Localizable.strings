@@ -211,6 +211,10 @@
 
 "followingARouteSpeechFeedbackContent" = "Assuming you have enabled speech feedback in the app settings and voice over is on, the phone will provide you with voice directions whenever you encounter an anchor point on your route, start a route, or complete a route. If you want to hear voice directions again, you can use the &quot;Get Directions&quot; button.";
 
+"followingARouteCorrectOffsetAutomaticallyHeader" = "Automatic Correction of Phone / Body Offset";
+
+"followingARouteCorrectOffsetAutomaticallyContent" = "todo";
+
 "appSoundsAndTheirMeaningsHeader" = "App sounds and their meanings";
 
 "appSoundsAndTheirMeaningsContent" = "In addition to the auditory guidance that you get when navigating along a route (described previously), there are some additional sounds that help you understand what is currently happening with the app. If you have enabled the speech feedback option in the app settings, each of these sounds is accompanied by speech that briefly explains the sounds meaning. Note that these sounds are not delivered when you are in the help menu (to avoid distracting you while you are reading through the help information).";
