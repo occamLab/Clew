@@ -288,6 +288,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         waypointFeedbackGenerator = UINotificationFeedbackGenerator()
         
         showStopNavigationButton()
+        remindedUserOfOffsetAdjustment = false
 
         // wait a little bit before starting navigation to allow screen to transition and make room for the first direction announcement to be communicated
         
@@ -579,6 +580,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// True if the offset between direction of travel and phone should be updated over time
     var adjustOffset: Bool!
+    
+    /// True if the user has been reminded that the adjusts offset feature is turned on
+    var remindedUserOfOffsetAdjustment = false
     
     /// True if we should use a cone of pi/12 and false if we should use a cone of pi/6 when deciding whether to issue haptic feedback
     var strictHaptic = true
@@ -1251,6 +1255,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 altText += " for \(distanceToDisplay)" + unitText[defaultUnit]!
             }
         }
+        if !remindedUserOfOffsetAdjustment {
+            altText += ". " + NSLocalizedString("adjustOffsetReminderAnnouncement", comment: "This is the announcement which is spoken after starting navigation if the user has enabled the Correct Offset of Phone / Body option.")
+            remindedUserOfOffsetAdjustment = true
+        }
         if case .navigatingRoute = state {
             logger.logSpeech(utterance: altText)
         }
@@ -1584,6 +1592,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                     ///PATHPOINT load saved route -> start navigation
 
                     ///announce to the user that they have sucessfully aligned with their saved anchor point.
+                    // TODO: could be a localization problem.
                     self.delayTransition(announcement: NSLocalizedString("Aligned to anchor point. Starting navigation.", comment: "This is an announcement that is played when the user is loading a saved route. this signifies the transition between saving an anchor point and starting route navigation."), initialFocus: nil)
                     self.state = .navigatingRoute
 
@@ -1728,7 +1737,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         headingRingBuffer.insert(currPhoneHeading)
         locationRingBuffer.insert(Vector3(curLocation.location.x, curLocation.location.y, curLocation.location.z))
         
-        if let newOffset = getHeadingOffset() {
+        if let newOffset = getHeadingOffset(), cos(newOffset) > 0 {
             if case .recordingRoute = state {
                 // see if it has been at least 1 second since we last recorded the offset
                 if -lastRecordPhaseOffsetTime.timeIntervalSinceNow > 1.0 {
