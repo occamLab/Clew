@@ -53,11 +53,11 @@ enum AppState {
     /// user has successfully paused the ARSession
     case pauseProcedureCompleted
     /// user has hit the resume button and is waiting for the volume to hit
-    case startingResumeProcedure(route: SavedRoute, worldMap: ARWorldMap?, navigateStartToEnd: Bool)
+    case startingResumeProcedure(route: SavedRoute, worldMap: Any?, navigateStartToEnd: Bool)
     /// the AR session has entered the relocalizing state, which means that we can now realign the session
     case readyForFinalResumeAlignment
     /// the user is attempting to name the route they're in the process of saving
-    case startingNameSavedRouteProcedure(worldMap: ARWorldMap?)
+    case startingNameSavedRouteProcedure(worldMap: Any?)
     
     /// rawValue is useful for serializing state values, which we are currently using for our logging feature
     var rawValue: String {
@@ -225,7 +225,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         // if the ARSession is running, pause it to conserve battery
         sceneView.session.pause()
         // set this to nil to prevent the app from erroneously detecting that we can auto-align to the route
-        configuration.initialWorldMap = nil
+        if #available(iOS 12.0, *) {
+            configuration.initialWorldMap = nil
+        }
         showRecordPathButton(announceArrival: announceArrival)
     }
     
@@ -320,7 +322,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     ///   - route: the route to navigate
     ///   - worldMap: the world map to use
     ///   - navigateStartToEnd: a Boolean that is true if we want to navigate from the start to the end and false if we want to navigate from the end to the start.
-    func handleStateTransitionToStartingResumeProcedure(route: SavedRoute, worldMap: ARWorldMap?, navigateStartToEnd: Bool) {
+    func handleStateTransitionToStartingResumeProcedure(route: SavedRoute, worldMap: Any?, navigateStartToEnd: Bool) {
         // load the world map and restart the session so that things have a chance to quiet down before putting it up to the wall
         var isTrackingPerformanceNormal = false
         if case .normal? = sceneView.session.currentFrame?.camera.trackingState {
@@ -330,10 +332,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         if case .limited(reason: .relocalizing)? = sceneView.session.currentFrame?.camera.trackingState {
             isRelocalizing = true
         }
-        let isSameMap = configuration.initialWorldMap != nil && configuration.initialWorldMap == worldMap
-        configuration.initialWorldMap = worldMap
+        var isSameMap = false
+        if #available(iOS 12.0, *), let worldMap = worldMap as? ARWorldMap? {
+            isSameMap = configuration.initialWorldMap != nil && configuration.initialWorldMap == worldMap
+            configuration.initialWorldMap = worldMap
+            attemptingRelocalization =  isSameMap && !isTrackingPerformanceNormal || worldMap != nil && !isSameMap
+        }
     
-        attemptingRelocalization =  isSameMap && !isTrackingPerformanceNormal || worldMap != nil && !isSameMap
 
         if navigateStartToEnd {
             crumbs = route.crumbs.reversed()
@@ -366,7 +371,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     }
     
     /// Handler for the startingNameSavedRouteProcedure app state
-    func handleStateTransitionToStartingNameSavedRouteProcedure(worldMap: ARWorldMap?){
+    func handleStateTransitionToStartingNameSavedRouteProcedure(worldMap: Any?){
         hideAllViewsHelper()
         nameSavedRouteController.worldMap = worldMap
         add(nameSavedRouteController)
@@ -446,22 +451,31 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             endRouteAnchorPoint.transform = currentTransform
             // no more crumbs
             droppingCrumbs?.invalidate()
-            sceneView.session.getCurrentWorldMap { worldMap, error in
-                //check whether or not the path was called from the pause menu or not
-                if self.paused {
-                    ///PATHPOINT pause recording anchor point alignment timer -> resume tracking
-                    //proceed as normal with the pause structure (single use route)
-                    self.justTraveledRoute = SavedRoute(id: "single use", name: "single use", crumbs: self.crumbs, dateCreated: Date() as NSDate, beginRouteAnchorPoint: self.beginRouteAnchorPoint, endRouteAnchorPoint: self.endRouteAnchorPoint)
-                    self.justUsedMap = worldMap
-                    self.showResumeTrackingButton()
-                    self.state = .pauseProcedureCompleted
-                } else {
-                    ///PATHPOINT end anchor point alignment timer -> Save Route View
-                    self.delayTransition(announcement: NSLocalizedString("multipleUseRouteAnchorPointToSaveARouteAnnouncement", comment: "This is an announcement which is spoken when the user saves the end anchor point for a multiple use route. This signifies the transition from saving an anchor point to the screen where the user can name and save their route"), initialFocus: nil)
-                    ///sends the user to the play/pause screen
-                    self.state = .startingNameSavedRouteProcedure(worldMap: worldMap)
+
+            if #available(iOS 12.0, *) {
+                sceneView.session.getCurrentWorldMap { worldMap, error in
+                    self.completingPauseProcedureHelper(worldMap: worldMap)
                 }
+            } else {
+                completingPauseProcedureHelper(worldMap: nil)
             }
+        }
+    }
+    
+    func completingPauseProcedureHelper(worldMap: Any?) {
+        //check whether or not the path was called from the pause menu or not
+        if paused {
+            ///PATHPOINT pause recording anchor point alignment timer -> resume tracking
+            //proceed as normal with the pause structure (single use route)
+            justTraveledRoute = SavedRoute(id: "single use", name: "single use", crumbs: self.crumbs, dateCreated: Date() as NSDate, beginRouteAnchorPoint: self.beginRouteAnchorPoint, endRouteAnchorPoint: self.endRouteAnchorPoint)
+            justUsedMap = worldMap
+            showResumeTrackingButton()
+            state = .pauseProcedureCompleted
+        } else {
+            ///PATHPOINT end anchor point alignment timer -> Save Route View
+            delayTransition(announcement: NSLocalizedString("multipleUseRouteAnchorPointToSaveARouteAnnouncement", comment: "This is an announcement which is spoken when the user saves the end anchor point for a multiple use route. This signifies the transition from saving an anchor point to the screen where the user can name and save their route"), initialFocus: nil)
+            ///sends the user to the play/pause screen
+            state = .startingNameSavedRouteProcedure(worldMap: worldMap)
         }
     }
     
@@ -539,7 +553,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     ///   - endRouteAnchorPoint: the route Anchor Point for the end (if there is no route Anchor Point at the end, the elements of this struct can be nil)
     ///   - worldMap: the world map
     /// - Throws: an error if something goes wrong
-    func archive(routeId: NSString, beginRouteAnchorPoint: RouteAnchorPoint, endRouteAnchorPoint: RouteAnchorPoint, worldMap: ARWorldMap?) throws {
+    func archive(routeId: NSString, beginRouteAnchorPoint: RouteAnchorPoint, endRouteAnchorPoint: RouteAnchorPoint, worldMap: Any?) throws {
         let savedRoute = SavedRoute(id: routeId, name: routeName!, crumbs: crumbs, dateCreated: Date() as NSDate, beginRouteAnchorPoint: beginRouteAnchorPoint, endRouteAnchorPoint: endRouteAnchorPoint)
         try dataPersistence.archive(route: savedRoute, worldMap: worldMap)
         justTraveledRoute = savedRoute
@@ -1367,7 +1381,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     
     /// the most recently used map.  This helps us determine whether a route the user is attempting to load requires alignment.  If we have already aligned within a particular map, we can skip the alignment procedure.
-    var justUsedMap : ARWorldMap?
+    var justUsedMap : Any?
     
     /// DirectionText based on hapic/voice settings
     var Directions: Dictionary<Int, String> {
@@ -1435,7 +1449,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             //sends the user to the screen where they can start recording a route
             self.state = .startingPauseProcedure
         }
-        configuration.initialWorldMap = nil
+        if #available(iOS 12.0, *) {
+            configuration.initialWorldMap = nil
+        }
         sceneView.session.run(configuration, options: [.removeExistingAnchors, .resetTracking])
     }
     
@@ -1545,7 +1561,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             //sends the user to the screen where they can start recording a route
             self.state = .recordingRoute
         }
-        configuration.initialWorldMap = nil
+        if #available(iOS 12.0, *) {
+            configuration.initialWorldMap = nil
+        }
         sceneView.session.run(configuration, options: [.removeExistingAnchors, .resetTracking])
     }
     
@@ -2139,7 +2157,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 continuation()
             }
             
-            if configuration.initialWorldMap != nil, attemptingRelocalization {
+            if #available(iOS 12.0, *), configuration.initialWorldMap != nil, attemptingRelocalization {
                 // This call is necessary to cancel any pending setWorldOrigin call from the alignment procedure.  Depending on timing, it's possible for the relocalization *and* the realignment to both be applied.  This results in the origin essentially being shifted twice and things are then way off
                 session.setWorldOrigin(relativeTransform: matrix_identity_float4x4)
                 if !suppressTrackingWarnings {
