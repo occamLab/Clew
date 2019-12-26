@@ -67,6 +67,9 @@
     // Resume
 "resumeRouteViewText" = "Your route tracking is now paused. When you would like to navigate back, return to the location of your last anchor point and press the resume button.";
 
+// Pause
+"pauseButtonAccessibilityLabel" = "Pause session";
+
     // Rating service view
 "ratingYourServiceViewText" = "Navigation complete. Please rate the quality of your navigation experience.";
 

@@ -135,12 +135,12 @@ class StartNavigationController: UIViewController {
         pauseButton = UIButton.makeConstraintButton(view,
                                                alignment: UIConstants.ButtonContainerHorizontalAlignment.right,
                                                appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "Pause")!),
-                                               label: "Pause session")
+                                               label: NSLocalizedString("pauseButtonAccessibilityLabel", comment: "The accessibility label for the pause button at the end of a single use route recording."))
         
         largeHomeButton = UIButton.makeConstraintButton(view,
                                                     alignment: UIConstants.ButtonContainerHorizontalAlignment.right,
                                                     appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "homeButton")!),
-                                                    label: "Return to home screen")
+                                                    label: NSLocalizedString("homeButtonAccessibilityLabel", comment: "This is the accessibility label for the home button"))
         
         /// create stack view for aligning and distributing bottom layer buttons
         stackView = UIStackView()
