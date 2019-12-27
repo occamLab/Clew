@@ -45,7 +45,7 @@ class SingleRouteVC: TutorialChildViewController {
         UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: singleUseRouteCallout) // added: landmarkCallout -> singleUseRouteCallout
         NotificationCenter.default.post(name: Notification.Name("UnhideMainScreenAccessibilityElements"), object: nil)
         
-        self.view.addSubview(singleUseRouteCallout!)
+        self.view.addSubview(singleUseRoute!)
         self.view.addSubview(singleUseRouteNextButton!)
         self.view.addSubview(singleUseRouteArrow!)
 //        self.view.addSubview(landmarkCallout!)
@@ -61,8 +61,8 @@ class SingleRouteVC: TutorialChildViewController {
     }
     
     func createObjects() {
-        singleUseRouteCallout = createCalloutToView(withTagID: UIView.recordPathButtonTag, calloutText: NSLocalizedString("Press the 'Single Use Route' button below to proceed on making a single use route. The single use route button enables you to quickly record a path without anchor points.", comment: "Single Use Route Button"), buttonAccessibilityName: NSLocalizedString("Single Use Route Button", comment: "Single Use Route Button")) // added gotta do NSLocalized
-//        singleUseRouteCallout = createCalloutToView(withTagID: UIView.recordPathButtonTag, calloutText: NSLocalizedString("Press the button below to proceed on making a single use route. The single use route button enables you to quickly record a path without anchor points.", comment: "Single Use Route Button"), buttonAccessibilityName: NSLocalizedString("Single Use Route Button", comment: "Single Use Route Button")) // added (for TagID use recordPathButtonTag for now)
+        singleUseRoute = createCalloutToView(withTagID: UIView.recordPathButtonTag, calloutText: "Press the 'Single Use Route' button below to proceed on making a single use route. The single use route button enables you to quickly record a path without anchor points.") // added <- can this be removed?
+        singleUseRouteCallout = createCalloutToView(withTagID: UIView.recordPathButtonTag, calloutText: NSLocalizedString("Press the 'Single Use Route' button below.", comment: "Single Use Route Button"), buttonAccessibilityName: NSLocalizedString("Single Use Route Button", comment: "Single Use Route Button")) // added (for TagID use recordPathButtonTag for now)
 //        landmarkCallout = createCalloutToView(withTagID: UIView.recordPathButtonTag, calloutText: NSLocalizedString("The Landmark button helps create saved routes. For now, let's just create a single use route.", comment: "Landmark callout during tutorial."), buttonAccessibilityName: NSLocalizedString("Landmark Button", comment: "Landmark Button"))
 //        landmarkArrow = createCalloutArrowToView(withTagID: UIView.addAnchorPointButtonTag)
 //        singleUseRouteArrow = createCalloutArrowToView(withTagID: UIView.recordPathButtonTag) //addAnchorPointButtonTag
@@ -122,7 +122,7 @@ class SingleRouteVC: TutorialChildViewController {
     
 //    @objc func landmarkNextButtonAction(sender: UIButton!) {
     @objc func singleUseRouteNextButtonAction(sender: UIButton!) {
-        singleUseRouteCallout!.removeFromSuperview() // added
+        singleUseRoute!.removeFromSuperview() // added
         singleUseRouteNextButton!.removeFromSuperview() // added
 //        singleUseRouteArrow!.removeFromSuperview() // added
         /*
@@ -153,7 +153,7 @@ class SingleRouteVC: TutorialChildViewController {
         pauseNextButton.removeFromSuperview()
 //        pauseArrow!.removeFromSuperview()
         pauseCallout!.removeFromSuperview()
-        self.singleUseRouteArrow!.removeFromSuperview() // added
+        singleUseRouteArrow!.removeFromSuperview() // added
         navigateCallout = createCalloutToView(withTagID: UIView.startNavigationButtonTag, calloutText: NSLocalizedString("The navigate button allows you to navigate the route, click the next button and then click the navigate button to continue", comment: "The navigate button allows you to navigate the route, click the next button and then click the navigate button to continue"), buttonAccessibilityName: NSLocalizedString("Navigate Button", comment: "Navigate Button"))
         navigateArrow = createCalloutArrowToView(withTagID: UIView.startNavigationButtonTag)
         self.view.addSubview(navigateCallout!)
@@ -185,6 +185,7 @@ class SingleRouteVC: TutorialChildViewController {
         if case .recordingRoute = newState {
             tutorialParent?.state = .recordingSingleRoute
             singleUseRouteCallout!.removeFromSuperview()
+            singleUseRouteArrow!.removeFromSuperview() // added
 //            recordCallout!.removeFromSuperview()
 //            recordArrow!.removeFromSuperview()
         }
