@@ -148,17 +148,30 @@ class TutorialChildViewController: UIViewController, ClewDelegate {
         return scrollView
     }
     
-    
-    func createCalloutArrowToView(withTagID tagID: Int)-> UIView? {
-        guard let grandParent = tutorialParent?.parent as? ViewController,
-            let viewToCallout = grandParent.view.viewWithTag(tagID) else {
-                return nil
-            }
-        let arrowImage = UIImage(named: "calloutArrow")
+    // TODO: make new createCalloutArrowUpToView that has an upside down arrow
+    func createCalloutUpArrowToView(withTagID tagID: Int)-> UIView? {
+        guard let grandParent = tutorialParent?.parent as? ViewController, let viewToCallout = grandParent.view.viewWithTag(tagID) else {
+            return nil
+        }
+        let arrowImage = UIImage(named: "calloutArrowUp")
         let imageView = UIImageView(image: arrowImage!)
         imageView.isHidden = false
         let xCenter = viewToCallout.frame.midX
-        let yCenter = viewToCallout.frame.maxY + 50
+        let yCenter = viewToCallout.frame.maxY - 75
+        imageView.frame = CGRect(x: xCenter - imageView.frame.width/9, y: yCenter + imageView.frame.width*1/2, width: 100, height: 100)
+
+        return imageView
+    }
+    
+    func createCalloutArrowToView(withTagID tagID: Int)-> UIView? {
+        guard let grandParent = tutorialParent?.parent as? ViewController, let viewToCallout = grandParent.view.viewWithTag(tagID) else {
+            return nil
+        }
+        let arrowImage = UIImage(named: "calloutArrow")
+        let imageView = UIImageView(image: arrowImage!)
+        imageView.isHidden = false
+        let xCenter = viewToCallout.frame.midX - 15
+        let yCenter = viewToCallout.frame.maxY + 70
         imageView.frame = CGRect(x: xCenter - imageView.frame.width/16, y: yCenter + imageView.frame.width*1/2, width: 100, height: 100)
 
         return imageView

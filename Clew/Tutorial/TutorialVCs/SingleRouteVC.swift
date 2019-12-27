@@ -12,15 +12,18 @@ class SingleRouteVC: TutorialChildViewController {
     
     var backgroundShadow: UIView! = TutorialShadowBackground()
     var clewGreen = UIColor(red: 103/255, green: 188/255, blue: 71/255, alpha: 1.0)
+    /*
     var landmarkNextButton: UIButton!
+    var landmarkArrow: UIView?
+    var landmarkCallout: UIView?
+    */
     var recordNextButton: UIButton!
     var pauseNextButton: UIButton!
     var navigateNextButton: UIButton!
     var singleUseRouteNextButton: UIButton!
     var singleUseRoute: UIView?
     var singleUseRouteCallout: UIView?
-    var landmarkArrow: UIView?
-    var landmarkCallout: UIView?
+    var singleUseRouteArrow: UIView?
     var recordArrow: UIView?
     var recordCallout: UIView?
     var pauseArrow: UIView?
@@ -42,8 +45,9 @@ class SingleRouteVC: TutorialChildViewController {
         UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: singleUseRouteCallout) // added: landmarkCallout -> singleUseRouteCallout
         NotificationCenter.default.post(name: Notification.Name("UnhideMainScreenAccessibilityElements"), object: nil)
         
-        self.view.addSubview(singleUseRoute!)
+        self.view.addSubview(singleUseRouteCallout!)
         self.view.addSubview(singleUseRouteNextButton!)
+        self.view.addSubview(singleUseRouteArrow!)
 //        self.view.addSubview(landmarkCallout!)
 //        self.view.addSubview(landmarkNextButton)
 //        self.view.addSubview(landmarkArrow!)
@@ -57,16 +61,18 @@ class SingleRouteVC: TutorialChildViewController {
     }
     
     func createObjects() {
-        singleUseRoute = createCalloutToView(withTagID: UIView.recordPathButtonTag, calloutText: "Press the button below to proceed on making a single use route. The single use route button enables you to quickly record a path without anchor points.") // added
-        singleUseRouteCallout = createCalloutToView(withTagID: UIView.recordPathButtonTag, calloutText: NSLocalizedString("Press the button below to proceed on making a single use route. The single use route button enables you to quickly record a path without anchor points.", comment: "Single Use Route Button"), buttonAccessibilityName: NSLocalizedString("Single Use Route Button", comment: "Single Use Route Button")) // added (for TagID use recordPathButtonTag for now)
+        singleUseRouteCallout = createCalloutToView(withTagID: UIView.recordPathButtonTag, calloutText: NSLocalizedString("Press the 'Single Use Route' button below to proceed on making a single use route. The single use route button enables you to quickly record a path without anchor points.", comment: "Single Use Route Button"), buttonAccessibilityName: NSLocalizedString("Single Use Route Button", comment: "Single Use Route Button")) // added gotta do NSLocalized
+//        singleUseRouteCallout = createCalloutToView(withTagID: UIView.recordPathButtonTag, calloutText: NSLocalizedString("Press the button below to proceed on making a single use route. The single use route button enables you to quickly record a path without anchor points.", comment: "Single Use Route Button"), buttonAccessibilityName: NSLocalizedString("Single Use Route Button", comment: "Single Use Route Button")) // added (for TagID use recordPathButtonTag for now)
 //        landmarkCallout = createCalloutToView(withTagID: UIView.recordPathButtonTag, calloutText: NSLocalizedString("The Landmark button helps create saved routes. For now, let's just create a single use route.", comment: "Landmark callout during tutorial."), buttonAccessibilityName: NSLocalizedString("Landmark Button", comment: "Landmark Button"))
-        landmarkArrow = createCalloutArrowToView(withTagID: UIView.addAnchorPointButtonTag)
+//        landmarkArrow = createCalloutArrowToView(withTagID: UIView.addAnchorPointButtonTag)
+//        singleUseRouteArrow = createCalloutArrowToView(withTagID: UIView.recordPathButtonTag) //addAnchorPointButtonTag
+        singleUseRouteArrow = createCalloutUpArrowToView(withTagID: UIView.recordPathButtonTag) //addAnchorPointButtonTag
 
         recordArrow = createCalloutArrowToView(withTagID: UIView.recordPathButtonTag)
 
 //        landmarkNextButton = NextButton().createNextButton(buttonAction: #selector(landmarkNextButtonAction))
         singleUseRouteNextButton = NextButton().createNextButton(buttonAction: #selector(singleUseRouteNextButtonAction))
-        recordNextButton = NextButton().createNextButton(buttonAction: #selector(recordNextButtonAction))
+//        recordNextButton = NextButton().createNextButton(buttonAction: #selector(recordNextButtonAction))
         pauseNextButton = NextButton().createNextButton(buttonAction: #selector(pauseNextButtonAction))
         navigateNextButton = NextButton().createNextButton(buttonAction: #selector(navigateNextButtonAction))
         skipButton = SkipButton().createSkipButton(buttonAction:
@@ -116,42 +122,51 @@ class SingleRouteVC: TutorialChildViewController {
     
 //    @objc func landmarkNextButtonAction(sender: UIButton!) {
     @objc func singleUseRouteNextButtonAction(sender: UIButton!) {
-        singleUseRoute!.removeFromSuperview() // added
+        singleUseRouteCallout!.removeFromSuperview() // added
         singleUseRouteNextButton!.removeFromSuperview() // added
-//        landmarkArrow!.removeFromSuperview()
-//        landmarkCallout!.removeFromSuperview()
-//        landmarkNextButton.removeFromSuperview()
+//        singleUseRouteArrow!.removeFromSuperview() // added
+        /*
+        landmarkArrow!.removeFromSuperview()
+        landmarkCallout!.removeFromSuperview()
+        landmarkNextButton.removeFromSuperview()
         
-        // Create record callout here instead of under createObjects() to prevent it from being added to view hiearchy upon initializing readyToRecordSingleRoute state.
-//        recordCallout = createCalloutToView(withTagID: UIView.recordPathButtonTag, calloutText: NSLocalizedString("The Record button allows you to start recording a route. Click the 'record' button to continue.", comment: "The Record button allows you to start recording a route. Click the 'record' button to continue."), buttonAccessibilityName: NSLocalizedString("Record Button", comment: "Record Button"))
-//
-//        self.view.addSubview(recordCallout!)
-//        self.view.addSubview(recordNextButton)
+         Create record callout here instead of under createObjects() to prevent it from being added to view hiearchy upon initializing readyToRecordSingleRoute state.
+        recordCallout = createCalloutToView(withTagID: UIView.recordPathButtonTag, calloutText: NSLocalizedString("The Record button allows you to start recording a route. Click the 'record' button to continue.", comment: "The Record button allows you to start recording a route. Click the 'record' button to continue."), buttonAccessibilityName: NSLocalizedString("Record Button", comment: "Record Button"))
+
+        self.view.addSubview(recordCallout!)
+        self.view.addSubview(recordNextButton)
+        */
         backgroundShadow.removeFromSuperview()
         UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: recordCallout)
     }
     
+    /*
     @objc func recordNextButtonAction(sender: UIButton!) {
         recordNextButton.removeFromSuperview()
         UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: recordCallout)
         self.view.addSubview(recordArrow!)
         backgroundShadow.removeFromSuperview()
     }
+    */
     
     @objc func pauseNextButtonAction(sender: UIButton!) {
         pauseNextButton.removeFromSuperview()
-        pauseArrow!.removeFromSuperview()
+//        pauseArrow!.removeFromSuperview()
         pauseCallout!.removeFromSuperview()
+        self.singleUseRouteArrow!.removeFromSuperview() // added
         navigateCallout = createCalloutToView(withTagID: UIView.startNavigationButtonTag, calloutText: NSLocalizedString("The navigate button allows you to navigate the route, click the next button and then click the navigate button to continue", comment: "The navigate button allows you to navigate the route, click the next button and then click the navigate button to continue"), buttonAccessibilityName: NSLocalizedString("Navigate Button", comment: "Navigate Button"))
+        navigateArrow = createCalloutArrowToView(withTagID: UIView.startNavigationButtonTag)
         self.view.addSubview(navigateCallout!)
+        self.view.addSubview(navigateArrow!)
         self.view.addSubview(navigateNextButton!)
         UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: navigateCallout)
     }
     
     @objc func navigateNextButtonAction(sender: UIButton!) {
         navigateNextButton.removeFromSuperview()
+        navigateArrow?.removeFromSuperview()
         backgroundShadow.removeFromSuperview()
-        navigateArrow = createCalloutArrowToView(withTagID: UIView.startNavigationButtonTag)
+//        navigateArrow = createCalloutArrowToView(withTagID: UIView.startNavigationButtonTag)
         self.view.addSubview(navigateArrow!)
         UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: navigateCallout)
     }
@@ -181,9 +196,9 @@ class SingleRouteVC: TutorialChildViewController {
             // TODO: think about healthier ways this can be done
             DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(1)) {
                 self.pauseCallout = self.createCalloutToView(withTagID: UIView.startNavigationButtonTag, calloutText: NSLocalizedString("The Pause button is also important to saving routes, but let's just keep recording a single use route for now. Click the next button.", comment: "The Pause button is also important to saving routes, but let's just keep recording a single use route for now. Click the next button."), buttonAccessibilityName: NSLocalizedString("Pause Button", comment: "Pause Button"))
-                self.pauseArrow = self.createCalloutArrowToView(withTagID: UIView.pauseSessionButtonTag)
+                self.pauseArrow = self.createCalloutArrowToView(withTagID: UIView.pauseButtonTag) // previously UIView.pauseSessionButtonTag
                 self.view.addSubview(self.pauseCallout!)
-                self.view.addSubview(self.pauseArrow!)
+//                self.view.addSubview(self.pauseArrow!)
                 self.view.addSubview(self.pauseNextButton!)
                 // Brings tutorialViewController to the front so that the shadow can be added onto it and thus cover the startNavigationViewController
                 self.tutorialParent?.parent?.view.bringSubviewToFront(self.tutorialParent!.view)
