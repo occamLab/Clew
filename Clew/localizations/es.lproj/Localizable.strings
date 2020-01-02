@@ -251,6 +251,8 @@
 
 "startingReturnNavigationAnnouncement" = "Iniciando la navegación";
 
+"Aligned to anchor point. Starting navigation." = "Alineado al punto de anclaje. Iniciando la navegación.";
+
 "resumeAnchorPointToReturnNavigationAnnouncement" = "Alineado al punto de anclaje. Iniciando la navegación.";
 "singleUseRouteToRecordingRouteAnnouncement" = "Grabando una ruta de un solo uso.";
 "saveRouteToPlayPauseAnnouncement" = "Ruta guardada. Ahora puedes realizar la navegación de retorno o regresar a la pantalla de inicio de Clew.";
