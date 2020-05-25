@@ -19,35 +19,35 @@ class PathLogger {
     let storageBaseRef = Storage.storage().reference()
 
     /// path data taken during RECORDPATH - [[1x16 transform matrix]]
-    var pathData: [[Float]] = []
+    var pathData: LinkedList<[Float]> = []
     /// time stamps for pathData
-    var pathDataTime: [Double] = []
+    var pathDataTime: LinkedList<Double> = []
     /// path data taken during NAVIGATEPATH - [[1x16 transform matrix]]
-    var navigationData: [[Float]] = []
+    var navigationData: LinkedList<[Float]> = []
     /// time stamps for navigationData
-    var navigationDataTime: [Double] = []
+    var navigationDataTime: LinkedList<Double> = []
     /// timer to use for logging
     var dataTimer = Date()
     /// list of tracking errors ["InsufficientFeatures", "ExcessiveMotion"]
-    var trackingErrorData: [String] = []
+    var trackingErrorData: LinkedList<String> = []
     /// time stamp of tracking error
-    var trackingErrorTime: [Double] = []
+    var trackingErrorTime: LinkedList<Double> = []
     /// tracking phase - true: recording, false: navigation
-    var trackingErrorPhase: [Bool] = []
+    var trackingErrorPhase: LinkedList<Bool> = []
 
     /// timer for logging state transitions
     var stateTransitionLogTimer = Date()
     /// all state transitions the app went through
-    var stateSequence: [String] = []
+    var stateSequence: LinkedList<String> = []
     /// time stamp of state transitions
-    var stateSequenceTime: [Double] = []
+    var stateSequenceTime: LinkedList<Double> = []
 
     /// description data during NAVIGATION
-    var speechData: [String] = []
+    var speechData: LinkedList<String> = []
     /// time stamp for speechData
-    var speechDataTime: [Double] = []
+    var speechDataTime: LinkedList<Double> = []
     /// list of keypoints - [[(LocationInfo)x, y, z, yaw]]
-    var keypointData: [Array<Any>] = []
+    var keypointData: LinkedList<Array<Any>> = []
     
     /// language used in recording
 //    var langData: [String] = []
@@ -189,12 +189,12 @@ class PathLogger {
                                     "PathID": pathID,
                                     "PathDate": pathDate,
                                     "PathType": pathType,
-                                    "keypointData": keypointData,
-                                    "trackingErrorPhase": trackingErrorPhase,
-                                    "trackingErrorTime": trackingErrorTime,
-                                    "trackingErrorData": trackingErrorData,
-                                    "stateSequence": stateSequence,
-                                    "stateSequenceTime": stateSequenceTime]
+                                    "keypointData": Array(keypointData),
+                                    "trackingErrorPhase": Array(trackingErrorPhase),
+                                    "trackingErrorTime": Array(trackingErrorTime),
+                                    "trackingErrorData": Array(trackingErrorData),
+                                    "stateSequence": Array(stateSequence),
+                                    "stateSequenceTime": Array(stateSequenceTime)]
         do {
             let jsonData = try JSONSerialization.data(withJSONObject: body, options: .prettyPrinted)
             // here "jsonData" is the dictionary encoded in JSON data
@@ -224,12 +224,12 @@ class PathLogger {
                                     "PathID": pathID,
                                     "PathDate": "0",
                                     "PathType": "0",
-                                    "PathData": pathData,
-                                    "pathDataTime": pathDataTime,
-                                    "navigationData": navigationData,
-                                    "navigationDataTime": navigationDataTime,
-                                    "speechData": speechData,
-                                    "speechDataTime": speechDataTime]
+                                    "PathData": Array(pathData),
+                                    "pathDataTime": Array(pathDataTime),
+                                    "navigationData": Array(navigationData),
+                                    "navigationDataTime": Array(navigationDataTime),
+                                    "speechData": Array(speechData),
+                                    "speechDataTime": Array(speechDataTime)]
         
         do {
             let jsonData = try JSONSerialization.data(withJSONObject: body, options: .prettyPrinted)

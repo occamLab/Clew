@@ -238,7 +238,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         startAnchorPoint = false
         attemptingRelocalization = false
         
+        // TODO: probably don't need to set this to [], but erring on the side of begin conservative
         crumbs = []
+        recordingCrumbs = []
         logger.resetPathLog()
         
         showStopRecordingButton()
@@ -409,7 +411,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// Checks to see if the user had the phone pointing consistently off-center when recording the route.  If this is the case, set a flag in UserDefaults so that the app can suggests the "Correct Offset of Phone / Body" feature.
     func setShouldSuggestAdjustOffset() {
-        if recordPhaseHeadingOffsets.count > 6 && abs(recordPhaseHeadingOffsets.avg()) > 0.4 && recordPhaseHeadingOffsets.mean_abs_dev() < 0.2 {
+        // TODO: could do this without conversion by adding an extension
+        let offsetsArray = Array(recordPhaseHeadingOffsets)
+        if offsetsArray.count > 6 && abs(offsetsArray.avg()) > 0.4 && offsetsArray.mean_abs_dev() < 0.2 {
             UserDefaults.standard.set(true, forKey: "shouldShowAdjustOffsetSuggestion")
         }
     }
@@ -573,7 +577,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     let linearDeviationThreshold: Float = 0.05
     
     /// an aray of heading offsets calculated during the record phase.  We use thsi to suggest that users enable the adjustOffest option
-    var recordPhaseHeadingOffsets: [Float] = []
+    var recordPhaseHeadingOffsets: LinkedList<Float> = []
     /// the last time we stored the heading offset during the record phase (we want to make sure thesse are spaced out by at least a little bit
     var lastRecordPhaseOffsetTime = Date()
     /// a ring buffer used to keep the last 50 positions of the phone
@@ -1287,6 +1291,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// MARK: - Clew internal datastructures
     
     /// list of crumbs dropped when recording path
+    var recordingCrumbs: LinkedList<LocationInfo>!
+    
+    /// list of crumbs to use for route creation
     var crumbs: [LocationInfo]!
     
     /// list of keypoints calculated after path completion
@@ -1459,7 +1466,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     ///
     /// - Parameter sender: the button that generated the event
     @objc func stopRecording(_ sender: UIButton) {
-
+        // copy the recordingCrumbs over for use in path creation
+        crumbs = Array(recordingCrumbs)
         isResumedRoute = false
 
         rootContainerView.homeButton.isHidden = false // home button here
@@ -1648,7 +1656,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         guard let curLocation = getRealCoordinates(record: true)?.location else {
             return
         }
-        crumbs.append(curLocation)
+        recordingCrumbs.append(curLocation)
     }
     
     /// checks to see if user is on the right path during navigation.
@@ -1745,7 +1753,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
   
     /// update the offset between direction of travel and the orientation of the phone.  This supports a feature which allows the user to navigate with the phone pointed in a direction other than the direction of travel.  The feature cannot be accessed by users in the app store version.
     @objc func updateHeadingOffset() {
-        // send haptic feedback depending on correct device
         guard let curLocation = getRealCoordinates(record: false) else {
             return
         }
@@ -1761,9 +1768,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                     recordPhaseHeadingOffsets.append(newOffset)
                     lastRecordPhaseOffsetTime = Date()
                 }
-            }// else if case .navigatingRoute = state {
-                // TODO: maybe add this here???  This will probably be much more variable and hard to detect.  Maybe start with an easier path
-            //}
+            }
             if adjustOffset {
                 nav.headingOffset = newOffset
             }
@@ -1797,7 +1802,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// send haptic feedback if the device is pointing towards the next keypoint.
     @objc func getHapticFeedback() {
-        updateHeadingOffset()
+        // Conserve CPU by only calculating the offset if the user has requested it
+        if adjustOffset {
+            updateHeadingOffset()
+        }
         guard let curLocation = getRealCoordinates(record: false) else {
             // TODO: might want to indicate that something is wrong to the user
             return
