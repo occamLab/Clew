@@ -11,6 +11,29 @@ import Foundation
 import VectorMath
 import ARKit
 
+extension Array where Element: FloatingPoint {
+
+    func sum() -> Element {
+        return self.reduce(0, +)
+    }
+
+    func avg() -> Element {
+        return self.sum() / Element(self.count)
+    }
+
+    func std() -> Element {
+        let mean = self.avg()
+        let v = self.reduce(0, { $0 + ($1-mean)*($1-mean) })
+        return sqrt(v / (Element(self.count) - 1))
+    }
+
+    func mean_abs_dev() -> Element {
+        let mean = self.avg()
+        let v = self.reduce(0, { $0 + abs($1-mean) })
+        return v / Element(self.count)
+    }
+}
+
 extension float4x4 {
     /// Create a rotation matrix based on the angle and axis.
     ///

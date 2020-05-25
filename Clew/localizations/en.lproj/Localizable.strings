@@ -67,6 +67,9 @@
     // Resume
 "resumeRouteViewText" = "Your route tracking is now paused. When you would like to navigate back, return to the location of your last anchor point and press the resume button.";
 
+// Pause
+"pauseButtonAccessibilityLabel" = "Pause session";
+
     // Rating service view
 "ratingYourServiceViewText" = "Navigation complete. Please rate the quality of your navigation experience.";
 
@@ -135,6 +138,12 @@
 "homeAlertContent" = "If you exit this process right now, your active route information will be lost.";
 "homeAlertConfirmNavigationButton" = "Go to the Home Page";
 
+// Enable Correct Phone / Body Alignment Alert
+"showAdjustOffsetSuggestionTitle" = "Enable Automatic \"Correct Offset of Phone / Body\"?";
+"adjustOffsetAlertContent" = "While you were recording this route, the app determined that your phone's rear camera was not pointing straight ahead. When navigating the recorded route, if your phone is not pointing straight ahead, the app's directional guidance may be confusing. If it is difficult for you to keep you phone pointing straight ahead, the app can automatically adjust its guidance so that it is relative to your body rather than the phone's direction.  Would you like enable this feature?  You can always disable this feature in the settings menu under \"Correct Offset of Phone / Body.\"  Important details of this feature are available in the help menu.";
+"turnOnAdjustOffsetButton" = "Yes";
+"declineTurnOnAdjustOffsetButton" = "No";
+"adjustOffsetReminderAnnouncement" = "Correction for phone / body offset will be updated as you start walking.";
 
 // RoutesViewController
 "routeDirectionPop-UpHeader" = "Route direction";
@@ -210,6 +219,12 @@
 "followingARouteSpeechFeedbackHeader" = "Speech feedback";
 
 "followingARouteSpeechFeedbackContent" = "Assuming you have enabled speech feedback in the app settings and voice over is on, the phone will provide you with voice directions whenever you encounter an anchor point on your route, start a route, or complete a route. If you want to hear voice directions again, you can use the &quot;Get Directions&quot; button.";
+
+"followingARouteCorrectOffsetAutomaticallyHeader" = "Automatic Correction of Phone / Body Offset";
+
+"followingARouteCorrectOffsetAutomaticallyContentParagraph1" = "By default, Clew guides you along a route using the direction your phone is facing.  Because of this, if you are walking forward but your phone is not pointing straight ahead, the guidance the app provides may be confusing.  If you are finding this to be an issue, you can enable the setting &quot;Correct Offset of Phone / Body&quot;.  When this setting is enabled, the app will use periods where you are moving to determine if your phone is not pointing straight ahead (in the same direction as you are facing).  If the app determines that your phone is not pointing straight ahead, the app will adjust its feedback so that it is relative to the direction your body is facing rather than the direction that your phone is facing.";
+
+"followingARouteCorrectOffsetAutomaticallyContentParagraph2" = "When using the &quot;Correct Offset of Phone / Body&quot; it is best to brace your phone against your chest and rotate your body to find the correct direction to travel next (as you rotate your body, the phone should stay braced to your chest and rotate with you).  Note that walking backwards or sideways will cause the app to incorrectly determine the relationship between the phone and your body.  if this happens, you can either disable the option or walk forward a few steps to reset the app's estimates.";
 
 "appSoundsAndTheirMeaningsHeader" = "App sounds and their meanings";
 

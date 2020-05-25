@@ -47,10 +47,11 @@ class HelpCompiler {
                     <p>\(NSLocalizedString("followingARouteAuditoryBeepsContent", comment: "This is a paragraph in the following a route section of the help documentation which describes the menaing of audityory meps during navigation."))</p>
                     </h3>
                     <h3>\(NSLocalizedString("followingARouteSpeechFeedbackHeader", comment: "This is a header inside the following a route section of the help documentation"))</h3>
-                    <p>\(NSLocalizedString("followingARouteSpeechFeedbackContent", comment: "this is a paragraph in the following a route section of the help documentation which describes the meaning of auditory speech feedback during navigation."))
-                    </p>
-                    </p>
-                    </h3>
+                    <p>\(NSLocalizedString("followingARouteSpeechFeedbackContent", comment: "this is a paragraph in the following a route section of the help documentation which describes the meaning of auditory speech feedback during navigation."))</p>
+                    <h3>\(NSLocalizedString("followingARouteCorrectOffsetAutomaticallyHeader", comment: "This is a header inside the following a route section of the help documentation"))</h3>
+                    <p>\(NSLocalizedString("followingARouteCorrectOffsetAutomaticallyContentParagraph1", comment: "this is paragraph 1 in the following a route section of the help documentation which describes the functionality of the correct for phone / body offset feature."))</p>
+                    <p>\(NSLocalizedString("followingARouteCorrectOffsetAutomaticallyContentParagraph2", comment: "this is paragraph 2 in the following a route section of the help documentation which describes the functionality of the correct for phone / body offset feature."))</p>
+
                     """),("\(NSLocalizedString("appSoundsAndTheirMeaningsHeader", comment: "This is a section header in the help documentation"))","""
                         <p>\(NSLocalizedString("appSoundsAndTheirMeaningsContent", comment: "This is a paragraph in the App sounds and their meanings section."))</p>
                         <ul>

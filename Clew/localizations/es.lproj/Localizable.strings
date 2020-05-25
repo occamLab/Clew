@@ -10,7 +10,7 @@
 // When opening the app for the first time
 "sharingYourExperiencePop-UpHeading" = "Comparte tu experiencia con Clew";
 
-"sharingYourExperiencePop-UpContent" = "Ayúdanos a mejorar la aplicación registrando tu experiencia con Clew. Estos registros de usario no incluirán ninguna imagen o información personal. Puedes desactivar esto en los ajustes.";
+"sharingYourExperiencePop-UpContent" = "Ayúdanos a mejorar la aplicación registrando tu experiencia con Clew. Estos registros de usuario no incluirán ninguna imagen o información personal. Puedes desactivar esto en los ajustes.";
 
 "significantVersionChangesPop-UpHeading" = "Cambios importantes";
 
@@ -67,6 +67,9 @@
     // Resume
 "resumeRouteViewText" = "El seguimiento de la ruta está en pausa. Cuando quieras navegar de vuelta, regresa a la ubicación de tu último punto de anclaje y presiona el botón de reanudar.";
 
+// Pause
+"pauseButtonAccessibilityLabel" = "Pausar sesión";
+
     // Rating service view
 "ratingYourServiceViewText" = "Navegación completada. Por favor, evalúa la calidad de tu experiencia de navegación.";
 
@@ -102,7 +105,7 @@
 
 // Anchor Points
 
-"anchorPointTextHeading" = "Información sobre los puntos de anclaje";
+"anchorPointTextHeading" = "Información sobre el punto de anclaje";
 
 "anchorPointTextPrompt" = "Introduce el texto sobre el punto de anclaje que te permitirá encontrar el mismo punto más adelante.";
 
@@ -144,7 +147,7 @@
 
 "routeDirectionEndToStartButtonLabel" = "Del final al inicio";
 
-"deleteActionText" = "Borrar";
+"deleteActionText" = "Eliminar";
 
 "shareActionText" = "Compartir";
 
@@ -192,7 +195,7 @@
 
 "savedRoutesLoadingARouteContent" = "El menú de rutas guardadas te proporciona una lista de rutas grabadas ordenadas de la más reciente a la menos reciente. Una vez que pulses sobre una ruta, puedes seleccionar la navegación en el modo &quot;del inicio al final&quot; o &quot;del final al inicio&quot;. &quot;Del inicio al final&quot; significa que navegas a lo largo de la ruta en la misma dirección en la que fue grabada. &quot;Del final al inicio&quot; significa que navegas la ruta en la dirección inversa a la que fue grabada.";
 
-"savedRoutesDeletingASavedRouteHeader" = "Borrar una ruta guardada";
+"savedRoutesDeletingASavedRouteHeader" = "Eliminar una ruta guardada";
 "savedRoutesDeletingASavedRouteContent" = "Puedes eliminar rutas desde este menú deslizándote hacia la izquierda (si no usas VoiceOver) o deslizando un dedo hacia abajo mientras está situado en la ruta que deseas eliminar (si usas VoiceOver).";
 "savedRoutesSharingASavedRouteHeader" = "Compartir una ruta guardada";
 "savedRoutesSharingASavedRouteContent" = "Puedes compartir rutas desde este menú ya sea deslizándote hacia la izquierda (si no usas VoiceOver) o deslizando un dedo hacia abajo mientras está situado en la ruta que deseas compartir (si usas VoiceOver). Presionando el botón de compartir se abrirá un selector que te permite compartir una ruta a través de texto, correo electrónico, airdrop, o a través de otras muchas aplicaciones. Cuando compartas una ruta, asegúrate de que has introducido instrucciones detalladas (ya sea como nota de voz o como texto) para ayudar a la persona con la que compartes la ruta a encontrar los puntos de anclaje. Si esta persona no puede encontrar con precisión los puntos de anclaje, la aplicación no le proporcionará una orientación precisa.";
@@ -222,7 +225,7 @@
 
 "ratingYourNavigationExperienceHeader" = "Evaluar tu experiencia de navegación";
 
-"ratingYourNavigationExperienceContent" = "Una vez que hayas terminado de navegar, asumiendo que has habilitado la función para &quot;Enviar registros de usario&quot;, la aplicación te pedirá que valores el servicio. Estas calificaciones nos ayudan a mejorar la experiencia de la aplicación y su precisión. Junto con tu puntuación, la ruta de tu teléfono se enviará en el registro. Ten en cuenta que estos datos no están vinculados a ti de ninguna manera y no contienen ninguna información sobre la ubicación donde se grabó la ruta (por ejemplo, no se envían coordenadas GPS). Además, la aplicación no registra ninguna imagen u otra información sensible. Si tienes alguna duda sobre los datos que se envían, ponte en contacto con nosotros (o simplemente desactiva esta función de &quot;Enviar registros de usario&quot; en los ajustes de la aplicación).";
+"ratingYourNavigationExperienceContent" = "Una vez que hayas terminado de navegar, asumiendo que has habilitado la función para &quot;Enviar registros de usuario&quot;, la aplicación te pedirá que valores el servicio. Estas calificaciones nos ayudan a mejorar la experiencia de la aplicación y su precisión. Junto con tu puntuación, la ruta de tu teléfono se enviará en el registro. Ten en cuenta que estos datos no están vinculados a ti de ninguna manera y no contienen ninguna información sobre la ubicación donde se grabó la ruta (por ejemplo, no se envían coordenadas GPS). Además, la aplicación no registra ninguna imagen u otra información sensible. Si tienes alguna duda sobre los datos que se envían, ponte en contacto con nosotros (o simplemente desactiva esta función de &quot;Enviar registros de usuario&quot; en los ajustes de la aplicación).";
 
 
 "providingFeedbackToTheDevelopmentTeamHeader" = "Envía comentarios al equipo de desarrollo";
@@ -248,6 +251,8 @@
 
 "startingReturnNavigationAnnouncement" = "Iniciando la navegación";
 
+"Aligned to anchor point. Starting navigation." = "Alineado al punto de anclaje. Iniciando la navegación.";
+
 "resumeAnchorPointToReturnNavigationAnnouncement" = "Alineado al punto de anclaje. Iniciando la navegación.";
 "singleUseRouteToRecordingRouteAnnouncement" = "Grabando una ruta de un solo uso.";
 "saveRouteToPlayPauseAnnouncement" = "Ruta guardada. Ahora puedes realizar la navegación de retorno o regresar a la pantalla de inicio de Clew.";
@@ -260,4 +265,29 @@
 "multipleUseRoutePlayPauseViewText" = "Para navegar inmediatamente hacia atrás por la ruta que has grabado, pulsa el botón de reproducción y sigue las instrucciones proporcionadas. Si deseas navegar por la ruta más tarde, puedes volver a la pantalla de inicio de Clew y cargar la ruta que acabas de guardar cuando quieras recorrerla.";
 
 //Sharing routes
-"automaticEmailTextWhenSharingRoutes" = "Chequea esta ruta!";
+"automaticEmailTextWhenSharingRoutes" = "Comparte esta ruta.";
+
+
+// This is the title of an alert which shows up when the user appears to hold their phone at a consistent offset to their direction of motion.
+"showAdjustOffsetSuggestionTitle" = "Habilitar la compensación automática del teléfono / cuerpo\"?";
+
+// This is the content of an alert which tells the user that they should consider enabling the adjust offset feature.
+"adjustOffsetAlertContent" = "Mientras estabas grabando la ruta, la aplicación determinó que la cámara trasera del teléfono no apuntaba en línea recta. Al navegar por la ruta grabada, si el móvil no está apuntando en la dirección adecuada, el guiado direccional de Clew puede ser erróneo. Si te resulta difícil mantener el teléfono apuntando en línea recta, la aplicación puede ajustar automáticamente su orientación para que sea relativa a tu cuerpo y no a la dirección del móvil. ¿Deseas activar esta función? Podrás desactivarla en cualquier momento en los ajustes, en \"Corregir la compensación del teléfono / cuerpo.\". Los detalles de esta función están disponibles en el menú de ayuda";
+
+// This text appears on a button that turns on the adjust offset feature
+"turnOnAdjustOffsetButton" = "Sí";
+
+// A button which declines to turn on the adjust offset feature
+"declineTurnOnAdjustOffsetButton" = "No";
+
+// This is the announcement which is spoken after starting navigation if the user has enabled the Correct Offset of Phone / Body option.
+"adjustOffsetReminderAnnouncement" = "La corrección para el desplazamiento del teléfono / cuerpo se actualizará cuando empieces a caminar";
+
+// This is a header inside the following a route section of the help documentation
+"followingARouteCorrectOffsetAutomaticallyHeader" = "Corrección automática de la compensación del teléfono / cuerpo";
+
+// This is paragraph 1 in the following a route section of the help documentation which describes the functionality of the correct for phone / body offset feature.
+"followingARouteCorrectOffsetAutomaticallyContentParagraph1" = "De forma predeterminada, Clew te guía a lo largo de una ruta utilizando la dirección hacia la que está orientado el teléfono. Debido a esto, si estás caminando hacia adelante pero tu móvil no está apuntando en línea recta, la orientación que proporciona la aplicación puede ser errónea. Si consideras que esto es un problema, puedes habilitar la configuración &quot;Corregir el desplazamiento del teléfono / cuerpo&quot;. Cuando este ajuste está activo, Clew utilizará períodos en los que te mueves para determinar si tu móvil no está apuntando en línea recta (en tu misma dirección). Si la aplicación determina que tu teléfono no está apuntando en la dirección adecuada, ajustará el guiado de manera que sea relativo a la dirección en la que tu cuerpo está orientado en lugar de en la que está orientado tu móvil";
+
+// This is paragraph 2 in the following a route section of the help documentation which describes the functionality of the correct for phone / body offset feature.
+"followingARouteCorrectOffsetAutomaticallyContentParagraph2" = "Cuando utilices la función &quot;Corregir el desplazamiento del teléfono / cuerpo&quot; lo mejor es apoyar el móvil contra el pecho y girar el cuerpo para encontrar la dirección correcta a seguir (a medida que giras el cuerpo, el teléfono debe permanecer apoyado en el pecho y girar contigo). Ten en cuenta que si caminas hacia atrás o hacia los lados, la aplicación determinará incorrectamente la relación entre el móvil y tu cuerpo. Si esto sucede, puedes desactivar la función o caminar hacia adelante unos pasos para restablecer las estimaciones de la aplicación";

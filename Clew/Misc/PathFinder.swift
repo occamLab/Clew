@@ -79,9 +79,9 @@ public class LocationInfo : ARAnchor {
     }
     
     /// the translation expressed as a 3-element vector (x, y, z)
-    public var translation: SCNVector3 {
+    public var translation: Vector3 {
         let translation = self.transform.columns.3
-        return SCNVector3(translation.x, translation.y, translation.z)
+        return Vector3(translation.x, translation.y, translation.z)
     }
     
     /// the Euler angles as a 3 element vector (pitch, yaw, roll)

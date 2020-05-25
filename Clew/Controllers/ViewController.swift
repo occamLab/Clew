@@ -53,11 +53,11 @@ enum AppState {
     /// user has successfully paused the ARSession
     case pauseProcedureCompleted
     /// user has hit the resume button and is waiting for the volume to hit
-    case startingResumeProcedure(route: SavedRoute, worldMap: ARWorldMap?, navigateStartToEnd: Bool)
+    case startingResumeProcedure(route: SavedRoute, worldMap: Any?, navigateStartToEnd: Bool)
     /// the AR session has entered the relocalizing state, which means that we can now realign the session
     case readyForFinalResumeAlignment
     /// the user is attempting to name the route they're in the process of saving
-    case startingNameSavedRouteProcedure(worldMap: ARWorldMap?)
+    case startingNameSavedRouteProcedure(worldMap: Any?)
     
     /// rawValue is useful for serializing state values, which we are currently using for our logging feature
     var rawValue: String {
@@ -225,7 +225,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         // if the ARSession is running, pause it to conserve battery
         sceneView.session.pause()
         // set this to nil to prevent the app from erroneously detecting that we can auto-align to the route
-        configuration.initialWorldMap = nil
+        if #available(iOS 12.0, *) {
+            configuration.initialWorldMap = nil
+        }
         showRecordPathButton(announceArrival: announceArrival)
     }
     
@@ -245,6 +247,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         nav.headingOffset = 0.0
         headingRingBuffer.clear()
         locationRingBuffer.clear()
+        recordPhaseHeadingOffsets = []
         updateHeadingOffsetTimer = Timer.scheduledTimer(timeInterval: 0.01, target: self, selector: (#selector(updateHeadingOffset)), userInfo: nil, repeats: true)
     }
     
@@ -255,6 +258,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         droppingCrumbs?.invalidate()
         updateHeadingOffsetTimer?.invalidate()
         showStartNavigationButton(allowPause: allowPause)
+        suggestAdjustOffsetIfAppropriate()
     }
     
     /// Handler for the navigatingRoute app state
@@ -286,6 +290,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         waypointFeedbackGenerator = UINotificationFeedbackGenerator()
         
         showStopNavigationButton()
+        remindedUserOfOffsetAdjustment = false
 
         // wait a little bit before starting navigation to allow screen to transition and make room for the first direction announcement to be communicated
         
@@ -317,7 +322,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     ///   - route: the route to navigate
     ///   - worldMap: the world map to use
     ///   - navigateStartToEnd: a Boolean that is true if we want to navigate from the start to the end and false if we want to navigate from the end to the start.
-    func handleStateTransitionToStartingResumeProcedure(route: SavedRoute, worldMap: ARWorldMap?, navigateStartToEnd: Bool) {
+    func handleStateTransitionToStartingResumeProcedure(route: SavedRoute, worldMap: Any?, navigateStartToEnd: Bool) {
         // load the world map and restart the session so that things have a chance to quiet down before putting it up to the wall
         var isTrackingPerformanceNormal = false
         if case .normal? = sceneView.session.currentFrame?.camera.trackingState {
@@ -327,10 +332,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         if case .limited(reason: .relocalizing)? = sceneView.session.currentFrame?.camera.trackingState {
             isRelocalizing = true
         }
-        let isSameMap = configuration.initialWorldMap != nil && configuration.initialWorldMap == worldMap
-        configuration.initialWorldMap = worldMap
+        var isSameMap = false
+        if #available(iOS 12.0, *), let worldMap = worldMap as? ARWorldMap? {
+            isSameMap = configuration.initialWorldMap != nil && configuration.initialWorldMap == worldMap
+            configuration.initialWorldMap = worldMap
+            attemptingRelocalization =  isSameMap && !isTrackingPerformanceNormal || worldMap != nil && !isSameMap
+        }
     
-        attemptingRelocalization =  isSameMap && !isTrackingPerformanceNormal || worldMap != nil && !isSameMap
 
         if navigateStartToEnd {
             crumbs = route.crumbs.reversed()
@@ -363,7 +371,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     }
     
     /// Handler for the startingNameSavedRouteProcedure app state
-    func handleStateTransitionToStartingNameSavedRouteProcedure(worldMap: ARWorldMap?){
+    func handleStateTransitionToStartingNameSavedRouteProcedure(worldMap: Any?){
         hideAllViewsHelper()
         nameSavedRouteController.worldMap = worldMap
         add(nameSavedRouteController)
@@ -399,6 +407,28 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(ViewController.alignmentWaitingPeriod), execute: playAlignmentConfirmation!)
     }
     
+    /// Checks to see if the user had the phone pointing consistently off-center when recording the route.  If this is the case, set a flag in UserDefaults so that the app can suggests the "Correct Offset of Phone / Body" feature.
+    func setShouldSuggestAdjustOffset() {
+        if recordPhaseHeadingOffsets.count > 6 && abs(recordPhaseHeadingOffsets.avg()) > 0.4 && recordPhaseHeadingOffsets.mean_abs_dev() < 0.2 {
+            UserDefaults.standard.set(true, forKey: "shouldShowAdjustOffsetSuggestion")
+        }
+    }
+    
+    /// If appropriate, suggest that the user activate the "Correct Offset of Phone / Body" feature.
+    func suggestAdjustOffsetIfAppropriate() {
+        let userDefaults: UserDefaults = UserDefaults.standard
+        let shouldShowAdjustOffsetSuggestion: Bool? = userDefaults.object(forKey: "shouldShowAdjustOffsetSuggestion") as? Bool
+        let showedAdjustOffsetSuggestion: Bool? = userDefaults.object(forKey: "showedAdjustOffsetSuggestion") as? Bool
+
+        if !adjustOffset && shouldShowAdjustOffsetSuggestion == true && showedAdjustOffsetSuggestion != true {
+            showAdjustOffsetSuggestion()
+            // clear the flag
+            userDefaults.set(false, forKey: "shouldShowAdjustOffsetSuggestion")
+            // record that the alert has been shown
+            userDefaults.set(true, forKey: "showedAdjustOffsetSuggestion")
+        }
+    }
+    
     /// Handler for the completingPauseProcedure app state
     func handleStateTransitionToCompletingPauseProcedure() {
         // TODO: we should not be able to create a route Anchor Point if we are in the relocalizing state... (might want to handle this when the user stops navigation on a route they loaded.... This would obviate the need to handle this in the recordPath code as well
@@ -419,23 +449,33 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             return
         } else if let currentTransform = sceneView.session.currentFrame?.camera.transform {
             endRouteAnchorPoint.transform = currentTransform
+            // no more crumbs
+            droppingCrumbs?.invalidate()
 
-            sceneView.session.getCurrentWorldMap { worldMap, error in
-                //check whether or not the path was called from the pause menu or not
-                if self.paused {
-                    ///PATHPOINT pause recording anchor point alignment timer -> resume tracking
-                    //proceed as normal with the pause structure (single use route)
-                    self.justTraveledRoute = SavedRoute(id: "single use", name: "single use", crumbs: self.crumbs, dateCreated: Date() as NSDate, beginRouteAnchorPoint: self.beginRouteAnchorPoint, endRouteAnchorPoint: self.endRouteAnchorPoint)
-                    self.justUsedMap = worldMap
-                    self.showResumeTrackingButton()
-                    self.state = .pauseProcedureCompleted
-                } else {
-                    ///PATHPOINT end anchor point alignment timer -> Save Route View
-                    self.delayTransition(announcement: NSLocalizedString("multipleUseRouteAnchorPointToSaveARouteAnnouncement", comment: "This is an announcement which is spoken when the user saves the end anchor point for a multiple use route. This signifies the transition from saving an anchor point to the screen where the user can name and save their route"), initialFocus: nil)
-                    ///sends the user to the play/pause screen
-                    self.state = .startingNameSavedRouteProcedure(worldMap: worldMap)
+            if #available(iOS 12.0, *) {
+                sceneView.session.getCurrentWorldMap { worldMap, error in
+                    self.completingPauseProcedureHelper(worldMap: worldMap)
                 }
+            } else {
+                completingPauseProcedureHelper(worldMap: nil)
             }
+        }
+    }
+    
+    func completingPauseProcedureHelper(worldMap: Any?) {
+        //check whether or not the path was called from the pause menu or not
+        if paused {
+            ///PATHPOINT pause recording anchor point alignment timer -> resume tracking
+            //proceed as normal with the pause structure (single use route)
+            justTraveledRoute = SavedRoute(id: "single use", name: "single use", crumbs: self.crumbs, dateCreated: Date() as NSDate, beginRouteAnchorPoint: self.beginRouteAnchorPoint, endRouteAnchorPoint: self.endRouteAnchorPoint)
+            justUsedMap = worldMap
+            showResumeTrackingButton()
+            state = .pauseProcedureCompleted
+        } else {
+            ///PATHPOINT end anchor point alignment timer -> Save Route View
+            delayTransition(announcement: NSLocalizedString("multipleUseRouteAnchorPointToSaveARouteAnnouncement", comment: "This is an announcement which is spoken when the user saves the end anchor point for a multiple use route. This signifies the transition from saving an anchor point to the screen where the user can name and save their route"), initialFocus: nil)
+            ///sends the user to the play/pause screen
+            state = .startingNameSavedRouteProcedure(worldMap: worldMap)
         }
     }
     
@@ -513,7 +553,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     ///   - endRouteAnchorPoint: the route Anchor Point for the end (if there is no route Anchor Point at the end, the elements of this struct can be nil)
     ///   - worldMap: the world map
     /// - Throws: an error if something goes wrong
-    func archive(routeId: NSString, beginRouteAnchorPoint: RouteAnchorPoint, endRouteAnchorPoint: RouteAnchorPoint, worldMap: ARWorldMap?) throws {
+    func archive(routeId: NSString, beginRouteAnchorPoint: RouteAnchorPoint, endRouteAnchorPoint: RouteAnchorPoint, worldMap: Any?) throws {
         let savedRoute = SavedRoute(id: routeId, name: routeName!, crumbs: crumbs, dateCreated: Date() as NSDate, beginRouteAnchorPoint: beginRouteAnchorPoint, endRouteAnchorPoint: endRouteAnchorPoint)
         try dataPersistence.archive(route: savedRoute, worldMap: worldMap)
         justTraveledRoute = savedRoute
@@ -532,6 +572,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// A threshold to determine when a path is too curvy to update the angle offset
     let linearDeviationThreshold: Float = 0.05
     
+    /// an aray of heading offsets calculated during the record phase.  We use thsi to suggest that users enable the adjustOffest option
+    var recordPhaseHeadingOffsets: [Float] = []
+    /// the last time we stored the heading offset during the record phase (we want to make sure thesse are spaced out by at least a little bit
+    var lastRecordPhaseOffsetTime = Date()
     /// a ring buffer used to keep the last 50 positions of the phone
     var locationRingBuffer = RingBuffer<Vector3>(capacity: 50)
     /// a ring buffer used to keep the last 100 headings of the phone
@@ -549,7 +593,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     // MARK: - Parameters that can be controlled remotely via Firebase
     
     /// True if the offset between direction of travel and phone should be updated over time
-    var adjustOffset = false
+    var adjustOffset: Bool!
+    
+    /// True if the user has been reminded that the adjusts offset feature is turned on
+    var remindedUserOfOffsetAdjustment = false
     
     /// True if we should use a cone of pi/12 and false if we should use a cone of pi/6 when deciding whether to issue haptic feedback
     var strictHaptic = true
@@ -749,7 +796,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         } else if showedSignificantChangesAlert == nil {
             // we only show the significant changes alert if this is an old installation
             userDefaults.set(true, forKey: "showedSignificantChangesAlertv1_3")
-            showSignificantChangesAlert()
+            // don't show this for now, but leave the plumbing in place for a future significant change
+            // showSignificantChangesAlert()
         }
         
         synth.delegate = self
@@ -777,6 +825,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             keypointNode.removeFromParentNode()
         }
         followingCrumbs?.invalidate()
+        recordPhaseHeadingOffsets = []
         routeName = nil
         beginRouteAnchorPoint = RouteAnchorPoint()
         endRouteAnchorPoint = RouteAnchorPoint()
@@ -819,12 +868,29 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         ))
         self.present(alert, animated: true, completion: nil)
     }
+    
+    /// function that creates alerts for the home button
+    func showAdjustOffsetSuggestion() {
+        // Create alert to warn users of lost information
+        let alert = UIAlertController(title: NSLocalizedString("showAdjustOffsetSuggestionTitle", comment: "This is the title of an alert which shows up when the user appears to hold their phone at a consistent offset to their direction of motion."),
+                                      message: NSLocalizedString("adjustOffsetAlertContent", comment: "this is the content of an alert which tells the user that they should consider enabling the adjust offset feature."),
+                                      preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: NSLocalizedString("turnOnAdjustOffsetButton", comment: "This text appears on a button that turns on the adjust offset feature"), style: .default, handler: { action -> Void in
+            // turn on the adjust offset feature
+            UserDefaults.standard.set(true, forKey: "adjustOffset")
+        }
+        ))
+        alert.addAction(UIAlertAction(title: NSLocalizedString("declineTurnOnAdjustOffsetButton", comment: "A button which declines to turn on the adjust offset feature"), style: .default, handler: { action -> Void in
+            // nothing to do, just stay on the page
+        }
+        ))
+        self.present(alert, animated: true, completion: nil)
+    }
 
     
     /// Show the dialog that allows the user to enter textual information to help them remember a Anchor Point.
     @objc func showAnchorPointInformationDialog() {
         rootContainerView.homeButton.isHidden = false
-//        backButton.isHidden = true
         // Set title and message for the alert dialog
         let alertController = UIAlertController(title: NSLocalizedString("anchorPointTextHeading", comment: "The header of a pop-up menu which prompts the user to write descriptive text about their route anchor point"), message: NSLocalizedString("anchorPointTextPrompt", comment: "Prompts user to enter descriptive text about their anchor point"), preferredStyle: .alert)
         // The confirm action taking the inputs
@@ -929,7 +995,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// Register settings bundle
     func registerSettingsBundle(){
-        let appDefaults = ["crumbColor": 0, "hapticFeedback": true, "sendLogs": true, "voiceFeedback": true, "soundFeedback": true, "units": 0, "timerLength":5] as [String : Any]
+        let appDefaults = ["crumbColor": 0, "hapticFeedback": true, "sendLogs": true, "voiceFeedback": true, "soundFeedback": true, "adjustOffset": false, "units": 0, "timerLength":5] as [String : Any]
         UserDefaults.standard.register(defaults: appDefaults)
     }
 
@@ -944,6 +1010,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         hapticFeedback = defaults.bool(forKey: "hapticFeedback")
         sendLogs = defaults.bool(forKey: "sendLogs")
         timerLength = defaults.integer(forKey: "timerLength")
+        adjustOffset = defaults.bool(forKey: "adjustOffset")
     }
     
     /// Handles updates to the app settings.
@@ -1150,7 +1217,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 } catch {}
             }
         }
-//        rootContainerView.resumeTrackingConfirmView.getButtonByTag(tag: UIView.readVoiceNoteButtonTag)?.isHidden = voiceNoteToPlay == nil
         resumeTrackingConfirmController.readVoiceNoteButton?.isHidden = voiceNoteToPlay == nil
         let waitingPeriod = ViewController.alignmentWaitingPeriod
         resumeTrackingConfirmController.view.mainText?.text?.append(String.localizedStringWithFormat(NSLocalizedString("anchorPointAlignmentText", comment: "Text describing the process of aligning to an anchorpoint. This text shows up on the alignment screen."), waitingPeriod))
@@ -1202,6 +1268,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             } else {
                 altText += " for \(distanceToDisplay)" + unitText[defaultUnit]!
             }
+        }
+        if !remindedUserOfOffsetAdjustment && adjustOffset {
+            altText += ". " + NSLocalizedString("adjustOffsetReminderAnnouncement", comment: "This is the announcement which is spoken after starting navigation if the user has enabled the Correct Offset of Phone / Body option.")
+            remindedUserOfOffsetAdjustment = true
         }
         if case .navigatingRoute = state {
             logger.logSpeech(utterance: altText)
@@ -1311,7 +1381,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     
     /// the most recently used map.  This helps us determine whether a route the user is attempting to load requires alignment.  If we have already aligned within a particular map, we can skip the alignment procedure.
-    var justUsedMap : ARWorldMap?
+    var justUsedMap : Any?
     
     /// DirectionText based on hapic/voice settings
     var Directions: Dictionary<Int, String> {
@@ -1379,7 +1449,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             //sends the user to the screen where they can start recording a route
             self.state = .startingPauseProcedure
         }
-        configuration.initialWorldMap = nil
+        if #available(iOS 12.0, *) {
+            configuration.initialWorldMap = nil
+        }
         sceneView.session.run(configuration, options: [.removeExistingAnchors, .resetTracking])
     }
     
@@ -1394,6 +1466,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         resumeTrackingController.remove()
         resumeTrackingConfirmController.remove()
         stopRecordingController.remove()
+        setShouldSuggestAdjustOffset()
+        // heading offsets should not be updated from this point until route navigation starts
+        updateHeadingOffsetTimer?.invalidate()
+        recordPhaseHeadingOffsets = []
         
         ///checks if the route is a single use route or a multiple use route
         if !recordingSingleUseRoute {
@@ -1485,7 +1561,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             //sends the user to the screen where they can start recording a route
             self.state = .recordingRoute
         }
-        configuration.initialWorldMap = nil
+        if #available(iOS 12.0, *) {
+            configuration.initialWorldMap = nil
+        }
         sceneView.session.run(configuration, options: [.removeExistingAnchors, .resetTracking])
     }
     
@@ -1525,14 +1603,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                     ///PATHPOINT paused anchor point alignment timer -> return navigation
                     ///announce to the user that they have aligned to the anchor point sucessfully and are starting  navigation.
                     self.paused = false
-                    self.delayTransition(announcement: NSLocalizedString("resumeAnchorPointToReturnNavigationAnnouncement", comment: "This is an Announcement which indicates that the pause session is complete, that the prgram was able to align with the anchor point, and that return navigation has started."), initialFocus: nil)
+                    self.delayTransition(announcement: NSLocalizedString("resumeAnchorPointToReturnNavigationAnnouncement", comment: "This is an Announcement which indicates that the pause session is complete, that the program was able to align with the anchor point, and that return navigation has started."), initialFocus: nil)
                     self.state = .navigatingRoute
 
                 } else {
                     ///PATHPOINT load saved route -> start navigation
 
                     ///announce to the user that they have sucessfully aligned with their saved anchor point.
-                    self.delayTransition(announcement: NSLocalizedString("Aligned to anchor point. Starting navigation.", comment: "This is an announcement that is played when the user is loading a saved route. this signifies the transition between saving an anchor point and starting route navigation."), initialFocus: nil)
+                    self.delayTransition(announcement: NSLocalizedString("resumeAnchorPointToReturnNavigationAnnouncement", comment: "This is an Announcement which indicates that the pause session is complete, that the program was able to align with the anchor point, and that return navigation has started."), initialFocus: nil)
                     self.state = .navigatingRoute
 
                 }
@@ -1676,7 +1754,16 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         headingRingBuffer.insert(currPhoneHeading)
         locationRingBuffer.insert(Vector3(curLocation.location.x, curLocation.location.y, curLocation.location.z))
         
-        if let newOffset = getHeadingOffset() {
+        if let newOffset = getHeadingOffset(), cos(newOffset) > 0 {
+            if case .recordingRoute = state {
+                // see if it has been at least 1 second since we last recorded the offset
+                if -lastRecordPhaseOffsetTime.timeIntervalSinceNow > 1.0 {
+                    recordPhaseHeadingOffsets.append(newOffset)
+                    lastRecordPhaseOffsetTime = Date()
+                }
+            }// else if case .navigatingRoute = state {
+                // TODO: maybe add this here???  This will probably be much more variable and hard to detect.  Maybe start with an easier path
+            //}
             if adjustOffset {
                 nav.headingOffset = newOffset
             }
@@ -1717,14 +1804,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
         let directionToNextKeypoint = getDirectionToNextKeypoint(currentLocation: curLocation)
         let coneWidth: Float!
+        let lateralDisplacementToleranceRatio: Float
         if strictHaptic {
             coneWidth = Float.pi/12
+            lateralDisplacementToleranceRatio = 0.5          // this is the ratio between lateral distance when passing keypoint and the maximum acceptable lateral displacement
         } else {
             coneWidth = Float.pi/6
+            lateralDisplacementToleranceRatio = 1.0
         }
         
         // use a stricter criteria than 12 o'clock for providing haptic feedback
-        if abs(directionToNextKeypoint.angleDiff) < coneWidth {
+        if directionToNextKeypoint.lateralDistanceRatioWhenCrossingTarget < lateralDisplacementToleranceRatio || abs(directionToNextKeypoint.angleDiff) < coneWidth {
             let timeInterval = feedbackTimer.timeIntervalSinceNow
             if(-timeInterval > ViewController.FEEDBACKDELAY) {
                 // wait until desired time interval before sending another feedback
@@ -2066,7 +2156,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 continuation()
             }
             
-            if configuration.initialWorldMap != nil, attemptingRelocalization {
+            if #available(iOS 12.0, *), configuration.initialWorldMap != nil, attemptingRelocalization {
                 // This call is necessary to cancel any pending setWorldOrigin call from the alignment procedure.  Depending on timing, it's possible for the relocalization *and* the realignment to both be applied.  This results in the origin essentially being shifted twice and things are then way off
                 session.setWorldOrigin(relativeTransform: matrix_identity_float4x4)
                 if !suppressTrackingWarnings {

@@ -22,7 +22,7 @@ class NameSavedRouteController: UIViewController, UITextFieldDelegate {
     var textField: UITextField!
     
     /// The ARWorldMap to associate with this route
-    var worldMap: ARWorldMap?
+    var worldMap: Any?
     
     override func viewDidAppear(_ animated: Bool){
         super.viewDidAppear(animated)
