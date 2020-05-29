@@ -86,6 +86,8 @@ extension UIButton {
         case .imageButton(let image):
             button.setImage(image, for: .normal)
             button.imageView?.contentMode = .scaleAspectFit
+            button.contentVerticalAlignment = .fill
+            button.contentHorizontalAlignment = .fill
         case .textButton(let label):
             button.setTitle(label, for: .normal)
             button.layer.borderWidth = 2

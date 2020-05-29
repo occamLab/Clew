@@ -34,9 +34,9 @@ class RecordPathController: UIViewController {
         super.viewDidLoad()
         
         view = TransparentTouchView(frame:CGRect(x: 0,
-                                                 y: 0,
+                                                 y: UIScreen.main.bounds.size.height*0.15,
                                                  width: UIConstants.buttonFrameWidth * 1,
-                                                 height: UIConstants.buttonFrameWidth * 1.5))
+                                                 height: UIScreen.main.bounds.size.height*0.75))
         
         /// Creating a button that can be used to start the creation of a saved route.
         addAnchorPointButton = UIButton(type: .custom)
@@ -44,7 +44,7 @@ class RecordPathController: UIViewController {
         addAnchorPointButton.clipsToBounds = true
         addAnchorPointButton.translatesAutoresizingMaskIntoConstraints = false
         addAnchorPointButton.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 1.1).isActive = true
-        addAnchorPointButton.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 2.5).isActive = true
+        addAnchorPointButton.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.height / 5).isActive = true
         addAnchorPointButton.setBackgroundImage(UIImage(named: "WhiteButtonBackground"), for: .normal)
         addAnchorPointButton.imageView?.contentMode = .scaleAspectFit
         addAnchorPointButton.setTitle(NSLocalizedString("saveARouteButtonText", comment: "This is the text which appears on the save a route buttton"),for: .normal)
@@ -66,7 +66,7 @@ class RecordPathController: UIViewController {
         recordPathButton.clipsToBounds = true
         recordPathButton.translatesAutoresizingMaskIntoConstraints = false
         recordPathButton.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 1.1).isActive = true
-        recordPathButton.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 2.5).isActive = true
+        recordPathButton.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.height / 5).isActive = true
         recordPathButton.setBackgroundImage(UIImage(named: "WhiteButtonBackground"), for: .normal)
         recordPathButton.imageView?.contentMode = .scaleAspectFit
         recordPathButton.setTitle(NSLocalizedString("singleUseRouteButtonText", comment: "This is the text which appears on the single use route buttton"),for: .normal)
@@ -88,7 +88,7 @@ class RecordPathController: UIViewController {
         routesButton.clipsToBounds = true
         routesButton.translatesAutoresizingMaskIntoConstraints = false
         routesButton.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 1.1).isActive = true
-        routesButton.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 2.5).isActive = true
+        routesButton.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.height / 5).isActive = true
         routesButton.setBackgroundImage(UIImage(named: "WhiteButtonBackground"), for: .normal)
         routesButton.imageView?.contentMode = .scaleAspectFit
         ///LOCALIZE
@@ -128,7 +128,7 @@ class RecordPathController: UIViewController {
         stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 5).isActive = true
         stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -5).isActive = true
         stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 20).isActive = true
-        stackView.topAnchor.constraint(equalTo: view.topAnchor, constant: 115).isActive = true
+        stackView.topAnchor.constraint(equalTo: view.topAnchor, constant: 0).isActive = true
         
         if let parent: UIViewController = parent {
 

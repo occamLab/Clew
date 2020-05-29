@@ -78,7 +78,7 @@ enum UIConstants {
     
     /// y-origin of announcement frame
     static var yOriginOfAnnouncementFrame: CGFloat {
-        return UIScreen.main.bounds.size.height/15
+        return UIScreen.main.bounds.size.height/7
     }
     
     static var yButtonFrameMargin: CGFloat {
