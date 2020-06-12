@@ -161,6 +161,11 @@
 		8206436A23B556A200DEE347 /* es */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = es; path = es.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
 		822E27F8210E3F260024A5E3 /* Clew Dev-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Clew Dev-Info.plist"; sourceTree = "<group>"; };
 		82569F4D22187E6500448B45 /* help */ = {isa = PBXFileReference; lastKnownFileType = folder; path = help; sourceTree = "<group>"; };
+		827CB5B024932CC60032A857 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/SettingsAndHelp.strings; sourceTree = "<group>"; };
+		827CB5B124932CC60032A857 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/BurgerMenu.strings; sourceTree = "<group>"; };
+		827CB5B224932CC60032A857 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/MainInterface.strings; sourceTree = "<group>"; };
+		827CB5B324932CC70032A857 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/SettingsAndHelp.strings; sourceTree = "<group>"; };
+		827CB5B424932CC70032A857 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/Localizable.strings; sourceTree = "<group>"; };
 		82F2DDD122E26A44005CD7D0 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		82F2DDD322E26A44005CD7D0 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/SettingsAndHelp.strings; sourceTree = "<group>"; };
 		85A1A72DC19F87F15B738291 /* Pods-Clew Dev.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew Dev.release.xcconfig"; path = "Pods/Target Support Files/Pods-Clew Dev/Pods-Clew Dev.release.xcconfig"; sourceTree = "<group>"; };
@@ -506,7 +511,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1020;
-				LastUpgradeCheck = 1020;
+				LastUpgradeCheck = 1150;
 				ORGANIZATIONNAME = OccamLab;
 				TargetAttributes = {
 					4D6B00BF1F33C1C400952242 = {
@@ -537,6 +542,7 @@
 				ru,
 				base,
 				Base,
+				ar,
 			);
 			mainGroup = 4D6B00B71F33C1C400952242;
 			productRefGroup = 4D6B00C11F33C1C400952242 /* Products */;
@@ -821,6 +827,7 @@
 			children = (
 				772E4565236CC155008EF6AC /* es */,
 				772E4567236CC15F008EF6AC /* Base */,
+				827CB5B024932CC60032A857 /* ar */,
 			);
 			name = SettingsAndHelp.storyboard;
 			sourceTree = "<group>";
@@ -830,6 +837,7 @@
 			children = (
 				772E4562236CC0A7008EF6AC /* es */,
 				772E4568236CC7BE008EF6AC /* Base */,
+				827CB5B124932CC60032A857 /* ar */,
 			);
 			name = BurgerMenu.storyboard;
 			sourceTree = "<group>";
@@ -839,6 +847,7 @@
 			children = (
 				82F2DDD322E26A44005CD7D0 /* en */,
 				7743819F2343E3F8003EBD85 /* es */,
+				827CB5B324932CC70032A857 /* ar */,
 			);
 			name = SettingsAndHelp.strings;
 			sourceTree = "<group>";
@@ -848,6 +857,7 @@
 			children = (
 				82F2DDD122E26A44005CD7D0 /* en */,
 				772E455F235F91C6008EF6AC /* es */,
+				827CB5B424932CC70032A857 /* ar */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -857,6 +867,7 @@
 			children = (
 				E5E9016D22FB4D4A00AD0E95 /* Base */,
 				8206436A23B556A200DEE347 /* es */,
+				827CB5B224932CC60032A857 /* ar */,
 			);
 			name = MainInterface.storyboard;
 			sourceTree = "<group>";
@@ -1068,7 +1079,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "edu.occam.Clew-Dev";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_COMPILATION_MODE = singlefile;
+				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OBJC_BRIDGING_HEADER = "Clew/Clew Dev-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
