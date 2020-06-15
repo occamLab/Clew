@@ -109,7 +109,6 @@
 		E565A10922F2173400C1998E /* RouteDocumentData.swift in Sources */ = {isa = PBXBuildFile; fileRef = E565A10722F2173400C1998E /* RouteDocumentData.swift */; };
 		E59DA6BF22C65F5900FCD5A1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E59DA6BD22C65F5900FCD5A1 /* LaunchScreen.storyboard */; };
 		E59DA6C022C65F5900FCD5A1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E59DA6BD22C65F5900FCD5A1 /* LaunchScreen.storyboard */; };
-		E5D1695C22E103A0008754D0 /* SettingsAndHelp.strings in Resources */ = {isa = PBXBuildFile; fileRef = E5D1695622E103A0008754D0 /* SettingsAndHelp.strings */; };
 		E5D1695D22E103A0008754D0 /* SettingsAndHelp.strings in Resources */ = {isa = PBXBuildFile; fileRef = E5D1695622E103A0008754D0 /* SettingsAndHelp.strings */; };
 		E5D1695E22E103A0008754D0 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E5D1695822E103A0008754D0 /* Localizable.strings */; };
 		E5D1695F22E103A0008754D0 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E5D1695822E103A0008754D0 /* Localizable.strings */; };
@@ -575,7 +574,6 @@
 				1F2B9D8722C5446B00317DC8 /* (null) in Resources */,
 				E5D1695E22E103A0008754D0 /* Localizable.strings in Resources */,
 				E5470F1A22C119F5001092A4 /* StopRecording.aiff in Resources */,
-				E5D1695C22E103A0008754D0 /* SettingsAndHelp.strings in Resources */,
 				77467DAF22BBC1D300FA7DEE /* Default-568h@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
