@@ -213,6 +213,26 @@ class Navigation {
         return direction
     }
     
+    ///temporary attempt
+    public func isFarFromPath(currentLocation: CurrentCoordinateInfo, prevKeypoint: KeypointInfo, nextKeypoint: KeypointInfo, isLastKeypoint: Bool) -> Bool{
+        let deltaA = currentLocation.location.translation - prevKeypoint.location.translation
+        let deltaC = nextKeypoint.location.translation - prevKeypoint.location.translation
+        let vectorA = Vector3(deltaA.x, 0, deltaA.z)
+        let vectorC = Vector3(deltaC.x, 0, deltaC.z)
+        let scalarProjectionAOnC = (vectorA.dot(vectorC)/vectorC.lengthSquared)
+        let vectorProjectionAOnC = Vector3((deltaC.x)*scalarProjectionAOnC, 0, (deltaC.z)*scalarProjectionAOnC)
+        let rejectionAFromC = vectorA - vectorProjectionAOnC
+        let distanceFromPath = rejectionAFromC.length
+        if (distanceFromPath > 0.25){
+            return true
+        }
+        else{
+
+            return false
+        }
+        
+    }
+    
     /// Divides all possible directional angles into six sections for using with haptic feedback.
     ///
     /// - Parameter angle: angle in radians from straight ahead.

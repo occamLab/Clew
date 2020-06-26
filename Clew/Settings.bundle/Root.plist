@@ -119,8 +119,6 @@
 			<string>PSToggleSwitchSpecifier</string>
 			<key>Title</key>
 			<string>Voice</string>
-			<key>Key</key>
-			<string>voiceFeedback</string>
 			<key>DefaultValue</key>
 			<true/>
 		</dict>
@@ -143,6 +141,26 @@
 			<string>adjustOffset</string>
 			<key>DefaultValue</key>
 			<false/>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>Reroute</string>
+			<key>Key</key>
+			<string>guidanceFeedback</string>
+			<key>DefaultValue</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>Return to Path</string>
+			<key>Key</key>
+			<string>pathFindingFeedback</string>
+			<key>DefaultValue</key>
+			<true/>
 		</dict>
 		<dict>
 			<key>Type</key>

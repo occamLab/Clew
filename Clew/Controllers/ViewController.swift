@@ -181,6 +181,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     ///this boolean denotes whether or not the app is loading a route from an automatic alignment
     var isAutomaticAlignment: Bool = false
     
+    ///this Boolean denotes whether or not the user is off the path
+    var isOffPath: Bool = false
+    
     /// This is an audio player that queues up the voice note associated with a particular route Anchor Point. The player is created whenever a saved route is loaded. Loading it before the user clicks the "Play Voice Note" button allows us to call the prepareToPlay function which reduces the latency when the user clicks the "Play Voice Note" button.
     var voiceNoteToPlay: AVAudioPlayer?
     
@@ -999,7 +1002,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// Register settings bundle
     func registerSettingsBundle(){
-        let appDefaults = ["crumbColor": 0, "hapticFeedback": true, "sendLogs": true, "voiceFeedback": true, "soundFeedback": true, "adjustOffset": false, "units": 0, "timerLength":5] as [String : Any]
+        let appDefaults = ["crumbColor": 0, "hapticFeedback": true, "sendLogs": true, "voiceFeedback": true, "soundFeedback": true, "adjustOffset": false, "units": 0, "timerLength":5, "guidanceFeedback": true, "pathFindingFeedback": true] as [String : Any]
         UserDefaults.standard.register(defaults: appDefaults)
     }
 
@@ -1012,6 +1015,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         soundFeedback = defaults.bool(forKey: "soundFeedback")
         voiceFeedback = defaults.bool(forKey: "voiceFeedback")
         hapticFeedback = defaults.bool(forKey: "hapticFeedback")
+        guidanceFeedback = defaults.bool(forKey: "guidanceFeedback")
+        pathFindingFeedback = defaults.bool(forKey: "pathFindingFeedback")
         sendLogs = defaults.bool(forKey: "sendLogs")
         timerLength = defaults.integer(forKey: "timerLength")
         adjustOffset = defaults.bool(forKey: "adjustOffset")
@@ -1304,6 +1309,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// previous keypoint location - originally set to current location
     var prevKeypointPosition: LocationInfo!
+    
+    /// previous keypoint
+    var prevKeypointNode: KeypointInfo!
 
     /// Interface for logging data about the session and the path
     var logger = PathLogger()
@@ -1364,6 +1372,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// true if haptic feedback should be generated when the user is facing the next waypoint, false otherwise
     var hapticFeedback: Bool!
+    
+    /// true if guidance feedback should be generated when the user is not facing the next waypoint, false otherwise
+    var guidanceFeedback: Bool!
+    
+    /// true if path finding feedback should be generated when the user has strayed significantly away from the path
+    var pathFindingFeedback: Bool!
 
     /// true if we should prompt the user to rate route navigation and then send log data to the cloud
     var sendLogs: Bool!
@@ -1676,6 +1690,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 
                 // remove current visited keypont from keypoint list
                 prevKeypointPosition = keypoints[0].location
+                prevKeypointNode = keypoints[0]
                 keypoints.remove(at: 0)
                 
                 // erase current keypoint and render next keypoint node
@@ -1821,17 +1836,74 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             lateralDisplacementToleranceRatio = 1.0
         }
         
-        // use a stricter criteria than 12 o'clock for providing haptic feedback
-        if directionToNextKeypoint.lateralDistanceRatioWhenCrossingTarget < lateralDisplacementToleranceRatio || abs(directionToNextKeypoint.angleDiff) < coneWidth {
+        if (prevKeypointNode == nil) {
             let timeInterval = feedbackTimer.timeIntervalSinceNow
-            if(-timeInterval > ViewController.FEEDBACKDELAY) {
-                // wait until desired time interval before sending another feedback
-                if (hapticFeedback) { feedbackGenerator?.impactOccurred() }
-                if (soundFeedback) { playSystemSound(id: 1103) }
-                feedbackTimer = Date()
+            if(-timeInterval > 2*ViewController.FEEDBACKDELAY) {
+                print("hello")
+                let startingAnchor = curLocation.location
+                prevKeypointNode.location = startingAnchor
+                prevKeypointNode.orientation = Vector3(0,0,0)
+
             }
         }
+        
+
+        if (isOffPath == false){
+            //probably don't need this if statement directly below anymore but will remove later
+            if !(prevKeypointNode == nil)  {
+                if(nav.isFarFromPath(currentLocation: curLocation, prevKeypoint: prevKeypointNode, nextKeypoint: keypoints[0], isLastKeypoint: keypoints.count==1)){
+                    let timeInterval = feedbackTimer.timeIntervalSinceNow
+                    if(pathFindingFeedback){
+                        if((-timeInterval > 10*ViewController.FEEDBACKDELAY)) {
+                            if(nav.isFarFromPath(currentLocation: curLocation, prevKeypoint: prevKeypointNode, nextKeypoint: keypoints[0], isLastKeypoint: keypoints.count==1)){
+                                isOffPath = true
+                                announce(announcement: "You are no longer on the path...")
+                                feedbackTimer = Date()
+                            }
+                        }
+                    }
+                }
+                else {
+                    if directionToNextKeypoint.lateralDistanceRatioWhenCrossingTarget < lateralDisplacementToleranceRatio || abs(directionToNextKeypoint.angleDiff) < coneWidth {
+                            let timeInterval = feedbackTimer.timeIntervalSinceNow
+                            if(-timeInterval > ViewController.FEEDBACKDELAY) {
+                               // wait until desired time interval before sending another feedback
+                                if (soundFeedback) {
+                                    playSystemSound(id: 1103) }
+                                if (hapticFeedback){
+                                    feedbackGenerator?.impactOccurred() }
+                                feedbackTimer = Date()
+                            }
+                        }
+                    else{      //if pointing away from path
+                        let timeInterval = feedbackTimer.timeIntervalSinceNow
+                            if(guidanceFeedback){
+                                if(-timeInterval > 10*ViewController.FEEDBACKDELAY) {
+                                    // wait until desired time interval before sending another feedback
+                                    if (hapticFeedback){
+                                        if (directionToNextKeypoint.angleDiff < 0){
+                                            announce(announcement: "turn left until you feel haptic feedback")
+                                        }
+                                        else{
+                                            announce(announcement: "turn right until you feel haptic feedback")
+                                        }
+                                    }
+                                    else{
+                                        announceDirectionHelpPressed()
+                                    }
+                                    feedbackTimer = Date()
+                                }
+                            }
+                    }
+                }
+            }
+        }
+        else{
+            announce(announcement: "time to drop crumbs")
+                //code for dropping crumbs etc removed temporarily
+        }
     }
+    
     
     /// Communicates a message to the user via speech.  If VoiceOver is active, then VoiceOver is used to communicate the announcement, otherwise we use the AVSpeechEngine
     ///
