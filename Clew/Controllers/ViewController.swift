@@ -278,10 +278,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         logger.resetNavigationLog()
         
         // drop crumbs while navigating for rerouting
-        guard let curLocation = getRealCoordinates(record: true)?.location else {
-            return
-        }
-        recordingDetourCrumbs.append(curLocation)
+        detourCrumbs = []
+        recordingDetourCrumbs = []
+        isDetour = true
+        droppingCrumbs = Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: #selector(dropCrumb), userInfo: nil, repeats: true)
         
         // generate path from PathFinder class
         // enabled hapticFeedback generates more keypoints
@@ -1307,6 +1307,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// index of start of detour
     var detourIndex = 0
     
+    /// boolean if current route is detour
+    var isDetour = false
+    
     /// list of crumbs dropped when recording path
     var recordingCrumbs: LinkedList<LocationInfo>!
     
@@ -1688,7 +1691,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         guard let curLocation = getRealCoordinates(record: true)?.location else {
             return
         }
-        recordingCrumbs.append(curLocation)
+        if (isDetour){
+            recordingDetourCrumbs.append(curLocation)
+        }
+        else {
+            recordingCrumbs.append(curLocation)
+        }
     }
     
     /// checks to see if user is on the right path during navigation.
