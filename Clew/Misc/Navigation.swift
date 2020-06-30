@@ -227,7 +227,6 @@ class Navigation {
             return true
         }
         else{
-
             return false
         }
         
