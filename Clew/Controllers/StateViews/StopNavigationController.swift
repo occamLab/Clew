@@ -14,6 +14,12 @@ class StopNavigationController: UIViewController {
     /// button for stopping route navigation
     var stopNavigationButton: UIButton!
     
+    /// button for returing to path from detour
+    var returnToPathButton: UIButton!
+    
+    /// space filler button for alignment
+    var fillerButton: UIButton!
+    
     /// called when view appears
     override func viewDidAppear(_ animated: Bool) {
         /// set stopnavigationbutton as initially active voiceover button
@@ -35,6 +41,16 @@ class StopNavigationController: UIViewController {
                                                         alignment: UIConstants.ButtonContainerHorizontalAlignment.center,
                                                         appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "StopNavigation")!),
                                                         label: NSLocalizedString("stopNavigationButtonAccessibilityLabel", comment: "The accessibility label of the button that allows user to stop navigating."))
+        // label needs to be fixed to be it's own detour label
+        returnToPathButton = UIButton.makeConstraintButton(view,
+                                                        alignment: UIConstants.ButtonContainerHorizontalAlignment.left,
+                                                        appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "StartNavigation")!),
+                                                        label: NSLocalizedString("startNavigationButtonAccessibilityLabel", comment: "The accessibility label of the button that allows user to start navigating a detour."))
+        fillerButton = UIButton.makeConstraintButton(view,
+                                                        alignment: UIConstants.ButtonContainerHorizontalAlignment.right,
+                                                        appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "FillerSpace")!),
+                                                        label: NSLocalizedString("startNavigationButtonAccessibilityLabel", comment: "The accessibility label of the button that should be invisible"))
+        
         
         /// create stack view for aligning and distributing bottom layer buttons
         let stackView   = UIStackView()
@@ -48,7 +64,9 @@ class StopNavigationController: UIViewController {
         stackView.alignment = UIStackView.Alignment.center
         
         /// add elements to the stack
+        stackView.addArrangedSubview(returnToPathButton)
         stackView.addArrangedSubview(stopNavigationButton)
+        stackView.addArrangedSubview(fillerButton)
         
         /// size the stack
         stackView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
@@ -56,9 +74,14 @@ class StopNavigationController: UIViewController {
         stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -UIConstants.yButtonFrameMargin).isActive = true
         stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         
+        
+        
         if let parent: UIViewController = parent {
             stopNavigationButton.addTarget(parent,
                                             action: #selector(ViewController.stopNavigation),
+                                            for: .touchUpInside)
+            returnToPathButton.addTarget(parent,
+                                            action: #selector(ViewController.startRerouting),
                                             for: .touchUpInside)
         }        
     }

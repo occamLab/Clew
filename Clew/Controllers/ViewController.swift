@@ -184,6 +184,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     ///this Boolean denotes whether or not the user is off the path
     var isOffPath: Bool = false
     
+    /// this boolean denotes whether or not the user is rerouting
+    var isRerouting: Bool = false
+    
     /// This is an audio player that queues up the voice note associated with a particular route Anchor Point. The player is created whenever a saved route is loaded. Loading it before the user clicks the "Play Voice Note" button allows us to call the prepareToPlay function which reduces the latency when the user clicks the "Play Voice Note" button.
     var voiceNoteToPlay: AVAudioPlayer?
     
@@ -280,11 +283,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         // drop crumbs while navigating for rerouting
         detourCrumbs = []
         recordingDetourCrumbs = []
-        isDetour = true
-        droppingCrumbs = Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: #selector(dropCrumb), userInfo: nil, repeats: true)
+        isDetourCrumbs = true
         
         // generate path from PathFinder class
         // enabled hapticFeedback generates more keypoints
+
         let path = PathFinder(crumbs: crumbs.reversed(), hapticFeedback: hapticFeedback, voiceFeedback: voiceFeedback)
         keypoints = [path.keypoints]
         
@@ -317,6 +320,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         // make sure there are no old values hanging around
         headingRingBuffer.clear()
         locationRingBuffer.clear()
+        droppingCrumbs = Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: #selector(dropCrumb), userInfo: nil, repeats: true)
         hapticTimer = Timer.scheduledTimer(timeInterval: 0.01, target: self, selector: (#selector(getHapticFeedback)), userInfo: nil, repeats: true)
     }
     
@@ -838,6 +842,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             keypointNode.removeFromParentNode()
         }
         followingCrumbs?.invalidate()
+        droppingCrumbs?.invalidate()
         recordPhaseHeadingOffsets = []
         routeName = nil
         beginRouteAnchorPoint = RouteAnchorPoint()
@@ -1242,9 +1247,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     @objc func showStopNavigationButton() {
         rootContainerView.homeButton.isHidden = false
         rootContainerView.getDirectionButton.isHidden = false
+        //Need to make detour button hidden at start
         startNavigationController.remove()
         add(stopNavigationController)
-        
+        stopNavigationController.returnToPathButton.isHidden = true
+        stopNavigationController.fillerButton.isHidden = true
         // this does not auto update, so don't use it as an accessibility element
         delayTransition()
     }
@@ -1305,10 +1312,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     var keypointIndex = 0
     
     /// index of start of detour
-    var detourIndex = 0
+    var detourIndex: Int?
     
-    /// boolean if current route is detour
-    var isDetour = false
+    /// returns true if detour crumbs are being dropped
+    var isDetourCrumbs = false
     
     /// list of crumbs dropped when recording path
     var recordingCrumbs: LinkedList<LocationInfo>!
@@ -1545,6 +1552,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     @objc func stopNavigation(_ sender: UIButton) {
         // stop navigation
         followingCrumbs?.invalidate()
+        droppingCrumbs?.invalidate()
         hapticTimer?.invalidate()
         
         feedbackGenerator = nil
@@ -1691,7 +1699,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         guard let curLocation = getRealCoordinates(record: true)?.location else {
             return
         }
-        if (isDetour){
+        if (isDetourCrumbs){
             recordingDetourCrumbs.append(curLocation)
         }
         else {
@@ -1707,7 +1715,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             return
         }
         var directionToNextKeypoint = getDirectionToNextKeypoint(currentLocation: curLocation)
-        
+
         if (directionToNextKeypoint.targetState == PositionState.atTarget) {
             if (keypoints[keypointIndex].count > 1) {
                 // arrived at keypoint
@@ -1728,23 +1736,31 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 directionToNextKeypoint = getDirectionToNextKeypoint(currentLocation: curLocation)
                 setDirectionText(currentLocation: curLocation.location, direction: directionToNextKeypoint, displayDistance: false)
             } else {
-                // arrived at final keypoint
-                // send haptic/sonic feedback
                 waypointFeedbackGenerator?.notificationOccurred(.success)
                 if (soundFeedback) { playSystemSound(id: 1016) }
-                
                 // erase current keypoint node
                 keypointNode.removeFromParentNode()
                 
-                followingCrumbs?.invalidate()
-                hapticTimer?.invalidate()
+                if (keypointIndex > 0)
+                {
+                    keypointIndex = keypointIndex - 1
+                }
+                else {
+                        // arrived at final keypoint
+                        // send haptic/sonic feedback
                 
-                // update text and stop navigation
-                if(sendLogs) {
-                    state = .ratingRoute(announceArrival: true)
-                } else {
-                    state = .mainScreen(announceArrival: true)
-                    logger.resetStateSequenceLog()
+                        followingCrumbs?.invalidate()
+                        droppingCrumbs?.invalidate()
+                        hapticTimer?.invalidate()
+                
+                        // update text and stop navigation
+                        if(sendLogs) {
+                            state = .ratingRoute(announceArrival: true)
+                        }
+                        else {
+                            state = .mainScreen(announceArrival: true)
+                            logger.resetStateSequenceLog()
+                        }
                 }
             }
         }
@@ -1865,7 +1881,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         if (isOffPath == false){
             //probably don't need this if statement directly below anymore but will remove later
             if !(prevKeypointNode == nil)  {
-                if(nav.isFarFromPath(currentLocation: curLocation, prevKeypoint: prevKeypointNode, nextKeypoint: keypoints[keypointIndex][0], isLastKeypoint: keypoints.count==1)){
+                if(nav.isFarFromPath(currentLocation: curLocation, prevKeypoint: prevKeypointNode, nextKeypoint: keypoints[keypointIndex][0], isLastKeypoint: keypoints[keypointIndex].count==1)){
                     let timeInterval = feedbackTimer.timeIntervalSinceNow
                     if(pathFindingFeedback){
                         if((-timeInterval > 10*ViewController.FEEDBACKDELAY)) {
@@ -1886,6 +1902,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                                     playSystemSound(id: 1103) }
                                 if (hapticFeedback){
                                     feedbackGenerator?.impactOccurred() }
+                                stopNavigationController.fillerButton.isHidden = true
+                                stopNavigationController.returnToPathButton.isHidden = true
                                 feedbackTimer = Date()
                             }
                         }
@@ -1915,13 +1933,44 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         else{
              if(!nav.isFarFromPath(currentLocation: curLocation, prevKeypoint: prevKeypointNode, nextKeypoint: keypoints[keypointIndex][0], isLastKeypoint: keypoints[keypointIndex].count==1)){
                 isOffPath = false
+                detourIndex = nil
+                
             }
             //increment the key index if it is time to go back
-            detourIndex = recordingDetourCrumbs.count - 1 //I know this will incrememnt everytime
-            announce(announcement: "time to drop crumbs")
+            if (detourIndex == nil){
+                if recordingDetourCrumbs.count > 10 {
+                detourIndex = recordingDetourCrumbs.count - 10
+                }
+                else{
+                    detourIndex = recordingDetourCrumbs.count - 1
+                }
+                stopNavigationController.fillerButton.isHidden = false
+                stopNavigationController.returnToPathButton.isHidden = false
+            }
         }
     }
     
+     @objc func startRerouting(_ sender: UIButton){
+        isRerouting = true
+        detourCrumbs = Array(recordingDetourCrumbs)
+        let trimmedDetourCrumbs = detourCrumbs[detourIndex!...(detourCrumbs.count-1)]
+        let detour = PathFinder(crumbs:trimmedDetourCrumbs.reversed(), hapticFeedback: hapticFeedback, voiceFeedback: voiceFeedback)
+        keypoints.append(detour.keypoints)
+        keypointIndex = keypoints.count - 1
+        print("keypoint index:")
+        print(keypointIndex)
+        stopNavigationController.fillerButton.isHidden = true
+        stopNavigationController.returnToPathButton.isHidden = true
+        
+        //needs to convert crumbs starting at an index to keypoints
+        //add those keypoints to nested array
+        //increment keypoint index
+        //continue navigation
+        //change keypoint color
+        //when reach last kp deincrement
+        //change color back
+        
+    }
     
     /// Communicates a message to the user via speech.  If VoiceOver is active, then VoiceOver is used to communicate the announcement, otherwise we use the AVSpeechEngine
     ///
@@ -1966,7 +2015,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// - Returns: the direction to the next keypoint with the distance rounded to the nearest tenth of a meter
     func getDirectionToNextKeypoint(currentLocation: CurrentCoordinateInfo) -> DirectionInfo {
         // returns direction to next keypoint from current location
-        var dir = nav.getDirections(currentLocation: currentLocation, nextKeypoint: keypoints[keypointIndex][0], isLastKeypoint: keypoints.count == 1)
+        var dir = nav.getDirections(currentLocation: currentLocation, nextKeypoint: keypoints[keypointIndex][0], isLastKeypoint: keypoints[keypointIndex].count == 1)
         dir.distance = roundToTenths(dir.distance)
         return dir
     }
