@@ -275,10 +275,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
 
         // If the route has not yet been saved, we can no longer save this route
         routeName = nil
+        detourIndex = nil
         beginRouteAnchorPoint = RouteAnchorPoint()
         endRouteAnchorPoint = RouteAnchorPoint()
 
         logger.resetNavigationLog()
+        
         
         // drop crumbs while navigating for rerouting
         detourCrumbs = []
@@ -713,6 +715,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         rootContainerView.homeButton.addTarget(self, action: #selector(homeButtonPressed), for: .touchUpInside)
 
         rootContainerView.getDirectionButton.addTarget(self, action: #selector(announceDirectionHelpPressed), for: .touchUpInside)
+        
+    
 
         // make sure this happens after the view is created!
         rootContainerView.countdownTimer.delegate = self
@@ -1744,6 +1748,28 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 if (keypointIndex > 0)
                 {
                     keypointIndex = keypointIndex - 1
+                    isRerouting = false
+                    
+                    // temporary copy to render next keypoint correctly
+                    // arrived at keypoint
+                    // send haptic/sonic feedback
+                    waypointFeedbackGenerator?.notificationOccurred(.success)
+                    if (soundFeedback) { playSystemSound(id: 1016) }
+                    
+                    // remove current visited keypont from keypoint list
+                    prevKeypointPosition = keypoints[keypointIndex][0].location
+                    prevKeypointNode = keypoints[keypointIndex][0]
+                    keypoints[keypointIndex].remove(at: 0)
+                    
+                    // erase current keypoint and render next keypoint node
+                    keypointNode.removeFromParentNode()
+                    if (keypoints[keypointIndex].count > 1){
+                    renderKeypoint(keypoints[keypointIndex][0].location)
+                    }
+                    
+                    // update directions to next keypoint
+                    directionToNextKeypoint = getDirectionToNextKeypoint(currentLocation: curLocation)
+                    setDirectionText(currentLocation: curLocation.location, direction: directionToNextKeypoint, displayDistance: false)
                 }
                 else {
                         // arrived at final keypoint
@@ -1912,7 +1938,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                             if(guidanceFeedback){
                                 if(-timeInterval > 10*ViewController.FEEDBACKDELAY) {
                                     // wait until desired time interval before sending another feedback
-                                    if (hapticFeedback){
+                                    if (hapticFeedback && !isOffPath){
                                         if (directionToNextKeypoint.angleDiff < 0){
                                             announce(announcement: "turn left until you feel haptic feedback")
                                         }
@@ -1932,6 +1958,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
         else{
              if(!nav.isFarFromPath(currentLocation: curLocation, prevKeypoint: prevKeypointNode, nextKeypoint: keypoints[keypointIndex][0], isLastKeypoint: keypoints[keypointIndex].count==1)){
+                
                 isOffPath = false
                 detourIndex = nil
                 
@@ -2215,14 +2242,39 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             }
             node.geometry!.firstMaterial!.diffuse.contents = color
         }
-        let flashColors = [flashRed, flashGreen, flashBlue]
+        
+        // animation - SCNNode flashes purple
+        let flashPurple = SCNAction.customAction(duration: 2) { (node, elapsedTime) -> () in
+            let percentage = Float(elapsedTime / 2)
+            var color = UIColor.clear
+            let power: Float = 2.0
+            
+            if (percentage < 0.5) {
+                color = UIColor(red: 1,
+                                green: CGFloat(powf(2.0*percentage, power)),
+                                blue: 1,
+                                alpha: 1)
+            } else {
+                color = UIColor(red: 1,
+                                green: CGFloat(powf(2-2.0*percentage, power)),
+                                blue: 1,
+                                alpha: 1)
+            }
+            node.geometry!.firstMaterial!.diffuse.contents = color
+        }
+        let flashColors = [flashRed, flashGreen, flashBlue, flashPurple]
         
         // set flashing color based on settings bundle configuration
         var changeColor: SCNAction!
+        if (isRerouting){
+            changeColor = SCNAction.repeatForever(flashColors[3])
+        }
+        else{
         if (defaultColor == 3) {
             changeColor = SCNAction.repeatForever(flashColors[Int(arc4random_uniform(3))])
         } else {
             changeColor = SCNAction.repeatForever(flashColors[defaultColor])
+        }
         }
         
         // add keypoint node to view
