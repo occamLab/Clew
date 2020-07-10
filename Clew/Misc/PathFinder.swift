@@ -395,7 +395,10 @@ class PathFinder {
     /// - Returns: a list of `KeypointInfo` objects representing the turns in the path
     func getKeypoints(edibleCrumbs: [LocationInfo]) -> [KeypointInfo] {
         var keypoints = [KeypointInfo]()
-        let firstKeypointLocation = edibleCrumbs.first!
+        guard let firstKeypointLocation = edibleCrumbs.first else{
+            return keypoints
+        }
+        
         let firstKeypointOrientation = Vector3.x
         keypoints.append(KeypointInfo(location: firstKeypointLocation, orientation: firstKeypointOrientation))
         

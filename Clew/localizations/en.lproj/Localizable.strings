@@ -89,6 +89,8 @@
 "uTurnDirection" = "Turn around";
 "leftDirection" = "Turn left";
 "slightLeftDirection" = "Slight left";
+"turnLeftUntilHapticFeedback" = "Turn left until you feel haptic feedback";
+"turnRightUntilHapticFeedback" = "Turn right until you feel haptic feedback";
 
     // Version of directions given when haptic feedback function is turned off (Clock directions)
 "1o'clockDirection" = "Slight right towards 1 o'clock";
@@ -101,6 +103,8 @@
 "10o'clockDirection" = "Slight left towards 10 o'clock";
 "11o'clockDirection" = "Slight left towards 11 o'clock";
 
+// Warning given if the user toggles rerouting
+"offPathWarning" = "You are off the path";
 
 // Anchor Points
 
@@ -267,6 +271,7 @@
 "singleUseRouteToRecordingRouteAnnouncement" = "Now recording a single use route.";
 "saveRouteToPlayPauseAnnouncement" = "Route saved. You may now perform return navigation or return to the home screen.";
 
+"returnedToMainPathAnnouncement" = "You have returned to the main path.";
 //Play/Pause text
 "automaticAlignmentPlayPauseViewText" = "You have been automatically realigned with your route. Press the play button to perform navigation.";
 

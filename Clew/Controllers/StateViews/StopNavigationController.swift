@@ -46,12 +46,14 @@ class StopNavigationController: UIViewController {
                                                         alignment: UIConstants.ButtonContainerHorizontalAlignment.left,
                                                         appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "StartNavigation")!),
                                                         label: NSLocalizedString("startNavigationButtonAccessibilityLabel", comment: "The accessibility label of the button that allows user to start navigating a detour."))
+        //change later
         fillerButton = UIButton.makeConstraintButton(view,
                                                         alignment: UIConstants.ButtonContainerHorizontalAlignment.right,
                                                         appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "FillerSpace")!),
-                                                        label: NSLocalizedString("startNavigationButtonAccessibilityLabel", comment: "The accessibility label of the button that should be invisible"))
+                                                        label: "")
         
         
+        fillerButton.isAccessibilityElement = false
         /// create stack view for aligning and distributing bottom layer buttons
         let stackView   = UIStackView()
         view.addSubview(stackView)

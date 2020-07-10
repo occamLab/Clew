@@ -280,8 +280,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         endRouteAnchorPoint = RouteAnchorPoint()
 
         logger.resetNavigationLog()
-        
-        
+
         // drop crumbs while navigating for rerouting
         detourCrumbs = []
         recordingDetourCrumbs = []
@@ -1318,6 +1317,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// index of start of detour
     var detourIndex: Int?
     
+    /// index of most recently dropped crumb while on path
+    var onPathIndex = 0
+    
     /// returns true if detour crumbs are being dropped
     var isDetourCrumbs = false
     
@@ -1491,7 +1493,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         creatingRouteAnchorPoint = true
 
         hideAllViewsHelper()
-
+        
+        keypointIndex = 0
         // announce session state
         trackingErrorsAnnouncementTimer = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: true) { timer in
             self.announceCurrentTrackingErrors()
@@ -1754,6 +1757,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                     // arrived at keypoint
                     // send haptic/sonic feedback
                     waypointFeedbackGenerator?.notificationOccurred(.success)
+                    announce(announcement: NSLocalizedString("returnedToMainPathAnnouncement", comment: "An announcement which lets the user know they are back on the main path after a detour"))
                     if (soundFeedback) { playSystemSound(id: 1016) }
                     
                     // remove current visited keypont from keypoint list
@@ -1904,16 +1908,22 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             coneWidth = Float.pi/6
             lateralDisplacementToleranceRatio = 1.0
         }
+        
+        
         if (isOffPath == false){
             //probably don't need this if statement directly below anymore but will remove later
             if !(prevKeypointNode == nil)  {
-                if(nav.isFarFromPath(currentLocation: curLocation, prevKeypoint: prevKeypointNode, nextKeypoint: keypoints[keypointIndex][0], isLastKeypoint: keypoints[keypointIndex].count==1)){
+                if (!isRerouting && !nav.isFarFromPath(currentLocation: curLocation, prevKeypoint: prevKeypointNode, nextKeypoint: keypoints[keypointIndex][0], isLastKeypoint: keypoints[keypointIndex].count==1, threshold: 1/8)){
+                    onPathIndex = recordingDetourCrumbs.count - 1
+                    print(onPathIndex)
+                }
+                if(nav.isFarFromPath(currentLocation: curLocation, prevKeypoint: prevKeypointNode, nextKeypoint: keypoints[keypointIndex][0], isLastKeypoint: keypoints[keypointIndex].count==1, threshold: 1/4)){
                     let timeInterval = feedbackTimer.timeIntervalSinceNow
                     if(pathFindingFeedback){
                         if((-timeInterval > 10*ViewController.FEEDBACKDELAY)) {
-                            if(nav.isFarFromPath(currentLocation: curLocation, prevKeypoint: prevKeypointNode, nextKeypoint: keypoints[keypointIndex][0], isLastKeypoint: keypoints[keypointIndex].count==1)){
+                            if(nav.isFarFromPath(currentLocation: curLocation, prevKeypoint: prevKeypointNode, nextKeypoint: keypoints[keypointIndex][0], isLastKeypoint: keypoints[keypointIndex].count==1, threshold: 1/4)){
                                 isOffPath = true
-                                announce(announcement: "You are no longer on the path...")
+                                announce(announcement: NSLocalizedString("offPathWarning", comment: "An announcement that warns the user they have walked off the path" ))
                                 feedbackTimer = Date()
                             }
                         }
@@ -1930,6 +1940,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                                     feedbackGenerator?.impactOccurred() }
                                 stopNavigationController.fillerButton.isHidden = true
                                 stopNavigationController.returnToPathButton.isHidden = true
+                                UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged , argument: nil)
                                 feedbackTimer = Date()
                             }
                         }
@@ -1940,11 +1951,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                                     // wait until desired time interval before sending another feedback
                                     if (hapticFeedback && !isOffPath){
                                         if (directionToNextKeypoint.angleDiff < 0){
-                                            announce(announcement: "turn left until you feel haptic feedback")
+                                            announce(announcement: NSLocalizedString("turnLeftUntilHapticFeedback", comment: "An announcement that lets the user know to turn left until they feel haptic feedback."))
                                         }
                                         else{
-                                            announce(announcement: "turn right until you feel haptic feedback")
-                                        }
+                                            announce(announcement: NSLocalizedString("turnRightUntilHapticFeedback", comment: "An announcement that lets the user know to turn right until they feel haptic feedback."))                                        }
                                     }
                                     else{
                                         announceDirectionHelpPressed()
@@ -1957,26 +1967,22 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             }
         }
         else{
-             if(!nav.isFarFromPath(currentLocation: curLocation, prevKeypoint: prevKeypointNode, nextKeypoint: keypoints[keypointIndex][0], isLastKeypoint: keypoints[keypointIndex].count==1)){
-                
+            if(!nav.isFarFromPath(currentLocation: curLocation, prevKeypoint: prevKeypointNode, nextKeypoint: keypoints[keypointIndex][0], isLastKeypoint: keypoints[keypointIndex].count==1, threshold : 1/4)){
                 isOffPath = false
                 detourIndex = nil
                 
             }
             //increment the key index if it is time to go back
             if (detourIndex == nil){
-                if recordingDetourCrumbs.count > 10 {
-                detourIndex = recordingDetourCrumbs.count - 10
-                }
-                else{
-                    detourIndex = recordingDetourCrumbs.count - 1
-                }
+                detourIndex = onPathIndex
                 stopNavigationController.fillerButton.isHidden = false
                 stopNavigationController.returnToPathButton.isHidden = false
+                UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged , argument: nil)
             }
         }
     }
     
+    /// Reroutes the user to the original path after the start rerouting button is pushed
      @objc func startRerouting(_ sender: UIButton){
         isRerouting = true
         detourCrumbs = Array(recordingDetourCrumbs)
@@ -1988,15 +1994,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         print(keypointIndex)
         stopNavigationController.fillerButton.isHidden = true
         stopNavigationController.returnToPathButton.isHidden = true
-        
-        //needs to convert crumbs starting at an index to keypoints
-        //add those keypoints to nested array
-        //increment keypoint index
-        //continue navigation
-        //change keypoint color
-        //when reach last kp deincrement
-        //change color back
-        
+        UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged , argument: nil)
     }
     
     /// Communicates a message to the user via speech.  If VoiceOver is active, then VoiceOver is used to communicate the announcement, otherwise we use the AVSpeechEngine
