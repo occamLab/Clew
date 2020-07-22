@@ -17,8 +17,8 @@ class StopNavigationController: UIViewController {
     /// button for returing to path from detour
     var returnToPathButton: UIButton!
     
-    /// space filler button for alignment
-    var fillerButton: UIButton!
+    /// pause button during navigation
+    var pauseButton: UIButton!
     
     /// called when view appears
     override func viewDidAppear(_ animated: Bool) {
@@ -38,22 +38,22 @@ class StopNavigationController: UIViewController {
         view.backgroundColor = UIColor.black.withAlphaComponent(0.4)
  
         stopNavigationButton = UIButton.makeConstraintButton(view,
-                                                        alignment: UIConstants.ButtonContainerHorizontalAlignment.center,
+                                                        alignment: UIConstants.ButtonContainerHorizontalAlignment.left,
                                                         appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "StopNavigation")!),
                                                         label: NSLocalizedString("stopNavigationButtonAccessibilityLabel", comment: "The accessibility label of the button that allows user to stop navigating."))
         // label needs to be fixed to be it's own detour label
         returnToPathButton = UIButton.makeConstraintButton(view,
-                                                        alignment: UIConstants.ButtonContainerHorizontalAlignment.left,
+                                                        alignment: UIConstants.ButtonContainerHorizontalAlignment.center,
                                                         appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "StartNavigation")!),
                                                         label: NSLocalizedString("startNavigationButtonAccessibilityLabel", comment: "The accessibility label of the button that allows user to start navigating a detour."))
         //change later
-        fillerButton = UIButton.makeConstraintButton(view,
+        pauseButton = UIButton.makeConstraintButton(view,
                                                         alignment: UIConstants.ButtonContainerHorizontalAlignment.right,
-                                                        appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "FillerSpace")!),
-                                                        label: "")
+                                                        appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "Pause")!),
+                                                        label: NSLocalizedString("pauseButtonAccessibilityLabel", comment: "The accesssibility label of the button that allows user to start navigating a detour."))
         
         
-        fillerButton.isAccessibilityElement = false
+    
         /// create stack view for aligning and distributing bottom layer buttons
         let stackView   = UIStackView()
         view.addSubview(stackView)
@@ -66,9 +66,10 @@ class StopNavigationController: UIViewController {
         stackView.alignment = UIStackView.Alignment.center
         
         /// add elements to the stack
-        stackView.addArrangedSubview(returnToPathButton)
+        
         stackView.addArrangedSubview(stopNavigationButton)
-        stackView.addArrangedSubview(fillerButton)
+        stackView.addArrangedSubview(returnToPathButton)
+        stackView.addArrangedSubview(pauseButton)
         
         /// size the stack
         stackView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
@@ -85,6 +86,9 @@ class StopNavigationController: UIViewController {
             returnToPathButton.addTarget(parent,
                                             action: #selector(ViewController.startRerouting),
                                             for: .touchUpInside)
+            pauseButton.addTarget(parent,
+                                  action: #selector(ViewController.startPauseProcedure),
+                                  for: .touchUpInside)
         }        
     }
 }

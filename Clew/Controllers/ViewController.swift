@@ -158,6 +158,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// A boolean that tracks whether or not to suppress tracking warnings.  By default we don't suppress, but when the help popover is presented we do.
     var suppressTrackingWarnings = false
     
+    /// A map that is saved when starting to pause while navigating
+    //var navigatingMap = ARWorldMap!
+    
     // TODO: the number of Booleans is a bit out of control.  We need a better way to manage them.  Some of them may be redundant with each other at this point.
     
     /// This Boolean marks whether or not the pause procedure is being used to create a Anchor Point at the start of a route (true) or if it is being used to pause an already recorded route
@@ -180,6 +183,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     ///this boolean denotes whether or not the app is loading a route from an automatic alignment
     var isAutomaticAlignment: Bool = false
+    
+    ///this boolean denotes whether the user is currently navigating a route
+    var isNavigating: Bool = false
+    
+    /// this boolean denotes whether or not paused while navigating
+    var pausedWhileNavigating: Bool = false
     
     ///this Boolean denotes whether or not the user is off the path
     var isOffPath: Bool = false
@@ -227,6 +236,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// - Parameter announceArrival: a Boolean that indicates whether the user's arrival should be announced (true means the user has arrived)
     func handleStateTransitionToMainScreen(announceArrival: Bool) {
         // cancel the timer that announces tracking errors
+        keypointIndex = 0
+        
+        isDetourCrumbs = false
         trackingErrorsAnnouncementTimer?.invalidate()
         // if the ARSession is running, pause it to conserve battery
         sceneView.session.pause()
@@ -262,8 +274,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// Handler for the readyToNavigateOrPause app state
     ///
     /// - Parameter allowPause: a Boolean that determines whether the app should allow the user to pause the route (this is only allowed if it is the initial route recording)
+    /// TODO: check compatability with rerouting
     func handleStateTransitionToReadyToNavigateOrPause(allowPause: Bool) {
         droppingCrumbs?.invalidate()
+
         updateHeadingOffsetTimer?.invalidate()
         showStartNavigationButton(allowPause: allowPause)
         suggestAdjustOffsetIfAppropriate()
@@ -278,7 +292,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         detourIndex = nil
         beginRouteAnchorPoint = RouteAnchorPoint()
         endRouteAnchorPoint = RouteAnchorPoint()
-
+        showStopNavigationButton()
+        
+        if pausedWhileNavigating {
+            pausedWhileNavigating = false
+            return
+        }
         logger.resetNavigationLog()
 
         // drop crumbs while navigating for rerouting
@@ -286,17 +305,26 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         recordingDetourCrumbs = []
         isDetourCrumbs = true
         
+        isNavigating = true
+        
         // generate path from PathFinder class
         // enabled hapticFeedback generates more keypoints
 
         let path = PathFinder(crumbs: crumbs.reversed(), hapticFeedback: hapticFeedback, voiceFeedback: voiceFeedback)
         keypoints = [path.keypoints]
         
+        // for single use routes
         // save keypoints data for debug log
         logger.logKeypoints(keypoints: keypoints[keypointIndex])
         
         // render 3D keypoints
+        print("keypoint index, keypoint count, keypoint in count")
+        print(keypointIndex)
+        print(keypoints.count)
+        print(keypoints[keypointIndex].count)
+    
         renderKeypoint(keypoints[keypointIndex][0].location)
+       
         
         // TODO: gracefully handle error
         prevKeypointPosition = getRealCoordinates(record: true)!.location
@@ -304,7 +332,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         feedbackGenerator = UIImpactFeedbackGenerator(style: .light)
         waypointFeedbackGenerator = UINotificationFeedbackGenerator()
         
-        showStopNavigationButton()
+        
         remindedUserOfOffsetAdjustment = false
 
         // wait a little bit before starting navigation to allow screen to transition and make room for the first direction announcement to be communicated
@@ -321,9 +349,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         // make sure there are no old values hanging around
         headingRingBuffer.clear()
         locationRingBuffer.clear()
+        
         droppingCrumbs = Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: #selector(dropCrumb), userInfo: nil, repeats: true)
         hapticTimer = Timer.scheduledTimer(timeInterval: 0.01, target: self, selector: (#selector(getHapticFeedback)), userInfo: nil, repeats: true)
     }
+    
+    
     
     /// Handler for the route rating app state
     ///
@@ -352,6 +383,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         if #available(iOS 12.0, *), let worldMap = worldMap as? ARWorldMap? {
             isSameMap = configuration.initialWorldMap != nil && configuration.initialWorldMap == worldMap
             configuration.initialWorldMap = worldMap
+            
+            
             attemptingRelocalization =  isSameMap && !isTrackingPerformanceNormal || worldMap != nil && !isSameMap
         }
     
@@ -396,11 +429,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// Handler for the startingPauseProcedure app state
     func handleStateTransitionToStartingPauseProcedure() {
         // clear out these variables in case they had already been created
-        if creatingRouteAnchorPoint {
-            beginRouteAnchorPoint = RouteAnchorPoint()
-        } else {
-            endRouteAnchorPoint = RouteAnchorPoint()
-        }
+            if creatingRouteAnchorPoint {
+                beginRouteAnchorPoint = RouteAnchorPoint()
+            } else  {
+                endRouteAnchorPoint = RouteAnchorPoint()
+            }
+        stopNavigationController.returnToPathButton.isHidden = true
+        stopNavigationController.pauseButton.isHidden = true
+        stopNavigationController.stopNavigationButton.isHidden = true
         try! showPauseTrackingButton()
     }
     
@@ -450,7 +486,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// Handler for the completingPauseProcedure app state
     func handleStateTransitionToCompletingPauseProcedure() {
         // TODO: we should not be able to create a route Anchor Point if we are in the relocalizing state... (might want to handle this when the user stops navigation on a route they loaded.... This would obviate the need to handle this in the recordPath code as well
-        print("completing pause procedure")
         if creatingRouteAnchorPoint {
             guard let currentTransform = sceneView.session.currentFrame?.camera.transform else {
                 print("can't properly save Anchor Point: TODO communicate this to the user somehow")
@@ -465,14 +500,21 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             ///sends the user to a route recording of the program is creating a beginning route Anchor Point
             state = .recordingRoute
             return
+            
         } else if let currentTransform = sceneView.session.currentFrame?.camera.transform {
             endRouteAnchorPoint.transform = currentTransform
-            // no more crumbs
+            // no more crumbs may cause error with trying another single use route
             droppingCrumbs?.invalidate()
 
+
             if #available(iOS 12.0, *) {
-                sceneView.session.getCurrentWorldMap { worldMap, error in
-                    self.completingPauseProcedureHelper(worldMap: worldMap)
+                if !pausedWhileNavigating {
+                    sceneView.session.getCurrentWorldMap { worldMap, error in
+                        self.completingPauseProcedureHelper(worldMap: worldMap)
+                    }
+                } else {
+                        self.completingPauseProcedureHelper(worldMap: configuration.initialWorldMap)
+                    
                 }
             } else {
                 completingPauseProcedureHelper(worldMap: nil)
@@ -499,7 +541,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// Called when the user presses the routes button.  The function will display the `Routes` view, which is managed by `RoutesViewController`.
     @objc func routesButtonPressed() {
-        ///update state boolians
+        ///update state booleans
         paused = false
         isAutomaticAlignment = false
         recordingSingleUseRoute = false
@@ -846,6 +888,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
         followingCrumbs?.invalidate()
         droppingCrumbs?.invalidate()
+
         recordPhaseHeadingOffsets = []
         routeName = nil
         beginRouteAnchorPoint = RouteAnchorPoint()
@@ -1179,13 +1222,16 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// Display the pause tracking view/hide all other views
     func showPauseTrackingButton() throws {
         rootContainerView.homeButton.isHidden = false
+        pauseTrackingController.isNavigating = isNavigating
+        
         recordPathController.remove()
         startNavigationController.remove()
-
+        
         // set appropriate Boolean flags
         pauseTrackingController.paused = paused
         pauseTrackingController.recordingSingleUseRoute = recordingSingleUseRoute
         pauseTrackingController.startAnchorPoint = startAnchorPoint
+        
         
         add(pauseTrackingController)
         delayTransition()
@@ -1253,8 +1299,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         //Need to make detour button hidden at start
         startNavigationController.remove()
         add(stopNavigationController)
+        stopNavigationController.stopNavigationButton.isHidden = false
         stopNavigationController.returnToPathButton.isHidden = true
-        stopNavigationController.fillerButton.isHidden = true
+        stopNavigationController.pauseButton.isHidden = false
         // this does not auto update, so don't use it as an accessibility element
         delayTransition()
     }
@@ -1427,6 +1474,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// the Anchor Point to use to mark the end of the route currently being recorded
     var endRouteAnchorPoint = RouteAnchorPoint()
+    
 
     /// the name of the route being recorded
     var routeName: NSString?
@@ -1494,7 +1542,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
 
         hideAllViewsHelper()
         
-        keypointIndex = 0
+        //keypointIndex = 0
         // announce session state
         trackingErrorsAnnouncementTimer = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: true) { timer in
             self.announceCurrentTrackingErrors()
@@ -1508,6 +1556,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         if #available(iOS 12.0, *) {
             configuration.initialWorldMap = nil
         }
+        
         sceneView.session.run(configuration, options: [.removeExistingAnchors, .resetTracking])
     }
     
@@ -1559,15 +1608,15 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     @objc func stopNavigation(_ sender: UIButton) {
         // stop navigation
         followingCrumbs?.invalidate()
-        droppingCrumbs?.invalidate()
         hapticTimer?.invalidate()
         
+        //keypointIndex = 0
         feedbackGenerator = nil
         waypointFeedbackGenerator = nil
         
         // erase nearest keypoint
         keypointNode.removeFromParentNode()
-        
+
         if(sendLogs) {
             state = .ratingRoute(announceArrival: false)
         } else {
@@ -1577,16 +1626,29 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     }
     
     /// handles the user pressing the pause button
+    //something is wrong here
     @objc func startPauseProcedure() {
         creatingRouteAnchorPoint = false
         paused = true
-        
+        if isNavigating {
+            recordingSingleUseRoute = true
+            pausedWhileNavigating = true
+            
+            if #available(iOS 12.0, *) {
+                //navigatingMap = sceneView.session.getCurrentWorldMap(completionHandler: (ARWorldMap?, Error?) -> Void)
+            } else {
+                // Fallback on earlier versions
+            }
+        }
         //checks if the pause button has been called from inside a recording a multi use route
         if !recordingSingleUseRoute {
             hideAllViewsHelper()
+            
             ///PATHPOINT multi use route pause -> resume route
             self.pauseTracking()
-        }else {
+            
+        }
+        else {
             ///PATHPOINT single use route pause -> record end Anchor Point
             state = .startingPauseProcedure
         }
@@ -1654,6 +1716,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 leveledAlignPose.columns.3 = alignTransform.columns.3
                 
                 let relativeTransform = leveledCameraPose * leveledAlignPose.inverse
+                
                 self.sceneView.session.setWorldOrigin(relativeTransform: relativeTransform)
                 
                 self.isResumedRoute = true
@@ -1782,6 +1845,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                         followingCrumbs?.invalidate()
                         droppingCrumbs?.invalidate()
                         hapticTimer?.invalidate()
+                    
+                        isNavigating = false
                 
                         // update text and stop navigation
                         if(sendLogs) {
@@ -1909,7 +1974,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             lateralDisplacementToleranceRatio = 1.0
         }
         
-        
+        if !paused{
         if (isOffPath == false){
             //probably don't need this if statement directly below anymore but will remove later
             if !(prevKeypointNode == nil)  {
@@ -1938,7 +2003,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                                     playSystemSound(id: 1103) }
                                 if (hapticFeedback){
                                     feedbackGenerator?.impactOccurred() }
-                                stopNavigationController.fillerButton.isHidden = true
+                                stopNavigationController.pauseButton.isHidden = false
                                 stopNavigationController.returnToPathButton.isHidden = true
                                 UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged , argument: nil)
                                 feedbackTimer = Date()
@@ -1975,10 +2040,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             //increment the key index if it is time to go back
             if (detourIndex == nil){
                 detourIndex = onPathIndex
-                stopNavigationController.fillerButton.isHidden = false
+                stopNavigationController.pauseButton.isHidden = false
                 stopNavigationController.returnToPathButton.isHidden = false
                 UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged , argument: nil)
             }
+        }
         }
     }
     
@@ -1992,7 +2058,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         keypointIndex = keypoints.count - 1
         print("keypoint index:")
         print(keypointIndex)
-        stopNavigationController.fillerButton.isHidden = true
+        stopNavigationController.pauseButton.isHidden = false
         stopNavigationController.returnToPathButton.isHidden = true
         UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged , argument: nil)
     }

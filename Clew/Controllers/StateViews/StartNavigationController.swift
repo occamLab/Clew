@@ -169,7 +169,7 @@ class StartNavigationController: UIViewController {
             startNavigationButton.addTarget(parent,
                                    action: #selector(ViewController.startNavigation),
                                    for: .touchUpInside)
-            pauseButton.tag = 0
+            pauseButton.tag = 0 // use?
             pauseButton.addTarget(parent,
                                         action: #selector(ViewController.startPauseProcedure),
                                         for: .touchUpInside)

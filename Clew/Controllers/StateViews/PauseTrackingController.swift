@@ -28,6 +28,9 @@ class PauseTrackingController: UIViewController, UIScrollViewDelegate {
     /// paused Boolean that should be set from ViewController in order to display appropriate text
     var paused: Bool!
     
+    /// Boolean that is set in View Controller to tell whether the state is navigating
+    var isNavigating: Bool!
+    
     /// recordingSingleUseRoute Boolean that should be set from ViewController in order to display appropriate text
     var recordingSingleUseRoute: Bool!
     
@@ -44,7 +47,7 @@ class PauseTrackingController: UIViewController, UIScrollViewDelegate {
         
         if paused  && recordingSingleUseRoute {
             mainText = String.localizedStringWithFormat(NSLocalizedString("singleUseRouteAnchorPointText", comment: "Information on how to record an anchor point when used for pausing a single use route"), waitingPeriod)
-        } else {
+        } else if !isNavigating{
             if startAnchorPoint{
                 mainText = String.localizedStringWithFormat(NSLocalizedString("multipleUseRouteStartAnchorPointText", comment: "Information on how to record an anchor point when used recording the starting anchor point of a multiple use route."), waitingPeriod)
                 
@@ -52,6 +55,9 @@ class PauseTrackingController: UIViewController, UIScrollViewDelegate {
                 mainText = String.localizedStringWithFormat(NSLocalizedString("multipleUseRouteEndAnchorPointText", comment: "Information on how to record an anchor point when used recording the ending anchor point of a multiple use route."), waitingPeriod)
             }
             
+        }
+        else {
+            mainText = "navigating filler string"
         }
         
         label.textColor = UIColor.white
@@ -95,15 +101,19 @@ class PauseTrackingController: UIViewController, UIScrollViewDelegate {
         // TODO: not sure why this code is duplicated
         var mainText:String
         
-        if paused && recordingSingleUseRoute {
+       if paused  && recordingSingleUseRoute {
             mainText = String.localizedStringWithFormat(NSLocalizedString("singleUseRouteAnchorPointText", comment: "Information on how to record an anchor point when used for pausing a single use route"), waitingPeriod)
-        } else {
-            if startAnchorPoint {
+        } else if !isNavigating{
+            if startAnchorPoint{
                 mainText = String.localizedStringWithFormat(NSLocalizedString("multipleUseRouteStartAnchorPointText", comment: "Information on how to record an anchor point when used recording the starting anchor point of a multiple use route."), waitingPeriod)
+                
             } else {
                 mainText = String.localizedStringWithFormat(NSLocalizedString("multipleUseRouteEndAnchorPointText", comment: "Information on how to record an anchor point when used recording the ending anchor point of a multiple use route."), waitingPeriod)
             }
             
+        }
+        else {
+            mainText = "navigating filler string"
         }
         
         label.textColor = UIColor.white
@@ -180,6 +190,7 @@ class PauseTrackingController: UIViewController, UIScrollViewDelegate {
         stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8.0).isActive = true
         stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -UIConstants.buttonFrameWidth/7 * 2).isActive = true
         
+        /// need to hide these if navigating
         /// set function targets for the functions in this state
         if let parent: UIViewController = parent {
             enterAnchorPointDescriptionButton.addTarget(parent,
