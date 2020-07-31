@@ -288,8 +288,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         // navigate the recorded path
 
         // If the route has not yet been saved, we can no longer save this route
-        routeName = nil
-        detourIndex = nil
+        
+        announce(announcement: "handle state transition to navigating route")
         beginRouteAnchorPoint = RouteAnchorPoint()
         endRouteAnchorPoint = RouteAnchorPoint()
         showStopNavigationButton()
@@ -298,12 +298,18 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             pausedWhileNavigating = false
             return
         }
-        logger.resetNavigationLog()
+        else {
+            routeName = nil
+            detourIndex = nil
+            logger.resetNavigationLog()
+            detourCrumbs = []
+            recordingDetourCrumbs = []
+            isDetourCrumbs = true
+        }
+        
 
         // drop crumbs while navigating for rerouting
-        detourCrumbs = []
-        recordingDetourCrumbs = []
-        isDetourCrumbs = true
+        
         
         isNavigating = true
         
@@ -350,6 +356,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         headingRingBuffer.clear()
         locationRingBuffer.clear()
         
+        
         droppingCrumbs = Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: #selector(dropCrumb), userInfo: nil, repeats: true)
         hapticTimer = Timer.scheduledTimer(timeInterval: 0.01, target: self, selector: (#selector(getHapticFeedback)), userInfo: nil, repeats: true)
     }
@@ -384,7 +391,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             isSameMap = configuration.initialWorldMap != nil && configuration.initialWorldMap == worldMap
             configuration.initialWorldMap = worldMap
             
-            
             attemptingRelocalization =  isSameMap && !isTrackingPerformanceNormal || worldMap != nil && !isSameMap
         }
     
@@ -397,21 +403,36 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             pausedTransform = route.endRouteAnchorPoint.transform
         }
         // don't reset tracking, but do clear anchors and switch to the new map
-        sceneView.session.run(configuration, options: [.removeExistingAnchors, .resetTracking])
+        //sceneView.session.run(configuration, options: [.removeExistingAnchors, .resetTracking])
 
         if isTrackingPerformanceNormal, isSameMap {
             // we can skip the whole process of relocalization since we are already using the correct map and tracking is normal.  It helps to strip out old anchors to reduce jitter though
             ///PATHPOINT load route from automatic alignment -> start navigation
             
+            //modified here
+            //come back here
+            //this is the one that resumes during navigation and the map has already been localized
             isResumedRoute = true
             isAutomaticAlignment = true
             state = .readyToNavigateOrPause(allowPause: false)
+            announce(announcement: "Option one")
         } else if isRelocalizing && isSameMap || isTrackingPerformanceNormal && worldMap == nil  {
             // we don't have to wait for the session to start up.  It will be created automatically.
+            // this is same as option one but the map hasn't been localized yet
+            if (worldMap == nil)
+            {
+                announce(announcement: "world map is nil")
+            }
+            announce(announcement: "Option two")
+            sceneView.session.run(configuration, options: [.removeExistingAnchors, .resetTracking])
             self.state = .readyForFinalResumeAlignment
-            self.showResumeTrackingConfirmButton(route: route, navigateStartToEnd: navigateStartToEnd)
+            self.showResumeTrackingConfirmButton(route: route, navigateStartToEnd: navigateStartToEnd) // this may be the thing that is showing too many buttons
         } else {
-            // this makes sure that the user doesn't resume the session until the session is initialized
+            // this makes sure that the user doesn't resume the session until the session is initialized, but this is the first hitting play button
+            announce(announcement: "Option three")
+            if !isResumedRoute {
+                self.sceneView.session.run(self.configuration, options: [.removeExistingAnchors, .resetTracking])
+            }
             continuationAfterSessionIsReady = {
                 self.state = .readyForFinalResumeAlignment
                 self.showResumeTrackingConfirmButton(route: route, navigateStartToEnd: navigateStartToEnd)
@@ -434,9 +455,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             } else  {
                 endRouteAnchorPoint = RouteAnchorPoint()
             }
-        stopNavigationController.returnToPathButton.isHidden = true
-        stopNavigationController.pauseButton.isHidden = true
-        stopNavigationController.stopNavigationButton.isHidden = true
+        stopNavigationController.remove()
         try! showPauseTrackingButton()
     }
     
@@ -1633,6 +1652,20 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         if isNavigating {
             recordingSingleUseRoute = true
             pausedWhileNavigating = true
+            // makes sure the timers have been properly invalidated otherwise they don't work properly after a pause
+            guard droppingCrumbs != nil  else { return }
+            droppingCrumbs?.invalidate()
+            droppingCrumbs = nil
+            guard hapticTimer != nil  else { return }
+            hapticTimer?.invalidate()
+            hapticTimer = nil
+            //have to somehow set to nil?
+            //guard followingCrumbs != nil else { return }
+            //followingCrumbs?.invalidate()
+            //followingCrumbs = nil
+            
+            //feedbackGenerator = nil
+            //waypointFeedbackGenerator = nil
             
             if #available(iOS 12.0, *) {
                 //navigatingMap = sceneView.session.getCurrentWorldMap(completionHandler: (ARWorldMap?, Error?) -> Void)
@@ -1681,7 +1714,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             //sends the user to the screen where they can start recording a route
             self.state = .recordingRoute
         }
-        if #available(iOS 12.0, *) {
+        
+        if #available(iOS 12.0, *), !isNavigating {
             configuration.initialWorldMap = nil
         }
         sceneView.session.run(configuration, options: [.removeExistingAnchors, .resetTracking])
@@ -1784,6 +1818,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             // TODO: might want to indicate that something is wrong to the user
             return
         }
+        print("navigating keypoint index, keypoint count, keypoint in count")
+        print(keypointIndex)
+        print(keypoints.count)
+        print(keypoints[keypointIndex].count)
+        
         var directionToNextKeypoint = getDirectionToNextKeypoint(currentLocation: curLocation)
 
         if (directionToNextKeypoint.targetState == PositionState.atTarget) {
@@ -1802,6 +1841,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 keypointNode.removeFromParentNode()
                 renderKeypoint(keypoints[keypointIndex][0].location)
                 
+                //temp announcement to let you know how many keypoints are left
+                let numberKeypointsLeft = String(keypoints[keypointIndex].count)
+                let notifKeypointsLeft = "Keypoints left"
+                let remainingKeypointAnnouncement = "\(numberKeypointsLeft) \(notifKeypointsLeft)"
+                announce(announcement: remainingKeypointAnnouncement)
                 // update directions to next keypoint
                 directionToNextKeypoint = getDirectionToNextKeypoint(currentLocation: curLocation)
                 setDirectionText(currentLocation: curLocation.location, direction: directionToNextKeypoint, displayDistance: false)
@@ -1841,6 +1885,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 else {
                         // arrived at final keypoint
                         // send haptic/sonic feedback
+                        print("final keypoint index, keypoint count, keypoint in count")
+                        print(keypointIndex)
+                        print(keypoints.count)
+                        print(keypoints[keypointIndex].count)
                 
                         followingCrumbs?.invalidate()
                         droppingCrumbs?.invalidate()
@@ -1975,6 +2023,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
         
         if !paused{
+            isNavigating = true
         if (isOffPath == false){
             //probably don't need this if statement directly below anymore but will remove later
             if !(prevKeypointNode == nil)  {
@@ -2424,9 +2473,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 session.setWorldOrigin(relativeTransform: matrix_identity_float4x4)
                 if !suppressTrackingWarnings {
                     announce(announcement: NSLocalizedString("realignToSavedRouteAnnouncement", comment: "An announcement which lets the user know that their surroundings have been matched to a saved route"))
+                    print("line 2426")
                 }
                 attemptingRelocalization = false
             } else if case let .limited(reason)? = trackingSessionState {
+                print("line2430") // goes here if creating a route
                 if !suppressTrackingWarnings {
                     if reason != .initializing {
                         announce(announcement: NSLocalizedString("fixedTrackingAnnouncement", comment: "Let user know that the ARKit tracking session has returned to its normal quality (this is played after the tracking has been restored from thir being insuficent visual features or excessive motion which degrade the tracking)"))
