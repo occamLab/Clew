@@ -187,6 +187,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     ///this boolean denotes whether the user is currently navigating a route
     var isNavigating: Bool = false
     
+    ///this boolean denotes whether the user finished navigating a route
+    var isFinished: Bool = false
+    
     /// this boolean denotes whether or not paused while navigating
     var pausedWhileNavigating: Bool = false
     
@@ -289,25 +292,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
 
         // If the route has not yet been saved, we can no longer save this route
         
+        paused = false
         announce(announcement: "handle state transition to navigating route")
         beginRouteAnchorPoint = RouteAnchorPoint()
         endRouteAnchorPoint = RouteAnchorPoint()
         showStopNavigationButton()
         
-        if pausedWhileNavigating {
-            pausedWhileNavigating = false
-            return
-        }
-        else {
-            routeName = nil
-            detourIndex = nil
-            logger.resetNavigationLog()
-            detourCrumbs = []
-            recordingDetourCrumbs = []
-            isDetourCrumbs = true
-        }
+        print("pre check for me")
         
-
+        helpHandleStateTransitionToNavigation()
+        
+        print("check for me")
         // drop crumbs while navigating for rerouting
         
         
@@ -324,7 +319,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         logger.logKeypoints(keypoints: keypoints[keypointIndex])
         
         // render 3D keypoints
-        print("keypoint index, keypoint count, keypoint in count")
+        print("transition keypoint index, keypoint count, keypoint in count")
         print(keypointIndex)
         print(keypoints.count)
         print(keypoints[keypointIndex].count)
@@ -335,6 +330,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         // TODO: gracefully handle error
         prevKeypointPosition = getRealCoordinates(record: true)!.location
         
+
         feedbackGenerator = UIImpactFeedbackGenerator(style: .light)
         waypointFeedbackGenerator = UINotificationFeedbackGenerator()
         
@@ -356,11 +352,27 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         headingRingBuffer.clear()
         locationRingBuffer.clear()
         
-        
+        print("look for me")
         droppingCrumbs = Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: #selector(dropCrumb), userInfo: nil, repeats: true)
         hapticTimer = Timer.scheduledTimer(timeInterval: 0.01, target: self, selector: (#selector(getHapticFeedback)), userInfo: nil, repeats: true)
+        //never gets here the second time
     }
     
+    /// Helper for handleStateTransitionToNavigationRoute
+    func helpHandleStateTransitionToNavigation() {
+        print("help used")
+        if pausedWhileNavigating {
+            pausedWhileNavigating = false
+            return
+        } else {
+            routeName = nil
+            detourIndex = nil
+            logger.resetNavigationLog()
+            detourCrumbs = []
+            recordingDetourCrumbs = []
+            isDetourCrumbs = true
+        }
+    }
     
     
     /// Handler for the route rating app state
@@ -415,7 +427,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             isResumedRoute = true
             isAutomaticAlignment = true
             state = .readyToNavigateOrPause(allowPause: false)
-            announce(announcement: "Option one")
+            //announce(announcement: "Option one")
         } else if isRelocalizing && isSameMap || isTrackingPerformanceNormal && worldMap == nil  {
             // we don't have to wait for the session to start up.  It will be created automatically.
             // this is same as option one but the map hasn't been localized yet
@@ -423,13 +435,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             {
                 announce(announcement: "world map is nil")
             }
-            announce(announcement: "Option two")
+            //announce(announcement: "Option two")
             sceneView.session.run(configuration, options: [.removeExistingAnchors, .resetTracking])
             self.state = .readyForFinalResumeAlignment
             self.showResumeTrackingConfirmButton(route: route, navigateStartToEnd: navigateStartToEnd) // this may be the thing that is showing too many buttons
         } else {
             // this makes sure that the user doesn't resume the session until the session is initialized, but this is the first hitting play button
-            announce(announcement: "Option three")
+            //announce(announcement: "Option three")
+            print(isResumedRoute)
             if !isResumedRoute {
                 self.sceneView.session.run(self.configuration, options: [.removeExistingAnchors, .resetTracking])
             }
@@ -1889,11 +1902,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                         print(keypointIndex)
                         print(keypoints.count)
                         print(keypoints[keypointIndex].count)
-                
+                        
+                        //feedbackGenerator = nil
+                        //waypointFeedbackGenerator = nil
                         followingCrumbs?.invalidate()
                         droppingCrumbs?.invalidate()
                         hapticTimer?.invalidate()
-                    
+                        
+                        isResumedRoute = false
                         isNavigating = false
                 
                         // update text and stop navigation
@@ -2004,6 +2020,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// send haptic feedback if the device is pointing towards the next keypoint.
     @objc func getHapticFeedback() {
         // Conserve CPU by only calculating the offset if the user has requested it
+        //print(paused)
         if adjustOffset {
             updateHeadingOffset()
         }
@@ -2022,8 +2039,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             lateralDisplacementToleranceRatio = 1.0
         }
         
-        if !paused{
-            isNavigating = true
+        if !paused {
+            //isNavigating = true
         if (isOffPath == false){
             //probably don't need this if statement directly below anymore but will remove later
             if !(prevKeypointNode == nil)  {
