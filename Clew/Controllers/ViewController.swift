@@ -240,6 +240,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     func handleStateTransitionToMainScreen(announceArrival: Bool) {
         // cancel the timer that announces tracking errors
         keypointIndex = 0
+        keypoints = nil
         
         isDetourCrumbs = false
         trackingErrorsAnnouncementTimer?.invalidate()
@@ -293,26 +294,22 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         // If the route has not yet been saved, we can no longer save this route
         
         paused = false
-        announce(announcement: "handle state transition to navigating route")
+        //announce(announcement: "handle state transition to navigating route")
         beginRouteAnchorPoint = RouteAnchorPoint()
         endRouteAnchorPoint = RouteAnchorPoint()
         showStopNavigationButton()
         
-        print("pre check for me")
-        
         helpHandleStateTransitionToNavigation()
         
-        print("check for me")
-        // drop crumbs while navigating for rerouting
-        
-        
         isNavigating = true
+        isFinished = false
         
         // generate path from PathFinder class
         // enabled hapticFeedback generates more keypoints
-
-        let path = PathFinder(crumbs: crumbs.reversed(), hapticFeedback: hapticFeedback, voiceFeedback: voiceFeedback)
-        keypoints = [path.keypoints]
+        if keypoints == nil {
+            let path = PathFinder(crumbs: crumbs.reversed(), hapticFeedback: hapticFeedback, voiceFeedback: voiceFeedback)
+            keypoints = [path.keypoints]
+        }
         
         // for single use routes
         // save keypoints data for debug log
@@ -352,7 +349,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         headingRingBuffer.clear()
         locationRingBuffer.clear()
         
-        print("look for me")
         droppingCrumbs = Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: #selector(dropCrumb), userInfo: nil, repeats: true)
         hapticTimer = Timer.scheduledTimer(timeInterval: 0.01, target: self, selector: (#selector(getHapticFeedback)), userInfo: nil, repeats: true)
         //never gets here the second time
@@ -360,7 +356,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// Helper for handleStateTransitionToNavigationRoute
     func helpHandleStateTransitionToNavigation() {
-        print("help used")
         if pausedWhileNavigating {
             pausedWhileNavigating = false
             return
@@ -1662,6 +1657,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     @objc func startPauseProcedure() {
         creatingRouteAnchorPoint = false
         paused = true
+        print("paused")
         if isNavigating {
             recordingSingleUseRoute = true
             pausedWhileNavigating = true
@@ -1820,6 +1816,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             recordingDetourCrumbs.append(curLocation)
         }
         else {
+            //sometimes recordingCrumbs is not working
             recordingCrumbs.append(curLocation)
         }
     }
@@ -1831,13 +1828,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             // TODO: might want to indicate that something is wrong to the user
             return
         }
-        print("navigating keypoint index, keypoint count, keypoint in count")
-        print(keypointIndex)
-        print(keypoints.count)
-        print(keypoints[keypointIndex].count)
         
-        var directionToNextKeypoint = getDirectionToNextKeypoint(currentLocation: curLocation)
-
+        if (!isFinished && keypoints != nil){
+            var directionToNextKeypoint = getDirectionToNextKeypoint(currentLocation: curLocation)
         if (directionToNextKeypoint.targetState == PositionState.atTarget) {
             if (keypoints[keypointIndex].count > 1) {
                 // arrived at keypoint
@@ -1851,7 +1844,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 keypoints[keypointIndex].remove(at: 0)
                 
                 // erase current keypoint and render next keypoint node
+             
                 keypointNode.removeFromParentNode()
+
                 renderKeypoint(keypoints[keypointIndex][0].location)
                 
                 //temp announcement to let you know how many keypoints are left
@@ -1859,6 +1854,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 let notifKeypointsLeft = "Keypoints left"
                 let remainingKeypointAnnouncement = "\(numberKeypointsLeft) \(notifKeypointsLeft)"
                 announce(announcement: remainingKeypointAnnouncement)
+                print("remaining keypoints: ")
+                print(remainingKeypointAnnouncement)
                 // update directions to next keypoint
                 directionToNextKeypoint = getDirectionToNextKeypoint(currentLocation: curLocation)
                 setDirectionText(currentLocation: curLocation.location, direction: directionToNextKeypoint, displayDistance: false)
@@ -1905,12 +1902,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                         
                         //feedbackGenerator = nil
                         //waypointFeedbackGenerator = nil
+                    
+                        isResumedRoute = false
+                        isNavigating = false
+                        isFinished = true
+                    
                         followingCrumbs?.invalidate()
                         droppingCrumbs?.invalidate()
                         hapticTimer?.invalidate()
-                        
-                        isResumedRoute = false
-                        isNavigating = false
                 
                         // update text and stop navigation
                         if(sendLogs) {
@@ -1920,7 +1919,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                             state = .mainScreen(announceArrival: true)
                             logger.resetStateSequenceLog()
                         }
+                    
                 }
+            }
             }
         }
     }
@@ -2028,7 +2029,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             // TODO: might want to indicate that something is wrong to the user
             return
         }
-        let directionToNextKeypoint = getDirectionToNextKeypoint(currentLocation: curLocation)
+       
         let coneWidth: Float!
         let lateralDisplacementToleranceRatio: Float
         if strictHaptic {
@@ -2041,7 +2042,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         
         if !paused {
             //isNavigating = true
-        if (isOffPath == false){
+        if (isOffPath == false && keypoints != nil){
+            let directionToNextKeypoint = getDirectionToNextKeypoint(currentLocation: curLocation)
             //probably don't need this if statement directly below anymore but will remove later
             if !(prevKeypointNode == nil)  {
                 if (!isRerouting && !nav.isFarFromPath(currentLocation: curLocation, prevKeypoint: prevKeypointNode, nextKeypoint: keypoints[keypointIndex][0], isLastKeypoint: keypoints[keypointIndex].count==1, threshold: 1/8)){
@@ -2175,6 +2177,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         var dir = nav.getDirections(currentLocation: currentLocation, nextKeypoint: keypoints[keypointIndex][0], isLastKeypoint: keypoints[keypointIndex].count == 1)
         dir.distance = roundToTenths(dir.distance)
         return dir
+        
     }
     
     /// Called when the "get directions" button is pressed.  The announcement is made with a 0.5 second delay to allow the button name to be announced.
@@ -2241,9 +2244,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// Announce directions at any given point to the next keypoint
     @objc func announceDirectionHelp() {
-        if case .navigatingRoute = state, let curLocation = getRealCoordinates(record: false) {
-            let directionToNextKeypoint = getDirectionToNextKeypoint(currentLocation: curLocation)
-            setDirectionText(currentLocation: curLocation.location, direction: directionToNextKeypoint, displayDistance: true)
+        if keypoints != nil {
+            if case .navigatingRoute = state, let curLocation = getRealCoordinates(record: false) {
+                let directionToNextKeypoint = getDirectionToNextKeypoint(currentLocation: curLocation)
+                setDirectionText(currentLocation: curLocation.location, direction: directionToNextKeypoint, displayDistance: true)
+            }
         }
     }
     
@@ -2406,6 +2411,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             changeColor = SCNAction.repeatForever(flashColors[defaultColor])
         }
         }
+        
+        //clear out duplicates from pausing
+        sceneView.scene.rootNode.enumerateChildNodes { (node, stop) in
+        node.removeFromParentNode() }
         
         // add keypoint node to view
         keypointNode.runAction(changeColor)
