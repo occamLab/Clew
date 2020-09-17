@@ -1,12 +1,12 @@
-
 /* Class = "UILabel"; text = "Give Feedback"; ObjectID = "JnB-cV-dtW"; */
-"JnB-cV-dtW.text" = "Give Feedback";
-
-/* Class = "UILabel"; text = "Settings"; ObjectID = "TCm-6A-2mu"; */
-"TCm-6A-2mu.text" = "Settings";
+"JnB-cV-dtW.text" = "أعطنا رأيك";
 
 /* Class = "UILabel"; text = "Help"; ObjectID = "q99-sr-qSp"; */
-"q99-sr-qSp.text" = "Help";
+"q99-sr-qSp.text" = "مساعدة";
+
+/* Class = "UILabel"; text = "Settings"; ObjectID = "TCm-6A-2mu"; */
+"TCm-6A-2mu.text" = "الإعدادات";
 
 /* Class = "UITableViewSection"; headerTitle = "Menu"; ObjectID = "zjo-RA-y09"; */
-"zjo-RA-y09.headerTitle" = "Menu";
+"zjo-RA-y09.headerTitle" = "القائمة";
+
