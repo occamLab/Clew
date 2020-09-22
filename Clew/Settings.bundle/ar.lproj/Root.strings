@@ -1,0 +1,100 @@
+/* (No Comment) */
+"1 second" = "ثانية";
+
+/* (No Comment) */
+"2 seconds" = "ثانيتين";
+
+/* (No Comment) */
+"3 seconds" = "ثلاث ثواني";
+
+/* (No Comment) */
+"4 seconds" = "أربع ثواني";
+
+/* (No Comment) */
+"5 seconds" = "خمس ثواني";
+
+/* (No Comment) */
+"6 seconds" = "ست ثواني";
+
+/* (No Comment) */
+"7 seconds" = "سبع ثواني";
+
+/* (No Comment) */
+"8 seconds" = "ثمانية ثواني";
+
+/* (No Comment) */
+"9 seconds" = "تسع ثواني";
+
+/* (No Comment) */
+"10 seconds" = "عشر ثواني";
+
+/* "Settings" = "Settings"; // Comments: Title/header of the settings menu. & Comments: A header for the slider which adjusts the length of the alignment timer */
+"Alignment Timer Options" = "خيارات مؤقت المحاذاة";
+
+/* Comments: The option for the markers to be blue. */
+"Blue" = "أزرق";
+
+/* Comments: The title of the menu that allows the user to change the color of each marker/goal that the user need to reach to get to their destination. */
+"Crumb Color" = "لون خافت";
+
+/* Strings that are in the settings pop-up & Comments: The title of the menu that allows the user to change the units distance is displayed. with */
+"Distance Units" = "وحدات المسافة";
+
+/* (No Comment) */
+"Enabled" = "مفعلة";
+
+/* Comments: The header for choosing different ways to receive navigation directions/feedback. */
+"Feedback Options" = "خيارات الاهتزازات";
+
+/* Comments: A header for the general options that could be adjusted */
+"General Options" = "الإعدادات العامة";
+
+/* Comments: The option for the markers to be green. */
+"Green" = "أخضر";
+
+/* A single strings file, whose title is specified in your preferences schema. The strings files provide the localized content to display to the user for each of your preferences. */
+"Group" = "المجموع";
+
+/* Comments: The option for the user to get navigation directions through vibrations/sensations given by the phone. */
+"Haptic" = "الحس اللمسي";
+
+/* Comments: A comment on what turning on the button of "Send Logs" does. */
+"Help us improve the app by logging your Clew experience. These logs will not include any images or personal information." = "ساعدنا على تحسين التطبيق عن طريق مشاركة تجربتك مع Clew. ولن تتضمن هذه البيانات أي صور أو معلومات شخصية.";
+
+/* Comments: The option of having imperial units. */
+"Imperial (ft)" = "وحدة القياس الإمبريالية (قدم)";
+
+/* Comments: The option of having metric units. */
+"Metric (m)" = "وحدة القياس المترية (متر)";
+
+/* (No Comment) */
+"Name" = "اسم";
+
+/* (No Comment) */
+"none given" = "لا ترسل شيءاً";
+
+/* Comments: The option for each marker to be a random color. */
+"Random" = "عشوائي";
+
+/* Comments: The option for the markers to be red. */
+"Red" = "أحمر";
+
+/* Comments: The header for choosing whether or not to send feedback to the developers. */
+"Send Feedback" = "ارسل رأيك";
+
+/* Comments: The name of a button that allows the user to send their route navigation data that could help improve the app. */
+"Send Logs" = "إرسال سجل المعلومات";
+
+/* Comment: The title of a menu that allows the user to change the settings. */
+"Settings" = "الإعدادات";
+
+/* Comments: The option for the user to get navigation directions/hints through sounds. */
+"Sound" = "الصوت";
+
+/* (No Comment) */
+"Timer Length" = "طول المؤقت";
+
+/* Comments: The option for the user to get navigation directions through vocal narration. */
+"Voice" = "صوت";
+
+"Correct Offset of Phone / Body" = "مزامنة الهاتف مع الجسم";
