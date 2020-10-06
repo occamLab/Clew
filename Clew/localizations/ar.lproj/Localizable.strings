@@ -138,7 +138,8 @@
 "feedbackButtonAccessibilityLabel" = "الاهتزازات";
 
 /* FeedbackViewController.swift */
-"feedbackMenuTitle" = "اهتزازات Clew";
+"feedbackMenuTitle" = "ملاحظات حول Clew";
+
 
 /* Let user know that the ARKit tracking session has returned to its normal quality (this is played after the tracking has been restored from thir being insuficent visual features or excessive motion which degrade the tracking) */
 "fixedTrackingAnnouncement" = "تتبع الأداء عادي";

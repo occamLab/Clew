@@ -35,7 +35,7 @@
 "Blue" = "أزرق";
 
 /* Comments: The title of the menu that allows the user to change the color of each marker/goal that the user need to reach to get to their destination. */
-"Crumb Color" = "لون خافت";
+"Crumb Color" = "اللون الخافت";
 
 /* Strings that are in the settings pop-up & Comments: The title of the menu that allows the user to change the units distance is displayed. with */
 "Distance Units" = "وحدات المسافة";

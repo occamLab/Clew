@@ -31,3 +31,5 @@
 /* Class = "UIButton"; normalTitle = "Send >"; ObjectID = "Yh2-1z-izX"; */
 "Yh2-1z-izX.normalTitle" = "إرسال";
 
+// write your message here
+"n1S-uX-9Ze.accessibilityLabel" = "اكتب رسالتك هنا";
