@@ -14,6 +14,9 @@ class StopRecordingController: UIViewController {
     /// Button for stopping a route recording
     var stopRecordingButton: UIButton!
 
+    /// button for recording a voice note about a part of the route
+    var recordVoiceNoteButton: UIButton!
+    
     /// called when the view appears (any time)
     override func viewDidAppear(_ animated: Bool) {
         /// set thumbsUpButton as initially active voiceover button
@@ -36,6 +39,12 @@ class StopRecordingController: UIViewController {
                                                        appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "StopRecording")!),
                                                        label: NSLocalizedString("stopRecordingButtonAccessibilityLabel", comment: "The accessibility label of the button that allows user to stop recording a route."))
         
+        
+        recordVoiceNoteButton = UIButton.makeConstraintButton(view,
+                                                         alignment: UIConstants.ButtonContainerHorizontalAlignment.right,
+                                                         appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "VoiceNote")!),
+                                                         label: NSLocalizedString("enterAnchorPointVoiceNoteButtonAccessibilityLabel", comment: "This is the accessibility label for the button which allows the user to save a voice note description of their anchor point when saving a route. This feature should allow the user to more easily realign with their anchorpoint."))
+        
         /// create stack view for aligning and distributing bottom layer buttons
         let stackView   = UIStackView()
         view.addSubview(stackView)
@@ -49,6 +58,8 @@ class StopRecordingController: UIViewController {
         
         /// add elements to the stack
         stackView.addArrangedSubview(stopRecordingButton)
+        stackView.addArrangedSubview(recordVoiceNoteButton)
+
         
         /// size the stack
         stackView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
@@ -60,6 +71,9 @@ class StopRecordingController: UIViewController {
             stopRecordingButton.addTarget(parent,
                                           action: #selector(ViewController.stopRecording),
                                           for: .touchUpInside)
+            recordVoiceNoteButton.addTarget(parent,
+                                       action: #selector(ViewController.recordVoiceNote),
+                                       for: .touchUpInside)
         }
     }
 }
