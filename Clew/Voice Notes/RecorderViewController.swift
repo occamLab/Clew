@@ -205,83 +205,86 @@ class RecorderViewController: UIViewController {
         if let d = self.delegate {
             d.didStartRecording()
         }
-        
-        self.recordingTs = NSDate().timeIntervalSince1970
-        self.silenceTs = 0
-        
-        let sampleRate: Double
-        do {
-            let session = AVAudioSession.sharedInstance()
-            try session.setCategory(.playAndRecord, mode: .videoRecording)
-            sampleRate = session.sampleRate
-            try session.setActive(true)
-        } catch let error as NSError {
-            print(error.localizedDescription)
-            return
-        }
-        
-        let inputNode = self.audioEngine.inputNode
-        guard let format = self.format(sampleRate) else {
-            return
-        }
-        
-        inputNode.installTap(onBus: 0, bufferSize: 1024, format: format) { (buffer, time) in
-            let level: Float = -50
-            let length: UInt32 = 1024
-            buffer.frameLength = length
-            let channels = UnsafeBufferPointer(start: buffer.floatChannelData, count: Int(buffer.format.channelCount))
-            var value: Float = 0
-            vDSP_meamgv(channels[0], 1, &value, vDSP_Length(length))
-            var average: Float = ((value == 0) ? -100 : 20.0 * log10f(value))
-            if average > 0 {
-                average = 0
-            } else if average < -100 {
-                average = -100
-            }
-            let silent = average < level
-            let ts = NSDate().timeIntervalSince1970
-            if ts - self.renderTs > 0.1 {
-                let floats = UnsafeBufferPointer(start: channels[0], count: Int(buffer.frameLength))
-                let frame = floats.map({ (f) -> Int in
-                    return Int(f * Float(Int16.max))
-                })
-                DispatchQueue.main.async {
-                    let seconds = (ts - self.recordingTs)
-                    self.timeLabel.text = seconds.toTimeString
-                    self.renderTs = ts
-                    let len = self.audioView.waveforms.count
-                    for i in 0 ..< len {
-                        let idx = ((frame.count - 1) * i) / len
-                        let f: Float = sqrt(1.5 * abs(Float(frame[idx])) / Float(Int16.max))
-                        self.audioView.waveforms[i] = min(49, Int(f * 50))
-                    }
-                    self.audioView.active = !silent
-                    self.audioView.setNeedsDisplay()
-                }
+        DispatchQueue.global(qos: .background).async {
+            self.recordingTs = NSDate().timeIntervalSince1970
+            self.silenceTs = 0
+            
+            let sampleRate: Double
+            do {
+                let session = AVAudioSession.sharedInstance()
+                try session.setCategory(.playAndRecord, mode: .videoRecording)
+                sampleRate = session.sampleRate
+                try session.setActive(true)
+            } catch let error as NSError {
+                print(error.localizedDescription)
+                return
             }
             
-            let write = true
-            if write {
-                if self.audioFile == nil {
-                    self.audioFile = self.createAudioRecordFile(sampleRate)
+            let inputNode = self.audioEngine.inputNode
+            guard let format = self.format(sampleRate) else {
+                return
+            }
+            
+            inputNode.installTap(onBus: 0, bufferSize: 1024, format: format) { (buffer, time) in
+                let level: Float = -50
+                let length: UInt32 = 1024
+                buffer.frameLength = length
+                let channels = UnsafeBufferPointer(start: buffer.floatChannelData, count: Int(buffer.format.channelCount))
+                var value: Float = 0
+                vDSP_meamgv(channels[0], 1, &value, vDSP_Length(length))
+                var average: Float = ((value == 0) ? -100 : 20.0 * log10f(value))
+                if average > 0 {
+                    average = 0
+                } else if average < -100 {
+                    average = -100
                 }
-                if let f = self.audioFile {
-                    do {
-                        try f.write(from: buffer)
-                    } catch let error as NSError {
-                        print(error.localizedDescription)
+                let silent = average < level
+                let ts = NSDate().timeIntervalSince1970
+                if ts - self.renderTs > 0.1 {
+                    let floats = UnsafeBufferPointer(start: channels[0], count: Int(buffer.frameLength))
+                    let frame = floats.map({ (f) -> Int in
+                        return Int(f * Float(Int16.max))
+                    })
+                    DispatchQueue.main.async {
+                        let seconds = (ts - self.recordingTs)
+                        self.timeLabel.text = seconds.toTimeString
+                        self.renderTs = ts
+                        let len = self.audioView.waveforms.count
+                        for i in 0 ..< len {
+                            let idx = ((frame.count - 1) * i) / len
+                            let f: Float = sqrt(1.5 * abs(Float(frame[idx])) / Float(Int16.max))
+                            self.audioView.waveforms[i] = min(49, Int(f * 50))
+                        }
+                        self.audioView.active = !silent
+                        self.audioView.setNeedsDisplay()
+                    }
+                }
+                
+                let write = true
+                if write {
+                    if self.audioFile == nil {
+                        self.audioFile = self.createAudioRecordFile(sampleRate)
+                    }
+                    if let f = self.audioFile {
+                        do {
+                            try f.write(from: buffer)
+                        } catch let error as NSError {
+                            print(error.localizedDescription)
+                        }
                     }
                 }
             }
+            do {
+                self.audioEngine.prepare()
+                try self.audioEngine.start()
+            } catch let error as NSError {
+                print(error.localizedDescription)
+                return
+            }
+            DispatchQueue.main.async {
+                self.updateUI(.recording)
+            }
         }
-        do {
-            self.audioEngine.prepare()
-            try self.audioEngine.start()
-        } catch let error as NSError {
-            print(error.localizedDescription)
-            return
-        }
-        self.updateUI(.recording)
     }
     
     /// Called when recording is stopped.  This will also dismiss the view.

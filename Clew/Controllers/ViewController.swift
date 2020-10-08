@@ -8,9 +8,7 @@
 // - We are not doing a proper job dealing with resumed routes with respect to logging (we always send recorded stuff in the log file, which we don't always have access to)
 //
 // Voie Note Recording Feature
-// - Need a better logo
 // - think about direction of device and how it relates to the route itself (e.g., look to your left)
-// - prevent voice onte recording from messing with the AR session
 // - Get buttons to align in the recording view (add transparent third button)
 //
 // Unconfirmed issues issues
@@ -246,6 +244,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         // TODO: probably don't need to set this to [], but erring on the side of begin conservative
         crumbs = []
         recordingCrumbs = []
+        intermediateAnchorPoints = []
         logger.resetPathLog()
         
         showStopRecordingButton()
@@ -357,6 +356,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             crumbs = route.crumbs
             pausedTransform = route.endRouteAnchorPoint.transform
         }
+        intermediateAnchorPoints = route.intermediateAnchorPoints
         // don't reset tracking, but do clear anchors and switch to the new map
         sceneView.session.run(configuration, options: [.removeExistingAnchors, .resetTracking])
 
@@ -599,6 +599,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// Keypoint object
     var keypointObject : MDLObject!
     
+    /// Speaker object
+    var speakerObject: MDLObject!
+    
     /// Route persistence
     var dataPersistence = DataPersistence()
     
@@ -760,6 +763,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         let url = NSURL(fileURLWithPath: Bundle.main.path(forResource: "Crumb", ofType: "obj")!)
         let asset = MDLAsset(url: url as URL)
         keypointObject = asset.object(at: 0)
+        let speakerUrl = NSURL(fileURLWithPath: Bundle.main.path(forResource: "speaker", ofType: "obj")!)
+        let speakerAsset = MDLAsset(url: speakerUrl as URL)
+        speakerObject = speakerAsset.object(at: 0)
     }
     
     /// Observe the relevant Firebase paths to handle any dynamic reconfiguration requests (this is currently not used in the app store version of Clew)
@@ -1864,7 +1870,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 continue
             }
             // TODO think about breaking ties by playing the least recently played voice note
-            if (voiceNoteToPlay == nil || !voiceNoteToPlay!.isPlaying) && sqrt(pow(anchorPointTransform.columns.3.x - curLocation.location.x,2) + pow(anchorPointTransform.columns.3.z - curLocation.location.z,2)) < 1.0 {
+            // TODO consider different floors by considering the y value
+            if (voiceNoteToPlay == nil || !voiceNoteToPlay!.isPlaying) && sqrt(pow(anchorPointTransform.columns.3.x - curLocation.location.x,2) + pow(anchorPointTransform.columns.3.z - curLocation.location.z,2)) < 0.5 {
                 // play voice note
                 let voiceNoteToPlayURL = anchorPoint.voiceNote!.documentURL
                 do {
@@ -2040,12 +2047,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 continue
             }
             // render SCNNode of given keypoint
-            let anchorPointNode = SCNNode(mdlObject: keypointObject)
-
+            let anchorPointNode = SCNNode(mdlObject: speakerObject)
             // configure node attributes
-            anchorPointNode.scale = SCNVector3(0.0004, 0.0004, 0.0004)
+            anchorPointNode.scale = SCNVector3(0.02, 0.02, 0.02)
             anchorPointNode.geometry?.firstMaterial?.diffuse.contents = UIColor.blue
-            anchorPointNode.position = SCNVector3(transform.columns.3.x, transform.columns.3.y - 0.2, transform.columns.3.z)
+            anchorPointNode.position = SCNVector3(transform.columns.3.x, transform.columns.3.y, transform.columns.3.z)
             // I don't think yaw really matters here (so we are putting 0 where we used to have location.yaw
             anchorPointNode.rotation = SCNVector4(0, 1, 0, (0 - Float.pi/2))
             
@@ -2053,8 +2059,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 x: anchorPointNode.boundingBox.max.x - anchorPointNode.boundingBox.min.x,
                 y: anchorPointNode.boundingBox.max.y - anchorPointNode.boundingBox.min.y,
                 z: anchorPointNode.boundingBox.max.z - anchorPointNode.boundingBox.min.z)
-            anchorPointNode.pivot = SCNMatrix4MakeTranslation(bound.x / 2, bound.y / 2, bound.z / 2)
-            
+            anchorPointNode.pivot = SCNMatrix4MakeTranslation(0, bound.y / 2, 0)
             let spin = CABasicAnimation(keyPath: "rotation")
             spin.fromValue = NSValue(scnVector4: SCNVector4(x: 0, y: 1, z: 0, w: 0))
             spin.toValue = NSValue(scnVector4: SCNVector4(x: 0, y: 1, z: 0, w: Float(CGFloat(2 * Float.pi))))
