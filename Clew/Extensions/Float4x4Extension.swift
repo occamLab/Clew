@@ -22,9 +22,12 @@ extension Array where Element: FloatingPoint {
     }
 
     func std() -> Element {
-        let mean = self.avg()
-        let v = self.reduce(0, { $0 + ($1-mean)*($1-mean) })
-        return sqrt(v / (Element(self.count) - 1))
+        let mean: Element = self.avg()
+        var ssd: Element = 0
+        for e in self {
+            ssd += (e - mean)*(e-mean)
+        }
+        return sqrt(ssd / (Element(self.count) - 1))
     }
 
     func mean_abs_dev() -> Element {

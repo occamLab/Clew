@@ -8,6 +8,7 @@
 
 import Foundation
 import Firebase
+import FirebaseStorage
 import SceneKit
 
 //FirebaseApp.configure()
