@@ -322,6 +322,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         print(keypoints[keypointIndex].count)
     
         renderKeypoint(keypoints[keypointIndex][0].location)
+
        
         
         // TODO: gracefully handle error
@@ -431,16 +432,16 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 announce(announcement: "world map is nil")
             }
             //announce(announcement: "Option two")
-            sceneView.session.run(configuration, options: [.removeExistingAnchors, .resetTracking])
+            sceneView.session.run(configuration, options: [.removeExistingAnchors])
             self.state = .readyForFinalResumeAlignment
             self.showResumeTrackingConfirmButton(route: route, navigateStartToEnd: navigateStartToEnd) // this may be the thing that is showing too many buttons
         } else {
             // this makes sure that the user doesn't resume the session until the session is initialized, but this is the first hitting play button
             //announce(announcement: "Option three")
             print(isResumedRoute)
-            if !isResumedRoute {
+            //if !isResumedRoute {
                 self.sceneView.session.run(self.configuration, options: [.removeExistingAnchors, .resetTracking])
-            }
+            //}
             continuationAfterSessionIsReady = {
                 self.state = .readyForFinalResumeAlignment
                 self.showResumeTrackingConfirmButton(route: route, navigateStartToEnd: navigateStartToEnd)
@@ -912,6 +913,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         recordPathController.isAccessibilityElement = false
         if case .navigatingRoute = self.state {
             keypointNode.removeFromParentNode()
+            //crumbNode.removeFromParentNode()
         }
         followingCrumbs?.invalidate()
         droppingCrumbs?.invalidate()
@@ -1415,6 +1417,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// SCNNode of the next keypoint
     var keypointNode: SCNNode!
     
+    /// SCNNode of any crumb
+    var crumbNode: SCNNode!
+    
     /// previous keypoint location - originally set to current location
     var prevKeypointPosition: LocationInfo!
     
@@ -1643,6 +1648,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         
         // erase nearest keypoint
         keypointNode.removeFromParentNode()
+        //crumbNode.removeFromParentNode()
 
         if(sendLogs) {
             state = .ratingRoute(announceArrival: false)
@@ -1814,17 +1820,19 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
         if (isDetourCrumbs){
             recordingDetourCrumbs.append(curLocation)
+            //renderCrumb(curLocation)
         }
         else {
             //sometimes recordingCrumbs is not working
             recordingCrumbs.append(curLocation)
+            //renderCrumb(curLocation)
         }
     }
     
     /// checks to see if user is on the right path during navigation.
     /// TODO: fix which array of keypoints is being used
     @objc func followCrumb() {
-        guard let curLocation = getRealCoordinates(record: true) else {
+        guard let curLocation = getRealCoordinates(record: true), case .navigatingRoute = state else {
             // TODO: might want to indicate that something is wrong to the user
             return
         }
@@ -1846,6 +1854,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 // erase current keypoint and render next keypoint node
              
                 keypointNode.removeFromParentNode()
+                //crumbNode.removeFromParentNode()
 
                 renderKeypoint(keypoints[keypointIndex][0].location)
                 
@@ -1864,6 +1873,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 if (soundFeedback) { playSystemSound(id: 1016) }
                 // erase current keypoint node
                 keypointNode.removeFromParentNode()
+                //crumbNode.removeFromParentNode()
                 
                 if (keypointIndex > 0)
                 {
@@ -1884,6 +1894,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                     
                     // erase current keypoint and render next keypoint node
                     keypointNode.removeFromParentNode()
+                    //crumbNode.removeFromParentNode()
                     if (keypoints[keypointIndex].count > 1){
                     renderKeypoint(keypoints[keypointIndex][0].location)
                     }
@@ -2087,7 +2098,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                                             announce(announcement: NSLocalizedString("turnLeftUntilHapticFeedback", comment: "An announcement that lets the user know to turn left until they feel haptic feedback."))
                                         }
                                         else{
-                                            announce(announcement: NSLocalizedString("turnRightUntilHapticFeedback", comment: "An announcement that lets the user know to turn right until they feel haptic feedback."))                                        }
+                                            announce(announcement: NSLocalizedString("turnRightUntilHapticFeedback", comment: "An announcement that lets the user know to turn right until they feel haptic feedback."))
+                                            print(NSLocalizedString("turnRightUntilHapticFeedback", comment: "help"))
+                                            
+                                        }
                                     }
                                     else{
                                         announceDirectionHelpPressed()
@@ -2418,8 +2432,143 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         
         // add keypoint node to view
         keypointNode.runAction(changeColor)
+    
         sceneView.scene.rootNode.addChildNode(keypointNode)
     }
+    
+    /*
+    /// Renders Crumbs as tiny keypoints
+    ///
+    /// - Parameter location: location of the crumb
+    func renderCrumb(_ location: LocationInfo) {
+        crumbNode = SCNNode(mdlObject: keypointObject)
+        // configure node attributes
+        crumbNode.scale = SCNVector3(0.0002, 0.0002, 0.0002)
+        crumbNode.geometry?.firstMaterial?.diffuse.contents = UIColor.red
+        crumbNode.position = SCNVector3(location.x, location.y - 0.2, location.z)
+        crumbNode.rotation = SCNVector4(0, 1, 0, (location.yaw - Float.pi/2))
+        
+        let bound = SCNVector3(
+            x: crumbNode.boundingBox.max.x - crumbNode.boundingBox.min.x,
+            y: crumbNode.boundingBox.max.y - crumbNode.boundingBox.min.y,
+            z: crumbNode.boundingBox.max.z - crumbNode.boundingBox.min.z)
+        crumbNode.pivot = SCNMatrix4MakeTranslation(bound.x / 2, bound.y / 2, bound.z / 2)
+        
+        let spin = CABasicAnimation(keyPath: "rotation")
+        spin.fromValue = NSValue(scnVector4: SCNVector4(x: 0, y: 1, z: 0, w: 0))
+        spin.toValue = NSValue(scnVector4: SCNVector4(x: 0, y: 1, z: 0, w: Float(CGFloat(2 * Float.pi))))
+        spin.duration = 3
+        spin.repeatCount = .infinity
+        crumbNode.addAnimation(spin, forKey: "spin around")
+        
+        // animation - SCNNode flashes red
+        let flashRed = SCNAction.customAction(duration: 2) { (node, elapsedTime) -> () in
+            let percentage = Float(elapsedTime / 2)
+            var color = UIColor.clear
+            let power: Float = 2.0
+            
+            
+            if (percentage < 0.5) {
+                color = UIColor(red: 1,
+                                green: CGFloat(powf(2.0*percentage, power)),
+                                blue: CGFloat(powf(2.0*percentage, power)),
+                                alpha: 1)
+            } else {
+                color = UIColor(red: 1,
+                                green: CGFloat(powf(2-2.0*percentage, power)),
+                                blue: CGFloat(powf(2-2.0*percentage, power)),
+                                alpha: 1)
+            }
+            node.geometry!.firstMaterial!.diffuse.contents = color
+        }
+        
+        // animation - SCNNode flashes green
+        let flashGreen = SCNAction.customAction(duration: 2) { (node, elapsedTime) -> () in
+            let percentage = Float(elapsedTime / 2)
+            var color = UIColor.clear
+            let power: Float = 2.0
+            
+            
+            if (percentage < 0.5) {
+                color = UIColor(red: CGFloat(powf(2.0*percentage, power)),
+                                green: 1,
+                                blue: CGFloat(powf(2.0*percentage, power)),
+                                alpha: 1)
+            } else {
+                color = UIColor(red: CGFloat(powf(2-2.0*percentage, power)),
+                                green: 1,
+                                blue: CGFloat(powf(2-2.0*percentage, power)),
+                                alpha: 1)
+            }
+            node.geometry!.firstMaterial!.diffuse.contents = color
+        }
+        
+        // animation - SCNNode flashes blue
+        let flashBlue = SCNAction.customAction(duration: 2) { (node, elapsedTime) -> () in
+            let percentage = Float(elapsedTime / 2)
+            var color = UIColor.clear
+            let power: Float = 2.0
+            
+            
+            if (percentage < 0.5) {
+                color = UIColor(red: CGFloat(powf(2.0*percentage, power)),
+                                green: CGFloat(powf(2.0*percentage, power)),
+                                blue: 1,
+                                alpha: 1)
+            } else {
+                color = UIColor(red: CGFloat(powf(2-2.0*percentage, power)),
+                                green: CGFloat(powf(2-2.0*percentage, power)),
+                                blue: 1,
+                                alpha: 1)
+            }
+            node.geometry!.firstMaterial!.diffuse.contents = color
+        }
+        
+        // animation - SCNNode flashes purple
+        let flashPurple = SCNAction.customAction(duration: 2) { (node, elapsedTime) -> () in
+            let percentage = Float(elapsedTime / 2)
+            var color = UIColor.clear
+            let power: Float = 2.0
+            
+            if (percentage < 0.5) {
+                color = UIColor(red: 1,
+                                green: CGFloat(powf(2.0*percentage, power)),
+                                blue: 1,
+                                alpha: 1)
+            } else {
+                color = UIColor(red: 1,
+                                green: CGFloat(powf(2-2.0*percentage, power)),
+                                blue: 1,
+                                alpha: 1)
+            }
+            node.geometry!.firstMaterial!.diffuse.contents = color
+        }
+        let flashColors = [flashRed, flashGreen, flashBlue, flashPurple]
+        
+        // set flashing color based on settings bundle configuration
+        var changeColor: SCNAction!
+        if (isRerouting){
+            changeColor = SCNAction.repeatForever(flashColors[3])
+        }
+        else{
+        if (defaultColor == 3) {
+            changeColor = SCNAction.repeatForever(flashColors[Int(arc4random_uniform(3))])
+        } else {
+            changeColor = SCNAction.repeatForever(flashColors[defaultColor])
+        }
+        }
+        
+        //clear out duplicates from pausing
+        sceneView.scene.rootNode.enumerateChildNodes { (node, stop) in
+        node.removeFromParentNode() }
+        
+        // add keypoint node to view
+        crumbNode.runAction(changeColor)
+        
+        sceneView.scene.rootNode.addChildNode(crumbNode)
+
+    } */
+  
     
     /// Compute the location of the device based on the ARSession.  If the record flag is set to true, record this position in the logs.
     ///

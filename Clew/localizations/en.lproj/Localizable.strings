@@ -92,6 +92,7 @@
 "turnLeftUntilHapticFeedback" = "Turn left until you feel haptic feedback";
 "turnRightUntilHapticFeedback" = "Turn right until you feel haptic feedback";
 
+
     // Version of directions given when haptic feedback function is turned off (Clock directions)
 "1o'clockDirection" = "Slight right towards 1 o'clock";
 "2o'clockDirection" = "Slight right towards 2 o'clock";
