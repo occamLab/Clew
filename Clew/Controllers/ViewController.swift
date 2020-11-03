@@ -439,9 +439,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             // this makes sure that the user doesn't resume the session until the session is initialized, but this is the first hitting play button
             //announce(announcement: "Option three")
             print(isResumedRoute)
-            //if !isResumedRoute {
                 self.sceneView.session.run(self.configuration, options: [.removeExistingAnchors, .resetTracking])
-            //}
             continuationAfterSessionIsReady = {
                 self.state = .readyForFinalResumeAlignment
                 self.showResumeTrackingConfirmButton(route: route, navigateStartToEnd: navigateStartToEnd)
@@ -1276,6 +1274,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     }
     
     /// Display the resume tracking confirm view/hide all other views.
+    /// May include one too many interemediate screens after pausing and resuming route without realignment
     func showResumeTrackingConfirmButton(route: SavedRoute, navigateStartToEnd: Bool) {
         rootContainerView.homeButton.isHidden = false
         resumeTrackingController.remove()
@@ -1621,7 +1620,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             ///PATHPOINT one way route recording finished -> play/pause
             state = .readyToNavigateOrPause(allowPause: true)
         }
-        
     }
     
     /// handles the user pressing the start navigation button.
@@ -2114,7 +2112,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             }
         }
         else{
-            if(!nav.isFarFromPath(currentLocation: curLocation, prevKeypoint: prevKeypointNode, nextKeypoint: keypoints[keypointIndex][0], isLastKeypoint: keypoints[keypointIndex].count==1, threshold : 1/4)){
+            if(!nav.isFarFromPath(currentLocation: curLocation, prevKeypoint: prevKeypointNode, nextKeypoint: keypoints[keypointIndex][0], isLastKeypoint: keypoints[keypointIndex].count==1, threshold : 1/2)){
                 isOffPath = false
                 detourIndex = nil
                 
@@ -2428,12 +2426,16 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         
         //clear out duplicates from pausing
         sceneView.scene.rootNode.enumerateChildNodes { (node, stop) in
-        node.removeFromParentNode() }
+        keypointNode.name = "key point"
+            if node.name == "key point" {
+                node.removeFromParentNode()
+        }
         
         // add keypoint node to view
         keypointNode.runAction(changeColor)
     
         sceneView.scene.rootNode.addChildNode(keypointNode)
+    }
     }
     
     /*
