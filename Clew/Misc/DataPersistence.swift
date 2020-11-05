@@ -96,6 +96,18 @@ class DataPersistence {
                         print("couldn't write file")
                     }
                 }
+                
+                for (i, voiceNote) in documentData.routeVoiceNotes.enumerated() {
+                    let voiceData = Data(base64Encoded: voiceNote as String)
+                    let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+                    let path = documentData.route.intermediateAnchorPoints[i].voiceNote! as String
+                    let url = documentsDirectory.appendingPathComponent(path)
+                    do {
+                        try voiceData?.write(to: url)
+                    } catch {
+                        print("couldn't write file")
+                    }
+                }
             }
         } catch {
             print("couldn't unarchive route document")
@@ -142,12 +154,25 @@ class DataPersistence {
             }
         }
         
+        var routeVoiceNotes: [NSString] = []
+        for routeAnchorPoint in route.intermediateAnchorPoints {
+            /// build a full valid path the found url from the landmark
+            if let voiceurl = routeAnchorPoint.voiceNote?.documentURL {
+                /// encode audio file into a base64 string to be written to
+                /// a shareable file
+                if let data = try? Data(contentsOf: voiceurl) {
+                    routeVoiceNotes.append(data.base64EncodedString() as NSString)
+                }
+            }
+        }
+        
         /// TODO: need to fix to include functionality for phones which don't support
         /// world maps (> iOS 12)
-            let routeData = RouteDocumentData(route: route,
-                                              map: worldMap,
-                                              beginVoiceNote: beginVoiceFile,
-                                              endVoiceNote: endVoiceFile)
+        let routeData = RouteDocumentData(route: route,
+                                          map: worldMap,
+                                          beginVoiceNote: beginVoiceFile,
+                                          endVoiceNote: endVoiceFile,
+                                          routeVoiceNotes: routeVoiceNotes)
 
         /// fetch the documents directory where apple stores temporary files
         let documents = FileManager.default.urls(

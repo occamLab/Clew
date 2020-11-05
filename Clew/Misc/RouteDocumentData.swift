@@ -30,16 +30,20 @@ class RouteDocumentData: NSObject, NSSecureCoding {
     /// second landmark audio note
     public var endVoiceNote: String?
     
+    /// the audio recordings of the route voice notes
+    public var routeVoiceNotes: [NSString]
+    
     /// Initialize the sharing document.
     ///
     /// - Parameters:
     ///   - route: the route data
     ///   - map: the arkit world map
-    public init(route: SavedRoute, map: Any? = nil, beginVoiceNote: String? = nil, endVoiceNote: String? = nil) {
+    public init(route: SavedRoute, map: Any? = nil, beginVoiceNote: String? = nil, endVoiceNote: String? = nil, routeVoiceNotes: [NSString]) {
         self.route = route
         self.map = map
         self.beginVoiceNote = beginVoiceNote
         self.endVoiceNote = endVoiceNote
+        self.routeVoiceNotes = routeVoiceNotes
     }
     
     /// Encodes the object to the specified coder object. Here, we combine each essential element
@@ -51,6 +55,7 @@ class RouteDocumentData: NSObject, NSSecureCoding {
         aCoder.encode(map, forKey: "map")
         aCoder.encode(beginVoiceNote as NSString?, forKey: "beginVoiceNote")
         aCoder.encode(endVoiceNote as NSString?, forKey: "endVoiceNote")
+        aCoder.encode(routeVoiceNotes, forKey: "routeVoiceNotes")
     }
     
     /// Initialize an object based using data from a decoder.
@@ -73,7 +78,12 @@ class RouteDocumentData: NSObject, NSSecureCoding {
         let beginNote = aDecoder.decodeObject(of: NSString.self, forKey: "beginVoiceNote")
         let endNote = aDecoder.decodeObject(of: NSString.self, forKey: "endVoiceNote")
         
+        var routeVoiceNotesFinal: [NSString] = []
+        if let routeVoiceNotes = aDecoder.decodeObject(of: [].self, forKey: "routeVoiceNotes") as? [NSString] {
+            routeVoiceNotesFinal = routeVoiceNotes
+        }
+        
         /// construct a new saved route from the decoded data
-        self.init(route: route, map: newMap, beginVoiceNote: beginNote as String?, endVoiceNote: endNote as String?)
+        self.init(route: route, map: newMap, beginVoiceNote: beginNote as String?, endVoiceNote: endNote as String?, routeVoiceNotes: routeVoiceNotesFinal)
     }
 }

@@ -43,7 +43,7 @@ class StopRecordingController: UIViewController {
         recordVoiceNoteButton = UIButton.makeConstraintButton(view,
                                                          alignment: UIConstants.ButtonContainerHorizontalAlignment.right,
                                                          appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "VoiceNote")!),
-                                                         label: NSLocalizedString("enterAnchorPointVoiceNoteButtonAccessibilityLabel", comment: "This is the accessibility label for the button which allows the user to save a voice note description of their anchor point when saving a route. This feature should allow the user to more easily realign with their anchorpoint."))
+                                                         label: NSLocalizedString("recordSpatialVoiceNoteAccessibilityLabel", comment: "This is the accessibility label for the button which allows the user to save a voice note to their current location in space."))
         
         /// create stack view for aligning and distributing bottom layer buttons
         let stackView   = UIStackView()
