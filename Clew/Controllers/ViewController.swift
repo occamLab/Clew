@@ -105,6 +105,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// How long to wait (in seconds) between the alignment request and grabbing the transform
     static var alignmentWaitingPeriod = 5
     
+    /// A threshold distance between the user's current position and a voice note.  If the user is closer than this value the voice note will be played
+    static let voiceNotePlayDistanceThreshold : Float = 0.75
+    
     /// The state of the ARKit tracking session as last communicated to us through the delgate protocol.  This is useful if you want to do something different in the delegate method depending on the previous state
     var trackingSessionState : ARCamera.TrackingState?
     
@@ -732,6 +735,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         // we use a custom notification to communicate from the help controller to the main view controller that a popover that should suppress tracking warnings was dimissed
         NotificationCenter.default.addObserver(forName: Notification.Name("ClewPopoverDismissed"), object: nil, queue: nil) { (notification) -> Void in
             self.suppressTrackingWarnings = false
+            if self.stopRecordingController.parent == self {
+                /// set  record voice note as active
+                UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: self.stopRecordingController.recordVoiceNoteButton)
+            
+            }
         }
 
         // we use a custom notification to communicate from the help controller to the main view controller that a popover that should suppress tracking warnings was displayed
@@ -1871,7 +1879,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             }
             // TODO think about breaking ties by playing the least recently played voice note
             // TODO consider different floors by considering the y value
-            if (voiceNoteToPlay == nil || !voiceNoteToPlay!.isPlaying) && sqrt(pow(anchorPointTransform.columns.3.x - curLocation.location.x,2) + pow(anchorPointTransform.columns.3.z - curLocation.location.z,2)) < 0.5 {
+            if (voiceNoteToPlay == nil || !voiceNoteToPlay!.isPlaying) && sqrt(pow(anchorPointTransform.columns.3.x - curLocation.location.x,2) + pow(anchorPointTransform.columns.3.z - curLocation.location.z,2)) < ViewController.voiceNotePlayDistanceThreshold {
                 // play voice note
                 let voiceNoteToPlayURL = anchorPoint.voiceNote!.documentURL
                 do {
@@ -1879,7 +1887,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                     voiceNoteToPlay = try AVAudioPlayer(data: data, fileTypeHint: AVFileType.caf.rawValue)
                     voiceNoteToPlay?.prepareToPlay()
                 } catch {}
-                // need to wait for a while
                 readVoiceNote()
             }
         }
