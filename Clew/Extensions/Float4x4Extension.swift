@@ -23,7 +23,8 @@ extension Array where Element: FloatingPoint {
 
     func std() -> Element {
         let mean = self.avg()
-        let v = self.reduce(0, { $0 + ($1-mean)*($1-mean) })
+        let x = {$0 + ($1-mean)*($1-mean)}
+        let v = self.reduce(0, x)
         return sqrt(v / (Element(self.count) - 1))
     }
 
@@ -100,4 +101,4 @@ extension float4x4 {
     var yaw: Float {
         return LocationInfo(anchor: ARAnchor(transform: self)).yaw
     }
-}
+} 

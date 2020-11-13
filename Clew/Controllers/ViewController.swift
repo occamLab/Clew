@@ -122,7 +122,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 handleStateTransitionToMainScreen(announceArrival: announceArrival)
             case .startingPauseProcedure:
                 handleStateTransitionToStartingPauseProcedure()
-
             case .pauseWaitingPeriod:
                 handleStateTransitionToPauseWaitingPeriod()
             case .completingPauseProcedure:
@@ -198,6 +197,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// this boolean denotes whether or not the user is rerouting
     var isRerouting: Bool = false
+    
+    /// this boolean denotes whether or not the map needs to be relocalized
+    var isSameResumeMap: Bool = false
     
     /// This is an audio player that queues up the voice note associated with a particular route Anchor Point. The player is created whenever a saved route is loaded. Loading it before the user clicks the "Play Voice Note" button allows us to call the prepareToPlay function which reduces the latency when the user clicks the "Play Voice Note" button.
     var voiceNoteToPlay: AVAudioPlayer?
@@ -394,11 +396,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         if case .limited(reason: .relocalizing)? = sceneView.session.currentFrame?.camera.trackingState {
             isRelocalizing = true
         }
+        
         var isSameMap = false
         if #available(iOS 12.0, *), let worldMap = worldMap as? ARWorldMap? {
             isSameMap = configuration.initialWorldMap != nil && configuration.initialWorldMap == worldMap
             configuration.initialWorldMap = worldMap
-            
             attemptingRelocalization =  isSameMap && !isTrackingPerformanceNormal || worldMap != nil && !isSameMap
         }
     
@@ -434,7 +436,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             //announce(announcement: "Option two")
             sceneView.session.run(configuration, options: [.removeExistingAnchors])
             self.state = .readyForFinalResumeAlignment
-            self.showResumeTrackingConfirmButton(route: route, navigateStartToEnd: navigateStartToEnd) // this may be the thing that is showing too many buttons
+            self.showResumeTrackingConfirmButton(route:route, navigateStartToEnd: navigateStartToEnd) // this may be the thing that is showing too many buttons
         } else {
             // this makes sure that the user doesn't resume the session until the session is initialized, but this is the first hitting play button
             //announce(announcement: "Option three")
@@ -442,7 +444,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 self.sceneView.session.run(self.configuration, options: [.removeExistingAnchors, .resetTracking])
             continuationAfterSessionIsReady = {
                 self.state = .readyForFinalResumeAlignment
-                self.showResumeTrackingConfirmButton(route: route, navigateStartToEnd: navigateStartToEnd)
+                self.showResumeTrackingButton()
+                //self.showResumeTrackingConfirmButton(route: route, navigateStartToEnd: navigateStartToEnd)
             }
         }
     }
@@ -540,7 +543,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                     }
                 } else {
                         self.completingPauseProcedureHelper(worldMap: configuration.initialWorldMap)
-                    
                 }
             } else {
                 completingPauseProcedureHelper(worldMap: nil)
@@ -555,6 +557,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             //proceed as normal with the pause structure (single use route)
             justTraveledRoute = SavedRoute(id: "single use", name: "single use", crumbs: self.crumbs, dateCreated: Date() as NSDate, beginRouteAnchorPoint: self.beginRouteAnchorPoint, endRouteAnchorPoint: self.endRouteAnchorPoint)
             justUsedMap = worldMap
+            //fruitloop
             showResumeTrackingButton()
             state = .pauseProcedureCompleted
         } else {
@@ -1247,7 +1250,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     }
 
     /// Display the pause tracking view/hide all other views
-    func showPauseTrackingButton() throws {
+    @objc func showPauseTrackingButton() throws {
         rootContainerView.homeButton.isHidden = false
         pauseTrackingController.isNavigating = isNavigating
         
@@ -1265,7 +1268,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     }
     
     /// Display the resume tracking view/hide all other views
-    @objc func showResumeTrackingButton() {
+     func showResumeTrackingButton() {
         rootContainerView.homeButton.isHidden = false // no home button here
         pauseTrackingController.remove()
         add(resumeTrackingController)
@@ -1787,7 +1790,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     }
     
     /// handles the user pressing the resume tracking confirmation button.
-    @objc func confirmResumeTracking() {
+     @objc func confirmResumeTracking() {
+        // not always being triggered when route is resumed without needing to relocalize
+        announce(announcement:"check check")
         if let route = justTraveledRoute {
             state = .startingResumeProcedure(route: route, worldMap: justUsedMap, navigateStartToEnd: false)
         }
@@ -1816,15 +1821,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         guard let curLocation = getRealCoordinates(record: true)?.location else {
             return
         }
-        if (isDetourCrumbs){
-            recordingDetourCrumbs.append(curLocation)
-            //renderCrumb(curLocation)
-        }
-        else {
-            //sometimes recordingCrumbs is not working
-            recordingCrumbs.append(curLocation)
-            //renderCrumb(curLocation)
-        }
+            if (isDetourCrumbs){
+                recordingDetourCrumbs.append(curLocation)
+                //renderCrumb(curLocation)
+            }
+            else {
+                print("recording crumbs:")
+                print(recordingCrumbs != nil)
+                if (recordingCrumbs != nil) {
+                    recordingCrumbs.append(curLocation)
+                }
+            }
     }
     
     /// checks to see if user is on the right path during navigation.
@@ -2057,6 +2064,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             if !(prevKeypointNode == nil)  {
                 if (!isRerouting && !nav.isFarFromPath(currentLocation: curLocation, prevKeypoint: prevKeypointNode, nextKeypoint: keypoints[keypointIndex][0], isLastKeypoint: keypoints[keypointIndex].count==1, threshold: 1/8)){
                     onPathIndex = recordingDetourCrumbs.count - 1
+                    print("on path index:")
                     print(onPathIndex)
                 }
                 if(nav.isFarFromPath(currentLocation: curLocation, prevKeypoint: prevKeypointNode, nextKeypoint: keypoints[keypointIndex][0], isLastKeypoint: keypoints[keypointIndex].count==1, threshold: 1/4)){
@@ -2132,15 +2140,22 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
      @objc func startRerouting(_ sender: UIButton){
         isRerouting = true
         detourCrumbs = Array(recordingDetourCrumbs)
+        if (detourCrumbs.count == 0){
+            guard let curLocation = getRealCoordinates(record: true)?.location else {
+                return
+            }
+            recordingDetourCrumbs.append(curLocation) //edited to stop freezing
+        }
+        detourCrumbs = Array(recordingDetourCrumbs)
         let trimmedDetourCrumbs = detourCrumbs[detourIndex!...(detourCrumbs.count-1)]
         let detour = PathFinder(crumbs:trimmedDetourCrumbs.reversed(), hapticFeedback: hapticFeedback, voiceFeedback: voiceFeedback)
         keypoints.append(detour.keypoints)
         keypointIndex = keypoints.count - 1
-        print("keypoint index:")
-        print(keypointIndex)
         stopNavigationController.pauseButton.isHidden = false
         stopNavigationController.returnToPathButton.isHidden = true
         UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged , argument: nil)
+        print("keypoint index:")
+        print(keypointIndex)
     }
     
     /// Communicates a message to the user via speech.  If VoiceOver is active, then VoiceOver is used to communicate the announcement, otherwise we use the AVSpeechEngine
