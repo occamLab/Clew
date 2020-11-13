@@ -24,7 +24,7 @@ class RecordButton: UIButton {
         }
     }
     
-    /// true if various sound effects (e.g., record start and stop) should be ;layed, false otherwise
+    /// true if various sound effects (e.g., record start and stop) should be played, false otherwise
     @IBInspectable open var playSounds = true
     
     /// the color of the frame around the record button

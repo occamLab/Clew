@@ -21,8 +21,12 @@
 		77365B192343ECBA008BC35C /* BurgerMenu.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 77365B1B2343ECBA008BC35C /* BurgerMenu.storyboard */; };
 		77467DAF22BBC1D300FA7DEE /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 77467DAE22BBC1D300FA7DEE /* Default-568h@2x.png */; };
 		821CF7842513264400A7B3C2 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 821CF7822513264400A7B3C2 /* InfoPlist.strings */; };
+		823DA454252F7EA800BB5E6B /* speaker.obj in Resources */ = {isa = PBXBuildFile; fileRef = 823DA453252F7EA800BB5E6B /* speaker.obj */; };
+		823DA455252F7EA800BB5E6B /* speaker.obj in Resources */ = {isa = PBXBuildFile; fileRef = 823DA453252F7EA800BB5E6B /* speaker.obj */; };
 		82569F4E22187E6500448B45 /* help in Resources */ = {isa = PBXBuildFile; fileRef = 82569F4D22187E6500448B45 /* help */; };
 		82569F4F22187E6500448B45 /* help in Resources */ = {isa = PBXBuildFile; fileRef = 82569F4D22187E6500448B45 /* help */; };
+		82AD6A25252F80AA00902A11 /* speaker.mtl in Resources */ = {isa = PBXBuildFile; fileRef = 82AD6A24252F80AA00902A11 /* speaker.mtl */; };
+		82AD6A26252F80AA00902A11 /* speaker.mtl in Resources */ = {isa = PBXBuildFile; fileRef = 82AD6A24252F80AA00902A11 /* speaker.mtl */; };
 		986640CE22FB68F2005AA1F6 /* NameSavedRouteController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986640CD22FB68F2005AA1F6 /* NameSavedRouteController.swift */; };
 		986640CF22FC9606005AA1F6 /* NameSavedRouteController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986640CD22FB68F2005AA1F6 /* NameSavedRouteController.swift */; };
 		B0A563F6FE1007A2716DC876 /* Pods_Clew_Dev.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3532E390954571B93729786A /* Pods_Clew_Dev.framework */; };
@@ -161,12 +165,14 @@
 		821CF7832513264400A7B3C2 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		821CF7892513264400A7B3C2 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		822E27F8210E3F260024A5E3 /* Clew Dev-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Clew Dev-Info.plist"; sourceTree = "<group>"; };
+		823DA453252F7EA800BB5E6B /* speaker.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = speaker.obj; sourceTree = "<group>"; };
 		82569F4D22187E6500448B45 /* help */ = {isa = PBXFileReference; lastKnownFileType = folder; path = help; sourceTree = "<group>"; };
 		827CB5B024932CC60032A857 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/SettingsAndHelp.strings; sourceTree = "<group>"; };
 		827CB5B124932CC60032A857 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/BurgerMenu.strings; sourceTree = "<group>"; };
 		827CB5B224932CC60032A857 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/MainInterface.strings; sourceTree = "<group>"; };
 		827CB5B324932CC70032A857 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/SettingsAndHelp.strings; sourceTree = "<group>"; };
 		827CB5B424932CC70032A857 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/Localizable.strings; sourceTree = "<group>"; };
+		82AD6A24252F80AA00902A11 /* speaker.mtl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = speaker.mtl; sourceTree = "<group>"; };
 		82F2DDD122E26A44005CD7D0 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		82F2DDD322E26A44005CD7D0 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/SettingsAndHelp.strings; sourceTree = "<group>"; };
 		85A1A72DC19F87F15B738291 /* Pods-Clew Dev.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew Dev.release.xcconfig"; path = "Pods/Target Support Files/Pods-Clew Dev/Pods-Clew Dev.release.xcconfig"; sourceTree = "<group>"; };
@@ -262,6 +268,8 @@
 				77467DAE22BBC1D300FA7DEE /* Default-568h@2x.png */,
 				82569F4D22187E6500448B45 /* help */,
 				4DF05CC71F34EB56008B0E31 /* Confirm.mp3 */,
+				823DA453252F7EA800BB5E6B /* speaker.obj */,
+				82AD6A24252F80AA00902A11 /* speaker.mtl */,
 				4D6B00E41F33C85500952242 /* Crumb.obj */,
 				E5E9016922FB4D4A00AD0E95 /* route-quicklook */,
 				4D6B00C11F33C1C400952242 /* Products */,
@@ -574,9 +582,11 @@
 				E59DA6BF22C65F5900FCD5A1 /* LaunchScreen.storyboard in Resources */,
 				E5470F4E22C119F5001092A4 /* GoogleService-Info_dev.plist in Resources */,
 				1F2B9D8722C5446B00317DC8 /* (null) in Resources */,
+				82AD6A25252F80AA00902A11 /* speaker.mtl in Resources */,
 				E5D1695E22E103A0008754D0 /* Localizable.strings in Resources */,
 				E5470F1A22C119F5001092A4 /* StopRecording.aiff in Resources */,
 				77467DAF22BBC1D300FA7DEE /* Default-568h@2x.png in Resources */,
+				823DA454252F7EA800BB5E6B /* speaker.obj in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -588,6 +598,7 @@
 				E5470F1922C119F5001092A4 /* StartRecording.aiff in Resources */,
 				77365B192343ECBA008BC35C /* BurgerMenu.storyboard in Resources */,
 				E5470F1B22C119F5001092A4 /* StopRecording.aiff in Resources */,
+				82AD6A26252F80AA00902A11 /* speaker.mtl in Resources */,
 				B7EB59E220F693EB00FBBC6A /* Confirm.mp3 in Resources */,
 				B7EB59E320F693EB00FBBC6A /* Crumb.obj in Resources */,
 				E5470F4F22C119F5001092A4 /* GoogleService-Info_dev.plist in Resources */,
@@ -597,6 +608,7 @@
 				772E4564236CC155008EF6AC /* SettingsAndHelp.storyboard in Resources */,
 				E5470F1D22C119F5001092A4 /* GoogleService-Info.plist in Resources */,
 				E5470F1722C119F5001092A4 /* Assets.xcassets in Resources */,
+				823DA455252F7EA800BB5E6B /* speaker.obj in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1013,13 +1025,13 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = 44;
+				CURRENT_PROJECT_VERSION = 47;
 				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
 				INFOPLIST_FILE = Clew/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 2.0.15;
+				MARKETING_VERSION = 2.0.17;
 				PRODUCT_BUNDLE_IDENTIFIER = edu.occam.Clew;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Clew/Clew-Bridging-Header.h";
@@ -1036,13 +1048,13 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = 44;
+				CURRENT_PROJECT_VERSION = 47;
 				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
 				INFOPLIST_FILE = Clew/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 2.0.15;
+				MARKETING_VERSION = 2.0.17;
 				PRODUCT_BUNDLE_IDENTIFIER = edu.occam.Clew;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Clew/Clew-Bridging-Header.h";
@@ -1059,12 +1071,12 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 44;
+				CURRENT_PROJECT_VERSION = 47;
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
 				INFOPLIST_FILE = "Clew Dev-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 2.0.15;
+				MARKETING_VERSION = 2.0.17;
 				OTHER_SWIFT_FLAGS = "$(inherited) \"-DDEVELOPER\" \"-DIS_DEV_TARGET\"";
 				PRODUCT_BUNDLE_IDENTIFIER = "edu.occam.Clew-Dev";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1085,12 +1097,12 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 44;
+				CURRENT_PROJECT_VERSION = 47;
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
 				INFOPLIST_FILE = "Clew Dev-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 2.0.15;
+				MARKETING_VERSION = 2.0.17;
 				OTHER_SWIFT_FLAGS = "$(inherited) \"-DDEVELOPER\" \"-DIS_DEV_TARGET\"";
 				PRODUCT_BUNDLE_IDENTIFIER = "edu.occam.Clew-Dev";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1107,13 +1119,13 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 44;
+				CURRENT_PROJECT_VERSION = 47;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
 				INFOPLIST_FILE = "route-quicklook/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
-				MARKETING_VERSION = 2.0.15;
+				MARKETING_VERSION = 2.0.17;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "edu.occam.Clew.route-quicklook";
@@ -1129,12 +1141,12 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 44;
+				CURRENT_PROJECT_VERSION = 47;
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
 				INFOPLIST_FILE = "route-quicklook/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
-				MARKETING_VERSION = 2.0.15;
+				MARKETING_VERSION = 2.0.17;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "edu.occam.Clew.route-quicklook";
 				PRODUCT_NAME = "$(TARGET_NAME)";

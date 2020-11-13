@@ -438,6 +438,8 @@
 /* This is the accessibility label which is played when a user with voice over selects the button to record a voice recording in the voice recorder view */
 "startRecordingVoiceNoteAccessibilityLabel" = "تسجيل ملحوظة صوتية";
 
+"recordSpatialVoiceNoteAccessibilityLabel" = "تسجيل ملاحظة صوتية كإشارة إلى موقعك الحالي";
+
 /* The accessibility label for the button that allows user to start navigating back along their route. */
 "startReturnNavigationButtonAccessibilityLabel" = "بدء التنقل";
 
