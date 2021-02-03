@@ -390,15 +390,19 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         // load the world map and restart the session so that things have a chance to quiet down before putting it up to the wall
         var isTrackingPerformanceNormal = false
         if case .normal? = sceneView.session.currentFrame?.camera.trackingState {
+            print("tracking performance:")
             isTrackingPerformanceNormal = true
         }
+        print(isTrackingPerformanceNormal)
         var isRelocalizing = false
         if case .limited(reason: .relocalizing)? = sceneView.session.currentFrame?.camera.trackingState {
+            announce(announcement: "is relocalizing is true")
             isRelocalizing = true
         }
         
         var isSameMap = false
         if #available(iOS 12.0, *), let worldMap = worldMap as? ARWorldMap? {
+            //check check
             isSameMap = configuration.initialWorldMap != nil && configuration.initialWorldMap == worldMap
             configuration.initialWorldMap = worldMap
             attemptingRelocalization =  isSameMap && !isTrackingPerformanceNormal || worldMap != nil && !isSameMap
@@ -414,8 +418,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
         // don't reset tracking, but do clear anchors and switch to the new map
         //sceneView.session.run(configuration, options: [.removeExistingAnchors, .resetTracking])
-
-        if isTrackingPerformanceNormal, isSameMap {
+    
+        if isTrackingPerformanceNormal && isSameMap {
             // we can skip the whole process of relocalization since we are already using the correct map and tracking is normal.  It helps to strip out old anchors to reduce jitter though
             ///PATHPOINT load route from automatic alignment -> start navigation
             
@@ -425,30 +429,55 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             isResumedRoute = true
             isAutomaticAlignment = true
             state = .readyToNavigateOrPause(allowPause: false)
-            //announce(announcement: "Option one")
-        } else if isRelocalizing && isSameMap || isTrackingPerformanceNormal && worldMap == nil  {
-            // we don't have to wait for the session to start up.  It will be created automatically.
+            announce(announcement: "Option one")
+        } else if isRelocalizing && isSameMap   {
+            // || isTrackingPerformanceNormal && worldMap == nil
+            //we don't have to wait for the session to start up.  It will be created automatically.
             // this is same as option one but the map hasn't been localized yet
             if (worldMap == nil)
             {
                 announce(announcement: "world map is nil")
             }
-            //announce(announcement: "Option two")
+            announce(announcement: "Option two")
             sceneView.session.run(configuration, options: [.removeExistingAnchors])
-            self.state = .readyForFinalResumeAlignment
-            self.showResumeTrackingConfirmButton(route:route, navigateStartToEnd: navigateStartToEnd) // this may be the thing that is showing too many buttons
+            //self.state = .readyForFinalResumeAlignmentd
+            //self.showResumeTrackingConfirmButton(route:route, navigateStartToEnd: navigateStartToEnd) // this may be the thing that is showing too many buttons
+            isResumedRoute = true
+            isAutomaticAlignment = true
+            state = .readyToNavigateOrPause(allowPause: false)
         } else {
             // this makes sure that the user doesn't resume the session until the session is initialized, but this is the first hitting play button
-            //announce(announcement: "Option three")
-            print(isResumedRoute)
-                self.sceneView.session.run(self.configuration, options: [.removeExistingAnchors, .resetTracking])
-            continuationAfterSessionIsReady = {
-                self.state = .readyForFinalResumeAlignment
-                self.showResumeTrackingButton()
-                //self.showResumeTrackingConfirmButton(route: route, navigateStartToEnd: navigateStartToEnd)
-            }
-        }
-    }
+                       announce(announcement: "Option three")
+                       print(isResumedRoute)
+                       //if !isResumedRoute {
+                           self.sceneView.session.run(self.configuration, options: [.removeExistingAnchors, .resetTracking])
+                       //}
+                       continuationAfterSessionIsReady = {
+                           self.state = .readyForFinalResumeAlignment
+                           self.showResumeTrackingConfirmButton(route: route, navigateStartToEnd: navigateStartToEnd)
+                       }
+                   }
+               }
+            // this makes sure that the user doesn't resume the session until the session is initialized, but this is the first hitting play button
+    ///
+//            announce(announcement: "Option three")
+//            print(isResumedRoute)
+//                self.sceneView.session.run(self.configuration, options: [.removeExistingAnchors, .resetTracking])
+//            if isTrackingPerformanceNormal {
+//                announce(announcement: "option three point 1")
+//                isResumedRoute = true
+//                isAutomaticAlignment = true
+//                state = .readyToNavigateOrPause(allowPause: false)
+//            } else {
+//            continuationAfterSessionIsReady = {
+//                self.state = .readyForFinalResumeAlignment
+//                self.showResumeTrackingButton()
+//                self.showResumeTrackingConfirmButton(route: route, navigateStartToEnd: navigateStartToEnd)
+//            }
+//            }
+//        }
+//    }
+////
     
     /// Handler for the startingNameSavedRouteProcedure app state
     func handleStateTransitionToStartingNameSavedRouteProcedure(worldMap: Any?){
@@ -1826,8 +1855,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 //renderCrumb(curLocation)
             }
             else {
-                print("recording crumbs:")
-                print(recordingCrumbs != nil)
+                //print("recording crumbs:")
+                //print(recordingCrumbs != nil)
                 if (recordingCrumbs != nil) {
                     recordingCrumbs.append(curLocation)
                 }
@@ -2064,8 +2093,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             if !(prevKeypointNode == nil)  {
                 if (!isRerouting && !nav.isFarFromPath(currentLocation: curLocation, prevKeypoint: prevKeypointNode, nextKeypoint: keypoints[keypointIndex][0], isLastKeypoint: keypoints[keypointIndex].count==1, threshold: 1/8)){
                     onPathIndex = recordingDetourCrumbs.count - 1
-                    print("on path index:")
-                    print(onPathIndex)
+                    //print("on path index:")
+                    //print(onPathIndex)
                 }
                 if(nav.isFarFromPath(currentLocation: curLocation, prevKeypoint: prevKeypointNode, nextKeypoint: keypoints[keypointIndex][0], isLastKeypoint: keypoints[keypointIndex].count==1, threshold: 1/4)){
                     let timeInterval = feedbackTimer.timeIntervalSinceNow
@@ -2154,8 +2183,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         stopNavigationController.pauseButton.isHidden = false
         stopNavigationController.returnToPathButton.isHidden = true
         UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged , argument: nil)
-        print("keypoint index:")
-        print(keypointIndex)
+        //print("keypoint index:")
+        //print(keypointIndex)
     }
     
     /// Communicates a message to the user via speech.  If VoiceOver is active, then VoiceOver is used to communicate the announcement, otherwise we use the AVSpeechEngine
@@ -2452,139 +2481,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         sceneView.scene.rootNode.addChildNode(keypointNode)
     }
     }
-    
-    /*
-    /// Renders Crumbs as tiny keypoints
-    ///
-    /// - Parameter location: location of the crumb
-    func renderCrumb(_ location: LocationInfo) {
-        crumbNode = SCNNode(mdlObject: keypointObject)
-        // configure node attributes
-        crumbNode.scale = SCNVector3(0.0002, 0.0002, 0.0002)
-        crumbNode.geometry?.firstMaterial?.diffuse.contents = UIColor.red
-        crumbNode.position = SCNVector3(location.x, location.y - 0.2, location.z)
-        crumbNode.rotation = SCNVector4(0, 1, 0, (location.yaw - Float.pi/2))
-        
-        let bound = SCNVector3(
-            x: crumbNode.boundingBox.max.x - crumbNode.boundingBox.min.x,
-            y: crumbNode.boundingBox.max.y - crumbNode.boundingBox.min.y,
-            z: crumbNode.boundingBox.max.z - crumbNode.boundingBox.min.z)
-        crumbNode.pivot = SCNMatrix4MakeTranslation(bound.x / 2, bound.y / 2, bound.z / 2)
-        
-        let spin = CABasicAnimation(keyPath: "rotation")
-        spin.fromValue = NSValue(scnVector4: SCNVector4(x: 0, y: 1, z: 0, w: 0))
-        spin.toValue = NSValue(scnVector4: SCNVector4(x: 0, y: 1, z: 0, w: Float(CGFloat(2 * Float.pi))))
-        spin.duration = 3
-        spin.repeatCount = .infinity
-        crumbNode.addAnimation(spin, forKey: "spin around")
-        
-        // animation - SCNNode flashes red
-        let flashRed = SCNAction.customAction(duration: 2) { (node, elapsedTime) -> () in
-            let percentage = Float(elapsedTime / 2)
-            var color = UIColor.clear
-            let power: Float = 2.0
-            
-            
-            if (percentage < 0.5) {
-                color = UIColor(red: 1,
-                                green: CGFloat(powf(2.0*percentage, power)),
-                                blue: CGFloat(powf(2.0*percentage, power)),
-                                alpha: 1)
-            } else {
-                color = UIColor(red: 1,
-                                green: CGFloat(powf(2-2.0*percentage, power)),
-                                blue: CGFloat(powf(2-2.0*percentage, power)),
-                                alpha: 1)
-            }
-            node.geometry!.firstMaterial!.diffuse.contents = color
-        }
-        
-        // animation - SCNNode flashes green
-        let flashGreen = SCNAction.customAction(duration: 2) { (node, elapsedTime) -> () in
-            let percentage = Float(elapsedTime / 2)
-            var color = UIColor.clear
-            let power: Float = 2.0
-            
-            
-            if (percentage < 0.5) {
-                color = UIColor(red: CGFloat(powf(2.0*percentage, power)),
-                                green: 1,
-                                blue: CGFloat(powf(2.0*percentage, power)),
-                                alpha: 1)
-            } else {
-                color = UIColor(red: CGFloat(powf(2-2.0*percentage, power)),
-                                green: 1,
-                                blue: CGFloat(powf(2-2.0*percentage, power)),
-                                alpha: 1)
-            }
-            node.geometry!.firstMaterial!.diffuse.contents = color
-        }
-        
-        // animation - SCNNode flashes blue
-        let flashBlue = SCNAction.customAction(duration: 2) { (node, elapsedTime) -> () in
-            let percentage = Float(elapsedTime / 2)
-            var color = UIColor.clear
-            let power: Float = 2.0
-            
-            
-            if (percentage < 0.5) {
-                color = UIColor(red: CGFloat(powf(2.0*percentage, power)),
-                                green: CGFloat(powf(2.0*percentage, power)),
-                                blue: 1,
-                                alpha: 1)
-            } else {
-                color = UIColor(red: CGFloat(powf(2-2.0*percentage, power)),
-                                green: CGFloat(powf(2-2.0*percentage, power)),
-                                blue: 1,
-                                alpha: 1)
-            }
-            node.geometry!.firstMaterial!.diffuse.contents = color
-        }
-        
-        // animation - SCNNode flashes purple
-        let flashPurple = SCNAction.customAction(duration: 2) { (node, elapsedTime) -> () in
-            let percentage = Float(elapsedTime / 2)
-            var color = UIColor.clear
-            let power: Float = 2.0
-            
-            if (percentage < 0.5) {
-                color = UIColor(red: 1,
-                                green: CGFloat(powf(2.0*percentage, power)),
-                                blue: 1,
-                                alpha: 1)
-            } else {
-                color = UIColor(red: 1,
-                                green: CGFloat(powf(2-2.0*percentage, power)),
-                                blue: 1,
-                                alpha: 1)
-            }
-            node.geometry!.firstMaterial!.diffuse.contents = color
-        }
-        let flashColors = [flashRed, flashGreen, flashBlue, flashPurple]
-        
-        // set flashing color based on settings bundle configuration
-        var changeColor: SCNAction!
-        if (isRerouting){
-            changeColor = SCNAction.repeatForever(flashColors[3])
-        }
-        else{
-        if (defaultColor == 3) {
-            changeColor = SCNAction.repeatForever(flashColors[Int(arc4random_uniform(3))])
-        } else {
-            changeColor = SCNAction.repeatForever(flashColors[defaultColor])
-        }
-        }
-        
-        //clear out duplicates from pausing
-        sceneView.scene.rootNode.enumerateChildNodes { (node, stop) in
-        node.removeFromParentNode() }
-        
-        // add keypoint node to view
-        crumbNode.runAction(changeColor)
-        
-        sceneView.scene.rootNode.addChildNode(crumbNode)
-
-    } */
   
     
     /// Compute the location of the device based on the ARSession.  If the record flag is set to true, record this position in the logs.
@@ -2665,11 +2561,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 session.setWorldOrigin(relativeTransform: matrix_identity_float4x4)
                 if !suppressTrackingWarnings {
                     announce(announcement: NSLocalizedString("realignToSavedRouteAnnouncement", comment: "An announcement which lets the user know that their surroundings have been matched to a saved route"))
-                    print("line 2426")
+                    print("line 2565")
                 }
                 attemptingRelocalization = false
             } else if case let .limited(reason)? = trackingSessionState {
-                print("line2430") // goes here if creating a route
+                print("line2569") // goes here if creating a route
                 if !suppressTrackingWarnings {
                     if reason != .initializing {
                         announce(announcement: NSLocalizedString("fixedTrackingAnnouncement", comment: "Let user know that the ARKit tracking session has returned to its normal quality (this is played after the tracking has been restored from thir being insuficent visual features or excessive motion which degrade the tracking)"))
