@@ -1690,6 +1690,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// handles the user pressing the pause button
     //something is wrong here
+    // triggered by both "StopNavigationController" and "StartNavigationController"
     @objc func startPauseProcedure() {
         creatingRouteAnchorPoint = false
         paused = true
