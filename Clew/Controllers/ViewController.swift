@@ -7,7 +7,7 @@
 // Confirmed issues
 // - We are not doing a proper job dealing with resumed routes with respect to logging (we always send recorded stuff in the log file, which we don't always have access to)
 //
-// Unconfirmed issues issues
+// Unconfirmed issues
 // - Maybe intercept session was interrupted so that we don't mistakenly try to navigate saved route before relocalization
 //
 // Major features to implement
@@ -17,6 +17,9 @@
 //  - Warn user via an alert if they have an iPhone 5S or 6
 //  - Possibly create a warning if the phone doesn't appear to be in the correct orientation
 //  - revisit turn warning feature.  It doesn't seem to actually help all that much at the moment.
+//  - remove double play button
+//  - thumbs up down button negates the announce arrival announcement if a turn is too close to the end
+//  -
 
 import UIKit
 import ARKit
@@ -183,6 +186,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     ///this boolean denotes whether or not the app is loading a route from an automatic alignment
     var isAutomaticAlignment: Bool = false
     
+    ///this boolean indicates whether or not the camera is initializing
+    var isInitializing: Bool = false
+    
     ///this boolean denotes whether the user is currently navigating a route
     var isNavigating: Bool = false
     
@@ -292,11 +298,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// Handler for the navigatingRoute app state
     func handleStateTransitionToNavigatingRoute() {
         // navigate the recorded path
-
         // If the route has not yet been saved, we can no longer save this route
         
+        isInitializing = false
         paused = false
-        //announce(announcement: "handle state transition to navigating route")
         beginRouteAnchorPoint = RouteAnchorPoint()
         endRouteAnchorPoint = RouteAnchorPoint()
         showStopNavigationButton()
@@ -318,10 +323,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         logger.logKeypoints(keypoints: keypoints[keypointIndex])
         
         // render 3D keypoints
-        print("transition keypoint index, keypoint count, keypoint in count")
-        print(keypointIndex)
-        print(keypoints.count)
-        print(keypoints[keypointIndex].count)
+        //print("transition keypoint index, keypoint count, keypoint in count")
+        //print(keypointIndex)
+        //print(keypoints.count)
+        //print(keypoints[keypointIndex].count)
     
         renderKeypoint(keypoints[keypointIndex][0].location)
 
@@ -396,7 +401,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         print(isTrackingPerformanceNormal)
         var isRelocalizing = false
         if case .limited(reason: .relocalizing)? = sceneView.session.currentFrame?.camera.trackingState {
-            announce(announcement: "is relocalizing is true")
             isRelocalizing = true
         }
         
@@ -418,66 +422,37 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
         // don't reset tracking, but do clear anchors and switch to the new map
         //sceneView.session.run(configuration, options: [.removeExistingAnchors, .resetTracking])
-    
         if isTrackingPerformanceNormal && isSameMap {
-            // we can skip the whole process of relocalization since we are already using the correct map and tracking is normal.  It helps to strip out old anchors to reduce jitter though
+            // To do: we can skip the whole process of relocalization since we are already using the correct map and tracking is normal.  It helps to strip out old anchors to reduce jitter though
             ///PATHPOINT load route from automatic alignment -> start navigation
-            
-            //modified here
-            //come back here
             //this is the one that resumes during navigation and the map has already been localized
             isResumedRoute = true
             isAutomaticAlignment = true
+            isInitializing = false
             state = .readyToNavigateOrPause(allowPause: false)
-            announce(announcement: "Option one")
-        } else if isRelocalizing && isSameMap   {
-            // || isTrackingPerformanceNormal && worldMap == nil
-            //we don't have to wait for the session to start up.  It will be created automatically.
+        } else if isRelocalizing && isSameMap && !isInitializing {
+            // formerly || isTrackingPerformanceNormal && worldMap == nil
+            // In this case we don't have to wait for the session to start up.  It will be created automatically.
             // this is same as option one but the map hasn't been localized yet
-            if (worldMap == nil)
-            {
-                announce(announcement: "world map is nil")
-            }
-            announce(announcement: "Option two")
             sceneView.session.run(configuration, options: [.removeExistingAnchors])
+            isInitializing = false
             //self.state = .readyForFinalResumeAlignmentd
             //self.showResumeTrackingConfirmButton(route:route, navigateStartToEnd: navigateStartToEnd) // this may be the thing that is showing too many buttons
             isResumedRoute = true
             isAutomaticAlignment = true
-            state = .readyToNavigateOrPause(allowPause: false)
+            //state = .readyToNavigateOrPause(allowPause: false)
+            
+            state = .navigatingRoute
         } else {
             // this makes sure that the user doesn't resume the session until the session is initialized, but this is the first hitting play button
-                       announce(announcement: "Option three")
-                       print(isResumedRoute)
-                       //if !isResumedRoute {
-                           self.sceneView.session.run(self.configuration, options: [.removeExistingAnchors, .resetTracking])
-                       //}
+            isInitializing = false
+                        self.sceneView.session.run(self.configuration, options: [.removeExistingAnchors, .resetTracking])
                        continuationAfterSessionIsReady = {
                            self.state = .readyForFinalResumeAlignment
                            self.showResumeTrackingConfirmButton(route: route, navigateStartToEnd: navigateStartToEnd)
                        }
                    }
                }
-            // this makes sure that the user doesn't resume the session until the session is initialized, but this is the first hitting play button
-    ///
-//            announce(announcement: "Option three")
-//            print(isResumedRoute)
-//                self.sceneView.session.run(self.configuration, options: [.removeExistingAnchors, .resetTracking])
-//            if isTrackingPerformanceNormal {
-//                announce(announcement: "option three point 1")
-//                isResumedRoute = true
-//                isAutomaticAlignment = true
-//                state = .readyToNavigateOrPause(allowPause: false)
-//            } else {
-//            continuationAfterSessionIsReady = {
-//                self.state = .readyForFinalResumeAlignment
-//                self.showResumeTrackingButton()
-//                self.showResumeTrackingConfirmButton(route: route, navigateStartToEnd: navigateStartToEnd)
-//            }
-//            }
-//        }
-//    }
-////
     
     /// Handler for the startingNameSavedRouteProcedure app state
     func handleStateTransitionToStartingNameSavedRouteProcedure(worldMap: Any?){
@@ -587,8 +562,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             justTraveledRoute = SavedRoute(id: "single use", name: "single use", crumbs: self.crumbs, dateCreated: Date() as NSDate, beginRouteAnchorPoint: self.beginRouteAnchorPoint, endRouteAnchorPoint: self.endRouteAnchorPoint)
             justUsedMap = worldMap
             //fruitloop
-            showResumeTrackingButton()
             state = .pauseProcedureCompleted
+            showResumeTrackingButton()
         } else {
             ///PATHPOINT end anchor point alignment timer -> Save Route View
             delayTransition(announcement: NSLocalizedString("multipleUseRouteAnchorPointToSaveARouteAnnouncement", comment: "This is an announcement which is spoken when the user saves the end anchor point for a multiple use route. This signifies the transition from saving an anchor point to the screen where the user can name and save their route"), initialFocus: nil)
@@ -1358,6 +1333,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         rootContainerView.getDirectionButton.isHidden = false
         //Need to make detour button hidden at start
         startNavigationController.remove()
+        hideAllViewsHelper()
         add(stopNavigationController)
         stopNavigationController.stopNavigationButton.isHidden = false
         stopNavigationController.returnToPathButton.isHidden = true
@@ -1822,7 +1798,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// handles the user pressing the resume tracking confirmation button.
      @objc func confirmResumeTracking() {
         // not always being triggered when route is resumed without needing to relocalize
-        announce(announcement:"check check")
         if let route = justTraveledRoute {
             state = .startingResumeProcedure(route: route, worldMap: justUsedMap, navigateStartToEnd: false)
         }
@@ -1898,8 +1873,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 let notifKeypointsLeft = "Keypoints left"
                 let remainingKeypointAnnouncement = "\(numberKeypointsLeft) \(notifKeypointsLeft)"
                 announce(announcement: remainingKeypointAnnouncement)
-                print("remaining keypoints: ")
-                print(remainingKeypointAnnouncement)
+                //print("remaining keypoints: ")
+                //print(remainingKeypointAnnouncement)
                 // update directions to next keypoint
                 directionToNextKeypoint = getDirectionToNextKeypoint(currentLocation: curLocation)
                 setDirectionText(currentLocation: curLocation.location, direction: directionToNextKeypoint, displayDistance: false)
@@ -1941,10 +1916,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 else {
                         // arrived at final keypoint
                         // send haptic/sonic feedback
-                        print("final keypoint index, keypoint count, keypoint in count")
-                        print(keypointIndex)
-                        print(keypoints.count)
-                        print(keypoints[keypointIndex].count)
+                        //print("final keypoint index, keypoint count, keypoint in count")
+                        //print(keypointIndex)
+                        //print(keypoints.count)
+                        //print(keypoints[keypointIndex].count)
                         
                         //feedbackGenerator = nil
                         //waypointFeedbackGenerator = nil
@@ -2512,7 +2487,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     ///   - camera: the AR camera associated with the change in tracking state
     func session(_ session: ARSession, cameraDidChangeTrackingState camera: ARCamera) {
         var logString: String? = nil
-
         switch camera.trackingState {
         case .limited(let reason):
             switch reason {
@@ -2536,7 +2510,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 }
             case .initializing:
                 // don't log anything
-                print("initializing")
+                isInitializing = true
             case .relocalizing:
                 // if we are waiting on the session, proceed now
                 if let continuation = continuationAfterSessionIsReady {
