@@ -112,7 +112,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     var state = AppState.initializing {
         didSet {
             logger.logStateTransition(newState: state)
-            print("alana ", state)
             switch state {
             case .recordingRoute:
                 handleStateTransitionToRecordingRoute()
@@ -323,11 +322,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         logger.logKeypoints(keypoints: keypoints[keypointIndex])
         
         // render 3D keypoints
-        //print("transition keypoint index, keypoint count, keypoint in count")
-        //print(keypointIndex)
-        //print(keypoints.count)
-        //print(keypoints[keypointIndex].count)
-    
         renderKeypoint(keypoints[keypointIndex][0].location)
 
        
@@ -395,10 +389,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         // load the world map and restart the session so that things have a chance to quiet down before putting it up to the wall
         var isTrackingPerformanceNormal = false
         if case .normal? = sceneView.session.currentFrame?.camera.trackingState {
-            print("tracking performance:")
             isTrackingPerformanceNormal = true
         }
-        print(isTrackingPerformanceNormal)
         var isRelocalizing = false
         if case .limited(reason: .relocalizing)? = sceneView.session.currentFrame?.camera.trackingState {
             isRelocalizing = true
@@ -1674,7 +1666,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     @objc func startPauseProcedure() {
         creatingRouteAnchorPoint = false
         paused = true
-        print("paused")
         if isNavigating {
             recordingSingleUseRoute = true // Not too sure why
             pausedWhileNavigating = true
@@ -1835,8 +1826,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 //renderCrumb(curLocation)
             }
             else {
-                //print("recording crumbs:")
-                //print(recordingCrumbs != nil)
                 if (recordingCrumbs != nil) {
                     recordingCrumbs.append(curLocation)
                 }
@@ -1877,8 +1866,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 let notifKeypointsLeft = "Keypoints left"
                 let remainingKeypointAnnouncement = "\(numberKeypointsLeft) \(notifKeypointsLeft)"
                 announce(announcement: remainingKeypointAnnouncement)
-                //print("remaining keypoints: ")
-                //print(remainingKeypointAnnouncement)
                 // update directions to next keypoint
                 directionToNextKeypoint = getDirectionToNextKeypoint(currentLocation: curLocation)
                 setDirectionText(currentLocation: curLocation.location, direction: directionToNextKeypoint, displayDistance: false)
@@ -1893,7 +1880,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 {
                     
                     isRerouting = false
-                    print("alana is rerouting", isRerouting)
                     // temporary copy to render next keypoint correctly
                     // arrived at keypoint
                     // send haptic/sonic feedback
@@ -1921,13 +1907,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 else {
                         // arrived at final keypoint
                         // send haptic/sonic feedback
-                        //print("final keypoint index, keypoint count, keypoint in count")
-                        //print(keypointIndex)
-                        //print(keypoints.count)
-                        //print(keypoints[keypointIndex].count)
-                        
-                        //feedbackGenerator = nil
-                        //waypointFeedbackGenerator = nil
                     
                         isResumedRoute = false
                         isNavigating = false
@@ -2074,7 +2053,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             if !(prevKeypointNode == nil)  {
                 if (!isRerouting && !nav.isFarFromPath(currentLocation: curLocation, prevKeypoint: prevKeypointNode, nextKeypoint: keypoints[keypointIndex][0], isLastKeypoint: keypoints[keypointIndex].count==1, threshold: 1/8)){
                     onPathIndex = recordingDetourCrumbs.count - 1
-                    print("alana on path index:", onPathIndex)
                 }
                 if(nav.isFarFromPath(currentLocation: curLocation, prevKeypoint: prevKeypointNode, nextKeypoint: keypoints[keypointIndex][0], isLastKeypoint: keypoints[keypointIndex].count==1, threshold: 1/4)){
                     let timeInterval = feedbackTimer.timeIntervalSinceNow
@@ -2148,7 +2126,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// Reroutes the user to the original path after the start rerouting button is pushed
      @objc func startRerouting(_ sender: UIButton){
-        print("alana starts rerouting", isRerouting)
         isRerouting = true
         detourCrumbs = Array(recordingDetourCrumbs)
         if (detourCrumbs.count == 0){
@@ -2165,7 +2142,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         stopNavigationController.pauseButton.isHidden = false
         stopNavigationController.returnToPathButton.isHidden = true
         UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged , argument: nil)
-        print("alana rerouting keypoint index:",  keypointIndex)
     }
     
     /// Communicates a message to the user via speech.  If VoiceOver is active, then VoiceOver is used to communicate the announcement, otherwise we use the AVSpeechEngine
@@ -2211,8 +2187,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// - Returns: the direction to the next keypoint with the distance rounded to the nearest tenth of a meter
     func getDirectionToNextKeypoint(currentLocation: CurrentCoordinateInfo) -> DirectionInfo {
         // returns direction to next keypoint from current location
-        //check check
-        print("alana keypoint index and count", keypointIndex, keypoints[keypointIndex].count)
         var dir = nav.getDirections(currentLocation: currentLocation, nextKeypoint: keypoints[keypointIndex][0], isLastKeypoint: keypoints[keypointIndex].count == 1)
         dir.distance = roundToTenths(dir.distance)
         
@@ -2544,11 +2518,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 session.setWorldOrigin(relativeTransform: matrix_identity_float4x4)
                 if !suppressTrackingWarnings {
                     announce(announcement: NSLocalizedString("realignToSavedRouteAnnouncement", comment: "An announcement which lets the user know that their surroundings have been matched to a saved route"))
-                    print("line 2565")
                 }
                 attemptingRelocalization = false
             } else if case let .limited(reason)? = trackingSessionState {
-                print("line2569") // goes here if creating a route
+                // goes here if creating a route
                 if !suppressTrackingWarnings {
                     if reason != .initializing {
                         announce(announcement: NSLocalizedString("fixedTrackingAnnouncement", comment: "Let user know that the ARKit tracking session has returned to its normal quality (this is played after the tracking has been restored from thir being insuficent visual features or excessive motion which degrade the tracking)"))
