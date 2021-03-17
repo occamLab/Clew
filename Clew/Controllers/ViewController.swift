@@ -480,9 +480,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     func completingPauseProcedureHelper(worldMap: Any?) {
         //check whether or not the path was called from the pause menu or not
         if paused {
+            let detectedPlanes = sceneView.session.currentFrame?.anchors ?? []
             ///PATHPOINT pause recording anchor point alignment timer -> resume tracking
             //proceed as normal with the pause structure (single use route)
-            justTraveledRoute = SavedRoute(id: "single use", name: "single use", crumbs: self.crumbs, dateCreated: Date() as NSDate, beginRouteAnchorPoint: self.beginRouteAnchorPoint, endRouteAnchorPoint: self.endRouteAnchorPoint, intermediateAnchorPoints: intermediateAnchorPoints)
+            justTraveledRoute = SavedRoute(id: "single use", name: "single use", crumbs: self.crumbs, dateCreated: Date() as NSDate, beginRouteAnchorPoint: self.beginRouteAnchorPoint, endRouteAnchorPoint: self.endRouteAnchorPoint, intermediateAnchorPoints: intermediateAnchorPoints, detectedPlanes: detectedPlanes)
             justUsedMap = worldMap
             showResumeTrackingButton()
             state = .pauseProcedureCompleted
@@ -569,7 +570,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     ///   - worldMap: the world map
     /// - Throws: an error if something goes wrong
     func archive(routeId: NSString, beginRouteAnchorPoint: RouteAnchorPoint, endRouteAnchorPoint: RouteAnchorPoint, intermediateAnchorPoints: [RouteAnchorPoint], worldMap: Any?) throws {
-        let savedRoute = SavedRoute(id: routeId, name: routeName!, crumbs: crumbs, dateCreated: Date() as NSDate, beginRouteAnchorPoint: beginRouteAnchorPoint, endRouteAnchorPoint: endRouteAnchorPoint, intermediateAnchorPoints: intermediateAnchorPoints)
+        let detectedPlanes = sceneView.session.currentFrame?.anchors ?? []
+        let savedRoute = SavedRoute(id: routeId, name: routeName!, crumbs: crumbs, dateCreated: Date() as NSDate, beginRouteAnchorPoint: beginRouteAnchorPoint, endRouteAnchorPoint: endRouteAnchorPoint, intermediateAnchorPoints: intermediateAnchorPoints, detectedPlanes: detectedPlanes)
         try dataPersistence.archive(route: savedRoute, worldMap: worldMap)
         justTraveledRoute = savedRoute
     }
@@ -673,6 +675,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// stop route navigation VC
     var stopNavigationController: StopNavigationController!
+    
+    /// view controller for AR planes detection
+    var arPlaneManager: ARPlaneManager!
 
     /// called when the view has loaded.  We setup various app elements in here.
     override func viewDidLoad() {
@@ -1054,6 +1059,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         configuration.planeDetection = [.horizontal, .vertical]
         configuration.isAutoFocusEnabled = false
         sceneView.delegate = self
+        arPlaneManager = ARPlaneManager(arSceneView: sceneView)
+        sceneView.session.delegate = arPlaneManager!
     }
     
     /// Handle the user clicking the confirm alignment to a saved Anchor Point.  Depending on the app state, the behavior of this function will differ (e.g., if the route is being resumed versus reloaded)
@@ -1341,6 +1348,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// Interface for logging data about the session and the path
     var logger = PathLogger()
     
+    var planeLogger = PlaneLogging()
+    
     // MARK: - Timers for background functions
     
     /// times the recording of path crumbs
@@ -1527,6 +1536,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             ///PATHPOINT one way route recording finished -> play/pause
             state = .readyToNavigateOrPause(allowPause: true)
         }
+        let anc = sceneView.session.currentFrame?.anchors
+        planeLogger.sendPlaneData(sceneView)
+        print("hello we stopped recording a route")
         
     }
     
@@ -1544,6 +1556,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     ///
     /// - Parameter sender: the button that generated the event
     @objc func stopNavigation(_ sender: UIButton) {
+        let anc = sceneView.session.currentFrame?.anchors
+        print(sceneView, type(of: sceneView))
+        print(anc)
+        print("hello we stopped navigating")
+        //TODO print these/ figure out how to export
+//            for anchor in sceneView.anchors {
+//                print(anchor)
+//            }
         // stop navigation
         followingCrumbs?.invalidate()
         hapticTimer?.invalidate()

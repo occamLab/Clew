@@ -27,8 +27,16 @@
 		82569F4F22187E6500448B45 /* help in Resources */ = {isa = PBXBuildFile; fileRef = 82569F4D22187E6500448B45 /* help */; };
 		82AD6A25252F80AA00902A11 /* speaker.mtl in Resources */ = {isa = PBXBuildFile; fileRef = 82AD6A24252F80AA00902A11 /* speaker.mtl */; };
 		82AD6A26252F80AA00902A11 /* speaker.mtl in Resources */ = {isa = PBXBuildFile; fileRef = 82AD6A24252F80AA00902A11 /* speaker.mtl */; };
+		9863723925EDB5C000B802A1 /* PlaneLogging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9863723825EDB5C000B802A1 /* PlaneLogging.swift */; };
+		9863724025EFEF8D00B802A1 /* ARPlaneManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98AD171725E1DFC2001118D3 /* ARPlaneManager.swift */; };
+		9863724425EFEF9200B802A1 /* Plane.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98AD172725E1E010001118D3 /* Plane.swift */; };
+		9863724825EFEF9700B802A1 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98AD172C25E1E02A001118D3 /* Utilities.swift */; };
+		9863724C25EFEF9A00B802A1 /* PlaneLogging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9863723825EDB5C000B802A1 /* PlaneLogging.swift */; };
 		986640CE22FB68F2005AA1F6 /* NameSavedRouteController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986640CD22FB68F2005AA1F6 /* NameSavedRouteController.swift */; };
 		986640CF22FC9606005AA1F6 /* NameSavedRouteController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986640CD22FB68F2005AA1F6 /* NameSavedRouteController.swift */; };
+		98AD171825E1DFC2001118D3 /* ARPlaneManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98AD171725E1DFC2001118D3 /* ARPlaneManager.swift */; };
+		98AD172825E1E010001118D3 /* Plane.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98AD172725E1E010001118D3 /* Plane.swift */; };
+		98AD172D25E1E02A001118D3 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98AD172C25E1E02A001118D3 /* Utilities.swift */; };
 		B0A563F6FE1007A2716DC876 /* Pods_Clew_Dev.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3532E390954571B93729786A /* Pods_Clew_Dev.framework */; };
 		B7EB59E220F693EB00FBBC6A /* Confirm.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4DF05CC71F34EB56008B0E31 /* Confirm.mp3 */; };
 		B7EB59E320F693EB00FBBC6A /* Crumb.obj in Resources */ = {isa = PBXBuildFile; fileRef = 4D6B00E41F33C85500952242 /* Crumb.obj */; };
@@ -177,7 +185,11 @@
 		82F2DDD322E26A44005CD7D0 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/SettingsAndHelp.strings; sourceTree = "<group>"; };
 		85A1A72DC19F87F15B738291 /* Pods-Clew Dev.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew Dev.release.xcconfig"; path = "Pods/Target Support Files/Pods-Clew Dev/Pods-Clew Dev.release.xcconfig"; sourceTree = "<group>"; };
 		942F73299DA8DCF97FAA974A /* Pods_Clew.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Clew.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		9863723825EDB5C000B802A1 /* PlaneLogging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaneLogging.swift; sourceTree = "<group>"; };
 		986640CD22FB68F2005AA1F6 /* NameSavedRouteController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NameSavedRouteController.swift; sourceTree = "<group>"; };
+		98AD171725E1DFC2001118D3 /* ARPlaneManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARPlaneManager.swift; sourceTree = "<group>"; };
+		98AD172725E1E010001118D3 /* Plane.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Plane.swift; sourceTree = "<group>"; };
+		98AD172C25E1E02A001118D3 /* Utilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
 		B7EB59EC20F693EB00FBBC6A /* Clew Dev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Clew Dev.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C68778047D8E263D2FB04989 /* Pods-Clew Dev.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew Dev.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Clew Dev/Pods-Clew Dev.debug.xcconfig"; sourceTree = "<group>"; };
 		D89DDB87A8AE1A9ECEAFCEC6 /* Pods-Clew.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew.release.xcconfig"; path = "Pods/Target Support Files/Pods-Clew/Pods-Clew.release.xcconfig"; sourceTree = "<group>"; };
@@ -300,6 +312,17 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		98AD171625E1DF08001118D3 /* Plane Detection */ = {
+			isa = PBXGroup;
+			children = (
+				98AD171725E1DFC2001118D3 /* ARPlaneManager.swift */,
+				98AD172725E1E010001118D3 /* Plane.swift */,
+				98AD172C25E1E02A001118D3 /* Utilities.swift */,
+				9863723825EDB5C000B802A1 /* PlaneLogging.swift */,
+			);
+			path = "Plane Detection";
+			sourceTree = "<group>";
+		};
 		C63B435EA8A32350A76E47DD /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -313,6 +336,7 @@
 		E5470EA922C119F4001092A4 /* Clew */ = {
 			isa = PBXGroup;
 			children = (
+				98AD171625E1DF08001118D3 /* Plane Detection */,
 				E5D1695522E103A0008754D0 /* localizations */,
 				E5470EAA22C119F4001092A4 /* Voice Notes */,
 				E5470EAF22C119F4001092A4 /* Misc */,
@@ -747,10 +771,13 @@
 				E5470F0622C119F5001092A4 /* PathFinder.swift in Sources */,
 				E5470F2C22C119F5001092A4 /* StartNavigationController.swift in Sources */,
 				E5470F3022C119F5001092A4 /* RouteRatingController.swift in Sources */,
+				9863723925EDB5C000B802A1 /* PlaneLogging.swift in Sources */,
+				98AD172825E1E010001118D3 /* Plane.swift in Sources */,
 				E5470F4222C119F5001092A4 /* UIConstants.swift in Sources */,
 				E5470F2022C119F5001092A4 /* UIViewControllerExtensions.swift in Sources */,
 				E5470F3A22C119F5001092A4 /* HelpViewController.swift in Sources */,
 				E565A10822F2173400C1998E /* RouteDocumentData.swift in Sources */,
+				98AD171825E1DFC2001118D3 /* ARPlaneManager.swift in Sources */,
 				E5470F0222C119F5001092A4 /* Navigation.swift in Sources */,
 				E5470F3822C119F5001092A4 /* ResumeTrackingConfirmController.swift in Sources */,
 				E5470EFA22C119F5001092A4 /* RecorderViewController.swift in Sources */,
@@ -767,6 +794,7 @@
 				E5470EF822C119F5001092A4 /* AudioVisualizerView.swift in Sources */,
 				1F2971A522DF60F700B896C6 /* HelpCompiler.swift in Sources */,
 				E5470F1E22C119F5001092A4 /* NSStringExtension.swift in Sources */,
+				98AD172D25E1E02A001118D3 /* Utilities.swift in Sources */,
 				E5470F3222C119F5001092A4 /* ResumeTrackingController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -791,9 +819,12 @@
 				E5470F0722C119F5001092A4 /* PathFinder.swift in Sources */,
 				E5470F2D22C119F5001092A4 /* StartNavigationController.swift in Sources */,
 				1F2B9D7222C3B50D00317DC8 /* HelpCompiler.swift in Sources */,
+				9863724C25EFEF9A00B802A1 /* PlaneLogging.swift in Sources */,
+				9863724425EFEF9200B802A1 /* Plane.swift in Sources */,
 				E5470F3122C119F5001092A4 /* RouteRatingController.swift in Sources */,
 				E5470F4322C119F5001092A4 /* UIConstants.swift in Sources */,
 				E5470F2122C119F5001092A4 /* UIViewControllerExtensions.swift in Sources */,
+				9863724025EFEF8D00B802A1 /* ARPlaneManager.swift in Sources */,
 				E565A10922F2173400C1998E /* RouteDocumentData.swift in Sources */,
 				E5470F3B22C119F5001092A4 /* HelpViewController.swift in Sources */,
 				E5470F0322C119F5001092A4 /* Navigation.swift in Sources */,
@@ -811,6 +842,7 @@
 				E5470F2522C119F5001092A4 /* UIButtonExtensions.swift in Sources */,
 				E5470EF922C119F5001092A4 /* AudioVisualizerView.swift in Sources */,
 				E5470F1F22C119F5001092A4 /* NSStringExtension.swift in Sources */,
+				9863724825EFEF9700B802A1 /* Utilities.swift in Sources */,
 				E5470F3322C119F5001092A4 /* ResumeTrackingController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1029,7 +1061,7 @@
 				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
 				INFOPLIST_FILE = Clew/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 2.0.17;
 				PRODUCT_BUNDLE_IDENTIFIER = edu.occam.Clew;
@@ -1052,7 +1084,7 @@
 				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
 				INFOPLIST_FILE = Clew/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 2.0.17;
 				PRODUCT_BUNDLE_IDENTIFIER = edu.occam.Clew;
@@ -1074,7 +1106,7 @@
 				CURRENT_PROJECT_VERSION = 47;
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
 				INFOPLIST_FILE = "Clew Dev-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 2.0.17;
 				OTHER_SWIFT_FLAGS = "$(inherited) \"-DDEVELOPER\" \"-DIS_DEV_TARGET\"";
@@ -1100,7 +1132,7 @@
 				CURRENT_PROJECT_VERSION = 47;
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
 				INFOPLIST_FILE = "Clew Dev-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 2.0.17;
 				OTHER_SWIFT_FLAGS = "$(inherited) \"-DDEVELOPER\" \"-DIS_DEV_TARGET\"";

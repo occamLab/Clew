@@ -8,6 +8,7 @@
 
 import UIKit
 import Firebase
+import ARKit
 
 /// This class handles various state changes for the app.
 @UIApplicationMain
@@ -27,6 +28,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     /// - Returns: a Boolean indicating whether the app can continue to handle user activity.
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
 
+        guard ARWorldTrackingConfiguration.isSupported else {
+            //TODO: add appropriate error handling here
+            fatalError("""
+                ARKit is not available on this device. For apps that require ARKit
+                for core functionality, use the `arkit` key in the key in the
+                `UIRequiredDeviceCapabilities` section of the Info.plist to prevent
+                the app from installing. (If the app can't be installed, this error
+                can't be triggered in a production scenario.)
+                In apps where AR is an additive feature, use `isSupported` to
+                determine whether to show UI for launching AR experiences.
+            """) // For details, see https://developer.apple.com/documentation/arkit
+        }
+        
         // Use Firebase library to configure APIs
         #if IS_DEV_TARGET
             let filePath = Bundle.main.path(forResource: "GoogleService-Info_dev", ofType: "plist")!

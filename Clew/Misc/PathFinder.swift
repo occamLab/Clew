@@ -277,6 +277,8 @@ class SavedRoute: NSObject, NSSecureCoding {
     public var endRouteAnchorPoint: RouteAnchorPoint
     /// The Anchor Points used for recording voice notes and other information along the route
     public var intermediateAnchorPoints: [RouteAnchorPoint]
+    /// The planes detected in AR during the recording of a route
+    public var detectedPlanes: [ARAnchor]
 
     /// Initialize the route.
     ///
@@ -287,7 +289,8 @@ class SavedRoute: NSObject, NSSecureCoding {
     ///   - dateCreated: the route creation date
     ///   - beginRouteAnchorPoint: the Anchor Point for the beginning of the route (pass a `RouteAnchorPoint` with default initialization if no Anchor Point was recorded at the beginning of the route)
     ///   - endRouteAnchorPoint: the Anchor Point for the end of the route (pass a `RouteAnchorPoint` with default initialization if no Anchor Point was recorded at the end of the route)
-    public init(id: NSString, name: NSString, crumbs: [LocationInfo], dateCreated: NSDate = NSDate(), beginRouteAnchorPoint: RouteAnchorPoint, endRouteAnchorPoint: RouteAnchorPoint, intermediateAnchorPoints: [RouteAnchorPoint]) {
+    ///   - detectedPlanes: TODO
+    public init(id: NSString, name: NSString, crumbs: [LocationInfo], dateCreated: NSDate = NSDate(), beginRouteAnchorPoint: RouteAnchorPoint, endRouteAnchorPoint: RouteAnchorPoint, intermediateAnchorPoints: [RouteAnchorPoint], detectedPlanes: [ARAnchor]) {
         self.id = id
         self.name = name
         self.crumbs = crumbs
@@ -295,6 +298,7 @@ class SavedRoute: NSObject, NSSecureCoding {
         self.beginRouteAnchorPoint = beginRouteAnchorPoint
         self.endRouteAnchorPoint = endRouteAnchorPoint
         self.intermediateAnchorPoints = intermediateAnchorPoints
+        self.detectedPlanes = detectedPlanes
     }
     
     /// Encodes the object to the specified coder object
@@ -308,6 +312,7 @@ class SavedRoute: NSObject, NSSecureCoding {
         aCoder.encode(beginRouteAnchorPoint, forKey: "beginRouteAnchorPoint")
         aCoder.encode(endRouteAnchorPoint, forKey: "endRouteAnchorPoint")
         aCoder.encode(intermediateAnchorPoints, forKey: "intermediateAnchorPoints")
+        aCoder.encode(detectedPlanes, forKey: "arPlanes")
     }
     
     /// Initialize an object based using data from a decoder
@@ -324,6 +329,10 @@ class SavedRoute: NSObject, NSSecureCoding {
             return nil
         }
         guard let dateCreated = aDecoder.decodeObject(of: NSDate.self, forKey: "dateCreated") else {
+            return nil
+        }
+        guard let detectedPlanes = aDecoder.decodeObject(of: [].self, forKey: "detectedPlanes")
+        as? [ARAnchor] else {
             return nil
         }
 
@@ -355,7 +364,7 @@ class SavedRoute: NSObject, NSSecureCoding {
         if let anchorPoints = aDecoder.decodeObject(of: [].self, forKey: "intermediateAnchorPoints") as? [RouteAnchorPoint] {
             intermediateRouteAnchorPoints = anchorPoints
         }
-        self.init(id: id, name: name, crumbs: crumbs, dateCreated: dateCreated, beginRouteAnchorPoint: beginRouteAnchorPoint, endRouteAnchorPoint: endRouteAnchorPoint, intermediateAnchorPoints: intermediateRouteAnchorPoints)
+        self.init(id: id, name: name, crumbs: crumbs, dateCreated: dateCreated, beginRouteAnchorPoint: beginRouteAnchorPoint, endRouteAnchorPoint: endRouteAnchorPoint, intermediateAnchorPoints: intermediateRouteAnchorPoints, detectedPlanes: detectedPlanes)
     }
 }
 
