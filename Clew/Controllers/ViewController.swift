@@ -17,9 +17,7 @@
 //  - Warn user via an alert if they have an iPhone 5S or 6
 //  - Possibly create a warning if the phone doesn't appear to be in the correct orientation
 //  - revisit turn warning feature.  It doesn't seem to actually help all that much at the moment.
-//  - remove double play button
-//  - thumbs up down button negates the announce arrival announcement if a turn is too close to the end
-//  -
+
 
 import UIKit
 import ARKit
@@ -398,7 +396,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         
         var isSameMap = false
         if #available(iOS 12.0, *), let worldMap = worldMap as? ARWorldMap? {
-            //check check
             isSameMap = configuration.initialWorldMap != nil && configuration.initialWorldMap == worldMap
             configuration.initialWorldMap = worldMap
             attemptingRelocalization =  isSameMap && !isTrackingPerformanceNormal || worldMap != nil && !isSameMap
@@ -414,37 +411,36 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
         // don't reset tracking, but do clear anchors and switch to the new map
         //sceneView.session.run(configuration, options: [.removeExistingAnchors, .resetTracking])
+        print("alana init", isInitializing)
         if isTrackingPerformanceNormal && isSameMap {
             // To do: we can skip the whole process of relocalization since we are already using the correct map and tracking is normal.  It helps to strip out old anchors to reduce jitter though
             ///PATHPOINT load route from automatic alignment -> start navigation
-            //this is the one that resumes during navigation and the map has already been localized
+            print("alana 1")
             isResumedRoute = true
             isAutomaticAlignment = true
             isInitializing = false
             state = .readyToNavigateOrPause(allowPause: false)
-        } else if isRelocalizing && isSameMap && !isInitializing {
+        } else if (isRelocalizing || isTrackingPerformanceNormal) && !isInitializing {
             // formerly || isTrackingPerformanceNormal && worldMap == nil
             // In this case we don't have to wait for the session to start up.  It will be created automatically.
             // this is same as option one but the map hasn't been localized yet
+            print("alana 2")
             sceneView.session.run(configuration, options: [.removeExistingAnchors])
             isInitializing = false
-            //self.state = .readyForFinalResumeAlignmentd
-            //self.showResumeTrackingConfirmButton(route:route, navigateStartToEnd: navigateStartToEnd) // this may be the thing that is showing too many buttons
             isResumedRoute = true
             isAutomaticAlignment = true
-            //state = .readyToNavigateOrPause(allowPause: false)
-            
             state = .navigatingRoute
         } else {
             // this makes sure that the user doesn't resume the session until the session is initialized, but this is the first hitting play button
+            print("alana 3")
             isInitializing = false
-                        self.sceneView.session.run(self.configuration, options: [.removeExistingAnchors, .resetTracking])
-                       continuationAfterSessionIsReady = {
-                           self.state = .readyForFinalResumeAlignment
-                           self.showResumeTrackingConfirmButton(route: route, navigateStartToEnd: navigateStartToEnd)
-                       }
-                   }
-               }
+            self.sceneView.session.run(self.configuration, options: [.removeExistingAnchors, .resetTracking])
+            continuationAfterSessionIsReady = {
+                self.state = .readyForFinalResumeAlignment
+                self.showResumeTrackingConfirmButton(route: route, navigateStartToEnd: navigateStartToEnd)
+            }
+        }
+    }
     
     /// Handler for the startingNameSavedRouteProcedure app state
     func handleStateTransitionToStartingNameSavedRouteProcedure(worldMap: Any?){
@@ -533,7 +529,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
 
 
             if #available(iOS 12.0, *) {
-                if !pausedWhileNavigating {
+                if !pausedWhileNavigating || recordingSingleUseRoute {
                     sceneView.session.getCurrentWorldMap { worldMap, error in
                         self.completingPauseProcedureHelper(worldMap: worldMap)
                     }

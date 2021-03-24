@@ -64,7 +64,7 @@
          referenceType = "1">
       </LocationScenarioReference>
       <DeviceSensorReplayFileReference
-         identifier = "../../../Downloads/Straightreroute.mov">
+         identifier = "../../../Downloads/Straightpause.mov">
       </DeviceSensorReplayFileReference>
    </LaunchAction>
    <ProfileAction
