@@ -252,7 +252,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// Set to true when the user is attempting to load a saved route that has a map associated with it. Once relocalization succeeds, this flag should be set back to false
     var attemptingRelocalization: Bool = false
     
-    /// this Boolean marks whether the curent route is 'paused' or not from the use of the pause button
+    /// this Boolean marks whether the current route is 'paused' or not from the use of the pause button
     var paused: Bool = false
     
     /// this Boolean marks whether or not the app is recording a multi use route
@@ -491,11 +491,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
         // don't reset tracking, but do clear anchors and switch to the new map
         //sceneView.session.run(configuration, options: [.removeExistingAnchors, .resetTracking])
-        print("alana init", isInitializing)
         if isTrackingPerformanceNormal && isSameMap {
             // To do: we can skip the whole process of relocalization since we are already using the correct map and tracking is normal.  It helps to strip out old anchors to reduce jitter though
             ///PATHPOINT load route from automatic alignment -> start navigation
-            print("alana 1")
             isResumedRoute = true
             isAutomaticAlignment = true
             isInitializing = false
@@ -504,7 +502,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             // formerly || isTrackingPerformanceNormal && worldMap == nil
             // In this case we don't have to wait for the session to start up.  It will be created automatically.
             // this is same as option one but the map hasn't been localized yet
-            print("alana 2")
             sceneView.session.run(configuration, options: [.removeExistingAnchors])
             isInitializing = false
             isResumedRoute = true
@@ -512,7 +509,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             state = .navigatingRoute
         } else {
             // this makes sure that the user doesn't resume the session until the session is initialized, but this is the first hitting play button
-            print("alana 3")
             isInitializing = false
             self.sceneView.session.run(self.configuration, options: [.removeExistingAnchors, .resetTracking])
             continuationAfterSessionIsReady = {
@@ -1740,7 +1736,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         creatingRouteAnchorPoint = false
         paused = true
         if isNavigating {
-            recordingSingleUseRoute = true // Not too sure why
+            keypointNode.removeFromParentNode()
+            recordingSingleUseRoute = true
             pausedWhileNavigating = true
             // makes sure the timers have been properly invalidated otherwise they don't work properly after a pause
             guard droppingCrumbs != nil  else { return }
@@ -1749,13 +1746,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             guard hapticTimer != nil  else { return }
             hapticTimer?.invalidate()
             hapticTimer = nil
-            //have to somehow set to nil?
-            //guard followingCrumbs != nil else { return }
-            //followingCrumbs?.invalidate()
-            //followingCrumbs = nil
-            
-            //feedbackGenerator = nil
-            //waypointFeedbackGenerator = nil
             
             if #available(iOS 12.0, *) {
                 //navigatingMap = sceneView.session.getCurrentWorldMap(completionHandler: (ARWorldMap?, Error?) -> Void)
@@ -1959,9 +1949,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                     if (soundFeedback) { playSystemSound(id: 1016) }
                     
                     // remove current visited keypoint from keypoint list
-                    //prevKeypointPosition = keypoints[keypointIndex][0].location
-                    //prevKeypointNode = keypoints[keypointIndex][0]
-                    //keypoints[keypointIndex].remove(at: 0)
                     keypointManager.popCurrentKeypoint()
                     keypointManager.popDetour()
                     
@@ -2481,20 +2468,26 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             }
             node.geometry!.firstMaterial!.diffuse.contents = color
         }
-        let flashColors = [flashRed, flashGreen, flashBlue, flashPurple]
+        
+        let flashClear = SCNAction.customAction(duration: 2) { (node, elapsedTime) -> () in
+            node.geometry!.firstMaterial!.diffuse.contents = UIColor.clear
+        }
+    
+        let flashColors = [flashRed, flashGreen, flashBlue, flashPurple, flashClear]
         
         // set flashing color based on settings bundle configuration
         var changeColor: SCNAction!
+        
         if (isRerouting){
             changeColor = SCNAction.repeatForever(flashColors[3])
-        }
-        else{
-        if (defaultColor == 3) {
-            changeColor = SCNAction.repeatForever(flashColors[Int(arc4random_uniform(3))])
         } else {
-            changeColor = SCNAction.repeatForever(flashColors[defaultColor])
+            if (defaultColor == 3) {
+                changeColor = SCNAction.repeatForever(flashColors[Int(arc4random_uniform(3))])
+            } else {
+                changeColor = SCNAction.repeatForever(flashColors[defaultColor])
+            }
         }
-        }
+        
         
         //clear out duplicates from pausing
         sceneView.scene.rootNode.enumerateChildNodes { (node, stop) in
