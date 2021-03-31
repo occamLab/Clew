@@ -1061,6 +1061,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         sceneView.delegate = self
         arPlaneManager = ARPlaneManager(arSceneView: sceneView)
         sceneView.session.delegate = arPlaneManager!
+        configuration.sceneReconstruction = .meshWithClassification
+        configuration.environmentTexturing = .automatic
+        arPlaneManager.loadDetection(configuration)
     }
     
     /// Handle the user clicking the confirm alignment to a saved Anchor Point.  Depending on the app state, the behavior of this function will differ (e.g., if the route is being resumed versus reloaded)
@@ -1504,6 +1507,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         if #available(iOS 12.0, *) {
             configuration.initialWorldMap = nil
         }
+        //initialize tracking of arplanes
+        arPlaneManager.startDetection()
+        arPlaneManager.printAnchors()
         sceneView.session.run(configuration, options: [.removeExistingAnchors, .resetTracking])
     }
     
@@ -1536,9 +1542,18 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             ///PATHPOINT one way route recording finished -> play/pause
             state = .readyToNavigateOrPause(allowPause: true)
         }
-        let anc = sceneView.session.currentFrame?.anchors
+        /// send logging data to Firebase
+        //stop tracking arplanes
+        arPlaneManager.stopDetection()
+        arPlaneManager.printAnchors()
+        //send the recorded planes
         planeLogger.sendPlaneData(sceneView)
-        print("hello we stopped recording a route")
+        //compile keypoints
+        let path = PathFinder(crumbs: crumbs.reversed(), hapticFeedback: hapticFeedback, voiceFeedback: voiceFeedback)
+        keypoints = path.keypoints
+
+        //send log data about the route as well
+        logger.compileLogData(false)
         
     }
     
@@ -1556,14 +1571,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     ///
     /// - Parameter sender: the button that generated the event
     @objc func stopNavigation(_ sender: UIButton) {
-        let anc = sceneView.session.currentFrame?.anchors
-        print(sceneView, type(of: sceneView))
-        print(anc)
-        print("hello we stopped navigating")
-        //TODO print these/ figure out how to export
-//            for anchor in sceneView.anchors {
-//                print(anchor)
-//            }
         // stop navigation
         followingCrumbs?.invalidate()
         hapticTimer?.invalidate()

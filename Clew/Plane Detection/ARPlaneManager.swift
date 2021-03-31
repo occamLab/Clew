@@ -9,14 +9,16 @@ import Foundation
 import UIKit
 import SceneKit
 import ARKit
+import RealityKit
 
 class ARPlaneManager: NSObject, ARSCNViewDelegate, ARSessionDelegate {
     var sceneView: ARSCNView;
+    var arView: ARView;
 
     init(arSceneView sceneView: ARSCNView) {
         self.sceneView = sceneView
+        self.arView = ARView()
         super.init()
-
         self.sceneView.debugOptions = [.showWorldOrigin, .showBoundingBoxes]
         self.sceneView.session.delegate = self // redundant?
     }
@@ -149,7 +151,87 @@ class ARPlaneManager: NSObject, ARSCNViewDelegate, ARSessionDelegate {
     // necessary?
     private func resetTracking() {
         let configuration = ARWorldTrackingConfiguration()
+        configuration.sceneReconstruction = .meshWithClassification
         configuration.planeDetection = [.horizontal, .vertical]
         self.sceneView.session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
+    }
+
+    /// - Tag: ViewDidLoad
+    func loadDetection(_ configuration: ARWorldTrackingConfiguration) {
+        arView.session.delegate = self
+
+        arView.environment.sceneUnderstanding.options = []
+        
+        // Turn on occlusion from the scene reconstruction's mesh.
+        arView.environment.sceneUnderstanding.options.insert(.occlusion)
+        
+        // Turn on physics for the scene reconstruction's mesh.
+        arView.environment.sceneUnderstanding.options.insert(.physics)
+
+        // Display a debug visualization of the mesh.
+        arView.debugOptions.insert(.showSceneUnderstanding)
+        
+        // For performance, disable render options that are not required for this app.
+        arView.renderOptions = [.disablePersonOcclusion, .disableDepthOfField, .disableMotionBlur]
+        
+        // Manually configure what kind of AR session to run since
+        // ARView on its own does not turn on mesh classification.
+        arView.automaticallyConfigureSession = false
+//        let configuration = ARWorldTrackingConfiguration()
+//        configuration.sceneReconstruction = .meshWithClassification
+//
+//        configuration.environmentTexturing = .automatic
+        arView.session.run(configuration)
+    }
+    
+
+    func startDetection() {
+        guard let configuration = sceneView.session.configuration as? ARWorldTrackingConfiguration else {
+            return
+        }
+        if configuration.planeDetection == [] {
+            configuration.planeDetection = [.horizontal, .vertical]
+        }
+        sceneView.session.run(configuration)
+    }
+    
+    func stopDetection() {
+        guard let configuration = sceneView.session.configuration as? ARWorldTrackingConfiguration else {
+            return
+        }
+//        guard let frame = sceneView.session.currentFrame else {
+//            return
+//        }
+//        print("armesh classification stopped")
+//        let meshAnchors = frame.anchors.compactMap({ $0 as? ARMeshAnchor })
+//        for anchor in meshAnchors {
+//            for index in 0..<anchor.geometry.faces.count {
+//                // Get the semantic classification of the face and finish the search.
+//                let classification: ARMeshClassification = anchor.geometry.classificationOf(faceWithIndex: index)
+//                print(index, getMeshClassificationDescription(classification))
+//            }
+//        }
+        // send logs to firebase
+        let plogger = PlaneLogging()
+        plogger.sendMeshData(sceneView)
+        
+        configuration.planeDetection = []
+        sceneView.session.run(configuration)
+    }
+    
+    func printAnchors() {
+        guard let frame = sceneView.session.currentFrame else {
+            return
+        }
+        let meshAnchors = frame.anchors.compactMap({ $0 as? ARMeshAnchor })
+        print("Printing detected mesh anchors")
+        print(meshAnchors.count)
+//        for anchor in meshAnchors {
+//            for index in 0..<anchor.geometry.faces.count {
+//                // Get the semantic classification of the face and finish the search.
+//                let classification: ARMeshClassification = anchor.geometry.classificationOf(faceWithIndex: index)
+//                print(index, classification)
+//            }
+//        }
     }
 }
