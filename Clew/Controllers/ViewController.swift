@@ -93,6 +93,86 @@ enum AppState {
     }
 }
 
+class KeypointManager{
+    private var keypoints: [[KeypointInfo]] = []
+    private var keypointIndex = 0
+    private var prevKeypointNode: KeypointInfo?
+    private var prevKeypointLocation: LocationInfo?
+    
+    var currentPath: [KeypointInfo] {
+        return keypoints[keypointIndex]
+    }
+    var currentKeypoint: KeypointInfo? {
+        return hasKeypoints ? keypoints[keypointIndex][0] : nil
+    }
+    
+    var prevKeypoint: KeypointInfo? {
+        return prevKeypointNode
+    }
+    
+    var currentLocation: LocationInfo? {
+        return currentKeypoint?.location
+    }
+    
+    var prevLocation: LocationInfo? {
+        if (prevKeypointNode == nil) {
+            return prevKeypointNode?.location
+        } else {
+            return prevKeypointLocation
+        }
+    }
+    
+    var hasKeypoints: Bool {
+        return (keypoints.count > keypointIndex && keypoints[keypointIndex].count > 0)
+    }
+    
+    // is detour
+    var isDetour: Bool {
+        return (keypointIndex > 0)
+    }
+    // is last keypoint
+    var isLastKeypoint: Bool {
+        return (numKeypoints == 1)
+    }
+    
+    var numKeypoints: Int {
+        return keypoints[keypointIndex].count
+    }
+    
+    func setPrevKeypoint(keypoint: KeypointInfo) {
+        prevKeypointNode = keypoint
+    }
+    
+    func setPrevLocation(location: LocationInfo) {
+        prevKeypointLocation = location
+    }
+    
+    func clearKeypoints() {
+        keypoints = []
+    }
+    
+    func setPath(path: [[KeypointInfo]]) {
+        keypoints = path
+    }
+    
+    func popCurrentKeypoint() {
+        // prevKeypointPosition = keypoints[keypointIndex][0].location needs to be added to code
+        setPrevKeypoint(keypoint: currentKeypoint!)
+        keypoints[keypointIndex].remove(at: 0)
+    }
+    
+    // add detour/ push path
+    func pushDetour(detour: [KeypointInfo]) {
+        keypoints.append(detour)
+        keypointIndex = keypoints.count - 1
+    }
+    
+    func popDetour() {
+        keypointIndex = keypointIndex - 1
+    }
+}
+
+
 /// The view controller that handles the main Clew window.  This view controller is always active and handles the various views that are used for different app functionalities.
 class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDelegate, AVSpeechSynthesizerDelegate {
     
@@ -245,8 +325,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// - Parameter announceArrival: a Boolean that indicates whether the user's arrival should be announced (true means the user has arrived)
     func handleStateTransitionToMainScreen(announceArrival: Bool) {
         // cancel the timer that announces tracking errors
-        keypointIndex = 0
-        keypoints = nil
+        //keypointIndex = 0
+        keypointManager.clearKeypoints()
         isDetourCrumbs = false
         trackingErrorsAnnouncementTimer?.invalidate()
         // if the ARSession is running, pause it to conserve battery
@@ -310,22 +390,22 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         
         // generate path from PathFinder class
         // enabled hapticFeedback generates more keypoints
-        if keypoints == nil {
+        if !keypointManager.hasKeypoints {
             let path = PathFinder(crumbs: crumbs.reversed(), hapticFeedback: hapticFeedback, voiceFeedback: voiceFeedback)
-            keypoints = [path.keypoints]
+            keypointManager.setPath(path: [path.keypoints])
         }
         
         // for single use routes
         // save keypoints data for debug log
-        logger.logKeypoints(keypoints: keypoints[keypointIndex])
+        logger.logKeypoints(keypoints: keypointManager.currentPath)
         
         // render 3D keypoints
-        renderKeypoint(keypoints[keypointIndex][0].location)
+        renderKeypoint(keypointManager.currentLocation!)
 
        
         
         // TODO: gracefully handle error
-        prevKeypointPosition = getRealCoordinates(record: true)!.location
+        keypointManager.setPrevLocation(location: getRealCoordinates(record: true)!.location)
         
 
         feedbackGenerator = UIImpactFeedbackGenerator(style: .light)
@@ -1386,9 +1466,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// MARK: - Clew internal datastructures
     
-    /// current keypoint outer index
-    var keypointIndex = 0
-    
     /// index of start of detour
     var detourIndex: Int?
     
@@ -1411,7 +1488,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     var detourCrumbs: [LocationInfo]!
     
     /// list of keypoints calculated after path completion
-    var keypoints: [[KeypointInfo]]!
+    var keypointManager = KeypointManager()
     
     /// SCNNode of the next keypoint
     var keypointNode: SCNNode!
@@ -1423,7 +1500,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     var prevKeypointPosition: LocationInfo!
     
     /// previous keypoint
-    var prevKeypointNode: KeypointInfo!
+    //var prevKeypointNode: KeypointInfo! now in keypointManager
 
     /// Interface for logging data about the session and the path
     var logger = PathLogger()
@@ -1836,29 +1913,27 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             return
         }
         
-        if (!isFinished && keypoints != nil){
+        if (!isFinished && keypointManager.hasKeypoints){
             var directionToNextKeypoint = getDirectionToNextKeypoint(currentLocation: curLocation)
         if (directionToNextKeypoint.targetState == PositionState.atTarget) {
-            if (keypoints[keypointIndex].count > 1) {
+            if (!keypointManager.isLastKeypoint) {
                 // arrived at keypoint
                 // send haptic/sonic feedback
                 waypointFeedbackGenerator?.notificationOccurred(.success)
                 if (soundFeedback) { playSystemSound(id: 1016) }
                 
                 // remove current visited keypont from keypoint list
-                prevKeypointPosition = keypoints[keypointIndex][0].location
-                prevKeypointNode = keypoints[keypointIndex][0]
-                keypoints[keypointIndex].remove(at: 0)
+                keypointManager.popCurrentKeypoint()
                 
                 // erase current keypoint and render next keypoint node
              
                 keypointNode.removeFromParentNode()
                 //crumbNode.removeFromParentNode()
 
-                renderKeypoint(keypoints[keypointIndex][0].location)
+                renderKeypoint(keypointManager.currentLocation!)
                 
                 //temp announcement to let you know how many keypoints are left
-                let numberKeypointsLeft = String(keypoints[keypointIndex].count)
+                let numberKeypointsLeft = String(keypointManager.numKeypoints)
                 let notifKeypointsLeft = "Keypoints left"
                 let remainingKeypointAnnouncement = "\(numberKeypointsLeft) \(notifKeypointsLeft)"
                 announce(announcement: remainingKeypointAnnouncement)
@@ -1872,7 +1947,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 keypointNode.removeFromParentNode()
                 //crumbNode.removeFromParentNode()
                 
-                if (keypointIndex > 0)
+                if (keypointManager.isDetour)
                 {
                     
                     isRerouting = false
@@ -1884,16 +1959,16 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                     if (soundFeedback) { playSystemSound(id: 1016) }
                     
                     // remove current visited keypoint from keypoint list
-                    prevKeypointPosition = keypoints[keypointIndex][0].location
-                    prevKeypointNode = keypoints[keypointIndex][0]
-                    keypoints[keypointIndex].remove(at: 0)
-                    
-                    keypointIndex = keypointIndex - 1
+                    //prevKeypointPosition = keypoints[keypointIndex][0].location
+                    //prevKeypointNode = keypoints[keypointIndex][0]
+                    //keypoints[keypointIndex].remove(at: 0)
+                    keypointManager.popCurrentKeypoint()
+                    keypointManager.popDetour()
                     
                     // erase current keypoint and render next keypoint node
                     keypointNode.removeFromParentNode()
-                    if (keypoints[keypointIndex].count >= 1){
-                    renderKeypoint(keypoints[keypointIndex][0].location)
+                    if (keypointManager.hasKeypoints){
+                        renderKeypoint(keypointManager.currentLocation!)
                     }
                     
                     // update directions to next keypoint
@@ -2040,21 +2115,19 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             coneWidth = Float.pi/6
             lateralDisplacementToleranceRatio = 1.0
         }
-        
         if !paused {
-            //isNavigating = true
-        if (isOffPath == false && keypoints != nil){
+            if (isOffPath == false && keypointManager.hasKeypoints){
             let directionToNextKeypoint = getDirectionToNextKeypoint(currentLocation: curLocation)
-            //probably don't need this if statement directly below anymore but will remove later
-            if !(prevKeypointNode == nil)  {
-                if (!isRerouting && !nav.isFarFromPath(currentLocation: curLocation, prevKeypoint: prevKeypointNode, nextKeypoint: keypoints[keypointIndex][0], isLastKeypoint: keypoints[keypointIndex].count==1, threshold: 1/8)){
+            if !(keypointManager.prevKeypoint == nil)  {
+                if (!isRerouting && !nav.isFarFromPath(currentLocation: curLocation, prevKeypoint: keypointManager.prevKeypoint!, nextKeypoint: keypointManager.currentKeypoint!, isLastKeypoint: keypointManager.isLastKeypoint, threshold: 1/8 )){
                     onPathIndex = recordingDetourCrumbs.count - 1
                 }
-                if(nav.isFarFromPath(currentLocation: curLocation, prevKeypoint: prevKeypointNode, nextKeypoint: keypoints[keypointIndex][0], isLastKeypoint: keypoints[keypointIndex].count==1, threshold: 1/4)){
+                if(nav.isFarFromPath(currentLocation: curLocation, prevKeypoint: keypointManager.prevKeypoint!, nextKeypoint: keypointManager.currentKeypoint!, isLastKeypoint: keypointManager.isLastKeypoint, threshold: 1/4)){
                     let timeInterval = feedbackTimer.timeIntervalSinceNow
                     if(pathFindingFeedback){
                         if((-timeInterval > 10*ViewController.FEEDBACKDELAY)) {
-                            if(nav.isFarFromPath(currentLocation: curLocation, prevKeypoint: prevKeypointNode, nextKeypoint: keypoints[keypointIndex][0], isLastKeypoint: keypoints[keypointIndex].count==1, threshold: 1/4)){
+                            if(nav.isFarFromPath(currentLocation: curLocation, prevKeypoint: keypointManager.prevKeypoint!, nextKeypoint: keypointManager.currentKeypoint!, isLastKeypoint: keypointManager.isLastKeypoint, threshold: 1/4) && nav.isFarFromKeypoint(currentLocation: curLocation, nextKeypoint: keypointManager.currentKeypoint!, threshold: 10.0)){
+
                                 isOffPath = true
                                 stopNavigationController.returnToPathButton.isHidden = false
                                 announce(announcement: NSLocalizedString("offPathWarning", comment: "An announcement that warns the user they have walked off the path" ))
@@ -2104,7 +2177,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             }
         }
         else{
-            if(!nav.isFarFromPath(currentLocation: curLocation, prevKeypoint: prevKeypointNode, nextKeypoint: keypoints[keypointIndex][0], isLastKeypoint: keypoints[keypointIndex].count==1, threshold : 1/2)){
+            if (!nav.isFarFromPath(currentLocation: curLocation, prevKeypoint: keypointManager.prevKeypoint!, nextKeypoint: keypointManager.currentKeypoint!, isLastKeypoint: keypointManager.isLastKeypoint, threshold : 1/2) || !nav.isFarFromKeypoint(currentLocation: curLocation, nextKeypoint: keypointManager.currentKeypoint!, threshold: 10.0)){
                 isOffPath = false
                 detourIndex = nil
                 
@@ -2132,9 +2205,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
         detourCrumbs = Array(recordingDetourCrumbs)
         let trimmedDetourCrumbs = detourCrumbs[detourIndex!...(detourCrumbs.count-1)]
-        let detour = PathFinder(crumbs:trimmedDetourCrumbs.reversed(), hapticFeedback: hapticFeedback, voiceFeedback: voiceFeedback)
-        keypoints.append(detour.keypoints)
-        keypointIndex = keypoints.count - 1
+        let detourPath = PathFinder(crumbs:trimmedDetourCrumbs.reversed(), hapticFeedback: hapticFeedback, voiceFeedback: voiceFeedback)
+        keypointManager.pushDetour(detour: detourPath.keypoints)
+       // keypoints.append(detour.keypoints)
+        //keypointIndex = keypoints.count - 1
         stopNavigationController.pauseButton.isHidden = false
         stopNavigationController.returnToPathButton.isHidden = true
         UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged , argument: nil)
@@ -2183,7 +2257,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// - Returns: the direction to the next keypoint with the distance rounded to the nearest tenth of a meter
     func getDirectionToNextKeypoint(currentLocation: CurrentCoordinateInfo) -> DirectionInfo {
         // returns direction to next keypoint from current location
-        var dir = nav.getDirections(currentLocation: currentLocation, nextKeypoint: keypoints[keypointIndex][0], isLastKeypoint: keypoints[keypointIndex].count == 1)
+        var dir = nav.getDirections(currentLocation: currentLocation, nextKeypoint: keypointManager.currentKeypoint!, isLastKeypoint: keypointManager.isLastKeypoint)
         dir.distance = roundToTenths(dir.distance)
         
         return dir
@@ -2254,7 +2328,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// Announce directions at any given point to the next keypoint
     @objc func announceDirectionHelp() {
-        if keypoints != nil {
+        if keypointManager.hasKeypoints {
             if case .navigatingRoute = state, let curLocation = getRealCoordinates(record: false) {
                 let directionToNextKeypoint = getDirectionToNextKeypoint(currentLocation: curLocation)
                 setDirectionText(currentLocation: curLocation.location, direction: directionToNextKeypoint, displayDistance: true)
@@ -2270,9 +2344,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     ///   - displayDistance: a Boolean that indicates whether the distance to the net keypoint should be displayed (true if it should be displayed, false otherwise)
     func setDirectionText(currentLocation: LocationInfo, direction: DirectionInfo, displayDistance: Bool) {
         // Set direction text for text label and VoiceOver
-        let xzNorm = sqrtf(powf(currentLocation.x - keypoints[keypointIndex][0].location.x, 2) + powf(currentLocation.z - keypoints[keypointIndex][0].location.z, 2))
-        let slope = (keypoints[keypointIndex][0].location.y - prevKeypointPosition.y) / xzNorm
-        let yDistance = abs(keypoints[keypointIndex][0].location.y - prevKeypointPosition.y)
+        let xzNorm = sqrtf(powf(currentLocation.x - keypointManager.currentLocation!.x, 2) + powf(currentLocation.z - keypointManager.currentLocation!.z, 2))
+        let slope = (keypointManager.currentLocation!.y - keypointManager.prevLocation!.y) / xzNorm
+        let yDistance = abs(keypointManager.currentLocation!.y - keypointManager.prevLocation!.y)
         var dir = ""
         
         if yDistance > 1 && slope > 0.3 { // Go upstairs

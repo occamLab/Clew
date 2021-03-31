@@ -229,7 +229,21 @@ class Navigation {
         else{
             return false
         }
+    }
+    
+    public func isFarFromKeypoint(currentLocation: CurrentCoordinateInfo, nextKeypoint: KeypointInfo, threshold: Float) -> Bool{
+        let delta = currentLocation.location.translation - nextKeypoint.location.translation
+        let planarDelta = Vector3(delta.x, 0, delta.z)
+        let dist = planarDelta.length
         
+        let trueYaw  = getPhoneHeadingYaw(currentLocation: currentLocation) + (headingOffset != nil ? headingOffset! : Float(0.0))
+        let angle = atan2f((currentLocation.location.x - nextKeypoint.location.x), (currentLocation.location.z-nextKeypoint.location.z))
+        let angleDiff = getAngleDiff(angle1: trueYaw, angle2: angle)
+        if (dist < threshold) && (angleDiff < 0.5) {
+            return true
+        } else {
+            return false
+        }
     }
     
     /// Divides all possible directional angles into six sections for using with haptic feedback.
