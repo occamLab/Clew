@@ -1305,13 +1305,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         let distanceToDisplay = roundToTenths(distance * unitConversionFactor[defaultUnit]!)
         var altText = description
         if (displayDistance) {
-            if defaultUnit == 0 || distanceToDisplay >= 10 {
-                // don't use fractional feet or for higher numbers of meters (round instead)
-                // Related to higher number of meters, there is a somewhat strange behavior in VoiceOver where numbers greater than 10 will be read as, for instance, 11 dot 4 meters (instead of 11 point 4 meters).
-                altText += " for \(Int(distanceToDisplay))" + unitText[defaultUnit]!
-            } else {
-                altText += " for \(distanceToDisplay)" + unitText[defaultUnit]!
-            }
+            altText += getDirectionDistanceAddOn(distanceToDisplay: distanceToDisplay)
         }
         if !remindedUserOfOffsetAdjustment && adjustOffset {
             altText += ". " + NSLocalizedString("adjustOffsetReminderAnnouncement", comment: "This is the announcement which is spoken after starting navigation if the user has enabled the Correct Offset of Phone / Body option.")
@@ -1513,6 +1507,35 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         sceneView.session.run(configuration, options: [.removeExistingAnchors, .resetTracking])
     }
     
+    func getIdealizedTransformFromRouteSegment(from: KeypointInfo, to: KeypointInfo, setPositionToStart: Bool = false)->simd_float4x4 {
+        var idealizedTransform = matrix_identity_float4x4
+        // zAxis of the camera points towards the user (and thus points from the end keypoint to the start)
+        var zAxis = simd_normalize(simd_float3(from.location.x - to.location.x, 0, from.location.z - to.location.z))
+        // xAxis is aligned pointing down
+        var xAxis = simd_float3(0, -1, 0)
+        // yAxis is constrained by the right hand rule
+        var yAxis = -simd_cross(xAxis, zAxis)
+        idealizedTransform.columns.0 = simd_float4(xAxis, 0)
+        idealizedTransform.columns.1 = simd_float4(yAxis, 0)
+        idealizedTransform.columns.2 = simd_float4(zAxis, 0)
+        if setPositionToStart {
+            idealizedTransform.columns.3 = simd_float4(from.location.x, from.location.y, from.location.z, 1)
+        } else {
+            idealizedTransform.columns.3 = simd_float4(to.location.x, to.location.y, to.location.z, 1)
+        }
+        return idealizedTransform
+    }
+    
+    func getDirectionDistanceAddOn(distanceToDisplay: Float)->String {
+        if defaultUnit == 0 || distanceToDisplay >= 10 {
+            // don't use fractional feet or for higher numbers of meters (round instead)
+            // Related to higher number of meters, there is a somewhat strange behavior in VoiceOver where numbers greater than 10 will be read as, for instance, 11 dot 4 meters (instead of 11 point 4 meters).
+            return " for \(Int(distanceToDisplay))" + unitText[defaultUnit]!
+        } else {
+            return " for \(distanceToDisplay)" + unitText[defaultUnit]!
+        }
+    }
+    
     /// handles the user pressing the stop recording button.
     ///
     /// - Parameter sender: the button that generated the event
@@ -1547,10 +1570,43 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         arPlaneManager.stopDetection()
         arPlaneManager.printAnchors()
         //send the recorded planes
-        planeLogger.sendPlaneData(sceneView)
         //compile keypoints
         let path = PathFinder(crumbs: crumbs.reversed(), hapticFeedback: hapticFeedback, voiceFeedback: voiceFeedback)
+        // better for logging with the plane anchor
+        let forwardPath = PathFinder(crumbs: crumbs, hapticFeedback: hapticFeedback, voiceFeedback: voiceFeedback)
+        var idealizedTransform = getIdealizedTransformFromRouteSegment(from: forwardPath.keypoints[0], to: forwardPath.keypoints[1], setPositionToStart: true)
+        // overwrite with the starting location since the first segment is a bit weird
+        idealizedTransform.columns.3 = simd_float4(forwardPath.keypoints[0].location.x, forwardPath.keypoints[0].location.y, forwardPath.keypoints[0].location.z, 1)
+        var idealizedDirections: [String] = []
+        if forwardPath.keypoints.count > 1 {
+            // TODO: not sure if this will be correct for saved routes, but we can use single use route for now
+            for i in 0..<forwardPath.keypoints.count-1 {
+                let keypointi = forwardPath.keypoints[i]
+                let keypointiplus1 = forwardPath.keypoints[i+1]
+                // returns current location & orientation based on starting origin
+                let scn = SCNMatrix4(idealizedTransform)
+                let transMatrix = Matrix3([scn.m11, scn.m12, scn.m13,
+                                           scn.m21, scn.m22, scn.m23,
+                                           scn.m31, scn.m32, scn.m33])
+                
+                let coordInfo = CurrentCoordinateInfo(LocationInfo(transform: idealizedTransform), transMatrix: transMatrix)
+                let directionBetweeniAndiPlus1 = getDirectionToSpecifiedKeypoint(currentLocation: coordInfo, keypoint: keypointiplus1, isLastKeypoint: i+1 == forwardPath.keypoints.count-1)
+                let (dir, distance, displayDistance) = getDirectionTextToSpecificKeypoint(currentLocation: coordInfo.location, direction: directionBetweeniAndiPlus1, nextKeypoint: keypointiplus1, prevKeypointPos: keypointi.location, displayDistance: true)
+                
+                let distanceToDisplay = roundToTenths(distance * unitConversionFactor[defaultUnit]!)
+                var altText = dir
+                if displayDistance {
+                    altText += getDirectionDistanceAddOn(distanceToDisplay: distanceToDisplay)
+                }
+                idealizedTransform = getIdealizedTransformFromRouteSegment(from: keypointi, to: keypointiplus1)
+                print("harvested directions", altText)
+                idealizedDirections.append(altText)
+            }
+        }
         keypoints = path.keypoints
+        
+        planeLogger.sendPlaneData(sceneView, forwardPath.keypoints, idealizedDirections)
+
 
         //send log data about the route as well
         logger.compileLogData(false)
@@ -1750,7 +1806,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 
                 // update directions to next keypoint
                 directionToNextKeypoint = getDirectionToNextKeypoint(currentLocation: curLocation)
-                setDirectionText(currentLocation: curLocation.location, direction: directionToNextKeypoint, displayDistance: false)
+                setDirectionText(currentLocation: curLocation, direction: directionToNextKeypoint, displayDistance: false)
             } else {
                 // arrived at final keypoint
                 // send haptic/sonic feedback
@@ -1967,6 +2023,18 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         return dir
     }
     
+    /// Get direction to specified keypoint based on the current location
+    ///
+    /// - Parameter currentLocation: the current location of the device
+    /// - Parameter the keypoint to get directions to
+    /// - Returns: the direction to the next keypoint with the distance rounded to the nearest tenth of a meter
+    func getDirectionToSpecifiedKeypoint(currentLocation: CurrentCoordinateInfo, keypoint: KeypointInfo, isLastKeypoint: Bool) -> DirectionInfo {
+        // returns direction to next keypoint from current location
+        var dir = nav.getDirections(currentLocation: currentLocation, nextKeypoint: keypoint, isLastKeypoint: isLastKeypoint)
+        dir.distance = roundToTenths(dir.distance)
+        return dir
+    }
+    
     /// Called when the "get directions" button is pressed.  The announcement is made with a 0.5 second delay to allow the button name to be announced.
     @objc func announceDirectionHelpPressed() {
         Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: (#selector(announceDirectionHelp)), userInfo: nil, repeats: false)
@@ -2033,7 +2101,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     @objc func announceDirectionHelp() {
         if case .navigatingRoute = state, let curLocation = getRealCoordinates(record: false) {
             let directionToNextKeypoint = getDirectionToNextKeypoint(currentLocation: curLocation)
-            setDirectionText(currentLocation: curLocation.location, direction: directionToNextKeypoint, displayDistance: true)
+            setDirectionText(currentLocation: curLocation, direction: directionToNextKeypoint, displayDistance: true)
         }
     }
     
@@ -2043,11 +2111,24 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     ///   - currentLocation: the current location of the device
     ///   - direction: the direction info struct (e.g., as computed by the `Navigation` class)
     ///   - displayDistance: a Boolean that indicates whether the distance to the net keypoint should be displayed (true if it should be displayed, false otherwise)
-    func setDirectionText(currentLocation: LocationInfo, direction: DirectionInfo, displayDistance: Bool) {
+    func setDirectionText(currentLocation: CurrentCoordinateInfo?, direction: DirectionInfo, displayDistance: Bool) {
+        var curLocation = currentLocation
+        if currentLocation == nil {
+            curLocation = getRealCoordinates(record: false)
+        }
+        guard let location = curLocation else {
+            return
+        }
+        let directionToNextKeypoint = getDirectionToNextKeypoint(currentLocation: location)
+        let (dir, distance, shouldDisplayDistance) =    getDirectionText(currentLocation: location.location, direction: directionToNextKeypoint, displayDistance: displayDistance)
+        updateDirectionText(dir, distance: distance, displayDistance: shouldDisplayDistance)
+    }
+    
+    func getDirectionTextToSpecificKeypoint(currentLocation: LocationInfo, direction: DirectionInfo, nextKeypoint: KeypointInfo, prevKeypointPos: LocationInfo, displayDistance: Bool)->(String, Float, Bool) {
         // Set direction text for text label and VoiceOver
-        let xzNorm = sqrtf(powf(currentLocation.x - keypoints[0].location.x, 2) + powf(currentLocation.z - keypoints[0].location.z, 2))
-        let slope = (keypoints[0].location.y - prevKeypointPosition.y) / xzNorm
-        let yDistance = abs(keypoints[0].location.y - prevKeypointPosition.y)
+        let xzNorm = sqrtf(powf(currentLocation.x - nextKeypoint.location.x, 2) + powf(currentLocation.z - nextKeypoint.location.z, 2))
+        let slope = (nextKeypoint.location.y - prevKeypointPos.y) / xzNorm
+        let yDistance = abs(nextKeypoint.location.y - prevKeypointPos.y)
         var dir = ""
         
         if yDistance > 1 && slope > 0.3 { // Go upstairs
@@ -2056,22 +2137,26 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             } else {
                 dir += "\(Directions[direction.clockDirection]!)" + NSLocalizedString(" and proceed upstairs", comment: "Additional directions given to user telling them to climb stairs")
             }
-            updateDirectionText(dir, distance: 0, displayDistance: false)
+            return (dir, 0, false)
         } else if yDistance > 1 && slope < -0.3 { // Go downstairs
             if(hapticFeedback) {
                 dir += "\(Directions[direction.hapticDirection]!)\(NSLocalizedString("descendStairsDirection" , comment: "This is a direction which instructs the user to descend stairs"))"
             } else {
                 dir += "\(Directions[direction.clockDirection]!)\(NSLocalizedString("descendStairsDirection" , comment: "This is a direction which instructs the user to descend stairs"))"
             }
-            updateDirectionText(dir, distance: direction.distance, displayDistance: false)
+            return (dir, direction.distance, false)
         } else { // normal directions
             if(hapticFeedback) {
                 dir += "\(Directions[direction.hapticDirection]!)"
             } else {
                 dir += "\(Directions[direction.clockDirection]!)"
             }
-            updateDirectionText(dir, distance: direction.distance, displayDistance:  displayDistance)
+            return (dir, direction.distance, displayDistance)
         }
+    }
+    
+    func getDirectionText(currentLocation: LocationInfo, direction: DirectionInfo, displayDistance: Bool)->(String, Float, Bool) {
+        return getDirectionTextToSpecificKeypoint(currentLocation: currentLocation, direction: direction, nextKeypoint: keypoints[0], prevKeypointPos: prevKeypointPosition, displayDistance: displayDistance)
     }
     
     /// TODO

@@ -15,7 +15,7 @@ class PlaneLogging {
     /// A handle to the Firebase storage
     let storageBaseRef = Storage.storage().reference()
     
-    public func sendPlaneData(_ sceneView: ARSCNView) {
+    public func sendPlaneData(_ sceneView: ARSCNView, _ route: [KeypointInfo], _ idealizedDirections: [String]) {
         let df = DateFormatter()
         df.dateFormat = "yyyy-MM-dd hh:mm:ss"
         let timeStamp = df.string(from: Date())
@@ -23,6 +23,7 @@ class PlaneLogging {
         var body = [String: Any]()
         print("printing plane anchor classifications from logging")
         let routePlaneAnchors = sceneView.session.currentFrame?.anchors ?? []
+        let keypointLocations = route.map({$0.location.translation.toArray()})
         for (index, anchor) in routePlaneAnchors.enumerated() {
             guard let planeAnchor = anchor as? ARPlaneAnchor else { continue }
             print(index, planeAnchor.alignment, planeAnchor.classification.description)
@@ -30,11 +31,13 @@ class PlaneLogging {
                                    "extent": planeAnchor.extent.debugDescription,
                                    "center": planeAnchor.center.debugDescription,
                                    "class": planeAnchor.classification.description,
+                                   "keypoints": keypointLocations,
+                                   "idealizedDirections": idealizedDirections,
                                    "align": planeAnchor.alignment.rawValue,
                                    "geometry": planeAnchor.geometry.vertices.debugDescription]
         }
         
-        let fileName = "planes_2.json" // TODO
+        let fileName = "planes_2_with_directions.json" // TODO
         do {
             let jsonData = try JSONSerialization.data(withJSONObject: body, options: .prettyPrinted)
             self.uploadToFirebase(jsonData, fileName)
