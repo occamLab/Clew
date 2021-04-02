@@ -2114,7 +2114,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                     if(pathFindingFeedback){
                         if((-timeInterval > 10*ViewController.FEEDBACKDELAY)) {
                             if(nav.isFarFromPath(currentLocation: curLocation, prevKeypoint: keypointManager.prevKeypoint!, nextKeypoint: keypointManager.currentKeypoint!, isLastKeypoint: keypointManager.isLastKeypoint, threshold: 1/4) && nav.isFarFromKeypoint(currentLocation: curLocation, nextKeypoint: keypointManager.currentKeypoint!, threshold: 10.0)){
-
                                 isOffPath = true
                                 stopNavigationController.returnToPathButton.isHidden = false
                                 announce(announcement: NSLocalizedString("offPathWarning", comment: "An announcement that warns the user they have walked off the path" ))
@@ -2182,6 +2181,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// Reroutes the user to the original path after the start rerouting button is pushed
      @objc func startRerouting(_ sender: UIButton){
+        stopNavigationController.returnToPathButton.isHidden = true
         isRerouting = true
         detourCrumbs = Array(recordingDetourCrumbs)
         if (detourCrumbs.count == 0){
@@ -2197,7 +2197,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
        // keypoints.append(detour.keypoints)
         //keypointIndex = keypoints.count - 1
         stopNavigationController.pauseButton.isHidden = false
-        stopNavigationController.returnToPathButton.isHidden = true
         UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged , argument: nil)
     }
     

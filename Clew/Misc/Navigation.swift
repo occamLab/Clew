@@ -202,7 +202,7 @@ class Navigation {
         var direction = DirectionInfo(distance: planarDelta.length, angleDiff: angleDiff, clockDirection: clockDirection, hapticDirection: hapticDirection, lateralDistanceRatioWhenCrossingTarget: lateralDistanceRatioWhenCrossingTarget)
         
         //  Determine whether the phone is inside the bounding box of the keypoint
-        if (xDiff <= keypointTargetDepth && yDiff <= keypointTargetHeight && zDiff <= keypointTargetWidth) {
+        if (abs(xDiff) <= keypointTargetDepth && abs(yDiff) <= keypointTargetHeight && abs(zDiff) <= keypointTargetWidth) {
             direction.targetState = .atTarget
         } else if (sqrtf(powf(Float(xDiff), 2) + powf(Float(zDiff), 2)) <= 4) {
             direction.targetState = .closeToTarget

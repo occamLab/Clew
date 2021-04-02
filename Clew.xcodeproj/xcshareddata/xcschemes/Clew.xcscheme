@@ -64,9 +64,6 @@
          identifier = "com.apple.dt.IDEFoundation.CurrentLocationScenarioIdentifier"
          referenceType = "1">
       </LocationScenarioReference>
-      <DeviceSensorReplayFileReference
-         identifier = "../../../Downloads/Straightpause.mov">
-      </DeviceSensorReplayFileReference>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
