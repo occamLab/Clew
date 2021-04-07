@@ -139,6 +139,10 @@ class KeypointManager{
         return keypoints[keypointIndex].count
     }
     
+    func clearManager() {
+        keypointIndex = 0
+        clearKeypoints()
+    }
     func setPrevKeypoint(keypoint: KeypointInfo) {
         prevKeypointNode = keypoint
     }
@@ -326,7 +330,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     func handleStateTransitionToMainScreen(announceArrival: Bool) {
         // cancel the timer that announces tracking errors
         //keypointIndex = 0
-        keypointManager.clearKeypoints()
+        keypointManager.clearManager()
         isDetourCrumbs = false
         trackingErrorsAnnouncementTimer?.invalidate()
         // if the ARSession is running, pause it to conserve battery
@@ -982,7 +986,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         recordPathController.isAccessibilityElement = false
         if case .navigatingRoute = self.state {
             keypointNode.removeFromParentNode()
-            //crumbNode.removeFromParentNode()
+            crumbNode.removeFromParentNode()
+            if (detourCrumbNode != nil) {
+                detourCrumbNode.removeFromParentNode()
+            }
         }
         followingCrumbs?.invalidate()
         droppingCrumbs?.invalidate()
@@ -1492,6 +1499,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// SCNNode of any crumb
     var crumbNode: SCNNode!
     
+    /// SCNNode of a detour crumb
+    var detourCrumbNode: SCNNode!
+    
     /// previous keypoint location - originally set to current location
     var prevKeypointPosition: LocationInfo!
     
@@ -1719,7 +1729,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         
         // erase nearest keypoint
         keypointNode.removeFromParentNode()
-        //crumbNode.removeFromParentNode()
+        crumbNode.removeFromParentNode()
+        if (detourCrumbNode != nil) {
+            detourCrumbNode.removeFromParentNode()
+        }
 
         if(sendLogs) {
             state = .ratingRoute(announceArrival: false)
@@ -1886,7 +1899,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
             if (isDetourCrumbs){
                 recordingDetourCrumbs.append(curLocation)
-                //renderCrumb(curLocation)
+                if (isOffPath) {
+                    renderOffPathCrumbs(curLocation)
+                }  else {
+                    renderCrumbs(curLocation)
+            }
+                
             }
             else {
                 if (recordingCrumbs != nil) {
@@ -2502,6 +2520,34 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     }
     }
   
+    /// Create the crumbSCNNode that corresponds to the rotating flashing element that looks like a sphere
+    ///
+    /// - Parameter location: the location of the crumb
+    func renderCrumbs(_ location: LocationInfo) {
+        // render SCNNode of given crumb
+        let material = SCNMaterial()
+        material.diffuse.contents = UIColor.yellow
+        crumbNode = SCNNode(mdlObject: keypointObject)
+
+        crumbNode.geometry?.materials = [material]
+        crumbNode.scale = SCNVector3(0.00001, 0.000005, 0.00001)
+        crumbNode.position = SCNVector3(location.x, location.y - 0.07, location.z)
+        
+        // add crumb node to view
+        sceneView.scene.rootNode.addChildNode(crumbNode)
+    }
+    
+    func renderOffPathCrumbs(_ location: LocationInfo) {
+        let material = SCNMaterial()
+        material.diffuse.contents = UIColor.orange
+        detourCrumbNode = SCNNode(mdlObject: keypointObject)
+        
+        detourCrumbNode.geometry?.materials = [material]
+        detourCrumbNode.scale = SCNVector3(0.00001, 0.000005, 0.00001)
+        detourCrumbNode.position = SCNVector3(location.x, location.y - 0.07, location.z)
+        
+        sceneView.scene.rootNode.addChildNode(detourCrumbNode)
+    }
     
     /// Compute the location of the device based on the ARSession.  If the record flag is set to true, record this position in the logs.
     ///
