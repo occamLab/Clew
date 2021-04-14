@@ -4,6 +4,11 @@
 //
 //  Created by Chris Seonghwan Yoon & Jeremy Ryan on 7/10/17.
 //
+// Enhanced Logging:
+//   - Logging which route is being navigated
+//   - Logging settings
+//   - Always send logs even if not rating route
+//
 // Confirmed issues
 // - We are not doing a proper job dealing with resumed routes with respect to logging (we always send recorded stuff in the log file, which we don't always have access to)
 //
@@ -85,8 +90,8 @@ enum AppState {
             return "completingPauseProcedure"
         case .pauseProcedureCompleted:
             return "pauseProcedureCompleted"
-        case .startingResumeProcedure(_, _, let navigateStartToEnd):
-            return "startingResumeProcedure(route=notloggedhere, map=notlogged, navigateStartToEnd=\(navigateStartToEnd))"
+        case .startingResumeProcedure(let route, let worldMap, let navigateStartToEnd):
+            return "startingResumeProcedure(route=\(route.id), mapexists=\(worldMap != nil), navigateStartToEnd=\(navigateStartToEnd))"
         case .readyForFinalResumeAlignment:
             return "readyForFinalResumeAlignment"
         case .startingNameSavedRouteProcedure:
@@ -335,6 +340,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     ///   - worldMap: the world map to use
     ///   - navigateStartToEnd: a Boolean that is true if we want to navigate from the start to the end and false if we want to navigate from the end to the start.
     func handleStateTransitionToStartingResumeProcedure(route: SavedRoute, worldMap: Any?, navigateStartToEnd: Bool) {
+        logger.setCurrentRoute(route: route, worldMap: worldMap)
+        
         // load the world map and restart the session so that things have a chance to quiet down before putting it up to the wall
         var isTrackingPerformanceNormal = false
         if case .normal? = sceneView.session.currentFrame?.camera.trackingState {
@@ -1041,6 +1048,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         sendLogs = defaults.bool(forKey: "sendLogs")
         timerLength = defaults.integer(forKey: "timerLength")
         adjustOffset = defaults.bool(forKey: "adjustOffset")
+        
+        // TODO: log settings here
+        // logger.registerSettings(unit: defaultUnit, ...)
+        
+        // leads to JSON like:
+        //   options: { "unit": "meter", "soundFeedback", true, ... }
     }
     
     /// Handles updates to the app settings.
@@ -1560,8 +1573,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         if(sendLogs) {
             state = .ratingRoute(announceArrival: false)
         } else {
-            state = .mainScreen(announceArrival: false)
-            logger.resetStateSequenceLog()
+            sendLogDataHelper(pathStatus: nil)
         }
     }
     
@@ -1676,18 +1688,19 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// send log data for an successful route navigation (thumbs up)
     @objc func sendLogData() {
+        sendLogDataHelper(pathStatus: true)
+    }
+    
+    func sendLogDataHelper(pathStatus: Bool?) {
         // send success log data to Firebase
-        logger.compileLogData(false)
+        logger.compileLogData(pathStatus)
         logger.resetStateSequenceLog()
         state = .mainScreen(announceArrival: false)
     }
     
     /// send log data for an unsuccessful route navigation (thumbs down)
     @objc func sendDebugLogData() {
-        // send debug log data to Firebase
-        logger.compileLogData(true)
-        logger.resetStateSequenceLog()
-        state = .mainScreen(announceArrival: false)
+        sendLogDataHelper(pathStatus: false)
     }
     
     /// drop a crumb during path recording

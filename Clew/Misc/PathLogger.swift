@@ -50,13 +50,25 @@ class PathLogger {
     /// list of keypoints - [[(LocationInfo)x, y, z, yaw]]
     var keypointData: LinkedList<Array<Any>> = []
     
+    /// the navigation route that the user is currently navigating
+    var currentNavigationRoute: SavedRoute?
+    /// the ARWorldMap that is currently navigating
+    var currentNavigationMap: Any?
+    
     /// language used in recording
-//    var langData: [String] = []
-//    let langData = Locale.preferredLanguages[0]
     func currentLocale() -> String {
         let preferredLanguage = Locale.preferredLanguages[0] as String
         print(preferredLanguage)
         return preferredLanguage
+    }
+    
+    /// Sets the current route and map so we can log it later
+    /// - Parameters:
+    ///   - route: the route being navigated
+    ///   - worldMap: the world map expressed as an optional Any type
+    func setCurrentRoute(route: SavedRoute, worldMap: Any?) {
+        currentNavigationRoute = route
+        currentNavigationMap = worldMap
     }
     
     /// Add the specified state transition to the log.
@@ -146,6 +158,8 @@ class PathLogger {
         speechData = []
         speechDataTime = []
         dataTimer = Date()
+        currentNavigationMap = nil
+        currentNavigationRoute = nil
     }
     
     /// Reset the logging variables having to do with state sequence tracking
@@ -158,7 +172,7 @@ class PathLogger {
     /// Compile log data and send it to the cloud
     ///
     /// - Parameter debug: true if the route was unsuccessful (useful for debugging) and false if the route was successful
-    func compileLogData(_ debug: Bool) {
+    func compileLogData(_ debug: Bool?) {
         // compile log data
         let date = Date()
         let dateFormatter = DateFormatter()
@@ -178,9 +192,11 @@ class PathLogger {
     ///   - pathID: the path id
     ///   - userId: the user id
     ///   - debug: true if the route was unsuccessful (useful for debugging) and false if the route was successful
-    func sendMetaData(_ pathDate: String, _ pathID: String, _ userId: String, _ debug: Bool) {
+    func sendMetaData(_ pathDate: String, _ pathID: String, _ userId: String, _ debug: Bool?) {
         let pathType: String
-        if(debug) {
+        if debug == nil {
+            pathType = "notrated"
+        } else if debug! {
             pathType = "debug"
         } else {
             pathType = "success"
@@ -190,6 +206,8 @@ class PathLogger {
                                     "PathID": pathID,
                                     "PathDate": pathDate,
                                     "PathType": pathType,
+                                    "routeId": currentNavigationRoute != nil ? currentNavigationRoute!.id : "",
+                                    "hasMap": currentNavigationMap != nil,
                                     "keypointData": Array(keypointData),
                                     "trackingErrorPhase": Array(trackingErrorPhase),
                                     "trackingErrorTime": Array(trackingErrorTime),
