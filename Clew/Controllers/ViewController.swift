@@ -1861,7 +1861,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                     let notifKeypointsLeft = "Keypoints left"
                     let remainingKeypointAnnouncement = "\(numberKeypointsLeft) \(notifKeypointsLeft)"
                     announce(announcement: remainingKeypointAnnouncement)
-                    print("alana", remainingKeypointAnnouncement)
                     // update directions to next keypoint
                     directionToNextKeypoint = getDirectionToNextKeypoint(currentLocation: curLocation)
                     setDirectionText(currentLocation: curLocation.location, direction: directionToNextKeypoint, displayDistance: false)
@@ -1884,7 +1883,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                         keypointNode.removeFromParentNode()
                         // remove current visited keypoint from keypoint list
                         keypointManager.popCurrentKeypoint()
-                        print("alana pop detour")
                         keypointManager.popDetour()
                         
                         // erase current keypoint and render next keypoint node
@@ -2018,7 +2016,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// send haptic feedback if the device is pointing towards the next keypoint.
     @objc func getHapticFeedback() {
         // Conserve CPU by only calculating the offset if the user has requested it
-        //print(paused)
         if adjustOffset {
             updateHeadingOffset()
         }
@@ -2048,7 +2045,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                     if(pathFindingFeedback && -feedbackTimer.timeIntervalSinceNow > ViewController.FEEDBACKDELAY){
                         isOffPath = true
                         stopNavigationController.returnToPathButton.isHidden = false
-                        announce(announcement: NSLocalizedString("offPathWarning", comment: "An announcement that warns the user they have walked off the path" ))
+                        announce(announcement: NSLocalizedString("offPathWarning", comment: "Announcement warns user they're off path." ))
                         feedbackTimer = Date()
                     }
                 } else if (directionToNextKeypoint.lateralDistanceRatioWhenCrossingTarget < lateralDisplacementToleranceRatio || abs(directionToNextKeypoint.angleDiff) < coneWidth) {
@@ -2063,10 +2060,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 } else if (guidanceFeedback && (-feedbackTimer.timeIntervalSinceNow > 10*ViewController.FEEDBACKDELAY)) { // wait until desired time interval before sending another feedback, pointing away
                     if (hapticFeedback && !isOffPath){
                         if (directionToNextKeypoint.angleDiff < 0){
-                            announce(announcement: NSLocalizedString("turnLeftUntilHapticFeedback", comment: "An announcement that lets the user know to turn left until they feel haptic feedback."))
+                            announce(announcement: NSLocalizedString("turnLeftUntilHapticFeedback", comment: "Tells user to turn left until haptic."))
                         } else {
-                            announce(announcement: NSLocalizedString("turnRightUntilHapticFeedback", comment: "An announcement that lets the user know to turn right until they feel haptic feedback."))
-                            print(NSLocalizedString("turnRightUntilHapticFeedback", comment: "help"))
+                            announce(announcement: NSLocalizedString("turnRightUntilHapticFeedback", comment: "Tells user to turn right until haptic."))
                         }
                     } else {announceDirectionHelpPressed()}
                     feedbackTimer = Date()
@@ -2077,7 +2073,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 isOffPath = false
                 detourIndex = nil
             }
-        } else if (detourIndex == nil) { // captures the instance where you are off the path and shows the buttons to return
+        } else if (detourIndex == nil && !isRerouting) { // captures the instance where you are off the path and shows the buttons to return
             detourIndex = onPathIndex
             stopNavigationController.pauseButton.isHidden = false
             stopNavigationController.returnToPathButton.isHidden = false

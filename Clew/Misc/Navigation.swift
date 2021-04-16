@@ -408,7 +408,6 @@ class KeypointManager{
     }
     
     func popDetour() {
-        print("alana detour index", keypointIndex)
         if (keypoints[keypointIndex].count > 0){
             keypointIndex = keypointIndex - 1
         } else {
