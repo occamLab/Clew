@@ -8,6 +8,7 @@
 
 import UIKit
 import Firebase
+import FirebaseAnalytics
 
 /// This class handles various state changes for the app.
 @UIApplicationMain
@@ -38,12 +39,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         logUserProperties()
         
         vc = ViewController()
-
+        
         // Override point for customization after application launch.
         window = UIWindow(frame:UIScreen.main.bounds)
         window?.rootViewController = vc
         window?.makeKeyAndVisible()
         UIApplication.shared.isIdleTimerDisabled = true
+        let authHelper = AuthenticationHelper(window: window!)
+        authHelper.startSignInWithAppleFlow()
+
         
         return true
     }

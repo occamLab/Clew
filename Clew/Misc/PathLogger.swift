@@ -9,6 +9,7 @@
 import Foundation
 import Firebase
 import FirebaseStorage
+import FirebaseAnalytics
 import SceneKit
 
 //FirebaseApp.configure()
@@ -181,8 +182,8 @@ class PathLogger {
         let pathID = UIDevice.current.identifierForVendor!.uuidString + dateFormatter.string(from: date)
         let userId = Analytics.appInstanceID()
         
-        sendMetaData(pathDate, pathID+"-0", userId, debug)
-        sendPathData(pathID, userId)
+        sendMetaData(pathDate, pathID+"-0", userId!, debug)
+        sendPathData(pathID, userId!)
     }
     
     /// Send the meta data log to the cloud
