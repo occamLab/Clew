@@ -329,4 +329,93 @@ class Navigation {
     }
 }
 
+class KeypointManager{
+    private var keypoints: [[KeypointInfo]] = []
+    private var keypointIndex = 0
+    private var prevKeypointNode: KeypointInfo?
+    private var prevKeypointLocation: LocationInfo?
+    
+    var currentPath: [KeypointInfo] {
+        return keypoints[keypointIndex]
+    }
+    var currentKeypoint: KeypointInfo? {
+        return hasKeypoints ? keypoints[keypointIndex][0] : nil
+    }
+    
+    var prevKeypoint: KeypointInfo? {
+        return prevKeypointNode
+    }
+    
+    var currentLocation: LocationInfo? {
+        return currentKeypoint?.location
+    }
+    
+    var prevLocation: LocationInfo? {
+        if (prevKeypointNode == nil) {
+            return prevKeypointNode?.location
+        } else {
+            return prevKeypointLocation
+        }
+    }
+    
+    var hasKeypoints: Bool {
+        return (keypoints.count > keypointIndex && keypoints[keypointIndex].count > 0)
+    }
+    
+    // is detour
+    var isDetour: Bool {
+        return (keypointIndex > 0)
+    }
+    // is last keypoint
+    var isLastKeypoint: Bool {
+        return (numKeypoints == 1)
+    }
+    
+    var numKeypoints: Int {
+        return keypoints[keypointIndex].count
+    }
+    
+    func clearManager() {
+        keypointIndex = 0
+        clearKeypoints()
+    }
+    func setPrevKeypoint(keypoint: KeypointInfo) {
+        prevKeypointNode = keypoint
+    }
+    
+    func setPrevLocation(location: LocationInfo) {
+        prevKeypointLocation = location
+    }
+    
+    func clearKeypoints() {
+        keypoints = []
+    }
+    
+    func setPath(path: [[KeypointInfo]]) {
+        keypoints = path
+    }
+    
+    func popCurrentKeypoint() {
+        // prevKeypointPosition = keypoints[keypointIndex][0].location needs to be added to code
+        setPrevKeypoint(keypoint: currentKeypoint!)
+        keypoints[keypointIndex].remove(at: 0)
+    }
+    
+    // add detour/ push path
+    func pushDetour(detour: [KeypointInfo]) {
+        keypoints.append(detour)
+        keypointIndex = keypoints.count - 1
+    }
+    
+    func popDetour() {
+        print("alana detour index", keypointIndex)
+        if (keypoints[keypointIndex].count > 0){
+            keypointIndex = keypointIndex - 1
+        } else {
+            keypointIndex = 0
+        }
+    }
+    
+}
+
 

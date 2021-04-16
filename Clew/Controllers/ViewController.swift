@@ -93,89 +93,6 @@ enum AppState {
     }
 }
 
-class KeypointManager{
-    private var keypoints: [[KeypointInfo]] = []
-    private var keypointIndex = 0
-    private var prevKeypointNode: KeypointInfo?
-    private var prevKeypointLocation: LocationInfo?
-    
-    var currentPath: [KeypointInfo] {
-        return keypoints[keypointIndex]
-    }
-    var currentKeypoint: KeypointInfo? {
-        return hasKeypoints ? keypoints[keypointIndex][0] : nil
-    }
-    
-    var prevKeypoint: KeypointInfo? {
-        return prevKeypointNode
-    }
-    
-    var currentLocation: LocationInfo? {
-        return currentKeypoint?.location
-    }
-    
-    var prevLocation: LocationInfo? {
-        if (prevKeypointNode == nil) {
-            return prevKeypointNode?.location
-        } else {
-            return prevKeypointLocation
-        }
-    }
-    
-    var hasKeypoints: Bool {
-        return (keypoints.count > keypointIndex && keypoints[keypointIndex].count > 0)
-    }
-    
-    // is detour
-    var isDetour: Bool {
-        return (keypointIndex > 0)
-    }
-    // is last keypoint
-    var isLastKeypoint: Bool {
-        return (numKeypoints == 1)
-    }
-    
-    var numKeypoints: Int {
-        return keypoints[keypointIndex].count
-    }
-    
-    func clearManager() {
-        keypointIndex = 0
-        clearKeypoints()
-    }
-    func setPrevKeypoint(keypoint: KeypointInfo) {
-        prevKeypointNode = keypoint
-    }
-    
-    func setPrevLocation(location: LocationInfo) {
-        prevKeypointLocation = location
-    }
-    
-    func clearKeypoints() {
-        keypoints = []
-    }
-    
-    func setPath(path: [[KeypointInfo]]) {
-        keypoints = path
-    }
-    
-    func popCurrentKeypoint() {
-        // prevKeypointPosition = keypoints[keypointIndex][0].location needs to be added to code
-        setPrevKeypoint(keypoint: currentKeypoint!)
-        keypoints[keypointIndex].remove(at: 0)
-    }
-    
-    // add detour/ push path
-    func pushDetour(detour: [KeypointInfo]) {
-        keypoints.append(detour)
-        keypointIndex = keypoints.count - 1
-    }
-    
-    func popDetour() {
-        keypointIndex = keypointIndex - 1
-    }
-}
-
 
 /// The view controller that handles the main Clew window.  This view controller is always active and handles the various views that are used for different app functionalities.
 class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDelegate, AVSpeechSynthesizerDelegate {
@@ -1899,7 +1816,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
             if (isDetourCrumbs){
                 recordingDetourCrumbs.append(curLocation)
-                if (isOffPath) {
+                if (!stopNavigationController.returnToPathButton.isHidden) {
                     renderOffPathCrumbs(curLocation)
                 }  else {
                     renderCrumbs(curLocation)
@@ -1920,89 +1837,88 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             // TODO: might want to indicate that something is wrong to the user
             return
         }
-        
         if (!isFinished && keypointManager.hasKeypoints){
             var directionToNextKeypoint = getDirectionToNextKeypoint(currentLocation: curLocation)
-        if (directionToNextKeypoint.targetState == PositionState.atTarget) {
-            if (!keypointManager.isLastKeypoint) {
-                // arrived at keypoint
-                // send haptic/sonic feedback
-                waypointFeedbackGenerator?.notificationOccurred(.success)
-                if (soundFeedback) { playSystemSound(id: 1016) }
-                
-                // remove current visited keypont from keypoint list
-                keypointManager.popCurrentKeypoint()
-                
-                // erase current keypoint and render next keypoint node
-             
-                keypointNode.removeFromParentNode()
-                //crumbNode.removeFromParentNode()
-
-                renderKeypoint(keypointManager.currentLocation!)
-                
-                //temp announcement to let you know how many keypoints are left
-                let numberKeypointsLeft = String(keypointManager.numKeypoints)
-                let notifKeypointsLeft = "Keypoints left"
-                let remainingKeypointAnnouncement = "\(numberKeypointsLeft) \(notifKeypointsLeft)"
-                announce(announcement: remainingKeypointAnnouncement)
-                // update directions to next keypoint
-                directionToNextKeypoint = getDirectionToNextKeypoint(currentLocation: curLocation)
-                setDirectionText(currentLocation: curLocation.location, direction: directionToNextKeypoint, displayDistance: false)
-            } else {
-                waypointFeedbackGenerator?.notificationOccurred(.success)
-                if (soundFeedback) { playSystemSound(id: 1016) }
-                // erase current keypoint node
-                keypointNode.removeFromParentNode()
-                //crumbNode.removeFromParentNode()
-                
-                if (keypointManager.isDetour)
-                {
-                    
-                    isRerouting = false
-                    // temporary copy to render next keypoint correctly
+            if (directionToNextKeypoint.targetState == PositionState.atTarget) {
+                if (!keypointManager.isLastKeypoint) {
                     // arrived at keypoint
                     // send haptic/sonic feedback
                     waypointFeedbackGenerator?.notificationOccurred(.success)
-                    announce(announcement: NSLocalizedString("returnedToMainPathAnnouncement", comment: "An announcement which lets the user know they are back on the main path after a detour"))
                     if (soundFeedback) { playSystemSound(id: 1016) }
                     
-                    // remove current visited keypoint from keypoint list
+                    // remove current visited keypont from keypoint list
                     keypointManager.popCurrentKeypoint()
-                    keypointManager.popDetour()
                     
                     // erase current keypoint and render next keypoint node
+                 
                     keypointNode.removeFromParentNode()
-                    if (keypointManager.hasKeypoints){
-                        renderKeypoint(keypointManager.currentLocation!)
-                    }
+                    //crumbNode.removeFromParentNode()
+
+                    renderKeypoint(keypointManager.currentLocation!)
                     
+                    //temp announcement to let you know how many keypoints are left
+                    let numberKeypointsLeft = String(keypointManager.numKeypoints)
+                    let notifKeypointsLeft = "Keypoints left"
+                    let remainingKeypointAnnouncement = "\(numberKeypointsLeft) \(notifKeypointsLeft)"
+                    announce(announcement: remainingKeypointAnnouncement)
+                    print("alana", remainingKeypointAnnouncement)
                     // update directions to next keypoint
                     directionToNextKeypoint = getDirectionToNextKeypoint(currentLocation: curLocation)
                     setDirectionText(currentLocation: curLocation.location, direction: directionToNextKeypoint, displayDistance: false)
-                }
-                else {
-                        // arrived at final keypoint
+                } else {
+                    waypointFeedbackGenerator?.notificationOccurred(.success)
+                    if (soundFeedback) { playSystemSound(id: 1016) }
+                    // erase current keypoint node
+                    keypointNode.removeFromParentNode()
+                    //crumbNode.removeFromParentNode()
+                    
+                    if (keypointManager.isDetour) {
+                        isRerouting = false
+                        // temporary copy to render next keypoint correctly
+                        // arrived at keypoint
                         // send haptic/sonic feedback
-                    
-                        isResumedRoute = false
-                        isNavigating = false
-                        isFinished = true
-                    
-                        followingCrumbs?.invalidate()
-                        droppingCrumbs?.invalidate()
-                        hapticTimer?.invalidate()
-                
-                        // update text and stop navigation
-                        if(sendLogs) {
-                            state = .ratingRoute(announceArrival: true)
+                        waypointFeedbackGenerator?.notificationOccurred(.success)
+                        announce(announcement: NSLocalizedString("returnedToMainPathAnnouncement", comment: "An announcement which lets the user know they are back on the main path after a detour"))
+                        if (soundFeedback) { playSystemSound(id: 1016) }
+                        
+                        keypointNode.removeFromParentNode()
+                        // remove current visited keypoint from keypoint list
+                        keypointManager.popCurrentKeypoint()
+                        print("alana pop detour")
+                        keypointManager.popDetour()
+                        
+                        // erase current keypoint and render next keypoint node
+                       
+                        if (keypointManager.hasKeypoints){
+                            renderKeypoint(keypointManager.currentLocation!)
+                            directionToNextKeypoint = getDirectionToNextKeypoint(currentLocation: curLocation)
+                            setDirectionText(currentLocation: curLocation.location, direction: directionToNextKeypoint, displayDistance: false)
                         }
-                        else {
-                            state = .mainScreen(announceArrival: true)
-                            logger.resetStateSequenceLog()
-                        }
+                        // update directions to next keypoint
+                    }
+                    else {
+                            // arrived at final keypoint
+                            // send haptic/sonic feedback
+                        
+                            isResumedRoute = false
+                            isNavigating = false
+                            isFinished = true
+                        
+                            followingCrumbs?.invalidate()
+                            droppingCrumbs?.invalidate()
+                            hapticTimer?.invalidate()
                     
+                            // update text and stop navigation
+                            if(sendLogs) {
+                                state = .ratingRoute(announceArrival: true)
+                            }
+                            else {
+                                state = .mainScreen(announceArrival: true)
+                                logger.resetStateSequenceLog()
+                            }
+                        
+                    }
                 }
-            }
             }
         }
     }
@@ -2110,7 +2026,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             // TODO: might want to indicate that something is wrong to the user
             return
         }
-       
+        let pathThreshold = Float(0.125)
+        let leavePathThreshold = Float(0.5)
+        let returnPathThreshold = Float(0.6)
+        
         let coneWidth: Float!
         let lateralDisplacementToleranceRatio: Float
         if strictHaptic {
@@ -2120,80 +2039,49 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             coneWidth = Float.pi/6
             lateralDisplacementToleranceRatio = 1.0
         }
-        if !paused {
-            if (isOffPath == false && keypointManager.hasKeypoints){
+        guard !paused else {return}
+        if (isOffPath == false && keypointManager.hasKeypoints){
             let directionToNextKeypoint = getDirectionToNextKeypoint(currentLocation: curLocation)
-            if !(keypointManager.prevKeypoint == nil)  {
-                if (!isRerouting && !nav.isFarFromPath(currentLocation: curLocation, prevKeypoint: keypointManager.prevKeypoint!, nextKeypoint: keypointManager.currentKeypoint!, isLastKeypoint: keypointManager.isLastKeypoint, threshold: 1/8 )){
-                    onPathIndex = recordingDetourCrumbs.count - 1
-                }
-                if(nav.isFarFromPath(currentLocation: curLocation, prevKeypoint: keypointManager.prevKeypoint!, nextKeypoint: keypointManager.currentKeypoint!, isLastKeypoint: keypointManager.isLastKeypoint, threshold: 1/4)){
-                    let timeInterval = feedbackTimer.timeIntervalSinceNow
-                    if(pathFindingFeedback){
-                        if((-timeInterval > 10*ViewController.FEEDBACKDELAY)) {
-                            if(nav.isFarFromPath(currentLocation: curLocation, prevKeypoint: keypointManager.prevKeypoint!, nextKeypoint: keypointManager.currentKeypoint!, isLastKeypoint: keypointManager.isLastKeypoint, threshold: 1/4) && nav.isFarFromKeypoint(currentLocation: curLocation, nextKeypoint: keypointManager.currentKeypoint!, threshold: 10.0)){
-                                isOffPath = true
-                                stopNavigationController.returnToPathButton.isHidden = false
-                                announce(announcement: NSLocalizedString("offPathWarning", comment: "An announcement that warns the user they have walked off the path" ))
-                                feedbackTimer = Date()
-                            }
-                        }
+            if let prevKeypoint = keypointManager.prevKeypoint, let curKeypoint = keypointManager.currentKeypoint {
+                if (!isRerouting && !nav.isFarFromPath(currentLocation: curLocation, prevKeypoint: prevKeypoint, nextKeypoint: curKeypoint, isLastKeypoint: keypointManager.isLastKeypoint, threshold: pathThreshold )){ onPathIndex = recordingDetourCrumbs.count - 1}
+                if(nav.isFarFromPath(currentLocation: curLocation, prevKeypoint: prevKeypoint, nextKeypoint: curKeypoint, isLastKeypoint: keypointManager.isLastKeypoint, threshold: leavePathThreshold)) {
+                    if(pathFindingFeedback && -feedbackTimer.timeIntervalSinceNow > ViewController.FEEDBACKDELAY){
+                        isOffPath = true
+                        stopNavigationController.returnToPathButton.isHidden = false
+                        announce(announcement: NSLocalizedString("offPathWarning", comment: "An announcement that warns the user they have walked off the path" ))
+                        feedbackTimer = Date()
                     }
-                }
-                else {
-                    if directionToNextKeypoint.lateralDistanceRatioWhenCrossingTarget < lateralDisplacementToleranceRatio || abs(directionToNextKeypoint.angleDiff) < coneWidth {
-                            let timeInterval = feedbackTimer.timeIntervalSinceNow
-                            if(-timeInterval > ViewController.FEEDBACKDELAY) {
-                               // wait until desired time interval before sending another feedback
-                                if (soundFeedback) {
-                                    playSystemSound(id: 1103) }
-                                if (hapticFeedback){
-                                    feedbackGenerator?.impactOccurred() }
-                                stopNavigationController.pauseButton.isHidden = false
-                                stopNavigationController.returnToPathButton.isHidden = true
-                                UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged , argument: nil)
-                                feedbackTimer = Date()
-                            }
-                        }
-                    else{      //if pointing away from path
-                        let timeInterval = feedbackTimer.timeIntervalSinceNow
-                            if(guidanceFeedback){
-                                if(-timeInterval > 10*ViewController.FEEDBACKDELAY) {
-                                    // wait until desired time interval before sending another feedback
-                                    if (hapticFeedback && !isOffPath){
-                                        if (directionToNextKeypoint.angleDiff < 0){
-                                            announce(announcement: NSLocalizedString("turnLeftUntilHapticFeedback", comment: "An announcement that lets the user know to turn left until they feel haptic feedback."))
-                                        }
-                                        else{
-                                            announce(announcement: NSLocalizedString("turnRightUntilHapticFeedback", comment: "An announcement that lets the user know to turn right until they feel haptic feedback."))
-                                            print(NSLocalizedString("turnRightUntilHapticFeedback", comment: "help"))
-                                            
-                                        }
-                                    }
-                                    else{
-                                        announceDirectionHelpPressed()
-                                    }
-                                    feedbackTimer = Date()
-                                }
-                            }
+                } else if (directionToNextKeypoint.lateralDistanceRatioWhenCrossingTarget < lateralDisplacementToleranceRatio || abs(directionToNextKeypoint.angleDiff) < coneWidth) {
+                    if(-feedbackTimer.timeIntervalSinceNow > ViewController.FEEDBACKDELAY) { // wait until desired time interval before sending another feedback
+                        if (soundFeedback) {playSystemSound(id: 1103)}
+                        if (hapticFeedback) {feedbackGenerator?.impactOccurred()}
+                        stopNavigationController.pauseButton.isHidden = false
+                        stopNavigationController.returnToPathButton.isHidden = true
+                        UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged , argument: nil)
+                        feedbackTimer = Date()
                     }
+                } else if (guidanceFeedback && (-feedbackTimer.timeIntervalSinceNow > 10*ViewController.FEEDBACKDELAY)) { // wait until desired time interval before sending another feedback, pointing away
+                    if (hapticFeedback && !isOffPath){
+                        if (directionToNextKeypoint.angleDiff < 0){
+                            announce(announcement: NSLocalizedString("turnLeftUntilHapticFeedback", comment: "An announcement that lets the user know to turn left until they feel haptic feedback."))
+                        } else {
+                            announce(announcement: NSLocalizedString("turnRightUntilHapticFeedback", comment: "An announcement that lets the user know to turn right until they feel haptic feedback."))
+                            print(NSLocalizedString("turnRightUntilHapticFeedback", comment: "help"))
+                        }
+                    } else {announceDirectionHelpPressed()}
+                    feedbackTimer = Date()
                 }
             }
-        }
-        else{
-            if (!nav.isFarFromPath(currentLocation: curLocation, prevKeypoint: keypointManager.prevKeypoint!, nextKeypoint: keypointManager.currentKeypoint!, isLastKeypoint: keypointManager.isLastKeypoint, threshold : 1/2) || !nav.isFarFromKeypoint(currentLocation: curLocation, nextKeypoint: keypointManager.currentKeypoint!, threshold: 10.0)){
+        } else if (keypointManager.hasKeypoints && detourIndex != nil) {
+            if (!nav.isFarFromPath(currentLocation: curLocation, prevKeypoint: keypointManager.prevKeypoint!, nextKeypoint: keypointManager.currentKeypoint!, isLastKeypoint: keypointManager.isLastKeypoint, threshold : returnPathThreshold)) {
                 isOffPath = false
                 detourIndex = nil
-                
             }
-            //increment the key index if it is time to go back
-            if (detourIndex == nil){
-                detourIndex = onPathIndex
-                stopNavigationController.pauseButton.isHidden = false
-                stopNavigationController.returnToPathButton.isHidden = false
-                UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged , argument: nil)
-            }
-        }
+        } else if (detourIndex == nil) { // captures the instance where you are off the path and shows the buttons to return
+            detourIndex = onPathIndex
+            stopNavigationController.pauseButton.isHidden = false
+            stopNavigationController.returnToPathButton.isHidden = false
+            UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged , argument: nil)
         }
     }
     
@@ -2209,6 +2097,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             recordingDetourCrumbs.append(curLocation) //edited to stop freezing
         }
         detourCrumbs = Array(recordingDetourCrumbs)
+        if detourIndex == nil {detourIndex = onPathIndex}
         let trimmedDetourCrumbs = detourCrumbs[detourIndex!...(detourCrumbs.count-1)]
         let detourPath = PathFinder(crumbs:trimmedDetourCrumbs.reversed(), hapticFeedback: hapticFeedback, voiceFeedback: voiceFeedback)
         keypointManager.pushDetour(detour: detourPath.keypoints)
