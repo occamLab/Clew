@@ -17,6 +17,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     /// A handle to the app's main window
     var window: UIWindow?
     
+    var authHelper: AuthenticationHelper?
+    
     /// view controller!
     var vc: ViewController!
     
@@ -45,8 +47,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window?.rootViewController = vc
         window?.makeKeyAndVisible()
         UIApplication.shared.isIdleTimerDisabled = true
-        let authHelper = AuthenticationHelper(window: window!)
-        authHelper.startSignInWithAppleFlow()
+        authHelper = AuthenticationHelper(window: window!)
+        authHelper?.startSignInWithAppleFlow()
 
         
         return true

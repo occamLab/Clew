@@ -11,7 +11,7 @@
 		1F27632422FCBB9900E1FCF8 /* BurgerMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F27632222FCBB6E00E1FCF8 /* BurgerMenuViewController.swift */; };
 		1F2971A522DF60F700B896C6 /* HelpCompiler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2B9D7022C3B50D00317DC8 /* HelpCompiler.swift */; };
 		1F2B9D7222C3B50D00317DC8 /* HelpCompiler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2B9D7022C3B50D00317DC8 /* HelpCompiler.swift */; };
-		1F2B9D8722C5446B00317DC8 /* BuildFile in Resources */ = {isa = PBXBuildFile; };
+		1F2B9D8722C5446B00317DC8 /* (null) in Resources */ = {isa = PBXBuildFile; };
 		2748B8490FCBA95C7AA028D7 /* Pods_Clew.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 942F73299DA8DCF97FAA974A /* Pods_Clew.framework */; };
 		4D6B00E51F33C9B800952242 /* Crumb.obj in Resources */ = {isa = PBXBuildFile; fileRef = 4D6B00E41F33C85500952242 /* Crumb.obj */; };
 		4DF05CC81F34EB6B008B0E31 /* Confirm.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4DF05CC71F34EB56008B0E31 /* Confirm.mp3 */; };
@@ -177,6 +177,7 @@
 		82A417E0262A205A001FCB8C /* AuthenticationHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationHelper.swift; sourceTree = "<group>"; };
 		82A417EC262A2140001FCB8C /* Clew Dev.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Clew Dev.entitlements"; sourceTree = "<group>"; };
 		82AD6A24252F80AA00902A11 /* speaker.mtl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = speaker.mtl; sourceTree = "<group>"; };
+		82E4A5CE262A26DC000BEB44 /* Clew.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Clew.entitlements; sourceTree = "<group>"; };
 		82F2DDD122E26A44005CD7D0 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		82F2DDD322E26A44005CD7D0 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/SettingsAndHelp.strings; sourceTree = "<group>"; };
 		85A1A72DC19F87F15B738291 /* Pods-Clew Dev.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew Dev.release.xcconfig"; path = "Pods/Target Support Files/Pods-Clew Dev/Pods-Clew Dev.release.xcconfig"; sourceTree = "<group>"; };
@@ -318,6 +319,7 @@
 		E5470EA922C119F4001092A4 /* Clew */ = {
 			isa = PBXGroup;
 			children = (
+				82E4A5CE262A26DC000BEB44 /* Clew.entitlements */,
 				E5D1695522E103A0008754D0 /* localizations */,
 				E5470EAA22C119F4001092A4 /* Voice Notes */,
 				E5470EAF22C119F4001092A4 /* Misc */,
@@ -587,7 +589,7 @@
 				77365B182343ECBA008BC35C /* BurgerMenu.storyboard in Resources */,
 				E59DA6BF22C65F5900FCD5A1 /* LaunchScreen.storyboard in Resources */,
 				E5470F4E22C119F5001092A4 /* GoogleService-Info_dev.plist in Resources */,
-				1F2B9D8722C5446B00317DC8 /* BuildFile in Resources */,
+				1F2B9D8722C5446B00317DC8 /* (null) in Resources */,
 				82AD6A25252F80AA00902A11 /* speaker.mtl in Resources */,
 				E5D1695E22E103A0008754D0 /* Localizable.strings in Resources */,
 				E5470F1A22C119F5001092A4 /* StopRecording.aiff in Resources */,
@@ -1065,6 +1067,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = Clew/Clew.entitlements;
 				CURRENT_PROJECT_VERSION = 47;
 				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
@@ -1088,6 +1091,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = Clew/Clew.entitlements;
 				CURRENT_PROJECT_VERSION = 47;
 				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
