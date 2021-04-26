@@ -287,7 +287,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// TODO: check compatability with rerouting
     func handleStateTransitionToReadyToNavigateOrPause(allowPause: Bool) {
         droppingCrumbs?.invalidate()
-
         updateHeadingOffsetTimer?.invalidate()
         showStartNavigationButton(allowPause: allowPause)
         suggestAdjustOffsetIfAppropriate()
@@ -323,7 +322,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         // render 3D keypoints
         renderKeypoint(keypointManager.currentLocation!)
 
-       
         
         // TODO: gracefully handle error
         keypointManager.setPrevLocation(location: getRealCoordinates(record: true)!.location)
@@ -349,6 +347,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         // make sure there are no old values hanging around
         headingRingBuffer.clear()
         locationRingBuffer.clear()
+        
+        if(isOffPath) {
+            announce(announcement: NSLocalizedString("OffPathWarning", comment: "Warns user that they may be off the path"))
+            stopNavigationController.returnToPathButton.isHidden = false
+        }
         
         droppingCrumbs = Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: #selector(dropCrumb), userInfo: nil, repeats: true)
         hapticTimer = Timer.scheduledTimer(timeInterval: 0.01, target: self, selector: (#selector(getHapticFeedback)), userInfo: nil, repeats: true)
@@ -903,7 +906,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         recordPathController.isAccessibilityElement = false
         if case .navigatingRoute = self.state {
             keypointNode.removeFromParentNode()
-            crumbNode.removeFromParentNode()
+            //crumbNode.removeFromParentNode()
             if (detourCrumbNode != nil) {
                 detourCrumbNode.removeFromParentNode()
             }
@@ -1646,7 +1649,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         
         // erase nearest keypoint
         keypointNode.removeFromParentNode()
-        crumbNode.removeFromParentNode()
+        //crumbNode.removeFromParentNode()
         if (detourCrumbNode != nil) {
             detourCrumbNode.removeFromParentNode()
         }
@@ -1817,9 +1820,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             if (isDetourCrumbs){
                 recordingDetourCrumbs.append(curLocation)
                 if (!stopNavigationController.returnToPathButton.isHidden) {
-                    renderOffPathCrumbs(curLocation)
+                    //renderOffPathCrumbs(curLocation)
                 }  else {
-                    renderCrumbs(curLocation)
+                    //renderCrumbs(curLocation)
             }
                 
             }
@@ -1852,15 +1855,15 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                     // erase current keypoint and render next keypoint node
                  
                     keypointNode.removeFromParentNode()
-                    //crumbNode.removeFromParentNode()
+        
 
                     renderKeypoint(keypointManager.currentLocation!)
                     
                     //temp announcement to let you know how many keypoints are left
-                    let numberKeypointsLeft = String(keypointManager.numKeypoints)
-                    let notifKeypointsLeft = "Keypoints left"
-                    let remainingKeypointAnnouncement = "\(numberKeypointsLeft) \(notifKeypointsLeft)"
-                    announce(announcement: remainingKeypointAnnouncement)
+                    //let numberKeypointsLeft = String(keypointManager.numKeypoints)
+                    //let notifKeypointsLeft = "Keypoints left"
+                    //let remainingKeypointAnnouncement = "\(numberKeypointsLeft) \(notifKeypointsLeft)"
+                    //announce(announcement: remainingKeypointAnnouncement)
                     // update directions to next keypoint
                     directionToNextKeypoint = getDirectionToNextKeypoint(currentLocation: curLocation)
                     setDirectionText(currentLocation: curLocation.location, direction: directionToNextKeypoint, displayDistance: false)
@@ -1869,7 +1872,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                     if (soundFeedback) { playSystemSound(id: 1016) }
                     // erase current keypoint node
                     keypointNode.removeFromParentNode()
-                    //crumbNode.removeFromParentNode()
+
                     
                     if (keypointManager.isDetour) {
                         isRerouting = false
@@ -1878,7 +1881,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                         // send haptic/sonic feedback
                         waypointFeedbackGenerator?.notificationOccurred(.success)
                         announce(announcement: NSLocalizedString("returnedToMainPathAnnouncement", comment: "An announcement which lets the user know they are back on the main path after a detour"))
-                        if (soundFeedback) { playSystemSound(id: 1016) }
+                        if (soundFeedback) { playSystemSound(id: 1321) }
                         
                         keypointNode.removeFromParentNode()
                         // remove current visited keypoint from keypoint list
@@ -2024,8 +2027,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             return
         }
         let pathThreshold = Float(0.125)
-        let leavePathThreshold = Float(0.5)
-        let returnPathThreshold = Float(0.6)
+        let leavePathThreshold = Float(1.2)
+        let returnPathThreshold = Float(1.4)
         
         let coneWidth: Float!
         let lateralDisplacementToleranceRatio: Float
