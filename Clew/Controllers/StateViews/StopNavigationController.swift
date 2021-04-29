@@ -70,13 +70,15 @@ class StopNavigationController: UIViewController {
     let arrow = UIBezierPath()
 
     func addArrowProperties(arrowLayer: CAShapeLayer) {
+        // floating arrow
         arrowLayer.strokeColor = UIColor.red.cgColor
         arrowLayer.lineWidth = 25
         arrowLayer.path = arrow.cgPath
         arrowLayer.fillColor = UIColor.red.cgColor
         arrowLayer.lineJoin = CAShapeLayerLineJoin.round // joins arrow head and body
-        arrowLayer.lineCap = CAShapeLayerLineCap.round   // rounds the edges
+        arrowLayer.lineCap = CAShapeLayerLineCap.round   // rounds edges
         
+        // arrow in stop button
 //        arrowLayer.strokeColor = UIColor.red.cgColor
 //        arrowLayer.lineWidth = 25
 //        arrowLayer.path = arrow.cgPath
