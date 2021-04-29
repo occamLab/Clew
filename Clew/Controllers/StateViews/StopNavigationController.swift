@@ -75,7 +75,7 @@ class StopNavigationController: UIViewController {
         arrowLayer.path = arrow.cgPath
         arrowLayer.fillColor = UIColor.red.cgColor
         arrowLayer.lineJoin = CAShapeLayerLineJoin.round // joins arrow head and body
-        arrowLayer.lineCap = CAShapeLayerLineCap.round   // rounds edges
+        arrowLayer.lineCap = CAShapeLayerLineCap.round   // rounds the edges
         
 //        arrowLayer.strokeColor = UIColor.red.cgColor
 //        arrowLayer.lineWidth = 25
