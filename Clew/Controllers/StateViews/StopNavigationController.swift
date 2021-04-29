@@ -11,7 +11,7 @@ import SwiftUI // for z-stack
 
 extension UIBezierPath {
     func createArrow(omega: CGFloat) {
-
+        // floating arrow
         let arrow_length = CGFloat(60)
         let x = arrow_length*sin(omega)
         let y = arrow_length*cos(omega)
@@ -35,7 +35,7 @@ extension UIBezierPath {
     }
     
     func createInnerArrow(omega: CGFloat) {
-
+        // arrow in stop button
         let arrow_height = CGFloat(75)
         let x = arrow_height*sin(omega)
         let y = arrow_height*cos(omega)
