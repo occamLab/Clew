@@ -292,6 +292,15 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         // render 3D keypoints
         renderKeypoint(keypoints[0].location)
         
+        // ? getting user location
+        prevKeypointPosition = getRealCoordinates(record: true)!.location
+        
+        // render path
+        renderPath(prevKeypointPosition, keypoints[0].location)
+        
+        // render pathpoints
+//        renderPathpoints(prevKeypointPosition, keypoints[0].location)
+        
         // render intermediate anchor points
         renderIntermediateAnchorPoints()
         
@@ -318,7 +327,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         // make sure there are no old values hanging around
         headingRingBuffer.clear()
         locationRingBuffer.clear()
+        
         hapticTimer = Timer.scheduledTimer(timeInterval: 0.01, target: self, selector: (#selector(getHapticFeedback)), userInfo: nil, repeats: true)
+//        arrowTimer = Timer.scheduledTimer(timeInterval: 0.01, target: self, selector: (#selector(updateArrow)), userInfo: nil, repeats: true)
     }
     
     /// Handler for the route rating app state
@@ -697,7 +708,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         // Add the scene to the view, which is a RootContainerView
         sceneView.frame = view.frame
         view.addSubview(sceneView)
-
+        
         setupAudioPlayers()
         loadAssets()
         createSettingsBundle()
@@ -849,6 +860,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         recordPathController.isAccessibilityElement = false
         if case .navigatingRoute = self.state {
             keypointNode.removeFromParentNode()
+//            pathObj?.removeFromParentNode()
+            pathpointObjs.map({$0.removeFromParentNode()})
+            pathpointObjs = []
             for anchorPointNode in anchorPointNodes {
                 anchorPointNode.removeFromParentNode()
             }
@@ -867,6 +881,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         logger.resetNavigationLog()
         logger.resetPathLog()
         hapticTimer?.invalidate()
+        arrowTimer?.invalidate()
         logger.resetStateSequenceLog()
     }
     
@@ -1332,6 +1347,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// SCNNode of the next keypoint
     var keypointNode: SCNNode!
     
+    /// SCNNode of the bar path
+    var pathObj: SCNNode?
+    
+    /// SCNNode of the spherical pathpoints
+    var pathpointObjs: [SCNNode] = []
+    
     /// SCNNode of the intermediate anchor points
     var anchorPointNodes: [SCNNode] = []
     
@@ -1351,6 +1372,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// times the generation of haptic feedback
     var hapticTimer: Timer?
+    
+    /// times the generation of arrow
+    var arrowTimer: Timer?
+    
+    /// arrow bezierpath
+    var arrowShapeLayer: CAShapeLayer?
     
     /// times when an announcement should be removed.  These announcements are displayed on the `announcementText` label.
     var announcementRemovalTimer: Timer?
@@ -1547,12 +1574,16 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         // stop navigation
         followingCrumbs?.invalidate()
         hapticTimer?.invalidate()
+        arrowTimer?.invalidate()
         
         feedbackGenerator = nil
         waypointFeedbackGenerator = nil
         
         // erase nearest keypoint
         keypointNode.removeFromParentNode()
+//        pathObj?.removeFromParentNode()
+        pathpointObjs.map({$0.removeFromParentNode()})
+        pathpointObjs = []
         for anchorPointNode in anchorPointNodes {
             anchorPointNode.removeFromParentNode()
         }
@@ -1721,6 +1752,15 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 keypointNode.removeFromParentNode()
                 renderKeypoint(keypoints[0].location)
                 
+                // erase current path and render next path
+                pathObj?.removeFromParentNode()
+                renderPath(prevKeypointPosition, keypoints[0].location)
+                
+                // erase current set of pathpoints and render next
+//                pathpointObjs.map({$0.removeFromParentNode()})
+//                pathpointObjs = []
+//                renderPathpoints(prevKeypointPosition, keypoints[0].location)
+                
                 // update directions to next keypoint
                 directionToNextKeypoint = getDirectionToNextKeypoint(currentLocation: curLocation)
                 setDirectionText(currentLocation: curLocation.location, direction: directionToNextKeypoint, displayDistance: false)
@@ -1732,12 +1772,16 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 
                 // erase current keypoint node
                 keypointNode.removeFromParentNode()
+//                pathObj?.removeFromParentNode()
+                pathpointObjs.map({$0.removeFromParentNode()})
+                pathpointObjs = []
                 for anchorPointNode in anchorPointNodes {
                     anchorPointNode.removeFromParentNode()
                 }
                 
                 followingCrumbs?.invalidate()
                 hapticTimer?.invalidate()
+                arrowTimer?.invalidate()
                 
                 // update text and stop navigation
                 if(sendLogs) {
@@ -1891,6 +1935,27 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             }
         }
     }
+    
+    /// Updates arrow pointer to direct user to next keypoint
+    @objc func updateArrow() {
+        guard let curLocation = getRealCoordinates(record: false) else {
+            // TODO: might want to indicate that something is wrong to the user
+            return
+        }
+        let directionToNextKeypoint = getDirectionToNextKeypoint(currentLocation: curLocation)
+
+        /// Create new arrow
+        let arrow_bez = UIBezierPath()
+//        arrow_bez.createArrow(omega: CGFloat(directionToNextKeypoint.angleDiff))
+        arrow_bez.createInnerArrow(omega: CGFloat(directionToNextKeypoint.angleDiff))
+        arrowShapeLayer = stopNavigationController.view.layer.sublayers![0] as? CAShapeLayer
+        arrowShapeLayer?.path = arrow_bez.cgPath
+        
+        /// Flattening effect, slight x axis rotate
+//        stopNavigationController.view.layer.sublayers?[0].transform = CATransform3DMakeRotation(CGFloat(1), 1, 0, 0)
+        
+    }
+    
     
     /// Communicates a message to the user via speech.  If VoiceOver is active, then VoiceOver is used to communicate the announcement, otherwise we use the AVSpeechEngine
     ///
@@ -2207,6 +2272,79 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         sceneView.scene.rootNode.addChildNode(keypointNode)
     }
     
+    /// TODO: User can choose color and opacity
+    /// Create the path SCNNode that corresponds to the long translucent bar element that looks like a route path.
+    /// - Parameters:
+    ///  - locationFront: the location of the keypoint user is approaching
+    ///  - locationBack: the location of the keypoint user is currently at
+    func renderPath(_ locationFront: LocationInfo, _ locationBack: LocationInfo) {
+        
+        let x = (locationFront.x + locationBack.x) / 2
+        let y = (locationFront.y + locationBack.y) / 2
+        let z = (locationFront.z + locationBack.z) / 2
+        let xDist = locationFront.x - locationBack.x
+        let yDist = locationFront.y - locationBack.y
+        let zDist = locationFront.z - locationBack.z
+        let planarDist = sqrt(pow(xDist, 2) + pow(zDist, 2))
+        let pathDist = sqrt(pow(xDist, 2) + pow(yDist, 2) + pow(zDist, 2))
+        let hAngle = atan2(-zDist, xDist)
+        let vAngle = atan2(yDist, planarDist)
+        
+        // render SCNNode of given keypoint
+        pathObj = SCNNode(geometry: SCNBox(width: CGFloat(pathDist), height: 0.08, length: 0.25, chamferRadius: 3))
+        
+        // configure node attributes
+        pathObj!.geometry?.firstMaterial!.diffuse.contents = UIColor.blue
+        pathObj!.opacity = CGFloat(0.5)
+        pathObj!.position = SCNVector3(x, y - 0.6, z)
+        // horizontal rotation
+        pathObj!.rotation = SCNVector4(0, 1, 0, hAngle)
+        // vertical rotation
+        pathObj!.localRotate(by: SCNQuaternion(x: 0, y: 0, z: 1, w: -vAngle))
+//        simd_quatf(angle: hAngle, axis: simd_float3(0, 1, 0)) * simd_quatf(angle: vAngle, axis: simd_float3(1, 0, 0))
+        
+        sceneView.scene.rootNode.addChildNode(pathObj!)
+    }
+    
+    /// Create several spherical SCNNodes that make up a dotted route path.
+    /// - Parameters:
+    ///  - locationFront: the location of the keypoint user is approaching
+    ///  - locationBack: the location of the keypoint user is currently at
+    func renderPathpoints(_ locationFront: LocationInfo, _ locationBack: LocationInfo) {
+        
+        let xDist = locationFront.x - locationBack.x
+        let yDist = locationFront.y - locationBack.y
+        let zDist = locationFront.z - locationBack.z
+        let pathDist = sqrt(pow(xDist, 2) + pow(yDist, 2) + pow(zDist, 2))
+        print(pathDist)
+        var numPathpoints = Int(pathDist / 0.5)
+
+        if (numPathpoints == 0) {
+            numPathpoints = 1
+        }
+
+//         configure attributes for each node
+        for index in 1...numPathpoints {
+            
+            print("Index: ", index)
+            // render SCNNode of given keypoint
+            let pathpointObj = SCNNode(geometry: SCNSphere(radius: 0.07))
+            pathpointObj.geometry?.firstMaterial!.diffuse.contents = UIColor.blue
+            pathpointObj.opacity = CGFloat(0.7)
+            
+            let pointDist = (pathDist / Float(numPathpoints+1)) * Float(index)
+            let ratio = pointDist/pathDist
+            let x = locationBack.x + ratio * xDist
+            let y = locationBack.y + ratio * yDist
+            let z = locationBack.z + ratio * zDist
+            pathpointObj.position = SCNVector3(x, y - 0.6, z)
+            pathpointObjs.append(pathpointObj)
+            sceneView.scene.rootNode.addChildNode(pathpointObj)
+            print("Here ", index)
+        }
+        
+    }
+    
     /// Compute the location of the device based on the ARSession.  If the record flag is set to true, record this position in the logs.
     ///
     /// - Parameter record: a Boolean indicating whether to record the computed position (true if it should be computed, false otherwise)
@@ -2228,8 +2366,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         return CurrentCoordinateInfo(LocationInfo(transform: currTransform), transMatrix: transMatrix)
     }
     
-    ///Called when there is a change in tracking state.  This is important for both announcing tracking errors to the user and also to triggering some app state transitions.
-    ///
+    /// Called when there is a change in tracking state.  This is important for both announcing tracking errors to the user and also to triggering some app state transitions.
     /// - Parameters:
     ///   - session: the AR session associated with the change in tracking state
     ///   - camera: the AR camera associated with the change in tracking state
