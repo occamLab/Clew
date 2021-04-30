@@ -277,3 +277,6 @@
 
 //Sharing routes
 "automaticEmailTextWhenSharingRoutes" = "Check out this route!";
+
+//Signing in with Apple
+"signInWithAppleTitle" = "Please sign in with your Apple ID";

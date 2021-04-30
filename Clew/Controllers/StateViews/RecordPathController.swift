@@ -130,6 +130,8 @@ class RecordPathController: UIViewController {
         stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 20).isActive = true
         stackView.topAnchor.constraint(equalTo: view.topAnchor, constant: 0).isActive = true
         
+        print("line 133")
+        print(parent!)
         if let parent: UIViewController = parent {
 
             routesButton.addTarget(parent,

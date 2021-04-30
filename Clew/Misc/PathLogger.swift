@@ -166,9 +166,39 @@ class PathLogger {
         let pathDate = dateFormatter.string(from: date)
         let pathID = UIDevice.current.identifierForVendor!.uuidString + dateFormatter.string(from: date)
         let userId = Analytics.appInstanceID()
+        let appleUserData = self.getAppleUserData()
+        print(appleUserData)
+        
+        
+        
+        // TODO: add email + apple identifier
+        // look into if a FIR ID makes things easier, as it supports other login methods
+        // implement the privaterelay.appleid.com / firebase, is there anything need to make this work
+        // put wherever userId is passed
+        // how to make it easy to link appleID to user? how to interact with list of users
+        // pass name, email, uuid
+
         
         sendMetaData(pathDate, pathID+"-0", userId, debug)
         sendPathData(pathID, userId)
+    }
+    
+    func getAppleUserData() -> Any? {
+        let keychain = UserDataKeychain()
+        var userDataOutput: UserData?
+
+        do {
+            let userData = try keychain.retrieve()
+            userDataOutput = userData
+            print("retrieved userData struct")
+            print(userData)
+        } catch {
+            userDataOutput = nil
+        }
+        print(userDataOutput)
+        
+        
+        return userDataOutput!
     }
     
     /// Send the meta data log to the cloud

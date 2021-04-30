@@ -62,6 +62,9 @@ enum AppState {
     /// the user is attempting to name the route they're in the process of saving
     case startingNameSavedRouteProcedure(worldMap: Any?)
     
+    /// the user is signing into their apple account on first launch
+    case signingInWithApple
+    
     /// rawValue is useful for serializing state values, which we are currently using for our logging feature
     var rawValue: String {
         switch self {
@@ -91,6 +94,8 @@ enum AppState {
             return "readyForFinalResumeAlignment"
         case .startingNameSavedRouteProcedure:
             return "startingNameSavedRouteProcedure"
+        case .signingInWithApple:
+            return "signingInWithApple"
         }
     }
 }
@@ -143,6 +148,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 break
             case .startingNameSavedRouteProcedure(let worldMap):
                 handleStateTransitionToStartingNameSavedRouteProcedure(worldMap: worldMap)
+            case .signingInWithApple:
+                handleStateTransitionToSigningInWithApple()
             case .initializing:
                 break
             }
@@ -235,6 +242,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             configuration.initialWorldMap = nil
         }
         showRecordPathButton(announceArrival: announceArrival)
+        
     }
     
     /// Handler for the recordingRoute app state
@@ -399,6 +407,16 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             endRouteAnchorPoint = RouteAnchorPoint()
         }
         try! showPauseTrackingButton()
+    }
+    
+    func handleStateTransitionToSigningInWithApple() {
+        print("debug: handleStateTransitionToSigningInWithApple")
+        showAppleSignInButton()
+    }
+    
+    func showAppleSignInButton(){
+        print("debug: showAppleSignInButton")
+        
     }
     
     /// Handler for the pauseWaitingPeriod app state
@@ -662,6 +680,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// route recording VC (called on app start)
     var recordPathController: RecordPathController!
     
+    /// appleID sign-in (called if first-time launch)
+//    var appleSignInController: AController!
+
     /// saving route name VC
     var nameSavedRouteController: NameSavedRouteController!
     
@@ -690,6 +711,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         resumeTrackingConfirmController = ResumeTrackingConfirmController()
         stopRecordingController = StopRecordingController()
         recordPathController = RecordPathController()
+//        appleSignInController = AppleSignInController()
         startNavigationController = StartNavigationController()
         stopNavigationController = StopNavigationController()
         nameSavedRouteController = NameSavedRouteController()
@@ -1340,6 +1362,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
 
     /// Interface for logging data about the session and the path
     var logger = PathLogger()
+    
     
     // MARK: - Timers for background functions
     

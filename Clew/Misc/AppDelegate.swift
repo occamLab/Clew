@@ -16,8 +16,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     /// A handle to the app's main window
     var window: UIWindow?
     
+    
     /// view controller!
-    var vc: ViewController!
+    var vc: UIViewController!
     
     /// Called when the app finishes launching.  Currently, this is where we setup Firebase and make sure the phone screen doesn't lock while we are using the app.
     ///
@@ -35,30 +36,51 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         #else
             FirebaseApp.configure()
         #endif
-        logUserProperties()
+//        logUserProperties()
         
-        vc = ViewController()
+        
+        let userDefaults: UserDefaults = UserDefaults.standard
+        
+        let firstTimeLoggingIn: Bool? = userDefaults.object(forKey: "firstTimeLogin") as? Bool
+        
+        
+        if #available(iOS 13.0, *) {
+//            if (firstTimeLoggingIn == nil) {
+            if true {
+    //        var appState: AppState = .followingTutorial
+                userDefaults.set(true, forKey: "firstTimeLogin")
+                window = UIWindow(frame:UIScreen.main.bounds)
+                window?.makeKeyAndVisible()
+                window?.rootViewController = AppleSignInController()
+                UIApplication.shared.isIdleTimerDisabled = true
+                return true
+            } else {
+    //        logUserProperties()
+            
+                vc = ViewController()
 
-        // Override point for customization after application launch.
-        window = UIWindow(frame:UIScreen.main.bounds)
-        window?.rootViewController = vc
-        window?.makeKeyAndVisible()
-        UIApplication.shared.isIdleTimerDisabled = true
-        
+                // Override point for customization after application launch.
+                window = UIWindow(frame:UIScreen.main.bounds)
+                window?.rootViewController = vc
+                window?.makeKeyAndVisible()
+                UIApplication.shared.isIdleTimerDisabled = true
+                
+            }
+        }
         return true
     }
     
+    // TODO: re-enable this
     /// entry point for when a file is opened from outside the app
     func application(_ app: UIApplication,
                      open url: URL,
                      options: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
         
         /// check imported file extension
-        guard url.pathExtension == "crd" else { return false }
-        
-        /// import the file here
-        vc.dataPersistence.importData(from: url)
-        
+//        guard url.pathExtension == "crd" else { return false }
+//
+//        /// import the file here
+//        vc.dataPersistence.importData(from: url)
         return true
     }
 
@@ -104,4 +126,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         Analytics.setUserProperty(String(UIAccessibility.isVoiceOverRunning), forName: "isVoiceOverRunning")
     }
 }
+ 
+//@available(iOS 13.0, *)
+//extension AppDelegate: UIWindowSceneDelegate {
+//  func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
+//    guard let windowScene = scene as? UIWindowScene else { return }
+//
+//    let window = UIWindow(windowScene: windowScene)
+//
+//    let rootView = OnboardingView().environment(\.window, window)
+//
+//    window.rootViewController = UIHostingController(rootView: rootView)
+//    self.window = window
+//    window.makeKeyAndVisible()
+//  }
+//}
 

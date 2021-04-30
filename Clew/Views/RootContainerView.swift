@@ -52,7 +52,7 @@ class RootContainerView: UIView {
     /// a timer that counts down during the alignment procedure
     /// (alignment is captured at the end of the time)
     var countdownTimer: SRCountdownTimer!
-
+    
     /// required for non storyboard UIView
     /// objects
     required init(coder aDecoder: NSCoder) {
@@ -132,5 +132,6 @@ class RootContainerView: UIView {
         addSubview(countdownTimer)
         addSubview(homeButton)
         addSubview(burgerMenuButton)
+        
     }
 }
