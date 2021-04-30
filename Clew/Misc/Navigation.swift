@@ -329,27 +329,38 @@ class Navigation {
     }
 }
 
+/// Keypoint managing class that handles keypoint functions
+/// TODO: Handle multiple reroutings potentially in the future, as well as skipping keypoints
 class KeypointManager{
+    /// Nested Linkedlist of keypoint info appends new lists for detours and pops through the inner lists for each keypoint
     private var keypoints: [[KeypointInfo]] = []
+    /// Index of keypoint info list being used, zero being the main route and higher numbers indicate rerouting
     private var keypointIndex = 0
+    /// Last keypoint node visited
     private var prevKeypointNode: KeypointInfo?
+    /// Location of last keypoint node visited
     private var prevKeypointLocation: LocationInfo?
     
+    /// Current route/path being used
     var currentPath: [KeypointInfo] {
         return keypoints[keypointIndex]
     }
+    /// Current keypoint being rendered
     var currentKeypoint: KeypointInfo? {
         return hasKeypoints ? keypoints[keypointIndex][0] : nil
     }
     
+    /// Last keypoint node visisted
     var prevKeypoint: KeypointInfo? {
         return prevKeypointNode
     }
     
+    /// Current location of user
     var currentLocation: LocationInfo? {
         return currentKeypoint?.location
     }
     
+    /// Location of last keypoint node visisted
     var prevLocation: LocationInfo? {
         if (prevKeypointNode == nil) {
             return prevKeypointNode?.location
@@ -358,55 +369,74 @@ class KeypointManager{
         }
     }
     
+    /// Returns true if there are keypoints
     var hasKeypoints: Bool {
         return (keypoints.count > keypointIndex && keypoints[keypointIndex].count > 0)
     }
     
-    // is detour
+    /// Returns true if not on main route/path
     var isDetour: Bool {
         return (keypointIndex > 0)
     }
-    // is last keypoint
+    /// Returns true if there is only one keypoint left
     var isLastKeypoint: Bool {
         return (numKeypoints == 1)
     }
     
+    /// Returns number of keypoints
     var numKeypoints: Int {
         return keypoints[keypointIndex].count
     }
     
+    /// Clears everything out when returning to mainscreen
     func clearManager() {
         keypointIndex = 0
         clearKeypoints()
     }
+    
+    /// Set the previous keypoint node visited
+    ///
+    /// - Parameters:
+    ///  - keypoint: a keypoint info object to be set as the previous keypoint, can be an arbitrary keypoint at the
+    ///              start of the route as there is no previous keypoint (handled elsewhere)
     func setPrevKeypoint(keypoint: KeypointInfo) {
         prevKeypointNode = keypoint
     }
     
+    /// Set Location of previously visited keypoint
+    /// - Parameters:
+    ///  - location: a locationinfo object to be set as the previous keypoint, can be an arbitrary location at the
+    ///              start of the route as there is no previous keypoint (handled elsewhere)
     func setPrevLocation(location: LocationInfo) {
         prevKeypointLocation = location
     }
     
+    /// Clears out keypoints
     func clearKeypoints() {
         keypoints = []
     }
     
+    /// Sets current path
     func setPath(path: [[KeypointInfo]]) {
         keypoints = path
     }
     
+    /// When arriving at a keypoint, removes it from the path
     func popCurrentKeypoint() {
         // prevKeypointPosition = keypoints[keypointIndex][0].location needs to be added to code
         setPrevKeypoint(keypoint: currentKeypoint!)
         keypoints[keypointIndex].remove(at: 0)
     }
     
-    // add detour/ push path
+    /// Adds a detour or path
+    /// - Parameters:
+    ///  - detour: a list of keypoints for a detour path made during a route
     func pushDetour(detour: [KeypointInfo]) {
         keypoints.append(detour)
         keypointIndex = keypoints.count - 1
     }
     
+    /// Removes a detour or path upon completion
     func popDetour() {
         if (keypoints[keypointIndex].count > 0){
             keypointIndex = keypointIndex - 1

@@ -349,7 +349,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         locationRingBuffer.clear()
         
         if(isOffPath) {
-            announce(announcement: NSLocalizedString("OffPathWarning", comment: "Warns user that they may be off the path"))
+            announce(announcement: NSLocalizedString("offPathWarning", comment: "Warns user that they may be off the path"))
             stopNavigationController.returnToPathButton.isHidden = false
         }
         
@@ -418,14 +418,16 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         if isTrackingPerformanceNormal && isSameMap {
             // To do: we can skip the whole process of relocalization since we are already using the correct map and tracking is normal.  It helps to strip out old anchors to reduce jitter though
             ///PATHPOINT load route from automatic alignment -> start navigation
+      
             isResumedRoute = true
             isAutomaticAlignment = true
             isInitializing = false
             state = .readyToNavigateOrPause(allowPause: false)
-        } else if (isRelocalizing || isTrackingPerformanceNormal) && !isInitializing {
+        } else if ((isRelocalizing && worldMap == nil  ) || isTrackingPerformanceNormal) && !isInitializing {
             // formerly || isTrackingPerformanceNormal && worldMap == nil
             // In this case we don't have to wait for the session to start up.  It will be created automatically.
             // this is same as option one but the map hasn't been localized yet
+      
             sceneView.session.run(configuration, options: [.removeExistingAnchors])
             isInitializing = false
             isResumedRoute = true
@@ -433,6 +435,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             state = .navigatingRoute
         } else {
             // this makes sure that the user doesn't resume the session until the session is initialized, but this is the first hitting play button
+         
             isInitializing = false
             self.sceneView.session.run(self.configuration, options: [.removeExistingAnchors, .resetTracking])
             continuationAfterSessionIsReady = {

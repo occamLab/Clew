@@ -105,7 +105,7 @@
 "11o'clockDirection" = "Slight left towards 11 o'clock";
 
 // Warning given if the user toggles rerouting
-"offPathWarning" = "You appear to be off the path, would you like to return?";
+"offPathWarning" = "You appear to be off the path, press the play button to return.";
 
 // Anchor Points
 
