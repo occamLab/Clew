@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SwiftUI
 
 /// A View Controller for handling rating the app
 /// functionality and route that was just navigated
@@ -20,6 +21,9 @@ class RouteRatingController: UIViewController {
     
     /// text label for the state
     var label: UILabel!
+    
+    /// the controller that hosts the popover survey
+    var hostingController: UIViewController?
     
     /// called when the view loads (any time)
     override func viewDidAppear(_ animated: Bool) {
@@ -135,5 +139,13 @@ class RouteRatingController: UIViewController {
                                        action: #selector(ViewController.sendDebugLogData),
                                        for: .touchUpInside)
         }
+        
+        NotificationCenter.default.addObserver(forName: Notification.Name("SurveyPopoverReadyToDismiss"), object: nil, queue: nil) { (notification) -> Void in
+            self.hostingController?.dismiss(animated: true)
+        }
+        
+        let swiftUIView = FirebaseFeedbackSurvey()
+        hostingController = UIHostingController(rootView: swiftUIView)
+        present(hostingController!, animated: true, completion: nil)
     }
 }
