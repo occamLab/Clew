@@ -183,7 +183,7 @@ class PathLogger {
     /// Compile log data and send it to the cloud
     ///
     /// - Parameter debug: true if the route was unsuccessful (useful for debugging) and false if the route was successful
-    func compileLogData(_ debug: Bool?) {
+    func compileLogData(_ debug: Bool?)->[String] {
         // compile log data
         let date = Date()
         let dateFormatter = DateFormatter()
@@ -196,9 +196,14 @@ class PathLogger {
         } else {
             userId = Analytics.appInstanceID()!
         }
-        
-        sendMetaData(pathDate, pathID+"-0", userId, debug)
-        sendPathData(pathID, userId)
+        var logFileURLs: [String] = []
+        if let metaDataLogURL = sendMetaData(pathDate, pathID+"-0", userId, debug) {
+            logFileURLs.append(metaDataLogURL)
+        }
+        if let pathDataLogURL = sendPathData(pathID, userId) {
+            logFileURLs.append(pathDataLogURL)
+        }
+        return logFileURLs
     }
     
     /// Send the meta data log to the cloud
@@ -208,7 +213,7 @@ class PathLogger {
     ///   - pathID: the path id
     ///   - userId: the user id
     ///   - debug: true if the route was unsuccessful (useful for debugging) and false if the route was successful
-    func sendMetaData(_ pathDate: String, _ pathID: String, _ userId: String, _ debug: Bool?) {
+    func sendMetaData(_ pathDate: String, _ pathID: String, _ userId: String, _ debug: Bool?)->String? {
         let pathType: String
         if debug == nil {
             pathType = "notrated"
@@ -240,7 +245,7 @@ class PathLogger {
         do {
             let jsonData = try JSONSerialization.data(withJSONObject: body, options: .prettyPrinted)
             // here "jsonData" is the dictionary encoded in JSON data
-            let storageRef = storageBaseRef.child(userId + "_" + pathID + "_metadata.json")
+            let storageRef = storageBaseRef.child("logs").child(userId).child(pathID + "_metadata.json")
             let fileType = StorageMetadata()
             fileType.contentType = "application/json"
             // upload the image to Firebase storage and setup auto snapshotting
@@ -251,8 +256,10 @@ class PathLogger {
                     return
                 }
             }
+            return storageRef.fullPath
         } catch {
             print(error.localizedDescription)
+            return nil
         }
     }
     
@@ -261,7 +268,7 @@ class PathLogger {
     /// - Parameters:
     ///   - pathID: the id of the path
     ///   - userId: the user id
-    func sendPathData(_ pathID: String, _ userId: String) {
+    func sendPathData(_ pathID: String, _ userId: String)->String? {
         let body: [String : Any] = ["userId": userId,
                                     "PathID": pathID,
                                     "PathDate": "0",
@@ -276,19 +283,21 @@ class PathLogger {
         do {
             let jsonData = try JSONSerialization.data(withJSONObject: body, options: .prettyPrinted)
             // here "jsonData" is the dictionary encoded as a JSON
-            let storageRef = storageBaseRef.child(userId + "_" + pathID + "_pathdata.json")
+            let storageRef = storageBaseRef.child("logs").child(userId).child(pathID + "_pathdata.json")
             let fileType = StorageMetadata()
             fileType.contentType = "application/json"
             // upload the image to Firebase storage and setup auto snapshotting
             storageRef.putData(jsonData, metadata: fileType) { (metadata, error) in
-                guard metadata != nil else {
+                guard let metadata = metadata else {
                     // Uh-oh, an error occurred!
                     print("could not upload path data to firebase", error!.localizedDescription)
                     return
                 }
             }
+            return storageRef.fullPath
         } catch {
             print(error.localizedDescription)
+            return nil
         }
     }
 }

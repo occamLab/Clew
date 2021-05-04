@@ -5,12 +5,12 @@
 //  Created by Chris Seonghwan Yoon & Jeremy Ryan on 7/10/17.
 //
 // Enhanced Logging:
-//   - Correlate surveys with path logs
+//   - Don't over-survey
 //
 // Confirmed issues
 // - We are not doing a proper job dealing with resumed routes with respect to logging (we always send recorded stuff in the log file, which we don't always have access to)
 //
-// Voie Note Recording Feature
+// Voice Note Recording Feature
 // - think about direction of device and how it relates to the route itself (e.g., look to your left)
 // - Get buttons to align in the recording view (add transparent third button)
 //
@@ -1658,13 +1658,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     func sendLogDataHelper(pathStatus: Bool?, announceArrival: Bool = false) {
         // send success log data to Firebase
-        logger.compileLogData(pathStatus)
+        let logFileURLs = logger.compileLogData(pathStatus)
         logger.resetStateSequenceLog()
         state = .mainScreen(announceArrival: announceArrival)
         if sendLogs {
             // do this in a little while to give it time to announce arrival
             DispatchQueue.main.asyncAfter(deadline: .now() + (announceArrival ? 3 : 1)) {
-                let swiftUIView = FirebaseFeedbackSurvey()
+                let swiftUIView = FirebaseFeedbackSurvey(logFileURLs: logFileURLs)
                 self.hostingController = UISurveyHostingController(rootView: swiftUIView)
                 NotificationCenter.default.post(name: Notification.Name("ClewPopoverDisplayed"), object: nil)
                 self.present(self.hostingController!, animated: true, completion: nil)

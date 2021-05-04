@@ -59,9 +59,14 @@ struct FirebaseFeedbackSurvey: View {
     
     var simpleForm = SF()
     var presentingVC: UIViewController?
+    let logFileURLs: [String]
     @State var testText: String = ""
     @State var calculatedHeight: CGFloat = 0.0
 
+    init(logFileURLs: [String]) {
+        self.logFileURLs = logFileURLs
+    }
+    
     var body: some View {
         let orderedQuestions = FirebaseFeedbackSurveyModel.shared.questions.sorted(by: {$0.order < $1.order})
         
@@ -88,6 +93,7 @@ struct FirebaseFeedbackSurvey: View {
                             var formValues = self.simpleForm.getValues()
                             formValues["_dateSubmitted"] = Date().timeIntervalSince1970
                             formValues["_uid"] = Auth.auth().currentUser?.uid ?? "notsignedin"
+                            formValues["_logFileURLs"] = logFileURLs
                             let jsonData = try! JSONSerialization.data(withJSONObject: formValues, options: .prettyPrinted)
                             self.uploadToFirebase(data: jsonData)
                         }
