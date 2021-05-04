@@ -152,16 +152,6 @@
 			<key>FooterText</key>
 			<string>Help us improve the app by logging your Clew experience. These logs will not include any images or personal information.</string>
 		</dict>
-		<dict>
-			<key>Type</key>
-			<string>PSToggleSwitchSpecifier</string>
-			<key>Title</key>
-			<string>Send Logs</string>
-			<key>Key</key>
-			<string>sendLogs</string>
-			<key>DefaultValue</key>
-			<true/>
-		</dict>
 	</array>
 </dict>
 </plist>

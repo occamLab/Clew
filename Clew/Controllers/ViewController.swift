@@ -5,7 +5,7 @@
 //  Created by Chris Seonghwan Yoon & Jeremy Ryan on 7/10/17.
 //
 // Enhanced Logging:
-//   - Don't over-survey
+//   - Internationalization of survey
 //
 // Confirmed issues
 // - We are not doing a proper job dealing with resumed routes with respect to logging (we always send recorded stuff in the log file, which we don't always have access to)
@@ -112,6 +112,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     var trackingSessionState : ARCamera.TrackingState?
     
     let surveyModel = FirebaseFeedbackSurveyModel.shared
+    
+    /// the last time this particular user was surveyed (nil if we don't know this information or it hasn't been loaded from the database yet)
+    var lastSurveyTime: Double?
     
     /// The state of the app.  This should be constantly referenced and updated as the app transitions
     var state = AppState.initializing {
@@ -784,6 +787,21 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         responsePathRef.observe(.childAdded) { (snapshot) -> Void in
             self.handleNewConfig(snapshot: snapshot)
         }
+        if let currentUID = Auth.auth().currentUser?.uid {
+            databaseHandle.reference(withPath: "\(currentUID)").child("surveys").getData() { (error, snapshot) in
+                if let error = error {
+                    print("Error getting data \(error)")
+                }
+                else if snapshot.exists(), let userDict = snapshot.value as? [String : AnyObject], let lastSurveyTime = userDict["lastSurveyTime"] as? Double {
+                    print("Got data \(snapshot.value!)")
+                    self.lastSurveyTime = lastSurveyTime
+                }
+                else {
+                    print("No data available")
+                }
+            }
+        }
+        
     }
     
     /// Respond to any dynamic reconfiguration requests (this is currently not used in the app store version of Clew).
@@ -1034,7 +1052,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         soundFeedback = defaults.bool(forKey: "soundFeedback")
         voiceFeedback = defaults.bool(forKey: "voiceFeedback")
         hapticFeedback = defaults.bool(forKey: "hapticFeedback")
-        sendLogs = defaults.bool(forKey: "sendLogs")
+        sendLogs = true // (making this mandatory) defaults.bool(forKey: "sendLogs")
         timerLength = defaults.integer(forKey: "timerLength")
         adjustOffset = defaults.bool(forKey: "adjustOffset")
         nav.useHeadingOffset = adjustOffset
@@ -1664,10 +1682,19 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         if sendLogs {
             // do this in a little while to give it time to announce arrival
             DispatchQueue.main.asyncAfter(deadline: .now() + (announceArrival ? 3 : 1)) {
-                let swiftUIView = FirebaseFeedbackSurvey(logFileURLs: logFileURLs)
-                self.hostingController = UISurveyHostingController(rootView: swiftUIView)
-                NotificationCenter.default.post(name: Notification.Name("ClewPopoverDisplayed"), object: nil)
-                self.present(self.hostingController!, animated: true, completion: nil)
+                if self.lastSurveyTime == nil || -Date(timeIntervalSince1970: self.lastSurveyTime!).timeIntervalSinceNow >= 3600*24 {
+                    self.lastSurveyTime = Date().timeIntervalSince1970
+                    
+                    if let currentUID = Auth.auth().currentUser?.uid {
+                        let surveyInfo = ["lastSurveyTime": self.lastSurveyTime]
+                        self.databaseHandle.reference(withPath: "\(currentUID)").child("surveys").updateChildValues(surveyInfo)
+                    }
+                    
+                    let swiftUIView = FirebaseFeedbackSurvey(logFileURLs: logFileURLs)
+                    self.hostingController = UISurveyHostingController(rootView: swiftUIView)
+                    NotificationCenter.default.post(name: Notification.Name("ClewPopoverDisplayed"), object: nil)
+                    self.present(self.hostingController!, animated: true, completion: nil)
+                }
             }
         }
     }
