@@ -25,6 +25,7 @@
 		823DA455252F7EA800BB5E6B /* speaker.obj in Resources */ = {isa = PBXBuildFile; fileRef = 823DA453252F7EA800BB5E6B /* speaker.obj */; };
 		82569F4E22187E6500448B45 /* help in Resources */ = {isa = PBXBuildFile; fileRef = 82569F4D22187E6500448B45 /* help */; };
 		82569F4F22187E6500448B45 /* help in Resources */ = {isa = PBXBuildFile; fileRef = 82569F4D22187E6500448B45 /* help */; };
+		82A0E50F264194F500F096FE /* SimpleForm in Frameworks */ = {isa = PBXBuildFile; productRef = 82A0E50E264194F500F096FE /* SimpleForm */; };
 		82A417E1262A205A001FCB8C /* AuthenticationHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82A417E0262A205A001FCB8C /* AuthenticationHelper.swift */; };
 		82A417E2262A205A001FCB8C /* AuthenticationHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82A417E0262A205A001FCB8C /* AuthenticationHelper.swift */; };
 		82AD6A25252F80AA00902A11 /* speaker.mtl in Resources */ = {isa = PBXBuildFile; fileRef = 82AD6A24252F80AA00902A11 /* speaker.mtl */; };
@@ -253,6 +254,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				82A0E50F264194F500F096FE /* SimpleForm in Frameworks */,
 				B0A563F6FE1007A2716DC876 /* Pods_Clew_Dev.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -505,6 +507,9 @@
 			dependencies = (
 			);
 			name = "Clew Dev";
+			packageProductDependencies = (
+				82A0E50E264194F500F096FE /* SimpleForm */,
+			);
 			productName = Clew;
 			productReference = B7EB59EC20F693EB00FBBC6A /* Clew Dev.app */;
 			productType = "com.apple.product-type.application";
@@ -1284,6 +1289,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		82A0E50E264194F500F096FE /* SimpleForm */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 82B454CE2640699500B610A3 /* XCRemoteSwiftPackageReference "SimpleForm" */;
+			productName = SimpleForm;
+		};
 		82B454CF2640699500B610A3 /* SimpleForm */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 82B454CE2640699500B610A3 /* XCRemoteSwiftPackageReference "SimpleForm" */;

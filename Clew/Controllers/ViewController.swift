@@ -5,12 +5,7 @@
 //  Created by Chris Seonghwan Yoon & Jeremy Ryan on 7/10/17.
 //
 // Enhanced Logging:
-//   - Logging which route is being navigated
-//   - Logging settings
-//   - Always send logs even if not rating route
-//   - Log uid
-//   - put voiceover focus on survey when it pops up
-//   - Log use of offset feature
+//   - Correlate surveys with path logs
 //
 // Confirmed issues
 // - We are not doing a proper job dealing with resumed routes with respect to logging (we always send recorded stuff in the log file, which we don't always have access to)
@@ -746,8 +741,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         NotificationCenter.default.addObserver(forName: Notification.Name("SurveyPopoverReadyToDismiss"), object: nil, queue: nil) { (notification) -> Void in
             self.hostingController?.dismiss(animated: true)
             NotificationCenter.default.post(name: Notification.Name("ClewPopoverDismissed"), object: nil)
+            // TODO: I18N / L10N
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                self.announce(announcement: "Thank you for your feedback")
+            }
         }
-        
     }
     
     /// Create the audio player objdcts for the various app sounds.  Creating them ahead of time helps reduce latency when playing them later.
@@ -794,10 +792,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     func handleNewConfig(snapshot: DataSnapshot) {
         if snapshot.key == "adjust_offset", let newValue = snapshot.value as? Bool {
             adjustOffset = newValue
-            if !adjustOffset {
-                // clear the offset in case one was set from before
-                nav.headingOffset = 0.0
-            }
+            nav.useHeadingOffset = adjustOffset
             print("set new adjust offset value", newValue)
         } else if snapshot.key == "strict_haptic", let newValue = snapshot.value as? Bool {
             strictHaptic = newValue
@@ -1042,9 +1037,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         sendLogs = defaults.bool(forKey: "sendLogs")
         timerLength = defaults.integer(forKey: "timerLength")
         adjustOffset = defaults.bool(forKey: "adjustOffset")
+        nav.useHeadingOffset = adjustOffset
         
         // TODO: log settings here
-        // logger.registerSettings(unit: defaultUnit, ...)
+        logger.logSettings(defaultUnit: defaultUnit, defaultColor: defaultColor, soundFeedback: soundFeedback, voiceFeedback: voiceFeedback, hapticFeedback: hapticFeedback, sendLogs: sendLogs, timerLength: timerLength, adjustOffset: adjustOffset)
         
         // leads to JSON like:
         //   options: { "unit": "meter", "soundFeedback", true, ... }
@@ -1151,6 +1147,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// - Parameter announcement: the announcement to read after a 2 second delay
     func delayTransition(announcement: String? = nil, initialFocus: UIView? = nil) {
         // this notification currently cuts off the announcement of the button that was just pressed
+        print("initialFocus \(initialFocus) announcement \(announcement)")
         UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: initialFocus)
         if let announcement = announcement {
             if UIAccessibility.isVoiceOverRunning {
@@ -1665,10 +1662,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         logger.resetStateSequenceLog()
         state = .mainScreen(announceArrival: announceArrival)
         if sendLogs {
-            let swiftUIView = FirebaseFeedbackSurvey()
-            hostingController = UIHostingController(rootView: swiftUIView)
-            NotificationCenter.default.post(name: Notification.Name("ClewPopoverDisplayed"), object: nil)
-            present(hostingController!, animated: true, completion: nil)
+            // do this in a little while to give it time to announce arrival
+            DispatchQueue.main.asyncAfter(deadline: .now() + (announceArrival ? 3 : 1)) {
+                let swiftUIView = FirebaseFeedbackSurvey()
+                self.hostingController = UISurveyHostingController(rootView: swiftUIView)
+                NotificationCenter.default.post(name: Notification.Name("ClewPopoverDisplayed"), object: nil)
+                self.present(self.hostingController!, animated: true, completion: nil)
+            }
         }
     }
     
@@ -1792,9 +1792,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                     lastRecordPhaseOffsetTime = Date()
                 }
             }
-            if adjustOffset {
-                nav.headingOffset = newOffset
-            }
+            nav.headingOffset = newOffset
         }
     }
     
@@ -1825,10 +1823,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// send haptic feedback if the device is pointing towards the next keypoint.
     @objc func getHapticFeedback() {
-        // Conserve CPU by only calculating the offset if the user has requested it
-        if adjustOffset {
-            updateHeadingOffset()
-        }
+        updateHeadingOffset()
         guard let curLocation = getRealCoordinates(record: false) else {
             // TODO: might want to indicate that something is wrong to the user
             return
@@ -2204,7 +2199,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         
         // record location data in debug logs
         if(record) {
-            logger.logTransformMatrix(state: state, scn: scn)
+            logger.logTransformMatrix(state: state, scn: scn, headingOffset: nav.headingOffset, useHeadingOffset: nav.useHeadingOffset)
         }
         return CurrentCoordinateInfo(LocationInfo(transform: currTransform), transMatrix: transMatrix)
     }
@@ -2383,6 +2378,15 @@ extension ViewController: UIPopoverPresentationControllerDelegate {
         if let popoverController = segue.destination.popoverPresentationController, let button = sender as? UIButton {
             popoverController.delegate = self
             popoverController.sourceRect = button.bounds
+        }
+    }
+}
+
+class UISurveyHostingController: UIHostingController<FirebaseFeedbackSurvey> {
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: self.view)
         }
     }
 }

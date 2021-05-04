@@ -19,12 +19,13 @@ import SceneKit
 class PathLogger {
     /// A handle to the Firebase storage
     let storageBaseRef = Storage.storage().reference()
-
-    /// path data taken during RECORDPATH - [[1x16 transform matrix]]
+    /// history of settings in the app
+    var settingsHistory: [(Date, Dictionary<String, Any>)] = []
+    /// path data taken during RECORDPATH - [[1x16 transform matrix, navigation offset, use navigation offset]]
     var pathData: LinkedList<[Float]> = []
     /// time stamps for pathData
     var pathDataTime: LinkedList<Double> = []
-    /// path data taken during NAVIGATEPATH - [[1x16 transform matrix]]
+    /// path data taken during NAVIGATEPATH - [[1x16 transform matrix, navigation offset, use navigation offset]]
     var navigationData: LinkedList<[Float]> = []
     /// time stamps for navigationData
     var navigationDataTime: LinkedList<Double> = []
@@ -104,12 +105,15 @@ class PathLogger {
     /// - Parameters:
     ///   - state: the app's state (this helps determine whether to log the transformation as part of the path recording or navigation data)
     ///   - scn: the 4x4 matrix that encodes the position and orientation of the phone
-    func logTransformMatrix(state: AppState, scn: SCNMatrix4) {
+    ///   - headingOffset: the offset
+    func logTransformMatrix(state: AppState, scn: SCNMatrix4, headingOffset: Float?, useHeadingOffset: Bool) {
         let logTime = -dataTimer.timeIntervalSinceNow
+        
+        // TODO: figure out better way to indicate nil value than hardcoded value of -1000.0
         let logMatrix = [scn.m11, scn.m12, scn.m13, scn.m14,
                          scn.m21, scn.m22, scn.m23, scn.m24,
                          scn.m31, scn.m32, scn.m33, scn.m34,
-                         scn.m41, scn.m42, scn.m43, scn.m44]
+                         scn.m41, scn.m42, scn.m43, scn.m44, headingOffset == nil ? -1000.0 : headingOffset!, useHeadingOffset ? 1.0 : 0.0]
         if case .navigatingRoute = state {
             navigationData.append(logMatrix)
             navigationDataTime.append(logTime)
@@ -128,6 +132,10 @@ class PathLogger {
             let data = [keypoint.location.x, keypoint.location.y, keypoint.location.z, keypoint.location.yaw]
             keypointData.append(data)
         }
+    }
+    
+    func logSettings(defaultUnit: Int, defaultColor: Int, soundFeedback: Bool, voiceFeedback: Bool, hapticFeedback: Bool, sendLogs: Bool, timerLength: Int, adjustOffset: Bool) {
+        settingsHistory.append((Date(), ["defaultUnit": defaultUnit, "defaultColor": defaultColor, "soundFeedback": soundFeedback, "voiceFeedback": voiceFeedback, "hapticFeedback": hapticFeedback, "sendLogs": sendLogs, "timerLength": timerLength, "adjustOffset": adjustOffset]))
     }
     
     /// Log language used by user in recording.
@@ -149,6 +157,10 @@ class PathLogger {
         trackingErrorData = []
         trackingErrorTime = []
         trackingErrorPhase = []
+        
+        // reset these
+        currentNavigationMap = nil
+        currentNavigationRoute = nil
     }
     
     /// Reset the logging variables having to do with path navigation.
@@ -159,8 +171,6 @@ class PathLogger {
         speechData = []
         speechDataTime = []
         dataTimer = Date()
-        currentNavigationMap = nil
-        currentNavigationRoute = nil
     }
     
     /// Reset the logging variables having to do with state sequence tracking
@@ -180,10 +190,15 @@ class PathLogger {
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZZZZZ"
         let pathDate = dateFormatter.string(from: date)
         let pathID = UIDevice.current.identifierForVendor!.uuidString + dateFormatter.string(from: date)
-        let userId = Analytics.appInstanceID()
+        let userId: String
+        if Auth.auth().currentUser != nil {
+            userId = Auth.auth().currentUser!.uid
+        } else {
+            userId = Analytics.appInstanceID()!
+        }
         
-        sendMetaData(pathDate, pathID+"-0", userId!, debug)
-        sendPathData(pathID, userId!)
+        sendMetaData(pathDate, pathID+"-0", userId, debug)
+        sendPathData(pathID, userId)
     }
     
     /// Send the meta data log to the cloud
@@ -203,10 +218,16 @@ class PathLogger {
             pathType = "success"
         }
         
+        // compute time stamps for settings
+        for i in 0..<settingsHistory.count {
+            settingsHistory[i].1["relativeTimeStamp"] = settingsHistory[i].0.timeIntervalSince(stateTransitionLogTimer)
+        }
+        
         let body: [String : Any] = ["userId": userId,
                                     "PathID": pathID,
                                     "PathDate": pathDate,
                                     "PathType": pathType,
+                                    "isVoiceOverOn": UIAccessibility.isVoiceOverRunning,
                                     "routeId": currentNavigationRoute != nil ? currentNavigationRoute!.id : "",
                                     "hasMap": currentNavigationMap != nil,
                                     "keypointData": Array(keypointData),
@@ -214,7 +235,8 @@ class PathLogger {
                                     "trackingErrorTime": Array(trackingErrorTime),
                                     "trackingErrorData": Array(trackingErrorData),
                                     "stateSequence": Array(stateSequence),
-                                    "stateSequenceTime": Array(stateSequenceTime)]
+                                    "stateSequenceTime": Array(stateSequenceTime),
+                                    "settingsHistory": settingsHistory.map({$0.1})]
         do {
             let jsonData = try JSONSerialization.data(withJSONObject: body, options: .prettyPrinted)
             // here "jsonData" is the dictionary encoded in JSON data
