@@ -8,6 +8,9 @@
 //   - Logging which route is being navigated
 //   - Logging settings
 //   - Always send logs even if not rating route
+//   - Log uid
+//   - put voiceover focus on survey when it pops up
+//   - Log use of offset feature
 //
 // Confirmed issues
 // - We are not doing a proper job dealing with resumed routes with respect to logging (we always send recorded stuff in the log file, which we don't always have access to)
@@ -37,6 +40,7 @@ import VectorMath
 import Firebase
 import FirebaseDatabase
 import SRCountdownTimer
+import SwiftUI
 
 /// A custom enumeration type that describes the exact state of the app.  The state is not exhaustive (e.g., there are Boolean flags that also track app state).
 enum AppState {
@@ -48,8 +52,6 @@ enum AppState {
     case readyToNavigateOrPause(allowPause: Bool)
     /// User is navigating along a route
     case navigatingRoute
-    /// User is rating the route
-    case ratingRoute(announceArrival: Bool)
     /// The app is starting up
     case initializing
     /// The user has requested a pause, but has not yet put the phone in the save location
@@ -78,8 +80,6 @@ enum AppState {
             return "readyToNavigateOrPause"
         case .navigatingRoute:
             return "navigatingRoute"
-        case .ratingRoute(let announceArrival):
-            return "ratingRoute(announceArrival=\(announceArrival))"
         case .initializing:
             return "initializing"
         case .startingPauseProcedure:
@@ -129,13 +129,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 handleStateTransitionToReadyToNavigateOrPause(allowPause: recordingSingleUseRoute)
             case .navigatingRoute:
                 handleStateTransitionToNavigatingRoute()
-            case .ratingRoute(let announceArrival):
-                handleStateTransitionToRatingRoute(announceArrival: announceArrival)
             case .mainScreen(let announceArrival):
                 handleStateTransitionToMainScreen(announceArrival: announceArrival)
             case .startingPauseProcedure:
                 handleStateTransitionToStartingPauseProcedure()
-
             case .pauseWaitingPeriod:
                 handleStateTransitionToPauseWaitingPeriod()
             case .completingPauseProcedure:
@@ -326,13 +323,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         headingRingBuffer.clear()
         locationRingBuffer.clear()
         hapticTimer = Timer.scheduledTimer(timeInterval: 0.01, target: self, selector: (#selector(getHapticFeedback)), userInfo: nil, repeats: true)
-    }
-    
-    /// Handler for the route rating app state
-    ///
-    /// - Parameter announceArrival: a Boolean that is true if we should announce that the user has arrived at the destination and false otherwise
-    func handleStateTransitionToRatingRoute(announceArrival: Bool) {
-        showRouteRating(announceArrival: announceArrival)
     }
     
     /// Handler for the startingResumeProcedure app state
@@ -547,7 +537,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// Hide all the subviews.  TODO: This should probably eventually refactored so it happens more automatically.
     func hideAllViewsHelper() {
         recordPathController.remove()
-        routeRatingController.remove()
         stopRecordingController.remove()
         startNavigationController.remove()
         stopNavigationController.remove()
@@ -653,8 +642,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// child view controllers for various app states
     
-    /// route rating VC
-    var routeRatingController: RouteRatingController!
+    /// the controller that hosts the popover survey
+    var hostingController: UIViewController?
     
     /// route navigation pausing VC
     var pauseTrackingController: PauseTrackingController!
@@ -693,7 +682,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         view = RootContainerView(frame: UIScreen.main.bounds)
         
         // initialize child view controllers
-        routeRatingController = RouteRatingController()
         pauseTrackingController = PauseTrackingController()
         resumeTrackingController = ResumeTrackingController()
         resumeTrackingConfirmController = ResumeTrackingConfirmController()
@@ -747,13 +735,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             if self.stopRecordingController.parent == self {
                 /// set  record voice note as active
                 UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: self.stopRecordingController.recordVoiceNoteButton)
-            
             }
         }
 
         // we use a custom notification to communicate from the help controller to the main view controller that a popover that should suppress tracking warnings was displayed
         NotificationCenter.default.addObserver(forName: Notification.Name("ClewPopoverDisplayed"), object: nil, queue: nil) { (notification) -> Void in
             self.suppressTrackingWarnings = true
+        }
+        
+        NotificationCenter.default.addObserver(forName: Notification.Name("SurveyPopoverReadyToDismiss"), object: nil, queue: nil) { (notification) -> Void in
+            self.hostingController?.dismiss(animated: true)
+            NotificationCenter.default.post(name: Notification.Name("ClewPopoverDismissed"), object: nil)
         }
         
     }
@@ -1140,7 +1132,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         add(recordPathController)
         /// handling main screen transitions outside of the first load
         /// add the view of the child to the view of the parent
-        routeRatingController.remove()
         stopNavigationController.remove()
         
         rootContainerView.getDirectionButton.isHidden = true
@@ -1277,27 +1268,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         
         // this does not auto update, so don't use it as an accessibility element
         delayTransition()
-    }
-    
-    /// display route rating view/hide all other views
-    @objc func showRouteRating(announceArrival: Bool) {
-        rootContainerView.getDirectionButton.isHidden = true
-        rootContainerView.homeButton.isHidden = true
-        stopNavigationController.remove()
-        add(routeRatingController)
-        if announceArrival {
-            routeRatingController.view.mainText?.text = NSLocalizedString("ratingYourServiceViewText", comment: "The text that is displayed when the user has completed navigation of their route. This prompts the user to rate their navigation experience.")
-        } else {
-            routeRatingController.view.mainText?.text = NSLocalizedString("ratingYourServiceViewText", comment: "The text that is displayed when the user has completed navigation of their route. This prompts the user to rate their navigation experience.")
-        }
-        
-        feedbackGenerator = nil
-        waypointFeedbackGenerator = nil
-        if announceArrival {
-            delayTransition(announcement: NSLocalizedString("completedNavigationAnnouncement", comment: "An announcement which is played to notify the user that they have arrived at the end of their route."))
-        } else {
-            delayTransition()
-        }
     }
     
     /// Announce the direction (both in text and using speech if appropriate).  The function will automatically use the appropriate units based on settings to convert `distance` from meters to the appropriate unit.
@@ -1572,11 +1542,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             anchorPointNode.removeFromParentNode()
         }
         
-        if(sendLogs) {
-            state = .ratingRoute(announceArrival: false)
-        } else {
-            sendLogDataHelper(pathStatus: nil)
-        }
+        sendLogDataHelper(pathStatus: nil)
     }
     
     /// handles the user pressing the pause button
@@ -1693,11 +1659,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         sendLogDataHelper(pathStatus: true)
     }
     
-    func sendLogDataHelper(pathStatus: Bool?) {
+    func sendLogDataHelper(pathStatus: Bool?, announceArrival: Bool = false) {
         // send success log data to Firebase
         logger.compileLogData(pathStatus)
         logger.resetStateSequenceLog()
-        state = .mainScreen(announceArrival: false)
+        state = .mainScreen(announceArrival: announceArrival)
+        if sendLogs {
+            let swiftUIView = FirebaseFeedbackSurvey()
+            hostingController = UIHostingController(rootView: swiftUIView)
+            NotificationCenter.default.post(name: Notification.Name("ClewPopoverDisplayed"), object: nil)
+            present(hostingController!, animated: true, completion: nil)
+        }
     }
     
     /// send log data for an unsuccessful route navigation (thumbs down)
@@ -1754,13 +1726,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 followingCrumbs?.invalidate()
                 hapticTimer?.invalidate()
                 
-                // update text and stop navigation
-                if(sendLogs) {
-                    state = .ratingRoute(announceArrival: true)
-                } else {
-                    state = .mainScreen(announceArrival: true)
-                    logger.resetStateSequenceLog()
-                }
+                sendLogDataHelper(pathStatus: nil, announceArrival: true)
             }
         }
     }
