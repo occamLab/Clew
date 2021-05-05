@@ -21,6 +21,7 @@ enum QuestionType: String {
     case textView = "textView"
     case slider = "slider"
     case stepper = "stepper"
+    case toggle = "toggle"
 }
 
 struct SurveyQuestion {
@@ -33,6 +34,7 @@ struct SurveyQuestion {
     let numericalDefault: Float?
     let numericalMin: Float?
     let numericalMax: Float?
+    let booleanDefault: Bool?
     var localizedText: String {
         if let languageCode = Locale.current.languageCode, let localized = localizations[languageCode] {
             return localized
@@ -45,14 +47,15 @@ struct SurveyQuestion {
 class FirebaseFeedbackSurveyModel {
     let databaseHandle = Database.database()
     public static var shared = FirebaseFeedbackSurveyModel()
-    var questions: [SurveyQuestion] = []
+    var questions: [String: [SurveyQuestion]] = [:]
+    var intervals: [String: Double] = [:]
 
     private init() {
         setupListeners()
     }
     
     private func setupListeners() {
-        let surveysRef = databaseHandle.reference(withPath: "surveys/main")
+        let surveysRef = databaseHandle.reference(withPath: "surveys")
         surveysRef.observe(.childAdded) { (snapshot) -> Void in
             self.populateModel(snapshot)
         }
@@ -61,15 +64,33 @@ class FirebaseFeedbackSurveyModel {
         }
     }
     private func populateModel(_ snapshot: DataSnapshot) {
-        guard let questionDefinition = snapshot.value as? [String: Any], let prompt = questionDefinition["prompt"] as? [String: String], let questionType = questionDefinition["type"] as? String, let questionTypeEnum = QuestionType(rawValue: questionType), let questionOrder = questionDefinition["order"] as? Int, let text = prompt["en"] else {
+        print(snapshot.key)
+        var surveyQuestions: [SurveyQuestion] = []
+        guard let surveyQuestionsRaw = snapshot.value as? [String: Any] else {
             return
         }
-        let numericalDefault = questionDefinition["numericalDefault"] as? Float
-        let numericalMin = questionDefinition["numericalMin"] as? Float
-        let numericalMax = questionDefinition["numericalMax"] as? Float
+        var presentationIntervalInSeconds: Double = 0.0
+        for (childKey, childValue) in surveyQuestionsRaw {
+            if childKey == "_presentationIntervalInSeconds" {
+                if let newInterval = childValue as? Double {
+                    presentationIntervalInSeconds = newInterval
+                }
+                continue
+            }
+            guard let questionDefinition = childValue as? [String: Any], let prompt = questionDefinition["prompt"] as? [String: String], let questionType = questionDefinition["type"] as? String, let questionTypeEnum = QuestionType(rawValue: questionType), let questionOrder = questionDefinition["order"] as? Int, let text = prompt["en"] else {
+                continue
+            }
+            let numericalDefault = questionDefinition["numericalDefault"] as? Float
+            let numericalMin = questionDefinition["numericalMin"] as? Float
+            let numericalMax = questionDefinition["numericalMax"] as? Float
+            let booleanDefault = questionDefinition["booleanDefault"] as? Bool
 
-        let requiredString = questionDefinition["required"] as? String ?? "true"
-        questions.append(SurveyQuestion(name: snapshot.key, text: text, localizations: prompt, questionType: questionTypeEnum, required: requiredString != "false", order: questionOrder, numericalDefault: numericalDefault, numericalMin: numericalMin, numericalMax: numericalMax))
+            let requiredString = questionDefinition["required"] as? String ?? "true"
+            surveyQuestions.append(SurveyQuestion(name: childKey, text: text, localizations: prompt, questionType: questionTypeEnum, required: requiredString != "false", order: questionOrder, numericalDefault: numericalDefault, numericalMin: numericalMin, numericalMax: numericalMax, booleanDefault: booleanDefault))
+        }
+        questions[snapshot.key] = surveyQuestions
+        intervals[snapshot.key] = presentationIntervalInSeconds
+        print("intervals", intervals)
     }
 }
 
@@ -77,16 +98,18 @@ struct FirebaseFeedbackSurvey: View {
     
     var simpleForm = SF()
     var presentingVC: UIViewController?
+    let feedbackSurveyName: String
     let logFileURLs: [String]
     @State var testText: String = ""
     @State var calculatedHeight: CGFloat = 0.0
 
-    init(logFileURLs: [String]) {
+    init(feedbackSurveyName: String, logFileURLs: [String]) {
+        self.feedbackSurveyName = feedbackSurveyName
         self.logFileURLs = logFileURLs
     }
     
     var body: some View {
-        let orderedQuestions = FirebaseFeedbackSurveyModel.shared.questions.sorted(by: {$0.order < $1.order})
+        let orderedQuestions = FirebaseFeedbackSurveyModel.shared.questions[feedbackSurveyName] != nil ? FirebaseFeedbackSurveyModel.shared.questions[feedbackSurveyName]!.sorted(by: {$0.order < $1.order}) : []
         
         // Section One
         let sectionOne = SimpleFormSection()
@@ -100,6 +123,8 @@ struct FirebaseFeedbackSurvey: View {
                 sectionOne.model.fields.append(SimpleFormField(sliderField: question.text, name: question.name, value: (question.numericalDefault ?? 0.5), range: (question.numericalMin ?? 0.0)...(question.numericalMax ?? 1.0)))
             case .stepper:
                 sectionOne.model.fields.append(SimpleFormField(stepperField: question.text, name: question.name, value: (question.numericalDefault ?? 3), range: (question.numericalMin ?? 1)...(question.numericalMax ?? 5)))
+            case .toggle:
+                sectionOne.model.fields.append(SimpleFormField(toggleField: question.text, name: question.name, value: question.booleanDefault ?? true))
             }
         }
         self.simpleForm.model.sections.append(sectionOne)
@@ -131,7 +156,7 @@ struct FirebaseFeedbackSurvey: View {
         let uniqueID = UUID().uuidString
 
         ///creates a reference to the location we want to save the new file
-        let fileRef = feedbackRef.child("\(uniqueID)_main.json")
+        let fileRef = feedbackRef.child("\(uniqueID)_\(feedbackSurveyName).json")
         
         let fileType = StorageMetadata()
         fileType.contentType = "application/json"

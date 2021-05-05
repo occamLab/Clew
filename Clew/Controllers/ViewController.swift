@@ -111,7 +111,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     let surveyModel = FirebaseFeedbackSurveyModel.shared
     
     /// the last time this particular user was surveyed (nil if we don't know this information or it hasn't been loaded from the database yet)
-    var lastSurveyTime: Double?
+    var lastSurveyTime: [String: Double] = [:]
     
     /// The state of the app.  This should be constantly referenced and updated as the app transitions
     var state = AppState.initializing {
@@ -789,9 +789,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 if let error = error {
                     print("Error getting data \(error)")
                 }
-                else if snapshot.exists(), let userDict = snapshot.value as? [String : AnyObject], let lastSurveyTime = userDict["lastSurveyTime"] as? Double {
-                    print("Got data \(snapshot.value!)")
-                    self.lastSurveyTime = lastSurveyTime
+                else if snapshot.exists(), let userDict = snapshot.value as? [String : AnyObject] {
+                    for (surveyName, surveyInfo) in userDict {
+                        if let surveyInfoDict = surveyInfo as? [String : AnyObject], let lastSurveyTime = userDict["lastSurveyTime"] as? Double {
+                            self.lastSurveyTime[surveyName] = lastSurveyTime
+                        }
+                    }
                 }
                 else {
                     print("No data available")
@@ -1671,6 +1674,26 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         sendLogDataHelper(pathStatus: true)
     }
     
+    /// Presents a survey to the user as a popover.  The method will check to see if it has been sufficiently long since the user was last asked to fill out this survey before displaying the survey.
+    /// - Parameters:
+    ///   - surveyToTrigger: this is the name of the survey, which should be described in the realtime database under "/surveys/{surveyToTrigger}"
+    ///   - logFileURLs: this list of URLs will be added to the survey response JSON file if the user winds up submitting the survey.  This makes it easier to link together feedback in the survey with data logs.
+    func presentSurveyIfIntervalHasPassed(surveyToTrigger: String, logFileURLs: [String]) {
+        if self.lastSurveyTime[surveyToTrigger] == nil || -Date(timeIntervalSince1970: self.lastSurveyTime[surveyToTrigger]!).timeIntervalSinceNow >= FirebaseFeedbackSurveyModel.shared.intervals[surveyToTrigger] ?? 0.0 {
+            self.lastSurveyTime[surveyToTrigger] = Date().timeIntervalSince1970
+            
+            if let currentUID = Auth.auth().currentUser?.uid {
+                let surveyInfo = ["lastSurveyTime": self.lastSurveyTime[surveyToTrigger]!]
+                self.databaseHandle.reference(withPath: "\(currentUID)/surveys/\(surveyToTrigger)").updateChildValues(surveyInfo)
+            }
+            
+            let swiftUIView = FirebaseFeedbackSurvey(feedbackSurveyName: surveyToTrigger, logFileURLs: logFileURLs)
+            self.hostingController = UISurveyHostingController(rootView: swiftUIView)
+            NotificationCenter.default.post(name: Notification.Name("ClewPopoverDisplayed"), object: nil)
+            self.present(self.hostingController!, animated: true, completion: nil)
+        }
+    }
+    
     func sendLogDataHelper(pathStatus: Bool?, announceArrival: Bool = false) {
         // send success log data to Firebase
         let logFileURLs = logger.compileLogData(pathStatus)
@@ -1679,19 +1702,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         if sendLogs {
             // do this in a little while to give it time to announce arrival
             DispatchQueue.main.asyncAfter(deadline: .now() + (announceArrival ? 3 : 1)) {
-                if self.lastSurveyTime == nil || -Date(timeIntervalSince1970: self.lastSurveyTime!).timeIntervalSinceNow >= 3600*24 {
-                    self.lastSurveyTime = Date().timeIntervalSince1970
-                    
-                    if let currentUID = Auth.auth().currentUser?.uid {
-                        let surveyInfo = ["lastSurveyTime": self.lastSurveyTime]
-                        self.databaseHandle.reference(withPath: "\(currentUID)").child("surveys").updateChildValues(surveyInfo)
-                    }
-                    
-                    let swiftUIView = FirebaseFeedbackSurvey(logFileURLs: logFileURLs)
-                    self.hostingController = UISurveyHostingController(rootView: swiftUIView)
-                    NotificationCenter.default.post(name: Notification.Name("ClewPopoverDisplayed"), object: nil)
-                    self.present(self.hostingController!, animated: true, completion: nil)
-                }
+                self.presentSurveyIfIntervalHasPassed(surveyToTrigger: "secondary", logFileURLs: logFileURLs)
             }
         }
     }

@@ -8,6 +8,7 @@
 
 import UIKit
 import Firebase
+import FirebaseAuth
 import FirebaseAnalytics
 
 /// This class handles various state changes for the app.
@@ -47,9 +48,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window?.rootViewController = vc
         window?.makeKeyAndVisible()
         UIApplication.shared.isIdleTimerDisabled = true
-        authHelper = AuthenticationHelper(window: window!)
-        authHelper?.startSignInWithAppleFlow()
-
+        if Auth.auth().currentUser == nil {
+            authHelper = AuthenticationHelper(window: window!)
+            authHelper?.startSignInWithAppleFlow()
+        }
         
         return true
     }
