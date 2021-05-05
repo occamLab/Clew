@@ -1,3 +1,14 @@
+//
+//  Surveys.swift
+//  Provides survey capabilities to be served from a Firebase database
+//
+//  Created by Paul on 5/3/2021
+//
+
+// TODO: Support multiple surveys by listening to the "surveys/" path.
+// TODO: Allow trigger rate to be set through Firebase (e.g., showing the survey once a day versus once a week, etc.)
+// TODO: Handle users being offline more gracefully (either don't show the survey at all or cache the data)
+
 import SwiftUI
 import UIKit
 import SimpleForm
@@ -50,7 +61,6 @@ class FirebaseFeedbackSurveyModel {
         }
     }
     private func populateModel(_ snapshot: DataSnapshot) {
-        // TODO: avoid hardcode to English
         guard let questionDefinition = snapshot.value as? [String: Any], let prompt = questionDefinition["prompt"] as? [String: String], let questionType = questionDefinition["type"] as? String, let questionTypeEnum = QuestionType(rawValue: questionType), let questionOrder = questionDefinition["order"] as? Int, let text = prompt["en"] else {
             return
         }
