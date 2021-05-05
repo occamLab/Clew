@@ -15,12 +15,20 @@ enum QuestionType: String {
 struct SurveyQuestion {
     let name: String
     let text: String
+    let localizations: [String: String]
     let questionType: QuestionType
     let required: Bool
     let order: Int
     let numericalDefault: Float?
     let numericalMin: Float?
     let numericalMax: Float?
+    var localizedText: String {
+        if let languageCode = Locale.current.languageCode, let localized = localizations[languageCode] {
+            return localized
+        } else {
+            return text
+        }
+    }
 }
 
 class FirebaseFeedbackSurveyModel {
@@ -43,7 +51,7 @@ class FirebaseFeedbackSurveyModel {
     }
     private func populateModel(_ snapshot: DataSnapshot) {
         // TODO: avoid hardcode to English
-        guard let questionDefinition = snapshot.value as? [String: Any], let text = questionDefinition["english"] as? String, let questionType = questionDefinition["type"] as? String, let questionTypeEnum = QuestionType(rawValue: questionType), let questionOrder = questionDefinition["order"] as? Int else {
+        guard let questionDefinition = snapshot.value as? [String: Any], let prompt = questionDefinition["prompt"] as? [String: String], let questionType = questionDefinition["type"] as? String, let questionTypeEnum = QuestionType(rawValue: questionType), let questionOrder = questionDefinition["order"] as? Int, let text = prompt["en"] else {
             return
         }
         let numericalDefault = questionDefinition["numericalDefault"] as? Float
@@ -51,7 +59,7 @@ class FirebaseFeedbackSurveyModel {
         let numericalMax = questionDefinition["numericalMax"] as? Float
 
         let requiredString = questionDefinition["required"] as? String ?? "true"
-        questions.append(SurveyQuestion(name: snapshot.key, text: text, questionType: questionTypeEnum, required: requiredString != "false", order: questionOrder, numericalDefault: numericalDefault, numericalMin: numericalMin, numericalMax: numericalMax))
+        questions.append(SurveyQuestion(name: snapshot.key, text: text, localizations: prompt, questionType: questionTypeEnum, required: requiredString != "false", order: questionOrder, numericalDefault: numericalDefault, numericalMin: numericalMin, numericalMax: numericalMax))
     }
 }
 
@@ -75,7 +83,7 @@ struct FirebaseFeedbackSurvey: View {
         for question in orderedQuestions {
             switch question.questionType {
             case .textField:
-                sectionOne.model.fields.append(SimpleFormField(textField: question.text, labelPosition: .above, name: question.name, value: "", validation: question.required ? [.required] : []))
+                sectionOne.model.fields.append(SimpleFormField(textField: question.localizedText, labelPosition: .above, name: question.name, value: "", validation: question.required ? [.required] : []))
             case .textView:
                 sectionOne.model.fields.append(SimpleFormField(textView: question.text, labelPosition: .above, name: question.name, value: "", validation: question.required ? [.required] : []))
             case .slider:

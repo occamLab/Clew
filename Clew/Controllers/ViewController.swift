@@ -1682,7 +1682,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         if sendLogs {
             // do this in a little while to give it time to announce arrival
             DispatchQueue.main.asyncAfter(deadline: .now() + (announceArrival ? 3 : 1)) {
-                if self.lastSurveyTime == nil || -Date(timeIntervalSince1970: self.lastSurveyTime!).timeIntervalSinceNow >= 3600*24 {
+                if self.lastSurveyTime == nil || -Date(timeIntervalSince1970: self.lastSurveyTime!).timeIntervalSinceNow >= 0*3600*24 {
                     self.lastSurveyTime = Date().timeIntervalSince1970
                     
                     if let currentUID = Auth.auth().currentUser?.uid {
