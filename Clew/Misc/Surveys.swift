@@ -96,7 +96,7 @@ struct FirebaseFeedbackSurvey: View {
         return NavigationView {
             VStack {
                 simpleForm
-                    .navigationBarTitle("We'd love to get your feedback", displayMode: .inline).navigationBarItems(trailing: Button(action: {
+                    .navigationBarTitle(Text(NSLocalizedString("surveyPopoverTitle", comment: "This is the title of the survey popover that is displayed to get feedback")), displayMode: .inline).navigationBarItems(trailing: Button(action: {
                         if self.simpleForm.isValid() {
                             var formValues = self.simpleForm.getValues()
                             formValues["_dateSubmitted"] = Date().timeIntervalSince1970
@@ -106,7 +106,7 @@ struct FirebaseFeedbackSurvey: View {
                             self.uploadToFirebase(data: jsonData)
                         }
                     }){
-                        Text("Submit")
+                        Text(NSLocalizedString("submitSurvey", comment: "this is the button text that submits the survey"))
                     })
             }
         }

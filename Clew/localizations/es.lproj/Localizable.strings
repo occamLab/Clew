@@ -293,3 +293,9 @@
 
 // This is paragraph 2 in the following a route section of the help documentation which describes the functionality of the correct for phone / body offset feature.
 "followingARouteCorrectOffsetAutomaticallyContentParagraph2" = "Cuando utilices la función &quot;Corregir el desplazamiento del teléfono / cuerpo&quot; lo mejor es apoyar el móvil contra el pecho y girar el cuerpo para encontrar la dirección correcta a seguir (a medida que giras el cuerpo, el teléfono debe permanecer apoyado en el pecho y girar contigo). Ten en cuenta que si caminas hacia atrás o hacia los lados, la aplicación determinará incorrectamente la relación entre el móvil y tu cuerpo. Si esto sucede, puedes desactivar la función o caminar hacia adelante unos pasos para restablecer las estimaciones de la aplicación";
+
+//Feedback
+"surveyPopoverTitle" = "Nos encantaría recibir sus comentarios.";
+"missingRequiredFieldHighlight" = "Este campo es requerido.";
+"missingRequiredFieldAnnouncement" = "El campo %@ es requerido\n";
+"submitSurvey" = "Enviar";

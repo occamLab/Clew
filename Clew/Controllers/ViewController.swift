@@ -4,9 +4,6 @@
 //
 //  Created by Chris Seonghwan Yoon & Jeremy Ryan on 7/10/17.
 //
-// Enhanced Logging:
-//   - Internationalization of survey
-//
 // Confirmed issues
 // - We are not doing a proper job dealing with resumed routes with respect to logging (we always send recorded stuff in the log file, which we don't always have access to)
 //
