@@ -296,6 +296,4 @@
 
 //Feedback
 "surveyPopoverTitle" = "Nos encantaría recibir sus comentarios.";
-"missingRequiredFieldHighlight" = "Este campo es requerido.";
-"missingRequiredFieldAnnouncement" = "El campo %@ es requerido\n";
 "submitSurvey" = "Enviar";

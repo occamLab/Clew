@@ -280,6 +280,4 @@
 
 //Feedback (this is necessary since we can't get it to work properly in the library)
 "surveyPopoverTitle" = "We'd love to get your feedback";
-"missingRequiredFieldHighlight" = "This field is required.";
-"missingRequiredFieldAnnouncement" = "The field %@ is required\n";
 "submitSurvey" = "Submit";
