@@ -30,6 +30,7 @@ struct SurveyQuestion {
     let localizations: [String: String]
     let questionType: QuestionType
     let required: Bool
+    let isEmail: Bool
     let order: Int
     let numericalDefault: Float?
     let numericalMin: Float?
@@ -84,9 +85,10 @@ class FirebaseFeedbackSurveyModel {
             let numericalMin = questionDefinition["numericalMin"] as? Float
             let numericalMax = questionDefinition["numericalMax"] as? Float
             let booleanDefault = questionDefinition["booleanDefault"] as? Bool
+            let required = questionDefinition["required"] as? Bool ?? true
+            let isEmail = questionDefinition["isEmail"] as? Bool ?? false
 
-            let requiredString = questionDefinition["required"] as? String ?? "true"
-            surveyQuestions.append(SurveyQuestion(name: childKey, text: text, localizations: prompt, questionType: questionTypeEnum, required: requiredString != "false", order: questionOrder, numericalDefault: numericalDefault, numericalMin: numericalMin, numericalMax: numericalMax, booleanDefault: booleanDefault))
+            surveyQuestions.append(SurveyQuestion(name: childKey, text: text, localizations: prompt, questionType: questionTypeEnum, required: required, isEmail: isEmail, order: questionOrder, numericalDefault: numericalDefault, numericalMin: numericalMin, numericalMax: numericalMax, booleanDefault: booleanDefault))
         }
         questions[snapshot.key] = surveyQuestions
         intervals[snapshot.key] = presentationIntervalInSeconds
@@ -116,9 +118,9 @@ struct FirebaseFeedbackSurvey: View {
         for question in orderedQuestions {
             switch question.questionType {
             case .textField:
-                sectionOne.model.fields.append(SimpleFormField(textField: question.localizedText, labelPosition: .above, name: question.name, value: "", validation: question.required ? [.required] : []))
+                sectionOne.model.fields.append(SimpleFormField(textField: question.localizedText, labelPosition: .above, name: question.name, value: "", validation: (question.required ? [.required] : []) + (question.isEmail ? [.email] : [])))
             case .textView:
-                sectionOne.model.fields.append(SimpleFormField(textView: question.text, labelPosition: .above, name: question.name, value: "", validation: question.required ? [.required] : []))
+                sectionOne.model.fields.append(SimpleFormField(textView: question.text, labelPosition: .above, name: question.name, value: "", validation: (question.required ? [.required] : []) + (question.isEmail ? [.email] : [])))
             case .slider:
                 sectionOne.model.fields.append(SimpleFormField(sliderField: question.text, name: question.name, value: (question.numericalDefault ?? 0.5), range: (question.numericalMin ?? 0.0)...(question.numericalMax ?? 1.0)))
             case .stepper:
