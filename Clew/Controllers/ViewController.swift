@@ -742,8 +742,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             self.hostingController?.dismiss(animated: true)
             NotificationCenter.default.post(name: Notification.Name("ClewPopoverDismissed"), object: nil)
             // TODO: I18N / L10N
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-                self.announce(announcement: "Thank you for your feedback")
+            if let gaveFeedback = notification.object as? Bool, gaveFeedback {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                    self.announce(announcement: NSLocalizedString("thanksForFeedbackAnnouncement", comment: "This is read right after the user fills out a feedback survey."))
+                }
             }
         }
     }
@@ -1702,7 +1704,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         if sendLogs {
             // do this in a little while to give it time to announce arrival
             DispatchQueue.main.asyncAfter(deadline: .now() + (announceArrival ? 3 : 1)) {
-                self.presentSurveyIfIntervalHasPassed(surveyToTrigger: "secondary", logFileURLs: logFileURLs)
+                self.presentSurveyIfIntervalHasPassed(surveyToTrigger: "main", logFileURLs: logFileURLs)
             }
         }
     }

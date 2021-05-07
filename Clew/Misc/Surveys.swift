@@ -35,6 +35,8 @@ struct SurveyQuestion {
     let numericalDefault: Float?
     let numericalMin: Float?
     let numericalMax: Float?
+    let quantizeSlider: Bool?
+    let addSliderAccent: Bool?
     let booleanDefault: Bool?
     var localizedText: String {
         if let languageCode = Locale.current.languageCode, let localized = localizations[languageCode] {
@@ -84,11 +86,14 @@ class FirebaseFeedbackSurveyModel {
             let numericalDefault = questionDefinition["numericalDefault"] as? Float
             let numericalMin = questionDefinition["numericalMin"] as? Float
             let numericalMax = questionDefinition["numericalMax"] as? Float
+            let quantizeSlider = questionDefinition["quantizeSlider"] as? Bool
+            let addSliderAccent = questionDefinition["addSliderAccent"] as? Bool
+
             let booleanDefault = questionDefinition["booleanDefault"] as? Bool
             let required = questionDefinition["required"] as? Bool ?? true
             let isEmail = questionDefinition["isEmail"] as? Bool ?? false
 
-            surveyQuestions.append(SurveyQuestion(name: childKey, text: text, localizations: prompt, questionType: questionTypeEnum, required: required, isEmail: isEmail, order: questionOrder, numericalDefault: numericalDefault, numericalMin: numericalMin, numericalMax: numericalMax, booleanDefault: booleanDefault))
+            surveyQuestions.append(SurveyQuestion(name: childKey, text: text, localizations: prompt, questionType: questionTypeEnum, required: required, isEmail: isEmail, order: questionOrder, numericalDefault: numericalDefault, numericalMin: numericalMin, numericalMax: numericalMax, quantizeSlider: quantizeSlider, addSliderAccent: addSliderAccent, booleanDefault: booleanDefault))
         }
         questions[snapshot.key] = surveyQuestions
         intervals[snapshot.key] = presentationIntervalInSeconds
@@ -122,7 +127,7 @@ struct FirebaseFeedbackSurvey: View {
             case .textView:
                 sectionOne.model.fields.append(SimpleFormField(textView: question.text, labelPosition: .above, name: question.name, value: "", validation: (question.required ? [.required] : []) + (question.isEmail ? [.email] : [])))
             case .slider:
-                sectionOne.model.fields.append(SimpleFormField(sliderField: question.text, name: question.name, value: (question.numericalDefault ?? 0.5), range: (question.numericalMin ?? 0.0)...(question.numericalMax ?? 1.0)))
+                sectionOne.model.fields.append(SimpleFormField(sliderField: question.text, name: question.name, value: question.numericalDefault ?? 0.5, addSliderAccent: question.addSliderAccent ?? false, quantizeSlider: question.quantizeSlider ?? false, range: (question.numericalMin ?? 0.0)...(question.numericalMax ?? 1.0)))
             case .stepper:
                 sectionOne.model.fields.append(SimpleFormField(stepperField: question.text, name: question.name, value: (question.numericalDefault ?? 3), range: (question.numericalMin ?? 1)...(question.numericalMax ?? 5)))
             case .toggle:
@@ -134,17 +139,20 @@ struct FirebaseFeedbackSurvey: View {
             VStack {
                 simpleForm
                     .navigationBarTitle(Text(NSLocalizedString("surveyPopoverTitle", comment: "This is the title of the survey popover that is displayed to get feedback")), displayMode: .inline).navigationBarItems(trailing: Button(action: {
-                        if self.simpleForm.isValid() {
-                            var formValues = self.simpleForm.getValues()
-                            formValues["_dateSubmitted"] = Date().timeIntervalSince1970
-                            formValues["_uid"] = Auth.auth().currentUser?.uid ?? "notsignedin"
-                            formValues["_logFileURLs"] = logFileURLs
-                            let jsonData = try! JSONSerialization.data(withJSONObject: formValues, options: .prettyPrinted)
-                            self.uploadToFirebase(data: jsonData)
-                        }
-                    }){
-                        Text(NSLocalizedString("submitSurvey", comment: "this is the button text that submits the survey"))
-                    })
+                        NotificationCenter.default.post(name: Notification.Name("SurveyPopoverReadyToDismiss"), object: nil)
+                    }) { Text(NSLocalizedString("dismissSurvey", comment: "this is the button text that dismisses the survey"))})
+                Button(action: {
+                    if self.simpleForm.isValid() {
+                        var formValues = self.simpleForm.getValues()
+                        formValues["_dateSubmitted"] = Date().timeIntervalSince1970
+                        formValues["_uid"] = Auth.auth().currentUser?.uid ?? "notsignedin"
+                        formValues["_logFileURLs"] = logFileURLs
+                        let jsonData = try! JSONSerialization.data(withJSONObject: formValues, options: .prettyPrinted)
+                        self.uploadToFirebase(data: jsonData)
+                    }
+                }){
+                    Text(NSLocalizedString("submitSurvey", comment: "this is the button text that submits the survey"))
+                }
             }
         }
     }
@@ -168,7 +176,7 @@ struct FirebaseFeedbackSurvey: View {
             } else {
                 print("uploaded data successfully")
             }
-            NotificationCenter.default.post(name: Notification.Name("SurveyPopoverReadyToDismiss"), object: nil)
+            NotificationCenter.default.post(name: Notification.Name("SurveyPopoverReadyToDismiss"), object: true)
         }
     }
 }

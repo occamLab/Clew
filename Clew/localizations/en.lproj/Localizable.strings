@@ -281,3 +281,5 @@
 //Feedback (this is necessary since we can't get it to work properly in the library)
 "surveyPopoverTitle" = "We'd love to get your feedback";
 "submitSurvey" = "Submit";
+"dismissSurvey" = "Dismiss";
+"thanksForFeedbackAnnouncement" = "Thank you for your feedback";
