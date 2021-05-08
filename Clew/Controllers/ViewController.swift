@@ -793,7 +793,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 }
                 else if snapshot.exists(), let userDict = snapshot.value as? [String : AnyObject] {
                     for (surveyName, surveyInfo) in userDict {
-                        if let surveyInfoDict = surveyInfo as? [String : AnyObject], let lastSurveyTime = userDict["lastSurveyTime"] as? Double {
+                        if let surveyInfoDict = surveyInfo as? [String : AnyObject], let lastSurveyTime = surveyInfoDict["lastSurveyTime"] as? Double {
                             self.lastSurveyTime[surveyName] = lastSurveyTime
                         }
                     }
@@ -831,6 +831,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         let showedSignificantChangesAlert: Bool? = userDefaults.object(forKey: "showedSignificantChangesAlertv1_3") as? Bool
         
         if firstTimeLoggingIn == nil {
+            userDefaults.set(Date().timeIntervalSince1970, forKey: "firstUsageTimeStamp")
             userDefaults.set(true, forKey: "firstTimeLogin")
             // make sure not to show the significant changes alert in the future
             userDefaults.set(true, forKey: "showedSignificantChangesAlertv1_3")
@@ -848,6 +849,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             if let nextAnnouncement = self.nextAnnouncement {
                 self.nextAnnouncement = nil
                 self.announce(announcement: nextAnnouncement)
+            }
+        }
+        
+        let firstUsageTimeStamp =  userDefaults.object(forKey: "firstUsageTimeStamp") as? Double ?? 0.0
+        if Date().timeIntervalSince1970 - firstUsageTimeStamp > 3600*24 {
+            // it's been long enough, try to trigger the survey
+            DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+                // make sure to wait for data to load from firebase.  If they have started using the app, don't interrupt them.
+                if case .mainScreen(_) = self.state {
+                    self.presentSurveyIfIntervalHasPassed(surveyToTrigger: "secondary", logFileURLs: [])
+                }
             }
         }
     }
@@ -1681,6 +1693,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     ///   - surveyToTrigger: this is the name of the survey, which should be described in the realtime database under "/surveys/{surveyToTrigger}"
     ///   - logFileURLs: this list of URLs will be added to the survey response JSON file if the user winds up submitting the survey.  This makes it easier to link together feedback in the survey with data logs.
     func presentSurveyIfIntervalHasPassed(surveyToTrigger: String, logFileURLs: [String]) {
+        if FirebaseFeedbackSurveyModel.shared.questions[surveyToTrigger] == nil {
+            return
+        }
         if self.lastSurveyTime[surveyToTrigger] == nil || -Date(timeIntervalSince1970: self.lastSurveyTime[surveyToTrigger]!).timeIntervalSinceNow >= FirebaseFeedbackSurveyModel.shared.intervals[surveyToTrigger] ?? 0.0 {
             self.lastSurveyTime[surveyToTrigger] = Date().timeIntervalSince1970
             
