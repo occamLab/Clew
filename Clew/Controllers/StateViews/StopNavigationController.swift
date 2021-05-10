@@ -7,85 +7,12 @@
 
 
 import UIKit
-import SwiftUI // for z-stack
-
-extension UIBezierPath {
-    func createArrow(omega: CGFloat) {
-        // floating arrow
-        let arrow_length = CGFloat(60)
-        let x = arrow_length*sin(omega)
-        let y = arrow_length*cos(omega)
-        let centerX = UIConstants.buttonFrameWidth/2
-        let centerY = UIConstants.buttonFrameHeight/2 - 100
-        let start = CGPoint(x: centerX-x, y: centerY+y)
-        let end = CGPoint(x: centerX+x, y: centerY-y)
-
-        self.move(to: start)
-        self.addLine(to: end)
-
-        let pointerLineLength = CGFloat(35)      // length of arrow head
-        let arrowAngle = CGFloat(Double.pi / 4) // angle of head to body
-        let startEndAngle = atan((end.y - start.y) / (end.x - start.x)) + ((end.x - start.x) < 0 ? CGFloat(Double.pi) : 0)
-        let arrowHeadSide1 = CGPoint(x: end.x + pointerLineLength * cos(CGFloat(Double.pi) - startEndAngle + arrowAngle), y: end.y - pointerLineLength * sin(CGFloat(Double.pi) - startEndAngle + arrowAngle))
-        let arrowHeadSide2 = CGPoint(x: end.x + pointerLineLength * cos(CGFloat(Double.pi) - startEndAngle - arrowAngle), y: end.y - pointerLineLength * sin(CGFloat(Double.pi) - startEndAngle - arrowAngle))
-
-        self.addLine(to: arrowHeadSide1)
-        self.move(to: end)
-        self.addLine(to: arrowHeadSide2)
-    }
-    
-    func createInnerArrow(omega: CGFloat) {
-        // arrow in stop button
-        let arrow_height = CGFloat(75)
-        let x = arrow_height*sin(omega)
-        let y = arrow_height*cos(omega)
-        let centerX = UIConstants.buttonFrameWidth/2
-        let centerY = UIConstants.buttonFrameHeight/2
-        let start = CGPoint(x: centerX-x, y: centerY+y)
-        let end = CGPoint(x: centerX+x, y: centerY-y)
-
-        let sideLength = CGFloat(50)      // length of triangle sides
-        let arrowAngle = CGFloat(Double.pi / 4.5) // angle of triangle tip
-        let arrowTipAngle = atan((end.y - start.y) / (end.x - start.x)) + ((end.x - start.x) < 0 ? CGFloat(Double.pi) : 0)
-        let leftCorner = CGPoint(x: end.x + sideLength * cos(CGFloat(Double.pi) - arrowTipAngle + arrowAngle), y: end.y - sideLength * sin(CGFloat(Double.pi) - arrowTipAngle + arrowAngle))
-        let rightCorner = CGPoint(x: end.x + sideLength * cos(CGFloat(Double.pi) - arrowTipAngle - arrowAngle), y: end.y - sideLength * sin(CGFloat(Double.pi) - arrowTipAngle - arrowAngle))
-
-        self.move(to: leftCorner)
-        self.addLine(to: end)
-        self.addLine(to: rightCorner)
-        self.addLine(to: leftCorner)
-    }
-}
 
 /// A View Controller for handling the stop navigation state
 class StopNavigationController: UIViewController {
 
     /// button for stopping route navigation
     var stopNavigationButton: UIButton!
-
-    /// 2D arrow directing user to pathpoint
-//    let imageView_arrow = UIImageView(image: UIImage(named: "Arrow"))
-
-    /// BezierPath Arrow
-    let arrow = UIBezierPath()
-
-    func addArrowProperties(arrowLayer: CAShapeLayer) {
-        // floating arrow
-        arrowLayer.strokeColor = UIColor.red.cgColor
-        arrowLayer.lineWidth = 25
-        arrowLayer.path = arrow.cgPath
-        arrowLayer.fillColor = UIColor.red.cgColor
-        arrowLayer.lineJoin = CAShapeLayerLineJoin.round // joins arrow head and body
-        arrowLayer.lineCap = CAShapeLayerLineCap.round   // rounds edges
-        
-        // arrow in stop button
-//        arrowLayer.strokeColor = UIColor.red.cgColor
-//        arrowLayer.lineWidth = 25
-//        arrowLayer.path = arrow.cgPath
-//        arrowLayer.fillColor = UIColor.clear.cgColor // clear area between head and body
-//        arrowLayer.lineJoin = CAShapeLayerLineJoin.round
-//        arrowLayer.lineCap = CAShapeLayerLineCap.round
-    }
 
     /// called when view appears
     override func viewDidAppear(_ animated: Bool) {
@@ -104,14 +31,6 @@ class StopNavigationController: UIViewController {
                             height: UIConstants.buttonFrameHeight)
 
         view.backgroundColor = UIColor.black.withAlphaComponent(0.4)
-//        view.layer.cornerRadius = 150
-
-        // Create black circular frame
-//        let circlePath = UIBezierPath(arcCenter: CGPoint(x: view.frame.width/2, y: view.frame.height/2 + 140), radius: CGFloat(300), startAngle: CGFloat(0), endAngle: CGFloat(Double.pi * 2), clockwise: true)
-//        let frameLayer = CAShapeLayer()
-//        frameLayer.path = circlePath.cgPath
-//        frameLayer.fillColor = UIColor(white: 0.0, alpha: 0.4).cgColor
-//        view.layer.insertSublayer(frameLayer, at: 1)
 
         stopNavigationButton = UIButton.makeConstraintButton(view,
                                                         alignment: UIConstants.ButtonContainerHorizontalAlignment.center,
@@ -132,11 +51,6 @@ class StopNavigationController: UIViewController {
 
         /// add elements to the stack
         buttonStackView.addArrangedSubview(stopNavigationButton)
-
-        /// Add arrowLayer as sublayer
-        let arrowLayer = CAShapeLayer()
-        addArrowProperties(arrowLayer: arrowLayer)
-        view.layer.insertSublayer(arrowLayer, at: 0)
 
         /// size the stack
         buttonStackView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true

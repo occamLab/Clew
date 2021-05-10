@@ -296,7 +296,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         prevKeypointPosition = getRealCoordinates(record: true)!.location
         
         // render path
-        renderPath(prevKeypointPosition, keypoints[0].location)
+        if (showPath) {
+            renderPath(prevKeypointPosition, keypoints[0].location)
+        }
         
         // render pathpoints
 //        renderPathpoints(prevKeypointPosition, keypoints[0].location)
@@ -329,7 +331,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         locationRingBuffer.clear()
         
         hapticTimer = Timer.scheduledTimer(timeInterval: 0.01, target: self, selector: (#selector(getHapticFeedback)), userInfo: nil, repeats: true)
-//        arrowTimer = Timer.scheduledTimer(timeInterval: 0.01, target: self, selector: (#selector(updateArrow)), userInfo: nil, repeats: true)
     }
     
     /// Handler for the route rating app state
@@ -881,7 +882,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         logger.resetNavigationLog()
         logger.resetPathLog()
         hapticTimer?.invalidate()
-        arrowTimer?.invalidate()
         logger.resetStateSequenceLog()
     }
     
@@ -1040,7 +1040,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// Register settings bundle
     func registerSettingsBundle(){
-        let appDefaults = ["crumbColor": 0, "hapticFeedback": true, "sendLogs": true, "voiceFeedback": true, "soundFeedback": true, "adjustOffset": false, "units": 0, "timerLength":5] as [String : Any]
+        let appDefaults = ["crumbColor": 0, "showPath": true, "pathColor": 0, "hapticFeedback": true, "sendLogs": true, "voiceFeedback": true, "soundFeedback": true, "adjustOffset": false, "units": 0, "timerLength":5] as [String : Any]
         UserDefaults.standard.register(defaults: appDefaults)
     }
 
@@ -1050,6 +1050,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         
         defaultUnit = defaults.integer(forKey: "units")
         defaultColor = defaults.integer(forKey: "crumbColor")
+        showPath = defaults.bool(forKey: "showPath")
+        defaultPathColor = defaults.integer(forKey: "pathColor")
         soundFeedback = defaults.bool(forKey: "soundFeedback")
         voiceFeedback = defaults.bool(forKey: "voiceFeedback")
         hapticFeedback = defaults.bool(forKey: "hapticFeedback")
@@ -1373,12 +1375,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// times the generation of haptic feedback
     var hapticTimer: Timer?
     
-    /// times the generation of arrow
-    var arrowTimer: Timer?
-    
-    /// arrow bezierpath
-    var arrowShapeLayer: CAShapeLayer?
-    
     /// times when an announcement should be removed.  These announcements are displayed on the `announcementText` label.
     var announcementRemovalTimer: Timer?
     
@@ -1415,6 +1411,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// the color of the waypoints.  0 is red, 1 is green, 2 is blue, and 3 is random
     var defaultColor: Int!
+    
+    /// true if path should be shown between waypoints, false otherwise
+    var showPath: Bool!
+    
+    /// the color of the path.  0 is red, 1 is green, 2 is blue, and 3 is random
+    var defaultPathColor: Int!
     
     /// true if sound feedback should be generated when the user is facing the next waypoint, false otherwise
     var soundFeedback: Bool!
@@ -1574,7 +1576,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         // stop navigation
         followingCrumbs?.invalidate()
         hapticTimer?.invalidate()
-        arrowTimer?.invalidate()
         
         feedbackGenerator = nil
         waypointFeedbackGenerator = nil
@@ -1753,8 +1754,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 renderKeypoint(keypoints[0].location)
                 
                 // erase current path and render next path
-                pathObj?.removeFromParentNode()
-                renderPath(prevKeypointPosition, keypoints[0].location)
+                if (showPath) {
+                    pathObj?.removeFromParentNode()
+                    renderPath(prevKeypointPosition, keypoints[0].location)
+                }
                 
                 // erase current set of pathpoints and render next
 //                pathpointObjs.map({$0.removeFromParentNode()})
@@ -1781,7 +1784,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 
                 followingCrumbs?.invalidate()
                 hapticTimer?.invalidate()
-                arrowTimer?.invalidate()
                 
                 // update text and stop navigation
                 if(sendLogs) {
@@ -1934,26 +1936,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 readVoiceNote()
             }
         }
-    }
-    
-    /// Updates arrow pointer to direct user to next keypoint
-    @objc func updateArrow() {
-        guard let curLocation = getRealCoordinates(record: false) else {
-            // TODO: might want to indicate that something is wrong to the user
-            return
-        }
-        let directionToNextKeypoint = getDirectionToNextKeypoint(currentLocation: curLocation)
-
-        /// Create new arrow
-        let arrow_bez = UIBezierPath()
-//        arrow_bez.createArrow(omega: CGFloat(directionToNextKeypoint.angleDiff))
-        arrow_bez.createInnerArrow(omega: CGFloat(directionToNextKeypoint.angleDiff))
-        arrowShapeLayer = stopNavigationController.view.layer.sublayers![0] as? CAShapeLayer
-        arrowShapeLayer?.path = arrow_bez.cgPath
-        
-        /// Flattening effect, slight x axis rotate
-//        stopNavigationController.view.layer.sublayers?[0].transform = CATransform3DMakeRotation(CGFloat(1), 1, 0, 0)
-        
     }
     
     
@@ -2293,8 +2275,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         // render SCNNode of given keypoint
         pathObj = SCNNode(geometry: SCNBox(width: CGFloat(pathDist), height: 0.08, length: 0.25, chamferRadius: 3))
         
+        let colors = [UIColor.red, UIColor.green, UIColor.blue]
+        var color: UIColor!
+        // set color based on settings bundle configuration
+        if (defaultPathColor == 3) {
+            color = colors[Int(arc4random_uniform(3))]
+        } else {
+            color = colors[defaultPathColor]
+        }
+        pathObj?.geometry?.firstMaterial!.diffuse.contents = color
+        
         // configure node attributes
-        pathObj!.geometry?.firstMaterial!.diffuse.contents = UIColor.blue
         pathObj!.opacity = CGFloat(0.5)
         pathObj!.position = SCNVector3(x, y - 0.6, z)
         // horizontal rotation
