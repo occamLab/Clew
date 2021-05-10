@@ -10,8 +10,8 @@ import UIKit
 import SwiftUI // for z-stack
 
 extension UIBezierPath {
-    func createArrow(omega: CGFloat) {
-        // floating arrow
+    /// Create bezier path for floating spatial arrow
+    func createFloatArrow(omega: CGFloat) {
         let arrow_length = CGFloat(60)
         let x = arrow_length*sin(omega)
         let y = arrow_length*cos(omega)
@@ -34,7 +34,8 @@ extension UIBezierPath {
         self.addLine(to: arrowHeadSide2)
     }
     
-    func createInnerArrow(omega: CGFloat) {
+    /// Create bezier path for 2D arrow in stop button
+    func create2DArrow(omega: CGFloat) {
         // arrow in stop button
         let arrow_height = CGFloat(75)
         let x = arrow_height*sin(omega)
@@ -63,28 +64,27 @@ class StopNavigationController: UIViewController {
     /// button for stopping route navigation
     var stopNavigationButton: UIButton!
 
-    /// 2D arrow directing user to pathpoint
-//    let imageView_arrow = UIImageView(image: UIImage(named: "Arrow"))
-
     /// BezierPath Arrow
     let arrow = UIBezierPath()
 
+    /// Add visual properties to floating spatial arrow
     func addArrowProperties(arrowLayer: CAShapeLayer) {
-        // floating arrow
         arrowLayer.strokeColor = UIColor.red.cgColor
         arrowLayer.lineWidth = 25
         arrowLayer.path = arrow.cgPath
         arrowLayer.fillColor = UIColor.red.cgColor
         arrowLayer.lineJoin = CAShapeLayerLineJoin.round // joins arrow head and body
         arrowLayer.lineCap = CAShapeLayerLineCap.round   // rounds edges
-        
-        // arrow in stop button
-//        arrowLayer.strokeColor = UIColor.red.cgColor
-//        arrowLayer.lineWidth = 25
-//        arrowLayer.path = arrow.cgPath
-//        arrowLayer.fillColor = UIColor.clear.cgColor // clear area between head and body
-//        arrowLayer.lineJoin = CAShapeLayerLineJoin.round
-//        arrowLayer.lineCap = CAShapeLayerLineCap.round
+    }
+
+    /// Add visual properties to 2D arrow in stop button
+    func addArrowProperties(arrowLayer: CAShapeLayer) {
+        arrowLayer.strokeColor = UIColor.red.cgColor
+        arrowLayer.lineWidth = 25
+        arrowLayer.path = arrow.cgPath
+        arrowLayer.fillColor = UIColor.clear.cgColor // clear area between head and body
+        arrowLayer.lineJoin = CAShapeLayerLineJoin.round
+        arrowLayer.lineCap = CAShapeLayerLineCap.round
     }
 
     /// called when view appears
@@ -104,9 +104,9 @@ class StopNavigationController: UIViewController {
                             height: UIConstants.buttonFrameHeight)
 
         view.backgroundColor = UIColor.black.withAlphaComponent(0.4)
-//        view.layer.cornerRadius = 150
 
-        // Create black circular frame
+        /// Creates a black circular frame
+//        view.layer.cornerRadius = 150
 //        let circlePath = UIBezierPath(arcCenter: CGPoint(x: view.frame.width/2, y: view.frame.height/2 + 140), radius: CGFloat(300), startAngle: CGFloat(0), endAngle: CGFloat(Double.pi * 2), clockwise: true)
 //        let frameLayer = CAShapeLayer()
 //        frameLayer.path = circlePath.cgPath
@@ -133,10 +133,10 @@ class StopNavigationController: UIViewController {
         /// add elements to the stack
         buttonStackView.addArrangedSubview(stopNavigationButton)
 
-        /// Add arrowLayer as sublayer
-        let arrowLayer = CAShapeLayer()
-        addArrowProperties(arrowLayer: arrowLayer)
-        view.layer.insertSublayer(arrowLayer, at: 0)
+//        /// Add arrowLayer as sublayer
+//        let arrowLayer = CAShapeLayer()
+//        addArrowProperties(arrowLayer: arrowLayer)
+//        view.layer.insertSublayer(arrowLayer, at: 0)
 
         /// size the stack
         buttonStackView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
