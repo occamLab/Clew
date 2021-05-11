@@ -843,12 +843,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             // showSignificantChangesAlert()
         }
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-            if case .mainScreen(_) = self.state {
-                self.presentSurveyIfIntervalHasPassed(surveyToTrigger: "main", logFileURLs: [])
-            }
-        }
-        
         synth.delegate = self
         NotificationCenter.default.addObserver(forName: UIAccessibility.announcementDidFinishNotification, object: nil, queue: nil) { (notification) -> Void in
             self.currentAnnouncement = nil
@@ -864,7 +858,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
                 // make sure to wait for data to load from firebase.  If they have started using the app, don't interrupt them.
                 if case .mainScreen(_) = self.state {
-                    self.presentSurveyIfIntervalHasPassed(surveyToTrigger: "secondary", logFileURLs: [])
+                    self.presentSurveyIfIntervalHasPassed(surveyToTrigger: "main", logFileURLs: [])
                 }
             }
         }
