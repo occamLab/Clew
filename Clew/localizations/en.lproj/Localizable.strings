@@ -55,6 +55,7 @@
 "playVoiceNoteButtonAccessibilityLabel" = "Play recorded voice note";
 "startReturnNavigationButtonAccessibilityLabel" = "Start navigation";
 "optionsButtonAccessibilityLabel" = "Options";
+"signInwithAppleButtonAccessibilityLabel" = "Sign In";
 
     // Save routes
 "saveRoutePop-UpTitle" = "Save route";
@@ -281,3 +282,10 @@
 //Feedback (this is necessary since we can't get it to work properly in the library)
 "surveyPopoverTitle" = "We'd love to get your feedback";
 "submitSurvey" = "Submit";
+
+//Signing in with apple id
+"signInWithAppleTitle" = "Please sign in.";
+
+"signInWithAppleDescription" = "As we develop Clew, we're seeking feedback so we can make the app a better tool for navigation. Please sign in with Apple to help our team improve the app!";
+
+"signInWithAppleButtonText" = "Sign In";

@@ -840,6 +840,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             // showSignificantChangesAlert()
         }
         
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+            if case .mainScreen(_) = self.state {
+                self.presentSurveyIfIntervalHasPassed(surveyToTrigger: "main", logFileURLs: [])
+            }
+        }
+        
         synth.delegate = self
         NotificationCenter.default.addObserver(forName: UIAccessibility.announcementDidFinishNotification, object: nil, queue: nil) { (notification) -> Void in
             self.currentAnnouncement = nil
