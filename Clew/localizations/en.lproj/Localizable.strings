@@ -289,3 +289,5 @@
 "signInWithAppleDescription" = "As we develop Clew, we're seeking feedback so we can make the app a better tool for navigation. Please sign in with Apple to help our team improve the app!";
 
 "signInWithAppleButtonText" = "Sign In";
+"dismissSurvey" = "Dismiss";
+"thanksForFeedbackAnnouncement" = "Thank you for your feedback";
