@@ -306,9 +306,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         // render intermediate anchor points
         renderIntermediateAnchorPoints()
         
-        // TODO: gracefully handle error
-        prevKeypointPosition = getRealCoordinates(record: true)!.location
-        
         feedbackGenerator = UIImpactFeedbackGenerator(style: .light)
         waypointFeedbackGenerator = UINotificationFeedbackGenerator()
         
@@ -861,9 +858,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         recordPathController.isAccessibilityElement = false
         if case .navigatingRoute = self.state {
             keypointNode.removeFromParentNode()
-//            pathObj?.removeFromParentNode()
-            pathpointObjs.map({$0.removeFromParentNode()})
-            pathpointObjs = []
+            pathObj?.removeFromParentNode()
+//            pathpointObjs.map({$0.removeFromParentNode()})
+//            pathpointObjs = []
             for anchorPointNode in anchorPointNodes {
                 anchorPointNode.removeFromParentNode()
             }
@@ -1582,9 +1579,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         
         // erase nearest keypoint
         keypointNode.removeFromParentNode()
-//        pathObj?.removeFromParentNode()
-        pathpointObjs.map({$0.removeFromParentNode()})
-        pathpointObjs = []
+        pathObj?.removeFromParentNode()
+//        pathpointObjs.map({$0.removeFromParentNode()})
+//        pathpointObjs = []
         for anchorPointNode in anchorPointNodes {
             anchorPointNode.removeFromParentNode()
         }
@@ -1775,9 +1772,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 
                 // erase current keypoint node
                 keypointNode.removeFromParentNode()
-//                pathObj?.removeFromParentNode()
-                pathpointObjs.map({$0.removeFromParentNode()})
-                pathpointObjs = []
+                pathObj?.removeFromParentNode()
+//                pathpointObjs.map({$0.removeFromParentNode()})
+//                pathpointObjs = []
                 for anchorPointNode in anchorPointNodes {
                     anchorPointNode.removeFromParentNode()
                 }
@@ -2254,7 +2251,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         sceneView.scene.rootNode.addChildNode(keypointNode)
     }
     
-    /// TODO: User can choose color and opacity
     /// Create the path SCNNode that corresponds to the long translucent bar element that looks like a route path.
     /// - Parameters:
     ///  - locationFront: the location of the keypoint user is approaching
@@ -2286,13 +2282,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         pathObj?.geometry?.firstMaterial!.diffuse.contents = color
         
         // configure node attributes
-        pathObj!.opacity = CGFloat(0.5)
+        pathObj!.opacity = CGFloat(0.7)
         pathObj!.position = SCNVector3(x, y - 0.6, z)
         // horizontal rotation
         pathObj!.rotation = SCNVector4(0, 1, 0, hAngle)
         // vertical rotation
         pathObj!.localRotate(by: SCNQuaternion(x: 0, y: 0, z: 1, w: -vAngle))
-//        simd_quatf(angle: hAngle, axis: simd_float3(0, 1, 0)) * simd_quatf(angle: vAngle, axis: simd_float3(1, 0, 0))
         
         sceneView.scene.rootNode.addChildNode(pathObj!)
     }
