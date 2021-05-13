@@ -858,7 +858,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
                 // make sure to wait for data to load from firebase.  If they have started using the app, don't interrupt them.
                 if case .mainScreen(_) = self.state {
-                    self.presentSurveyIfIntervalHasPassed(surveyToTrigger: "main", logFileURLs: [])
+                    self.presentSurveyIfIntervalHasPassed(logFileURLs: [])
                 }
             }
         }
@@ -1692,7 +1692,30 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// - Parameters:
     ///   - surveyToTrigger: this is the name of the survey, which should be described in the realtime database under "/surveys/{surveyToTrigger}"
     ///   - logFileURLs: this list of URLs will be added to the survey response JSON file if the user winds up submitting the survey.  This makes it easier to link together feedback in the survey with data logs.
-    func presentSurveyIfIntervalHasPassed(surveyToTrigger: String, logFileURLs: [String]) {
+    func presentSurveyIfIntervalHasPassed(logFileURLs: [String]) {
+        
+        let surveyToTrigger: String = FirebaseFeedbackSurveyModel.shared.currentSurvey
+        print(surveyToTrigger)
+        
+        if FirebaseFeedbackSurveyModel.shared.questions[surveyToTrigger] == nil {
+            return
+        }
+        if self.lastSurveyTime[surveyToTrigger] == nil || -Date(timeIntervalSince1970: self.lastSurveyTime[surveyToTrigger]!).timeIntervalSinceNow >= FirebaseFeedbackSurveyModel.shared.intervals[surveyToTrigger] ?? 0.0 {
+            self.lastSurveyTime[surveyToTrigger] = Date().timeIntervalSince1970
+            
+            if let currentUID = Auth.auth().currentUser?.uid {
+                let surveyInfo = ["lastSurveyTime": self.lastSurveyTime[surveyToTrigger]!]
+                self.databaseHandle.reference(withPath: "\(currentUID)/surveys/\(surveyToTrigger)").updateChildValues(surveyInfo)
+            }
+            
+            let swiftUIView = FirebaseFeedbackSurvey(feedbackSurveyName: surveyToTrigger, logFileURLs: logFileURLs)
+            self.hostingController = UISurveyHostingController(rootView: swiftUIView)
+            NotificationCenter.default.post(name: Notification.Name("ClewPopoverDisplayed"), object: nil)
+            self.present(self.hostingController!, animated: true, completion: nil)
+        }
+    }
+    
+    func presentSurveyIfIntervalHasPassedWithSurveyKey(surveyToTrigger: String, logFileURLs: [String]) {
         if FirebaseFeedbackSurveyModel.shared.questions[surveyToTrigger] == nil {
             return
         }
@@ -1719,7 +1742,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         if sendLogs {
             // do this in a little while to give it time to announce arrival
             DispatchQueue.main.asyncAfter(deadline: .now() + (announceArrival ? 3 : 1)) {
-                self.presentSurveyIfIntervalHasPassed(surveyToTrigger: "main", logFileURLs: logFileURLs)
+                self.presentSurveyIfIntervalHasPassed(logFileURLs: logFileURLs)
             }
         }
     }
