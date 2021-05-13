@@ -55,7 +55,8 @@ class FirebaseFeedbackSurveyModel {
     public static var shared = FirebaseFeedbackSurveyModel()
     var questions: [String: [SurveyQuestion]] = [:]
     var intervals: [String: Double] = [:]
-    var currentSurvey: String = ""
+    var currentAppLaunchSurvey: String = ""
+    var currentAfterRouteSurvey: String = ""
     
     private init() {
         setupListeners()
@@ -72,9 +73,13 @@ class FirebaseFeedbackSurveyModel {
     }
     private func populateModel(_ snapshot: DataSnapshot) {
         print(snapshot.key)
-        if snapshot.key == "currentSurvey" {
-            self.currentSurvey = snapshot.value as? String ?? "defaultSurvey"
+        
+        if snapshot.key == "currentAppLaunchSurvey" {
+            self.currentAppLaunchSurvey = snapshot.value as? String ?? "defaultSurvey"
+        } else if snapshot.key == "currentAfterRouteSurvey" {
+            self.currentAfterRouteSurvey = snapshot.value as? String ?? "defaultSurvey"
         }
+        
         var surveyQuestions: [SurveyQuestion] = []
         guard let surveyQuestionsRaw = snapshot.value as? [String: Any] else {
             return

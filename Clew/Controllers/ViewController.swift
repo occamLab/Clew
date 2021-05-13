@@ -858,7 +858,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
                 // make sure to wait for data to load from firebase.  If they have started using the app, don't interrupt them.
                 if case .mainScreen(_) = self.state {
-                    self.presentSurveyIfIntervalHasPassed(logFileURLs: [])
+                    self.presentSurveyIfIntervalHasPassed(mode: "onAppLaunch", logFileURLs: [])
                 }
             }
         }
@@ -1690,11 +1690,21 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// Presents a survey to the user as a popover.  The method will check to see if it has been sufficiently long since the user was last asked to fill out this survey before displaying the survey.
     /// - Parameters:
-    ///   - surveyToTrigger: this is the name of the survey, which should be described in the realtime database under "/surveys/{surveyToTrigger}"
+    ///   - mode: type of survey, accepts "onAppLaunch" and "afterRoute" which correspond to the value of the "currentAppLaunchSurvey" and "currentAfterRouteSurvey" keys respectively located in the Firebase Realtime Database at surveys/
     ///   - logFileURLs: this list of URLs will be added to the survey response JSON file if the user winds up submitting the survey.  This makes it easier to link together feedback in the survey with data logs.
-    func presentSurveyIfIntervalHasPassed(logFileURLs: [String]) {
+    func presentSurveyIfIntervalHasPassed(mode: String, logFileURLs: [String]) {
         
-        let surveyToTrigger: String = FirebaseFeedbackSurveyModel.shared.currentSurvey
+        var surveyToTrigger: String = ""
+        
+        switch mode {
+            case "onAppLaunch":
+                surveyToTrigger = FirebaseFeedbackSurveyModel.shared.currentAppLaunchSurvey
+            case "afterRoute":
+                surveyToTrigger = FirebaseFeedbackSurveyModel.shared.currentAfterRouteSurvey
+            default:
+                surveyToTrigger = "defaultSurvey"
+        }
+        
         print(surveyToTrigger)
         
         if FirebaseFeedbackSurveyModel.shared.questions[surveyToTrigger] == nil {
@@ -1715,6 +1725,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
     }
     
+    /// Presents a survey to the user as a popover.  The method will check to see if it has been sufficiently long since the user was last asked to fill out this survey before displaying the survey.
+    /// - Parameters:
+    ///   - surveyToTrigger: this is the name of the survey, which should be described in the realtime database under "/surveys/{surveyToTrigger}"
+    ///   - logFileURLs: this list of URLs will be added to the survey response JSON file if the user winds up submitting the survey.  This makes it easier to link together feedback in the survey with data logs.
     func presentSurveyIfIntervalHasPassedWithSurveyKey(surveyToTrigger: String, logFileURLs: [String]) {
         if FirebaseFeedbackSurveyModel.shared.questions[surveyToTrigger] == nil {
             return
@@ -1742,7 +1756,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         if sendLogs {
             // do this in a little while to give it time to announce arrival
             DispatchQueue.main.asyncAfter(deadline: .now() + (announceArrival ? 3 : 1)) {
-                self.presentSurveyIfIntervalHasPassed(logFileURLs: logFileURLs)
+                self.presentSurveyIfIntervalHasPassed(mode: "afterRoute", logFileURLs: logFileURLs)
             }
         }
     }
