@@ -17,11 +17,13 @@ import FirebaseStorage
 import FirebaseAuth
 
 enum QuestionType: String {
+    case title = "title"
     case textField = "textField"
     case textView = "textView"
     case slider = "slider"
     case stepper = "stepper"
     case toggle = "toggle"
+    case checkboxes = "checkboxes"
 }
 
 struct SurveyQuestion {
@@ -38,6 +40,7 @@ struct SurveyQuestion {
     let quantizeSlider: Bool?
     let addSliderAccent: Bool?
     let booleanDefault: Bool?
+    let choices: Array<String>
     var localizedText: String {
         if let languageCode = Locale.current.languageCode, let localized = localizations[languageCode] {
             return localized
@@ -92,8 +95,10 @@ class FirebaseFeedbackSurveyModel {
             let booleanDefault = questionDefinition["booleanDefault"] as? Bool
             let required = questionDefinition["required"] as? Bool ?? true
             let isEmail = questionDefinition["isEmail"] as? Bool ?? false
+            
+            let choices = questionDefinition["choices"] as? Array<String> ?? ["none"]
 
-            surveyQuestions.append(SurveyQuestion(name: childKey, text: text, localizations: prompt, questionType: questionTypeEnum, required: required, isEmail: isEmail, order: questionOrder, numericalDefault: numericalDefault, numericalMin: numericalMin, numericalMax: numericalMax, quantizeSlider: quantizeSlider, addSliderAccent: addSliderAccent, booleanDefault: booleanDefault))
+            surveyQuestions.append(SurveyQuestion(name: childKey, text: text, localizations: prompt, questionType: questionTypeEnum, required: required, isEmail: isEmail, order: questionOrder, numericalDefault: numericalDefault, numericalMin: numericalMin, numericalMax: numericalMax, quantizeSlider: quantizeSlider, addSliderAccent: addSliderAccent, booleanDefault: booleanDefault, choices: choices))
         }
         questions[snapshot.key] = surveyQuestions
         intervals[snapshot.key] = presentationIntervalInSeconds
@@ -132,8 +137,13 @@ struct FirebaseFeedbackSurvey: View {
                 sectionOne.model.fields.append(SimpleFormField(stepperField: question.text, name: question.name, value: (question.numericalDefault ?? 3), range: (question.numericalMin ?? 1)...(question.numericalMax ?? 5)))
             case .toggle:
                 sectionOne.model.fields.append(SimpleFormField(toggleField: question.text, name: question.name, value: question.booleanDefault ?? true))
+            case .checkboxes:
+                sectionOne.model.fields.append(SimpleFormField(checkboxesField: question.text, name: question.name, choices: question.choices, value: false))
+            case .title:
+                sectionOne.model.fields.append(SimpleFormField(title: question.text))
             }
         }
+            
         self.simpleForm.model.sections.append(sectionOne)
         return NavigationView {
             VStack {
