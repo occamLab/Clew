@@ -59,9 +59,6 @@
             ReferencedContainer = "container:Clew.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
-      <DeviceSensorReplayFileReference
-         identifier = "../../../../../../../../Downloads/AR Session 2.mov">
-      </DeviceSensorReplayFileReference>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
