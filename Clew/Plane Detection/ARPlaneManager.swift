@@ -199,18 +199,6 @@ class ARPlaneManager: NSObject, ARSCNViewDelegate, ARSessionDelegate {
         guard let configuration = sceneView.session.configuration as? ARWorldTrackingConfiguration else {
             return
         }
-//        guard let frame = sceneView.session.currentFrame else {
-//            return
-//        }
-//        print("armesh classification stopped")
-//        let meshAnchors = frame.anchors.compactMap({ $0 as? ARMeshAnchor })
-//        for anchor in meshAnchors {
-//            for index in 0..<anchor.geometry.faces.count {
-//                // Get the semantic classification of the face and finish the search.
-//                let classification: ARMeshClassification = anchor.geometry.classificationOf(faceWithIndex: index)
-//                print(index, getMeshClassificationDescription(classification))
-//            }
-//        }
         // send logs to firebase
         let plogger = PlaneLogging()
         plogger.sendMeshData(sceneView)

@@ -168,7 +168,7 @@ class PathLogger {
         let userId = Analytics.appInstanceID()
         
         sendMetaData(pathDate, pathID+"-0", userId, debug)
-        sendPathData(pathID, userId)
+        sendPathData(pathDate, pathID, userId)
     }
     
     /// Send the meta data log to the cloud
@@ -200,7 +200,7 @@ class PathLogger {
             let jsonData = try JSONSerialization.data(withJSONObject: body, options: .prettyPrinted)
             // here "jsonData" is the dictionary encoded in JSON data
             // TODO CHANGE THIS FILE NAME
-            let storageRef = storageBaseRef.child("path" + "_metadata.json")
+            let storageRef = storageBaseRef.child(pathDate + "_path_metadata.json")
             let fileType = StorageMetadata()
             fileType.contentType = "application/json"
             // upload the image to Firebase storage and setup auto snapshotting
@@ -221,7 +221,7 @@ class PathLogger {
     /// - Parameters:
     ///   - pathID: the id of the path
     ///   - userId: the user id
-    func sendPathData(_ pathID: String, _ userId: String) {
+    func sendPathData(_ pathDate: String, _ pathID: String, _ userId: String) {
         let body: [String : Any] = ["userId": userId,
                                     "PathID": pathID,
                                     "PathDate": "0",
@@ -237,7 +237,7 @@ class PathLogger {
             let jsonData = try JSONSerialization.data(withJSONObject: body, options: .prettyPrinted)
             // here "jsonData" is the dictionary encoded as a JSON
             // TODO CHANGE THIS FILE NAME
-            let storageRef = storageBaseRef.child("path_data.json")
+            let storageRef = storageBaseRef.child(pathDate + "_path_data.json")
             let fileType = StorageMetadata()
             fileType.contentType = "application/json"
             // upload the image to Firebase storage and setup auto snapshotting

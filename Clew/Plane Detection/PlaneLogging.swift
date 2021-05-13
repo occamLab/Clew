@@ -17,8 +17,7 @@ class PlaneLogging {
     
     public func sendPlaneData(_ sceneView: ARSCNView, _ route: [KeypointInfo], _ idealizedDirections: [String]) {
         let df = DateFormatter()
-        df.dateFormat = "yyyy-MM-dd hh:mm:ss"
-        let timeStamp = df.string(from: Date())
+        df.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZZZZZ"
 
         var body = [String: Any]()
         print("printing plane anchor classifications from logging")
@@ -37,7 +36,7 @@ class PlaneLogging {
                                    "geometry": planeAnchor.geometry.vertices.debugDescription]
         }
         
-        let fileName = "planes_2_with_directions.json" // TODO
+        let fileName = "\(df.string(from: Date()))_planes.json"
         do {
             let jsonData = try JSONSerialization.data(withJSONObject: body, options: .prettyPrinted)
             self.uploadToFirebase(jsonData, fileName)
@@ -52,13 +51,17 @@ class PlaneLogging {
             return
         }
         DispatchQueue.global().async {
+            /// get timestamp for file upload
+            let df = DateFormatter()
+            df.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZZZZZ"
+
+            /// build mesh data for upload
             let start_time = Date()
             var body = [String: Any]()
             for (index, anchor) in frame.anchors.enumerated() {
                 guard let meshAnchor = anchor as? ARMeshAnchor else { continue }
                 body[String(index)] = [[String:Any]]()
                 guard var array = body[String(index)] as? [[String:Any]] else {continue}
-                print(meshAnchor.geometry.verticesOf(faceWithIndex: 0).debugDescription)
                 for i in 0..<meshAnchor.geometry.faces.count {
                     //center point of each face needs to be converted to global coord system
                     let centerOfFace = meshAnchor.geometry.centerOf(faceWithIndex: i)
@@ -73,10 +76,9 @@ class PlaneLogging {
                                 "vertices": meshAnchor.geometry.verticesOf(faceWithIndex: i).debugDescription,
                                 "transform": anchor.transform.debugDescription])
                 }
-                print(array.count)
                 body[String(index)] = array
             }
-            let fileName = "meshes_2.json" // TODO
+            let fileName = "\(df.string(from: Date()))_meshes.json" // TODO
             do {
                 let jsonData = try JSONSerialization.data(withJSONObject: body, options: .prettyPrinted)
                 self.uploadToFirebase(jsonData, fileName)
@@ -90,7 +92,6 @@ class PlaneLogging {
     private func uploadToFirebase(_ jsonData:Data, _ fileName: String) {
         // here "jsonData" is the dictionary encoded as a JSON
         let storageRef = storageBaseRef.child(fileName)
-        print(jsonData)
         let fileType = StorageMetadata()
         fileType.contentType = "application/json"
         // upload the image to Firebase storage and setup auto snapshotting
