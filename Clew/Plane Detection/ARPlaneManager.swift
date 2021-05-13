@@ -12,8 +12,9 @@ import ARKit
 import RealityKit
 
 class ARPlaneManager: NSObject, ARSCNViewDelegate, ARSessionDelegate {
-    var sceneView: ARSCNView;
-    var arView: ARView;
+    var sceneView: ARSCNView
+    var arView: ARView
+    let plogger = PlaneLogging()
 
     init(arSceneView sceneView: ARSCNView) {
         self.sceneView = sceneView
@@ -200,7 +201,6 @@ class ARPlaneManager: NSObject, ARSCNViewDelegate, ARSessionDelegate {
             return
         }
         // send logs to firebase
-        let plogger = PlaneLogging()
         plogger.sendMeshData(sceneView)
         
         configuration.planeDetection = []
