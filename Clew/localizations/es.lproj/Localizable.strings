@@ -297,3 +297,10 @@
 //Feedback
 "surveyPopoverTitle" = "Nos encantaría recibir sus comentarios.";
 "submitSurvey" = "Enviar";
+
+"signInWithAppleButtonText" = "Iniciar sesión";
+"signInWithAppleDescription" = "A medida que desarrollamos Clew, buscamos comentarios para hacer de la aplicación una mejor herramienta de navegación. Inicia sesión con Apple para ayudar a nuestro equipo a mejorar la aplicación.";
+"dismissSurvey" = "Descartar";
+"surveyPopoverTitle" = "Nos encantaría recibir tu opinión";
+"thanksForFeedbackAnnouncement" = "Gracias por tus comentarios";
+

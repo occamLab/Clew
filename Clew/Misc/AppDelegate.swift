@@ -38,8 +38,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             FirebaseApp.configure()
         #endif
         logUserProperties()
-
-        
+        // use for testing sign-in flow try? Auth.auth().signOut()
         if #available(iOS 13.0, *) {
             if (Auth.auth().currentUser == nil) {
                 window = UIWindow(frame:UIScreen.main.bounds)
