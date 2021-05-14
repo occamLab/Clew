@@ -26,6 +26,32 @@ enum QuestionType: String {
     case checkboxes = "checkboxes"
 }
 
+struct MultipleChoiceOption {
+    let key: String
+    let choiceOrder: Int
+    let localizations: [String: String]
+
+    init?(key: String, firebaseData: [String: Any]) {
+        self.key = key
+        guard let choiceOrder = firebaseData["order"] as? Int else {
+            return nil
+        }
+        self.choiceOrder = choiceOrder
+        guard let localizations = firebaseData["prompt"] as? [String: String] else {
+            return nil
+        }
+        self.localizations = localizations
+    }
+    
+    var localizedText: String {
+        if let languageCode = Locale.current.languageCode, let localized = localizations[languageCode] {
+            return localized
+        } else {
+            return key
+        }
+    }
+}
+
 struct SurveyQuestion {
     let name: String
     let text: String
@@ -40,13 +66,16 @@ struct SurveyQuestion {
     let quantizeSlider: Bool?
     let addSliderAccent: Bool?
     let booleanDefault: Bool?
-    let choices: Array<String>
+    let choices: [MultipleChoiceOption]
     var localizedText: String {
         if let languageCode = Locale.current.languageCode, let localized = localizations[languageCode] {
             return localized
         } else {
             return text
         }
+    }
+    var localizedChoices: [(String, String)] {
+        choices.enumerated().map({(_, keyvalue) in (keyvalue.key, keyvalue.localizedText)})
     }
 }
 
@@ -104,9 +133,15 @@ class FirebaseFeedbackSurveyModel {
             let booleanDefault = questionDefinition["booleanDefault"] as? Bool
             let required = questionDefinition["required"] as? Bool ?? true
             let isEmail = questionDefinition["isEmail"] as? Bool ?? false
-            
-            let choices = questionDefinition["choices"] as? Array<String> ?? ["none"]
-
+            var choices: [MultipleChoiceOption] = []
+            if let choiceDict = questionDefinition["choices"] as? [String : [String: Any] ] {
+                for (choiceKey, choiceDescription) in choiceDict {
+                    if let choice = MultipleChoiceOption(key: choiceKey, firebaseData: choiceDescription) {
+                        choices.append(choice)
+                    }
+                }
+            }
+            choices.sort(by: {$0.choiceOrder < $1.choiceOrder})
             surveyQuestions.append(SurveyQuestion(name: childKey, text: text, localizations: prompt, questionType: questionTypeEnum, required: required, isEmail: isEmail, order: questionOrder, numericalDefault: numericalDefault, numericalMin: numericalMin, numericalMax: numericalMax, quantizeSlider: quantizeSlider, addSliderAccent: addSliderAccent, booleanDefault: booleanDefault, choices: choices))
         }
         questions[snapshot.key] = surveyQuestions
@@ -139,17 +174,17 @@ struct FirebaseFeedbackSurvey: View {
             case .textField:
                 sectionOne.model.fields.append(SimpleFormField(textField: question.localizedText, labelPosition: .above, name: question.name, value: "", validation: (question.required ? [.required] : []) + (question.isEmail ? [.email] : [])))
             case .textView:
-                sectionOne.model.fields.append(SimpleFormField(textView: question.text, labelPosition: .above, name: question.name, value: "", validation: (question.required ? [.required] : []) + (question.isEmail ? [.email] : [])))
+                sectionOne.model.fields.append(SimpleFormField(textView: question.localizedText, labelPosition: .above, name: question.name, value: "", validation: (question.required ? [.required] : []) + (question.isEmail ? [.email] : [])))
             case .slider:
-                sectionOne.model.fields.append(SimpleFormField(sliderField: question.text, name: question.name, value: question.numericalDefault ?? 0.5, addSliderAccent: question.addSliderAccent ?? false, quantizeSlider: question.quantizeSlider ?? false, range: (question.numericalMin ?? 0.0)...(question.numericalMax ?? 1.0)))
+                sectionOne.model.fields.append(SimpleFormField(sliderField: question.localizedText, name: question.name, value: question.numericalDefault ?? 0.5, addSliderAccent: question.addSliderAccent ?? false, quantizeSlider: question.quantizeSlider ?? false, range: (question.numericalMin ?? 0.0)...(question.numericalMax ?? 1.0)))
             case .stepper:
-                sectionOne.model.fields.append(SimpleFormField(stepperField: question.text, name: question.name, value: (question.numericalDefault ?? 3), range: (question.numericalMin ?? 1)...(question.numericalMax ?? 5)))
+                sectionOne.model.fields.append(SimpleFormField(stepperField: question.localizedText, name: question.name, value: (question.numericalDefault ?? 3), range: (question.numericalMin ?? 1)...(question.numericalMax ?? 5)))
             case .toggle:
-                sectionOne.model.fields.append(SimpleFormField(toggleField: question.text, name: question.name, value: question.booleanDefault ?? true))
+                sectionOne.model.fields.append(SimpleFormField(toggleField: question.localizedText, name: question.name, value: question.booleanDefault ?? true))
             case .checkboxes:
-                sectionOne.model.fields.append(SimpleFormField(checkboxesField: question.text, name: question.name, choices: question.choices, value: false))
+                sectionOne.model.fields.append(SimpleFormField(checkboxesField: question.localizedText, name: question.name, choices: question.localizedChoices, value: false))
             case .title:
-                sectionOne.model.fields.append(SimpleFormField(title: question.text))
+                sectionOne.model.fields.append(SimpleFormField(title: question.localizedText))
             }
         }
             
@@ -163,6 +198,7 @@ struct FirebaseFeedbackSurvey: View {
                 Button(action: {
                     if self.simpleForm.isValid() {
                         var formValues = self.simpleForm.getValues()
+                        formValues["_preferredLanguage"] = Locale.current.languageCode ?? ""
                         formValues["_dateSubmitted"] = Date().timeIntervalSince1970
                         formValues["_uid"] = Auth.auth().currentUser?.uid ?? "notsignedin"
                         formValues["_logFileURLs"] = logFileURLs
