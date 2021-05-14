@@ -279,7 +279,7 @@
 //Sharing routes
 "automaticEmailTextWhenSharingRoutes" = "Check out this route!";
 
-//Feedback (this is necessary since we can't get it to work properly in the library)
+//Feedback
 "surveyPopoverTitle" = "We'd love to get your feedback";
 "submitSurvey" = "Submit";
 
