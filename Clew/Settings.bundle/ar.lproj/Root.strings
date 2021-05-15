@@ -79,6 +79,11 @@
 /* Comments: The option for the markers to be red. */
 "Red" = "أحمر";
 
+
+"Show Path" = "عرض المسار";
+"Path Color" = "لون المسار";
+
+
 /* Comments: The header for choosing whether or not to send feedback to the developers. */
 "Send Feedback" = "ارسل رأيك";
 

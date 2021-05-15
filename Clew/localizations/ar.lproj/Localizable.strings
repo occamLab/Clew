@@ -467,3 +467,16 @@
 /* Voicenote */
 "voiceNoteRecorderPop-UpHeader" = "مسجل الصوت";
 
+// Version 1.5 strings
+"surveyPopoverTitle" = "نرغب في الحصول على رأيك";
+"submitSurvey" = "إرسال";
+
+"signInWithAppleTitle" = "الرجاء تسجيل الدخول";
+"signInWithAppleButtonText" = "تسجيل الدخول";
+"signInWithAppleDescription" = "نعمل دائما على تطوير Clew، فمن المهم الحصول على تعليقات وآراء المستخدمين حول التطبيق، حتى نتمكن من جعله أداة أفضل للتنقل.
+الرجاء تسجيل الدخول باستخدام آبل لمساعدة فريقنا على تحسين التطبيق!
+";
+
+"dismissSurvey" = "استبعاد";
+"thanksForFeedbackAnnouncement" = "شكرا جزيلا على تقديم رأيك";
+
