@@ -9,6 +9,7 @@
 import Foundation
 import Firebase
 import FirebaseStorage
+import FirebaseAnalytics
 import SceneKit
 
 //FirebaseApp.configure()
@@ -18,12 +19,13 @@ import SceneKit
 class PathLogger {
     /// A handle to the Firebase storage
     let storageBaseRef = Storage.storage().reference()
-
-    /// path data taken during RECORDPATH - [[1x16 transform matrix]]
+    /// history of settings in the app
+    var settingsHistory: [(Date, Dictionary<String, Any>)] = []
+    /// path data taken during RECORDPATH - [[1x16 transform matrix, navigation offset, use navigation offset]]
     var pathData: LinkedList<[Float]> = []
     /// time stamps for pathData
     var pathDataTime: LinkedList<Double> = []
-    /// path data taken during NAVIGATEPATH - [[1x16 transform matrix]]
+    /// path data taken during NAVIGATEPATH - [[1x16 transform matrix, navigation offset, use navigation offset]]
     var navigationData: LinkedList<[Float]> = []
     /// time stamps for navigationData
     var navigationDataTime: LinkedList<Double> = []
@@ -50,13 +52,25 @@ class PathLogger {
     /// list of keypoints - [[(LocationInfo)x, y, z, yaw]]
     var keypointData: LinkedList<Array<Any>> = []
     
+    /// the navigation route that the user is currently navigating
+    var currentNavigationRoute: SavedRoute?
+    /// the ARWorldMap that is currently navigating
+    var currentNavigationMap: Any?
+    
     /// language used in recording
-//    var langData: [String] = []
-//    let langData = Locale.preferredLanguages[0]
     func currentLocale() -> String {
         let preferredLanguage = Locale.preferredLanguages[0] as String
         print(preferredLanguage)
         return preferredLanguage
+    }
+    
+    /// Sets the current route and map so we can log it later
+    /// - Parameters:
+    ///   - route: the route being navigated
+    ///   - worldMap: the world map expressed as an optional Any type
+    func setCurrentRoute(route: SavedRoute, worldMap: Any?) {
+        currentNavigationRoute = route
+        currentNavigationMap = worldMap
     }
     
     /// Add the specified state transition to the log.
@@ -91,12 +105,15 @@ class PathLogger {
     /// - Parameters:
     ///   - state: the app's state (this helps determine whether to log the transformation as part of the path recording or navigation data)
     ///   - scn: the 4x4 matrix that encodes the position and orientation of the phone
-    func logTransformMatrix(state: AppState, scn: SCNMatrix4) {
+    ///   - headingOffset: the offset
+    func logTransformMatrix(state: AppState, scn: SCNMatrix4, headingOffset: Float?, useHeadingOffset: Bool) {
         let logTime = -dataTimer.timeIntervalSinceNow
+        
+        // TODO: figure out better way to indicate nil value than hardcoded value of -1000.0
         let logMatrix = [scn.m11, scn.m12, scn.m13, scn.m14,
                          scn.m21, scn.m22, scn.m23, scn.m24,
                          scn.m31, scn.m32, scn.m33, scn.m34,
-                         scn.m41, scn.m42, scn.m43, scn.m44]
+                         scn.m41, scn.m42, scn.m43, scn.m44, headingOffset == nil ? -1000.0 : headingOffset!, useHeadingOffset ? 1.0 : 0.0]
         if case .navigatingRoute = state {
             navigationData.append(logMatrix)
             navigationDataTime.append(logTime)
@@ -115,6 +132,10 @@ class PathLogger {
             let data = [keypoint.location.x, keypoint.location.y, keypoint.location.z, keypoint.location.yaw]
             keypointData.append(data)
         }
+    }
+    
+    func logSettings(defaultUnit: Int, defaultColor: Int, soundFeedback: Bool, voiceFeedback: Bool, hapticFeedback: Bool, sendLogs: Bool, timerLength: Int, adjustOffset: Bool) {
+        settingsHistory.append((Date(), ["defaultUnit": defaultUnit, "defaultColor": defaultColor, "soundFeedback": soundFeedback, "voiceFeedback": voiceFeedback, "hapticFeedback": hapticFeedback, "sendLogs": sendLogs, "timerLength": timerLength, "adjustOffset": adjustOffset]))
     }
     
     /// Log language used by user in recording.
@@ -136,6 +157,10 @@ class PathLogger {
         trackingErrorData = []
         trackingErrorTime = []
         trackingErrorPhase = []
+        
+        // reset these
+        currentNavigationMap = nil
+        currentNavigationRoute = nil
     }
     
     /// Reset the logging variables having to do with path navigation.
@@ -158,17 +183,27 @@ class PathLogger {
     /// Compile log data and send it to the cloud
     ///
     /// - Parameter debug: true if the route was unsuccessful (useful for debugging) and false if the route was successful
-    func compileLogData(_ debug: Bool) {
+    func compileLogData(_ debug: Bool?)->[String] {
         // compile log data
         let date = Date()
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZZZZZ"
         let pathDate = dateFormatter.string(from: date)
         let pathID = UIDevice.current.identifierForVendor!.uuidString + dateFormatter.string(from: date)
-        let userId = Analytics.appInstanceID()
-        
-        sendMetaData(pathDate, pathID+"-0", userId, debug)
-        sendPathData(pathID, userId)
+        let userId: String
+        if Auth.auth().currentUser != nil {
+            userId = Auth.auth().currentUser!.uid
+        } else {
+            userId = Analytics.appInstanceID()!
+        }
+        var logFileURLs: [String] = []
+        if let metaDataLogURL = sendMetaData(pathDate, pathID+"-0", userId, debug) {
+            logFileURLs.append(metaDataLogURL)
+        }
+        if let pathDataLogURL = sendPathData(pathID, userId) {
+            logFileURLs.append(pathDataLogURL)
+        }
+        return logFileURLs
     }
     
     /// Send the meta data log to the cloud
@@ -178,28 +213,39 @@ class PathLogger {
     ///   - pathID: the path id
     ///   - userId: the user id
     ///   - debug: true if the route was unsuccessful (useful for debugging) and false if the route was successful
-    func sendMetaData(_ pathDate: String, _ pathID: String, _ userId: String, _ debug: Bool) {
+    func sendMetaData(_ pathDate: String, _ pathID: String, _ userId: String, _ debug: Bool?)->String? {
         let pathType: String
-        if(debug) {
+        if debug == nil {
+            pathType = "notrated"
+        } else if debug! {
             pathType = "debug"
         } else {
             pathType = "success"
+        }
+        
+        // compute time stamps for settings
+        for i in 0..<settingsHistory.count {
+            settingsHistory[i].1["relativeTimeStamp"] = settingsHistory[i].0.timeIntervalSince(stateTransitionLogTimer)
         }
         
         let body: [String : Any] = ["userId": userId,
                                     "PathID": pathID,
                                     "PathDate": pathDate,
                                     "PathType": pathType,
+                                    "isVoiceOverOn": UIAccessibility.isVoiceOverRunning,
+                                    "routeId": currentNavigationRoute != nil ? currentNavigationRoute!.id : "",
+                                    "hasMap": currentNavigationMap != nil,
                                     "keypointData": Array(keypointData),
                                     "trackingErrorPhase": Array(trackingErrorPhase),
                                     "trackingErrorTime": Array(trackingErrorTime),
                                     "trackingErrorData": Array(trackingErrorData),
                                     "stateSequence": Array(stateSequence),
-                                    "stateSequenceTime": Array(stateSequenceTime)]
+                                    "stateSequenceTime": Array(stateSequenceTime),
+                                    "settingsHistory": settingsHistory.map({$0.1})]
         do {
             let jsonData = try JSONSerialization.data(withJSONObject: body, options: .prettyPrinted)
             // here "jsonData" is the dictionary encoded in JSON data
-            let storageRef = storageBaseRef.child(userId + "_" + pathID + "_metadata.json")
+            let storageRef = storageBaseRef.child("logs").child(userId).child(pathID + "_metadata.json")
             let fileType = StorageMetadata()
             fileType.contentType = "application/json"
             // upload the image to Firebase storage and setup auto snapshotting
@@ -210,8 +256,10 @@ class PathLogger {
                     return
                 }
             }
+            return storageRef.fullPath
         } catch {
             print(error.localizedDescription)
+            return nil
         }
     }
     
@@ -220,7 +268,7 @@ class PathLogger {
     /// - Parameters:
     ///   - pathID: the id of the path
     ///   - userId: the user id
-    func sendPathData(_ pathID: String, _ userId: String) {
+    func sendPathData(_ pathID: String, _ userId: String)->String? {
         let body: [String : Any] = ["userId": userId,
                                     "PathID": pathID,
                                     "PathDate": "0",
@@ -235,19 +283,21 @@ class PathLogger {
         do {
             let jsonData = try JSONSerialization.data(withJSONObject: body, options: .prettyPrinted)
             // here "jsonData" is the dictionary encoded as a JSON
-            let storageRef = storageBaseRef.child(userId + "_" + pathID + "_pathdata.json")
+            let storageRef = storageBaseRef.child("logs").child(userId).child(pathID + "_pathdata.json")
             let fileType = StorageMetadata()
             fileType.contentType = "application/json"
             // upload the image to Firebase storage and setup auto snapshotting
             storageRef.putData(jsonData, metadata: fileType) { (metadata, error) in
-                guard metadata != nil else {
+                guard let metadata = metadata else {
                     // Uh-oh, an error occurred!
                     print("could not upload path data to firebase", error!.localizedDescription)
                     return
                 }
             }
+            return storageRef.fullPath
         } catch {
             print(error.localizedDescription)
+            return nil
         }
     }
 }

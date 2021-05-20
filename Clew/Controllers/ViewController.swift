@@ -7,7 +7,7 @@
 // Confirmed issues
 // - We are not doing a proper job dealing with resumed routes with respect to logging (we always send recorded stuff in the log file, which we don't always have access to)
 //
-// Voie Note Recording Feature
+// Voice Note Recording Feature
 // - think about direction of device and how it relates to the route itself (e.g., look to your left)
 // - Get buttons to align in the recording view (add transparent third button)
 //
@@ -32,6 +32,7 @@ import VectorMath
 import Firebase
 import FirebaseDatabase
 import SRCountdownTimer
+import SwiftUI
 
 /// A custom enumeration type that describes the exact state of the app.  The state is not exhaustive (e.g., there are Boolean flags that also track app state).
 enum AppState {
@@ -43,8 +44,6 @@ enum AppState {
     case readyToNavigateOrPause(allowPause: Bool)
     /// User is navigating along a route
     case navigatingRoute
-    /// User is rating the route
-    case ratingRoute(announceArrival: Bool)
     /// The app is starting up
     case initializing
     /// The user has requested a pause, but has not yet put the phone in the save location
@@ -73,8 +72,6 @@ enum AppState {
             return "readyToNavigateOrPause"
         case .navigatingRoute:
             return "navigatingRoute"
-        case .ratingRoute(let announceArrival):
-            return "ratingRoute(announceArrival=\(announceArrival))"
         case .initializing:
             return "initializing"
         case .startingPauseProcedure:
@@ -85,8 +82,8 @@ enum AppState {
             return "completingPauseProcedure"
         case .pauseProcedureCompleted:
             return "pauseProcedureCompleted"
-        case .startingResumeProcedure(_, _, let navigateStartToEnd):
-            return "startingResumeProcedure(route=notloggedhere, map=notlogged, navigateStartToEnd=\(navigateStartToEnd))"
+        case .startingResumeProcedure(let route, let worldMap, let navigateStartToEnd):
+            return "startingResumeProcedure(route=\(route.id), mapexists=\(worldMap != nil), navigateStartToEnd=\(navigateStartToEnd))"
         case .readyForFinalResumeAlignment:
             return "readyForFinalResumeAlignment"
         case .startingNameSavedRouteProcedure:
@@ -111,6 +108,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// The state of the ARKit tracking session as last communicated to us through the delgate protocol.  This is useful if you want to do something different in the delegate method depending on the previous state
     var trackingSessionState : ARCamera.TrackingState?
     
+    let surveyModel = FirebaseFeedbackSurveyModel.shared
+    
+    /// the last time this particular user was surveyed (nil if we don't know this information or it hasn't been loaded from the database yet)
+    var lastSurveyTime: [String: Double] = [:]
+    
     /// The state of the app.  This should be constantly referenced and updated as the app transitions
     var state = AppState.initializing {
         didSet {
@@ -122,13 +124,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 handleStateTransitionToReadyToNavigateOrPause(allowPause: recordingSingleUseRoute)
             case .navigatingRoute:
                 handleStateTransitionToNavigatingRoute()
-            case .ratingRoute(let announceArrival):
-                handleStateTransitionToRatingRoute(announceArrival: announceArrival)
             case .mainScreen(let announceArrival):
                 handleStateTransitionToMainScreen(announceArrival: announceArrival)
             case .startingPauseProcedure:
                 handleStateTransitionToStartingPauseProcedure()
-
             case .pauseWaitingPeriod:
                 handleStateTransitionToPauseWaitingPeriod()
             case .completingPauseProcedure:
@@ -330,13 +329,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         hapticTimer = Timer.scheduledTimer(timeInterval: 0.01, target: self, selector: (#selector(getHapticFeedback)), userInfo: nil, repeats: true)
     }
     
-    /// Handler for the route rating app state
-    ///
-    /// - Parameter announceArrival: a Boolean that is true if we should announce that the user has arrived at the destination and false otherwise
-    func handleStateTransitionToRatingRoute(announceArrival: Bool) {
-        showRouteRating(announceArrival: announceArrival)
-    }
-    
     /// Handler for the startingResumeProcedure app state
     ///
     /// - Parameters:
@@ -344,6 +336,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     ///   - worldMap: the world map to use
     ///   - navigateStartToEnd: a Boolean that is true if we want to navigate from the start to the end and false if we want to navigate from the end to the start.
     func handleStateTransitionToStartingResumeProcedure(route: SavedRoute, worldMap: Any?, navigateStartToEnd: Bool) {
+        logger.setCurrentRoute(route: route, worldMap: worldMap)
+        
         // load the world map and restart the session so that things have a chance to quiet down before putting it up to the wall
         var isTrackingPerformanceNormal = false
         if case .normal? = sceneView.session.currentFrame?.camera.trackingState {
@@ -547,7 +541,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// Hide all the subviews.  TODO: This should probably eventually refactored so it happens more automatically.
     func hideAllViewsHelper() {
         recordPathController.remove()
-        routeRatingController.remove()
         stopRecordingController.remove()
         startNavigationController.remove()
         stopNavigationController.remove()
@@ -653,8 +646,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// child view controllers for various app states
     
-    /// route rating VC
-    var routeRatingController: RouteRatingController!
+    /// the controller that hosts the popover survey
+    var hostingController: UIViewController?
     
     /// route navigation pausing VC
     var pauseTrackingController: PauseTrackingController!
@@ -693,7 +686,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         view = RootContainerView(frame: UIScreen.main.bounds)
         
         // initialize child view controllers
-        routeRatingController = RouteRatingController()
         pauseTrackingController = PauseTrackingController()
         resumeTrackingController = ResumeTrackingController()
         resumeTrackingConfirmController = ResumeTrackingConfirmController()
@@ -747,7 +739,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             if self.stopRecordingController.parent == self {
                 /// set  record voice note as active
                 UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: self.stopRecordingController.recordVoiceNoteButton)
-            
             }
         }
 
@@ -756,6 +747,16 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             self.suppressTrackingWarnings = true
         }
         
+        NotificationCenter.default.addObserver(forName: Notification.Name("SurveyPopoverReadyToDismiss"), object: nil, queue: nil) { (notification) -> Void in
+            self.hostingController?.dismiss(animated: true)
+            NotificationCenter.default.post(name: Notification.Name("ClewPopoverDismissed"), object: nil)
+            // TODO: I18N / L10N
+            if let gaveFeedback = notification.object as? Bool, gaveFeedback {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                    self.announce(announcement: NSLocalizedString("thanksForFeedbackAnnouncement", comment: "This is read right after the user fills out a feedback survey."))
+                }
+            }
+        }
     }
     
     /// Create the audio player objdcts for the various app sounds.  Creating them ahead of time helps reduce latency when playing them later.
@@ -794,6 +795,24 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         responsePathRef.observe(.childAdded) { (snapshot) -> Void in
             self.handleNewConfig(snapshot: snapshot)
         }
+        if let currentUID = Auth.auth().currentUser?.uid {
+            databaseHandle.reference(withPath: "\(currentUID)").child("surveys").getData() { (error, snapshot) in
+                if let error = error {
+                    print("Error getting data \(error)")
+                }
+                else if snapshot.exists(), let userDict = snapshot.value as? [String : AnyObject] {
+                    for (surveyName, surveyInfo) in userDict {
+                        if let surveyInfoDict = surveyInfo as? [String : AnyObject], let lastSurveyTime = surveyInfoDict["lastSurveyTime"] as? Double {
+                            self.lastSurveyTime[surveyName] = lastSurveyTime
+                        }
+                    }
+                }
+                else {
+                    print("No data available")
+                }
+            }
+        }
+        
     }
     
     /// Respond to any dynamic reconfiguration requests (this is currently not used in the app store version of Clew).
@@ -802,10 +821,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     func handleNewConfig(snapshot: DataSnapshot) {
         if snapshot.key == "adjust_offset", let newValue = snapshot.value as? Bool {
             adjustOffset = newValue
-            if !adjustOffset {
-                // clear the offset in case one was set from before
-                nav.headingOffset = 0.0
-            }
+            nav.useHeadingOffset = adjustOffset
             print("set new adjust offset value", newValue)
         } else if snapshot.key == "strict_haptic", let newValue = snapshot.value as? Bool {
             strictHaptic = newValue
@@ -824,6 +840,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         let showedSignificantChangesAlert: Bool? = userDefaults.object(forKey: "showedSignificantChangesAlertv1_3") as? Bool
         
         if firstTimeLoggingIn == nil {
+            userDefaults.set(Date().timeIntervalSince1970, forKey: "firstUsageTimeStamp")
             userDefaults.set(true, forKey: "firstTimeLogin")
             // make sure not to show the significant changes alert in the future
             userDefaults.set(true, forKey: "showedSignificantChangesAlertv1_3")
@@ -841,6 +858,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             if let nextAnnouncement = self.nextAnnouncement {
                 self.nextAnnouncement = nil
                 self.announce(announcement: nextAnnouncement)
+            }
+        }
+        
+        let firstUsageTimeStamp =  userDefaults.object(forKey: "firstUsageTimeStamp") as? Double ?? 0.0
+        if Date().timeIntervalSince1970 - firstUsageTimeStamp > 3600*24 {
+            // it's been long enough, try to trigger the survey
+            DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+                // make sure to wait for data to load from firebase.  If they have started using the app, don't interrupt them.
+                if case .mainScreen(_) = self.state {
+                    self.presentSurveyIfIntervalHasPassed(mode: "onAppLaunch", logFileURLs: [])
+                }
             }
         }
     }
@@ -1052,9 +1080,16 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         soundFeedback = defaults.bool(forKey: "soundFeedback")
         voiceFeedback = defaults.bool(forKey: "voiceFeedback")
         hapticFeedback = defaults.bool(forKey: "hapticFeedback")
-        sendLogs = defaults.bool(forKey: "sendLogs")
+        sendLogs = true // (making this mandatory) defaults.bool(forKey: "sendLogs")
         timerLength = defaults.integer(forKey: "timerLength")
         adjustOffset = defaults.bool(forKey: "adjustOffset")
+        nav.useHeadingOffset = adjustOffset
+        
+        // TODO: log settings here
+        logger.logSettings(defaultUnit: defaultUnit, defaultColor: defaultColor, soundFeedback: soundFeedback, voiceFeedback: voiceFeedback, hapticFeedback: hapticFeedback, sendLogs: sendLogs, timerLength: timerLength, adjustOffset: adjustOffset)
+        
+        // leads to JSON like:
+        //   options: { "unit": "meter", "soundFeedback", true, ... }
     }
     
     /// Handles updates to the app settings.
@@ -1139,7 +1174,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         add(recordPathController)
         /// handling main screen transitions outside of the first load
         /// add the view of the child to the view of the parent
-        routeRatingController.remove()
         stopNavigationController.remove()
         
         rootContainerView.getDirectionButton.isHidden = true
@@ -1159,6 +1193,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// - Parameter announcement: the announcement to read after a 2 second delay
     func delayTransition(announcement: String? = nil, initialFocus: UIView? = nil) {
         // this notification currently cuts off the announcement of the button that was just pressed
+        print("initialFocus \(initialFocus) announcement \(announcement)")
         UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: initialFocus)
         if let announcement = announcement {
             if UIAccessibility.isVoiceOverRunning {
@@ -1276,27 +1311,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         
         // this does not auto update, so don't use it as an accessibility element
         delayTransition()
-    }
-    
-    /// display route rating view/hide all other views
-    @objc func showRouteRating(announceArrival: Bool) {
-        rootContainerView.getDirectionButton.isHidden = true
-        rootContainerView.homeButton.isHidden = true
-        stopNavigationController.remove()
-        add(routeRatingController)
-        if announceArrival {
-            routeRatingController.view.mainText?.text = NSLocalizedString("ratingYourServiceViewText", comment: "The text that is displayed when the user has completed navigation of their route. This prompts the user to rate their navigation experience.")
-        } else {
-            routeRatingController.view.mainText?.text = NSLocalizedString("ratingYourServiceViewText", comment: "The text that is displayed when the user has completed navigation of their route. This prompts the user to rate their navigation experience.")
-        }
-        
-        feedbackGenerator = nil
-        waypointFeedbackGenerator = nil
-        if announceArrival {
-            delayTransition(announcement: NSLocalizedString("completedNavigationAnnouncement", comment: "An announcement which is played to notify the user that they have arrived at the end of their route."))
-        } else {
-            delayTransition()
-        }
     }
     
     /// Announce the direction (both in text and using speech if appropriate).  The function will automatically use the appropriate units based on settings to convert `distance` from meters to the appropriate unit.
@@ -1586,12 +1600,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             anchorPointNode.removeFromParentNode()
         }
         
-        if(sendLogs) {
-            state = .ratingRoute(announceArrival: false)
-        } else {
-            state = .mainScreen(announceArrival: false)
-            logger.resetStateSequenceLog()
-        }
+        sendLogDataHelper(pathStatus: nil)
     }
     
     /// handles the user pressing the pause button
@@ -1705,18 +1714,85 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// send log data for an successful route navigation (thumbs up)
     @objc func sendLogData() {
+        sendLogDataHelper(pathStatus: true)
+    }
+    
+    /// Presents a survey to the user as a popover.  The method will check to see if it has been sufficiently long since the user was last asked to fill out this survey before displaying the survey.
+    /// - Parameters:
+    ///   - mode: type of survey, accepts "onAppLaunch" and "afterRoute" which correspond to the value of the "currentAppLaunchSurvey" and "currentAfterRouteSurvey" keys respectively located in the Firebase Realtime Database at surveys/
+    ///   - logFileURLs: this list of URLs will be added to the survey response JSON file if the user winds up submitting the survey.  This makes it easier to link together feedback in the survey with data logs.
+    func presentSurveyIfIntervalHasPassed(mode: String, logFileURLs: [String]) {
+        
+        var surveyToTrigger: String = ""
+        
+        switch mode {
+            case "onAppLaunch":
+                surveyToTrigger = FirebaseFeedbackSurveyModel.shared.currentAppLaunchSurvey
+            case "afterRoute":
+                surveyToTrigger = FirebaseFeedbackSurveyModel.shared.currentAfterRouteSurvey
+            default:
+                surveyToTrigger = "defaultSurvey"
+        }
+        
+        print(surveyToTrigger)
+        
+        if FirebaseFeedbackSurveyModel.shared.questions[surveyToTrigger] == nil {
+            return
+        }
+        if self.lastSurveyTime[surveyToTrigger] == nil || -Date(timeIntervalSince1970: self.lastSurveyTime[surveyToTrigger]!).timeIntervalSinceNow >= FirebaseFeedbackSurveyModel.shared.intervals[surveyToTrigger] ?? 0.0 {
+            self.lastSurveyTime[surveyToTrigger] = Date().timeIntervalSince1970
+            
+            if let currentUID = Auth.auth().currentUser?.uid {
+                let surveyInfo = ["lastSurveyTime": self.lastSurveyTime[surveyToTrigger]!]
+                self.databaseHandle.reference(withPath: "\(currentUID)/surveys/\(surveyToTrigger)").updateChildValues(surveyInfo)
+            }
+            
+            let swiftUIView = FirebaseFeedbackSurvey(feedbackSurveyName: surveyToTrigger, logFileURLs: logFileURLs)
+            self.hostingController = UISurveyHostingController(rootView: swiftUIView)
+            NotificationCenter.default.post(name: Notification.Name("ClewPopoverDisplayed"), object: nil)
+            self.present(self.hostingController!, animated: true, completion: nil)
+        }
+    }
+    
+    /// Presents a survey to the user as a popover.  The method will check to see if it has been sufficiently long since the user was last asked to fill out this survey before displaying the survey.
+    /// - Parameters:
+    ///   - surveyToTrigger: this is the name of the survey, which should be described in the realtime database under "/surveys/{surveyToTrigger}"
+    ///   - logFileURLs: this list of URLs will be added to the survey response JSON file if the user winds up submitting the survey.  This makes it easier to link together feedback in the survey with data logs.
+    func presentSurveyIfIntervalHasPassedWithSurveyKey(surveyToTrigger: String, logFileURLs: [String]) {
+        if FirebaseFeedbackSurveyModel.shared.questions[surveyToTrigger] == nil {
+            return
+        }
+        if self.lastSurveyTime[surveyToTrigger] == nil || -Date(timeIntervalSince1970: self.lastSurveyTime[surveyToTrigger]!).timeIntervalSinceNow >= FirebaseFeedbackSurveyModel.shared.intervals[surveyToTrigger] ?? 0.0 {
+            self.lastSurveyTime[surveyToTrigger] = Date().timeIntervalSince1970
+            
+            if let currentUID = Auth.auth().currentUser?.uid {
+                let surveyInfo = ["lastSurveyTime": self.lastSurveyTime[surveyToTrigger]!]
+                self.databaseHandle.reference(withPath: "\(currentUID)/surveys/\(surveyToTrigger)").updateChildValues(surveyInfo)
+            }
+            
+            let swiftUIView = FirebaseFeedbackSurvey(feedbackSurveyName: surveyToTrigger, logFileURLs: logFileURLs)
+            self.hostingController = UISurveyHostingController(rootView: swiftUIView)
+            NotificationCenter.default.post(name: Notification.Name("ClewPopoverDisplayed"), object: nil)
+            self.present(self.hostingController!, animated: true, completion: nil)
+        }
+    }
+    
+    func sendLogDataHelper(pathStatus: Bool?, announceArrival: Bool = false) {
         // send success log data to Firebase
-        logger.compileLogData(false)
+        let logFileURLs = logger.compileLogData(pathStatus)
         logger.resetStateSequenceLog()
-        state = .mainScreen(announceArrival: false)
+        state = .mainScreen(announceArrival: announceArrival)
+        if sendLogs {
+            // do this in a little while to give it time to announce arrival
+            DispatchQueue.main.asyncAfter(deadline: .now() + (announceArrival ? 3 : 1)) {
+                self.presentSurveyIfIntervalHasPassed(mode: "afterRoute", logFileURLs: logFileURLs)
+            }
+        }
     }
     
     /// send log data for an unsuccessful route navigation (thumbs down)
     @objc func sendDebugLogData() {
-        // send debug log data to Firebase
-        logger.compileLogData(true)
-        logger.resetStateSequenceLog()
-        state = .mainScreen(announceArrival: false)
+        sendLogDataHelper(pathStatus: false)
     }
     
     /// drop a crumb during path recording
@@ -1782,13 +1858,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 followingCrumbs?.invalidate()
                 hapticTimer?.invalidate()
                 
-                // update text and stop navigation
-                if(sendLogs) {
-                    state = .ratingRoute(announceArrival: true)
-                } else {
-                    state = .mainScreen(announceArrival: true)
-                    logger.resetStateSequenceLog()
-                }
+                sendLogDataHelper(pathStatus: nil, announceArrival: true)
             }
         }
     }
@@ -1854,9 +1924,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                     lastRecordPhaseOffsetTime = Date()
                 }
             }
-            if adjustOffset {
-                nav.headingOffset = newOffset
-            }
+            nav.headingOffset = newOffset
         }
     }
     
@@ -1887,10 +1955,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// send haptic feedback if the device is pointing towards the next keypoint.
     @objc func getHapticFeedback() {
-        // Conserve CPU by only calculating the offset if the user has requested it
-        if adjustOffset {
-            updateHeadingOffset()
-        }
+        updateHeadingOffset()
         guard let curLocation = getRealCoordinates(record: false) else {
             // TODO: might want to indicate that something is wrong to the user
             return
@@ -2347,7 +2412,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         
         // record location data in debug logs
         if(record) {
-            logger.logTransformMatrix(state: state, scn: scn)
+            logger.logTransformMatrix(state: state, scn: scn, headingOffset: nav.headingOffset, useHeadingOffset: nav.useHeadingOffset)
         }
         return CurrentCoordinateInfo(LocationInfo(transform: currTransform), transMatrix: transMatrix)
     }
@@ -2525,6 +2590,15 @@ extension ViewController: UIPopoverPresentationControllerDelegate {
         if let popoverController = segue.destination.popoverPresentationController, let button = sender as? UIButton {
             popoverController.delegate = self
             popoverController.sourceRect = button.bounds
+        }
+    }
+}
+
+class UISurveyHostingController: UIHostingController<FirebaseFeedbackSurvey> {
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: self.view)
         }
     }
 }

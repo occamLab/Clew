@@ -9,6 +9,7 @@
 import Foundation
 import Firebase
 import FirebaseStorage
+import FirebaseAnalytics
 
 
 class FeedbackLogger {

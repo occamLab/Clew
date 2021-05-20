@@ -8,6 +8,8 @@
 
 import UIKit
 import Firebase
+import FirebaseAuth
+import FirebaseAnalytics
 
 /// This class handles various state changes for the app.
 @UIApplicationMain
@@ -15,9 +17,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     /// A handle to the app's main window
     var window: UIWindow?
-    
+        
     /// view controller!
-    var vc: ViewController!
+    var vc: UIViewController!
     
     /// Called when the app finishes launching.  Currently, this is where we setup Firebase and make sure the phone screen doesn't lock while we are using the app.
     ///
@@ -36,15 +38,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             FirebaseApp.configure()
         #endif
         logUserProperties()
+        // use for testing sign-in flow try? Auth.auth().signOut()
+        if #available(iOS 13.0, *) {
+            if (Auth.auth().currentUser == nil) {
+                window = UIWindow(frame:UIScreen.main.bounds)
+                window?.makeKeyAndVisible()
+                window?.rootViewController = AppleSignInController()
+                UIApplication.shared.isIdleTimerDisabled = true
+                return true
+            }
+        }
         
-        vc = ViewController()
-
         // Override point for customization after application launch.
+        vc = ViewController()
         window = UIWindow(frame:UIScreen.main.bounds)
         window?.rootViewController = vc
         window?.makeKeyAndVisible()
         UIApplication.shared.isIdleTimerDisabled = true
-        
         return true
     }
     
@@ -57,7 +67,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         guard url.pathExtension == "crd" else { return false }
         
         /// import the file here
-        vc.dataPersistence.importData(from: url)
+        (vc as? ViewController)?.dataPersistence.importData(from: url)
         
         return true
     }
@@ -103,5 +113,5 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func logUserProperties() {
         Analytics.setUserProperty(String(UIAccessibility.isVoiceOverRunning), forName: "isVoiceOverRunning")
     }
+        
 }
-

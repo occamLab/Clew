@@ -137,6 +137,9 @@ class Navigation {
     /// The offset between the user's direction of travel (assumed to be aligned with the front of their body and the phone's orientation)
     var headingOffset: Float?
     
+    /// control whether to apply the heading offset or not
+    public var useHeadingOffset = false
+    
     /// Get the heading for the phone suitable for computing directions to the next waypoint.
     ///
     /// The phone's direction is either the projection of its z-axis on the floor plane (x-z plane), or if the phone is lying flatter than 45 degrees, it is the projection of the phone's y-axis.
@@ -171,7 +174,7 @@ class Navigation {
         let keypointTargetHeight = isLastKeypoint ? lastKeypointTargetHeight : targetHeight
         let keypointTargetWidth = isLastKeypoint ? lastKeypointTargetWidth : targetWidth
 
-        let trueYaw  = getPhoneHeadingYaw(currentLocation: currentLocation) + (headingOffset != nil ? headingOffset! : Float(0.0))
+        let trueYaw  = getPhoneHeadingYaw(currentLocation: currentLocation) + (useHeadingOffset && headingOffset != nil ? headingOffset! : Float(0.0))
         // planar heading vector
         let planarHeading = Vector3([sin(trueYaw), 0, cos(trueYaw)])
         let delta = currentLocation.location.translation - nextKeypoint.location.translation
