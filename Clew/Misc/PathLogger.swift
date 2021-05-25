@@ -191,8 +191,8 @@ class PathLogger {
         let pathDate = dateFormatter.string(from: date)
         let pathID = UIDevice.current.identifierForVendor!.uuidString + dateFormatter.string(from: date)
         let userId: String
-        if Auth.auth().currentUser != nil {
-            userId = Auth.auth().currentUser!.uid
+        if let currentUser = Auth.auth().currentUser {
+            userId = currentUser.uid
         } else {
             userId = Analytics.appInstanceID()!
         }
@@ -255,6 +255,7 @@ class PathLogger {
                     print("could not upload meta data to firebase", error!.localizedDescription)
                     return
                 }
+                print("Successfully uploaded log! ", storageRef.fullPath)
             }
             return storageRef.fullPath
         } catch {
@@ -293,6 +294,7 @@ class PathLogger {
                     print("could not upload path data to firebase", error!.localizedDescription)
                     return
                 }
+                print("Successfully uploaded log! ", storageRef.fullPath)
             }
             return storageRef.fullPath
         } catch {
