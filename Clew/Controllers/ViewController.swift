@@ -1789,12 +1789,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             }
         }
     }
-    
-    /// send log data for an unsuccessful route navigation (thumbs down)
-    @objc func sendDebugLogData() {
-        sendLogDataHelper(pathStatus: false)
-    }
-    
+        
     /// drop a crumb during path recording
     @objc func dropCrumb() {
         guard let curLocation = getRealCoordinates(record: true)?.location else {
