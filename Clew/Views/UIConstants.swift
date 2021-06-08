@@ -110,4 +110,9 @@ enum UIConstants {
         /// A text button appears using the specified text label
         case textButton(label: String)
     }
+    
+    /// Alpha value for transparency, where 1 is opaque and 0 is transparent.
+    static var transparencyAlpha: CGFloat {
+        return 0.9
+    }
 }
