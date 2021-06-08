@@ -46,7 +46,7 @@ class ResumeTrackingController: UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         
         
-        view.backgroundColor = UIColor.black.withAlphaComponent(0.4)
+        view.backgroundColor = UIColor.black.withAlphaComponent(UIConstants.transparencyAlpha)
         
         let mainText = NSLocalizedString("resumeRouteViewText", comment: "A message displayed to the user when they have paused the route")
         label.textColor = UIColor.white
