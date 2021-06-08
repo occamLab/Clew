@@ -3,7 +3,7 @@ import numpy as np
 import os
 import json
 import matplotlib.pyplot as plt
-from utils import *
+from clew_data_analysis.utils import *
 
 class ClewData:
     def __init__(self):
