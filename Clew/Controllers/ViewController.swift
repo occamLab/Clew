@@ -1,6 +1,6 @@
 //
 //  ViewController.swift
-//  ARKitTest
+//  ARKitTest Test
 //
 //  Created by Chris Seonghwan Yoon & Jeremy Ryan on 7/10/17.
 //
