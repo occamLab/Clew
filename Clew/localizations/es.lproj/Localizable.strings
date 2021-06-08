@@ -133,6 +133,8 @@
 "voiceNoteRecorderPop-UpHeader" = "Grabadora de notas de voz";
 "stopRecordingVoiceNoteAccessibilityLabel" = "Detener grabación";
 "startRecordingVoiceNoteAccessibilityLabel" = "Grabar nota de voz";
+"recordSpatialVoiceNoteAccessibilityLabel" = "Grabar una nota de voz vinculada a tu ubicación actual";
+
 
 //GoHomeAlert
 "homeAlertTitle" = "¿Estás seguro?";

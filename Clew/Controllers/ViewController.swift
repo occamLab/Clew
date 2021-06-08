@@ -7,13 +7,20 @@
 // Confirmed issues
 // - We are not doing a proper job dealing with resumed routes with respect to logging (we always send recorded stuff in the log file, which we don't always have access to)
 //
+
 // Unconfirmed issues
+
+// Voice Note Recording Feature
+// - think about direction of device and how it relates to the route itself (e.g., look to your left)
+// - Get buttons to align in the recording view (add transparent third button)
+//
+// Unconfirmed issues issues
+
 // - Maybe intercept session was interrupted so that we don't mistakenly try to navigate saved route before relocalization
 //
 // Major features to implement
 //
 // Potential enhancements
-//  - Add a tip to the help file regarding holding phone against your chest (see Per Rosqvist's suggestion)
 //  - Warn user via an alert if they have an iPhone 5S or 6
 //  - Possibly create a warning if the phone doesn't appear to be in the correct orientation
 //  - revisit turn warning feature.  It doesn't seem to actually help all that much at the moment.
@@ -103,6 +110,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// How long to wait (in seconds) between the alignment request and grabbing the transform
     static var alignmentWaitingPeriod = 5
+    
+    /// A threshold distance between the user's current position and a voice note.  If the user is closer than this value the voice note will be played
+    static let voiceNotePlayDistanceThreshold : Float = 0.75
     
     /// The state of the ARKit tracking session as last communicated to us through the delgate protocol.  This is useful if you want to do something different in the delegate method depending on the previous state
     var trackingSessionState : ARCamera.TrackingState?
@@ -269,6 +279,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         // TODO: probably don't need to set this to [], but erring on the side of begin conservative
         crumbs = []
         recordingCrumbs = []
+        intermediateAnchorPoints = []
         logger.resetPathLog()
         
         showStopRecordingButton()
@@ -322,6 +333,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         // render 3D keypoints
         renderKeypoint(keypointManager.currentLocation!)
 
+        // render intermediate anchor points
+        renderIntermediateAnchorPoints()
         
         // TODO: gracefully handle error
         keypointManager.setPrevLocation(location: getRealCoordinates(record: true)!.location)
@@ -413,6 +426,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             crumbs = route.crumbs
             pausedTransform = route.endRouteAnchorPoint.transform
         }
+        intermediateAnchorPoints = route.intermediateAnchorPoints
         // don't reset tracking, but do clear anchors and switch to the new map
         //sceneView.session.run(configuration, options: [.removeExistingAnchors, .resetTracking])
         if isTrackingPerformanceNormal && isSameMap {
@@ -550,7 +564,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         if paused {
             ///PATHPOINT pause recording anchor point alignment timer -> resume tracking
             //proceed as normal with the pause structure (single use route)
-            justTraveledRoute = SavedRoute(id: "single use", name: "single use", crumbs: self.crumbs, dateCreated: Date() as NSDate, beginRouteAnchorPoint: self.beginRouteAnchorPoint, endRouteAnchorPoint: self.endRouteAnchorPoint)
+            justTraveledRoute = SavedRoute(id: "single use", name: "single use", crumbs: self.crumbs, dateCreated: Date() as NSDate, beginRouteAnchorPoint: self.beginRouteAnchorPoint, endRouteAnchorPoint: self.endRouteAnchorPoint, intermediateAnchorPoints: intermediateAnchorPoints)
             justUsedMap = worldMap
             //fruitloop
             state = .pauseProcedureCompleted
@@ -593,7 +607,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         let id = String(Int64(NSDate().timeIntervalSince1970 * 1000)) as NSString
         // Get the input values from user, if it's nil then use timestamp
         self.routeName = nameSavedRouteController.textField.text as NSString? ?? id
-        try! self.archive(routeId: id, beginRouteAnchorPoint: self.beginRouteAnchorPoint, endRouteAnchorPoint: self.endRouteAnchorPoint, worldMap: nameSavedRouteController.worldMap)
+        try! self.archive(routeId: id, beginRouteAnchorPoint: self.beginRouteAnchorPoint, endRouteAnchorPoint: self.endRouteAnchorPoint, intermediateAnchorPoints: self.intermediateAnchorPoints, worldMap: nameSavedRouteController.worldMap)
         hideAllViewsHelper()
         /// PATHPOINT Save Route View -> play/pause
         ///Announce to the user that they have finished the alignment process and are now at the play pause screen
@@ -637,8 +651,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     ///   - endRouteAnchorPoint: the route Anchor Point for the end (if there is no route Anchor Point at the end, the elements of this struct can be nil)
     ///   - worldMap: the world map
     /// - Throws: an error if something goes wrong
-    func archive(routeId: NSString, beginRouteAnchorPoint: RouteAnchorPoint, endRouteAnchorPoint: RouteAnchorPoint, worldMap: Any?) throws {
-        let savedRoute = SavedRoute(id: routeId, name: routeName!, crumbs: crumbs, dateCreated: Date() as NSDate, beginRouteAnchorPoint: beginRouteAnchorPoint, endRouteAnchorPoint: endRouteAnchorPoint)
+    func archive(routeId: NSString, beginRouteAnchorPoint: RouteAnchorPoint, endRouteAnchorPoint: RouteAnchorPoint, intermediateAnchorPoints: [RouteAnchorPoint], worldMap: Any?) throws {
+        let savedRoute = SavedRoute(id: routeId, name: routeName!, crumbs: crumbs, dateCreated: Date() as NSDate, beginRouteAnchorPoint: beginRouteAnchorPoint, endRouteAnchorPoint: endRouteAnchorPoint, intermediateAnchorPoints: intermediateAnchorPoints)
         try dataPersistence.archive(route: savedRoute, worldMap: worldMap)
         justTraveledRoute = savedRoute
     }
@@ -670,6 +684,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// Keypoint object
     var keypointObject : MDLObject!
+    
+    /// Speaker object
+    var speakerObject: MDLObject!
     
     /// Route persistence
     var dataPersistence = DataPersistence()
@@ -803,6 +820,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         // we use a custom notification to communicate from the help controller to the main view controller that a popover that should suppress tracking warnings was dimissed
         NotificationCenter.default.addObserver(forName: Notification.Name("ClewPopoverDismissed"), object: nil, queue: nil) { (notification) -> Void in
             self.suppressTrackingWarnings = false
+            if self.stopRecordingController.parent == self {
+                /// set  record voice note as active
+                UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: self.stopRecordingController.recordVoiceNoteButton)
+            
+            }
         }
 
         // we use a custom notification to communicate from the help controller to the main view controller that a popover that should suppress tracking warnings was displayed
@@ -834,6 +856,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         let url = NSURL(fileURLWithPath: Bundle.main.path(forResource: "Crumb", ofType: "obj")!)
         let asset = MDLAsset(url: url as URL)
         keypointObject = asset.object(at: 0)
+        let speakerUrl = NSURL(fileURLWithPath: Bundle.main.path(forResource: "speaker", ofType: "obj")!)
+        let speakerAsset = MDLAsset(url: speakerUrl as URL)
+        speakerObject = speakerAsset.object(at: 0)
     }
     
     /// Observe the relevant Firebase paths to handle any dynamic reconfiguration requests (this is currently not used in the app store version of Clew)
@@ -913,6 +938,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             if (detourCrumbNode != nil) {
                 detourCrumbNode.removeFromParentNode()
             }
+            for anchorPointNode in anchorPointNodes {
+                anchorPointNode.removeFromParentNode()
+            }
         }
         followingCrumbs?.invalidate()
         droppingCrumbs?.invalidate()
@@ -921,6 +949,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         routeName = nil
         beginRouteAnchorPoint = RouteAnchorPoint()
         endRouteAnchorPoint = RouteAnchorPoint()
+        intermediateAnchorPoints = []
         playAlignmentConfirmation?.cancel()
         rootContainerView.announcementText.isHidden = true
         nav.headingOffset = 0.0
@@ -1419,11 +1448,15 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// SCNNode of the next keypoint
     var keypointNode: SCNNode!
     
+
     /// SCNNode of any crumb
     var crumbNode: SCNNode!
     
     /// SCNNode of a detour crumb
     var detourCrumbNode: SCNNode!
+
+    /// SCNNode of the intermediate anchor points
+    var anchorPointNodes: [SCNNode] = []
     
     /// previous keypoint location - originally set to current location
     var prevKeypointPosition: LocationInfo!
@@ -1511,7 +1544,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// the Anchor Point to use to mark the end of the route currently being recorded
     var endRouteAnchorPoint = RouteAnchorPoint()
-    
+
+    /// Intermediate anchor points
+    var intermediateAnchorPoints:[RouteAnchorPoint] = []
 
     /// the name of the route being recorded
     var routeName: NSString?
@@ -1652,9 +1687,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         
         // erase nearest keypoint
         keypointNode.removeFromParentNode()
+        
         //crumbNode.removeFromParentNode()
         if (detourCrumbNode != nil) {
             detourCrumbNode.removeFromParentNode()
+        }
+
+        for anchorPointNode in anchorPointNodes {
+            anchorPointNode.removeFromParentNode()
         }
 
         if(sendLogs) {
@@ -1858,7 +1898,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                     // erase current keypoint and render next keypoint node
                  
                     keypointNode.removeFromParentNode()
-        
 
                     renderKeypoint(keypointManager.currentLocation!)
                     
@@ -1870,12 +1909,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                     // update directions to next keypoint
                     directionToNextKeypoint = getDirectionToNextKeypoint(currentLocation: curLocation)
                     setDirectionText(currentLocation: curLocation.location, direction: directionToNextKeypoint, displayDistance: false)
+
                 } else {
+                    
                     waypointFeedbackGenerator?.notificationOccurred(.success)
                     if (soundFeedback) { playSystemSound(id: 1016) }
                     // erase current keypoint node
                     keypointNode.removeFromParentNode()
-
                     
                     if (keypointManager.isDetour) {
                         isRerouting = false
@@ -1901,26 +1941,28 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                         // update directions to next keypoint
                     }
                     else {
-                            // arrived at final keypoint
-                            // send haptic/sonic feedback
+                        // arrived at final keypoint
+                        // send haptic/sonic feedback
                         
-                            isResumedRoute = false
-                            isNavigating = false
-                            isFinished = true
+                        isResumedRoute = false
+                        isNavigating = false
+                        isFinished = true
                         
-                            followingCrumbs?.invalidate()
-                            droppingCrumbs?.invalidate()
-                            hapticTimer?.invalidate()
+                        for anchorPointNode in anchorPointNodes {
+                            anchorPointNode.removeFromParentNode()
+                        }
+                        followingCrumbs?.invalidate()
+                        droppingCrumbs?.invalidate()
+                        hapticTimer?.invalidate()
                     
-                            // update text and stop navigation
-                            if(sendLogs) {
-                                state = .ratingRoute(announceArrival: true)
-                            }
-                            else {
-                                state = .mainScreen(announceArrival: true)
-                                logger.resetStateSequenceLog()
-                            }
-                        
+                        // update text and stop navigation
+                        if(sendLogs) {
+                            state = .ratingRoute(announceArrival: true)
+                        }
+                        else {
+                            state = .mainScreen(announceArrival: true)
+                            logger.resetStateSequenceLog()
+                        }
                     }
                 }
             }
@@ -2029,6 +2071,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             // TODO: might want to indicate that something is wrong to the user
             return
         }
+        
         let pathThreshold = Float(0.125)
         let leavePathThreshold = Float(1.2)
         let returnPathThreshold = Float(1.4)
@@ -2043,6 +2086,24 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             lateralDisplacementToleranceRatio = 1.0
         }
         guard !paused else {return}
+        for anchorPoint in intermediateAnchorPoints {
+            guard let anchorPointTransform = anchorPoint.transform else {
+                continue
+            }
+            // TODO think about breaking ties by playing the least recently played voice note
+            // TODO consider different floors by considering the y value
+            if (voiceNoteToPlay == nil || !voiceNoteToPlay!.isPlaying) && sqrt(pow(anchorPointTransform.columns.3.x - curLocation.location.x,2) + pow(anchorPointTransform.columns.3.z - curLocation.location.z,2)) < ViewController.voiceNotePlayDistanceThreshold {
+                // play voice note
+                let voiceNoteToPlayURL = anchorPoint.voiceNote!.documentURL
+                do {
+                    let data = try Data(contentsOf: voiceNoteToPlayURL)
+                    voiceNoteToPlay = try AVAudioPlayer(data: data, fileTypeHint: AVFileType.caf.rawValue)
+                    voiceNoteToPlay?.prepareToPlay()
+                } catch {}
+                readVoiceNote()
+            }
+        }
+
         if (isOffPath == false && keypointManager.hasKeypoints){
             let directionToNextKeypoint = getDirectionToNextKeypoint(currentLocation: curLocation)
             if let prevKeypoint = keypointManager.prevKeypoint, let curKeypoint = keypointManager.currentKeypoint {
@@ -2098,6 +2159,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             }
             recordingDetourCrumbs.append(curLocation) //edited to stop freezing
         }
+
         detourCrumbs = Array(recordingDetourCrumbs)
         if detourIndex == nil {detourIndex = onPathIndex}
         let trimmedDetourCrumbs = detourCrumbs[detourIndex!...(detourCrumbs.count-1)]
@@ -2107,6 +2169,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         //keypointIndex = keypoints.count - 1
         stopNavigationController.pauseButton.isHidden = false
         UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged , argument: nil)
+
+        
     }
     
     /// Communicates a message to the user via speech.  If VoiceOver is active, then VoiceOver is used to communicate the announcement, otherwise we use the AVSpeechEngine
@@ -2267,6 +2331,63 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             updateDirectionText(dir, distance: direction.distance, displayDistance:  displayDistance)
         }
     }
+    
+    /// TODO Appear
+    func renderIntermediateAnchorPoints() {
+        for intermediateAnchorPoint in intermediateAnchorPoints {
+            guard let transform = intermediateAnchorPoint.transform else {
+                continue
+            }
+            // render SCNNode of given keypoint
+            let anchorPointNode = SCNNode(mdlObject: speakerObject)
+            // configure node attributes
+            anchorPointNode.scale = SCNVector3(0.02, 0.02, 0.02)
+            anchorPointNode.geometry?.firstMaterial?.diffuse.contents = UIColor.blue
+            anchorPointNode.position = SCNVector3(transform.columns.3.x, transform.columns.3.y, transform.columns.3.z)
+            // I don't think yaw really matters here (so we are putting 0 where we used to have location.yaw
+            anchorPointNode.rotation = SCNVector4(0, 1, 0, (0 - Float.pi/2))
+            
+            let bound = SCNVector3(
+                x: anchorPointNode.boundingBox.max.x - anchorPointNode.boundingBox.min.x,
+                y: anchorPointNode.boundingBox.max.y - anchorPointNode.boundingBox.min.y,
+                z: anchorPointNode.boundingBox.max.z - anchorPointNode.boundingBox.min.z)
+            anchorPointNode.pivot = SCNMatrix4MakeTranslation(0, bound.y / 2, 0)
+            let spin = CABasicAnimation(keyPath: "rotation")
+            spin.fromValue = NSValue(scnVector4: SCNVector4(x: 0, y: 1, z: 0, w: 0))
+            spin.toValue = NSValue(scnVector4: SCNVector4(x: 0, y: 1, z: 0, w: Float(CGFloat(2 * Float.pi))))
+            spin.duration = 3
+            spin.repeatCount = .infinity
+            anchorPointNode.addAnimation(spin, forKey: "spin around")
+
+            // animation - SCNNode flashes blue
+            let flashBlue = SCNAction.customAction(duration: 2) { (node, elapsedTime) -> () in
+                let percentage = Float(elapsedTime / 2)
+                var color = UIColor.clear
+                let power: Float = 2.0
+                
+                
+                if (percentage < 0.5) {
+                    color = UIColor(red: CGFloat(powf(2.0*percentage, power)),
+                                    green: CGFloat(powf(2.0*percentage, power)),
+                                    blue: 1,
+                                    alpha: 1)
+                } else {
+                    color = UIColor(red: CGFloat(powf(2-2.0*percentage, power)),
+                                    green: CGFloat(powf(2-2.0*percentage, power)),
+                                    blue: 1,
+                                    alpha: 1)
+                }
+                node.geometry!.firstMaterial!.diffuse.contents = color
+            }
+            // set flashing color based on settings bundle configuration
+            let changeColor = SCNAction.repeatForever(flashBlue)
+            // add keypoint node to view
+            anchorPointNode.runAction(changeColor)
+            anchorPointNodes.append(anchorPointNode)
+            sceneView.scene.rootNode.addChildNode(anchorPointNode)
+        }
+    }
+    
     
     /// Create the keypoint SCNNode that corresponds to the rotating flashing element that looks like a navigation pin.
     ///
@@ -2574,22 +2695,34 @@ extension ViewController: RecorderViewControllerDelegate {
     ///
     /// - Parameter audioFileURL: the URL to the audio recording
     func didFinishRecording(audioFileURL: URL) {
-        if creatingRouteAnchorPoint {
-            // delete the file since we are re-recording it
-            if let beginRouteAnchorPointVoiceNote = self.beginRouteAnchorPoint.voiceNote {
-                do {
-                    try FileManager.default.removeItem(at: beginRouteAnchorPointVoiceNote.documentURL)
-                } catch { }
+        if case .recordingRoute = state {
+            guard let currentTransform = sceneView.session.currentFrame?.camera.transform else {
+                print("can't properly save Anchor Point since AR session is not running")
+                return
             }
-            beginRouteAnchorPoint.voiceNote = audioFileURL.lastPathComponent as NSString
+            let noteAnchorPoint = RouteAnchorPoint()
+            noteAnchorPoint.voiceNote = audioFileURL.lastPathComponent as NSString
+            noteAnchorPoint.transform = currentTransform
+            intermediateAnchorPoints.append(noteAnchorPoint)
         } else {
-            // delete the file since we are re-recording it
-            if let endRouteAnchorPointVoiceNote = self.endRouteAnchorPoint.voiceNote {
-                do {
-                    try FileManager.default.removeItem(at: endRouteAnchorPointVoiceNote.documentURL)
-                } catch { }
+            print(audioFileURL)
+            if creatingRouteAnchorPoint {
+                // delete the file since we are re-recording it
+                if let beginRouteAnchorPointVoiceNote = self.beginRouteAnchorPoint.voiceNote {
+                    do {
+                        try FileManager.default.removeItem(at: beginRouteAnchorPointVoiceNote.documentURL)
+                    } catch { }
+                }
+                beginRouteAnchorPoint.voiceNote = audioFileURL.lastPathComponent as NSString
+            } else {
+                // delete the file since we are re-recording it
+                if let endRouteAnchorPointVoiceNote = self.endRouteAnchorPoint.voiceNote {
+                    do {
+                        try FileManager.default.removeItem(at: endRouteAnchorPointVoiceNote.documentURL)
+                    } catch { }
+                }
+                endRouteAnchorPoint.voiceNote = audioFileURL.lastPathComponent as NSString
             }
-            endRouteAnchorPoint.voiceNote = audioFileURL.lastPathComponent as NSString
         }
     }
 }

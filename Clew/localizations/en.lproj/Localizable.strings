@@ -137,6 +137,7 @@
 "voiceNoteRecorderPop-UpHeader" = "Voice Note Recorder";
 "stopRecordingVoiceNoteAccessibilityLabel" = "Stop Recording";
 "startRecordingVoiceNoteAccessibilityLabel" = "Record Voice Note";
+"recordSpatialVoiceNoteAccessibilityLabel" = "Record a voice note anchored to your current location";
 
 //GoHomeAlert
 "homeAlertTitle" = "Are you sure?";

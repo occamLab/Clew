@@ -8,6 +8,7 @@
 
 import UIKit
 import AVFoundation
+import SRCountdownTimer
 import Accelerate
 
 extension Double {
@@ -45,7 +46,7 @@ protocol RecorderViewControllerDelegate: class {
 }
 
 /// The view controller for the audio recorder
-class RecorderViewController: UIViewController {
+class RecorderViewController: UIViewController, SRCountdownTimerDelegate {
     
     //MARK:- Properties
     /// Should automatically dismiss when the stop recording button is pressed
@@ -53,6 +54,8 @@ class RecorderViewController: UIViewController {
     
     /// the handle view (TODO: not sure exactly what this is)
     var handleView = UIView()
+    /// the countdown timer
+    var srCountdownTimer = SRCountdownTimer()
     /// the button used for recording
     var recordButton = RecordButton()
     /// the view that displays the time
@@ -65,6 +68,7 @@ class RecorderViewController: UIViewController {
     private var recordingTs: Double = 0
     private var silenceTs: Double = 0
     private var audioFile: AVAudioFile?
+    private var writeAudio = false
     /// a delegate to notify of various recording events
     weak var delegate: RecorderViewControllerDelegate?
     
@@ -83,8 +87,33 @@ class RecorderViewController: UIViewController {
         setupRecordingButton()
         setupTimeLabel()
         setupAudioView()
+        setupSRCountdownView()
         
         title = NSLocalizedString("voiceNoteRecorderPop-UpHeader", comment: "The header of a pop-up window that allows user to record a voice note")
+    }
+    
+    func setupSRCountdownView() {
+        srCountdownTimer = SRCountdownTimer(frame: CGRect(x: 0,
+                                                        y: 0,
+                                                        width: 250,
+                                                        height: 250))
+        srCountdownTimer.labelFont = UIFont(name: "HelveticaNeue-Light", size: 100)
+        srCountdownTimer.labelTextColor = UIColor.white
+        srCountdownTimer.timerFinishingText = "End"
+        srCountdownTimer.lineWidth = 10
+        srCountdownTimer.lineColor = UIColor.white
+        srCountdownTimer.backgroundColor = UIColor.black.withAlphaComponent(0.4)
+        srCountdownTimer.isHidden = true
+        /// hide the timer as an accessibility element
+        /// and announce through VoiceOver by posting appropriate notifications
+        srCountdownTimer.accessibilityElementsHidden = true
+        view.addSubview(srCountdownTimer)
+        
+        srCountdownTimer.translatesAutoresizingMaskIntoConstraints = false
+        srCountdownTimer.widthAnchor.constraint(equalToConstant: 250).isActive = true
+        srCountdownTimer.heightAnchor.constraint(equalToConstant: 250).isActive = true
+        srCountdownTimer.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        srCountdownTimer.topAnchor.constraint(equalTo: view.topAnchor, constant: 10).isActive = true
     }
     
     /// Called when the view will appear.
@@ -205,7 +234,29 @@ class RecorderViewController: UIViewController {
         if let d = self.delegate {
             d.didStartRecording()
         }
-        
+        srCountdownTimer.isHidden = false
+        srCountdownTimer.delegate = self
+        srCountdownTimer.start(beginingValue: 3, interval: 1)
+        view.layoutIfNeeded()
+        writeAudio = false
+        DispatchQueue.global(qos: .background).async {
+            self.startAudioTap()
+        }
+        let doRecording = DispatchWorkItem{
+            self.srCountdownTimer.isHidden = true
+            DispatchQueue.global(qos: .background).async {
+                self.intiateAudioWrite()
+            }
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(3), execute: doRecording)
+    }
+    
+    func intiateAudioWrite() {
+        recordingTs = NSDate().timeIntervalSince1970
+        writeAudio = true
+    }
+    
+    func startAudioTap() {
         self.recordingTs = NSDate().timeIntervalSince1970
         self.silenceTs = 0
         
@@ -224,7 +275,7 @@ class RecorderViewController: UIViewController {
         guard let format = self.format(sampleRate) else {
             return
         }
-        
+        inputNode.removeTap(onBus: 0)
         inputNode.installTap(onBus: 0, bufferSize: 1024, format: format) { (buffer, time) in
             let level: Float = -50
             let length: UInt32 = 1024
@@ -240,7 +291,7 @@ class RecorderViewController: UIViewController {
             }
             let silent = average < level
             let ts = NSDate().timeIntervalSince1970
-            if ts - self.renderTs > 0.1 {
+            if self.writeAudio && ts - self.renderTs > 0.1 {
                 let floats = UnsafeBufferPointer(start: channels[0], count: Int(buffer.frameLength))
                 let frame = floats.map({ (f) -> Int in
                     return Int(f * Float(Int16.max))
@@ -259,9 +310,8 @@ class RecorderViewController: UIViewController {
                     self.audioView.setNeedsDisplay()
                 }
             }
-            
-            let write = true
-            if write {
+
+            if self.writeAudio {
                 if self.audioFile == nil {
                     self.audioFile = self.createAudioRecordFile(sampleRate)
                 }
@@ -281,7 +331,9 @@ class RecorderViewController: UIViewController {
             print(error.localizedDescription)
             return
         }
-        self.updateUI(.recording)
+        DispatchQueue.main.async {
+            self.updateUI(.recording)
+        }
     }
     
     /// Called when recording is stopped.  This will also dismiss the view.
@@ -409,6 +461,15 @@ class RecorderViewController: UIViewController {
                     self.stopRecording()
                 }
             }
+        }
+    }
+    
+    /// Callback function for when `srCountdownTimer` updates.  This allows us to announce the new value via voice
+    ///
+    /// - Parameter newValue: the new value (in seconds) displayed on the countdown timer
+    @objc func timerDidUpdateCounterValue(newValue: Int) {
+        if newValue > 0 {
+            UIAccessibility.post(notification: UIAccessibility.Notification.announcement, argument: String(newValue))
         }
     }
     
