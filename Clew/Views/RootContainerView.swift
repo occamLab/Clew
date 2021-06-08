@@ -107,7 +107,7 @@ class RootContainerView: UIView {
         announcementText.lineBreakMode = .byWordWrapping
         announcementText.numberOfLines = 2
         announcementText.font = announcementText.font.withSize(20)
-        announcementText.backgroundColor = UIColor.black.withAlphaComponent(0.4)
+        announcementText.backgroundColor = UIColor.black.withAlphaComponent(UIConstants.transparencyAlpha)
         announcementText.isHidden = true
         
         // MARK: countdown element
@@ -120,7 +120,7 @@ class RootContainerView: UIView {
         countdownTimer.timerFinishingText = "End"
         countdownTimer.lineWidth = 10
         countdownTimer.lineColor = UIColor.white
-        countdownTimer.backgroundColor = UIColor.black.withAlphaComponent(0.4)
+        countdownTimer.backgroundColor = UIColor.black.withAlphaComponent(UIConstants.transparencyAlpha)
         countdownTimer.isHidden = true
         /// hide the timer as an accessibility element
         /// and announce through VoiceOver by posting appropriate notifications
