@@ -34,6 +34,7 @@
 		82BC47FE2640383300C7D364 /* Surveys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82BC47FD2640383300C7D364 /* Surveys.swift */; };
 		82BC47FF2640396700C7D364 /* Surveys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82BC47FD2640383300C7D364 /* Surveys.swift */; };
 		82D94B63266FC7CF00EE2C1C /* SimpleForm in Frameworks */ = {isa = PBXBuildFile; productRef = 82D94B62266FC7CF00EE2C1C /* SimpleForm */; };
+		82D94B65266FC86200EE2C1C /* SimpleForm in Frameworks */ = {isa = PBXBuildFile; productRef = 82D94B64266FC86200EE2C1C /* SimpleForm */; };
 		986640CE22FB68F2005AA1F6 /* NameSavedRouteController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986640CD22FB68F2005AA1F6 /* NameSavedRouteController.swift */; };
 		986640CF22FC9606005AA1F6 /* NameSavedRouteController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986640CD22FB68F2005AA1F6 /* NameSavedRouteController.swift */; };
 		B0A563F6FE1007A2716DC876 /* Pods_Clew_Dev.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3532E390954571B93729786A /* Pods_Clew_Dev.framework */; };
@@ -256,6 +257,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				82D94B65266FC86200EE2C1C /* SimpleForm in Frameworks */,
 				B0A563F6FE1007A2716DC876 /* Pods_Clew_Dev.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -510,6 +512,7 @@
 			);
 			name = "Clew Dev";
 			packageProductDependencies = (
+				82D94B64266FC86200EE2C1C /* SimpleForm */,
 			);
 			productName = Clew;
 			productReference = B7EB59EC20F693EB00FBBC6A /* Clew Dev.app */;
@@ -1293,6 +1296,11 @@
 
 /* Begin XCSwiftPackageProductDependency section */
 		82D94B62266FC7CF00EE2C1C /* SimpleForm */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 82D94B61266FC7CF00EE2C1C /* XCRemoteSwiftPackageReference "SimpleForm" */;
+			productName = SimpleForm;
+		};
+		82D94B64266FC86200EE2C1C /* SimpleForm */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 82D94B61266FC7CF00EE2C1C /* XCRemoteSwiftPackageReference "SimpleForm" */;
 			productName = SimpleForm;
