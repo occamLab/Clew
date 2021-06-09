@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import InAppSettingsKit
 
 class BurgerMenuViewController: UITableViewController, UIPopoverPresentationControllerDelegate {
     
@@ -31,7 +32,7 @@ class BurgerMenuViewController: UITableViewController, UIPopoverPresentationCont
     /// Called when the settings button is pressed.  This function will display the settings view (managed by SettingsViewController) as a popover.
     func settingsButtonPressed() {
         let storyBoard: UIStoryboard = UIStoryboard(name: "SettingsAndHelp", bundle: nil)
-        let popoverContent = storyBoard.instantiateViewController(withIdentifier: "Settings") as! SettingsViewController
+        let popoverContent = IASKAppSettingsViewController()
         popoverContent.preferredContentSize = CGSize(width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height)
         let nav = UINavigationController(rootViewController: popoverContent)
         nav.modalPresentationStyle = .popover
@@ -40,7 +41,7 @@ class BurgerMenuViewController: UITableViewController, UIPopoverPresentationCont
         popover?.sourceView = self.view
         popover?.sourceRect = CGRect(x: 0, y: UIConstants.settingsAndHelpFrameHeight/2, width: 0,height: 0)
         
-        popoverContent.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: popoverContent, action: #selector(popoverContent.doneWithSettings))
+        popoverContent.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: popoverContent, action: #selector(popoverContent.dismiss))
         
         self.present(nav, animated: true, completion: nil)
     }

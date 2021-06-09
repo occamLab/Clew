@@ -8,7 +8,6 @@
 
 import UIKit
 import AVFoundation
-import SRCountdownTimer
 import Accelerate
 
 extension Double {

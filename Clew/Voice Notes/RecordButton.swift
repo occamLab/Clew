@@ -8,14 +8,13 @@
 
 import UIKit
 import AVFoundation
-import PRTween
 
 /// a button that can initiate an audio recording
 @IBDesignable
 class RecordButton: UIButton {
     
     
-    private weak var tweenOperation : PRTweenOperation?
+    //private weak var tweenOperation : PRTweenOperation?
     private var startPlayer : AVAudioPlayer?
     private var stopPlayer : AVAudioPlayer?
     private var isRecordingScale : CGFloat = 1.0 {
@@ -39,18 +38,8 @@ class RecordButton: UIButton {
         didSet {
             #if !TARGET_INTERFACE_BUILDER
             //  Stop any running animation
-            if let tweenOperation = tweenOperation {
-                PRTween.sharedInstance().remove(tweenOperation)
-            }
-            
             //  Animate from one state to another (either 0 -> 1 or 1 -> 0)
-            let period = PRTweenPeriod.period(withStartValue: isRecordingScale,
-                                              endValue: isRecording ? 0.0 : 1.0,
-                                              duration: 0.5) as! PRTweenPeriod
             
-            tweenOperation = PRTween.sharedInstance().add(period, update: { (p) in
-                self.isRecordingScale = p!.tweenedValue
-            }, completionBlock: nil)
             setAccessibilityLabel()
             #else
             //  Don't animate in IB as the changes will not be shown
