@@ -163,7 +163,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		08FA9C31721F9F8CDCC23AE9 /* Pods-Clew.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Clew/Pods-Clew.debug.xcconfig"; sourceTree = "<group>"; };
 		1F27632222FCBB6E00E1FCF8 /* BurgerMenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BurgerMenuViewController.swift; sourceTree = "<group>"; };
 		1F2B9D7022C3B50D00317DC8 /* HelpCompiler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HelpCompiler.swift; sourceTree = "<group>"; };
 		3532E390954571B93729786A /* Pods_Clew_Dev.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Clew_Dev.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -197,12 +196,9 @@
 		82E4A5CE262A26DC000BEB44 /* Clew.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Clew.entitlements; sourceTree = "<group>"; };
 		82F2DDD122E26A44005CD7D0 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		82F2DDD322E26A44005CD7D0 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/SettingsAndHelp.strings; sourceTree = "<group>"; };
-		85A1A72DC19F87F15B738291 /* Pods-Clew Dev.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew Dev.release.xcconfig"; path = "Pods/Target Support Files/Pods-Clew Dev/Pods-Clew Dev.release.xcconfig"; sourceTree = "<group>"; };
 		942F73299DA8DCF97FAA974A /* Pods_Clew.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Clew.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		986640CD22FB68F2005AA1F6 /* NameSavedRouteController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NameSavedRouteController.swift; sourceTree = "<group>"; };
 		B7EB59EC20F693EB00FBBC6A /* Clew Dev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Clew Dev.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		C68778047D8E263D2FB04989 /* Pods-Clew Dev.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew Dev.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Clew Dev/Pods-Clew Dev.debug.xcconfig"; sourceTree = "<group>"; };
-		D89DDB87A8AE1A9ECEAFCEC6 /* Pods-Clew.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew.release.xcconfig"; path = "Pods/Target Support Files/Pods-Clew/Pods-Clew.release.xcconfig"; sourceTree = "<group>"; };
 		E538EF4E22D3BFEC004216E9 /* TransparentTouchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransparentTouchView.swift; sourceTree = "<group>"; };
 		E5470EAB22C119F4001092A4 /* RecordButtonKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecordButtonKit.swift; sourceTree = "<group>"; };
 		E5470EAC22C119F4001092A4 /* AudioVisualizerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioVisualizerView.swift; sourceTree = "<group>"; };
@@ -306,7 +302,6 @@
 				4D6B00E41F33C85500952242 /* Crumb.obj */,
 				E5E9016922FB4D4A00AD0E95 /* route-quicklook */,
 				4D6B00C11F33C1C400952242 /* Products */,
-				645269AB241294DCBFA0E1B0 /* Pods */,
 				C63B435EA8A32350A76E47DD /* Frameworks */,
 				822E27F8210E3F260024A5E3 /* Clew Dev-Info.plist */,
 			);
@@ -320,17 +315,6 @@
 				E5E9016722FB4D4A00AD0E95 /* route-quicklook.appex */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		645269AB241294DCBFA0E1B0 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				08FA9C31721F9F8CDCC23AE9 /* Pods-Clew.debug.xcconfig */,
-				D89DDB87A8AE1A9ECEAFCEC6 /* Pods-Clew.release.xcconfig */,
-				C68778047D8E263D2FB04989 /* Pods-Clew Dev.debug.xcconfig */,
-				85A1A72DC19F87F15B738291 /* Pods-Clew Dev.release.xcconfig */,
-			);
-			name = Pods;
 			sourceTree = "<group>";
 		};
 		82D94B892670685B00EE2C1C /* ImportedDependencies */ = {
@@ -510,7 +494,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 4D6B00D21F33C1C400952242 /* Build configuration list for PBXNativeTarget "Clew" */;
 			buildPhases = (
-				FC3FD998D963F5FE0C5C7B8E /* [CP] Check Pods Manifest.lock */,
 				4D6B00BC1F33C1C400952242 /* Sources */,
 				4D6B00BD1F33C1C400952242 /* Frameworks */,
 				4D6B00BE1F33C1C400952242 /* Resources */,
@@ -539,7 +522,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = B7EB59E920F693EB00FBBC6A /* Build configuration list for PBXNativeTarget "Clew Dev" */;
 			buildPhases = (
-				B7EB59D820F693EB00FBBC6A /* [CP] Check Pods Manifest.lock */,
 				B7EB59D920F693EB00FBBC6A /* Sources */,
 				B7EB59DF20F693EB00FBBC6A /* Frameworks */,
 				B7EB59E120F693EB00FBBC6A /* Resources */,
@@ -694,45 +676,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		B7EB59D820F693EB00FBBC6A /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-Clew Dev-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		FC3FD998D963F5FE0C5C7B8E /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-Clew-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		4D6B00BC1F33C1C400952242 /* Sources */ = {
@@ -1033,7 +976,6 @@
 		};
 		4D6B00D31F33C1C400952242 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 08FA9C31721F9F8CDCC23AE9 /* Pods-Clew.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -1060,7 +1002,6 @@
 		};
 		4D6B00D41F33C1C400952242 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = D89DDB87A8AE1A9ECEAFCEC6 /* Pods-Clew.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -1086,7 +1027,6 @@
 		};
 		B7EB59EA20F693EB00FBBC6A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = C68778047D8E263D2FB04989 /* Pods-Clew Dev.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -1116,7 +1056,6 @@
 		};
 		B7EB59EB20F693EB00FBBC6A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 85A1A72DC19F87F15B738291 /* Pods-Clew Dev.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
