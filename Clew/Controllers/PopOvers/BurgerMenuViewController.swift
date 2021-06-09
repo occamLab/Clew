@@ -9,15 +9,12 @@
 import Foundation
 import InAppSettingsKit
 
-extension IASKAppSettingsViewController {
-    @objc func doneWithSettings() {
-        dismiss(animated: true, completion: nil)
-        // TODO: doesn't work need to debug (also, not sure if we need this next call)
+class BurgerMenuViewController: UITableViewController, UIPopoverPresentationControllerDelegate, IASKSettingsDelegate {
+    
+    func settingsViewControllerDidEnd(_ settingsViewController: IASKAppSettingsViewController) {
+        settingsViewController.dismiss(animated: true, completion: nil)
         NotificationCenter.default.post(name: Notification.Name("ClewPopoverDismissed"), object: nil)
     }
-}
-
-class BurgerMenuViewController: UITableViewController, UIPopoverPresentationControllerDelegate {
     
     /// Called when the user selects an element from the routes table. Different indexPath/tableViewCell being tapped triggers different popup that is indicated by the content of the UILabel inside the tableViewCell (check corresponding storyboard).
     ///
@@ -41,14 +38,14 @@ class BurgerMenuViewController: UITableViewController, UIPopoverPresentationCont
     func settingsButtonPressed() {
         let popoverContent = IASKAppSettingsViewController()
         popoverContent.preferredContentSize = CGSize(width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height)
+        popoverContent.delegate = self
         let nav = UINavigationController(rootViewController: popoverContent)
         nav.modalPresentationStyle = .popover
         let popover = nav.popoverPresentationController
         popover?.delegate = self
         popover?.sourceView = self.view
         popover?.sourceRect = CGRect(x: 0, y: UIConstants.settingsAndHelpFrameHeight/2, width: 0,height: 0)
-        
-        popoverContent.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: popoverContent, action: #selector(popoverContent.doneWithSettings))
+        NotificationCenter.default.post(name: Notification.Name("ClewPopoverDisplayed"), object: nil)
         
         self.present(nav, animated: true, completion: nil)
     }
