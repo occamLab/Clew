@@ -9,6 +9,14 @@
 import Foundation
 import InAppSettingsKit
 
+extension IASKAppSettingsViewController {
+    @objc func doneWithSettings() {
+        dismiss(animated: true, completion: nil)
+        // TODO: doesn't work need to debug (also, not sure if we need this next call)
+        NotificationCenter.default.post(name: Notification.Name("ClewPopoverDismissed"), object: nil)
+    }
+}
+
 class BurgerMenuViewController: UITableViewController, UIPopoverPresentationControllerDelegate {
     
     /// Called when the user selects an element from the routes table. Different indexPath/tableViewCell being tapped triggers different popup that is indicated by the content of the UILabel inside the tableViewCell (check corresponding storyboard).
@@ -31,7 +39,6 @@ class BurgerMenuViewController: UITableViewController, UIPopoverPresentationCont
     
     /// Called when the settings button is pressed.  This function will display the settings view (managed by SettingsViewController) as a popover.
     func settingsButtonPressed() {
-        let storyBoard: UIStoryboard = UIStoryboard(name: "SettingsAndHelp", bundle: nil)
         let popoverContent = IASKAppSettingsViewController()
         popoverContent.preferredContentSize = CGSize(width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height)
         let nav = UINavigationController(rootViewController: popoverContent)
@@ -41,7 +48,7 @@ class BurgerMenuViewController: UITableViewController, UIPopoverPresentationCont
         popover?.sourceView = self.view
         popover?.sourceRect = CGRect(x: 0, y: UIConstants.settingsAndHelpFrameHeight/2, width: 0,height: 0)
         
-        popoverContent.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: popoverContent, action: #selector(popoverContent.dismiss))
+        popoverContent.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: popoverContent, action: #selector(popoverContent.doneWithSettings))
         
         self.present(nav, animated: true, completion: nil)
     }

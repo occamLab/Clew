@@ -36,15 +36,8 @@ class RecordButton: UIButton {
     /// true if the recording is active, and false otherwise.  By changing the value of this attribute, an animation will be presented that communicates that the recording state is changing.
     @IBInspectable open var isRecording : Bool = false {
         didSet {
-            #if !TARGET_INTERFACE_BUILDER
-            //  Stop any running animation
-            //  Animate from one state to another (either 0 -> 1 or 1 -> 0)
-            
             setAccessibilityLabel()
-            #else
-            //  Don't animate in IB as the changes will not be shown
             isRecordingScale = isRecording ? 0.0 : 1.0
-            #endif
         }
     }
     
