@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "pin.png",
+      "filename" : "newpin.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "pin-1.png",
+      "filename" : "newpin-1.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "pin-2.png",
+      "filename" : "newpin-2.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
