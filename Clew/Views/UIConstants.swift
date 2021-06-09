@@ -112,7 +112,8 @@ enum UIConstants {
     }
     
     /// Alpha value for transparency, where 1 is opaque and 0 is transparent.
-    static var transparencyAlpha: CGFloat {
+    static var alpha: CGFloat {
+        /// Value for white text for high contrast, or dynamic backgrounds.
         return 0.9
     }
 }

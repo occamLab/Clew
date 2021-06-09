@@ -35,7 +35,7 @@ class StopRecordingController: UIViewController {
                             width: UIConstants.buttonFrameWidth,
                             height: UIConstants.buttonFrameHeight)
         
-        view.backgroundColor = UIColor.black.withAlphaComponent(0.4)
+        view.backgroundColor = UIColor.black.withAlphaComponent(UIConstants.alpha)
 
         paddingButton = UIButton.makeConstraintButton(view,
                                                       alignment: UIConstants.ButtonContainerHorizontalAlignment.left,

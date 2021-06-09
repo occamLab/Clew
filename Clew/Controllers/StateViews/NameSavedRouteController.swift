@@ -148,7 +148,7 @@ class NameSavedRouteController: UIViewController, UITextFieldDelegate {
         stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -150).isActive = true
         stackView.topAnchor.constraint(equalTo: view.topAnchor, constant: 150).isActive = true
     
-        view.backgroundColor = UIColor.black.withAlphaComponent(0.4)
+        view.backgroundColor = UIColor.black.withAlphaComponent(UIConstants.alpha)
     
     
         saveRouteButton.addTarget(parent,

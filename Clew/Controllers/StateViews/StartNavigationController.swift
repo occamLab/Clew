@@ -79,7 +79,7 @@ class StartNavigationController: UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         
         /// darken background of view
-        view.backgroundColor = UIColor.black.withAlphaComponent(0.4)
+        view.backgroundColor = UIColor.black.withAlphaComponent(UIConstants.alpha)
         
         // TODO: we can probably just use the code in viewDidAppear
         var mainText : String

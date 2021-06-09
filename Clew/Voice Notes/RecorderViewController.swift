@@ -102,7 +102,7 @@ class RecorderViewController: UIViewController, SRCountdownTimerDelegate {
         srCountdownTimer.timerFinishingText = "End"
         srCountdownTimer.lineWidth = 10
         srCountdownTimer.lineColor = UIColor.white
-        srCountdownTimer.backgroundColor = UIColor.black.withAlphaComponent(0.4)
+        srCountdownTimer.backgroundColor = UIColor.black.withAlphaComponent(UIConstants.alpha)
         srCountdownTimer.isHidden = true
         /// hide the timer as an accessibility element
         /// and announce through VoiceOver by posting appropriate notifications

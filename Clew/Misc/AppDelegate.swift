@@ -40,6 +40,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         logUserProperties()
         // use for testing sign-in flow try? Auth.auth().signOut()
         if #available(iOS 13.0, *) {
+         //   try? Auth.auth().signOut()
             if (Auth.auth().currentUser == nil) {
                 #if IS_DEV_TARGET
                     Auth.auth().signInAnonymously() { (authResult, error) in

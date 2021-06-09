@@ -30,7 +30,7 @@ class StopNavigationController: UIViewController {
                             width: UIConstants.buttonFrameWidth,
                             height: UIConstants.buttonFrameHeight)
 
-        view.backgroundColor = UIColor.black.withAlphaComponent(0.4)
+        view.backgroundColor = UIColor.black.withAlphaComponent(UIConstants.alpha)
 
         stopNavigationButton = UIButton.makeConstraintButton(view,
                                                         alignment: UIConstants.ButtonContainerHorizontalAlignment.center,

@@ -56,7 +56,7 @@ class ResumeTrackingConfirmController: UIViewController, UIScrollViewDelegate {
         anchorPointLabel.translatesAutoresizingMaskIntoConstraints = false
         
         /// darken background of view
-        view.backgroundColor = UIColor.black.withAlphaComponent(0.4)
+        view.backgroundColor = UIColor.black.withAlphaComponent(UIConstants.alpha)
         
         /// label details
         let waitingPeriod = ViewController.alignmentWaitingPeriod
