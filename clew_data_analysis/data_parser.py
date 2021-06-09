@@ -15,7 +15,7 @@ class ClewData:
         self.auth = self.load_auth()
 
     def load_auth(self):
-        f = os.path.join('data','auth.json')
+        f = open(os.path.join('data','auth.json'))
         auth = json.load(f)
         f.close()
         return pd.DataFrame(auth['users'])
