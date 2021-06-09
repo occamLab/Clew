@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "record.png",
+      "filename" : "record1.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "record-1.png",
+      "filename" : "record1-1.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "record-2.png",
+      "filename" : "record1-2.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
