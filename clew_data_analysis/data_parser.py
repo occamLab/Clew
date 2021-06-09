@@ -12,6 +12,13 @@ class ClewData:
         # the users.
         self.surveys = self.load_feedback()
         self.logs = self.load_logs()
+        self.auth = self.load_auth()
+
+    def load_auth(self):
+        f = os.path.join('data','auth.json')
+        auth = json.load(f)
+        f.close()
+        return pd.DataFrame(auth['users'])
 
     def load_logs(self):
         log_dir = os.path.join('data','logs')
