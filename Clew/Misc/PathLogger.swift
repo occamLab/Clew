@@ -233,6 +233,8 @@ class PathLogger {
                                     "PathDate": pathDate,
                                     "PathType": pathType,
                                     "isVoiceOverOn": UIAccessibility.isVoiceOverRunning,
+                                    "isGrayscaleOn": UIAccessibility.isGrayscaleEnabled,
+                                    "isInvertColorsOn": UIAccessibility.isInvertColorsEnabled,
                                     "routeId": currentNavigationRoute != nil ? currentNavigationRoute!.id : "",
                                     "hasMap": currentNavigationMap != nil,
                                     "keypointData": Array(keypointData),
