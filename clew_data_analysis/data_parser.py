@@ -61,6 +61,9 @@ class ClewData:
         df_all['keypointX'] = df_all['keypointData'].map(lambda x: [m[0] for m in x])
         df_all['keypointY'] = df_all['keypointData'].map(lambda x: [m[1] for m in x])
         df_all['keypointZ'] = df_all['keypointData'].map(lambda x: [m[2] for m in x])
+        df_all['relativeError'] = df_all.apply(lambda x: get_relativeError(x['keypointData'], x['navigationData'], x['routeDistance']), axis = 1)
+        df_all['PathHeadingAngles'] = df_all['PathData'].map(get_heading_angles)
+        df_all['navigationHeadingAngles'] = df_all['navigationData'].map(get_heading_angles)
         return df_all
     
     def parse_user_logs(self, user_id, log_dir):
