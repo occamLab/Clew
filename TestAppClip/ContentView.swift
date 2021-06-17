@@ -11,7 +11,7 @@ import UIKit
 
 struct ContentView: View {
     var body: some View {
-        recordPath()
+        // recordPath()
         
         Text("THIS IS FOOD THIS IS BEANS")
             .padding()

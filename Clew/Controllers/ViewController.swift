@@ -93,7 +93,7 @@ enum AppState {
 }
 
 /// The view controller that handles the main Clew window.  This view controller is always active and handles the various views that are used for different app functionalities.
-class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDelegate, AVSpeechSynthesizerDelegate {
+class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDelegate, AVSpeechSynthesizerDelegate, ARSessionDelegate {
     
     // MARK: - Refactoring UI definition
     
@@ -452,6 +452,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         // TODO: we should not be able to create a route Anchor Point if we are in the relocalizing state... (might want to handle this when the user stops navigation on a route they loaded.... This would obviate the need to handle this in the recordPath code as well
         print("completing pause procedure")
         if creatingRouteAnchorPoint {
+            print(sceneView.session.currentFrame?.anchors.compactMap({$0 as? ARAppClipCodeAnchor}))
             guard let currentTransform = sceneView.session.currentFrame?.camera.transform else {
                 print("can't properly save Anchor Point: TODO communicate this to the user somehow")
                 return
@@ -1102,9 +1103,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         configuration = ARWorldTrackingConfiguration()
         configuration.planeDetection = [.horizontal, .vertical]
         configuration.isAutoFocusEnabled = false
+        configuration.appClipCodeTrackingEnabled = true
         sceneView.delegate = self
+        sceneView.session.delegate = self
     }
-    
+    func session(_ session: ARSession, didUpdate frame: ARFrame) {
+        print(frame.anchors)
+        print(frame.anchors.compactMap(({$0 as? ARAppClipCodeAnchor})))
+    }
     /// Handle the user clicking the confirm alignment to a saved Anchor Point.  Depending on the app state, the behavior of this function will differ (e.g., if the route is being resumed versus reloaded)
     @objc func confirmAlignment() {
         if case .startingPauseProcedure = state {
