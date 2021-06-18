@@ -203,6 +203,12 @@ struct FirebaseFeedbackSurvey: View {
                         formValues["_uid"] = Auth.auth().currentUser?.uid ?? "notsignedin"
                         formValues["_logFileURLs"] = logFileURLs
                         let jsonData = try! JSONSerialization.data(withJSONObject: formValues, options: .prettyPrinted)
+                        
+                        if let currentUID = Auth.auth().currentUser?.uid {
+                            let surveyInfo = ["lastSurveySubmissionTime": Date().timeIntervalSince1970]
+                            FirebaseFeedbackSurveyModel.shared.databaseHandle.reference(withPath: "\(currentUID)/surveys/\(feedbackSurveyName)").updateChildValues(surveyInfo)
+                        }
+                        
                         self.uploadToFirebase(data: jsonData)
                     }
                 }){

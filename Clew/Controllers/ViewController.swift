@@ -113,6 +113,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// the last time this particular user was surveyed (nil if we don't know this information or it hasn't been loaded from the database yet)
     var lastSurveyTime: [String: Double] = [:]
     
+    /// the last time this particular user submitted each survey (nil if we don't know this information or it hasn't been loaded from the database yet)
+    var lastSurveySubmissionTime: [String: Double] = [:]
+    
     /// The state of the app.  This should be constantly referenced and updated as the app transitions
     var state = AppState.initializing {
         didSet {
@@ -750,7 +753,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         NotificationCenter.default.addObserver(forName: Notification.Name("SurveyPopoverReadyToDismiss"), object: nil, queue: nil) { (notification) -> Void in
             self.hostingController?.dismiss(animated: true)
             NotificationCenter.default.post(name: Notification.Name("ClewPopoverDismissed"), object: nil)
-            // TODO: I18N / L10N
             if let gaveFeedback = notification.object as? Bool, gaveFeedback {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
                     self.announce(announcement: NSLocalizedString("thanksForFeedbackAnnouncement", comment: "This is read right after the user fills out a feedback survey."))
@@ -802,8 +804,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 }
                 else if snapshot.exists(), let userDict = snapshot.value as? [String : AnyObject] {
                     for (surveyName, surveyInfo) in userDict {
-                        if let surveyInfoDict = surveyInfo as? [String : AnyObject], let lastSurveyTime = surveyInfoDict["lastSurveyTime"] as? Double {
-                            self.lastSurveyTime[surveyName] = lastSurveyTime
+                        if let surveyInfoDict = surveyInfo as? [String : AnyObject] {
+                            if let lastSurveyTime = surveyInfoDict["lastSurveyTime"] as? Double {
+                                self.lastSurveyTime[surveyName] = lastSurveyTime
+                            }
+                            if let lastSurveySubmissionTime = surveyInfoDict["lastSurveySubmissionTime"] as? Double {
+                                self.lastSurveySubmissionTime[surveyName] = lastSurveySubmissionTime
+                            }
                         }
                     }
                 }
@@ -1737,6 +1744,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         print(surveyToTrigger)
         
         if FirebaseFeedbackSurveyModel.shared.questions[surveyToTrigger] == nil {
+            return
+        }
+        if self.lastSurveySubmissionTime[surveyToTrigger] != nil {
             return
         }
         if self.lastSurveyTime[surveyToTrigger] == nil || -Date(timeIntervalSince1970: self.lastSurveyTime[surveyToTrigger]!).timeIntervalSinceNow >= FirebaseFeedbackSurveyModel.shared.intervals[surveyToTrigger] ?? 0.0 {
