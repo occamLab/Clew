@@ -21,6 +21,10 @@ class PathLogger {
     let storageBaseRef = Storage.storage().reference()
     /// history of settings in the app
     var settingsHistory: [(Date, Dictionary<String, Any>)] = []
+    /// alignment data taken during RECORDPATH - [[1x16 transform matrix, navigation offset, use navigation offset]]
+    var alignmentData: LinkedList<[Float]> = []
+    /// time stamps for pathData
+    var alignmentDataTime: LinkedList<Double> = []
     /// path data taken during RECORDPATH - [[1x16 transform matrix, navigation offset, use navigation offset]]
     var pathData: LinkedList<[Float]> = []
     /// time stamps for pathData
@@ -117,9 +121,12 @@ class PathLogger {
         if case .navigatingRoute = state {
             navigationData.append(logMatrix)
             navigationDataTime.append(logTime)
-        } else {
+        } else if case .recordingRoute = state {
             pathData.append(logMatrix)
             pathDataTime.append(logTime)
+        } else {
+            alignmentData.append(logMatrix)
+            alignmentDataTime.append(logTime)
         }
     }
 
@@ -154,6 +161,10 @@ class PathLogger {
         pathDataTime = []
         dataTimer = Date()
         
+        // these are shared with navigation, so reset them
+        alignmentData = []
+        alignmentDataTime = []
+        
         trackingErrorData = []
         trackingErrorTime = []
         trackingErrorPhase = []
@@ -168,6 +179,9 @@ class PathLogger {
         // clear any old log variables
         navigationData = []
         navigationDataTime = []
+        // these are shared with recording, so reset them
+        alignmentData = []
+        alignmentDataTime = []
         speechData = []
         speechDataTime = []
         dataTimer = Date()

@@ -459,6 +459,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 print("can't properly save Anchor Point: TODO communicate this to the user somehow")
                 return
             }
+            // make sure we log the transform
+            let _ = self.getRealCoordinates(record: true)
             beginRouteAnchorPoint.transform = currentTransform
             pauseTrackingController.remove()
             
@@ -469,6 +471,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             state = .recordingRoute
             return
         } else if let currentTransform = sceneView.session.currentFrame?.camera.transform {
+            // make sure to log transform
+            let _ = self.getRealCoordinates(record: true)
             endRouteAnchorPoint.transform = currentTransform
             // no more crumbs
             droppingCrumbs?.invalidate()
@@ -1678,6 +1682,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             // The first check is necessary in case the phone relocalizes before this code executes
             if case .readyForFinalResumeAlignment = self.state, let alignTransform = self.pausedTransform, let camera = self.sceneView.session.currentFrame?.camera {
                 // yaw can be determined by projecting the camera's z-axis into the ground plane and using arc tangent (note: the camera coordinate conventions of ARKit https://developer.apple.com/documentation/arkit/arsessionconfiguration/worldalignment/camera
+                // add this call so we make sure that we log the alignment transform
+                let _ = self.getRealCoordinates(record: true)
                 let alignYaw = self.getYawHelper(alignTransform)
                 let cameraYaw = self.getYawHelper(camera.transform)
 

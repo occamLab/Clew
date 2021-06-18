@@ -118,9 +118,8 @@ class RecordPathController: UIViewController {
         stackView.alignment = UIStackView.Alignment.center
         
         /// add elements to the stack
-
-        stackView.addArrangedSubview(addAnchorPointButton)
         stackView.addArrangedSubview(recordPathButton)
+        stackView.addArrangedSubview(addAnchorPointButton)
         stackView.addArrangedSubview(routesButton)
 
         
