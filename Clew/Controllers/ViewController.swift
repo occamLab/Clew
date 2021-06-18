@@ -2333,13 +2333,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         let xDist = locationFront.x - locationBack.x
         let yDist = locationFront.y - locationBack.y
         let zDist = locationFront.z - locationBack.z
-        let planarDist = sqrt(pow(xDist, 2) + pow(zDist, 2))
         let pathDist = sqrt(pow(xDist, 2) + pow(yDist, 2) + pow(zDist, 2))
-        let hAngle = atan2(-zDist, xDist)
-        let vAngle = atan2(yDist, planarDist)
         
         // render SCNNode of given keypoint
-        pathObj = SCNNode(geometry: SCNBox(width: CGFloat(pathDist), height: 0.08, length: 0.25, chamferRadius: 3))
+        pathObj = SCNNode(geometry: SCNBox(width: CGFloat(pathDist), height: 0.25, length: 0.08, chamferRadius: 3))
         
         let colors = [UIColor.red, UIColor.green, UIColor.blue]
         var color: UIColor!
@@ -2350,14 +2347,29 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             color = colors[defaultPathColor]
         }
         pathObj?.geometry?.firstMaterial!.diffuse.contents = color
+        let xAxis = simd_normalize(simd_float3(xDist, yDist, zDist))
+        let yAxis: simd_float3
+        if xDist == 0 && zDist == 0 {
+            // this is the case where the path goes straight up and we can set yAxis more or less arbitrarily
+            yAxis = simd_float3(1, 0, 0)
+        } else if xDist == 0 {
+            // zDist must be non-zero, which means that for yAxis to be perpendicular to the xAxis and have a zero y-component, we must make yAxis equal to simd_float3(1, 0, 0)
+            yAxis = simd_float3(1, 0, 0)
+        } else if zDist == 0 {
+            // xDist must be non-zero, which means that for yAxis to be perpendicular to the xAxis and have a zero y-component, we must make yAxis equal to simd_float3(0, 0, 1)
+            yAxis = simd_float3(0, 0, 1)
+        } else {
+            // TODO: real math
+            let yAxisZComponent = sqrt(1 / (zDist*zDist/(xDist*xDist) + 1))
+            let yAxisXComponent = -zDist*yAxisZComponent/xDist
+            yAxis = simd_float3(yAxisXComponent, 0, yAxisZComponent)
+        }
+        let zAxis = simd_cross(xAxis, yAxis)
         
+        let pathTransform = simd_float4x4(columns: (simd_float4(xAxis, 0), simd_float4(yAxis, 0), simd_float4(zAxis, 0), simd_float4(x, y - 0.6, z, 1)))
         // configure node attributes
         pathObj!.opacity = CGFloat(0.7)
-        pathObj!.position = SCNVector3(x, y - 0.6, z)
-        // horizontal rotation
-        pathObj!.rotation = SCNVector4(0, 1, 0, hAngle)
-        // vertical rotation
-        pathObj!.localRotate(by: SCNQuaternion(x: 0, y: 0, z: 1, w: -vAngle))
+        pathObj!.simdTransform = pathTransform
         
         sceneView.scene.rootNode.addChildNode(pathObj!)
     }
