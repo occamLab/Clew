@@ -365,6 +365,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
         intermediateAnchorPoints = route.intermediateAnchorPoints
         // don't reset tracking, but do clear anchors and switch to the new map
+        sceneView.debugOptions = [.showWorldOrigin]
         sceneView.session.run(configuration, options: [.removeExistingAnchors, .resetTracking])
 
         if isTrackingPerformanceNormal, isSameMap {
@@ -1587,6 +1588,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         if #available(iOS 12.0, *) {
             configuration.initialWorldMap = nil
         }
+        sceneView.debugOptions = [.showWorldOrigin]
         sceneView.session.run(configuration, options: [.removeExistingAnchors, .resetTracking])
     }
     
@@ -1738,6 +1740,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 tagToRoute = routeTransform
                 
                 let relativeTransform = tagToWorld * tagToRoute.inverse
+                print("relativeTransform \(relativeTransform)")
                 self.sceneView.session.setWorldOrigin(relativeTransform: relativeTransform)
                 
                 self.isResumedRoute = true
@@ -2537,7 +2540,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                     }
                 }
             }
+<<<<<<< HEAD
             if case .readyForFinalResumeAlignment = state, attemptingRelocalization {   // <3
+=======
+            if case .readyForFinalResumeAlignment = state, attemptingRelocalization {
+>>>>>>> d7c650d5f1ef79c211e5ad4503effbf5a61f47ed
                 // this will cancel any realignment if it hasn't happened yet and go straight to route navigation mode
                 rootContainerView.countdownTimer.isHidden = true
                 isResumedRoute = true
