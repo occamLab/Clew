@@ -15,7 +15,7 @@ class ClewData:
         self.auth = self.load_auth()
 
     def load_auth(self):
-        f = os.path.join('data','auth.json')
+        f = open(os.path.join('data','auth.json'))
         auth = json.load(f)
         f.close()
         return pd.DataFrame(auth['users'])
@@ -61,6 +61,9 @@ class ClewData:
         df_all['keypointX'] = df_all['keypointData'].map(lambda x: [m[0] for m in x])
         df_all['keypointY'] = df_all['keypointData'].map(lambda x: [m[1] for m in x])
         df_all['keypointZ'] = df_all['keypointData'].map(lambda x: [m[2] for m in x])
+        df_all['relativeError'] = df_all.apply(lambda x: get_relativeError(x['keypointData'], x['navigationData'], x['routeDistance']), axis = 1)
+        df_all['PathHeadingAngles'] = df_all['PathData'].map(get_heading_angles)
+        df_all['navigationHeadingAngles'] = df_all['navigationData'].map(get_heading_angles)
         return df_all
     
     def parse_user_logs(self, user_id, log_dir):
