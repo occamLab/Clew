@@ -372,8 +372,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             
             isResumedRoute = true
             isAutomaticAlignment = true
+            
             state = .readyToNavigateOrPause(allowPause: false)
-        } else if isRelocalizing && isSameMap || isTrackingPerformanceNormal && worldMap == nil  {
+        }
+        else if isRelocalizing && isSameMap || isTrackingPerformanceNormal && worldMap == nil  {
             // we don't have to wait for the session to start up.  It will be created automatically.
             self.state = .readyForFinalResumeAlignment
             self.showResumeTrackingConfirmButton(route: route, navigateStartToEnd: navigateStartToEnd)
@@ -452,8 +454,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         // TODO: we should not be able to create a route Anchor Point if we are in the relocalizing state... (might want to handle this when the user stops navigation on a route they loaded.... This would obviate the need to handle this in the recordPath code as well
         print("completing pause procedure")
         if creatingRouteAnchorPoint {
-            print(sceneView.session.currentFrame?.anchors.compactMap({$0 as? ARAppClipCodeAnchor}))
-            guard let currentTransform = sceneView.session.currentFrame?.camera.transform else {
+            print("setting start point @ \(sceneView.session.currentFrame?.anchors.compactMap({$0 as? ARAppClipCodeAnchor}))")
+            guard let currentTransform = sceneView.session.currentFrame?.anchors.compactMap({$0 as? ARAppClipCodeAnchor})[0].transform else {
                 print("can't properly save Anchor Point: TODO communicate this to the user somehow")
                 return
             }
@@ -473,7 +475,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
 
             if #available(iOS 12.0, *) {
                 sceneView.session.getCurrentWorldMap { worldMap, error in
-                    self.completingPauseProcedureHelper(worldMap: worldMap)
+                    self.completingPauseProcedureHelper(worldMap: nil)
+                    // note to ACDC, this is where you should change it back <3 to worldMap B) (or change back to nil, which is what Paul did)
                 }
             } else {
                 completingPauseProcedureHelper(worldMap: nil)
@@ -1675,18 +1678,24 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(ViewController.alignmentWaitingPeriod)) {
             self.rootContainerView.countdownTimer.isHidden = true
             // The first check is necessary in case the phone relocalizes before this code executes
-            if case .readyForFinalResumeAlignment = self.state, let alignTransform = self.pausedTransform, let camera = self.sceneView.session.currentFrame?.camera {
+            if case .readyForFinalResumeAlignment = self.state, let routeTransform = self.pausedTransform, let tagAnchor = self.sceneView.session.currentFrame?.anchors.compactMap({$0 as? ARAppClipCodeAnchor})[0] {
                 // yaw can be determined by projecting the camera's z-axis into the ground plane and using arc tangent (note: the camera coordinate conventions of ARKit https://developer.apple.com/documentation/arkit/arsessionconfiguration/worldalignment/camera
-                let alignYaw = self.getYawHelper(alignTransform)
-                let cameraYaw = self.getYawHelper(camera.transform)
+                let alignYaw = self.getYawHelper(routeTransform)
+                print("alignYaw = \(alignYaw*180/3.14)")
+                let cameraYaw = self.getYawHelper(tagAnchor.transform)
+                print("cameraYaw = \(cameraYaw*180/3.14)")
+                print("isAutomaticAlignment = \(self.isAutomaticAlignment)")
 
-                var leveledCameraPose = simd_float4x4.makeRotate(radians: cameraYaw, 0, 1, 0)
-                leveledCameraPose.columns.3 = camera.transform.columns.3
+                var tagToWorld = simd_float4x4.makeRotate(radians: cameraYaw, 0, 1, 0)
+                tagToWorld.columns.3 = tagAnchor.transform.columns.3
+                tagToWorld = tagAnchor.transform
                 
-                var leveledAlignPose =  simd_float4x4.makeRotate(radians: alignYaw, 0, 1, 0)
-                leveledAlignPose.columns.3 = alignTransform.columns.3
+                var tagToRoute =  simd_float4x4.makeRotate(radians: alignYaw, 0, 1, 0)
+                tagToRoute.columns.3 = routeTransform.columns.3
+                tagToRoute = routeTransform
                 
-                let relativeTransform = leveledCameraPose * leveledAlignPose.inverse
+                
+                let relativeTransform = tagToWorld * tagToRoute.inverse
                 self.sceneView.session.setWorldOrigin(relativeTransform: relativeTransform)
                 
                 self.isResumedRoute = true
