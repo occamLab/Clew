@@ -455,7 +455,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         print("completing pause procedure")
         if creatingRouteAnchorPoint {
             print("setting start point @ \(sceneView.session.currentFrame?.anchors.compactMap({$0 as? ARAppClipCodeAnchor}))")
-            guard let currentTransform = sceneView.session.currentFrame?.anchors.compactMap({$0 as? ARAppClipCodeAnchor})[0].transform else {
+            print("type = \(sceneView.session.currentFrame?.anchors.compactMap({$0 as? ARAppClipCodeAnchor}))")
+            guard let currentTransform = sceneView.session.currentFrame?.anchors.compactMap({$0 as? ARAppClipCodeAnchor}).filter({clipAnchor in clipAnchor.isTracked }).first?.transform else {
                 print("can't properly save Anchor Point: TODO communicate this to the user somehow")
                 return
             }
@@ -468,7 +469,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             ///sends the user to a route recording of the program is creating a beginning route Anchor Point
             state = .recordingRoute
             return
-        } else if let currentTransform = sceneView.session.currentFrame?.camera.transform {
+        } else if let currentTransform = sceneView.session.currentFrame?.anchors.compactMap({$0 as? ARAppClipCodeAnchor}).filter({clipAnchor in clipAnchor.isTracked }).last?.transform { // <3
+            
             endRouteAnchorPoint.transform = currentTransform
             // no more crumbs
             droppingCrumbs?.invalidate()
@@ -1111,8 +1113,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         sceneView.session.delegate = self
     }
     func session(_ session: ARSession, didUpdate frame: ARFrame) {
-        print(frame.anchors)
-        print(frame.anchors.compactMap(({$0 as? ARAppClipCodeAnchor})))
+        // print("frame.anchors = \(frame.anchors)")   // <3 type = int counting # of anchors ID'd
+        // print("frame.anchors.compactMap = \(frame.anchors.compactMap(({$0 as? ARAppClipCodeAnchor})))") // <3 type = Array<ARAppClipCodeAnchor>, where each ARAppClipCodeAnchor is another one it identifies
+        for (i, clipAnchor) in frame.anchors.compactMap(({$0 as? ARAppClipCodeAnchor})).enumerated() {
+            print("i=\(i) isTracked = \(clipAnchor.isTracked)")
+        }
     }
     /// Handle the user clicking the confirm alignment to a saved Anchor Point.  Depending on the app state, the behavior of this function will differ (e.g., if the route is being resumed versus reloaded)
     @objc func confirmAlignment() {
@@ -1678,7 +1683,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(ViewController.alignmentWaitingPeriod)) {
             self.rootContainerView.countdownTimer.isHidden = true
             // The first check is necessary in case the phone relocalizes before this code executes
-            if case .readyForFinalResumeAlignment = self.state, let routeTransform = self.pausedTransform, let tagAnchor = self.sceneView.session.currentFrame?.anchors.compactMap({$0 as? ARAppClipCodeAnchor})[0] {
+            if case .readyForFinalResumeAlignment = self.state, let routeTransform = self.pausedTransform, let tagAnchor = self.sceneView.session.currentFrame?.anchors.compactMap({$0 as? ARAppClipCodeAnchor}).filter({$0.isTracked}).first {
                 // yaw can be determined by projecting the camera's z-axis into the ground plane and using arc tangent (note: the camera coordinate conventions of ARKit https://developer.apple.com/documentation/arkit/arsessionconfiguration/worldalignment/camera
                 let alignYaw = self.getYawHelper(routeTransform)
                 print("alignYaw = \(alignYaw*180/3.14)")
@@ -1693,7 +1698,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 var tagToRoute =  simd_float4x4.makeRotate(radians: alignYaw, 0, 1, 0)
                 tagToRoute.columns.3 = routeTransform.columns.3
                 tagToRoute = routeTransform
-                
                 
                 let relativeTransform = tagToWorld * tagToRoute.inverse
                 self.sceneView.session.setWorldOrigin(relativeTransform: relativeTransform)
@@ -2495,7 +2499,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                     }
                 }
             }
-            if case .readyForFinalResumeAlignment = state {
+            if case .readyForFinalResumeAlignment = state, attemptingRelocalization {   // <3
                 // this will cancel any realignment if it hasn't happened yet and go straight to route navigation mode
                 rootContainerView.countdownTimer.isHidden = true
                 isResumedRoute = true
