@@ -1,0 +1,16 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "SimpleForm",
+        "repositoryURL": "https://github.com/occamlab/SimpleForm",
+        "state": {
+          "branch": "master",
+          "revision": "bbfbdcc4b53c16e3cfbf7ac1003cafe3397b55c8",
+          "version": null
+        }
+      }
+    ]
+  },
+  "version": 1
+}
