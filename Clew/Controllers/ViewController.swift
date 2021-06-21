@@ -113,6 +113,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// the last time this particular user was surveyed (nil if we don't know this information or it hasn't been loaded from the database yet)
     var lastSurveyTime: [String: Double] = [:]
     
+    /// the last time this particular user submitted each survey (nil if we don't know this information or it hasn't been loaded from the database yet)
+    var lastSurveySubmissionTime: [String: Double] = [:]
+    
     /// The state of the app.  This should be constantly referenced and updated as the app transitions
     var state = AppState.initializing {
         didSet {
@@ -456,6 +459,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 print("can't properly save Anchor Point: TODO communicate this to the user somehow")
                 return
             }
+            // make sure we log the transform
+            let _ = self.getRealCoordinates(record: true)
             beginRouteAnchorPoint.transform = currentTransform
             pauseTrackingController.remove()
             
@@ -466,6 +471,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             state = .recordingRoute
             return
         } else if let currentTransform = sceneView.session.currentFrame?.camera.transform {
+            // make sure to log transform
+            let _ = self.getRealCoordinates(record: true)
             endRouteAnchorPoint.transform = currentTransform
             // no more crumbs
             droppingCrumbs?.invalidate()
@@ -750,7 +757,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         NotificationCenter.default.addObserver(forName: Notification.Name("SurveyPopoverReadyToDismiss"), object: nil, queue: nil) { (notification) -> Void in
             self.hostingController?.dismiss(animated: true)
             NotificationCenter.default.post(name: Notification.Name("ClewPopoverDismissed"), object: nil)
-            // TODO: I18N / L10N
             if let gaveFeedback = notification.object as? Bool, gaveFeedback {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
                     self.announce(announcement: NSLocalizedString("thanksForFeedbackAnnouncement", comment: "This is read right after the user fills out a feedback survey."))
@@ -802,8 +808,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 }
                 else if snapshot.exists(), let userDict = snapshot.value as? [String : AnyObject] {
                     for (surveyName, surveyInfo) in userDict {
-                        if let surveyInfoDict = surveyInfo as? [String : AnyObject], let lastSurveyTime = surveyInfoDict["lastSurveyTime"] as? Double {
-                            self.lastSurveyTime[surveyName] = lastSurveyTime
+                        if let surveyInfoDict = surveyInfo as? [String : AnyObject] {
+                            if let lastSurveyTime = surveyInfoDict["lastSurveyTime"] as? Double {
+                                self.lastSurveyTime[surveyName] = lastSurveyTime
+                            }
+                            if let lastSurveySubmissionTime = surveyInfoDict["lastSurveySubmissionTime"] as? Double {
+                                self.lastSurveySubmissionTime[surveyName] = lastSurveySubmissionTime
+                            }
                         }
                     }
                 }
@@ -1671,6 +1682,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             // The first check is necessary in case the phone relocalizes before this code executes
             if case .readyForFinalResumeAlignment = self.state, let alignTransform = self.pausedTransform, let camera = self.sceneView.session.currentFrame?.camera {
                 // yaw can be determined by projecting the camera's z-axis into the ground plane and using arc tangent (note: the camera coordinate conventions of ARKit https://developer.apple.com/documentation/arkit/arsessionconfiguration/worldalignment/camera
+                // add this call so we make sure that we log the alignment transform
+                let _ = self.getRealCoordinates(record: true)
                 let alignYaw = self.getYawHelper(alignTransform)
                 let cameraYaw = self.getYawHelper(camera.transform)
 
@@ -1737,6 +1750,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         print(surveyToTrigger)
         
         if FirebaseFeedbackSurveyModel.shared.questions[surveyToTrigger] == nil {
+            return
+        }
+        if self.lastSurveySubmissionTime[surveyToTrigger] != nil {
             return
         }
         if self.lastSurveyTime[surveyToTrigger] == nil || -Date(timeIntervalSince1970: self.lastSurveyTime[surveyToTrigger]!).timeIntervalSinceNow >= FirebaseFeedbackSurveyModel.shared.intervals[surveyToTrigger] ?? 0.0 {
@@ -2323,13 +2339,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         let xDist = locationFront.x - locationBack.x
         let yDist = locationFront.y - locationBack.y
         let zDist = locationFront.z - locationBack.z
-        let planarDist = sqrt(pow(xDist, 2) + pow(zDist, 2))
         let pathDist = sqrt(pow(xDist, 2) + pow(yDist, 2) + pow(zDist, 2))
-        let hAngle = atan2(-zDist, xDist)
-        let vAngle = atan2(yDist, planarDist)
         
         // render SCNNode of given keypoint
-        pathObj = SCNNode(geometry: SCNBox(width: CGFloat(pathDist), height: 0.08, length: 0.25, chamferRadius: 3))
+        pathObj = SCNNode(geometry: SCNBox(width: CGFloat(pathDist), height: 0.25, length: 0.08, chamferRadius: 3))
         
         let colors = [UIColor.red, UIColor.green, UIColor.blue]
         var color: UIColor!
@@ -2340,14 +2353,29 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             color = colors[defaultPathColor]
         }
         pathObj?.geometry?.firstMaterial!.diffuse.contents = color
+        let xAxis = simd_normalize(simd_float3(xDist, yDist, zDist))
+        let yAxis: simd_float3
+        if xDist == 0 && zDist == 0 {
+            // this is the case where the path goes straight up and we can set yAxis more or less arbitrarily
+            yAxis = simd_float3(1, 0, 0)
+        } else if xDist == 0 {
+            // zDist must be non-zero, which means that for yAxis to be perpendicular to the xAxis and have a zero y-component, we must make yAxis equal to simd_float3(1, 0, 0)
+            yAxis = simd_float3(1, 0, 0)
+        } else if zDist == 0 {
+            // xDist must be non-zero, which means that for yAxis to be perpendicular to the xAxis and have a zero y-component, we must make yAxis equal to simd_float3(0, 0, 1)
+            yAxis = simd_float3(0, 0, 1)
+        } else {
+            // TODO: real math
+            let yAxisZComponent = sqrt(1 / (zDist*zDist/(xDist*xDist) + 1))
+            let yAxisXComponent = -zDist*yAxisZComponent/xDist
+            yAxis = simd_float3(yAxisXComponent, 0, yAxisZComponent)
+        }
+        let zAxis = simd_cross(xAxis, yAxis)
         
+        let pathTransform = simd_float4x4(columns: (simd_float4(xAxis, 0), simd_float4(yAxis, 0), simd_float4(zAxis, 0), simd_float4(x, y - 0.6, z, 1)))
         // configure node attributes
         pathObj!.opacity = CGFloat(0.7)
-        pathObj!.position = SCNVector3(x, y - 0.6, z)
-        // horizontal rotation
-        pathObj!.rotation = SCNVector4(0, 1, 0, hAngle)
-        // vertical rotation
-        pathObj!.localRotate(by: SCNQuaternion(x: 0, y: 0, z: 1, w: -vAngle))
+        pathObj!.simdTransform = pathTransform
         
         sceneView.scene.rootNode.addChildNode(pathObj!)
     }

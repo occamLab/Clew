@@ -21,6 +21,10 @@ class PathLogger {
     let storageBaseRef = Storage.storage().reference()
     /// history of settings in the app
     var settingsHistory: [(Date, Dictionary<String, Any>)] = []
+    /// alignment data taken during RECORDPATH - [[1x16 transform matrix, navigation offset, use navigation offset]]
+    var alignmentData: LinkedList<[Float]> = []
+    /// time stamps for pathData
+    var alignmentDataTime: LinkedList<Double> = []
     /// path data taken during RECORDPATH - [[1x16 transform matrix, navigation offset, use navigation offset]]
     var pathData: LinkedList<[Float]> = []
     /// time stamps for pathData
@@ -107,19 +111,24 @@ class PathLogger {
     ///   - scn: the 4x4 matrix that encodes the position and orientation of the phone
     ///   - headingOffset: the offset
     func logTransformMatrix(state: AppState, scn: SCNMatrix4, headingOffset: Float?, useHeadingOffset: Bool) {
-        let logTime = -dataTimer.timeIntervalSinceNow
-        
         // TODO: figure out better way to indicate nil value than hardcoded value of -1000.0
         let logMatrix = [scn.m11, scn.m12, scn.m13, scn.m14,
                          scn.m21, scn.m22, scn.m23, scn.m24,
                          scn.m31, scn.m32, scn.m33, scn.m34,
                          scn.m41, scn.m42, scn.m43, scn.m44, headingOffset == nil ? -1000.0 : headingOffset!, useHeadingOffset ? 1.0 : 0.0]
         if case .navigatingRoute = state {
+            let logTime = -dataTimer.timeIntervalSinceNow
             navigationData.append(logMatrix)
             navigationDataTime.append(logTime)
-        } else {
+        } else if case .recordingRoute = state {
+            let logTime = -dataTimer.timeIntervalSinceNow
             pathData.append(logMatrix)
             pathDataTime.append(logTime)
+        } else {
+            // use this log timer since these logs are shared
+            let logTime = -stateTransitionLogTimer.timeIntervalSinceNow
+            alignmentData.append(logMatrix)
+            alignmentDataTime.append(logTime)
         }
     }
 
@@ -168,6 +177,7 @@ class PathLogger {
         // clear any old log variables
         navigationData = []
         navigationDataTime = []
+
         speechData = []
         speechDataTime = []
         dataTimer = Date()
@@ -178,6 +188,9 @@ class PathLogger {
         // reset log variables that aren't tied to path recording or navigation
         stateSequence = []
         stateSequenceTime = []
+        
+        alignmentData = []
+        alignmentDataTime = []
     }
     
     /// Compile log data and send it to the cloud
@@ -233,6 +246,8 @@ class PathLogger {
                                     "PathDate": pathDate,
                                     "PathType": pathType,
                                     "isVoiceOverOn": UIAccessibility.isVoiceOverRunning,
+                                    "isGrayscaleOn": UIAccessibility.isGrayscaleEnabled,
+                                    "isInvertColorsOn": UIAccessibility.isInvertColorsEnabled,
                                     "routeId": currentNavigationRoute != nil ? currentNavigationRoute!.id : "",
                                     "hasMap": currentNavigationMap != nil,
                                     "keypointData": Array(keypointData),
@@ -276,6 +291,8 @@ class PathLogger {
                                     "PathType": "0",
                                     "PathData": Array(pathData),
                                     "pathDataTime": Array(pathDataTime),
+                                    "AlignmentData": Array(alignmentData),
+                                    "AlignmentDataTime": Array(alignmentDataTime),
                                     "navigationData": Array(navigationData),
                                     "navigationDataTime": Array(navigationDataTime),
                                     "speechData": Array(speechData),
