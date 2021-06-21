@@ -25,6 +25,7 @@ import UIKit
 import ARKit
 import SceneKit
 import SceneKit.ModelIO
+import RealityKit   // <3
 import AVFoundation
 import AudioToolbox
 import MediaPlayer
@@ -454,8 +455,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         // TODO: we should not be able to create a route Anchor Point if we are in the relocalizing state... (might want to handle this when the user stops navigation on a route they loaded.... This would obviate the need to handle this in the recordPath code as well
         print("completing pause procedure")
         if creatingRouteAnchorPoint {
-            print("setting start point @ \(sceneView.session.currentFrame?.anchors.compactMap({$0 as? ARAppClipCodeAnchor}))")
-            print("type = \(sceneView.session.currentFrame?.anchors.compactMap({$0 as? ARAppClipCodeAnchor}))")
+            // print("setting start point @ \(sceneView.session.currentFrame?.anchors.compactMap({$0 as? ARAppClipCodeAnchor}))")
+            // print("type = \(sceneView.session.currentFrame?.anchors.compactMap({$0 as? ARAppClipCodeAnchor}))")
             guard let currentTransform = sceneView.session.currentFrame?.anchors.compactMap({$0 as? ARAppClipCodeAnchor}).filter({clipAnchor in clipAnchor.isTracked }).first?.transform else {
                 print("can't properly save Anchor Point: TODO communicate this to the user somehow")
                 return
@@ -485,6 +486,43 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             }
         }
     }
+    
+    var axisAnchorDictionary: [String: (AnchorEntity, AnchorEntity, AnchorEntity)] = [:]
+    let arView = ARView()
+    
+    func updateAxes(anchor: ARAnchor ) {
+        if let axisAnchors = axisAnchorDictionary[anchor.identifier.uuidString] {
+            axisAnchors.0.move(to: anchor.transform, relativeTo: nil)
+            axisAnchors.1.move(to: anchor.transform, relativeTo: nil)
+            axisAnchors.2.move(to: anchor.transform, relativeTo: nil)
+        } else {
+            let xAxis = MeshResource.generateBox(width: 0.25, height: 0.025, depth: 0.025) // size in metres
+            let xMaterial = SimpleMaterial(color: .red, isMetallic: true)
+            let yAxis = MeshResource.generateBox(width: 0.025, height: 0.25, depth: 0.025) // size in metres
+            let yMaterial = SimpleMaterial(color: .green, isMetallic: true)
+            let zAxis = MeshResource.generateBox(width: 0.025, height: 0.025, depth: 0.25) // size in metres
+            let zMaterial = SimpleMaterial(color: .blue, isMetallic: true)
+            
+            
+            let xEntity = ModelEntity(mesh: xAxis, materials: [xMaterial])
+            let yEntity = ModelEntity(mesh: yAxis, materials: [yMaterial])
+            let zEntity = ModelEntity(mesh: zAxis, materials: [zMaterial])
+            
+            
+            let xAxisAnchor = AnchorEntity(world: anchor.transform)
+            let yAxisAnchor = AnchorEntity(world: anchor.transform)
+            let zAxisAnchor = AnchorEntity(world: anchor.transform)
+            
+            xAxisAnchor.addChild(xEntity)
+            yAxisAnchor.addChild(yEntity)
+            zAxisAnchor.addChild(zEntity)
+            
+            arView.scene.addAnchor(xAxisAnchor)
+            arView.scene.addAnchor(yAxisAnchor)
+            arView.scene.addAnchor(zAxisAnchor)
+            axisAnchorDictionary[anchor.identifier.uuidString] = (xAxisAnchor, yAxisAnchor, zAxisAnchor)
+        }
+      }
     
     func completingPauseProcedureHelper(worldMap: Any?) {
         //check whether or not the path was called from the pause menu or not
@@ -1686,10 +1724,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             if case .readyForFinalResumeAlignment = self.state, let routeTransform = self.pausedTransform, let tagAnchor = self.sceneView.session.currentFrame?.anchors.compactMap({$0 as? ARAppClipCodeAnchor}).filter({$0.isTracked}).first {
                 // yaw can be determined by projecting the camera's z-axis into the ground plane and using arc tangent (note: the camera coordinate conventions of ARKit https://developer.apple.com/documentation/arkit/arsessionconfiguration/worldalignment/camera
                 let alignYaw = self.getYawHelper(routeTransform)
-                print("alignYaw = \(alignYaw*180/3.14)")
+                // print("alignYaw = \(alignYaw*180/3.14)")
                 let cameraYaw = self.getYawHelper(tagAnchor.transform)
-                print("cameraYaw = \(cameraYaw*180/3.14)")
-                print("isAutomaticAlignment = \(self.isAutomaticAlignment)")
+                // print("cameraYaw = \(cameraYaw*180/3.14)")
+                // print("isAutomaticAlignment = \(self.isAutomaticAlignment)")
 
                 var tagToWorld = simd_float4x4.makeRotate(radians: cameraYaw, 0, 1, 0)
                 tagToWorld.columns.3 = tagAnchor.transform.columns.3
