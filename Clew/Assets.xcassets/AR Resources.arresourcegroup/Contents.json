@@ -5,6 +5,12 @@
   },
   "resources" : [
     {
+      "filename" : "iMac 21.5-inch.arreferenceimage"
+    },
+    {
+      "filename" : "MacBook Pro 13-inch.arreferenceimage"
+    },
+    {
       "filename" : "tree.arreferenceimage"
     }
   ]

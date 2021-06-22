@@ -25,7 +25,7 @@ import UIKit
 import ARKit
 import SceneKit
 import SceneKit.ModelIO
-import RealityKit   // <3
+// import RealityKit   // <3
 import AVFoundation
 import AudioToolbox
 import MediaPlayer
@@ -490,7 +490,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
     }
     
-    var axisAnchorDictionary: [String: (AnchorEntity, AnchorEntity, AnchorEntity)] = [:]
+    /* var axisAnchorDictionary: [String: (AnchorEntity, AnchorEntity, AnchorEntity)] = [:]
     let arView = ARView()
     
     func updateAxes(anchor: ARAnchor ) {
@@ -525,7 +525,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             arView.scene.addAnchor(zAxisAnchor)
             axisAnchorDictionary[anchor.identifier.uuidString] = (xAxisAnchor, yAxisAnchor, zAxisAnchor)
         }
-      }
+      }*/
     
     func completingPauseProcedureHelper(worldMap: Any?) {
         //check whether or not the path was called from the pause menu or not
@@ -1144,7 +1144,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         updateDisplayFromDefaults()
     }
     
-    /// Create a new ARSession.
+    /// Create a new ARSession. <3
+    /// - Tag: ARReferenceImage-Loading
     func createARSessionConfiguration() {
         configuration = ARWorldTrackingConfiguration()
         configuration.planeDetection = [.horizontal, .vertical]
@@ -1157,7 +1158,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             fatalError("Missing expected asset catalog resources.")
         }
         
-        let configuration = ARWorldTrackingConfiguration()
         configuration.detectionImages = referenceImages
         print("consider your images,, detected")
     }
@@ -1165,7 +1165,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     func session(_ session: ARSession, didUpdate frame: ARFrame) {
         // print("frame.anchors = \(frame.anchors)")   // <3 type = int counting # of anchors ID'd
         // print("frame.anchors.compactMap = \(frame.anchors.compactMap(({$0 as? ARAppClipCodeAnchor})))") // <3 type = Array<ARAppClipCodeAnchor>, where each ARAppClipCodeAnchor is another one it identifies
-        print("frame.anchors.compactMap = \(frame.anchors.compactMap(({$0 as? ARImageAnchor})))")
+        //print("frame.anchors.compactMap = \(frame.anchors.compactMap(({$0 as? ARImageAnchor})))")
+        print(frame.anchors.compactMap(({$0 as? ARImageAnchor})))
         for (i, clipAnchor) in frame.anchors.compactMap(({$0 as? ARAppClipCodeAnchor})).enumerated() {
             //print("i=\(i) isTracked = \(clipAnchor.isTracked)")
             if clipAnchor.isTracked {
