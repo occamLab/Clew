@@ -359,9 +359,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         if navigateStartToEnd {
             crumbs = route.crumbs.reversed()
             pausedTransform = route.beginRouteAnchorPoint.transform
+            
         } else {
             crumbs = route.crumbs
             pausedTransform = route.endRouteAnchorPoint.transform
+            
         }
         intermediateAnchorPoints = route.intermediateAnchorPoints
         // don't reset tracking, but do clear anchors and switch to the new map
@@ -1150,13 +1152,75 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         configuration.appClipCodeTrackingEnabled = true
         sceneView.delegate = self
         sceneView.session.delegate = self
+        
+        guard let referenceImages = ARReferenceImage.referenceImages(inGroupNamed: "AR Resources", bundle: nil) else {
+            fatalError("Missing expected asset catalog resources.")
+        }
+        
+        let configuration = ARWorldTrackingConfiguration()
+        configuration.detectionImages = referenceImages
+        print("consider your images,, detected")
     }
+    
     func session(_ session: ARSession, didUpdate frame: ARFrame) {
         // print("frame.anchors = \(frame.anchors)")   // <3 type = int counting # of anchors ID'd
         // print("frame.anchors.compactMap = \(frame.anchors.compactMap(({$0 as? ARAppClipCodeAnchor})))") // <3 type = Array<ARAppClipCodeAnchor>, where each ARAppClipCodeAnchor is another one it identifies
+        print("frame.anchors.compactMap = \(frame.anchors.compactMap(({$0 as? ARImageAnchor})))")
         for (i, clipAnchor) in frame.anchors.compactMap(({$0 as? ARAppClipCodeAnchor})).enumerated() {
-            print("i=\(i) isTracked = \(clipAnchor.isTracked)")
+            //print("i=\(i) isTracked = \(clipAnchor.isTracked)")
+            if clipAnchor.isTracked {
+                let tagNode: SCNNode
+                if let existingTagNode = sceneView.scene.rootNode.childNode(withName: "Tag: \(clipAnchor.identifier)", recursively: false) {
+                    tagNode = existingTagNode
+                    tagNode.simdTransform = clipAnchor.transform
+                }
+                else {
+                    tagNode = SCNNode()
+                    tagNode.simdTransform = clipAnchor.transform
+                    tagNode.name = "Tag: \(clipAnchor.identifier)"
+                    sceneView.scene.rootNode.addChildNode(tagNode)
+                }
+                /// Adds axes to the tag to aid in the visualization
+                let sideLen: CGFloat = 0.01
+                let axisLen: CGFloat = 0.5
+                let xAxis = SCNNode(geometry: SCNBox(width: axisLen, height: sideLen, length: sideLen, chamferRadius: 0))
+                xAxis.geometry?.firstMaterial?.diffuse.contents = UIColor.red
+                let yAxis = SCNNode(geometry: SCNBox(width: sideLen, height: axisLen, length: sideLen, chamferRadius: 0))
+                yAxis.geometry?.firstMaterial?.diffuse.contents = UIColor.green
+                let zAxis = SCNNode(geometry: SCNBox(width: sideLen, height: sideLen, length: axisLen, chamferRadius: 0))
+                zAxis.geometry?.firstMaterial?.diffuse.contents = UIColor.blue
+                tagNode.addChildNode(xAxis)
+                tagNode.addChildNode(yAxis)
+                tagNode.addChildNode(zAxis)
+                
+            }
         }
+        for imageAnchor in frame.anchors.compactMap(({$0 as? ARImageAnchor})) {
+            let imageNode: SCNNode
+            if let existingTagNode = sceneView.scene.rootNode.childNode(withName: "Image Tag", recursively: false) {
+                imageNode = existingTagNode
+                imageNode.simdTransform = imageAnchor.transform
+            }
+            else {
+                imageNode = SCNNode()
+                imageNode.simdTransform = imageAnchor.transform
+                imageNode.name = "Image Tag"
+                sceneView.scene.rootNode.addChildNode(imageNode)
+            }
+            /// Adds axes to the tag to aid in the visualization
+            let sideLen: CGFloat = 0.01
+            let axisLen: CGFloat = 0.5
+            let xAxis = SCNNode(geometry: SCNBox(width: axisLen, height: sideLen, length: sideLen, chamferRadius: 0))
+            xAxis.geometry?.firstMaterial?.diffuse.contents = UIColor.red
+            let yAxis = SCNNode(geometry: SCNBox(width: sideLen, height: axisLen, length: sideLen, chamferRadius: 0))
+            yAxis.geometry?.firstMaterial?.diffuse.contents = UIColor.green
+            let zAxis = SCNNode(geometry: SCNBox(width: sideLen, height: sideLen, length: axisLen, chamferRadius: 0))
+            zAxis.geometry?.firstMaterial?.diffuse.contents = UIColor.blue
+            imageNode.addChildNode(xAxis)
+            imageNode.addChildNode(yAxis)
+            imageNode.addChildNode(zAxis)
+        }
+        
     }
     /// Handle the user clicking the confirm alignment to a saved Anchor Point.  Depending on the app state, the behavior of this function will differ (e.g., if the route is being resumed versus reloaded)
     @objc func confirmAlignment() {
@@ -2540,11 +2604,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                     }
                 }
             }
-<<<<<<< HEAD
             if case .readyForFinalResumeAlignment = state, attemptingRelocalization {   // <3
-=======
-            if case .readyForFinalResumeAlignment = state, attemptingRelocalization {
->>>>>>> d7c650d5f1ef79c211e5ad4503effbf5a61f47ed
+
                 // this will cancel any realignment if it hasn't happened yet and go straight to route navigation mode
                 rootContainerView.countdownTimer.isHidden = true
                 isResumedRoute = true
