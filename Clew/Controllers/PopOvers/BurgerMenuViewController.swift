@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 class BurgerMenuViewController: UITableViewController, UIPopoverPresentationControllerDelegate {
     
@@ -25,6 +26,9 @@ class BurgerMenuViewController: UITableViewController, UIPopoverPresentationCont
         }
         if indexPath == [0,2] {
             feedbackButtonPressed()
+        }
+        if indexPath == [0,3] {
+            tutorialButtonPressed()
         }
     }
     
@@ -63,6 +67,12 @@ class BurgerMenuViewController: UITableViewController, UIPopoverPresentationCont
         NotificationCenter.default.post(name: Notification.Name("ClewPopoverDisplayed"), object: nil)
 
         self.present(nav, animated: true, completion: nil)
+    }
+    
+    func tutorialButtonPressed() {
+        let tutorialView = TutorialTestView()
+        let hostingController = UIHostingController(rootView: tutorialView)
+        self.present(hostingController, animated: true, completion: nil)
     }
     
     /// Called when the help button is pressed.  This function will display the help view (managed by HelpViewController) as a popover.
