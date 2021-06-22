@@ -50,5 +50,7 @@ xcuserdata/
 !*.xcworkspace/contents.xcworkspacedata
 /*.gcno
 
+Package.resolved
+
 # End of https://www.gitignore.io/api/swift,xcode,cocoapods
 
