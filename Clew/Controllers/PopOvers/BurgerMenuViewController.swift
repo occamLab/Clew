@@ -10,6 +10,13 @@ import Foundation
 import SwiftUI
 
 class BurgerMenuViewController: UITableViewController, UIPopoverPresentationControllerDelegate {
+    var tutorialHostingController: UIHostingController<TutorialTestView>?
+    
+    override func viewDidLoad() {
+        NotificationCenter.default.addObserver(forName: Notification.Name("TutorialPopoverReadyToDismiss"), object: nil, queue: nil) { (notification) -> Void in
+            self.tutorialHostingController?.dismiss(animated: true)
+        }
+    }
     
     /// Called when the user selects an element from the routes table. Different indexPath/tableViewCell being tapped triggers different popup that is indicated by the content of the UILabel inside the tableViewCell (check corresponding storyboard).
     ///
@@ -71,8 +78,8 @@ class BurgerMenuViewController: UITableViewController, UIPopoverPresentationCont
     
     func tutorialButtonPressed() {
         let tutorialView = TutorialTestView()
-        let hostingController = UIHostingController(rootView: tutorialView)
-        self.present(hostingController, animated: true, completion: nil)
+        tutorialHostingController = UIHostingController(rootView: tutorialView)
+        self.present(tutorialHostingController!, animated: true, completion: nil)
     }
     
     /// Called when the help button is pressed.  This function will display the help view (managed by HelpViewController) as a popover.

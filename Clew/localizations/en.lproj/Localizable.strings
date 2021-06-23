@@ -276,6 +276,19 @@
 
 "multipleUseRoutePlayPauseViewText" = "In order to immediately navigate back along the path you recorded, press the play button and follow the instructions provided. If you'd like to navigate the route later, you can return to the home screen and load the route you've just saved when you're ready to navigate along it.";
 
+//Tutorial
+"buttonTexttoExitTutorial" = "Exit";
+"buttonTexttoNextScr"
+"tutorialTitleText" = "CLEW Tutorial";
+"orientPhoneTutorialButtonText" = "Holding your Phone";
+"findPathTutorialButtonText" = "Finding and Following a Path";
+"singleUseRouteTutorialButtonText" = "Using Single Use Routes";
+"savedRoutesTutorialButtonText" = "Using Saved Routes";
+"findingSavedRoutesTutorialButtonText" = "Finding Saved Routes";
+"settingOptionsTutorialButtonText" = "Setting Options";
+
+
+
 //Sharing routes
 "automaticEmailTextWhenSharingRoutes" = "Check out this route!";
 
