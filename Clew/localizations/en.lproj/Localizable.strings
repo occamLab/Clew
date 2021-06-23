@@ -280,12 +280,31 @@
 "buttonTexttoExitTutorial" = "Exit";
 "buttonTexttoNextScreenTutorial" = "Next";
 "tutorialTitleText" = "CLEW Tutorial";
+
 "orientPhoneTutorialButtonText" = "Holding your Phone";
+"orientPhoneTutorialInstructionText" = "For best expereince using CLEW you will have to hold your phone virtically, dirrectly infront of your chest with the rear camera facing forward. This is because CLEW uses your phones camera to track where you move so that it can take you back along the same route";
+
 "findPathTutorialButtonText" = "Finding and Following a Path";
+"findPathTutorialInstructionText" = "When you are on the path, Clew will give sound and haptic feedback. The app makes a different sound when you need to turn, followed by specific instructins on which way to turn. If the app is not making sound, it is most likley because your phone is not facing the path. Should Clew go quite you should stop and turn until you find the path again.";
+
 "singleUseRouteTutorialButtonText" = "Using Single Use Routes";
+"singleUseRouteTutorialInstructionText" = " ";
+
 "savedRoutesTutorialButtonText" = "Using Saved Routes";
+"savedRouteTutorialInstructionText" = "To allow your route to be navigated at a later pointyou need to record an anchor point for the start of your route...";
+
+"anchorPointTutorialButtonText" = "Making Anchor Points";
+"anchorPointTutorialInstructionText" = " ";
+
+"voiceNotesTutorialButtonText" = "Recording Voice Notes";
+"voiceNotesTutorialInstructionText" = "When recording a saved route, there is a button on the right that allows you to record a voice note. A voice note is a note you can leave yourself, that will play when you go to use the save route that you are recording. It can be any information that is helpful to you, such as noting where a landmark like a doorway or front desk is as you pass, or instructions for your future self. Later when you go to use a save route the voice notes will appear as speaker icons on your path at the point they were recorded. As you pass the note will play.";
+
 "findingSavedRoutesTutorialButtonText" = "Finding Saved Routes";
+"findingSavedRoutesTutorialInstructionText" = "Once you save a route, it can be found in your Saved Routes List. You can enter the list from the third button on the home screen. From the list click the route that you want to follow, line your phone up with your anchor point and follow the route.";
+
 "settingOptionsTutorialButtonText" = "Setting Options";
+"settingOptionsTutorialInstructionText" = " ";
+
 
 
 

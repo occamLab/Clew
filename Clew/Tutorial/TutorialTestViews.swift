@@ -21,23 +21,6 @@ struct TutorialScreen<Content: View>: View {
                 Button(NSLocalizedString("buttonTexttoExitTutorial", comment: "text of the button that dismisses the tutorial screens")) {
                     NotificationCenter.default.post(name: Notification.Name("TutorialPopoverReadyToDismiss"), object: nil)
                         })
-       /* if #available(iOS 14.0, *) {
-            Text(" ")
-                .navigationTitle("CLEW Tutorial")
-                .navigationBarItems(
-                    leading:
-                        Button("Exit") {
-                        
-                                },
-                    trailing:
-                        Button("Next") {})
-        } else {
-            // Fallback on earlier versions
-        }*/
-        
-    /*.navigationBarTitle(Text(NSLocalizedString("surveyPopoverTitle", comment: "This is the title of the survey popover that is displayed to get feedback")), displayMode: .inline).navigationBarItems(trailing: Button(action: {
-
-    }) { Text(NSLocalizedString("dismissSurvey", comment: "this is the button text that dismisses the survey"))}) */
   }
 }
 
@@ -71,11 +54,11 @@ struct OrientPhone: View {
     var body: some View {
             TutorialScreen {
                 VStack{
-                    Text("Holding Your Phone")
+                    Text(NSLocalizedString("orientPhoneTutorialButtonText", comment: "Title for the setting options part of the tutorial"))
                 
-                    Text("For best expereince using CLEW you will have to hold your phone virtically, dirrectly infront of your chest with the rear camera facing forward. This is because CLEW uses your phones camera to track where you move so that it can take you back along the same route")
+                    Text(NSLocalizedString("orientPhoneTutorialInstructionText", comment: "Text that explains how to orient the phone for the best experience using Clew"))
                     
-                    NavigationLink(destination: FindPath()) {Text("Next")}
+                    NavigationLink(destination: FindPath()) {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
                 
             }
         }
@@ -86,11 +69,11 @@ struct FindPath: View {
     var body: some View {
         TutorialScreen{
             VStack{
-                Text("Finding and Following the Path")
+                Text(NSLocalizedString( "findPathTutorialButtonText", comment: "Title for the finding and following path part of the tutorial"))
             
-                Text("To allow your route to be navigated at a later pointyou need to record an anchor point for the start of your route...")
+                Text(NSLocalizedString("findPathTutorialInstructionText", comment: "Text that explains what it sounds and feels like to be on the path and following the path"))
             
-                NavigationLink(destination: SignleUse())  {Text("Next")}
+                NavigationLink(destination: SignleUse())  {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
             }
         }
     }
@@ -102,9 +85,11 @@ struct SignleUse: View {
     var body: some View {
         TutorialScreen{
             VStack{
-                Text("Using a Signle Use Route")
+                Text(NSLocalizedString( "singleUseRouteTutorialButtonText", comment: "Title for the single use route part of the tutorial"))
                 
-                NavigationLink(destination: SavedRoutes()) {Text("Next")}
+                Text(NSLocalizedString( "singleUseRouteTutorialInstructionText", comment: "Instructions for using the single use route"))
+                
+                NavigationLink(destination: SavedRoutes()) {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
             }
         }
     }
@@ -115,15 +100,15 @@ struct SavedRoutes: View {
     var body: some View {
         TutorialScreen{
             VStack{
-                Text("Saved Routes")
+                Text(NSLocalizedString( "savedRoutesTutorialButtonText", comment: "Title for the saved route part of the tutorial"))
             
-                Text("To allow your route to be navigated at a later pointyou need to record an anchor point for the start of your route...")
+                Text(NSLocalizedString("savedRouteTutorialInstructionText", comment: "Instructions for using saved routes"))
                 
-                NavigationLink(destination: AnchorPoints()) {Text("Making Anchor Points")}
+                NavigationLink(destination: AnchorPoints()) {Text(NSLocalizedString( "anchorPointTutorialButtonText", comment: "Title for the anchor point part of the tutorial"))}
                 
-                NavigationLink(destination: VoiceNotes()) {Text("Recording Voice Notes")}
+                NavigationLink(destination: VoiceNotes()) {Text(NSLocalizedString( "voiceNotesTutorialButtonText", comment: "Title for the voice notes part of the tutorial"))}
                 
-                NavigationLink(destination: FindingSavedRoutes())  {Text("Next")}
+                NavigationLink(destination: FindingSavedRoutes())  {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
             }
         }
     }
@@ -133,9 +118,9 @@ struct AnchorPoints: View {
     var body: some View {
         TutorialScreen  {
             VStack{
-                Text("Making an Anchor Point")
+                Text(NSLocalizedString( "anchorPointTutorialButtonText", comment: "Title for the anchor point part of the tutorial"))
                 
-                Text("")
+                Text(NSLocalizedString("anchorPointTutorialInstructionText", comment: "Instructions for setting anchor points"))
                 
             }
         }
@@ -146,10 +131,9 @@ struct VoiceNotes: View {
     var body: some View {
         TutorialScreen  {
             VStack{
-                Text("Recording Voice Notes")
+                Text(NSLocalizedString( "voiceNotesTutorialButtonText", comment: "Title for the voice notes part of the tutorial"))
                 
-                Text("When recording a saved route, there is a button on the right that allows you to record a voice note. A voice note is a note you can leave yourself, that will play when you go to use the save route that you are recording. It can be any information that is helpful to you, such as noting where a landmark like a doorway or front desk is as you pass, or instructions for your future self. Later when you go to use a save route the voice notes will appear as speaker icons on your path at the point thye were recorded. As you pass the note will play.")
-                
+                Text(NSLocalizedString("voiceNotesTutorialInstructionText", comment: "Instructions for leaving voice notes along a path"))
             }
         }
     }
@@ -160,11 +144,11 @@ struct FindingSavedRoutes: View {
     var body: some View {
         TutorialScreen  {
             VStack{
-                Text("Finding Saved Routes")
+                Text(NSLocalizedString( "findingSavedRoutesTutorialButtonText", comment: "Title for the finding saved route part of the tutorial"))
                 
-                Text("Once you save a route, it can be found in your Saved Routes List. You can enter the list from the third button on the home screen. From the list click the route that you want to follow, line your phone up with your anchor point and follow the route.")
+                Text(NSLocalizedString("findingSavedRoutesTutorialInstructionText", comment: "Instructions for finding saved routes"))
                 
-                NavigationLink(destination: SettingOptions()) {Text("Next")}
+                NavigationLink(destination: SettingOptions()) {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
             }
         }
     }
@@ -175,9 +159,9 @@ struct SettingOptions: View {
     var body: some View {
         TutorialScreen{
             VStack{
-                Text("Settings Options")
+                Text(NSLocalizedString( "settingOptionsTutorialButtonText", comment: "Title for the setting options part of the tutorial"))
                 
-                Text("")
+                Text(NSLocalizedString( "settingOptionsTutorialInstructionText", comment: "Information about what the setting options are"))
             }
         }
     }
