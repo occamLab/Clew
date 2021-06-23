@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit // EEA
 
 class FeedbackViewController : UIViewController, UITextViewDelegate, UIPopoverPresentationControllerDelegate, RecorderViewControllerDelegate {
 

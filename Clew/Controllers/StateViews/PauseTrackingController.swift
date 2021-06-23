@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SceneKit // EEA
 
 /// A View Controller for handling the pause route state
 /// also handles associated buttons
