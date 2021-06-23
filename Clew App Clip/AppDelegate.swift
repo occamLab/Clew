@@ -1,8 +1,8 @@
 //
 //  AppDelegate.swift
-//  UIKitClip
+//  Clew App Clip
 //
-//  Created by occamlab on 6/16/21.
+//  Created by occamlab on 6/23/21.
 //  Copyright © 2021 OccamLab. All rights reserved.
 //
 

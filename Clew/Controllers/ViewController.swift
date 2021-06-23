@@ -490,43 +490,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
     }
     
-    /* var axisAnchorDictionary: [String: (AnchorEntity, AnchorEntity, AnchorEntity)] = [:]
-    let arView = ARView()
-    
-    func updateAxes(anchor: ARAnchor ) {
-        if let axisAnchors = axisAnchorDictionary[anchor.identifier.uuidString] {
-            axisAnchors.0.move(to: anchor.transform, relativeTo: nil)
-            axisAnchors.1.move(to: anchor.transform, relativeTo: nil)
-            axisAnchors.2.move(to: anchor.transform, relativeTo: nil)
-        } else {
-            let xAxis = MeshResource.generateBox(width: 0.25, height: 0.025, depth: 0.025) // size in metres
-            let xMaterial = SimpleMaterial(color: .red, isMetallic: true)
-            let yAxis = MeshResource.generateBox(width: 0.025, height: 0.25, depth: 0.025) // size in metres
-            let yMaterial = SimpleMaterial(color: .green, isMetallic: true)
-            let zAxis = MeshResource.generateBox(width: 0.025, height: 0.025, depth: 0.25) // size in metres
-            let zMaterial = SimpleMaterial(color: .blue, isMetallic: true)
-            
-            
-            let xEntity = ModelEntity(mesh: xAxis, materials: [xMaterial])
-            let yEntity = ModelEntity(mesh: yAxis, materials: [yMaterial])
-            let zEntity = ModelEntity(mesh: zAxis, materials: [zMaterial])
-            
-            
-            let xAxisAnchor = AnchorEntity(world: anchor.transform)
-            let yAxisAnchor = AnchorEntity(world: anchor.transform)
-            let zAxisAnchor = AnchorEntity(world: anchor.transform)
-            
-            xAxisAnchor.addChild(xEntity)
-            yAxisAnchor.addChild(yEntity)
-            zAxisAnchor.addChild(zEntity)
-            
-            arView.scene.addAnchor(xAxisAnchor)
-            arView.scene.addAnchor(yAxisAnchor)
-            arView.scene.addAnchor(zAxisAnchor)
-            axisAnchorDictionary[anchor.identifier.uuidString] = (xAxisAnchor, yAxisAnchor, zAxisAnchor)
-        }
-      }*/
-    
     func completingPauseProcedureHelper(worldMap: Any?) {
         //check whether or not the path was called from the pause menu or not
         if paused {

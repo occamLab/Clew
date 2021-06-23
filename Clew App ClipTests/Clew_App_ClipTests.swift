@@ -1,15 +1,15 @@
 //
-//  TestAppClipTests.swift
-//  TestAppClipTests
+//  Clew_App_ClipTests.swift
+//  Clew App ClipTests
 //
-//  Created by occamlab on 6/16/21.
+//  Created by occamlab on 6/23/21.
 //  Copyright © 2021 OccamLab. All rights reserved.
 //
 
 import XCTest
-@testable import TestAppClip
+@testable import Clew_App_Clip
 
-class TestAppClipTests: XCTestCase {
+class Clew_App_ClipTests: XCTestCase {
 
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
