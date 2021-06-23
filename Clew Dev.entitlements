@@ -4,7 +4,7 @@
 <dict>
 	<key>com.apple.developer.associated-domains</key>
 	<array>
-		<string>applinks:clewapp.org</string>
+		<string>appclips:clewapp.org</string>
 	</array>
 </dict>
 </plist>
