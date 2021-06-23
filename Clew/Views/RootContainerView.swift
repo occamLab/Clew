@@ -84,6 +84,19 @@ class RootContainerView: UIView {
         homeButton.titleLabel?.font = UIFont.systemFont(ofSize: 24.0)
         homeButton.accessibilityLabel = NSLocalizedString("homeButtonAccessibilityLabel", comment: "This is the accessibility label for the home button")
         homeButton.setImage(UIImage(named: "homeButton"), for: .normal)
+        
+        
+        
+        // MARK: Home Button
+        helpButton = UIButton(frame: CGRect(x: UIConstants.buttonFrameWidth/(10/8),
+                                            y: 10 + UIConstants.buttonFrameWidth/7,
+                                            width: UIConstants.buttonFrameWidth/7,
+                                            height: UIConstants.buttonFrameWidth/7))
+        helpButton.isAccessibilityElement = true
+        helpButton.setTitle("Help Button", for: .normal)
+        helpButton.titleLabel?.font = UIFont.systemFont(ofSize: 24.0)
+        helpButton.accessibilityLabel = NSLocalizedString("helpButtonAccessibilityLabel", comment: "This is the accessibility label for the help button")
+        helpButton.setImage(UIImage(named: "HelpButton"), for: .normal)
 
         // MARK: Get Directions Button
         getDirectionButton = UIButton(frame: CGRect(x: UIConstants.buttonFrameWidth/(7/5),
@@ -131,6 +144,7 @@ class RootContainerView: UIView {
         addSubview(getDirectionButton)
         addSubview(countdownTimer)
         addSubview(homeButton)
+        addSubview(helpButton)
         addSubview(burgerMenuButton)
     }
 }

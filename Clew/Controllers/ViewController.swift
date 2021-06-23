@@ -166,6 +166,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// A boolean that tracks whether or not to suppress tracking warnings.  By default we don't suppress, but when the help popover is presented we do.
     var suppressTrackingWarnings = false
     
+    var tutorialHostingController: UIViewController?
+    
+    
     // TODO: the number of Booleans is a bit out of control.  We need a better way to manage them.  Some of them may be redundant with each other at this point.
     
     /// This Boolean marks whether or not the pause procedure is being used to create a Anchor Point at the start of a route (true) or if it is being used to pause an already recorded route
@@ -720,6 +723,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         rootContainerView.burgerMenuButton.addTarget(self, action: #selector(burgerMenuButtonPressed), for: .touchUpInside)
         
         rootContainerView.homeButton.addTarget(self, action: #selector(homeButtonPressed), for: .touchUpInside)
+        
+        rootContainerView.helpButton.addTarget(self, action: #selector(helpButtonPressed), for: .touchUpInside)
 
         rootContainerView.getDirectionButton.addTarget(self, action: #selector(announceDirectionHelpPressed), for: .touchUpInside)
 
@@ -749,6 +754,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             }
         }
 
+        NotificationCenter.default.addObserver(forName: Notification.Name("TutorialPopoverReadyToDismiss"), object: nil, queue: nil) { (notification) -> Void in
+            self.tutorialHostingController?.dismiss(animated: true)
+        }
+        
         // we use a custom notification to communicate from the help controller to the main view controller that a popover that should suppress tracking warnings was displayed
         NotificationCenter.default.addObserver(forName: Notification.Name("ClewPopoverDisplayed"), object: nil, queue: nil) { (notification) -> Void in
             self.suppressTrackingWarnings = true
@@ -2063,6 +2072,72 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// Called when the "get directions" button is pressed.  The announcement is made with a 0.5 second delay to allow the button name to be announced.
     @objc func announceDirectionHelpPressed() {
         Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: (#selector(announceDirectionHelp)), userInfo: nil, repeats: false)
+    }
+    
+    // Called when help button is pressed
+    @objc func helpButtonPressed() {
+        switch state {
+        case .recordingRoute:
+            let tutorialView = NavigationView {
+                FindPath()}
+            tutorialHostingController = UIHostingController(rootView: tutorialView)
+            
+        case .mainScreen(_):
+            let tutorialView = TutorialTestView()
+            tutorialHostingController = UIHostingController(rootView: tutorialView)
+            
+        case .readyToNavigateOrPause(allowPause: let allowPause):
+            let tutorialView = NavigationView {
+                FindPath()}
+            tutorialHostingController = UIHostingController(rootView: tutorialView)
+            
+        case .navigatingRoute:
+            let tutorialView = NavigationView {
+                FindPath()}
+            tutorialHostingController = UIHostingController(rootView: tutorialView)
+            
+        case .initializing:
+            let tutorialView = NavigationView {
+                FindPath()}
+            tutorialHostingController = UIHostingController(rootView: tutorialView)
+            
+        case .startingPauseProcedure:
+            let tutorialView = NavigationView {
+                SavedRoutes()}
+            tutorialHostingController = UIHostingController(rootView: tutorialView)
+            
+        case .pauseWaitingPeriod:
+            let tutorialView = NavigationView {
+                AnchorPoints()}
+            tutorialHostingController = UIHostingController(rootView: tutorialView)
+            
+        case .completingPauseProcedure:
+            let tutorialView = NavigationView {
+                AnchorPoints()}
+            tutorialHostingController = UIHostingController(rootView: tutorialView)
+            
+        case .pauseProcedureCompleted:
+            let tutorialView = NavigationView {
+                AnchorPoints()}
+            tutorialHostingController = UIHostingController(rootView: tutorialView)
+            
+        case .startingResumeProcedure(route: let route, worldMap: let worldMap, navigateStartToEnd: let navigateStartToEnd):
+            let tutorialView = NavigationView {
+                FindPath()}
+            tutorialHostingController = UIHostingController(rootView: tutorialView)
+            
+        case .readyForFinalResumeAlignment:
+            let tutorialView = NavigationView {
+                FindPath()}
+            tutorialHostingController = UIHostingController(rootView: tutorialView)
+            
+        case .startingNameSavedRouteProcedure(worldMap: let worldMap):
+            let tutorialView = NavigationView {
+                FindingSavedRoutes()}
+            tutorialHostingController = UIHostingController(rootView: tutorialView)
+        }
+        self.present(tutorialHostingController!, animated: true, completion: nil)
+
     }
     
     // Called when home button is pressed

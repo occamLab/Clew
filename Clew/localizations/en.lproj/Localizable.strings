@@ -278,7 +278,7 @@
 
 //Tutorial
 "buttonTexttoExitTutorial" = "Exit";
-"buttonTexttoNextScr"
+//"buttonTexttoNextScr"
 "tutorialTitleText" = "CLEW Tutorial";
 "orientPhoneTutorialButtonText" = "Holding your Phone";
 "findPathTutorialButtonText" = "Finding and Following a Path";

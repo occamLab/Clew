@@ -42,7 +42,7 @@ struct TutorialScreen<Content: View>: View {
 }
 
 
-struct TutorialTestView: View {
+struct TutorialTestView: View {    
     var body: some View {
         NavigationView{
 
