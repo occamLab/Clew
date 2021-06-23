@@ -15,7 +15,7 @@ struct TutorialScreen<Content: View>: View {
   }
   var body: some View {
     content
-        //.navigationTitle("CLEW Tutorial", displayMode: .inline)
+        //.navigationTitle("CLEW Tutorial")
         .navigationBarItems(
             trailing:
                 Button(NSLocalizedString("buttonTexttoExitTutorial", comment: "text of the button that dismisses the tutorial screens")) {
@@ -176,4 +176,7 @@ struct TutorialTestViews_Previews: PreviewProvider {
         TutorialTestView()
     }
 }
+
+
+//Set Up CLEW
 
