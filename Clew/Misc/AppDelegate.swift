@@ -87,6 +87,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         return true
     }
+    
+    /// entry point for when the app is opened using a universal link <3
+    func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
+        return true
+    }
 
     /// Sent when the application is about to move from active to inactive state.  In Clew's current implementation, this method doesn't do anything.
     ///
