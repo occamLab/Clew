@@ -791,6 +791,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         let url = NSURL(fileURLWithPath: Bundle.main.path(forResource: "Crumb", ofType: "obj")!)
         let asset = MDLAsset(url: url as URL)
         keypointObject = asset.object(at: 0)
+        // let speakerUrl = NSURL(fileURLWithPath: Bundle.main.path(forResource: "speaker", ofType: "obj")!)
         let speakerUrl = NSURL(fileURLWithPath: Bundle.main.path(forResource: "speaker", ofType: "obj")!)
         let speakerAsset = MDLAsset(url: speakerUrl as URL)
         speakerObject = speakerAsset.object(at: 0)

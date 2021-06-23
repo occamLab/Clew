@@ -40,6 +40,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         logUserProperties()
         // use for testing sign-in flow try? Auth.auth().signOut()
         if #available(iOS 13.0, *) {
+            self.vc = ViewController()
+            self.window = UIWindow(frame:UIScreen.main.bounds)
+            self.window?.rootViewController = self.vc
+            self.window?.makeKeyAndVisible()
+            
+            /*
             if (Auth.auth().currentUser == nil) {
                 #if IS_DEV_TARGET
                     Auth.auth().signInAnonymously() { (authResult, error) in
@@ -62,7 +68,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     UIApplication.shared.isIdleTimerDisabled = true
                     return true
                 #endif
-            }
+            }*/
+            return true
         }
         
         // Override point for customization after application launch.

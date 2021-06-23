@@ -21,7 +21,7 @@ class BurgerMenuViewController: UITableViewController, UIPopoverPresentationCont
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print("selected", indexPath)
         if indexPath == [0,0] {
-            // settingsButtonPressed() // EEA
+            settingsButtonPressed() // EEA
         }
         if indexPath == [0,1] {
             helpButtonPressed()
@@ -33,7 +33,7 @@ class BurgerMenuViewController: UITableViewController, UIPopoverPresentationCont
     
     // EEA UNCOMMENT THIS PROBABLY
     /// Called when the settings button is pressed.  This function will display the settings view (managed by SettingsViewController) as a popover.
-    /* func settingsButtonPressed() {
+    func settingsButtonPressed() {
         let storyBoard: UIStoryboard = UIStoryboard(name: "SettingsAndHelp", bundle: nil)
         let popoverContent = storyBoard.instantiateViewController(withIdentifier: "Settings") as! SettingsViewController // EEA
         popoverContent.preferredContentSize = CGSize(width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height)
@@ -47,7 +47,7 @@ class BurgerMenuViewController: UITableViewController, UIPopoverPresentationCont
         popoverContent.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: popoverContent, action: #selector(popoverContent.doneWithSettings))
         
         self.present(nav, animated: true, completion: nil)
-    } */
+    }
 
     /// Called when the Feedback button is pressed.  This function will display the Feedback view (managed by FeedbackViewController) as a popover.
     func feedbackButtonPressed() {
