@@ -92,6 +92,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     ///
     /// Returns: true to indicate that the app handled the activity or false to let iOS know that your app didn't handle the activity
     func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
+        print("consider your restoration... handled")
         return true
     }
 
