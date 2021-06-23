@@ -14,7 +14,7 @@ def all_pods
   pod 'PRTween', '~> 0.1'
   pod 'Firebase/Analytics'
   pod 'OpenCV'
-  pod 'eigen'
+#  pod 'eigen'
   pod 'LASwift'
 end
 

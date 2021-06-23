@@ -245,6 +245,7 @@
 		E5E9016A22FB4D4A00AD0E95 /* PreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewViewController.swift; sourceTree = "<group>"; };
 		E5E9016D22FB4D4A00AD0E95 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
 		E5E9016F22FB4D4A00AD0E95 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E81B8981267C26EA00AB88A5 /* Clew Dev.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Clew Dev.entitlements"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -283,6 +284,7 @@
 		4D6B00B71F33C1C400952242 = {
 			isa = PBXGroup;
 			children = (
+				E81B8981267C26EA00AB88A5 /* Clew Dev.entitlements */,
 				E5470EA922C119F4001092A4 /* Clew */,
 				77467DAE22BBC1D300FA7DEE /* Default-568h@2x.png */,
 				82569F4D22187E6500448B45 /* help */,
@@ -1086,17 +1088,46 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = "Clew Dev.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 34;
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/Clew/PrefixHeader.pch";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseCore/FirebaseCore.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseCoreDiagnostics/FirebaseCoreDiagnostics.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseDatabase/FirebaseDatabase.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseInstanceID/FirebaseInstanceID.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseStorage/FirebaseStorage.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/GoogleDataTransport/GoogleDataTransport.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/GoogleDataTransportCCTSupport/GoogleDataTransportCCTSupport.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/GoogleUtilities/GoogleUtilities.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/InAppSettingsKit/InAppSettingsKit.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/LASwift/LASwift.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/PRTween/PRTween.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/SRCountdownTimer/SRCountdownTimer.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/VectorMath/VectorMath.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/leveldb-library/leveldb.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/nanopb/nanopb.framework/Headers\"",
+					"\"${PODS_ROOT}/Headers/Public\"",
+					"\"${PODS_ROOT}/Headers/Public/Firebase\"",
+					"\"${PODS_ROOT}/Headers/Public/FirebaseAuthInterop\"",
+					"\"${PODS_ROOT}/Headers/Public/FirebaseCoreDiagnosticsInterop\"",
+					"$(inherited)",
+					"${PODS_ROOT}/Firebase/CoreOnly/Sources",
+					/usr/local/include/eigen3,
+					/usr/local/include/eigen3/,
+					/usr/local/include/eigen3/eigen,
+				);
 				INFOPLIST_FILE = "Clew Dev-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 2.1.1;
 				OTHER_SWIFT_FLAGS = "$(inherited) \"-DDEVELOPER\" \"-DIS_DEV_TARGET\"";
-				PRODUCT_BUNDLE_IDENTIFIER = "edu.occam.Clew-Dev";
+				PRODUCT_BUNDLE_IDENTIFIER = "edu.occamlab.Clew-Dev";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_COMPILATION_MODE = singlefile;
@@ -1113,17 +1144,46 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = "Clew Dev.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 34;
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/Clew/PrefixHeader.pch";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseCore/FirebaseCore.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseCoreDiagnostics/FirebaseCoreDiagnostics.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseDatabase/FirebaseDatabase.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseInstanceID/FirebaseInstanceID.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseStorage/FirebaseStorage.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/GoogleDataTransport/GoogleDataTransport.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/GoogleDataTransportCCTSupport/GoogleDataTransportCCTSupport.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/GoogleUtilities/GoogleUtilities.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/InAppSettingsKit/InAppSettingsKit.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/LASwift/LASwift.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/PRTween/PRTween.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/SRCountdownTimer/SRCountdownTimer.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/VectorMath/VectorMath.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/leveldb-library/leveldb.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/nanopb/nanopb.framework/Headers\"",
+					"\"${PODS_ROOT}/Headers/Public\"",
+					"\"${PODS_ROOT}/Headers/Public/Firebase\"",
+					"\"${PODS_ROOT}/Headers/Public/FirebaseAuthInterop\"",
+					"\"${PODS_ROOT}/Headers/Public/FirebaseCoreDiagnosticsInterop\"",
+					"$(inherited)",
+					"${PODS_ROOT}/Firebase/CoreOnly/Sources",
+					/usr/local/include/eigen3,
+					/usr/local/include/eigen3/,
+					/usr/local/include/eigen3/eigen,
+				);
 				INFOPLIST_FILE = "Clew Dev-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 2.1.1;
 				OTHER_SWIFT_FLAGS = "$(inherited) \"-DDEVELOPER\" \"-DIS_DEV_TARGET\"";
-				PRODUCT_BUNDLE_IDENTIFIER = "edu.occam.Clew-Dev";
+				PRODUCT_BUNDLE_IDENTIFIER = "edu.occamlab.Clew-Dev";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_COMPILATION_MODE = singlefile;

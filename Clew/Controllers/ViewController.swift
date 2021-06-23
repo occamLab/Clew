@@ -36,6 +36,14 @@ import Firebase
 import FirebaseDatabase
 import SRCountdownTimer
 import VideoToolbox
+import Speech
+import Intents
+import CoreSpotlight
+import MobileCoreServices
+
+
+public let kNewSingleUseRouteType = "com.occamlab.NewSingleUseRoute"
+
 
 /// A custom enumeration type that describes the exact state of the app.  The state is not exhaustive (e.g., there are Boolean flags that also track app state).
 enum AppState {
@@ -68,8 +76,9 @@ enum AppState {
     
     /// user has initiated landmark realignment countdown
     case resumeWaitingPeriod
-    
+  
     /// The timer has expired and visual alignment is computing
+ 
     case visualAlignmentWaitingPeriod
     
     /// rawValue is useful for serializing state values, which we are currently using for our logging feature
@@ -130,6 +139,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     var loadedRouteStartToEnd : Bool?
     
     var phoneVertical : Bool? = false
+    // var for hands Free
+    
+    var audioEngine = AVAudioEngine()
+    var speechRecognizer = SFSpeechRecognizer()
+    var request = SFSpeechAudioBufferRecognitionRequest()
+    var recognitionTask: SFSpeechRecognitionTask?
+    var mostRecentlyProcessedSegmentDuration: TimeInterval = 0
+
     
     /// The state of the app.  This should be constantly referenced and updated as the app transitions
     var state = AppState.initializing {
@@ -219,6 +236,26 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
         phoneVertical = phoneCurrentlyVertical
     }
+    //Siri ShortCuts
+    public static func newSingleUseRouteShortcut() -> NSUserActivity {
+      let activity = NSUserActivity(activityType: kNewSingleUseRouteType)
+      activity.persistentIdentifier =
+        NSUserActivityPersistentIdentifier(kNewSingleUseRouteType)
+        activity.isEligibleForSearch = true
+        activity.isEligibleForPrediction = true
+        let attributes = CSSearchableItemAttributeSet(itemContentType: kUTTypeItem as String)
+        
+        activity.title = "Start Single Use Route"
+        attributes.contentDescription = "Let Clew help you navagate a single route !"
+     
+       
+        activity.suggestedInvocationPhrase = "Time to navagate with Clew!"
+
+        activity.contentAttributeSet = attributes
+
+      return activity
+    }
+    
     
     func session(_ session: ARSession, didUpdate: ARFrame) {
         switch state {
@@ -312,9 +349,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
     }
     
+    
+    
     /// Handler for the mainScreen app state
     ///
     /// - Parameter announceArrival: a Boolean that indicates whether the user's arrival should be announced (true means the user has arrived)
+    
+  
+    
     func handleStateTransitionToMainScreen(announceArrival: Bool) {
         // cancel the timer that announces tracking errors
         trackingErrorsAnnouncementTimer?.invalidate()
@@ -323,6 +365,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         // set this to nil to prevent the app from erroneously detecting that we can auto-align to the route
         configuration.initialWorldMap = nil
         showRecordPathButton(announceArrival: announceArrival)
+        announce(announcement: NSLocalizedString("HFHomeMenu", comment: "Let user know what options are availabe in the main menu when using HandsFree mode "))
+    // authHF()
     }
     
     /// Handler for the recordingRoute app state
@@ -652,6 +696,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     }
     
     @objc func saveRouteButtonPressed() {
+        print("siricheck: insideButtion pressed")
         let id = String(Int64(NSDate().timeIntervalSince1970 * 1000)) as NSString
         // Get the input values from user, if it's nil then use timestamp
         self.routeName = nameSavedRouteController.textField.text as NSString? ?? id
@@ -799,7 +844,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// stop route navigation VC
     var stopNavigationController: StopNavigationController!
-
+    /// Hands Free Voice Recognition Variables
+    // var handsFreeViewContoller: HandsFreeViewController!
+   // var liveTranscribeViewController: LiveTranscribeViewController!
     /// called when the view has loaded.  We setup various app elements in here.
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -820,6 +867,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         startNavigationController = StartNavigationController()
         stopNavigationController = StopNavigationController()
         nameSavedRouteController = NameSavedRouteController()
+       
+    
+
+       
+        
+        
         
         // Add the scene to the view, which is a RootContainerView
         sceneView.frame = view.frame
@@ -867,7 +920,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         NotificationCenter.default.addObserver(forName: Notification.Name("ClewPopoverDisplayed"), object: nil, queue: nil) { (notification) -> Void in
             self.suppressTrackingWarnings = true
         }
+        
+        //hands Free auth
+       
+      
     }
+    
+    
+    
     
     /// Create the audio player objects for the various app sounds.  Creating them ahead of time helps reduce latency when playing them later.
     func setupAudioPlayers() {
@@ -882,6 +942,31 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             }
         } catch let error {
             print("count not setup audio players", error)
+        }
+    }
+    
+    func authHF(){
+        
+        
+        SFSpeechRecognizer.requestAuthorization {
+          [unowned self] (authStatus) in
+          switch authStatus {
+          case .authorized:
+            do {
+                
+                
+              try self.startRecording()
+                print("HFNot: rec done")
+            } catch let error {
+              print("HFNOT:There was a problem starting recording: \(error.localizedDescription)")
+            }
+          case .denied:
+            print("HFNot: Speech recognition authorization denied")
+          case .restricted:
+            print("HFNot:Not available on this device")
+          case .notDetermined:
+            print(" HFNot: Not determined")
+          }
         }
     }
     
@@ -1597,6 +1682,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     @objc func recordPath() {
         ///PATHPOINT record two way path button -> create Anchor Point
         ///route has not been auto aligned
+        print("siricheck: inside record path ")
         isAutomaticAlignment = false
         ///tells the program that it is recording a two way route
         recordingSingleUseRoute = false
@@ -1717,6 +1803,15 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// handles the user pressing the Anchor Point button
     @objc func startCreateAnchorPointProcedure() {
+        print("siricheck: inside starCreateAnchorPoint")
+        let vcc =  ViewController()
+        vcc.state = .recordingRoute
+        
+        let activity = ViewController.newSingleUseRouteShortcut()
+        vcc.userActivity = activity
+
+        
+        activity.becomeCurrent()
         rootContainerView.homeButton.isHidden = false
         creatingRouteAnchorPoint = true
         
@@ -2021,6 +2116,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// this gets the yaw of the phone using the heading vector returned by `getProjectedHeading`.
     static func getYawHelper(_ transform: simd_float4x4) -> Float {
+        
         let projectedHeading = getProjectedHeading(transform)
         return atan2f(-projectedHeading.x, -projectedHeading.z)
     }
@@ -2215,6 +2311,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             updateDirectionText(dir, distance: direction.distance, displayDistance:  displayDistance)
         }
     }
+    
+ 
+    
+    
     
     /// Create the keypoint SCNNode that corresponds to the rotating flashing element that looks like a navigation pin.
     ///
@@ -2509,3 +2609,56 @@ extension ViewController: UIPopoverPresentationControllerDelegate {
         }
     }
 }
+
+
+
+
+extension ViewController {
+  fileprivate func startRecording() throws {
+    mostRecentlyProcessedSegmentDuration = 0
+    print("HFNot: inside start recording")
+   
+ 
+    print("HFNot: after check")
+    // 1
+    audioEngine.mainMixerNode
+    do {
+        try audioEngine.start()
+        print("HFNot: Success")
+    } catch {
+      print("HFNot: failed to start ")
+        // Handle error...
+    }
+  
+    recognitionTask = speechRecognizer?.recognitionTask(with: request) {
+      [unowned self]
+      (result, _) in
+      if let transcription = result?.bestTranscription {
+        self.updateUIWithTranscription(transcription)
+      }
+    }
+  }
+
+  fileprivate func stopRecording() {
+    audioEngine.stop()
+    request.endAudio()
+    recognitionTask?.cancel()
+  }
+}
+
+extension ViewController{
+ 
+  fileprivate func updateUIWithTranscription(_ transcription: SFTranscription) {
+    transcription.formattedString
+
+    // 2
+    if let lastSegment = transcription.segments.last,
+      lastSegment.duration > mostRecentlyProcessedSegmentDuration {
+      mostRecentlyProcessedSegmentDuration = lastSegment.duration
+      // 3
+    print("VCHF output")
+      print(lastSegment.substring)
+    }
+  }
+}
+

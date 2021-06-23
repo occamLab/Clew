@@ -9,6 +9,9 @@
 import UIKit
 import AVFoundation
 import Accelerate
+import Speech
+
+let audioEngine = AVAudioEngine()
 
 extension Double {
     /// a double expressed as a time string of format MINUTES:SECONDS

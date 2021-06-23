@@ -282,3 +282,5 @@ visualAlignmentConfirmation = "Visually aligning to saved route";
 
 //Sharing routes
 "automaticEmailTextWhenSharingRoutes" = "Check out this route!";
+// Hands Free Main Menu
+"HFHomeMenu" = "Say 1 to save a route, 2 to record a single use route or 3 to view save route list ";

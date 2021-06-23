@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import IntentsUI
 import Firebase
 
 /// This class handles various state changes for the app.
@@ -19,6 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     /// view controller!
     var vc: ViewController!
     
+    var nav: UINavigationController?
     /// Called when the app finishes launching.  Currently, this is where we setup Firebase and make sure the phone screen doesn't lock while we are using the app.
     ///
     /// - Parameters:
@@ -103,5 +105,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func logUserProperties() {
         Analytics.setUserProperty(String(UIAccessibility.isVoiceOverRunning), forName: "isVoiceOverRunning")
     }
+    
+    func application(
+      _ application: UIApplication,
+      continue userActivity: NSUserActivity,
+      restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void
+    ) -> Bool {
+        //vc.state = .recordingRoute
+        vc.startCreateAnchorPointProcedure()
+        let vcc = ViewController()
+        vcc.state = .recordingRoute
+        nav?.pushViewController(vcc, animated: false)
+      return true
+    }
+    
 }
 
