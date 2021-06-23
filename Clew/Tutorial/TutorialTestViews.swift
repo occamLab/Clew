@@ -18,7 +18,7 @@ struct TutorialScreen<Content: View>: View {
         //.navigationTitle("CLEW Tutorial", displayMode: .inline)
         .navigationBarItems(
             trailing:
-                Button("Exit") {
+                Button(NSLocalizedString("buttonTexttoExitTutorial", comment: "text of the button that dismisses the tutorial screens")) {
                     NotificationCenter.default.post(name: Notification.Name("TutorialPopoverReadyToDismiss"), object: nil)
                         })
        /* if #available(iOS 14.0, *) {
@@ -48,21 +48,19 @@ struct TutorialTestView: View {
 
             TutorialScreen{
                     VStack (spacing: 30){
-                        Text("CLEW Tutorial")
+                        Text(NSLocalizedString("tutorialTitleText", comment: "Title of the Clew Tutorial Screen. Top of the first tutorial page"))
                         
-                        NavigationLink(destination: OrientPhone()) {Text("Holding Your Phone")}
+                        NavigationLink(destination: OrientPhone()) {Text(NSLocalizedString("orientPhoneTutorialButtonText", comment: "Text for the tutorial screem for phone position"))}
                         
-                        NavigationLink(destination: FindPath()) {Text("Finding and Following a Path")}
+                        NavigationLink(destination: FindPath()) {Text(NSLocalizedString( "findPathTutorialButtonText", comment: "Title for the finding and following path part of the tutorial"))}
                         
-                        NavigationLink(destination: SignleUse()) {Text("Using a Signle Use Route")}
+                        NavigationLink(destination: SignleUse()) {Text(NSLocalizedString( "singleUseRouteTutorialButtonText", comment: "Title for the single use route part of the tutorial"))}
                         
-                        NavigationLink(destination: SavedRoutes()) {Text("Using a Saved Routes")}
+                        NavigationLink(destination: SavedRoutes()) {Text(NSLocalizedString( "savedRoutesTutorialButtonText", comment: "Title for the saved route part of the tutorial"))}
                         
-                        NavigationLink(destination: FindingSavedRoutes()) {Text("Finding Saved Routes")}
+                        NavigationLink(destination: FindingSavedRoutes()) {Text(NSLocalizedString( "findingSavedRoutesTutorialButtonText", comment: "Title for the finding saved route part of the tutorial"))}
                         
-                        NavigationLink(destination: SettingOptions()) {Text("Setting Options")}
-
-                    
+                        NavigationLink(destination: SettingOptions()) {Text(NSLocalizedString( "settingOptionsTutorialButtonText", comment: "Title for the setting options part of the tutorial"))}
                 }
             }
         }
