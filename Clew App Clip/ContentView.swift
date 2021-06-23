@@ -22,8 +22,8 @@ struct ContentView_Previews: PreviewProvider {
 
 struct CustomController: UIViewControllerRepresentable {
     func makeUIViewController(context: UIViewControllerRepresentableContext<CustomController>) -> UIViewController {
-        let storyboard = UIStoryboard(name: "SettingsAndHelp", bundle: Bundle.init(url: ""))
-        let controller = storyboard.instantiateViewController(withIdentifier: "Settings")
+        let storyboard = UIStoryboard(name: "LaunchScreen", bundle: Bundle.init(identifier: "edu.occam.Clew"))
+        let controller = storyboard.instantiateViewController(withIdentifier: "Start")
         return controller
     }
     
