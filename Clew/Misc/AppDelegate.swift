@@ -87,6 +87,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         return true
     }
+    
+    /// Tells the delegate that the data for continuing an activity is available (entry point for when the app is opened using a universal link) <3
+    ///
+    /// Returns: true to indicate that the app handled the activity or false to let iOS know that your app didn't handle the activity
+    func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
+        return true
+    }
 
     /// Sent when the application is about to move from active to inactive state.  In Clew's current implementation, this method doesn't do anything.
     ///
