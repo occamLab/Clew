@@ -1123,6 +1123,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         configuration.planeDetection = [.horizontal, .vertical]
         configuration.isAutoFocusEnabled = false
         sceneView.delegate = self
+        sceneView.session.delegate = self
     }
     
     /// Handle the user clicking the confirm alignment to a saved Anchor Point.  Depending on the app state, the behavior of this function will differ (e.g., if the route is being resumed versus reloaded)
@@ -2698,5 +2699,24 @@ class UISurveyHostingController: UIHostingController<FirebaseFeedbackSurvey> {
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
             UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: self.view)
         }
+    }
+}
+
+class ARData: ObservableObject {
+    public static var shared = ARData()
+    
+    private(set) var transform: simd_float4x4?
+    
+    func set(transform: simd_float4x4) {
+        self.transform = transform
+        objectWillChange.send()
+    }
+    
+}
+
+extension ViewController: ARSessionDelegate {
+    func session(_ session: ARSession, didUpdate frame: ARFrame) {
+        ARData.shared.set(transform: frame.camera.transform)
+        print("got a frame", frame.camera.transform.columns.0.y)
     }
 }
