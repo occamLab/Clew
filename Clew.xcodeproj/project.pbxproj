@@ -100,6 +100,18 @@
 		980536722683B6920065E80F /* Crumb.obj in Resources */ = {isa = PBXBuildFile; fileRef = 4D6B00E41F33C85500952242 /* Crumb.obj */; };
 		980536762683C8A30065E80F /* BurgerMenu.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 77365B1B2343ECBA008BC35C /* BurgerMenu.storyboard */; };
 		980536EE2684D16F0065E80F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 980536732683C1D10065E80F /* AppDelegate.swift */; };
+		9815CEEB26851049008FCF74 /* test-route2.crd in Resources */ = {isa = PBXBuildFile; fileRef = 9815CEEA26851049008FCF74 /* test-route2.crd */; };
+		9815CEEC26851049008FCF74 /* test-route2.crd in Resources */ = {isa = PBXBuildFile; fileRef = 9815CEEA26851049008FCF74 /* test-route2.crd */; };
+		9815CEED26851049008FCF74 /* test-route2.crd in Resources */ = {isa = PBXBuildFile; fileRef = 9815CEEA26851049008FCF74 /* test-route2.crd */; };
+		9815CEF8268512AB008FCF74 /* clew-dev-route.crd in Resources */ = {isa = PBXBuildFile; fileRef = 9815CEF6268512AB008FCF74 /* clew-dev-route.crd */; };
+		9815CEF9268512AB008FCF74 /* clew-dev-route.crd in Resources */ = {isa = PBXBuildFile; fileRef = 9815CEF6268512AB008FCF74 /* clew-dev-route.crd */; };
+		9815CEFA268512AB008FCF74 /* clew-dev-route.crd in Resources */ = {isa = PBXBuildFile; fileRef = 9815CEF6268512AB008FCF74 /* clew-dev-route.crd */; };
+		9815CEFB268512AB008FCF74 /* clew-test.crd in Resources */ = {isa = PBXBuildFile; fileRef = 9815CEF7268512AB008FCF74 /* clew-test.crd */; };
+		9815CEFC268512AB008FCF74 /* clew-test.crd in Resources */ = {isa = PBXBuildFile; fileRef = 9815CEF7268512AB008FCF74 /* clew-test.crd */; };
+		9815CEFD268512AB008FCF74 /* clew-test.crd in Resources */ = {isa = PBXBuildFile; fileRef = 9815CEF7268512AB008FCF74 /* clew-test.crd */; };
+		9815CEFF26851A06008FCF74 /* clew-dev-table2wall.crd in Resources */ = {isa = PBXBuildFile; fileRef = 9815CEFE26851A06008FCF74 /* clew-dev-table2wall.crd */; };
+		9815CF0026851A06008FCF74 /* clew-dev-table2wall.crd in Resources */ = {isa = PBXBuildFile; fileRef = 9815CEFE26851A06008FCF74 /* clew-dev-table2wall.crd */; };
+		9815CF0126851A06008FCF74 /* clew-dev-table2wall.crd in Resources */ = {isa = PBXBuildFile; fileRef = 9815CEFE26851A06008FCF74 /* clew-dev-table2wall.crd */; };
 		986640CE22FB68F2005AA1F6 /* NameSavedRouteController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986640CD22FB68F2005AA1F6 /* NameSavedRouteController.swift */; };
 		986640CF22FC9606005AA1F6 /* NameSavedRouteController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986640CD22FB68F2005AA1F6 /* NameSavedRouteController.swift */; };
 		B0A563F6FE1007A2716DC876 /* Pods_Clew_Dev.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3532E390954571B93729786A /* Pods_Clew_Dev.framework */; };
@@ -327,6 +339,10 @@
 		98006FAE2683838000E61861 /* Pods_Clew_Dev.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Pods_Clew_Dev.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9805366626838E130065E80F /* InAppSettingsKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = InAppSettingsKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		980536732683C1D10065E80F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		9815CEEA26851049008FCF74 /* test-route2.crd */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = "test-route2.crd"; sourceTree = "<group>"; };
+		9815CEF6268512AB008FCF74 /* clew-dev-route.crd */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = "clew-dev-route.crd"; sourceTree = "<group>"; };
+		9815CEF7268512AB008FCF74 /* clew-test.crd */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = "clew-test.crd"; sourceTree = "<group>"; };
+		9815CEFE26851A06008FCF74 /* clew-dev-table2wall.crd */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = "clew-dev-table2wall.crd"; sourceTree = "<group>"; };
 		986640CD22FB68F2005AA1F6 /* NameSavedRouteController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NameSavedRouteController.swift; sourceTree = "<group>"; };
 		B6E04179254C52D5DB1CCBA5 /* Pods-UIKit Clip.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UIKit Clip.release.xcconfig"; path = "Pods/Target Support Files/Pods-UIKit Clip/Pods-UIKit Clip.release.xcconfig"; sourceTree = "<group>"; };
 		B7EB59EC20F693EB00FBBC6A /* Clew Dev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Clew Dev.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -462,6 +478,8 @@
 		4D6B00B71F33C1C400952242 = {
 			isa = PBXGroup;
 			children = (
+				9815CEEA26851049008FCF74 /* test-route2.crd */,
+				9815CEFE26851A06008FCF74 /* clew-dev-table2wall.crd */,
 				82A417EC262A2140001FCB8C /* Clew Dev.entitlements */,
 				E5470EA922C119F4001092A4 /* Clew */,
 				77467DAE22BBC1D300FA7DEE /* Default-568h@2x.png */,
@@ -513,6 +531,8 @@
 		98006F77268382D600E61861 /* UIKit Clip */ = {
 			isa = PBXGroup;
 			children = (
+				9815CEF6268512AB008FCF74 /* clew-dev-route.crd */,
+				9815CEF7268512AB008FCF74 /* clew-test.crd */,
 				98006F7A268382D600E61861 /* SceneDelegate.swift */,
 				98006F81268382D800E61861 /* Assets.xcassets */,
 				98006F83268382D800E61861 /* LaunchScreen.storyboard */,
@@ -975,13 +995,17 @@
 				E5470F1C22C119F5001092A4 /* GoogleService-Info.plist in Resources */,
 				E5470F0E22C119F5001092A4 /* Settings.bundle in Resources */,
 				82569F4E22187E6500448B45 /* help in Resources */,
+				9815CEFF26851A06008FCF74 /* clew-dev-table2wall.crd in Resources */,
 				E5470F1622C119F5001092A4 /* Assets.xcassets in Resources */,
 				77365B182343ECBA008BC35C /* BurgerMenu.storyboard in Resources */,
 				E59DA6BF22C65F5900FCD5A1 /* LaunchScreen.storyboard in Resources */,
 				E5470F4E22C119F5001092A4 /* GoogleService-Info_dev.plist in Resources */,
+				9815CEF8268512AB008FCF74 /* clew-dev-route.crd in Resources */,
 				1F2B9D8722C5446B00317DC8 /* (null) in Resources */,
+				9815CEEB26851049008FCF74 /* test-route2.crd in Resources */,
 				82AD6A25252F80AA00902A11 /* speaker.mtl in Resources */,
 				E5D1695E22E103A0008754D0 /* Localizable.strings in Resources */,
+				9815CEFB268512AB008FCF74 /* clew-test.crd in Resources */,
 				E5470F1A22C119F5001092A4 /* StopRecording.aiff in Resources */,
 				77467DAF22BBC1D300FA7DEE /* Default-568h@2x.png in Resources */,
 				823DA454252F7EA800BB5E6B /* speaker.obj in Resources */,
@@ -1019,10 +1043,14 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9815CEFA268512AB008FCF74 /* clew-dev-route.crd in Resources */,
 				9805366426838C3C0065E80F /* SettingsAndHelp.storyboard in Resources */,
+				9815CF0126851A06008FCF74 /* clew-dev-table2wall.crd in Resources */,
 				9805366D2683AC7C0065E80F /* speaker.mtl in Resources */,
 				980536762683C8A30065E80F /* BurgerMenu.storyboard in Resources */,
 				98006F85268382D800E61861 /* LaunchScreen.storyboard in Resources */,
+				9815CEED26851049008FCF74 /* test-route2.crd in Resources */,
+				9815CEFD268512AB008FCF74 /* clew-test.crd in Resources */,
 				9805366226838ADC0065E80F /* Settings.bundle in Resources */,
 				98006F82268382D800E61861 /* Assets.xcassets in Resources */,
 				98006FBD2683859700E61861 /* StartRecording.aiff in Resources */,
@@ -1055,10 +1083,14 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9815CEF9268512AB008FCF74 /* clew-dev-route.crd in Resources */,
 				E5470F0F22C119F5001092A4 /* Settings.bundle in Resources */,
+				9815CF0026851A06008FCF74 /* clew-dev-table2wall.crd in Resources */,
 				E5470F1922C119F5001092A4 /* StartRecording.aiff in Resources */,
 				77365B192343ECBA008BC35C /* BurgerMenu.storyboard in Resources */,
 				E5470F1B22C119F5001092A4 /* StopRecording.aiff in Resources */,
+				9815CEEC26851049008FCF74 /* test-route2.crd in Resources */,
+				9815CEFC268512AB008FCF74 /* clew-test.crd in Resources */,
 				82AD6A26252F80AA00902A11 /* speaker.mtl in Resources */,
 				B7EB59E220F693EB00FBBC6A /* Confirm.mp3 in Resources */,
 				B7EB59E320F693EB00FBBC6A /* Crumb.obj in Resources */,

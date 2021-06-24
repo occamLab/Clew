@@ -282,11 +282,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
 
         logger.resetNavigationLog()
         
-        let externalRoute = SavedRoute(id: "External Route", name: "External Route", crumbs: self.crumbs, beginRouteAnchorPoint: self.beginRouteAnchorPoint, endRouteAnchorPoint: self.endRouteAnchorPoint, intermediateAnchorPoints: self.intermediateAnchorPoints)
+        let url = NSURL(fileURLWithPath: Bundle.main.path(forResource: "clew-dev-table2wall", ofType: "crd")!)
+
+        print(url)
+        dataPersistence.importData(from: url as URL)
         
-        logger.setCurrentRoute(route: externalRoute, worldMap: nil)
+        let thisRoute = (dataPersistence.routes.last)!
         
-        handleStateTransitionToReadyToNavigateOrPause(allowPause: false)
+        handleStateTransitionToStartingResumeProcedure(route: thisRoute, worldMap: nil, navigateStartToEnd: true)
     }
     
     /// Handler for the navigatingRoute app state

@@ -54,6 +54,11 @@ class DataPersistence {
     /// library
     /// TODO: Does this need to be a static function?
     func importData(from url: URL) {
+        NSKeyedUnarchiver.setClass(RouteDocumentData.self, forClassName: "Clew_Dev.RouteDocumentData")
+        NSKeyedUnarchiver.setClass(SavedRoute.self, forClassName: "Clew_Dev.SavedRoute")
+        NSKeyedUnarchiver.setClass(LocationInfo.self, forClassName: "Clew_Dev.LocationInfo")
+        NSKeyedUnarchiver.setClass(RouteAnchorPoint.self, forClassName: "Clew_Dev.RouteAnchorPoint")
+
         var documentData: RouteDocumentData
         
         /// attempt to fetch data from temporary import from external source
@@ -61,6 +66,9 @@ class DataPersistence {
             print("attempting unarchive")
             // if anything goes wrong with the unarchiving, stick with an emptly list of routes
             let data = try Data(contentsOf: url)
+            print("this is the data: ")
+            print(data.description)
+            print("that was the data! ")
             if let document = try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data) as? RouteDocumentData {
                 documentData = document
                 
@@ -110,7 +118,7 @@ class DataPersistence {
                 }
             }
         } catch {
-            print("couldn't unarchive route document")
+            print("couldn't unarchive route document \(error)")
         }
         
         /// remove from temp storage the file gets automatically placed into
