@@ -164,6 +164,8 @@ class RouteAnchorPoint: NSObject, NSSecureCoding {
     public var information: NSString?
     /// The URL to an audio file that contains information to help the user remember a Anchor Point
     public var voiceNote: NSString?
+    public var imageFileName: NSString?
+    public var location: (Float, Float)?
     
     /// Initialize the Anchor Point.
     ///

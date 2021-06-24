@@ -21,6 +21,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     /// view controller!
     var vc: UIViewController!
     
+    
     /// Called when the app finishes launching.  Currently, this is where we setup Firebase and make sure the phone screen doesn't lock while we are using the app.
     ///
     /// - Parameters:
@@ -40,12 +41,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         logUserProperties()
         // use for testing sign-in flow try? Auth.auth().signOut()
         if #available(iOS 13.0, *) {
-            self.vc = ViewController()
-            self.window = UIWindow(frame:UIScreen.main.bounds)
-            self.window?.rootViewController = self.vc
-            self.window?.makeKeyAndVisible()
-            
-            /*
+          
+          /*
             if (Auth.auth().currentUser == nil) {
                 #if IS_DEV_TARGET
                     Auth.auth().signInAnonymously() { (authResult, error) in
@@ -69,10 +66,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     return true
                 #endif
             }*/
-            return true
+            /*
+            self.vc = ViewController()
+            self.window = UIWindow(frame:UIScreen.main.bounds)
+            self.window?.rootViewController = self.vc
+            self.window?.makeKeyAndVisible()
+            return true*/
         }
         
         // Override point for customization after application launch.
+
         vc = ViewController()
         window = UIWindow(frame:UIScreen.main.bounds)
         window?.rootViewController = vc

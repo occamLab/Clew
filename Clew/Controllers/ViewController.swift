@@ -270,6 +270,25 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         suggestAdjustOffsetIfAppropriate()
     }
     
+    // handler for downloaded routes
+    // <3 Esme wrote a function !
+    func handleStateTransitionToNavigatingExternalRoute() {
+        // navigate the recorded path
+
+        // If the route has not yet been saved, we can no longer save this route
+        routeName = nil
+        beginRouteAnchorPoint = RouteAnchorPoint()
+        endRouteAnchorPoint = RouteAnchorPoint()
+
+        logger.resetNavigationLog()
+        
+        let externalRoute = SavedRoute(id: "External Route", name: "External Route", crumbs: self.crumbs, beginRouteAnchorPoint: self.beginRouteAnchorPoint, endRouteAnchorPoint: self.endRouteAnchorPoint, intermediateAnchorPoints: self.intermediateAnchorPoints)
+        
+        logger.setCurrentRoute(route: externalRoute, worldMap: nil)
+        
+        handleStateTransitionToReadyToNavigateOrPause(allowPause: false)
+    }
+    
     /// Handler for the navigatingRoute app state
     func handleStateTransitionToNavigatingRoute() {
         // navigate the recorded path
