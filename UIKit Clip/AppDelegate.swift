@@ -10,6 +10,7 @@ import UIKit
 import Firebase
 import FirebaseAuth
 import FirebaseAnalytics
+import ARKit
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -43,6 +44,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window = UIWindow(frame:UIScreen.main.bounds)
         window?.rootViewController = vc
         window?.makeKeyAndVisible()
+        vc.recordPathController.remove()
         vc.handleStateTransitionToNavigatingExternalRoute()
         UIApplication.shared.isIdleTimerDisabled = true
         return true

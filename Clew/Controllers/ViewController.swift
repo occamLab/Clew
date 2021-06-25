@@ -114,6 +114,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// the last time this particular user was surveyed (nil if we don't know this information or it hasn't been loaded from the database yet)
     var lastSurveyTime: [String: Double] = [:]
     
+    /// TEMPORARY to prevent multiple auto alignments
+    var autoAlignPending = false
+    
     /// The state of the app.  This should be constantly referenced and updated as the app transitions
     var state = AppState.initializing {
         didSet {
@@ -289,7 +292,23 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         
         let thisRoute = (dataPersistence.routes.last)!
         
-        handleStateTransitionToStartingResumeProcedure(route: thisRoute, worldMap: nil, navigateStartToEnd: true)
+        sceneView.debugOptions = [.showWorldOrigin]
+        sceneView.session.run(configuration, options: [.removeExistingAnchors, .resetTracking])
+        
+        continuationAfterSessionIsReady = {
+            self.handleStateTransitionToStartingResumeProcedure(route: thisRoute, worldMap: nil, navigateStartToEnd: true)
+            
+            
+    /*        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+                print("test?")
+                if self.sceneView.session.currentFrame?.anchors.compactMap({$0 as? ARImageAnchor}).count ?? 0 > 0 {
+                    self.state = .startingResumeProcedure(route: thisRoute, worldMap: nil, navigateStartToEnd: true)
+                    print("paused transform: \(self.pausedTransform)")
+                    self.confirmAlignment()
+                }
+            }
+        */
+        }
     }
     
     /// Handler for the navigatingRoute app state
@@ -412,6 +431,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 self.showResumeTrackingConfirmButton(route: route, navigateStartToEnd: navigateStartToEnd)
             }
         }
+        print("state \(state)")
     }
     
     /// Handler for the startingNameSavedRouteProcedure app state
@@ -1149,10 +1169,20 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     }
     
     func session(_ session: ARSession, didUpdate frame: ARFrame) {
+        
+        if case .readyForFinalResumeAlignment = state {
+            if frame.anchors.compactMap({$0 as? ARImageAnchor}).count ?? 0 > 0, !autoAlignPending {
+                autoAlignPending = true
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                    self.confirmAlignment()
+                }
+            }
+        }
+        
         // print("frame.anchors = \(frame.anchors)")   // <3 type = int counting # of anchors ID'd
         // print("frame.anchors.compactMap = \(frame.anchors.compactMap(({$0 as? ARAppClipCodeAnchor})))") // <3 type = Array<ARAppClipCodeAnchor>, where each ARAppClipCodeAnchor is another one it identifies
         //print("frame.anchors.compactMap = \(frame.anchors.compactMap(({$0 as? ARImageAnchor})))")
-        print(frame.anchors.compactMap(({$0 as? ARImageAnchor})))
+        // print(frame.anchors.compactMap(({$0 as? ARImageAnchor})))
         for (i, clipAnchor) in frame.anchors.compactMap(({$0 as? ARAppClipCodeAnchor})).enumerated() {
             //print("i=\(i) isTracked = \(clipAnchor.isTracked)")
             if clipAnchor.isTracked {
@@ -1209,6 +1239,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
         
     }
+    
     /// Handle the user clicking the confirm alignment to a saved Anchor Point.  Depending on the app state, the behavior of this function will differ (e.g., if the route is being resumed versus reloaded)
     @objc func confirmAlignment() {
         if case .startingPauseProcedure = state {
@@ -1768,7 +1799,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         // resume pose tracking with existing ARSessionConfiguration
         hideAllViewsHelper()
         pauseTrackingController.remove()
-        rootContainerView.countdownTimer.isHidden = false
+        rootContainerView.countdownTimer.isHidden = false // <3 used to be false
         rootContainerView.countdownTimer.start(beginingValue: ViewController.alignmentWaitingPeriod, interval: 1)
         delayTransition()
         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(ViewController.alignmentWaitingPeriod)) {
@@ -1782,6 +1813,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 // print("cameraYaw = \(cameraYaw*180/3.14)")
                 // print("isAutomaticAlignment = \(self.isAutomaticAlignment)")
 
+                print("image tag: \(tagAnchor)")
                 var tagToWorld = simd_float4x4.makeRotate(radians: cameraYaw, 0, 1, 0)
                 tagToWorld.columns.3 = tagAnchor.transform.columns.3
                 tagToWorld = tagAnchor.transform
