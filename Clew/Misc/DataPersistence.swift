@@ -54,6 +54,7 @@ class DataPersistence {
     /// library
     /// TODO: Does this need to be a static function?
     func importData(from url: URL) {
+        // TODO: Do this same setClass thing for Clew documents
         NSKeyedUnarchiver.setClass(RouteDocumentData.self, forClassName: "Clew_Dev.RouteDocumentData")
         NSKeyedUnarchiver.setClass(SavedRoute.self, forClassName: "Clew_Dev.SavedRoute")
         NSKeyedUnarchiver.setClass(LocationInfo.self, forClassName: "Clew_Dev.LocationInfo")
