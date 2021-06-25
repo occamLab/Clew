@@ -111,13 +111,47 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
       continue userActivity: NSUserActivity,
       restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void
     ) -> Bool {
+        print("indelact")
+        print(userActivity.activityType)
+      
+        if(userActivity.activityType == kNewSingleUseRouteType){
         //vc.state = .recordingRoute
         vc.startCreateAnchorPointProcedure()
         let vcc = ViewController()
-        vcc.state = .recordingRoute
+        //vcc.state = .recordingRoute
+     
+        print("appdelcheck:")
+        print(userActivity.activityType)
         nav?.pushViewController(vcc, animated: false)
+            
+        }
+        if (userActivity.activityType == kStopRecordingType){
+           // vc.stopRecording2()
+            vc.stopRecording(nil)
+            
+            let vcc = ViewController()
+           // vcc.state = .readyToNavigateOrPause(allowPause: true)
+            print("appdelcheck:")
+            print(userActivity.activityType)
+            nav?.pushViewController(vcc, animated: false)
+         
+            
+        }
+        if(userActivity.activityType == kStartNavigationType){
+            vc.startNavigation(nil)
+            let vcc = ViewController()
+            print("appdelcheck:")
+            print(userActivity.activityType)
+            nav?.pushViewController(vcc, animated: false)
+            
+        }
+        
+        
+        
       return true
     }
     
 }
+
+
 

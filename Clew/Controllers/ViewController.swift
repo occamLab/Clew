@@ -38,13 +38,15 @@ import SRCountdownTimer
 import VideoToolbox
 import Speech
 import Intents
+import IntentsUI
 import CoreSpotlight
 import MobileCoreServices
 
-
+///Initialize Siri Shortcuts Types
 public let kNewSingleUseRouteType = "com.occamlab.NewSingleUseRoute"
-
-
+public let kNewSaveRoute = "com.occamlab.NewSaveRoute"
+public let kStopRecordingType = "com.occamlab.StopRecording"
+public let kStartNavigationType = "com.occamlab.StartNavigation"
 /// A custom enumeration type that describes the exact state of the app.  The state is not exhaustive (e.g., there are Boolean flags that also track app state).
 enum AppState {
     /// This is the screen the comes up immediately after the splash screen
@@ -141,6 +143,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     var phoneVertical : Bool? = false
     // var for hands Free
     
+    static var newSingleRouteShortcutFlag: Bool = false
+    static var stopRecordingRouteFlag: Bool = false
+    static var startNavigationFlag: Bool = false
+    
     var audioEngine = AVAudioEngine()
     var speechRecognizer = SFSpeechRecognizer()
     var request = SFSpeechAudioBufferRecognitionRequest()
@@ -236,7 +242,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
         phoneVertical = phoneCurrentlyVertical
     }
-    //Siri ShortCuts
+    ///Siri ShortCuts Functions
     public static func newSingleUseRouteShortcut() -> NSUserActivity {
       let activity = NSUserActivity(activityType: kNewSingleUseRouteType)
       activity.persistentIdentifier =
@@ -256,6 +262,45 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
       return activity
     }
     
+    public static func stopRecordingShortcut() -> NSUserActivity {
+      let activity = NSUserActivity(activityType: kStopRecordingType)
+      activity.persistentIdentifier =
+        NSUserActivityPersistentIdentifier(kStopRecordingType)
+        activity.isEligibleForSearch = true
+        activity.isEligibleForPrediction = true
+        let attributes = CSSearchableItemAttributeSet(itemContentType: kUTTypeItem as String)
+        
+        activity.title = "Stop Recording Route"
+        attributes.contentDescription = "Tell Clew to stop recording the route"
+     
+       
+        activity.suggestedInvocationPhrase = "Stop Recording the Route"
+
+        activity.contentAttributeSet = attributes
+
+      return activity
+    }
+    
+    
+    
+    public static func startNavigationShortcut() -> NSUserActivity {
+      let activity = NSUserActivity(activityType: kStartNavigationType)
+      activity.persistentIdentifier =
+        NSUserActivityPersistentIdentifier(kStartNavigationType)
+        activity.isEligibleForSearch = true
+        activity.isEligibleForPrediction = true
+        let attributes = CSSearchableItemAttributeSet(itemContentType: kUTTypeItem as String)
+        
+        activity.title = "Start Navigating the route"
+        attributes.contentDescription = "Tell Clew to start navigating the route"
+     
+       
+        activity.suggestedInvocationPhrase = "Start navigating the Route"
+
+        activity.contentAttributeSet = attributes
+
+      return activity
+    }
     
     func session(_ session: ARSession, didUpdate: ARFrame) {
         switch state {
@@ -316,7 +361,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// This is an audio player that queues up the voice note associated with a particular route Anchor Point. The player is created whenever a saved route is loaded. Loading it before the user clicks the "Play Voice Note" button allows us to call the prepareToPlay function which reduces the latency when the user clicks the "Play Voice Note" button.
     var voiceNoteToPlay: AVAudioPlayer?
-    
+ 
     // MARK: - Speech Synthesizer Delegate
     
     /// Called when an utterance is finished.  We implement this function so that we can keep track of
@@ -365,8 +410,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         // set this to nil to prevent the app from erroneously detecting that we can auto-align to the route
         configuration.initialWorldMap = nil
         showRecordPathButton(announceArrival: announceArrival)
-        announce(announcement: NSLocalizedString("HFHomeMenu", comment: "Let user know what options are availabe in the main menu when using HandsFree mode "))
-    // authHF()
+     
     }
     
     /// Handler for the recordingRoute app state
@@ -1321,6 +1365,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
 
     /// display RECORD PATH button/hide all other views
     @objc func showRecordPathButton(announceArrival: Bool) {
+     
+        print("siricheck: inside record path button")
         add(recordPathController)
         /// handling main screen transitions outside of the first load
         /// add the view of the child to the view of the parent
@@ -1714,9 +1760,85 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// handles the user pressing the stop recording button.
     ///
     /// - Parameter sender: the button that generated the event
-    @objc func stopRecording(_ sender: UIButton) {
+    @objc func stopRecording(_ sender: UIButton?) {
         isResumedRoute = false
-
+        print("siricheckstop2:")
+        let vcc =  ViewController()
+  //      vcc.state =  state = .readyToNavigateOrPause(allowPause: true)
+        
+        let activity = ViewController.stopRecordingShortcut()
+      
+        vcc.userActivity = activity
+        print("before current")
+        print(activity.activityType)
+ 
+        
+        activity.becomeCurrent()
+        stopRecordingRouteShortcutWasPressed()
+        
+        // print
+    
+        print("after current ")
+        print(activity.activityType)
+     
+        if( activity.isEqual(nil)){
+       
+           print("Value - nil")
+        }else{
+            print("not nill")
+        }
+        
+        
+        rootContainerView.homeButton.isHidden = false // home button here
+        resumeTrackingController.remove()
+        resumeTrackingConfirmController.remove()
+        stopRecordingController.remove()
+        
+        ///checks if the route is a single use route or a multiple use route
+        if !recordingSingleUseRoute {
+            ///PATHPOINT two way route recording finished -> create end Anchor Point
+            ///sets the variable tracking whether the route is paused to be false
+            paused = false
+            creatingRouteAnchorPoint = false
+            ///sends the user to the process where they create an end anchorpoint
+            state = .startingPauseProcedure
+        } else {
+            ///PATHPOINT one way route recording finished -> play/pause
+            state = .readyToNavigateOrPause(allowPause: true)
+        }
+        
+    }
+    ///stop recording2
+    
+    func stopRecording2() {
+        isResumedRoute = false
+        print("siricheckstop2:")
+        let vcc =  ViewController()
+  //      vcc.state =  state = .readyToNavigateOrPause(allowPause: true)
+        
+        let activity = ViewController.stopRecordingShortcut()
+      
+        vcc.userActivity = activity
+        print("before current")
+        print(activity.activityType)
+ 
+        
+        activity.becomeCurrent()
+        
+        
+        // print
+    
+        print("after current ")
+        print(activity.activityType)
+     
+        if( activity.isEqual(nil)){
+       
+           print("Value - nil")
+        }else{
+            print("not nill")
+        }
+        
+        
         rootContainerView.homeButton.isHidden = false // home button here
         resumeTrackingController.remove()
         resumeTrackingConfirmController.remove()
@@ -1737,13 +1859,36 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         
     }
     
+    
+    
+    
+    
+    
     /// handles the user pressing the start navigation button.
     ///
     /// - Parameter sender: the button that generated the event
-    @objc func startNavigation(_ sender: UIButton) {
+    @objc func startNavigation(_ sender: UIButton?) {
+        
+      
+    
+        let vcc =  ViewController()
+ 
+        
+        let activity = ViewController.startNavigationShortcut()
+      
+        vcc.userActivity = activity
+        print("before current")
+        print(activity.activityType)
+ 
+        
+        activity.becomeCurrent()
+        startNavigationShortcutWasPressed()
+        
         ///announce to the user that return navigation has started.
-        self.delayTransition(announcement: NSLocalizedString("startingReturnNavigationAnnouncement", comment: "This is an anouncement which is played when the user performs return navigation from the play pause menu. It signifies the start of a navigation session."), initialFocus: nil)
+        self.delayTransition(announcement:
+                                NSLocalizedString("startingReturnNavigationAnnouncement", comment: "This is an anouncement which is played when the user performs return navigation from the play pause menu. It signifies the start of a navigation session."), initialFocus: nil)
         // this will handle the appropriate state transition if we pass the warning
+        print("sirinavcheck: inside starnavigation")
         state = .navigatingRoute
     }
     
@@ -1805,13 +1950,18 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     @objc func startCreateAnchorPointProcedure() {
         print("siricheck: inside starCreateAnchorPoint")
         let vcc =  ViewController()
-        vcc.state = .recordingRoute
+        //vcc.state = .recordingRoute
         
         let activity = ViewController.newSingleUseRouteShortcut()
+      
         vcc.userActivity = activity
-
+    
+ 
         
         activity.becomeCurrent()
+     
+        
+        newSingleUseRouteShortcutWasPressed()
         rootContainerView.homeButton.isHidden = false
         creatingRouteAnchorPoint = true
         
@@ -1932,6 +2082,106 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             }
         }
     }
+    // siri shortcutfunc
+ 
+    func newSingleUseRouteShortcutWasPressed(){
+        let newSingleUseRouteActivity = ViewController.newSingleUseRouteShortcut()
+        let activity = ViewController.newSingleUseRouteShortcut()
+        print("checkact1:")
+        print(activity.activityType)
+     
+        if( activity.isEqual(nil)){
+       
+           print("Value - nil")
+        }else{
+            print("not nill")
+        }
+        
+       // newSingleUseRouteActivity.state = .recordingRoute
+        let shortcut = INShortcut(userActivity: activity)
+        
+        let vcc = INUIAddVoiceShortcutViewController(shortcut:shortcut)
+            
+        
+        print("degCheckout")
+        print(ViewController.newSingleRouteShortcutFlag)
+        vcc.delegate = self
+        if(!ViewController.newSingleRouteShortcutFlag){
+       present(vcc, animated: true, completion: nil)
+            ViewController.newSingleRouteShortcutFlag=true
+            print("degCheckin")
+            print(ViewController.newSingleRouteShortcutFlag)
+        }
+    }
+    ///Function that adds the stop recording route view controller
+    
+    func stopRecordingRouteShortcutWasPressed(){
+        let StopRecordingRouteActivity = ViewController.stopRecordingShortcut()
+        
+        let activity = ViewController.stopRecordingShortcut()
+        
+        print("checkact4:")
+        print(activity.activityType)
+     
+        if( activity.isEqual(nil)){
+       
+           print("Value - nil")
+        }else{
+            print("not nill")
+        }
+        
+       // newSingleUseRouteActivity.state = .recordingRoute
+        let shortcut = INShortcut(userActivity: activity)
+        
+        let vcc = INUIAddVoiceShortcutViewController(shortcut:shortcut)
+            
+        
+        print("degCheckout3")
+        print(ViewController.stopRecordingRouteFlag)
+        vcc.delegate = self
+        if(!ViewController.stopRecordingRouteFlag){
+            print("just inside")
+       present(vcc, animated: true, completion: nil)
+            ViewController.stopRecordingRouteFlag=true
+           
+        }
+    }
+
+    
+    func startNavigationShortcutWasPressed(){
+        let startNavagationActivity = ViewController.startNavigationShortcut()
+        
+        let activity = ViewController.startNavigationShortcut()
+        
+        print("checkact3:")
+        print(activity.activityType)
+     
+        if( activity.isEqual(nil)){
+       
+           print("Value - nil")
+        }else{
+            print("not nill")
+        }
+        
+     
+        let shortcut = INShortcut(userActivity: activity)
+        
+        let vcc = INUIAddVoiceShortcutViewController(shortcut:shortcut)
+            
+        
+        print("degCheckout3")
+        print(ViewController.startNavigationFlag)
+        vcc.delegate = self
+        if(!ViewController.startNavigationFlag){
+            print("just inside")
+       present(vcc, animated: true, completion: nil)
+            ViewController.startNavigationFlag=true
+            print("degCheckin")
+            print(ViewController.newSingleRouteShortcutFlag)
+        }
+    }
+
+    
     
     
     
@@ -2576,6 +2826,30 @@ extension ViewController: RecorderViewControllerDelegate {
         }
     }
 }
+
+extension ViewController: INUIAddVoiceShortcutViewControllerDelegate {
+
+    func addVoiceShortcutViewController(
+      _ controller: INUIAddVoiceShortcutViewController,
+      didFinishWith voiceShortcut: INVoiceShortcut?,
+      error: Error?
+    ) {
+        dismiss(animated: true, completion: nil)
+
+    }
+
+    // Function For cancellation
+
+    func addVoiceShortcutViewControllerDidCancel(
+      _ controller: INUIAddVoiceShortcutViewController) {
+        dismiss(animated: true, completion: nil)
+
+    }
+
+
+//end of extensin
+}
+
 
 // MARK: - UIPopoverPresentationControllerDelegate
 extension ViewController: UIPopoverPresentationControllerDelegate {

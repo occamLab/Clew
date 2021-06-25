@@ -177,6 +177,7 @@ class RecorderViewController: UIViewController {
                 self.view.layoutIfNeeded()
             }, completion: nil)
             self.stopRecording()
+            print("siricheckstop1: inside ")
         }
     }
     

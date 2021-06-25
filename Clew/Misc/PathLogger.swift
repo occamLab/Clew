@@ -178,7 +178,8 @@ class PathLogger {
         let pathDate = dateFormatter.string(from: date)
         let pathID = UIDevice.current.identifierForVendor!.uuidString + dateFormatter.string(from: date)
         let userId = Analytics.appInstanceID()
-        
+   print("userId here:")
+        print(userId)
         sendMetaData(pathDate, pathID+"-0", userId, debug)
         sendPathData(pathID, userId)
     }
