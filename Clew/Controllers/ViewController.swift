@@ -61,6 +61,8 @@ enum AppState {
     case readyForFinalResumeAlignment
     /// the user is attempting to name the route they're in the process of saving
     case startingNameSavedRouteProcedure(worldMap: Any?)
+    // the user is anchoring a route from an ARImageAnchor
+    case startingAutoAlignment
     
     /// rawValue is useful for serializing state values, which we are currently using for our logging feature
     var rawValue: String {
@@ -89,6 +91,8 @@ enum AppState {
             return "readyForFinalResumeAlignment"
         case .startingNameSavedRouteProcedure:
             return "startingNameSavedRouteProcedure"
+        case .startingAutoAlignment:
+            return "startingAutoAlignment"
         }
     }
 }
@@ -148,6 +152,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 handleStateTransitionToStartingNameSavedRouteProcedure(worldMap: worldMap)
             case .initializing:
                 break
+            case .startingAutoAlignment:
+                handleStateTransitionToAutoAlignment()
             }
         }
     }
@@ -271,6 +277,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         updateHeadingOffsetTimer?.invalidate()
         showStartNavigationButton(allowPause: allowPause)
         suggestAdjustOffsetIfAppropriate()
+    }
+    
+    func handleStateTransitionToAutoAlignment() {
+        print("Aligning")
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            self.confirmAlignment()
+        }
     }
     
     // handler for downloaded routes
@@ -1171,11 +1184,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     func session(_ session: ARSession, didUpdate frame: ARFrame) {
         
         if case .readyForFinalResumeAlignment = state {
-            if frame.anchors.compactMap({$0 as? ARImageAnchor}).count ?? 0 > 0, !autoAlignPending {
-                autoAlignPending = true
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                    self.confirmAlignment()
-                }
+            if (frame.anchors.compactMap({$0 as? ARImageAnchor}).count > 0) && (state.rawValue != "startingAutoAlignment") {
+                print(frame.anchors.compactMap({$0 as? ARImageAnchor}).count)
+                self.state = .startingAutoAlignment
             }
         }
         
@@ -1247,6 +1258,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         } else if case .startingResumeProcedure = state {
             resumeTracking()
         } else if case .readyForFinalResumeAlignment = state {
+            resumeTracking()
+        } else if case .startingAutoAlignment = state {
             resumeTracking()
         }
     }
@@ -1802,6 +1815,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         rootContainerView.countdownTimer.isHidden = false // <3 used to be false
         rootContainerView.countdownTimer.start(beginingValue: ViewController.alignmentWaitingPeriod, interval: 1)
         delayTransition()
+        print(self.pausedTransform)
+        print("hehe")
         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(ViewController.alignmentWaitingPeriod)) {
             self.rootContainerView.countdownTimer.isHidden = true
             // The first check is necessary in case the phone relocalizes before this code executes
