@@ -47,6 +47,8 @@ public let kNewSingleUseRouteType = "com.occamlab.NewSingleUseRoute"
 public let kNewSaveRoute = "com.occamlab.NewSaveRoute"
 public let kStopRecordingType = "com.occamlab.StopRecording"
 public let kStartNavigationType = "com.occamlab.StartNavigation"
+public let kNewSaveARouteType = "com.occamlab.SaveARoute"
+public let kStartAlignmentType = "com.occamlab.StartAlignment"
 /// A custom enumeration type that describes the exact state of the app.  The state is not exhaustive (e.g., there are Boolean flags that also track app state).
 enum AppState {
     /// This is the screen the comes up immediately after the splash screen
@@ -146,6 +148,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     static var newSingleRouteShortcutFlag: Bool = false
     static var stopRecordingRouteFlag: Bool = false
     static var startNavigationFlag: Bool = false
+    static var saveARouteFlag: Bool = false
+    static var startAlighmentShortcutFlag: Bool = false
     
     var audioEngine = AVAudioEngine()
     var speechRecognizer = SFSpeechRecognizer()
@@ -252,10 +256,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         let attributes = CSSearchableItemAttributeSet(itemContentType: kUTTypeItem as String)
         
         activity.title = "Start Single Use Route"
-        attributes.contentDescription = "Let Clew help you navagate a single route !"
+        attributes.contentDescription = "Let Clew help you navigate a single route !"
      
        
-        activity.suggestedInvocationPhrase = "Time to navagate with Clew!"
+        activity.suggestedInvocationPhrase = "Time to navigate with Clew"
 
         activity.contentAttributeSet = attributes
 
@@ -301,6 +305,46 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
 
       return activity
     }
+    
+    public static func saveARouteShortcut() -> NSUserActivity {
+      let activity = NSUserActivity(activityType: kNewSaveARouteType)
+      activity.persistentIdentifier =
+        NSUserActivityPersistentIdentifier(kNewSaveARouteType)
+        activity.isEligibleForSearch = true
+        activity.isEligibleForPrediction = true
+        let attributes = CSSearchableItemAttributeSet(itemContentType: kUTTypeItem as String)
+        
+        activity.title = "Save A route"
+        attributes.contentDescription = "Tell Clew to start saving a new route"
+     
+       
+        activity.suggestedInvocationPhrase = "Start saving A Route"
+
+        activity.contentAttributeSet = attributes
+
+      return activity
+    }
+    
+    public static func startAlignmentShortcut() -> NSUserActivity {
+      let activity = NSUserActivity(activityType: kStartAlignmentType)
+      activity.persistentIdentifier =
+        NSUserActivityPersistentIdentifier(kStartAlignmentType)
+        activity.isEligibleForSearch = true
+        activity.isEligibleForPrediction = true
+        let attributes = CSSearchableItemAttributeSet(itemContentType: kUTTypeItem as String)
+        
+        activity.title = "Set Anchor Point"
+        attributes.contentDescription = "Tell Clew to start alignment countdown"
+     
+       
+        activity.suggestedInvocationPhrase = "set an anchor point"
+
+        activity.contentAttributeSet = attributes
+
+      return activity
+    }
+    
+    
     
     func session(_ session: ARSession, didUpdate: ARFrame) {
         switch state {
@@ -1108,6 +1152,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// This finishes the process of pressing the home button (after user has given confirmation)
     @objc func goHome() {
         // proceed to home page
+        print("siricheck7: inside go home ")
         self.clearState()
         self.hideAllViewsHelper()
         if case .startingNameSavedRouteProcedure = self.state {
@@ -1320,6 +1365,23 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// Handle the user clicking the confirm alignment to a saved Anchor Point.  Depending on the app state, the behavior of this function will differ (e.g., if the route is being resumed versus reloaded)
     @objc func confirmAlignment() {
+        print("siricheck6: inside confirmAlignment")
+       
+        let vcc =  ViewController()
+   
+        let activity = ViewController.startAlignmentShortcut()
+      
+        vcc.userActivity = activity
+        print("before current")
+        print(activity.activityType)
+ 
+        
+        activity.becomeCurrent()
+        startAlignmentShortcutWasPressed()
+        
+        
+        
+        
         if case .startingPauseProcedure = state {
             state = .pauseWaitingPeriod
         } else if case .startingResumeProcedure = state {
@@ -1728,7 +1790,22 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     @objc func recordPath() {
         ///PATHPOINT record two way path button -> create Anchor Point
         ///route has not been auto aligned
-        print("siricheck: inside record path ")
+        print("siricheck5: inside record path ")
+        let vcc =  ViewController()
+   
+        let activity = ViewController.saveARouteShortcut()
+      
+        vcc.userActivity = activity
+        print("before current")
+        print(activity.activityType)
+ 
+        
+        activity.becomeCurrent()
+        saveARouteShortcutWasPressed()
+        
+        
+        
+        
         isAutomaticAlignment = false
         ///tells the program that it is recording a two way route
         recordingSingleUseRoute = false
@@ -2178,6 +2255,72 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             ViewController.startNavigationFlag=true
             print("degCheckin")
             print(ViewController.newSingleRouteShortcutFlag)
+        }
+    }
+
+    
+  
+    
+    func saveARouteShortcutWasPressed(){
+        let saveARouteActivity = ViewController.saveARouteShortcut()
+        
+        let activity = ViewController.saveARouteShortcut()
+        
+        print("checkact5:")
+        print(activity.activityType)
+     
+        if( activity.isEqual(nil)){
+       
+           print("Value - nil")
+        }else{
+            print("not nill")
+        }
+        
+     
+        let shortcut = INShortcut(userActivity: activity)
+        
+        let vcc = INUIAddVoiceShortcutViewController(shortcut:shortcut)
+            
+        
+      
+        vcc.delegate = self
+        if(!ViewController.saveARouteFlag){
+            print("just inside")
+       present(vcc, animated: true, completion: nil)
+            ViewController.saveARouteFlag=true
+         
+        }
+    }
+
+    
+    func startAlignmentShortcutWasPressed(){
+        let startAlignmentActivity = ViewController.startAlignmentShortcut()
+        
+        let activity = ViewController.startAlignmentShortcut()
+        
+        print("checkact6:")
+        print(activity.activityType)
+     
+        if( activity.isEqual(nil)){
+       
+           print("Value - nil")
+        }else{
+            print("not nill")
+        }
+        
+     
+        let shortcut = INShortcut(userActivity: activity)
+        
+        let vcc = INUIAddVoiceShortcutViewController(shortcut:shortcut)
+            
+        
+      
+        vcc.delegate = self
+        if(!ViewController.startAlighmentShortcutFlag){
+            print("just inside")
+       present(vcc, animated: true, completion: nil)
+            ViewController.startAlighmentShortcutFlag=true
+         
         }
     }
 
