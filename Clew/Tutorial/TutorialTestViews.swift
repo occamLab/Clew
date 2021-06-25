@@ -217,6 +217,19 @@ struct PracticeOrientPhone: View {
         }
     }
 }
+
+struct CLEWintro: View {
+    var body: some View {
+        TutorialScreen{
+            VStack{
+                Text("CLEW is a navigation app that is meant for indoor use. It is not a replacement for mobitly stratigies such as a white cane or guide dog. It is meant to be a suplimentary tool to help with indoor navigation of shorter routes.")
+                
+                NavigationLink(destination: OrientPhone()) {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
+                
+            }
+        }
+    }
+}
             
 
 
@@ -227,6 +240,8 @@ struct TutorialTestView: View {
             TutorialScreen{
                     VStack (spacing: 30){
                         Text(NSLocalizedString("tutorialTitleText", comment: "Title of the Clew Tutorial Screen. Top of the first tutorial page"))
+                        
+                        NavigationLink(destination: CLEWintro()) {Text("Intro to Clew")}
                         
                         NavigationLink(destination: OrientPhone()) {Text(NSLocalizedString("orientPhoneTutorialButtonText", comment: "Text for the tutorial screem for phone position"))}
                         
