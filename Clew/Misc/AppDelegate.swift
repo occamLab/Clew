@@ -145,6 +145,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             nav?.pushViewController(vcc, animated: false)
             
         }
+        if(userActivity.activityType == kNewSaveARouteType){
+            vc.recordPath()
+            let vcc = ViewController()
+            print("appdelcheck5:")
+            print(userActivity.activityType)
+            nav?.pushViewController(vcc, animated: false)
+            
+        }
+        if(userActivity.activityType == kStartAlignmentType){
+            vc.confirmAlignment()
+            let vcc = ViewController()
+            print("appdelcheck5:")
+            print(userActivity.activityType)
+            nav?.pushViewController(vcc, animated: false)
+            
+        }
         
         
         
