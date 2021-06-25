@@ -21,7 +21,7 @@ struct TutorialScreen<Content: View>: View {
             trailing:
                 Button(NSLocalizedString("buttonTexttoExitTutorial", comment: "text of the button that dismisses the tutorial screens")) {
                     NotificationCenter.default.post(name: Notification.Name("TutorialPopoverReadyToDismiss"), object: nil)
-                        })
+        })
   }
 }
 
@@ -126,22 +126,35 @@ struct FindPath: View {
 
 struct OrientPhone: View {
     var body: some View {
-            TutorialScreen {
-                VStack{
-                    Text(NSLocalizedString("orientPhoneTutorialButtonText", comment: "Title for the setting options part of the tutorial"))
+        TutorialScreen {
+            VStack{
+                Text(NSLocalizedString("orientPhoneTutorialButtonText", comment: "Title for the setting options part of the tutorial"))
+            
+                Text(NSLocalizedString("orientPhoneTutorialInstructionText", comment: "Text that explains how to orient the phone for the best experience using Clew"))
                 
-                    Text(NSLocalizedString("orientPhoneTutorialInstructionText", comment: "Text that explains how to orient the phone for the best experience using Clew"))
-                    
-                    NavigationLink(destination: PracticeOrientPhone()) {Text("Practice Holding Phone")}
-                    
-                    NavigationLink(destination: FindPath()) {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
+                NavigationLink(destination: PracticeOrientPhone()) {Text("Practice Holding Phone")}
                 
+                NavigationLink(destination: OrientPhoneTips()) {Text("Tips")}
+                
+                NavigationLink(destination: FindPath()) {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
+            
+            }
+        }
+    }
+}
+
+struct OrientPhoneTips: View {
+    var body: some View {
+        TutorialScreen {
+            VStack{
+                Text("tips go here")
             }
         }
     }
 }
 
 struct PracticeOrientPhone: View {
+    //TODO: 1 can't exit right now bc the var arData is being updated constantly. 2 turn off warning when practicing. 3 turn on AR when practicing
     @State private var score = 0
     @State var lastSuccessSound = Date()
     @State var lastSuccess = Date()
@@ -156,51 +169,55 @@ struct PracticeOrientPhone: View {
                     Text("correct")
                 }
             }
-                
-            Button("add 1") {score += 1} //add to score by holding phone correctly
             
             if score >= 3 {
                 //AudioServicesPlaySystemSound(SystemSoundID(1057))
-                //UIAccessibility.post(notification: .announcement, argument: "Congratulations! You've completed the holding phone practice")
                 Text("Yay!!!")
                 NavigationLink(destination: FindPath()) {Text("Next")}
             }
-                
             
-                
+            if score == 3 {
+                Text("Nice Job! You've completed orientation practice. You can keep practicing or go to the next section")
+            }
+
             if score < 3 {
                 NavigationLink(destination: FindPath()) {Text("Skip")}
             }
-            
+                
         }.onReceive(self.arData.objectWillChange) { newARData in
-                if let transform = arData.transform {
-                let y = transform.columns.0.y
-                if y < -0.4 && y > -0.7, -lastSuccessSound.timeIntervalSinceNow > 0.7 {
-                        AudioServicesPlaySystemSound(SystemSoundID(1057))
-                        lastSuccessSound = Date()
-                        UIAccessibility.post(notification: .announcement, argument: "Almost")
-                }
-                if y < -0.7 && y > -0.9, -lastSuccessSound.timeIntervalSinceNow > 0.5 {
-                        AudioServicesPlaySystemSound(SystemSoundID(1057))
-                        lastSuccessSound = Date()
-                        UIAccessibility.post(notification: .announcement, argument: "Almost")
-                }
-                if y < -0.9, -lastSuccessSound.timeIntervalSinceNow > 0.2 {
-                        AudioServicesPlaySystemSound(SystemSoundID(1057))
-                        lastSuccessSound = Date()
-                        UIAccessibility.post(notification: .announcement, argument: "WAY TO GO!")
-                }
-                if y < -0.9, -lastSuccess.timeIntervalSinceNow > 5 {
-                    print(score)
-                    score += 1
-                    lastSuccess = Date()
-                    UIAccessibility.post(notification: .announcement, argument: "Great")
-                }
-            }
+                    if let transform = arData.transform {
+                    let y = transform.columns.0.y
+                    if y < -0.4 && y > -0.7, -lastSuccessSound.timeIntervalSinceNow > 0.7 {
+                            AudioServicesPlaySystemSound(SystemSoundID(1057))
+                            lastSuccessSound = Date()
+                            //UIAccessibility.post(notification: .announcement, argument: "Almost")
+                    }
+                    if y < -0.7 && y > -0.9, -lastSuccessSound.timeIntervalSinceNow > 0.5 {
+                            AudioServicesPlaySystemSound(SystemSoundID(1057))
+                            lastSuccessSound = Date()
+                            //UIAccessibility.post(notification: .announcement, argument: "Almost")
+                    }
+                    if y < -0.9, -lastSuccessSound.timeIntervalSinceNow > 0.2 {
+                            AudioServicesPlaySystemSound(SystemSoundID(1057))
+                            lastSuccessSound = Date()
+                            //UIAccessibility.post(notification: .announcement, argument: "WAY TO GO!")
+                    }
+                    if y < -0.9, -lastSuccess.timeIntervalSinceNow > 5 {
+                        print(score)
+                        score += 1
+                        AudioServicesPlaySystemSound(SystemSoundID(1043))
+                        lastSuccess = Date()
+                        //UIAccessibility.post(notification: .announcement, argument: "Great")
+                    }
+                        
+                    if score == 2 {
+                        UIAccessibility.post(notification: .announcement, argument: "Nice Job! You've completed orientation practice. You can keep practicing or go to the next section")
+                    }
+                    }
         }
     }
 }
-    
+            
 
 
 struct TutorialTestView: View {    
