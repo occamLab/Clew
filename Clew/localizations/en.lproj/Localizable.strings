@@ -281,8 +281,10 @@
 "buttonTexttoNextScreenTutorial" = "Next";
 "tutorialTitleText" = "CLEW Tutorial";
 
-"orientPhoneTutorialButtonText" = "Holding your Phone";
-"orientPhoneTutorialInstructionText" = "For best expereince using CLEW you will have to hold your phone virtically, dirrectly infront of your chest with the rear camera facing forward. This is because CLEW uses your phones camera to track where you move so that it can take you back along the same route";
+"orientPhoneTutorialButtonText" = "Holding Your Phone";
+"orientPhoneTutorialInstructionText" = "Clew uses your phone's camera to track the environment as you move along a route. You should hold your phone vertically with the rear camera facing forward whenever you are using Clew. It is important to maintain the phone in this orientation while you are navigating a route.
+
+Tip: You can hold your phone against your chest to ensure that it remains in the vertical oritentation. We also recomemend that you hold the phone in the opposite hand to which you use your white cane or guide dog.";
 
 "findPathTutorialButtonText" = "Finding and Following a Path";
 "findPathTutorialInstructionText" = "When you are on the path, Clew will give sound and haptic feedback. The app makes a different sound when you need to turn, followed by specific instructins on which way to turn. If the app is not making sound, it is most likley because your phone is not facing the path. Should Clew go quite you should stop and turn until you find the path again.";
