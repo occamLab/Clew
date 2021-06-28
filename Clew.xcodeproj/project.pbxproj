@@ -71,7 +71,6 @@
 		98006FCA268385DD00E61861 /* RoutesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470EEB22C119F4001092A4 /* RoutesViewController.swift */; };
 		98006FCB268386A900E61861 /* HelpCompiler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2B9D7022C3B50D00317DC8 /* HelpCompiler.swift */; };
 		98006FCC268386AD00E61861 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E5D1695822E103A0008754D0 /* Localizable.strings */; };
-		98053651268388640065E80F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E5470ED022C119F4001092A4 /* Assets.xcassets */; };
 		98053652268388B80065E80F /* RecordButtonKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470EAB22C119F4001092A4 /* RecordButtonKit.swift */; };
 		98053653268388BB0065E80F /* AudioVisualizerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470EAC22C119F4001092A4 /* AudioVisualizerView.swift */; };
 		98053654268388C00065E80F /* RecorderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470EAD22C119F4001092A4 /* RecorderViewController.swift */; };
@@ -1084,7 +1083,6 @@
 				9805366F2683AC820065E80F /* Confirm.mp3 in Resources */,
 				980536702683AC8B0065E80F /* help in Resources */,
 				98006FBE2683859A00E61861 /* StopRecording.aiff in Resources */,
-				98053651268388640065E80F /* Assets.xcassets in Resources */,
 				9805366B2683AB720065E80F /* GoogleService-Info_dev.plist in Resources */,
 				9805366E2683AC7F0065E80F /* speaker.obj in Resources */,
 				9805366C2683AC780065E80F /* Crumb.obj in Resources */,
