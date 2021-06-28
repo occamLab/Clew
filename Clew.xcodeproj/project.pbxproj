@@ -84,7 +84,6 @@
 		9805365B268388E00065E80F /* Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470EB522C119F4001092A4 /* Utility.swift */; };
 		9805365D268388EC0065E80F /* RouteDocumentData.swift in Sources */ = {isa = PBXBuildFile; fileRef = E565A10722F2173400C1998E /* RouteDocumentData.swift */; };
 		9805366126838AA40065E80F /* RootContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470EF022C119F4001092A4 /* RootContainerView.swift */; };
-		9805366226838ADC0065E80F /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = E5470EB922C119F4001092A4 /* Settings.bundle */; };
 		9805366426838C3C0065E80F /* SettingsAndHelp.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 772E4566236CC155008EF6AC /* SettingsAndHelp.storyboard */; };
 		9805366526838C500065E80F /* RouteTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470EF322C119F4001092A4 /* RouteTableViewCell.swift */; };
 		9805366B2683AB720065E80F /* GoogleService-Info_dev.plist in Resources */ = {isa = PBXBuildFile; fileRef = E5470EF522C119F4001092A4 /* GoogleService-Info_dev.plist */; };
@@ -1079,7 +1078,6 @@
 				98006F85268382D800E61861 /* LaunchScreen.storyboard in Resources */,
 				9815CEED26851049008FCF74 /* test-route2.crd in Resources */,
 				9815CEFD268512AB008FCF74 /* clew-test.crd in Resources */,
-				9805366226838ADC0065E80F /* Settings.bundle in Resources */,
 				98006F82268382D800E61861 /* Assets.xcassets in Resources */,
 				98006FBD2683859700E61861 /* StartRecording.aiff in Resources */,
 				98006FCC268386AD00E61861 /* Localizable.strings in Resources */,

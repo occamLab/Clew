@@ -30,7 +30,9 @@
 		<false/>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>The camera  is needed to track your phone's position</string>
+	<string>The camera is needed to track your phone&apos;s position</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>The microphone is needed for voice notes</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>
