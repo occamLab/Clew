@@ -3,6 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>com.apple.developer.associated-domains</key>
-	<array/>
+	<array>
+		<string>applinks:occamlab.github.io</string>
+		<string>appclips:occamlab.github.io</string>
+	</array>
 </dict>
 </plist>
