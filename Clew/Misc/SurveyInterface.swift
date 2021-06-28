@@ -7,6 +7,9 @@
 //
 
 import Foundation
+import UIKit
+import SceneKit
+import StoreKit
 #if !APPCLIP
 import Firebase
 import FirebaseDatabase
@@ -99,10 +102,15 @@ class SurveyInterface {
                 self.presentSurveyIfIntervalHasPassed(mode: "afterRoute", logFileURLs: logFileURLs, vc: vc)
             }
         }
-        #endif
-        
-        vc.state = .mainScreen(announceArrival: announceArrival)
+        #else
+        vc.hideAllViewsHelper()
+        vc.state = .initializing
 
+        guard let scene = vc.view.window?.windowScene else {return}
+        let config = SKOverlay.AppClipConfiguration(position: .bottom)
+        let overlay = SKOverlay(configuration: config)
+        overlay.present(in: scene)
+        #endif
     }
 }
 
