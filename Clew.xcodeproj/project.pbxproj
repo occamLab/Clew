@@ -110,6 +110,7 @@
 		9815CF0126851A06008FCF74 /* clew-dev-table2wall.crd in Resources */ = {isa = PBXBuildFile; fileRef = 9815CEFE26851A06008FCF74 /* clew-dev-table2wall.crd */; };
 		986640CE22FB68F2005AA1F6 /* NameSavedRouteController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986640CD22FB68F2005AA1F6 /* NameSavedRouteController.swift */; };
 		986640CF22FC9606005AA1F6 /* NameSavedRouteController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986640CD22FB68F2005AA1F6 /* NameSavedRouteController.swift */; };
+		98C288DF268A422000B59B7F /* UIKit Clip.app in Embed App Clips */ = {isa = PBXBuildFile; fileRef = 98006F76268382D600E61861 /* UIKit Clip.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		98CC6761268A0FEC00E3759F /* FirebaseSetup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98CC6760268A0FEC00E3759F /* FirebaseSetup.swift */; };
 		98CC6762268A0FEC00E3759F /* FirebaseSetup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98CC6760268A0FEC00E3759F /* FirebaseSetup.swift */; };
 		98CC6763268A0FEC00E3759F /* FirebaseSetup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98CC6760268A0FEC00E3759F /* FirebaseSetup.swift */; };
@@ -252,6 +253,13 @@
 			remoteGlobalIDString = 98006F75268382D600E61861;
 			remoteInfo = "UIKit Clip";
 		};
+		98C288E0268A422000B59B7F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4D6B00B81F33C1C400952242 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 98006F75268382D600E61861;
+			remoteInfo = "UIKit Clip";
+		};
 		E5E9017022FB4D4A00AD0E95 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 4D6B00B81F33C1C400952242 /* Project object */;
@@ -270,6 +278,17 @@
 			files = (
 				98006F642683703700E61861 /* Clew App Clip.app in Embed App Clips */,
 				98006FA0268382D800E61861 /* UIKit Clip.app in Embed App Clips */,
+			);
+			name = "Embed App Clips";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		98C288E2268A422000B59B7F /* Embed App Clips */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/AppClips";
+			dstSubfolderSpec = 16;
+			files = (
+				98C288DF268A422000B59B7F /* UIKit Clip.app in Embed App Clips */,
 			);
 			name = "Embed App Clips";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -877,10 +896,12 @@
 				B7EB59DF20F693EB00FBBC6A /* Frameworks */,
 				B7EB59E120F693EB00FBBC6A /* Resources */,
 				B7EB59E820F693EB00FBBC6A /* [CP] Embed Pods Frameworks */,
+				98C288E2268A422000B59B7F /* Embed App Clips */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				98C288E1268A422000B59B7F /* PBXTargetDependency */,
 			);
 			name = "Clew Dev";
 			packageProductDependencies = (
@@ -1540,6 +1561,11 @@
 			target = 98006F75268382D600E61861 /* UIKit Clip */;
 			targetProxy = 98006F9E268382D800E61861 /* PBXContainerItemProxy */;
 		};
+		98C288E1268A422000B59B7F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 98006F75268382D600E61861 /* UIKit Clip */;
+			targetProxy = 98C288E0268A422000B59B7F /* PBXContainerItemProxy */;
+		};
 		E5E9017122FB4D4A00AD0E95 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = E5E9016622FB4D4A00AD0E95 /* route-quicklook */;
@@ -1974,7 +2000,7 @@
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -D IS_DEV_TARGET";
-				PRODUCT_BUNDLE_IDENTIFIER = edu.occam.Clew.Clip;
+				PRODUCT_BUNDLE_IDENTIFIER = "edu.occam.Clew-Dev.Clip";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG APPCLIP";
 				SWIFT_VERSION = 5.0;
@@ -2001,7 +2027,7 @@
 				);
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -D IS_DEV_TARGET";
-				PRODUCT_BUNDLE_IDENTIFIER = edu.occam.Clew.Clip;
+				PRODUCT_BUNDLE_IDENTIFIER = "edu.occam.Clew-Dev.Clip";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
