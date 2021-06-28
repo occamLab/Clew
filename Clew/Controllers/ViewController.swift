@@ -1776,13 +1776,44 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         // resume pose tracking with existing ARSessionConfiguration
         hideAllViewsHelper()
         pauseTrackingController.remove()
-        rootContainerView.countdownTimer.isHidden = false // <3 used to be false
+        rootContainerView.countdownTimer.isHidden = false
         rootContainerView.countdownTimer.start(beginingValue: ViewController.alignmentWaitingPeriod, interval: 1)
         delayTransition()
-        print(self.pausedTransform)
         print("hehe")
-        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(ViewController.alignmentWaitingPeriod)) {
+        if case .startingAutoAlignment = self.state, let routeTransform = self.pausedTransform, let tagAnchor = self.sceneView.session.currentFrame?.anchors.compactMap({$0 as? ARImageAnchor}).first {
+            rootContainerView.countdownTimer.isHidden = true
+            
+            let tagToWorld = tagAnchor.transform
+            let tagToRoute = routeTransform
+            
+            let relativeTransform = tagToWorld * tagToRoute.inverse
+            print("relativeTransform \(relativeTransform)")
+            self.sceneView.session.setWorldOrigin(relativeTransform: relativeTransform)
+            
+            self.isResumedRoute = true
+            if self.paused {
+                ///PATHPOINT paused anchor point alignment timer -> return navigation
+                ///announce to the user that they have aligned to the anchor point sucessfully and are starting  navigation.
+                self.paused = false
+                self.delayTransition(announcement: NSLocalizedString("resumeAnchorPointToReturnNavigationAnnouncement", comment: "This is an Announcement which indicates that the pause session is complete, that the program was able to align with the anchor point, and that return navigation has started."), initialFocus: nil)
+                self.state = .navigatingRoute
+
+            } else {
+                ///PATHPOINT load saved route -> start navigation
+
+                ///announce to the user that they have sucessfully aligned with their saved anchor point.
+                self.delayTransition(announcement: NSLocalizedString("resumeAnchorPointToReturnNavigationAnnouncement", comment: "This is an Announcement which indicates that the pause session is complete, that the program was able to align with the anchor point, and that return navigation has started."), initialFocus: nil)
+                self.state = .navigatingRoute
+
+            }
+            
+            
+        }
+        else {
+            DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(ViewController.alignmentWaitingPeriod)) {
             self.rootContainerView.countdownTimer.isHidden = true
+            print("hmm")
+            print("whats going on")
             // The first check is necessary in case the phone relocalizes before this code executes
             if case .readyForFinalResumeAlignment = self.state, let routeTransform = self.pausedTransform, /*let tagAnchor = self.sceneView.session.currentFrame?.anchors.compactMap({$0 as? ARAppClipCodeAnchor}).filter({$0.isTracked}).first */ let tagAnchor = self.sceneView.session.currentFrame?.anchors.compactMap({$0 as? ARImageAnchor}).first{
                 // yaw can be determined by projecting the camera's z-axis into the ground plane and using arc tangent (note: the camera coordinate conventions of ARKit https://developer.apple.com/documentation/arkit/arsessionconfiguration/worldalignment/camera
@@ -1795,6 +1826,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 print("image tag: \(tagAnchor)")
                 var tagToWorld = simd_float4x4.makeRotate(radians: cameraYaw, 0, 1, 0)
                 tagToWorld.columns.3 = tagAnchor.transform.columns.3
+                print(tagAnchor.transform)
                 tagToWorld = tagAnchor.transform
                 
                 var tagToRoute =  simd_float4x4.makeRotate(radians: alignYaw, 0, 1, 0)
@@ -1822,6 +1854,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
 
                 }
             }
+        }
         }
     }
     
