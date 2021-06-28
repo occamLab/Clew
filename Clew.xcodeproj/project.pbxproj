@@ -58,7 +58,6 @@
 		98006FB82683845E00E61861 /* PauseTrackingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470EE622C119F4001092A4 /* PauseTrackingController.swift */; };
 		98006FB92683846200E61861 /* ResumeTrackingConfirmController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470EE722C119F4001092A4 /* ResumeTrackingConfirmController.swift */; };
 		98006FBA2683847900E61861 /* UIConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470EEE22C119F4001092A4 /* UIConstants.swift */; };
-		98006FBB2683857A00E61861 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E5470EB722C119F4001092A4 /* SettingsViewController.m */; };
 		98006FBD2683859700E61861 /* StartRecording.aiff in Resources */ = {isa = PBXBuildFile; fileRef = E5470ED222C119F4001092A4 /* StartRecording.aiff */; };
 		98006FBE2683859A00E61861 /* StopRecording.aiff in Resources */ = {isa = PBXBuildFile; fileRef = E5470ED322C119F4001092A4 /* StopRecording.aiff */; };
 		98006FC0268385A400E61861 /* NSStringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470ED622C119F4001092A4 /* NSStringExtension.swift */; };
@@ -84,10 +83,8 @@
 		9805365A268388DD0065E80F /* PathFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470EB422C119F4001092A4 /* PathFinder.swift */; };
 		9805365B268388E00065E80F /* Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470EB522C119F4001092A4 /* Utility.swift */; };
 		9805365D268388EC0065E80F /* RouteDocumentData.swift in Sources */ = {isa = PBXBuildFile; fileRef = E565A10722F2173400C1998E /* RouteDocumentData.swift */; };
-		9805365F268388F20065E80F /* Surveys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82BC47FD2640383300C7D364 /* Surveys.swift */; };
 		9805366126838AA40065E80F /* RootContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470EF022C119F4001092A4 /* RootContainerView.swift */; };
 		9805366226838ADC0065E80F /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = E5470EB922C119F4001092A4 /* Settings.bundle */; };
-		9805366326838C150065E80F /* BurgerMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F27632222FCBB6E00E1FCF8 /* BurgerMenuViewController.swift */; };
 		9805366426838C3C0065E80F /* SettingsAndHelp.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 772E4566236CC155008EF6AC /* SettingsAndHelp.storyboard */; };
 		9805366526838C500065E80F /* RouteTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470EF322C119F4001092A4 /* RouteTableViewCell.swift */; };
 		9805366B2683AB720065E80F /* GoogleService-Info_dev.plist in Resources */ = {isa = PBXBuildFile; fileRef = E5470EF522C119F4001092A4 /* GoogleService-Info_dev.plist */; };
@@ -98,7 +95,6 @@
 		980536702683AC8B0065E80F /* help in Resources */ = {isa = PBXBuildFile; fileRef = 82569F4D22187E6500448B45 /* help */; };
 		980536712683B68A0065E80F /* speaker.obj in Resources */ = {isa = PBXBuildFile; fileRef = 823DA453252F7EA800BB5E6B /* speaker.obj */; };
 		980536722683B6920065E80F /* Crumb.obj in Resources */ = {isa = PBXBuildFile; fileRef = 4D6B00E41F33C85500952242 /* Crumb.obj */; };
-		980536762683C8A30065E80F /* BurgerMenu.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 77365B1B2343ECBA008BC35C /* BurgerMenu.storyboard */; };
 		980536EE2684D16F0065E80F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 980536732683C1D10065E80F /* AppDelegate.swift */; };
 		9815CEEB26851049008FCF74 /* test-route2.crd in Resources */ = {isa = PBXBuildFile; fileRef = 9815CEEA26851049008FCF74 /* test-route2.crd */; };
 		9815CEEC26851049008FCF74 /* test-route2.crd in Resources */ = {isa = PBXBuildFile; fileRef = 9815CEEA26851049008FCF74 /* test-route2.crd */; };
@@ -114,6 +110,13 @@
 		9815CF0126851A06008FCF74 /* clew-dev-table2wall.crd in Resources */ = {isa = PBXBuildFile; fileRef = 9815CEFE26851A06008FCF74 /* clew-dev-table2wall.crd */; };
 		986640CE22FB68F2005AA1F6 /* NameSavedRouteController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986640CD22FB68F2005AA1F6 /* NameSavedRouteController.swift */; };
 		986640CF22FC9606005AA1F6 /* NameSavedRouteController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986640CD22FB68F2005AA1F6 /* NameSavedRouteController.swift */; };
+		98CC6761268A0FEC00E3759F /* FirebaseSetup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98CC6760268A0FEC00E3759F /* FirebaseSetup.swift */; };
+		98CC6762268A0FEC00E3759F /* FirebaseSetup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98CC6760268A0FEC00E3759F /* FirebaseSetup.swift */; };
+		98CC6763268A0FEC00E3759F /* FirebaseSetup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98CC6760268A0FEC00E3759F /* FirebaseSetup.swift */; };
+		98CC6766268A1F2200E3759F /* SurveyInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98CC6765268A1F2200E3759F /* SurveyInterface.swift */; };
+		98CC6767268A1F2200E3759F /* SurveyInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98CC6765268A1F2200E3759F /* SurveyInterface.swift */; };
+		98CC6768268A1F2200E3759F /* SurveyInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98CC6765268A1F2200E3759F /* SurveyInterface.swift */; };
+		98CC6769268A23A600E3759F /* SurveyInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98CC6765268A1F2200E3759F /* SurveyInterface.swift */; };
 		B0A563F6FE1007A2716DC876 /* Pods_Clew_Dev.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3532E390954571B93729786A /* Pods_Clew_Dev.framework */; };
 		B7EB59E220F693EB00FBBC6A /* Confirm.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4DF05CC71F34EB56008B0E31 /* Confirm.mp3 */; };
 		B7EB59E320F693EB00FBBC6A /* Crumb.obj in Resources */ = {isa = PBXBuildFile; fileRef = 4D6B00E41F33C85500952242 /* Crumb.obj */; };
@@ -344,6 +347,8 @@
 		9815CEF7268512AB008FCF74 /* clew-test.crd */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = "clew-test.crd"; sourceTree = "<group>"; };
 		9815CEFE26851A06008FCF74 /* clew-dev-table2wall.crd */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = "clew-dev-table2wall.crd"; sourceTree = "<group>"; };
 		986640CD22FB68F2005AA1F6 /* NameSavedRouteController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NameSavedRouteController.swift; sourceTree = "<group>"; };
+		98CC6760268A0FEC00E3759F /* FirebaseSetup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseSetup.swift; sourceTree = "<group>"; };
+		98CC6765268A1F2200E3759F /* SurveyInterface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SurveyInterface.swift; sourceTree = "<group>"; };
 		B6E04179254C52D5DB1CCBA5 /* Pods-UIKit Clip.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UIKit Clip.release.xcconfig"; path = "Pods/Target Support Files/Pods-UIKit Clip/Pods-UIKit Clip.release.xcconfig"; sourceTree = "<group>"; };
 		B7EB59EC20F693EB00FBBC6A /* Clew Dev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Clew Dev.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C68778047D8E263D2FB04989 /* Pods-Clew Dev.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew Dev.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Clew Dev/Pods-Clew Dev.debug.xcconfig"; sourceTree = "<group>"; };
@@ -623,6 +628,8 @@
 				E565A10722F2173400C1998E /* RouteDocumentData.swift */,
 				82A417E0262A205A001FCB8C /* AuthenticationHelper.swift */,
 				82BC47FD2640383300C7D364 /* Surveys.swift */,
+				98CC6765268A1F2200E3759F /* SurveyInterface.swift */,
+				98CC6760268A0FEC00E3759F /* FirebaseSetup.swift */,
 			);
 			path = Misc;
 			sourceTree = "<group>";
@@ -916,6 +923,7 @@
 					};
 					98006F392683703400E61861 = {
 						CreatedOnToolsVersion = 12.5.1;
+						LastSwiftMigration = 1250;
 					};
 					98006F4F2683703700E61861 = {
 						CreatedOnToolsVersion = 12.5.1;
@@ -1047,7 +1055,6 @@
 				9805366426838C3C0065E80F /* SettingsAndHelp.storyboard in Resources */,
 				9815CF0126851A06008FCF74 /* clew-dev-table2wall.crd in Resources */,
 				9805366D2683AC7C0065E80F /* speaker.mtl in Resources */,
-				980536762683C8A30065E80F /* BurgerMenu.storyboard in Resources */,
 				98006F85268382D800E61861 /* LaunchScreen.storyboard in Resources */,
 				9815CEED26851049008FCF74 /* test-route2.crd in Resources */,
 				9815CEFD268512AB008FCF74 /* clew-test.crd in Resources */,
@@ -1260,40 +1267,32 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-UIKit Clip/Pods-UIKit Clip-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/FirebaseAuth/FirebaseAuth.framework",
 				"${BUILT_PRODUCTS_DIR}/FirebaseCore/FirebaseCore.framework",
 				"${BUILT_PRODUCTS_DIR}/FirebaseCoreDiagnostics/FirebaseCoreDiagnostics.framework",
-				"${BUILT_PRODUCTS_DIR}/FirebaseDatabase/FirebaseDatabase.framework",
 				"${BUILT_PRODUCTS_DIR}/FirebaseInstallations/FirebaseInstallations.framework",
 				"${BUILT_PRODUCTS_DIR}/FirebaseStorage/FirebaseStorage.framework",
 				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
 				"${BUILT_PRODUCTS_DIR}/GoogleDataTransport/GoogleDataTransport.framework",
 				"${BUILT_PRODUCTS_DIR}/GoogleUtilities/GoogleUtilities.framework",
-				"${BUILT_PRODUCTS_DIR}/InAppSettingsKit/InAppSettingsKit.framework",
 				"${BUILT_PRODUCTS_DIR}/PRTween/PRTween.framework",
 				"${BUILT_PRODUCTS_DIR}/PromisesObjC/FBLPromises.framework",
 				"${BUILT_PRODUCTS_DIR}/SRCountdownTimer/SRCountdownTimer.framework",
 				"${BUILT_PRODUCTS_DIR}/VectorMath/VectorMath.framework",
-				"${BUILT_PRODUCTS_DIR}/leveldb-library/leveldb.framework",
 				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseAuth.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseCore.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseCoreDiagnostics.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseDatabase.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseInstallations.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseStorage.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleDataTransport.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleUtilities.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/InAppSettingsKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PRTween.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBLPromises.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SRCountdownTimer.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/VectorMath.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/leveldb.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1354,6 +1353,7 @@
 				E5470F4A22C119F5001092A4 /* RouteTableViewCell.swift in Sources */,
 				E5470F0422C119F5001092A4 /* FeedbackLogger.swift in Sources */,
 				E5470F2822C119F5001092A4 /* ViewController.swift in Sources */,
+				98CC6761268A0FEC00E3759F /* FirebaseSetup.swift in Sources */,
 				82A417E1262A205A001FCB8C /* AuthenticationHelper.swift in Sources */,
 				E5470F3622C119F5001092A4 /* PauseTrackingController.swift in Sources */,
 				E5470F2A22C119F5001092A4 /* RecordPathController.swift in Sources */,
@@ -1362,6 +1362,7 @@
 				E5470F0022C119F5001092A4 /* PathLogger.swift in Sources */,
 				E5470F2422C119F5001092A4 /* UIButtonExtensions.swift in Sources */,
 				E5470EF822C119F5001092A4 /* AudioVisualizerView.swift in Sources */,
+				98CC6766268A1F2200E3759F /* SurveyInterface.swift in Sources */,
 				1F2971A522DF60F700B896C6 /* HelpCompiler.swift in Sources */,
 				E5470F1E22C119F5001092A4 /* NSStringExtension.swift in Sources */,
 				E5470F3222C119F5001092A4 /* ResumeTrackingController.swift in Sources */,
@@ -1372,6 +1373,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				98CC6768268A1F2200E3759F /* SurveyInterface.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1405,14 +1407,13 @@
 				98006FB22683844A00E61861 /* RecordPathController.swift in Sources */,
 				98006FB92683846200E61861 /* ResumeTrackingConfirmController.swift in Sources */,
 				98053652268388B80065E80F /* RecordButtonKit.swift in Sources */,
-				9805365F268388F20065E80F /* Surveys.swift in Sources */,
 				98006FC7268385D400E61861 /* HelpViewController.swift in Sources */,
 				98006FB42683845000E61861 /* StopRecordingController.swift in Sources */,
 				98006FC9268385DA00E61861 /* FeedbackViewController.swift in Sources */,
 				98053657268388CE0065E80F /* PathLogger.swift in Sources */,
 				98006FC1268385A700E61861 /* UIViewControllerExtensions.swift in Sources */,
+				98CC6769268A23A600E3759F /* SurveyInterface.swift in Sources */,
 				98006FB32683844D00E61861 /* StartNavigationController.swift in Sources */,
-				9805366326838C150065E80F /* BurgerMenuViewController.swift in Sources */,
 				980536EE2684D16F0065E80F /* AppDelegate.swift in Sources */,
 				98006FC3268385B300E61861 /* UIButtonExtensions.swift in Sources */,
 				98006FB82683845E00E61861 /* PauseTrackingController.swift in Sources */,
@@ -1423,12 +1424,12 @@
 				98053654268388C00065E80F /* RecorderViewController.swift in Sources */,
 				98006FB52683845400E61861 /* ResumeTrackingController.swift in Sources */,
 				98053655268388C30065E80F /* RecordButton.swift in Sources */,
+				98CC6763268A0FEC00E3759F /* FirebaseSetup.swift in Sources */,
 				9805365D268388EC0065E80F /* RouteDocumentData.swift in Sources */,
 				98006FBA2683847900E61861 /* UIConstants.swift in Sources */,
 				98053658268388D10065E80F /* Navigation.swift in Sources */,
 				98006FC4268385B700E61861 /* Float4x4Extension.swift in Sources */,
 				9805365A268388DD0065E80F /* PathFinder.swift in Sources */,
-				98006FBB2683857A00E61861 /* SettingsViewController.m in Sources */,
 				98006FCA268385DD00E61861 /* RoutesViewController.swift in Sources */,
 				98006FC0268385A400E61861 /* NSStringExtension.swift in Sources */,
 			);
@@ -1482,6 +1483,7 @@
 				E5470F4722C119F5001092A4 /* RootContainerView.swift in Sources */,
 				E5470F4B22C119F5001092A4 /* RouteTableViewCell.swift in Sources */,
 				E5470F0522C119F5001092A4 /* FeedbackLogger.swift in Sources */,
+				98CC6762268A0FEC00E3759F /* FirebaseSetup.swift in Sources */,
 				82A417E2262A205A001FCB8C /* AuthenticationHelper.swift in Sources */,
 				E5470F2922C119F5001092A4 /* ViewController.swift in Sources */,
 				E5470F3722C119F5001092A4 /* PauseTrackingController.swift in Sources */,
@@ -1490,6 +1492,7 @@
 				E5470EFF22C119F5001092A4 /* DataPersistence.swift in Sources */,
 				E5470F0122C119F5001092A4 /* PathLogger.swift in Sources */,
 				E5470F2522C119F5001092A4 /* UIButtonExtensions.swift in Sources */,
+				98CC6767268A1F2200E3759F /* SurveyInterface.swift in Sources */,
 				E5470EF922C119F5001092A4 /* AudioVisualizerView.swift in Sources */,
 				E5470F1F22C119F5001092A4 /* NSStringExtension.swift in Sources */,
 				E5470F3322C119F5001092A4 /* ResumeTrackingController.swift in Sources */,
@@ -1796,6 +1799,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CODE_SIGN_ENTITLEMENTS = "Clew App Clip/Clew_App_Clip.entitlements";
@@ -1814,6 +1818,7 @@
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = edu.occam.Clew.Clip;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -1824,6 +1829,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CODE_SIGN_ENTITLEMENTS = "Clew App Clip/Clew_App_Clip.entitlements";
@@ -1848,6 +1854,7 @@
 		98006F692683703700E61861 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
@@ -1874,6 +1881,7 @@
 		98006F6A2683703700E61861 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
@@ -1898,6 +1906,7 @@
 		98006F6C2683703700E61861 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CODE_SIGN_STYLE = Automatic;
@@ -1923,6 +1932,7 @@
 		98006F6D2683703700E61861 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CODE_SIGN_STYLE = Automatic;
@@ -1966,7 +1976,7 @@
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -D IS_DEV_TARGET";
 				PRODUCT_BUNDLE_IDENTIFIER = edu.occam.Clew.Clip;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "Clew/Clew Dev-Bridging-Header.h";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG APPCLIP";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -1993,7 +2003,6 @@
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -D IS_DEV_TARGET";
 				PRODUCT_BUNDLE_IDENTIFIER = edu.occam.Clew.Clip;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "Clew/Clew Dev-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

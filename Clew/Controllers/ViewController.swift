@@ -31,7 +31,6 @@ import AudioToolbox
 import MediaPlayer
 import VectorMath
 import Firebase
-import FirebaseDatabase
 import SRCountdownTimer
 import SwiftUI
 
@@ -113,13 +112,20 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// The state of the ARKit tracking session as last communicated to us through the delgate protocol.  This is useful if you want to do something different in the delegate method depending on the previous state
     var trackingSessionState : ARCamera.TrackingState?
     
+    #if !APPCLIP
     let surveyModel = FirebaseFeedbackSurveyModel.shared
+    #endif
     
     /// the last time this particular user was surveyed (nil if we don't know this information or it hasn't been loaded from the database yet)
     var lastSurveyTime: [String: Double] = [:]
     
     /// TEMPORARY to prevent multiple auto alignments
     var autoAlignPending = false
+    
+    /// Helper Classes
+    let firebaseSetup = FirebaseSetup()
+    
+    let surveyInterface = SurveyInterface()
     
     /// The state of the app.  This should be constantly referenced and updated as the app transitions
     var state = AppState.initializing {
@@ -662,9 +668,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     var locationRingBuffer = RingBuffer<Vector3>(capacity: 50)
     /// a ring buffer used to keep the last 100 headings of the phone
     var headingRingBuffer = RingBuffer<Float>(capacity: 50)
-
-    /// The conection to the Firebase real-time database
-    var databaseHandle = Database.database()
     
     /// Keypoint object
     var keypointObject : MDLObject!
@@ -787,7 +790,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         ViewController.alignmentWaitingPeriod = timerLength
         
         addGestures()
-        setupFirebaseObservers()
+        firebaseSetup.setupFirebaseObservers(vc: self)
         
         // create listeners to ensure that the isReadingAnnouncement flag is reset properly
         NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification, object: nil, queue: nil) { (notification) -> Void in
@@ -852,48 +855,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         speakerObject = speakerAsset.object(at: 0)
     }
     
-    /// Observe the relevant Firebase paths to handle any dynamic reconfiguration requests (this is currently not used in the app store version of Clew)
-    func setupFirebaseObservers() {
-        let responsePathRef = databaseHandle.reference(withPath: "config/" + UIDevice.current.identifierForVendor!.uuidString)
-        responsePathRef.observe(.childChanged) { (snapshot) -> Void in
-            self.handleNewConfig(snapshot: snapshot)
-        }
-        responsePathRef.observe(.childAdded) { (snapshot) -> Void in
-            self.handleNewConfig(snapshot: snapshot)
-        }
-        if let currentUID = Auth.auth().currentUser?.uid {
-            databaseHandle.reference(withPath: "\(currentUID)").child("surveys").getData() { (error, snapshot) in
-                if let error = error {
-                    print("Error getting data \(error)")
-                }
-                else if snapshot.exists(), let userDict = snapshot.value as? [String : AnyObject] {
-                    for (surveyName, surveyInfo) in userDict {
-                        if let surveyInfoDict = surveyInfo as? [String : AnyObject], let lastSurveyTime = surveyInfoDict["lastSurveyTime"] as? Double {
-                            self.lastSurveyTime[surveyName] = lastSurveyTime
-                        }
-                    }
-                }
-                else {
-                    print("No data available")
-                }
-            }
-        }
-        
-    }
+
     
-    /// Respond to any dynamic reconfiguration requests (this is currently not used in the app store version of Clew).
-    ///
-    /// - Parameter snapshot: the new configuration data
-    func handleNewConfig(snapshot: DataSnapshot) {
-        if snapshot.key == "adjust_offset", let newValue = snapshot.value as? Bool {
-            adjustOffset = newValue
-            nav.useHeadingOffset = adjustOffset
-            print("set new adjust offset value", newValue)
-        } else if snapshot.key == "strict_haptic", let newValue = snapshot.value as? Bool {
-            strictHaptic = newValue
-            print("set new strict haptic value", newValue)
-        }
-    }
+
     
     /// Called when the view appears on screen.
     ///
@@ -933,7 +897,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
                 // make sure to wait for data to load from firebase.  If they have started using the app, don't interrupt them.
                 if case .mainScreen(_) = self.state {
-                    self.presentSurveyIfIntervalHasPassed(mode: "onAppLaunch", logFileURLs: [])
+                    self.surveyInterface.presentSurveyIfIntervalHasPassed(mode: "onAppLaunch", logFileURLs: [], vc: self)
                 }
             }
         }
@@ -1749,7 +1713,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             anchorPointNode.removeFromParentNode()
         }
         
-        sendLogDataHelper(pathStatus: nil)
+        self.surveyInterface.sendLogDataHelper(pathStatus: nil, vc: self)
     }
     
     /// handles the user pressing the pause button
@@ -1869,84 +1833,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     }
     
     // MARK: - Logging
-    
-    /// send log data for an successful route navigation (thumbs up)
-    @objc func sendLogData() {
-        sendLogDataHelper(pathStatus: true)
-    }
-    
-    /// Presents a survey to the user as a popover.  The method will check to see if it has been sufficiently long since the user was last asked to fill out this survey before displaying the survey.
-    /// - Parameters:
-    ///   - mode: type of survey, accepts "onAppLaunch" and "afterRoute" which correspond to the value of the "currentAppLaunchSurvey" and "currentAfterRouteSurvey" keys respectively located in the Firebase Realtime Database at surveys/
-    ///   - logFileURLs: this list of URLs will be added to the survey response JSON file if the user winds up submitting the survey.  This makes it easier to link together feedback in the survey with data logs.
-    func presentSurveyIfIntervalHasPassed(mode: String, logFileURLs: [String]) {
-        
-        var surveyToTrigger: String = ""
-        
-        switch mode {
-            case "onAppLaunch":
-                surveyToTrigger = FirebaseFeedbackSurveyModel.shared.currentAppLaunchSurvey
-            case "afterRoute":
-                surveyToTrigger = FirebaseFeedbackSurveyModel.shared.currentAfterRouteSurvey
-            default:
-                surveyToTrigger = "defaultSurvey"
-        }
-        
-        print(surveyToTrigger)
-        
-        if FirebaseFeedbackSurveyModel.shared.questions[surveyToTrigger] == nil {
-            return
-        }
-        if self.lastSurveyTime[surveyToTrigger] == nil || -Date(timeIntervalSince1970: self.lastSurveyTime[surveyToTrigger]!).timeIntervalSinceNow >= FirebaseFeedbackSurveyModel.shared.intervals[surveyToTrigger] ?? 0.0 {
-            self.lastSurveyTime[surveyToTrigger] = Date().timeIntervalSince1970
-            
-            if let currentUID = Auth.auth().currentUser?.uid {
-                let surveyInfo = ["lastSurveyTime": self.lastSurveyTime[surveyToTrigger]!]
-                self.databaseHandle.reference(withPath: "\(currentUID)/surveys/\(surveyToTrigger)").updateChildValues(surveyInfo)
-            }
-            
-            let swiftUIView = FirebaseFeedbackSurvey(feedbackSurveyName: surveyToTrigger, logFileURLs: logFileURLs)
-            self.hostingController = UISurveyHostingController(rootView: swiftUIView)
-            NotificationCenter.default.post(name: Notification.Name("ClewPopoverDisplayed"), object: nil)
-            self.present(self.hostingController!, animated: true, completion: nil)
-        }
-    }
-    
-    /// Presents a survey to the user as a popover.  The method will check to see if it has been sufficiently long since the user was last asked to fill out this survey before displaying the survey.
-    /// - Parameters:
-    ///   - surveyToTrigger: this is the name of the survey, which should be described in the realtime database under "/surveys/{surveyToTrigger}"
-    ///   - logFileURLs: this list of URLs will be added to the survey response JSON file if the user winds up submitting the survey.  This makes it easier to link together feedback in the survey with data logs.
-    func presentSurveyIfIntervalHasPassedWithSurveyKey(surveyToTrigger: String, logFileURLs: [String]) {
-        if FirebaseFeedbackSurveyModel.shared.questions[surveyToTrigger] == nil {
-            return
-        }
-        if self.lastSurveyTime[surveyToTrigger] == nil || -Date(timeIntervalSince1970: self.lastSurveyTime[surveyToTrigger]!).timeIntervalSinceNow >= FirebaseFeedbackSurveyModel.shared.intervals[surveyToTrigger] ?? 0.0 {
-            self.lastSurveyTime[surveyToTrigger] = Date().timeIntervalSince1970
-            
-            if let currentUID = Auth.auth().currentUser?.uid {
-                let surveyInfo = ["lastSurveyTime": self.lastSurveyTime[surveyToTrigger]!]
-                self.databaseHandle.reference(withPath: "\(currentUID)/surveys/\(surveyToTrigger)").updateChildValues(surveyInfo)
-            }
-            
-            let swiftUIView = FirebaseFeedbackSurvey(feedbackSurveyName: surveyToTrigger, logFileURLs: logFileURLs)
-            self.hostingController = UISurveyHostingController(rootView: swiftUIView)
-            NotificationCenter.default.post(name: Notification.Name("ClewPopoverDisplayed"), object: nil)
-            self.present(self.hostingController!, animated: true, completion: nil)
-        }
-    }
-    
-    func sendLogDataHelper(pathStatus: Bool?, announceArrival: Bool = false) {
-        // send success log data to Firebase
-        let logFileURLs = logger.compileLogData(pathStatus)
-        logger.resetStateSequenceLog()
-        state = .mainScreen(announceArrival: announceArrival)
-        if sendLogs {
-            // do this in a little while to give it time to announce arrival
-            DispatchQueue.main.asyncAfter(deadline: .now() + (announceArrival ? 3 : 1)) {
-                self.presentSurveyIfIntervalHasPassed(mode: "afterRoute", logFileURLs: logFileURLs)
-            }
-        }
-    }
         
     /// drop a crumb during path recording
     @objc func dropCrumb() {
@@ -2011,7 +1897,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 followingCrumbs?.invalidate()
                 hapticTimer?.invalidate()
                 
-                sendLogDataHelper(pathStatus: nil, announceArrival: true)
+                self.surveyInterface.sendLogDataHelper(pathStatus: nil, announceArrival: true, vc: self)
             }
         }
     }
@@ -2250,6 +2136,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     }
     
     @objc func burgerMenuButtonPressed() {
+        #if !APPCLIP
         let storyBoard: UIStoryboard = UIStoryboard(name: "BurgerMenu", bundle: nil)
         let popoverContent = storyBoard.instantiateViewController(withIdentifier: "burgerMenuTapped") as! BurgerMenuViewController
         popoverContent.preferredContentSize = CGSize(width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height)
@@ -2262,6 +2149,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         popover?.sourceRect = CGRect(x: 0, y: UIConstants.settingsAndHelpFrameHeight/2, width: 0,height: 0)
 
         self.present(nav, animated: true, completion: nil)
+        #endif
     }
     
     /// Announce directions at any given point to the next keypoint
@@ -2748,6 +2636,7 @@ extension ViewController: UIPopoverPresentationControllerDelegate {
     }
 }
 
+#if !APPCLIP
 class UISurveyHostingController: UIHostingController<FirebaseFeedbackSurvey> {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -2756,3 +2645,4 @@ class UISurveyHostingController: UIHostingController<FirebaseFeedbackSurvey> {
         }
     }
 }
+#endif

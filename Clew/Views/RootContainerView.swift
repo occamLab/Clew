@@ -17,7 +17,7 @@ import AudioToolbox
 import MediaPlayer
 import VectorMath
 import Firebase
-import FirebaseDatabase
+//import FirebaseDatabase
 import SRCountdownTimer
 
 /// View for buttons and elements which are, generally, accessible

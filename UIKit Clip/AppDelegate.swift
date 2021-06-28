@@ -8,8 +8,6 @@
 
 import UIKit
 import Firebase
-import FirebaseAuth
-import FirebaseAnalytics
 import ARKit
 
 @main

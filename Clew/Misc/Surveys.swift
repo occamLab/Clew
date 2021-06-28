@@ -12,9 +12,11 @@
 import SwiftUI
 import UIKit
 import SimpleForm
+#if !APPCLIP
 import FirebaseDatabase
 import FirebaseStorage
 import FirebaseAuth
+#endif
 
 enum QuestionType: String {
     case title = "title"
@@ -148,10 +150,10 @@ class FirebaseFeedbackSurveyModel {
         intervals[snapshot.key] = presentationIntervalInSeconds
         print("intervals", intervals)
     }
+    
 }
 
 struct FirebaseFeedbackSurvey: View {
-    
     var simpleForm = SF()
     var presentingVC: UIViewController?
     let feedbackSurveyName: String

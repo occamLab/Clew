@@ -11,6 +11,9 @@ import Firebase
 import FirebaseStorage
 import FirebaseAnalytics
 import SceneKit
+#if !APPCLIP
+import FirebaseAuth
+#endif
 
 //FirebaseApp.configure()
 //Analytics.
@@ -191,11 +194,17 @@ class PathLogger {
         let pathDate = dateFormatter.string(from: date)
         let pathID = UIDevice.current.identifierForVendor!.uuidString + dateFormatter.string(from: date)
         let userId: String
+        
+        #if !APPCLIP
         if let currentUser = Auth.auth().currentUser {
             userId = currentUser.uid
         } else {
             userId = Analytics.appInstanceID()!
         }
+        #else
+        userId = Analytics.appInstanceID()!
+        #endif
+        
         var logFileURLs: [String] = []
         if let metaDataLogURL = sendMetaData(pathDate, pathID+"-0", userId, debug) {
             logFileURLs.append(metaDataLogURL)
