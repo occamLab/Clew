@@ -36,7 +36,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         #else
             FirebaseApp.configure()
         #endif
-        logUserProperties()
+        // logUserProperties()
         
         vc = ViewController()
         window = UIWindow(frame:UIScreen.main.bounds)
@@ -108,8 +108,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     /// Send user properties to Firebase
-    func logUserProperties() {
+    /* func logUserProperties() {
         Analytics.setUserProperty(String(UIAccessibility.isVoiceOverRunning), forName: "isVoiceOverRunning")
-    }
+    } */
         
 }

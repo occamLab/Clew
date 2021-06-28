@@ -100,6 +100,9 @@ class SurveyInterface {
             }
         }
         #endif
+        
+        vc.state = .mainScreen(announceArrival: announceArrival)
+
     }
 }
 
