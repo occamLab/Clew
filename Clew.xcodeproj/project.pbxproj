@@ -84,7 +84,6 @@
 		9805365B268388E00065E80F /* Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470EB522C119F4001092A4 /* Utility.swift */; };
 		9805365D268388EC0065E80F /* RouteDocumentData.swift in Sources */ = {isa = PBXBuildFile; fileRef = E565A10722F2173400C1998E /* RouteDocumentData.swift */; };
 		9805366126838AA40065E80F /* RootContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470EF022C119F4001092A4 /* RootContainerView.swift */; };
-		9805366226838ADC0065E80F /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = E5470EB922C119F4001092A4 /* Settings.bundle */; };
 		9805366426838C3C0065E80F /* SettingsAndHelp.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 772E4566236CC155008EF6AC /* SettingsAndHelp.storyboard */; };
 		9805366526838C500065E80F /* RouteTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470EF322C119F4001092A4 /* RouteTableViewCell.swift */; };
 		9805366B2683AB720065E80F /* GoogleService-Info_dev.plist in Resources */ = {isa = PBXBuildFile; fileRef = E5470EF522C119F4001092A4 /* GoogleService-Info_dev.plist */; };
@@ -1079,7 +1078,6 @@
 				98006F85268382D800E61861 /* LaunchScreen.storyboard in Resources */,
 				9815CEED26851049008FCF74 /* test-route2.crd in Resources */,
 				9815CEFD268512AB008FCF74 /* clew-test.crd in Resources */,
-				9805366226838ADC0065E80F /* Settings.bundle in Resources */,
 				98006F82268382D800E61861 /* Assets.xcassets in Resources */,
 				98006FBD2683859700E61861 /* StartRecording.aiff in Resources */,
 				98006FCC268386AD00E61861 /* Localizable.strings in Resources */,
@@ -1989,6 +1987,7 @@
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CODE_SIGN_ENTITLEMENTS = "UIKit Clip/UIKit_Clip.entitlements";
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 23;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
 				INFOPLIST_FILE = "UIKit Clip/Info.plist";
@@ -1997,6 +1996,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 2.0.20;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -D IS_DEV_TARGET";
@@ -2018,6 +2018,7 @@
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CODE_SIGN_ENTITLEMENTS = "UIKit Clip/UIKit_Clip.entitlements";
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 23;
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
 				INFOPLIST_FILE = "UIKit Clip/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
@@ -2025,6 +2026,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 2.0.20;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -D IS_DEV_TARGET";
 				PRODUCT_BUNDLE_IDENTIFIER = "edu.occam.Clew-Dev.Clip";
@@ -2145,7 +2147,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Clew Dev.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 48;
+				CURRENT_PROJECT_VERSION = 23;
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
 				INFOPLIST_FILE = "Clew Dev-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
@@ -2153,7 +2155,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0.18;
+				MARKETING_VERSION = 2.0.20;
 				OTHER_SWIFT_FLAGS = "$(inherited) \"-DDEVELOPER\" \"-DIS_DEV_TARGET\"";
 				PRODUCT_BUNDLE_IDENTIFIER = "edu.occam.Clew-Dev";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2175,7 +2177,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Clew Dev.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 48;
+				CURRENT_PROJECT_VERSION = 23;
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
 				INFOPLIST_FILE = "Clew Dev-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
@@ -2183,7 +2185,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0.18;
+				MARKETING_VERSION = 2.0.20;
 				OTHER_SWIFT_FLAGS = "$(inherited) \"-DDEVELOPER\" \"-DIS_DEV_TARGET\"";
 				PRODUCT_BUNDLE_IDENTIFIER = "edu.occam.Clew-Dev";
 				PRODUCT_NAME = "$(TARGET_NAME)";
