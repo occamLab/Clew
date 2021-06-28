@@ -12,11 +12,9 @@
 import SwiftUI
 import UIKit
 import SimpleForm
-#if !APPCLIP
 import FirebaseDatabase
 import FirebaseStorage
 import FirebaseAuth
-#endif
 
 enum QuestionType: String {
     case title = "title"
