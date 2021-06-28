@@ -14,14 +14,19 @@ struct TutorialScreen<Content: View>: View {
   init(@ViewBuilder content: () -> Content) {
     self.content = content()
   }
+    
+    
   var body: some View {
     content
+        
         //.navigationTitle("CLEW Tutorial")
         .navigationBarItems(
             trailing:
                 Button(NSLocalizedString("buttonTexttoExitTutorial", comment: "text of the button that dismisses the tutorial screens")) {
                     NotificationCenter.default.post(name: Notification.Name("TutorialPopoverReadyToDismiss"), object: nil)
         })
+        
+        //NotificationCenter.default.addObserver(forName: Notification.Name("ClewPopoverDismissed"), object: nil) //TODO: turn off clew warnings when
   }
 }
 
@@ -155,6 +160,7 @@ struct OrientPhoneTips: View {
 
 struct PracticeOrientPhone: View {
     //TODO: 1 can't exit right now bc the var arData is being updated constantly. 2 turn off warning when practicing. 3 turn on AR when practicing
+    @State private var started = false
     @State private var score = 0
     @State var lastSuccessSound = Date()
     @State var lastSuccess = Date()
@@ -162,6 +168,17 @@ struct PracticeOrientPhone: View {
     var body: some View{
         TutorialScreen {
             Text("score \(self.score)")
+            
+            Button("Start") {
+                started.toggle()
+                //NotificationCenter.default.post(name: Notification.Name("StartARSession"), object: nil)
+            }
+            
+            if started {
+                
+                NotificationCenter.default.post(name: Notification.Name("StartARSession"), object: nil)
+            }
+            
             if let transform = arData.transform {
                 let y = transform.columns.0.y
                 Text("y-component \(y)")
@@ -183,6 +200,8 @@ struct PracticeOrientPhone: View {
             if score < 3 {
                 NavigationLink(destination: FindPath()) {Text("Skip")}
             }
+            
+            
                 
         }.onReceive(self.arData.objectWillChange) { newARData in
                     if let transform = arData.transform {
@@ -203,17 +222,18 @@ struct PracticeOrientPhone: View {
                             //UIAccessibility.post(notification: .announcement, argument: "WAY TO GO!")
                     }
                     if y < -0.9, -lastSuccess.timeIntervalSinceNow > 5 {
+                        //adds point when you hold your phone right for 5 sec. maybe change to adding a point when you move the phone and then come back to the right position and hold there for some amount of time
                         print(score)
                         score += 1
-                        AudioServicesPlaySystemSound(SystemSoundID(1043))
+                        AudioServicesPlaySystemSound(SystemSoundID(1043))//replace with a success sound
                         lastSuccess = Date()
                         //UIAccessibility.post(notification: .announcement, argument: "Great")
                     }
                         
-                    if score == 2 {
-                        UIAccessibility.post(notification: .announcement, argument: "Nice Job! You've completed orientation practice. You can keep practicing or go to the next section")
+                    if score == 3 {
+                        UIAccessibility.post(notification: .announcement, argument: "Nice Job! You've completed phone orientation practice. You can keep practicing or go to the next section")
                     }
-                    }
+                }
         }
     }
 }
