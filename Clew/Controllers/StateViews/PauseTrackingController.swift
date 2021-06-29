@@ -186,9 +186,11 @@ class PauseTrackingController: UIViewController, UIScrollViewDelegate {
             enterAnchorPointDescriptionButton.addTarget(parent,
                                      action: #selector(ViewController.showAnchorPointInformationDialog),
                                      for: .touchUpInside)
+            #if !APPCLIP
             recordVoiceNoteButton.addTarget(parent,
                                        action: #selector(ViewController.recordVoiceNote),
                                        for: .touchUpInside)
+            #endif
             confirmAlignmentButton.addTarget(parent,
                                             action: #selector(ViewController.confirmAlignment),
                                             for: .touchUpInside)

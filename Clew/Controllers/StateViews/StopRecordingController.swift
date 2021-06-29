@@ -82,9 +82,11 @@ class StopRecordingController: UIViewController {
             stopRecordingButton.addTarget(parent,
                                           action: #selector(ViewController.stopRecording),
                                           for: .touchUpInside)
+            #if !APPCLIP
             recordVoiceNoteButton.addTarget(parent,
                                        action: #selector(ViewController.recordVoiceNote),
                                        for: .touchUpInside)
+            #endif
         }
     }
 }

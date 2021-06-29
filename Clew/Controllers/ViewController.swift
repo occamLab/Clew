@@ -527,7 +527,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 return
             }
             beginRouteAnchorPoint.transform = currentTransform
+            #if !APPCLIP
             pauseTrackingController.remove()
+            #endif
             
             ///PATHPOINT begining anchor point alignment timer -> record route
             ///announce to the user that they have sucessfully saved an anchor point.
@@ -616,7 +618,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         stopRecordingController.remove()
         startNavigationController.remove()
         stopNavigationController.remove()
+        #if !APPCLIP
         pauseTrackingController.remove()
+        #endif
         resumeTrackingConfirmController.remove()
         resumeTrackingController.remove()
         nameSavedRouteController.remove()
@@ -718,8 +722,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// the controller that hosts the popover survey
     var hostingController: UIViewController?
     
+    #if !APPCLIP
     /// route navigation pausing VC
     var pauseTrackingController: PauseTrackingController!
+    #endif
     
     /// route navigation resuming VC
     var resumeTrackingController: ResumeTrackingController!
@@ -755,7 +761,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         view = RootContainerView(frame: UIScreen.main.bounds)
         
         // initialize child view controllers
+        #if !APPCLIP
         pauseTrackingController = PauseTrackingController()
+        #endif
         resumeTrackingController = ResumeTrackingController()
         resumeTrackingConfirmController = ResumeTrackingConfirmController()
         stopRecordingController = StopRecordingController()
@@ -779,10 +787,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         
         // targets for global buttons
         ///// TRACK
+        #if !APPCLIP
         rootContainerView.burgerMenuButton.addTarget(self, action: #selector(burgerMenuButtonPressed), for: .touchUpInside)
         
         rootContainerView.homeButton.addTarget(self, action: #selector(homeButtonPressed), for: .touchUpInside)
 
+        #endif
+        
         rootContainerView.getDirectionButton.addTarget(self, action: #selector(announceDirectionHelpPressed), for: .touchUpInside)
 
         // make sure this happens after the view is created!
@@ -913,7 +924,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     func clearState() {
         // TODO: check for code reuse
         // Clearing All State Processes and Data
+        #if !APPCLIP
         rootContainerView.homeButton.isHidden = true
+        #endif
         recordPathController.isAccessibilityElement = false
         if case .navigatingRoute = self.state {
             keypointNode.removeFromParentNode()
@@ -991,7 +1004,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// Show the dialog that allows the user to enter textual information to help them remember a Anchor Point.
     @objc func showAnchorPointInformationDialog() {
+        #if !APPCLIP
         rootContainerView.homeButton.isHidden = false
+        #endif
         // Set title and message for the alert dialog
         let alertController = UIAlertController(title: NSLocalizedString("anchorPointTextHeading", comment: "The header of a pop-up menu which prompts the user to write descriptive text about their route anchor point"), message: NSLocalizedString("anchorPointTextPrompt", comment: "Prompts user to enter descriptive text about their anchor point"), preferredStyle: .alert)
         // The confirm action taking the inputs
@@ -1036,6 +1051,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     }
     
     /// Record a voice note by displaying the RecorderView
+    #if !APPCLIP
     @objc func recordVoiceNote() {
         let popoverContent = RecorderViewController()
         //says that the recorder should dismiss tiself when it is done
@@ -1051,7 +1067,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         suppressTrackingWarnings = true
         self.present(nav, animated: true, completion: nil)
     }
-    
+    #endif
     /// Show logging disclaimer when user opens app for the first time.
     func showLogAlert() {
         let logAlertVC = UIAlertController(title: NSLocalizedString("sharingYourExperiencePop-UpHeading", comment: "The heading of a pop-up telling the user that their data is being saved with error logs"),
@@ -1292,7 +1308,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         rootContainerView.getDirectionButton.isHidden = true
         // the options button is hidden if the route rating shows up
         ///// TRACK
+        #if !APPCLIP
         rootContainerView.homeButton.isHidden = true
+        #endif
 
         if announceArrival {
             delayTransition(announcement: NSLocalizedString("completedNavigationAnnouncement", comment: "An announcement which is played to notify the user that they have arrived at the end of their route."))
@@ -1321,7 +1339,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// Display stop recording view/hide all other views
     @objc func showStopRecordingButton() {
+        #if !APPCLIP
         rootContainerView.homeButton.isHidden = false // home button here
+        #endif
         recordPathController.remove()
         recordPathController.view.isAccessibilityElement = false
         add(stopRecordingController)
@@ -1330,7 +1350,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// Display start navigation view/hide all other views
     @objc func showStartNavigationButton(allowPause: Bool) {
+        #if !APPCLIP
         rootContainerView.homeButton.isHidden = !recordingSingleUseRoute // home button hidden if we are doing a multi use route (we use the large home button instead)
+        #endif
         resumeTrackingController.remove()
         resumeTrackingConfirmController.remove()
         stopRecordingController.remove()
@@ -1347,6 +1369,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
 
     /// Display the pause tracking view/hide all other views
     func showPauseTrackingButton() throws {
+        #if !APPCLIP
         rootContainerView.homeButton.isHidden = false
         recordPathController.remove()
         startNavigationController.remove()
@@ -1358,20 +1381,25 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         
         add(pauseTrackingController)
         delayTransition()
+        #endif
     }
     
     /// Display the resume tracking view/hide all other views
     @objc func showResumeTrackingButton() {
+        #if !APPCLIP
         rootContainerView.homeButton.isHidden = false // no home button here
         pauseTrackingController.remove()
         add(resumeTrackingController)
         UIApplication.shared.keyWindow!.bringSubviewToFront(rootContainerView)
         delayTransition()
+        #endif
     }
     
     /// Display the resume tracking confirm view/hide all other views.
     func showResumeTrackingConfirmButton(route: SavedRoute, navigateStartToEnd: Bool) {
+        #if !APPCLIP
         rootContainerView.homeButton.isHidden = false
+        #endif
         resumeTrackingController.remove()
         add(resumeTrackingConfirmController)
         resumeTrackingConfirmController.view.mainText?.text = ""
@@ -1417,7 +1445,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// display stop navigation view/hide all other views
     @objc func showStopNavigationButton() {
+        #if !APPCLIP
         rootContainerView.homeButton.isHidden = false
+        #endif
         rootContainerView.getDirectionButton.isHidden = false
         startNavigationController.remove()
         add(stopNavigationController)
@@ -1630,7 +1660,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         startAnchorPoint = true
 
         ///sends the user to create a Anchor Point
+        #if !APPCLIP
         rootContainerView.homeButton.isHidden = false
+        #endif
         creatingRouteAnchorPoint = true
 
         hideAllViewsHelper()
@@ -1660,7 +1692,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         crumbs = Array(recordingCrumbs)
         isResumedRoute = false
 
+        #if !APPCLIP
         rootContainerView.homeButton.isHidden = false // home button here
+        #endif
         resumeTrackingController.remove()
         resumeTrackingConfirmController.remove()
         stopRecordingController.remove()
@@ -1735,7 +1769,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// handles the user pressing the Anchor Point button
     @objc func startCreateAnchorPointProcedure() {
+        #if !APPCLIP
         rootContainerView.homeButton.isHidden = false
+        #endif
         creatingRouteAnchorPoint = true
         
         ///the route has not been resumed automaticly from a saved route
@@ -1776,7 +1812,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     func resumeTracking() {
         // resume pose tracking with existing ARSessionConfiguration
         hideAllViewsHelper()
+        #if !APPCLIP
         pauseTrackingController.remove()
+        #endif
         rootContainerView.countdownTimer.isHidden = false
         rootContainerView.countdownTimer.start(beginingValue: ViewController.alignmentWaitingPeriod, interval: 1)
         delayTransition()
@@ -2596,6 +2634,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
 }
 
 // MARK: - methods for implementing RecorderViewControllerDelegate
+#if !APPCLIP
 extension ViewController: RecorderViewControllerDelegate {
     /// Called when a recording starts (currently nothing is done in this function)
     func didStartRecording() {
@@ -2636,6 +2675,7 @@ extension ViewController: RecorderViewControllerDelegate {
         }
     }
 }
+#endif
 
 // MARK: - UIPopoverPresentationControllerDelegate
 extension ViewController: UIPopoverPresentationControllerDelegate {

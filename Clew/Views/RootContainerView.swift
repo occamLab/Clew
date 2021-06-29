@@ -29,8 +29,10 @@ class RootContainerView: UIView {
     /// button for getting directions to the next keypoint
     var getDirectionButton: UIButton!
     
+    #if !APPCLIP
     /// button for the burger menu
     var burgerMenuButton: UIButton!
+    #endif
     
     /// button for bringing up the settings menu
     var settingsButton: UIButton!
@@ -38,8 +40,10 @@ class RootContainerView: UIView {
     /// button for bringing up the help menu
     var helpButton: UIButton!
 
+    #if !APPCLIP
     /// button for going to the main screen
     var homeButton: UIButton!
+    #endif
 
     /// button for bringing up the feedback menu
     var feedbackButton: UIButton!
@@ -65,6 +69,7 @@ class RootContainerView: UIView {
         super.init(frame: frame)
         
         // MARK: Burger Menu Button
+        #if !APPCLIP
         burgerMenuButton = UIButton(frame: CGRect(x: UIConstants.buttonFrameWidth/(10/0.5),
                                                   y: 10,
                                                   width: UIConstants.buttonFrameWidth/7,
@@ -72,7 +77,7 @@ class RootContainerView: UIView {
         burgerMenuButton.isAccessibilityElement = true
         burgerMenuButton.accessibilityLabel = NSLocalizedString("optionsButtonAccessibilityLabel", comment: "This is the accessibility label for the home button")
         burgerMenuButton.setImage(UIImage(named: "burgerMenu"), for: .normal)
-
+        
 
         // MARK: Home Button
         homeButton = UIButton(frame: CGRect(x: UIConstants.buttonFrameWidth/(10/8),
@@ -85,6 +90,7 @@ class RootContainerView: UIView {
         homeButton.accessibilityLabel = NSLocalizedString("homeButtonAccessibilityLabel", comment: "This is the accessibility label for the home button")
         homeButton.setImage(UIImage(named: "homeButton"), for: .normal)
 
+        #endif
         // MARK: Get Directions Button
         getDirectionButton = UIButton(frame: CGRect(x: UIConstants.buttonFrameWidth/(7/5),
                                                     y: UIConstants.yOriginOfSettingsAndHelpButton + 10,
@@ -130,7 +136,9 @@ class RootContainerView: UIView {
         addSubview(announcementText)
         addSubview(getDirectionButton)
         addSubview(countdownTimer)
+        #if !APPCLIP
         addSubview(homeButton)
         addSubview(burgerMenuButton)
+        #endif
     }
 }
