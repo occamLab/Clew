@@ -2722,6 +2722,6 @@ class ARData: ObservableObject {
 extension ViewController: ARSessionDelegate {
     func session(_ session: ARSession, didUpdate frame: ARFrame) {
         ARData.shared.set(transform: frame.camera.transform)
-        print("got a frame", frame.camera.transform.columns.0.y)
+        //print("got a frame", frame.camera.transform.columns.0.y)
     }
 }

@@ -19,14 +19,16 @@ struct TutorialScreen<Content: View>: View {
   var body: some View {
     content
         
-        //.navigationTitle("CLEW Tutorial")
+        .navigationTitle("Clew Tutorial")
+        .navigationBarTitleDisplayMode(.inline)
+        
         .navigationBarItems(
             trailing:
                 Button(NSLocalizedString("buttonTexttoExitTutorial", comment: "text of the button that dismisses the tutorial screens")) {
                     NotificationCenter.default.post(name: Notification.Name("TutorialPopoverReadyToDismiss"), object: nil)
         })
         
-        //NotificationCenter.default.addObserver(forName: Notification.Name("ClewPopoverDismissed"), object: nil) //TODO: turn off clew warnings when
+        //NotificationCenter.default.addObserver(forName: Notification.Name("ClewPopoverDismissed"), object: nil) //TODO: turn off clew warnings when in tutorial
   }
 }
 
@@ -158,25 +160,32 @@ struct OrientPhoneTips: View {
     }
 }
 
+
 struct PracticeOrientPhone: View {
-    //TODO: 1 can't exit right now bc the var arData is being updated constantly. 2 turn off warning when practicing. 3 turn on AR when practicing
+    //TODO: 1 can't exit right now bc the var arData is being updated constantly. 2 turn off warning when practicing. 3 don't let score go up until user has moved phone out of correct orientation
     @State private var started = false
     @State private var score = 0
     @State var lastSuccessSound = Date()
     @State var lastSuccess = Date()
+    @State var resetPosition = false
     @ObservedObject private var arData = ARData.shared
     var body: some View{
         TutorialScreen {
+            Text("Instructions: Here you you will practice holding your phone in the correct position for using CLEW. Start off by moving your phone around. You will see that the further you are from holding your phone upright the more your phone will buzz when you get it in the right postion there will be a sucess sound and when you hold it in the right position for a few seconds youll get a point. To get more points you will have to move your phone out of the correct orientation and then back into it and hold it there again. Try and do this at least three times.")
+            
             Text("score \(self.score)")
             
-            Button("Start") {
+            Button(action:{
                 started.toggle()
-                //NotificationCenter.default.post(name: Notification.Name("StartARSession"), object: nil)
-            }
-            
-            if started {
-                
                 NotificationCenter.default.post(name: Notification.Name("StartARSession"), object: nil)
+                
+            }){
+                if started {
+                    Text("Stop")
+                    
+                } else {
+                    Text("Start")
+                }
             }
             
             if let transform = arData.transform {
@@ -197,36 +206,47 @@ struct PracticeOrientPhone: View {
                 Text("Nice Job! You've completed orientation practice. You can keep practicing or go to the next section")
             }
 
-            if score < 3 {
+            else if score < 3 {
                 NavigationLink(destination: FindPath()) {Text("Skip")}
             }
             
-            
                 
-        }.onReceive(self.arData.objectWillChange) { newARData in
+        }.onDisappear() {
+            started = false
+        }
+        .onReceive(self.arData.objectWillChange) { newARData in
+            if started {
                     if let transform = arData.transform {
                     let y = transform.columns.0.y
-                    if y < -0.4 && y > -0.7, -lastSuccessSound.timeIntervalSinceNow > 0.7 {
+                        if y < 0.5 && y > -0.7, -lastSuccessSound.timeIntervalSinceNow > 0.2 {
                             AudioServicesPlaySystemSound(SystemSoundID(1057))
+                            AudioServicesPlaySystemSound(SystemSoundID(4095))
                             lastSuccessSound = Date()
+                            lastSuccess = Date()
+                            resetPosition = true
                             //UIAccessibility.post(notification: .announcement, argument: "Almost")
                     }
                     if y < -0.7 && y > -0.9, -lastSuccessSound.timeIntervalSinceNow > 0.5 {
                             AudioServicesPlaySystemSound(SystemSoundID(1057))
+                            AudioServicesPlaySystemSound(SystemSoundID(4095))
                             lastSuccessSound = Date()
+                            lastSuccess = Date()
+                            resetPosition = true
                             //UIAccessibility.post(notification: .announcement, argument: "Almost")
                     }
-                    if y < -0.9, -lastSuccessSound.timeIntervalSinceNow > 0.2 {
+                        if y < -0.9, -lastSuccessSound.timeIntervalSinceNow > 0.7 {
                             AudioServicesPlaySystemSound(SystemSoundID(1057))
+                            AudioServicesPlaySystemSound(SystemSoundID(4095))
                             lastSuccessSound = Date()
                             //UIAccessibility.post(notification: .announcement, argument: "WAY TO GO!")
                     }
-                    if y < -0.9, -lastSuccess.timeIntervalSinceNow > 5 {
-                        //adds point when you hold your phone right for 5 sec. maybe change to adding a point when you move the phone and then come back to the right position and hold there for some amount of time
+                    if y < -0.9, resetPosition,  -lastSuccess.timeIntervalSinceNow > 5 {
                         print(score)
                         score += 1
-                        AudioServicesPlaySystemSound(SystemSoundID(1043))//replace with a success sound
                         lastSuccess = Date()
+                        resetPosition = false
+                        AudioServicesPlaySystemSound(SystemSoundID(1025))//replace with a success sound
+                        AudioServicesPlaySystemSound(SystemSoundID(4095))
                         //UIAccessibility.post(notification: .announcement, argument: "Great")
                     }
                         
@@ -234,6 +254,7 @@ struct PracticeOrientPhone: View {
                         UIAccessibility.post(notification: .announcement, argument: "Nice Job! You've completed phone orientation practice. You can keep practicing or go to the next section")
                     }
                 }
+            }
         }
     }
 }
@@ -259,7 +280,7 @@ struct TutorialTestView: View {
 
             TutorialScreen{
                     VStack (spacing: 30){
-                        Text(NSLocalizedString("tutorialTitleText", comment: "Title of the Clew Tutorial Screen. Top of the first tutorial page"))
+                        //Text(NSLocalizedString("tutorialTitleText", comment: "Title of the Clew Tutorial Screen. Top of the first tutorial page"))
                         
                         NavigationLink(destination: CLEWintro()) {Text("Intro to Clew")}
                         
