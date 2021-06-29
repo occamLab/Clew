@@ -9,7 +9,7 @@
 import SwiftUI
 import AVFoundation
 
-//TODO: 1 add button padding, margins, spacing  2 add content to all pages  3 interactive practice on following a path  4 set up settings walk through  5 add localized strings to everything
+//TODO: 1 add button padding, margins, spacing  2 add content to all pages  3 interactive practice on following a path  4 set up settings walk through  5 add localized strings to everything  6 make progress view?
 
 struct TutorialScreen<Content: View>: View {
   let content: Content
@@ -18,9 +18,9 @@ struct TutorialScreen<Content: View>: View {
   }
     
     
-  var body: some View {
+    var body: some View {
     content
-        
+            
         .navigationTitle("Clew Tutorial")
         .navigationBarTitleDisplayMode(.inline)
         
@@ -28,6 +28,7 @@ struct TutorialScreen<Content: View>: View {
             trailing:
                 Button(NSLocalizedString("buttonTexttoExitTutorial", comment: "text of the button that dismisses the tutorial screens")) {
                     NotificationCenter.default.post(name: Notification.Name("TutorialPopoverReadyToDismiss"), object: nil)
+        
         })
     }
   }
@@ -154,6 +155,8 @@ struct OrientPhoneTips: View {
     var body: some View {
         TutorialScreen {
             VStack (spacing: 30){
+                Text("Tips for holding your phone")
+                
                 Text(NSLocalizedString("orientPhoneTutorialTips", comment: "Tips for orienting phone correctly"))
             }
         }
@@ -162,7 +165,7 @@ struct OrientPhoneTips: View {
 
 
 struct PracticeOrientPhone: View {
-    //TODO: 1 can't exit right now bc the var arData is being updated constantly. 2 give haptic feedback
+    //TODO: 1 can't exit right now bc the var arData is being updated constantly. 2 give haptic feedback  3 add success notification when activity is complete
     @State private var started = false
     @State private var successAlert = false
     @State private var score = 0
@@ -179,19 +182,13 @@ struct PracticeOrientPhone: View {
             Button(action:{
                 started.toggle()
                 NotificationCenter.default.post(name: Notification.Name("StartARSession"), object: nil)
-                
             }){
                 if started {
                     Text("Stop")
-                    
                 } else {
                     Text("Start")
                 }
             }
-            
-            /*.alert("Practice Complete", isPresented: successAlert){
-                Button("OK", role: .cancel) {}
-            }*/
             
             if let transform = arData.transform {
                 let y = transform.columns.0.y
@@ -214,8 +211,8 @@ struct PracticeOrientPhone: View {
             else if score < 3 {
                 NavigationLink(destination: FindPath()) {Text("Skip")}
             }
+        
             
-                
         }.onDisappear() {
             started = false
         }
@@ -255,6 +252,8 @@ struct PracticeOrientPhone: View {
                         //UIAccessibility.post(notification: .announcement, argument: "Great")
                     }
                         
+                    
+                        
                     /*if score == 3, playsuccess {
                         successAlert = true
                         UIAccessibility.post(notification: .announcement, argument: "Nice Job! You've completed phone orientation practice. You can keep practicing or go to the next section")
@@ -268,7 +267,7 @@ struct PracticeOrientPhone: View {
 struct CLEWintro: View {
     var body: some View {
         TutorialScreen{
-            VStack{
+            VStack (spacing: 30){
                 Text("CLEW is a navigation app that is meant for indoor use. It is not a replacement for mobility stratigies such as a white cane or guide dog. It is meant to be a supplimentary tool to help with indoor navigation of shorter routes.")
                 
                 NavigationLink(destination: OrientPhone()) {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}

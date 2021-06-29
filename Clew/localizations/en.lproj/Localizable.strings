@@ -284,7 +284,7 @@
 "orientPhoneTutorialButtonText" = "Holding Your Phone";
 "orientPhoneTutorialInstructionText" = "Clew uses your phone's camera to track the environment as you move along a route. You should hold your phone vertically with the rear camera facing forward whenever you are using Clew. It is important to maintain the phone in this orientation while you are navigating a route.";
 "orientPhoneTutorialTips" = "You can hold your phone against your chest to ensure that it remains in the vertical oritentation. We also recomemend that you hold the phone in the opposite hand to which you use your white cane or guide dog.";
-"orientPhoneTutorialPracticeTitle" = "Practice Holding Phone"
+"orientPhoneTutorialPracticeTitle" = "Practice Holding Phone";
 "orientPhoneTutorialPracticeInstructions" = "Instructions: Here you you will practice holding your phone in the correct position for using CLEW. Start off by moving your phone around. You will see that the further you are from holding your phone upright the more your phone will buzz when you get it in the right postion there will be a sucess sound and when you hold it in the right position for a few seconds youll get a point. To get more points you will have to move your phone out of the correct orientation and then back into it and hold it there again. Try and do this at least three times.";
 
 "findPathTutorialButtonText" = "Finding and Following a Path";
