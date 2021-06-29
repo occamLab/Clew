@@ -101,7 +101,7 @@ struct SavedRoutes: View {
     }
 }
 
-struct SignleUse: View {
+struct SingleUse: View {
     var body: some View {
         TutorialScreen{
             VStack{
@@ -123,7 +123,7 @@ struct FindPath: View {
             
                 Text(NSLocalizedString("findPathTutorialInstructionText", comment: "Text that explains what it sounds and feels like to be on the path and following the path"))
             
-                NavigationLink(destination: SignleUse())  {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
+                NavigationLink(destination: SingleUse())  {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
                 
                 NavigationLink(destination: PracticeOrientPhone()) {Text("Practice Holding Phone")}
             }
@@ -263,7 +263,7 @@ struct CLEWintro: View {
     var body: some View {
         TutorialScreen{
             VStack{
-                Text("CLEW is a navigation app that is meant for indoor use. It is not a replacement for mobitly stratigies such as a white cane or guide dog. It is meant to be a suplimentary tool to help with indoor navigation of shorter routes.")
+                Text("CLEW is a navigation app that is meant for indoor use. It is not a replacement for mobility stratigies such as a white cane or guide dog. It is meant to be a supplimentary tool to help with indoor navigation of shorter routes.")
                 
                 NavigationLink(destination: OrientPhone()) {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
                 
@@ -288,7 +288,7 @@ struct TutorialTestView: View {
                         
                         NavigationLink(destination: FindPath()) {Text(NSLocalizedString( "findPathTutorialButtonText", comment: "Title for the finding and following path part of the tutorial"))}
                         
-                        NavigationLink(destination: SignleUse()) {Text(NSLocalizedString( "singleUseRouteTutorialButtonText", comment: "Title for the single use route part of the tutorial"))}
+                        NavigationLink(destination: SingleUse()) {Text(NSLocalizedString( "singleUseRouteTutorialButtonText", comment: "Title for the single use route part of the tutorial"))}
                         
                         NavigationLink(destination: SavedRoutes()) {Text(NSLocalizedString( "savedRoutesTutorialButtonText", comment: "Title for the saved route part of the tutorial"))}
                         
