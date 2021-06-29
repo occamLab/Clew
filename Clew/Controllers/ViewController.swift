@@ -761,6 +761,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         
         NotificationCenter.default.addObserver(forName: Notification.Name("TutorialPopoverReadyToDismiss"), object: nil, queue: nil) { (notification) -> Void in
             self.tutorialHostingController?.dismiss(animated: true)
+            NotificationCenter.default.post(name: Notification.Name("ClewPopoverDismissed"), object: nil)
         }
         
         // we use a custom notification to communicate from the help controller to the main view controller that a popover that should suppress tracking warnings was displayed
@@ -2142,6 +2143,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 FindingSavedRoutes()}
             tutorialHostingController = UIHostingController(rootView: tutorialView)
         }
+        NotificationCenter.default.post(name: Notification.Name("ClewPopoverDisplayed"), object: nil)
         self.present(tutorialHostingController!, animated: true, completion: nil)
 
     }

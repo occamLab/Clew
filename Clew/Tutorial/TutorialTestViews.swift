@@ -9,6 +9,8 @@
 import SwiftUI
 import AVFoundation
 
+//TODO: 1 add button padding, margins, spacing  2 add content to all pages  3 interactive practice on following a path  4 set up settings walk through  5 add localized strings to everything
+
 struct TutorialScreen<Content: View>: View {
   let content: Content
   init(@ViewBuilder content: () -> Content) {
@@ -27,15 +29,13 @@ struct TutorialScreen<Content: View>: View {
                 Button(NSLocalizedString("buttonTexttoExitTutorial", comment: "text of the button that dismisses the tutorial screens")) {
                     NotificationCenter.default.post(name: Notification.Name("TutorialPopoverReadyToDismiss"), object: nil)
         })
-        
-        //NotificationCenter.default.addObserver(forName: Notification.Name("ClewPopoverDismissed"), object: nil) //TODO: turn off clew warnings when in tutorial
+    }
   }
-}
 
 struct SettingOptions: View {
     var body: some View {
         TutorialScreen{
-            VStack{
+            VStack (spacing: 30){
                 Text(NSLocalizedString( "settingOptionsTutorialButtonText", comment: "Title for the setting options part of the tutorial"))
                 
                 Text(NSLocalizedString( "settingOptionsTutorialInstructionText", comment: "Information about what the setting options are"))
@@ -47,7 +47,7 @@ struct SettingOptions: View {
 struct FindingSavedRoutes: View {
     var body: some View {
         TutorialScreen  {
-            VStack{
+            VStack (spacing: 30){
                 Text(NSLocalizedString( "findingSavedRoutesTutorialButtonText", comment: "Title for the finding saved route part of the tutorial"))
                 
                 Text(NSLocalizedString("findingSavedRoutesTutorialInstructionText", comment: "Instructions for finding saved routes"))
@@ -61,7 +61,7 @@ struct FindingSavedRoutes: View {
 struct AnchorPoints: View {
     var body: some View {
         TutorialScreen  {
-            VStack{
+            VStack (spacing: 30){
                 Text(NSLocalizedString( "anchorPointTutorialButtonText", comment: "Title for the anchor point part of the tutorial"))
                 
                 Text(NSLocalizedString("anchorPointTutorialInstructionText", comment: "Instructions for setting anchor points"))
@@ -74,7 +74,7 @@ struct AnchorPoints: View {
 struct VoiceNotes: View {
     var body: some View {
         TutorialScreen  {
-            VStack{
+            VStack (spacing: 30){
                 Text(NSLocalizedString( "voiceNotesTutorialButtonText", comment: "Title for the voice notes part of the tutorial"))
                 
                 Text(NSLocalizedString("voiceNotesTutorialInstructionText", comment: "Instructions for leaving voice notes along a path"))
@@ -86,7 +86,7 @@ struct VoiceNotes: View {
 struct SavedRoutes: View {
     var body: some View {
         TutorialScreen{
-            VStack{
+            VStack (spacing: 30){
                 Text(NSLocalizedString( "savedRoutesTutorialButtonText", comment: "Title for the saved route part of the tutorial"))
             
                 Text(NSLocalizedString("savedRouteTutorialInstructionText", comment: "Instructions for using saved routes"))
@@ -104,7 +104,7 @@ struct SavedRoutes: View {
 struct SingleUse: View {
     var body: some View {
         TutorialScreen{
-            VStack{
+            VStack (spacing: 30){
                 Text(NSLocalizedString( "singleUseRouteTutorialButtonText", comment: "Title for the single use route part of the tutorial"))
                 
                 Text(NSLocalizedString( "singleUseRouteTutorialInstructionText", comment: "Instructions for using the single use route"))
@@ -118,14 +118,14 @@ struct SingleUse: View {
 struct FindPath: View {
     var body: some View {
         TutorialScreen{
-            VStack{
+            VStack (spacing: 30){
                 Text(NSLocalizedString( "findPathTutorialButtonText", comment: "Title for the finding and following path part of the tutorial"))
             
                 Text(NSLocalizedString("findPathTutorialInstructionText", comment: "Text that explains what it sounds and feels like to be on the path and following the path"))
             
                 NavigationLink(destination: SingleUse())  {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
                 
-                NavigationLink(destination: PracticeOrientPhone()) {Text("Practice Holding Phone")}
+                NavigationLink(destination: PracticeOrientPhone()) {Text(NSLocalizedString ("orientPhoneTutorialPracticeTitle", comment: "Title of the practice orienting your phone page"))}
             }
         }
     }
@@ -134,7 +134,7 @@ struct FindPath: View {
 struct OrientPhone: View {
     var body: some View {
         TutorialScreen {
-            VStack{
+            VStack (spacing: 30){
                 Text(NSLocalizedString("orientPhoneTutorialButtonText", comment: "Title for the setting options part of the tutorial"))
             
                 Text(NSLocalizedString("orientPhoneTutorialInstructionText", comment: "Text that explains how to orient the phone for the best experience using Clew"))
@@ -153,8 +153,8 @@ struct OrientPhone: View {
 struct OrientPhoneTips: View {
     var body: some View {
         TutorialScreen {
-            VStack{
-                Text("tips go here")
+            VStack (spacing: 30){
+                Text(NSLocalizedString("orientPhoneTutorialTips", comment: "Tips for orienting phone correctly"))
             }
         }
     }
@@ -162,16 +162,17 @@ struct OrientPhoneTips: View {
 
 
 struct PracticeOrientPhone: View {
-    //TODO: 1 can't exit right now bc the var arData is being updated constantly. 2 turn off warning when practicing. 3 don't let score go up until user has moved phone out of correct orientation
+    //TODO: 1 can't exit right now bc the var arData is being updated constantly. 2 give haptic feedback
     @State private var started = false
+    @State private var successAlert = false
     @State private var score = 0
     @State var lastSuccessSound = Date()
     @State var lastSuccess = Date()
-    @State var resetPosition = false
+    @State var resetPosition = true
     @ObservedObject private var arData = ARData.shared
     var body: some View{
         TutorialScreen {
-            Text("Instructions: Here you you will practice holding your phone in the correct position for using CLEW. Start off by moving your phone around. You will see that the further you are from holding your phone upright the more your phone will buzz when you get it in the right postion there will be a sucess sound and when you hold it in the right position for a few seconds youll get a point. To get more points you will have to move your phone out of the correct orientation and then back into it and hold it there again. Try and do this at least three times.")
+            Text(NSLocalizedString("orientPhoneTutorialPracticeInstructions", comment: "Instructions for practicing holding phone activity"))
             
             Text("score \(self.score)")
             
@@ -187,6 +188,10 @@ struct PracticeOrientPhone: View {
                     Text("Start")
                 }
             }
+            
+            /*.alert("Practice Complete", isPresented: successAlert){
+                Button("OK", role: .cancel) {}
+            }*/
             
             if let transform = arData.transform {
                 let y = transform.columns.0.y
@@ -240,19 +245,20 @@ struct PracticeOrientPhone: View {
                             lastSuccessSound = Date()
                             //UIAccessibility.post(notification: .announcement, argument: "WAY TO GO!")
                     }
-                    if y < -0.9, resetPosition,  -lastSuccess.timeIntervalSinceNow > 5 {
+                    if y < -0.9, resetPosition,  -lastSuccess.timeIntervalSinceNow > 2 {
                         print(score)
                         score += 1
                         lastSuccess = Date()
                         resetPosition = false
-                        AudioServicesPlaySystemSound(SystemSoundID(1025))//replace with a success sound
+                        AudioServicesPlaySystemSound(SystemSoundID(1025))
                         AudioServicesPlaySystemSound(SystemSoundID(4095))
                         //UIAccessibility.post(notification: .announcement, argument: "Great")
                     }
                         
-                    if score == 3 {
+                    /*if score == 3, playsuccess {
+                        successAlert = true
                         UIAccessibility.post(notification: .announcement, argument: "Nice Job! You've completed phone orientation practice. You can keep practicing or go to the next section")
-                    }
+                    }*/
                 }
             }
         }
