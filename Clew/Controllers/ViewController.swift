@@ -33,6 +33,11 @@ import Firebase
 import FirebaseDatabase
 import SRCountdownTimer
 import SwiftUI
+import Intents
+import IntentsUI
+import CoreSpotlight
+import MobileCoreServices
+
 
 /// A custom enumeration type that describes the exact state of the app.  The state is not exhaustive (e.g., there are Boolean flags that also track app state).
 enum AppState {
@@ -151,6 +156,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
     }
 
+ 
+    ///
     /// When VoiceOver is not active, we use AVSpeechSynthesizer for speech feedback
     let synth = AVSpeechSynthesizer()
     
@@ -682,7 +689,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// stop route navigation VC
     var stopNavigationController: StopNavigationController!
-
+    ///siri shortcuts VC
+    var siriShortcutsController: SiriShortcutsController!
+    
     /// called when the view has loaded.  We setup various app elements in here.
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -1630,11 +1639,33 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
     }
     
+  
+    
+
+    
+    
     /// handles the user pressing the Anchor Point button
     @objc func startCreateAnchorPointProcedure() {
+
         rootContainerView.homeButton.isHidden = false
         creatingRouteAnchorPoint = true
+
+        /// create an activity and attach it to the VC
+        print("inside anch")
+        //print("siricheck: inside starCreateAnchorPoint")
+       // let vcc =  ViewController()
+        //vcc.state = .recordingRoute
         
+        let activity = SiriShortcutsController.newSingleUseRouteShortcut()
+      
+        self.userActivity = activity
+        
+ 
+        
+        activity.becomeCurrent()
+        newSingleUseRouteShortcutWasPressed()
+
+
         ///the route has not been resumed automaticly from a saved route
         isAutomaticAlignment = false
         ///tell the program that a single use route is being recorded
@@ -1643,7 +1674,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         ///PATHPOINT single use route button -> recording a route
         ///hide all other views
         hideAllViewsHelper()
-        
+
         // announce session state
         trackingErrorsAnnouncementTimer = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: true) { timer in
             self.announceCurrentTrackingErrors()
@@ -1653,9 +1684,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             self.trackingErrorsAnnouncementTimer?.invalidate()
             ///platy an announcemnt which tells the user that a route is being recorded
             self.delayTransition(announcement: NSLocalizedString("singleUseRouteToRecordingRouteAnnouncement", comment: "This is an announcement which is spoken when the user starts recording a single use route. it informs the user that they are recording a single use route."), initialFocus: nil)
-            
+
             //sends the user to the screen where they can start recording a route
             self.state = .recordingRoute
+            print("users is sent to screen")
         }
         if #available(iOS 12.0, *) {
             configuration.initialWorldMap = nil
@@ -1663,6 +1695,37 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         sceneView.session.run(configuration, options: [.removeExistingAnchors, .resetTracking])
     }
     
+    ///Siri shortcuts
+    
+    
+       func newSingleUseRouteShortcutWasPressed(){
+           let newSingleUseRouteActivity = SiriShortcutsController.newSingleUseRouteShortcut()
+           let activity = SiriShortcutsController.newSingleUseRouteShortcut()
+           print("checkact1:")
+           print(activity.activityType)
+        
+           if( activity.isEqual(nil)){
+          
+              print("Value - nil")
+           }else{
+               print("not nill")
+           }
+           
+          // newSingleUseRouteActivity.state = .recordingRoute
+           let shortcut = INShortcut(userActivity: activity)
+           
+           let vcc = INUIAddVoiceShortcutViewController(shortcut:shortcut)
+               
+         
+           vcc.delegate = self
+        
+            present(vcc, animated: true, completion: nil)
+           
+           
+       }
+    
+    
+
     /// this is called after the alignment countdown timer finishes in order to complete the pause tracking procedure
     @objc func pauseTracking() {
         // pause AR pose tracking
@@ -2542,6 +2605,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
 }
 
+
+
 // MARK: - methods for implementing RecorderViewControllerDelegate
 extension ViewController: RecorderViewControllerDelegate {
     /// Called when a recording starts (currently nothing is done in this function)
@@ -2584,6 +2649,8 @@ extension ViewController: RecorderViewControllerDelegate {
     }
 }
 
+
+
 // MARK: - UIPopoverPresentationControllerDelegate
 extension ViewController: UIPopoverPresentationControllerDelegate {
     /// Makes sure that popovers are not modal
@@ -2616,6 +2683,31 @@ extension ViewController: UIPopoverPresentationControllerDelegate {
         }
     }
 }
+
+
+extension ViewController: INUIAddVoiceShortcutViewControllerDelegate {
+
+    func addVoiceShortcutViewController(
+      _ controller: INUIAddVoiceShortcutViewController,
+      didFinishWith voiceShortcut: INVoiceShortcut?,
+      error: Error?
+    ) {
+        dismiss(animated: true, completion: nil)
+
+    }
+
+    // Function For cancellation
+
+    func addVoiceShortcutViewControllerDidCancel(
+      _ controller: INUIAddVoiceShortcutViewController) {
+        dismiss(animated: true, completion: nil)
+
+    }
+
+
+//end of extensin
+}
+
 
 class UISurveyHostingController: UIHostingController<FirebaseFeedbackSurvey> {
     override func viewDidAppear(_ animated: Bool) {
