@@ -49,11 +49,7 @@ class DataPersistence {
         }
     }
     
-    /// handler for importing routes from an external temporary file
-    /// called in the case of a route being shared from the UIActivityViewController
-    /// library
-    /// TODO: Does this need to be a static function?
-    func importData(from url: URL) {
+    func importData(withData data: Data) {
         // TODO: Do this same setClass thing for Clew documents
         NSKeyedUnarchiver.setClass(RouteDocumentData.self, forClassName: "Clew_Dev.RouteDocumentData")
         NSKeyedUnarchiver.setClass(SavedRoute.self, forClassName: "Clew_Dev.SavedRoute")
@@ -66,7 +62,6 @@ class DataPersistence {
         do {
             print("attempting unarchive")
             // if anything goes wrong with the unarchiving, stick with an emptly list of routes
-            let data = try Data(contentsOf: url)
             print("this is the data: ")
             print(data.description)
             print("that was the data! ")
@@ -118,6 +113,27 @@ class DataPersistence {
                     }
                 }
             }
+        } catch {
+            print("couldn't unarchive route document \(error)")
+        }
+        
+        /// remove from temp storage the file gets automatically placed into
+        /// otherwise the file sticks there and won't be deleted automatically,
+        /// causing app bloat.
+    }
+
+    
+    /// handler for importing routes from an external temporary file
+    /// called in the case of a route being shared from the UIActivityViewController
+    /// library
+    /// TODO: Does this need to be a static function?
+    func importData(from url: URL) {
+        /// attempt to fetch data from temporary import from external source
+        do {
+            print("attempting unarchive")
+            // if anything goes wrong with the unarchiving, stick with an emptly list of routes
+            let data = try Data(contentsOf: url)
+            importData(withData: data)
         } catch {
             print("couldn't unarchive route document \(error)")
         }
