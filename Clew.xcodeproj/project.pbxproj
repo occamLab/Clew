@@ -80,16 +80,12 @@
 		9805366526838C500065E80F /* RouteTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470EF322C119F4001092A4 /* RouteTableViewCell.swift */; };
 		9805366B2683AB720065E80F /* GoogleService-Info_dev.plist in Resources */ = {isa = PBXBuildFile; fileRef = E5470EF522C119F4001092A4 /* GoogleService-Info_dev.plist */; };
 		9805366C2683AC780065E80F /* Crumb.obj in Resources */ = {isa = PBXBuildFile; fileRef = 4D6B00E41F33C85500952242 /* Crumb.obj */; };
-		9805366D2683AC7C0065E80F /* speaker.mtl in Resources */ = {isa = PBXBuildFile; fileRef = 82AD6A24252F80AA00902A11 /* speaker.mtl */; };
-		9805366E2683AC7F0065E80F /* speaker.obj in Resources */ = {isa = PBXBuildFile; fileRef = 823DA453252F7EA800BB5E6B /* speaker.obj */; };
-		9805366F2683AC820065E80F /* Confirm.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4DF05CC71F34EB56008B0E31 /* Confirm.mp3 */; };
 		980536702683AC8B0065E80F /* help in Resources */ = {isa = PBXBuildFile; fileRef = 82569F4D22187E6500448B45 /* help */; };
 		980536712683B68A0065E80F /* speaker.obj in Resources */ = {isa = PBXBuildFile; fileRef = 823DA453252F7EA800BB5E6B /* speaker.obj */; };
 		980536722683B6920065E80F /* Crumb.obj in Resources */ = {isa = PBXBuildFile; fileRef = 4D6B00E41F33C85500952242 /* Crumb.obj */; };
 		980536EE2684D16F0065E80F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 980536732683C1D10065E80F /* AppDelegate.swift */; };
 		9815CEEB26851049008FCF74 /* test-route2.crd in Resources */ = {isa = PBXBuildFile; fileRef = 9815CEEA26851049008FCF74 /* test-route2.crd */; };
 		9815CEEC26851049008FCF74 /* test-route2.crd in Resources */ = {isa = PBXBuildFile; fileRef = 9815CEEA26851049008FCF74 /* test-route2.crd */; };
-		9815CEED26851049008FCF74 /* test-route2.crd in Resources */ = {isa = PBXBuildFile; fileRef = 9815CEEA26851049008FCF74 /* test-route2.crd */; };
 		9815CEF8268512AB008FCF74 /* clew-dev-route.crd in Resources */ = {isa = PBXBuildFile; fileRef = 9815CEF6268512AB008FCF74 /* clew-dev-route.crd */; };
 		9815CEF9268512AB008FCF74 /* clew-dev-route.crd in Resources */ = {isa = PBXBuildFile; fileRef = 9815CEF6268512AB008FCF74 /* clew-dev-route.crd */; };
 		9815CEFA268512AB008FCF74 /* clew-dev-route.crd in Resources */ = {isa = PBXBuildFile; fileRef = 9815CEF6268512AB008FCF74 /* clew-dev-route.crd */; };
@@ -98,11 +94,11 @@
 		9815CEFD268512AB008FCF74 /* clew-test.crd in Resources */ = {isa = PBXBuildFile; fileRef = 9815CEF7268512AB008FCF74 /* clew-test.crd */; };
 		9815CEFF26851A06008FCF74 /* clew-dev-table2wall.crd in Resources */ = {isa = PBXBuildFile; fileRef = 9815CEFE26851A06008FCF74 /* clew-dev-table2wall.crd */; };
 		9815CF0026851A06008FCF74 /* clew-dev-table2wall.crd in Resources */ = {isa = PBXBuildFile; fileRef = 9815CEFE26851A06008FCF74 /* clew-dev-table2wall.crd */; };
-		9815CF0126851A06008FCF74 /* clew-dev-table2wall.crd in Resources */ = {isa = PBXBuildFile; fileRef = 9815CEFE26851A06008FCF74 /* clew-dev-table2wall.crd */; };
+		9826024F268B760900D66811 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E5470ED022C119F4001092A4 /* Assets.xcassets */; };
+		98260250268B789A00D66811 /* clew-dev-table2wall.crd in Resources */ = {isa = PBXBuildFile; fileRef = 9815CEFE26851A06008FCF74 /* clew-dev-table2wall.crd */; };
 		986640CE22FB68F2005AA1F6 /* NameSavedRouteController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986640CD22FB68F2005AA1F6 /* NameSavedRouteController.swift */; };
 		986640CF22FC9606005AA1F6 /* NameSavedRouteController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986640CD22FB68F2005AA1F6 /* NameSavedRouteController.swift */; };
 		98C288DF268A422000B59B7F /* UIKit Clip.app in Embed App Clips */ = {isa = PBXBuildFile; fileRef = 98006F76268382D600E61861 /* UIKit Clip.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		98C288E5268A499900B59B7F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E5470ED022C119F4001092A4 /* Assets.xcassets */; };
 		98CC6761268A0FEC00E3759F /* FirebaseSetup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98CC6760268A0FEC00E3759F /* FirebaseSetup.swift */; };
 		98CC6762268A0FEC00E3759F /* FirebaseSetup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98CC6760268A0FEC00E3759F /* FirebaseSetup.swift */; };
 		98CC6763268A0FEC00E3759F /* FirebaseSetup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98CC6760268A0FEC00E3759F /* FirebaseSetup.swift */; };
@@ -1064,20 +1060,16 @@
 			files = (
 				9815CEFA268512AB008FCF74 /* clew-dev-route.crd in Resources */,
 				9805366426838C3C0065E80F /* SettingsAndHelp.storyboard in Resources */,
-				9815CF0126851A06008FCF74 /* clew-dev-table2wall.crd in Resources */,
-				9805366D2683AC7C0065E80F /* speaker.mtl in Resources */,
 				98006F85268382D800E61861 /* LaunchScreen.storyboard in Resources */,
-				9815CEED26851049008FCF74 /* test-route2.crd in Resources */,
-				98C288E5268A499900B59B7F /* Assets.xcassets in Resources */,
+				9826024F268B760900D66811 /* Assets.xcassets in Resources */,
 				9815CEFD268512AB008FCF74 /* clew-test.crd in Resources */,
 				98006F82268382D800E61861 /* Assets.xcassets in Resources */,
 				98006FBD2683859700E61861 /* StartRecording.aiff in Resources */,
 				98006FCC268386AD00E61861 /* Localizable.strings in Resources */,
-				9805366F2683AC820065E80F /* Confirm.mp3 in Resources */,
 				980536702683AC8B0065E80F /* help in Resources */,
+				98260250268B789A00D66811 /* clew-dev-table2wall.crd in Resources */,
 				98006FBE2683859A00E61861 /* StopRecording.aiff in Resources */,
 				9805366B2683AB720065E80F /* GoogleService-Info_dev.plist in Resources */,
-				9805366E2683AC7F0065E80F /* speaker.obj in Resources */,
 				9805366C2683AC780065E80F /* Crumb.obj in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1974,7 +1966,7 @@
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CODE_SIGN_ENTITLEMENTS = "UIKit Clip/UIKit_Clip.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 23;
+				CURRENT_PROJECT_VERSION = 41;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
 				INFOPLIST_FILE = "UIKit Clip/Info.plist";
@@ -2005,7 +1997,7 @@
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CODE_SIGN_ENTITLEMENTS = "UIKit Clip/UIKit_Clip.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 23;
+				CURRENT_PROJECT_VERSION = 41;
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
 				INFOPLIST_FILE = "UIKit Clip/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
@@ -2135,7 +2127,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Clew Dev.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 23;
+				CURRENT_PROJECT_VERSION = 41;
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
 				INFOPLIST_FILE = "Clew Dev-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
@@ -2166,7 +2158,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Clew Dev.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 23;
+				CURRENT_PROJECT_VERSION = 41;
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
 				INFOPLIST_FILE = "Clew Dev-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
