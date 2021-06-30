@@ -26,7 +26,6 @@ import ARKit
 import SceneKit
 import SceneKit.ModelIO
 import StoreKit
-// import RealityKit   // <3
 import AVFoundation
 import AudioToolbox
 import MediaPlayer
@@ -34,6 +33,7 @@ import VectorMath
 import Firebase
 import SRCountdownTimer
 import SwiftUI
+import Firebase
 
 /// A custom enumeration type that describes the exact state of the app.  The state is not exhaustive (e.g., there are Boolean flags that also track app state).
 enum AppState {
@@ -209,6 +209,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// This is an audio player that queues up the voice note associated with a particular route Anchor Point. The player is created whenever a saved route is loaded. Loading it before the user clicks the "Play Voice Note" button allows us to call the prepareToPlay function which reduces the latency when the user clicks the "Play Voice Note" button.
     var voiceNoteToPlay: AVAudioPlayer?
     
+    /// This is the invocation URL
+    // <3 var invocationURL:
+    
     
     // MARK: - Speech Synthesizer Delegate
     
@@ -308,36 +311,34 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         endRouteAnchorPoint = RouteAnchorPoint()
 
         logger.resetNavigationLog()
-        
-        let url = NSURL(fileURLWithPath: Bundle.main.path(forResource: "clew-dev-table2wall", ofType: "crd")!)
 
-        print(url)
-        dataPersistence.importData(from: url as URL)
+        let pathRef = Storage.storage().reference().child("clew-dev-table2wall.crd")
         
-        let thisRoute = (dataPersistence.routes.last)!
-        
-        sceneView.debugOptions = [.showWorldOrigin]
-        sceneView.session.run(configuration, options: [.removeExistingAnchors, .resetTracking])
-        
-        continuationAfterSessionIsReady = {
-            //self.state = .readyForFinalResumeAlignment
-            self.handleStateTransitionToStartingResumeProcedure(route: thisRoute, worldMap: nil, navigateStartToEnd: true)
-            print(self.resumeTrackingConfirmController.view.mainText?.text)
-            print("^ resume tracking text")
-            print(self.view.mainText?.text)
-            print("^ view text")
-            print("State transition, handled B)")
-            
-    /*        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
-                print("test?")
-                if self.sceneView.session.currentFrame?.anchors.compactMap({$0 as? ARImageAnchor}).count ?? 0 > 0 {
-                    self.state = .startingResumeProcedure(route: thisRoute, worldMap: nil, navigateStartToEnd: true)
-                    print("paused transform: \(self.pausedTransform)")
-                    self.confirmAlignment()
+        // download path from Firebase
+        pathRef.getData(maxSize: 100000000000) { data, error in
+            if let error = error {
+              // Handle any errors
+            } else {
+                self.dataPersistence.importData(withData: data!)
+                
+                let thisRoute = (self.dataPersistence.routes.last)!
+                
+                self.sceneView.debugOptions = [.showWorldOrigin]
+                self.sceneView.session.run(self.configuration, options: [.removeExistingAnchors, .resetTracking])
+                
+                self.continuationAfterSessionIsReady = {
+                    //self.state = .readyForFinalResumeAlignment
+                    self.handleStateTransitionToStartingResumeProcedure(route: thisRoute, worldMap: nil, navigateStartToEnd: true)
+//                    print(self.resumeTrackingConfirmController.view.mainText?.text)
+//                    print("^ resume tracking text")
+//                    print(self.view.mainText?.text)
+//                    print("^ view text")
+//                    print("State transition, handled B)")
                 }
             }
-        */
-        }
+          }
+        
+     
     }
     
     /// Handler for the navigatingRoute app state
