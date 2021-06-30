@@ -91,7 +91,6 @@ class SurveyInterface {
     }
     
     func sendLogDataHelper(pathStatus: Bool?, announceArrival: Bool = false, vc: ViewController) {
-        #if !APPCLIP
         // send success log data to Firebase
         let logFileURLs = vc.logger.compileLogData(pathStatus)
         vc.logger.resetStateSequenceLog()
@@ -102,15 +101,7 @@ class SurveyInterface {
                 self.presentSurveyIfIntervalHasPassed(mode: "afterRoute", logFileURLs: logFileURLs, vc: vc)
             }
         }
-        #else
-        vc.hideAllViewsHelper()
-        vc.state = .initializing
 
-        guard let scene = vc.view.window?.windowScene else {return}
-        let config = SKOverlay.AppClipConfiguration(position: .bottom)
-        let overlay = SKOverlay(configuration: config)
-        overlay.present(in: scene)
-        #endif
     }
 }
 

@@ -25,7 +25,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window?.backgroundColor = .white
         window?.makeKeyAndVisible()
         
-        //vc?.imageAnchoring = true
+        vc?.imageAnchoring = true
         vc?.recordPathController.remove()
         vc?.handleStateTransitionToNavigatingExternalRoute()
         UIApplication.shared.isIdleTimerDisabled = true

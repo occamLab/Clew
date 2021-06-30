@@ -61,8 +61,10 @@ enum AppState {
     case readyForFinalResumeAlignment
     /// the user is attempting to name the route they're in the process of saving
     case startingNameSavedRouteProcedure(worldMap: Any?)
-    // the user is anchoring a route from an ARImageAnchor
+    /// the user is anchoring a route from an ARImageAnchor
     case startingAutoAlignment
+    /// the user has stopped or completed an external route
+    case endScreen
     
     /// rawValue is useful for serializing state values, which we are currently using for our logging feature
     var rawValue: String {
@@ -93,6 +95,8 @@ enum AppState {
             return "startingNameSavedRouteProcedure"
         case .startingAutoAlignment:
             return "startingAutoAlignment"
+        case .endScreen:
+            return "endScreen"
         }
     }
 }
@@ -161,6 +165,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 break
             case .startingAutoAlignment:
                 handleStateTransitionToAutoAlignment()
+            case .endScreen:
+                showEndScreenInformation()
             }
         }
     }
@@ -1449,11 +1455,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         if imageAnchoring {
             print("yes good wrked correctly")
             resumeTrackingConfirmController.view.mainText?.text?.append(String.localizedStringWithFormat(NSLocalizedString("imageAnchorPointAlignmentText", comment: "Text describing the process of aligning to an image anchorpoint. This text shows up on the alignment screen."), waitingPeriod))
-            resumeTrackingConfirmController.view.mainText?.text?.append("test")
-            print(resumeTrackingConfirmController.view.mainText?.text)
-            print("^ appended text")
-            print(String(NSLocalizedString("imageAnchorPointAlignmentText", comment: "Text describing the process of aligning to an image anchorpoint. This text shows up on the alignment screen.")))
-            print("^ localized text")
             
         } else{
             resumeTrackingConfirmController.view.mainText?.text?.append(String.localizedStringWithFormat(NSLocalizedString("anchorPointAlignmentText", comment: "Text describing the process of aligning to an anchorpoint. This text shows up on the alignment screen."), waitingPeriod))
@@ -1461,6 +1462,34 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
         print("State: \(self.state)")
         delayTransition()
+    }
+    
+    func showEndScreenInformation(){
+        self.hideAllViewsHelper()
+        
+        guard let scene = self.view.window?.windowScene else {return}
+        
+        self.view.backgroundColor = UIColor.black.withAlphaComponent(0.4)
+        
+        /*var label = UILabel()
+        label.textColor = UIColor.white
+        label.textAlignment = .center
+        label.numberOfLines = 0
+        label.lineBreakMode = .byWordWrapping
+        label.font = UIFont.preferredFont(forTextStyle: .body)
+        label.text = "Route Navigation Stopped. Thank you for using the Clew App Clip"
+        label.tag = UIView.mainTextTag
+        
+        label.topAnchor.constraint(equalTo: view.topAnchor, constant: UIScreen.main.bounds.size.height*0.15).isActive = true
+        label.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8.0).isActive = true
+        label.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8.0).isActive = true
+        
+        self.view.addSubview(label)
+        
+        let config = SKOverlay.AppClipConfiguration(position: .bottom)
+        let overlay = SKOverlay(configuration: config)
+        overlay.present(in: scene)*/
+        print("UI done")
     }
     
     /// display stop navigation view/hide all other views
@@ -1767,8 +1796,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         for anchorPointNode in anchorPointNodes {
             anchorPointNode.removeFromParentNode()
         }
-        
+        #if !APPCLIP
         self.surveyInterface.sendLogDataHelper(pathStatus: nil, vc: self)
+        #else
+        showEndScreenInformation()
+        #endif
+        
     }
     
     /// handles the user pressing the pause button
