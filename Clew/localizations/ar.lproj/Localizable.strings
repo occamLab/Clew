@@ -40,6 +40,9 @@
 /* This is the text which delineates the text that a user saved witht their saved anchor point. This text is shown when a suer loads an anchor point and the text that the user saved with their anchor point appears right after this string. */
 "anchorPointIntroductionToSavedText" = "معلومات النقطة الثابتة التي أدخلتها هي:";
 
+"imageAnchorPointAlignmentText" = "";
+
+
 /* A button for user to click which will close the pop up without saving any information the user put in */
 "anchorPointPop-UpCancel" = "لا تُفصّل هذهي المعلومات";
 

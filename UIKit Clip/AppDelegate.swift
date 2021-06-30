@@ -44,8 +44,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window?.rootViewController = vc
         window?.makeKeyAndVisible()
         vc.recordPathController.remove()
-        vc.handleStateTransitionToNavigatingExternalRoute()
         UIApplication.shared.isIdleTimerDisabled = true
+        vc.handleStateTransitionToNavigatingExternalRoute()
+        print("test?")
         return true
     }
     

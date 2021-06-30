@@ -209,6 +209,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// This is an audio player that queues up the voice note associated with a particular route Anchor Point. The player is created whenever a saved route is loaded. Loading it before the user clicks the "Play Voice Note" button allows us to call the prepareToPlay function which reduces the latency when the user clicks the "Play Voice Note" button.
     var voiceNoteToPlay: AVAudioPlayer?
     
+    
     // MARK: - Speech Synthesizer Delegate
     
     /// Called when an utterance is finished.  We implement this function so that we can keep track of
@@ -319,8 +320,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         sceneView.session.run(configuration, options: [.removeExistingAnchors, .resetTracking])
         
         continuationAfterSessionIsReady = {
+            //self.state = .readyForFinalResumeAlignment
             self.handleStateTransitionToStartingResumeProcedure(route: thisRoute, worldMap: nil, navigateStartToEnd: true)
-            
+            print(self.resumeTrackingConfirmController.view.mainText?.text)
+            print("^ resume tracking text")
+            print(self.view.mainText?.text)
+            print("^ view text")
+            print("State transition, handled B)")
             
     /*        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
                 print("test?")
@@ -455,6 +461,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             }
         }
         print("state \(state)")
+        print("State Transition")
+        print(resumeTrackingConfirmController.view.mainText?.text)
+        print("^ new display text")
     }
     
     /// Handler for the startingNameSavedRouteProcedure app state
@@ -1321,6 +1330,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         // this notification currently cuts off the announcement of the button that was just pressed
         print("initialFocus \(initialFocus) announcement \(announcement)")
         UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: initialFocus)
+        print("notification posted")
+        print(UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: initialFocus))
+        print("That was the notification")
         if let announcement = announcement {
             if UIAccessibility.isVoiceOverRunning {
                 Timer.scheduledTimer(withTimeInterval: 2.0, repeats: false) { timer in
@@ -1395,6 +1407,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         rootContainerView.homeButton.isHidden = false
         #endif
         resumeTrackingController.remove()
+        resumeTrackingConfirmController.imageAnchoring = imageAnchoring
         add(resumeTrackingConfirmController)
         resumeTrackingConfirmController.view.mainText?.text = ""
         voiceNoteToPlay = nil
@@ -1434,16 +1447,19 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         resumeTrackingConfirmController.readVoiceNoteButton?.isHidden = voiceNoteToPlay == nil
         let waitingPeriod = ViewController.alignmentWaitingPeriod
         if imageAnchoring {
-            print("yes good worked correctly")
-            /*resumeTrackingConfirmController.view.mainText?.text?.append(String.localizedStringWithFormat(NSLocalizedString("imageAnchorPointAlignmentText", comment: "Text describing the process of aligning to an image anchorpoint. This text shows up on the alignment screen."), waitingPeriod))*/
-            resumeTrackingConfirmController.view.mainText?.text?.append(String(NSLocalizedString("imageAnchorPointAlignmentText", comment: "Text describing the process of aligning to an image anchorpoint. This text shows up on the alignment screen.")))
-            print("yes good worked correctly")
+            print("yes good wrked correctly")
+            resumeTrackingConfirmController.view.mainText?.text?.append(String.localizedStringWithFormat(NSLocalizedString("imageAnchorPointAlignmentText", comment: "Text describing the process of aligning to an image anchorpoint. This text shows up on the alignment screen."), waitingPeriod))
+            resumeTrackingConfirmController.view.mainText?.text?.append("test")
+            print(resumeTrackingConfirmController.view.mainText?.text)
+            print("^ appended text")
+            print(String(NSLocalizedString("imageAnchorPointAlignmentText", comment: "Text describing the process of aligning to an image anchorpoint. This text shows up on the alignment screen.")))
+            print("^ localized text")
             
-        } /*else{
-            print("no bad didn't work")
+        } else{
             resumeTrackingConfirmController.view.mainText?.text?.append(String.localizedStringWithFormat(NSLocalizedString("anchorPointAlignmentText", comment: "Text describing the process of aligning to an anchorpoint. This text shows up on the alignment screen."), waitingPeriod))
             
-        }*/
+        }
+        print("State: \(self.state)")
         delayTransition()
     }
     

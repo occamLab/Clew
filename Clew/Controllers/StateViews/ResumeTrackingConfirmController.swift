@@ -23,16 +23,28 @@ class ResumeTrackingConfirmController: UIViewController, UIScrollViewDelegate {
     /// text for Anchor Point information
     var anchorPointLabel: UILabel!
     
+    var imageAnchoring: Bool!
+    
     /// called when the view loads (any time)
     override func viewDidAppear(_ animated: Bool) {
         /// update label font
         /// TODO: is this a safe implementation? Might crash if label has no body, unclear.
         /// called when the view loads (any time)
+        
         label.font = UIFont.preferredFont(forTextStyle: .body)
         anchorPointLabel.font = UIFont.preferredFont(forTextStyle: .body)
+        
+        // TODO: Pass in waiting period incase it changes
+        if imageAnchoring {
+            label.text = String.localizedStringWithFormat(NSLocalizedString("imageAnchorPointAlignmentText", comment: "Text describing the process of aligning to an image anchorpoint. This text shows up on the alignment screen."), ViewController.alignmentWaitingPeriod)
+            confirmAlignmentButton.isHidden = true
+        } else {
+            label.text = String.localizedStringWithFormat(NSLocalizedString("anchorPointAlignmentText", comment: "Text describing the process of aligning to an anchorpoint. This text shows up on the alignment screen."), ViewController.alignmentWaitingPeriod)
+        }
 
         /// set confirm alignment button as initially active voiceover button
-        UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: self.confirmAlignmentButton)
+        UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: self.label.text)
+        
     }
     
     /// called when the view has loaded.  We setup various app elements in here.
@@ -116,16 +128,30 @@ class ResumeTrackingConfirmController: UIViewController, UIScrollViewDelegate {
         
         // MARK: ReadVoiceNoteButton
         /// The button that plays back the recorded voice note associated with a Anchor Point
+        #if !APPCLIP
         readVoiceNoteButton = UIButton.makeConstraintButton(view,
                                                        alignment: UIConstants.ButtonContainerHorizontalAlignment.left,
                                                        appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "Read")!),
                                                        label: NSLocalizedString("playVoiceNoteButtonAccessibilityLabel", comment: "This is the accessibility label for the button which allows the user to replay their recorded voice note when loading an anchor point."))
-        
+        #else
+        readVoiceNoteButton = UIButton.makeConstraintButton(view,
+                                                       alignment: UIConstants.ButtonContainerHorizontalAlignment.left,
+                                                       appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "StopNavigation")!),
+                                                       label: NSLocalizedString("playVoiceNoteButtonAccessibilityLabel", comment: "This is the accessibility label for the button which allows the user to replay their recorded voice note when loading an anchor point."))
+        #endif
         // MARK: ConfirmAlignmentButton
+        #if !APPCLIP
         confirmAlignmentButton = UIButton.makeConstraintButton(view,
                                                                alignment: UIConstants.ButtonContainerHorizontalAlignment.center,
                                                                appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "Align")!),
                                                                label: NSLocalizedString("startAlignmentCountdownButtonAccessibilityLabel", comment: "this is athe accessibility label for the button which allows the user to start an alignment procedure when saving an anchor point"))
+        #else
+        confirmAlignmentButton = UIButton.makeConstraintButton(view,
+                                                               alignment: UIConstants.ButtonContainerHorizontalAlignment.center,
+                                                               appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "StopNavigation")!),
+                                                               label: NSLocalizedString("startAlignmentCountdownButtonAccessibilityLabel", comment: "this is athe accessibility label for the button which allows the user to start an alignment procedure when saving an anchor point"))
+        #endif
+        
         
         /// create stack view for aligning and distributing bottom layer buttons
         let stackView   = UIStackView()
