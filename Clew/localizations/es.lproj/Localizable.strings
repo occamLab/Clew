@@ -124,6 +124,9 @@
 "anchorPointAlignmentText" = "Alinea el dispositivo con el punto de anclaje grabado anteriormente. Para ello, mantenlo en posición horizontal con la pantalla apuntando hacia arriba, Presionando el borde superior (el corto) a ras con la misma superficie vertical que utilizaste para crear el punto de anclaje. Tras ello, activa el botón de alineación que iniciará una cuenta atrás que te dará tiempo para ajustar la posición del dispositivo. Al final de la cuenta atrás se tomará la alineación y obtendrás un mensaje indicando que el punto de anclaje se ha guardado.";
 "anchorPointIntroductionToSavedText" = "La información del punto de anclaje que introdujiste es: ";
 
+// TODO: need to translate this
+"imageAnchorPointAlignmentText" = "";
+
 //Settings
 "Settings" = "Ajustes"; // Comments: Title/header of the settings menu.
 "imperialUnitText" = " pies";

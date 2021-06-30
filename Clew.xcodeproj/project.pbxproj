@@ -87,10 +87,10 @@
 		9815CF0026851A06008FCF74 /* clew-dev-table2wall.crd in Resources */ = {isa = PBXBuildFile; fileRef = 9815CEFE26851A06008FCF74 /* clew-dev-table2wall.crd */; };
 		9815CF0126851A06008FCF74 /* clew-dev-table2wall.crd in Resources */ = {isa = PBXBuildFile; fileRef = 9815CEFE26851A06008FCF74 /* clew-dev-table2wall.crd */; };
 		98260258268CC1DB00D66811 /* speaker.obj in Resources */ = {isa = PBXBuildFile; fileRef = 823DA453252F7EA800BB5E6B /* speaker.obj */; };
+		9819E2F2268BA6AB0008CA82 /* PauseTrackingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470EE622C119F4001092A4 /* PauseTrackingController.swift */; };
 		986640CE22FB68F2005AA1F6 /* NameSavedRouteController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986640CD22FB68F2005AA1F6 /* NameSavedRouteController.swift */; };
 		986640CF22FC9606005AA1F6 /* NameSavedRouteController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986640CD22FB68F2005AA1F6 /* NameSavedRouteController.swift */; };
 		98C288DF268A422000B59B7F /* UIKit Clip.app in Embed App Clips */ = {isa = PBXBuildFile; fileRef = 98006F76268382D600E61861 /* UIKit Clip.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		98C288E5268A499900B59B7F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E5470ED022C119F4001092A4 /* Assets.xcassets */; };
 		98CC6761268A0FEC00E3759F /* FirebaseSetup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98CC6760268A0FEC00E3759F /* FirebaseSetup.swift */; };
 		98CC6762268A0FEC00E3759F /* FirebaseSetup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98CC6760268A0FEC00E3759F /* FirebaseSetup.swift */; };
 		98CC6763268A0FEC00E3759F /* FirebaseSetup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98CC6760268A0FEC00E3759F /* FirebaseSetup.swift */; };
@@ -907,7 +907,6 @@
 				9805366426838C3C0065E80F /* SettingsAndHelp.storyboard in Resources */,
 				9815CF0126851A06008FCF74 /* clew-dev-table2wall.crd in Resources */,
 				98006F85268382D800E61861 /* LaunchScreen.storyboard in Resources */,
-				98C288E5268A499900B59B7F /* Assets.xcassets in Resources */,
 				98006F82268382D800E61861 /* Assets.xcassets in Resources */,
 				98006FBD2683859700E61861 /* StartRecording.aiff in Resources */,
 				98006FCC268386AD00E61861 /* Localizable.strings in Resources */,
@@ -1233,6 +1232,7 @@
 				98006FC7268385D400E61861 /* HelpViewController.swift in Sources */,
 				98006FB42683845000E61861 /* StopRecordingController.swift in Sources */,
 				98053657268388CE0065E80F /* PathLogger.swift in Sources */,
+				9819E2F2268BA6AB0008CA82 /* PauseTrackingController.swift in Sources */,
 				98006FC1268385A700E61861 /* UIViewControllerExtensions.swift in Sources */,
 				98CC6769268A23A600E3759F /* SurveyInterface.swift in Sources */,
 				98006FB32683844D00E61861 /* StartNavigationController.swift in Sources */,
