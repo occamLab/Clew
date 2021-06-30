@@ -203,6 +203,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     ///this boolean denotes whether or not the app is loading a route from an automatic alignment
     var isAutomaticAlignment: Bool = false
     
+    ///this boolean denotes whether or not the app is loading a route anchored off of an image
+    var imageAnchoring: Bool = false
+    
     /// This is an audio player that queues up the voice note associated with a particular route Anchor Point. The player is created whenever a saved route is loaded. Loading it before the user clicks the "Play Voice Note" button allows us to call the prepareToPlay function which reduces the latency when the user clicks the "Play Voice Note" button.
     var voiceNoteToPlay: AVAudioPlayer?
     
@@ -527,9 +530,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 return
             }
             beginRouteAnchorPoint.transform = currentTransform
-            #if !APPCLIP
             pauseTrackingController.remove()
-            #endif
             
             ///PATHPOINT begining anchor point alignment timer -> record route
             ///announce to the user that they have sucessfully saved an anchor point.
@@ -618,9 +619,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         stopRecordingController.remove()
         startNavigationController.remove()
         stopNavigationController.remove()
-        #if !APPCLIP
         pauseTrackingController.remove()
-        #endif
         resumeTrackingConfirmController.remove()
         resumeTrackingController.remove()
         nameSavedRouteController.remove()
@@ -722,10 +721,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// the controller that hosts the popover survey
     var hostingController: UIViewController?
     
-    #if !APPCLIP
     /// route navigation pausing VC
     var pauseTrackingController: PauseTrackingController!
-    #endif
     
     /// route navigation resuming VC
     var resumeTrackingController: ResumeTrackingController!
@@ -761,9 +758,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         view = RootContainerView(frame: UIScreen.main.bounds)
         
         // initialize child view controllers
-        #if !APPCLIP
         pauseTrackingController = PauseTrackingController()
-        #endif
         resumeTrackingController = ResumeTrackingController()
         resumeTrackingConfirmController = ResumeTrackingConfirmController()
         stopRecordingController = StopRecordingController()
@@ -1371,6 +1366,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     func showPauseTrackingButton() throws {
         #if !APPCLIP
         rootContainerView.homeButton.isHidden = false
+        #endif
         recordPathController.remove()
         startNavigationController.remove()
 
@@ -1381,19 +1377,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         
         add(pauseTrackingController)
         delayTransition()
-        #endif
     }
     
     /// Display the resume tracking view/hide all other views
     @objc func showResumeTrackingButton() {
         #if !APPCLIP
         rootContainerView.homeButton.isHidden = false // no home button here
+        #endif
         pauseTrackingController.remove()
         add(resumeTrackingController)
         UIApplication.shared.keyWindow!.bringSubviewToFront(rootContainerView)
-        delayTransition()
-        #endif
-    }
+        delayTransition()    }
     
     /// Display the resume tracking confirm view/hide all other views.
     func showResumeTrackingConfirmButton(route: SavedRoute, navigateStartToEnd: Bool) {
@@ -1439,7 +1433,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
         resumeTrackingConfirmController.readVoiceNoteButton?.isHidden = voiceNoteToPlay == nil
         let waitingPeriod = ViewController.alignmentWaitingPeriod
-        resumeTrackingConfirmController.view.mainText?.text?.append(String.localizedStringWithFormat(NSLocalizedString("anchorPointAlignmentText", comment: "Text describing the process of aligning to an anchorpoint. This text shows up on the alignment screen."), waitingPeriod))
+        if imageAnchoring {
+            print("yes good worked correctly")
+            /*resumeTrackingConfirmController.view.mainText?.text?.append(String.localizedStringWithFormat(NSLocalizedString("imageAnchorPointAlignmentText", comment: "Text describing the process of aligning to an image anchorpoint. This text shows up on the alignment screen."), waitingPeriod))*/
+            resumeTrackingConfirmController.view.mainText?.text?.append(String(NSLocalizedString("imageAnchorPointAlignmentText", comment: "Text describing the process of aligning to an image anchorpoint. This text shows up on the alignment screen.")))
+            print("yes good worked correctly")
+            
+        } /*else{
+            print("no bad didn't work")
+            resumeTrackingConfirmController.view.mainText?.text?.append(String.localizedStringWithFormat(NSLocalizedString("anchorPointAlignmentText", comment: "Text describing the process of aligning to an anchorpoint. This text shows up on the alignment screen."), waitingPeriod))
+            
+        }*/
         delayTransition()
     }
     
@@ -1812,9 +1816,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     func resumeTracking() {
         // resume pose tracking with existing ARSessionConfiguration
         hideAllViewsHelper()
-        #if !APPCLIP
         pauseTrackingController.remove()
-        #endif
         rootContainerView.countdownTimer.isHidden = false
         rootContainerView.countdownTimer.start(beginingValue: ViewController.alignmentWaitingPeriod, interval: 1)
         delayTransition()

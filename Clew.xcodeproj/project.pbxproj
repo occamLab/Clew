@@ -99,6 +99,7 @@
 		9815CEFF26851A06008FCF74 /* clew-dev-table2wall.crd in Resources */ = {isa = PBXBuildFile; fileRef = 9815CEFE26851A06008FCF74 /* clew-dev-table2wall.crd */; };
 		9815CF0026851A06008FCF74 /* clew-dev-table2wall.crd in Resources */ = {isa = PBXBuildFile; fileRef = 9815CEFE26851A06008FCF74 /* clew-dev-table2wall.crd */; };
 		9815CF0126851A06008FCF74 /* clew-dev-table2wall.crd in Resources */ = {isa = PBXBuildFile; fileRef = 9815CEFE26851A06008FCF74 /* clew-dev-table2wall.crd */; };
+		9819E2F2268BA6AB0008CA82 /* PauseTrackingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470EE622C119F4001092A4 /* PauseTrackingController.swift */; };
 		986640CE22FB68F2005AA1F6 /* NameSavedRouteController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986640CD22FB68F2005AA1F6 /* NameSavedRouteController.swift */; };
 		986640CF22FC9606005AA1F6 /* NameSavedRouteController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986640CD22FB68F2005AA1F6 /* NameSavedRouteController.swift */; };
 		98C288DF268A422000B59B7F /* UIKit Clip.app in Embed App Clips */ = {isa = PBXBuildFile; fileRef = 98006F76268382D600E61861 /* UIKit Clip.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -1418,6 +1419,7 @@
 				98006FC7268385D400E61861 /* HelpViewController.swift in Sources */,
 				98006FB42683845000E61861 /* StopRecordingController.swift in Sources */,
 				98053657268388CE0065E80F /* PathLogger.swift in Sources */,
+				9819E2F2268BA6AB0008CA82 /* PauseTrackingController.swift in Sources */,
 				98006FC1268385A700E61861 /* UIViewControllerExtensions.swift in Sources */,
 				98CC6769268A23A600E3759F /* SurveyInterface.swift in Sources */,
 				98006FB32683844D00E61861 /* StartNavigationController.swift in Sources */,
