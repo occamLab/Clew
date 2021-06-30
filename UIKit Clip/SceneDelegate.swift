@@ -1,9 +1,8 @@
 //
 //  SceneDelegate.swift
-//  UIKit Clip
+//  MyAppClip
 //
-//  Created by occamlab on 6/23/21.
-//  Copyright © 2021 OccamLab. All rights reserved.
+//  Created by Paul Ruvolo on 6/30/21.
 //
 
 import UIKit
@@ -11,17 +10,27 @@ import UIKit
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
-    var windowScene: UIWindowScene?
 
+    var vc: ViewController?
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
         // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
-        print("test")
-        self.windowScene = (scene as? UIWindowScene)
+        guard let scene = (scene as? UIWindowScene) else { return }
+        window = UIWindow(windowScene: scene)
+        vc = ViewController()
+        window?.frame = UIScreen.main.bounds
+        window?.rootViewController = vc
+        window?.backgroundColor = .white
+        window?.makeKeyAndVisible()
+        
+        //vc?.imageAnchoring = true
+        vc?.recordPathController.remove()
+        vc?.handleStateTransitionToNavigatingExternalRoute()
+        UIApplication.shared.isIdleTimerDisabled = true
     }
-
+    
     /// handles invocations in the App Clip <3
     /// return: Boolean value representing whether or not there is a userActivity object
     func scene(_ scene: UIScene, continue userActivity: NSUserActivity) {
@@ -29,6 +38,18 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             return
             }
         handleUserActivity(for: url)
+        
+        guard let scene = (scene as? UIWindowScene) else { return }
+        window = UIWindow(windowScene: scene)
+        vc = ViewController()
+        window?.frame = UIScreen.main.bounds
+        window?.rootViewController = vc
+        window?.backgroundColor = .white
+        window?.makeKeyAndVisible()
+        
+        vc?.recordPathController.remove()
+        vc?.handleStateTransitionToNavigatingExternalRoute()
+        UIApplication.shared.isIdleTimerDisabled = true
     }
     
     /// Configure App Clip with query items
@@ -37,7 +58,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             return
         }
     }
-    
+
+
     func sceneDidDisconnect(_ scene: UIScene) {
         // Called as the scene is being released by the system.
         // This occurs shortly after the scene enters the background, or when its session is discarded.
@@ -48,7 +70,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func sceneDidBecomeActive(_ scene: UIScene) {
         // Called when the scene has moved from an inactive state to an active state.
         // Use this method to restart any tasks that were paused (or not yet started) when the scene was inactive.
-        print("test")
     }
 
     func sceneWillResignActive(_ scene: UIScene) {
@@ -59,8 +80,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func sceneWillEnterForeground(_ scene: UIScene) {
         // Called as the scene transitions from the background to the foreground.
         // Use this method to undo the changes made on entering the background.
-        print("test")
-
     }
 
     func sceneDidEnterBackground(_ scene: UIScene) {
