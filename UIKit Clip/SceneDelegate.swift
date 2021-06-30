@@ -38,6 +38,18 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             return
             }
         handleUserActivity(for: url)
+        
+        guard let scene = (scene as? UIWindowScene) else { return }
+        window = UIWindow(windowScene: scene)
+        vc = ViewController()
+        window?.frame = UIScreen.main.bounds
+        window?.rootViewController = vc
+        window?.backgroundColor = .white
+        window?.makeKeyAndVisible()
+        
+        vc?.recordPathController.remove()
+        vc?.handleStateTransitionToNavigatingExternalRoute()
+        UIApplication.shared.isIdleTimerDisabled = true
     }
     
     /// Configure App Clip with query items
