@@ -13,7 +13,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var vc: ViewController?
 
-    func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
+    
+    func createScene(_ scene: UIScene) {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
         // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
@@ -24,11 +25,20 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window?.rootViewController = vc
         window?.backgroundColor = .white
         window?.makeKeyAndVisible()
-        
+        UIApplication.shared.isIdleTimerDisabled = true
+    }
+    
+    func loadRoute() {
         vc?.imageAnchoring = true
         vc?.recordPathController.remove()
         vc?.handleStateTransitionToNavigatingExternalRoute()
-        UIApplication.shared.isIdleTimerDisabled = true
+    }
+    
+    func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
+        
+        createScene(scene)
+        vc?.routeID = "table2wall"
+        loadRoute()
     }
     
     /// handles invocations in the App Clip <3
@@ -37,19 +47,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard userActivity.activityType == NSUserActivityTypeBrowsingWeb, let url = userActivity.webpageURL else {
             return
             }
+        createScene(scene)
         handleUserActivity(for: url)
-        
-        guard let scene = (scene as? UIWindowScene) else { return }
-        window = UIWindow(windowScene: scene)
-        vc = ViewController()
-        window?.frame = UIScreen.main.bounds
-        window?.rootViewController = vc
-        window?.backgroundColor = .white
-        window?.makeKeyAndVisible()
-        
-        vc?.recordPathController.remove()
-        vc?.handleStateTransitionToNavigatingExternalRoute()
-        UIApplication.shared.isIdleTimerDisabled = true
+        loadRoute()
     }
     
     /// Configure App Clip with query items
@@ -57,8 +57,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let components = NSURLComponents(url: url, resolvingAgainstBaseURL: true), let queryItems = components.queryItems else {
             return
         }
+        
+        /// with the invocation URL format https://occamlab.github.io/id?p=routeID, and routeID being the name of the file in Firebase
+        if let routeID = queryItems.first(where: { $0.name == "p"}) {
+            vc?.routeID = routeID.value!
+        }
     }
-
 
     func sceneDidDisconnect(_ scene: UIScene) {
         // Called as the scene is being released by the system.
