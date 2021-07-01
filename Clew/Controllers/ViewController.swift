@@ -64,7 +64,7 @@ enum AppState {
     /// the user is anchoring a route from an ARImageAnchor
     case startingAutoAlignment
     /// the user has stopped or completed an external route
-    case endScreen
+    case endScreen(completedRoute: Bool)
     
     /// rawValue is useful for serializing state values, which we are currently using for our logging feature
     var rawValue: String {
@@ -165,9 +165,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 break
             case .startingAutoAlignment:
                 handleStateTransitionToAutoAlignment()
-            case .endScreen:
+            case .endScreen(let completedRoute):
                 print("transitioned to the end screen")
-                showEndScreenInformation()
+                showEndScreenInformation(completedRoute: completedRoute)
             }
         }
     }
@@ -304,6 +304,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         print("Aligning")
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
             self.confirmAlignment()
+            print("alignment confirmed")
         }
     }
     
@@ -470,10 +471,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 self.showResumeTrackingConfirmButton(route: route, navigateStartToEnd: navigateStartToEnd)
             }
         }
-        print("state \(state)")
-        print("State Transition")
-        print(resumeTrackingConfirmController.view.mainText?.text)
-        print("^ new display text")
     }
     
     /// Handler for the startingNameSavedRouteProcedure app state
@@ -1468,21 +1465,31 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         delayTransition()
     }
     
-    func showEndScreenInformation(){
+    func showEndScreenInformation(completedRoute: Bool){
         self.hideAllViewsHelper()
         self.rootContainerView.getDirectionButton.isHidden = true
         guard let scene = self.view.window?.windowScene else {return}
         
-        let label = UILabel(frame: self.view.frame)
+        /*let label = UILabel(frame: self.view.frame)
         let scrollView = UIScrollView(frame: self.view.frame)
         
         label.textColor = UIColor.white
         label.textAlignment = .center
         label.numberOfLines = 0
-        label.lineBreakMode = .byWordWrapping
-        label.text = "Route Navigation Stopped. Thank you for using the Clew App Clip"
-        view.mainText?.text?.append(String.localizedStringWithFormat("Route Navigation Stopped. Thank you for using the Clew App Clip", 0))
-        label.tag = UIView.mainTextTag
+        label.lineBreakMode = .byWordWrapping*/
+        
+        // TODO: i18n/l10n
+        if completedRoute{
+            delayTransition(announcement: "You have arrived at your destination. Thank you for using the Clew App Clip")
+
+            //label.text = "You have arrived at your destination. Thank you for using the Clew App Clip"
+            //view.mainText?.text?.append(String.localizedStringWithFormat("You have arrived at your destination. Thank you for using the Clew App Clip", 5))
+        } else{
+            delayTransition(announcement: "Route navigation stopped. You may not have arrived at your destination yet. Thank you for using the Clew App Clip")
+            //label.text = "Route navigation stopped. You may not have arrived at your destination yet. Thank you for using the Clew App Clip"
+            // view.mainText?.text?.append(String.localizedStringWithFormat("Route navigation stopped. You may not have arrived at your destination yet. Thank you for using the Clew App Clip", 5))
+        }
+        /*label.tag = UIView.mainTextTag
         /// place label inside of the scrollview
         scrollView.addSubview(label)
         self.view.addSubview(scrollView)
@@ -1508,7 +1515,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         
         /// configure label: Zero lines + Word Wrapping
         label.numberOfLines = 0
-        label.lineBreakMode = NSLineBreakMode.byWordWrapping
+        label.lineBreakMode = NSLineBreakMode.byWordWrapping */
         
         
         let config = SKOverlay.AppClipConfiguration(position: .bottom)
@@ -1825,7 +1832,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         #if !APPCLIP
         self.surveyInterface.sendLogDataHelper(pathStatus: nil, vc: self)
         #else
-        self.state = .endScreen
+        self.state = .endScreen(completedRoute: false)
         #endif
         
     }
@@ -1892,9 +1899,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         // resume pose tracking with existing ARSessionConfiguration
         hideAllViewsHelper()
         pauseTrackingController.remove()
+        if case .readyForFinalResumeAlignment = self.state {
         rootContainerView.countdownTimer.isHidden = false
         rootContainerView.countdownTimer.start(beginingValue: ViewController.alignmentWaitingPeriod, interval: 1)
         delayTransition()
+        }
         print("hehe")
         if case .startingAutoAlignment = self.state, let routeTransform = self.pausedTransform, let tagAnchor = self.sceneView.session.currentFrame?.anchors.compactMap({$0 as? ARImageAnchor}).first {
             rootContainerView.countdownTimer.isHidden = true
@@ -2046,7 +2055,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 followingCrumbs?.invalidate()
                 hapticTimer?.invalidate()
                 
+                if !imageAnchoring{
                 self.surveyInterface.sendLogDataHelper(pathStatus: nil, announceArrival: true, vc: self)
+                } else{
+                    self.state = .endScreen(completedRoute: true)
+                }
             }
         }
     }
