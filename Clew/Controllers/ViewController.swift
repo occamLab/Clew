@@ -39,6 +39,7 @@ import CoreSpotlight
 import MobileCoreServices
 
 
+
 /// A custom enumeration type that describes the exact state of the app.  The state is not exhaustive (e.g., there are Boolean flags that also track app state).
 enum AppState {
     /// This is the screen the comes up immediately after the splash screen
@@ -289,7 +290,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         endRouteAnchorPoint = RouteAnchorPoint()
 
         logger.resetNavigationLog()
-
+        print("checkcrumbs: inside handleStateTransitionToNavigatingRoute()")
+        print(crumbs)
+        
+        
         // generate path from PathFinder class
         // enabled hapticFeedback generates more keypoints
         let path = PathFinder(crumbs: crumbs.reversed(), hapticFeedback: hapticFeedback, voiceFeedback: voiceFeedback)
@@ -700,7 +704,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         
         // set the main view as active
         view = RootContainerView(frame: UIScreen.main.bounds)
-        
+        self.modalPresentationStyle = .fullScreen
         // initialize child view controllers
         pauseTrackingController = PauseTrackingController()
         resumeTrackingController = ResumeTrackingController()
@@ -1561,9 +1565,22 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// handles the user pressing the stop recording button.
     ///
     /// - Parameter sender: the button that generated the event
-    @objc func stopRecording(_ sender: UIButton) {
+    @objc func stopRecording(_ sender: UIButton?) {
         // copy the recordingCrumbs over for use in path creation
+        
+        
+        let activity = SiriShortcutsController.stopRecordingShortcut()
+      
+        self.userActivity = activity
+        
+ 
+        
+        activity.becomeCurrent()
+        
+        stopRecordingRouteShortcutWasPressed()
+        
         crumbs = Array(recordingCrumbs)
+        
         isResumedRoute = false
 
         rootContainerView.homeButton.isHidden = false // home button here
@@ -1574,6 +1591,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         // heading offsets should not be updated from this point until route navigation starts
         updateHeadingOffsetTimer?.invalidate()
         recordPhaseHeadingOffsets = []
+      
+   
         
         ///checks if the route is a single use route or a multiple use route
         if !recordingSingleUseRoute {
@@ -1590,15 +1609,66 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         
     }
     
+    
+
+    
+    
     /// handles the user pressing the start navigation button.
     ///
     /// - Parameter sender: the button that generated the event
-    @objc func startNavigation(_ sender: UIButton) {
+    @objc func startNavigation(_ sender: UIButton?) {
+        
+      
+       
+        
         ///announce to the user that return navigation has started.
         self.delayTransition(announcement: NSLocalizedString("startingReturnNavigationAnnouncement", comment: "This is an anouncement which is played when the user performs return navigation from the play pause menu. It signifies the start of a navigation session."), initialFocus: nil)
+        
+      
+     
+            
+            let activity = SiriShortcutsController.startNavigationShortcut()
+            self.userActivity = activity
+        
+            
+            activity.becomeCurrent()
+            startNavigationShortcutWasPressed()
+        
+        
+        
         // this will handle the appropriate state transition if we pass the warning
         state = .navigatingRoute
     }
+    
+    @objc func startNavigation2() {
+        
+        let vcc =  ViewController()
+ 
+        
+        let activity = SiriShortcutsController.startNavigationShortcut()
+      
+        self.userActivity = activity
+        print("siricheck2: inside startnav")
+        print(activity.activityType)
+ 
+        
+        activity.becomeCurrent()
+        
+        startNavigationShortcutWasPressed()
+       
+        
+        ///announce to the user that return navigation has started.
+        self.delayTransition(announcement: NSLocalizedString("startingReturnNavigationAnnouncement", comment: "This is an anouncement which is played when the user performs return navigation from the play pause menu. It signifies the start of a navigation session."), initialFocus: nil)
+        
+       
+        
+        
+        
+        // this will handle the appropriate state transition if we pass the warning
+        state = .navigatingRoute
+    }
+    
+    
     
     /// handles the user pressing the stop navigation button.
     ///
@@ -1699,6 +1769,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     
        func newSingleUseRouteShortcutWasPressed(){
+        ////startNavigationShortcutWasPressed()
            let newSingleUseRouteActivity = SiriShortcutsController.newSingleUseRouteShortcut()
            let activity = SiriShortcutsController.newSingleUseRouteShortcut()
            print("checkact1:")
@@ -1724,6 +1795,53 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
            
        }
     
+    
+    func stopRecordingRouteShortcutWasPressed(){
+        let StopRecordingRouteActivity = SiriShortcutsController.stopRecordingShortcut()
+        
+        let activity = SiriShortcutsController.stopRecordingShortcut()
+        
+     
+        
+       // newSingleUseRouteActivity.state = .recordingRoute
+        let shortcut = INShortcut(userActivity: activity)
+        
+        let vcc = INUIAddVoiceShortcutViewController(shortcut:shortcut)
+            
+     
+        vcc.delegate = self
+   
+       present(vcc, animated: true, completion: nil)
+    
+    }
+
+    
+       func startNavigationShortcutWasPressed(){
+        ///
+           let newSingleUseRouteActivity = SiriShortcutsController.startNavigationShortcut()
+           let activity = SiriShortcutsController.startNavigationShortcut()
+           print("checkact1:")
+           print(activity.activityType)
+        
+           if( activity.isEqual(nil)){
+          
+              print("Value - nil")
+           }else{
+               print("not nill")
+           }
+           
+          // newSingleUseRouteActivity.state = .recordingRoute
+           let shortcut = INShortcut(userActivity: activity)
+           
+           let vcc = INUIAddVoiceShortcutViewController(shortcut:shortcut)
+               
+         
+           vcc.delegate = self
+        
+            present(vcc, animated: true, completion: nil)
+           
+           
+       }
     
 
     /// this is called after the alignment countdown timer finishes in order to complete the pause tracking procedure

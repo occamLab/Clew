@@ -62,7 +62,7 @@ class StartNavigationController: UIViewController {
     /// called when the view has loaded.  We setup various app elements in here.
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        self.modalPresentationStyle = .fullScreen
         // we subtract one pixel from the height to prevent accessibility elements in the parent view from being hidden (Warning: this is not documented behavior, so we may need to revisit this down the road)
         view = TransparentTouchView(frame:CGRect(x: 0,
                                                  y: 0,

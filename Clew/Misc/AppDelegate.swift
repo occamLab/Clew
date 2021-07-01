@@ -20,7 +20,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
         
     /// view controller!
-    var vc: UIViewController!
+  /// var vc: UIViewController!
+  var vc: ViewController!
     /// navigation controller
     var nav: UINavigationController?
     /// Called when the app finishes launching.  Currently, this is where we setup Firebase and make sure the phone screen doesn't lock while we are using the app.
@@ -140,29 +141,51 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
       continue userActivity: NSUserActivity,
       restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void
     ) -> Bool {
-     
+       
         print("indelact")
         print(userActivity.activityType)
       
         if(userActivity.activityType == kNewSingleUseRouteType){
-        //vc.state = .recordingRoute
-     //   vcc.startCreateAnchorPointProcedure()
-           // self.vc = ViewController()
-            
-        let vcc = ViewController()
-            vcc.startCreateAnchorPointProcedure()
-         //   vcc.state = .recordingRoute
-     
-        print("appdelcheck:")
-        print(userActivity.activityType)
-       //nav?.pushViewController(vcc, animated: true)
-        vc.present(vcc, animated: true, completion: nil)
+             
+             let vcc = ViewController()
+             vc.startCreateAnchorPointProcedure()
+              //nav?.pushViewController(vcc, animated: false)
+          //  vc.present(vcc, animated: true, completion: nil)
 
-           // vc.present(UINavigationController(rootViewController: vcc), animated: true, completion: nil)
-           
+             }
         
-       // nav?.pushViewController(vc, animated: false)
-        }
+        if(userActivity.activityType == kStopRecordingType){
+             
+            // let vcc = ViewController()
+             vc.stopRecording(nil)
+            //nav?.pushViewController(vcc, animated: false)
+            //self.vc = vcc
+            
+          //  vc.present(vcc, animated: true, completion: nil)
+
+             }
+        
+        
+               if(userActivity.activityType == kStartNavigationType){
+             
+                vc.startNavigation(nil)
+                
+//
+//                let vcc = ViewController()
+////                print("appdelcheck:")
+////                print(userActivity.activityType)
+//                vcc.startNavigation(nil)
+////                /// nav?.pushViewController(vcc, animated: false)
+////               vc = ViewController()
+//               vc = vcc
+//                vc.present(vcc, animated: true, completion: nil)
+//               //nav?.pushViewController(vc, animated: false)
+//           ///   // vc.present(vc, animated: true, completion: nil)
+
+               
+               }
+        
+        
      
         
       return true

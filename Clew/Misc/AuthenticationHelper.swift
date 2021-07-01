@@ -132,7 +132,7 @@ class AuthenticationHelper: NSObject, ASAuthorizationControllerDelegate, ASAutho
             appDelegate.window = UIWindow(frame:UIScreen.main.bounds)
             appDelegate.window?.makeKeyAndVisible()
             appDelegate.window?.rootViewController = ViewController()
-            appDelegate.vc = appDelegate.window?.rootViewController
+        appDelegate.vc = appDelegate.window?.rootViewController as! ViewController
         }
 
 }
