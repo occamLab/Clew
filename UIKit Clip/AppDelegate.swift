@@ -38,7 +38,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         #endif
         // logUserProperties()
         
-        vc = ViewController()
+        /* vc = ViewController()
         vc.imageAnchoring = true
         window = UIWindow(frame:UIScreen.main.bounds)
         window?.rootViewController = vc
@@ -46,7 +46,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         vc.recordPathController.remove()
         UIApplication.shared.isIdleTimerDisabled = true
         vc.handleStateTransitionToNavigatingExternalRoute()
-        print("test?")
+        print("test?") */
         return true
     }
     

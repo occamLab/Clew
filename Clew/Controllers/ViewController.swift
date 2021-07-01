@@ -1186,6 +1186,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         // print("frame.anchors.compactMap = \(frame.anchors.compactMap(({$0 as? ARAppClipCodeAnchor})))") // <3 type = Array<ARAppClipCodeAnchor>, where each ARAppClipCodeAnchor is another one it identifies
         //print("frame.anchors.compactMap = \(frame.anchors.compactMap(({$0 as? ARImageAnchor})))")
         // print(frame.anchors.compactMap(({$0 as? ARImageAnchor})))
+        
+        
         for (i, clipAnchor) in frame.anchors.compactMap(({$0 as? ARAppClipCodeAnchor})).enumerated() {
             //print("i=\(i) isTracked = \(clipAnchor.isTracked)")
             if clipAnchor.isTracked {
@@ -1199,19 +1201,21 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                     tagNode.simdTransform = clipAnchor.transform
                     tagNode.name = "Tag: \(clipAnchor.identifier)"
                     sceneView.scene.rootNode.addChildNode(tagNode)
+                    
+                    /// Adds axes to the tag to aid in the visualization
+                    let sideLen: CGFloat = 0.01
+                    let axisLen: CGFloat = 0.5
+                    let xAxis = SCNNode(geometry: SCNBox(width: axisLen, height: sideLen, length: sideLen, chamferRadius: 0))
+                    xAxis.geometry?.firstMaterial?.diffuse.contents = UIColor.red
+                    let yAxis = SCNNode(geometry: SCNBox(width: sideLen, height: axisLen, length: sideLen, chamferRadius: 0))
+                    yAxis.geometry?.firstMaterial?.diffuse.contents = UIColor.green
+                    let zAxis = SCNNode(geometry: SCNBox(width: sideLen, height: sideLen, length: axisLen, chamferRadius: 0))
+                    zAxis.geometry?.firstMaterial?.diffuse.contents = UIColor.blue
+                    tagNode.addChildNode(xAxis)
+                    tagNode.addChildNode(yAxis)
+                    tagNode.addChildNode(zAxis)
                 }
-                /// Adds axes to the tag to aid in the visualization
-                let sideLen: CGFloat = 0.01
-                let axisLen: CGFloat = 0.5
-                let xAxis = SCNNode(geometry: SCNBox(width: axisLen, height: sideLen, length: sideLen, chamferRadius: 0))
-                xAxis.geometry?.firstMaterial?.diffuse.contents = UIColor.red
-                let yAxis = SCNNode(geometry: SCNBox(width: sideLen, height: axisLen, length: sideLen, chamferRadius: 0))
-                yAxis.geometry?.firstMaterial?.diffuse.contents = UIColor.green
-                let zAxis = SCNNode(geometry: SCNBox(width: sideLen, height: sideLen, length: axisLen, chamferRadius: 0))
-                zAxis.geometry?.firstMaterial?.diffuse.contents = UIColor.blue
-                tagNode.addChildNode(xAxis)
-                tagNode.addChildNode(yAxis)
-                tagNode.addChildNode(zAxis)
+                /// this is where axes visualization
                 
             }
         }
@@ -1226,19 +1230,21 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 imageNode.simdTransform = imageAnchor.transform
                 imageNode.name = "Image Tag"
                 sceneView.scene.rootNode.addChildNode(imageNode)
+                
+                /// Adds axes to the tag to aid in the visualization
+                let sideLen: CGFloat = 0.01
+                let axisLen: CGFloat = 0.5
+                let xAxis = SCNNode(geometry: SCNBox(width: axisLen, height: sideLen, length: sideLen, chamferRadius: 0))
+                xAxis.geometry?.firstMaterial?.diffuse.contents = UIColor.red
+                let yAxis = SCNNode(geometry: SCNBox(width: sideLen, height: axisLen, length: sideLen, chamferRadius: 0))
+                yAxis.geometry?.firstMaterial?.diffuse.contents = UIColor.green
+                let zAxis = SCNNode(geometry: SCNBox(width: sideLen, height: sideLen, length: axisLen, chamferRadius: 0))
+                zAxis.geometry?.firstMaterial?.diffuse.contents = UIColor.blue
+                imageNode.addChildNode(xAxis)
+                imageNode.addChildNode(yAxis)
+                imageNode.addChildNode(zAxis)
             }
-            /// Adds axes to the tag to aid in the visualization
-            let sideLen: CGFloat = 0.01
-            let axisLen: CGFloat = 0.5
-            let xAxis = SCNNode(geometry: SCNBox(width: axisLen, height: sideLen, length: sideLen, chamferRadius: 0))
-            xAxis.geometry?.firstMaterial?.diffuse.contents = UIColor.red
-            let yAxis = SCNNode(geometry: SCNBox(width: sideLen, height: axisLen, length: sideLen, chamferRadius: 0))
-            yAxis.geometry?.firstMaterial?.diffuse.contents = UIColor.green
-            let zAxis = SCNNode(geometry: SCNBox(width: sideLen, height: sideLen, length: axisLen, chamferRadius: 0))
-            zAxis.geometry?.firstMaterial?.diffuse.contents = UIColor.blue
-            imageNode.addChildNode(xAxis)
-            imageNode.addChildNode(yAxis)
-            imageNode.addChildNode(zAxis)
+            
         }
         
     }
@@ -1467,6 +1473,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     func showEndScreenInformation(completedRoute: Bool){
         self.hideAllViewsHelper()
+        //self.sceneView.session.pause()
+        
+        trackingErrorsAnnouncementTimer?.invalidate()
+        
+        if #available(iOS 12.0, *) {
+            configuration.initialWorldMap = nil
+        }
+        
         self.rootContainerView.getDirectionButton.isHidden = true
         guard let scene = self.view.window?.windowScene else {return}
         
