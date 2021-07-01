@@ -83,14 +83,11 @@
 		9815CEF9268512AB008FCF74 /* clew-dev-route.crd in Resources */ = {isa = PBXBuildFile; fileRef = 9815CEF6268512AB008FCF74 /* clew-dev-route.crd */; };
 		9815CEFB268512AB008FCF74 /* clew-test.crd in Resources */ = {isa = PBXBuildFile; fileRef = 9815CEF7268512AB008FCF74 /* clew-test.crd */; };
 		9815CEFC268512AB008FCF74 /* clew-test.crd in Resources */ = {isa = PBXBuildFile; fileRef = 9815CEF7268512AB008FCF74 /* clew-test.crd */; };
-		9815CEFF26851A06008FCF74 /* table2wall.crd in Resources */ = {isa = PBXBuildFile; fileRef = 9815CEFE26851A06008FCF74 /* table2wall.crd */; };
-		9815CF0026851A06008FCF74 /* table2wall.crd in Resources */ = {isa = PBXBuildFile; fileRef = 9815CEFE26851A06008FCF74 /* table2wall.crd */; };
-		9815CF0126851A06008FCF74 /* table2wall.crd in Resources */ = {isa = PBXBuildFile; fileRef = 9815CEFE26851A06008FCF74 /* table2wall.crd */; };
 		9819E2F2268BA6AB0008CA82 /* PauseTrackingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470EE622C119F4001092A4 /* PauseTrackingController.swift */; };
 		98260258268CC1DB00D66811 /* speaker.obj in Resources */ = {isa = PBXBuildFile; fileRef = 823DA453252F7EA800BB5E6B /* speaker.obj */; };
 		986640CE22FB68F2005AA1F6 /* NameSavedRouteController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986640CD22FB68F2005AA1F6 /* NameSavedRouteController.swift */; };
 		986640CF22FC9606005AA1F6 /* NameSavedRouteController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986640CD22FB68F2005AA1F6 /* NameSavedRouteController.swift */; };
-		987BA6F2268E49BE008B129E /* SwiftUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 987BA6F1268E49BE008B129E /* SwiftUIView.swift */; };
+		987BA6F4268E53C0008B129E /* StartNavigationPopoverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 987BA6F3268E53C0008B129E /* StartNavigationPopoverView.swift */; };
 		98C288DF268A422000B59B7F /* UIKit Clip.app in Embed App Clips */ = {isa = PBXBuildFile; fileRef = 98006F76268382D600E61861 /* UIKit Clip.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		98CC6761268A0FEC00E3759F /* FirebaseSetup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98CC6760268A0FEC00E3759F /* FirebaseSetup.swift */; };
 		98CC6762268A0FEC00E3759F /* FirebaseSetup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98CC6760268A0FEC00E3759F /* FirebaseSetup.swift */; };
@@ -319,9 +316,8 @@
 		9815CEEA26851049008FCF74 /* test-route2.crd */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = "test-route2.crd"; sourceTree = "<group>"; };
 		9815CEF6268512AB008FCF74 /* clew-dev-route.crd */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = "clew-dev-route.crd"; sourceTree = "<group>"; };
 		9815CEF7268512AB008FCF74 /* clew-test.crd */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = "clew-test.crd"; sourceTree = "<group>"; };
-		9815CEFE26851A06008FCF74 /* table2wall.crd */ = {isa = PBXFileReference; lastKnownFileType = file; path = table2wall.crd; sourceTree = "<group>"; };
 		986640CD22FB68F2005AA1F6 /* NameSavedRouteController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NameSavedRouteController.swift; sourceTree = "<group>"; };
-		987BA6F1268E49BE008B129E /* SwiftUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIView.swift; sourceTree = "<group>"; };
+		987BA6F3268E53C0008B129E /* StartNavigationPopoverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartNavigationPopoverView.swift; sourceTree = "<group>"; };
 		98CC6760268A0FEC00E3759F /* FirebaseSetup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseSetup.swift; sourceTree = "<group>"; };
 		98CC6765268A1F2200E3759F /* SurveyInterface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SurveyInterface.swift; sourceTree = "<group>"; };
 		B6E04179254C52D5DB1CCBA5 /* Pods-UIKit Clip.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UIKit Clip.release.xcconfig"; path = "Pods/Target Support Files/Pods-UIKit Clip/Pods-UIKit Clip.release.xcconfig"; sourceTree = "<group>"; };
@@ -436,7 +432,6 @@
 		4D6B00B71F33C1C400952242 = {
 			isa = PBXGroup;
 			children = (
-				9815CEFE26851A06008FCF74 /* table2wall.crd */,
 				9815CEEA26851049008FCF74 /* test-route2.crd */,
 				82A417EC262A2140001FCB8C /* Clew Dev.entitlements */,
 				E5470EA922C119F4001092A4 /* Clew */,
@@ -494,7 +489,7 @@
 				98006F86268382D800E61861 /* Info.plist */,
 				98006F87268382D800E61861 /* UIKit_Clip.entitlements */,
 				980536732683C1D10065E80F /* AppDelegate.swift */,
-				987BA6F1268E49BE008B129E /* SwiftUIView.swift */,
+				987BA6F3268E53C0008B129E /* StartNavigationPopoverView.swift */,
 			);
 			path = "UIKit Clip";
 			sourceTree = "<group>";
@@ -886,7 +881,6 @@
 				E5470F1C22C119F5001092A4 /* GoogleService-Info.plist in Resources */,
 				E5470F0E22C119F5001092A4 /* Settings.bundle in Resources */,
 				82569F4E22187E6500448B45 /* help in Resources */,
-				9815CEFF26851A06008FCF74 /* table2wall.crd in Resources */,
 				E5470F1622C119F5001092A4 /* Assets.xcassets in Resources */,
 				77365B182343ECBA008BC35C /* BurgerMenu.storyboard in Resources */,
 				E59DA6BF22C65F5900FCD5A1 /* LaunchScreen.storyboard in Resources */,
@@ -908,7 +902,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				9805366426838C3C0065E80F /* SettingsAndHelp.storyboard in Resources */,
-				9815CF0126851A06008FCF74 /* table2wall.crd in Resources */,
 				98006F85268382D800E61861 /* LaunchScreen.storyboard in Resources */,
 				98006F82268382D800E61861 /* Assets.xcassets in Resources */,
 				98006FBD2683859700E61861 /* StartRecording.aiff in Resources */,
@@ -941,7 +934,6 @@
 			files = (
 				9815CEF9268512AB008FCF74 /* clew-dev-route.crd in Resources */,
 				E5470F0F22C119F5001092A4 /* Settings.bundle in Resources */,
-				9815CF0026851A06008FCF74 /* table2wall.crd in Resources */,
 				E5470F1922C119F5001092A4 /* StartRecording.aiff in Resources */,
 				77365B192343ECBA008BC35C /* BurgerMenu.storyboard in Resources */,
 				E5470F1B22C119F5001092A4 /* StopRecording.aiff in Resources */,
@@ -1224,7 +1216,6 @@
 			files = (
 				9805365B268388E00065E80F /* Utility.swift in Sources */,
 				98006FC5268385BA00E61861 /* TransparentTouchView.swift in Sources */,
-				987BA6F2268E49BE008B129E /* SwiftUIView.swift in Sources */,
 				98006FB72683845A00E61861 /* StopNavigationController.swift in Sources */,
 				98006FB62683845600E61861 /* NameSavedRouteController.swift in Sources */,
 				98053656268388CA0065E80F /* DataPersistence.swift in Sources */,
@@ -1234,6 +1225,7 @@
 				98006FB22683844A00E61861 /* RecordPathController.swift in Sources */,
 				98006FB92683846200E61861 /* ResumeTrackingConfirmController.swift in Sources */,
 				98006FC7268385D400E61861 /* HelpViewController.swift in Sources */,
+				987BA6F4268E53C0008B129E /* StartNavigationPopoverView.swift in Sources */,
 				98006FB42683845000E61861 /* StopRecordingController.swift in Sources */,
 				98053657268388CE0065E80F /* PathLogger.swift in Sources */,
 				9819E2F2268BA6AB0008CA82 /* PauseTrackingController.swift in Sources */,

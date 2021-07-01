@@ -302,10 +302,18 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     func handleStateTransitionToAutoAlignment() {
         print("Aligning")
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+        
+        let navStart = UIAlertController(title: "Start Navigating", message: "Aligned to anchor image, click Start to begin navigation", preferredStyle: .alert)
+        
+        let start = UIAlertAction(title: "Start", style: .default, handler: {(action) -> Void in
             self.confirmAlignment()
-            print("alignment confirmed")
-        }
+        })
+        
+        navStart.addAction(start)
+        
+                
+        self.present(navStart, animated: true, completion: nil)
+
     }
     
     // handler for downloaded routes
@@ -1488,12 +1496,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         
         // TODO: i18n/l10n
         if completedRoute{
-            delayTransition(announcement: "You have arrived at your destination. Thank you for using the Clew App Clip")
+            delayTransition(announcement: "You have arrived at your destination.")
 
             //label.text = "You have arrived at your destination. Thank you for using the Clew App Clip"
             //view.mainText?.text?.append(String.localizedStringWithFormat("You have arrived at your destination. Thank you for using the Clew App Clip", 5))
         } else{
-            delayTransition(announcement: "Route navigation stopped. You may not have arrived at your destination yet. Thank you for using the Clew App Clip")
+            delayTransition(announcement: "Route navigation stopped. You may not have arrived at your destination yet.")
             //label.text = "Route navigation stopped. You may not have arrived at your destination yet. Thank you for using the Clew App Clip"
             // view.mainText?.text?.append(String.localizedStringWithFormat("Route navigation stopped. You may not have arrived at your destination yet. Thank you for using the Clew App Clip", 5))
         }
