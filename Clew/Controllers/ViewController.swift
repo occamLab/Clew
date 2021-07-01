@@ -166,6 +166,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             case .startingAutoAlignment:
                 handleStateTransitionToAutoAlignment()
             case .endScreen:
+                print("transitioned to the end screen")
                 showEndScreenInformation()
             }
         }
@@ -318,11 +319,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
 
         logger.resetNavigationLog()
 
-        let pathRef = Storage.storage().reference().child("clew-dev-table2wall.crd")
+        let pathRef = Storage.storage().reference().child("routes/clew-dev-table2wall.crd")
         
         // download path from Firebase
         pathRef.getData(maxSize: 100000000000) { data, error in
             if let error = error {
+                print(error)
+                print("aw beans")
               // Handle any errors
             } else {
                 self.dataPersistence.importData(withData: data!)
@@ -1467,33 +1470,55 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     func showEndScreenInformation(){
         self.hideAllViewsHelper()
-        
+        self.rootContainerView.getDirectionButton.isHidden = true
         guard let scene = self.view.window?.windowScene else {return}
         
-        self.view.backgroundColor = UIColor.black.withAlphaComponent(0.4)
+        let label = UILabel(frame: self.view.frame)
+        let scrollView = UIScrollView(frame: self.view.frame)
         
-        /*var label = UILabel()
         label.textColor = UIColor.white
         label.textAlignment = .center
         label.numberOfLines = 0
         label.lineBreakMode = .byWordWrapping
-        label.font = UIFont.preferredFont(forTextStyle: .body)
         label.text = "Route Navigation Stopped. Thank you for using the Clew App Clip"
+        view.mainText?.text?.append(String.localizedStringWithFormat("Route Navigation Stopped. Thank you for using the Clew App Clip", 0))
         label.tag = UIView.mainTextTag
+        /// place label inside of the scrollview
+        scrollView.addSubview(label)
+        self.view.addSubview(scrollView)
         
-        label.topAnchor.constraint(equalTo: view.topAnchor, constant: UIScreen.main.bounds.size.height*0.15).isActive = true
-        label.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8.0).isActive = true
-        label.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8.0).isActive = true
+        /// set top, left, right constraints on scrollView to
+        /// "main" view + 8.0 padding on each side
+        scrollView.topAnchor.constraint(equalTo: view.topAnchor, constant: UIScreen.main.bounds.size.height*0.15).isActive = true
+        scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8.0).isActive = true
+        scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8.0).isActive = true
         
-        self.view.addSubview(label)
+        /// set the height constraint on the scrollView to 0.5 * the main view height
+        scrollView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.5).isActive = true
+        
+        /// set top, left, right AND bottom constraints on label to
+        /// scrollView + 8.0 padding on each side
+        label.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 8.0).isActive = true
+        label.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 8.0).isActive = true
+        label.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -8.0).isActive = true
+        label.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -8.0).isActive = true
+        
+        /// set the width of the label to the width of the scrollView (-16 for 8.0 padding on each side)
+        label.widthAnchor.constraint(equalTo: scrollView.widthAnchor, constant: -16.0).isActive = true
+        
+        /// configure label: Zero lines + Word Wrapping
+        label.numberOfLines = 0
+        label.lineBreakMode = NSLineBreakMode.byWordWrapping
+        
         
         let config = SKOverlay.AppClipConfiguration(position: .bottom)
         let overlay = SKOverlay(configuration: config)
-        overlay.present(in: scene)*/
+        overlay.present(in: scene)
         print("UI done")
     }
     
     /// display stop navigation view/hide all other views
+    // is this where the timer is set?
     @objc func showStopNavigationButton() {
         #if !APPCLIP
         rootContainerView.homeButton.isHidden = false
@@ -1800,7 +1825,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         #if !APPCLIP
         self.surveyInterface.sendLogDataHelper(pathStatus: nil, vc: self)
         #else
-        showEndScreenInformation()
+        self.state = .endScreen
         #endif
         
     }
