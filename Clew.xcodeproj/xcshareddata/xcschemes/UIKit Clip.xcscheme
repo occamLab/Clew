@@ -83,8 +83,8 @@
       <EnvironmentVariables>
          <EnvironmentVariable
             key = "_XCAppClipURL"
-            value = "https://example.com"
-            isEnabled = "NO">
+            value = "https://berwinl.com/id?p=clew-dev-table2wall"
+            isEnabled = "YES">
          </EnvironmentVariable>
       </EnvironmentVariables>
    </LaunchAction>

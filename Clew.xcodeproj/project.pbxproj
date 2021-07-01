@@ -83,11 +83,11 @@
 		9815CEF9268512AB008FCF74 /* clew-dev-route.crd in Resources */ = {isa = PBXBuildFile; fileRef = 9815CEF6268512AB008FCF74 /* clew-dev-route.crd */; };
 		9815CEFB268512AB008FCF74 /* clew-test.crd in Resources */ = {isa = PBXBuildFile; fileRef = 9815CEF7268512AB008FCF74 /* clew-test.crd */; };
 		9815CEFC268512AB008FCF74 /* clew-test.crd in Resources */ = {isa = PBXBuildFile; fileRef = 9815CEF7268512AB008FCF74 /* clew-test.crd */; };
-		9815CEFF26851A06008FCF74 /* clew-dev-table2wall.crd in Resources */ = {isa = PBXBuildFile; fileRef = 9815CEFE26851A06008FCF74 /* clew-dev-table2wall.crd */; };
-		9815CF0026851A06008FCF74 /* clew-dev-table2wall.crd in Resources */ = {isa = PBXBuildFile; fileRef = 9815CEFE26851A06008FCF74 /* clew-dev-table2wall.crd */; };
-		9815CF0126851A06008FCF74 /* clew-dev-table2wall.crd in Resources */ = {isa = PBXBuildFile; fileRef = 9815CEFE26851A06008FCF74 /* clew-dev-table2wall.crd */; };
-		98260258268CC1DB00D66811 /* speaker.obj in Resources */ = {isa = PBXBuildFile; fileRef = 823DA453252F7EA800BB5E6B /* speaker.obj */; };
+		9815CEFF26851A06008FCF74 /* table2wall.crd in Resources */ = {isa = PBXBuildFile; fileRef = 9815CEFE26851A06008FCF74 /* table2wall.crd */; };
+		9815CF0026851A06008FCF74 /* table2wall.crd in Resources */ = {isa = PBXBuildFile; fileRef = 9815CEFE26851A06008FCF74 /* table2wall.crd */; };
+		9815CF0126851A06008FCF74 /* table2wall.crd in Resources */ = {isa = PBXBuildFile; fileRef = 9815CEFE26851A06008FCF74 /* table2wall.crd */; };
 		9819E2F2268BA6AB0008CA82 /* PauseTrackingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470EE622C119F4001092A4 /* PauseTrackingController.swift */; };
+		98260258268CC1DB00D66811 /* speaker.obj in Resources */ = {isa = PBXBuildFile; fileRef = 823DA453252F7EA800BB5E6B /* speaker.obj */; };
 		986640CE22FB68F2005AA1F6 /* NameSavedRouteController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986640CD22FB68F2005AA1F6 /* NameSavedRouteController.swift */; };
 		986640CF22FC9606005AA1F6 /* NameSavedRouteController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986640CD22FB68F2005AA1F6 /* NameSavedRouteController.swift */; };
 		98C288DF268A422000B59B7F /* UIKit Clip.app in Embed App Clips */ = {isa = PBXBuildFile; fileRef = 98006F76268382D600E61861 /* UIKit Clip.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -318,7 +318,7 @@
 		9815CEEA26851049008FCF74 /* test-route2.crd */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = "test-route2.crd"; sourceTree = "<group>"; };
 		9815CEF6268512AB008FCF74 /* clew-dev-route.crd */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = "clew-dev-route.crd"; sourceTree = "<group>"; };
 		9815CEF7268512AB008FCF74 /* clew-test.crd */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = "clew-test.crd"; sourceTree = "<group>"; };
-		9815CEFE26851A06008FCF74 /* clew-dev-table2wall.crd */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = "clew-dev-table2wall.crd"; sourceTree = "<group>"; };
+		9815CEFE26851A06008FCF74 /* table2wall.crd */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = table2wall.crd; sourceTree = "<group>"; };
 		986640CD22FB68F2005AA1F6 /* NameSavedRouteController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NameSavedRouteController.swift; sourceTree = "<group>"; };
 		98CC6760268A0FEC00E3759F /* FirebaseSetup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseSetup.swift; sourceTree = "<group>"; };
 		98CC6765268A1F2200E3759F /* SurveyInterface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SurveyInterface.swift; sourceTree = "<group>"; };
@@ -435,7 +435,7 @@
 			isa = PBXGroup;
 			children = (
 				9815CEEA26851049008FCF74 /* test-route2.crd */,
-				9815CEFE26851A06008FCF74 /* clew-dev-table2wall.crd */,
+				9815CEFE26851A06008FCF74 /* table2wall.crd */,
 				82A417EC262A2140001FCB8C /* Clew Dev.entitlements */,
 				E5470EA922C119F4001092A4 /* Clew */,
 				77467DAE22BBC1D300FA7DEE /* Default-568h@2x.png */,
@@ -883,7 +883,7 @@
 				E5470F1C22C119F5001092A4 /* GoogleService-Info.plist in Resources */,
 				E5470F0E22C119F5001092A4 /* Settings.bundle in Resources */,
 				82569F4E22187E6500448B45 /* help in Resources */,
-				9815CEFF26851A06008FCF74 /* clew-dev-table2wall.crd in Resources */,
+				9815CEFF26851A06008FCF74 /* table2wall.crd in Resources */,
 				E5470F1622C119F5001092A4 /* Assets.xcassets in Resources */,
 				77365B182343ECBA008BC35C /* BurgerMenu.storyboard in Resources */,
 				E59DA6BF22C65F5900FCD5A1 /* LaunchScreen.storyboard in Resources */,
@@ -905,7 +905,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9805366426838C3C0065E80F /* SettingsAndHelp.storyboard in Resources */,
-				9815CF0126851A06008FCF74 /* clew-dev-table2wall.crd in Resources */,
+				9815CF0126851A06008FCF74 /* table2wall.crd in Resources */,
 				98006F85268382D800E61861 /* LaunchScreen.storyboard in Resources */,
 				98006F82268382D800E61861 /* Assets.xcassets in Resources */,
 				98006FBD2683859700E61861 /* StartRecording.aiff in Resources */,
@@ -938,7 +938,7 @@
 			files = (
 				9815CEF9268512AB008FCF74 /* clew-dev-route.crd in Resources */,
 				E5470F0F22C119F5001092A4 /* Settings.bundle in Resources */,
-				9815CF0026851A06008FCF74 /* clew-dev-table2wall.crd in Resources */,
+				9815CF0026851A06008FCF74 /* table2wall.crd in Resources */,
 				E5470F1922C119F5001092A4 /* StartRecording.aiff in Resources */,
 				77365B192343ECBA008BC35C /* BurgerMenu.storyboard in Resources */,
 				E5470F1B22C119F5001092A4 /* StopRecording.aiff in Resources */,
@@ -1613,7 +1613,7 @@
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CODE_SIGN_ENTITLEMENTS = "UIKit Clip/UIKit_Clip.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 51;
+				CURRENT_PROJECT_VERSION = 59;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
 				INFOPLIST_FILE = "UIKit Clip/Info.plist";
@@ -1644,7 +1644,7 @@
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CODE_SIGN_ENTITLEMENTS = "UIKit Clip/UIKit_Clip.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 51;
+				CURRENT_PROJECT_VERSION = 59;
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
 				INFOPLIST_FILE = "UIKit Clip/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
@@ -1774,7 +1774,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Clew Dev.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 51;
+				CURRENT_PROJECT_VERSION = 59;
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
 				INFOPLIST_FILE = "Clew Dev-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
@@ -1805,7 +1805,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Clew Dev.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 51;
+				CURRENT_PROJECT_VERSION = 59;
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
 				INFOPLIST_FILE = "Clew Dev-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 14.3;

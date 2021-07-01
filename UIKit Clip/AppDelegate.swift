@@ -37,16 +37,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             FirebaseApp.configure()
         #endif
         // logUserProperties()
-        
-        vc = ViewController()
-        vc.imageAnchoring = true
-        window = UIWindow(frame:UIScreen.main.bounds)
-        window?.rootViewController = vc
-        window?.makeKeyAndVisible()
-        vc.recordPathController.remove()
-        UIApplication.shared.isIdleTimerDisabled = true
-        vc.handleStateTransitionToNavigatingExternalRoute()
-        print("test?")
         return true
     }
     
@@ -59,7 +49,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         guard url.pathExtension == "crd" else { return false }
         
         /// import the file here
-        (vc as? ViewController)?.dataPersistence.importData(from: url)
+        vc?.dataPersistence.importData(from: url)
         
         return true
     }
