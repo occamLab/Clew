@@ -64,7 +64,7 @@ enum AppState {
     /// the user is anchoring a route from an ARImageAnchor
     case startingAutoAlignment
     /// the user has stopped or completed an external route
-    case endScreen
+    case endScreen(completedRoute: Bool)
     
     /// rawValue is useful for serializing state values, which we are currently using for our logging feature
     var rawValue: String {
@@ -165,8 +165,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 break
             case .startingAutoAlignment:
                 handleStateTransitionToAutoAlignment()
-            case .endScreen:
-                showEndScreenInformation()
+            case .endScreen(let completedRoute):
+                print("transitioned to the end screen")
+                showEndScreenInformation(completedRoute: completedRoute)
             }
         }
     }
@@ -303,6 +304,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         print("Aligning")
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
             self.confirmAlignment()
+            print("alignment confirmed")
         }
     }
     
@@ -463,10 +465,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 self.showResumeTrackingConfirmButton(route: route, navigateStartToEnd: navigateStartToEnd)
             }
         }
-        print("state \(state)")
-        print("State Transition")
-        print(resumeTrackingConfirmController.view.mainText?.text)
-        print("^ new display text")
     }
     
     /// Handler for the startingNameSavedRouteProcedure app state
@@ -1182,6 +1180,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         // print("frame.anchors.compactMap = \(frame.anchors.compactMap(({$0 as? ARAppClipCodeAnchor})))") // <3 type = Array<ARAppClipCodeAnchor>, where each ARAppClipCodeAnchor is another one it identifies
         //print("frame.anchors.compactMap = \(frame.anchors.compactMap(({$0 as? ARImageAnchor})))")
         // print(frame.anchors.compactMap(({$0 as? ARImageAnchor})))
+        
+        
         for (i, clipAnchor) in frame.anchors.compactMap(({$0 as? ARAppClipCodeAnchor})).enumerated() {
             //print("i=\(i) isTracked = \(clipAnchor.isTracked)")
             if clipAnchor.isTracked {
@@ -1195,19 +1195,21 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                     tagNode.simdTransform = clipAnchor.transform
                     tagNode.name = "Tag: \(clipAnchor.identifier)"
                     sceneView.scene.rootNode.addChildNode(tagNode)
+                    
+                    /// Adds axes to the tag to aid in the visualization
+                    let sideLen: CGFloat = 0.01
+                    let axisLen: CGFloat = 0.5
+                    let xAxis = SCNNode(geometry: SCNBox(width: axisLen, height: sideLen, length: sideLen, chamferRadius: 0))
+                    xAxis.geometry?.firstMaterial?.diffuse.contents = UIColor.red
+                    let yAxis = SCNNode(geometry: SCNBox(width: sideLen, height: axisLen, length: sideLen, chamferRadius: 0))
+                    yAxis.geometry?.firstMaterial?.diffuse.contents = UIColor.green
+                    let zAxis = SCNNode(geometry: SCNBox(width: sideLen, height: sideLen, length: axisLen, chamferRadius: 0))
+                    zAxis.geometry?.firstMaterial?.diffuse.contents = UIColor.blue
+                    tagNode.addChildNode(xAxis)
+                    tagNode.addChildNode(yAxis)
+                    tagNode.addChildNode(zAxis)
                 }
-                /// Adds axes to the tag to aid in the visualization
-                let sideLen: CGFloat = 0.01
-                let axisLen: CGFloat = 0.5
-                let xAxis = SCNNode(geometry: SCNBox(width: axisLen, height: sideLen, length: sideLen, chamferRadius: 0))
-                xAxis.geometry?.firstMaterial?.diffuse.contents = UIColor.red
-                let yAxis = SCNNode(geometry: SCNBox(width: sideLen, height: axisLen, length: sideLen, chamferRadius: 0))
-                yAxis.geometry?.firstMaterial?.diffuse.contents = UIColor.green
-                let zAxis = SCNNode(geometry: SCNBox(width: sideLen, height: sideLen, length: axisLen, chamferRadius: 0))
-                zAxis.geometry?.firstMaterial?.diffuse.contents = UIColor.blue
-                tagNode.addChildNode(xAxis)
-                tagNode.addChildNode(yAxis)
-                tagNode.addChildNode(zAxis)
+                /// this is where axes visualization
                 
             }
         }
@@ -1222,19 +1224,21 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 imageNode.simdTransform = imageAnchor.transform
                 imageNode.name = "Image Tag"
                 sceneView.scene.rootNode.addChildNode(imageNode)
+                
+                /// Adds axes to the tag to aid in the visualization
+                let sideLen: CGFloat = 0.01
+                let axisLen: CGFloat = 0.5
+                let xAxis = SCNNode(geometry: SCNBox(width: axisLen, height: sideLen, length: sideLen, chamferRadius: 0))
+                xAxis.geometry?.firstMaterial?.diffuse.contents = UIColor.red
+                let yAxis = SCNNode(geometry: SCNBox(width: sideLen, height: axisLen, length: sideLen, chamferRadius: 0))
+                yAxis.geometry?.firstMaterial?.diffuse.contents = UIColor.green
+                let zAxis = SCNNode(geometry: SCNBox(width: sideLen, height: sideLen, length: axisLen, chamferRadius: 0))
+                zAxis.geometry?.firstMaterial?.diffuse.contents = UIColor.blue
+                imageNode.addChildNode(xAxis)
+                imageNode.addChildNode(yAxis)
+                imageNode.addChildNode(zAxis)
             }
-            /// Adds axes to the tag to aid in the visualization
-            let sideLen: CGFloat = 0.01
-            let axisLen: CGFloat = 0.5
-            let xAxis = SCNNode(geometry: SCNBox(width: axisLen, height: sideLen, length: sideLen, chamferRadius: 0))
-            xAxis.geometry?.firstMaterial?.diffuse.contents = UIColor.red
-            let yAxis = SCNNode(geometry: SCNBox(width: sideLen, height: axisLen, length: sideLen, chamferRadius: 0))
-            yAxis.geometry?.firstMaterial?.diffuse.contents = UIColor.green
-            let zAxis = SCNNode(geometry: SCNBox(width: sideLen, height: sideLen, length: axisLen, chamferRadius: 0))
-            zAxis.geometry?.firstMaterial?.diffuse.contents = UIColor.blue
-            imageNode.addChildNode(xAxis)
-            imageNode.addChildNode(yAxis)
-            imageNode.addChildNode(zAxis)
+            
         }
         
     }
@@ -1461,35 +1465,75 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         delayTransition()
     }
     
-    func showEndScreenInformation(){
+    func showEndScreenInformation(completedRoute: Bool){
         self.hideAllViewsHelper()
+        //self.sceneView.session.pause()
         
+        trackingErrorsAnnouncementTimer?.invalidate()
+        
+        if #available(iOS 12.0, *) {
+            configuration.initialWorldMap = nil
+        }
+        
+        self.rootContainerView.getDirectionButton.isHidden = true
         guard let scene = self.view.window?.windowScene else {return}
         
-        self.view.backgroundColor = UIColor.black.withAlphaComponent(0.4)
+        /*let label = UILabel(frame: self.view.frame)
+        let scrollView = UIScrollView(frame: self.view.frame)
         
-        /*var label = UILabel()
         label.textColor = UIColor.white
         label.textAlignment = .center
         label.numberOfLines = 0
-        label.lineBreakMode = .byWordWrapping
-        label.font = UIFont.preferredFont(forTextStyle: .body)
-        label.text = "Route Navigation Stopped. Thank you for using the Clew App Clip"
-        label.tag = UIView.mainTextTag
+        label.lineBreakMode = .byWordWrapping*/
         
-        label.topAnchor.constraint(equalTo: view.topAnchor, constant: UIScreen.main.bounds.size.height*0.15).isActive = true
-        label.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8.0).isActive = true
-        label.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8.0).isActive = true
+        // TODO: i18n/l10n
+        if completedRoute{
+            delayTransition(announcement: "You have arrived at your destination. Thank you for using the Clew App Clip")
+
+            //label.text = "You have arrived at your destination. Thank you for using the Clew App Clip"
+            //view.mainText?.text?.append(String.localizedStringWithFormat("You have arrived at your destination. Thank you for using the Clew App Clip", 5))
+        } else{
+            delayTransition(announcement: "Route navigation stopped. You may not have arrived at your destination yet. Thank you for using the Clew App Clip")
+            //label.text = "Route navigation stopped. You may not have arrived at your destination yet. Thank you for using the Clew App Clip"
+            // view.mainText?.text?.append(String.localizedStringWithFormat("Route navigation stopped. You may not have arrived at your destination yet. Thank you for using the Clew App Clip", 5))
+        }
+        /*label.tag = UIView.mainTextTag
+        /// place label inside of the scrollview
+        scrollView.addSubview(label)
+        self.view.addSubview(scrollView)
         
-        self.view.addSubview(label)
+        /// set top, left, right constraints on scrollView to
+        /// "main" view + 8.0 padding on each side
+        scrollView.topAnchor.constraint(equalTo: view.topAnchor, constant: UIScreen.main.bounds.size.height*0.15).isActive = true
+        scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8.0).isActive = true
+        scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8.0).isActive = true
+        
+        /// set the height constraint on the scrollView to 0.5 * the main view height
+        scrollView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.5).isActive = true
+        
+        /// set top, left, right AND bottom constraints on label to
+        /// scrollView + 8.0 padding on each side
+        label.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 8.0).isActive = true
+        label.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 8.0).isActive = true
+        label.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -8.0).isActive = true
+        label.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -8.0).isActive = true
+        
+        /// set the width of the label to the width of the scrollView (-16 for 8.0 padding on each side)
+        label.widthAnchor.constraint(equalTo: scrollView.widthAnchor, constant: -16.0).isActive = true
+        
+        /// configure label: Zero lines + Word Wrapping
+        label.numberOfLines = 0
+        label.lineBreakMode = NSLineBreakMode.byWordWrapping */
+        
         
         let config = SKOverlay.AppClipConfiguration(position: .bottom)
         let overlay = SKOverlay(configuration: config)
-        overlay.present(in: scene)*/
+        overlay.present(in: scene)
         print("UI done")
     }
     
     /// display stop navigation view/hide all other views
+    // is this where the timer is set?
     @objc func showStopNavigationButton() {
         #if !APPCLIP
         rootContainerView.homeButton.isHidden = false
@@ -1796,7 +1840,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         #if !APPCLIP
         self.surveyInterface.sendLogDataHelper(pathStatus: nil, vc: self)
         #else
-        showEndScreenInformation()
+        self.state = .endScreen(completedRoute: false)
         #endif
         
     }
@@ -1863,9 +1907,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         // resume pose tracking with existing ARSessionConfiguration
         hideAllViewsHelper()
         pauseTrackingController.remove()
+        if case .readyForFinalResumeAlignment = self.state {
         rootContainerView.countdownTimer.isHidden = false
         rootContainerView.countdownTimer.start(beginingValue: ViewController.alignmentWaitingPeriod, interval: 1)
         delayTransition()
+        }
         print("hehe")
         if case .startingAutoAlignment = self.state, let routeTransform = self.pausedTransform, let tagAnchor = self.sceneView.session.currentFrame?.anchors.compactMap({$0 as? ARImageAnchor}).first {
             rootContainerView.countdownTimer.isHidden = true
@@ -2017,7 +2063,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 followingCrumbs?.invalidate()
                 hapticTimer?.invalidate()
                 
+                if !imageAnchoring{
                 self.surveyInterface.sendLogDataHelper(pathStatus: nil, announceArrival: true, vc: self)
+                } else{
+                    self.state = .endScreen(completedRoute: true)
+                }
             }
         }
     }
