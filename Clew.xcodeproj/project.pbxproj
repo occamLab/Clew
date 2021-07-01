@@ -90,6 +90,7 @@
 		98260258268CC1DB00D66811 /* speaker.obj in Resources */ = {isa = PBXBuildFile; fileRef = 823DA453252F7EA800BB5E6B /* speaker.obj */; };
 		986640CE22FB68F2005AA1F6 /* NameSavedRouteController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986640CD22FB68F2005AA1F6 /* NameSavedRouteController.swift */; };
 		986640CF22FC9606005AA1F6 /* NameSavedRouteController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986640CD22FB68F2005AA1F6 /* NameSavedRouteController.swift */; };
+		987BA6F2268E49BE008B129E /* SwiftUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 987BA6F1268E49BE008B129E /* SwiftUIView.swift */; };
 		98C288DF268A422000B59B7F /* UIKit Clip.app in Embed App Clips */ = {isa = PBXBuildFile; fileRef = 98006F76268382D600E61861 /* UIKit Clip.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		98CC6761268A0FEC00E3759F /* FirebaseSetup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98CC6760268A0FEC00E3759F /* FirebaseSetup.swift */; };
 		98CC6762268A0FEC00E3759F /* FirebaseSetup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98CC6760268A0FEC00E3759F /* FirebaseSetup.swift */; };
@@ -318,8 +319,9 @@
 		9815CEEA26851049008FCF74 /* test-route2.crd */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = "test-route2.crd"; sourceTree = "<group>"; };
 		9815CEF6268512AB008FCF74 /* clew-dev-route.crd */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = "clew-dev-route.crd"; sourceTree = "<group>"; };
 		9815CEF7268512AB008FCF74 /* clew-test.crd */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = "clew-test.crd"; sourceTree = "<group>"; };
-		9815CEFE26851A06008FCF74 /* table2wall.crd */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = table2wall.crd; sourceTree = "<group>"; };
+		9815CEFE26851A06008FCF74 /* table2wall.crd */ = {isa = PBXFileReference; lastKnownFileType = file; path = table2wall.crd; sourceTree = "<group>"; };
 		986640CD22FB68F2005AA1F6 /* NameSavedRouteController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NameSavedRouteController.swift; sourceTree = "<group>"; };
+		987BA6F1268E49BE008B129E /* SwiftUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIView.swift; sourceTree = "<group>"; };
 		98CC6760268A0FEC00E3759F /* FirebaseSetup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseSetup.swift; sourceTree = "<group>"; };
 		98CC6765268A1F2200E3759F /* SurveyInterface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SurveyInterface.swift; sourceTree = "<group>"; };
 		B6E04179254C52D5DB1CCBA5 /* Pods-UIKit Clip.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UIKit Clip.release.xcconfig"; path = "Pods/Target Support Files/Pods-UIKit Clip/Pods-UIKit Clip.release.xcconfig"; sourceTree = "<group>"; };
@@ -434,8 +436,8 @@
 		4D6B00B71F33C1C400952242 = {
 			isa = PBXGroup;
 			children = (
-				9815CEEA26851049008FCF74 /* test-route2.crd */,
 				9815CEFE26851A06008FCF74 /* table2wall.crd */,
+				9815CEEA26851049008FCF74 /* test-route2.crd */,
 				82A417EC262A2140001FCB8C /* Clew Dev.entitlements */,
 				E5470EA922C119F4001092A4 /* Clew */,
 				77467DAE22BBC1D300FA7DEE /* Default-568h@2x.png */,
@@ -492,6 +494,7 @@
 				98006F86268382D800E61861 /* Info.plist */,
 				98006F87268382D800E61861 /* UIKit_Clip.entitlements */,
 				980536732683C1D10065E80F /* AppDelegate.swift */,
+				987BA6F1268E49BE008B129E /* SwiftUIView.swift */,
 			);
 			path = "UIKit Clip";
 			sourceTree = "<group>";
@@ -1221,6 +1224,7 @@
 			files = (
 				9805365B268388E00065E80F /* Utility.swift in Sources */,
 				98006FC5268385BA00E61861 /* TransparentTouchView.swift in Sources */,
+				987BA6F2268E49BE008B129E /* SwiftUIView.swift in Sources */,
 				98006FB72683845A00E61861 /* StopNavigationController.swift in Sources */,
 				98006FB62683845600E61861 /* NameSavedRouteController.swift in Sources */,
 				98053656268388CA0065E80F /* DataPersistence.swift in Sources */,
