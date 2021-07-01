@@ -1089,7 +1089,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// Register settings bundle
     func registerSettingsBundle(){
-        let appDefaults = ["crumbColor": 0, "showPath": true, "pathColor": 0, "hapticFeedback": true, "sendLogs": true, "voiceFeedback": true, "soundFeedback": true, "adjustOffset": false, "units": 0, "timerLength":5] as [String : Any]
+        let appDefaults = ["crumbColor": 0, "showPath": true, "pathColor": 0, "hapticFeedback": true, "sendLogs": true, "voiceFeedback": true, "soundFeedback": true, "adjustOffset": false, "units": 0, "timerLength":5, "siriShortcutSingleUseRoute": false,  "siriShortcutStopRecordingRoute": false,  "siriShortcutStartNavigatingRoute": false] as [String : Any]
         UserDefaults.standard.register(defaults: appDefaults)
     }
 
@@ -1104,6 +1104,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         soundFeedback = defaults.bool(forKey: "soundFeedback")
         voiceFeedback = defaults.bool(forKey: "voiceFeedback")
         hapticFeedback = defaults.bool(forKey: "hapticFeedback")
+        siriShortcutSingleUseRouteFlag = defaults.bool(forKey:"siriShortcutSingleUseRoute")
+        
+        siriShortcutStopRecordingRouteFlag = defaults.bool(forKey:"siriShortcutStopRecordingRoute")
+        siriShortcutStartNavigatingRouteFlag = defaults.bool(forKey:"siriShortcutStartNavigatingRoute")
         sendLogs = true // (making this mandatory) defaults.bool(forKey: "sendLogs")
         timerLength = defaults.integer(forKey: "timerLength")
         adjustOffset = defaults.bool(forKey: "adjustOffset")
@@ -1449,7 +1453,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// true if path should be shown between waypoints, false otherwise
     var showPath: Bool!
-    
+  ///  true if shortcuts are set, false otherwise.
+    var siriShortcutSingleUseRouteFlag : Bool!
+    var siriShortcutStopRecordingRouteFlag : Bool!
+    var siriShortcutStartNavigatingRouteFlag : Bool!
     /// the color of the path.  0 is red, 1 is green, 2 is blue, and 3 is random
     var defaultPathColor: Int!
     
@@ -1716,7 +1723,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// handles the user pressing the Anchor Point button
     @objc func startCreateAnchorPointProcedure() {
-
+        print("check userdef")
+        
+    
         rootContainerView.homeButton.isHidden = false
         creatingRouteAnchorPoint = true
 
@@ -1789,30 +1798,37 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                
          
            vcc.delegate = self
-        
+        print("adjustoffset flag")
+        print(adjustOffset)
+        if(!siriShortcutSingleUseRouteFlag ){
+            print("checkf5")
+            print(siriShortcutSingleUseRouteFlag)
             present(vcc, animated: true, completion: nil)
-           
+            UserDefaults.standard.setValue(true, forKey: "siriShortcutSingleUseRoute")
+            print(siriShortcutSingleUseRouteFlag)
+            
+        }
            
        }
     
     
     func stopRecordingRouteShortcutWasPressed(){
-        let StopRecordingRouteActivity = SiriShortcutsController.stopRecordingShortcut()
+   
         
         let activity = SiriShortcutsController.stopRecordingShortcut()
         
-     
-        
-       // newSingleUseRouteActivity.state = .recordingRoute
         let shortcut = INShortcut(userActivity: activity)
         
         let vcc = INUIAddVoiceShortcutViewController(shortcut:shortcut)
             
      
         vcc.delegate = self
-   
-       present(vcc, animated: true, completion: nil)
-    
+       
+        if(!siriShortcutStopRecordingRouteFlag){
+            present(vcc, animated: true, completion: nil)
+            UserDefaults.standard.setValue(true, forKey: "siriShortcutStopRecordingRoute")
+        }
+            
     }
 
     
@@ -1820,17 +1836,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         ///
            let newSingleUseRouteActivity = SiriShortcutsController.startNavigationShortcut()
            let activity = SiriShortcutsController.startNavigationShortcut()
-           print("checkact1:")
-           print(activity.activityType)
-        
-           if( activity.isEqual(nil)){
-          
-              print("Value - nil")
-           }else{
-               print("not nill")
-           }
+      
            
-          // newSingleUseRouteActivity.state = .recordingRoute
            let shortcut = INShortcut(userActivity: activity)
            
            let vcc = INUIAddVoiceShortcutViewController(shortcut:shortcut)
@@ -1838,8 +1845,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
          
            vcc.delegate = self
         
+        if(!siriShortcutStartNavigatingRouteFlag){
             present(vcc, animated: true, completion: nil)
-           
+            UserDefaults.standard.setValue(true, forKey: "siriShortcutStartNavigatingRoute")
+       }
            
        }
     
