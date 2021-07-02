@@ -224,7 +224,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     var appClipCodeID: String = ""
     
     /// This is the list of routes associated with a specific app clip code
-    var availableRoutes: [SavedRoute]
+    var availableRoutes: [SavedRoute]?
     
     // MARK: - Speech Synthesizer Delegate
     
