@@ -695,7 +695,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     var stopNavigationController: StopNavigationController!
     ///siri shortcuts VC
     var siriShortcutsController: SiriShortcutsController!
-    
+  
     /// called when the view has loaded.  We setup various app elements in here.
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -874,6 +874,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             userDefaults.set(true, forKey: "showedSignificantChangesAlertv1_3")
             // don't show this for now, but leave the plumbing in place for a future significant change
             // showSignificantChangesAlert()
+        }
+        
+        if(!siriShortcutAlert){
+            
+            showSignificantChangesHandsFreeAlert()
+            UserDefaults.standard.setValue(true, forKey: "siriShortcutAlert")
         }
         
         synth.delegate = self
@@ -1077,6 +1083,20 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         self.present(changesAlertVC, animated: true, completion: nil)
     }
     
+    ///significant changes Hands free alert
+    
+    
+    /// Show significant changes alert so the user is not surprised by new app features.
+    func showSignificantChangesHandsFreeAlert() {
+        let changesAlertVC = UIAlertController(title: NSLocalizedString("significantVersionChangesPop-UpHeading", comment: "The heading of a pop-up telling the user that significant changes have been made to this app version"),
+                                               message: NSLocalizedString("significantVersionChangesPopHandsFree-UpContent", comment: "An alert shown to the user to alert them to the fact that significant changes have been made to the app."),
+                                               preferredStyle: .alert)
+        changesAlertVC.addAction(UIAlertAction(title: NSLocalizedString("significantVersionChanges-Confirmation", comment: "What the user clicks to acknowledge the significant changes message and dismiss pop-up"), style: .default, handler: { action -> Void in
+        }
+        ))
+        self.present(changesAlertVC, animated: true, completion: nil)
+    }
+    
     /// Configure Settings Bundle
     func createSettingsBundle() {
         registerSettingsBundle()
@@ -1089,7 +1109,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// Register settings bundle
     func registerSettingsBundle(){
-        let appDefaults = ["crumbColor": 0, "showPath": true, "pathColor": 0, "hapticFeedback": true, "sendLogs": true, "voiceFeedback": true, "soundFeedback": true, "adjustOffset": false, "units": 0, "timerLength":5, "siriShortcutSingleUseRoute": false,  "siriShortcutStopRecordingRoute": false,  "siriShortcutStartNavigatingRoute": false] as [String : Any]
+        let appDefaults = ["crumbColor": 0, "showPath": true, "pathColor": 0, "hapticFeedback": true, "sendLogs": true, "voiceFeedback": true, "soundFeedback": true, "adjustOffset": false, "units": 0, "timerLength":5, "siriShortcutSingleUseRoute": false,  "siriShortcutStopRecordingRoute": false,  "siriShortcutStartNavigatingRoute": false, "siriShortcutAlert": false] as [String : Any]
         UserDefaults.standard.register(defaults: appDefaults)
     }
 
@@ -1108,6 +1128,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         
         siriShortcutStopRecordingRouteFlag = defaults.bool(forKey:"siriShortcutStopRecordingRoute")
         siriShortcutStartNavigatingRouteFlag = defaults.bool(forKey:"siriShortcutStartNavigatingRoute")
+        siriShortcutAlert = defaults.bool(forKey: "siriShortcutAlert")
         sendLogs = true // (making this mandatory) defaults.bool(forKey: "sendLogs")
         timerLength = defaults.integer(forKey: "timerLength")
         adjustOffset = defaults.bool(forKey: "adjustOffset")
@@ -1464,6 +1485,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     var siriShortcutSingleUseRouteFlag : Bool!
     var siriShortcutStopRecordingRouteFlag : Bool!
     var siriShortcutStartNavigatingRouteFlag : Bool!
+    var siriShortcutAlert: Bool!
     /// the color of the path.  0 is red, 1 is green, 2 is blue, and 3 is random
     var defaultPathColor: Int!
     
@@ -1750,7 +1772,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         
         activity.becomeCurrent()
         newSingleUseRouteShortcutWasPressed()
-
+        
 
         ///the route has not been resumed automaticly from a saved route
         isAutomaticAlignment = false

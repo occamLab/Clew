@@ -16,6 +16,9 @@
 
 "significantVersionChangesPop-UpContent" = "This new version of Clew features a route sharing feature and a redesigned workflow for saving routes. Please note that \"landmarks\" are now called \"anchor points\". Also, some menus previously on the home screen are now available through the \"options\" menu. See the help menu for more details.";
 
+
+"significantVersionChangesPopHandsFree-UpContent" = "Now you can use Siri with this new version of Clew. Please note that you can only use Siri with \"Single Use Route\". Please ensure that you have enabled Hey Siri through settings. You will now be prompted to add Siri shortcuts after each actiion you take, when this is done you can simply say Hey Siri \"Activity name\". ";
+
 "significantVersionChanges-Confirmation" = "Ok";
 
 "forYourSafetyPop-UpHeading" = "For your safety";
