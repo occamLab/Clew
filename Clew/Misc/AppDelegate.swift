@@ -92,6 +92,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         /// check imported file extension
         guard url.pathExtension == "crd" else { return false }
         
+        
         /// import the file here
         (vc as? ViewController)?.dataPersistence.importData(from: url)
         
