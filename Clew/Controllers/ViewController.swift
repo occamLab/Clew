@@ -220,8 +220,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// This is the name of the .crd file of the path to load, which is assigned by SceneDelegate
     var routeID: String = ""
     /// This is the identifier of the App Clip Code, which specifies the path to load and is assigned by SceneDelegate
+    
     var appClipCodeID: String = ""
     
+    /// This is the list of routes associated with a specific app clip code
+    var availableRoutes: [SavedRoute]
     
     // MARK: - Speech Synthesizer Delegate
     
