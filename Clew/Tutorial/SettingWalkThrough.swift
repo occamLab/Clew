@@ -25,9 +25,41 @@ struct setUnit: View{
         TutorialScreen{
             Text("Distance Units")
             
-            Button("Imperial", action:{ print("feet"); metric = false})
+            Button(action:{
+                    print("feet")
+                    metric = false})
+            {TutorialButton{
+                Text("Imperial")}}
             
-            Button("Metric", action: {print("meters"); metric = true})
+            Button(action: {
+                    print("meters")
+                    metric = true})
+            {TutorialButton{
+                Text("Metric")}
+                
+            }
+            
+            TutorialNavLink(destination: setUpColor()) {Text("Next")
+            }
+        }
+    }
+}
+
+
+struct setUpColor: View {
+    @State private var crumbColor = "Red"
+    let colors = ["Red", "Green", "Blue", "Random"]
+
+    var body: some View {
+        VStack {
+            Picker("Select a crumb color", selection: $crumbColor) {
+                ForEach(colors, id: \.self) {
+                    Text($0)
+                }
+            }
+            .pickerStyle(MenuPickerStyle())
+
+            Text("Selected color: \(crumbColor)")
         }
     }
 }

@@ -36,7 +36,7 @@ struct TutorialScreen<Content: View>: View {
 
 
 struct TutorialNavLink<Destination: View, Content: View>: View {
-    //creates a button format for all the CLEW tutorial buttons to use
+    //creates a button format for all the CLEW tutorial navigation links to use
   let content: Content
     let destination: Destination
     init(destination: Destination, @ViewBuilder content: () -> Content) {
@@ -56,6 +56,23 @@ struct TutorialNavLink<Destination: View, Content: View>: View {
         }
     }
   }
+
+
+struct TutorialButton<Content: View>: View {
+    let content: Content
+    init(@ViewBuilder content: () -> Content) {
+        self.content = content()
+    }
+    var body: some View {
+        content.textboarder(color: .black, lineWidth: 3)
+            .frame(minWidth: 0, maxWidth: 300)
+            .padding()
+            .foregroundColor(.white)
+            .background(Color.blue)
+            .cornerRadius(10)
+            .font(.system(size: 18, weight: .bold))
+    }
+}
 
 
 struct SettingOptions: View {
@@ -194,23 +211,11 @@ struct PracticeOrientPhone: View {
                 NotificationCenter.default.post(name: Notification.Name("StartARSession"), object: nil)
             }){
                 if started {
-                    Text("Stop")
-                    .textboarder(color: .black, lineWidth: 3)
-                    .frame(minWidth: 0, maxWidth: 300)
-                    .padding()
-                    .foregroundColor(.white)
-                    .background(Color.blue)
-                    .cornerRadius(10)
-                    .font(.system(size: 18, weight: .bold))
+                    TutorialButton{
+                        Text("Stop")}
                 } else {
-                    Text("Start")
-                    .textboarder(color: .black, lineWidth: 3)
-                    .frame(minWidth: 0, maxWidth: 300)
-                    .padding()
-                    .foregroundColor(.white)
-                    .background(Color.blue)
-                    .cornerRadius(10)
-                    .font(.system(size: 18, weight: .bold))
+                    TutorialButton{
+                        Text("Start")}
                 }
             }
             
