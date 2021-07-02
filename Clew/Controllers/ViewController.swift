@@ -556,7 +556,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             ///sends the user to a route recording of the program is creating a beginning route Anchor Point
             state = .recordingRoute
             return
-        } else if let currentTransform = sceneView.session.currentFrame?.anchors.compactMap({$0 as? ARImageAnchor}).last?.transform { // <3
+        } else if let currentTransform = sceneView.session.currentFrame?.anchors.compactMap({$0 as? ARImageAnchor}).last?.transform { 
             
             endRouteAnchorPoint.transform = currentTransform
             // no more crumbs
