@@ -1275,16 +1275,21 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         startNavigationController.isAutomaticAlignment = isAutomaticAlignment
         startNavigationController.recordingSingleUseRoute = recordingSingleUseRoute
        
-     
+ 
+                      
         add(startNavigationController)
      // hide pause button for single use route
          if(recordingSingleUseRoute) {
              startNavigationController.pauseButton.isHidden =  true
          }
         
+        
        // startNavigationController.pauseButton.isHidden = !allowPause
         startNavigationController.largeHomeButton.isHidden = recordingSingleUseRoute
         startNavigationController.stackView.layoutIfNeeded()
+    
+        announce(announcement: NSLocalizedString("stoppedTrachingSessionAnnouncement", comment: "An announcement which lets the user know that they have stopped recording the route."))
+        
         UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: startNavigationController.startNavigationButton)
     }
 

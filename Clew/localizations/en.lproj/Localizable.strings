@@ -31,7 +31,7 @@
 "fixedTrackingAnnouncement" = "Tracking performance normal.";
 "properDevicePositioningAnnouncement" = "Hold vertically with the rear camera facing forward.";
 "completedNavigationAnnouncement" = "You've arrived.";
-
+"stoppedTrachingSessionAnnouncement"="You've now stopped recording the route";
     // Name of labels that appear in UI
 "saveARouteButtonText" = "Save Route";
 "saveARouteButtonAccessibilityLabel" = "Save a route";
