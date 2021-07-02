@@ -103,7 +103,9 @@ class RoutesViewController : UIViewController, UITableViewDataSource, UITableVie
         
         let share = UITableViewRowAction(style: .normal, title: NSLocalizedString("shareActionText", comment: "This is the text that appears when a user tries to share a saved route. This text is used in an option menu when a route is selected and it describes the action for share a route.")) { (action, indexPath) in
             /// share item
-            let url = self.rootViewController?.dataPersistence.exportToURL(route: self.routes[indexPath.row])
+//            let url = self.rootViewController?.dataPersistence.exportToURL(route: self.routes[indexPath.row])
+            #if !APPCLIP
+            let url = self.rootViewController?.dataPersistence.uploadToFirebase(route: self.routes[indexPath.row])
             
             /// define share menu content and a message to show with it
             /// TODO: localize
@@ -114,6 +116,7 @@ class RoutesViewController : UIViewController, UITableViewDataSource, UITableVie
 
             /// show the share menu
             self.present(activity, animated: true, completion: nil)
+            #endif
         }
         return [delete, share]
         

@@ -8,6 +8,7 @@
 
 import Foundation
 import ARKit
+import FirebaseStorage
 import FirebaseAuth
 
 /// This class handles saving and loading routes.
@@ -119,7 +120,6 @@ class DataPersistence {
         }
     }
 
-    
     /// handler for importing routes from an external temporary file
     /// called in the case of a route being shared from the UIActivityViewController
     /// library
@@ -228,6 +228,25 @@ class DataPersistence {
         } catch {
             print(error.localizedDescription)
             return nil
+        }
+    }
+    
+    func uploadToFirebase(route: SavedRoute) {
+        let routeRef = Storage.storage().reference().child("AppClipRoutes")
+        let codedData = exportToCrd(route: route)
+
+        ///creates a reference to the location we want to save the new file
+        let fileRef = routeRef.child("\(route.name).crd")
+        
+        let fileType = StorageMetadata()
+        fileType.contentType = "application/crd"
+        let _ = fileRef.putData(codedData, metadata: fileType){ (metadata, error) in
+            if metadata == nil {
+                print("could not upload route to Firebase", error!.localizedDescription)
+            } else {
+                print("uploaded route successfully")
+            }
+            NotificationCenter.default.post(name: Notification.Name("SurveyPopoverReadyToDismiss"), object: true)
         }
     }
     
