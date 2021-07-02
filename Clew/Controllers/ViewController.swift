@@ -699,7 +699,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     var speakerObject: MDLObject!
     
     /// Route persistence
+    #if !APPCLIP
     var dataPersistence = DataPersistence()
+    #endif
     
     // MARK: - Parameters that can be controlled remotely via Firebase
     

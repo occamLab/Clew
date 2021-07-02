@@ -8,6 +8,7 @@
 
 import Foundation
 import ARKit
+import FirebaseAuth
 
 /// This class handles saving and loading routes.
 /// TODO: make this a singleton
@@ -151,7 +152,7 @@ class DataPersistence {
         var beginVoiceFile: String?
         var endVoiceFile: String?
         
-        /// fetch begginning voice notefile if it exists
+        /// fetch beginning voice notefile if it exists
         if let beginVoiceURL = route.beginRouteAnchorPoint.voiceNote {
             /// build a full valid path the found url from the landmark
             let voiceurl = beginVoiceURL.documentURL
