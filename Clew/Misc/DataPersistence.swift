@@ -120,6 +120,7 @@ class DataPersistence {
         /// remove from temp storage the file gets automatically placed into
         /// otherwise the file sticks there and won't be deleted automatically,
         /// causing app bloat.
+        try? FileManager.default.removeItem(at: url)
     }
 
     
@@ -131,17 +132,12 @@ class DataPersistence {
         /// attempt to fetch data from temporary import from external source
         do {
             print("attempting unarchive")
-            // if anything goes wrong with the unarchiving, stick with an emptly list of routes
+            // if anything goes wrong with the unarchiving, stick with an empty list of routes
             let data = try Data(contentsOf: url)
             importData(withData: data)
         } catch {
             print("couldn't unarchive route document \(error)")
         }
-        
-        /// remove from temp storage the file gets automatically placed into
-        /// otherwise the file sticks there and won't be deleted automatically,
-        /// causing app bloat.
-        try? FileManager.default.removeItem(at: url)
     }
     
     /// handler for exporting routes to a external temporary file
