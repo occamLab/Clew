@@ -141,10 +141,11 @@ class DataPersistence {
         try? FileManager.default.removeItem(at: url)
     }
     
-    /// handler for exporting routes to a external temporary file
-    /// called in the case of a route being shared from the UIActivityViewController
-    /// library
-    func exportToURL(route: SavedRoute) -> URL? {
+    /// handler for encoding routes to a .crd file
+    /// - Parameters:
+    ///     - route: a `SavedRoute` representing the route to save as a .crd
+    /// - Returns: `codedData`, representing `route` encoded as a .crd file
+    func exportToCrd(route: SavedRoute) -> Data {
         /// fetch the world map if it exists. Otherwise, value is nil
         let worldMap = self.unarchiveMap(id: route.id as String)
         
@@ -195,8 +196,19 @@ class DataPersistence {
                                           beginVoiceNote: beginVoiceFile,
                                           endVoiceNote: endVoiceFile,
                                           routeVoiceNotes: routeVoiceNotes)
+        
+        /// encode our route data before writing to disk, then return it
+        return try! NSKeyedArchiver.archivedData(withRootObject: routeData, requiringSecureCoding: true)
+    }
+    
+    /// handler for exporting routes to a external temporary file
+    /// called in the case of a route being shared from the UIActivityViewController
+    /// library
+    func exportToURL(route: SavedRoute) -> URL? {
 
-        /// fetch the documents directory where apple stores temporary files
+        let codedData = exportToCrd(route: route)
+        
+        /// fetch the documents directory where Apple stores temporary files
         let documents = FileManager.default.urls(
             for: .documentDirectory,
             in: .userDomainMask
@@ -207,9 +219,6 @@ class DataPersistence {
         guard let path = documents?.appendingPathComponent("/\(route.name).crd") else {
             return nil
         }
-        
-        /// encode our route data before writing to disk
-        let codedData = try! NSKeyedArchiver.archivedData(withRootObject: routeData, requiringSecureCoding: true)
         
         /// write route to file
         /// and return the path of the created temp file
