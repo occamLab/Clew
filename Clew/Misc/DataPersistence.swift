@@ -116,11 +116,6 @@ class DataPersistence {
         } catch {
             print("couldn't unarchive route document \(error)")
         }
-        
-        /// remove from temp storage the file gets automatically placed into
-        /// otherwise the file sticks there and won't be deleted automatically,
-        /// causing app bloat.
-        try? FileManager.default.removeItem(at: url)
     }
 
     
@@ -138,6 +133,11 @@ class DataPersistence {
         } catch {
             print("couldn't unarchive route document \(error)")
         }
+        
+        /// remove from temp storage the file gets automatically placed into
+        /// otherwise the file sticks there and won't be deleted automatically,
+        /// causing app bloat.
+        try? FileManager.default.removeItem(at: url)
     }
     
     /// handler for exporting routes to a external temporary file
