@@ -1253,8 +1253,15 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         // set appropriate Boolean flags for context
         startNavigationController.isAutomaticAlignment = isAutomaticAlignment
         startNavigationController.recordingSingleUseRoute = recordingSingleUseRoute
+       
+     
         add(startNavigationController)
-        startNavigationController.pauseButton.isHidden = !allowPause
+     // hide pause button for single use route
+         if(recordingSingleUseRoute) {
+             startNavigationController.pauseButton.isHidden =  true
+         }
+        
+       // startNavigationController.pauseButton.isHidden = !allowPause
         startNavigationController.largeHomeButton.isHidden = recordingSingleUseRoute
         startNavigationController.stackView.layoutIfNeeded()
         UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: startNavigationController.startNavigationButton)
@@ -1611,7 +1618,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             state = .startingPauseProcedure
         } else {
             ///PATHPOINT one way route recording finished -> play/pause
-            state = .readyToNavigateOrPause(allowPause: true)
+            state = .readyToNavigateOrPause(allowPause: false)
         }
         
     }
