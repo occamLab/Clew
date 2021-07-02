@@ -216,8 +216,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// This is an audio player that queues up the voice note associated with a particular route Anchor Point. The player is created whenever a saved route is loaded. Loading it before the user clicks the "Play Voice Note" button allows us to call the prepareToPlay function which reduces the latency when the user clicks the "Play Voice Note" button.
     var voiceNoteToPlay: AVAudioPlayer?
     
+    /// These are based on querying the invocation URL
     /// This is the name of the .crd file of the path to load, which is assigned by SceneDelegate
     var routeID: String = ""
+    /// This is the identifier of the App Clip Code, which specifies the path to load and is assigned by SceneDelegate
+    var appClipCodeID: String = ""
     
     
     // MARK: - Speech Synthesizer Delegate
@@ -319,9 +322,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         endRouteAnchorPoint = RouteAnchorPoint()
 
         logger.resetNavigationLog()
-        let testPath = "routes/\(routeID).crd"
-        print("testPath", testPath)
-        let pathRef = Storage.storage().reference().child(testPath)
+        let firebasePath = "routes/\(appClipCodeID)/\(routeID).crd"
+        print("testPath", firebasePath)
+        let pathRef = Storage.storage().reference().child(firebasePath)
         
         // download path from Firebase
         pathRef.getData(maxSize: 100000000000) { data, error in
@@ -341,8 +344,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 }
             }
           }
-        
-     
     }
     
     /// Handler for the navigatingRoute app state
