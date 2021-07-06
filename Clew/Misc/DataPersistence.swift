@@ -233,12 +233,22 @@ class DataPersistence {
     func uploadToFirebase(route: SavedRoute) {
         let routeRef = Storage.storage().reference().child("AppClipRoutes")
         let codedData = exportToCrd(route: route)
-
-        let appClipRef = routeRef.child("\()")
         
-        ///creates a reference to the location we want to save the new file
+        ///creates a reference to the location we want to save the new files
         let fileRef = routeRef.child("\(route.name).crd")
+
+        /// creates a reference to the location we want the .json to live
+        let appClipRef = routeRef.child("\(route.appClipCodeID).json")
         
+        /// attempt to download .json file from Firebase
+        appClipRef.getData(maxSize: 100000000000) { data, error in
+            if error != nil {
+                /// Create file
+            } else {
+                /// append fileRef to .json file
+                }
+            }
+
         let fileType = StorageMetadata()
         fileType.contentType = "application/crd"
         let _ = fileRef.putData(codedData, metadata: fileType){ (metadata, error) in

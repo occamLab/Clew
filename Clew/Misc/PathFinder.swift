@@ -279,6 +279,8 @@ class SavedRoute: NSObject, NSSecureCoding {
     public var endRouteAnchorPoint: RouteAnchorPoint
     /// The Anchor Points used for recording voice notes and other information along the route
     public var intermediateAnchorPoints: [RouteAnchorPoint]
+    /// An identifier for the App Clip code that begins a route.
+    public var appClipCodeID: String = ""
 
     /// Initialize the route.
     ///

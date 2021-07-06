@@ -219,7 +219,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// These are based on querying the invocation URL
     /// This is the name of the .crd file of the path to load, which is assigned by SceneDelegate
     var routeID: String = ""
-    /// This is the identifier of the App Clip Code, which specifies the path to load and is assigned by SceneDelegate
+    /// This is the identifier of the App Clip Code, which specifies the json to load and is assigned by SceneDelegate
     var appClipCodeID: String = ""
     
     
