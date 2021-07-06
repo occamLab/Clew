@@ -7,6 +7,7 @@
 
 import UIKit
 import SwiftUI
+import Firebase
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
@@ -41,10 +42,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         createScene(scene)
         //vc?.routeID = "table2wall"
         // TODO: get rid of this once available routes is set in a different way
-        vc?.availableRoutes["table2wall"] = "AppClipRoutes/Please work.crd"
+        
+        vc?.availableRoutes["Table to Wall"] = "AppClipRoutes/Please work.crd"
+        vc?.availableRoutes["Table to Office"] = "AppClipRoutes/Please work.crd"
+        vc?.availableRoutes["Table to Bathroom"] = "AppClipRoutes/Please work.crd"
+
+
         print("Dictionary: \(vc?.availableRoutes)")
         popoverController = UIHostingController(rootView: StartNavigationPopoverView(vc: vc!))
-        popoverController?.modalPresentationStyle = .popover
+        popoverController?.modalPresentationStyle = .fullScreen
         vc!.present(popoverController!, animated: true)
         print("popover successful B)")
         // create listeners to ensure that the isReadingAnnouncement flag is reset properly

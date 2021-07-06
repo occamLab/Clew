@@ -228,7 +228,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
 
     
     /// This is the path to download route
-    var firebasePath: String = ""
+    var firebasePath: String?
     
     // MARK: - Speech Synthesizer Delegate
     
@@ -341,7 +341,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         print("testPath", firebasePath)
         
         // this is where the code would actually pick up B)
-        let pathRef = Storage.storage().reference().child(firebasePath)
+        let pathRef = Storage.storage().reference().child(firebasePath!)
+        //let pathRef = firebasePath!
         
         // download path from Firebase
         pathRef.getData(maxSize: 100000000000) { data, error in
