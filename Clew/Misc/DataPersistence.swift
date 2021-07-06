@@ -246,7 +246,7 @@ class DataPersistence {
         let fileType = StorageMetadata()
         
         /// Initializes routesFile list of [route.id: route.name] dictionaries
-        var existingRoutes: [[String: String]] = [[:]]
+        var existingRoutes: [[String: String]] = []
      
         /// attempt to download .json file from Firebase
         appClipRef.getData(maxSize: 100000000000) { appClipJson, error in

@@ -19,23 +19,24 @@ struct StartNavigationPopoverView: View {
             Text("I am placeholder text that will explain what clew is :)")
                 .multilineTextAlignment(.center)
                 .font(.system(size: 24, weight: .bold))
+            
             NavigationView {
-                List(vc.availableRoutes.sorted(by: {$0.0 < $1.0}), id: \.key) { routeInfo in
+                List(vc.availableRoutes, id: \.first!.key) { routeInfo in
                     
                     Button(action: {
-                        //vc.firebasePath! = routeInfo.value
-                        selectedRouteName = routeInfo.key
+                        vc.routeID = routeInfo.first!.key
+                        selectedRouteName = routeInfo.first!.value
                         vc.imageAnchoring = true
                         vc.recordPathController.remove()
                             
                     }) {
-                        if selectedRouteName == routeInfo.key {
+                        if selectedRouteName == routeInfo.first!.value {
                             RowSelected {
-                                RouteList(RouteName: routeInfo.key)
+                                RouteList(RouteName: routeInfo.first!.value)
                             }
                         } else {
                             RowNotSelected {
-                                RouteList(RouteName: routeInfo.key)
+                                RouteList(RouteName: routeInfo.first!.value)
                             }
                         }
                     }

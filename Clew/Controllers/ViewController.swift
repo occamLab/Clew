@@ -224,7 +224,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     var appClipCodeID: String = ""
     
     /// This is the list of routes associated with a specific app clip code
-    var availableRoutes = [String: String]()
+    var availableRoutes = [[String: String]]()
 
     
     /// This is the path to download route
