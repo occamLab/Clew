@@ -242,42 +242,49 @@ class DataPersistence {
 //        let appClipRef = routeRef.child("\(route.appClipCodeID).json")
         let appClipRef = routeRef.child("test.json")
         
-        /// Initializes routesFile dictionary ["route.name": "file-location"]
-        var routesFile: [String: StorageReference] = [:]
+        /// initialize this
+        let fileType = StorageMetadata()
         
+        /// Initializes routesFile dictionary ["route.name"]
+        var existingRoutes: [String] = []
+     
         /// attempt to download .json file from Firebase
         appClipRef.getData(maxSize: 100000000000) { appClipJson, error in
-            /// route file does not exist
-            if error != nil {
-                print("JSON file does not exist! This is okay, we will make one!")
-            } else {
-                /// unwrap NSData and set routesFile to data in .json file
-                let routesFile = NSKeyedUnarchiver.unarchiveObject(with: appClipJson!) as? [String: StorageReference]
+            do {
+                if let appClipJson = appClipJson {
+                    /// unwrap NSData, if it exists, to a list, and set equal to existingRoutes
+                    let routesFile = try JSONSerialization.jsonObject(with: appClipJson, options: [])
+                    
+                    if let routesFile = routesFile as? [String] {
+                        existingRoutes = routesFile
+                    }
                 }
-            /// set key-value pair
-            routesFile[route.name as String] = fileRef
+                existingRoutes.append(route.name as String)
+                /// encode existingRoutes to Data
+                let updatedRoutesFile = try JSONSerialization.data(withJSONObject: existingRoutes, options: [])
+                
+                /// Upload JSON
+                fileType.contentType = "application/json"
+                let _ = appClipRef.putData(updatedRoutesFile, metadata: fileType){ (metadata, error) in
+                    if metadata == nil {
+                        print("could not upload .json to Firebase", error!.localizedDescription)
+                    } else {
+                        print("uploaded .json successfully @ ", appClipRef.fullPath, existingRoutes)
+                        /// upload .crd route file
+                        fileType.contentType = "application/crd"
+                        let _ = fileRef.putData(codedData, metadata: fileType){ (metadata, error) in
+                            if metadata == nil {
+                                print("could not upload route to Firebase", error!.localizedDescription)
+                            } else {
+                                print("uploaded route successfully @ ", fileRef.fullPath)
+                            }
+                            NotificationCenter.default.post(name: Notification.Name("SurveyPopoverReadyToDismiss"), object: true)
+                        }
+                    }
+                }
+            } catch {
+                print("Unable to upload routes \(error)")
             }
-
-        /// upload revised .json
-        let fileType = StorageMetadata()
-        fileType.contentType = "application/json"
-        let _ = appClipRef.putData(codedData, metadata: fileType){ (metadata, error) in
-            if metadata == nil {
-                print("could not upload .json to Firebase", error!.localizedDescription)
-            } else {
-                print("uploaded .json successfully", appClipRef.fullPath)
-            }
-        }
-        
-        /// upload .crd route file
-        fileType.contentType = "application/crd"
-        let _ = fileRef.putData(codedData, metadata: fileType){ (metadata, error) in
-            if metadata == nil {
-                print("could not upload route to Firebase", error!.localizedDescription)
-            } else {
-                print("uploaded route successfully", fileRef.fullPath)
-            }
-            NotificationCenter.default.post(name: Notification.Name("SurveyPopoverReadyToDismiss"), object: true)
         }
     }
     
