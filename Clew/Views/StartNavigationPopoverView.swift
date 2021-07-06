@@ -12,24 +12,22 @@ struct StartNavigationPopoverView: View {
     let vc: ViewController
     
     var body: some View {
-        var routeID: String = ""
+        var routePath: String = ""
         var selected = false
         
         NavigationView {
-            List(vc.dataPersistence.routes) { route in
+            List(vc.availableRoutes.sorted(by: >), id: \.key) { routeInfo in
                 
                 Button(action: {
-                    //routeID = String(route.name)
-                    routeID = "table2wall"
-
-                    vc.routeID = routeID
+                    routePath = routeInfo.value
+                    vc.firebasePath = routePath
+                    selected = true
                     vc.imageAnchoring = true
                     vc.recordPathController.remove()
-                    vc.handleStateTransitionToNavigatingExternalRoute()
-                    NotificationCenter.default.post(name: NSNotification.Name("shouldDismissRoutePopover"), object: nil)
+
                         
                 }) {
-                    RouteList(Route: route)
+                    RouteList(RouteName: routeInfo.key)
                 }
             }
             .navigationTitle("Select A Route")
@@ -37,8 +35,8 @@ struct StartNavigationPopoverView: View {
         }
         Button(action: {
             if selected {
-                vc.routeID = routeID
-
+                vc.handleStateTransitionToNavigatingExternalRoute()
+                NotificationCenter.default.post(name: NSNotification.Name("shouldDismissRoutePopover"), object: nil)
             }
         }) {
             Text("Start Navigation")
@@ -50,7 +48,7 @@ struct StartNavigationPopoverView: View {
 
 struct RouteList: View {
     
-    var Route: SavedRoute
+    var RouteName: String
     
     var body: some View {
         HStack {
@@ -58,7 +56,7 @@ struct RouteList: View {
                 .resizable()
                 .frame(width: 50, height: 50)
             
-            Text(String(Route.name))
+            Text(RouteName)
             
             Spacer()
         }

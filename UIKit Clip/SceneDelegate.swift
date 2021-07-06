@@ -40,6 +40,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         createScene(scene)
         //vc?.routeID = "table2wall"
+        // TODO: get rid of this once available routes is set in a different way
+        vc?.availableRoutes["table2wall"] = "AppClipRoutes/Please work.crd"
+        print("Dictionary: \(vc?.availableRoutes)")
         popoverController = UIHostingController(rootView: StartNavigationPopoverView(vc: vc!))
         popoverController?.modalPresentationStyle = .popover
         vc!.present(popoverController!, animated: true)
@@ -80,11 +83,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         /// with the invocation URL format https://occamlab.github.io/id?p=appClipCodeID&p1=routeID, and routeID being the name of the file in Firebase
         if let appClipCodeID = queryItems.first(where: { $0.name == "p"}) {
             vc?.appClipCodeID = appClipCodeID.value!
+            
+            if let routeID = queryItems.first(where: { $0.name == "p1"}) {
+                vc?.routeID = routeID.value!
+                vc?.availableRoutes[routeID.value!] = "routes/\(appClipCodeID.value!)/\(routeID.value!).crd"
+
+            }
         }
         
-        if let routeID = queryItems.first(where: { $0.name == "p1"}) {
-            vc?.routeID = routeID.value!
-        }
+
                 
     }
 

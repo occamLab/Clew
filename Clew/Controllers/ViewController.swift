@@ -224,7 +224,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     var appClipCodeID: String = ""
     
     /// This is the list of routes associated with a specific app clip code
-    var availableRoutes: [SavedRoute]?
+    var availableRoutes = [String: String]()
+
+    
+    /// This is the path to download route
+    var firebasePath: String = ""
     
     // MARK: - Speech Synthesizer Delegate
     
@@ -333,8 +337,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         endRouteAnchorPoint = RouteAnchorPoint()
 
         logger.resetNavigationLog()
-        let firebasePath = "routes/\(appClipCodeID)/\(routeID).crd"
+        //let firebasePath = "routes/\(appClipCodeID)/\(routeID).crd"
         print("testPath", firebasePath)
+        
+        // this is where the code would actually pick up B)
         let pathRef = Storage.storage().reference().child(firebasePath)
         
         // download path from Firebase
