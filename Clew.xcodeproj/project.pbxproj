@@ -42,7 +42,6 @@
 		98006F91268382D800E61861 /* UIKit_ClipTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98006F90268382D800E61861 /* UIKit_ClipTests.swift */; };
 		98006F9C268382D800E61861 /* UIKit_ClipUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98006F9B268382D800E61861 /* UIKit_ClipUITests.swift */; };
 		98006FA0268382D800E61861 /* UIKit Clip.app in Embed App Clips */ = {isa = PBXBuildFile; fileRef = 98006F76268382D600E61861 /* UIKit Clip.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		98006FAB2683832C00E61861 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470EDE22C119F4001092A4 /* ViewController.swift */; };
 		98006FB22683844A00E61861 /* RecordPathController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470EE022C119F4001092A4 /* RecordPathController.swift */; };
 		98006FB32683844D00E61861 /* StartNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470EE122C119F4001092A4 /* StartNavigationController.swift */; };
 		98006FB42683845000E61861 /* StopRecordingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470EE222C119F4001092A4 /* StopRecordingController.swift */; };
@@ -94,7 +93,8 @@
 		98CC6766268A1F2200E3759F /* SurveyInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98CC6765268A1F2200E3759F /* SurveyInterface.swift */; };
 		98CC6767268A1F2200E3759F /* SurveyInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98CC6765268A1F2200E3759F /* SurveyInterface.swift */; };
 		98CC6769268A23A600E3759F /* SurveyInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98CC6765268A1F2200E3759F /* SurveyInterface.swift */; };
-		98E3A38E268F69B400C3DAD1 /* DataPersistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470EB022C119F4001092A4 /* DataPersistence.swift */; };
+		98E3A38F268F994A00C3DAD1 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470EDE22C119F4001092A4 /* ViewController.swift */; };
+		98E3A391268F99E800C3DAD1 /* DataPersistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470EB022C119F4001092A4 /* DataPersistence.swift */; };
 		B0A563F6FE1007A2716DC876 /* Pods_Clew_Dev.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3532E390954571B93729786A /* Pods_Clew_Dev.framework */; };
 		B7EB59E220F693EB00FBBC6A /* Confirm.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4DF05CC71F34EB56008B0E31 /* Confirm.mp3 */; };
 		B7EB59E320F693EB00FBBC6A /* Crumb.obj in Resources */ = {isa = PBXBuildFile; fileRef = 4D6B00E41F33C85500952242 /* Crumb.obj */; };
@@ -1217,11 +1217,10 @@
 				9805365B268388E00065E80F /* Utility.swift in Sources */,
 				98006FC5268385BA00E61861 /* TransparentTouchView.swift in Sources */,
 				98006FB72683845A00E61861 /* StopNavigationController.swift in Sources */,
-				98E3A38E268F69B400C3DAD1 /* DataPersistence.swift in Sources */,
+				98E3A391268F99E800C3DAD1 /* DataPersistence.swift in Sources */,
 				98006FB62683845600E61861 /* NameSavedRouteController.swift in Sources */,
 				9805366526838C500065E80F /* RouteTableViewCell.swift in Sources */,
 				98053659268388D90065E80F /* FeedbackLogger.swift in Sources */,
-				98006FAB2683832C00E61861 /* ViewController.swift in Sources */,
 				98006FB22683844A00E61861 /* RecordPathController.swift in Sources */,
 				98006FB92683846200E61861 /* ResumeTrackingConfirmController.swift in Sources */,
 				98006FC7268385D400E61861 /* HelpViewController.swift in Sources */,
@@ -1230,6 +1229,7 @@
 				98053657268388CE0065E80F /* PathLogger.swift in Sources */,
 				9819E2F2268BA6AB0008CA82 /* PauseTrackingController.swift in Sources */,
 				98006FC1268385A700E61861 /* UIViewControllerExtensions.swift in Sources */,
+				98E3A38F268F994A00C3DAD1 /* ViewController.swift in Sources */,
 				98CC6769268A23A600E3759F /* SurveyInterface.swift in Sources */,
 				98006FB32683844D00E61861 /* StartNavigationController.swift in Sources */,
 				980536EE2684D16F0065E80F /* AppDelegate.swift in Sources */,

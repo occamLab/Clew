@@ -12,6 +12,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
 
     var vc: ViewController?
+    var route: SavedRoute?
 
     
     func createScene(_ scene: UIScene) {
@@ -58,13 +59,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             return
         }
         
-        /// with the invocation URL format https://occamlab.github.io/id?p=appClipCodeID&p1=routeID, and routeID being the name of the file in Firebase
+        /// with the invocation URL format https://occamlab.github.io/id?p=appClipCodeID, appClipCodeID being the name of the file in Firebase
         if let appClipCodeID = queryItems.first(where: { $0.name == "p"}) {
             vc?.appClipCodeID = appClipCodeID.value!
-        }
-        
-        if let routeID = queryItems.first(where: { $0.name == "p1"}) {
-            vc?.routeID = routeID.value!
+            route?.appClipCodeID = appClipCodeID.value!
         }
     }
 
