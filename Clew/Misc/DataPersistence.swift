@@ -260,7 +260,9 @@ class DataPersistence {
                     }
                 }
                 let routeInfo = [route.id: route.name] as [String: String]
-                existingRoutes.append(routeInfo)
+                if !existingRoutes.contains(routeInfo) {
+                    existingRoutes.append(routeInfo)
+                }
                 /// encode existingRoutes to Data
                 let updatedRoutesFile = try JSONSerialization.data(withJSONObject: existingRoutes, options: [])
                 
