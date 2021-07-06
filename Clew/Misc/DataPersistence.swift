@@ -236,7 +236,7 @@ class DataPersistence {
         let codedData = exportToCrd(route: route)
         
         ///creates a reference to the location we want to save the new files
-        let fileRef = routeRef.child("\(route.name).crd")
+        let fileRef = routeRef.child("\(route.id).crd")
 
         /// creates a reference to the location we want the .json to live
 //        let appClipRef = routeRef.child("\(route.appClipCodeID).json")
@@ -245,8 +245,8 @@ class DataPersistence {
         /// initialize this
         let fileType = StorageMetadata()
         
-        /// Initializes routesFile dictionary ["route.name"]
-        var existingRoutes: [String] = []
+        /// Initializes routesFile list of [route.id: route.name] dictionaries
+        var existingRoutes: [[String: String]] = [[:]]
      
         /// attempt to download .json file from Firebase
         appClipRef.getData(maxSize: 100000000000) { appClipJson, error in
@@ -255,11 +255,12 @@ class DataPersistence {
                     /// unwrap NSData, if it exists, to a list, and set equal to existingRoutes
                     let routesFile = try JSONSerialization.jsonObject(with: appClipJson, options: [])
                     
-                    if let routesFile = routesFile as? [String] {
+                    if let routesFile = routesFile as? [[String: String]] {
                         existingRoutes = routesFile
                     }
                 }
-                existingRoutes.append(route.name as String)
+                let routeInfo = [route.id: route.name] as [String: String]
+                existingRoutes.append(routeInfo)
                 /// encode existingRoutes to Data
                 let updatedRoutesFile = try JSONSerialization.data(withJSONObject: existingRoutes, options: [])
                 
