@@ -14,8 +14,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
 
     var vc: ViewController?
+    var route: SavedRoute?
     var popoverController: UIViewController?
-    
+  
     
     func createScene(_ scene: UIScene) {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
@@ -86,19 +87,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             return
         }
         
-        /// with the invocation URL format https://occamlab.github.io/id?p=appClipCodeID&p1=routeID, and routeID being the name of the file in Firebase
+        /// with the invocation URL format https://occamlab.github.io/id?p=appClipCodeID, appClipCodeID being the name of the file in Firebase
         if let appClipCodeID = queryItems.first(where: { $0.name == "p"}) {
             vc?.appClipCodeID = appClipCodeID.value!
-            
-            if let routeID = queryItems.first(where: { $0.name == "p1"}) {
-                vc?.routeID = routeID.value!
-                vc?.availableRoutes[routeID.value!] = "routes/\(appClipCodeID.value!)/\(routeID.value!).crd"
-
-            }
+            route?.appClipCodeID = appClipCodeID.value!
         }
-        
-
-                
+              
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {

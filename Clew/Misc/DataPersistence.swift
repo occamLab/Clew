@@ -8,6 +8,7 @@
 
 import Foundation
 import ARKit
+import FirebaseStorage
 
 /// This class handles saving and loading routes.
 /// TODO: make this a singleton
@@ -116,13 +117,8 @@ class DataPersistence {
         } catch {
             print("couldn't unarchive route document \(error)")
         }
-        
-        /// remove from temp storage the file gets automatically placed into
-        /// otherwise the file sticks there and won't be deleted automatically,
-        /// causing app bloat.
     }
 
-    
     /// handler for importing routes from an external temporary file
     /// called in the case of a route being shared from the UIActivityViewController
     /// library
@@ -131,7 +127,7 @@ class DataPersistence {
         /// attempt to fetch data from temporary import from external source
         do {
             print("attempting unarchive")
-            // if anything goes wrong with the unarchiving, stick with an emptly list of routes
+            // if anything goes wrong with the unarchiving, stick with an empty list of routes
             let data = try Data(contentsOf: url)
             importData(withData: data)
         } catch {
@@ -144,10 +140,11 @@ class DataPersistence {
         try? FileManager.default.removeItem(at: url)
     }
     
-    /// handler for exporting routes to a external temporary file
-    /// called in the case of a route being shared from the UIActivityViewController
-    /// library
-    func exportToURL(route: SavedRoute) -> URL? {
+    /// handler for encoding routes to a .crd file
+    /// - Parameters:
+    ///     - route: a `SavedRoute` representing the route to save as a .crd
+    /// - Returns: `codedData`, representing `route` encoded as a .crd file
+    func exportToCrd(route: SavedRoute) -> Data {
         /// fetch the world map if it exists. Otherwise, value is nil
         let worldMap = self.unarchiveMap(id: route.id as String)
         
@@ -155,7 +152,7 @@ class DataPersistence {
         var beginVoiceFile: String?
         var endVoiceFile: String?
         
-        /// fetch begginning voice notefile if it exists
+        /// fetch beginning voice notefile if it exists
         if let beginVoiceURL = route.beginRouteAnchorPoint.voiceNote {
             /// build a full valid path the found url from the landmark
             let voiceurl = beginVoiceURL.documentURL
@@ -198,8 +195,19 @@ class DataPersistence {
                                           beginVoiceNote: beginVoiceFile,
                                           endVoiceNote: endVoiceFile,
                                           routeVoiceNotes: routeVoiceNotes)
+        
+        /// encode our route data before writing to disk, then return it
+        return try! NSKeyedArchiver.archivedData(withRootObject: routeData, requiringSecureCoding: true)
+    }
+    
+    /// handler for exporting routes to a external temporary file
+    /// called in the case of a route being shared from the UIActivityViewController
+    /// library
+    func exportToURL(route: SavedRoute) -> URL? {
 
-        /// fetch the documents directory where apple stores temporary files
+        let codedData = exportToCrd(route: route)
+        
+        /// fetch the documents directory where Apple stores temporary files
         let documents = FileManager.default.urls(
             for: .documentDirectory,
             in: .userDomainMask
@@ -211,9 +219,6 @@ class DataPersistence {
             return nil
         }
         
-        /// encode our route data before writing to disk
-        let codedData = try! NSKeyedArchiver.archivedData(withRootObject: routeData, requiringSecureCoding: true)
-        
         /// write route to file
         /// and return the path of the created temp file
         do {
@@ -222,6 +227,67 @@ class DataPersistence {
         } catch {
             print(error.localizedDescription)
             return nil
+        }
+    }
+    
+    func uploadToFirebase(route: SavedRoute) {
+    /// This currently works when you hit the "Share" button
+        let routeRef = Storage.storage().reference().child("AppClipRoutes")
+        let codedData = exportToCrd(route: route)
+        
+        ///creates a reference to the location we want to save the new files
+        let fileRef = routeRef.child("\(route.id).crd")
+
+        /// creates a reference to the location we want the .json to live
+//        let appClipRef = routeRef.child("\(route.appClipCodeID).json")
+        let appClipRef = routeRef.child("test.json")
+        
+        /// initialize this
+        let fileType = StorageMetadata()
+        
+        /// Initializes routesFile list of [route.id: route.name] dictionaries
+        var existingRoutes: [[String: String]] = [[:]]
+     
+        /// attempt to download .json file from Firebase
+        appClipRef.getData(maxSize: 100000000000) { appClipJson, error in
+            do {
+                if let appClipJson = appClipJson {
+                    /// unwrap NSData, if it exists, to a list, and set equal to existingRoutes
+                    let routesFile = try JSONSerialization.jsonObject(with: appClipJson, options: [])
+                    
+                    if let routesFile = routesFile as? [[String: String]] {
+                        existingRoutes = routesFile
+                    }
+                }
+                let routeInfo = [route.id: route.name] as [String: String]
+                if !existingRoutes.contains(routeInfo) {
+                    existingRoutes.append(routeInfo)
+                }
+                /// encode existingRoutes to Data
+                let updatedRoutesFile = try JSONSerialization.data(withJSONObject: existingRoutes, options: [])
+                
+                /// Upload JSON
+                fileType.contentType = "application/json"
+                let _ = appClipRef.putData(updatedRoutesFile, metadata: fileType){ (metadata, error) in
+                    if metadata == nil {
+                        print("could not upload .json to Firebase", error!.localizedDescription)
+                    } else {
+                        print("uploaded .json successfully @ ", appClipRef.fullPath, existingRoutes)
+                        /// upload .crd route file
+                        fileType.contentType = "application/crd"
+                        let _ = fileRef.putData(codedData, metadata: fileType){ (metadata, error) in
+                            if metadata == nil {
+                                print("could not upload route to Firebase", error!.localizedDescription)
+                            } else {
+                                print("uploaded route successfully @ ", fileRef.fullPath)
+                            }
+                            NotificationCenter.default.post(name: Notification.Name("SurveyPopoverReadyToDismiss"), object: true)
+                        }
+                    }
+                }
+            } catch {
+                print("Unable to upload routes \(error)")
+            }
         }
     }
     
