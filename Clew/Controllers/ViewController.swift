@@ -219,9 +219,16 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// These are based on querying the invocation URL
     /// This is the name of the .crd file of the path to load, which is assigned by SceneDelegate
     var routeID: String = ""
-    /// This is the identifier of the App Clip Code, which specifies the json to load and is assigned by SceneDelegate
+  
+    /// This is the identifier of the App Clip Code, which specifies the path to load and is assigned by SceneDelegate
     var appClipCodeID: String = ""
     
+    /// This is the list of routes associated with a specific app clip code
+    var availableRoutes = [String: String]()
+
+    
+    /// This is the path to download route
+    var firebasePath: String?
     
     // MARK: - Speech Synthesizer Delegate
     
@@ -330,9 +337,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         endRouteAnchorPoint = RouteAnchorPoint()
 
         logger.resetNavigationLog()
-        let firebasePath = "routes/\(appClipCodeID)/\(routeID).crd"
+        //let firebasePath = "routes/\(appClipCodeID)/\(routeID).crd"
         print("testPath", firebasePath)
-        let pathRef = Storage.storage().reference().child(firebasePath)
+        
+        // this is where the code would actually pick up B)
+        let pathRef = Storage.storage().reference().child(firebasePath!)
+        //let pathRef = firebasePath!
         
         // download path from Firebase
         pathRef.getData(maxSize: 100000000000) { data, error in

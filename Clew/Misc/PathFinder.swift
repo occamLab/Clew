@@ -261,7 +261,7 @@ class RouteLandmark: NSObject, NSSecureCoding {
     
 }
 /// This class encapsulates a route that can be persisted to storage and reloaded as needed.
-class SavedRoute: NSObject, NSSecureCoding {
+class SavedRoute: NSObject, NSSecureCoding, Identifiable {
     /// This is needed to use NSSecureCoding
     static var supportsSecureCoding = true
     

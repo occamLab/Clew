@@ -489,7 +489,6 @@
 				98006F86268382D800E61861 /* Info.plist */,
 				98006F87268382D800E61861 /* UIKit_Clip.entitlements */,
 				980536732683C1D10065E80F /* AppDelegate.swift */,
-				987BA6F3268E53C0008B129E /* StartNavigationPopoverView.swift */,
 			);
 			path = "UIKit Clip";
 			sourceTree = "<group>";
@@ -643,6 +642,7 @@
 		E5470EED22C119F4001092A4 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				987BA6F3268E53C0008B129E /* StartNavigationPopoverView.swift */,
 				E59DA6BD22C65F5900FCD5A1 /* LaunchScreen.storyboard */,
 				E5470EEE22C119F4001092A4 /* UIConstants.swift */,
 				772E4566236CC155008EF6AC /* SettingsAndHelp.storyboard */,

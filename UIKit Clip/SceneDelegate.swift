@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import SwiftUI
+import Firebase
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
@@ -13,7 +15,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var vc: ViewController?
     var route: SavedRoute?
-
+    var popoverController: UIViewController?
+  
     
     func createScene(_ scene: UIScene) {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
@@ -38,8 +41,23 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         
         createScene(scene)
-        vc?.routeID = "table2wall"
-        loadRoute()
+        //vc?.routeID = "table2wall"
+        // TODO: get rid of this once available routes is set in a different way
+        
+        vc?.availableRoutes["Table to Wall"] = "AppClipRoutes/Please work.crd"
+        vc?.availableRoutes["Table to Office"] = "AppClipRoutes/Please work.crd"
+        vc?.availableRoutes["Table to Bathroom"] = "AppClipRoutes/Please work.crd"
+
+
+        print("Dictionary: \(vc?.availableRoutes)")
+        popoverController = UIHostingController(rootView: StartNavigationPopoverView(vc: vc!))
+        popoverController?.modalPresentationStyle = .fullScreen
+        vc!.present(popoverController!, animated: true)
+        print("popover successful B)")
+        // create listeners to ensure that the isReadingAnnouncement flag is reset properly
+        NotificationCenter.default.addObserver(forName: NSNotification.Name("shouldDismissRoutePopover"), object: nil, queue: nil) { (notification) -> Void in
+            self.popoverController?.dismiss(animated: true)
+        }
     }
     
     /// handles invocations in the App Clip <3
@@ -50,11 +68,21 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             }
         createScene(scene)
         handleUserActivity(for: url)
-        loadRoute()
+        
+        popoverController = UIHostingController(rootView: StartNavigationPopoverView(vc: vc!))
+        popoverController?.modalPresentationStyle = .popover
+        vc!.present(popoverController!, animated: true)
+        print("popover successful B)")
+        // create listeners to ensure that the isReadingAnnouncement flag is reset properly
+        NotificationCenter.default.addObserver(forName: NSNotification.Name("shouldDismissRoutePopover"), object: nil, queue: nil) { (notification) -> Void in
+            self.popoverController?.dismiss(animated: true)
+        }
+        
     }
     
     /// Configure App Clip with query items
     func handleUserActivity(for url: URL) {
+        // TODO: update this to load urls into a list of urls to be passed into the popover list <3
         guard let components = NSURLComponents(url: url, resolvingAgainstBaseURL: true), let queryItems = components.queryItems else {
             return
         }
@@ -64,6 +92,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             vc?.appClipCodeID = appClipCodeID.value!
             route?.appClipCodeID = appClipCodeID.value!
         }
+              
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
