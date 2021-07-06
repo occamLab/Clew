@@ -9,7 +9,6 @@
 import Foundation
 import ARKit
 import FirebaseStorage
-import FirebaseAuth
 
 /// This class handles saving and loading routes.
 /// TODO: make this a singleton
@@ -235,6 +234,8 @@ class DataPersistence {
         let routeRef = Storage.storage().reference().child("AppClipRoutes")
         let codedData = exportToCrd(route: route)
 
+        let appClipRef = routeRef.child("\()")
+        
         ///creates a reference to the location we want to save the new file
         let fileRef = routeRef.child("\(route.name).crd")
         
