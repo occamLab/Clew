@@ -25,6 +25,7 @@ struct StartNavigationPopoverView: View {
                     
                     Button(action: {
                         vc.routeID = routeInfo.first!.key
+                        print(vc.routeID)
                         selectedRouteName = routeInfo.first!.value
                         vc.imageAnchoring = true
                         vc.recordPathController.remove()
