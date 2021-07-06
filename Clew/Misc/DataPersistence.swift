@@ -240,16 +240,20 @@ class DataPersistence {
         /// creates a reference to the location we want the .json to live
         let appClipRef = routeRef.child("\(route.appClipCodeID).json")
         
+        /// Initializes routesFile dictionary ["route.name": "file-location"]
+        var routesFile: [String: StorageReference] = [:]
+        
         /// attempt to download .json file from Firebase
-        appClipRef.getData(maxSize: 100000000000) { data, error in
-            /// if there is an error (trying to find a route that does not exist)...
+        appClipRef.getData(maxSize: 100000000000) { appClipJson, error in
+            /// route file does not exist
             if error != nil {
-                /// Create an empty dictionary ["route-name": "file-location"]
-                var routesFile: [String: String] = [:]
+                print("Route file does not exist!")
             } else {
-                /// append fileRef to .json file
-                var routesFile = data
+                /// unwrap NSData and set routesFile to data in .json file
+                let routesFile = NSKeyedUnarchiver.unarchiveObject(with: appClipJson!) as? [String: StorageReference]
                 }
+            /// set key-value pair
+            routesFile[route.name as String] = fileRef
             }
 
         let fileType = StorageMetadata()
