@@ -7,6 +7,8 @@
 //  Copyright © 2021 OccamLab. All rights reserved.
 //
 
+
+//not actually good for low vision users!
 import SwiftUI
 
 struct TextBoarder: ViewModifier {

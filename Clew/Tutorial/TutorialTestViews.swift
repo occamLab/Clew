@@ -9,7 +9,7 @@
 import SwiftUI
 import AVFoundation
 
-//TODO: 1 add content to all pages  3 interactive practice on following a path  4 set up settings walk through  5 add localized strings to everything  6 make progress view?
+//TODO: 1 add content to all pages  2 interactive practice on following a path  3 set up settings walk through  4 add localized strings to everything  5 make progress view?  6 add color cue to interactive practice
 
 struct TutorialScreen<Content: View>: View {
   let content: Content
@@ -34,6 +34,11 @@ struct TutorialScreen<Content: View>: View {
     }
   }
 
+//Colors:
+let darkBlue = Color(red: 0.01, green: 0.15, blue: 1.05)
+let skyBlue = Color(red: 0.4627, green: 0.8392, blue: 1.0)
+
+
 
 struct TutorialNavLink<Destination: View, Content: View>: View {
     //creates a button format for all the CLEW tutorial navigation links to use
@@ -46,16 +51,19 @@ struct TutorialNavLink<Destination: View, Content: View>: View {
     
     var body: some View {
         NavigationLink(destination: self.destination) {
-            content.textboarder(color: .black, lineWidth: 3)
+            content
+                //.textboarder(color: .black, lineWidth: 3)
                 .frame(minWidth: 0, maxWidth: 300)
                 .padding()
-                .foregroundColor(.white)
-                .background(Color.blue)
+                .foregroundColor(.black)
+                .background(Color.yellow)
                 .cornerRadius(10)
                 .font(.system(size: 18, weight: .bold))
         }
     }
   }
+
+
 
 
 struct TutorialButton<Content: View>: View {
@@ -64,16 +72,16 @@ struct TutorialButton<Content: View>: View {
         self.content = content()
     }
     var body: some View {
-        content.textboarder(color: .black, lineWidth: 3)
+        content
+            //.textboarder(color: .black, lineWidth: 3)
             .frame(minWidth: 0, maxWidth: 300)
             .padding()
-            .foregroundColor(.white)
-            .background(Color.blue)
+            .foregroundColor(.black)
+            .background(Color.yellow)
             .cornerRadius(10)
             .font(.system(size: 18, weight: .bold))
     }
 }
-
 
 struct SettingOptions: View {
     var body: some View {
@@ -94,6 +102,7 @@ struct FindingSavedRoutes: View {
             
             Text(NSLocalizedString("findingSavedRoutesTutorialInstructionText", comment: "Instructions for finding saved routes"))
             
+            Spacer()
             TutorialNavLink(destination: SettingOptions()) {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
         }
     }
@@ -131,6 +140,7 @@ struct SavedRoutes: View {
             
             TutorialNavLink(destination: VoiceNotes()) {Text(NSLocalizedString( "voiceNotesTutorialButtonText", comment: "Title for the voice notes part of the tutorial"))}
             
+            Spacer()
             TutorialNavLink(destination: FindingSavedRoutes())  {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
         }
     }
@@ -143,6 +153,7 @@ struct SingleUse: View {
             
             Text(NSLocalizedString( "singleUseRouteTutorialInstructionText", comment: "Instructions for using the single use route"))
             
+            Spacer()
             TutorialNavLink(destination: SavedRoutes()) {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
         }
     }
@@ -154,10 +165,13 @@ struct FindPath: View {
             Text(NSLocalizedString( "findPathTutorialButtonText", comment: "Title for the finding and following path part of the tutorial"))
         
             Text(NSLocalizedString("findPathTutorialInstructionText", comment: "Text that explains what it sounds and feels like to be on the path and following the path"))
+            
+            //TutorialNavLink(destination: PracticeOrientPhone()) {Text(NSLocalizedString ("orientPhoneTutorialPracticeTitle", comment: "Title of the practice orienting your phone page"))}
         
+            Spacer()
             TutorialNavLink(destination: SingleUse())  {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
             
-            TutorialNavLink(destination: PracticeOrientPhone()) {Text(NSLocalizedString ("orientPhoneTutorialPracticeTitle", comment: "Title of the practice orienting your phone page"))}
+            
         }
     }
 }
@@ -173,6 +187,7 @@ struct OrientPhone: View {
             
             TutorialNavLink(destination: OrientPhoneTips()) {Text("Tips")}
             
+            Spacer()
             TutorialNavLink(destination: FindPath()) {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
         }
     }
@@ -204,8 +219,6 @@ struct PracticeOrientPhone: View {
         TutorialScreen {
             Text(NSLocalizedString("orientPhoneTutorialPracticeInstructions", comment: "Instructions for practicing holding phone activity"))
             
-            Text("score \(self.score)")
-            
             Button(action:{
                 started.toggle()
                 NotificationCenter.default.post(name: Notification.Name("StartARSession"), object: nil)
@@ -220,16 +233,53 @@ struct PracticeOrientPhone: View {
             }
             
             if let transform = arData.transform {
-                let y = transform.columns.0.y
-                Text("y-component \(y)")
-                if y < -0.9 {
-                    Text("correct")
+            let y = transform.columns.0.y
+                //Text("y-component \(y)")
+                if started {
+                    if y < -0.9 {
+                        Text("score \(self.score)")
+                            .frame(minWidth: 0, maxWidth: 150)
+                            .padding()
+                            .foregroundColor(.black)
+                            .background(Color.green)
+                            .cornerRadius(10)
+                            .font(.system(size: 18, weight: .bold))
+                    }
+                    else if y < -0.7 && y > -0.9 {
+                        Text("score \(self.score)")
+                            .frame(minWidth: 0, maxWidth: 150)
+                            .padding()
+                            .foregroundColor(.black)
+                            .background(Color.yellow)
+                            .cornerRadius(10)
+                            .font(.system(size: 18, weight: .bold))
+                    }
+                    else {
+                        Text("score \(self.score)")
+                            .frame(minWidth: 0, maxWidth: 150)
+                            .padding()
+                            .foregroundColor(.black)
+                            .background(Color.red)
+                            .cornerRadius(10)
+                            .font(.system(size: 18, weight: .bold))
+                    }
+                } else {
+                    Text("score \(self.score)")
+                        .frame(minWidth: 0, maxWidth: 150)
+                        .padding()
+                        .foregroundColor(.black)
+                        .background(Color.blue)
+                        .cornerRadius(10)
+                        .font(.system(size: 18, weight: .bold))
                 }
             }
             
+            
+            
             if score >= 3 {
                 //AudioServicesPlaySystemSound(SystemSoundID(1057))
-                Text("Yay!!!")
+                //Text("Yay!!!")
+                Spacer()
                 TutorialNavLink(destination: FindPath()) {Text("Next")}
             }
             
@@ -238,6 +288,7 @@ struct PracticeOrientPhone: View {
             }
 
             else if score < 3 {
+                Spacer()
                 TutorialNavLink(destination: FindPath()) {Text("Skip")}
             }
         
@@ -298,6 +349,7 @@ struct CLEWintro: View {
         TutorialScreen{
             Text("CLEW is a navigation app that is meant for indoor use. It is not a replacement for mobility stratigies such as a white cane or guide dog. It is meant to be a supplimentary tool to help with indoor navigation of shorter routes.")
             
+            Spacer()
             TutorialNavLink(destination: OrientPhone()) {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
         }
     }
@@ -314,22 +366,27 @@ struct TutorialTestView: View {
                         
                 TutorialNavLink(destination: CLEWintro()) {
                     Text("Intro to Clew")
-                    }
+                }
                         
                 TutorialNavLink(destination: OrientPhone()){
                     Text(NSLocalizedString("orientPhoneTutorialButtonText", comment: "Text for the tutorial screem for phone position"))
-                    }
+                }
                     
                         
-                    TutorialNavLink(destination: FindPath()) {Text(NSLocalizedString( "findPathTutorialButtonText", comment: "Title for the finding and following path part of the tutorial"))}
-                    
-                    TutorialNavLink(destination: SingleUse()) {Text(NSLocalizedString( "singleUseRouteTutorialButtonText", comment: "Title for the single use route part of the tutorial"))}
-                    
-                    TutorialNavLink(destination: SavedRoutes()) {Text(NSLocalizedString( "savedRoutesTutorialButtonText", comment: "Title for the saved route part of the tutorial"))}
-                    
-                    TutorialNavLink(destination: FindingSavedRoutes()) {Text(NSLocalizedString( "findingSavedRoutesTutorialButtonText", comment: "Title for the finding saved route part of the tutorial"))}
-                    
-                    TutorialNavLink(destination: SettingOptions()) {Text(NSLocalizedString( "settingOptionsTutorialButtonText", comment: "Title for the setting options part of the tutorial"))}
+                TutorialNavLink(destination: FindPath()) {Text(NSLocalizedString( "findPathTutorialButtonText", comment: "Title for the finding and following path part of the tutorial"))
+                }
+                
+                TutorialNavLink(destination: SingleUse()) {Text(NSLocalizedString( "singleUseRouteTutorialButtonText", comment: "Title for the single use route part of the tutorial"))
+                }
+                
+                TutorialNavLink(destination: SavedRoutes()) {Text(NSLocalizedString( "savedRoutesTutorialButtonText", comment: "Title for the saved route part of the tutorial"))
+                }
+                
+                TutorialNavLink(destination: FindingSavedRoutes()) {Text(NSLocalizedString( "findingSavedRoutesTutorialButtonText", comment: "Title for the finding saved route part of the tutorial"))
+                }
+                
+                TutorialNavLink(destination: SettingOptions()) {Text(NSLocalizedString( "settingOptionsTutorialButtonText", comment: "Title for the setting options part of the tutorial"))
+                }
             }
         }
     }
