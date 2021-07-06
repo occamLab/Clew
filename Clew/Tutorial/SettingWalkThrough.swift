@@ -115,19 +115,11 @@ struct setUpColor: View {
     var body: some View {
         TutorialScreen{
             VStack {
-                /*Picker("Select a crumb color", selection: $crumbColor) {
-                    ForEach(colors, id: \.self) {
-                        Text($0)
-                    }
-                }
-                .pickerStyle(MenuPickerStyle())
-
-                Text("Selected color: \(crumbColor)")*/
                 Text("Chose Crumb Color")
                 
                 Button(action:{
                         print("red")
-                        //UserDefaults.standard.setValue(0, forKey: "units")
+                        UserDefaults.standard.setValue(0, forKey: "crumbColor")
                         crumbColor = "red"})
                 {if crumbColor == "red" {
                     TutorialButtonSelected{
@@ -140,8 +132,24 @@ struct setUpColor: View {
                 }
                 
                 Button(action: {
+                    print("Green")
+                    UserDefaults.standard.setValue(1, forKey: "crumbColor")
+                    crumbColor = "green"}
+                    //TODO: render image of green crumb color
+                    )
+                {if crumbColor == "green" {
+                    TutorialButtonSelected{
+                        Text("Green")}
+                        
+                } else {
+                    TutorialButtonNotSelected{
+                        Text("Green")}
+                }
+                }
+                
+                Button(action: {
                         print("blue")
-                        //UserDefaults.standard.setValue(1, forKey: "units")
+                        UserDefaults.standard.setValue(2, forKey: "crumbColor")
                         crumbColor = "blue"}
                         //TODO: render image of blue crumb color
                         )
@@ -155,24 +163,10 @@ struct setUpColor: View {
                 }
                 }
                 
-                Button(action: {
-                        print("Green")
-                        //UserDefaults.standard.setValue(1, forKey: "units")
-                        crumbColor = "green"}
-                        //TODO: render image of blue crumb color
-                        )
-                {if crumbColor == "green" {
-                    TutorialButtonSelected{
-                        Text("Green")}
-                        
-                } else {
-                    TutorialButtonNotSelected{
-                        Text("Blue")}
-                }
-                }
+                
             
                 Spacer()
-                TutorialNavLink(destination: setUpColor())
+                TutorialNavLink(destination: setUpPathColor())
                     {Text("Next")}
             
             }
@@ -180,35 +174,69 @@ struct setUpColor: View {
     }
 }
 
-/*struct setColor: View{
-    @State private var crumbColor = "blue"
-    @State private var pathColor = "blue"
+struct setUpPathColor: View {
+    @State private var pathColor = "red"
+    //TODO: set crumbColor to the users current crumb color
+    //let colors = ["Red", "Green", "Blue", "Random"]
+
     var body: some View {
         TutorialScreen{
-            Text("Crumb and Path Color")
+            VStack {
+                Text("Chose Path Color")
+                
+                Button(action:{
+                        print("red")
+                        UserDefaults.standard.setValue(0, forKey: "pathColor")
+                        pathColor = "red"})
+                {if pathColor == "red" {
+                    TutorialButtonSelected{
+                        Text("Red")}
             
-            Text("Set Crumb Color")
+                } else {
+                    TutorialButtonNotSelected{
+                        Text("Red")}
+                    }
+                }
+                
+                Button(action: {
+                    print("Green")
+                    UserDefaults.standard.setValue(1, forKey: "pathColor")
+                    pathColor = "green"}
+                    //TODO: render image of green crumb color
+                    )
+                {if pathColor == "green" {
+                    TutorialButtonSelected{
+                        Text("Green")}
+                        
+                } else {
+                    TutorialButtonNotSelected{
+                        Text("Green")}
+                }
+                }
+                
+                Button(action: {
+                        print("blue")
+                        UserDefaults.standard.setValue(2, forKey: "pathColor")
+                        pathColor = "blue"}
+                        //TODO: render image of blue crumb color
+                        )
+                {if pathColor == "blue" {
+                    TutorialButtonSelected{
+                        Text("Blue")}
+                        
+                } else {
+                    TutorialButtonNotSelected{
+                        Text("Blue")}
+                }
+                }
+                
+                
             
-            Button("Red", action:{ print(crumbColor); crumbColor = "red"})
+                Spacer()
+                TutorialNavLink(destination: setUpPathColor())
+                    {Text("Next")}
             
-            Button("Green", action: {print("Green"); crumbColor = "green"})
-            
-            Button("Blue", action: {print("Blue")})
-            
-            Button("Random", action: {print("random")})
-            
-            Text("Set Path Color")
-            
-            Button("Red", action:{ print("Blue")})
-            
-            Button("Green", action: {print("Green")})
-            
-            Button("Blue", action: {print("Blue")})
-            
-            Button("Random", action: {print("random")})
-            
-            //render an image of the options
-            
+            }
         }
     }
-}*/
+}
