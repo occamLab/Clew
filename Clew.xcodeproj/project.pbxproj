@@ -13,6 +13,8 @@
 		14B7EA0A268E052100E4A3CE /* SettingWalkThrough.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14B7EA08268E052100E4A3CE /* SettingWalkThrough.swift */; };
 		14B7EA0C268E147A00E4A3CE /* TextBoarder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14B7EA0B268E147A00E4A3CE /* TextBoarder.swift */; };
 		14B7EA0D268E147A00E4A3CE /* TextBoarder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14B7EA0B268E147A00E4A3CE /* TextBoarder.swift */; };
+		14B7EA12269631C500E4A3CE /* ClewSuccessSound.wav in Resources */ = {isa = PBXBuildFile; fileRef = 14B7EA11269631C500E4A3CE /* ClewSuccessSound.wav */; };
+		14B7EA13269631C500E4A3CE /* ClewSuccessSound.wav in Resources */ = {isa = PBXBuildFile; fileRef = 14B7EA11269631C500E4A3CE /* ClewSuccessSound.wav */; };
 		1F27632322FCBB6E00E1FCF8 /* BurgerMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F27632222FCBB6E00E1FCF8 /* BurgerMenuViewController.swift */; };
 		1F27632422FCBB9900E1FCF8 /* BurgerMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F27632222FCBB6E00E1FCF8 /* BurgerMenuViewController.swift */; };
 		1F2971A522DF60F700B896C6 /* HelpCompiler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2B9D7022C3B50D00317DC8 /* HelpCompiler.swift */; };
@@ -163,6 +165,7 @@
 		14B02B3126823E2C00174B36 /* TutorialTestViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialTestViews.swift; sourceTree = "<group>"; };
 		14B7EA08268E052100E4A3CE /* SettingWalkThrough.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingWalkThrough.swift; sourceTree = "<group>"; };
 		14B7EA0B268E147A00E4A3CE /* TextBoarder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextBoarder.swift; sourceTree = "<group>"; };
+		14B7EA11269631C500E4A3CE /* ClewSuccessSound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = ClewSuccessSound.wav; sourceTree = "<group>"; };
 		1F27632222FCBB6E00E1FCF8 /* BurgerMenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BurgerMenuViewController.swift; sourceTree = "<group>"; };
 		1F2B9D7022C3B50D00317DC8 /* HelpCompiler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HelpCompiler.swift; sourceTree = "<group>"; };
 		3532E390954571B93729786A /* Pods_Clew_Dev.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Clew_Dev.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -401,6 +404,7 @@
 			children = (
 				E5470EBA22C119F4001092A4 /* SettingsTableViewController.h */,
 				E5470ED222C119F4001092A4 /* StartRecording.aiff */,
+				14B7EA11269631C500E4A3CE /* ClewSuccessSound.wav */,
 				E5470ED322C119F4001092A4 /* StopRecording.aiff */,
 			);
 			path = "Sound Effects";
@@ -620,6 +624,7 @@
 				E5470F1822C119F5001092A4 /* StartRecording.aiff in Resources */,
 				4D6B00E51F33C9B800952242 /* Crumb.obj in Resources */,
 				E5470F1C22C119F5001092A4 /* GoogleService-Info.plist in Resources */,
+				14B7EA12269631C500E4A3CE /* ClewSuccessSound.wav in Resources */,
 				E5470F0E22C119F5001092A4 /* Settings.bundle in Resources */,
 				82569F4E22187E6500448B45 /* help in Resources */,
 				E5470F1622C119F5001092A4 /* Assets.xcassets in Resources */,
@@ -652,6 +657,7 @@
 				E59DA6C022C65F5900FCD5A1 /* LaunchScreen.storyboard in Resources */,
 				772E4564236CC155008EF6AC /* SettingsAndHelp.storyboard in Resources */,
 				E5470F1D22C119F5001092A4 /* GoogleService-Info.plist in Resources */,
+				14B7EA13269631C500E4A3CE /* ClewSuccessSound.wav in Resources */,
 				E5470F1722C119F5001092A4 /* Assets.xcassets in Resources */,
 				823DA455252F7EA800BB5E6B /* speaker.obj in Resources */,
 			);
@@ -1143,7 +1149,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clew/Clew.entitlements;
 				CURRENT_PROJECT_VERSION = 61;
 				DEVELOPMENT_ASSET_PATHS = "";
-				DEVELOPMENT_TEAM = 787TUDMR8Q;
+				DEVELOPMENT_TEAM = RW5575UVCD;
 				INFOPLIST_FILE = Clew/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
