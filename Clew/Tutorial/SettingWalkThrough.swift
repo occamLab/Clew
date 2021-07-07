@@ -22,6 +22,7 @@ struct SettingWalkThrough: View {
 
 
 struct TutorialButtonSelected<Content: View>: View {
+    //Button format when an option is selected, highlights and outlines the option selected
     let content: Content
     init(@ViewBuilder content: () -> Content) {
         self.content = content()
@@ -44,6 +45,7 @@ struct TutorialButtonSelected<Content: View>: View {
 }
 
 struct TutorialButtonNotSelected<Content: View>: View {
+    //Button format when that option is not selected, leaves button grey without outline
     let content: Content
     init(@ViewBuilder content: () -> Content) {
         self.content = content()
@@ -65,8 +67,23 @@ struct TutorialButtonNotSelected<Content: View>: View {
     }
 }
 
+class SettingsWrapper: ObservableObject {
+    public static var shared = SettingsWrapper()
+    
+    @objc func changeOccurred() {
+        objectWillChange.send()
+    }
+    
+    init() {
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(changeOccurred),
+                                               name: UserDefaults.didChangeNotification,
+                                               object: nil)
+    }
+}
+
 struct setUnit: View{
-    @State private var metric = true //TODO: change so it know what your settings are when you enter the walkthrough
+    @ObservedObject var settings = SettingsWrapper.shared
     var body: some View {
         TutorialScreen{
             Text("Distance Units")
@@ -74,54 +91,76 @@ struct setUnit: View{
             Button(action:{
                     print("feet")
                     UserDefaults.standard.setValue(0, forKey: "units")
-                    metric = false})
-            {if metric {
-                TutorialButtonNotSelected{
-                    Text("Imperial")}
-        
-            } else {
-                TutorialButtonSelected{
-                    Text("Imperial")}
+            }) {
+                if UserDefaults.standard.integer(forKey: "units") == 1 {
+                    TutorialButtonNotSelected{
+                        Text("Imperial")
+                    }
+                } else {
+                    TutorialButtonSelected{
+                        Text("Imperial")
+                    }
                 }
             }
             
             Button(action: {
-                    print("meters")
-                    UserDefaults.standard.setValue(1, forKey: "units")
-                    metric = true})
-            {if metric {
-                TutorialButtonSelected{
-                    Text("Metric")}
-                    
-            } else {
-                TutorialButtonNotSelected{
-                    Text("Metric")}
-            }
-            }
+                print("meters")
+                UserDefaults.standard.setValue(1, forKey: "units")
+            }) {
+                if UserDefaults.standard.integer(forKey: "units") == 1 {
+                    TutorialButtonSelected{
+                        Text("Metric")
+                    }
+                } else {
+                    TutorialButtonNotSelected{
+                        Text("Metric")
+                    }
+                }
         
-            Spacer()
-            TutorialNavLink(destination: setUpColor())
-                {Text("Next")}
+                Spacer()
+                TutorialNavLink(destination: setUpColor()) {
+                    Text("Next")
+                }
+            }
         }
     }
 }
 
 
 struct setUpColor: View {
-    @State private var crumbColor = "red"
-    //TODO: set crumbColor to the users current crumb color
-    //let colors = ["Red", "Green", "Blue", "Random"]
+    @ObservedObject var settings = SettingsWrapper.shared
+    let colors = ["Red", "Green", "Blue", "Random"]
 
     var body: some View {
         TutorialScreen{
             VStack {
                 Text("Chose Crumb Color")
                 
-                Button(action:{
+                ForEach(colors.indices) { i in
+                    Button(action:{
+                            print(colors[i])
+                            UserDefaults.standard.setValue(i, forKey: "pathColor")
+                            //crumbColor = "red"
+                    })
+                    {
+                    if UserDefaults.standard.integer(forKey: "pathColor") == i {
+                        TutorialButtonSelected{
+                            Text(colors[i])}
+                
+                    } else {
+                        TutorialButtonNotSelected{
+                            Text(colors[i])}
+                        }
+                    }
+                }
+                
+                /*Button(action:{
                         print("red")
                         UserDefaults.standard.setValue(0, forKey: "crumbColor")
-                        crumbColor = "red"})
-                {if crumbColor == "red" {
+                        //crumbColor = "red"
+                })
+                {
+                if UserDefaults.standard.integer(forKey: "crumbColor") == 0 {
                     TutorialButtonSelected{
                         Text("Red")}
             
@@ -134,10 +173,11 @@ struct setUpColor: View {
                 Button(action: {
                     print("Green")
                     UserDefaults.standard.setValue(1, forKey: "crumbColor")
-                    crumbColor = "green"}
+                    //crumbColor = "green"
+                
                     //TODO: render image of green crumb color
-                    )
-                {if crumbColor == "green" {
+                })
+                {if UserDefaults.standard.integer(forKey: "crumbColor") == 1 {
                     TutorialButtonSelected{
                         Text("Green")}
                         
@@ -150,10 +190,12 @@ struct setUpColor: View {
                 Button(action: {
                         print("blue")
                         UserDefaults.standard.setValue(2, forKey: "crumbColor")
-                        crumbColor = "blue"}
+                        //crumbColor = "blue"
+                    
+                }
                         //TODO: render image of blue crumb color
                         )
-                {if crumbColor == "blue" {
+                {if UserDefaults.standard.integer(forKey: "crumbColor") == 2 {
                     TutorialButtonSelected{
                         Text("Blue")}
                         
@@ -161,10 +203,8 @@ struct setUpColor: View {
                     TutorialButtonNotSelected{
                         Text("Blue")}
                 }
-                }
+                }*/
                 
-                
-            
                 Spacer()
                 TutorialNavLink(destination: setUpPathColor())
                     {Text("Next")}
@@ -175,20 +215,40 @@ struct setUpColor: View {
 }
 
 struct setUpPathColor: View {
-    @State private var pathColor = "red"
-    //TODO: set crumbColor to the users current crumb color
-    //let colors = ["Red", "Green", "Blue", "Random"]
+    @ObservedObject var settings = SettingsWrapper.shared
+    let colors = ["Red", "Green", "Blue", "Random"]
 
     var body: some View {
         TutorialScreen{
             VStack {
                 Text("Chose Path Color")
                 
-                Button(action:{
+                ForEach(colors.indices) { i in
+                 // trying to make a button for each button
+                    Button(action:{
+                            print(colors[i])
+                            UserDefaults.standard.setValue(i, forKey: "pathColor")
+                            //crumbColor = "red"
+                    })
+                    {
+                    if UserDefaults.standard.integer(forKey: "pathColor") == i {
+                        TutorialButtonSelected{
+                            Text(colors[i])}
+                
+                    } else {
+                        TutorialButtonNotSelected{
+                            Text(colors[i])}
+                        }
+                    }
+                }
+                
+                /*Button(action:{
                         print("red")
                         UserDefaults.standard.setValue(0, forKey: "pathColor")
-                        pathColor = "red"})
-                {if pathColor == "red" {
+                        //crumbColor = "red"
+                })
+                {
+                if UserDefaults.standard.integer(forKey: "pathColor") == 0 {
                     TutorialButtonSelected{
                         Text("Red")}
             
@@ -201,10 +261,11 @@ struct setUpPathColor: View {
                 Button(action: {
                     print("Green")
                     UserDefaults.standard.setValue(1, forKey: "pathColor")
-                    pathColor = "green"}
+                    //crumbColor = "green"
+                
                     //TODO: render image of green crumb color
-                    )
-                {if pathColor == "green" {
+                })
+                {if UserDefaults.standard.integer(forKey: "pathColor") == 1 {
                     TutorialButtonSelected{
                         Text("Green")}
                         
@@ -217,10 +278,12 @@ struct setUpPathColor: View {
                 Button(action: {
                         print("blue")
                         UserDefaults.standard.setValue(2, forKey: "pathColor")
-                        pathColor = "blue"}
+                        //crumbColor = "blue"
+                    
+                }
                         //TODO: render image of blue crumb color
                         )
-                {if pathColor == "blue" {
+                {if UserDefaults.standard.integer(forKey: "pathColor") == 2 {
                     TutorialButtonSelected{
                         Text("Blue")}
                         
@@ -228,10 +291,8 @@ struct setUpPathColor: View {
                     TutorialButtonNotSelected{
                         Text("Blue")}
                 }
-                }
+                }*/
                 
-                
-            
                 Spacer()
                 TutorialNavLink(destination: setUpPathColor())
                     {Text("Next")}
