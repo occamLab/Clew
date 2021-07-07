@@ -46,8 +46,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // TODO: get rid of this once available routes is set in a different way
         let routeRef = Storage.storage().reference().child("AppClipRoutes")
         
+        /// User enters their appClipCodeID
+        self.popoverController = UIHostingController(rootView: StartNavigationPopoverView(vc: self.vc!))
+        self.popoverController?.modalPresentationStyle = .fullScreen
+        self.vc!.present(self.popoverController!, animated: true)
+        
         let appClipRef = routeRef.child("123.json")
-                
      
         /// attempt to download .json file from Firebase
         appClipRef.getData(maxSize: 100000000000) { appClipJson, error in
@@ -71,7 +75,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         }
 
-        print("Dictionary: \(vc?.availableRoutes)")
+//        print("Dictionary: \(vc?.availableRoutes)")
+        
         DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
             self.popoverController = UIHostingController(rootView: StartNavigationPopoverView(vc: self.vc!))
             self.popoverController?.modalPresentationStyle = .fullScreen
