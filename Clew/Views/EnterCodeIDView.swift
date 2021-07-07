@@ -31,20 +31,20 @@ struct EnterCodeIDView: View {
                     }
                 }
             
-            EnterButton(vc: vc, codeID: appClipCodeID)
-                .padding(12)
+//            EnterButton(vc: vc, codeID: appClipCodeID)
+//                .padding(12)
         }
     }
 }
 
 struct EnterButtonView: View {
-    
     var body: some View {
         HStack{
             Spacer()
+            
             Text("Continue to Routes")
                 .bold()
-                .foregroundColor(Color.primary)
+//                .foregroundColor(Color.primary)
             Spacer()
         }
     }
@@ -63,4 +63,3 @@ struct EnterButton: View {
         }
     }
 }
-

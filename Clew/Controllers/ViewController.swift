@@ -1238,6 +1238,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             //print("i=\(i) isTracked = \(clipAnchor.isTracked)")
             if clipAnchor.isTracked {
                 let tagNode: SCNNode
+                if case .failed = clipAnchor.urlDecodingState {
+                    print("failed")
+                } else if case .decoding = clipAnchor.urlDecodingState {
+                    print("decoding")
+                }
+                print(clipAnchor.url, clipAnchor.urlDecodingState)
                 if let existingTagNode = sceneView.scene.rootNode.childNode(withName: "Tag: \(clipAnchor.identifier)", recursively: false) {
                     tagNode = existingTagNode
                     tagNode.simdTransform = clipAnchor.transform
