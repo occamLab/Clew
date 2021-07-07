@@ -240,8 +240,6 @@ class DataPersistence {
 
         /// creates a reference to the location we want the .json to live
         let appClipRef = routeRef.child("\(route.appClipCodeID).json")
-        print("json name:", route.appClipCodeID)
-//        let appClipRef = routeRef.child("test.json")
         
         /// initialize this
         let fileType = StorageMetadata()
@@ -273,7 +271,7 @@ class DataPersistence {
                     if metadata == nil {
                         print("could not upload .json to Firebase", error!.localizedDescription)
                     } else {
-                        print("uploaded .json successfully @", appClipRef.fullPath, existingRoutes)
+                        print("uploaded .json successfully @", appClipRef.fullPath, "with content", existingRoutes)
                         /// upload .crd route file
                         fileType.contentType = "application/crd"
                         let _ = fileRef.putData(codedData, metadata: fileType){ (metadata, error) in

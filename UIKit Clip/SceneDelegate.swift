@@ -43,11 +43,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         
         createScene(scene)
-        //vc?.routeID = "table2wall"
         // TODO: get rid of this once available routes is set in a different way
         let routeRef = Storage.storage().reference().child("AppClipRoutes")
         
-        let appClipRef = routeRef.child("test.json")
+        let appClipRef = routeRef.child("123.json")
                 
      
         /// attempt to download .json file from Firebase
