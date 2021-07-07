@@ -35,7 +35,7 @@ struct TutorialButtonSelected<Content: View>: View {
             .foregroundColor(.black)
             .background(Color.yellow)
             .cornerRadius(10)
-            .font(.system(size: 18, weight: .bold))
+            .font(.system(size: 18, weight: .regular))
             .padding(10)
             //.border(Color.blue, width: 5) //square boarder
             .overlay(
@@ -58,7 +58,7 @@ struct TutorialButtonNotSelected<Content: View>: View {
             .foregroundColor(.white)
             .background(Color.gray)
             .cornerRadius(10)
-            .font(.system(size: 18, weight: .bold))
+            .font(.system(size: 18, weight: .regular))
             .padding(10)
             //.border(Color.blue, width: 5)
             .overlay(
@@ -116,12 +116,11 @@ struct setUnit: View{
                         Text("Metric")
                     }
                 }
-        
+                }
                 Spacer()
                 TutorialNavLink(destination: setUpColor()) {
                     Text("Next")
                 }
-            }
         }
     }
 }

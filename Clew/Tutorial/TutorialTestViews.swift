@@ -21,6 +21,9 @@ struct TutorialScreen<Content: View>: View {
     var body: some View {
         VStack(spacing: 30) {
             content
+                .padding(.leading)
+                .padding(.trailing)
+                //.padding(.init(top: <#T##CGFloat#>, leading: <#T##CGFloat#>, bottom: <#T##CGFloat#>, trailing: <#T##CGFloat#>))
         }
             
         //.navigationTitle("Clew Tutorial") //gives title, but title is the same on all the tutorial screens and the back button text only says Clew Tutorial.
@@ -82,7 +85,7 @@ struct TutorialButton<Content: View>: View {
             .foregroundColor(.black)
             .background(Color.yellow)
             .cornerRadius(10)
-            .font(.system(size: 18, weight: .bold))
+            .font(.system(size: 18, weight: .regular))
     }
 }
 
@@ -218,6 +221,7 @@ struct PracticeOrientPhone: View {
     @State var lastSuccess = Date()
     @State var resetPosition = true
     @ObservedObject private var arData = ARData.shared
+    //let successSound = 
     var body: some View{
         TutorialScreen {
             Text(NSLocalizedString("orientPhoneTutorialPracticeInstructions", comment: "Instructions for practicing holding phone activity"))
@@ -310,25 +314,45 @@ struct PracticeOrientPhone: View {
                             lastSuccessSound = Date()
                             lastSuccess = Date()
                             resetPosition = true
-                    }
-                    if y < -0.7 && y > -0.9, -lastSuccessSound.timeIntervalSinceNow > 0.5 {
-                            AudioServicesPlaySystemSound(SystemSoundID(1057))
-                            //AudioServicesPlaySystemSound(SystemSoundID(4095))
-                            lastSuccessSound = Date()
-                            lastSuccess = Date()
-                            resetPosition = true
-                    }
+                        }
+                        if y < -0.7 && y > -0.9, -lastSuccessSound.timeIntervalSinceNow > 0.5 {
+                                AudioServicesPlaySystemSound(SystemSoundID(1057))
+                                //AudioServicesPlaySystemSound(SystemSoundID(4095))
+                                lastSuccessSound = Date()
+                                lastSuccess = Date()
+                                resetPosition = true
+                        }
                         if y < -0.9, -lastSuccessSound.timeIntervalSinceNow > 0.7 {
                             AudioServicesPlaySystemSound(SystemSoundID(1057))
                             //AudioServicesPlaySystemSound(SystemSoundID(4095))
                             lastSuccessSound = Date()
-                    }
+                        }
+                        //Version where there is more feedback when youre holding the phone correctly
+                        /*if y < 0.5 && y > -0.7, -lastSuccessSound.timeIntervalSinceNow > 0.7 {
+                            AudioServicesPlaySystemSound(SystemSoundID(1057))
+                            //AudioServicesPlaySystemSound(SystemSoundID(4095)) //TODO: add haptics
+                            lastSuccessSound = Date()
+                            lastSuccess = Date()
+                            resetPosition = true
+                        }
+                        if y < -0.7 && y > -0.9, -lastSuccessSound.timeIntervalSinceNow > 0.5 {
+                                AudioServicesPlaySystemSound(SystemSoundID(1057))
+                                //AudioServicesPlaySystemSound(SystemSoundID(4095))
+                                lastSuccessSound = Date()
+                                lastSuccess = Date()
+                                resetPosition = true
+                        }
+                        if y < -0.9, -lastSuccessSound.timeIntervalSinceNow > 0.2 {
+                            AudioServicesPlaySystemSound(SystemSoundID(1057))
+                            //AudioServicesPlaySystemSound(SystemSoundID(4095))
+                            lastSuccessSound = Date()
+                        }*/
                     if y < -0.9, resetPosition,  -lastSuccess.timeIntervalSinceNow > 2{
                             //to get another point, users have to move thier phones out of the correct position and then hold thier phones in the correct position for 2 seconds
-                        print(score)
                         score += 1
                         lastSuccess = Date()
                         resetPosition = false
+                        
                         AudioServicesPlaySystemSound(SystemSoundID(1025))
                         //AudioServicesPlaySystemSound(SystemSoundID(4095))
                         //UIAccessibility.post(notification: .announcement, argument: "Great")
@@ -349,8 +373,8 @@ struct PracticeOrientPhone: View {
 struct CLEWintro: View {
     var body: some View {
         TutorialScreen{
-            Text("CLEW is a navigation app that is meant for indoor use. It is not a replacement for mobility stratigies such as a white cane or guide dog. It is meant to be a supplimentary tool to help with indoor navigation of shorter routes.")
-            
+            Text(NSLocalizedString("ClewIntroTutorialText", comment: "Text on the first page of the tutorial that describes Clew"))
+
             Spacer()
             TutorialNavLink(destination: OrientPhone()) {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
         }

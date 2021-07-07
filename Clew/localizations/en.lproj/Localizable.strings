@@ -281,6 +281,8 @@
 "buttonTexttoNextScreenTutorial" = "Next";
 "tutorialTitleText" = "CLEW Tutorial";
 
+"ClewIntroTutorialText" = "CLEW is a navigation app that is meant for indoor use. It is not a replacement for mobility stratigies such as a white cane or guide dog. It is meant to be a supplimentary tool to help with indoor navigation of shorter routes."
+
 "orientPhoneTutorialButtonText" = "Holding Your Phone";
 "orientPhoneTutorialInstructionText" = "Clew uses your phone's camera to track the environment as you move along a route. You should hold your phone vertically with the rear camera facing forward whenever you are using Clew. It is important to maintain the phone in this orientation while you are navigating a route.";
 "orientPhoneTutorialTip1" = "You can hold your phone against your chest to ensure that it remains in the vertical oritentation.";
