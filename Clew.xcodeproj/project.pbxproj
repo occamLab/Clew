@@ -86,9 +86,9 @@
 		984FBD342696179800B63A6A /* NameCodeIDController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 984FBD332696179800B63A6A /* NameCodeIDController.swift */; };
 		984FBD352696179800B63A6A /* NameCodeIDController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 984FBD332696179800B63A6A /* NameCodeIDController.swift */; };
 		984FBD362696179800B63A6A /* NameCodeIDController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 984FBD332696179800B63A6A /* NameCodeIDController.swift */; };
-		984FBD3826962CB800B63A6A /* EnterCodeID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 984FBD3726962CB800B63A6A /* EnterCodeID.swift */; };
-		984FBD3926962CB800B63A6A /* EnterCodeID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 984FBD3726962CB800B63A6A /* EnterCodeID.swift */; };
-		984FBD3A26962CB800B63A6A /* EnterCodeID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 984FBD3726962CB800B63A6A /* EnterCodeID.swift */; };
+		984FBD3C26962E4900B63A6A /* EnterCodeIDView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 984FBD3B26962E4900B63A6A /* EnterCodeIDView.swift */; };
+		984FBD3D26962E4900B63A6A /* EnterCodeIDView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 984FBD3B26962E4900B63A6A /* EnterCodeIDView.swift */; };
+		984FBD3E26962E4900B63A6A /* EnterCodeIDView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 984FBD3B26962E4900B63A6A /* EnterCodeIDView.swift */; };
 		986640CE22FB68F2005AA1F6 /* NameSavedRouteController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986640CD22FB68F2005AA1F6 /* NameSavedRouteController.swift */; };
 		986640CF22FC9606005AA1F6 /* NameSavedRouteController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986640CD22FB68F2005AA1F6 /* NameSavedRouteController.swift */; };
 		987BA6F4268E53C0008B129E /* StartNavigationPopoverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 987BA6F3268E53C0008B129E /* StartNavigationPopoverView.swift */; };
@@ -323,7 +323,7 @@
 		9815CEF6268512AB008FCF74 /* clew-dev-route.crd */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = "clew-dev-route.crd"; sourceTree = "<group>"; };
 		9815CEF7268512AB008FCF74 /* clew-test.crd */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = "clew-test.crd"; sourceTree = "<group>"; };
 		984FBD332696179800B63A6A /* NameCodeIDController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NameCodeIDController.swift; sourceTree = "<group>"; };
-		984FBD3726962CB800B63A6A /* EnterCodeID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterCodeID.swift; sourceTree = "<group>"; };
+		984FBD3B26962E4900B63A6A /* EnterCodeIDView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterCodeIDView.swift; sourceTree = "<group>"; };
 		986640CD22FB68F2005AA1F6 /* NameSavedRouteController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NameSavedRouteController.swift; sourceTree = "<group>"; };
 		987BA6F3268E53C0008B129E /* StartNavigationPopoverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartNavigationPopoverView.swift; sourceTree = "<group>"; };
 		98CC6760268A0FEC00E3759F /* FirebaseSetup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseSetup.swift; sourceTree = "<group>"; };
@@ -652,13 +652,13 @@
 			isa = PBXGroup;
 			children = (
 				987BA6F3268E53C0008B129E /* StartNavigationPopoverView.swift */,
-				984FBD3726962CB800B63A6A /* EnterCodeID.swift */,
 				E59DA6BD22C65F5900FCD5A1 /* LaunchScreen.storyboard */,
 				E5470EEE22C119F4001092A4 /* UIConstants.swift */,
 				772E4566236CC155008EF6AC /* SettingsAndHelp.storyboard */,
 				77365B1B2343ECBA008BC35C /* BurgerMenu.storyboard */,
 				E5470EF022C119F4001092A4 /* RootContainerView.swift */,
 				E5470EF322C119F4001092A4 /* RouteTableViewCell.swift */,
+				984FBD3B26962E4900B63A6A /* EnterCodeIDView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1176,6 +1176,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				984FBD3C26962E4900B63A6A /* EnterCodeIDView.swift in Sources */,
 				E5470F2E22C119F5001092A4 /* StopRecordingController.swift in Sources */,
 				E5470F0A22C119F5001092A4 /* AppDelegate.swift in Sources */,
 				E5470F2222C119F5001092A4 /* UIViewExtensions.swift in Sources */,
@@ -1185,7 +1186,6 @@
 				E5470F3E22C119F5001092A4 /* RoutesViewController.swift in Sources */,
 				E5470F0822C119F5001092A4 /* Utility.swift in Sources */,
 				E5470EFC22C119F5001092A4 /* RecordButton.swift in Sources */,
-				984FBD3826962CB800B63A6A /* EnterCodeID.swift in Sources */,
 				8261892E264ACCC5007F99C4 /* AppleSignInController.swift in Sources */,
 				1F27632322FCBB6E00E1FCF8 /* BurgerMenuViewController.swift in Sources */,
 				E5470F0C22C119F5001092A4 /* SettingsViewController.m in Sources */,
@@ -1249,9 +1249,9 @@
 				98006FC3268385B300E61861 /* UIButtonExtensions.swift in Sources */,
 				9805366126838AA40065E80F /* RootContainerView.swift in Sources */,
 				98006FC2268385AF00E61861 /* UIViewExtensions.swift in Sources */,
-				984FBD3A26962CB800B63A6A /* EnterCodeID.swift in Sources */,
 				98006F7B268382D600E61861 /* SceneDelegate.swift in Sources */,
 				98006FCB268386A900E61861 /* HelpCompiler.swift in Sources */,
+				984FBD3E26962E4900B63A6A /* EnterCodeIDView.swift in Sources */,
 				98006FB52683845400E61861 /* ResumeTrackingController.swift in Sources */,
 				98CC6763268A0FEC00E3759F /* FirebaseSetup.swift in Sources */,
 				9805365D268388EC0065E80F /* RouteDocumentData.swift in Sources */,
@@ -1284,6 +1284,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				984FBD3D26962E4900B63A6A /* EnterCodeIDView.swift in Sources */,
 				E538EF5022D3BFEC004216E9 /* TransparentTouchView.swift in Sources */,
 				E5470F2F22C119F5001092A4 /* StopRecordingController.swift in Sources */,
 				E5470F0B22C119F5001092A4 /* AppDelegate.swift in Sources */,
@@ -1293,7 +1294,6 @@
 				E5470F3F22C119F5001092A4 /* RoutesViewController.swift in Sources */,
 				E5470F0922C119F5001092A4 /* Utility.swift in Sources */,
 				E5470EFD22C119F5001092A4 /* RecordButton.swift in Sources */,
-				984FBD3926962CB800B63A6A /* EnterCodeID.swift in Sources */,
 				8261892F264ACCC5007F99C4 /* AppleSignInController.swift in Sources */,
 				1F27632422FCBB9900E1FCF8 /* BurgerMenuViewController.swift in Sources */,
 				E5470F0D22C119F5001092A4 /* SettingsViewController.m in Sources */,

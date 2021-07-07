@@ -47,7 +47,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let routeRef = Storage.storage().reference().child("AppClipRoutes")
         
         /// User enters their appClipCodeID
-        self.popoverController = UIHostingController(rootView: StartNavigationPopoverView(vc: self.vc!))
+        self.popoverController = UIHostingController(rootView: EnterCodeIDView(vc: self.vc!))
         self.popoverController?.modalPresentationStyle = .fullScreen
         self.vc!.present(self.popoverController!, animated: true)
         

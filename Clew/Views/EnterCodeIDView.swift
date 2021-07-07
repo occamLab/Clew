@@ -1,15 +1,30 @@
 //
-//  EnterCodeID.swift
+//  EnterCodeIDView.swift
 //  Clew
 //
 //  Created by Berwin Lan on 7/7/21.
 //  Copyright © 2021 OccamLab. All rights reserved.
 //
 
-import UIKit
-import ARKit
+import SwiftUI
 
-/// A view controller for handling the route saving naming process.
+struct EnterCodeIDView: View {
+    let vc: ViewController
+    @State private var appClipCodeID: String = ""
+    
+    var body: some View {
+        VStack {
+            TextField(
+                "3-digit App Clip Code ID",
+                 text: $appClipCodeID)
+                .disableAutocorrection(true)
+        }
+    .textFieldStyle(RoundedBorderTextFieldStyle())
+    }
+}
+
+/*
+/// A view controller for handling the route loading naming process.
 class EnterCodeID: UIViewController, UITextFieldDelegate {
     
     /// button for finalizing your saved route name
@@ -159,3 +174,4 @@ class EnterCodeID: UIViewController, UITextFieldDelegate {
     
 }
 
+*/
