@@ -22,6 +22,14 @@ struct EnterCodeIDView: View {
                 .disableAutocorrection(true)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .keyboardType(.numberPad)
+                
+                /// this will automatically filter out any non-numerical input
+                .onReceive(Just(appClipCodeID)) { newValue in
+                    let filtered = newValue.filter { "0123456789".contains($0) }
+                    if filtered != newValue {
+                        self.appClipCodeID = filtered
+                    }
+                }
             
             EnterButton(vc: vc, codeID: appClipCodeID)
                 .padding(12)
@@ -43,7 +51,7 @@ struct EnterButtonView: View {
 }
 
 /// Press this button to submit the app clip code ID and proceed to the routes
-struct EnterButton: View{
+struct EnterButton: View {
     var vc: ViewController
     var codeID: String
     var body: some View {
