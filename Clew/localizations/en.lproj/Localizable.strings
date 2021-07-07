@@ -32,6 +32,8 @@
     // Name of labels that appear in UI
 "saveARouteButtonText" = "Save Route";
 "saveARouteButtonAccessibilityLabel" = "Save a route";
+"saveACodeIDButtonText" = "Save Code ID";
+"saveACodeIDButtonAccessiblityLabel" = "Save the Code ID of the route";
 "badServiceButtonAccessibilityLabel" = "Bad";
 "goodServiceButtonAccessibilityLabel" = "Good";
 "resumePausedRouteButtonAccessibilityLabel" = "Resume";
@@ -48,7 +50,9 @@
 "feedbackButtonAccessibilityLabel" = "Feedback";
 "getDirectionsButtonAccessibilityLabel" = "Get Directions";
 "nameSavedRouteLabel" = "Type your route name below";
+"nameCodeIDLabel" = "Type the route's code ID below";
 "nameSavedRouteTextField" = "Enter route name here";
+"nameCodeIDTextField" = "Enter route's code ID here";
 "enterAnchorPointDescriptionButtonAccessibilityLabel" = "Enter text to help you remember this Anchor Point";
 "enterAnchorPointVoiceNoteButtonAccessibilityLabel" = "Record audio to help you remember this Anchor Point";
 "startAlignmentCountdownButtonAccessibilityLabel" = "Start alignment countdown";

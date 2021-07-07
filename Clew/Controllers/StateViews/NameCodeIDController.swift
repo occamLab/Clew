@@ -10,7 +10,7 @@ import UIKit
 import ARKit
 
 /// A view controller for handling the route saving naming process.
-class NameSavedRouteController: UIViewController, UITextFieldDelegate {
+class NameCodeIDController: UIViewController, UITextFieldDelegate {
     
     /// button for finalizing your saved route name
     var saveRouteButton: UIButton!
@@ -68,10 +68,10 @@ class NameSavedRouteController: UIViewController, UITextFieldDelegate {
         saveRouteButton.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 2.5).isActive = true
         saveRouteButton.setBackgroundImage(UIImage(named: "WhiteButtonBackground"), for: .normal)
         saveRouteButton.imageView?.contentMode = .scaleAspectFit
-        saveRouteButton.setTitle(NSLocalizedString("saveARouteButtonText", comment: "This is the text which appears on the save a route buttton"),for: .normal)
+        saveRouteButton.setTitle(NSLocalizedString("saveACodeIDButtonText", comment: "This is the text which appears on the save a code ID button."),for: .normal)
         saveRouteButton.setTitleColor(.black, for: .normal)
         saveRouteButton.titleLabel?.font = UIFont(name: "HelveticaNeue-Bold", size: 35)!
-        saveRouteButton.accessibilityLabel = NSLocalizedString("saveARouteButtonAccessibilityLabel", comment: "A button that allows the user to save a path to a destination.")
+        saveRouteButton.accessibilityLabel = NSLocalizedString("saveACodeIDButtonAccessibilityLabel", comment: "A button that allows the user to save a code ID to the route they just recorded.")
         saveRouteButton.titleLabel?.textAlignment = .center
         saveRouteButton.titleLabel?.numberOfLines = 0
         saveRouteButton.titleLabel?.lineBreakMode = .byWordWrapping
@@ -83,7 +83,7 @@ class NameSavedRouteController: UIViewController, UITextFieldDelegate {
         
         label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        let mainText = NSLocalizedString("nameSavedRouteLabel", comment: "Message displayed to the user when saving a route by name.")
+        let mainText = NSLocalizedString("nameCodeIDLabel", comment: "Message displayed to the user when saving a route to reference its code ID.")
         label.textColor = UIColor.white
         label.textAlignment = .center
         label.numberOfLines = 0
@@ -99,7 +99,7 @@ class NameSavedRouteController: UIViewController, UITextFieldDelegate {
         textField.translatesAutoresizingMaskIntoConstraints = false
         textField.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 1.1).isActive = true
         textField.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 8).isActive = true
-        textField.placeholder = NSLocalizedString("nameSavedRouteTextField", comment: "Message displayed to the user when typing to save a route by name.")
+        textField.placeholder = NSLocalizedString("nameCodeIDTextField", comment: "Message displayed to the user when typing to save a route to its code ID.")
         textField.borderStyle = .roundedRect
         textField.font = UIFont.preferredFont(forTextStyle: .body)
     
@@ -118,7 +118,7 @@ class NameSavedRouteController: UIViewController, UITextFieldDelegate {
 
 
         /// create stack view for aligning and distributing bottom layer buttons
-        let stackView   = UIStackView()
+        let stackView = UIStackView()
         view.addSubview(stackView)
         stackView.translatesAutoresizingMaskIntoConstraints = false;
         
