@@ -276,6 +276,7 @@
 "resumeAnchorPointToReturnNavigationAnnouncement" = "Aligned to anchor point. Starting navigation.";
 "singleUseRouteToRecordingRouteAnnouncement" = "Now recording a single use route.";
 "saveRouteToPlayPauseAnnouncement" = "Route saved. You may now perform return navigation or return to the home screen.";
+"saveCodeIDtoSaveRouteNameAnnouncement" = "App clip code ID saved. You may now name your route.";
 
 //Play/Pause text
 "automaticAlignmentPlayPauseViewText" = "You have been automatically realigned with your route. Press the play button to perform navigation.";

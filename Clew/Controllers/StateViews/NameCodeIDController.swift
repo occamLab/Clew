@@ -13,7 +13,7 @@ import ARKit
 class NameCodeIDController: UIViewController, UITextFieldDelegate {
     
     /// button for finalizing your saved route name
-    var saveRouteButton: UIButton!
+    var saveCodeIDButton: UIButton!
     
     /// Label for description of what to do to name your route
     var label: UILabel!
@@ -29,7 +29,7 @@ class NameCodeIDController: UIViewController, UITextFieldDelegate {
         
         label.font = UIFont.preferredFont(forTextStyle: .largeTitle)
         textField.font = UIFont.preferredFont(forTextStyle: .body)
-        saveRouteButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .largeTitle)
+        saveCodeIDButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .largeTitle)
     }
     
     
@@ -60,26 +60,26 @@ class NameCodeIDController: UIViewController, UITextFieldDelegate {
         }
         
         /// Creating a button that can be used to save the name of your route
-        saveRouteButton = UIButton(type: .custom)
-        saveRouteButton.layer.cornerRadius = 0.5 * saveRouteButton.bounds.size.width
-        saveRouteButton.clipsToBounds = true
-        saveRouteButton.translatesAutoresizingMaskIntoConstraints = false
-        saveRouteButton.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 1.1).isActive = true
-        saveRouteButton.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 2.5).isActive = true
-        saveRouteButton.setBackgroundImage(UIImage(named: "WhiteButtonBackground"), for: .normal)
-        saveRouteButton.imageView?.contentMode = .scaleAspectFit
-        saveRouteButton.setTitle(NSLocalizedString("saveACodeIDButtonText", comment: "This is the text which appears on the save a code ID button."),for: .normal)
-        saveRouteButton.setTitleColor(.black, for: .normal)
-        saveRouteButton.titleLabel?.font = UIFont(name: "HelveticaNeue-Bold", size: 35)!
-        saveRouteButton.accessibilityLabel = NSLocalizedString("saveACodeIDButtonAccessibilityLabel", comment: "A button that allows the user to save a code ID to the route they just recorded.")
-        saveRouteButton.titleLabel?.textAlignment = .center
-        saveRouteButton.titleLabel?.numberOfLines = 0
-        saveRouteButton.titleLabel?.lineBreakMode = .byWordWrapping
-        saveRouteButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .largeTitle)
-        saveRouteButton.titleEdgeInsets.top = 0
-        saveRouteButton.titleEdgeInsets.left = 5
-        saveRouteButton.titleEdgeInsets.bottom = 0
-        saveRouteButton.titleEdgeInsets.right = 5
+        saveCodeIDButton = UIButton(type: .custom)
+        saveCodeIDButton.layer.cornerRadius = 0.5 * saveCodeIDButton.bounds.size.width
+        saveCodeIDButton.clipsToBounds = true
+        saveCodeIDButton.translatesAutoresizingMaskIntoConstraints = false
+        saveCodeIDButton.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 1.1).isActive = true
+        saveCodeIDButton.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 2.5).isActive = true
+        saveCodeIDButton.setBackgroundImage(UIImage(named: "WhiteButtonBackground"), for: .normal)
+        saveCodeIDButton.imageView?.contentMode = .scaleAspectFit
+        saveCodeIDButton.setTitle(NSLocalizedString("saveACodeIDButtonText", comment: "This is the text which appears on the save a code ID button."),for: .normal)
+        saveCodeIDButton.setTitleColor(.black, for: .normal)
+        saveCodeIDButton.titleLabel?.font = UIFont(name: "HelveticaNeue-Bold", size: 35)!
+        saveCodeIDButton.accessibilityLabel = NSLocalizedString("saveACodeIDButtonAccessibilityLabel", comment: "A button that allows the user to save a code ID to the route they just recorded.")
+        saveCodeIDButton.titleLabel?.textAlignment = .center
+        saveCodeIDButton.titleLabel?.numberOfLines = 0
+        saveCodeIDButton.titleLabel?.lineBreakMode = .byWordWrapping
+        saveCodeIDButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .largeTitle)
+        saveCodeIDButton.titleEdgeInsets.top = 0
+        saveCodeIDButton.titleEdgeInsets.left = 5
+        saveCodeIDButton.titleEdgeInsets.bottom = 0
+        saveCodeIDButton.titleEdgeInsets.right = 5
         
         label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -140,7 +140,7 @@ class NameCodeIDController: UIViewController, UITextFieldDelegate {
 
         stackView.addArrangedSubview(scrollView)
         stackView.addArrangedSubview(textField)
-        stackView.addArrangedSubview(saveRouteButton)
+        stackView.addArrangedSubview(saveCodeIDButton)
     
         /// size the stack
         stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 5).isActive = true
@@ -151,8 +151,8 @@ class NameCodeIDController: UIViewController, UITextFieldDelegate {
         view.backgroundColor = UIColor.black.withAlphaComponent(0.4)
     
     
-        saveRouteButton.addTarget(parent,
-                                  action: #selector(ViewController.saveRouteButtonPressed),
+        saveCodeIDButton.addTarget(parent,
+                                  action: #selector(ViewController.saveCodeIDButtonPressed),
                            for: .touchUpInside)
     }
     
