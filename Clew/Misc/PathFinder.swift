@@ -280,19 +280,21 @@ class SavedRoute: NSObject, NSSecureCoding, Identifiable {
     /// The Anchor Points used for recording voice notes and other information along the route
     public var intermediateAnchorPoints: [RouteAnchorPoint]
     /// An identifier for the App Clip code that begins a route.
-    public var appClipCodeID: String = ""
+    public var appClipCodeID: String
 
     /// Initialize the route.
     ///
     /// - Parameters:
     ///   - id: the route id
+    ///   - appClipCodeID: the ID associating the app clip at the start of the route to the route
     ///   - name: the route name
     ///   - crumbs: the crumbs for the route
     ///   - dateCreated: the route creation date
     ///   - beginRouteAnchorPoint: the Anchor Point for the beginning of the route (pass a `RouteAnchorPoint` with default initialization if no Anchor Point was recorded at the beginning of the route)
     ///   - endRouteAnchorPoint: the Anchor Point for the end of the route (pass a `RouteAnchorPoint` with default initialization if no Anchor Point was recorded at the end of the route)
-    public init(id: NSString, name: NSString, crumbs: [LocationInfo], dateCreated: NSDate = NSDate(), beginRouteAnchorPoint: RouteAnchorPoint, endRouteAnchorPoint: RouteAnchorPoint, intermediateAnchorPoints: [RouteAnchorPoint]) {
+    public init(id: NSString, appClipCodeID: String, name: NSString, crumbs: [LocationInfo], dateCreated: NSDate = NSDate(), beginRouteAnchorPoint: RouteAnchorPoint, endRouteAnchorPoint: RouteAnchorPoint, intermediateAnchorPoints: [RouteAnchorPoint]) {
         self.id = id
+        self.appClipCodeID = appClipCodeID
         self.name = name
         self.crumbs = crumbs
         self.dateCreated = dateCreated
@@ -306,6 +308,7 @@ class SavedRoute: NSObject, NSSecureCoding, Identifiable {
     /// - Parameter aCoder: the object used for encoding
     func encode(with aCoder: NSCoder) {
         aCoder.encode(id, forKey: "id")
+        aCoder.encode(appClipCodeID, forKey: "appClipCodeID")
         aCoder.encode(name, forKey: "name")
         aCoder.encode(crumbs, forKey: "crumbs")
         aCoder.encode(dateCreated, forKey: "dateCreated")
@@ -319,6 +322,9 @@ class SavedRoute: NSObject, NSSecureCoding, Identifiable {
     /// - Parameter aDecoder: the decoder object
     required convenience init?(coder aDecoder: NSCoder) {
         guard let id = aDecoder.decodeObject(of: NSString.self, forKey: "id") else {
+            return nil
+        }
+        guard let appClipCodeID = aDecoder.decodeObject(of: NSString.self, forKey: "appClipCodeID") else {
             return nil
         }
         guard let name = aDecoder.decodeObject(of: NSString.self, forKey: "name") else {
@@ -359,7 +365,7 @@ class SavedRoute: NSObject, NSSecureCoding, Identifiable {
         if let anchorPoints = aDecoder.decodeObject(of: [].self, forKey: "intermediateAnchorPoints") as? [RouteAnchorPoint] {
             intermediateRouteAnchorPoints = anchorPoints
         }
-        self.init(id: id, name: name, crumbs: crumbs, dateCreated: dateCreated, beginRouteAnchorPoint: beginRouteAnchorPoint, endRouteAnchorPoint: endRouteAnchorPoint, intermediateAnchorPoints: intermediateRouteAnchorPoints)
+        self.init(id: id, appClipCodeID: appClipCodeID as String, name: name, crumbs: crumbs, dateCreated: dateCreated, beginRouteAnchorPoint: beginRouteAnchorPoint, endRouteAnchorPoint: endRouteAnchorPoint, intermediateAnchorPoints: intermediateRouteAnchorPoints)
     }
 }
 

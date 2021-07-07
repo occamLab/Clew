@@ -602,7 +602,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         if paused {
             ///PATHPOINT pause recording anchor point alignment timer -> resume tracking
             //proceed as normal with the pause structure (single use route)
-            justTraveledRoute = SavedRoute(id: "single use", name: "single use", crumbs: self.crumbs, dateCreated: Date() as NSDate, beginRouteAnchorPoint: self.beginRouteAnchorPoint, endRouteAnchorPoint: self.endRouteAnchorPoint, intermediateAnchorPoints: intermediateAnchorPoints)
+            justTraveledRoute = SavedRoute(id: "single use", appClipCodeID: self.appClipCodeID, name: "single use", crumbs: self.crumbs, dateCreated: Date() as NSDate, beginRouteAnchorPoint: self.beginRouteAnchorPoint, endRouteAnchorPoint: self.endRouteAnchorPoint, intermediateAnchorPoints: intermediateAnchorPoints)
             justUsedMap = worldMap
             showResumeTrackingButton()
             state = .pauseProcedureCompleted
@@ -644,6 +644,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         let id = "000"
         /// Get the input values from user, if it's nil then use "000"
         self.appClipCodeID = nameCodeIDController.textField.text as String? ?? id
+        print(type(of: self), type(of: nameCodeIDController))
         let worldMap = nameCodeIDController.worldMap
         hideAllViewsHelper()
         ///Announce to the user that they have saved the route ID and are now at the saving route name screen
@@ -658,7 +659,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         let id = String(Int64(NSDate().timeIntervalSince1970 * 1000)) as NSString
         // Get the input values from user, if it's nil then use timestamp
         self.routeName = nameSavedRouteController.textField.text as NSString? ?? id
-        try! self.archive(routeId: id, beginRouteAnchorPoint: self.beginRouteAnchorPoint, endRouteAnchorPoint: self.endRouteAnchorPoint, intermediateAnchorPoints: self.intermediateAnchorPoints, worldMap: nameSavedRouteController.worldMap)
+        try! self.archive(routeId: id, appClipCodeID: self.appClipCodeID, beginRouteAnchorPoint: self.beginRouteAnchorPoint, endRouteAnchorPoint: self.endRouteAnchorPoint, intermediateAnchorPoints: self.intermediateAnchorPoints, worldMap: nameSavedRouteController.worldMap)
         hideAllViewsHelper()
         /// PATHPOINT Save Route View -> play/pause
         ///Announce to the user that they have finished the alignment process and are now at the play pause screen
@@ -698,12 +699,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     ///
     /// - Parameters:
     ///   - routeId: the ID of the route
+    ///   - appClipCodeID: the ID of the app clip code associated with the start point of the route
     ///   - beginRouteAnchorPoint: the route Anchor Point for the beginning (if there is no route Anchor Point at the beginning, the elements of this struct can be nil)
     ///   - endRouteAnchorPoint: the route Anchor Point for the end (if there is no route Anchor Point at the end, the elements of this struct can be nil)
     ///   - worldMap: the world map
     /// - Throws: an error if something goes wrong
-    func archive(routeId: NSString, beginRouteAnchorPoint: RouteAnchorPoint, endRouteAnchorPoint: RouteAnchorPoint, intermediateAnchorPoints: [RouteAnchorPoint], worldMap: Any?) throws {
-        let savedRoute = SavedRoute(id: routeId, name: routeName!, crumbs: crumbs, dateCreated: Date() as NSDate, beginRouteAnchorPoint: beginRouteAnchorPoint, endRouteAnchorPoint: endRouteAnchorPoint, intermediateAnchorPoints: intermediateAnchorPoints)
+    func archive(routeId: NSString, appClipCodeID: String, beginRouteAnchorPoint: RouteAnchorPoint, endRouteAnchorPoint: RouteAnchorPoint, intermediateAnchorPoints: [RouteAnchorPoint], worldMap: Any?) throws {
+        let savedRoute = SavedRoute(id: routeId, appClipCodeID: self.appClipCodeID, name: routeName!, crumbs: crumbs, dateCreated: Date() as NSDate, beginRouteAnchorPoint: beginRouteAnchorPoint, endRouteAnchorPoint: endRouteAnchorPoint, intermediateAnchorPoints: intermediateAnchorPoints)
         try dataPersistence.archive(route: savedRoute, worldMap: worldMap)
         justTraveledRoute = savedRoute
     }
