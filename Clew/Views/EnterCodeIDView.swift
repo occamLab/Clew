@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import Combine
 
 /// A text entry box in which to enter the app clip code ID
 struct EnterCodeIDView: View {
@@ -20,6 +21,7 @@ struct EnterCodeIDView: View {
                  text: $appClipCodeID)
                 .disableAutocorrection(true)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
+                .keyboardType(.numberPad)
             
             EnterButton(vc: vc, codeID: appClipCodeID)
                 .padding(12)
