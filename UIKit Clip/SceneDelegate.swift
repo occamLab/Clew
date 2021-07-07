@@ -52,10 +52,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         self.enterCodeIDController?.modalPresentationStyle = .fullScreen
         self.vc!.present(self.enterCodeIDController!, animated: true)
         
+        /// listener
         NotificationCenter.default.addObserver(forName: NSNotification.Name("shouldDismissCodeIDPopover"), object: nil, queue: nil) { (notification) -> Void in
             self.enterCodeIDController?.dismiss(animated: true)
-            let appClipRef = routeRef.child("\(self.vc?.appClipCodeID ?? "test").json")
-         
+            
+//            let appClipRef = routeRef.child("test.json")
+            let appClipRef = routeRef.child("\(self.vc!.appClipCodeID).json")
+            
             /// attempt to download .json file from Firebase
             appClipRef.getData(maxSize: 100000000000) { appClipJson, error in
                 do {
@@ -71,16 +74,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                         }
                     }
                 } catch {
-                        print("aw beans")
-                        print("B(")
+                    print("aw beans")
+                    print("B(")
                 }
                 print(":(")
 
             }
-
-    //        print("Dictionary: \(vc?.availableRoutes)")
             
-            DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
                 self.popoverController = UIHostingController(rootView: StartNavigationPopoverView(vc: self.vc!))
                 self.popoverController?.modalPresentationStyle = .fullScreen
                 self.vc!.present(self.popoverController!, animated: true)
