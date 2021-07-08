@@ -36,7 +36,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
     
     func loadRoute() {
-        vc?.imageAnchoring = true
+        //vc?.imageAnchoring = true
         vc?.recordPathController.remove()
         vc?.handleStateTransitionToNavigatingExternalRoute()
     }
@@ -127,6 +127,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 print("B(")
             }
             print(":(")
+
         }
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 15.0) {
@@ -139,7 +140,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 self.popoverController?.dismiss(animated: true)
             }
         }
-//        }
         
 //        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) { [self] in
 //            popoverController = UIHostingController(rootView: StartNavigationPopoverView(vc: vc!))

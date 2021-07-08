@@ -27,7 +27,7 @@ struct StartNavigationPopoverView: View {
                         vc.routeID = routeInfo.first!.key
                         print(vc.routeID)
                         selectedRouteName = routeInfo.first!.value
-                        vc.imageAnchoring = true
+                        //vc.imageAnchoring = true
                         vc.recordPathController.remove()
                             
                     }) {
@@ -41,6 +41,7 @@ struct StartNavigationPopoverView: View {
                             }
                         }
                     }
+
                 }
                 .navigationTitle("Select Route")
             }

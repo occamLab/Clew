@@ -281,6 +281,8 @@ class SavedRoute: NSObject, NSSecureCoding, Identifiable {
     public var intermediateAnchorPoints: [RouteAnchorPoint]
     /// An identifier for the App Clip code that begins a route.
     public var appClipCodeID: String
+    
+    public var imageAnchoring: Bool
 
     /// Initialize the route.
     ///
@@ -292,7 +294,8 @@ class SavedRoute: NSObject, NSSecureCoding, Identifiable {
     ///   - dateCreated: the route creation date
     ///   - beginRouteAnchorPoint: the Anchor Point for the beginning of the route (pass a `RouteAnchorPoint` with default initialization if no Anchor Point was recorded at the beginning of the route)
     ///   - endRouteAnchorPoint: the Anchor Point for the end of the route (pass a `RouteAnchorPoint` with default initialization if no Anchor Point was recorded at the end of the route)
-    public init(id: NSString, appClipCodeID: String, name: NSString, crumbs: [LocationInfo], dateCreated: NSDate = NSDate(), beginRouteAnchorPoint: RouteAnchorPoint, endRouteAnchorPoint: RouteAnchorPoint, intermediateAnchorPoints: [RouteAnchorPoint]) {
+
+    public init(id: NSString, appClipCodeID: String,  name: NSString, crumbs: [LocationInfo], dateCreated: NSDate = NSDate(), beginRouteAnchorPoint: RouteAnchorPoint, endRouteAnchorPoint: RouteAnchorPoint, intermediateAnchorPoints: [RouteAnchorPoint], imageAnchoring: Bool = false) {
         self.id = id
         self.appClipCodeID = appClipCodeID
         self.name = name
@@ -301,6 +304,7 @@ class SavedRoute: NSObject, NSSecureCoding, Identifiable {
         self.beginRouteAnchorPoint = beginRouteAnchorPoint
         self.endRouteAnchorPoint = endRouteAnchorPoint
         self.intermediateAnchorPoints = intermediateAnchorPoints
+        self.imageAnchoring = imageAnchoring
     }
     
     /// Encodes the object to the specified coder object
@@ -315,6 +319,7 @@ class SavedRoute: NSObject, NSSecureCoding, Identifiable {
         aCoder.encode(beginRouteAnchorPoint, forKey: "beginRouteAnchorPoint")
         aCoder.encode(endRouteAnchorPoint, forKey: "endRouteAnchorPoint")
         aCoder.encode(intermediateAnchorPoints, forKey: "intermediateAnchorPoints")
+        aCoder.encode(imageAnchoring, forKey: "imageAnchoring")
     }
     
     /// Initialize an object based using data from a decoder
@@ -336,6 +341,11 @@ class SavedRoute: NSObject, NSSecureCoding, Identifiable {
         guard let dateCreated = aDecoder.decodeObject(of: NSDate.self, forKey: "dateCreated") else {
             return nil
         }
+        
+       /* guard let imageAnchoring = aDecoder.decodeBool(forKey: "imageAnchoring") else {
+            return nil
+        }*/
+
 
         let beginRouteAnchorPoint: RouteAnchorPoint
         if let anchorPoint = aDecoder.decodeObject(of: RouteAnchorPoint.self, forKey: "beginRouteAnchorPoint") {
@@ -365,7 +375,12 @@ class SavedRoute: NSObject, NSSecureCoding, Identifiable {
         if let anchorPoints = aDecoder.decodeObject(of: [].self, forKey: "intermediateAnchorPoints") as? [RouteAnchorPoint] {
             intermediateRouteAnchorPoints = anchorPoints
         }
-        self.init(id: id, appClipCodeID: appClipCodeID as String, name: name, crumbs: crumbs, dateCreated: dateCreated, beginRouteAnchorPoint: beginRouteAnchorPoint, endRouteAnchorPoint: endRouteAnchorPoint, intermediateAnchorPoints: intermediateRouteAnchorPoints)
+
+        
+        let imageAnchoring = aDecoder.decodeBool(forKey: "imageAnchoring")
+        print("image anchoring: \(imageAnchoring)")
+        
+        self.init(id: id, appClipCodeID: appClipCodeID as String, name: name, crumbs: crumbs, dateCreated: dateCreated, beginRouteAnchorPoint: beginRouteAnchorPoint, endRouteAnchorPoint: endRouteAnchorPoint, intermediateAnchorPoints: intermediateRouteAnchorPoints, imageAnchoring: imageAnchoring)
     }
 }
 
