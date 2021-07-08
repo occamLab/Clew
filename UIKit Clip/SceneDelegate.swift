@@ -55,10 +55,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         NotificationCenter.default.addObserver(forName: NSNotification.Name("shouldDismissCodeIDPopover"), object: nil, queue: nil) { (notification) -> Void in
             self.enterCodeIDController?.dismiss(animated: true)
             
-//            // TODO: get rid of this once available routes is set in a different way
-//            let routeRef = Storage.storage().reference().child("AppClipRoutes")
-//            let appClipRef = routeRef.child("\(self.vc!.appClipCodeID).json")
-            
             NotificationCenter.default.addObserver(forName: NSNotification.Name("firebaseLoaded"), object: nil, queue: nil) { (notification) -> Void in
                 self.popoverController = UIHostingController(rootView: StartNavigationPopoverView(vc: self.vc!))
                 self.popoverController?.modalPresentationStyle = .fullScreen
@@ -74,7 +70,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
     }
     
-    /// handles invocations in the App Clip <3
+    /// handles invocations in the App Clip
     /// return: Boolean value representing whether or not there is a userActivity object
     func scene(_ scene: UIScene, continue userActivity: NSUserActivity) {
         guard userActivity.activityType == NSUserActivityTypeBrowsingWeb, let url = userActivity.webpageURL else {
@@ -85,7 +81,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         getFirebaseRoutesList(vc: self.vc!)
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 15.0) {
+        NotificationCenter.default.addObserver(forName: NSNotification.Name("firebaseLoaded"), object: nil, queue: nil) { (notification) -> Void in
             self.popoverController = UIHostingController(rootView: StartNavigationPopoverView(vc: self.vc!))
             self.popoverController?.modalPresentationStyle = .fullScreen
             self.vc!.present(self.popoverController!, animated: true)
