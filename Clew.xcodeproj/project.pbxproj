@@ -83,6 +83,14 @@
 		9815CEFC268512AB008FCF74 /* clew-test.crd in Resources */ = {isa = PBXBuildFile; fileRef = 9815CEF7268512AB008FCF74 /* clew-test.crd */; };
 		9819E2F2268BA6AB0008CA82 /* PauseTrackingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470EE622C119F4001092A4 /* PauseTrackingController.swift */; };
 		98260258268CC1DB00D66811 /* speaker.obj in Resources */ = {isa = PBXBuildFile; fileRef = 823DA453252F7EA800BB5E6B /* speaker.obj */; };
+		984FBD312695EC0200B63A6A /* SetTagController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 984FBD302695EC0200B63A6A /* SetTagController.swift */; };
+		984FBD322695EC0200B63A6A /* SetTagController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 984FBD302695EC0200B63A6A /* SetTagController.swift */; };
+		984FBD342696179800B63A6A /* NameCodeIDController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 984FBD332696179800B63A6A /* NameCodeIDController.swift */; };
+		984FBD352696179800B63A6A /* NameCodeIDController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 984FBD332696179800B63A6A /* NameCodeIDController.swift */; };
+		984FBD362696179800B63A6A /* NameCodeIDController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 984FBD332696179800B63A6A /* NameCodeIDController.swift */; };
+		984FBD3C26962E4900B63A6A /* EnterCodeIDView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 984FBD3B26962E4900B63A6A /* EnterCodeIDView.swift */; };
+		984FBD3D26962E4900B63A6A /* EnterCodeIDView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 984FBD3B26962E4900B63A6A /* EnterCodeIDView.swift */; };
+		984FBD3E26962E4900B63A6A /* EnterCodeIDView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 984FBD3B26962E4900B63A6A /* EnterCodeIDView.swift */; };
 		986640CE22FB68F2005AA1F6 /* NameSavedRouteController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986640CD22FB68F2005AA1F6 /* NameSavedRouteController.swift */; };
 		986640CF22FC9606005AA1F6 /* NameSavedRouteController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986640CD22FB68F2005AA1F6 /* NameSavedRouteController.swift */; };
 		987BA6F4268E53C0008B129E /* StartNavigationPopoverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 987BA6F3268E53C0008B129E /* StartNavigationPopoverView.swift */; };
@@ -316,6 +324,9 @@
 		9815CEEA26851049008FCF74 /* test-route2.crd */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = "test-route2.crd"; sourceTree = "<group>"; };
 		9815CEF6268512AB008FCF74 /* clew-dev-route.crd */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = "clew-dev-route.crd"; sourceTree = "<group>"; };
 		9815CEF7268512AB008FCF74 /* clew-test.crd */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = "clew-test.crd"; sourceTree = "<group>"; };
+		984FBD302695EC0200B63A6A /* SetTagController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetTagController.swift; sourceTree = "<group>"; };
+		984FBD332696179800B63A6A /* NameCodeIDController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NameCodeIDController.swift; sourceTree = "<group>"; };
+		984FBD3B26962E4900B63A6A /* EnterCodeIDView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterCodeIDView.swift; sourceTree = "<group>"; };
 		986640CD22FB68F2005AA1F6 /* NameSavedRouteController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NameSavedRouteController.swift; sourceTree = "<group>"; };
 		987BA6F3268E53C0008B129E /* StartNavigationPopoverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartNavigationPopoverView.swift; sourceTree = "<group>"; };
 		98CC6760268A0FEC00E3759F /* FirebaseSetup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseSetup.swift; sourceTree = "<group>"; };
@@ -624,6 +635,8 @@
 				E5470EE522C119F4001092A4 /* StopNavigationController.swift */,
 				E5470EE622C119F4001092A4 /* PauseTrackingController.swift */,
 				E5470EE722C119F4001092A4 /* ResumeTrackingConfirmController.swift */,
+				984FBD332696179800B63A6A /* NameCodeIDController.swift */,
+				984FBD302695EC0200B63A6A /* SetTagController.swift */,
 			);
 			path = StateViews;
 			sourceTree = "<group>";
@@ -649,6 +662,7 @@
 				77365B1B2343ECBA008BC35C /* BurgerMenu.storyboard */,
 				E5470EF022C119F4001092A4 /* RootContainerView.swift */,
 				E5470EF322C119F4001092A4 /* RouteTableViewCell.swift */,
+				984FBD3B26962E4900B63A6A /* EnterCodeIDView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -827,7 +841,6 @@
 					};
 					B7EB59D720F693EB00FBBC6A = {
 						LastSwiftMigration = 1010;
-						ProvisioningStyle = Automatic;
 					};
 					E5E9016622FB4D4A00AD0E95 = {
 						CreatedOnToolsVersion = 10.2.1;
@@ -1166,6 +1179,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				984FBD3C26962E4900B63A6A /* EnterCodeIDView.swift in Sources */,
 				E5470F2E22C119F5001092A4 /* StopRecordingController.swift in Sources */,
 				E5470F0A22C119F5001092A4 /* AppDelegate.swift in Sources */,
 				E5470F2222C119F5001092A4 /* UIViewExtensions.swift in Sources */,
@@ -1202,9 +1216,11 @@
 				E5470EFE22C119F5001092A4 /* DataPersistence.swift in Sources */,
 				E5470F0022C119F5001092A4 /* PathLogger.swift in Sources */,
 				E5470F2422C119F5001092A4 /* UIButtonExtensions.swift in Sources */,
+				984FBD342696179800B63A6A /* NameCodeIDController.swift in Sources */,
 				E5470EF822C119F5001092A4 /* AudioVisualizerView.swift in Sources */,
 				98CC6766268A1F2200E3759F /* SurveyInterface.swift in Sources */,
 				1F2971A522DF60F700B896C6 /* HelpCompiler.swift in Sources */,
+				984FBD312695EC0200B63A6A /* SetTagController.swift in Sources */,
 				E5470F1E22C119F5001092A4 /* NSStringExtension.swift in Sources */,
 				E5470F3222C119F5001092A4 /* ResumeTrackingController.swift in Sources */,
 			);
@@ -1226,6 +1242,7 @@
 				98006FC7268385D400E61861 /* HelpViewController.swift in Sources */,
 				987BA6F4268E53C0008B129E /* StartNavigationPopoverView.swift in Sources */,
 				98006FB42683845000E61861 /* StopRecordingController.swift in Sources */,
+				984FBD362696179800B63A6A /* NameCodeIDController.swift in Sources */,
 				98053657268388CE0065E80F /* PathLogger.swift in Sources */,
 				9819E2F2268BA6AB0008CA82 /* PauseTrackingController.swift in Sources */,
 				98006FC1268385A700E61861 /* UIViewControllerExtensions.swift in Sources */,
@@ -1238,6 +1255,7 @@
 				98006FC2268385AF00E61861 /* UIViewExtensions.swift in Sources */,
 				98006F7B268382D600E61861 /* SceneDelegate.swift in Sources */,
 				98006FCB268386A900E61861 /* HelpCompiler.swift in Sources */,
+				984FBD3E26962E4900B63A6A /* EnterCodeIDView.swift in Sources */,
 				98006FB52683845400E61861 /* ResumeTrackingController.swift in Sources */,
 				98CC6763268A0FEC00E3759F /* FirebaseSetup.swift in Sources */,
 				9805365D268388EC0065E80F /* RouteDocumentData.swift in Sources */,
@@ -1270,6 +1288,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				984FBD3D26962E4900B63A6A /* EnterCodeIDView.swift in Sources */,
 				E538EF5022D3BFEC004216E9 /* TransparentTouchView.swift in Sources */,
 				E5470F2F22C119F5001092A4 /* StopRecordingController.swift in Sources */,
 				E5470F0B22C119F5001092A4 /* AppDelegate.swift in Sources */,
@@ -1306,9 +1325,11 @@
 				E5470F2B22C119F5001092A4 /* RecordPathController.swift in Sources */,
 				E5470EFF22C119F5001092A4 /* DataPersistence.swift in Sources */,
 				E5470F0122C119F5001092A4 /* PathLogger.swift in Sources */,
+				984FBD352696179800B63A6A /* NameCodeIDController.swift in Sources */,
 				E5470F2522C119F5001092A4 /* UIButtonExtensions.swift in Sources */,
 				98CC6767268A1F2200E3759F /* SurveyInterface.swift in Sources */,
 				E5470EF922C119F5001092A4 /* AudioVisualizerView.swift in Sources */,
+				984FBD322695EC0200B63A6A /* SetTagController.swift in Sources */,
 				E5470F1F22C119F5001092A4 /* NSStringExtension.swift in Sources */,
 				E5470F3322C119F5001092A4 /* ResumeTrackingController.swift in Sources */,
 			);
@@ -1554,7 +1575,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Clew/Clew.entitlements;
-				CURRENT_PROJECT_VERSION = 48;
+				CURRENT_PROJECT_VERSION = 61;
 				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
 				INFOPLIST_FILE = Clew/Info.plist;
@@ -1563,7 +1584,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0.18;
+				MARKETING_VERSION = 2.0.20;
 				PRODUCT_BUNDLE_IDENTIFIER = edu.occam.Clew;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Clew/Clew-Bridging-Header.h";
@@ -1581,7 +1602,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Clew/Clew.entitlements;
-				CURRENT_PROJECT_VERSION = 48;
+				CURRENT_PROJECT_VERSION = 61;
 				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
 				INFOPLIST_FILE = Clew/Info.plist;
@@ -1590,7 +1611,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0.18;
+				MARKETING_VERSION = 2.0.20;
 				PRODUCT_BUNDLE_IDENTIFIER = edu.occam.Clew;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Clew/Clew-Bridging-Header.h";
@@ -1609,7 +1630,7 @@
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CODE_SIGN_ENTITLEMENTS = "UIKit Clip/UIKit_Clip.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 59;
+				CURRENT_PROJECT_VERSION = 65;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
 				INFOPLIST_FILE = "UIKit Clip/Info.plist";
@@ -1640,7 +1661,7 @@
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CODE_SIGN_ENTITLEMENTS = "UIKit Clip/UIKit_Clip.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 59;
+				CURRENT_PROJECT_VERSION = 65;
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
 				INFOPLIST_FILE = "UIKit Clip/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
@@ -1768,9 +1789,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "Clew Dev.entitlements";
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 59;
+				CURRENT_PROJECT_VERSION = 65;
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
 				INFOPLIST_FILE = "Clew Dev-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
@@ -1799,9 +1820,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "Clew Dev.entitlements";
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 59;
+				CURRENT_PROJECT_VERSION = 65;
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
 				INFOPLIST_FILE = "Clew Dev-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 14.3;

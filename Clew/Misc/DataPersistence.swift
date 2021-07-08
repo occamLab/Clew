@@ -239,8 +239,7 @@ class DataPersistence {
         let fileRef = routeRef.child("\(route.id).crd")
 
         /// creates a reference to the location we want the .json to live
-//        let appClipRef = routeRef.child("\(route.appClipCodeID).json")
-        let appClipRef = routeRef.child("test.json")
+        let appClipRef = routeRef.child("\(route.appClipCodeID).json")
         
         /// initialize this
         let fileType = StorageMetadata()
@@ -272,14 +271,14 @@ class DataPersistence {
                     if metadata == nil {
                         print("could not upload .json to Firebase", error!.localizedDescription)
                     } else {
-                        print("uploaded .json successfully @ ", appClipRef.fullPath, existingRoutes)
+                        print("uploaded .json successfully @", appClipRef.fullPath, "with content", existingRoutes)
                         /// upload .crd route file
                         fileType.contentType = "application/crd"
                         let _ = fileRef.putData(codedData, metadata: fileType){ (metadata, error) in
                             if metadata == nil {
                                 print("could not upload route to Firebase", error!.localizedDescription)
                             } else {
-                                print("uploaded route successfully @ ", fileRef.fullPath)
+                                print("uploaded route successfully @", fileRef.fullPath)
                             }
                             NotificationCenter.default.post(name: Notification.Name("SurveyPopoverReadyToDismiss"), object: true)
                         }

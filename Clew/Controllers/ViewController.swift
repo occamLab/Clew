@@ -61,6 +61,8 @@ enum AppState {
     case readyForFinalResumeAlignment
     /// the user is attempting to name the route they're in the process of saving
     case startingNameSavedRouteProcedure(worldMap: Any?)
+    /// the user is attempting to name the app clip code ID for the route they're in the process of saving
+    case startingNameCodeIDProcedure(worldMap: Any?)
     /// the user is anchoring a route from an ARImageAnchor
     case startingAutoAlignment
     /// the user has stopped or completed an external route
@@ -93,6 +95,8 @@ enum AppState {
             return "readyForFinalResumeAlignment"
         case .startingNameSavedRouteProcedure:
             return "startingNameSavedRouteProcedure"
+        case .startingNameCodeIDProcedure:
+            return "startingNameCodeIDProcedure"
         case .startingAutoAlignment:
             return "startingAutoAlignment"
         case .endScreen:
@@ -159,6 +163,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             case .readyForFinalResumeAlignment:
                 // nothing happens currently
                 break
+            case .startingNameCodeIDProcedure(let worldMap):
+                handleStateTransitionToStartingNameCodeIDProcedure(worldMap: worldMap)
             case .startingNameSavedRouteProcedure(let worldMap):
                 handleStateTransitionToStartingNameSavedRouteProcedure(worldMap: worldMap)
             case .initializing:
@@ -222,7 +228,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// This is the list of routes associated with a specific app clip code
     var availableRoutes = [[String: String]]()
-
     
     /// This is the path to download route
     var firebasePath: String?
@@ -484,6 +489,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
     }
     
+    /// Handler for the startingNameCodeIDProcedure app state
+    func handleStateTransitionToStartingNameCodeIDProcedure(worldMap: Any?){
+        hideAllViewsHelper()
+        nameCodeIDController.worldMap = worldMap
+        add(nameCodeIDController)
+    }
+    
     /// Handler for the startingNameSavedRouteProcedure app state
     func handleStateTransitionToStartingNameSavedRouteProcedure(worldMap: Any?){
         hideAllViewsHelper()
@@ -622,7 +634,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         if paused {
             ///PATHPOINT pause recording anchor point alignment timer -> resume tracking
             //proceed as normal with the pause structure (single use route)
-            justTraveledRoute = SavedRoute(id: "single use", name: "single use", crumbs: self.crumbs, dateCreated: Date() as NSDate, beginRouteAnchorPoint: self.beginRouteAnchorPoint, endRouteAnchorPoint: self.endRouteAnchorPoint, intermediateAnchorPoints: intermediateAnchorPoints, imageAnchoring: imageAnchoring)
+
+            justTraveledRoute = SavedRoute(id: "single use", appClipCodeID: self.appClipCodeID, name: "single use", crumbs: self.crumbs, dateCreated: Date() as NSDate, beginRouteAnchorPoint: self.beginRouteAnchorPoint, endRouteAnchorPoint: self.endRouteAnchorPoint, intermediateAnchorPoints: intermediateAnchorPoints, imageAnchoring: imageAnchoring)
             justUsedMap = worldMap
             showResumeTrackingButton()
             state = .pauseProcedureCompleted
@@ -630,17 +643,16 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             ///PATHPOINT end anchor point alignment timer -> Save Route View
             delayTransition(announcement: NSLocalizedString("multipleUseRouteAnchorPointToSaveARouteAnnouncement", comment: "This is an announcement which is spoken when the user saves the end anchor point for a multiple use route. This signifies the transition from saving an anchor point to the screen where the user can name and save their route"), initialFocus: nil)
             ///sends the user to the play/pause screen
-            state = .startingNameSavedRouteProcedure(worldMap: worldMap)
+            state = .startingNameCodeIDProcedure(worldMap: worldMap)
         }
     }
     
     /// Called when the user presses the routes button.  The function will display the `Routes` view, which is managed by `RoutesViewController`.
     @objc func routesButtonPressed() {
-        ///update state boolians
+        ///update state booleans
         paused = false
         isAutomaticAlignment = false
         recordingSingleUseRoute = false
-        
         
         let storyBoard: UIStoryboard = UIStoryboard(name: "SettingsAndHelp", bundle: nil)
         let popoverContent = storyBoard.instantiateViewController(withIdentifier: "Routes") as! RoutesViewController
@@ -660,12 +672,29 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         self.present(nav, animated: true, completion: nil)
     }
     
+    @objc func saveCodeIDButtonPressed() {
+        /// Save the input from the user for the app clip code ID as an attribute of the SavedRoute
+        let id = "000"
+        /// Get the input values from user, if it's nil then use "000"
+        self.appClipCodeID = nameCodeIDController.textField.text as String? ?? id
+        print(type(of: self), type(of: nameCodeIDController))
+        let worldMap = nameCodeIDController.worldMap
+        hideAllViewsHelper()
+        ///Announce to the user that they have saved the route ID and are now at the saving route name screen
+        self.delayTransition(announcement: NSLocalizedString("saveCodeIDtoSaveRouteNameAnnouncement", comment: "This is an announcement which is spoken when the user finishes saving their route's app clip code ID. This announcement signifies the transition from the view where the user can enter the app clip code ID associated with the route to the view where the user can name or save their route"), initialFocus: nil)
+        ///Clearing the save route text field
+        nameCodeIDController.textField.text = ""
+        /// send to SaveRouteButtonPressed
+        self.state = .startingNameSavedRouteProcedure(worldMap: worldMap)
+    }
+    
     @objc func saveRouteButtonPressed() {
         let id = String(Int64(NSDate().timeIntervalSince1970 * 1000)) as NSString
         // Get the input values from user, if it's nil then use timestamp
         self.routeName = nameSavedRouteController.textField.text as NSString? ?? id
+
         
-        try! self.archive(routeId: id, beginRouteAnchorPoint: self.beginRouteAnchorPoint, endRouteAnchorPoint: self.endRouteAnchorPoint, intermediateAnchorPoints: self.intermediateAnchorPoints, worldMap: nameSavedRouteController.worldMap, imageAnchoring: self.imageAnchoring)
+        try! self.archive(routeId: id, appClipCodeID: self.appClipCodeID, beginRouteAnchorPoint: self.beginRouteAnchorPoint, endRouteAnchorPoint: self.endRouteAnchorPoint, intermediateAnchorPoints: self.intermediateAnchorPoints, worldMap: nameSavedRouteController.worldMap, imageAnchoring: self.imageAnchoring)
         hideAllViewsHelper()
         /// PATHPOINT Save Route View -> play/pause
         ///Announce to the user that they have finished the alignment process and are now at the play pause screen
@@ -686,6 +715,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         resumeTrackingConfirmController.remove()
         resumeTrackingController.remove()
         nameSavedRouteController.remove()
+        nameCodeIDController.remove()
         rootContainerView.countdownTimer.isHidden = true
     }
     
@@ -706,14 +736,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     ///
     /// - Parameters:
     ///   - routeId: the ID of the route
+    ///   - appClipCodeID: the ID of the app clip code associated with the start point of the route
     ///   - beginRouteAnchorPoint: the route Anchor Point for the beginning (if there is no route Anchor Point at the beginning, the elements of this struct can be nil)
     ///   - endRouteAnchorPoint: the route Anchor Point for the end (if there is no route Anchor Point at the end, the elements of this struct can be nil)
     ///   - worldMap: the world map
     /// - Throws: an error if something goes wrong
-    func archive(routeId: NSString, beginRouteAnchorPoint: RouteAnchorPoint, endRouteAnchorPoint: RouteAnchorPoint, intermediateAnchorPoints: [RouteAnchorPoint], worldMap: Any?, imageAnchoring: Bool) throws {
-        let savedRoute = SavedRoute(id: routeId, name: routeName!, crumbs: crumbs, dateCreated: Date() as NSDate, beginRouteAnchorPoint: beginRouteAnchorPoint, endRouteAnchorPoint: endRouteAnchorPoint, intermediateAnchorPoints: intermediateAnchorPoints, imageAnchoring: imageAnchoring)
+
+    func archive(routeId: NSString, appClipCodeID: String, beginRouteAnchorPoint: RouteAnchorPoint, endRouteAnchorPoint: RouteAnchorPoint, intermediateAnchorPoints: [RouteAnchorPoint], worldMap: Any?, imageAnchoring: Bool) throws {
+        let savedRoute = SavedRoute(id: routeId, appClipCodeID: self.appClipCodeID, name: routeName!, crumbs: crumbs, dateCreated: Date() as NSDate, beginRouteAnchorPoint: beginRouteAnchorPoint, endRouteAnchorPoint: endRouteAnchorPoint, intermediateAnchorPoints: intermediateAnchorPoints, imageAnchoring: imageAnchoring)
         print("route image anchoring: \(savedRoute.imageAnchoring)")
-        try dataPersistence.archive(route: savedRoute, worldMap: worldMap)
+
+      try dataPersistence.archive(route: savedRoute, worldMap: worldMap)
         justTraveledRoute = savedRoute
     }
 
@@ -802,6 +835,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// route recording VC (called on app start)
     var recordPathController: RecordPathController!
     
+    /// saving route code ID VC
+    var nameCodeIDController: NameCodeIDController!
+    
     /// saving route name VC
     var nameSavedRouteController: NameSavedRouteController!
     
@@ -832,6 +868,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         startNavigationController = StartNavigationController()
         stopNavigationController = StopNavigationController()
         nameSavedRouteController = NameSavedRouteController()
+        nameCodeIDController = NameCodeIDController()
         
         // Add the scene to the view, which is a RootContainerView
         sceneView.frame = view.frame
@@ -1242,6 +1279,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             //print("i=\(i) isTracked = \(clipAnchor.isTracked)")
             if clipAnchor.isTracked {
                 let tagNode: SCNNode
+                if case .failed = clipAnchor.urlDecodingState {
+                    print("failed")
+                } else if case .decoding = clipAnchor.urlDecodingState {
+                    print("decoding")
+                }
+                print(clipAnchor.url, clipAnchor.urlDecodingState)
                 if let existingTagNode = sceneView.scene.rootNode.childNode(withName: "Tag: \(clipAnchor.identifier)", recursively: false) {
                     tagNode = existingTagNode
                     tagNode.simdTransform = clipAnchor.transform
