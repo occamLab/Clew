@@ -44,19 +44,20 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         
         createScene(scene)
-        // TODO: get rid of this once available routes is set in a different way
-        let routeRef = Storage.storage().reference().child("AppClipRoutes")
         
         /// User enters their appClipCodeID
         self.enterCodeIDController = UIHostingController(rootView: EnterCodeIDView(vc: self.vc!))
         self.enterCodeIDController?.modalPresentationStyle = .fullScreen
         self.vc!.present(self.enterCodeIDController!, animated: true)
         
+
         /// listener
         NotificationCenter.default.addObserver(forName: NSNotification.Name("shouldDismissCodeIDPopover"), object: nil, queue: nil) { (notification) -> Void in
             self.enterCodeIDController?.dismiss(animated: true)
             
-            let appClipRef = routeRef.child("\(self.vc!.appClipCodeID).json")
+//            // TODO: get rid of this once available routes is set in a different way
+//            let routeRef = Storage.storage().reference().child("AppClipRoutes")
+//            let appClipRef = routeRef.child("\(self.vc!.appClipCodeID).json")
             
             NotificationCenter.default.addObserver(forName: NSNotification.Name("firebaseLoaded"), object: nil, queue: nil) { (notification) -> Void in
                 self.popoverController = UIHostingController(rootView: StartNavigationPopoverView(vc: self.vc!))
@@ -69,31 +70,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 }
             }
             
-            /// attempt to download .json file from Firebase
-            appClipRef.getData(maxSize: 100000000000) { appClipJson, error in
-                do {
-                    if let appClipJson = appClipJson {
-                        /// unwrap NSData, if it exists, to a list, and set equal to existingRoutes
-                        let routesFile = try JSONSerialization.jsonObject(with: appClipJson, options: [])
-                        print("File: \(routesFile)")
-                        if let routesFile = routesFile as? [[String: String]] {
-                            self.vc?.availableRoutes = routesFile
-                            print("List: \(self.vc?.availableRoutes)")
-                            print("æ")
-                            NotificationCenter.default.post(name: NSNotification.Name("firebaseLoaded"), object: nil)
-
-                            
-                        }
-                    }
-                } catch {
-                    print("aw beans")
-                    print("B(")
-                }
-                print(":(")
-
-            }
-            
- 
+            self.getFirebaseRoutesList(vc: self.vc!)
         }
     }
     
@@ -104,35 +81,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             return
             }
         createScene(scene)
-        let routeRef = Storage.storage().reference().child("AppClipRoutes")
         handleUserActivity(for: url)
         
-        /// listener
-//        NotificationCenter.default.addObserver(forName: NSNotification.Name("shouldDismissCodeIDPopover"), object: nil, queue: nil) { (notification) -> Void in
-//            self.enterCodeIDController?.dismiss(animated: true)
-            
-        let appClipRef = routeRef.child("\(self.vc!.appClipCodeID).json")
-        
-        /// attempt to download .json file from Firebase
-        appClipRef.getData(maxSize: 100000000000) { appClipJson, error in
-            do {
-                if let appClipJson = appClipJson {
-                    /// unwrap NSData, if it exists, to a list, and set equal to existingRoutes
-                    let routesFile = try JSONSerialization.jsonObject(with: appClipJson, options: [])
-                    print("File: \(routesFile)")
-                    if let routesFile = routesFile as? [[String: String]] {
-                        self.vc?.availableRoutes = routesFile
-                        print("List: \(self.vc?.availableRoutes)")
-                        print("æ")
-                    }
-                }
-            } catch {
-                print("aw beans")
-                print("B(")
-            }
-            print(":(")
-
-        }
+        getFirebaseRoutesList(vc: self.vc!)
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 15.0) {
             self.popoverController = UIHostingController(rootView: StartNavigationPopoverView(vc: self.vc!))
@@ -144,17 +95,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 self.popoverController?.dismiss(animated: true)
             }
         }
-        
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) { [self] in
-//            popoverController = UIHostingController(rootView: StartNavigationPopoverView(vc: vc!))
-//            popoverController?.modalPresentationStyle = .popover
-//            vc!.present(popoverController!, animated: true)
-//            print("popover successful B)")
-//            // create listeners to ensure that the isReadingAnnouncement flag is reset properly
-//            NotificationCenter.default.addObserver(forName: NSNotification.Name("shouldDismissRoutePopover"), object: nil, queue: nil) { (notification) -> Void in
-//                self.popoverController?.dismiss(animated: true)
-//            }
-//        }
     }
     
     /// Configure App Clip with query items
@@ -169,7 +109,32 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             vc?.appClipCodeID = appClipCodeID.value!
 //            route?.appClipCodeID = appClipCodeID.value!
         }
-              
+    }
+    
+    func getFirebaseRoutesList(vc: ViewController) {
+        let routeRef = Storage.storage().reference().child("AppClipRoutes")
+        let appClipRef = routeRef.child("\(self.vc!.appClipCodeID).json")
+        
+        /// attempt to download .json file from Firebase
+        appClipRef.getData(maxSize: 100000000000) { appClipJson, error in
+            do {
+                if let appClipJson = appClipJson {
+                    /// unwrap NSData, if it exists, to a list, and set equal to existingRoutes
+                    let routesFile = try JSONSerialization.jsonObject(with: appClipJson, options: [])
+                    print("File: \(routesFile)")
+                    if let routesFile = routesFile as? [[String: String]] {
+                        self.vc?.availableRoutes = routesFile
+                        print("List: \(self.vc?.availableRoutes)")
+                        print("æ")
+                        NotificationCenter.default.post(name: NSNotification.Name("firebaseLoaded"), object: nil)
+                    }
+                }
+            } catch {
+                print("aw beans")
+                print("B(")
+            }
+            print(":(")
+        }
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
