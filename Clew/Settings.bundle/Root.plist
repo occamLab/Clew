@@ -12,9 +12,9 @@
 			<key>Title</key>
 			<string>Align Routes From Image Anchors</string>
 			<key>Key</key>
-			<string>imageAnchoringSetting</string>
+			<string>imageAnchoring</string>
 			<key>DefaultValue</key>
-			<false/>
+			<true/>
 		</dict>
 		<dict>
 			<key>Type</key>

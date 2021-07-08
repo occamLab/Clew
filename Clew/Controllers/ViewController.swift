@@ -210,11 +210,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     ///this boolean denotes whether or not the app is loading a route from an automatic alignment
     var isAutomaticAlignment: Bool = false
     
-    ///this boolean denotes whether or not the app is loading a route that was anchored off of an image
-    var routeImageAnchoring: Bool = false
-    
-    var imageAnchoring: Bool = false
-    
     /// This is an audio player that queues up the voice note associated with a particular route Anchor Point. The player is created whenever a saved route is loaded. Loading it before the user clicks the "Play Voice Note" button allows us to call the prepareToPlay function which reduces the latency when the user clicks the "Play Voice Note" button.
     var voiceNoteToPlay: AVAudioPlayer?
     
@@ -435,7 +430,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     func handleStateTransitionToStartingResumeProcedure(route: SavedRoute, worldMap: Any?, navigateStartToEnd: Bool) {
         logger.setCurrentRoute(route: route, worldMap: worldMap)
         
-        //imageAnchoring = route.imageAnchoring
         // load the world map and restart the session so that things have a chance to quiet down before putting it up to the wall
         var isTrackingPerformanceNormal = false
         if case .normal? = sceneView.session.currentFrame?.camera.trackingState {
@@ -462,7 +456,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             pausedTransform = route.endRouteAnchorPoint.transform
             
         }
-        //routeImageAnchoring = route.imageAnchoring
         
         intermediateAnchorPoints = route.intermediateAnchorPoints
         // don't reset tracking, but do clear anchors and switch to the new map
@@ -629,7 +622,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         if paused {
             ///PATHPOINT pause recording anchor point alignment timer -> resume tracking
             //proceed as normal with the pause structure (single use route)
-            justTraveledRoute = SavedRoute(id: "single use", name: "single use", crumbs: self.crumbs, dateCreated: Date() as NSDate, beginRouteAnchorPoint: self.beginRouteAnchorPoint, endRouteAnchorPoint: self.endRouteAnchorPoint, intermediateAnchorPoints: intermediateAnchorPoints, imageAnchoring: imageAnchoringSetting)
+            justTraveledRoute = SavedRoute(id: "single use", name: "single use", crumbs: self.crumbs, dateCreated: Date() as NSDate, beginRouteAnchorPoint: self.beginRouteAnchorPoint, endRouteAnchorPoint: self.endRouteAnchorPoint, intermediateAnchorPoints: intermediateAnchorPoints, imageAnchoring: imageAnchoring)
             justUsedMap = worldMap
             showResumeTrackingButton()
             state = .pauseProcedureCompleted
@@ -672,7 +665,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         // Get the input values from user, if it's nil then use timestamp
         self.routeName = nameSavedRouteController.textField.text as NSString? ?? id
         
-        try! self.archive(routeId: id, beginRouteAnchorPoint: self.beginRouteAnchorPoint, endRouteAnchorPoint: self.endRouteAnchorPoint, intermediateAnchorPoints: self.intermediateAnchorPoints, worldMap: nameSavedRouteController.worldMap, imageAnchoring: self.imageAnchoringSetting)
+        try! self.archive(routeId: id, beginRouteAnchorPoint: self.beginRouteAnchorPoint, endRouteAnchorPoint: self.endRouteAnchorPoint, intermediateAnchorPoints: self.intermediateAnchorPoints, worldMap: nameSavedRouteController.worldMap, imageAnchoring: self.imageAnchoring)
         hideAllViewsHelper()
         /// PATHPOINT Save Route View -> play/pause
         ///Announce to the user that they have finished the alignment process and are now at the play pause screen
@@ -704,8 +697,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     func onRouteTableViewCellClicked(route: SavedRoute, navigateStartToEnd: Bool) {
         let worldMap = dataPersistence.unarchiveMap(id: route.id as String)
         hideAllViewsHelper()
-        imageAnchoring = route.imageAnchoring
         print("imageAnchoring value: \(imageAnchoring)")
+        print("route imageAnchoring value: \(route.imageAnchoring)")
         state = .startingResumeProcedure(route: route, worldMap: worldMap, navigateStartToEnd: navigateStartToEnd)
     }
     
@@ -1199,7 +1192,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         timerLength = defaults.integer(forKey: "timerLength")
         adjustOffset = defaults.bool(forKey: "adjustOffset")
         nav.useHeadingOffset = adjustOffset
-        imageAnchoringSetting = defaults.bool(forKey: "imageAnchoring")
+        imageAnchoring = defaults.bool(forKey: "imageAnchoring")
         
         // TODO: log settings here
         logger.logSettings(defaultUnit: defaultUnit, defaultColor: defaultColor, soundFeedback: soundFeedback, voiceFeedback: voiceFeedback, hapticFeedback: hapticFeedback, sendLogs: sendLogs, timerLength: timerLength, adjustOffset: adjustOffset)
@@ -1477,13 +1470,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         rootContainerView.homeButton.isHidden = false
         #endif
         resumeTrackingController.remove()
-        resumeTrackingConfirmController.imageAnchoring = routeImageAnchoring
+        resumeTrackingConfirmController.imageAnchoring = route.imageAnchoring
+        // I THINK that's the image anchoring that we want
         add(resumeTrackingConfirmController)
         resumeTrackingConfirmController.view.mainText?.text = ""
         voiceNoteToPlay = nil
         if navigateStartToEnd {
             if let AnchorPointInformation = route.beginRouteAnchorPoint.information as String? {
-                let infoString = "\n\n" + NSLocalizedString("anchorPointIntroductionToSavedText", comment: "This is the text which delineates the text that a user saved witht their saved anchor point. This text is shown when a suer loads an anchor point and the text that the user saved with their anchor point appears right after this string.") + AnchorPointInformation + "\n\n"
+                let infoString = "\n\n" + NSLocalizedString("anchorPointIntroductionToSavedText", comment: "This is the text which delineates the text that a user saved witht their saved anchor point. This text is shown when a user loads an anchor point and the text that the user saved with their anchor point appears right after this string.") + AnchorPointInformation + "\n\n"
                 resumeTrackingConfirmController.anchorPointLabel.text = infoString
             } else {
                 // make sure to clear out any old labels that were stored here
@@ -1516,7 +1510,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
         resumeTrackingConfirmController.readVoiceNoteButton?.isHidden = voiceNoteToPlay == nil
         let waitingPeriod = ViewController.alignmentWaitingPeriod
-        if imageAnchoring {
+        if route.imageAnchoring {
             print("yes good wrked correctly")
             resumeTrackingConfirmController.view.mainText?.text?.append(String.localizedStringWithFormat(NSLocalizedString("imageAnchorPointAlignmentText", comment: "Text describing the process of aligning to an image anchorpoint. This text shows up on the alignment screen."), waitingPeriod))
             
@@ -1723,7 +1717,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     var showPath: Bool!
     
     /// true if saved route anchoring happens from images, false otherwise
-    var imageAnchoringSetting: Bool!
+    var imageAnchoring: Bool!
     
     /// the color of the path.  0 is red, 1 is green, 2 is blue, and 3 is random
     var defaultPathColor: Int!
@@ -2127,11 +2121,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 followingCrumbs?.invalidate()
                 hapticTimer?.invalidate()
                 
-                if !imageAnchoring{
+                #if !APPCLIP
                 self.surveyInterface.sendLogDataHelper(pathStatus: nil, announceArrival: true, vc: self)
-                } else{
-                    self.state = .endScreen(completedRoute: true)
-                }
+                #else
+
+                self.state = .endScreen(completedRoute: true)
+                
+                #endif
             }
         }
     }

@@ -35,7 +35,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
     
     func loadRoute() {
-        vc?.imageAnchoring = true
+        //vc?.imageAnchoring = true
         vc?.recordPathController.remove()
         vc?.handleStateTransitionToNavigatingExternalRoute()
     }
