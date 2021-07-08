@@ -58,6 +58,17 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             
             let appClipRef = routeRef.child("\(self.vc!.appClipCodeID).json")
             
+            NotificationCenter.default.addObserver(forName: NSNotification.Name("firebaseLoaded"), object: nil, queue: nil) { (notification) -> Void in
+                self.popoverController = UIHostingController(rootView: StartNavigationPopoverView(vc: self.vc!))
+                self.popoverController?.modalPresentationStyle = .fullScreen
+                self.vc!.present(self.popoverController!, animated: true)
+                print("popover successful B)")
+                // create listeners to ensure that the isReadingAnnouncement flag is reset properly
+                NotificationCenter.default.addObserver(forName: NSNotification.Name("shouldDismissRoutePopover"), object: nil, queue: nil) { (notification) -> Void in
+                    self.popoverController?.dismiss(animated: true)
+                }
+            }
+            
             /// attempt to download .json file from Firebase
             appClipRef.getData(maxSize: 100000000000) { appClipJson, error in
                 do {
@@ -69,6 +80,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                             self.vc?.availableRoutes = routesFile
                             print("List: \(self.vc?.availableRoutes)")
                             print("æ")
+                            NotificationCenter.default.post(name: NSNotification.Name("firebaseLoaded"), object: nil)
+
                             
                         }
                     }
@@ -80,16 +93,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
             }
             
-            DispatchQueue.main.asyncAfter(deadline: .now() + 15.0) {
-                self.popoverController = UIHostingController(rootView: StartNavigationPopoverView(vc: self.vc!))
-                self.popoverController?.modalPresentationStyle = .fullScreen
-                self.vc!.present(self.popoverController!, animated: true)
-                print("popover successful B)")
-                // create listeners to ensure that the isReadingAnnouncement flag is reset properly
-                NotificationCenter.default.addObserver(forName: NSNotification.Name("shouldDismissRoutePopover"), object: nil, queue: nil) { (notification) -> Void in
-                    self.popoverController?.dismiss(animated: true)
-                }
-            }
+ 
         }
     }
     
