@@ -60,15 +60,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                     if let routesFile = routesFile as? [[String: String]] {
                         self.vc?.availableRoutes = routesFile
                         print("List: \(self.vc?.availableRoutes)")
-                        print("æ")
                         
                     }
                 }
             } catch {
-                    print("aw beans")
-                    print("B(")
+
             }
-            print(":(")
 
         }
 
@@ -99,6 +96,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         vc!.present(popoverController!, animated: true)
         print("popover successful B)")
         // create listeners to ensure that the isReadingAnnouncement flag is reset properly
+
         NotificationCenter.default.addObserver(forName: NSNotification.Name("shouldDismissRoutePopover"), object: nil, queue: nil) { (notification) -> Void in
             self.popoverController?.dismiss(animated: true)
         }

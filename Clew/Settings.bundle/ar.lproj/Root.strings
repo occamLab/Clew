@@ -83,6 +83,9 @@
 "Show Path" = "عرض المسار";
 "Path Color" = "لون المسار";
 
+"Image Anchoring" = ""; // Comments: The option for the user to align to ARImages
+
+
 
 /* Comments: The header for choosing whether or not to send feedback to the developers. */
 "Send Feedback" = "ارسل رأيك";

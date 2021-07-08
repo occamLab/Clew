@@ -210,7 +210,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     ///this boolean denotes whether or not the app is loading a route from an automatic alignment
     var isAutomaticAlignment: Bool = false
     
-    ///this boolean denotes whether or not the app is loading a route anchored off of an image
+    ///this boolean denotes whether or not the app is loading a route that was anchored off of an image
+    var routeImageAnchoring: Bool = false
+    
     var imageAnchoring: Bool = false
     
     /// This is an audio player that queues up the voice note associated with a particular route Anchor Point. The player is created whenever a saved route is loaded. Loading it before the user clicks the "Play Voice Note" button allows us to call the prepareToPlay function which reduces the latency when the user clicks the "Play Voice Note" button.
@@ -433,6 +435,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     func handleStateTransitionToStartingResumeProcedure(route: SavedRoute, worldMap: Any?, navigateStartToEnd: Bool) {
         logger.setCurrentRoute(route: route, worldMap: worldMap)
         
+        //imageAnchoring = route.imageAnchoring
         // load the world map and restart the session so that things have a chance to quiet down before putting it up to the wall
         var isTrackingPerformanceNormal = false
         if case .normal? = sceneView.session.currentFrame?.camera.trackingState {
@@ -459,6 +462,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             pausedTransform = route.endRouteAnchorPoint.transform
             
         }
+        //routeImageAnchoring = route.imageAnchoring
+        
         intermediateAnchorPoints = route.intermediateAnchorPoints
         // don't reset tracking, but do clear anchors and switch to the new map
         sceneView.debugOptions = [.showWorldOrigin]
@@ -551,37 +556,72 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     func handleStateTransitionToCompletingPauseProcedure() {
         // TODO: we should not be able to create a route Anchor Point if we are in the relocalizing state... (might want to handle this when the user stops navigation on a route they loaded.... This would obviate the need to handle this in the recordPath code as well
         print("completing pause procedure")
-        if creatingRouteAnchorPoint {
-            // print("setting start point @ \(sceneView.session.currentFrame?.anchors.compactMap({$0 as? ARAppClipCodeAnchor}))")
-            // print("type = \(sceneView.session.currentFrame?.anchors.compactMap({$0 as? ARAppClipCodeAnchor}))")
-            guard let currentTransform = sceneView.session.currentFrame?.anchors.compactMap({$0 as? ARImageAnchor}).first?.transform else {
-                print("can't properly save Anchor Point: TODO communicate this to the user somehow")
-                return
-            }
-            beginRouteAnchorPoint.transform = currentTransform
-            pauseTrackingController.remove()
-            
-            ///PATHPOINT begining anchor point alignment timer -> record route
-            ///announce to the user that they have sucessfully saved an anchor point.
-            delayTransition(announcement: NSLocalizedString("multipleUseRouteAnchorPointToRecordingRouteAnnouncement", comment: "This is the announcement which is spoken after the first anchor point of a multiple use route is saved. this signifies the completeion of the saving an anchor point procedure and the start of recording a route to be saved."), initialFocus: nil)
-            ///sends the user to a route recording of the program is creating a beginning route Anchor Point
-            state = .recordingRoute
-            return
-        } else if let currentTransform = sceneView.session.currentFrame?.anchors.compactMap({$0 as? ARImageAnchor}).last?.transform { 
-            
-            endRouteAnchorPoint.transform = currentTransform
-            // no more crumbs
-            droppingCrumbs?.invalidate()
-
-            if #available(iOS 12.0, *) {
-                sceneView.session.getCurrentWorldMap { worldMap, error in
-                    self.completingPauseProcedureHelper(worldMap: nil)
-                    // note to ACDC, this is where you should change it back <3 to worldMap B) (or change back to nil, which is what Paul did)
+        
+        if imageAnchoring {
+            if creatingRouteAnchorPoint {
+                guard let currentTransform = sceneView.session.currentFrame?.anchors.compactMap({$0 as? ARImageAnchor}).first?.transform else {
+                    print("can't properly save Anchor Point: TODO communicate this to the user somehow")
+                    return
                 }
-            } else {
-                completingPauseProcedureHelper(worldMap: nil)
+                beginRouteAnchorPoint.transform = currentTransform
+                pauseTrackingController.remove()
+                
+                ///PATHPOINT begining anchor point alignment timer -> record route
+                ///announce to the user that they have sucessfully saved an anchor point.
+                delayTransition(announcement: NSLocalizedString("multipleUseRouteAnchorPointToRecordingRouteAnnouncement", comment: "This is the announcement which is spoken after the first anchor point of a multiple use route is saved. this signifies the completeion of the saving an anchor point procedure and the start of recording a route to be saved."), initialFocus: nil)
+                ///sends the user to a route recording of the program is creating a beginning route Anchor Point
+                state = .recordingRoute
+                return
+            } else if let currentTransform = sceneView.session.currentFrame?.anchors.compactMap({$0 as? ARImageAnchor}).last?.transform {
+                
+                endRouteAnchorPoint.transform = currentTransform
+                // no more crumbs
+                droppingCrumbs?.invalidate()
+
+                if #available(iOS 12.0, *) {
+                    sceneView.session.getCurrentWorldMap { worldMap, error in
+                        self.completingPauseProcedureHelper(worldMap: nil)
+                        // note to ACDC, this is where you should change it back <3 to worldMap B) (or change back to nil, which is what Paul did)
+                    }
+                } else {
+                    completingPauseProcedureHelper(worldMap: nil)
+                }
             }
+            
+        } else {
+            if creatingRouteAnchorPoint {
+                        guard let currentTransform = sceneView.session.currentFrame?.camera.transform else {
+                            print("can't properly save Anchor Point: TODO communicate this to the user somehow")
+                            return
+                        }
+                        // make sure we log the transform
+                        let _ = self.getRealCoordinates(record: true)
+                        beginRouteAnchorPoint.transform = currentTransform
+                        pauseTrackingController.remove()
+                        
+                        ///PATHPOINT begining anchor point alignment timer -> record route
+                        ///announce to the user that they have sucessfully saved an anchor point.
+                        delayTransition(announcement: NSLocalizedString("multipleUseRouteAnchorPointToRecordingRouteAnnouncement", comment: "This is the announcement which is spoken after the first anchor point of a multiple use route is saved. this signifies the completeion of the saving an anchor point procedure and the start of recording a route to be saved."), initialFocus: nil)
+                        ///sends the user to a route recording of the program is creating a beginning route Anchor Point
+                        state = .recordingRoute
+                        return
+                    } else if let currentTransform = sceneView.session.currentFrame?.camera.transform {
+                        // make sure to log transform
+                        let _ = self.getRealCoordinates(record: true)
+                        endRouteAnchorPoint.transform = currentTransform
+                        // no more crumbs
+                        droppingCrumbs?.invalidate()
+
+                        if #available(iOS 12.0, *) {
+                            sceneView.session.getCurrentWorldMap { worldMap, error in
+                                self.completingPauseProcedureHelper(worldMap: worldMap)
+                            }
+                        } else {
+                            completingPauseProcedureHelper(worldMap: nil)
+                        }
+                    }
         }
+        
     }
     
     func completingPauseProcedureHelper(worldMap: Any?) {
@@ -589,7 +629,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         if paused {
             ///PATHPOINT pause recording anchor point alignment timer -> resume tracking
             //proceed as normal with the pause structure (single use route)
-            justTraveledRoute = SavedRoute(id: "single use", name: "single use", crumbs: self.crumbs, dateCreated: Date() as NSDate, beginRouteAnchorPoint: self.beginRouteAnchorPoint, endRouteAnchorPoint: self.endRouteAnchorPoint, intermediateAnchorPoints: intermediateAnchorPoints)
+            justTraveledRoute = SavedRoute(id: "single use", name: "single use", crumbs: self.crumbs, dateCreated: Date() as NSDate, beginRouteAnchorPoint: self.beginRouteAnchorPoint, endRouteAnchorPoint: self.endRouteAnchorPoint, intermediateAnchorPoints: intermediateAnchorPoints, imageAnchoring: imageAnchoringSetting)
             justUsedMap = worldMap
             showResumeTrackingButton()
             state = .pauseProcedureCompleted
@@ -631,7 +671,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         let id = String(Int64(NSDate().timeIntervalSince1970 * 1000)) as NSString
         // Get the input values from user, if it's nil then use timestamp
         self.routeName = nameSavedRouteController.textField.text as NSString? ?? id
-        try! self.archive(routeId: id, beginRouteAnchorPoint: self.beginRouteAnchorPoint, endRouteAnchorPoint: self.endRouteAnchorPoint, intermediateAnchorPoints: self.intermediateAnchorPoints, worldMap: nameSavedRouteController.worldMap)
+        
+        try! self.archive(routeId: id, beginRouteAnchorPoint: self.beginRouteAnchorPoint, endRouteAnchorPoint: self.endRouteAnchorPoint, intermediateAnchorPoints: self.intermediateAnchorPoints, worldMap: nameSavedRouteController.worldMap, imageAnchoring: self.imageAnchoringSetting)
         hideAllViewsHelper()
         /// PATHPOINT Save Route View -> play/pause
         ///Announce to the user that they have finished the alignment process and are now at the play pause screen
@@ -663,6 +704,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     func onRouteTableViewCellClicked(route: SavedRoute, navigateStartToEnd: Bool) {
         let worldMap = dataPersistence.unarchiveMap(id: route.id as String)
         hideAllViewsHelper()
+        imageAnchoring = route.imageAnchoring
+        print("imageAnchoring value: \(imageAnchoring)")
         state = .startingResumeProcedure(route: route, worldMap: worldMap, navigateStartToEnd: navigateStartToEnd)
     }
     
@@ -674,8 +717,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     ///   - endRouteAnchorPoint: the route Anchor Point for the end (if there is no route Anchor Point at the end, the elements of this struct can be nil)
     ///   - worldMap: the world map
     /// - Throws: an error if something goes wrong
-    func archive(routeId: NSString, beginRouteAnchorPoint: RouteAnchorPoint, endRouteAnchorPoint: RouteAnchorPoint, intermediateAnchorPoints: [RouteAnchorPoint], worldMap: Any?) throws {
-        let savedRoute = SavedRoute(id: routeId, name: routeName!, crumbs: crumbs, dateCreated: Date() as NSDate, beginRouteAnchorPoint: beginRouteAnchorPoint, endRouteAnchorPoint: endRouteAnchorPoint, intermediateAnchorPoints: intermediateAnchorPoints)
+    func archive(routeId: NSString, beginRouteAnchorPoint: RouteAnchorPoint, endRouteAnchorPoint: RouteAnchorPoint, intermediateAnchorPoints: [RouteAnchorPoint], worldMap: Any?, imageAnchoring: Bool) throws {
+        let savedRoute = SavedRoute(id: routeId, name: routeName!, crumbs: crumbs, dateCreated: Date() as NSDate, beginRouteAnchorPoint: beginRouteAnchorPoint, endRouteAnchorPoint: endRouteAnchorPoint, intermediateAnchorPoints: intermediateAnchorPoints, imageAnchoring: imageAnchoring)
+        print("route image anchoring: \(savedRoute.imageAnchoring)")
         try dataPersistence.archive(route: savedRoute, worldMap: worldMap)
         justTraveledRoute = savedRoute
     }
@@ -1155,6 +1199,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         timerLength = defaults.integer(forKey: "timerLength")
         adjustOffset = defaults.bool(forKey: "adjustOffset")
         nav.useHeadingOffset = adjustOffset
+        imageAnchoringSetting = defaults.bool(forKey: "imageAnchoring")
         
         // TODO: log settings here
         logger.logSettings(defaultUnit: defaultUnit, defaultColor: defaultColor, soundFeedback: soundFeedback, voiceFeedback: voiceFeedback, hapticFeedback: hapticFeedback, sendLogs: sendLogs, timerLength: timerLength, adjustOffset: adjustOffset)
@@ -1187,7 +1232,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     }
     
     func session(_ session: ARSession, didUpdate frame: ARFrame) {
-        
         if case .readyForFinalResumeAlignment = state {
             if (frame.anchors.compactMap({$0 as? ARImageAnchor}).count > 0) && (state.rawValue != "startingAutoAlignment") {
                 print(frame.anchors.compactMap({$0 as? ARImageAnchor}).count)
@@ -1433,7 +1477,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         rootContainerView.homeButton.isHidden = false
         #endif
         resumeTrackingController.remove()
-        resumeTrackingConfirmController.imageAnchoring = imageAnchoring
+        resumeTrackingConfirmController.imageAnchoring = routeImageAnchoring
         add(resumeTrackingConfirmController)
         resumeTrackingConfirmController.view.mainText?.text = ""
         voiceNoteToPlay = nil
@@ -1677,6 +1721,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// true if path should be shown between waypoints, false otherwise
     var showPath: Bool!
+    
+    /// true if saved route anchoring happens from images, false otherwise
+    var imageAnchoringSetting: Bool!
     
     /// the color of the path.  0 is red, 1 is green, 2 is blue, and 3 is random
     var defaultPathColor: Int!
@@ -1967,7 +2014,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             print("hmm")
             print("whats going on")
             // The first check is necessary in case the phone relocalizes before this code executes
-            if case .readyForFinalResumeAlignment = self.state, let routeTransform = self.pausedTransform, /*let tagAnchor = self.sceneView.session.currentFrame?.anchors.compactMap({$0 as? ARAppClipCodeAnchor}).filter({$0.isTracked}).first */ let tagAnchor = self.sceneView.session.currentFrame?.anchors.compactMap({$0 as? ARImageAnchor}).first{
+                if case .readyForFinalResumeAlignment = self.state, let routeTransform = self.pausedTransform, /*let tagAnchor = self.sceneView.session.currentFrame?.anchors.compactMap({$0 as? ARAppClipCodeAnchor}).filter({$0.isTracked}).first */ let tagAnchor = self.sceneView.session.currentFrame?.camera{
                 // yaw can be determined by projecting the camera's z-axis into the ground plane and using arc tangent (note: the camera coordinate conventions of ARKit https://developer.apple.com/documentation/arkit/arsessionconfiguration/worldalignment/camera
                 let alignYaw = self.getYawHelper(routeTransform)
                 // print("alignYaw = \(alignYaw*180/3.14)")
@@ -1979,11 +2026,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 var tagToWorld = simd_float4x4.makeRotate(radians: cameraYaw, 0, 1, 0)
                 tagToWorld.columns.3 = tagAnchor.transform.columns.3
                 print(tagAnchor.transform)
-                tagToWorld = tagAnchor.transform
                 
                 var tagToRoute =  simd_float4x4.makeRotate(radians: alignYaw, 0, 1, 0)
                 tagToRoute.columns.3 = routeTransform.columns.3
-                tagToRoute = routeTransform
                 
                 let relativeTransform = tagToWorld * tagToRoute.inverse
                 print("relativeTransform \(relativeTransform)")
