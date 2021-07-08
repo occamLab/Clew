@@ -23,8 +23,8 @@ struct EnterCodeIDView: View {
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .keyboardType(.numberPad)
             
-//            EnterButton(vc: vc, codeID: appClipCodeID)
-//                .padding(12)
+            EnterButton(vc: vc, codeID: appClipCodeID)
+                .padding(12)
         }
     }
 }
