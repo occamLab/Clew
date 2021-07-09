@@ -19,6 +19,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var route: SavedRoute?
     var enterCodeIDController: UIViewController?
     var popoverController: UIViewController?
+    var loadFromAppClipController: UIViewController?
   
     
     func createScene(_ scene: UIScene) {
@@ -65,7 +66,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                     self.popoverController?.dismiss(animated: true)
                 }
             }
-            
             self.getFirebaseRoutesList(vc: self.vc!)
         }
     }
@@ -79,11 +79,20 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         createScene(scene)
         handleUserActivity(for: url)
         
-//        self.popoverController = UIHostingController(rootView: StartNavigationPopoverView(vc: self.vc!))
-//        self.popoverController?.modalPresentationStyle = .fullScreen
-//        self.vc!.present(self.popoverController!, animated: true)
+        /// This loading screen should show up if the URL is properly invoked
+        self.loadFromAppClipController = UIHostingController(rootView: LoadFromAppClipView())
+        self.loadFromAppClipController?.modalPresentationStyle = .fullScreen
+        self.vc!.present(self.loadFromAppClipController!, animated: true)
         
+        /// listener
+//        NotificationCenter.default.addObserver(forName: NSNotification.Name("shouldDismissAppClipLoadingPopover"), object: nil, queue: nil) { (notification) -> Void in
+//            self.loadFromAppClipController?.dismiss(animated: true)
+            
         NotificationCenter.default.addObserver(forName: NSNotification.Name("firebaseLoaded"), object: nil, queue: nil) { (notification) -> Void in
+            /// dismiss loading screen
+            self.loadFromAppClipController?.dismiss(animated: true)
+            
+            /// bring up list of routes
             self.popoverController = UIHostingController(rootView: StartNavigationPopoverView(vc: self.vc!))
             self.popoverController?.modalPresentationStyle = .fullScreen
             self.vc!.present(self.popoverController!, animated: true)
@@ -92,7 +101,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             NotificationCenter.default.addObserver(forName: NSNotification.Name("shouldDismissRoutePopover"), object: nil, queue: nil) { (notification) -> Void in
                 self.popoverController?.dismiss(animated: true)
             }
-            self.getFirebaseRoutesList(vc: self.vc!)
+//            }
+        self.getFirebaseRoutesList(vc: self.vc!)
         }
     }
     
@@ -106,7 +116,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         /// with the invocation URL format https://occamlab.github.io/id?p=appClipCodeID, appClipCodeID being the name of the file in Firebase
         if let appClipCodeID = queryItems.first(where: { $0.name == "p"}) {
             vc?.appClipCodeID = appClipCodeID.value!
-//            route?.appClipCodeID = appClipCodeID.value!
+            route?.appClipCodeID = appClipCodeID.value!
         }
     }
     
@@ -129,10 +139,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                     }
                 }
             } catch {
-                print("aw beans")
-                print("B(")
+                print("Failed to download Firebase data due to error \(error)")
             }
-            print(":(")
         }
     }
 
