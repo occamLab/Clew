@@ -356,7 +356,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 
                 let thisRoute = (self.dataPersistence.routes.last)!
                 
-                self.sceneView.debugOptions = [.showWorldOrigin]
+                //self.sceneView.debugOptions = [.showWorldOrigin]
                 self.sceneView.session.run(self.configuration, options: [.removeExistingAnchors, .resetTracking])
                 
                 self.continuationAfterSessionIsReady = {
@@ -464,7 +464,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         
         intermediateAnchorPoints = route.intermediateAnchorPoints
         // don't reset tracking, but do clear anchors and switch to the new map
-        sceneView.debugOptions = [.showWorldOrigin]
+        //sceneView.debugOptions = [.showWorldOrigin]
         sceneView.session.run(configuration, options: [.removeExistingAnchors, .resetTracking])
 
         if isTrackingPerformanceNormal, isSameMap {
@@ -1275,7 +1275,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         // print(frame.anchors.compactMap(({$0 as? ARImageAnchor})))
         
         
-        for (i, clipAnchor) in frame.anchors.compactMap(({$0 as? ARAppClipCodeAnchor})).enumerated() {
+  /*      for (i, clipAnchor) in frame.anchors.compactMap(({$0 as? ARAppClipCodeAnchor})).enumerated() {
             //print("i=\(i) isTracked = \(clipAnchor.isTracked)")
             if clipAnchor.isTracked {
                 let tagNode: SCNNode
@@ -1304,6 +1304,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                     yAxis.geometry?.firstMaterial?.diffuse.contents = UIColor.green
                     let zAxis = SCNNode(geometry: SCNBox(width: sideLen, height: sideLen, length: axisLen, chamferRadius: 0))
                     zAxis.geometry?.firstMaterial?.diffuse.contents = UIColor.blue
+                    
+                    
                     tagNode.addChildNode(xAxis)
                     tagNode.addChildNode(yAxis)
                     tagNode.addChildNode(zAxis)
@@ -1311,7 +1313,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 /// this is where axes visualization
                 
             }
-        }
+        } */
         for imageAnchor in frame.anchors.compactMap(({$0 as? ARImageAnchor})) {
             let imageNode: SCNNode
             if let existingTagNode = sceneView.scene.rootNode.childNode(withName: "Image Tag", recursively: false) {
@@ -1325,17 +1327,26 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 sceneView.scene.rootNode.addChildNode(imageNode)
                 
                 /// Adds axes to the tag to aid in the visualization
-                let sideLen: CGFloat = 0.01
+                /*let sideLen: CGFloat = 0.01
                 let axisLen: CGFloat = 0.5
                 let xAxis = SCNNode(geometry: SCNBox(width: axisLen, height: sideLen, length: sideLen, chamferRadius: 0))
                 xAxis.geometry?.firstMaterial?.diffuse.contents = UIColor.red
                 let yAxis = SCNNode(geometry: SCNBox(width: sideLen, height: axisLen, length: sideLen, chamferRadius: 0))
                 yAxis.geometry?.firstMaterial?.diffuse.contents = UIColor.green
                 let zAxis = SCNNode(geometry: SCNBox(width: sideLen, height: sideLen, length: axisLen, chamferRadius: 0))
-                zAxis.geometry?.firstMaterial?.diffuse.contents = UIColor.blue
-                imageNode.addChildNode(xAxis)
+                zAxis.geometry?.firstMaterial?.diffuse.contents = UIColor.blue*/
+                
+                let highlightPlane = SCNNode(geometry: SCNPlane(width: imageAnchor.referenceImage.physicalSize.width, height: imageAnchor.referenceImage.physicalSize.height))
+                
+                highlightPlane.eulerAngles.x = -.pi / 2
+                
+                highlightPlane.geometry?.firstMaterial?.diffuse.contents = UIColor.green
+                highlightPlane.opacity = 0.9
+
+                /* imageNode.addChildNode(xAxis)
                 imageNode.addChildNode(yAxis)
-                imageNode.addChildNode(zAxis)
+                imageNode.addChildNode(zAxis) */
+                imageNode.addChildNode(highlightPlane)
             }
             
         }
@@ -1873,7 +1884,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         if #available(iOS 12.0, *) {
             configuration.initialWorldMap = nil
         }
-        sceneView.debugOptions = [.showWorldOrigin]
+        //sceneView.debugOptions = [.showWorldOrigin]
         sceneView.session.run(configuration, options: [.removeExistingAnchors, .resetTracking])
     }
     
