@@ -50,7 +50,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         self.enterCodeIDController = UIHostingController(rootView: EnterCodeIDView(vc: self.vc!))
         self.enterCodeIDController?.modalPresentationStyle = .fullScreen
         self.vc!.present(self.enterCodeIDController!, animated: true)
-        
 
         /// listener
         NotificationCenter.default.addObserver(forName: NSNotification.Name("shouldDismissCodeIDPopover"), object: nil, queue: nil) { (notification) -> Void in
@@ -77,16 +76,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             return
             }
         createScene(scene)
-        handleUserActivity(for: url)
-        
+
         /// This loading screen should show up if the URL is properly invoked
         self.loadFromAppClipController = UIHostingController(rootView: LoadFromAppClipView())
         self.loadFromAppClipController?.modalPresentationStyle = .fullScreen
         self.vc!.present(self.loadFromAppClipController!, animated: true)
+        print("loading screen successful B)")
         
-        /// listener
-//        NotificationCenter.default.addObserver(forName: NSNotification.Name("shouldDismissAppClipLoadingPopover"), object: nil, queue: nil) { (notification) -> Void in
-//            self.loadFromAppClipController?.dismiss(animated: true)
+        handleUserActivity(for: url)
             
         NotificationCenter.default.addObserver(forName: NSNotification.Name("firebaseLoaded"), object: nil, queue: nil) { (notification) -> Void in
             /// dismiss loading screen
@@ -101,9 +98,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             NotificationCenter.default.addObserver(forName: NSNotification.Name("shouldDismissRoutePopover"), object: nil, queue: nil) { (notification) -> Void in
                 self.popoverController?.dismiss(animated: true)
             }
-//            }
-        self.getFirebaseRoutesList(vc: self.vc!)
         }
+        self.getFirebaseRoutesList(vc: self.vc!)
     }
     
     /// Configure App Clip to query items
@@ -116,7 +112,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         /// with the invocation URL format https://occamlab.github.io/id?p=appClipCodeID, appClipCodeID being the name of the file in Firebase
         if let appClipCodeID = queryItems.first(where: { $0.name == "p"}) {
             vc?.appClipCodeID = appClipCodeID.value!
-            route?.appClipCodeID = appClipCodeID.value!
+            print("app clip code ID from URL: \(appClipCodeID.value!)")
         }
     }
     
