@@ -79,7 +79,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         createScene(scene)
         handleUserActivity(for: url)
         
-        getFirebaseRoutesList(vc: self.vc!)
+//        self.popoverController = UIHostingController(rootView: StartNavigationPopoverView(vc: self.vc!))
+//        self.popoverController?.modalPresentationStyle = .fullScreen
+//        self.vc!.present(self.popoverController!, animated: true)
         
         NotificationCenter.default.addObserver(forName: NSNotification.Name("firebaseLoaded"), object: nil, queue: nil) { (notification) -> Void in
             self.popoverController = UIHostingController(rootView: StartNavigationPopoverView(vc: self.vc!))
@@ -90,10 +92,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             NotificationCenter.default.addObserver(forName: NSNotification.Name("shouldDismissRoutePopover"), object: nil, queue: nil) { (notification) -> Void in
                 self.popoverController?.dismiss(animated: true)
             }
+            self.getFirebaseRoutesList(vc: self.vc!)
         }
     }
     
-    /// Configure App Clip with query items
+    /// Configure App Clip to query items
     func handleUserActivity(for url: URL) {
         // TODO: update this to load urls into a list of urls to be passed into the popover list <3
         guard let components = NSURLComponents(url: url, resolvingAgainstBaseURL: true), let queryItems = components.queryItems else {
