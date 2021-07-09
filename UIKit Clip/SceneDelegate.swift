@@ -19,6 +19,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var route: SavedRoute?
     var enterCodeIDController: UIViewController?
     var popoverController: UIViewController?
+    var loadFromAppClipController: UIViewController?
   
     
     func createScene(_ scene: UIScene) {
@@ -49,15 +50,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         self.enterCodeIDController = UIHostingController(rootView: EnterCodeIDView(vc: self.vc!))
         self.enterCodeIDController?.modalPresentationStyle = .fullScreen
         self.vc!.present(self.enterCodeIDController!, animated: true)
-        
 
         /// listener
         NotificationCenter.default.addObserver(forName: NSNotification.Name("shouldDismissCodeIDPopover"), object: nil, queue: nil) { (notification) -> Void in
             self.enterCodeIDController?.dismiss(animated: true)
-            
-//            // TODO: get rid of this once available routes is set in a different way
-//            let routeRef = Storage.storage().reference().child("AppClipRoutes")
-//            let appClipRef = routeRef.child("\(self.vc!.appClipCodeID).json")
             
             NotificationCenter.default.addObserver(forName: NSNotification.Name("firebaseLoaded"), object: nil, queue: nil) { (notification) -> Void in
                 self.popoverController = UIHostingController(rootView: StartNavigationPopoverView(vc: self.vc!))
@@ -69,23 +65,31 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                     self.popoverController?.dismiss(animated: true)
                 }
             }
-            
             self.getFirebaseRoutesList(vc: self.vc!)
         }
     }
     
-    /// handles invocations in the App Clip <3
+    /// handles invocations in the App Clip
     /// return: Boolean value representing whether or not there is a userActivity object
     func scene(_ scene: UIScene, continue userActivity: NSUserActivity) {
         guard userActivity.activityType == NSUserActivityTypeBrowsingWeb, let url = userActivity.webpageURL else {
             return
             }
         createScene(scene)
+
+        /// This loading screen should show up if the URL is properly invoked
+        self.loadFromAppClipController = UIHostingController(rootView: LoadFromAppClipView())
+        self.loadFromAppClipController?.modalPresentationStyle = .fullScreen
+        self.vc!.present(self.loadFromAppClipController!, animated: true)
+        print("loading screen successful B)")
+        
         handleUserActivity(for: url)
-        
-        getFirebaseRoutesList(vc: self.vc!)
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 15.0) {
+            
+        NotificationCenter.default.addObserver(forName: NSNotification.Name("firebaseLoaded"), object: nil, queue: nil) { (notification) -> Void in
+            /// dismiss loading screen
+            self.loadFromAppClipController?.dismiss(animated: true)
+            
+            /// bring up list of routes
             self.popoverController = UIHostingController(rootView: StartNavigationPopoverView(vc: self.vc!))
             self.popoverController?.modalPresentationStyle = .fullScreen
             self.vc!.present(self.popoverController!, animated: true)
@@ -95,9 +99,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 self.popoverController?.dismiss(animated: true)
             }
         }
+        self.getFirebaseRoutesList(vc: self.vc!)
     }
     
-    /// Configure App Clip with query items
+    /// Configure App Clip to query items
     func handleUserActivity(for url: URL) {
         // TODO: update this to load urls into a list of urls to be passed into the popover list <3
         guard let components = NSURLComponents(url: url, resolvingAgainstBaseURL: true), let queryItems = components.queryItems else {
@@ -107,7 +112,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         /// with the invocation URL format https://occamlab.github.io/id?p=appClipCodeID, appClipCodeID being the name of the file in Firebase
         if let appClipCodeID = queryItems.first(where: { $0.name == "p"}) {
             vc?.appClipCodeID = appClipCodeID.value!
-//            route?.appClipCodeID = appClipCodeID.value!
+            print("app clip code ID from URL: \(appClipCodeID.value!)")
         }
     }
     
@@ -130,10 +135,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                     }
                 }
             } catch {
-                print("aw beans")
-                print("B(")
+                print("Failed to download Firebase data due to error \(error)")
             }
-            print(":(")
         }
     }
 
