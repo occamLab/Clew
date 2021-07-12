@@ -19,6 +19,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var route: SavedRoute?
     var enterCodeIDController: UIViewController?
     var popoverController: UIViewController?
+    var loadFromAppClipController: UIViewController?
   
     
     func createScene(_ scene: UIScene) {
@@ -44,19 +45,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         
         createScene(scene)
-        // TODO: get rid of this once available routes is set in a different way
-        let routeRef = Storage.storage().reference().child("AppClipRoutes")
         
         /// User enters their appClipCodeID
         self.enterCodeIDController = UIHostingController(rootView: EnterCodeIDView(vc: self.vc!))
         self.enterCodeIDController?.modalPresentationStyle = .fullScreen
         self.vc!.present(self.enterCodeIDController!, animated: true)
-        
+
         /// listener
         NotificationCenter.default.addObserver(forName: NSNotification.Name("shouldDismissCodeIDPopover"), object: nil, queue: nil) { (notification) -> Void in
             self.enterCodeIDController?.dismiss(animated: true)
-            
-            let appClipRef = routeRef.child("\(self.vc!.appClipCodeID).json")
             
             NotificationCenter.default.addObserver(forName: NSNotification.Name("firebaseLoaded"), object: nil, queue: nil) { (notification) -> Void in
                 self.popoverController = UIHostingController(rootView: StartNavigationPopoverView(vc: self.vc!))
@@ -68,49 +65,59 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                     self.popoverController?.dismiss(animated: true)
                 }
             }
-            
-            /// attempt to download .json file from Firebase
-            appClipRef.getData(maxSize: 100000000000) { appClipJson, error in
-                do {
-                    if let appClipJson = appClipJson {
-                        /// unwrap NSData, if it exists, to a list, and set equal to existingRoutes
-                        let routesFile = try JSONSerialization.jsonObject(with: appClipJson, options: [])
-                        print("File: \(routesFile)")
-                        if let routesFile = routesFile as? [[String: String]] {
-                            self.vc?.availableRoutes = routesFile
-                            print("List: \(self.vc?.availableRoutes)")
-                            print("æ")
-                            NotificationCenter.default.post(name: NSNotification.Name("firebaseLoaded"), object: nil)
-
-                            
-                        }
-                    }
-                } catch {
-                    print("aw beans")
-                    print("B(")
-                }
-                print(":(")
-
-            }
-            
- 
+            self.getFirebaseRoutesList(vc: self.vc!)
         }
     }
     
-    /// handles invocations in the App Clip <3
+    /// handles invocations in the App Clip
     /// return: Boolean value representing whether or not there is a userActivity object
     func scene(_ scene: UIScene, continue userActivity: NSUserActivity) {
         guard userActivity.activityType == NSUserActivityTypeBrowsingWeb, let url = userActivity.webpageURL else {
             return
             }
         createScene(scene)
-        let routeRef = Storage.storage().reference().child("AppClipRoutes")
-        handleUserActivity(for: url)
+
+        /// This loading screen should show up if the URL is properly invoked
+        self.loadFromAppClipController = UIHostingController(rootView: LoadFromAppClipView())
+        self.loadFromAppClipController?.modalPresentationStyle = .fullScreen
+        self.vc!.present(self.loadFromAppClipController!, animated: true)
+        print("loading screen successful B)")
         
-        /// listener
-//        NotificationCenter.default.addObserver(forName: NSNotification.Name("shouldDismissCodeIDPopover"), object: nil, queue: nil) { (notification) -> Void in
-//            self.enterCodeIDController?.dismiss(animated: true)
+        handleUserActivity(for: url)
             
+        NotificationCenter.default.addObserver(forName: NSNotification.Name("firebaseLoaded"), object: nil, queue: nil) { (notification) -> Void in
+            /// dismiss loading screen
+            self.loadFromAppClipController?.dismiss(animated: true)
+            
+            /// bring up list of routes
+            self.popoverController = UIHostingController(rootView: StartNavigationPopoverView(vc: self.vc!))
+            self.popoverController?.modalPresentationStyle = .fullScreen
+            self.vc!.present(self.popoverController!, animated: true)
+            print("popover successful B)")
+            // create listeners to ensure that the isReadingAnnouncement flag is reset properly
+            NotificationCenter.default.addObserver(forName: NSNotification.Name("shouldDismissRoutePopover"), object: nil, queue: nil) { (notification) -> Void in
+                self.popoverController?.dismiss(animated: true)
+            }
+        }
+        self.getFirebaseRoutesList(vc: self.vc!)
+    }
+    
+    /// Configure App Clip to query items
+    func handleUserActivity(for url: URL) {
+        // TODO: update this to load urls into a list of urls to be passed into the popover list <3
+        guard let components = NSURLComponents(url: url, resolvingAgainstBaseURL: true), let queryItems = components.queryItems else {
+            return
+        }
+        
+        /// with the invocation URL format https://occamlab.github.io/id?p=appClipCodeID, appClipCodeID being the name of the file in Firebase
+        if let appClipCodeID = queryItems.first(where: { $0.name == "p"}) {
+            vc?.appClipCodeID = appClipCodeID.value!
+            print("app clip code ID from URL: \(appClipCodeID.value!)")
+        }
+    }
+    
+    func getFirebaseRoutesList(vc: ViewController) {
+        let routeRef = Storage.storage().reference().child("AppClipRoutes")
         let appClipRef = routeRef.child("\(self.vc!.appClipCodeID).json")
         
         /// attempt to download .json file from Firebase
@@ -124,52 +131,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                         self.vc?.availableRoutes = routesFile
                         print("List: \(self.vc?.availableRoutes)")
                         print("æ")
+                        NotificationCenter.default.post(name: NSNotification.Name("firebaseLoaded"), object: nil)
                     }
                 }
             } catch {
-                print("aw beans")
-                print("B(")
-            }
-            print(":(")
-
-        }
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 15.0) {
-            self.popoverController = UIHostingController(rootView: StartNavigationPopoverView(vc: self.vc!))
-            self.popoverController?.modalPresentationStyle = .fullScreen
-            self.vc!.present(self.popoverController!, animated: true)
-            print("popover successful B)")
-            // create listeners to ensure that the isReadingAnnouncement flag is reset properly
-            NotificationCenter.default.addObserver(forName: NSNotification.Name("shouldDismissRoutePopover"), object: nil, queue: nil) { (notification) -> Void in
-                self.popoverController?.dismiss(animated: true)
+                print("Failed to download Firebase data due to error \(error)")
             }
         }
-        
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) { [self] in
-//            popoverController = UIHostingController(rootView: StartNavigationPopoverView(vc: vc!))
-//            popoverController?.modalPresentationStyle = .popover
-//            vc!.present(popoverController!, animated: true)
-//            print("popover successful B)")
-//            // create listeners to ensure that the isReadingAnnouncement flag is reset properly
-//            NotificationCenter.default.addObserver(forName: NSNotification.Name("shouldDismissRoutePopover"), object: nil, queue: nil) { (notification) -> Void in
-//                self.popoverController?.dismiss(animated: true)
-//            }
-//        }
-    }
-    
-    /// Configure App Clip with query items
-    func handleUserActivity(for url: URL) {
-        // TODO: update this to load urls into a list of urls to be passed into the popover list <3
-        guard let components = NSURLComponents(url: url, resolvingAgainstBaseURL: true), let queryItems = components.queryItems else {
-            return
-        }
-        
-        /// with the invocation URL format https://occamlab.github.io/id?p=appClipCodeID, appClipCodeID being the name of the file in Firebase
-        if let appClipCodeID = queryItems.first(where: { $0.name == "p"}) {
-            vc?.appClipCodeID = appClipCodeID.value!
-//            route?.appClipCodeID = appClipCodeID.value!
-        }
-              
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
