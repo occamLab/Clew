@@ -305,3 +305,6 @@
 "signInWithAppleButtonText" = "Sign In";
 "dismissSurvey" = "Dismiss";
 "thanksForFeedbackAnnouncement" = "Thank you for your feedback";
+
+// App Clip strings
+"firebaseSuccessfullyLoaded" = "Routes loaded successfully.";

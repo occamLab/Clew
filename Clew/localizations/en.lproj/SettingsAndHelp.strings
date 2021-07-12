@@ -8,7 +8,6 @@
 "AwY-9g-fYn.text" = "Attach a voice recording";
 
 /* Class = "UIButton"; accessibilityLabel = "Send Feedback"; ObjectID = "Yh2-1z-izX"; */
-
 ///This is tha accessibility label that is read when the user hovers over the send feedback button
 "Yh2-1z-izX.accessibilityLabel" = "Send Feedback";
 

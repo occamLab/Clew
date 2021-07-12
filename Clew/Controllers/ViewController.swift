@@ -2356,7 +2356,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 currentAnnouncement = announcement
                 synth.speak(utterance)
             } catch {
-                print("Unexpeced error announcing something using AVSpeechEngine!")
+                print("Unexpected error announcing something using AVSpeechEngine!")
             }
         }
     }

@@ -20,6 +20,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var enterCodeIDController: UIViewController?
     var popoverController: UIViewController?
     var loadFromAppClipController: UIViewController?
+//    var currentAnnouncement: String?
   
     
     func createScene(_ scene: UIScene) {
@@ -53,6 +54,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         /// listener
         NotificationCenter.default.addObserver(forName: NSNotification.Name("shouldDismissCodeIDPopover"), object: nil, queue: nil) { (notification) -> Void in
+            
             self.enterCodeIDController?.dismiss(animated: true)
             
             NotificationCenter.default.addObserver(forName: NSNotification.Name("firebaseLoaded"), object: nil, queue: nil) { (notification) -> Void in
@@ -99,8 +101,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             // create listeners to ensure that the isReadingAnnouncement flag is reset properly
             NotificationCenter.default.addObserver(forName: NSNotification.Name("shouldDismissRoutePopover"), object: nil, queue: nil) { (notification) -> Void in
                 self.popoverController?.dismiss(animated: true)
-                self.vc?.hideAllViewsHelper()
                 self.loadRoute()
+                self.vc?.hideAllViewsHelper()
             }
         }
     }
@@ -133,8 +135,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                     if let routesFile = routesFile as? [[String: String]] {
                         self.vc?.availableRoutes = routesFile
                         print("List: \(self.vc?.availableRoutes)")
-                        print("æ")
                         NotificationCenter.default.post(name: NSNotification.Name("firebaseLoaded"), object: nil)
+                        vc.announce(announcement: NSLocalizedString("firebaseSuccessfullyLoaded", comment: "This is read out when routes are successfully downloaded from Firebase."))
                     }
                 }
             } catch {

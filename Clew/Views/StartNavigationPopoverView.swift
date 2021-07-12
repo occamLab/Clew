@@ -41,7 +41,6 @@ struct StartNavigationPopoverView: View {
                             }
                         }
                     }
-
                 }
                 .navigationTitle("Select Route")
             }
@@ -52,7 +51,6 @@ struct StartNavigationPopoverView: View {
             }
         }
     }
-            
 }
 
 struct RouteList: View {
@@ -86,9 +84,7 @@ struct StartButtonView: View {
             }
             Spacer()
         }
-        
     }
-        
 }
 
 struct StartButton: View{
@@ -102,7 +98,6 @@ struct StartButton: View{
             StartButtonView()
         }
     }
-    
 }
 
 
