@@ -42,7 +42,7 @@ struct StartNavigationPopoverView: View {
                         }
                     }
                 }
-                .navigationTitle(NSLocalizedString("selectRoutePopoverText", comment: "This is text instructing the user to select a route from a list."))
+                .navigationTitle(NSLocalizedString("selectRoutePopoverLabel", comment: "This is text instructing the user to select a route from a list."))
             }
             
             if selectedRouteName.count > 0 {
@@ -78,7 +78,7 @@ struct StartButtonView: View {
             VStack{
                 Image("StartNavigation")
                 
-                Text("Start Navigating")
+                Text(NSLocalizedString("startNavigatingLabel", comment: "This text shows up below the play button to start navigating a route."))
                     .bold()
                     .foregroundColor(Color.primary)
             }

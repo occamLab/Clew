@@ -311,4 +311,5 @@
 
     // Popover
     "startNavigationPopoverText" = "I am placeholder text that will explain what clew is :)";
-    "selectRoutePopoverText" = "Select Route";
+    "selectRoutePopoverLabel" = "Select Route";
+    "startNavigatingLabel" = "Start Navigating";
