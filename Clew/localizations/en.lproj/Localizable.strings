@@ -308,3 +308,11 @@
 
 // App Clip strings
 "firebaseSuccessfullyLoaded" = "Routes loaded successfully.";
+
+    // Popover
+    "startNavigationPopoverText" = "I am placeholder text that will explain what clew is :)";
+    "selectRoutePopoverLabel" = "Select Route";
+    "startNavigatingLabel" = "Start Navigating";
+
+    // LoadFromAppClipView
+    "loadingText" = "Loading...";

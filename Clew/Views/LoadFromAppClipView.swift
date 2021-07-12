@@ -12,7 +12,7 @@ import SwiftUI
 struct LoadFromAppClipView: View {
     
     var body: some View {
-        Text("Loading available routes...")
+        Text(NSLocalizedString("loadingText", comment: "This is the text that is displayed when the app clip needs time to load something."))
     }
 }
 

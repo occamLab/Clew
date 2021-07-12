@@ -35,6 +35,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window?.backgroundColor = .white
         window?.makeKeyAndVisible()
         UIApplication.shared.isIdleTimerDisabled = true
+        vc!.hideAllViewsHelper()
     }
     
     func loadRoute() {
@@ -54,7 +55,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         /// listener
         NotificationCenter.default.addObserver(forName: NSNotification.Name("shouldDismissCodeIDPopover"), object: nil, queue: nil) { (notification) -> Void in
-            
             self.enterCodeIDController?.dismiss(animated: true)
             
             NotificationCenter.default.addObserver(forName: NSNotification.Name("firebaseLoaded"), object: nil, queue: nil) { (notification) -> Void in
