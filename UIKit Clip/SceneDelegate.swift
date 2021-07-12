@@ -35,6 +35,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window?.backgroundColor = .white
         window?.makeKeyAndVisible()
         UIApplication.shared.isIdleTimerDisabled = true
+        vc!.hideAllViewsHelper()
     }
     
     func loadRoute() {
