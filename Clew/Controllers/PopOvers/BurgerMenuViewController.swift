@@ -31,7 +31,6 @@ class BurgerMenuViewController: UITableViewController, UIPopoverPresentationCont
         }
     }
     
-    // EEA UNCOMMENT THIS PROBABLY
     /// Called when the settings button is pressed.  This function will display the settings view (managed by SettingsViewController) as a popover.
     func settingsButtonPressed() {
         let storyBoard: UIStoryboard = UIStoryboard(name: "SettingsAndHelp", bundle: nil)
