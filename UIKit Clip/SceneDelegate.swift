@@ -49,7 +49,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         /// User enters their appClipCodeID
         self.enterCodeIDController = UIHostingController(rootView: EnterCodeIDView(vc: self.vc!))
         self.enterCodeIDController?.modalPresentationStyle = .fullScreen
-        self.vc!.present(self.enterCodeIDController!, animated: true)
+        self.vc!.present(self.enterCodeIDController!, animated: false)
 
         /// listener
         NotificationCenter.default.addObserver(forName: NSNotification.Name("shouldDismissCodeIDPopover"), object: nil, queue: nil) { (notification) -> Void in
@@ -63,6 +63,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 // create listeners to ensure that the isReadingAnnouncement flag is reset properly
                 NotificationCenter.default.addObserver(forName: NSNotification.Name("shouldDismissRoutePopover"), object: nil, queue: nil) { (notification) -> Void in
                     self.popoverController?.dismiss(animated: true)
+                    self.loadRoute()
                 }
             }
             self.getFirebaseRoutesList(vc: self.vc!)
@@ -80,14 +81,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         /// This loading screen should show up if the URL is properly invoked
         self.loadFromAppClipController = UIHostingController(rootView: LoadFromAppClipView())
         self.loadFromAppClipController?.modalPresentationStyle = .fullScreen
-        self.vc!.present(self.loadFromAppClipController!, animated: true)
+        self.vc!.present(self.loadFromAppClipController!, animated: false)
         print("loading screen successful B)")
         
         handleUserActivity(for: url)
+        self.getFirebaseRoutesList(vc: self.vc!)
             
         NotificationCenter.default.addObserver(forName: NSNotification.Name("firebaseLoaded"), object: nil, queue: nil) { (notification) -> Void in
             /// dismiss loading screen
-            self.loadFromAppClipController?.dismiss(animated: true)
+            self.loadFromAppClipController?.dismiss(animated: false)
             
             /// bring up list of routes
             self.popoverController = UIHostingController(rootView: StartNavigationPopoverView(vc: self.vc!))
@@ -97,9 +99,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             // create listeners to ensure that the isReadingAnnouncement flag is reset properly
             NotificationCenter.default.addObserver(forName: NSNotification.Name("shouldDismissRoutePopover"), object: nil, queue: nil) { (notification) -> Void in
                 self.popoverController?.dismiss(animated: true)
+                self.vc?.hideAllViewsHelper()
+                self.loadRoute()
             }
         }
-        self.getFirebaseRoutesList(vc: self.vc!)
     }
     
     /// Configure App Clip to query items
