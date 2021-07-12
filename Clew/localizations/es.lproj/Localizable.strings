@@ -121,6 +121,12 @@
 
 "multipleUseRouteEndAnchorPointText" = "Para permitir la navegación en la dirección inversa, debes registrar un punto de anclaje que señale el final de la ruta. Un punto de anclaje registra la posición y la alineación de tu dispositivo para que la aplicación pueda recargar tu ruta desde un archivo guardado. La precisión de la navegación por la ruta guardada depende totalmente de la precisión con la que puedas realinear y posicionar el teléfono con el punto de anclaje guardado. Te sugerimos que utilices los botones de texto y de nota de voz para grabar una nota de texto y/o una grabación de voz que pueda ayudarte a realinear tu dispositivo con el punto de anclaje que grabes.\nPara crear un punto de anclaje, mantén tu dispositivo plano con la pantalla hacia arriba, presionando el borde superior (el corto) a ras con una superficie vertical plana (como una pared). Tras ello, inicia una cuenta atrás de %lu-segundo con el botón \”Alinear\”. La cuenta atrás tiene por objetivo darte tiempo para posicionar tu dispositivo. El punto de anclaje se guardará al final de la cuenta atrás.";
 
+// TODO: need to translate this
+"multipleUseRouteStartImageAnchorPointText" = "";
+
+
+"multipleUseRouteEndImageAnchorPointText" = "";
+
 "anchorPointAlignmentText" = "Alinea el dispositivo con el punto de anclaje grabado anteriormente. Para ello, mantenlo en posición horizontal con la pantalla apuntando hacia arriba, Presionando el borde superior (el corto) a ras con la misma superficie vertical que utilizaste para crear el punto de anclaje. Tras ello, activa el botón de alineación que iniciará una cuenta atrás que te dará tiempo para ajustar la posición del dispositivo. Al final de la cuenta atrás se tomará la alineación y obtendrás un mensaje indicando que el punto de anclaje se ha guardado.";
 "anchorPointIntroductionToSavedText" = "La información del punto de anclaje que introdujiste es: ";
 

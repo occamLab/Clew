@@ -83,6 +83,10 @@
 		9815CEFC268512AB008FCF74 /* clew-test.crd in Resources */ = {isa = PBXBuildFile; fileRef = 9815CEF7268512AB008FCF74 /* clew-test.crd */; };
 		9819E2F2268BA6AB0008CA82 /* PauseTrackingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470EE622C119F4001092A4 /* PauseTrackingController.swift */; };
 		98260258268CC1DB00D66811 /* speaker.obj in Resources */ = {isa = PBXBuildFile; fileRef = 823DA453252F7EA800BB5E6B /* speaker.obj */; };
+		98384368269C9CC800B6CFC7 /* Clew_Public_SpacesApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98384367269C9CC800B6CFC7 /* Clew_Public_SpacesApp.swift */; };
+		9838436A269C9CC800B6CFC7 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98384369269C9CC800B6CFC7 /* ContentView.swift */; };
+		9838436C269C9CC900B6CFC7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9838436B269C9CC900B6CFC7 /* Assets.xcassets */; };
+		9838436F269C9CC900B6CFC7 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9838436E269C9CC900B6CFC7 /* Preview Assets.xcassets */; };
 		984FBD312695EC0200B63A6A /* SetTagController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 984FBD302695EC0200B63A6A /* SetTagController.swift */; };
 		984FBD322695EC0200B63A6A /* SetTagController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 984FBD302695EC0200B63A6A /* SetTagController.swift */; };
 		984FBD342696179800B63A6A /* NameCodeIDController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 984FBD332696179800B63A6A /* NameCodeIDController.swift */; };
@@ -324,6 +328,12 @@
 		9815CEEA26851049008FCF74 /* test-route2.crd */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = "test-route2.crd"; sourceTree = "<group>"; };
 		9815CEF6268512AB008FCF74 /* clew-dev-route.crd */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = "clew-dev-route.crd"; sourceTree = "<group>"; };
 		9815CEF7268512AB008FCF74 /* clew-test.crd */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = "clew-test.crd"; sourceTree = "<group>"; };
+		98384365269C9CC800B6CFC7 /* Clew Public Spaces.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Clew Public Spaces.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		98384367269C9CC800B6CFC7 /* Clew_Public_SpacesApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Clew_Public_SpacesApp.swift; sourceTree = "<group>"; };
+		98384369269C9CC800B6CFC7 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		9838436B269C9CC900B6CFC7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		9838436E269C9CC900B6CFC7 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		98384370269C9CC900B6CFC7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		984FBD302695EC0200B63A6A /* SetTagController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetTagController.swift; sourceTree = "<group>"; };
 		984FBD332696179800B63A6A /* NameCodeIDController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NameCodeIDController.swift; sourceTree = "<group>"; };
 		984FBD3B26962E4900B63A6A /* EnterCodeIDView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterCodeIDView.swift; sourceTree = "<group>"; };
@@ -419,6 +429,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		98384362269C9CC800B6CFC7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B7EB59DF20F693EB00FBBC6A /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -456,6 +473,7 @@
 				98006F77268382D600E61861 /* UIKit Clip */,
 				98006F8F268382D800E61861 /* UIKit ClipTests */,
 				98006F9A268382D800E61861 /* UIKit ClipUITests */,
+				98384366269C9CC800B6CFC7 /* Clew Public Spaces */,
 				4D6B00C11F33C1C400952242 /* Products */,
 				645269AB241294DCBFA0E1B0 /* Pods */,
 				C63B435EA8A32350A76E47DD /* Frameworks */,
@@ -472,6 +490,7 @@
 				98006F76268382D600E61861 /* UIKit Clip.app */,
 				98006F8C268382D800E61861 /* UIKit ClipTests.xctest */,
 				98006F97268382D800E61861 /* UIKit ClipUITests.xctest */,
+				98384365269C9CC800B6CFC7 /* Clew Public Spaces.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -520,6 +539,26 @@
 				98006F9D268382D800E61861 /* Info.plist */,
 			);
 			path = "UIKit ClipUITests";
+			sourceTree = "<group>";
+		};
+		98384366269C9CC800B6CFC7 /* Clew Public Spaces */ = {
+			isa = PBXGroup;
+			children = (
+				98384367269C9CC800B6CFC7 /* Clew_Public_SpacesApp.swift */,
+				98384369269C9CC800B6CFC7 /* ContentView.swift */,
+				9838436B269C9CC900B6CFC7 /* Assets.xcassets */,
+				98384370269C9CC900B6CFC7 /* Info.plist */,
+				9838436D269C9CC900B6CFC7 /* Preview Content */,
+			);
+			path = "Clew Public Spaces";
+			sourceTree = "<group>";
+		};
+		9838436D269C9CC900B6CFC7 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				9838436E269C9CC900B6CFC7 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
 			sourceTree = "<group>";
 		};
 		C63B435EA8A32350A76E47DD /* Frameworks */ = {
@@ -773,6 +812,23 @@
 			productReference = 98006F97268382D800E61861 /* UIKit ClipUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
+		98384364269C9CC800B6CFC7 /* Clew Public Spaces */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 98384371269C9CC900B6CFC7 /* Build configuration list for PBXNativeTarget "Clew Public Spaces" */;
+			buildPhases = (
+				98384361269C9CC800B6CFC7 /* Sources */,
+				98384362269C9CC800B6CFC7 /* Frameworks */,
+				98384363269C9CC800B6CFC7 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Clew Public Spaces";
+			productName = "Clew Public Spaces";
+			productReference = 98384365269C9CC800B6CFC7 /* Clew Public Spaces.app */;
+			productType = "com.apple.product-type.application";
+		};
 		B7EB59D720F693EB00FBBC6A /* Clew Dev */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = B7EB59E920F693EB00FBBC6A /* Build configuration list for PBXNativeTarget "Clew Dev" */;
@@ -839,6 +895,9 @@
 						CreatedOnToolsVersion = 12.5.1;
 						TestTargetID = 98006F75268382D600E61861;
 					};
+					98384364269C9CC800B6CFC7 = {
+						CreatedOnToolsVersion = 12.5.1;
+					};
 					B7EB59D720F693EB00FBBC6A = {
 						LastSwiftMigration = 1010;
 					};
@@ -878,6 +937,7 @@
 				98006F75268382D600E61861 /* UIKit Clip */,
 				98006F8B268382D800E61861 /* UIKit ClipTests */,
 				98006F96268382D800E61861 /* UIKit ClipUITests */,
+				98384364269C9CC800B6CFC7 /* Clew Public Spaces */,
 			);
 		};
 /* End PBXProject section */
@@ -938,6 +998,15 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		98384363269C9CC800B6CFC7 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9838436F269C9CC900B6CFC7 /* Preview Assets.xcassets in Resources */,
+				9838436C269C9CC900B6CFC7 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1281,6 +1350,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				98006F9C268382D800E61861 /* UIKit_ClipUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		98384361269C9CC800B6CFC7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9838436A269C9CC800B6CFC7 /* ContentView.swift in Sources */,
+				98384368269C9CC800B6CFC7 /* Clew_Public_SpacesApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1782,6 +1860,58 @@
 			};
 			name = Release;
 		};
+		98384372269C9CC900B6CFC7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_ASSET_PATHS = "\"Clew Public Spaces/Preview Content\"";
+				DEVELOPMENT_TEAM = 787TUDMR8Q;
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = "Clew Public Spaces/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "edu.occam.Clew-Public-Spaces";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		98384373269C9CC900B6CFC7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_ASSET_PATHS = "\"Clew Public Spaces/Preview Content\"";
+				DEVELOPMENT_TEAM = 787TUDMR8Q;
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = "Clew Public Spaces/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "edu.occam.Clew-Public-Spaces";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		B7EB59EA20F693EB00FBBC6A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = C68778047D8E263D2FB04989 /* Pods-Clew Dev.debug.xcconfig */;
@@ -1937,6 +2067,15 @@
 			buildConfigurations = (
 				98006FA8268382D800E61861 /* Debug */,
 				98006FA9268382D800E61861 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		98384371269C9CC900B6CFC7 /* Build configuration list for PBXNativeTarget "Clew Public Spaces" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				98384372269C9CC900B6CFC7 /* Debug */,
+				98384373269C9CC900B6CFC7 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

@@ -243,6 +243,12 @@
 /* Information on how to record an anchor point when used recording the starting anchor point of a multiple use route. */
 "multipleUseRouteStartAnchorPointText" = "لكي تتمكن من استخدام الطريق في وقت لاحق، يجب عليك تسجيل نقطة ثابتة في بداية الطريق. \nتسجل النقطة الثابتة موقع واتجاه الهاتف الخاص بك، فيمكن للتطبيق إعادة تحميل الطريق عن طريق الملف المحفوظ.\nونتيجة لذلك، تعتمد دقة الطريق المحفوظ على مدى قدرتك على المحاذاة ومطابقة الهاتف مع النقطة الثابتة التي تم تسجيلها.\nننصحك باستخدام زري النص والملحوظة الصوتية لكتابة ملحوظة أو تسجيلها لمساعدتك على محاذاة الهاتف مع نفس النقطة التي قمت بتسجيلها.\nوللقيام بتسجيل نقطة ثابتة: يجب عليك وضع هاتفك بشكل ثابت، ثم وجه الشاشة لأعلى واضغط على الجزء العلوي (الزاوية القصيرة من الهاتف) وسيبدأ العد التنازلي.\nويهدف العد التنازلي لمنحك الوقت لإجراء التعديلات النهائية على اتجاه جهازك. وسيتم حفظ النقطة الثابتة عندما ينتهي العد التنازلي.";
 
+// TODO: Translate these!!
+"multipleUseRouteStartImageAnchorPointText" = "";
+
+
+"multipleUseRouteEndImageAnchorPointText" = "";
+
 /* Message displayed to the user when saving a route by name. */
 "nameSavedRouteLabel" = "اكتب اسم الطريق الخاص بك أدناه";
 
