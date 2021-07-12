@@ -63,6 +63,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 // create listeners to ensure that the isReadingAnnouncement flag is reset properly
                 NotificationCenter.default.addObserver(forName: NSNotification.Name("shouldDismissRoutePopover"), object: nil, queue: nil) { (notification) -> Void in
                     self.popoverController?.dismiss(animated: true)
+                    self.loadRoute()
                 }
             }
             self.getFirebaseRoutesList(vc: self.vc!)
@@ -99,6 +100,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             NotificationCenter.default.addObserver(forName: NSNotification.Name("shouldDismissRoutePopover"), object: nil, queue: nil) { (notification) -> Void in
                 self.popoverController?.dismiss(animated: true)
                 self.vc?.hideAllViewsHelper()
+                self.loadRoute()
             }
         }
     }
