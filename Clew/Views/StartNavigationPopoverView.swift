@@ -42,7 +42,7 @@ struct StartNavigationPopoverView: View {
                         }
                     }
                 }
-                .navigationTitle("Select Route")
+                .navigationTitle(NSLocalizedString("selectRoutePopoverText", comment: "This is text instructing the user to select a route from a list."))
             }
             
             if selectedRouteName.count > 0 {
