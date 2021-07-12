@@ -339,12 +339,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         endRouteAnchorPoint = RouteAnchorPoint()
 
         logger.resetNavigationLog()
-        //let firebasePath = "routes/\(appClipCodeID)/\(routeID).crd"
         print("testPath", firebasePath)
         
         // this is where the code would actually pick up B)
         let pathRef = Storage.storage().reference().child("AppClipRoutes/\(routeID).crd")
-        //let pathRef = firebasePath!
         
         // download path from Firebase
         pathRef.getData(maxSize: 100000000000) { data, error in

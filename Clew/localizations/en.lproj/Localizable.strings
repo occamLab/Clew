@@ -313,3 +313,6 @@
     "startNavigationPopoverText" = "I am placeholder text that will explain what clew is :)";
     "selectRoutePopoverLabel" = "Select Route";
     "startNavigatingLabel" = "Start Navigating";
+
+    // LoadFromAppClipView
+    "loadingText" = "Loading...";
