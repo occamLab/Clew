@@ -1547,7 +1547,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             }
         } else {
             if let AnchorPointInformation = route.endRouteAnchorPoint.information as String? {
-                let infoString = "\n\n" + NSLocalizedString("anchorPointIntroductionToSavedText", comment: "This is the text which delineates the text that a user saved witht their saved anchor point. This text is shown when a suer loads an anchor point and the text that the user saved with their anchor point appears right after this string.") + AnchorPointInformation + "\n\n"
+                let infoString = "\n\n" + NSLocalizedString("anchorPointIntroductionToSavedText", comment: "This is the text which delineates the text that a user saved with their saved anchor point. This text is shown when a user loads an anchor point and the text that the user saved with their anchor point appears right after this string.") + AnchorPointInformation + "\n\n"
                 resumeTrackingConfirmController.anchorPointLabel.text = infoString
             } else {
                 // make sure to clear out any old labels that were stored here
@@ -1914,7 +1914,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             paused = false
             creatingRouteAnchorPoint = false
             ///sends the user to the process where they create an end anchorpoint
-            state = .startingPauseProcedure
+//            state = .startingPauseProcedure
+            /// sends the user to naming the route, skipping creating the end anchorpoint
+            state = .startingNameCodeIDProcedure(worldMap: nil) // <3
         } else {
             ///PATHPOINT one way route recording finished -> play/pause
             state = .readyToNavigateOrPause(allowPause: true)
