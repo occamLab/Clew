@@ -63,8 +63,10 @@ enum AppState {
     case startingNameSavedRouteProcedure(worldMap: Any?)
     /// the user is attempting to name the app clip code ID for the route they're in the process of saving
     case startingNameCodeIDProcedure(worldMap: Any?)
-    /// the user is anchoring a route from an ARImageAnchor
+    /// the user is navigating a recorded route from an ARImageAnchor
     case startingAutoAlignment
+    /// the user is creating a route anchored from an ARImageAnchor
+    case startingAutoAnchoring
     /// the user has stopped or completed an external route
     case endScreen(completedRoute: Bool)
     
@@ -99,6 +101,8 @@ enum AppState {
             return "startingNameCodeIDProcedure"
         case .startingAutoAlignment:
             return "startingAutoAlignment"
+        case .startingAutoAnchoring:
+            return "startingAutoAnchoring"
         case .endScreen:
             return "endScreen"
         }
@@ -171,6 +175,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 break
             case .startingAutoAlignment:
                 handleStateTransitionToAutoAlignment()
+            case .startingAutoAnchoring: //BL
+//                print("hehe this is useless")
+                handleStateTransitionToAutoAnchoring()
             case .endScreen(let completedRoute):
                 print("transitioned to the end screen")
                 showEndScreenInformation(completedRoute: completedRoute)
@@ -312,6 +319,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         suggestAdjustOffsetIfAppropriate()
     }
     
+    /// Automatically localizes user with popup to begin navigation
     func handleStateTransitionToAutoAlignment() {
         print("Aligning")
         
@@ -323,9 +331,22 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         
         navStart.addAction(start)
         
-                
         self.present(navStart, animated: true, completion: nil)
-
+    }
+    
+    /// Automatically sets up anchor point for route recording
+    func handleStateTransitionToAutoAnchoring() {
+        print("Aligning to anchor image")
+        
+        let recordStart = UIAlertController(title: "Start Recording", message: "Aligned to anchor image, click Start to begin recording route", preferredStyle: .alert)
+        
+        let start = UIAlertAction(title: "Start", style: .default, handler: {(action) -> Void in
+            self.confirmAlignment()
+        })
+        
+        recordStart.addAction(start)
+        
+        self.present(recordStart, animated: true, completion: nil)
     }
     
     // handler for downloaded routes
@@ -1302,6 +1323,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 imageNode.addChildNode(yAxis)
                 imageNode.addChildNode(zAxis) */
                 imageNode.addChildNode(highlightPlane)
+                self.state = .startingAutoAnchoring
             }
             
         }
@@ -1363,6 +1385,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             resumeTracking()
         } else if case .startingAutoAlignment = state {
             resumeTracking()
+        } else if case .startingAutoAnchoring = state {
+            hideAllViewsHelper()
+            state = .recordingRoute
         }
     }
 
@@ -2027,11 +2052,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         hideAllViewsHelper()
         pauseTrackingController.remove()
         if case .readyForFinalResumeAlignment = self.state {
-        rootContainerView.countdownTimer.isHidden = false
-        rootContainerView.countdownTimer.start(beginingValue: ViewController.alignmentWaitingPeriod, interval: 1)
-        delayTransition()
+            rootContainerView.countdownTimer.isHidden = false
+            rootContainerView.countdownTimer.start(beginingValue: ViewController.alignmentWaitingPeriod, interval: 1)
+            delayTransition()
         }
-        print("hehe")
+        
         if case .startingAutoAlignment = self.state, let routeTransform = self.pausedTransform, let tagAnchor = self.sceneView.session.currentFrame?.anchors.compactMap({$0 as? ARImageAnchor}).first {
             rootContainerView.countdownTimer.isHidden = true
             
@@ -2058,16 +2083,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 self.state = .navigatingRoute
 
             }
-            
-            
         }
         else {
             DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(ViewController.alignmentWaitingPeriod)) {
             self.rootContainerView.countdownTimer.isHidden = true
-            print("hmm")
-            print("whats going on")
             // The first check is necessary in case the phone relocalizes before this code executes
-                if case .readyForFinalResumeAlignment = self.state, let routeTransform = self.pausedTransform, /*let tagAnchor = self.sceneView.session.currentFrame?.anchors.compactMap({$0 as? ARAppClipCodeAnchor}).filter({$0.isTracked}).first */ let tagAnchor = self.sceneView.session.currentFrame?.camera{
+                if case .readyForFinalResumeAlignment = self.state, let routeTransform = self.pausedTransform, /*let tagAnchor = self.sceneView.session.currentFrame?.anchors.compactMap({$0 as? ARAppClipCodeAnchor}).filter({$0.isTracked}).first */ let tagAnchor = self.sceneView.session.currentFrame?.camera {
                 // yaw can be determined by projecting the camera's z-axis into the ground plane and using arc tangent (note: the camera coordinate conventions of ARKit https://developer.apple.com/documentation/arkit/arsessionconfiguration/worldalignment/camera
                 let alignYaw = self.getYawHelper(routeTransform)
                 // print("alignYaw = \(alignYaw*180/3.14)")
