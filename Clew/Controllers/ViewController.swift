@@ -1264,6 +1264,48 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             }
         }
         
+        for imageAnchor in frame.anchors.compactMap(({$0 as? ARImageAnchor})) {
+            let imageNode: SCNNode
+            if let existingTagNode = sceneView.scene.rootNode.childNode(withName: "Image Tag", recursively: false) {
+                imageNode = existingTagNode
+                imageNode.simdTransform = imageAnchor.transform
+            }
+            else {
+                if (soundFeedback) {
+                    playSystemSound(id: 1234)
+                }
+                announce(announcement: NSLocalizedString("imageTagInFrameAnnouncement", comment: "This is announced when the image tag is in frame and the user can set an anchor point."))
+                
+                imageNode = SCNNode()
+                imageNode.simdTransform = imageAnchor.transform
+                imageNode.name = "Image Tag"
+                sceneView.scene.rootNode.addChildNode(imageNode)
+                
+                /// Adds axes to the tag to aid in the visualization
+                /*let sideLen: CGFloat = 0.01
+                let axisLen: CGFloat = 0.5
+                let xAxis = SCNNode(geometry: SCNBox(width: axisLen, height: sideLen, length: sideLen, chamferRadius: 0))
+                xAxis.geometry?.firstMaterial?.diffuse.contents = UIColor.red
+                let yAxis = SCNNode(geometry: SCNBox(width: sideLen, height: axisLen, length: sideLen, chamferRadius: 0))
+                yAxis.geometry?.firstMaterial?.diffuse.contents = UIColor.green
+                let zAxis = SCNNode(geometry: SCNBox(width: sideLen, height: sideLen, length: axisLen, chamferRadius: 0))
+                zAxis.geometry?.firstMaterial?.diffuse.contents = UIColor.blue*/
+                
+                let highlightPlane = SCNNode(geometry: SCNPlane(width: imageAnchor.referenceImage.physicalSize.width, height: imageAnchor.referenceImage.physicalSize.height))
+                
+                highlightPlane.eulerAngles.x = -.pi / 2
+                
+                highlightPlane.geometry?.firstMaterial?.diffuse.contents = UIColor.green
+                highlightPlane.opacity = 0.9
+
+                /* imageNode.addChildNode(xAxis)
+                imageNode.addChildNode(yAxis)
+                imageNode.addChildNode(zAxis) */
+                imageNode.addChildNode(highlightPlane)
+            }
+            
+        }
+        
         // print("frame.anchors = \(frame.anchors)")   // <3 type = int counting # of anchors ID'd
         // print("frame.anchors.compactMap = \(frame.anchors.compactMap(({$0 as? ARAppClipCodeAnchor})))") // <3 type = Array<ARAppClipCodeAnchor>, where each ARAppClipCodeAnchor is another one it identifies
         //print("frame.anchors.compactMap = \(frame.anchors.compactMap(({$0 as? ARImageAnchor})))")
@@ -1309,48 +1351,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 
             }
         } */
-        for imageAnchor in frame.anchors.compactMap(({$0 as? ARImageAnchor})) {
-            let imageNode: SCNNode
-            if let existingTagNode = sceneView.scene.rootNode.childNode(withName: "Image Tag", recursively: false) {
-                imageNode = existingTagNode
-                imageNode.simdTransform = imageAnchor.transform
-            }
-            else {
-                if (soundFeedback) {
-                    playSystemSound(id: 1234)
-                }
-                announce(announcement: NSLocalizedString("imageTagInFrameAnnouncement", comment: "This is announced when the image tag is in frame and the user can set an anchor point."))
-                
-                imageNode = SCNNode()
-                imageNode.simdTransform = imageAnchor.transform
-                imageNode.name = "Image Tag"
-                sceneView.scene.rootNode.addChildNode(imageNode)
-                
-                /// Adds axes to the tag to aid in the visualization
-                /*let sideLen: CGFloat = 0.01
-                let axisLen: CGFloat = 0.5
-                let xAxis = SCNNode(geometry: SCNBox(width: axisLen, height: sideLen, length: sideLen, chamferRadius: 0))
-                xAxis.geometry?.firstMaterial?.diffuse.contents = UIColor.red
-                let yAxis = SCNNode(geometry: SCNBox(width: sideLen, height: axisLen, length: sideLen, chamferRadius: 0))
-                yAxis.geometry?.firstMaterial?.diffuse.contents = UIColor.green
-                let zAxis = SCNNode(geometry: SCNBox(width: sideLen, height: sideLen, length: axisLen, chamferRadius: 0))
-                zAxis.geometry?.firstMaterial?.diffuse.contents = UIColor.blue*/
-                
-                let highlightPlane = SCNNode(geometry: SCNPlane(width: imageAnchor.referenceImage.physicalSize.width, height: imageAnchor.referenceImage.physicalSize.height))
-                
-                highlightPlane.eulerAngles.x = -.pi / 2
-                
-                highlightPlane.geometry?.firstMaterial?.diffuse.contents = UIColor.green
-                highlightPlane.opacity = 0.9
-
-                /* imageNode.addChildNode(xAxis)
-                imageNode.addChildNode(yAxis)
-                imageNode.addChildNode(zAxis) */
-                imageNode.addChildNode(highlightPlane)
-            }
-            
-        }
-        
     }
     
     /// Handle the user clicking the confirm alignment to a saved Anchor Point.  Depending on the app state, the behavior of this function will differ (e.g., if the route is being resumed versus reloaded)
