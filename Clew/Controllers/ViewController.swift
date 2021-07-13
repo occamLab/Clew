@@ -1913,10 +1913,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             ///sets the variable tracking whether the route is paused to be false
             paused = false
             creatingRouteAnchorPoint = false
-            ///sends the user to the process where they create an end anchorpoint
-//            state = .startingPauseProcedure
-            /// sends the user to naming the route, skipping creating the end anchorpoint
-            state = .startingNameCodeIDProcedure(worldMap: nil) // <3
+            if imageAnchoring {
+                /// sends the user to naming the route, skipping creating the end anchorpoint
+                state = .startingNameCodeIDProcedure(worldMap: nil) // <3
+            } else {
+                ///sends the user to the process where they create an end anchorpoint
+                state = .startingPauseProcedure
+            }
         } else {
             ///PATHPOINT one way route recording finished -> play/pause
             state = .readyToNavigateOrPause(allowPause: true)
