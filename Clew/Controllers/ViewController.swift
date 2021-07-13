@@ -934,13 +934,16 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
     }
     
-    /// Create the audio player objdcts for the various app sounds.  Creating them ahead of time helps reduce latency when playing them later.
+    /// Create the audio player objects for the various app sounds.  Creating them ahead of time helps reduce latency when playing them later.
     func setupAudioPlayers() {
+        let anchorInFrameSound = Bundle.main.path(forResource: "anchorInFrame", ofType: "mp3")
+        
         do {
             audioPlayers[1103] = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: "/System/Library/Audio/UISounds/Tink.caf"))
             audioPlayers[1016] = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: "/System/Library/Audio/UISounds/tweet_sent.caf"))
             audioPlayers[1050] = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: "/System/Library/Audio/UISounds/ussd.caf"))
             audioPlayers[1025] = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: "/System/Library/Audio/UISounds/New/Fanfare.caf"))
+            audioPlayers[1234] = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: anchorInFrameSound!))
 
             for p in audioPlayers.values {
                 p.prepareToPlay()
@@ -956,15 +959,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         let url = NSURL(fileURLWithPath: Bundle.main.path(forResource: "Crumb", ofType: "obj")!)
         let asset = MDLAsset(url: url as URL)
         keypointObject = asset.object(at: 0)
-        // let speakerUrl = NSURL(fileURLWithPath: Bundle.main.path(forResource: "speaker", ofType: "obj")!)
         let speakerUrl = NSURL(fileURLWithPath: Bundle.main.path(forResource: "speaker", ofType: "obj")!)
         let speakerAsset = MDLAsset(url: speakerUrl as URL)
         speakerObject = speakerAsset.object(at: 0)
     }
     
-
-    
-
     
     /// Called when the view appears on screen.
     ///
@@ -1318,6 +1317,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 imageNode.simdTransform = imageAnchor.transform
             }
             else {
+                if (soundFeedback) {
+                    playSystemSound(id: 1234)
+                }
+                announce(announcement: NSLocalizedString("imageTagInFrameAnnouncement", comment: "This is announced when the image tag is in frame and the user can set an anchor point."))
+                
                 imageNode = SCNNode()
                 imageNode.simdTransform = imageAnchor.transform
                 imageNode.name = "Image Tag"
@@ -2175,9 +2179,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 #if !APPCLIP
                 self.surveyInterface.sendLogDataHelper(pathStatus: nil, announceArrival: true, vc: self)
                 #else
-
                 self.state = .endScreen(completedRoute: true)
-                
                 #endif
             }
         }
