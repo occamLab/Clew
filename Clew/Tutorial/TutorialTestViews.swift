@@ -96,7 +96,7 @@ struct SettingOptions: View {
             
             Text(NSLocalizedString( "settingOptionsTutorialInstructionText", comment: "Information about what the setting options are"))
             
-            TutorialNavLink(destination: SettingWalkThrough()) {Text("Settings Walk Through")}
+            TutorialNavLink(destination: SettingWalkThrough()) {Text(NSLocalizedString("settingsWalkThroughTitle", comment: "Title for the Settings Walk Through"))}
         }
     }
 }
@@ -171,8 +171,6 @@ struct FindPath: View {
             Text(NSLocalizedString( "findPathTutorialButtonText", comment: "Title for the finding and following path part of the tutorial"))
         
             Text(NSLocalizedString("findPathTutorialInstructionText", comment: "Text that explains what it sounds and feels like to be on the path and following the path"))
-            
-            //TutorialNavLink(destination: PracticeOrientPhone()) {Text(NSLocalizedString ("orientPhoneTutorialPracticeTitle", comment: "Title of the practice orienting your phone page"))}
         
             Spacer()
             TutorialNavLink(destination: SingleUse())  {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
@@ -189,9 +187,9 @@ struct OrientPhone: View {
         
             Text(NSLocalizedString("orientPhoneTutorialInstructionText", comment: "Text that explains how to orient the phone for the best experience using Clew"))
             
-            TutorialNavLink(destination: PracticeOrientPhone()) {Text("Practice Holding Phone")}
+            TutorialNavLink(destination: PracticeOrientPhone()) {Text(NSLocalizedString("orientPhoneTutorialPracticeTitle", comment: "Title for holding phone practice"))}
             
-            TutorialNavLink(destination: OrientPhoneTips()) {Text("Tips")}
+            TutorialNavLink(destination: OrientPhoneTips()) {Text(NSLocalizedString("tipTutorialTitle", comment: "text on button to tips page"))}
             
             Spacer()
             TutorialNavLink(destination: FindPath()) {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
@@ -202,7 +200,7 @@ struct OrientPhone: View {
 struct OrientPhoneTips: View {
     var body: some View {
         TutorialScreen {
-            Text("Tips for holding your phone")
+            Text(NSLocalizedString("orientPhoneTutorialTipsTitle", comment: "Tips for holding phone title"))
             
             Text(NSLocalizedString("orientPhoneTutorialTip1", comment: "Tip for holding phone against chest"))
             
@@ -232,10 +230,10 @@ struct PracticeOrientPhone: View {
             }){
                 if started {
                     TutorialButton{
-                        Text("Stop")}
+                        Text(NSLocalizedString("orientPhoneTutorialPracticeStop", comment: "stop orient phone practice"))}
                 } else {
                     TutorialButton{
-                        Text("Start")}
+                        Text(NSLocalizedString("orientPhoneTutorialPracticeStart", comment: "start orient phone practice"))}
                 }
             }
             
@@ -291,12 +289,12 @@ struct PracticeOrientPhone: View {
                 //AudioServicesPlaySystemSound(SystemSoundID(1057))
                 //Text("Yay!!!")
                 Spacer()
-                TutorialNavLink(destination: FindPath()) {Text("Next")} //change skip button to next button when score equals three because the user has completed the practice
+                TutorialNavLink(destination: FindPath()) {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))} //change skip button to next button when score equals three because the user has completed the practice
             }
             
             else if score < 3 {
                 Spacer()
-                TutorialNavLink(destination: FindPath()) {Text("Skip")}
+                TutorialNavLink(destination: FindPath()) {Text(NSLocalizedString("buttonTexttoSkip", comment: "Text on skip button"))}
             }
         
             
@@ -404,7 +402,7 @@ struct TutorialTestView: View {
                 Text(NSLocalizedString("tutorialTitleText", comment: "Title of the Clew Tutorial Screen. Top of the first tutorial page"))
                         
                 TutorialNavLink(destination: CLEWintro()) {
-                    Text("Intro to Clew")
+                    Text(NSLocalizedString("ClewIntroTutorialTitle", comment: "Intro to Clew Tutorial Title"))
                 }
                         
                 TutorialNavLink(destination: OrientPhone()){
