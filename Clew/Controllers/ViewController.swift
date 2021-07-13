@@ -282,7 +282,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// Handler for the recordingRoute app state
     func handleStateTransitionToRecordingRoute() {
         // records a new path
-        // updates the state Boolean to signifiy that the program is no longer saving the first anchor point
+        // updates the state Boolean to signify that the program is no longer saving the first anchor point
         startAnchorPoint = false
         attemptingRelocalization = false
         
@@ -583,8 +583,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
 
                 if #available(iOS 12.0, *) {
                     sceneView.session.getCurrentWorldMap { worldMap, error in
-                        self.completingPauseProcedureHelper(worldMap: nil)
-                        // note to ACDC, this is where you should change it back <3 to worldMap B) (or change back to nil, which is what Paul did)
+                        self.completingPauseProcedureHelper(worldMap: worldMap)
                     }
                 } else {
                     completingPauseProcedureHelper(worldMap: nil)
@@ -640,7 +639,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         } else {
             ///PATHPOINT end anchor point alignment timer -> Save Route View
             delayTransition(announcement: NSLocalizedString("multipleUseRouteAnchorPointToSaveARouteAnnouncement", comment: "This is an announcement which is spoken when the user saves the end anchor point for a multiple use route. This signifies the transition from saving an anchor point to the screen where the user can name and save their route"), initialFocus: nil)
-            ///sends the user to the play/pause screen
+            ///sends the user to the screen where they input the app clip code ID
             state = .startingNameCodeIDProcedure(worldMap: worldMap)
         }
     }
@@ -887,7 +886,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         rootContainerView.burgerMenuButton.addTarget(self, action: #selector(burgerMenuButtonPressed), for: .touchUpInside)
         
         rootContainerView.homeButton.addTarget(self, action: #selector(homeButtonPressed), for: .touchUpInside)
-
         #endif
         
         rootContainerView.getDirectionButton.addTarget(self, action: #selector(announceDirectionHelpPressed), for: .touchUpInside)
@@ -935,13 +933,16 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
     }
     
-    /// Create the audio player objdcts for the various app sounds.  Creating them ahead of time helps reduce latency when playing them later.
+    /// Create the audio player objects for the various app sounds.  Creating them ahead of time helps reduce latency when playing them later.
     func setupAudioPlayers() {
+        let anchorInFrameSound = Bundle.main.path(forResource: "anchorInFrame", ofType: "mp3")
+        
         do {
             audioPlayers[1103] = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: "/System/Library/Audio/UISounds/Tink.caf"))
             audioPlayers[1016] = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: "/System/Library/Audio/UISounds/tweet_sent.caf"))
             audioPlayers[1050] = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: "/System/Library/Audio/UISounds/ussd.caf"))
             audioPlayers[1025] = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: "/System/Library/Audio/UISounds/New/Fanfare.caf"))
+            audioPlayers[1234] = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: anchorInFrameSound!))
 
             for p in audioPlayers.values {
                 p.prepareToPlay()
@@ -957,15 +958,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         let url = NSURL(fileURLWithPath: Bundle.main.path(forResource: "Crumb", ofType: "obj")!)
         let asset = MDLAsset(url: url as URL)
         keypointObject = asset.object(at: 0)
-        // let speakerUrl = NSURL(fileURLWithPath: Bundle.main.path(forResource: "speaker", ofType: "obj")!)
         let speakerUrl = NSURL(fileURLWithPath: Bundle.main.path(forResource: "speaker", ofType: "obj")!)
         let speakerAsset = MDLAsset(url: speakerUrl as URL)
         speakerObject = speakerAsset.object(at: 0)
     }
     
-
-    
-
     
     /// Called when the view appears on screen.
     ///
@@ -1319,6 +1316,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 imageNode.simdTransform = imageAnchor.transform
             }
             else {
+                if (soundFeedback) {
+                    playSystemSound(id: 1234)
+                }
+                announce(announcement: NSLocalizedString("imageTagInFrameAnnouncement", comment: "This is announced when the image tag is in frame and the user can set an anchor point."))
+                
                 imageNode = SCNNode()
                 imageNode.simdTransform = imageAnchor.transform
                 imageNode.name = "Image Tag"
@@ -1545,7 +1547,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             }
         } else {
             if let AnchorPointInformation = route.endRouteAnchorPoint.information as String? {
-                let infoString = "\n\n" + NSLocalizedString("anchorPointIntroductionToSavedText", comment: "This is the text which delineates the text that a user saved witht their saved anchor point. This text is shown when a suer loads an anchor point and the text that the user saved with their anchor point appears right after this string.") + AnchorPointInformation + "\n\n"
+                let infoString = "\n\n" + NSLocalizedString("anchorPointIntroductionToSavedText", comment: "This is the text which delineates the text that a user saved with their saved anchor point. This text is shown when a user loads an anchor point and the text that the user saved with their anchor point appears right after this string.") + AnchorPointInformation + "\n\n"
                 resumeTrackingConfirmController.anchorPointLabel.text = infoString
             } else {
                 // make sure to clear out any old labels that were stored here
@@ -1912,7 +1914,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             paused = false
             creatingRouteAnchorPoint = false
             ///sends the user to the process where they create an end anchorpoint
-            state = .startingPauseProcedure
+//            state = .startingPauseProcedure
+            /// sends the user to naming the route, skipping creating the end anchorpoint
+            state = .startingNameCodeIDProcedure(worldMap: nil) // <3
         } else {
             ///PATHPOINT one way route recording finished -> play/pause
             state = .readyToNavigateOrPause(allowPause: true)
@@ -2176,9 +2180,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 #if !APPCLIP
                 self.surveyInterface.sendLogDataHelper(pathStatus: nil, announceArrival: true, vc: self)
                 #else
-
                 self.state = .endScreen(completedRoute: true)
-                
                 #endif
             }
         }

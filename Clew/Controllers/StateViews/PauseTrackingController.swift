@@ -43,7 +43,7 @@ class PauseTrackingController: UIViewController, UIScrollViewDelegate {
         let waitingPeriod = ViewController.alignmentWaitingPeriod
         var mainText : String
         
-        if paused  && recordingSingleUseRoute {
+        if paused && recordingSingleUseRoute {
             mainText = String.localizedStringWithFormat(NSLocalizedString("singleUseRouteAnchorPointText", comment: "Information on how to record an anchor point when used for pausing a single use route"), waitingPeriod)
         } else {
             if startAnchorPoint{
@@ -159,7 +159,7 @@ class PauseTrackingController: UIViewController, UIScrollViewDelegate {
                                                           label: NSLocalizedString("startAlignmentCountdownButtonAccessibilityLabel", comment: "this is athe accessibility label for the button which allows the user to start an alignment procedure when saving an anchor point"))
         
         /// create stack view for aligning and distributing bottom layer buttons
-        let stackView   = UIStackView()
+        let stackView = UIStackView()
         view.addSubview(stackView)
         stackView.translatesAutoresizingMaskIntoConstraints = false;
         
