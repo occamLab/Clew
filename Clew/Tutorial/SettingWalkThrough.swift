@@ -118,7 +118,7 @@ struct setUnit: View{
                 }
                 }
                 Spacer()
-                TutorialNavLink(destination: setUpColor()) {
+                TutorialNavLink(destination: setUpCrumbColor()) {
                     Text("Next")
                 }
         }
@@ -126,9 +126,10 @@ struct setUnit: View{
 }
 
 
-struct setUpColor: View {
+struct setUpCrumbColor: View {
     @ObservedObject var settings = SettingsWrapper.shared
     let colors = ["Red", "Green", "Blue", "Random"]
+    let images = [["CrumbRedPathRed", "CrumbRedPathGreen", "CrumbRedPathBlue", "CrumbRedPathRed"], ["CrumbGreenPathRed", "CrumbGreenPathGreen", "CrumbGreenPathBlue", "CrumbRedPathRed"], ["CrumbBluePathRed", "CrumbBluePathGreen", "CrumbBluePathBlue", "CrumbRedPathRed"], ["CrumbRedPathRed", "CrumbRedPathRed", "CrumbRedPathRed", "CrumbRedPathRed"]] //TODO: decide what to do with random colors
 
     var body: some View {
         TutorialScreen{
@@ -138,11 +139,11 @@ struct setUpColor: View {
                 ForEach(colors.indices) { i in
                     Button(action:{
                             print(colors[i])
-                            UserDefaults.standard.setValue(i, forKey: "pathColor")
+                            UserDefaults.standard.setValue(i, forKey: "crumbColor")
                             //crumbColor = "red"
                     })
                     {
-                    if UserDefaults.standard.integer(forKey: "pathColor") == i {
+                    if UserDefaults.standard.integer(forKey: "crumbColor") == i {
                         TutorialButtonSelected{
                             Text(colors[i])}
                 
@@ -204,6 +205,20 @@ struct setUpColor: View {
                 }
                 }*/
                 
+                ForEach(colors.indices) { p in
+                    if UserDefaults.standard.integer(forKey: "pathColor") == p {
+                        ForEach(colors.indices) { c in
+                            if UserDefaults.standard.integer(forKey: "crumbColor") == c{
+                            
+                                Image(images[c][p])
+                                //("CrumbRedPathRed")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                            }
+                        }
+                    }
+                }
+                
                 Spacer()
                 TutorialNavLink(destination: setUpPathColor())
                     {Text("Next")}
@@ -216,6 +231,7 @@ struct setUpColor: View {
 struct setUpPathColor: View {
     @ObservedObject var settings = SettingsWrapper.shared
     let colors = ["Red", "Green", "Blue", "Random"]
+    let images = [["CrumbRedPathRed", "CrumbRedPathGreen", "CrumbRedPathBlue", "CrumbRedPathRed"], ["CrumbGreenPathRed", "CrumbGreenPathGreen", "CrumbGreenPathBlue", "CrumbRedPathRed"], ["CrumbBluePathRed", "CrumbBluePathGreen", "CrumbBluePathBlue", "CrumbRedPathRed"], ["CrumbRedPathRed", "CrumbRedPathRed", "CrumbRedPathRed", "CrumbRedPathRed"]]
 
     var body: some View {
         TutorialScreen{
@@ -291,6 +307,20 @@ struct setUpPathColor: View {
                         Text("Blue")}
                 }
                 }*/
+                
+                ForEach(colors.indices) { p in
+                    if UserDefaults.standard.integer(forKey: "pathColor") == p {
+                        ForEach(colors.indices) { c in
+                            if UserDefaults.standard.integer(forKey: "crumbColor") == c{
+                            
+                                Image(images[c][p])
+                                //("CrumbRedPathRed")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                            }
+                        }
+                    }
+                }
                 
                 Spacer()
                 TutorialNavLink(destination: setUpPathColor())

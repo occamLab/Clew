@@ -220,8 +220,8 @@ struct PracticeOrientPhone: View {
     @State var lastSuccessSound = Date()
     @State var lastSuccess = Date()
     @State var resetPosition = true
+    @State var successSound: AVAudioPlayer?
     @ObservedObject private var arData = ARData.shared
-    //let successSound =
     var body: some View{
         TutorialScreen {
             Text(NSLocalizedString("orientPhoneTutorialPracticeInstructions", comment: "Instructions for practicing holding phone activity"))
@@ -351,6 +351,15 @@ struct PracticeOrientPhone: View {
                         score += 1
                         lastSuccess = Date()
                         resetPosition = false
+                        let path = Bundle.main.path(forResource: "ClewSuccessSound", ofType:"wav")!
+                        let url = URL(fileURLWithPath: path)
+                        do {
+                            successSound = try AVAudioPlayer(contentsOf: url)
+                            successSound?.play()
+                        } catch {
+                            // couldn't load file :(
+                        }
+
                         //AudioServicesPlaySystemSound(SystemSoundID(1025))
                         //AudioServicesPlaySystemSound(SystemSoundID(4095))
                         //UIAccessibility.post(notification: .announcement, argument: "Great")
