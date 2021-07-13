@@ -220,9 +220,6 @@ struct PracticeOrientPhone: View {
     @State var lastSuccessSound = Date()
     @State var lastSuccess = Date()
     @State var resetPosition = true
-    var successSound = AVAudioPlayer?
-    let path = Bundle.main.path(forResource: "ClewSuccessSound.wav", ofType:nil)!
-    let url = URL(fileURLWithPath: path)
     @ObservedObject private var arData = ARData.shared
     //let successSound =
     var body: some View{
@@ -286,7 +283,10 @@ struct PracticeOrientPhone: View {
             }
             
             
-            
+            if score == 3 {
+                Text("Nice Job! You've completed orientation practice. You can keep practicing or go to the next section") //TODO: create audio anouncment
+            }
+
             if score >= 3 {
                 //AudioServicesPlaySystemSound(SystemSoundID(1057))
                 //Text("Yay!!!")
@@ -294,10 +294,6 @@ struct PracticeOrientPhone: View {
                 TutorialNavLink(destination: FindPath()) {Text("Next")} //change skip button to next button when score equals three because the user has completed the practice
             }
             
-            if score == 3 {
-                Text("Nice Job! You've completed orientation practice. You can keep practicing or go to the next section") //TODO: create audio anouncment
-            }
-
             else if score < 3 {
                 Spacer()
                 TutorialNavLink(destination: FindPath()) {Text("Skip")}
@@ -355,12 +351,6 @@ struct PracticeOrientPhone: View {
                         score += 1
                         lastSuccess = Date()
                         resetPosition = false
-                        do {
-                            successSound = try AVAudioPlayer(contentsOf: url)
-                            successSound?.play()
-                        } catch {
-                            // couldn't load file :(
-                        }
                         //AudioServicesPlaySystemSound(SystemSoundID(1025))
                         //AudioServicesPlaySystemSound(SystemSoundID(4095))
                         //UIAccessibility.post(notification: .announcement, argument: "Great")
@@ -378,14 +368,20 @@ struct PracticeOrientPhone: View {
     }
 }
 
+
 struct CLEWintro: View {
     var body: some View {
         TutorialScreen{
             Text(NSLocalizedString("ClewIntroTutorialText", comment: "Text on the first page of the tutorial that describes Clew"))
 
-            Spacer()
-            TutorialNavLink(destination: OrientPhone()) {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
+            //Spacer()
+            TutorialNavLink(destination: OrientPhone()) {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
+            }
+                
         }
+        //.fixedSize(horizontal: false, vertical: false)
+        //Spacer()
+            //.frame(height:10)
     }
 }
             
