@@ -282,7 +282,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// Handler for the recordingRoute app state
     func handleStateTransitionToRecordingRoute() {
         // records a new path
-        // updates the state Boolean to signifiy that the program is no longer saving the first anchor point
+        // updates the state Boolean to signify that the program is no longer saving the first anchor point
         startAnchorPoint = false
         attemptingRelocalization = false
         
@@ -583,8 +583,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
 
                 if #available(iOS 12.0, *) {
                     sceneView.session.getCurrentWorldMap { worldMap, error in
-                        self.completingPauseProcedureHelper(worldMap: nil)
-                        // note to ACDC, this is where you should change it back <3 to worldMap B) (or change back to nil, which is what Paul did)
+                        self.completingPauseProcedureHelper(worldMap: worldMap)
                     }
                 } else {
                     completingPauseProcedureHelper(worldMap: nil)
@@ -640,7 +639,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         } else {
             ///PATHPOINT end anchor point alignment timer -> Save Route View
             delayTransition(announcement: NSLocalizedString("multipleUseRouteAnchorPointToSaveARouteAnnouncement", comment: "This is an announcement which is spoken when the user saves the end anchor point for a multiple use route. This signifies the transition from saving an anchor point to the screen where the user can name and save their route"), initialFocus: nil)
-            ///sends the user to the play/pause screen
+            ///sends the user to the screen where they input the app clip code ID
             state = .startingNameCodeIDProcedure(worldMap: worldMap)
         }
     }
