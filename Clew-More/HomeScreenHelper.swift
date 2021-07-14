@@ -11,7 +11,7 @@ import Firebase
 import Foundation
 import FirebaseStorage
 
-class HomeScreenController {
+class HomeScreenHelper {
     
     var vc: ViewController
     var sceneDelegate: SceneDelegate
@@ -53,6 +53,10 @@ class HomeScreenController {
         }
 
 
+    }
+    
+    func RecordAppClipRouteHelper() {
+        
     }
     
     func loadRoute() {

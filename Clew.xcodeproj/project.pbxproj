@@ -111,7 +111,7 @@
 		98AA5899269E1BA0001123F0 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98AA5898269E1BA0001123F0 /* SceneDelegate.swift */; };
 		98AA589A269E1CC2001123F0 /* StartNavigationPopoverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 987BA6F3268E53C0008B129E /* StartNavigationPopoverView.swift */; };
 		98AA589B269E2217001123F0 /* Surveys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82BC47FD2640383300C7D364 /* Surveys.swift */; };
-		98AA589D269E2CE3001123F0 /* HomeScreenController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98AA589C269E2CE3001123F0 /* HomeScreenController.swift */; };
+		98AA589D269E2CE3001123F0 /* HomeScreenHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98AA589C269E2CE3001123F0 /* HomeScreenHelper.swift */; };
 		98AB6072269889B700613BB5 /* LoadFromAppClipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98AB6071269889B700613BB5 /* LoadFromAppClipView.swift */; };
 		98AB6073269889B700613BB5 /* LoadFromAppClipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98AB6071269889B700613BB5 /* LoadFromAppClipView.swift */; };
 		98AB6074269889B700613BB5 /* LoadFromAppClipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98AB6071269889B700613BB5 /* LoadFromAppClipView.swift */; };
@@ -408,7 +408,7 @@
 		98AA5894269E0C13001123F0 /* StartMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartMenuView.swift; sourceTree = "<group>"; };
 		98AA5896269E1518001123F0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		98AA5898269E1BA0001123F0 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		98AA589C269E2CE3001123F0 /* HomeScreenController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeScreenController.swift; sourceTree = "<group>"; };
+		98AA589C269E2CE3001123F0 /* HomeScreenHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeScreenHelper.swift; sourceTree = "<group>"; };
 		98AB6071269889B700613BB5 /* LoadFromAppClipView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadFromAppClipView.swift; sourceTree = "<group>"; };
 		98CC59AE269CCE11002EF6D7 /* FirebaseCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FirebaseCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		98CC59B2269CCE31002EF6D7 /* FirebaseAnalytics.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = FirebaseAnalytics.xcframework; path = Pods/FirebaseAnalytics/Frameworks/FirebaseAnalytics.xcframework; sourceTree = "<group>"; };
@@ -659,7 +659,7 @@
 				98FF7AA0269CBFEB008C64E5 /* Preview Content */,
 				98AA5896269E1518001123F0 /* AppDelegate.swift */,
 				98AA5898269E1BA0001123F0 /* SceneDelegate.swift */,
-				98AA589C269E2CE3001123F0 /* HomeScreenController.swift */,
+				98AA589C269E2CE3001123F0 /* HomeScreenHelper.swift */,
 			);
 			path = "Clew-More";
 			sourceTree = "<group>";
@@ -1581,7 +1581,7 @@
 				98AA5897269E1518001123F0 /* AppDelegate.swift in Sources */,
 				98FF7ACC269CC10F008C64E5 /* StopNavigationController.swift in Sources */,
 				98AA5895269E0C13001123F0 /* StartMenuView.swift in Sources */,
-				98AA589D269E2CE3001123F0 /* HomeScreenController.swift in Sources */,
+				98AA589D269E2CE3001123F0 /* HomeScreenHelper.swift in Sources */,
 				98FF7AD1269CC11C008C64E5 /* HelpViewController.swift in Sources */,
 				98FF7AD7269CC143008C64E5 /* UIConstants.swift in Sources */,
 				98CC59AA269CC92D002EF6D7 /* FeedbackLogger.swift in Sources */,

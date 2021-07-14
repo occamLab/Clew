@@ -19,8 +19,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var route: SavedRoute?
     
     var startMenuController: UIViewController?
+    var enterCodeIDController: UIViewController?
+    var popoverController: UIViewController?
+    var loadFromAppClipController: UIViewController?
 
-    var homeScreenController: HomeScreenController?
+    var homeScreenHelper: HomeScreenHelper?
     
 
   
@@ -32,12 +35,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let scene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: scene)
         vc = ViewController()
-        homeScreenController = HomeScreenController(vc: vc!)
+        homeScreenHelper = HomeScreenHelper(vc: vc!, sceneDelegate: self)
         window?.frame = UIScreen.main.bounds
         window?.rootViewController = vc
         window?.backgroundColor = .white
         window?.makeKeyAndVisible()
         UIApplication.shared.isIdleTimerDisabled = true
+        
     }
     
 
@@ -51,7 +55,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         self.vc!.present(self.startMenuController!, animated: true)
         
         NotificationCenter.default.addObserver(forName: NSNotification.Name("shouldOpenRouteMenu"), object: nil, queue: nil) { (notification) -> Void in
-            self.homeScreenController!.NavigateAppClipRouteHelper()
+            self.startMenuController!.dismiss(animated: false)
+            
+            self.homeScreenHelper!.NavigateAppClipRouteHelper()
+        }
+        
+        NotificationCenter.default.addObserver(forName: NSNotification.Name("shouldRouteRecording"), object: nil, queue: nil) { (notification) -> Void in
+            self.startMenuController!.dismiss(animated: false)
+            
+            self.homeScreenHelper!.RecordAppClipRouteHelper()
         }
         
         
@@ -65,8 +77,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             return
             }
         createScene(scene)
-
-        /*
+        
         /// This loading screen should show up if the URL is properly invoked
         self.loadFromAppClipController = UIHostingController(rootView: LoadFromAppClipView())
         self.loadFromAppClipController?.modalPresentationStyle = .fullScreen
@@ -92,7 +103,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                // self.loadRoute()
             }
         }
- */
+ 
     }
     
     /// Configure App Clip to query items
