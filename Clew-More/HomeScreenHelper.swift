@@ -14,13 +14,17 @@ import FirebaseStorage
 class HomeScreenController {
     
     var vc: ViewController
+    var sceneDelegate: SceneDelegate
+
     
     var enterCodeIDController: UIViewController?
     var popoverController: UIViewController?
     var loadFromAppClipController: UIViewController?
     
-    init(vc: ViewController) {
+    init(vc: ViewController, sceneDelegate: SceneDelegate) {
         self.vc = vc
+        self.sceneDelegate = sceneDelegate
+        //self.sceneDelegate = vc.view.window?.windowScene.delegate
     }
     
     
@@ -28,7 +32,7 @@ class HomeScreenController {
         /// User enters their appClipCodeID
         var enterCodeIDController = UIHostingController(rootView: EnterCodeIDView(vc: self.vc))
         enterCodeIDController.modalPresentationStyle = .fullScreen
-        self.vc.present(enterCodeIDController, animated: false)
+        self.sceneDelegate.window?.rootViewController!.present(enterCodeIDController, animated: false)
 
         /// listener
         NotificationCenter.default.addObserver(forName: NSNotification.Name("shouldDismissCodeIDPopover"), object: nil, queue: nil) { (notification) -> Void in
