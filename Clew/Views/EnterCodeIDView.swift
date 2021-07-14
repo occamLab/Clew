@@ -9,41 +9,58 @@
 import SwiftUI
 import Combine
 
+class CodeIDModel: ObservableObject {
+    var limit: Int = 3
+
+    @Published var code: String = "" {
+        didSet {
+             if code.count > limit {
+                code = String(code.prefix(limit))
+             }
+        }
+    }
+}
+
 /// A text entry box in which to enter the app clip code ID
 struct EnterCodeIDView: View {
     let vc: ViewController
-    @State private var appClipCodeID: String = ""
-    
-    var body: some View {
+    @ObservedObject private var codeIDModel = CodeIDModel()
+
+     var body: some View {
         VStack {
-            TextField(
-                "3-digit App Clip Code ID",
-                 text: $appClipCodeID)
+            TextField(NSLocalizedString("codeIDprompt", comment: "This is a string appearing in the text box asking the user to enter their 3-digit app clip code ID"), text: $codeIDModel.code)
+                .padding(20)
                 .disableAutocorrection(true)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .keyboardType(.numberPad)
             
-            EnterButton(vc: vc, codeID: appClipCodeID)
-                .padding(12)
+            EnterButton(vc: vc, codeID: codeIDModel.code)
+                .padding(40)
+                .overlay(
+                        RoundedRectangle(cornerRadius: 10)
+                            .stroke(Color.clewGreen, lineWidth: 10)
+                )
+                .frame(minWidth: 0, maxWidth: .infinity)
+                .padding(.horizontal, 20)
         }
-    }
+     }
 }
 
 struct EnterButtonView: View {
     var body: some View {
         HStack{
             Spacer()
-            
-            Text("Continue to Routes")
+
+            Text(NSLocalizedString("proceedToRoutes", comment: "This is the label of the button the user presses to have Firebase load in the routes based on the app clip code ID."))
                 .bold()
-//                .foregroundColor(Color.primary)
+                .foregroundColor(Color.primary)
             Spacer()
         }
     }
 }
 
 /// Press this button to submit the app clip code ID and proceed to the routes
-struct EnterButton: View{
+struct EnterButton: View {
     var vc: ViewController
     var codeID: String
     var body: some View {

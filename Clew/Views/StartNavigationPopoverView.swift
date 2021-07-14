@@ -111,13 +111,13 @@ struct RowSelected<Content: View>: View {
             .frame(minWidth: 0, maxWidth: 300)
             .padding()
             .foregroundColor(.black)
-            .background(Color.green)
+            .background(Color.clewGreen)
             .cornerRadius(10)
             .font(.system(size: 18, weight: .bold))
             .padding(10)
             .overlay(
                     RoundedRectangle(cornerRadius: 10)
-                        .stroke(Color.green, lineWidth: 4))
+                        .stroke(Color.clewGreen, lineWidth: 4))
     }
 }
 

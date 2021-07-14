@@ -63,8 +63,10 @@ enum AppState {
     case startingNameSavedRouteProcedure(worldMap: Any?)
     /// the user is attempting to name the app clip code ID for the route they're in the process of saving
     case startingNameCodeIDProcedure(worldMap: Any?)
-    /// the user is anchoring a route from an ARImageAnchor
+    /// the user is navigating a recorded route from an ARImageAnchor
     case startingAutoAlignment
+    /// the user is creating a route anchored from an ARImageAnchor
+    case startingAutoAnchoring
     /// the user has stopped or completed an external route
     case endScreen(completedRoute: Bool)
     
@@ -99,10 +101,17 @@ enum AppState {
             return "startingNameCodeIDProcedure"
         case .startingAutoAlignment:
             return "startingAutoAlignment"
+        case .startingAutoAnchoring:
+            return "startingAutoAnchoring"
         case .endScreen:
             return "endScreen"
         }
     }
+}
+
+/// Add clewGreen as a color
+extension Color {
+    static let clewGreen = Color(red: 105 / 255, green: 189 / 255, blue: 72 / 255)
 }
 
 /// The view controller that handles the main Clew window.  This view controller is always active and handles the various views that are used for different app functionalities.
@@ -171,6 +180,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 break
             case .startingAutoAlignment:
                 handleStateTransitionToAutoAlignment()
+            case .startingAutoAnchoring:
+                handleStateTransitionToAutoAnchoring()
             case .endScreen(let completedRoute):
                 print("transitioned to the end screen")
                 showEndScreenInformation(completedRoute: completedRoute)
@@ -312,6 +323,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         suggestAdjustOffsetIfAppropriate()
     }
     
+    /// Automatically localizes user with popup to begin navigation
     func handleStateTransitionToAutoAlignment() {
         print("Aligning")
         
@@ -323,9 +335,22 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         
         navStart.addAction(start)
         
-                
         self.present(navStart, animated: true, completion: nil)
-
+    }
+    
+    /// Automatically sets up anchor point for route recording
+    func handleStateTransitionToAutoAnchoring() {
+        print("Aligning to anchor image")
+        
+        let recordStart = UIAlertController(title: "Start Recording", message: "Aligned to anchor image, click Start to begin recording route", preferredStyle: .alert)
+        
+        let start = UIAlertAction(title: "Start", style: .default, handler: {(action) -> Void in
+            self.confirmAlignment()
+        })
+        
+        recordStart.addAction(start)
+        
+        self.present(recordStart, animated: true, completion: nil)
     }
     
     // handler for downloaded routes
@@ -672,9 +697,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     @objc func saveCodeIDButtonPressed() {
         /// Save the input from the user for the app clip code ID as an attribute of the SavedRoute
         let id = "000"
-        /// Get the input values from user, if it's nil then use "000"
+        /// Get the input values from user, if it's nil then use "000" (this does not actually work)
         self.appClipCodeID = nameCodeIDController.textField.text as String? ?? id
-        print(type(of: self), type(of: nameCodeIDController))
         let worldMap = nameCodeIDController.worldMap
         hideAllViewsHelper()
         ///Announce to the user that they have saved the route ID and are now at the saving route name screen
@@ -1268,6 +1292,49 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             }
         }
         
+        for imageAnchor in frame.anchors.compactMap(({$0 as? ARImageAnchor})) {
+            let imageNode: SCNNode
+            if let existingTagNode = sceneView.scene.rootNode.childNode(withName: "Image Tag", recursively: false) {
+                imageNode = existingTagNode
+                imageNode.simdTransform = imageAnchor.transform
+            }
+            else {
+                if (soundFeedback) {
+                    playSystemSound(id: 1234)
+                }
+                announce(announcement: NSLocalizedString("imageTagInFrameAnnouncement", comment: "This is announced when the image tag is in frame and the user can set an anchor point."))
+                
+                imageNode = SCNNode()
+                imageNode.simdTransform = imageAnchor.transform
+                imageNode.name = "Image Tag"
+                sceneView.scene.rootNode.addChildNode(imageNode)
+                
+                /// Adds axes to the tag to aid in the visualization
+                /*let sideLen: CGFloat = 0.01
+                let axisLen: CGFloat = 0.5
+                let xAxis = SCNNode(geometry: SCNBox(width: axisLen, height: sideLen, length: sideLen, chamferRadius: 0))
+                xAxis.geometry?.firstMaterial?.diffuse.contents = UIColor.red
+                let yAxis = SCNNode(geometry: SCNBox(width: sideLen, height: axisLen, length: sideLen, chamferRadius: 0))
+                yAxis.geometry?.firstMaterial?.diffuse.contents = UIColor.green
+                let zAxis = SCNNode(geometry: SCNBox(width: sideLen, height: sideLen, length: axisLen, chamferRadius: 0))
+                zAxis.geometry?.firstMaterial?.diffuse.contents = UIColor.blue*/
+                
+                let highlightPlane = SCNNode(geometry: SCNPlane(width: imageAnchor.referenceImage.physicalSize.width, height: imageAnchor.referenceImage.physicalSize.height))
+                
+                highlightPlane.eulerAngles.x = -.pi / 2
+                
+                highlightPlane.geometry?.firstMaterial?.diffuse.contents = UIColor.green
+                highlightPlane.opacity = 0.9
+
+                /* imageNode.addChildNode(xAxis)
+                imageNode.addChildNode(yAxis)
+                imageNode.addChildNode(zAxis) */
+                imageNode.addChildNode(highlightPlane)
+                self.state = .startingAutoAnchoring
+            }
+            
+        }
+        
         // print("frame.anchors = \(frame.anchors)")   // <3 type = int counting # of anchors ID'd
         // print("frame.anchors.compactMap = \(frame.anchors.compactMap(({$0 as? ARAppClipCodeAnchor})))") // <3 type = Array<ARAppClipCodeAnchor>, where each ARAppClipCodeAnchor is another one it identifies
         //print("frame.anchors.compactMap = \(frame.anchors.compactMap(({$0 as? ARImageAnchor})))")
@@ -1313,48 +1380,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 
             }
         } */
-        for imageAnchor in frame.anchors.compactMap(({$0 as? ARImageAnchor})) {
-            let imageNode: SCNNode
-            if let existingTagNode = sceneView.scene.rootNode.childNode(withName: "Image Tag", recursively: false) {
-                imageNode = existingTagNode
-                imageNode.simdTransform = imageAnchor.transform
-            }
-            else {
-                if (soundFeedback) {
-                    playSystemSound(id: 1234)
-                }
-                announce(announcement: NSLocalizedString("imageTagInFrameAnnouncement", comment: "This is announced when the image tag is in frame and the user can set an anchor point."))
-                
-                imageNode = SCNNode()
-                imageNode.simdTransform = imageAnchor.transform
-                imageNode.name = "Image Tag"
-                sceneView.scene.rootNode.addChildNode(imageNode)
-                
-                /// Adds axes to the tag to aid in the visualization
-                /*let sideLen: CGFloat = 0.01
-                let axisLen: CGFloat = 0.5
-                let xAxis = SCNNode(geometry: SCNBox(width: axisLen, height: sideLen, length: sideLen, chamferRadius: 0))
-                xAxis.geometry?.firstMaterial?.diffuse.contents = UIColor.red
-                let yAxis = SCNNode(geometry: SCNBox(width: sideLen, height: axisLen, length: sideLen, chamferRadius: 0))
-                yAxis.geometry?.firstMaterial?.diffuse.contents = UIColor.green
-                let zAxis = SCNNode(geometry: SCNBox(width: sideLen, height: sideLen, length: axisLen, chamferRadius: 0))
-                zAxis.geometry?.firstMaterial?.diffuse.contents = UIColor.blue*/
-                
-                let highlightPlane = SCNNode(geometry: SCNPlane(width: imageAnchor.referenceImage.physicalSize.width, height: imageAnchor.referenceImage.physicalSize.height))
-                
-                highlightPlane.eulerAngles.x = -.pi / 2
-                
-                highlightPlane.geometry?.firstMaterial?.diffuse.contents = UIColor.green
-                highlightPlane.opacity = 0.9
-
-                /* imageNode.addChildNode(xAxis)
-                imageNode.addChildNode(yAxis)
-                imageNode.addChildNode(zAxis) */
-                imageNode.addChildNode(highlightPlane)
-            }
-            
-        }
-        
     }
     
     /// Handle the user clicking the confirm alignment to a saved Anchor Point.  Depending on the app state, the behavior of this function will differ (e.g., if the route is being resumed versus reloaded)
@@ -1367,6 +1392,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             resumeTracking()
         } else if case .startingAutoAlignment = state {
             resumeTracking()
+        } else if case .startingAutoAnchoring = state {
+            hideAllViewsHelper()
+            state = .recordingRoute
         }
     }
 
@@ -1918,10 +1946,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             ///sets the variable tracking whether the route is paused to be false
             paused = false
             creatingRouteAnchorPoint = false
-            ///sends the user to the process where they create an end anchorpoint
-//            state = .startingPauseProcedure
-            /// sends the user to naming the route, skipping creating the end anchorpoint
-            state = .startingNameCodeIDProcedure(worldMap: nil) // <3
+            if imageAnchoring {
+                /// sends the user to naming the route, skipping creating the end anchorpoint
+                state = .startingNameCodeIDProcedure(worldMap: nil) // <3
+            } else {
+                ///sends the user to the process where they create an end anchorpoint
+                state = .startingPauseProcedure
+            }
         } else {
             ///PATHPOINT one way route recording finished -> play/pause
             state = .readyToNavigateOrPause(allowPause: true)
@@ -2029,11 +2060,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         hideAllViewsHelper()
         pauseTrackingController.remove()
         if case .readyForFinalResumeAlignment = self.state {
-        rootContainerView.countdownTimer.isHidden = false
-        rootContainerView.countdownTimer.start(beginingValue: ViewController.alignmentWaitingPeriod, interval: 1)
-        delayTransition()
+            rootContainerView.countdownTimer.isHidden = false
+            rootContainerView.countdownTimer.start(beginingValue: ViewController.alignmentWaitingPeriod, interval: 1)
+            delayTransition()
         }
-        print("hehe")
+        
         if case .startingAutoAlignment = self.state, let routeTransform = self.pausedTransform, let tagAnchor = self.sceneView.session.currentFrame?.anchors.compactMap({$0 as? ARImageAnchor}).first {
             rootContainerView.countdownTimer.isHidden = true
             
@@ -2060,16 +2091,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 self.state = .navigatingRoute
 
             }
-            
-            
         }
         else {
             DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(ViewController.alignmentWaitingPeriod)) {
             self.rootContainerView.countdownTimer.isHidden = true
-            print("hmm")
-            print("whats going on")
             // The first check is necessary in case the phone relocalizes before this code executes
-                if case .readyForFinalResumeAlignment = self.state, let routeTransform = self.pausedTransform, /*let tagAnchor = self.sceneView.session.currentFrame?.anchors.compactMap({$0 as? ARAppClipCodeAnchor}).filter({$0.isTracked}).first */ let tagAnchor = self.sceneView.session.currentFrame?.camera{
+                if case .readyForFinalResumeAlignment = self.state, let routeTransform = self.pausedTransform, /*let tagAnchor = self.sceneView.session.currentFrame?.anchors.compactMap({$0 as? ARAppClipCodeAnchor}).filter({$0.isTracked}).first */ let tagAnchor = self.sceneView.session.currentFrame?.camera {
                 // yaw can be determined by projecting the camera's z-axis into the ground plane and using arc tangent (note: the camera coordinate conventions of ARKit https://developer.apple.com/documentation/arkit/arsessionconfiguration/worldalignment/camera
                 let alignYaw = self.getYawHelper(routeTransform)
                 // print("alignYaw = \(alignYaw*180/3.14)")
