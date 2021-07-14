@@ -16,7 +16,7 @@ struct StartNavigationPopoverView: View {
     var body: some View {
 
         VStack {
-            Text("I am placeholder text that will explain what clew is :)")
+            Text(NSLocalizedString("startNavigationPopoverText", comment: "This is text that appears with the list of routes in the app clip."))
                 .multilineTextAlignment(.center)
                 .font(.system(size: 24, weight: .bold))
             
@@ -41,9 +41,8 @@ struct StartNavigationPopoverView: View {
                             }
                         }
                     }
-
                 }
-                .navigationTitle("Select Route")
+                .navigationTitle(NSLocalizedString("selectRoutePopoverLabel", comment: "This is text instructing the user to select a route from a list."))
             }
             
             if selectedRouteName.count > 0 {
@@ -52,7 +51,6 @@ struct StartNavigationPopoverView: View {
             }
         }
     }
-            
 }
 
 struct RouteList: View {
@@ -80,15 +78,13 @@ struct StartButtonView: View {
             VStack{
                 Image("StartNavigation")
                 
-                Text("Start Navigating")
+                Text(NSLocalizedString("startNavigatingLabel", comment: "This text shows up below the play button to start navigating a route."))
                     .bold()
                     .foregroundColor(Color.primary)
             }
             Spacer()
         }
-        
     }
-        
 }
 
 struct StartButton: View{
@@ -102,7 +98,6 @@ struct StartButton: View{
             StartButtonView()
         }
     }
-    
 }
 
 
