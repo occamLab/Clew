@@ -44,6 +44,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         vc?.handleStateTransitionToNavigatingExternalRoute()
     }
     
+    /// For scenes created NOT through the invocation URL
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         
         createScene(scene)
@@ -56,6 +57,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         /// listener
         NotificationCenter.default.addObserver(forName: NSNotification.Name("shouldDismissCodeIDPopover"), object: nil, queue: nil) { (notification) -> Void in
             self.enterCodeIDController?.dismiss(animated: true)
+            
+            NotificationCenter.default.addObserver(forName: NSNotification.Name("invalidCodeID"), object: nil, queue: nil) { (notification) -> Void in
+                /// If user inputs an invalid app clip code ID, let them know to retry
+                self.enterCodeIDController = UIHostingController(rootView: EnterCodeIDView(vc: self.vc!))
+                self.enterCodeIDController?.modalPresentationStyle = .fullScreen
+                self.vc!.present(self.enterCodeIDController!, animated: false)
+            }
             
             NotificationCenter.default.addObserver(forName: NSNotification.Name("firebaseLoaded"), object: nil, queue: nil) { (notification) -> Void in
                 self.popoverController = UIHostingController(rootView: StartNavigationPopoverView(vc: self.vc!))
@@ -138,6 +146,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                         NotificationCenter.default.post(name: NSNotification.Name("firebaseLoaded"), object: nil)
                         vc.announce(announcement: NSLocalizedString("firebaseSuccessfullyLoaded", comment: "This is read out when routes are successfully downloaded from Firebase."))
                     }
+                } else {
+                    NotificationCenter.default.post(name: NSNotification.Name("invalidCodeID"), object: nil)
+//                    vc.announce(announcement: NSLocalizedString("firebaseSuccessfullyLoaded", comment: "This is read out when routes are successfully downloaded from Firebase."))
                 }
             } catch {
                 print("Failed to download Firebase data due to error \(error)")

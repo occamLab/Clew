@@ -72,6 +72,8 @@ struct EnterButton: View {
     var body: some View {
         Button(action: {
             vc.appClipCodeID = codeID
+//            /// this is currently hella inefficient because it's loading it twice, eventually put functionality of route loading here
+//            SceneDelegate().getFirebaseRoutesList(vc: vc)
             NotificationCenter.default.post(name: NSNotification.Name("shouldDismissCodeIDPopover"), object: nil)
         }) {
             EnterButtonView()
