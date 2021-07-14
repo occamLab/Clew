@@ -36,7 +36,7 @@ struct EnterCodeIDView: View {
                             .stroke(Color.black, lineWidth: 3))
                 .padding(3)
                 .overlay(RoundedRectangle(cornerRadius: 2 * 3)
-                            .stroke(Color.whiteg, lineWidth: 3))
+                            .stroke(Color.white, lineWidth: 3))
                 .padding(20)
                 
             
