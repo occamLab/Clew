@@ -9,45 +9,31 @@
 import SwiftUI
 import Combine
 
-/*class ZipCodeModel: ObservableObject {
- var limit: Int = 5
+class CodeIDModel: ObservableObject {
+    var limit: Int = 3
 
- @Published var zip: String = "" {
-     didSet {
-         if zip.count > limit {
-             zip = String(zip.prefix(limit))
-         }
-     }
- }
+    @Published var code: String = "" {
+        didSet {
+             if code.count > limit {
+                code = String(code.prefix(limit))
+             }
+        }
+    }
 }
 
-struct ContentView: View {
- @ObservedObject private var zipCodeModel = ZipCodeModel()
-
- var body: some View {
-     TextField("", text: $zipCodeModel.zip)
-         .textFieldStyle(RoundedBorderTextFieldStyle())
-         .padding(10)
-         .keyboardType(.numberPad)
-         .multilineTextAlignment(.center)
- }*/
-
-/// A text entry box in which to enter the app clip code ID
 struct EnterCodeIDView: View {
     let vc: ViewController
-    @State private var appClipCodeID: String = ""
-    
-    var body: some View {
+    @ObservedObject private var codeIDModel = CodeIDModel()
+
+     var body: some View {
         VStack {
-            TextField(
-                "3-digit App Clip Code ID",
-                 text: $appClipCodeID)
+            TextField("3-digit App Clip Code ID", text: $codeIDModel.code)
                 .padding(20)
                 .disableAutocorrection(true)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .keyboardType(.numberPad)
             
-            EnterButton(vc: vc, codeID: appClipCodeID)
+            EnterButton(vc: vc, codeID: codeIDModel.code)
                 .padding(40)
                 .overlay(
                         RoundedRectangle(cornerRadius: 10)
@@ -56,15 +42,42 @@ struct EnterCodeIDView: View {
                 .frame(minWidth: 0, maxWidth: .infinity)
                 .padding(.horizontal, 20)
         }
-    }
+     }
 }
 
-
+///// A text entry box in which to enter the app clip code ID
+//struct EnterCodeIDView: View {
+//    let vc: ViewController
+//    @State private var appClipCodeID: String = ""
+//
+//    var body: some View {
+//        VStack {
+//            TextField(
+//                "3-digit App Clip Code ID",
+//                 text: $appClipCodeID)
+//                .padding(20)
+//                .disableAutocorrection(true)
+//                .textFieldStyle(RoundedBorderTextFieldStyle())
+//                .keyboardType(.numberPad)
+//
+//            EnterButton(vc: vc, codeID: appClipCodeID)
+//                .padding(40)
+//                .overlay(
+//                        RoundedRectangle(cornerRadius: 10)
+//                            .stroke(Color.clewGreen, lineWidth: 10)
+//                )
+//                .frame(minWidth: 0, maxWidth: .infinity)
+//                .padding(.horizontal, 20)
+//        }
+//    }
+//}
+//
+//
 struct EnterButtonView: View {
     var body: some View {
         HStack{
             Spacer()
-            
+
             Text("Continue to Routes")
                 .bold()
                 .foregroundColor(Color.primary)
@@ -74,7 +87,7 @@ struct EnterButtonView: View {
 }
 
 /// Press this button to submit the app clip code ID and proceed to the routes
-struct EnterButton: View{
+struct EnterButton: View {
     var vc: ViewController
     var codeID: String
     var body: some View {
