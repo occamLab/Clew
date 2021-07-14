@@ -127,12 +127,18 @@ class AuthenticationHelper: NSObject, ASAuthorizationControllerDelegate, ASAutho
       }
     
     func transitionToMainApp() {
+        #if !CLEWMORE
             let appDelegate = UIApplication.shared.delegate as! AppDelegate
             appDelegate.window?.rootViewController?.dismiss(animated: false)
             appDelegate.window = UIWindow(frame:UIScreen.main.bounds)
             appDelegate.window?.makeKeyAndVisible()
             appDelegate.window?.rootViewController = ViewController()
+            #if !CLEWMORE
             appDelegate.vc = appDelegate.window?.rootViewController
+            #else
+            appDelegate.vc = appDelegate.window?.rootViewController as? ViewController
+            #endif
+        #endif
         }
 
 }

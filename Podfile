@@ -24,6 +24,10 @@ target 'Clew Dev' do
     all_pods
 end
 
+target 'Clew-More' do
+    all_pods
+end
+
 target 'UIKit Clip' do
   pod 'VectorMath', '~> 0.3'
   pod 'Firebase/Core'
@@ -31,6 +35,8 @@ target 'UIKit Clip' do
   pod 'SRCountdownTimer'
   pod 'PRTween', '~> 0.1'
 end
+
+
 
 # manually set the swift version for SRCountdownTimer since it doesn't work with Swift 5.0
 post_install do |installer|

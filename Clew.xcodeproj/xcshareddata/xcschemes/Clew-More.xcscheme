@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "98384351269C9B1C00B6CFC7"
-               BuildableName = "GORF.app"
-               BlueprintName = "GORF"
+               BlueprintIdentifier = "98FF7A97269CBFE9008C64E5"
+               BuildableName = "Clew-More.app"
+               BlueprintName = "Clew-More"
                ReferencedContainer = "container:Clew.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -44,9 +44,9 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "98384351269C9B1C00B6CFC7"
-            BuildableName = "GORF.app"
-            BlueprintName = "GORF"
+            BlueprintIdentifier = "98FF7A97269CBFE9008C64E5"
+            BuildableName = "Clew-More.app"
+            BlueprintName = "Clew-More"
             ReferencedContainer = "container:Clew.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -61,9 +61,9 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "98384351269C9B1C00B6CFC7"
-            BuildableName = "GORF.app"
-            BlueprintName = "GORF"
+            BlueprintIdentifier = "98FF7A97269CBFE9008C64E5"
+            BuildableName = "Clew-More.app"
+            BlueprintName = "Clew-More"
             ReferencedContainer = "container:Clew.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

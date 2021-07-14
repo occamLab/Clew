@@ -1244,7 +1244,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         configuration = ARWorldTrackingConfiguration()
         configuration.planeDetection = [.horizontal, .vertical]
         configuration.isAutoFocusEnabled = false
-        configuration.appClipCodeTrackingEnabled = true
+        if #available(iOS 14.3, *) {
+            configuration.appClipCodeTrackingEnabled = true
+        } else {
+            // Fallback on earlier versions
+        }
         sceneView.delegate = self
         sceneView.session.delegate = self
         
@@ -1636,11 +1640,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         label.numberOfLines = 0
         label.lineBreakMode = NSLineBreakMode.byWordWrapping */
         
-        
-        let config = SKOverlay.AppClipConfiguration(position: .bottom)
-        let overlay = SKOverlay(configuration: config)
-        overlay.present(in: scene)
+        if #available(iOS 14.0, *){
+            let config = SKOverlay.AppClipConfiguration(position: .bottom)
+            let overlay = SKOverlay(configuration: config)
+            overlay.present(in: scene)
         print("UI done")
+        }
     }
     
     /// display stop navigation view/hide all other views
