@@ -9,6 +9,29 @@
 import SwiftUI
 import Combine
 
+/*class ZipCodeModel: ObservableObject {
+ var limit: Int = 5
+
+ @Published var zip: String = "" {
+     didSet {
+         if zip.count > limit {
+             zip = String(zip.prefix(limit))
+         }
+     }
+ }
+}
+
+struct ContentView: View {
+ @ObservedObject private var zipCodeModel = ZipCodeModel()
+
+ var body: some View {
+     TextField("", text: $zipCodeModel.zip)
+         .textFieldStyle(RoundedBorderTextFieldStyle())
+         .padding(10)
+         .keyboardType(.numberPad)
+         .multilineTextAlignment(.center)
+ }*/
+
 /// A text entry box in which to enter the app clip code ID
 struct EnterCodeIDView: View {
     let vc: ViewController
@@ -36,9 +59,6 @@ struct EnterCodeIDView: View {
     }
 }
 
-extension Color {
-    static let clewGreen = Color(red: 105 / 255, green: 189 / 255, blue: 72 / 255)
-}
 
 struct EnterButtonView: View {
     var body: some View {
@@ -47,7 +67,7 @@ struct EnterButtonView: View {
             
             Text("Continue to Routes")
                 .bold()
-//                .foregroundColor(Color.primary)
+                .foregroundColor(Color.primary)
             Spacer()
         }
     }

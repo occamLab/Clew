@@ -109,6 +109,11 @@ enum AppState {
     }
 }
 
+/// Add clewGreen as a color
+extension Color {
+    static let clewGreen = Color(red: 105 / 255, green: 189 / 255, blue: 72 / 255)
+}
+
 /// The view controller that handles the main Clew window.  This view controller is always active and handles the various views that are used for different app functionalities.
 class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDelegate, AVSpeechSynthesizerDelegate, ARSessionDelegate {
     
@@ -692,9 +697,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     @objc func saveCodeIDButtonPressed() {
         /// Save the input from the user for the app clip code ID as an attribute of the SavedRoute
         let id = "000"
-        /// Get the input values from user, if it's nil then use "000"
+        /// Get the input values from user, if it's nil then use "000" (this does not actually work)
         self.appClipCodeID = nameCodeIDController.textField.text as String? ?? id
-        print(type(of: self), type(of: nameCodeIDController))
         let worldMap = nameCodeIDController.worldMap
         hideAllViewsHelper()
         ///Announce to the user that they have saved the route ID and are now at the saving route name screen
