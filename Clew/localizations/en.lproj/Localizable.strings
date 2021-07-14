@@ -313,6 +313,10 @@
 // App Clip strings
 "firebaseSuccessfullyLoaded" = "Routes loaded successfully.";
 
+    // EnterCodeIDView
+    "codeIDprompt" = "3-digit App Clip Code ID";
+    "proceedToRoutes" = "Continue to Routes";
+
     // Popover
     "startNavigationPopoverText" = "I am placeholder text that will explain what clew is :)";
     "selectRoutePopoverLabel" = "Select Route";
