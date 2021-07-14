@@ -175,8 +175,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 break
             case .startingAutoAlignment:
                 handleStateTransitionToAutoAlignment()
-            case .startingAutoAnchoring: //BL
-//                print("hehe this is useless")
+            case .startingAutoAnchoring:
                 handleStateTransitionToAutoAnchoring()
             case .endScreen(let completedRoute):
                 print("transitioned to the end screen")
