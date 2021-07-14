@@ -19,14 +19,25 @@ struct EnterCodeIDView: View {
             TextField(
                 "3-digit App Clip Code ID",
                  text: $appClipCodeID)
+                .padding(20)
                 .disableAutocorrection(true)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .keyboardType(.numberPad)
             
             EnterButton(vc: vc, codeID: appClipCodeID)
-                .padding(12)
+                .padding(40)
+                .overlay(
+                        RoundedRectangle(cornerRadius: 10)
+                            .stroke(Color.clewGreen, lineWidth: 10)
+                )
+                .frame(minWidth: 0, maxWidth: .infinity)
+                .padding(.horizontal, 20)
         }
     }
+}
+
+extension Color {
+    static let clewGreen = Color(red: 105 / 255, green: 189 / 255, blue: 72 / 255)
 }
 
 struct EnterButtonView: View {
