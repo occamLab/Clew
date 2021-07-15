@@ -35,6 +35,9 @@ class PauseTrackingController: UIViewController, UIScrollViewDelegate {
     /// startAnchorPoint Boolean that should be set from ViewController in order to display appropriate text
     var startAnchorPoint: Bool!
     
+    /// imageAnchoring Boolean that should be set from ViewController in order to display appropriate text
+    var imageAnchoring: Bool!
+    
     /// called when the view loads (any time)
     override func viewDidAppear(_ animated: Bool) {
         /// update label font
@@ -48,8 +51,11 @@ class PauseTrackingController: UIViewController, UIScrollViewDelegate {
         } else {
             if startAnchorPoint {
                 mainText = String.localizedStringWithFormat(NSLocalizedString("multipleUseRouteStartAnchorPointText", comment: "Information on how to record an anchor point when used recording the starting anchor point of a multiple use route."), waitingPeriod)
-                
+            } else if imageAnchoring {
+                /// no text is displayed
+                mainText = ""
             } else {
+                /// recording an end anchor point without image anchor
                 mainText = String.localizedStringWithFormat(NSLocalizedString("multipleUseRouteEndAnchorPointText", comment: "Information on how to record an anchor point when used recording the ending anchor point of a multiple use route."), waitingPeriod)
             }
             

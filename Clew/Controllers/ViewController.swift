@@ -1537,6 +1537,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         pauseTrackingController.paused = paused
         pauseTrackingController.recordingSingleUseRoute = recordingSingleUseRoute
         pauseTrackingController.startAnchorPoint = startAnchorPoint
+        pauseTrackingController.imageAnchoring = imageAnchoring
         
         add(pauseTrackingController)
         delayTransition()
