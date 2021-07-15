@@ -1335,7 +1335,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 imageNode.addChildNode(yAxis)
                 imageNode.addChildNode(zAxis) */
                 imageNode.addChildNode(highlightPlane)
+                #if APPCLIP
+                self.state = .startingAutoAlignment
+                #else
                 self.state = .startingAutoAnchoring
+                #endif
             }
             
         }
@@ -2097,8 +2101,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 self.state = .navigatingRoute
 
             }
-        }
-        else {
+        } else {
             DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(ViewController.alignmentWaitingPeriod)) {
             self.rootContainerView.countdownTimer.isHidden = true
             // The first check is necessary in case the phone relocalizes before this code executes
@@ -2132,7 +2135,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
 
                 } else {
                     ///PATHPOINT load saved route -> start navigation
-
                     ///announce to the user that they have sucessfully aligned with their saved anchor point.
                     self.delayTransition(announcement: NSLocalizedString("resumeAnchorPointToReturnNavigationAnnouncement", comment: "This is an Announcement which indicates that the pause session is complete, that the program was able to align with the anchor point, and that return navigation has started."), initialFocus: nil)
                     self.state = .navigatingRoute

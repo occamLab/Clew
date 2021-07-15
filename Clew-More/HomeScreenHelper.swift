@@ -61,7 +61,6 @@ class HomeScreenHelper {
     }
     
     func loadRoute() {
-            //vc?.imageAnchoring = true
         self.vc.recordPathController.remove()
         self.vc.handleStateTransitionToNavigatingExternalRoute()
     }
