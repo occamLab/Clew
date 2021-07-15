@@ -1001,6 +1001,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         let firstTimeLoggingIn: Bool? = userDefaults.object(forKey: "firstTimeLogin") as? Bool
         let showedSignificantChangesAlert: Bool? = userDefaults.object(forKey: "showedSignificantChangesAlertv1_3") as? Bool
         
+        #if !APPCLIP
         if firstTimeLoggingIn == nil {
             userDefaults.set(Date().timeIntervalSince1970, forKey: "firstUsageTimeStamp")
             userDefaults.set(true, forKey: "firstTimeLogin")
@@ -1013,6 +1014,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             // don't show this for now, but leave the plumbing in place for a future significant change
             // showSignificantChangesAlert()
         }
+        #endif
         
         synth.delegate = self
         NotificationCenter.default.addObserver(forName: UIAccessibility.announcementDidFinishNotification, object: nil, queue: nil) { (notification) -> Void in
