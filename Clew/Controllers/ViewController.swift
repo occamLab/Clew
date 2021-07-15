@@ -1267,7 +1267,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         updateDisplayFromDefaults()
     }
     
-    /// Create a new ARSession. <3
+    /// Create a new ARSession.
     /// - Tag: ARReferenceImage-Loading
     func createARSessionConfiguration() {
         configuration = ARWorldTrackingConfiguration()
