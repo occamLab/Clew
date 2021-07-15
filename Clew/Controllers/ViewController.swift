@@ -855,6 +855,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// route recording VC (called on app start)
     var recordPathController: RecordPathController!
+   
     
     /// saving route code ID VC
     var nameCodeIDController: NameCodeIDController!
@@ -886,6 +887,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         resumeTrackingConfirmController = ResumeTrackingConfirmController()
         stopRecordingController = StopRecordingController()
         recordPathController = RecordPathController()
+      
         startNavigationController = StartNavigationController()
         stopNavigationController = StopNavigationController()
         nameSavedRouteController = NameSavedRouteController()
@@ -901,15 +903,26 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         createARSessionConfiguration()
         
         // TODO: we might want to make this wait on the AR session starting up, but since it happens pretty fast it's likely not a big deal
+        #if !CLEWMORE
         state = .mainScreen(announceArrival: false)
+        #endif
         view.sendSubviewToBack(sceneView)
         
+        //rootContainerView.swiftUIPlaceHolder = UIHostingController(rootView: DefaultView())
+
+        // view.bringSubviewToFront(rootContainerView.swiftUIPlaceHolder.view)
+        
+        // rootContainerView.swiftUIPlaceHolder.view.isHidden = false
+        
+        print("its in the front now")
         // targets for global buttons
         ///// TRACK
         #if !APPCLIP
         rootContainerView.burgerMenuButton.addTarget(self, action: #selector(burgerMenuButtonPressed), for: .touchUpInside)
         
+        // need to modify this for clewmore
         rootContainerView.homeButton.addTarget(self, action: #selector(homeButtonPressed), for: .touchUpInside)
+        
         #endif
         
         rootContainerView.getDirectionButton.addTarget(self, action: #selector(announceDirectionHelpPressed), for: .touchUpInside)
@@ -921,6 +934,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         
         addGestures()
         firebaseSetup.setupFirebaseObservers(vc: self)
+        
+
         
         // create listeners to ensure that the isReadingAnnouncement flag is reset properly
         NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification, object: nil, queue: nil) { (notification) -> Void in
@@ -1003,7 +1018,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             userDefaults.set(true, forKey: "firstTimeLogin")
             // make sure not to show the significant changes alert in the future
             userDefaults.set(true, forKey: "showedSignificantChangesAlertv1_3")
+            #if !APPCLIP
             showLogAlert()
+            #endif
         } else if showedSignificantChangesAlert == nil {
             // we only show the significant changes alert if this is an old installation
             userDefaults.set(true, forKey: "showedSignificantChangesAlertv1_3")
@@ -1528,6 +1545,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         #if !APPCLIP
         rootContainerView.homeButton.isHidden = false
         #endif
+        
+        #if CLEWMORE
+        rootContainerView.homeButton.isHidden = true
+        #endif
+        
         recordPathController.remove()
         startNavigationController.remove()
 
@@ -2413,6 +2435,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     // Chooses the states in which the home page alerts pop up
     @objc func homeButtonPressed() {
     // if the state case needs to have a home button alert, send it to the function that creates the relevant alert
+        #if !CLEWMORE
         if case .navigatingRoute = self.state {
             homePageNavigationProcesses()
         }
@@ -2449,6 +2472,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             hideAllViewsHelper()
             self.state = .mainScreen(announceArrival: false)
         }
+        #endif
+        
+        #if CLEWMORE
+        self.present(UIHostingController(rootView: StartMenuView(vc: self)), animated: false)
+        #endif
     }
     
     @objc func burgerMenuButtonPressed() {

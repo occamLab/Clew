@@ -2,7 +2,7 @@
 //  SceneDelegate.swift
 //  Clew More
 //
-//  Created by Paul Ruvolo on 6/30/21.
+//  Created by Esme Abbot on 7/14/21.
 //
 
 import UIKit
@@ -36,6 +36,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window = UIWindow(windowScene: scene)
         vc = ViewController()
         homeScreenHelper = HomeScreenHelper(vc: vc!, sceneDelegate: self)
+        vc?.rootContainerView.burgerMenuButton.isHidden = false
         window?.frame = UIScreen.main.bounds
         window?.rootViewController = vc
         window?.backgroundColor = .white
@@ -54,6 +55,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         self.startMenuController?.modalPresentationStyle = .fullScreen
         self.vc!.present(self.startMenuController!, animated: true)
         
+        //vc?.rootContainerView.swiftUIPlaceHolder = UIHostingController(rootView: StartMenuView(vc: self.vc!))
+        print("view created")
         NotificationCenter.default.addObserver(forName: NSNotification.Name("shouldOpenRouteMenu"), object: nil, queue: nil) { (notification) -> Void in
             self.startMenuController!.dismiss(animated: false)
             
@@ -64,6 +67,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             self.startMenuController!.dismiss(animated: false)
             
             self.homeScreenHelper!.RecordAppClipRouteHelper()
+        }
+        
+        NotificationCenter.default.addObserver(forName: NSNotification.Name("shouldShowRoutes"), object: nil, queue: nil) { (notification) -> Void in
+            self.startMenuController!.dismiss(animated: false)
+            
+            self.homeScreenHelper!.RouteDisplayHelper()
         }
         
         

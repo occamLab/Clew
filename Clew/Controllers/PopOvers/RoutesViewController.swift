@@ -9,6 +9,8 @@
 import Foundation
 import WebKit
 import ARKit
+import UIKit
+import SwiftUI
 
 /// The view controller that handles the saved routes view
 class RoutesViewController : UIViewController, UITableViewDataSource, UITableViewDelegate {
@@ -145,5 +147,9 @@ class RoutesViewController : UIViewController, UITableViewDataSource, UITableVie
     /// Called to dismiss the routes menu
     @objc func doneWithRoutes() {
         dismiss(animated: true, completion: nil)
+        #if CLEWMORE
+        self.rootViewController!.present(UIHostingController(rootView: StartMenuView(vc: self.rootViewController!)), animated: true)
+
+        #endif
     }
 }
