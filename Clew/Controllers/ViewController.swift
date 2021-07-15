@@ -303,7 +303,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         intermediateAnchorPoints = []
         logger.resetPathLog()
         
+        #if !APPCLIP
         showStopRecordingButton()
+        #endif
         droppingCrumbs = Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: #selector(dropCrumb), userInfo: nil, repeats: true)
         // make sure there are no old values hanging around
         nav.headingOffset = 0.0
@@ -2007,7 +2009,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             hideAllViewsHelper()
             ///PATHPOINT multi use route pause -> resume route
             self.pauseTracking()
-        }else {
+        } else {
             ///PATHPOINT single use route pause -> record end Anchor Point
             state = .startingPauseProcedure
         }
@@ -2054,7 +2056,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         state = .completingPauseProcedure
     }
     
-    /// this is called when the user has confirmed the alignment and is the alignment countdown should begin.  Once the alignment countdown has finished, the alignment will be performed and the app will move to the ready to navigate view.
+    /// this is called when the user has confirmed the alignment for return navigation and is the alignment countdown should begin.  Once the alignment countdown has finished, the alignment will be performed and the app will move to the ready to navigate view.
     func resumeTracking() {
         // resume pose tracking with existing ARSessionConfiguration
         hideAllViewsHelper()
