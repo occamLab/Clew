@@ -343,6 +343,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// Automatically sets up anchor point for route recording
     func handleStateTransitionToAutoAnchoring() {
         print("Aligning to anchor image")
+        hideAllViewsHelper()
         
         let recordStart = UIAlertController(title: "Start Recording", message: "Aligned to anchor image, click Start to begin recording route", preferredStyle: .alert)
         
@@ -1546,7 +1547,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// Display the resume tracking view/hide all other views
     @objc func showResumeTrackingButton() {
         #if !APPCLIP
-        rootContainerView.homeButton.isHidden = false // no home button here
+        rootContainerView.homeButton.isHidden = false // no home button here,, unhomes your button :(
         #endif
         pauseTrackingController.remove()
         add(resumeTrackingController)
@@ -1849,7 +1850,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// the most recently used map.  This helps us determine whether a route the user is attempting to load requires alignment.  If we have already aligned within a particular map, we can skip the alignment procedure.
     var justUsedMap : Any?
     
-    /// DirectionText based on hapic/voice settings
+    /// DirectionText based on haptic/voice settings
     var Directions: Dictionary<Int, String> {
         if (hapticFeedback) {
             return HapticDirections

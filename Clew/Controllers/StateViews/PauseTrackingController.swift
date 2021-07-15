@@ -51,9 +51,6 @@ class PauseTrackingController: UIViewController, UIScrollViewDelegate {
         } else {
             if startAnchorPoint {
                 mainText = String.localizedStringWithFormat(NSLocalizedString("multipleUseRouteStartAnchorPointText", comment: "Information on how to record an anchor point when used recording the starting anchor point of a multiple use route."), waitingPeriod)
-            } else if imageAnchoring {
-                /// no text is displayed
-                mainText = ""
             } else {
                 /// recording an end anchor point without image anchor
                 mainText = String.localizedStringWithFormat(NSLocalizedString("multipleUseRouteEndAnchorPointText", comment: "Information on how to record an anchor point when used recording the ending anchor point of a multiple use route."), waitingPeriod)
