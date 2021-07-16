@@ -20,6 +20,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var enterCodeIDController: UIViewController?
     var popoverController: UIViewController?
     var loadFromAppClipController: UIViewController?
+    
+    var homeScreenHelper: HomeScreenHelper?
+
 //    var currentAnnouncement: String?
   
     
@@ -30,6 +33,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let scene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: scene)
         vc = ViewController()
+        homeScreenHelper = HomeScreenHelper(vc: vc!, sceneDelegate: self)
+
+        
         window?.frame = UIScreen.main.bounds
         window?.rootViewController = vc
         window?.backgroundColor = .white
@@ -48,37 +54,38 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         
         createScene(scene)
-        
-        /// User enters their appClipCodeID
-        self.enterCodeIDController = UIHostingController(rootView: EnterCodeIDView(vc: self.vc!))
-        self.enterCodeIDController?.modalPresentationStyle = .fullScreen
-        self.vc!.present(self.enterCodeIDController!, animated: false)
+        self.homeScreenHelper!.NavigateAppClipRouteHelper()
+      
+//         /// User enters their appClipCodeID
+//         self.enterCodeIDController = UIHostingController(rootView: EnterCodeIDView(vc: self.vc!))
+//         self.enterCodeIDController?.modalPresentationStyle = .fullScreen
+//         self.vc!.present(self.enterCodeIDController!, animated: false)
 
-        /// listener
-        NotificationCenter.default.addObserver(forName: NSNotification.Name("shouldDismissCodeIDPopover"), object: nil, queue: nil) { (notification) -> Void in
+//         /// listener
+//         NotificationCenter.default.addObserver(forName: NSNotification.Name("shouldDismissCodeIDPopover"), object: nil, queue: nil) { (notification) -> Void in
             
-            NotificationCenter.default.addObserver(forName: NSNotification.Name("invalidCodeID"), object: nil, queue: nil) { (notification) -> Void in
-                /// If user inputs an invalid app clip code ID, let them know to retry
-                self.enterCodeIDController = UIHostingController(rootView: EnterCodeIDView(vc: self.vc!))
-                self.enterCodeIDController?.modalPresentationStyle = .fullScreen
-                self.vc!.present(self.enterCodeIDController!, animated: true)
-            }
+//             NotificationCenter.default.addObserver(forName: NSNotification.Name("invalidCodeID"), object: nil, queue: nil) { (notification) -> Void in
+//                 /// If user inputs an invalid app clip code ID, let them know to retry
+//                 self.enterCodeIDController = UIHostingController(rootView: EnterCodeIDView(vc: self.vc!))
+//                 self.enterCodeIDController?.modalPresentationStyle = .fullScreen
+//                 self.vc!.present(self.enterCodeIDController!, animated: true)
+//             }
             
-            NotificationCenter.default.addObserver(forName: NSNotification.Name("firebaseLoaded"), object: nil, queue: nil) { (notification) -> Void in
+//             NotificationCenter.default.addObserver(forName: NSNotification.Name("firebaseLoaded"), object: nil, queue: nil) { (notification) -> Void in
                 
-                self.popoverController = UIHostingController(rootView: StartNavigationPopoverView(vc: self.vc!))
-                self.popoverController?.modalPresentationStyle = .fullScreen
-                self.vc!.present(self.popoverController!, animated: true)
-                print("popover successful B)")
-                // create listeners to ensure that the isReadingAnnouncement flag is reset properly
-                NotificationCenter.default.addObserver(forName: NSNotification.Name("shouldDismissRoutePopover"), object: nil, queue: nil) { (notification) -> Void in
-                    self.popoverController?.dismiss(animated: true)
-                    self.loadRoute()
-                }
-            }
-            self.getFirebaseRoutesList(vc: self.vc!)
-            self.enterCodeIDController?.dismiss(animated: true)
-        }
+//                 self.popoverController = UIHostingController(rootView: StartNavigationPopoverView(vc: self.vc!))
+//                 self.popoverController?.modalPresentationStyle = .fullScreen
+//                 self.vc!.present(self.popoverController!, animated: true)
+//                 print("popover successful B)")
+//                 // create listeners to ensure that the isReadingAnnouncement flag is reset properly
+//                 NotificationCenter.default.addObserver(forName: NSNotification.Name("shouldDismissRoutePopover"), object: nil, queue: nil) { (notification) -> Void in
+//                     self.popoverController?.dismiss(animated: true)
+//                     self.loadRoute()
+//                 }
+//             }
+//             self.getFirebaseRoutesList(vc: self.vc!)
+//             self.enterCodeIDController?.dismiss(animated: true)
+//         }
     }
     
     /// handles invocations in the App Clip

@@ -859,6 +859,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// route recording VC (called on app start)
     var recordPathController: RecordPathController!
     
+    
+    #if CLEWMORE
+    var enterCodeIDController: UIViewController!
+    
+    var selectRouteController: UIViewController!
+    #endif
+    
     /// saving route code ID VC
     var nameCodeIDController: NameCodeIDController!
     
@@ -889,10 +896,26 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         resumeTrackingConfirmController = ResumeTrackingConfirmController()
         stopRecordingController = StopRecordingController()
         recordPathController = RecordPathController()
+      
         startNavigationController = StartNavigationController()
         stopNavigationController = StopNavigationController()
         nameSavedRouteController = NameSavedRouteController()
         nameCodeIDController = NameCodeIDController()
+        
+        #if CLEWMORE
+        enterCodeIDController = UIHostingController(rootView: EnterCodeIDView(vc: self))
+        enterCodeIDController.view.frame = CGRect(x: 0,
+                                                                       y: UIScreen.main.bounds.size.height*0.15,
+                                                                       width: UIConstants.buttonFrameWidth * 1,
+                                                                       height: UIScreen.main.bounds.size.height*0.75)
+        
+        selectRouteController = UIHostingController(rootView: StartNavigationPopoverView(vc: self))
+        selectRouteController.view.frame = CGRect(x: 0,
+                                                                       y: UIScreen.main.bounds.size.height*0.15,
+                                                                       width: UIConstants.buttonFrameWidth * 1,
+                                                                       height: UIScreen.main.bounds.size.height*0.75)
+        #endif
+        
         
         // Add the scene to the view, which is a RootContainerView
         sceneView.frame = view.frame
@@ -907,12 +930,21 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         state = .mainScreen(announceArrival: false)
         view.sendSubviewToBack(sceneView)
         
+        //rootContainerView.swiftUIPlaceHolder = UIHostingController(rootView: DefaultView())
+
+        // view.bringSubviewToFront(rootContainerView.swiftUIPlaceHolder.view)
+        
+        // rootContainerView.swiftUIPlaceHolder.view.isHidden = false
+        
+        print("its in the front now")
         // targets for global buttons
         ///// TRACK
         #if !APPCLIP
         rootContainerView.burgerMenuButton.addTarget(self, action: #selector(burgerMenuButtonPressed), for: .touchUpInside)
         
+        // need to modify this for clewmore
         rootContainerView.homeButton.addTarget(self, action: #selector(homeButtonPressed), for: .touchUpInside)
+        
         #endif
         
         rootContainerView.getDirectionButton.addTarget(self, action: #selector(announceDirectionHelpPressed), for: .touchUpInside)
@@ -924,6 +956,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         
         addGestures()
         firebaseSetup.setupFirebaseObservers(vc: self)
+        
+
         
         // create listeners to ensure that the isReadingAnnouncement flag is reset properly
         NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification, object: nil, queue: nil) { (notification) -> Void in
@@ -1007,7 +1041,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             userDefaults.set(true, forKey: "firstTimeLogin")
             // make sure not to show the significant changes alert in the future
             userDefaults.set(true, forKey: "showedSignificantChangesAlertv1_3")
+            #if !APPCLIP
             showLogAlert()
+            #endif
         } else if showedSignificantChangesAlert == nil {
             // we only show the significant changes alert if this is an old installation
             userDefaults.set(true, forKey: "showedSignificantChangesAlertv1_3")
@@ -1337,6 +1373,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 imageNode.addChildNode(highlightPlane)
                 #if APPCLIP
                 self.state = .startingAutoAlignment
+                #elseif CLEWMORE
+                self.state = .startingAutoAlignment
                 #else
                 self.state = .startingAutoAnchoring
                 #endif
@@ -1401,10 +1439,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             resumeTracking()
         } else if case .startingAutoAlignment = state {
             resumeTracking()
+            print("navigating route")
         } else if case .startingAutoAnchoring = state {
             hideAllViewsHelper()
             state = .recordingRoute
         }
+        print("alignment confirmed")
     }
 
     /// Play the specified system sound.  If the system sound has been preloaded as an audio player, then play using the AVAudioSession.  If there is no corresponding player, use the `AudioServicesPlaySystemSound` function.
@@ -1537,6 +1577,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         #if !APPCLIP
         rootContainerView.homeButton.isHidden = false
         #endif
+        
+        #if CLEWMORE
+        rootContainerView.homeButton.isHidden = false
+        #endif
+        
         recordPathController.remove()
         startNavigationController.remove()
 
@@ -1567,6 +1612,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         #endif
         resumeTrackingController.remove()
         resumeTrackingConfirmController.imageAnchoring = route.imageAnchoring
+        print(resumeTrackingConfirmController.imageAnchoring)
         // I THINK that's the image anchoring that we want
         add(resumeTrackingConfirmController)
         resumeTrackingConfirmController.view.mainText?.text = ""
@@ -2058,13 +2104,59 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         sceneView.session.run(configuration, options: [.removeExistingAnchors, .resetTracking])
     }
     
+    @objc func enterCodeID() {
+        self.recordPathController.remove()
+        
+        self.add(enterCodeIDController)
+
+    }
+    
+    @objc func codeIDEntered() {
+        self.enterCodeIDController.remove()
+      
+        NotificationCenter.default.addObserver(forName: NSNotification.Name("firebaseLoaded"), object: nil, queue: nil) { (notification) -> Void in
+            self.add(self.selectRouteController)
+            // create listeners to ensure that the isReadingAnnouncement flag is reset properly
+            NotificationCenter.default.addObserver(forName: NSNotification.Name("shouldDismissRoutePopover"), object: nil, queue: nil) { (notification) -> Void in
+                self.selectRouteController.remove()
+            }
+        }
+        
+        self.getFirebaseRoutesList()
+
+    }
+    
     /// this is called after the alignment countdown timer finishes in order to complete the pause tracking procedure
     @objc func pauseTracking() {
         // pause AR pose tracking
         state = .completingPauseProcedure
     }
+   
+    func getFirebaseRoutesList() {
+        let routeRef = Storage.storage().reference().child("AppClipRoutes")
+        let appClipRef = routeRef.child("\(self.appClipCodeID).json")
+            
+            /// attempt to download .json file from Firebase
+            appClipRef.getData(maxSize: 100000000000) { appClipJson, error in
+                do {
+                    if let appClipJson = appClipJson {
+                        /// unwrap NSData, if it exists, to a list, and set equal to existingRoutes
+                        let routesFile = try JSONSerialization.jsonObject(with: appClipJson, options: [])
+                        print("File: \(routesFile)")
+                        if let routesFile = routesFile as? [[String: String]] {
+                            self.availableRoutes = routesFile
+                            print("List: \(self.availableRoutes)")
+                            print("æ")
+                            NotificationCenter.default.post(name: NSNotification.Name("firebaseLoaded"), object: nil)
+                        }
+                    }
+                } catch {
+                    print("Failed to download Firebase data due to error \(error)")
+                }
+            }
+        }
     
-    /// this is called when the user has confirmed the alignment for return navigation and is the alignment countdown should begin.  Once the alignment countdown has finished, the alignment will be performed and the app will move to the ready to navigate view.
+    /// this is called when the user has confirmed the alignment and is the alignment countdown should begin.  Once the alignment countdown has finished, the alignment will be performed and the app will move to the ready to navigate view.
     func resumeTracking() {
         // resume pose tracking with existing ARSessionConfiguration
         hideAllViewsHelper()
@@ -2457,6 +2549,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             hideAllViewsHelper()
             self.state = .mainScreen(announceArrival: false)
         }
+        
     }
     
     @objc func burgerMenuButtonPressed() {

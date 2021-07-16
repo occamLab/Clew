@@ -9,6 +9,7 @@
 // and elements
 
 import UIKit
+import SwiftUI
 import ARKit
 import SceneKit
 import SceneKit.ModelIO
@@ -56,6 +57,10 @@ class RootContainerView: UIView {
     /// a timer that counts down during the alignment procedure
     /// (alignment is captured at the end of the time)
     var countdownTimer: SRCountdownTimer!
+    
+    #if CLEWMORE
+    //var swiftUIPlaceHolder: UIViewController!
+    #endif
 
     /// required for non storyboard UIView
     /// objects
@@ -132,6 +137,21 @@ class RootContainerView: UIView {
         /// and announce through VoiceOver by posting appropriate notifications
         countdownTimer.accessibilityElementsHidden = true
         
+        #if CLEWMORE
+        /* swiftUIPlaceHolder = UIHostingController(rootView: DefaultView())
+        /*swiftUIPlaceHolder.view.frame(forAlignmentRect: CGRect(x: UIConstants.buttonFrameWidth*1/10,
+                                                          y: UIConstants.yOriginOfButtonFrame*11/10,
+                                                          width: self.frame.width,
+                                                          height: self.frame.height - UIConstants.buttonFrameHeight))
+    */
+        swiftUIPlaceHolder.view.frame(forAlignmentRect: CGRect(x: 100,
+                                                          y: 100,
+                                                          width: 600,
+                                                          height: 1000))
+        print("Coordinate Info: \(swiftUIPlaceHolder.view.frame)")
+        print("heehee") */
+        #endif
+        
         /// add all sub views
         addSubview(announcementText)
         addSubview(getDirectionButton)
@@ -139,6 +159,10 @@ class RootContainerView: UIView {
         #if !APPCLIP
         addSubview(homeButton)
         addSubview(burgerMenuButton)
+        #endif
+        
+        #if CLEWMORE
+        //addSubview(swiftUIPlaceHolder.view)
         #endif
     }
 }

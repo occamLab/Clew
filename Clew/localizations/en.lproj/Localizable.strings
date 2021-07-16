@@ -39,8 +39,8 @@
 "resumePausedRouteButtonAccessibilityLabel" = "Resume";
 "singleUseRouteButtonText" = "Single Use Route";
 "recordSingleUseRouteButtonAccessibilityLabel" = "Record a single use route";
-"savedRoutesListButtonText" = "Saved Routes List";
-"savedRoutesListButtonAccessibilityLabel" = "Saved Routes List";
+"savedRoutesListButtonText" = "Local Saved Routes List";
+"savedRoutesListButtonAccessibilityLabel" = "Local Saved Routes List";
 "stopNavigationButtonAccessibilityLabel" = "Stop navigation";
 "startReturnNavigationButtonAcessabilityLabel" = "Start return navigation";
 "stopRecordingButtonAccessibilityLabel" = "Stop recording";
@@ -60,6 +60,9 @@
 "startReturnNavigationButtonAccessibilityLabel" = "Start navigation";
 "optionsButtonAccessibilityLabel" = "Options";
 "signInwithAppleButtonAccessibilityLabel" = "Sign In";
+"enterCodeButtonText" = "Navigate From App Clip Code";
+"recordSingleUseRouteButtonAccessibilityLabel" = "Navigate From App Clip Code";
+
 
     // Save routes
 "saveRoutePop-UpTitle" = "Save route";
