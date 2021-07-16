@@ -26,7 +26,9 @@ struct EnterCodeIDView: View {
     let vc: ViewController
     @ObservedObject private var codeIDModel = CodeIDModel()
 
+    
      var body: some View {
+        
         VStack {
             TextField(NSLocalizedString("codeIDprompt", comment: "This is a string appearing in the text box asking the user to enter their 3-digit app clip code ID"), text: $codeIDModel.code)
                 .padding(20)
@@ -66,7 +68,8 @@ struct EnterButton: View {
     var body: some View {
         Button(action: {
             vc.appClipCodeID = codeID
-            NotificationCenter.default.post(name: NSNotification.Name("shouldDismissCodeIDPopover"), object: nil)
+            vc.codeIDEntered()
+            //NotificationCenter.default.post(name: NSNotification.Name("shouldDismissCodeIDPopover"), object: nil)
         }) {
             EnterButtonView()
         }

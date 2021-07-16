@@ -147,9 +147,5 @@ class RoutesViewController : UIViewController, UITableViewDataSource, UITableVie
     /// Called to dismiss the routes menu
     @objc func doneWithRoutes() {
         dismiss(animated: true, completion: nil)
-        #if CLEWMORE
-        self.rootViewController!.present(UIHostingController(rootView: StartMenuView(vc: self.rootViewController!)), animated: true)
-
-        #endif
     }
 }

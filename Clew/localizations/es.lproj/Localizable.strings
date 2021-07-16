@@ -55,6 +55,9 @@
 "playVoiceNoteButtonAccessibilityLabel" = "Reproducir nota de voz grabada";
 "startReturnNavigationButtonAccessibilityLabel" = "Iniciar la navegación";
 "optionsButtonAccessibilityLabel" = "Opciónes";
+// TODO: Translate the two below from the english localizaiton
+"enterCodeButtonText" = "";
+"recordSingleUseRouteButtonAccessibilityLabel" = "";
 
     // Save routes
 "saveRoutePop-UpTitle" = "Guardar ruta";

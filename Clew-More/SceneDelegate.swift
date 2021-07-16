@@ -50,7 +50,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         
         createScene(scene)
-        
+        /*
         self.startMenuController = UIHostingController(rootView: StartMenuView(vc: self.vc!))
         self.startMenuController?.modalPresentationStyle = .fullScreen
         self.vc!.present(self.startMenuController!, animated: true)
@@ -73,7 +73,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             self.startMenuController!.dismiss(animated: false)
             
             self.homeScreenHelper!.RouteDisplayHelper()
-        }
+        }*/
         
         
         

@@ -464,6 +464,10 @@
 /* This is the accessibility label which is played when a user with voice over selects the button to stop their voice recording */
 "stopRecordingVoiceNoteAccessibilityLabel" = "تم إيقاف التسجيل";
 
+// TODO: Translate the two below from the English file
+"enterCodeButtonText" = "";
+"recordSingleUseRouteButtonAccessibilityLabel" = "";
+
 /* Version of directions given when haptic feedback function is turned on (Simpler) */
 "straightDirection" = "تابع السير إلى الأمام";
 

@@ -31,8 +31,14 @@ class HomeScreenHelper {
     func NavigateAppClipRouteHelper() {
         /// User enters their appClipCodeID
         var enterCodeIDController = UIHostingController(rootView: EnterCodeIDView(vc: self.vc))
-        enterCodeIDController.modalPresentationStyle = .fullScreen
-        self.sceneDelegate.window?.rootViewController!.present(enterCodeIDController, animated: false)
+        enterCodeIDController.view.frame = CGRect(x: 0,
+                                                                       y: UIScreen.main.bounds.size.height*0.15,
+                                                                       width: UIConstants.buttonFrameWidth * 1,
+                                                                       height: UIScreen.main.bounds.size.height*0.75)
+        self.vc.add(enterCodeIDController)
+
+        /*enterCodeIDController.modalPresentationStyle = .fullScreen
+        self.sceneDelegate.window?.rootViewController!.present(enterCodeIDController, animated: false)*/
 
         /// listener
         NotificationCenter.default.addObserver(forName: NSNotification.Name("shouldDismissCodeIDPopover"), object: nil, queue: nil) { (notification) -> Void in
@@ -70,7 +76,7 @@ class HomeScreenHelper {
     }
     
     func getFirebaseRoutesList() {
-            let routeRef = Storage.storage().reference().child("AppClipRoutes")
+        let routeRef = Storage.storage().reference().child("AppClipRoutes")
         let appClipRef = routeRef.child("\(self.vc.appClipCodeID).json")
             
             /// attempt to download .json file from Firebase
