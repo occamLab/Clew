@@ -282,7 +282,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         // cancel the timer that announces tracking errors
         trackingErrorsAnnouncementTimer?.invalidate()
         // if the ARSession is running, pause it to conserve battery
-        sceneView.session.currentFrame?.anchors.removeAll()
         sceneView.session.pause()
         // set this to nil to prevent the app from erroneously detecting that we can auto-align to the route
         if #available(iOS 12.0, *) {
@@ -742,6 +741,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         resumeTrackingController.remove()
         nameSavedRouteController.remove()
         nameCodeIDController.remove()
+        #if CLEWMORE
+        selectRouteController.remove()
+        enterCodeIDController.remove()
+        #endif
         rootContainerView.countdownTimer.isHidden = true
     }
     
@@ -910,12 +913,16 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                                                                        y: UIScreen.main.bounds.size.height*0.15,
                                                                        width: UIConstants.buttonFrameWidth * 1,
                                                                        height: UIScreen.main.bounds.size.height*0.75)
+        enterCodeIDController.view.backgroundColor = .clear
         
         selectRouteController = UIHostingController(rootView: StartNavigationPopoverView(vc: self))
         selectRouteController.view.frame = CGRect(x: 0,
                                                                        y: UIScreen.main.bounds.size.height*0.15,
                                                                        width: UIConstants.buttonFrameWidth * 1,
                                                                        height: UIScreen.main.bounds.size.height*0.75)
+        
+        selectRouteController.view.backgroundColor = .clear
+
         #endif
         
         
@@ -1335,6 +1342,16 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             }
         }
         
+        if case .startingPauseProcedure = state {
+            if (frame.anchors.compactMap({$0 as? ARImageAnchor}).count > 0) && (state.rawValue != "startingAutoAnchoring") {
+                print("number of ARImageAnchors: \(frame.anchors.compactMap({$0 as? ARImageAnchor}).count)")
+                if (frame.anchors.compactMap({$0 as? ARImageAnchor}).first!.isTracked) {
+                    self.state = .startingAutoAnchoring
+                    print("auto anchoring")
+                }
+            }
+        }
+        
         for imageAnchor in frame.anchors.compactMap(({$0 as? ARImageAnchor})) {
             let imageNode: SCNNode
             if let existingTagNode = sceneView.scene.rootNode.childNode(withName: "Image Tag", recursively: false) {
@@ -1352,15 +1369,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 imageNode.name = "Image Tag"
                 sceneView.scene.rootNode.addChildNode(imageNode)
                 
-                /// Adds axes to the tag to aid in the visualization
-                /*let sideLen: CGFloat = 0.01
-                let axisLen: CGFloat = 0.5
-                let xAxis = SCNNode(geometry: SCNBox(width: axisLen, height: sideLen, length: sideLen, chamferRadius: 0))
-                xAxis.geometry?.firstMaterial?.diffuse.contents = UIColor.red
-                let yAxis = SCNNode(geometry: SCNBox(width: sideLen, height: axisLen, length: sideLen, chamferRadius: 0))
-                yAxis.geometry?.firstMaterial?.diffuse.contents = UIColor.green
-                let zAxis = SCNNode(geometry: SCNBox(width: sideLen, height: sideLen, length: axisLen, chamferRadius: 0))
-                zAxis.geometry?.firstMaterial?.diffuse.contents = UIColor.blue*/
+                /// Adds plane to the tag to aid in the visualization
                 
                 let highlightPlane = SCNNode(geometry: SCNPlane(width: imageAnchor.referenceImage.physicalSize.width, height: imageAnchor.referenceImage.physicalSize.height))
                 
@@ -2106,6 +2115,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         self.recordPathController.remove()
         
         self.add(enterCodeIDController)
+        self.rootContainerView.homeButton.isHidden = false
 
     }
     
@@ -2114,6 +2124,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
       
         NotificationCenter.default.addObserver(forName: NSNotification.Name("firebaseLoaded"), object: nil, queue: nil) { (notification) -> Void in
             self.add(self.selectRouteController)
+            /*self.selectRouteController.modalPresentationStyle = .formSheet
+            self.selectRouteController.modalTransitionStyle = .crossDissolve
+            self.present(self.selectRouteController, animated: true)*/
             // create listeners to ensure that the isReadingAnnouncement flag is reset properly
             NotificationCenter.default.addObserver(forName: NSNotification.Name("shouldDismissRoutePopover"), object: nil, queue: nil) { (notification) -> Void in
                 self.selectRouteController.remove()
@@ -2514,6 +2527,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     // Chooses the states in which the home page alerts pop up
     @objc func homeButtonPressed() {
     // if the state case needs to have a home button alert, send it to the function that creates the relevant alert
+        hideAllViewsHelper()
         if case .navigatingRoute = self.state {
             homePageNavigationProcesses()
         }

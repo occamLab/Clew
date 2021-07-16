@@ -12,16 +12,20 @@ import Firebase
 struct StartNavigationPopoverView: View {
     let vc: ViewController
     @State private var selectedRouteName = "" //TODO: change so it know what your settings are when you enter the walkthrough
+    @State private var routeList = [[String: String]]()
 
+    
     var body: some View {
-
+             
+        
         VStack {
+            #if APPCLIP
             Text(NSLocalizedString("startNavigationPopoverText", comment: "This is text that appears with the list of routes in the app clip."))
                 .multilineTextAlignment(.center)
                 .font(.system(size: 24, weight: .bold))
-            
+            #endif
             NavigationView {
-                List(vc.availableRoutes, id: \.first!.key) { routeInfo in
+                List(routeList, id: \.first!.key) { routeInfo in
                     
                     Button(action: {
                         vc.routeID = routeInfo.first!.key
@@ -46,9 +50,12 @@ struct StartNavigationPopoverView: View {
             
             if selectedRouteName.count > 0 {
                 StartButton(vc: vc)
-                    .padding(12)
+                    .background(Color.white)
             }
-        }
+        }.onAppear(perform: {
+            routeList = self.vc.availableRoutes
+            
+        })
     }
 }
 
@@ -79,10 +86,12 @@ struct StartButtonView: View {
                 
                 Text(NSLocalizedString("startNavigatingLabel", comment: "This text shows up below the play button to start navigating a route."))
                     .bold()
-                    .foregroundColor(Color.primary)
+                    .foregroundColor(Color.black)
             }
             Spacer()
         }
+        .padding(12)
+
     }
 }
 

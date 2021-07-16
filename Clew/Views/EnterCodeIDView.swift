@@ -28,41 +28,51 @@ struct EnterCodeIDView: View {
 
     
      var body: some View {
-        
-        VStack {
-            TextField(NSLocalizedString("codeIDprompt", comment: "This is a string appearing in the text box asking the user to enter their 3-digit app clip code ID"), text: $codeIDModel.code)
-                .disableAutocorrection(true)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .keyboardType(.numberPad)
-                .overlay(RoundedRectangle(cornerRadius: 3)
-                            .stroke(Color.black, lineWidth: 3))
-                .padding(3)
-                .overlay(RoundedRectangle(cornerRadius: 2 * 3)
-                            .stroke(Color.white, lineWidth: 3))
-                .padding(20)
+        ZStack {
+            Rectangle()
+                .foregroundColor(Color.clear)
+            VStack {
+                TextField(NSLocalizedString("codeIDprompt", comment: "This is a string appearing in the text box asking the user to enter their 3-digit app clip code ID"), text: $codeIDModel.code)
+                    .disableAutocorrection(true)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .keyboardType(.numberPad)
+                    .overlay(RoundedRectangle(cornerRadius: 3)
+                                .stroke(Color.black, lineWidth: 3))
+                    .padding(3)
+                    .overlay(RoundedRectangle(cornerRadius: 2 * 3)
+                                .stroke(Color.white, lineWidth: 3))
+                    .padding(20)
+                    
                 
-            
-            EnterButton(vc: vc, codeID: codeIDModel.code)
-                .padding(40)
-                .overlay(
-                        RoundedRectangle(cornerRadius: 10)
-                            .stroke(Color.clewGreen, lineWidth: 10)
-                )
-                .frame(minWidth: 0, maxWidth: .infinity)
-                .padding(.horizontal, 20)
-        }
+                EnterButton(vc: vc, codeID: codeIDModel.code)
+                    /*.padding(40)
+                    .overlay(
+                            RoundedRectangle(cornerRadius: 10)
+                                .stroke(Color.clewGreen, lineWidth: 10)
+                    )*/
+                    .frame(minWidth: 0, maxWidth: .infinity)
+                    .padding(.horizontal, 20)
+            }.onAppear(perform: {
+                codeIDModel.code = ""
+            })
+         }
      }
 }
 
 struct EnterButtonView: View {
     var body: some View {
-        HStack{
-            Spacer()
+        ZStack {
+            Image("WhiteButtonBackground")
+                .resizable()
+                .frame(maxWidth: UIScreen.main.bounds.size.width/1.1, maxHeight: UIScreen.main.bounds.size.height/5)
+            HStack{
+                Spacer()
 
-            Text(NSLocalizedString("proceedToRoutes", comment: "This is the label of the button the user presses to have Firebase load in the routes based on the app clip code ID."))
-                .bold()
-                .foregroundColor(Color.primary)
-            Spacer()
+                Text(NSLocalizedString("proceedToRoutes", comment: "This is the label of the button the user presses to have Firebase load in the routes based on the app clip code ID."))
+                    .bold()
+                    .foregroundColor(Color.black)
+                Spacer()
+            }
         }
     }
 }

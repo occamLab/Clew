@@ -73,6 +73,7 @@ class RootContainerView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
+        backgroundColor = UIColor.systemBackground
         // MARK: Burger Menu Button
         #if !APPCLIP
         burgerMenuButton = UIButton(frame: CGRect(x: UIConstants.buttonFrameWidth/(10/0.5),
