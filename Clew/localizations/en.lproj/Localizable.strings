@@ -126,7 +126,7 @@
 
 //"multipleUseRouteStartAnchorPointText" = "To allow your route to be navigated at a later point you need to record an anchor point for the start of your route. An anchor point records the position and alignment of your device so the app can reload your route from a saved file. As a result the accuracy of your saved route navigation relies entirely on how accurately you can realign and position your phone with your saved anchor point at a later point. We suggest using the text and voice note buttons to record a text note and/or a voice recording which can help you realign your device to the anchor point you recorded at a later time.\nTo create an anchor point, hold your device flat with the screen facing up. Press the top (short) edge flush against a flat vertical surface (such as a wall) the \”align\” button starts a %lu-second countdown. The countdown is intended to give you time to position your device; the anchor point will be saved at the end of the countdown.";
 
-"multipleUseRouteStartAnchorPointText" = "To save a route for later navigation, you need to anchor the start point off an image. To create this anchor point, point the rear camera of your phone toward the image of the tree. When a green rectangle appears on the tree and you hear a ding sound, the anchor point will automatically save, and you can start recording your route by pressing the \"Start\" button on the popoverg.";
+"multipleUseRouteStartAnchorPointText" = "To save a route for later navigation, you need to anchor the start point off an image. To create this anchor point, point the rear camera of your phone toward the image of the tree. When a green rectangle appears on the tree and you hear a ding sound, the anchor point will automatically save, and you can start recording your route by pressing the \"Start\" button on the popover.";
 
 "multipleUseRouteEndAnchorPointText" = "To allow your route to be navigated in the reverse direction you need to record an anchor point for the end of your route. An anchor point records the position and alignment of your device so the app can reload your route from a saved file. As a result the accuracy of your saved route navigation relies entirely on how accurately you can realign and position your phone with your saved anchor point at a later point. We suggest using the text and voice note buttons to record a text note and/or a voice recording which can help you realign your device to the anchor point you recorded at a later time.\nTo create an anchor point, hold your device flat with the screen facing up. Press the top (short) edge flush against a flat vertical surface (such as a wall) the \”align\” button starts a %lu-second countdown. The countdown is intended to give you time to position your device; the anchor point will be saved at the end of the countdown.";
 
@@ -314,7 +314,9 @@
 "thanksForFeedbackAnnouncement" = "Thank you for your feedback";
 
 // App Clip strings
-"firebaseSuccessfullyLoaded" = "Routes loaded successfully.";
+    // SceneDelegate
+    "firebaseSuccessfullyLoaded" = "Routes loaded successfully.";
+    "invalidCodeID" = "Invalid app clip code ID, please try again.";
 
     // EnterCodeIDView
     "codeIDprompt" = "3-digit App Clip Code ID";

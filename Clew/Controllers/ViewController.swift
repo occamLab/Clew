@@ -303,7 +303,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         intermediateAnchorPoints = []
         logger.resetPathLog()
         
+        #if !APPCLIP
         showStopRecordingButton()
+        #endif
         droppingCrumbs = Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: #selector(dropCrumb), userInfo: nil, repeats: true)
         // make sure there are no old values hanging around
         nav.headingOffset = 0.0
@@ -341,6 +343,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// Automatically sets up anchor point for route recording
     func handleStateTransitionToAutoAnchoring() {
         print("Aligning to anchor image")
+        hideAllViewsHelper()
         
         let recordStart = UIAlertController(title: "Start Recording", message: "Aligned to anchor image, click Start to begin recording route", preferredStyle: .alert)
         
@@ -1032,6 +1035,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         let firstTimeLoggingIn: Bool? = userDefaults.object(forKey: "firstTimeLogin") as? Bool
         let showedSignificantChangesAlert: Bool? = userDefaults.object(forKey: "showedSignificantChangesAlertv1_3") as? Bool
         
+        #if !APPCLIP
         if firstTimeLoggingIn == nil {
             userDefaults.set(Date().timeIntervalSince1970, forKey: "firstUsageTimeStamp")
             userDefaults.set(true, forKey: "firstTimeLogin")
@@ -1046,6 +1050,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             // don't show this for now, but leave the plumbing in place for a future significant change
             // showSignificantChangesAlert()
         }
+        #endif
         
         synth.delegate = self
         NotificationCenter.default.addObserver(forName: UIAccessibility.announcementDidFinishNotification, object: nil, queue: nil) { (notification) -> Void in
@@ -1298,7 +1303,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         updateDisplayFromDefaults()
     }
     
-    /// Create a new ARSession. <3
+    /// Create a new ARSession.
     /// - Tag: ARReferenceImage-Loading
     func createARSessionConfiguration() {
         configuration = ARWorldTrackingConfiguration()
@@ -1368,10 +1373,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 imageNode.addChildNode(highlightPlane)
                 #if APPCLIP
                 self.state = .startingAutoAlignment
-
                 #elseif CLEWMORE
                 self.state = .startingAutoAlignment
-
                 #else
                 self.state = .startingAutoAnchoring
                 #endif
@@ -1586,6 +1589,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         pauseTrackingController.paused = paused
         pauseTrackingController.recordingSingleUseRoute = recordingSingleUseRoute
         pauseTrackingController.startAnchorPoint = startAnchorPoint
+        pauseTrackingController.imageAnchoring = imageAnchoring
         
         add(pauseTrackingController)
         delayTransition()
@@ -1594,7 +1598,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// Display the resume tracking view/hide all other views
     @objc func showResumeTrackingButton() {
         #if !APPCLIP
-        rootContainerView.homeButton.isHidden = false // no home button here
+        rootContainerView.homeButton.isHidden = false // no home button here,, unhomes your button :(
         #endif
         pauseTrackingController.remove()
         add(resumeTrackingController)
@@ -1898,7 +1902,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// the most recently used map.  This helps us determine whether a route the user is attempting to load requires alignment.  If we have already aligned within a particular map, we can skip the alignment procedure.
     var justUsedMap : Any?
     
-    /// DirectionText based on hapic/voice settings
+    /// DirectionText based on haptic/voice settings
     var Directions: Dictionary<Int, String> {
         if (hapticFeedback) {
             return HapticDirections
@@ -2059,7 +2063,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             hideAllViewsHelper()
             ///PATHPOINT multi use route pause -> resume route
             self.pauseTracking()
-        }else {
+        } else {
             ///PATHPOINT single use route pause -> record end Anchor Point
             state = .startingPauseProcedure
         }
@@ -2127,7 +2131,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         // pause AR pose tracking
         state = .completingPauseProcedure
     }
-    
+   
     func getFirebaseRoutesList() {
         let routeRef = Storage.storage().reference().child("AppClipRoutes")
         let appClipRef = routeRef.child("\(self.appClipCodeID).json")
@@ -2189,8 +2193,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 self.state = .navigatingRoute
 
             }
-        }
-        else {
+        } else {
             DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(ViewController.alignmentWaitingPeriod)) {
             self.rootContainerView.countdownTimer.isHidden = true
             // The first check is necessary in case the phone relocalizes before this code executes
@@ -2224,7 +2227,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
 
                 } else {
                     ///PATHPOINT load saved route -> start navigation
-
                     ///announce to the user that they have sucessfully aligned with their saved anchor point.
                     self.delayTransition(announcement: NSLocalizedString("resumeAnchorPointToReturnNavigationAnnouncement", comment: "This is an Announcement which indicates that the pause session is complete, that the program was able to align with the anchor point, and that return navigation has started."), initialFocus: nil)
                     self.state = .navigatingRoute

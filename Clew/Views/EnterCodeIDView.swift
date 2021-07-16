@@ -31,10 +31,16 @@ struct EnterCodeIDView: View {
         
         VStack {
             TextField(NSLocalizedString("codeIDprompt", comment: "This is a string appearing in the text box asking the user to enter their 3-digit app clip code ID"), text: $codeIDModel.code)
-                .padding(20)
                 .disableAutocorrection(true)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .keyboardType(.numberPad)
+                .overlay(RoundedRectangle(cornerRadius: 3)
+                            .stroke(Color.black, lineWidth: 3))
+                .padding(3)
+                .overlay(RoundedRectangle(cornerRadius: 2 * 3)
+                            .stroke(Color.white, lineWidth: 3))
+                .padding(20)
+                
             
             EnterButton(vc: vc, codeID: codeIDModel.code)
                 .padding(40)
@@ -68,8 +74,8 @@ struct EnterButton: View {
     var body: some View {
         Button(action: {
             vc.appClipCodeID = codeID
+            NotificationCenter.default.post(name: NSNotification.Name("shouldDismissCodeIDPopover"), object: nil
             vc.codeIDEntered()
-            //NotificationCenter.default.post(name: NSNotification.Name("shouldDismissCodeIDPopover"), object: nil)
         }) {
             EnterButtonView()
         }

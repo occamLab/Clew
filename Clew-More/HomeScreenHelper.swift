@@ -52,6 +52,7 @@ class HomeScreenHelper {
                 // create listeners to ensure that the isReadingAnnouncement flag is reset properly
                 NotificationCenter.default.addObserver(forName: NSNotification.Name("shouldDismissRoutePopover"), object: nil, queue: nil) { (notification) -> Void in
                     popoverController.dismiss(animated: true)
+                    ViewController.hideAllViewsHelper(self.vc)
                     self.loadRoute()
                 }
             }
@@ -70,8 +71,7 @@ class HomeScreenHelper {
     }
     
     func loadRoute() {
-            //vc?.imageAnchoring = true
-        //self.vc.recordPathController.remove()
+        self.vc.recordPathController.remove()
         self.vc.handleStateTransitionToNavigatingExternalRoute()
     }
     
