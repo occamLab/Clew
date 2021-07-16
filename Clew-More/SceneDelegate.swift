@@ -23,7 +23,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var popoverController: UIViewController?
     var loadFromAppClipController: UIViewController?
 
-    var homeScreenHelper: HomeScreenHelper?
+    //var homeScreenHelper: HomeScreenHelper?
     
 
   
@@ -35,7 +35,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let scene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: scene)
         vc = ViewController()
-        homeScreenHelper = HomeScreenHelper(vc: vc!, sceneDelegate: self)
+        //homeScreenHelper = HomeScreenHelper(vc: vc!, sceneDelegate: self)
         vc?.rootContainerView.burgerMenuButton.isHidden = false
         window?.frame = UIScreen.main.bounds
         window?.rootViewController = vc

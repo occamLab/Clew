@@ -111,8 +111,6 @@
 		98AA5899269E1BA0001123F0 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98AA5898269E1BA0001123F0 /* SceneDelegate.swift */; };
 		98AA589A269E1CC2001123F0 /* StartNavigationPopoverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 987BA6F3268E53C0008B129E /* StartNavigationPopoverView.swift */; };
 		98AA589B269E2217001123F0 /* Surveys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82BC47FD2640383300C7D364 /* Surveys.swift */; };
-		98AA589D269E2CE3001123F0 /* HomeScreenHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98AA589C269E2CE3001123F0 /* HomeScreenHelper.swift */; };
-		98AA589E269F415C001123F0 /* HomeScreenHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98AA589C269E2CE3001123F0 /* HomeScreenHelper.swift */; };
 		98AA58A0269F7AD5001123F0 /* OptionsHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98AA589F269F7AD5001123F0 /* OptionsHeaderView.swift */; };
 		98AA58A2269F8651001123F0 /* DefaultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98AA58A1269F8651001123F0 /* DefaultView.swift */; };
 		98AA58A426A1C13D001123F0 /* RecordPathController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98AA58A326A1C13D001123F0 /* RecordPathController.swift */; };
@@ -1555,7 +1553,6 @@
 				98006FB52683845400E61861 /* ResumeTrackingController.swift in Sources */,
 				98CC6763268A0FEC00E3759F /* FirebaseSetup.swift in Sources */,
 				98AB6074269889B700613BB5 /* LoadFromAppClipView.swift in Sources */,
-				98AA589E269F415C001123F0 /* HomeScreenHelper.swift in Sources */,
 				9805365D268388EC0065E80F /* RouteDocumentData.swift in Sources */,
 				98006FBA2683847900E61861 /* UIConstants.swift in Sources */,
 				98053658268388D10065E80F /* Navigation.swift in Sources */,
@@ -1600,7 +1597,6 @@
 				98AA5897269E1518001123F0 /* AppDelegate.swift in Sources */,
 				98FF7ACC269CC10F008C64E5 /* StopNavigationController.swift in Sources */,
 				98AA5895269E0C13001123F0 /* StartMenuView.swift in Sources */,
-				98AA589D269E2CE3001123F0 /* HomeScreenHelper.swift in Sources */,
 				98FF7AD1269CC11C008C64E5 /* HelpViewController.swift in Sources */,
 				98FF7AD7269CC143008C64E5 /* UIConstants.swift in Sources */,
 				98CC59AA269CC92D002EF6D7 /* FeedbackLogger.swift in Sources */,

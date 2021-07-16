@@ -90,7 +90,6 @@ struct StartButton: View{
     var vc: ViewController
     var body: some View {
         Button(action: {
-            vc.handleStateTransitionToNavigatingExternalRoute()
             NotificationCenter.default.post(name: NSNotification.Name("shouldDismissRoutePopover"), object: nil)
             
         }) {

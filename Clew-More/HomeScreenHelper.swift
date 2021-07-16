@@ -52,7 +52,7 @@ class HomeScreenHelper {
                 // create listeners to ensure that the isReadingAnnouncement flag is reset properly
                 NotificationCenter.default.addObserver(forName: NSNotification.Name("shouldDismissRoutePopover"), object: nil, queue: nil) { (notification) -> Void in
                     popoverController.dismiss(animated: true)
-                    ViewController.hideAllViewsHelper(self.vc)
+                    self.vc.hideAllViewsHelper(self.vc)
                     self.loadRoute()
                 }
             }

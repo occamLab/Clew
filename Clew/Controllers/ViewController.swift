@@ -343,6 +343,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// Automatically sets up anchor point for route recording
     func handleStateTransitionToAutoAnchoring() {
         print("Aligning to anchor image")
+        
         hideAllViewsHelper()
         
         let recordStart = UIAlertController(title: "Start Recording", message: "Aligned to anchor image, click Start to begin recording route", preferredStyle: .alert)
@@ -1371,13 +1372,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 imageNode.addChildNode(yAxis)
                 imageNode.addChildNode(zAxis) */
                 imageNode.addChildNode(highlightPlane)
-                #if APPCLIP
-                self.state = .startingAutoAlignment
-                #elseif CLEWMORE
-                self.state = .startingAutoAlignment
-                #else
-                self.state = .startingAutoAnchoring
-                #endif
+
             }
             
         }
@@ -1431,6 +1426,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// Handle the user clicking the confirm alignment to a saved Anchor Point.  Depending on the app state, the behavior of this function will differ (e.g., if the route is being resumed versus reloaded)
     @objc func confirmAlignment() {
+        print("confirm alignment function open")
+        print("this is food this is beans")
         if case .startingPauseProcedure = state {
             state = .pauseWaitingPeriod
         } else if case .startingResumeProcedure = state {
@@ -2119,6 +2116,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             // create listeners to ensure that the isReadingAnnouncement flag is reset properly
             NotificationCenter.default.addObserver(forName: NSNotification.Name("shouldDismissRoutePopover"), object: nil, queue: nil) { (notification) -> Void in
                 self.selectRouteController.remove()
+                self.handleStateTransitionToNavigatingExternalRoute()
+
             }
         }
         
@@ -2160,6 +2159,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     func resumeTracking() {
         // resume pose tracking with existing ARSessionConfiguration
         hideAllViewsHelper()
+        print("frame that we're looking at: \(self.sceneView.session.currentFrame)")
         pauseTrackingController.remove()
         if case .readyForFinalResumeAlignment = self.state {
             rootContainerView.countdownTimer.isHidden = false

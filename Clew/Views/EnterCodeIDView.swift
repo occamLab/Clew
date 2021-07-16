@@ -74,7 +74,7 @@ struct EnterButton: View {
     var body: some View {
         Button(action: {
             vc.appClipCodeID = codeID
-            NotificationCenter.default.post(name: NSNotification.Name("shouldDismissCodeIDPopover"), object: nil
+            NotificationCenter.default.post(name: NSNotification.Name("shouldDismissCodeIDPopover"), object: nil)
             vc.codeIDEntered()
         }) {
             EnterButtonView()
