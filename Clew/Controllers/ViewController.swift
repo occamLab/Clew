@@ -282,6 +282,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         // cancel the timer that announces tracking errors
         trackingErrorsAnnouncementTimer?.invalidate()
         // if the ARSession is running, pause it to conserve battery
+        sceneView.session.currentFrame?.anchors.removeAll()
         sceneView.session.pause()
         // set this to nil to prevent the app from erroneously detecting that we can auto-align to the route
         if #available(iOS 12.0, *) {
