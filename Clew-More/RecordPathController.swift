@@ -137,7 +137,7 @@ class RecordPathController: UIViewController {
         if let parent: UIViewController = parent {
 
             routesButton.addTarget(parent,
-                                          action: #selector(ViewController.routesButtonPressed),
+                                          action: #selector(ViewController.manageRoutesButtonPressed),
                                           for: .touchUpInside)
             addAnchorPointButton.addTarget(parent,
                                           action: #selector(ViewController.recordPath),

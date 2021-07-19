@@ -54,7 +54,7 @@ struct StartNavigationPopoverView: View {
             }
         }.onAppear(perform: {
             routeList = self.vc.availableRoutes
-            
+            selectedRouteName = ""
         })
     }
 }

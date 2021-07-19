@@ -698,6 +698,18 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         self.present(nav, animated: true, completion: nil)
     }
     
+    @objc func manageRoutesButtonPressed(){
+        paused = false
+        isAutomaticAlignment = false
+        recordingSingleUseRoute = false
+        self.hideAllViewsHelper()
+        self.rootContainerView.homeButton.isHidden = false
+        self.add(self.manageRoutesController)
+        print("works")
+        
+        
+    }
+    
     @objc func saveCodeIDButtonPressed() {
         /// Save the input from the user for the app clip code ID as an attribute of the SavedRoute
         let id = "000"
@@ -744,6 +756,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         #if CLEWMORE
         selectRouteController.remove()
         enterCodeIDController.remove()
+        manageRoutesController.remove()
         #endif
         rootContainerView.countdownTimer.isHidden = true
     }
@@ -869,6 +882,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     var enterCodeIDController: UIViewController!
     
     var selectRouteController: UIViewController!
+    
+    var manageRoutesController: UIViewController!
+    
+    var routeOptionsController: UIViewController?
     #endif
     
     /// saving route code ID VC
@@ -922,6 +939,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                                                                        height: UIScreen.main.bounds.size.height*0.75)
         
         selectRouteController.view.backgroundColor = .clear
+        
+        manageRoutesController = UIHostingController(rootView: SavedRoutesList(vc: self))
+        manageRoutesController.view.frame = CGRect(x: 0,
+                                                                       y: UIScreen.main.bounds.size.height*0.15,
+                                                                       width: UIConstants.buttonFrameWidth * 1,
+                                                                       height: UIScreen.main.bounds.size.height*0.85)
+        manageRoutesController.view.backgroundColor = .clear
+        
 
         #endif
         
@@ -1617,6 +1642,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         #if !APPCLIP
         rootContainerView.homeButton.isHidden = false
         #endif
+        self.hideAllViewsHelper()
         resumeTrackingController.remove()
         resumeTrackingConfirmController.imageAnchoring = route.imageAnchoring
         print(resumeTrackingConfirmController.imageAnchoring)

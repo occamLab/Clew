@@ -115,6 +115,7 @@
 		98AA58A2269F8651001123F0 /* DefaultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98AA58A1269F8651001123F0 /* DefaultView.swift */; };
 		98AA58A426A1C13D001123F0 /* RecordPathController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98AA58A326A1C13D001123F0 /* RecordPathController.swift */; };
 		98AA58A626A604C3001123F0 /* RouteManagerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98AA58A526A604C3001123F0 /* RouteManagerView.swift */; };
+		98AA58A826A60F02001123F0 /* SavedRoutesList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98AA58A726A60F02001123F0 /* SavedRoutesList.swift */; };
 		98AB6072269889B700613BB5 /* LoadFromAppClipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98AB6071269889B700613BB5 /* LoadFromAppClipView.swift */; };
 		98AB6073269889B700613BB5 /* LoadFromAppClipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98AB6071269889B700613BB5 /* LoadFromAppClipView.swift */; };
 		98AB6074269889B700613BB5 /* LoadFromAppClipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98AB6071269889B700613BB5 /* LoadFromAppClipView.swift */; };
@@ -418,6 +419,7 @@
 		98AA58A1269F8651001123F0 /* DefaultView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultView.swift; sourceTree = "<group>"; };
 		98AA58A326A1C13D001123F0 /* RecordPathController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordPathController.swift; sourceTree = "<group>"; };
 		98AA58A526A604C3001123F0 /* RouteManagerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteManagerView.swift; sourceTree = "<group>"; };
+		98AA58A726A60F02001123F0 /* SavedRoutesList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedRoutesList.swift; sourceTree = "<group>"; };
 		98AB6071269889B700613BB5 /* LoadFromAppClipView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadFromAppClipView.swift; sourceTree = "<group>"; };
 		98AB6076269DDCC700613BB5 /* anchorInFrame.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = anchorInFrame.mp3; path = Clew/anchorInFrame.mp3; sourceTree = "<group>"; };
 		98CC59AE269CCE11002EF6D7 /* FirebaseCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FirebaseCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -675,6 +677,7 @@
 				98AA589F269F7AD5001123F0 /* OptionsHeaderView.swift */,
 				98AA58A326A1C13D001123F0 /* RecordPathController.swift */,
 				98AA58A526A604C3001123F0 /* RouteManagerView.swift */,
+				98AA58A726A60F02001123F0 /* SavedRoutesList.swift */,
 			);
 			path = "Clew-More";
 			sourceTree = "<group>";
@@ -1630,6 +1633,7 @@
 				98AA5892269E070C001123F0 /* ContentView.swift in Sources */,
 				98FF7ADC269CC157008C64E5 /* EnterCodeIDView.swift in Sources */,
 				98FF7AD2269CC11F008C64E5 /* BurgerMenuViewController.swift in Sources */,
+				98AA58A826A60F02001123F0 /* SavedRoutesList.swift in Sources */,
 				98FF7AA9269CC04A008C64E5 /* AudioVisualizerView.swift in Sources */,
 				98FF7ACB269CC10C008C64E5 /* NameSavedRouteController.swift in Sources */,
 				98AA58A426A1C13D001123F0 /* RecordPathController.swift in Sources */,
