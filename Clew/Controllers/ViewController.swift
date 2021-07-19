@@ -668,8 +668,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         } else {
             ///PATHPOINT end anchor point alignment timer -> Save Route View
             delayTransition(announcement: NSLocalizedString("multipleUseRouteAnchorPointToSaveARouteAnnouncement", comment: "This is an announcement which is spoken when the user saves the end anchor point for a multiple use route. This signifies the transition from saving an anchor point to the screen where the user can name and save their route"), initialFocus: nil)
-            ///sends the user to the screen where they input the app clip code ID
-            state = .startingNameCodeIDProcedure
+            ///sends the user to the screen where they name the route they're saving
+            state = .startingNameSavedRouteProcedure(worldMap: worldMap)
         }
     }
     
@@ -703,14 +703,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         let id = "000"
         /// Get the input values from user, if it's nil then use "000" (this does not actually work)
         self.appClipCodeID = nameCodeIDController.textField.text as String? ?? id
-        let worldMap = nameCodeIDController.worldMap
         hideAllViewsHelper()
         ///Announce to the user that they have saved the route ID and are now at the saving route name screen
         self.delayTransition(announcement: NSLocalizedString("saveCodeIDtoSaveRouteNameAnnouncement", comment: "This is an announcement which is spoken when the user finishes saving their route's app clip code ID. This announcement signifies the transition from the view where the user can enter the app clip code ID associated with the route to the view where the user can name or save their route"), initialFocus: nil)
         ///Clearing the save route text field
         nameCodeIDController.textField.text = ""
         /// send to SaveRouteButtonPressed
-        self.state = .startingNameSavedRouteProcedure(worldMap: worldMap)
+        self.state = .startingPauseProcedure
     }
     
     @objc func saveRouteButtonPressed() {
@@ -1974,8 +1973,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         // this makes sure that the user doesn't start recording the single use route until the session is initialized
         continuationAfterSessionIsReady = {
             self.trackingErrorsAnnouncementTimer?.invalidate()
-            //sends the user to the screen where they can start recording a route
-            self.state = .startingPauseProcedure
+            // sends the user to the screen where they can enter an app clip code ID for the route they're about to record
+            self.state = .startingNameCodeIDProcedure
         }
         if #available(iOS 12.0, *) {
             configuration.initialWorldMap = nil
