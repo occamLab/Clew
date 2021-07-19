@@ -327,6 +327,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// Automatically localizes user with popup to begin navigation
     func handleStateTransitionToAutoAlignment() {
+        hideAllViewsHelper()
         print("Aligning")
         
         let navStart = UIAlertController(title: "Start Navigating", message: "Aligned to anchor image, click Start to begin navigation", preferredStyle: .alert)
@@ -1445,9 +1446,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         } else if case .readyForFinalResumeAlignment = state {
             resumeTracking()
         } else if case .startingAutoAlignment = state {
-            resumeTracking()
+            /// for navigating a saved route
+            hideAllViewsHelper()
+            state = .navigatingRoute
             print("navigating route")
         } else if case .startingAutoAnchoring = state {
+            /// for recording a saved route
             hideAllViewsHelper()
             state = .recordingRoute
         }
