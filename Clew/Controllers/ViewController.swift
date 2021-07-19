@@ -535,10 +535,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         // clear out these variables in case they had already been created
         if creatingRouteAnchorPoint {
             beginRouteAnchorPoint = RouteAnchorPoint()
+            try! showPauseTrackingButton()
         } else {
             endRouteAnchorPoint = RouteAnchorPoint()
+            // BL
+            completingPauseProcedureHelper(worldMap: nil)
         }
-        try! showPauseTrackingButton()
     }
     
     /// Handler for the pauseWaitingPeriod app state
@@ -602,7 +604,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 ///announce to the user that they have sucessfully saved an anchor point.
                 delayTransition(announcement: NSLocalizedString("multipleUseRouteAnchorPointToRecordingRouteAnnouncement", comment: "This is the announcement which is spoken after the first anchor point of a multiple use route is saved. this signifies the completeion of the saving an anchor point procedure and the start of recording a route to be saved."), initialFocus: nil)
                 ///sends the user to a route recording of the program is creating a beginning route Anchor Point
-                // BL
                 state = .startingNameCodeIDProcedure
                 return
             } else if let currentTransform = sceneView.session.currentFrame?.anchors.compactMap({$0 as? ARImageAnchor}).last?.transform {
@@ -725,9 +726,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         self.delayTransition(announcement: NSLocalizedString("saveRouteToPlayPauseAnnouncement", comment: "This is an announcement which is spoken when the user finishes saving their route. This announcement signifies the transition from the view where the user can name or save their route to the screen where the user can either pause the AR session tracking or they can perform return navigation."), initialFocus: nil)
         ///Clearing the save route text field
         nameSavedRouteController.textField.text = ""
-        ///perform the state transition
-        // BL
-        self.state = .readyToNavigateOrPause(allowPause: true)
+        ///perform the state transition to the main screen after successfully saving a route
+        self.state = .mainScreen(announceArrival: true)
     }
     
     /// Hide all the subviews.  TODO: This should probably eventually refactored so it happens more automatically.
