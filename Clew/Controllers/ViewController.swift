@@ -297,7 +297,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         startAnchorPoint = false
         attemptingRelocalization = false
         
-        // TODO: probably don't need to set this to [], but erring on the side of begin conservative
+        // TODO: probably don't need to set this to [], but erring on the side of being conservative
         crumbs = []
         recordingCrumbs = []
         intermediateAnchorPoints = []
@@ -526,7 +526,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// Handler for the startingNameSavedRouteProcedure app state
     func handleStateTransitionToStartingNameSavedRouteProcedure(worldMap: Any?){
         hideAllViewsHelper()
-        nameSavedRouteController.worldMap = worldMap
+//        nameSavedRouteController.worldMap = worldMap // BL
         add(nameSavedRouteController)
     }
     
@@ -607,7 +607,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 state = .startingNameCodeIDProcedure
                 return
             } else if let currentTransform = sceneView.session.currentFrame?.anchors.compactMap({$0 as? ARImageAnchor}).last?.transform {
-                
                 endRouteAnchorPoint.transform = currentTransform
                 // no more crumbs
                 droppingCrumbs?.invalidate()
@@ -620,41 +619,39 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                     completingPauseProcedureHelper(worldMap: nil)
                 }
             }
-            
         } else {
             if creatingRouteAnchorPoint {
-                        guard let currentTransform = sceneView.session.currentFrame?.camera.transform else {
-                            print("can't properly save Anchor Point: TODO communicate this to the user somehow")
-                            return
-                        }
-                        // make sure we log the transform
-                        let _ = self.getRealCoordinates(record: true)
-                        beginRouteAnchorPoint.transform = currentTransform
-                        pauseTrackingController.remove()
-                        
-                        ///PATHPOINT begining anchor point alignment timer -> record route
-                        ///announce to the user that they have sucessfully saved an anchor point.
-                        delayTransition(announcement: NSLocalizedString("multipleUseRouteAnchorPointToRecordingRouteAnnouncement", comment: "This is the announcement which is spoken after the first anchor point of a multiple use route is saved. this signifies the completeion of the saving an anchor point procedure and the start of recording a route to be saved."), initialFocus: nil)
-                        ///sends the user to a route recording of the program is creating a beginning route Anchor Point
-                        state = .recordingRoute
-                        return
-                    } else if let currentTransform = sceneView.session.currentFrame?.camera.transform {
-                        // make sure to log transform
-                        let _ = self.getRealCoordinates(record: true)
-                        endRouteAnchorPoint.transform = currentTransform
-                        // no more crumbs
-                        droppingCrumbs?.invalidate()
+                guard let currentTransform = sceneView.session.currentFrame?.camera.transform else {
+                    print("can't properly save Anchor Point: TODO communicate this to the user somehow")
+                    return
+                }
+                // make sure we log the transform
+                let _ = self.getRealCoordinates(record: true)
+                beginRouteAnchorPoint.transform = currentTransform
+                pauseTrackingController.remove()
+                
+                ///PATHPOINT begining anchor point alignment timer -> record route
+                ///announce to the user that they have sucessfully saved an anchor point.
+                delayTransition(announcement: NSLocalizedString("multipleUseRouteAnchorPointToRecordingRouteAnnouncement", comment: "This is the announcement which is spoken after the first anchor point of a multiple use route is saved. this signifies the completeion of the saving an anchor point procedure and the start of recording a route to be saved."), initialFocus: nil)
+                ///sends the user to a route recording of the program is creating a beginning route Anchor Point
+                state = .recordingRoute
+                return
+            } else if let currentTransform = sceneView.session.currentFrame?.camera.transform {
+                // make sure to log transform
+                let _ = self.getRealCoordinates(record: true)
+                endRouteAnchorPoint.transform = currentTransform
+                // no more crumbs
+                droppingCrumbs?.invalidate()
 
-                        if #available(iOS 12.0, *) {
-                            sceneView.session.getCurrentWorldMap { worldMap, error in
-                                self.completingPauseProcedureHelper(worldMap: worldMap)
-                            }
-                        } else {
-                            completingPauseProcedureHelper(worldMap: nil)
-                        }
+                if #available(iOS 12.0, *) {
+                    sceneView.session.getCurrentWorldMap { worldMap, error in
+                        self.completingPauseProcedureHelper(worldMap: worldMap)
                     }
+                } else {
+                    completingPauseProcedureHelper(worldMap: nil)
+                }
+            }
         }
-        
     }
     
     func completingPauseProcedureHelper(worldMap: Any?) {
@@ -729,15 +726,16 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     @objc func saveRouteButtonPressed() {
         let id = String(Int64(NSDate().timeIntervalSince1970 * 1000)) as NSString
         // Get the input values from user, if it's nil then use timestamp
-        self.routeName = nameSavedRouteController.textField.text as NSString? ?? id
+//        self.routeName = nameSavedRouteController.textField.text as NSString? ?? id
         
-        try! self.archive(routeId: id, appClipCodeID: self.appClipCodeID, beginRouteAnchorPoint: self.beginRouteAnchorPoint, endRouteAnchorPoint: self.endRouteAnchorPoint, intermediateAnchorPoints: self.intermediateAnchorPoints, worldMap: nameSavedRouteController.worldMap, imageAnchoring: self.imageAnchoring)
+        // BL: get worldMap in here
+        try! self.archive(routeId: id, appClipCodeID: self.appClipCodeID, beginRouteAnchorPoint: self.beginRouteAnchorPoint, endRouteAnchorPoint: self.endRouteAnchorPoint, intermediateAnchorPoints: self.intermediateAnchorPoints, worldMap: nil, imageAnchoring: self.imageAnchoring)
         hideAllViewsHelper()
         /// PATHPOINT Save Route View -> play/pause
         ///Announce to the user that they have finished the alignment process and are now at the play pause screen
         self.delayTransition(announcement: NSLocalizedString("saveRouteToPlayPauseAnnouncement", comment: "This is an announcement which is spoken when the user finishes saving their route. This announcement signifies the transition from the view where the user can name or save their route to the screen where the user can either pause the AR session tracking or they can perform return navigation."), initialFocus: nil)
         ///Clearing the save route text field
-        nameSavedRouteController.textField.text = ""
+//        nameSavedRouteController.textField.text = ""  //moved to .onAppear in view
         ///perform the state transition to the main screen after successfully saving a route
         self.state = .mainScreen(announceArrival: true)
     }
@@ -886,13 +884,19 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     var manageRoutesController: UIViewController!
     
     var routeOptionsController: UIViewController?
+    
+    /// saving route code ID VC
+    var nameCodeIDController: UIViewController!
+    
+    /// saving route name VC
+    var nameSavedRouteController: UIViewController!
     #endif
     
     /// saving route code ID VC
-    var nameCodeIDController: NameCodeIDController!
+//    var nameCodeIDController: NameCodeIDController!
     
     /// saving route name VC
-    var nameSavedRouteController: NameSavedRouteController!
+//    var nameSavedRouteController: NameSavedRouteController!
     
     /// start route navigation VC
     var startNavigationController: StartNavigationController!
@@ -921,10 +925,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
       
         startNavigationController = StartNavigationController()
         stopNavigationController = StopNavigationController()
-        nameSavedRouteController = NameSavedRouteController()
+//        nameSavedRouteController = NameSavedRouteController()
         nameCodeIDController = NameCodeIDController()
         
         #if CLEWMORE
+        /// This is a wrapper to allow SwiftUI views to be used with the existing UIKit framework.
         enterCodeIDController = UIHostingController(rootView: EnterCodeIDView(vc: self))
         enterCodeIDController.view.frame = CGRect(x: 0,
                                                                        y: UIScreen.main.bounds.size.height*0.15,
@@ -947,7 +952,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                                                                        height: UIScreen.main.bounds.size.height*0.85)
         manageRoutesController.view.backgroundColor = .clear
         
-
+        nameSavedRouteController = UIHostingController(rootView: NameSavedRouteView(vc: self))
+        nameSavedRouteController.view.frame = CGRect(x: 0,
+                                                                       y: UIScreen.main.bounds.size.height*0.15,
+                                                                       width: UIConstants.buttonFrameWidth * 1,
+                                                                       height: UIScreen.main.bounds.size.height*0.85)
+        nameSavedRouteController.view.backgroundColor = .clear
         #endif
         
         
@@ -1151,9 +1161,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         // proceed to home page
         self.clearState()
         self.hideAllViewsHelper()
-        if case .startingNameSavedRouteProcedure = self.state {
-            self.nameSavedRouteController.textField.text = ""
-        }
+        // BL: this should be cleared with the .onAppear in that V
+//        if case .startingNameSavedRouteProcedure = self.state {
+//            self.nameSavedRouteController.textField.text = ""
+//        }
         self.state = .mainScreen(announceArrival: false)
     }
     
