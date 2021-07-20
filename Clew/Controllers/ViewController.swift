@@ -2140,14 +2140,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         sceneView.session.run(configuration, options: [.removeExistingAnchors, .resetTracking])
     }
     
+    /// presents a view for the user to enter the app clip code ID
     @objc func enterCodeID() {
         self.recordPathController.remove()
-        
         self.add(enterCodeIDController)
         self.rootContainerView.homeButton.isHidden = false
-
     }
     
+    /// this is called once the app clip code ID has been entered
     @objc func codeIDEntered() {
         self.enterCodeIDController.remove()
       
@@ -2160,12 +2160,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             NotificationCenter.default.addObserver(forName: NSNotification.Name("shouldDismissRoutePopover"), object: nil, queue: nil) { (notification) -> Void in
                 self.selectRouteController.remove()
                 self.handleStateTransitionToNavigatingExternalRoute()
-
             }
         }
-        
         self.getFirebaseRoutesList()
-
     }
     
     /// this is called after the alignment countdown timer finishes in order to complete the pause tracking procedure
