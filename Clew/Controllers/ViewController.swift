@@ -2187,11 +2187,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         self.getFirebaseRoutesList()
     }
     
-    @objc func routeNameEntered() {
-        self.nameSavedRouteController.remove()
-        self.state = .readyToNavigateOrPause(allowPause: false)
-    }
-    
     /// this is called after the alignment countdown timer finishes in order to complete the pause tracking procedure
     @objc func pauseTracking() {
         // pause AR pose tracking
