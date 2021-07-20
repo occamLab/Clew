@@ -9,7 +9,7 @@
 import SwiftUI
 import AVFoundation
 
-//TODO: 1 add content to all pages  2 interactive practice on following a path  3 set up settings walk through  4 add localized strings to everything  5 make progress view?  6 add color cue to interactive practice
+//TODO: 1 add content to all pages  2 interactive practice on following a path  3 set up settings walk through  4 add localized strings to everything  5 make progress view?
 
 struct TutorialScreen<Content: View>: View {
     //format for all the tutorial and app set up screens. standarizes spacing and adds exit button to each page
@@ -19,16 +19,21 @@ struct TutorialScreen<Content: View>: View {
   }
     
     var body: some View {
-        VStack(spacing: 30) {
-            content
-                .padding(.leading)
-                .padding(.trailing)
-                //.padding(.init(top: <#T##CGFloat#>, leading: <#T##CGFloat#>, bottom: <#T##CGFloat#>, trailing: <#T##CGFloat#>))
-        }
+        //ScrollView{
+            VStack(spacing: 30) {
+                content
+                    //.fixedSize(horizontal: false, vertical: true)
+                    //.lineLimit(100)//added these lines because text was being truncated and this fixed it, not sure why
+                    //.minimumScaleFactor(0.7)
+                    .padding(.leading)
+                    .padding(.trailing)
+                    //.padding(.init(top: <#T##CGFloat#>, leading: <#T##CGFloat#>, bottom: <#T##CGFloat#>, trailing: <#T##CGFloat#>))
+            }
+       // }
             
         //.navigationTitle("Clew Tutorial") //gives title, but title is the same on all the tutorial screens and the back button text only says Clew Tutorial.
         //.navigationBarTitleDisplayMode(.inline)
-        
+
         .navigationBarItems(
             trailing:
                 Button(NSLocalizedString("buttonTexttoExitTutorial", comment: "text of the button that dismisses the tutorial screens")) {
@@ -41,7 +46,7 @@ struct TutorialScreen<Content: View>: View {
 //Colors:
 let darkBlue = Color(red: 0.01, green: 0.15, blue: 1.05)
 let skyBlue = Color(red: 0.4627, green: 0.8392, blue: 1.0)
-//find our own clew colors
+//TODO: find our own clew colors
 
 
 
@@ -94,9 +99,14 @@ struct SettingOptions: View {
         TutorialScreen{
             Text(NSLocalizedString( "settingOptionsTutorialButtonText", comment: "Title for the setting options part of the tutorial"))
             
+            ScrollView{
             Text(NSLocalizedString( "settingOptionsTutorialInstructionText", comment: "Information about what the setting options are"))
+                //.fixedSize(horizontal: false, vertical: true)
+            }
             
             TutorialNavLink(destination: SettingWalkThrough()) {Text(NSLocalizedString("settingsWalkThroughTitle", comment: "Title for the Settings Walk Through"))}
+        }.onDisappear(){
+            UserDefaults.standard.setValue(true, forKey: "SettingsOptionsTutorialCompleted")
         }
     }
 }
@@ -106,10 +116,35 @@ struct FindingSavedRoutes: View {
         TutorialScreen  {
             Text(NSLocalizedString( "findingSavedRoutesTutorialButtonText", comment: "Title for the finding saved route part of the tutorial"))
             
+            ScrollView{
             Text(NSLocalizedString("findingSavedRoutesTutorialInstructionText", comment: "Instructions for finding saved routes"))
+                //.fixedSize(horizontal: false, vertical: true)
+            }
             
             Spacer()
             TutorialNavLink(destination: SettingOptions()) {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
+        }.onDisappear(){
+            UserDefaults.standard.setValue(true, forKey: "FindingSavedRoutesTutorialCompleted")
+        }
+    }
+}
+
+struct RecordSavedRoutes: View {
+    var body: some View {
+        TutorialScreen {
+            Text(NSLocalizedString( "recordSavedRoutesTutorialButtonText", comment: "Title for the recording saved routes part of the tutorial"))
+            
+        ScrollView{
+        Text(NSLocalizedString("recordSavedRoutesTutorialInstructionText", comment: "Instructions for recording saved routes"))
+            //.fixedSize(horizontal: false, vertical: true)
+        }
+            
+        TutorialNavLink(destination: AnchorPoints()) {Text(NSLocalizedString( "anchorPointTutorialButtonText", comment: "Title for the anchor point part of the tutorial"))}
+        
+        TutorialNavLink(destination: VoiceNotes()) {Text(NSLocalizedString( "voiceNotesTutorialButtonText", comment: "Title for the voice notes part of the tutorial"))}
+        
+        Spacer()
+        TutorialNavLink(destination: FindingSavedRoutes())  {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
         }
     }
 }
@@ -119,7 +154,13 @@ struct AnchorPoints: View {
         TutorialScreen  {
             Text(NSLocalizedString( "anchorPointTutorialButtonText", comment: "Title for the anchor point part of the tutorial"))
             
+            ScrollView{
             Text(NSLocalizedString("anchorPointTutorialInstructionText", comment: "Instructions for setting anchor points"))
+                //.fixedSize(horizontal: false, vertical: true)
+            }
+            
+            Spacer()
+            TutorialNavLink(destination: VoiceNotes())  {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
                 
         }
     }
@@ -130,7 +171,13 @@ struct VoiceNotes: View {
         TutorialScreen  {
             Text(NSLocalizedString( "voiceNotesTutorialButtonText", comment: "Title for the voice notes part of the tutorial"))
             
+            ScrollView{
             Text(NSLocalizedString("voiceNotesTutorialInstructionText", comment: "Instructions for leaving voice notes along a path"))
+                //.fixedSize(horizontal: false, vertical: true)
+            }
+            
+            Spacer()
+            TutorialNavLink(destination: FindingSavedRoutes())  {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
         }
     }
 }
@@ -138,16 +185,17 @@ struct VoiceNotes: View {
 struct SavedRoutes: View {
     var body: some View {
         TutorialScreen{
-            Text(NSLocalizedString( "savedRoutesTutorialButtonText", comment: "Title for the saved route part of the tutorial"))
+            Text(NSLocalizedString("savedRoutesTutorialButtonText", comment: "Title for the saved route part of the tutorial"))
         
-            Text(NSLocalizedString("savedRouteTutorialInstructionText", comment: "Instructions for using saved routes"))
-            
-            TutorialNavLink(destination: AnchorPoints()) {Text(NSLocalizedString( "anchorPointTutorialButtonText", comment: "Title for the anchor point part of the tutorial"))}
-            
-            TutorialNavLink(destination: VoiceNotes()) {Text(NSLocalizedString( "voiceNotesTutorialButtonText", comment: "Title for the voice notes part of the tutorial"))}
-            
+            ScrollView{
+                Text(NSLocalizedString("savedRouteTutorialInstructionText", comment: "Instructions for using saved routes"))
+                    //.fixedSize(horizontal: false, vertical: true)
+            }
+        
             Spacer()
-            TutorialNavLink(destination: FindingSavedRoutes())  {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
+            TutorialNavLink(destination: RecordSavedRoutes())  {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
+        }.onDisappear(){
+            UserDefaults.standard.setValue(true, forKey: "SavedRoutesTutorialCompleted")
         }
     }
 }
@@ -157,10 +205,28 @@ struct SingleUse: View {
         TutorialScreen{
             Text(NSLocalizedString( "singleUseRouteTutorialButtonText", comment: "Title for the single use route part of the tutorial"))
             
+            ScrollView{
             Text(NSLocalizedString( "singleUseRouteTutorialInstructionText", comment: "Instructions for using the single use route"))
+                //.fixedSize(horizontal: false, vertical: true)
+            }
             
             Spacer()
             TutorialNavLink(destination: SavedRoutes()) {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
+        }.onDisappear(){
+            UserDefaults.standard.setValue(true, forKey: "SingleUseTutorialCompleted")
+        }
+    }
+}
+
+struct RecordingSingleUse: View {
+    var body: some View {
+        TutorialScreen{
+            
+            
+        TutorialNavLink(destination: AnchorPoints()) {Text(NSLocalizedString( "anchorPointTutorialButtonText", comment: "Title for the anchor point part of the tutorial"))}
+            
+        Spacer()
+        TutorialNavLink(destination: SavedRoutes()) {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
         }
     }
 }
@@ -170,12 +236,88 @@ struct FindPath: View {
         TutorialScreen{
             Text(NSLocalizedString( "findPathTutorialButtonText", comment: "Title for the finding and following path part of the tutorial"))
         
+            ScrollView{
             Text(NSLocalizedString("findPathTutorialInstructionText", comment: "Text that explains what it sounds and feels like to be on the path and following the path"))
+                //.fixedSize(horizontal: false, vertical: true)
+            }
+            
+            TutorialNavLink(destination: FindPathPractice())  {Text("Practice")}
         
             Spacer()
             TutorialNavLink(destination: SingleUse())  {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
             
+        }.onDisappear(){
+            UserDefaults.standard.setValue(true, forKey: "FindPathTutorialCompleted")
+        }
+    }
+}
+
+struct FindPathPractice: View {
+    @State var score = 0
+    let generator = UINotificationFeedbackGenerator()
+    var body: some View{
+        TutorialScreen{
+            Button(action: {
+                self.generator.notificationOccurred(.success)
+            }) {
+                Text("Success")
+            }
             
+            Button(action: {
+                self.generator.notificationOccurred(.error)
+            }) {
+                Text("Error")
+            }
+            
+            Button(action: {
+                self.generator.notificationOccurred(.warning)
+            }) {
+                Text("Warning")
+            }
+            
+            Button(action: {
+                let impactLight = UIImpactFeedbackGenerator(style: .light)
+                impactLight.impactOccurred()
+            }) {
+                Text("Light")
+            }
+            
+            Button(action: {
+                let impactMed = UIImpactFeedbackGenerator(style: .medium)
+                impactMed.impactOccurred()
+            }) {
+                Text("Medium")
+            }
+            
+            Button(action: {
+                let impactHeavy = UIImpactFeedbackGenerator(style: .heavy)
+                impactHeavy.impactOccurred()
+            }) {
+                Text("Heavy")
+            }
+            
+            Button(action: {
+                let selectionFeedback = UISelectionFeedbackGenerator()
+                selectionFeedback.selectionChanged()
+            }) {
+                Text("Selection Feedback Changed")
+            }
+        .padding(.all, 30.0)
+            
+            
+            Text("score \(self.score)")
+            
+            if score >= 3 {
+                //AudioServicesPlaySystemSound(SystemSoundID(1057))
+                //Text("Yay!!!")
+                Spacer()
+                TutorialNavLink(destination: SingleUse()) {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))} //change skip button to next button when score equals three because the user has completed the practice
+            }
+            
+            else if score < 3 {
+                Spacer()
+                TutorialNavLink(destination: SingleUse()) {Text(NSLocalizedString("buttonTexttoSkip", comment: "Text on skip button"))}
+             }
         }
     }
 }
@@ -185,11 +327,14 @@ struct OrientPhone: View {
         TutorialScreen {
             Text(NSLocalizedString("orientPhoneTutorialButtonText", comment: "Title for the setting options part of the tutorial"))
         
+            ScrollView{
             Text(NSLocalizedString("orientPhoneTutorialInstructionText", comment: "Text that explains how to orient the phone for the best experience using Clew"))
-            
-            TutorialNavLink(destination: PracticeOrientPhone()) {Text(NSLocalizedString("orientPhoneTutorialPracticeTitle", comment: "Title for holding phone practice"))}
+                //.fixedSize(horizontal: false, vertical: true)
+            }
             
             TutorialNavLink(destination: OrientPhoneTips()) {Text(NSLocalizedString("tipTutorialTitle", comment: "text on button to tips page"))}
+            
+            TutorialNavLink(destination: PracticeOrientPhone()) {Text(NSLocalizedString("orientPhoneTutorialPracticeTitle", comment: "Title for holding phone practice"))}
             
             Spacer()
             TutorialNavLink(destination: FindPath()) {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
@@ -202,9 +347,14 @@ struct OrientPhoneTips: View {
         TutorialScreen {
             Text(NSLocalizedString("orientPhoneTutorialTipsTitle", comment: "Tips for holding phone title"))
             
+            ScrollView{
             Text(NSLocalizedString("orientPhoneTutorialTip1", comment: "Tip for holding phone against chest"))
             
             Text(NSLocalizedString("orientPhoneTutorialTip2", comment: "Tip for using Clew with cane or guide dog"))
+            }
+            
+            Spacer()
+            TutorialNavLink(destination: PracticeOrientPhone()) {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
         }
     }
 }
@@ -213,16 +363,24 @@ struct OrientPhoneTips: View {
 struct PracticeOrientPhone: View {
     //TODO: 1 can't exit right now bc the var arData is being updated constantly. 2 give haptic feedback  3 add success notification when activity is complete
     @State private var started = false
-    @State private var successAlert = false
+    //@State private var successAlert = false
     @State private var score = 0
     @State var lastSuccessSound = Date()
     @State var lastSuccess = Date()
+    @State var playSuccess = true
     @State var resetPosition = true
     @State var successSound: AVAudioPlayer?
+    @State var sound: AVAudioPlayer?
     @ObservedObject private var arData = ARData.shared
+    let impactLight = UIImpactFeedbackGenerator(style: .light)
+    let generator = UINotificationFeedbackGenerator()
     var body: some View{
         TutorialScreen {
+            
+            ScrollView{
             Text(NSLocalizedString("orientPhoneTutorialPracticeInstructions", comment: "Instructions for practicing holding phone activity"))
+                //.fixedSize(horizontal: false, vertical: true)
+            }
             
             Button(action:{
                 started.toggle()
@@ -300,28 +458,51 @@ struct PracticeOrientPhone: View {
             
         }.onDisappear() {
             started = false //turn feedback off when exiting the practice page or hitting stop
+            
+            UserDefaults.standard.setValue(true, forKey: "OrientPhoneTutorialCompleted")
+            
         }
         .onReceive(self.arData.objectWillChange) {newARData in
             if started {
                     if let transform = arData.transform {
                     let y = transform.columns.0.y
-                        if y < 0.5 && y > -0.7, -lastSuccessSound.timeIntervalSinceNow > 0.2 {
-                            AudioServicesPlaySystemSound(SystemSoundID(1057))
-                            //AudioServicesPlaySystemSound(SystemSoundID(4095)) //TODO: add haptics
+                    let path1 = Bundle.main.path(forResource: "ClewTutorialFeedback", ofType:"wav")!
+                    let url1 = URL(fileURLWithPath: path1)
+                        if y < 0.9 && y > -0.7, -lastSuccessSound.timeIntervalSinceNow > 0.2 {
+                            do {
+                                sound = try AVAudioPlayer(contentsOf: url1)
+                                sound?.play()
+                            } catch {
+                                // couldn't load file :(
+                            }
+                            //AudioServicesPlaySystemSound(SystemSoundID(1057))
+                            self.generator.notificationOccurred(.warning)
                             lastSuccessSound = Date()
                             lastSuccess = Date()
                             resetPosition = true
                         }
                         if y < -0.7 && y > -0.9, -lastSuccessSound.timeIntervalSinceNow > 0.5 {
-                                AudioServicesPlaySystemSound(SystemSoundID(1057))
-                                //AudioServicesPlaySystemSound(SystemSoundID(4095))
+                            do {
+                                sound = try AVAudioPlayer(contentsOf: url1)
+                                sound?.play()
+                            } catch {
+                                // couldn't load file :(
+                            }
+                                //AudioServicesPlaySystemSound(SystemSoundID(1057))
+                                self.generator.notificationOccurred(.warning)
                                 lastSuccessSound = Date()
                                 lastSuccess = Date()
                                 resetPosition = true
                         }
                         if y < -0.9, -lastSuccessSound.timeIntervalSinceNow > 0.7 {
-                            AudioServicesPlaySystemSound(SystemSoundID(1057))
-                            //AudioServicesPlaySystemSound(SystemSoundID(4095))
+                            do {
+                                sound = try AVAudioPlayer(contentsOf: url1)
+                                sound?.play()
+                            } catch {
+                                // couldn't load file :(
+                            }
+                            //AudioServicesPlaySystemSound(SystemSoundID(1057))
+                            impactLight.impactOccurred()
                             lastSuccessSound = Date()
                         }
                         //Version where there is more feedback when youre holding the phone correctly
@@ -349,6 +530,7 @@ struct PracticeOrientPhone: View {
                         score += 1
                         lastSuccess = Date()
                         resetPosition = false
+                        self.generator.notificationOccurred(.success)
                         let path = Bundle.main.path(forResource: "ClewSuccessSound", ofType:"wav")!
                         let url = URL(fileURLWithPath: path)
                         do {
@@ -357,18 +539,14 @@ struct PracticeOrientPhone: View {
                         } catch {
                             // couldn't load file :(
                         }
-
-                        //AudioServicesPlaySystemSound(SystemSoundID(1025))
-                        //AudioServicesPlaySystemSound(SystemSoundID(4095))
-                        //UIAccessibility.post(notification: .announcement, argument: "Great")
                     }
                         
                     
                         
-                    /*if score == 3, playsuccess {
-                        successAlert = true
+                    if score == 3, playSuccess {
+                        playSuccess = false
                         UIAccessibility.post(notification: .announcement, argument: "Nice Job! You've completed phone orientation practice. You can keep practicing or go to the next section")
-                    }*/
+                    }
                 }
             }
         }
@@ -377,52 +555,158 @@ struct PracticeOrientPhone: View {
 
 
 struct CLEWintro: View {
+    //@EnvironmentObject var completed: status
+    //@StateObject var completed = status()
     var body: some View {
         TutorialScreen{
+            Text("Introduction to Clew")
+            
+            ScrollView{
             Text(NSLocalizedString("ClewIntroTutorialText", comment: "Text on the first page of the tutorial that describes Clew"))
-
-            //Spacer()
-            TutorialNavLink(destination: OrientPhone()) {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
+                //.fixedSize(horizontal: false, vertical: true)
+               // .lineLimit(100)//added these lines because text was being truncated and this fixed it, not sure why
+                //.minimumScaleFactor(0.5)
+                //.fixedSize()
+                //.frame(width: 50, height: 70, alignment: .topLeading)
             }
+            
+            Button(action:{
+                UserDefaults.standard.setValue(false, forKey: "IntroTutorialCompleted")
+                UserDefaults.standard.setValue(false, forKey: "OrientPhoneTutorialCompleted")
+                UserDefaults.standard.setValue(false, forKey: "FindPathTutorialCompleted")
+                UserDefaults.standard.setValue(false, forKey: "SingleUseTutorialCompleted")
+                UserDefaults.standard.setValue(false, forKey: "SavedRoutesTutorialCompleted")
+                UserDefaults.standard.setValue(false, forKey: "FindingSavedRoutesTutorialCompleted")
+                UserDefaults.standard.setValue(false, forKey: "SettingsOptionsTutorialCompleted")
+            }) {Text("Reset Tutorial Progress")}
                 
+            }.onDisappear() {
+                UserDefaults.standard.setValue(true, forKey: "IntroTutorialCompleted")
+    
         }
-        //.fixedSize(horizontal: false, vertical: false)
-        //Spacer()
-            //.frame(height:10)
+        Spacer()
+        TutorialNavLink(destination: OrientPhone()) {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
+        }
     }
 }
             
 
 
-struct TutorialTestView: View {    
+struct TutorialTestView: View {
+    @ObservedObject var settings = SettingsWrapper.shared
     var body: some View {
         NavigationView{
 
             TutorialScreen{
                 Text(NSLocalizedString("tutorialTitleText", comment: "Title of the Clew Tutorial Screen. Top of the first tutorial page"))
                         
+                HStack{
                 TutorialNavLink(destination: CLEWintro()) {
                     Text(NSLocalizedString("ClewIntroTutorialTitle", comment: "Intro to Clew Tutorial Title"))
-                }
+                    }
+                    if UserDefaults.standard.bool(forKey: "IntroTutorialCompleted") == true {
+                        Circle()
+                            .fill(Color.yellow)
+                            .frame(width: 30, height: 30)
+                            
+                    } else {
+                        Circle()
+                            .stroke(Color.gray, lineWidth: 1)
+                            .frame(width: 30, height: 30)
+                    }
                         
+                    
+                }
+                
+                HStack{
                 TutorialNavLink(destination: OrientPhone()){
                     Text(NSLocalizedString("orientPhoneTutorialButtonText", comment: "Text for the tutorial screem for phone position"))
                 }
+                    if UserDefaults.standard.bool(forKey: "OrientPhoneTutorialCompleted") == true {
+                        Circle()
+                            .fill(Color.yellow)
+                            .frame(width: 30, height: 30)
+                            
+                    } else {
+                        Circle()
+                            .stroke(Color.gray, lineWidth: 1)
+                            .frame(width: 30, height: 30)
+                    }
+                }
                     
-                        
+                HStack{
                 TutorialNavLink(destination: FindPath()) {Text(NSLocalizedString( "findPathTutorialButtonText", comment: "Title for the finding and following path part of the tutorial"))
                 }
+                if UserDefaults.standard.bool(forKey: "FindPathTutorialCompleted") == true {
+                    Circle()
+                        .fill(Color.yellow)
+                        .frame(width: 30, height: 30)
+                        
+                } else {
+                    Circle()
+                        .stroke(Color.gray, lineWidth: 1)
+                        .frame(width: 30, height: 30)
+                }
+                }
                 
+                HStack{
                 TutorialNavLink(destination: SingleUse()) {Text(NSLocalizedString( "singleUseRouteTutorialButtonText", comment: "Title for the single use route part of the tutorial"))
                 }
+                if UserDefaults.standard.bool(forKey: "SingleUseTutorialCompleted") == true {
+                    Circle()
+                        .fill(Color.yellow)
+                        .frame(width: 30, height: 30)
+                        
+                } else {
+                    Circle()
+                        .stroke(Color.gray, lineWidth: 1)
+                        .frame(width: 30, height: 30)
+                }
+                }
                 
+                HStack{
                 TutorialNavLink(destination: SavedRoutes()) {Text(NSLocalizedString( "savedRoutesTutorialButtonText", comment: "Title for the saved route part of the tutorial"))
                 }
-                
-                TutorialNavLink(destination: FindingSavedRoutes()) {Text(NSLocalizedString( "findingSavedRoutesTutorialButtonText", comment: "Title for the finding saved route part of the tutorial"))
+                if UserDefaults.standard.bool(forKey: "SavedRoutesTutorialCompleted") == true {
+                    Circle()
+                        .fill(Color.yellow)
+                        .frame(width: 30, height: 30)
+                        
+                } else {
+                    Circle()
+                        .stroke(Color.gray, lineWidth: 1)
+                        .frame(width: 30, height: 30)
+                }
                 }
                 
+                HStack{
+                TutorialNavLink(destination: FindingSavedRoutes()) {Text(NSLocalizedString( "findingSavedRoutesTutorialButtonText", comment: "Title for the finding saved route part of the tutorial"))
+                }
+                if UserDefaults.standard.bool(forKey: "FindingSavedRoutesTutorialCompleted") {
+                    Circle()
+                        .fill(Color.yellow)
+                        .frame(width: 30, height: 30)
+                        
+                } else {
+                    Circle()
+                        .stroke(Color.gray, lineWidth: 1)
+                        .frame(width: 30, height: 30)
+                }
+                }
+                
+                HStack{
                 TutorialNavLink(destination: SettingOptions()) {Text(NSLocalizedString( "settingOptionsTutorialButtonText", comment: "Title for the setting options part of the tutorial"))
+                }
+                if UserDefaults.standard.bool(forKey: "SettingsOptionsTutorialCompleted") == true {
+                    Circle()
+                        .fill(Color.yellow)
+                        .frame(width: 30, height: 30)
+                        
+                } else {
+                    Circle()
+                        .stroke(Color.gray, lineWidth: 1)
+                        .frame(width: 30, height: 30)
+                    }
                 }
             }
         }

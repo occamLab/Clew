@@ -299,16 +299,19 @@
 "findPathTutorialButtonText" = "Finding and Following a Path";
 "findPathTutorialInstructionText" = "When you are on the path, Clew will give sound and haptic feedback. The app makes a distinct sound when you need to turn, followed by specific instructions on which way to turn. If the app is not making sound, it is most likely because your phone is not facing the path. Should Clew go quite you should stop and turn until you find the path again. Clew will also anonch when you have reached the end of the route";
 
-"singleUseRouteTutorialButtonText" = "Using Single Use Routes";
+"singleUseRouteTutorialButtonText" = "Single Use Routes";
 "singleUseRouteTutorialInstructionText" = "You can use single use routes in Clew to return along a route you have walked. To use this feature you can select the Single Use Route button on the home screen which will begin a recording. Once Clew is recording you should navigate from where you are to where you want to go, potentially with the help of a seeing guide. When you get to your destination you will want to stop the recording. From there you can immediately return to your starting point with guidance from Clew, or you can pause and do the return navigation in a little while. If you pause the navigation, Clew will ask you to set an anchor point that you will have to reline to when you want to start the return navigation.
 
 Single use routes can only be used once and are great if you only need to get back from a location once, but if you want to be able to navigate a route more than once you can save a route. Click next to learn about Saved Routes.";
 
-"savedRoutesTutorialButtonText" = "Using Saved Routes";
-"savedRouteTutorialInstructionText" = "In Clew you can save routes which you can then return to at any time for guidance along that route. To save a route you click on the Save Route button on the home screen. You will then set an anchor point by clicking the set anchor point button. The anchor point serves as the beginning of the saved route and you will have to find the location where you set the anchor point when you wish to use the route in the future. Once the anchor point is set, then Clew is recording and you should walk the path you want to save. You can leave voice notes along the way if you wish to help orient yourself when you go to walk the route in the future. When you get to the end of your route, you’ll have to set another anchor point to mark the ending point of your route. Once the last anchor point is set, you’ll name the route you’ve saved. At that point you can access that route at any time for guidance along that path. With a saved route you can travel from the starting point to the end or from the end to the start.";
+"savedRoutesTutorialButtonText" = "Saved Routes";
+"savedRouteTutorialInstructionText" = "In Clew you can save routes which you can then return to at any time for guidance along that route. A saved route can be useful for paths that you would want to come back to multiple times or as a tool when practicing a new route.";
+
+"recordSavedRoutesTutorialButtonText" = "Recording Saved Routes";
+"recordSavedRoutesTutorialInstructionText" = "To save a route, click on the Save Route button on the home screen. You will then set an anchor point by clicking the set anchor point button. The anchor point serves as the beginning of the saved route and you will have to find the location where you set the anchor point when you wish to use the route in the future. Once the anchor point is set, then Clew is recording and you should walk the path you want to save. You can leave voice notes along the way if you wish to help orient yourself when you go to walk the route in the future. When you get to the end of your route, you’ll have to set another anchor point to mark the ending point of your route. Once the last anchor point is set, you’ll name the route you have saved. At that point you can access that route at any time for guidance along that path.";
 
 "anchorPointTutorialButtonText" = "Making Anchor Points";
-"anchorPointTutorialInstructionText" = " ";
+"anchorPointTutorialInstructionText" = "In Clew you will have to set anchor points for a few different functions";
 
 "voiceNotesTutorialButtonText" = "Recording Voice Notes";
 "voiceNotesTutorialInstructionText" = "When recording a saved route, there is a button on the right that allows you to record a voice note. A voice note is a note you can leave yourself, that will play when you go to use the save route that you are recording. It can be any information that is helpful to you, such as noting where a landmark like a doorway or front desk is as you pass, or instructions for your future self. Later when you go to use a save route the voice notes will appear as speaker icons on your path at the point they were recorded. As you pass the note will play.";
@@ -323,10 +326,12 @@ You can also reenter the settings walk through that popped up when you first ent
 
 //Settings Walk Through
 "settingsWalkThroughTitle" = "Settings Walk Through";
-
-
-
-
+"settingsWalkThroughIntro" = "You can ajust all the settings from the settings tap in the main menu at anytime, or go to the next page to walk through the settings options.";
+"settingsWalkThroughSetUnitsTitle" = "Distance Units";
+"settingsWalkThroughSetUnitsImperialButton" = "Imperial";
+"settingsWalkThroughSetUnitsMetricButton" = "Metric";
+"settingsWalkThroughCrumbColorTitle" = "Chose Crumb Color";
+"settingsWalkThroughPathColorTitle" = "Chose Path Color";
 
 //Sharing routes
 "automaticEmailTextWhenSharingRoutes" = "Check out this route!";

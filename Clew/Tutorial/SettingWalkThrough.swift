@@ -12,10 +12,10 @@ import SwiftUI
 struct SettingWalkThrough: View {
     var body: some View {
         TutorialScreen{
-            Text("You can ajust all the settings from the settings tap in the main menu, or go to the next page to walk through the settings.")
+            Text(NSLocalizedString("settingsWalkThroughIntro", comment: "Intro text to the settings walk through"))
             
             Spacer()
-            TutorialNavLink(destination: setUnit()) {Text("Next")}
+            TutorialNavLink(destination: setUnit()) {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
         }
     }
 }
@@ -86,40 +86,38 @@ struct setUnit: View{
     @ObservedObject var settings = SettingsWrapper.shared
     var body: some View {
         TutorialScreen{
-            Text("Distance Units")
+            Text(NSLocalizedString("settingsWalkThroughSetUnitsTitle", comment: "Set units page title"))
             
             Button(action:{
-                    print("feet")
                     UserDefaults.standard.setValue(0, forKey: "units")
             }) {
                 if UserDefaults.standard.integer(forKey: "units") == 1 {
                     TutorialButtonNotSelected{
-                        Text("Imperial")
+                        Text(NSLocalizedString("settingsWalkThroughSetUnitsImperialButton", comment: "Imperial option button text"))
                     }
                 } else {
                     TutorialButtonSelected{
-                        Text("Imperial")
+                        Text(NSLocalizedString("settingsWalkThroughSetUnitsImperialButton", comment: "Imperial option button text"))
                     }
                 }
             }
             
             Button(action: {
-                print("meters")
                 UserDefaults.standard.setValue(1, forKey: "units")
             }) {
                 if UserDefaults.standard.integer(forKey: "units") == 1 {
                     TutorialButtonSelected{
-                        Text("Metric")
+                        Text(NSLocalizedString("settingsWalkThroughSetUnitsMetricButton", comment: "Metric option button text"))
                     }
                 } else {
                     TutorialButtonNotSelected{
-                        Text("Metric")
+                        Text(NSLocalizedString("settingsWalkThroughSetUnitsMetricButton", comment: "Metric option button text"))
                     }
                 }
                 }
                 Spacer()
                 TutorialNavLink(destination: setUpCrumbColor()) {
-                    Text("Next")
+                    Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
                 }
         }
     }
@@ -134,7 +132,7 @@ struct setUpCrumbColor: View {
     var body: some View {
         TutorialScreen{
             VStack {
-                Text("Chose Crumb Color")
+                Text(NSLocalizedString("settingsWalkThroughCrumbColorTitle", comment: "Crumb color title"))
                 
                 ForEach(colors.indices) { i in
                     Button(action:{
@@ -221,7 +219,7 @@ struct setUpCrumbColor: View {
                 
                 Spacer()
                 TutorialNavLink(destination: setUpPathColor())
-                    {Text("Next")}
+                    {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
             
             }
         }
@@ -236,7 +234,7 @@ struct setUpPathColor: View {
     var body: some View {
         TutorialScreen{
             VStack {
-                Text("Chose Path Color")
+                Text(NSLocalizedString("settingsWalkThroughPathColorTitle", comment: "Path color title"))
                 
                 ForEach(colors.indices) { i in
                  // trying to make a button for each button
@@ -323,10 +321,77 @@ struct setUpPathColor: View {
                 }
                 
                 Spacer()
-                TutorialNavLink(destination: setUpPathColor())
-                    {Text("Next")}
+                TutorialNavLink(destination: setUpFeedback())
+                    {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
             
             }
+        }
+    }
+}
+
+struct setUpFeedback: View{
+    @ObservedObject var settings = SettingsWrapper.shared
+    //let feedback = ["Sound", "Voice", "Haptic"]
+    var body: some View{
+        TutorialScreen{
+            Text("Feedback Options")
+            
+            Text("We recomend that you leave all of the feedback options on until you have played around with Clew for a while. Then you can return to settings and decide if you want to turn off any of the feedback features.")
+            
+            Button(action: {
+                if UserDefaults.standard.bool(forKey: "soundFeedback"){
+                    UserDefaults.standard.setValue(false, forKey: "soundFeedback")
+                } else{
+                    UserDefaults.standard.setValue(true, forKey: "soundFeedback")
+                }
+            })
+            {if UserDefaults.standard.bool(forKey: "soundFeedback"){
+                TutorialButtonSelected{
+                    Text("Sound")}
+        
+            } else {
+                TutorialButtonNotSelected{
+                    Text("Sound")}
+                }
+            }
+            
+            
+            Button(action: {
+                if UserDefaults.standard.bool(forKey: "voiceFeedback"){
+                    UserDefaults.standard.setValue(false, forKey: "voiceFeedback")
+                } else{
+                    UserDefaults.standard.setValue(true, forKey: "voiceFeedback")
+                }
+            })
+            {if UserDefaults.standard.bool(forKey: "voiceFeedback"){
+                TutorialButtonSelected{
+                    Text("Voice")}
+        
+            } else {
+                TutorialButtonNotSelected{
+                    Text("Voice")}
+                }
+            }
+            
+            Button(action: {
+                if UserDefaults.standard.bool(forKey: "hapticFeedback"){
+                    UserDefaults.standard.setValue(false, forKey: "hapticFeedback")
+                } else{
+                    UserDefaults.standard.setValue(true, forKey: "hapticFeedback")
+                }
+            })
+            {if UserDefaults.standard.bool(forKey: "hapticFeedback"){
+                TutorialButtonSelected{
+                    Text("Haptic")}
+        
+            } else {
+                TutorialButtonNotSelected{
+                    Text("Haptic")}
+                }
+            }
+            
+        Spacer()
+            
         }
     }
 }
