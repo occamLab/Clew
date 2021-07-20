@@ -45,11 +45,6 @@ struct EnterCodeIDView: View {
                     
                 
                 EnterButton(vc: vc, codeID: codeIDModel.code)
-                    /*.padding(40)
-                    .overlay(
-                            RoundedRectangle(cornerRadius: 10)
-                                .stroke(Color.clewGreen, lineWidth: 10)
-                    )*/
                     .frame(minWidth: 0, maxWidth: .infinity)
                     .padding(.horizontal, 20)
             }.onAppear(perform: {

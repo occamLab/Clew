@@ -13,6 +13,7 @@ import Combine
 struct NameCodeIDView: View {
     let vc: ViewController
     @ObservedObject private var codeIDModel = CodeIDModel()
+    
 
      var body: some View {
         ZStack {
@@ -68,7 +69,6 @@ struct EnterCodeIDButton: View {
     var body: some View {
         Button(action: {
             vc.appClipCodeID = codeID
-//            NotificationCenter.default.post(name: NSNotification.Name("shouldDismissCodeIDPopover"), object: nil)
             vc.saveCodeIDButtonPressed()
         }) {
             EnterButtonView()

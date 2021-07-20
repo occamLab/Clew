@@ -70,7 +70,6 @@ struct EnterNameButton: View {
         Button(action: {
             vc.routeName = routeName as NSString
             vc.saveRouteButtonPressed()
-            vc.hideAllViewsHelper()
             vc.state = .readyToNavigateOrPause(allowPause: false)
         }) {
             EnterNameButtonView()
