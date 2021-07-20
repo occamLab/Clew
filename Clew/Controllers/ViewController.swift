@@ -757,6 +757,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         selectRouteController.remove()
         enterCodeIDController.remove()
         manageRoutesController.remove()
+        routeOptionsController?.dismiss(animated: false)
+
         #endif
         rootContainerView.countdownTimer.isHidden = true
     }
@@ -771,6 +773,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         hideAllViewsHelper()
         print("imageAnchoring value: \(imageAnchoring)")
         print("route imageAnchoring value: \(route.imageAnchoring)")
+        print(route.name)
+        imageAnchoring = true
+        route.imageAnchoring = true
+        print(route.imageAnchoring)
         state = .startingResumeProcedure(route: route, worldMap: worldMap, navigateStartToEnd: navigateStartToEnd)
     }
     
@@ -1323,7 +1329,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         timerLength = defaults.integer(forKey: "timerLength")
         adjustOffset = defaults.bool(forKey: "adjustOffset")
         nav.useHeadingOffset = adjustOffset
+        #if CLEWMORE
+        imageAnchoring = true
+        #else
         imageAnchoring = defaults.bool(forKey: "imageAnchoring")
+        #endif
+        print(imageAnchoring)
         
         // TODO: log settings here
         logger.logSettings(defaultUnit: defaultUnit, defaultColor: defaultColor, soundFeedback: soundFeedback, voiceFeedback: voiceFeedback, hapticFeedback: hapticFeedback, sendLogs: sendLogs, timerLength: timerLength, adjustOffset: adjustOffset)
@@ -2282,8 +2293,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// handles the user pressing the resume tracking confirmation button.
     @objc func confirmResumeTracking() {
+        print("entered")
         if let route = justTraveledRoute {
             state = .startingResumeProcedure(route: route, worldMap: justUsedMap, navigateStartToEnd: false)
+            print("entered if")
         }
     }
     
