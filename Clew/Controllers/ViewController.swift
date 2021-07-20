@@ -892,14 +892,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     var routeOptionsController: UIViewController?
     
     /// saving route code ID VC
-    var nameCodeIDController: UIViewController!
+//    var nameCodeIDController: UIViewController!
     
     /// saving route name VC
     var nameSavedRouteController: UIViewController!
     #endif
     
     /// saving route code ID VC
-//    var nameCodeIDController: NameCodeIDController!
+    var nameCodeIDController: NameCodeIDController!
     
     /// saving route name VC
 //    var nameSavedRouteController: NameSavedRouteController!
@@ -2062,8 +2062,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             creatingRouteAnchorPoint = false
             if imageAnchoring {
                 /// sends the user to naming the route, skipping creating the end anchorpoint
-                state = .recordingRoute // BL
-            } else {
+                state = .startingPauseProcedure // BL
+            } else {    /// this probably shouldn't go to startingPauseProcedure but it also currently never gets here
                 ///sends the user to the process where they create an end anchorpoint
                 state = .startingPauseProcedure
             }
@@ -2185,6 +2185,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             }
         }
         self.getFirebaseRoutesList()
+    }
+    
+    @objc func routeNameEntered() {
+        self.nameSavedRouteController.remove()
+        self.state = .readyToNavigateOrPause(allowPause: false)
     }
     
     /// this is called after the alignment countdown timer finishes in order to complete the pause tracking procedure

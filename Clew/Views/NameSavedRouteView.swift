@@ -70,7 +70,8 @@ struct EnterNameButton: View {
         Button(action: {
             vc.routeName = routeName as NSString
             NotificationCenter.default.post(name: NSNotification.Name("shouldDismissCodeIDPopover"), object: nil)
-            vc.codeIDEntered()
+            vc.routeNameEntered()
+            vc.state = .readyToNavigateOrPause(allowPause: false)
         }) {
             EnterNameButtonView()
         }
