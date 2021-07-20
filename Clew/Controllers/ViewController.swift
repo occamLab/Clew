@@ -705,20 +705,18 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         self.rootContainerView.homeButton.isHidden = false
         self.add(self.manageRoutesController)
         print("works")
-        
-        
     }
     
     @objc func saveCodeIDButtonPressed() {
-        /// Save the input from the user for the app clip code ID as an attribute of the SavedRoute
-        let id = "000"
-        /// Get the input values from user, if it's nil then use "000" (this does not actually work)
-        self.appClipCodeID = nameCodeIDController.textField.text as String? ?? id
+//        /// Save the input from the user for the app clip code ID as an attribute of the SavedRoute
+//        let id = "000"
+//        /// Get the input values from user, if it's nil then use "000" (this does not actually work)
+//        self.appClipCodeID = nameCodeIDController.textField.text as String? ?? id
         hideAllViewsHelper()
         ///Announce to the user that they have saved the route ID and are now at the saving route name screen
         self.delayTransition(announcement: NSLocalizedString("saveCodeIDtoSaveRouteNameAnnouncement", comment: "This is an announcement which is spoken when the user finishes saving their route's app clip code ID. This announcement signifies the transition from the view where the user can enter the app clip code ID associated with the route to the view where the user can name or save their route"), initialFocus: nil)
-        ///Clearing the save route text field
-        nameCodeIDController.textField.text = ""
+//        ///Clearing the save route text field
+//        nameCodeIDController.textField.text = ""
         /// send to SaveRouteButtonPressed
         self.state = .startingPauseProcedure
     }
@@ -892,16 +890,16 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     var routeOptionsController: UIViewController?
     
     /// saving route code ID VC
-//    var nameCodeIDController: UIViewController!
+    var nameCodeIDController: UIViewController!
     
     /// saving route name VC
     var nameSavedRouteController: UIViewController!
     #endif
     
-    /// saving route code ID VC
-    var nameCodeIDController: NameCodeIDController!
-    
-    /// saving route name VC
+//    /// saving route code ID VC
+//    var nameCodeIDController: NameCodeIDController!
+//
+//    /// saving route name VC
 //    var nameSavedRouteController: NameSavedRouteController!
     
     /// start route navigation VC
@@ -932,7 +930,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         startNavigationController = StartNavigationController()
         stopNavigationController = StopNavigationController()
 //        nameSavedRouteController = NameSavedRouteController()
-        nameCodeIDController = NameCodeIDController()
+//        nameCodeIDController = NameCodeIDController()
         
         #if CLEWMORE
         /// This is a wrapper to allow SwiftUI views to be used with the existing UIKit framework.
@@ -964,6 +962,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                                                                        width: UIConstants.buttonFrameWidth * 1,
                                                                        height: UIScreen.main.bounds.size.height*0.85)
         nameSavedRouteController.view.backgroundColor = .clear
+        
+        nameCodeIDController = UIHostingController(rootView: NameCodeIDView(vc: self))
+        nameCodeIDController.view.frame = CGRect(x: 0,
+                                                                       y: UIScreen.main.bounds.size.height*0.15,
+                                                                       width: UIConstants.buttonFrameWidth * 1,
+                                                                       height: UIScreen.main.bounds.size.height*0.85)
+        nameCodeIDController.view.backgroundColor = .clear
         #endif
         
         
