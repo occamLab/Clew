@@ -16,8 +16,14 @@ import MobileCoreServices
 public let kNewSingleUseRouteType = "com.occamlab.NewSingleUseRoute"
 public let kStopRecordingType = "com.occamlab.StopRecording"
 public let kStartNavigationType = "com.occamlab.StartNavigation"
+public let kExperimentRouteType = "com.occamlab.ExperimentRoute"
 
-
+struct shortCutPhase : Identifiable{
+    //var id: ObjectIdentifier
+    var id = UUID()
+    var phrase: String!
+   // var type: String
+}
 class SiriShortcutsController: UIViewController {
 
     ///Siri ShortCuts Functions
@@ -80,6 +86,24 @@ class SiriShortcutsController: UIViewController {
       return activity
     }
     
+    public static func experimentRouteShortcut() -> NSUserActivity {
+      let activity = NSUserActivity(activityType: kExperimentRouteType)
+      activity.persistentIdentifier =
+        NSUserActivityPersistentIdentifier(kExperimentRouteType)
+        activity.isEligibleForSearch = true
+        activity.isEligibleForPrediction = true
+        let attributes = CSSearchableItemAttributeSet(itemContentType: kUTTypeItem as String)
+        
+        activity.title = "Experiment Route"
+        attributes.contentDescription = "Tell Clew to start an experiment route"
+     
+       
+        activity.suggestedInvocationPhrase = "Start Experiment Route"
+
+        activity.contentAttributeSet = attributes
+
+      return activity
+    }
     
     
     

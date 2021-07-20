@@ -57,6 +57,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                         self.window?.rootViewController = self.vc
                         self.window?.makeKeyAndVisible()
                     }
+                    print("firstdel")
+                print(vc.userActivity)
                     return true
                 #else
                     window = UIWindow(frame:UIScreen.main.bounds)
@@ -147,40 +149,51 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
       
         if(userActivity.activityType == kNewSingleUseRouteType){
              
-             let vcc = ViewController()
+        
              vc.startCreateAnchorPointProcedure()
-              //nav?.pushViewController(vcc, animated: false)
-          //  vc.present(vcc, animated: true, completion: nil)
-
-             }
-        
-        if(userActivity.activityType == kStopRecordingType){
-             
-            // let vcc = ViewController()
-             vc.stopRecording(nil)
-            //nav?.pushViewController(vcc, animated: false)
-            //self.vc = vcc
             
-          //  vc.present(vcc, animated: true, completion: nil)
+             vc.prevSiriActivity = kNewSingleUseRouteType
+
+             }
+        if(userActivity.activityType == kExperimentRouteType){
+             
+        
+             vc.experimentProcedure()
+            
+             vc.prevSiriActivity = kExperimentRouteType
 
              }
         
         
-               if(userActivity.activityType == kStartNavigationType){
+        if(userActivity.activityType == kStopRecordingType &&  vc.prevSiriActivity == kNewSingleUseRouteType){
+             
+        
+             vc.stopRecording(nil)
+                //vc.prevSiriActivity = kStopRecordingType
+
+             }
+        
+        if(userActivity.activityType == kStopRecordingType &&  vc.prevSiriActivity == kExperimentRouteType){
+             
+        
+             vc.stopRecording(nil)
+                //vc.prevSiriActivity = kStopRecordingType
+
+             }
+        
+        if(userActivity.activityType == kStopRecordingType ){
+             
+        
+             vc.stopRecording(nil)
+                //vc.prevSiriActivity = kStopRecordingType
+
+             }
+        
+        
+               if(userActivity.activityType == kStartNavigationType &&  vc.prevSiriActivity == kStopRecordingType ){
              
                 vc.startNavigation(nil)
-                
-//
-//                let vcc = ViewController()
-////                print("appdelcheck:")
-////                print(userActivity.activityType)
-//                vcc.startNavigation(nil)
-////                /// nav?.pushViewController(vcc, animated: false)
-////               vc = ViewController()
-//               vc = vcc
-//                vc.present(vcc, animated: true, completion: nil)
-//               //nav?.pushViewController(vc, animated: false)
-//           ///   // vc.present(vc, animated: true, completion: nil)
+            
 
                
                }

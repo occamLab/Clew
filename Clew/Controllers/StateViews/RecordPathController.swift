@@ -19,7 +19,8 @@ class RecordPathController: UIViewController {
 
     /// button for accessing saved routes
     var routesButton: UIButton!
-
+    /// button for starting the  experiment
+    var experimentButton: UIButton!
     /// called when view appears (any time)
     override func viewDidAppear(_ animated: Bool) {
         /// set thumbsUpButton as initially active voiceover button
@@ -27,6 +28,7 @@ class RecordPathController: UIViewController {
         addAnchorPointButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .largeTitle)
         routesButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .largeTitle)
         recordPathButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .largeTitle)
+        experimentButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .largeTitle)
     }
     
     /// called when the view has loaded.  We setup various app elements in here.
@@ -106,6 +108,29 @@ class RecordPathController: UIViewController {
         routesButton.titleEdgeInsets.bottom = 0
         routesButton.titleEdgeInsets.right = 5
         
+        experimentButton = UIButton(type: .custom)
+        experimentButton.layer.cornerRadius = 0.75 *  experimentButton.bounds.size.width
+        experimentButton.clipsToBounds = true
+        experimentButton.translatesAutoresizingMaskIntoConstraints = false
+        experimentButton.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 1.1).isActive = true
+        experimentButton.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.height / 5).isActive = true
+        experimentButton.setBackgroundImage(UIImage(named: "WhiteButtonBackground"), for: .normal)
+        experimentButton.imageView?.contentMode = .scaleAspectFit
+       ///LOCALIZE
+        experimentButton.setTitle("Experiment Route",for: .normal)
+        experimentButton.setTitleColor(.black, for: .normal)
+        experimentButton.titleLabel?.font = UIFont(name: "HelveticaNeue-Bold", size: 35)!
+
+        experimentButton.accessibilityLabel = "Experiment Route"
+        experimentButton.titleLabel?.textAlignment = .center
+        experimentButton.titleLabel?.numberOfLines = 0
+        experimentButton.titleLabel?.lineBreakMode = .byWordWrapping
+        experimentButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .largeTitle)
+        experimentButton.titleEdgeInsets.top = 0
+        experimentButton.titleEdgeInsets.left = 5
+        experimentButton.titleEdgeInsets.bottom = 0
+        experimentButton.titleEdgeInsets.right = 5
+        
         /// create stack view for aligning and distributing bottom layer buttons
         let stackView   = UIStackView()
         view.addSubview(stackView)
@@ -121,6 +146,7 @@ class RecordPathController: UIViewController {
         stackView.addArrangedSubview(recordPathButton)
         stackView.addArrangedSubview(addAnchorPointButton)
         stackView.addArrangedSubview(routesButton)
+        stackView.addArrangedSubview(experimentButton)
 
         
         /// size the stack
@@ -131,6 +157,9 @@ class RecordPathController: UIViewController {
         
         if let parent: UIViewController = parent {
 
+            experimentButton.addTarget(parent,
+                                          action: #selector(ViewController.experimentProcedure),
+                                          for: .touchUpInside)
             routesButton.addTarget(parent,
                                           action: #selector(ViewController.routesButtonPressed),
                                           for: .touchUpInside)

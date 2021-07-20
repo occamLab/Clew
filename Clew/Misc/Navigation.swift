@@ -297,6 +297,16 @@ class Navigation {
     func averageAngle(a: Float, b: Float)->Float {
         return atan2f(sin(b) + sin(a), cos(a) + cos(b))
     }
+    func  getDistance(first: LocationInfo, last: LocationInfo) -> Float{
+      
+        let delta = first.translation - last.translation
+   
+        let distance = (delta.x*delta.z + delta.y*delta.y + delta.z*delta.z).squareRoot()
+       
+        return distance
+        
+        
+    }
 }
 
 
