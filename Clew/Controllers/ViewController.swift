@@ -658,7 +658,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         //check whether or not the path was called from the pause menu or not
         if paused {
             ///PATHPOINT pause recording anchor point alignment timer -> resume tracking
-            //proceed as normal with the pause structure (single use route)
+            ///proceed as normal with the pause structure (single use route)
 
             justTraveledRoute = SavedRoute(id: "single use", appClipCodeID: self.appClipCodeID, name: "single use", crumbs: self.crumbs, dateCreated: Date() as NSDate, beginRouteAnchorPoint: self.beginRouteAnchorPoint, endRouteAnchorPoint: self.endRouteAnchorPoint, intermediateAnchorPoints: intermediateAnchorPoints, imageAnchoring: imageAnchoring)
             justUsedMap = worldMap
@@ -708,15 +708,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     }
     
     @objc func saveCodeIDButtonPressed() {
-//        /// Save the input from the user for the app clip code ID as an attribute of the SavedRoute
-//        let id = "000"
-//        /// Get the input values from user, if it's nil then use "000" (this does not actually work)
-//        self.appClipCodeID = nameCodeIDController.textField.text as String? ?? id
         hideAllViewsHelper()
         ///Announce to the user that they have saved the route ID and are now at the saving route name screen
         self.delayTransition(announcement: NSLocalizedString("saveCodeIDtoCreatingAnchorPointAnnouncement", comment: "This is an announcement which is spoken when the user finishes saving their route's app clip code ID. This announcement signifies the transition from the view where the user can enter the app clip code ID associated with the route to the view where the user can anchor the starting point of the route they are recording."), initialFocus: nil)
-//        ///Clearing the save route text field
-//        nameCodeIDController.textField.text = ""
         /// send to SaveRouteButtonPressed
         self.state = .startingPauseProcedure
     }
@@ -730,8 +724,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         /// PATHPOINT Save Route View -> play/pause
         ///Announce to the user that they have finished the alignment process and are now at the play pause screen
         self.delayTransition(announcement: NSLocalizedString("saveRouteToPlayPauseAnnouncement", comment: "This is an announcement which is spoken when the user finishes saving their route. This announcement signifies the transition from the view where the user can name or save their route to the screen where the user can either pause the AR session tracking or they can perform return navigation."), initialFocus: nil)
-        ///Clearing the save route text field
-//        nameSavedRouteController.textField.text = ""  //moved to .onAppear in view
         ///perform the state transition to the main screen after successfully saving a route
         self.state = .mainScreen(announceArrival: true)
     }
