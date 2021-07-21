@@ -1751,6 +1751,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     ///   - mode: type of survey, accepts "onAppLaunch" and "afterRoute" which correspond to the value of the "currentAppLaunchSurvey" and "currentAfterRouteSurvey" keys respectively located in the Firebase Realtime Database at surveys/
     ///   - logFileURLs: this list of URLs will be added to the survey response JSON file if the user winds up submitting the survey.  This makes it easier to link together feedback in the survey with data logs.
     func presentSurveyIfIntervalHasPassed(mode: String, logFileURLs: [String]) {
+        print("overriding surveys!")
+        return
         
         var surveyToTrigger: String = ""
         

@@ -33,13 +33,20 @@ struct TutorialScreen<Content: View>: View {
             
         //.navigationTitle("Clew Tutorial") //gives title, but title is the same on all the tutorial screens and the back button text only says Clew Tutorial.
         //.navigationBarTitleDisplayMode(.inline)
-
         .navigationBarItems(
+            /*leading:
+                Button("Tutorial") {
+                    print("return to tutorial home")
+                }
+                .padding()
+            //TODO: center this and link to tutorial home screen
+            ,*/
             trailing:
                 Button(NSLocalizedString("buttonTexttoExitTutorial", comment: "text of the button that dismisses the tutorial screens")) {
                     NotificationCenter.default.post(name: Notification.Name("TutorialPopoverReadyToDismiss"), object: nil)
-        
-        })
+                    }
+                .padding()
+        )
     }
   }
 
@@ -91,6 +98,16 @@ struct TutorialButton<Content: View>: View {
             .background(Color.yellow)
             .cornerRadius(10)
             .font(.system(size: 18, weight: .regular))
+    }
+}
+
+struct TutorialEndView: View {
+    var body: some View {
+        TutorialScreen{
+            Text("End of Tutorial")
+            
+            Text("Nice Job! You've completed the Clew tutorial. You can come back to this information at anytime through the menu options. ")
+        }
     }
 }
 
@@ -241,10 +258,10 @@ struct FindPath: View {
                 //.fixedSize(horizontal: false, vertical: true)
             }
             
-            TutorialNavLink(destination: FindPathPractice())  {Text("Practice")}
+            //TutorialNavLink(destination: FindPathPractice())  {Text("Practice")}
         
             Spacer()
-            TutorialNavLink(destination: SingleUse())  {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
+            TutorialNavLink(destination: TutorialEndView())  {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
             
         }.onDisappear(){
             UserDefaults.standard.setValue(true, forKey: "FindPathTutorialCompleted")
@@ -337,6 +354,7 @@ struct OrientPhone: View {
             TutorialNavLink(destination: PracticeOrientPhone()) {Text(NSLocalizedString("orientPhoneTutorialPracticeTitle", comment: "Title for holding phone practice"))}
             
             Spacer()
+            //TutorialNavLink(destination: FindPath()) {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
             TutorialNavLink(destination: FindPath()) {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
         }
     }
@@ -354,6 +372,7 @@ struct OrientPhoneTips: View {
             }
             
             Spacer()
+            //TutorialNavLink(destination: PracticeOrientPhone()) {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
             TutorialNavLink(destination: PracticeOrientPhone()) {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
         }
     }
@@ -439,13 +458,23 @@ struct PracticeOrientPhone: View {
             }
             
             
-            if score == 3 {
-                Text("Nice Job! You've completed orientation practice. You can keep practicing or go to the next section") //TODO: create audio anouncment
+            if score >= 3 {
+                Text("Nice Job! You've completed orientation practice. You can keep practicing or go to the next section")
             }
 
-            if score >= 3 {
+            /*if score >= 3 {
                 //AudioServicesPlaySystemSound(SystemSoundID(1057))
                 //Text("Yay!!!")
+                Spacer()
+                TutorialNavLink(destination: FindPath()) {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))} //change skip button to next button when score equals three because the user has completed the practice
+            }
+            
+            else if score < 3 {
+                Spacer()
+                TutorialNavLink(destination: FindPath()) {Text(NSLocalizedString("buttonTexttoSkip", comment: "Text on skip button"))}
+            }*/
+            
+            if score >= 3 {
                 Spacer()
                 TutorialNavLink(destination: FindPath()) {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))} //change skip button to next button when score equals three because the user has completed the practice
             }
@@ -570,7 +599,7 @@ struct CLEWintro: View {
                 //.frame(width: 50, height: 70, alignment: .topLeading)
             }
             
-            Button(action:{
+            /*Button(action:{
                 UserDefaults.standard.setValue(false, forKey: "IntroTutorialCompleted")
                 UserDefaults.standard.setValue(false, forKey: "OrientPhoneTutorialCompleted")
                 UserDefaults.standard.setValue(false, forKey: "FindPathTutorialCompleted")
@@ -578,7 +607,7 @@ struct CLEWintro: View {
                 UserDefaults.standard.setValue(false, forKey: "SavedRoutesTutorialCompleted")
                 UserDefaults.standard.setValue(false, forKey: "FindingSavedRoutesTutorialCompleted")
                 UserDefaults.standard.setValue(false, forKey: "SettingsOptionsTutorialCompleted")
-            }) {Text("Reset Tutorial Progress")}
+            }) {Text("Reset Tutorial Progress")}*/
                 
             }.onDisappear() {
                 UserDefaults.standard.setValue(true, forKey: "IntroTutorialCompleted")
@@ -649,7 +678,7 @@ struct TutorialTestView: View {
                 }
                 }
                 
-                HStack{
+                /*HStack{
                 TutorialNavLink(destination: SingleUse()) {Text(NSLocalizedString( "singleUseRouteTutorialButtonText", comment: "Title for the single use route part of the tutorial"))
                 }
                 if UserDefaults.standard.bool(forKey: "SingleUseTutorialCompleted") == true {
@@ -692,8 +721,9 @@ struct TutorialTestView: View {
                         .stroke(Color.gray, lineWidth: 1)
                         .frame(width: 30, height: 30)
                 }
-                }
+                }*/
                 
+                Spacer()
                 HStack{
                 TutorialNavLink(destination: SettingOptions()) {Text(NSLocalizedString( "settingOptionsTutorialButtonText", comment: "Title for the setting options part of the tutorial"))
                 }
@@ -713,9 +743,3 @@ struct TutorialTestView: View {
     }
 }
 
-
-/*struct TutorialTestViews_Previews: PreviewProvider {
-    static var previews: some View {
-        TutorialTestView()
-    }
-}*/
