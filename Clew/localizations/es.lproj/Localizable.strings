@@ -316,3 +316,9 @@
 "surveyPopoverTitle" = "Nos encantaría recibir tu opinión";
 "thanksForFeedbackAnnouncement" = "Gracias por tus comentarios";
 
+// App Clip App Route Manager Strings
+"NavigateText" = "Navigate/Test Route";
+"UploadText" = "Upload Route";
+"DeleteText" = "Delete Route";
+"ShareText" = "Share Route";
+"AppClipCodeIDText" = "App Clip Code ID";

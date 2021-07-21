@@ -328,6 +328,13 @@
     // LoadFromAppClipView
     "loadingText" = "Loading...";
 
+// App Clip App Route Manager Strings
+"NavigateText" = "Navigate/Test Route";
+"UploadText" = "Upload Route";
+"DeleteText" = "Delete Route";
+"ShareText" = "Share Route";
+"AppClipCodeIDText" = "App Clip Code ID";
+
 // User Text Entry Views
 // some of this overlaps with the UI section
     // EnterCodeIDView
