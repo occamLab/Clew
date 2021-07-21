@@ -14,7 +14,7 @@ import Combine
 struct NameSavedRouteView: View {
     @State private var routeName: String = ""
     let vc: ViewController
-//    let worldMap: Any?
+//    let worldMap: Any?    // BL: add worldMap
 
      var body: some View {
         VStack {
@@ -53,7 +53,6 @@ struct EnterNameButtonView: View {
             Image("WhiteButtonBackground")
                 .resizable()
                 .frame(maxWidth: UIScreen.main.bounds.size.width/1.1, maxHeight: UIScreen.main.bounds.size.height/5)
-//                .accessibilityLabel(NSLocalizedString(<#T##key: String##String#>, comment: <#T##String#>))
             HStack {
                 Spacer()
                 Text(NSLocalizedString("nameSavedRouteButtonText", comment: "The text that appears on the button the user should press to submit their route name."))
