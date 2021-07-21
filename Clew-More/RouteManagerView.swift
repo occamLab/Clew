@@ -2,7 +2,7 @@
 //  RouteManagerView.swift
 //  Clew-More
 //
-//  Created by occamlab on 7/19/21.
+//  Created by Esme Abbot on 7/19/21.
 //  Copyright © 2021 OccamLab. All rights reserved.
 //
 
@@ -92,7 +92,7 @@ struct RouteManagerView: View {
             }.padding()
             
             Button(action: {
-                let url = self.vc.dataPersistence.uploadToFirebase(route: self.route)
+                let url = self.vc.dataPersistence.exportToURL(route: self.route)
                 
                 /// define share menu content and a message to show with it
                 /// TODO: localize
@@ -116,10 +116,7 @@ struct RouteManagerView: View {
                             RoundedRectangle(cornerRadius: 10)
                                 .stroke(Color.clewGreen, lineWidth: 4))
             }.padding()
-            
         }
-     
-        
     }
 }
 

@@ -333,7 +333,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         
         let navStart = UIAlertController(title: "Start Navigating", message: "Aligned to anchor image, click Start to begin navigation", preferredStyle: .alert)
         
-        let start = UIAlertAction(title: "Start", style: .default, handler: {(action) -> Void in
+        let start = UIAlertAction(title: "Start", style: .default, handler: {(action) -> Void in    // BL L10N
             self.confirmAlignment()
         })
         
@@ -350,7 +350,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         
         let recordStart = UIAlertController(title: "Start Recording", message: "Aligned to anchor image, click Start to begin recording route", preferredStyle: .alert)
         
-        let start = UIAlertAction(title: "Start", style: .default, handler: {(action) -> Void in
+        let start = UIAlertAction(title: "Start", style: .default, handler: {(action) -> Void in    // BL L10N
             self.confirmAlignment()
         })
         
