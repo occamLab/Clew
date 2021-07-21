@@ -175,7 +175,9 @@ class PauseTrackingController: UIViewController, UIScrollViewDelegate {
         /// add elements to the stack
         stackView.addArrangedSubview(enterAnchorPointDescriptionButton)
         stackView.addArrangedSubview(recordVoiceNoteButton)
+        #if !CLEWMORE
         stackView.addArrangedSubview(confirmAlignmentButton)
+        #endif
         
         scrollView.flashScrollIndicators()
 
@@ -194,9 +196,11 @@ class PauseTrackingController: UIViewController, UIScrollViewDelegate {
                                        action: #selector(ViewController.recordVoiceNote),
                                        for: .touchUpInside)
             #endif
+            #if !CLEWMORE
             confirmAlignmentButton.addTarget(parent,
                                             action: #selector(ViewController.confirmAlignment),
                                             for: .touchUpInside)
+            #endif
         }
     }
 }
