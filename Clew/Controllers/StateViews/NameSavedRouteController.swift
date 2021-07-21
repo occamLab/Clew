@@ -6,6 +6,8 @@
 //  Copyright © 2019 OccamLab. All rights reserved.
 //
 
+// DEPRECATED 7/2021; use NameSavedRouteView instead.
+
 import UIKit
 import ARKit
 

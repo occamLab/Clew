@@ -30,8 +30,8 @@
 "completedNavigationAnnouncement" = "You've arrived.";
 
     // Name of labels that appear in UI
-"saveARouteButtonText" = "Save Route";
-"saveARouteButtonAccessibilityLabel" = "Save a route";
+"saveARouteButtonText" = "Create a Route";
+"saveARouteButtonAccessibilityLabel" = "Record and save a route.";
 "saveACodeIDButtonText" = "Save Code ID";
 "saveACodeIDButtonAccessiblityLabel" = "Save the Code ID of the route";
 "badServiceButtonAccessibilityLabel" = "Bad";
@@ -40,7 +40,7 @@
 "singleUseRouteButtonText" = "Single Use Route";
 "recordSingleUseRouteButtonAccessibilityLabel" = "Record a single use route";
 "savedRoutesListButtonText" = "Local Saved Routes List";
-"savedRoutesListButtonAccessibilityLabel" = "Local Saved Routes List";
+"savedRoutesListButtonAccessibilityLabel" = "Access the routes on your device";
 "stopNavigationButtonAccessibilityLabel" = "Stop navigation";
 "startReturnNavigationButtonAcessabilityLabel" = "Start return navigation";
 "stopRecordingButtonAccessibilityLabel" = "Stop recording";
@@ -61,6 +61,7 @@
 "optionsButtonAccessibilityLabel" = "Options";
 "signInwithAppleButtonAccessibilityLabel" = "Sign In";
 "enterCodeButtonText" = "Navigate From App Clip Code";
+"enterCodeButtonAccessibilityLabel" = "Enter app clip code ID";
 "recordSingleUseRouteButtonAccessibilityLabel" = "Navigate From App Clip Code";
 
 

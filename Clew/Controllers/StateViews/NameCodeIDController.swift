@@ -6,6 +6,8 @@
 //  Copyright © 2021 OccamLab. All rights reserved.
 //
 
+// DEPRECATED 7/2021, use NameCodeIDController instead.
+
 import UIKit
 import ARKit
 
