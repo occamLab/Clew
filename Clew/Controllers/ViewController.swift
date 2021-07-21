@@ -620,7 +620,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 ///announce to the user that they have sucessfully saved an anchor point.
                 delayTransition(announcement: NSLocalizedString("multipleUseRouteAnchorPointToRecordingRouteAnnouncement", comment: "This is the announcement which is spoken after the first anchor point of a multiple use route is saved. this signifies the completeion of the saving an anchor point procedure and the start of recording a route to be saved."), initialFocus: nil)
                 ///sends the user to a route recording of the program is creating a beginning route Anchor Point
-                state = .startingNameCodeIDProcedure
+                //state = .startingNameCodeIDProcedure
+                state = .recordingRoute
                 return
             } else if let currentTransform = sceneView.session.currentFrame?.anchors.compactMap({$0 as? ARImageAnchor}).last?.transform {
                 print(sceneView.session.currentFrame?.anchors.compactMap({$0 as? ARImageAnchor}))
@@ -1510,7 +1511,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         } else if case .startingAutoAnchoring = state {
             /// for recording a saved route
             hideAllViewsHelper()
-            state = .recordingRoute
+            
+            state = .completingPauseProcedure
         }
         print("alignment confirmed")
     }
