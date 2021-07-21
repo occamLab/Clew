@@ -28,7 +28,7 @@ struct SavedRoutesList: View {
                         RowNotSelected {
                             RouteList(RouteName: String(route.name))
                         }
-                    }
+                    }.accessibility(label: Text("Route \(String(route.name))"))
                 }
                 .navigationTitle(NSLocalizedString("selectRoutePopoverLabel", comment: "This is text instructing the user to select a route from a list."))
             }

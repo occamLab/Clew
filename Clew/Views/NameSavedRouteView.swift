@@ -10,7 +10,7 @@ import SwiftUI
 import Combine
 
 
-/// A text entry box in which to enter the app clip code ID
+/// A text entry box in which to enter the recorded route's name
 struct NameSavedRouteView: View {
     @State private var routeName: String = ""
     let vc: ViewController
@@ -21,8 +21,7 @@ struct NameSavedRouteView: View {
             Rectangle()
                 .foregroundColor(Color.clear)
             VStack {
-//                TextField(NSLocalizedString("codeIDprompt", comment: "This is a string appearing in the text box asking the user to enter their 3-digit app clip code ID"), text: $routeName)
-                TextField("name me!", text: $routeName)
+                TextField(NSLocalizedString("nameSavedRouteTextField", comment: "Message displayed to the user when typing to save a route by name."), text: $routeName)
                     .disableAutocorrection(true)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .overlay(RoundedRectangle(cornerRadius: 3)
@@ -48,11 +47,10 @@ struct EnterNameButtonView: View {
             Image("WhiteButtonBackground")
                 .resizable()
                 .frame(maxWidth: UIScreen.main.bounds.size.width/1.1, maxHeight: UIScreen.main.bounds.size.height/5)
+//                .accessibilityLabel(NSLocalizedString(<#T##key: String##String#>, comment: <#T##String#>))
             HStack {
                 Spacer()
-
-//                Text(NSLocalizedString("proceedToRoutes", comment: "This is the label of the button the user presses to have Firebase load in the routes based on the app clip code ID."))
-                Text("press me to save route name")
+                Text(NSLocalizedString("nameSavedRouteButtonText", comment: "The text that appears on the button the user should press to submit their route name."))
                     .bold()
                     .foregroundColor(Color.black)
                 Spacer()
@@ -69,8 +67,8 @@ struct EnterNameButton: View {
     var body: some View {
         Button(action: {
             vc.routeName = routeName as NSString
-            NotificationCenter.default.post(name: NSNotification.Name("shouldDismissCodeIDPopover"), object: nil)
-            vc.codeIDEntered()
+            vc.saveRouteButtonPressed()
+            vc.state = .readyToNavigateOrPause(allowPause: false)
         }) {
             EnterNameButtonView()
         }

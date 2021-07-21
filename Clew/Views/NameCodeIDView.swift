@@ -1,39 +1,27 @@
 //
-//  EnterCodeIDView.swift
+//  NameCodeIDView.swift
 //  Clew
-//  This view is used when a user enters an app clip code ID to bring up a list of routes.
+//  This view is used when a new route is recorded.
 //
-//  Created by Berwin Lan on 7/7/21.
+//  Created by Berwin Lan on 7/20/21.
 //  Copyright © 2021 OccamLab. All rights reserved.
 //
 
 import SwiftUI
 import Combine
 
-class CodeIDModel: ObservableObject {
-    var limit: Int = 3
-
-    @Published var code: String = "" {
-        didSet {
-             if code.count > limit {
-                code = String(code.prefix(limit))
-             }
-        }
-    }
-}
-
 /// A text entry box in which to enter the app clip code ID
-struct EnterCodeIDView: View {
+struct NameCodeIDView: View {
     let vc: ViewController
     @ObservedObject private var codeIDModel = CodeIDModel()
-
     
+
      var body: some View {
         ZStack {
             Rectangle()
                 .foregroundColor(Color.clear)
             VStack {
-                TextField(NSLocalizedString("enterCodeIDTextField", comment: "This is a string appearing in the text box asking the user to enter their 3-digit app clip code ID"), text: $codeIDModel.code)
+                TextField(NSLocalizedString("nameCodeIDTextField", comment: "This is a string appearing in the text box asking the user to enter their 3-digit app clip code ID"), text: $codeIDModel.code)
                     .disableAutocorrection(true)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .keyboardType(.numberPad)
@@ -43,8 +31,9 @@ struct EnterCodeIDView: View {
                     .overlay(RoundedRectangle(cornerRadius: 2 * 3)
                                 .stroke(Color.white, lineWidth: 3))
                     .padding(20)
+                    
                 
-                EnterButton(vc: vc, codeID: codeIDModel.code)
+                EnterCodeIDButton(vc: vc, codeID: codeIDModel.code)
                     .frame(minWidth: 0, maxWidth: .infinity)
                     .padding(.horizontal, 20)
             }.onAppear(perform: {
@@ -54,7 +43,7 @@ struct EnterCodeIDView: View {
      }
 }
 
-struct EnterButtonView: View {
+struct EnterCodeIDButtonView: View {
     var body: some View {
         ZStack {
             Image("WhiteButtonBackground")
@@ -63,7 +52,7 @@ struct EnterButtonView: View {
             HStack{
                 Spacer()
 
-                Text(NSLocalizedString("enterCodeIDButtonText", comment: "This is the label of the button the user presses to have Firebase load in the routes based on the app clip code ID."))
+                Text(NSLocalizedString("nameCodeIDButtonText", comment: "This is the label of the button the user presses to have Firebase load in the routes based on the app clip code ID."))
                     .bold()
                     .foregroundColor(Color.black)
                 Spacer()
@@ -73,16 +62,15 @@ struct EnterButtonView: View {
 }
 
 /// Press this button to submit the app clip code ID and proceed to the routes
-struct EnterButton: View {
+struct EnterCodeIDButton: View {
     var vc: ViewController
     var codeID: String
     var body: some View {
         Button(action: {
             vc.appClipCodeID = codeID
-            NotificationCenter.default.post(name: NSNotification.Name("shouldDismissCodeIDPopover"), object: nil)
-            vc.codeIDEntered()
+            vc.saveCodeIDButtonPressed()
         }) {
-            EnterButtonView()
+            EnterCodeIDButtonView()
         }
     }
 }

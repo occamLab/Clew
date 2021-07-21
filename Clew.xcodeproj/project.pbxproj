@@ -101,6 +101,10 @@
 		98A2DABC26A709C400158F83 /* NameSavedRouteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98A2DABA26A709C400158F83 /* NameSavedRouteView.swift */; };
 		98A2DABD26A709C400158F83 /* NameSavedRouteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98A2DABA26A709C400158F83 /* NameSavedRouteView.swift */; };
 		98A2DABE26A709C400158F83 /* NameSavedRouteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98A2DABA26A709C400158F83 /* NameSavedRouteView.swift */; };
+		98A2DAC526A76ACA00158F83 /* NameCodeIDView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98A2DAC426A76ACA00158F83 /* NameCodeIDView.swift */; };
+		98A2DAC626A76ACA00158F83 /* NameCodeIDView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98A2DAC426A76ACA00158F83 /* NameCodeIDView.swift */; };
+		98A2DAC726A76ACA00158F83 /* NameCodeIDView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98A2DAC426A76ACA00158F83 /* NameCodeIDView.swift */; };
+		98A2DAC826A76ACA00158F83 /* NameCodeIDView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98A2DAC426A76ACA00158F83 /* NameCodeIDView.swift */; };
 		98AA588A269DD119001123F0 /* GoogleService-Info_dev.plist in Resources */ = {isa = PBXBuildFile; fileRef = 98AA5888269DCC54001123F0 /* GoogleService-Info_dev.plist */; };
 		98AA588B269DD11B001123F0 /* GoogleService-Info_dev.plist in Resources */ = {isa = PBXBuildFile; fileRef = 98AA5888269DCC54001123F0 /* GoogleService-Info_dev.plist */; };
 		98AA588C269DD11D001123F0 /* GoogleService-Info_dev.plist in Resources */ = {isa = PBXBuildFile; fileRef = 98AA5888269DCC54001123F0 /* GoogleService-Info_dev.plist */; };
@@ -109,7 +113,6 @@
 		98AA588F269DD121001123F0 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 98AA5889269DCC54001123F0 /* GoogleService-Info.plist */; };
 		98AA5890269DD122001123F0 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 98AA5889269DCC54001123F0 /* GoogleService-Info.plist */; };
 		98AA5891269DD122001123F0 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 98AA5889269DCC54001123F0 /* GoogleService-Info.plist */; };
-		98AA5892269E070C001123F0 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98FF7A9C269CBFE9008C64E5 /* ContentView.swift */; };
 		98AA5895269E0C13001123F0 /* StartMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98AA5894269E0C13001123F0 /* StartMenuView.swift */; };
 		98AA5897269E1518001123F0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98AA5896269E1518001123F0 /* AppDelegate.swift */; };
 		98AA5899269E1BA0001123F0 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98AA5898269E1BA0001123F0 /* SceneDelegate.swift */; };
@@ -414,6 +417,7 @@
 		986640CD22FB68F2005AA1F6 /* NameSavedRouteController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NameSavedRouteController.swift; sourceTree = "<group>"; };
 		987BA6F3268E53C0008B129E /* StartNavigationPopoverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartNavigationPopoverView.swift; sourceTree = "<group>"; };
 		98A2DABA26A709C400158F83 /* NameSavedRouteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NameSavedRouteView.swift; sourceTree = "<group>"; };
+		98A2DAC426A76ACA00158F83 /* NameCodeIDView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NameCodeIDView.swift; sourceTree = "<group>"; };
 		98AA5888269DCC54001123F0 /* GoogleService-Info_dev.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info_dev.plist"; sourceTree = "<group>"; };
 		98AA5889269DCC54001123F0 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		98AA5894269E0C13001123F0 /* StartMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartMenuView.swift; sourceTree = "<group>"; };
@@ -435,7 +439,6 @@
 		98CC6760268A0FEC00E3759F /* FirebaseSetup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseSetup.swift; sourceTree = "<group>"; };
 		98CC6765268A1F2200E3759F /* SurveyInterface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SurveyInterface.swift; sourceTree = "<group>"; };
 		98FF7A98269CBFE9008C64E5 /* Clew-More.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Clew-More.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		98FF7A9C269CBFE9008C64E5 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		98FF7AA1269CBFEB008C64E5 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		98FF7AA3269CBFEB008C64E5 /* Info.plist */ = {isa = PBXFileReference; explicitFileType = text.plist.entitlements; path = Info.plist; sourceTree = "<group>"; };
 		9EDA0709B865627072DE3218 /* Pods-Clew-More.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew-More.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Clew-More/Pods-Clew-More.debug.xcconfig"; sourceTree = "<group>"; };
@@ -673,7 +676,6 @@
 			children = (
 				98AA5894269E0C13001123F0 /* StartMenuView.swift */,
 				98AA58A1269F8651001123F0 /* DefaultView.swift */,
-				98FF7A9C269CBFE9008C64E5 /* ContentView.swift */,
 				98FF7AA3269CBFEB008C64E5 /* Info.plist */,
 				98FF7AA0269CBFEB008C64E5 /* Preview Content */,
 				98AA5896269E1518001123F0 /* AppDelegate.swift */,
@@ -843,6 +845,7 @@
 				984FBD3B26962E4900B63A6A /* EnterCodeIDView.swift */,
 				98AB6071269889B700613BB5 /* LoadFromAppClipView.swift */,
 				98A2DABA26A709C400158F83 /* NameSavedRouteView.swift */,
+				98A2DAC426A76ACA00158F83 /* NameCodeIDView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1484,6 +1487,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				98A2DAC526A76ACA00158F83 /* NameCodeIDView.swift in Sources */,
 				984FBD3C26962E4900B63A6A /* EnterCodeIDView.swift in Sources */,
 				E5470F2E22C119F5001092A4 /* StopRecordingController.swift in Sources */,
 				E5470F0A22C119F5001092A4 /* AppDelegate.swift in Sources */,
@@ -1556,6 +1560,7 @@
 				98006FC1268385A700E61861 /* UIViewControllerExtensions.swift in Sources */,
 				98E3A38F268F994A00C3DAD1 /* ViewController.swift in Sources */,
 				98CC6769268A23A600E3759F /* SurveyInterface.swift in Sources */,
+				98A2DAC726A76ACA00158F83 /* NameCodeIDView.swift in Sources */,
 				98006FB32683844D00E61861 /* StartNavigationController.swift in Sources */,
 				980536EE2684D16F0065E80F /* AppDelegate.swift in Sources */,
 				98006FC3268385B300E61861 /* UIButtonExtensions.swift in Sources */,
@@ -1632,6 +1637,7 @@
 				98FF7AAE269CC0A5008C64E5 /* Navigation.swift in Sources */,
 				98AA58A626A604C3001123F0 /* RouteManagerView.swift in Sources */,
 				98FF7AC5269CC0FD008C64E5 /* ViewController.swift in Sources */,
+				98A2DAC826A76ACA00158F83 /* NameCodeIDView.swift in Sources */,
 				98FF7AAA269CC04C008C64E5 /* RecorderViewController.swift in Sources */,
 				98FF7AB2269CC0B0008C64E5 /* HelpCompiler.swift in Sources */,
 				98FF7ADB269CC153008C64E5 /* RouteTableViewCell.swift in Sources */,
@@ -1639,7 +1645,6 @@
 				98FF7AD4269CC125008C64E5 /* RoutesViewController.swift in Sources */,
 				98FF7ACE269CC114008C64E5 /* ResumeTrackingConfirmController.swift in Sources */,
 				98FF7AC2269CC0F0008C64E5 /* UIButtonExtensions.swift in Sources */,
-				98AA5892269E070C001123F0 /* ContentView.swift in Sources */,
 				98FF7ADC269CC157008C64E5 /* EnterCodeIDView.swift in Sources */,
 				98FF7AD2269CC11F008C64E5 /* BurgerMenuViewController.swift in Sources */,
 				98AA58A826A60F02001123F0 /* SavedRoutesList.swift in Sources */,
@@ -1655,6 +1660,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				98A2DAC626A76ACA00158F83 /* NameCodeIDView.swift in Sources */,
 				984FBD3D26962E4900B63A6A /* EnterCodeIDView.swift in Sources */,
 				E538EF5022D3BFEC004216E9 /* TransparentTouchView.swift in Sources */,
 				E5470F2F22C119F5001092A4 /* StopRecordingController.swift in Sources */,
