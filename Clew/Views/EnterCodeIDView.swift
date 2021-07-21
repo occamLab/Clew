@@ -1,6 +1,7 @@
 //
 //  EnterCodeIDView.swift
 //  Clew
+//  This view is used when a user enters an app clip code ID to bring up a list of routes.
 //
 //  Created by Berwin Lan on 7/7/21.
 //  Copyright © 2021 OccamLab. All rights reserved.
@@ -32,7 +33,7 @@ struct EnterCodeIDView: View {
             Rectangle()
                 .foregroundColor(Color.clear)
             VStack {
-                TextField(NSLocalizedString("codeIDprompt", comment: "This is a string appearing in the text box asking the user to enter their 3-digit app clip code ID"), text: $codeIDModel.code)
+                TextField(NSLocalizedString("enterCodeIDTextField", comment: "This is a string appearing in the text box asking the user to enter their 3-digit app clip code ID"), text: $codeIDModel.code)
                     .disableAutocorrection(true)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .keyboardType(.numberPad)
@@ -42,7 +43,6 @@ struct EnterCodeIDView: View {
                     .overlay(RoundedRectangle(cornerRadius: 2 * 3)
                                 .stroke(Color.white, lineWidth: 3))
                     .padding(20)
-                    
                 
                 EnterButton(vc: vc, codeID: codeIDModel.code)
                     .frame(minWidth: 0, maxWidth: .infinity)
@@ -63,7 +63,7 @@ struct EnterButtonView: View {
             HStack{
                 Spacer()
 
-                Text(NSLocalizedString("proceedToRoutes", comment: "This is the label of the button the user presses to have Firebase load in the routes based on the app clip code ID."))
+                Text(NSLocalizedString("enterCodeIDButtonText", comment: "This is the label of the button the user presses to have Firebase load in the routes based on the app clip code ID."))
                     .bold()
                     .foregroundColor(Color.black)
                 Spacer()
