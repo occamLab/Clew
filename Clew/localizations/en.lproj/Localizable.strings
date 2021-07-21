@@ -289,7 +289,8 @@
 "resumeAnchorPointToReturnNavigationAnnouncement" = "Aligned to anchor point. Starting navigation.";
 "singleUseRouteToRecordingRouteAnnouncement" = "Now recording a single use route.";
 "saveRouteToPlayPauseAnnouncement" = "Route saved. You may now perform return navigation or return to the home screen.";
-"saveCodeIDtoSaveRouteNameAnnouncement" = "App clip code ID saved. You may now proceed to setting an anchor point.";
+"saveCodeIDtoCreatingAnchorPointAnnouncement" = "App clip code ID saved. You may now proceed to setting an anchor point.";
+
 
 //Play/Pause text
 "automaticAlignmentPlayPauseViewText" = "You have been automatically realigned with your route. Press the play button to perform navigation.";
@@ -319,10 +320,6 @@
     "firebaseSuccessfullyLoaded" = "Routes loaded successfully.";
     "invalidCodeID" = "Invalid app clip code ID, please try again.";
 
-    // EnterCodeIDView
-    "codeIDprompt" = "3-digit App Clip Code ID";
-    "proceedToRoutes" = "Continue to Routes";
-
     // Popover
     "startNavigationPopoverText" = "I am placeholder text that will explain what clew is :)";
     "selectRoutePopoverLabel" = "Select Route";
@@ -330,3 +327,17 @@
 
     // LoadFromAppClipView
     "loadingText" = "Loading...";
+
+// User Text Entry Views
+// some of this overlaps with the UI section
+    // EnterCodeIDView
+    "enterCodeIDTextField" = "3-digit code ID";
+    "enterCodeIDButtonText" = "Continue to Routes";
+
+    // NameCodeIDView
+    "nameCodeIDTextField" = "3-digit app clip code ID";
+    "nameCodeIDButtonText" = "Save Code ID";
+
+    // NameSavedRouteView
+    "nameSavedRouteTextField" = "Enter route name here";
+    "nameSavedRouteButtonText" = "Save Route Name";

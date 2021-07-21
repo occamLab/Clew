@@ -21,8 +21,7 @@ struct NameCodeIDView: View {
             Rectangle()
                 .foregroundColor(Color.clear)
             VStack {
-//                TextField(NSLocalizedString("codeIDprompt", comment: "This is a string appearing in the text box asking the user to enter their 3-digit app clip code ID"), text: $codeIDModel.code)
-                TextField("enter code id here", text: $codeIDModel.code)
+                TextField(NSLocalizedString("nameCodeIDTextField", comment: "This is a string appearing in the text box asking the user to enter their 3-digit app clip code ID"), text: $codeIDModel.code)
                     .disableAutocorrection(true)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .keyboardType(.numberPad)
@@ -53,8 +52,7 @@ struct EnterCodeIDButtonView: View {
             HStack{
                 Spacer()
 
-//                Text(NSLocalizedString("proceedToRoutes", comment: "This is the label of the button the user presses to have Firebase load in the routes based on the app clip code ID."))
-                Text("save code id")
+                Text(NSLocalizedString("nameCodeIDButtonText", comment: "This is the label of the button the user presses to have Firebase load in the routes based on the app clip code ID."))
                     .bold()
                     .foregroundColor(Color.black)
                 Spacer()
