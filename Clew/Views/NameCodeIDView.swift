@@ -13,8 +13,7 @@ import Combine
 /// A text entry box in which to enter the app clip code ID
 struct NameCodeIDView: View {
     let vc: ViewController
-    @ObservedObject private var codeIDModel = CodeIDModel()
-    
+    @ObservedObject private var codeIDModel = CodeIDModel() /// this is in EnterCodeIDView
 
      var body: some View {
         VStack {
@@ -38,7 +37,7 @@ struct NameCodeIDView: View {
                                 .stroke(Color.white, lineWidth: 3))
                     .padding(20)
                 
-                EnterCodeIDButton(vc: vc, codeID: codeIDModel.code)
+                NameCodeIDButton(vc: vc, codeID: codeIDModel.code)
                     .frame(minWidth: 0, maxWidth: .infinity)
                     .padding(.horizontal, 20)
             }.onAppear(perform: {
@@ -48,7 +47,7 @@ struct NameCodeIDView: View {
      }
 }
 
-struct EnterCodeIDButtonView: View {
+struct NameCodeIDButtonView: View {
     var body: some View {
         ZStack {
             Image("WhiteButtonBackground")
@@ -66,15 +65,19 @@ struct EnterCodeIDButtonView: View {
 }
 
 /// Press this button to submit the app clip code ID and proceed to the routes
-struct EnterCodeIDButton: View {
+struct NameCodeIDButton: View {
     var vc: ViewController
     var codeID: String
     var body: some View {
         Button(action: {
-            vc.appClipCodeID = codeID
-            vc.saveCodeIDButtonPressed()
+            if codeID.count == 3 {
+                vc.appClipCodeID = codeID
+                vc.saveCodeIDButtonPressed()
+            } else {
+                print("needs to be 3")
+            }
         }) {
-            EnterCodeIDButtonView()
+            NameCodeIDButtonView()
         }
     }
 }
