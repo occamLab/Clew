@@ -17,9 +17,14 @@ struct NameCodeIDView: View {
     
 
      var body: some View {
-        ZStack {
-            Rectangle()
-                .foregroundColor(Color.clear)
+        VStack {
+            ZStack {
+                Rectangle()
+                    .foregroundColor(Color.black.opacity(0.4))
+                    .frame(maxHeight: .infinity)
+                Text(NSLocalizedString("nameCodeIDLabel", comment: "Text that instructs the user to enter the code ID associated with the start anchor of the route they are recording."))
+                    .foregroundColor(Color.white)
+            }
             VStack {
                 TextField(NSLocalizedString("nameCodeIDTextField", comment: "This is a string appearing in the text box asking the user to enter their 3-digit app clip code ID"), text: $codeIDModel.code)
                     .disableAutocorrection(true)
@@ -31,7 +36,6 @@ struct NameCodeIDView: View {
                     .overlay(RoundedRectangle(cornerRadius: 2 * 3)
                                 .stroke(Color.white, lineWidth: 3))
                     .padding(20)
-                    
                 
                 EnterCodeIDButton(vc: vc, codeID: codeIDModel.code)
                     .frame(minWidth: 0, maxWidth: .infinity)
@@ -51,7 +55,6 @@ struct EnterCodeIDButtonView: View {
                 .frame(maxWidth: UIScreen.main.bounds.size.width/1.1, maxHeight: UIScreen.main.bounds.size.height/5)
             HStack{
                 Spacer()
-
                 Text(NSLocalizedString("nameCodeIDButtonText", comment: "This is the label of the button the user presses to have Firebase load in the routes based on the app clip code ID."))
                     .bold()
                     .foregroundColor(Color.black)

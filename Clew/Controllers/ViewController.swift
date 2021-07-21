@@ -522,7 +522,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     func handleStateTransitionToStartingNameCodeIDProcedure(){
         hideAllViewsHelper()
         /// Announce that the view has changed to the NameCodeIDView
-        self.delayTransition(announcement: "Enter the three-digit code ID for this route's starting point", initialFocus: nil) // BL L10N
+//        self.delayTransition(announcement: "Enter the three-digit code ID for this route's starting point", initialFocus: nil) // BL L10N
         add(nameCodeIDController)
     }
     
@@ -531,7 +531,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         hideAllViewsHelper()
 //        nameSavedRouteController.worldMap = worldMap // BL
         /// Announce that the view has changed to naming the route
-        self.delayTransition(announcement: "Enter a name for the route you just recorded", initialFocus: nil) // BL L10N
+//        self.delayTransition(announcement: "Enter a name for the route you just recorded", initialFocus: nil) // BL L10N
         add(nameSavedRouteController)
     }
     
@@ -2179,7 +2179,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         self.recordPathController.remove()
         self.add(enterCodeIDController)
         /// Announce that the view has transitioned to the EnterCodeIDView
-        self.delayTransition(announcement: "Enter the Code ID here.", initialFocus: nil) // BL L10N
+//        self.delayTransition(announcement: "Enter the Code ID here.", initialFocus: nil) // BL L10N
         self.rootContainerView.homeButton.isHidden = false
     }
     

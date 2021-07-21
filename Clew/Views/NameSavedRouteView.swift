@@ -17,9 +17,14 @@ struct NameSavedRouteView: View {
 //    let worldMap: Any?
 
      var body: some View {
-        ZStack {
-            Rectangle()
-                .foregroundColor(Color.clear)
+        VStack {
+            ZStack {
+                Rectangle()
+                    .foregroundColor(Color.black.opacity(0.4))
+                    .frame(maxHeight: .infinity)
+                Text(NSLocalizedString("nameSavedRouteLabel", comment: "Text that instructs the user to name the route they just recorded."))
+                    .foregroundColor(Color.white)
+            }
             VStack {
                 TextField(NSLocalizedString("nameSavedRouteTextField", comment: "Message displayed to the user when typing to save a route by name."), text: $routeName)
                     .disableAutocorrection(true)

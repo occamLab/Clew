@@ -26,12 +26,16 @@ class CodeIDModel: ObservableObject {
 struct EnterCodeIDView: View {
     let vc: ViewController
     @ObservedObject private var codeIDModel = CodeIDModel()
-
     
      var body: some View {
-        ZStack {
-            Rectangle()
-                .foregroundColor(Color.clear)
+        VStack {
+            ZStack {
+                Rectangle()
+                    .foregroundColor(Color.black.opacity(0.4))
+                    .frame(maxHeight: .infinity)
+                Text(NSLocalizedString("enterCodeIDLabel", comment: "This text appears instructing the user to enter their app clip code ID."))
+                    .foregroundColor(Color.white)
+            }
             VStack {
                 TextField(NSLocalizedString("enterCodeIDTextField", comment: "This is a string appearing in the text box asking the user to enter their 3-digit app clip code ID"), text: $codeIDModel.code)
                     .disableAutocorrection(true)
