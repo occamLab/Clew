@@ -113,7 +113,6 @@
 		98AA588F269DD121001123F0 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 98AA5889269DCC54001123F0 /* GoogleService-Info.plist */; };
 		98AA5890269DD122001123F0 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 98AA5889269DCC54001123F0 /* GoogleService-Info.plist */; };
 		98AA5891269DD122001123F0 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 98AA5889269DCC54001123F0 /* GoogleService-Info.plist */; };
-		98AA5892269E070C001123F0 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98FF7A9C269CBFE9008C64E5 /* ContentView.swift */; };
 		98AA5895269E0C13001123F0 /* StartMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98AA5894269E0C13001123F0 /* StartMenuView.swift */; };
 		98AA5897269E1518001123F0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98AA5896269E1518001123F0 /* AppDelegate.swift */; };
 		98AA5899269E1BA0001123F0 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98AA5898269E1BA0001123F0 /* SceneDelegate.swift */; };
@@ -440,7 +439,6 @@
 		98CC6760268A0FEC00E3759F /* FirebaseSetup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseSetup.swift; sourceTree = "<group>"; };
 		98CC6765268A1F2200E3759F /* SurveyInterface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SurveyInterface.swift; sourceTree = "<group>"; };
 		98FF7A98269CBFE9008C64E5 /* Clew-More.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Clew-More.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		98FF7A9C269CBFE9008C64E5 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		98FF7AA1269CBFEB008C64E5 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		98FF7AA3269CBFEB008C64E5 /* Info.plist */ = {isa = PBXFileReference; explicitFileType = text.plist.entitlements; path = Info.plist; sourceTree = "<group>"; };
 		9EDA0709B865627072DE3218 /* Pods-Clew-More.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew-More.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Clew-More/Pods-Clew-More.debug.xcconfig"; sourceTree = "<group>"; };
@@ -678,7 +676,6 @@
 			children = (
 				98AA5894269E0C13001123F0 /* StartMenuView.swift */,
 				98AA58A1269F8651001123F0 /* DefaultView.swift */,
-				98FF7A9C269CBFE9008C64E5 /* ContentView.swift */,
 				98FF7AA3269CBFEB008C64E5 /* Info.plist */,
 				98FF7AA0269CBFEB008C64E5 /* Preview Content */,
 				98AA5896269E1518001123F0 /* AppDelegate.swift */,
@@ -1648,7 +1645,6 @@
 				98FF7AD4269CC125008C64E5 /* RoutesViewController.swift in Sources */,
 				98FF7ACE269CC114008C64E5 /* ResumeTrackingConfirmController.swift in Sources */,
 				98FF7AC2269CC0F0008C64E5 /* UIButtonExtensions.swift in Sources */,
-				98AA5892269E070C001123F0 /* ContentView.swift in Sources */,
 				98FF7ADC269CC157008C64E5 /* EnterCodeIDView.swift in Sources */,
 				98FF7AD2269CC11F008C64E5 /* BurgerMenuViewController.swift in Sources */,
 				98AA58A826A60F02001123F0 /* SavedRoutesList.swift in Sources */,

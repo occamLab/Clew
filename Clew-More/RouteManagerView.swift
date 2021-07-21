@@ -12,17 +12,28 @@ struct RouteManagerView: View {
     var route: SavedRoute
     var vc: ViewController
     var body: some View {
+        HStack{
+            Button(action: {
+                self.vc.routeOptionsController?.dismiss(animated: false)
+            }) {
+                Text("Back To Routes")
+                    .bold()
+                    .multilineTextAlignment(.leading)
+            }.padding()
+            Spacer()
+        }
+     
         Text(String(route.name))
             .font(.title)
             .multilineTextAlignment(.center)
-        Text("App Clip Code ID: \(String(route.appClipCodeID))")
+        Text("\(String(NSLocalizedString("AppClipCodeIDText", comment: "describes an app clip code ID"))): \(String(route.appClipCodeID))")
             .font(.title2)
         VStack {
             Button(action: {
                 self.vc.onRouteTableViewCellClicked(route: self.route, navigateStartToEnd: true)
                 self.vc.routeOptionsController?.dismiss(animated: false)
             } ){
-                Text("Navigate/Test Route")
+                Text(String(NSLocalizedString("NavigateText", comment: "This is the text that tells the user to navigate a route")))
                     .frame(minWidth: 0, maxWidth: 300)
                     .padding()
                     .foregroundColor(.black)
@@ -42,7 +53,7 @@ struct RouteManagerView: View {
                 self.vc.add(self.vc.recordPathController)
 
             }) {
-                Text("Upload Route")
+                Text(String(NSLocalizedString("UploadText", comment: "This is the text that tells the user to upload a route")))
                     .frame(minWidth: 0, maxWidth: 300)
                     .padding()
                     .foregroundColor(.black)
@@ -67,7 +78,7 @@ struct RouteManagerView: View {
                     print("Unexpectedly failed to persist the new routes data")
                 }
             }) {
-                Text("Delete Route")
+                Text(String(NSLocalizedString("DeleteText", comment: "This is the text that tells the user to delete a route")))
                     .frame(minWidth: 0, maxWidth: 300)
                     .padding()
                     .foregroundColor(.white)
@@ -93,7 +104,7 @@ struct RouteManagerView: View {
                 /// show the share menu
                 self.vc.present(activity, animated: true, completion: nil)
             }) {
-                Text("Share")
+                Text(String(NSLocalizedString("ShareText", comment: "This is the text that tells the user to share a route")))
                     .frame(minWidth: 0, maxWidth: 300)
                     .padding()
                     .foregroundColor(.white)
