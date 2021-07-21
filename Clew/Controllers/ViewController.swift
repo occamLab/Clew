@@ -724,8 +724,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         /// PATHPOINT Save Route View -> play/pause
         ///Announce to the user that they have finished the alignment process and are now at the play pause screen
         self.delayTransition(announcement: NSLocalizedString("saveRouteToPlayPauseAnnouncement", comment: "This is an announcement which is spoken when the user finishes saving their route. This announcement signifies the transition from the view where the user can name or save their route to the screen where the user can either pause the AR session tracking or they can perform return navigation."), initialFocus: nil)
-        ///perform the state transition to the main screen after successfully saving a route
-        self.state = .mainScreen(announceArrival: true)
     }
     
     /// Hide all the subviews.  TODO: This should probably eventually refactored so it happens more automatically.
