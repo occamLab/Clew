@@ -30,6 +30,7 @@ struct StartNavigationPopoverView: View {
                     Button(action: {
                         vc.routeID = routeInfo.first!.key
                         print(vc.routeID)
+                        print("B)")
                         selectedRouteName = routeInfo.first!.value
                         vc.recordPathController.remove()
                             

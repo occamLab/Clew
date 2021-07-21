@@ -381,16 +381,30 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 // Handle any errors
                 print("Failed to download route from Firebase due to the following error: \(error)")
             } else {
+                
+                /*NotificationCenter.default.addObserver(forName: NSNotification.Name("shouldOpenRoute"), object: nil, queue: nil) { (notification) -> Void in
+                    
+                }*/
+   
+                
                 self.dataPersistence.importData(withData: data!)
+                print(self.dataPersistence.routes)
+                print("data, persisted")
                 
-                let thisRoute = (self.dataPersistence.routes.last)!
+                let thisRoute = (self.dataPersistence.routes.first(where: {String($0.id) == self.routeID}))!
                 
-                //self.sceneView.debugOptions = [.showWorldOrigin]
+                print("Soooup Time \(thisRoute.name)")
+                print("soooooup time")
+                
+                
+                self.sceneView.debugOptions = [.showWorldOrigin]
                 self.sceneView.session.run(self.configuration, options: [.removeExistingAnchors, .resetTracking])
                 
                 self.continuationAfterSessionIsReady = {
                     self.handleStateTransitionToStartingResumeProcedure(route: thisRoute, worldMap: nil, navigateStartToEnd: true)
                 }
+
+
             }
           }
     }
@@ -484,6 +498,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         if navigateStartToEnd {
             crumbs = route.crumbs.reversed()
             pausedTransform = route.beginRouteAnchorPoint.transform
+            print(pausedTransform)
+            print("nil?")
             
         } else {
             crumbs = route.crumbs
@@ -493,7 +509,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         
         intermediateAnchorPoints = route.intermediateAnchorPoints
         // don't reset tracking, but do clear anchors and switch to the new map
-        //sceneView.debugOptions = [.showWorldOrigin]
+        sceneView.debugOptions = [.showWorldOrigin]
         sceneView.session.run(configuration, options: [.removeExistingAnchors, .resetTracking])
 
         if isTrackingPerformanceNormal, isSameMap {
@@ -612,6 +628,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 state = .startingNameCodeIDProcedure
                 return
             } else if let currentTransform = sceneView.session.currentFrame?.anchors.compactMap({$0 as? ARImageAnchor}).last?.transform {
+                print(sceneView.session.currentFrame?.anchors.compactMap({$0 as? ARImageAnchor}))
+                print("^^ image anchoring")
                 endRouteAnchorPoint.transform = currentTransform
                 // no more crumbs
                 droppingCrumbs?.invalidate()
@@ -1394,8 +1412,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     func session(_ session: ARSession, didUpdate frame: ARFrame) {
         if case .readyForFinalResumeAlignment = state {
             if (frame.anchors.compactMap({$0 as? ARImageAnchor}).count > 0) && (state.rawValue != "startingAutoAlignment") {
-                print(frame.anchors.compactMap({$0 as? ARImageAnchor}).count)
-                self.state = .startingAutoAlignment
+                print("in the first if loop")
+                if (frame.anchors.compactMap({$0 as? ARImageAnchor}).first!.isTracked) {
+                    self.state = .startingAutoAlignment
+                    print("auto alignment")
+                }
             }
         }
         
@@ -1504,7 +1525,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         } else if case .startingAutoAlignment = state {
             /// for navigating a saved route
             hideAllViewsHelper()
-            state = .navigatingRoute
+            resumeTracking()
+            //state = .navigatingRoute
             print("navigating route")
         } else if case .startingAutoAnchoring = state {
             /// for recording a saved route
@@ -2041,7 +2063,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         if #available(iOS 12.0, *) {
             configuration.initialWorldMap = nil
         }
-        //sceneView.debugOptions = [.showWorldOrigin]
+        sceneView.debugOptions = [.showWorldOrigin]
         sceneView.session.run(configuration, options: [.removeExistingAnchors, .resetTracking])
     }
     

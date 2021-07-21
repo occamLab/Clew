@@ -31,6 +31,8 @@ struct RouteManagerView: View {
         VStack {
             Button(action: {
                 self.vc.onRouteTableViewCellClicked(route: self.route, navigateStartToEnd: true)
+                print(self.route.endRouteAnchorPoint.transform)
+                print("??")
                 self.vc.routeOptionsController?.dismiss(animated: false)
             } ){
                 Text(String(NSLocalizedString("NavigateText", comment: "This is the text that tells the user to navigate a route")))

@@ -113,10 +113,14 @@ class DataPersistence {
                         print("couldn't write file")
                     }
                 }
+                NotificationCenter.default.post(name: NSNotification.Name("shouldOpenRoute"), object: nil)
+                print("posted")
             }
+
         } catch {
             print("couldn't unarchive route document \(error)")
         }
+
     }
 
     /// handler for importing routes from an external temporary file
