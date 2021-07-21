@@ -892,14 +892,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     var routeOptionsController: UIViewController?
     
     /// saving route code ID VC
-    var nameCodeIDController: UIViewController!
+  //  var nameCodeIDController: UIViewController!
     
     /// saving route name VC
     var nameSavedRouteController: UIViewController!
     #endif
     
     /// saving route code ID VC
-//    var nameCodeIDController: NameCodeIDController!
+    var nameCodeIDController: NameCodeIDController!
     
     /// saving route name VC
 //    var nameSavedRouteController: NameSavedRouteController!
@@ -2062,7 +2062,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             creatingRouteAnchorPoint = false
             if imageAnchoring {
                 /// sends the user to naming the route, skipping creating the end anchorpoint
-                state = .recordingRoute // BL
+                state = .startingNameSavedRouteProcedure(worldMap: nil) // BL
             } else {
                 ///sends the user to the process where they create an end anchorpoint
                 state = .startingPauseProcedure
