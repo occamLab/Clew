@@ -74,7 +74,7 @@ struct NameCodeIDButton: View {
                 vc.appClipCodeID = codeID
                 vc.saveCodeIDButtonPressed()
             } else {
-                print("needs to be 3")
+                vc.delayTransition(announcement: NSLocalizedString("codeIDErrorAnnouncement", comment: "This announcement is read out when the user enters a code ID that does not meet the criteria"), initialFocus: nil)
             }
         }) {
             NameCodeIDButtonView()

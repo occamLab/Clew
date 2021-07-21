@@ -83,9 +83,13 @@ struct EnterButton: View {
     var codeID: String
     var body: some View {
         Button(action: {
-            vc.appClipCodeID = codeID
-            NotificationCenter.default.post(name: NSNotification.Name("shouldDismissCodeIDPopover"), object: nil)
-            vc.codeIDEntered()
+            if codeID.count == 3 {
+                vc.appClipCodeID = codeID
+                NotificationCenter.default.post(name: NSNotification.Name("shouldDismissCodeIDPopover"), object: nil)
+                vc.codeIDEntered()
+            } else {
+                vc.delayTransition(announcement: NSLocalizedString("codeIDErrorAnnouncement", comment: "This announcement is read out when the user enters a code ID that does not meet the criteria"), initialFocus: nil)
+            }
         }) {
             EnterButtonView()
         }

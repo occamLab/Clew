@@ -346,6 +346,8 @@
     "nameCodeIDLabel" = "To create a route, the starting anchor point must be associated with an app clip code ID. Enter the three-digit ID for this route's starting point below.";
     "nameCodeIDTextField" = "3-digit app clip code ID";
     "nameCodeIDButtonText" = "Save Code ID";
+    
+    "codeIDErrorAnnouncement" = "Please make sure you have entered three digits.";
 
     // NameSavedRouteView
     "nameSavedRouteLabel" = "Below, you can enter a name for the route you just recorded.";
