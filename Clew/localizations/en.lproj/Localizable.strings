@@ -60,7 +60,7 @@
 "startReturnNavigationButtonAccessibilityLabel" = "Start navigation";
 "optionsButtonAccessibilityLabel" = "Options";
 "signInwithAppleButtonAccessibilityLabel" = "Sign In";
-"enterCodeButtonText" = "Navigate From App Clip Code";
+"enterCodeButtonText" = "Navigate From\nApp Clip Code";
 "enterCodeButtonAccessibilityLabel" = "Load routes from app clip code ID";
 "recordSingleUseRouteButtonAccessibilityLabel" = "Navigate From app clip code ID";
 
