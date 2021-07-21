@@ -61,8 +61,8 @@
 "optionsButtonAccessibilityLabel" = "Options";
 "signInwithAppleButtonAccessibilityLabel" = "Sign In";
 "enterCodeButtonText" = "Navigate From App Clip Code";
-"enterCodeButtonAccessibilityLabel" = "Enter app clip code ID";
-"recordSingleUseRouteButtonAccessibilityLabel" = "Navigate From App Clip Code";
+"enterCodeButtonAccessibilityLabel" = "Load routes from app clip code ID";
+"recordSingleUseRouteButtonAccessibilityLabel" = "Navigate From app clip code ID";
 
 
     // Save routes
@@ -289,7 +289,7 @@
 "resumeAnchorPointToReturnNavigationAnnouncement" = "Aligned to anchor point. Starting navigation.";
 "singleUseRouteToRecordingRouteAnnouncement" = "Now recording a single use route.";
 "saveRouteToPlayPauseAnnouncement" = "Route saved. You may now perform return navigation or return to the home screen.";
-"saveCodeIDtoCreatingAnchorPointAnnouncement" = "App clip code ID saved. You may now proceed to setting an anchor point.";
+"saveCodeIDtoCreatingAnchorPointAnnouncement" = "App clip code ID saved. You may now set an anchor point.";
 
 
 //Play/Pause text

@@ -24,6 +24,7 @@ struct NameCodeIDView: View {
                     .frame(maxHeight: .infinity)
                 Text(NSLocalizedString("nameCodeIDLabel", comment: "Text that instructs the user to enter the code ID associated with the start anchor of the route they are recording."))
                     .foregroundColor(Color.white)
+                    .padding(.horizontal, 20)
             }
             VStack {
                 TextField(NSLocalizedString("nameCodeIDTextField", comment: "This is a string appearing in the text box asking the user to enter their 3-digit app clip code ID"), text: $codeIDModel.code)

@@ -35,6 +35,7 @@ struct EnterCodeIDView: View {
                     .frame(maxHeight: .infinity)
                 Text(NSLocalizedString("enterCodeIDLabel", comment: "This text appears instructing the user to enter their app clip code ID."))
                     .foregroundColor(Color.white)
+                    .padding(.horizontal, 20)
             }
             VStack {
                 TextField(NSLocalizedString("enterCodeIDTextField", comment: "This is a string appearing in the text box asking the user to enter their 3-digit app clip code ID"), text: $codeIDModel.code)
