@@ -13,13 +13,18 @@ import Combine
 /// A text entry box in which to enter the app clip code ID
 struct NameCodeIDView: View {
     let vc: ViewController
-    @ObservedObject private var codeIDModel = CodeIDModel()
-    
+    @ObservedObject private var codeIDModel = CodeIDModel() /// this is in EnterCodeIDView
 
      var body: some View {
-        ZStack {
-            Rectangle()
-                .foregroundColor(Color.clear)
+        VStack {
+            ZStack {
+                Rectangle()
+                    .foregroundColor(Color.black.opacity(0.4))
+                    .frame(maxHeight: .infinity)
+                Text(NSLocalizedString("nameCodeIDLabel", comment: "Text that instructs the user to enter the code ID associated with the start anchor of the route they are recording."))
+                    .foregroundColor(Color.white)
+                    .padding(.horizontal, 20)
+            }
             VStack {
                 TextField(NSLocalizedString("nameCodeIDTextField", comment: "This is a string appearing in the text box asking the user to enter their 3-digit app clip code ID"), text: $codeIDModel.code)
                     .disableAutocorrection(true)
@@ -31,9 +36,8 @@ struct NameCodeIDView: View {
                     .overlay(RoundedRectangle(cornerRadius: 2 * 3)
                                 .stroke(Color.white, lineWidth: 3))
                     .padding(20)
-                    
                 
-                EnterCodeIDButton(vc: vc, codeID: codeIDModel.code)
+                NameCodeIDButton(vc: vc, codeID: codeIDModel.code)
                     .frame(minWidth: 0, maxWidth: .infinity)
                     .padding(.horizontal, 20)
             }.onAppear(perform: {
@@ -43,7 +47,7 @@ struct NameCodeIDView: View {
      }
 }
 
-struct EnterCodeIDButtonView: View {
+struct NameCodeIDButtonView: View {
     var body: some View {
         ZStack {
             Image("WhiteButtonBackground")
@@ -51,7 +55,6 @@ struct EnterCodeIDButtonView: View {
                 .frame(maxWidth: UIScreen.main.bounds.size.width/1.1, maxHeight: UIScreen.main.bounds.size.height/5)
             HStack{
                 Spacer()
-
                 Text(NSLocalizedString("nameCodeIDButtonText", comment: "This is the label of the button the user presses to have Firebase load in the routes based on the app clip code ID."))
                     .bold()
                     .foregroundColor(Color.black)
@@ -62,15 +65,19 @@ struct EnterCodeIDButtonView: View {
 }
 
 /// Press this button to submit the app clip code ID and proceed to the routes
-struct EnterCodeIDButton: View {
+struct NameCodeIDButton: View {
     var vc: ViewController
     var codeID: String
     var body: some View {
         Button(action: {
-            vc.appClipCodeID = codeID
-            vc.saveCodeIDButtonPressed()
+            if codeID.count == 3 {
+                vc.appClipCodeID = codeID
+                vc.saveCodeIDButtonPressed()
+            } else {
+                print("needs to be 3")
+            }
         }) {
-            EnterCodeIDButtonView()
+            NameCodeIDButtonView()
         }
     }
 }

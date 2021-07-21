@@ -14,12 +14,18 @@ import Combine
 struct NameSavedRouteView: View {
     @State private var routeName: String = ""
     let vc: ViewController
-//    let worldMap: Any?
+//    let worldMap: Any?    // BL: add worldMap
 
      var body: some View {
-        ZStack {
-            Rectangle()
-                .foregroundColor(Color.clear)
+        VStack {
+            ZStack {
+                Rectangle()
+                    .foregroundColor(Color.black.opacity(0.4))
+                    .frame(maxHeight: .infinity)
+                Text(NSLocalizedString("nameSavedRouteLabel", comment: "Text that instructs the user to name the route they just recorded."))
+                    .foregroundColor(Color.white)
+                    .padding(.horizontal, 20)
+            }
             VStack {
                 TextField(NSLocalizedString("nameSavedRouteTextField", comment: "Message displayed to the user when typing to save a route by name."), text: $routeName)
                     .disableAutocorrection(true)
@@ -47,7 +53,6 @@ struct EnterNameButtonView: View {
             Image("WhiteButtonBackground")
                 .resizable()
                 .frame(maxWidth: UIScreen.main.bounds.size.width/1.1, maxHeight: UIScreen.main.bounds.size.height/5)
-//                .accessibilityLabel(NSLocalizedString(<#T##key: String##String#>, comment: <#T##String#>))
             HStack {
                 Spacer()
                 Text(NSLocalizedString("nameSavedRouteButtonText", comment: "The text that appears on the button the user should press to submit their route name."))

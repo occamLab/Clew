@@ -333,7 +333,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         
         let navStart = UIAlertController(title: "Start Navigating", message: "Aligned to anchor image, click Start to begin navigation", preferredStyle: .alert)
         
-        let start = UIAlertAction(title: "Start", style: .default, handler: {(action) -> Void in
+        let start = UIAlertAction(title: "Start", style: .default, handler: {(action) -> Void in    // BL L10N
             self.confirmAlignment()
         })
         
@@ -350,7 +350,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         
         let recordStart = UIAlertController(title: "Start Recording", message: "Aligned to anchor image, click Start to begin recording route", preferredStyle: .alert)
         
-        let start = UIAlertAction(title: "Start", style: .default, handler: {(action) -> Void in
+        let start = UIAlertAction(title: "Start", style: .default, handler: {(action) -> Void in    // BL L10N
             self.confirmAlignment()
         })
         
@@ -537,8 +537,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// Handler for the startingNameCodeIDProcedure app state
     func handleStateTransitionToStartingNameCodeIDProcedure(){
         hideAllViewsHelper()
-        /// Announce that the view has changed to the NameCodeIDView
-        self.delayTransition(announcement: "Enter the three-digit code ID for this route's starting point", initialFocus: nil) // BL L10N
         add(nameCodeIDController)
     }
     
@@ -546,8 +544,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     func handleStateTransitionToStartingNameSavedRouteProcedure(worldMap: Any?){
         hideAllViewsHelper()
 //        nameSavedRouteController.worldMap = worldMap // BL
-        /// Announce that the view has changed to naming the route
-        self.delayTransition(announcement: "Enter a name for the route you just recorded", initialFocus: nil) // BL L10N
         add(nameSavedRouteController)
     }
     
@@ -559,7 +555,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             try! showPauseTrackingButton()
         } else {
             endRouteAnchorPoint = RouteAnchorPoint()
-            // BL
             completingPauseProcedureHelper(worldMap: nil)
         }
     }
@@ -681,7 +676,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         //check whether or not the path was called from the pause menu or not
         if paused {
             ///PATHPOINT pause recording anchor point alignment timer -> resume tracking
-            //proceed as normal with the pause structure (single use route)
+            ///proceed as normal with the pause structure (single use route)
 
             justTraveledRoute = SavedRoute(id: "single use", appClipCodeID: self.appClipCodeID, name: "single use", crumbs: self.crumbs, dateCreated: Date() as NSDate, beginRouteAnchorPoint: self.beginRouteAnchorPoint, endRouteAnchorPoint: self.endRouteAnchorPoint, intermediateAnchorPoints: intermediateAnchorPoints, imageAnchoring: imageAnchoring)
             justUsedMap = worldMap
@@ -731,23 +726,15 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     }
     
     @objc func saveCodeIDButtonPressed() {
-//        /// Save the input from the user for the app clip code ID as an attribute of the SavedRoute
-//        let id = "000"
-//        /// Get the input values from user, if it's nil then use "000" (this does not actually work)
-//        self.appClipCodeID = nameCodeIDController.textField.text as String? ?? id
         hideAllViewsHelper()
         ///Announce to the user that they have saved the route ID and are now at the saving route name screen
         self.delayTransition(announcement: NSLocalizedString("saveCodeIDtoCreatingAnchorPointAnnouncement", comment: "This is an announcement which is spoken when the user finishes saving their route's app clip code ID. This announcement signifies the transition from the view where the user can enter the app clip code ID associated with the route to the view where the user can anchor the starting point of the route they are recording."), initialFocus: nil)
-//        ///Clearing the save route text field
-//        nameCodeIDController.textField.text = ""
         /// send to SaveRouteButtonPressed
         self.state = .startingPauseProcedure
     }
     
     @objc func saveRouteButtonPressed() {
         let id = String(Int64(NSDate().timeIntervalSince1970 * 1000)) as NSString
-        // Get the input values from user, if it's nil then use timestamp
-//        self.routeName = nameSavedRouteController.textField.text as NSString? ?? id
         
         // BL: get worldMap in here
         try! self.archive(routeId: id, appClipCodeID: self.appClipCodeID, beginRouteAnchorPoint: self.beginRouteAnchorPoint, endRouteAnchorPoint: self.endRouteAnchorPoint, intermediateAnchorPoints: self.intermediateAnchorPoints, worldMap: nil, imageAnchoring: self.imageAnchoring)
@@ -755,10 +742,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         /// PATHPOINT Save Route View -> play/pause
         ///Announce to the user that they have finished the alignment process and are now at the play pause screen
         self.delayTransition(announcement: NSLocalizedString("saveRouteToPlayPauseAnnouncement", comment: "This is an announcement which is spoken when the user finishes saving their route. This announcement signifies the transition from the view where the user can name or save their route to the screen where the user can either pause the AR session tracking or they can perform return navigation."), initialFocus: nil)
-        ///Clearing the save route text field
-//        nameSavedRouteController.textField.text = ""  //moved to .onAppear in view
-        ///perform the state transition to the main screen after successfully saving a route
-        self.state = .mainScreen(announceArrival: true)
     }
     
     /// Hide all the subviews.  TODO: This should probably eventually refactored so it happens more automatically.
@@ -1195,10 +1178,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         // proceed to home page
         self.clearState()
         self.hideAllViewsHelper()
-        // BL: this should be cleared with the .onAppear in that V
-//        if case .startingNameSavedRouteProcedure = self.state {
-//            self.nameSavedRouteController.textField.text = ""
-//        }
         self.state = .mainScreen(announceArrival: false)
     }
     
@@ -2200,8 +2179,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     @objc func enterCodeID() {
         self.recordPathController.remove()
         self.add(enterCodeIDController)
-        /// Announce that the view has transitioned to the EnterCodeIDView
-        self.delayTransition(announcement: "Enter the Code ID here.", initialFocus: nil) // BL L10N
         self.rootContainerView.homeButton.isHidden = false
     }
     

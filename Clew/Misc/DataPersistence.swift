@@ -235,7 +235,8 @@ class DataPersistence {
     }
     
     func uploadToFirebase(route: SavedRoute) {
-    /// This currently works when you hit the "Share" button
+        /// Called when the Upload Route button is pressed
+        
         let routeRef = Storage.storage().reference().child("AppClipRoutes")
         let codedData = exportToCrd(route: route)
         
@@ -284,7 +285,6 @@ class DataPersistence {
                             } else {
                                 print("uploaded route successfully @", fileRef.fullPath)
                             }
-                            NotificationCenter.default.post(name: Notification.Name("SurveyPopoverReadyToDismiss"), object: true)
                         }
                     }
                 }
