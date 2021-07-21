@@ -1,6 +1,7 @@
 //
 //  EnterCodeIDView.swift
 //  Clew
+//  This view is used when a user enters an app clip code ID to bring up a list of routes.
 //
 //  Created by Berwin Lan on 7/7/21.
 //  Copyright © 2021 OccamLab. All rights reserved.

@@ -891,7 +891,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     var routeOptionsController: UIViewController?
     
     /// saving route code ID VC
-  //  var nameCodeIDController: UIViewController!
+    var nameCodeIDController: UIViewController!
     
     /// saving route name VC
     var nameSavedRouteController: UIViewController!
@@ -2103,6 +2103,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         waypointFeedbackGenerator = nil
         
         // erase nearest keypoint
+        
         keypointNode.removeFromParentNode()
         pathObj?.removeFromParentNode()
 //        pathpointObjs.map({$0.removeFromParentNode()})

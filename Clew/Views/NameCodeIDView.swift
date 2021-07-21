@@ -1,6 +1,7 @@
 //
 //  NameCodeIDView.swift
 //  Clew
+//  This view is used when a new route is recorded.
 //
 //  Created by Berwin Lan on 7/20/21.
 //  Copyright © 2021 OccamLab. All rights reserved.
@@ -33,7 +34,7 @@ struct NameCodeIDView: View {
                     .padding(20)
                     
                 
-                EnterButton(vc: vc, codeID: codeIDModel.code)
+                EnterCodeIDButton(vc: vc, codeID: codeIDModel.code)
                     .frame(minWidth: 0, maxWidth: .infinity)
                     .padding(.horizontal, 20)
             }.onAppear(perform: {
@@ -71,7 +72,7 @@ struct EnterCodeIDButton: View {
             vc.appClipCodeID = codeID
             vc.saveCodeIDButtonPressed()
         }) {
-            EnterButtonView()
+            EnterCodeIDButtonView()
         }
     }
 }
