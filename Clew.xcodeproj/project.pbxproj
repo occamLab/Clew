@@ -2166,6 +2166,7 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 110;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_ASSET_PATHS = "\"Clew-More/Preview Content\"";
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
@@ -2176,10 +2177,11 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 2.0.20;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				OTHER_LDFLAGS = "$(inherited)";
-				PRODUCT_BUNDLE_IDENTIFIER = "edu.occam.Clew-More";
+				PRODUCT_BUNDLE_IDENTIFIER = "edu.occam.Clew-Dev";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG CLEWMORE IS_DEV_TARGET";
 				SWIFT_OBJC_BRIDGING_HEADER = "Clew/Clew-More-Bridging-Header.h";
@@ -2197,6 +2199,7 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 110;
 				DEVELOPMENT_ASSET_PATHS = "\"Clew-More/Preview Content\"";
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
 				ENABLE_PREVIEWS = YES;
@@ -2206,6 +2209,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 2.0.20;
 				MTL_FAST_MATH = YES;
 				OTHER_LDFLAGS = (
 					"-l\"c++\"",
@@ -2267,7 +2271,7 @@
 					"-framework",
 					"\"nanopb\"",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "edu.occam.Clew-More";
+				PRODUCT_BUNDLE_IDENTIFIER = "edu.occam.Clew-Dev";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "CLEWMORE IS_DEV_TARGET";
 				SWIFT_OBJC_BRIDGING_HEADER = "Clew/Clew-More-Bridging-Header.h";
