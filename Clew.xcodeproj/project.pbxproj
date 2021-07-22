@@ -431,6 +431,7 @@
 		98AA58A726A60F02001123F0 /* SavedRoutesList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedRoutesList.swift; sourceTree = "<group>"; };
 		98AB6071269889B700613BB5 /* LoadFromAppClipView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadFromAppClipView.swift; sourceTree = "<group>"; };
 		98AB6076269DDCC700613BB5 /* anchorInFrame.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = anchorInFrame.mp3; path = Clew/anchorInFrame.mp3; sourceTree = "<group>"; };
+		98C9A0D426AA07B500810163 /* Clew-More.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Clew-More.entitlements"; sourceTree = "<group>"; };
 		98CC59AE269CCE11002EF6D7 /* FirebaseCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FirebaseCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		98CC59B2269CCE31002EF6D7 /* FirebaseAnalytics.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = FirebaseAnalytics.xcframework; path = Pods/FirebaseAnalytics/Frameworks/FirebaseAnalytics.xcframework; sourceTree = "<group>"; };
 		98CC59BB269CD48C002EF6D7 /* InAppSettingsKit.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; path = InAppSettingsKit.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -674,6 +675,7 @@
 		98FF7A99269CBFE9008C64E5 /* Clew-More */ = {
 			isa = PBXGroup;
 			children = (
+				98C9A0D426AA07B500810163 /* Clew-More.entitlements */,
 				98AA5894269E0C13001123F0 /* StartMenuView.swift */,
 				98AA58A1269F8651001123F0 /* DefaultView.swift */,
 				98FF7AA3269CBFEB008C64E5 /* Info.plist */,
@@ -2165,6 +2167,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CODE_SIGN_ENTITLEMENTS = "Clew-More/Clew-More.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 110;
 				DEBUG_INFORMATION_FORMAT = dwarf;
@@ -2198,6 +2201,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CODE_SIGN_ENTITLEMENTS = "Clew-More/Clew-More.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 110;
 				DEVELOPMENT_ASSET_PATHS = "\"Clew-More/Preview Content\"";
