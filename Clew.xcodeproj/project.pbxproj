@@ -2208,7 +2208,6 @@
 				);
 				MTL_FAST_MATH = YES;
 				OTHER_LDFLAGS = (
-					"$(inherited)",
 					"-l\"c++\"",
 					"-l\"icucore\"",
 					"-l\"sqlite3\"",
@@ -2267,8 +2266,6 @@
 					"\"leveldb\"",
 					"-framework",
 					"\"nanopb\"",
-					"-framework",
-					"\"Firebase\"",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "edu.occam.Clew-More";
 				PRODUCT_NAME = "$(TARGET_NAME)";
