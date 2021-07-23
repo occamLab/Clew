@@ -71,6 +71,7 @@ class HomeScreenHelper {
     }
     
     func loadRoute() {
+        self.vc.arLogger.startTrial()
         self.vc.recordPathController.remove()
         self.vc.handleStateTransitionToNavigatingExternalRoute()
     }

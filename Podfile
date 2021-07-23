@@ -7,13 +7,8 @@ def all_pods
   # Pods for Clew
   pod 'InAppSettingsKit'
   pod 'VectorMath', '~> 0.3'
-  pod 'Firebase/Core'
-  pod 'Firebase/Storage'
-  pod 'Firebase/Database'
   pod 'SRCountdownTimer'
   pod 'PRTween', '~> 0.1'
-  pod 'Firebase/Auth'
-  pod 'Firebase/Analytics'
 end
 
 target 'Clew' do
@@ -30,8 +25,6 @@ end
 
 target 'UIKit Clip' do
   pod 'VectorMath', '~> 0.3'
-  pod 'Firebase/Core'
-  pod 'Firebase/Storage'
   pod 'SRCountdownTimer'
   pod 'PRTween', '~> 0.1'
 end
