@@ -9,7 +9,6 @@
 
 import Foundation
 import Firebase
-import FirebaseStorage
 import FirebaseAnalytics
 import SceneKit
 #if !APPCLIP
