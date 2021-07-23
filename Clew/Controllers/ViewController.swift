@@ -34,6 +34,7 @@ import Firebase
 import SRCountdownTimer
 import SwiftUI
 import Firebase
+import ARDataLogger
 
 /// A custom enumeration type that describes the exact state of the app.  The state is not exhaustive (e.g., there are Boolean flags that also track app state).
 enum AppState {
@@ -227,6 +228,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     ///this boolean denotes whether or not the app is loading a route from an automatic alignment
     var isAutomaticAlignment: Bool = false
     
+    /// ARDataLogger
+    var arLogger = ARLogger.shared
+    /// Keep track of when to log a frame
+    var lastFrameLogTime = Date()
+    
     /// This is an audio player that queues up the voice note associated with a particular route Anchor Point. The player is created whenever a saved route is loaded. Loading it before the user clicks the "Play Voice Note" button allows us to call the prepareToPlay function which reduces the latency when the user clicks the "Play Voice Note" button.
     var voiceNoteToPlay: AVAudioPlayer?
     
@@ -279,6 +285,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     ///
     /// - Parameter announceArrival: a Boolean that indicates whether the user's arrival should be announced (true means the user has arrived)
     func handleStateTransitionToMainScreen(announceArrival: Bool) {
+        arLogger.finalizeTrial()
+        arLogger.startTrial()
         // cancel the timer that announces tracking errors
         trackingErrorsAnnouncementTimer?.invalidate()
         // if the ARSession is running, pause it to conserve battery
@@ -395,8 +403,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 
                 print("Soooup Time \(thisRoute.name)")
                 print("soooooup time")
-                
-                
                 self.sceneView.debugOptions = [.showWorldOrigin]
                 self.sceneView.session.run(self.configuration, options: [.removeExistingAnchors, .resetTracking])
                 
@@ -1389,7 +1395,23 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         print("consider your images,, detected")
     }
     
+    
+    func session(_ session: ARSession, didUpdate anchors: [ARAnchor]) {
+        arLogger.session(session, didUpdate: anchors)
+    }
+    func session(_ session: ARSession, didRemove anchors: [ARAnchor]) {
+        arLogger.session(session, didRemove: anchors)
+    }
+    func session(_ session: ARSession, didAdd anchors: [ARAnchor]) {
+        arLogger.session(session, didAdd: anchors)
+    }
+    
     func session(_ session: ARSession, didUpdate frame: ARFrame) {
+        arLogger.session(session, didUpdate: frame)
+        if -lastFrameLogTime.timeIntervalSinceNow > 1.0 {
+            arLogger.log(frame: frame, withType: state.rawValue, withMeshLoggingBehavior: .none)
+            lastFrameLogTime = Date()
+        }
         if case .readyForFinalResumeAlignment = state {
             if (frame.anchors.compactMap({$0 as? ARImageAnchor}).count > 0) && (state.rawValue != "startingAutoAlignment") {
                 print("in the first if loop")

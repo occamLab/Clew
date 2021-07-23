@@ -46,6 +46,7 @@
 		8614597226AB363100CF4840 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 8614597126AB363100CF4840 /* FirebaseAnalytics */; };
 		8614597426AB363800CF4840 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 8614597326AB363800CF4840 /* FirebaseStorage */; };
 		8614597626AB36EC00CF4840 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 8614597526AB36EC00CF4840 /* FirebaseStorage */; };
+		8614597926AB3F4F00CF4840 /* ARDataLogger in Frameworks */ = {isa = PBXBuildFile; productRef = 8614597826AB3F4F00CF4840 /* ARDataLogger */; };
 		98006F7B268382D600E61861 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98006F7A268382D600E61861 /* SceneDelegate.swift */; };
 		98006F82268382D800E61861 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 98006F81268382D800E61861 /* Assets.xcassets */; };
 		98006F85268382D800E61861 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 98006F83268382D800E61861 /* LaunchScreen.storyboard */; };
@@ -556,6 +557,7 @@
 				8614597226AB363100CF4840 /* FirebaseAnalytics in Frameworks */,
 				98FF7AEC269CC1F2008C64E5 /* SimpleForm in Frameworks */,
 				8614597426AB363800CF4840 /* FirebaseStorage in Frameworks */,
+				8614597926AB3F4F00CF4840 /* ARDataLogger in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1002,6 +1004,7 @@
 				8614596F26AB362500CF4840 /* FirebaseDatabase */,
 				8614597126AB363100CF4840 /* FirebaseAnalytics */,
 				8614597326AB363800CF4840 /* FirebaseStorage */,
+				8614597826AB3F4F00CF4840 /* ARDataLogger */,
 			);
 			productName = "Clew-More";
 			productReference = 98FF7A98269CBFE9008C64E5 /* Clew-More.app */;
@@ -1105,6 +1108,7 @@
 			packageReferences = (
 				82D94B61266FC7CF00EE2C1C /* XCRemoteSwiftPackageReference "SimpleForm" */,
 				8614596426AB35E500CF4840 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				8614597726AB3F4F00CF4840 /* XCRemoteSwiftPackageReference "ARDataLogger" */,
 			);
 			productRefGroup = 4D6B00C11F33C1C400952242 /* Products */;
 			projectDirPath = "";
@@ -2429,6 +2433,14 @@
 				minimumVersion = 8.4.0;
 			};
 		};
+		8614597726AB3F4F00CF4840 /* XCRemoteSwiftPackageReference "ARDataLogger" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/occamLab/ARDataLogger";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -2486,6 +2498,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 8614596426AB35E500CF4840 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseStorage;
+		};
+		8614597826AB3F4F00CF4840 /* ARDataLogger */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 8614597726AB3F4F00CF4840 /* XCRemoteSwiftPackageReference "ARDataLogger" */;
+			productName = ARDataLogger;
 		};
 		98FF7AEB269CC1F2008C64E5 /* SimpleForm */ = {
 			isa = XCSwiftPackageProductDependency;
