@@ -135,6 +135,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         Analytics.setUserProperty(String(UIAccessibility.isVoiceOverRunning), forName: "isVoiceOverRunning")
         Analytics.setUserProperty(String(UIAccessibility.isGrayscaleEnabled), forName: "isGrayscaleEnabled")
         Analytics.setUserProperty(String(UIAccessibility.isInvertColorsEnabled), forName: "isInvertColorsEnabled")
+        
     }
         
     

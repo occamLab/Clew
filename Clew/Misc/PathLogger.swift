@@ -143,8 +143,8 @@ class PathLogger {
         }
     }
     
-    func logSettings(defaultUnit: Int, defaultColor: Int, soundFeedback: Bool, voiceFeedback: Bool, hapticFeedback: Bool, sendLogs: Bool, timerLength: Int, adjustOffset: Bool) {
-        settingsHistory.append((Date(), ["defaultUnit": defaultUnit, "defaultColor": defaultColor, "soundFeedback": soundFeedback, "voiceFeedback": voiceFeedback, "hapticFeedback": hapticFeedback, "sendLogs": sendLogs, "timerLength": timerLength, "adjustOffset": adjustOffset]))
+    func logSettings(defaultUnit: Int, defaultColor: Int, soundFeedback: Bool, voiceFeedback: Bool, hapticFeedback: Bool, sendLogs: Bool, timerLength: Int, distance:Float, currentRoute: String, adjustOffset: Bool, currentCondition: String, experimentRouteFlag: Bool,experimentConditonsDico: [String: Any]!,conditionsDico: [String : Any]!) {
+        settingsHistory.append((Date(), ["defaultUnit": defaultUnit, "defaultColor": defaultColor, "soundFeedback": soundFeedback, "voiceFeedback": voiceFeedback, "hapticFeedback": hapticFeedback, "sendLogs": sendLogs, "timerLength": timerLength, "adjustOffset": adjustOffset,"currentCondition":currentCondition,"experimentRouteFlag": experimentRouteFlag, "conditionsDico": conditionsDico,"experimentConditonsDico": experimentConditonsDico, "currentRoute":currentRoute,"distance":distance]))
     }
     
     /// Log language used by user in recording.
@@ -202,6 +202,9 @@ class PathLogger {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZZZZZ"
         let pathDate = dateFormatter.string(from: date)
+        //let crumbs = ViewController.scrumbs
+//        let ExperimentRouteFlag = ViewController.sExperimentRouteFlag
+//        let currentCondition = ViewController.sCurrentCondtioin
         let pathID = UIDevice.current.identifierForVendor!.uuidString + dateFormatter.string(from: date)
         let userId: String
         if let currentUser = Auth.auth().currentUser {
@@ -210,7 +213,7 @@ class PathLogger {
             userId = Analytics.appInstanceID()!
         }
         var logFileURLs: [String] = []
-        if let metaDataLogURL = sendMetaData(pathDate, pathID+"-0", userId, debug) {
+        if let metaDataLogURL = sendMetaData(pathDate, pathID+"-0", userId,  debug) {
             logFileURLs.append(metaDataLogURL)
         }
         if let pathDataLogURL = sendPathData(pathID, userId) {
@@ -244,6 +247,7 @@ class PathLogger {
         let body: [String : Any] = ["userId": userId,
                                     "PathID": pathID,
                                     "PathDate": pathDate,
+                                   // "crumbs": //ViewController.scrumbs,
                                     "PathType": pathType,
                                     "isVoiceOverOn": UIAccessibility.isVoiceOverRunning,
                                     "isGrayscaleOn": UIAccessibility.isGrayscaleEnabled,
@@ -270,6 +274,8 @@ class PathLogger {
                     print("could not upload meta data to firebase", error!.localizedDescription)
                     return
                 }
+                print("pathID")
+                print(pathID)
                 print("Successfully uploaded log! ", storageRef.fullPath)
             }
             return storageRef.fullPath

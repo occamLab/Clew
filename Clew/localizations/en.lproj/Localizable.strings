@@ -16,7 +16,13 @@
 
 "significantVersionChangesPop-UpContent" = "This new version of Clew features a route sharing feature and a redesigned workflow for saving routes. Please note that \"landmarks\" are now called \"anchor points\". Also, some menus previously on the home screen are now available through the \"options\" menu. See the help menu for more details.";
 
-
+"ExperimentInstructions" = "Experiment Instructions";
+"ExperimentRouteControlledInstructions" = "Please record 3 \"Experiment Routes\" where you start the route, walk around, and return to the exact same position you started in. Once you've reached the starting position you can end the path recording. For this round, hold the phone with your hand and use Siri shortcuts to start and stop the recording.";
+"ExperimentRouteLanyardInstructions" = "Please record 3 \"Experiment Routes\" where you start the route, walk around, and return to the exact same position you started in. Once you've reached the starting position you can end the path recording. For this round, attach your phone to a lanyard while keeping the camera facing forwards. Also, use Siri shortcuts to start and end the route.";
+"ExperimentRouteBracingInstructions" = "Please record 3 \"Experiment Routes\" where you start the route, walk around, and return to the exact same position you started in. Once you've reached the starting position you can end the path recording. For this round,For this round, brace the phone vertically against your chest while keeping the camera facing forwards. Also, use Siri shortcuts to start and end the route.";
+"lanyardInstruction" = "Please record 3 Single Use Route using Siri shortcuts to start, end and navigate routes. For this round, attach your phone to a lanyard while keeping the camera facing forwards.";
+"bracingInstruction" = "Please record 3 Single Use Route using Siri shortcuts to start, end and navigate routes. For this round, brace the phone vertically against your chest while keeping the camera facing forwards. )";
+"contolledInstruction" = "Please record 3 Single Use Route. For this round, hold the phone with your hand and use Siri shortcuts to start, stop and navigate the routes.)";
 "significantVersionChangesPopHandsFree-UpContent" = "Now you can use Siri with this new version of Clew. Please note that you can only use Siri with \"Single Use Route\". Please ensure that you have enabled Hey Siri on your iPhone through Settings > Siri & Search > Listen for Hey Siri. You will now be prompted to add Siri shortcuts after each action you take, when this is done you can simply say: \"Hey Siri, Activity name\".";
 
 "significantVersionChanges-Confirmation" = "Ok";
@@ -150,6 +156,16 @@
 "declineTurnOnAdjustOffsetButton" = "No";
 "adjustOffsetReminderAnnouncement" = "Correction for phone / body offset will be updated as you start walking.";
 
+//Redo Routes Alert
+"redoRoutesSuggestionTitle" = "Have you completed the route ?";
+"lanyardRedoContent" = "Please select \"Completed\"  if you have completed the route using a lanyard. Otherwise, select \"Redo\" to redo the route.";
+"bracingRedoContent" = "Please select \"completed\"  if you have completed the route using the bracing method. Otherwise, select \"Redo\" to redo the route.";
+"controlledRedoContent" = "Please select \"completed\" if you have completed the route while holding the phone with your hand. Otherewise, select \"redo\" to redo the route";
+"completedThreeRoutes" = "Completed";
+"redoOneRoute" = "Redo ";
+"redoTwoRoutes" = "Redo 2 routes";
+"redoThreeRoutes" = "Redo 3 routes";
+// Mess
 // RoutesViewController
 "routeDirectionPop-UpHeader" = "Route direction";
 

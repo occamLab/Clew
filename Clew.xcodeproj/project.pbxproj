@@ -74,8 +74,6 @@
 		E5470F1922C119F5001092A4 /* StartRecording.aiff in Resources */ = {isa = PBXBuildFile; fileRef = E5470ED222C119F4001092A4 /* StartRecording.aiff */; };
 		E5470F1A22C119F5001092A4 /* StopRecording.aiff in Resources */ = {isa = PBXBuildFile; fileRef = E5470ED322C119F4001092A4 /* StopRecording.aiff */; };
 		E5470F1B22C119F5001092A4 /* StopRecording.aiff in Resources */ = {isa = PBXBuildFile; fileRef = E5470ED322C119F4001092A4 /* StopRecording.aiff */; };
-		E5470F1C22C119F5001092A4 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E5470ED422C119F4001092A4 /* GoogleService-Info.plist */; };
-		E5470F1D22C119F5001092A4 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E5470ED422C119F4001092A4 /* GoogleService-Info.plist */; };
 		E5470F1E22C119F5001092A4 /* NSStringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470ED622C119F4001092A4 /* NSStringExtension.swift */; };
 		E5470F1F22C119F5001092A4 /* NSStringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470ED622C119F4001092A4 /* NSStringExtension.swift */; };
 		E5470F2022C119F5001092A4 /* UIViewControllerExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470ED722C119F4001092A4 /* UIViewControllerExtensions.swift */; };
@@ -114,8 +112,6 @@
 		E5470F4722C119F5001092A4 /* RootContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470EF022C119F4001092A4 /* RootContainerView.swift */; };
 		E5470F4A22C119F5001092A4 /* RouteTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470EF322C119F4001092A4 /* RouteTableViewCell.swift */; };
 		E5470F4B22C119F5001092A4 /* RouteTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470EF322C119F4001092A4 /* RouteTableViewCell.swift */; };
-		E5470F4E22C119F5001092A4 /* GoogleService-Info_dev.plist in Resources */ = {isa = PBXBuildFile; fileRef = E5470EF522C119F4001092A4 /* GoogleService-Info_dev.plist */; };
-		E5470F4F22C119F5001092A4 /* GoogleService-Info_dev.plist in Resources */ = {isa = PBXBuildFile; fileRef = E5470EF522C119F4001092A4 /* GoogleService-Info_dev.plist */; };
 		E565A10822F2173400C1998E /* RouteDocumentData.swift in Sources */ = {isa = PBXBuildFile; fileRef = E565A10722F2173400C1998E /* RouteDocumentData.swift */; };
 		E565A10922F2173400C1998E /* RouteDocumentData.swift in Sources */ = {isa = PBXBuildFile; fileRef = E565A10722F2173400C1998E /* RouteDocumentData.swift */; };
 		E59DA6BF22C65F5900FCD5A1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E59DA6BD22C65F5900FCD5A1 /* LaunchScreen.storyboard */; };
@@ -128,6 +124,10 @@
 		E5E9017222FB4D4A00AD0E95 /* route-quicklook.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = E5E9016722FB4D4A00AD0E95 /* route-quicklook.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		E820BDAF269F9F6D006B38BF /* VoiceCommandView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E820BDAE269F9F6D006B38BF /* VoiceCommandView.swift */; };
 		E820BDB7269FB387006B38BF /* VoiceCommandView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E820BDAE269F9F6D006B38BF /* VoiceCommandView.swift */; };
+		E820BE2626A8D49F006B38BF /* GoogleService-Info_dev.plist in Resources */ = {isa = PBXBuildFile; fileRef = E820BE2526A8D49F006B38BF /* GoogleService-Info_dev.plist */; };
+		E820BE2B26A8D5AB006B38BF /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E820BE2A26A8D5AB006B38BF /* GoogleService-Info.plist */; };
+		E820BE3326A8DB51006B38BF /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E820BE2A26A8D5AB006B38BF /* GoogleService-Info.plist */; };
+		E820BE3726A8DB7A006B38BF /* GoogleService-Info_dev.plist in Resources */ = {isa = PBXBuildFile; fileRef = E820BE2526A8D49F006B38BF /* GoogleService-Info_dev.plist */; };
 		E84904652698BB7E008F8E5D /* SiriShortcutsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E84904642698BB7E008F8E5D /* SiriShortcutsView.swift */; };
 		E84904662698BB7E008F8E5D /* SiriShortcutsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E84904642698BB7E008F8E5D /* SiriShortcutsView.swift */; };
 		E8773AFB268B874F003EA863 /* SiriShortcutsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8773AFA268B874F003EA863 /* SiriShortcutsController.swift */; };
@@ -217,7 +217,6 @@
 		E5470ED022C119F4001092A4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E5470ED222C119F4001092A4 /* StartRecording.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = StartRecording.aiff; sourceTree = "<group>"; };
 		E5470ED322C119F4001092A4 /* StopRecording.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = StopRecording.aiff; sourceTree = "<group>"; };
-		E5470ED422C119F4001092A4 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		E5470ED622C119F4001092A4 /* NSStringExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSStringExtension.swift; sourceTree = "<group>"; };
 		E5470ED722C119F4001092A4 /* UIViewControllerExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIViewControllerExtensions.swift; sourceTree = "<group>"; };
 		E5470ED822C119F4001092A4 /* UIViewExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIViewExtensions.swift; sourceTree = "<group>"; };
@@ -239,7 +238,6 @@
 		E5470EEE22C119F4001092A4 /* UIConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIConstants.swift; sourceTree = "<group>"; };
 		E5470EF022C119F4001092A4 /* RootContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootContainerView.swift; sourceTree = "<group>"; };
 		E5470EF322C119F4001092A4 /* RouteTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteTableViewCell.swift; sourceTree = "<group>"; };
-		E5470EF522C119F4001092A4 /* GoogleService-Info_dev.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info_dev.plist"; sourceTree = "<group>"; };
 		E565A10722F2173400C1998E /* RouteDocumentData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteDocumentData.swift; sourceTree = "<group>"; };
 		E59DA6BD22C65F5900FCD5A1 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		E5E9015322FB4CEB00AD0E95 /* QuickLook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickLook.framework; path = System/Library/Frameworks/QuickLook.framework; sourceTree = SDKROOT; };
@@ -248,6 +246,8 @@
 		E5E9016D22FB4D4A00AD0E95 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
 		E5E9016F22FB4D4A00AD0E95 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E820BDAE269F9F6D006B38BF /* VoiceCommandView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = VoiceCommandView.swift; path = ../../../../../../../VoiceCommandView.swift; sourceTree = "<group>"; };
+		E820BE2526A8D49F006B38BF /* GoogleService-Info_dev.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info_dev.plist"; sourceTree = "<group>"; };
+		E820BE2A26A8D5AB006B38BF /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "Clew/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		E84904642698BB7E008F8E5D /* SiriShortcutsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SiriShortcutsView.swift; sourceTree = "<group>"; };
 		E8773AFA268B874F003EA863 /* SiriShortcutsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SiriShortcutsController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -285,6 +285,7 @@
 		4D6B00B71F33C1C400952242 = {
 			isa = PBXGroup;
 			children = (
+				E820BE2A26A8D5AB006B38BF /* GoogleService-Info.plist */,
 				82A417EC262A2140001FCB8C /* Clew Dev.entitlements */,
 				E5470EA922C119F4001092A4 /* Clew */,
 				77467DAE22BBC1D300FA7DEE /* Default-568h@2x.png */,
@@ -335,6 +336,7 @@
 		E5470EA922C119F4001092A4 /* Clew */ = {
 			isa = PBXGroup;
 			children = (
+				E820BE2526A8D49F006B38BF /* GoogleService-Info_dev.plist */,
 				82E4A5CE262A26DC000BEB44 /* Clew.entitlements */,
 				E5D1695522E103A0008754D0 /* localizations */,
 				E5470EAA22C119F4001092A4 /* Voice Notes */,
@@ -344,14 +346,12 @@
 				E5470EB922C119F4001092A4 /* Settings.bundle */,
 				E5470ED022C119F4001092A4 /* Assets.xcassets */,
 				E5470ED122C119F4001092A4 /* Sound Effects */,
-				E5470ED422C119F4001092A4 /* GoogleService-Info.plist */,
 				E5470ED522C119F4001092A4 /* Extensions */,
 				E5470EDB22C119F4001092A4 /* SettingsViewController.h */,
 				E5470EDC22C119F4001092A4 /* Clew-Bridging-Header.h */,
 				E5470EDD22C119F4001092A4 /* Controllers */,
 				E5470EED22C119F4001092A4 /* Views */,
 				821CF7882513264400A7B3C2 /* InfoPlist.strings */,
-				E5470EF522C119F4001092A4 /* GoogleService-Info_dev.plist */,
 			);
 			path = Clew;
 			sourceTree = "<group>";
@@ -611,15 +611,15 @@
 				4DF05CC81F34EB6B008B0E31 /* Confirm.mp3 in Resources */,
 				E5470F1822C119F5001092A4 /* StartRecording.aiff in Resources */,
 				4D6B00E51F33C9B800952242 /* Crumb.obj in Resources */,
-				E5470F1C22C119F5001092A4 /* GoogleService-Info.plist in Resources */,
 				E5470F0E22C119F5001092A4 /* Settings.bundle in Resources */,
 				82569F4E22187E6500448B45 /* help in Resources */,
 				E5470F1622C119F5001092A4 /* Assets.xcassets in Resources */,
 				77365B182343ECBA008BC35C /* BurgerMenu.storyboard in Resources */,
 				E59DA6BF22C65F5900FCD5A1 /* LaunchScreen.storyboard in Resources */,
-				E5470F4E22C119F5001092A4 /* GoogleService-Info_dev.plist in Resources */,
 				1F2B9D8722C5446B00317DC8 /* (null) in Resources */,
 				82AD6A25252F80AA00902A11 /* speaker.mtl in Resources */,
+				E820BE2626A8D49F006B38BF /* GoogleService-Info_dev.plist in Resources */,
+				E820BE2B26A8D5AB006B38BF /* GoogleService-Info.plist in Resources */,
 				E5D1695E22E103A0008754D0 /* Localizable.strings in Resources */,
 				E5470F1A22C119F5001092A4 /* StopRecording.aiff in Resources */,
 				77467DAF22BBC1D300FA7DEE /* Default-568h@2x.png in Resources */,
@@ -638,14 +638,14 @@
 				82AD6A26252F80AA00902A11 /* speaker.mtl in Resources */,
 				B7EB59E220F693EB00FBBC6A /* Confirm.mp3 in Resources */,
 				B7EB59E320F693EB00FBBC6A /* Crumb.obj in Resources */,
-				E5470F4F22C119F5001092A4 /* GoogleService-Info_dev.plist in Resources */,
 				82569F4F22187E6500448B45 /* help in Resources */,
 				E5D1695F22E103A0008754D0 /* Localizable.strings in Resources */,
+				E820BE3726A8DB7A006B38BF /* GoogleService-Info_dev.plist in Resources */,
 				E59DA6C022C65F5900FCD5A1 /* LaunchScreen.storyboard in Resources */,
 				772E4564236CC155008EF6AC /* SettingsAndHelp.storyboard in Resources */,
-				E5470F1D22C119F5001092A4 /* GoogleService-Info.plist in Resources */,
 				E5470F1722C119F5001092A4 /* Assets.xcassets in Resources */,
 				823DA455252F7EA800BB5E6B /* speaker.obj in Resources */,
+				E820BE3326A8DB51006B38BF /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

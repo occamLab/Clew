@@ -107,6 +107,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// How long to wait (in seconds) between the alignment request and grabbing the transform
     static var alignmentWaitingPeriod = 5
+    /// keep count of conditions routes
+    
+    static var ConditionsCount = 0
+   // static var ConditionsCount = nav.crembs
+    static var sConditionType = "start"
+    static var sExperimentRouteFlag = false
+    var storeCrumbs : [Any]!
     
     /// A threshold distance between the user's current position and a voice note.  If the user is closer than this value the voice note will be played
     static let voiceNotePlayDistanceThreshold : Float = 0.75
@@ -247,6 +254,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             configuration.initialWorldMap = nil
         }
         showRecordPathButton(announceArrival: announceArrival)
+        ///get the value of current route from defaults to start the experment with
+        
+        
+    
+            
+        
     }
     
     /// Handler for the recordingRoute app state
@@ -263,7 +276,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         logger.resetPathLog()
         
         showStopRecordingButton()
-        droppingCrumbs = Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: #selector(dropCrumb), userInfo: nil, repeats: true)
+        droppingCrumbs = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(dropCrumb), userInfo: nil, repeats: true)
         // make sure there are no old values hanging around
         nav.headingOffset = 0.0
         headingRingBuffer.clear()
@@ -283,7 +296,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         droppingCrumbs?.invalidate()
         updateHeadingOffsetTimer?.invalidate()
         showStartNavigationButton(allowPause: allowPause)
-        suggestAdjustOffsetIfAppropriate()
+      //  suggestAdjustOffsetIfAppropriate()
     }
     
     /// Handler for the navigatingRoute app state
@@ -461,7 +474,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         let showedAdjustOffsetSuggestion: Bool? = userDefaults.object(forKey: "showedAdjustOffsetSuggestion") as? Bool
 
         if !adjustOffset && shouldShowAdjustOffsetSuggestion == true && showedAdjustOffsetSuggestion != true {
-            showAdjustOffsetSuggestion()
+            //showAdjustOffsetSuggestion()
             // clear the flag
             userDefaults.set(false, forKey: "shouldShowAdjustOffsetSuggestion")
             // record that the alert has been shown
@@ -706,7 +719,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     var siriShortcutList: [String] = []
     var voiceShortcuts: [INVoiceShortcut] = []
     static var voiceCommandsList : [INVoiceShortcut]=[]
-    
+    //todel
+    var cc: Int = 1
     /// called when the view has loaded.  We setup various app elements in here.
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -870,7 +884,46 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
+//        if(!experimentRouteFlag){
+//
+//            showSignificantChangesHandsFreeAlert()
+//            UserDefaults.standard.setValue(true, forKey: "experimentRouteFlag")
+//            //expeimentRouteFlag
+//        }
+//
+//
+//        updateExperiment()
         let userDefaults: UserDefaults = UserDefaults.standard
+        //todel
+        // reintialise everythin for test puposes
+        
+        UserDefaults.standard.setValue(false, forKey: "siriShortcutAlert")
+        UserDefaults.standard.setValue(false, forKey: "singleUseRouteExperimentFlag")
+        UserDefaults.standard.setValue(false, forKey: "experimentRouteFlag")
+        UserDefaults.standard.setValue(conditionsList.randomElement(), forKey: "currentCondition")
+        let cConditions: Dictionary? =  userDefaults.dictionary(forKey: "conditionsDico")
+        print("before Condition")
+        print(cConditions)
+        
+        let recondtions = ["lanyard":0,"bracing":0,"none":0]
+        UserDefaults.standard.setValue(recondtions, forKey: "conditionsDico")
+        UserDefaults.standard.setValue(recondtions, forKey: "experimentConditonsDico")
+       
+      
+        let tConditions: Dictionary? =  userDefaults.dictionary(forKey: "conditionsDico")
+        
+        print("After tCondition")
+        print(tConditions)
+        if(!siriShortcutAlert){
+            
+            showSignificantChangesHandsFreeAlert()
+            UserDefaults.standard.setValue(true, forKey: "siriShortcutAlert")
+        }
+    
+        
+        
+        
+        
         let firstTimeLoggingIn: Bool? = userDefaults.object(forKey: "firstTimeLogin") as? Bool
         let showedSignificantChangesAlert: Bool? = userDefaults.object(forKey: "showedSignificantChangesAlertv1_3") as? Bool
         
@@ -887,11 +940,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             // showSignificantChangesAlert()
         }
         
-        if(!siriShortcutAlert){
-            
-            showSignificantChangesHandsFreeAlert()
-            UserDefaults.standard.setValue(true, forKey: "siriShortcutAlert")
-        }
+       
+        
         
         synth.delegate = self
         NotificationCenter.default.addObserver(forName: UIAccessibility.announcementDidFinishNotification, object: nil, queue: nil) { (notification) -> Void in
@@ -988,7 +1038,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                                       preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: NSLocalizedString("turnOnAdjustOffsetButton", comment: "This text appears on a button that turns on the adjust offset feature"), style: .default, handler: { action -> Void in
             // turn on the adjust offset feature
-            UserDefaults.standard.set(true, forKey: "adjustOffset")
+            //UserDefaults.standard.set(true, forKey: "adjustOffset")
         }
         ))
         alert.addAction(UIAlertAction(title: NSLocalizedString("declineTurnOnAdjustOffsetButton", comment: "A button which declines to turn on the adjust offset feature"), style: .default, handler: { action -> Void in
@@ -997,7 +1047,99 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         ))
         self.present(alert, animated: true, completion: nil)
     }
+    
+    
+    //function that creates alerts once 3 routes has been completed
+//    func showRedoRoutesSuggestion(condition: String, content: String) {
+//        // Create alert to warn users of lost information
+//        let alert = UIAlertController(title: NSLocalizedString("redoRoutesSuggestionTitle", comment: "This is the title of an alert which shows up when the user completes 3  routes of a given condition"),
+//                                      message: NSLocalizedString(content, comment: "this is the content of an alert which tells the user that they should confirm the completion of 3 routes."),
+//                                      preferredStyle: .alert)
+//        alert.addAction(UIAlertAction(title: NSLocalizedString("completedThreeRoutes", comment: "This text appears on a button that "), style: .default, handler: { action -> Void in
+//            // nothing to do
+//        }
+//        ))
+//        alert.addAction(UIAlertAction(title: NSLocalizedString("redoOneRoute", comment: "A button that decrements the number of routess completed"), style: .default, handler: { action -> Void in
+//            // nothing to do, just stay on the page
+//        }
+//        ))
+//        alert.addAction(UIAlertAction(title: NSLocalizedString("redoTwoRoutes", comment: "This text appears on a button that "), style: .default, handler: { action -> Void in
+//            // nothing to do
+//        }
+//        ))
+//        alert.addAction(UIAlertAction(title: NSLocalizedString("redoThreeRoutes", comment: "This text appears on a button that "), style: .default, handler: { action -> Void in
+//            // nothing to do
+//        }
+//        ))
+//
+//        self.present(alert, animated: true, completion: nil)
+//    }
+//
+    
+    func showRedoExperimentRoutesSuggestion(condition: String, content: String) {
+        // Create alert to warn users of lost information
+        let alert = UIAlertController(title: NSLocalizedString("redoRoutesSuggestionTitle", comment: "This is the title of an alert which shows up when the user completes 3  routes of a given condition"),
+                                      message: NSLocalizedString(content, comment: "this is the content of an alert which tells the user that they should confirm the completion of 3 routes."),
+                                      preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: NSLocalizedString("completedThreeRoutes", comment: "This text appears on a button that "), style: .default, handler: { action -> Void in
+            // nothing to do
+            print("insideRedoAlert")
+            print("before")
+            print(self.experimentConditonsDico)
+            self.experimentConditonsDico[condition]! = self.experimentConditonsDico[condition] as! Int + 1
+            
+            UserDefaults.standard.setValue(self.experimentConditonsDico, forKey: "experimentConditonsDico")
+            print("after")
+            ViewController.ConditionsCount =  self.experimentConditonsDico[condition] as! Int
+            print(self.experimentConditonsDico)
+            
+            
+        }
+        ))
+        
+        alert.addAction(UIAlertAction(title: NSLocalizedString("redoOneRoute", comment: "A button that decrements the number of routess completed"), style: .default, handler: { action -> Void in
+            // nothing to do, just stay on the page
+            
+        }
+        ))
+    
 
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    func showRedoRoutesSuggestion(condition: String, content: String) {
+        // Create alert to warn users of lost information
+        let alert = UIAlertController(title: NSLocalizedString("redoRoutesSuggestionTitle", comment: "This is the title of an alert which shows up when the user completes 3  routes of a given condition"),
+                                      message: NSLocalizedString(content, comment: "this is the content of an alert which tells the user that they should confirm the completion of 3 routes."),
+                                      preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: NSLocalizedString("completedThreeRoutes", comment: "This text appears on a button that "), style: .default, handler: { [self] action -> Void in
+            print("in Redo b4")
+            print(conditionsDico[condition]as! Int)
+            conditionsDico[condition] = conditionsDico[condition] as! Int + 1
+            print("in Redo after")
+            print(conditionsDico[condition]as! Int)
+            
+            
+            
+            UserDefaults.standard.setValue(conditionsDico, forKey: "conditionsDico")
+            
+            ViewController.ConditionsCount =  conditionsDico[condition] as! Int
+            
+        }
+        ))
+        
+        alert.addAction(UIAlertAction(title: NSLocalizedString("redoOneRoute", comment: "A button that decrements the number of routess completed"), style: .default, handler: { action -> Void in
+            // nothing to do, just stay on the page
+            
+        }
+        ))
+    
+
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    
+    
     
     /// Show the dialog that allows the user to enter textual information to help them remember a Anchor Point.
     @objc func showAnchorPointInformationDialog() {
@@ -1108,6 +1250,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         self.present(changesAlertVC, animated: true, completion: nil)
     }
     
+    func experimentInstructionAlert(instruction: String) {
+        let changesAlertVC = UIAlertController(title: NSLocalizedString("ExperimentInstructions", comment: "The heading of a pop-up telling the user what actions to take"),
+                                               message: NSLocalizedString(instruction, comment: "An alert shown to the user to give them instructions."),
+                                               preferredStyle: .alert)
+        changesAlertVC.addAction(UIAlertAction(title: NSLocalizedString("significantVersionChanges-Confirmation", comment: "What the user clicks to acknowledge message and dismiss pop-up"), style: .default, handler: { action -> Void in
+        }
+        ))
+        self.present(changesAlertVC, animated: true, completion: nil)
+    }
+    
+    
     /// Configure Settings Bundle
     func createSettingsBundle() {
         registerSettingsBundle()
@@ -1137,7 +1290,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// Register settings bundle
     func registerSettingsBundle(){
-        let appDefaults = ["crumbColor": 0, "showPath": true, "pathColor": 0, "hapticFeedback": true, "sendLogs": true, "voiceFeedback": true, "soundFeedback": true, "adjustOffset": false, "units": 0, "timerLength":5, "siriShortcutSingleUseRoute": false,  "siriShortcutStopRecordingRoute": false,  "siriShortcutExperimentRoute": false,"siriShortcutStartNavigatingRoute": false, "siriShortcutAlert": false] as [String : Any]
+        let appDefaults = ["crumbColor": 0, "showPath": true, "pathColor": 0, "hapticFeedback": true, "sendLogs": true, "voiceFeedback": true, "soundFeedback": true, "adjustOffset": false, "units": 0, "timerLength":5, "conditionsDico": ["lanyard":0,"bracing":0,"none":0],"experimentConditonsDico": ["lanyard":0,"bracing":0,"none":0], "siriShortcutSingleUseRoute": false,  "siriShortcutStopRecordingRoute": false, "experimentRouteFlag":false,"singleUseRouteExperimentFlag":false,  "currentCondition": conditionsList.randomElement(), "siriShortcutExperimentRoute": false,"siriShortcutStartNavigatingRoute": false,"currentRoute":startExperimentWithList.randomElement(), "siriShortcutAlert": false, "distance":0] as [String : Any]
         UserDefaults.standard.register(defaults: appDefaults)
     }
 
@@ -1152,18 +1305,32 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         soundFeedback = defaults.bool(forKey: "soundFeedback")
         voiceFeedback = defaults.bool(forKey: "voiceFeedback")
         hapticFeedback = defaults.bool(forKey: "hapticFeedback")
+        experimentRouteFlag = defaults.bool(forKey:"experimentRouteFlag")
+        singleUseRouteExperimentFlag = defaults.bool(forKey: "singleUseRouteExperimentFlag")
+       
         siriShortcutSingleUseRouteFlag = defaults.bool(forKey:"siriShortcutSingleUseRoute")
         siriShortcutExperimentRouteFlag = defaults.bool(forKey: "siriShortcutExperimentRoute")
         siriShortcutStopRecordingRouteFlag = defaults.bool(forKey:"siriShortcutStopRecordingRoute")
         siriShortcutStartNavigatingRouteFlag = defaults.bool(forKey:"siriShortcutStartNavigatingRoute")
         siriShortcutAlert = defaults.bool(forKey: "siriShortcutAlert")
+        distance = defaults.float(forKey: "distance")
+        
         sendLogs = true // (making this mandatory) defaults.bool(forKey: "sendLogs")
         timerLength = defaults.integer(forKey: "timerLength")
-        adjustOffset = defaults.bool(forKey: "adjustOffset")
+        currentCondition = defaults.string(forKey: "currentCondition")
+        
+       
+        adjustOffset = false // making this off by defualt
+        experimentConditonsDico=defaults.dictionary(forKey:"experimentConditonsDico")
+        conditionsDico = defaults.dictionary(forKey:"conditionsDico")
+        currentRoute =  defaults.string(forKey: "currentRoute")
         nav.useHeadingOffset = adjustOffset
+       
         
         // TODO: log settings here
-        logger.logSettings(defaultUnit: defaultUnit, defaultColor: defaultColor, soundFeedback: soundFeedback, voiceFeedback: voiceFeedback, hapticFeedback: hapticFeedback, sendLogs: sendLogs, timerLength: timerLength, adjustOffset: adjustOffset)
+        logger.logSettings(defaultUnit: defaultUnit, defaultColor: defaultColor, soundFeedback: soundFeedback, voiceFeedback: voiceFeedback, hapticFeedback: hapticFeedback, sendLogs: sendLogs, timerLength: timerLength, distance: distance, currentRoute: currentRoute,adjustOffset: adjustOffset,
+                           currentCondition:currentCondition, experimentRouteFlag: experimentRouteFlag, experimentConditonsDico: experimentConditonsDico,
+                           conditionsDico: conditionsDico)
         
         // leads to JSON like:
         //   options: { "unit": "meter", "soundFeedback", true, ... }
@@ -1520,8 +1687,18 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     var siriShortcutExperimentRouteFlag : Bool!
     var siriShortcutStartNavigatingRouteFlag : Bool!
     var siriShortcutAlert: Bool!
+    /// if true means that user has been shown the first instruction of the experiment
+  //flags that indicates which part of the experiment the user is in
+    var experimentRouteFlag: Bool!
+    var singleUseRouteExperimentFlag: Bool!
+    // list used for setting the randomisation of routes order
+    var currentRoute: String!
+    var startExperimentWithList : [String]! = ["ExperimentRoute", "SingleUseRoute"]
     /// the color of the path.  0 is red, 1 is green, 2 is blue, and 3 is random
     var defaultPathColor: Int!
+    // store the distance between the first and last frame of experiment route
+    
+    var distance: Float!
     
     /// true if sound feedback should be generated when the user is facing the next waypoint, false otherwise
     var soundFeedback: Bool!
@@ -1537,7 +1714,21 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// The length of time that the timer will run for
     var timerLength: Int!
+    /// stores what condition to do.
+    var condition: Int!
+    /// holds the conditin
+   // var conditionList: [String]!
+    /// holds the current condition
+    var currentCondition: String!
+    var nextCondition: String!
+    ///list of condition to randomise from
+    var conditionsList:[String]! = ["lanyard", "none", "bracing"]
 
+    
+    var conditionsDico: [String :Any]!
+    var experimentConditonsDico: [String :Any]!
+    //var conditionsDicoSet =
+    
     /// This keeps track of the paused transform while the current session is being realigned to the saved route
     var pausedTransform : simd_float4x4?
     
@@ -1597,6 +1788,40 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             break
         }
     }
+    
+    /// update experiment flaags
+    func updateExperiment(){
+        
+        if (currentCondition == "lanyard" ){
+            experimentInstructionAlert(instruction:  NSLocalizedString( "lanyardInstruction" , comment:"experiment instruction" )
+            )
+        }
+        if (currentCondition == "bracing" ){
+            experimentInstructionAlert(instruction:
+                                       NSLocalizedString( "bracingInstruction", comment:"experiment instruction" ))
+        }else{
+            experimentInstructionAlert(instruction: NSLocalizedString( "contolledInstruction", comment:"experiment instruction" ))
+        }
+        
+    }
+    
+    
+    /// update experiment flaags
+    func updateExperimentExperimentRoute(){
+        
+        if (currentCondition == "lanyard" ){
+            experimentInstructionAlert(instruction:  NSLocalizedString( "ExperimentRouteLanyardInstructions" , comment:"experiment instruction" )
+            )
+        }
+        if (currentCondition == "bracing" ){
+            experimentInstructionAlert(instruction:
+                                       NSLocalizedString( "ExperimentRouteBracingInstructions", comment:"experiment instruction" ))
+        }else{
+            experimentInstructionAlert(instruction: NSLocalizedString( "ExperimentRouteControlledInstructions", comment:"experiment instruction" ))
+        }
+        
+    }
+    
     
     /// handles the user pressing the record path button.
     @objc func recordPath() {
@@ -1665,11 +1890,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
 
         print("insidestop")
       
-        print(crumbs.count)
-        let size = crumbs.count
-        let first = crumbs[0]
-        let last = crumbs[size-1]
-        let distance = nav.getDistance(first: first, last: last)
+        
+        
+        
+  
         
    
         
@@ -1683,7 +1907,28 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             state = .startingPauseProcedure
         }
         if(recordingExperimentRoute){
-            self.goHome()
+            print("insideStop")
+            let size = crumbs.count
+            let first = crumbs[0]
+            print("first")
+            print(first)
+            let last = crumbs[size-1]
+            let distancecal = nav.getDistance(first: first, last: last)
+            
+            print("dist")
+            print(cc)
+            cc = cc + 1
+            distance = distancecal
+            //storeCrumbs = crumbs
+            
+            UserDefaults.standard.setValue(distance, forKey: "distance")
+            print(distance)
+            
+            sendLogExperimentRouteDataHelper(pathStatus: true)
+//            self.state = .mainScreen(announceArrival: true)
+//            let logFileURLs = logger.compileLogData(nil)
+//            logger.resetStateSequenceLog()
+            
         }else {
             ///PATHPOINT one way route recording finished -> play/pause
             state = .readyToNavigateOrPause(allowPause: false)
@@ -1798,8 +2043,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// handles the user pressing the Anchor Point button
     @objc func startCreateAnchorPointProcedure() {
-       
+        //set experiment route to false
+        recordingExperimentRoute = false
+        // ensure adjustoffset is turned off
         
+        UserDefaults.standard.set(false, forKey: "adjustOffset")
+        
+       
     
         rootContainerView.homeButton.isHidden = false
         creatingRouteAnchorPoint = true
@@ -1896,6 +2146,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     }
     
     @objc func experimentProcedure() {
+     // adjustOffset is turned off Ensure it's turned off
+        UserDefaults.standard.set(false, forKey: "adjustOffset")
         
         self.recordingExperimentRoute = true
     
@@ -2056,6 +2308,33 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
     }
     
+    func startExperiment(){
+        
+        print("2flagTrue")
+        print(siriShortcutAlert && siriShortcutExperimentRouteFlag)
+        
+        print(
+            !singleUseRouteExperimentFlag && !experimentRouteFlag)
+        if(siriShortcutAlert && siriShortcutExperimentRouteFlag){
+       
+            print("inside Both not")
+        
+        if(currentRoute as! String == "SingleUseRoute"){
+            
+            updateExperiment()
+            UserDefaults.standard.setValue(true, forKey: "singleUseRouteExperimentFlag")
+            
+        }else {
+            updateExperimentExperimentRoute()
+            UserDefaults.standard.setValue(true, forKey: "experimentRouteFlag")
+            
+        }
+        
+        }
+            
+    }
+    
+    
     // MARK: - Logging
     
     /// send log data for an successful route navigation (thumbs up)
@@ -2127,17 +2406,199 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     }
     
     func sendLogDataHelper(pathStatus: Bool?, announceArrival: Bool = false) {
+       
+        state = .mainScreen(announceArrival: announceArrival)
+        var prevConditionsCountsv = conditionsDico[currentCondition] as! Int
+        var Condd = UserDefaults.standard.dictionary(forKey: "conditionsDico")
+        var prevCondd = Condd![currentCondition]
+        var prevC = ViewController.ConditionsCount
+        if(!singleUseRouteExperimentFlag && !experimentRouteFlag){
+            print("inside startExp")
+            startExperiment()
+        }
+         if(currentCondition == "lanyard"){
+            showRedoRoutesSuggestion(condition: currentCondition, content: "lanyardRedoContent")
+        }
+         if(currentCondition == "none"){
+            showRedoRoutesSuggestion(condition: currentCondition, content: "controlledRedoContent")
+            
+        }
+         if(currentCondition == "bracing"){
+            
+            showRedoRoutesSuggestion(condition: currentCondition, content: "bracingRedoContent")
+        }
+        
+        
+        print("currentCondition")
+        print(currentCondition)
+        
+        print(conditionsDico[currentCondition])
+       
+               print(ViewController.ConditionsCount)
+              
+        print(prevConditionsCountsv)
+        print(prevC)
+        print(prevCondd)
+        let test = 0
+        if(test == 0){
+            print("checkf")
+        }
+        //only log if user confirmed completion of route
+        if(prevConditionsCountsv !=   ViewController.ConditionsCount ){
         // send success log data to Firebase
+            print("fromv")
+            print(ViewController.ConditionsCount)
+            let prevConditionsCounts =  conditionsDico[currentCondition] as! Int
+            print(prevConditionsCounts)
+            print(conditionsDico[currentCondition] as! Int)
+            
         let logFileURLs = logger.compileLogData(pathStatus)
         logger.resetStateSequenceLog()
-        state = .mainScreen(announceArrival: announceArrival)
+          
+        // left
+            var left : [String] = []
+        
+            for( key) in conditionsDico.keys{
+                if( conditionsDico[key] as! Int == 0){
+                    left.append(key)}
+                
+                
+            }
+            if(left.isEmpty){
+                
+                if(!experimentRouteFlag){
+                updateExperimentExperimentRoute()
+                 UserDefaults.standard.setValue("ExperimentRoute", forKey: "currentRoute")
+                UserDefaults.standard.setValue(true, forKey: "experimentRouteFlag")
+                }else{
+                    print("completedExperiment")
+                    
+                }
+            }
+        if(conditionsDico[currentCondition]! as! Int == 3){
+       // if(ViewController.ConditionsCount == 3){
+            print("insideIf 1")
+            nextCondition = left.randomElement()
+            if(conditionsDico[nextCondition]! as! Int == 0){
+                print("insideIf 2")
+                print("inSendlog")
+                print("updateNext")
+            
+                
+                currentCondition = nextCondition
+                UserDefaults.standard.setValue(currentCondition, forKey: "currentCondition")
+               
+                
+                updateExperiment()
+                
+            }
+        }
+        
+        
         if sendLogs {
             // do this in a little while to give it time to announce arrival
+            
+           
             DispatchQueue.main.asyncAfter(deadline: .now() + (announceArrival ? 3 : 1)) {
                 self.presentSurveyIfIntervalHasPassed(mode: "afterRoute", logFileURLs: logFileURLs)
             }
         }
+        }
     }
+    
+    
+    func sendLogExperimentRouteDataHelper(pathStatus: Bool?, announceArrival: Bool = false) {
+       
+        state = .mainScreen(announceArrival: announceArrival)
+        let prevConditionsCounts = ViewController.ConditionsCount
+        if(currentCondition == "lanyard"){
+            
+            showRedoExperimentRoutesSuggestion(condition: currentCondition, content: "lanyardRedoContent")
+        }
+        if(currentCondition == "none"){
+            showRedoExperimentRoutesSuggestion(condition: currentCondition, content: "controlledRedoContent")
+            
+        }
+        if(currentCondition == "bracing"){
+            
+            showRedoExperimentRoutesSuggestion(condition: currentCondition, content: "bracingRedoContent")
+        }
+        
+        
+        print("currentCondition")
+        print(currentCondition)
+        print(experimentConditonsDico[currentCondition])
+        
+       
+        
+      
+        print("prev")
+        print(prevConditionsCounts)
+        print("current")
+        print( ViewController.ConditionsCount
+        )
+          
+        //only log if user confirmed completion of route
+        if(prevConditionsCounts !=   ViewController.ConditionsCount ){
+            print("insideSendLog")
+        // send success log data to Firebase
+        let logFileURLs = logger.compileLogData(pathStatus)
+        logger.resetStateSequenceLog()
+          
+            
+            // left
+                var left : [String] = []
+            
+                for(key) in experimentConditonsDico.keys{
+                    if( experimentConditonsDico[key] as! Int == 0){
+                        left.append(key)}
+                    
+                    
+                }
+                if(left.isEmpty){
+                    
+                    if(!singleUseRouteExperimentFlag){
+                    updateExperiment()
+                     UserDefaults.standard.setValue("SingleUseRoute", forKey: "currentRoute")
+                    UserDefaults.standard.setValue(true, forKey: "singleUseRouteExperimentFlag")
+                    }else{
+                        print("completedExperiment")
+                        
+                    }
+                }
+        
+        if(experimentConditonsDico[currentCondition]! as! Int == 3){
+        //if(ViewController.ConditionsCount == 3){
+            print("insideIf 1")
+            print("eq3")
+            nextCondition = left.randomElement()
+            if(experimentConditonsDico[nextCondition]! as! Int == 0){
+                print("insideIf 2")
+                print("inSendlog")
+                print("updateNext")
+            
+                
+                currentCondition = nextCondition
+                UserDefaults.standard.setValue(currentCondition, forKey: "currentCondition")
+               
+                
+               updateExperimentExperimentRoute()
+                
+            }
+        }
+        
+        
+        if sendLogs {
+            // do this in a little while to give it time to announce arrival
+            
+           
+            DispatchQueue.main.asyncAfter(deadline: .now() + (announceArrival ? 3 : 1)) {
+                self.presentSurveyIfIntervalHasPassed(mode: "afterRoute", logFileURLs: logFileURLs)
+            }
+        }
+        }
+    }
+    
         
     /// drop a crumb during path recording
     @objc func dropCrumb() {
