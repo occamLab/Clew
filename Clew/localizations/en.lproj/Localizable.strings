@@ -148,7 +148,9 @@
 "homeAlertTitle" = "Are you sure?";
 "homeAlertContent" = "If you exit this process right now, your active route information will be lost.";
 "homeAlertConfirmNavigationButton" = "Go to the Home Page";
-
+// Completed experiment Alert
+"completedExperimentTitle" = "You Have Completed the Experiemnt";
+"completedExperimentContent" = "You have completed all the required routes. Thank you for your participation. ";
 // Enable Correct Phone / Body Alignment Alert
 "showAdjustOffsetSuggestionTitle" = "Enable Automatic \"Correct Offset of Phone / Body\"?";
 "adjustOffsetAlertContent" = "While you were recording this route, the app determined that your phone's rear camera was not pointing straight ahead. When navigating the recorded route, if your phone is not pointing straight ahead, the app's directional guidance may be confusing. If it is difficult for you to keep you phone pointing straight ahead, the app can automatically adjust its guidance so that it is relative to your body rather than the phone's direction.  Would you like enable this feature?  You can always disable this feature in the settings menu under \"Correct Offset of Phone / Body.\"  Important details of this feature are available in the help menu.";

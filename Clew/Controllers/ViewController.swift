@@ -1266,6 +1266,18 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         self.present(changesAlertVC, animated: true, completion: nil)
     }
     
+    func showCompletedExperimentAlert() {
+        let changesAlertVC = UIAlertController(title: NSLocalizedString("completedExperimentTitle", comment: "Notify the User that they have completed the experiment"),
+                                               message: NSLocalizedString("completedExperimentContent", comment: "Notify the User that they have completed the experiment."),
+                                               preferredStyle: .alert)
+        changesAlertVC.addAction(UIAlertAction(title: NSLocalizedString("significantVersionChanges-Confirmation", comment: "What the user clicks to acknowledge the significant changes message and dismiss pop-up"), style: .default, handler: { action -> Void in
+        }
+        ))
+        self.present(changesAlertVC, animated: true, completion: nil)
+    }
+
+    
+    
     func experimentInstructionAlert(instruction: String) {
         let changesAlertVC = UIAlertController(title: NSLocalizedString("ExperimentInstructions", comment: "The heading of a pop-up telling the user what actions to take"),
                                                message: NSLocalizedString(instruction, comment: "An alert shown to the user to give them instructions."),
@@ -2493,6 +2505,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                  UserDefaults.standard.setValue("ExperimentRoute", forKey: "currentRoute")
                 UserDefaults.standard.setValue(true, forKey: "experimentRouteFlag")
                 }else{
+                    showCompletedExperimentAlert()
                     print("completedExperiment")
                     
                 }
@@ -2562,8 +2575,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         else{
       
             //
-            print("nextCon")
-            print("left")
+           
             dump(left)
             let nextCondition = left.randomElement()
             print(nextCondition)
@@ -2588,7 +2600,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
        
         state = .mainScreen(announceArrival: announceArrival)
         let prevConditionsCounts = ViewController.ConditionsCount
-        var tIn: Int
+        
+        if(!singleUseRouteExperimentFlag && !experimentRouteFlag){
+            print("inside startExp")
+            startExperiment()
+        }
         if(currentCondition == "lanyard"){
             
             showRedoExperimentRoutesSuggestion(condition: currentCondition, content: "lanyardRedoContent")
@@ -2707,9 +2723,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                   
                   if(!singleUseRouteExperimentFlag){
                   updateExperiment()
-                 UserDefaults.standard.setValue("SingleUseRoute", forKey: "currentRoute")
+                  UserDefaults.standard.setValue("SingleUseRoute", forKey: "currentRoute")
                   UserDefaults.standard.setValue(true, forKey: "singleUseRouteExperimentFlag")
                   }else{
+                      showCompletedExperimentAlert()
                       print("completedExperiment")
                       
                   }
