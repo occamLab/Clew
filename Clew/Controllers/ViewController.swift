@@ -1076,35 +1076,47 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
 //    }
 //
     
-    func showRedoExperimentRoutesSuggestion(condition: String, content: String) {
+    func showRedoExperimentRoutesSuggestion (condition: String, content: String) {
         // Create alert to warn users of lost information
         let alert = UIAlertController(title: NSLocalizedString("redoRoutesSuggestionTitle", comment: "This is the title of an alert which shows up when the user completes 3  routes of a given condition"),
                                       message: NSLocalizedString(content, comment: "this is the content of an alert which tells the user that they should confirm the completion of 3 routes."),
                                       preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: NSLocalizedString("completedThreeRoutes", comment: "This text appears on a button that "), style: .default, handler: { action -> Void in
+        alert.addAction(UIAlertAction(title: NSLocalizedString("completedThreeRoutes", comment: "This text appears on a button that "), style: .default, handler: { [self] action -> Void in
             // nothing to do
             print("insideRedoAlert")
             print("before")
             print(self.experimentConditonsDico)
-            self.experimentConditonsDico[condition]! = self.experimentConditonsDico[condition] as! Int + 1
+            experimentConditonsDico[condition]! = experimentConditonsDico[condition] as! Int + 1
             
-            UserDefaults.standard.setValue(self.experimentConditonsDico, forKey: "experimentConditonsDico")
+            UserDefaults.standard.setValue(experimentConditonsDico, forKey: "experimentConditonsDico")
             print("after")
-            ViewController.ConditionsCount =  self.experimentConditonsDico[condition] as! Int
-            print(self.experimentConditonsDico)
+            ViewController.ConditionsCount =  experimentConditonsDico[condition] as! Int
+            print(experimentConditonsDico)
+            sendExpRouteLog()
+            
+            
             
             
         }
-        ))
+     
+        
+        )
+    
+        )
         
         alert.addAction(UIAlertAction(title: NSLocalizedString("redoOneRoute", comment: "A button that decrements the number of routess completed"), style: .default, handler: { action -> Void in
             // nothing to do, just stay on the page
             
         }
         ))
-    
-
+        //ViewController.ConditionsCount = 200
+        print("ttt")
+        print(experimentConditonsDico[condition] as! Int )
+        
+        //ViewController.ConditionsCount =  experimentConditonsDico[condition] as! Int
         self.present(alert, animated: true, completion: nil)
+        
+        
     }
     
     func showRedoRoutesSuggestion(condition: String, content: String) {
@@ -1114,6 +1126,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                                       preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: NSLocalizedString("completedThreeRoutes", comment: "This text appears on a button that "), style: .default, handler: { [self] action -> Void in
             print("in Redo b4")
+            print("before")
+            print(conditionsDico)
             print(conditionsDico[condition]as! Int)
             conditionsDico[condition] = conditionsDico[condition] as! Int + 1
             print("in Redo after")
@@ -1122,8 +1136,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             
             
             UserDefaults.standard.setValue(conditionsDico, forKey: "conditionsDico")
-            
+            print("dico after")
+            print(conditionsDico)
             ViewController.ConditionsCount =  conditionsDico[condition] as! Int
+            sendLogSinglueUseRoute()
             
         }
         ))
@@ -1313,7 +1329,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         siriShortcutStopRecordingRouteFlag = defaults.bool(forKey:"siriShortcutStopRecordingRoute")
         siriShortcutStartNavigatingRouteFlag = defaults.bool(forKey:"siriShortcutStartNavigatingRoute")
         siriShortcutAlert = defaults.bool(forKey: "siriShortcutAlert")
-        distance = defaults.float(forKey: "distance")
+        //distance = defaults.float(forKey: "distance")
         
         sendLogs = true // (making this mandatory) defaults.bool(forKey: "sendLogs")
         timerLength = defaults.integer(forKey: "timerLength")
@@ -1328,7 +1344,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
        
         
         // TODO: log settings here
-        logger.logSettings(defaultUnit: defaultUnit, defaultColor: defaultColor, soundFeedback: soundFeedback, voiceFeedback: voiceFeedback, hapticFeedback: hapticFeedback, sendLogs: sendLogs, timerLength: timerLength, distance: distance, currentRoute: currentRoute,adjustOffset: adjustOffset,
+        logger.logSettings(defaultUnit: defaultUnit, defaultColor: defaultColor, soundFeedback: soundFeedback, voiceFeedback: voiceFeedback, hapticFeedback: hapticFeedback, sendLogs: sendLogs, timerLength: timerLength, currentRoute: currentRoute,adjustOffset: adjustOffset,
                            currentCondition:currentCondition, experimentRouteFlag: experimentRouteFlag, experimentConditonsDico: experimentConditonsDico,
                            conditionsDico: conditionsDico)
         
@@ -1921,7 +1937,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             distance = distancecal
             //storeCrumbs = crumbs
             
-            UserDefaults.standard.setValue(distance, forKey: "distance")
+           // UserDefaults.standard.setValue(distance ?? 0.0, forKey: "distance")
             print(distance)
             
             sendLogExperimentRouteDataHelper(pathStatus: true)
@@ -2418,14 +2434,20 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
          if(currentCondition == "lanyard"){
             showRedoRoutesSuggestion(condition: currentCondition, content: "lanyardRedoContent")
+            print("in redo if")
+            print(ViewController.ConditionsCount = conditionsDico[currentCondition] as! Int)
         }
          if(currentCondition == "none"){
             showRedoRoutesSuggestion(condition: currentCondition, content: "controlledRedoContent")
+            print("in redo if")
+            print(ViewController.ConditionsCount = conditionsDico[currentCondition] as! Int)
             
         }
          if(currentCondition == "bracing"){
             
             showRedoRoutesSuggestion(condition: currentCondition, content: "bracingRedoContent")
+            print("in redo if")
+            print(ViewController.ConditionsCount = conditionsDico[currentCondition] as! Int)
         }
         
         
@@ -2505,29 +2527,91 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
         }
     }
+    func sendLogSinglueUseRoute(){
+        
+        
+        //only log if user confirmed completion of route
+       
+        // send success log data to Firebase
+          
+        let logFileURLs = logger.compileLogData(true)
+        logger.resetStateSequenceLog()
+          
+        // left
+            var left : [String] = []
+        
+            for( key) in conditionsDico.keys{
+                if(conditionsDico[key] as! Int != 3){
+                    left.append(key)}
+                
+                
+            }
+            
+            if(left.isEmpty){
+                print("left is empty")
+                print("val o")
+                if(!experimentRouteFlag){
+                updateExperimentExperimentRoute()
+                 UserDefaults.standard.setValue("ExperimentRoute", forKey: "currentRoute")
+                UserDefaults.standard.setValue(true, forKey: "experimentRouteFlag")
+                }else{
+                    print("completedExperiment")
+                    
+                }
+            }
+        else{
+      
+            //
+            print("nextCon")
+            print("left")
+            dump(left)
+            let nextCondition = left.randomElement()
+            print(nextCondition)
+            if(conditionsDico[currentCondition]! as! Int == 3){
+            if(conditionsDico[nextCondition ?? "none"]! as! Int == 0){
+             
+            
+                
+                currentCondition = nextCondition
+                UserDefaults.standard.setValue(currentCondition, forKey: "currentCondition")
+               
+                
+                updateExperiment()
+                
+            }
+        }
+        
+        }}
     
     
     func sendLogExperimentRouteDataHelper(pathStatus: Bool?, announceArrival: Bool = false) {
        
         state = .mainScreen(announceArrival: announceArrival)
         let prevConditionsCounts = ViewController.ConditionsCount
+        var tIn: Int
         if(currentCondition == "lanyard"){
             
             showRedoExperimentRoutesSuggestion(condition: currentCondition, content: "lanyardRedoContent")
+         
+            
         }
         if(currentCondition == "none"){
-            showRedoExperimentRoutesSuggestion(condition: currentCondition, content: "controlledRedoContent")
+             showRedoExperimentRoutesSuggestion(condition: currentCondition, content: "controlledRedoContent")
+            
             
         }
         if(currentCondition == "bracing"){
             
             showRedoExperimentRoutesSuggestion(condition: currentCondition, content: "bracingRedoContent")
+            
+          
+            
         }
         
         
         print("currentCondition")
         print(currentCondition)
-        print(experimentConditonsDico[currentCondition])
+        print(self.experimentConditonsDico[currentCondition])
         
        
         
@@ -2539,7 +2623,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         )
           
         //only log if user confirmed completion of route
-        if(prevConditionsCounts !=   ViewController.ConditionsCount ){
+        if(prevConditionsCounts as! Int !=   ViewController.ConditionsCount ){
             print("insideSendLog")
         // send success log data to Firebase
         let logFileURLs = logger.compileLogData(pathStatus)
@@ -2550,7 +2634,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 var left : [String] = []
             
                 for(key) in experimentConditonsDico.keys{
-                    if( experimentConditonsDico[key] as! Int == 0){
+                    if( experimentConditonsDico[key] as! Int > 3){
                         left.append(key)}
                     
                     
@@ -2599,6 +2683,60 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
     }
     
+    func sendExpRouteLog(){
+        
+        
+      //only log if user confirmed completion of route
+    
+          print("insideSendLog")
+      // send success log data to Firebase
+        let logFileURLs = logger.compileLogData(true)
+      logger.resetStateSequenceLog()
+        
+          
+          // left
+              var left : [String] = []
+          
+              for(key) in experimentConditonsDico.keys{
+                  if( experimentConditonsDico[key] as! Int != 3){
+                      left.append(key)}
+                  
+                  
+              }
+              if(left.isEmpty){
+                  
+                  if(!singleUseRouteExperimentFlag){
+                  updateExperiment()
+                 UserDefaults.standard.setValue("SingleUseRoute", forKey: "currentRoute")
+                  UserDefaults.standard.setValue(true, forKey: "singleUseRouteExperimentFlag")
+                  }else{
+                      print("completedExperiment")
+                      
+                  }
+              }
+      
+     else{
+      //if(ViewController.ConditionsCount == 3){
+        if(experimentConditonsDico[currentCondition]! as! Int == 3){
+          print("insideIf 1")
+          print("eq3")
+          nextCondition = left.randomElement()
+          if(experimentConditonsDico[nextCondition]! as! Int == 0){
+              print("insideIf 2")
+              print("inSendlog")
+              print("updateNext")
+          
+              
+              currentCondition = nextCondition
+              UserDefaults.standard.setValue(currentCondition, forKey: "currentCondition")
+             
+              
+             updateExperimentExperimentRoute()
+              
+          }}
+      
+      
+      }}
         
     /// drop a crumb during path recording
     @objc func dropCrumb() {

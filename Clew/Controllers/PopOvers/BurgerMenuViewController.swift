@@ -7,7 +7,7 @@
 //
 
 import Foundation
-
+import SwiftUI
 class BurgerMenuViewController: UITableViewController, UIPopoverPresentationControllerDelegate {
     
     /// Called when the user selects an element from the routes table. Different indexPath/tableViewCell being tapped triggers different popup that is indicated by the content of the UILabel inside the tableViewCell (check corresponding storyboard).
@@ -23,9 +23,16 @@ class BurgerMenuViewController: UITableViewController, UIPopoverPresentationCont
         if indexPath == [0,1] {
             helpButtonPressed()
         }
+        
         if indexPath == [0,2] {
             feedbackButtonPressed()
         }
+        if indexPath == [0,3] {
+           //shortcutswasPressed()
+            voiceCommandsWasPressed()
+        }
+        
+        
     }
     
     /// Called when the settings button is pressed.  This function will display the settings view (managed by SettingsViewController) as a popover.
@@ -82,6 +89,20 @@ class BurgerMenuViewController: UITableViewController, UIPopoverPresentationCont
         self.present(nav, animated: true, completion: nil)
     }
     
+    func shortcutswasPressed(){
+        
+   //     let view =  siriShortcutsView()
+        //let shortcutsHostingController =  UIHostingController(rootView: view)
+       // self.present(shortcutsHostingController, animated: true, completion: nil)
+    }
+    
+    func voiceCommandsWasPressed(){
+        let view = VoiceCommandsView()
+        
+       
+        self.present(view, animated: true, completion: nil)
+        
+    }
     /// Dismisses the burger menu
     @objc func doneWithBurgerMenu() {
         dismiss(animated: true, completion: nil)

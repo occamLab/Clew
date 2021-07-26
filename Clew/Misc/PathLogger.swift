@@ -143,8 +143,8 @@ class PathLogger {
         }
     }
     
-    func logSettings(defaultUnit: Int, defaultColor: Int, soundFeedback: Bool, voiceFeedback: Bool, hapticFeedback: Bool, sendLogs: Bool, timerLength: Int, distance:Float, currentRoute: String, adjustOffset: Bool, currentCondition: String, experimentRouteFlag: Bool,experimentConditonsDico: [String: Any]!,conditionsDico: [String : Any]!) {
-        settingsHistory.append((Date(), ["defaultUnit": defaultUnit, "defaultColor": defaultColor, "soundFeedback": soundFeedback, "voiceFeedback": voiceFeedback, "hapticFeedback": hapticFeedback, "sendLogs": sendLogs, "timerLength": timerLength, "adjustOffset": adjustOffset,"currentCondition":currentCondition,"experimentRouteFlag": experimentRouteFlag, "conditionsDico": conditionsDico,"experimentConditonsDico": experimentConditonsDico, "currentRoute":currentRoute,"distance":distance]))
+    func logSettings(defaultUnit: Int, defaultColor: Int, soundFeedback: Bool, voiceFeedback: Bool, hapticFeedback: Bool, sendLogs: Bool, timerLength: Int,  currentRoute: String, adjustOffset: Bool, currentCondition: String, experimentRouteFlag: Bool,experimentConditonsDico: [String: Any]!,conditionsDico: [String : Any]!) {
+        settingsHistory.append((Date(), ["defaultUnit": defaultUnit, "defaultColor": defaultColor, "soundFeedback": soundFeedback, "voiceFeedback": voiceFeedback, "hapticFeedback": hapticFeedback, "sendLogs": sendLogs, "timerLength": timerLength, "adjustOffset": adjustOffset,"currentCondition":currentCondition,"experimentRouteFlag": experimentRouteFlag, "conditionsDico": conditionsDico,"experimentConditonsDico": experimentConditonsDico, "currentRoute":currentRoute]))
     }
     
     /// Log language used by user in recording.
@@ -259,6 +259,7 @@ class PathLogger {
                                     "trackingErrorTime": Array(trackingErrorTime),
                                     "trackingErrorData": Array(trackingErrorData),
                                     "stateSequence": Array(stateSequence),
+                                    
                                     "stateSequenceTime": Array(stateSequenceTime),
                                     "settingsHistory": settingsHistory.map({$0.1})]
         do {
