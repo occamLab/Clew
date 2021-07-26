@@ -282,7 +282,7 @@
 
 "multipleUseRouteAnchorPointToRecordingRouteAnnouncement" = "Anchor point saved. You are now recording a route.";
 
-"multipleUseRouteAnchorPointToSaveARouteAnnouncement" = "Anchor point saved. You may now enter the app clip code ID.";
+"multipleUseRouteAnchorPointToSaveARouteAnnouncement" = "Route successfully recorded. You may now name your route.";
 
 "startingReturnNavigationAnnouncement" = "Starting navigation";
 
