@@ -9,7 +9,7 @@
 import Foundation
 import SwiftUI
 
-struct shortCutInvPhasee : Identifiable{
+struct shortCutInvocationPhasee : Identifiable{
     //var id: ObjectIdentifier
     var id = UUID()
     var phase: String
@@ -17,18 +17,44 @@ struct shortCutInvPhasee : Identifiable{
 }
 
 
+//func getShortcuts()->  [shortCutInvocationPhasee]{
+//    var phrases: [shortCutInvocationPhasee]
+//
+//    let vc = ViewController().voiceShortcuts
+//    for element in vc {
+//        phrases.append(shortCutInvocationPhasee(phase: element.invocationPhrase))
+//    }
+//    return phrases
+//}
+
+struct shortcutRow: View{
+    var shortcut: shortCutInvocationPhasee
+    var body: some View{
+        Text("Siri Shortcut:\(shortcut.phase) ").foregroundColor(.yellow)
+    }
+    
+}
+
 
 struct siriShortcutsView : View {
 
-    
-    var phrases: [shortCutInvPhasee]
-
-    mutating func getShortcuts(){
-        let vc = ViewController().voiceShortcuts
-        for element in vc {
-            phrases.append(shortCutInvPhasee(phase: element.invocationPhrase))
+  
+   let shortcuts = ViewController.voiceCommandsList
+    var body: some View{
+        
+        List(shortcuts){ shortcut in shortcutRow(shortcut:shortcut)
+       
+            
         }
     }
+    
+}
+
+struct siriView : View {
+
+     //   let display = getShortcuts()
+    
+  
    
    
     
@@ -40,6 +66,7 @@ struct siriShortcutsView : View {
         Text("Fire").foregroundColor(.red)
         let vs = ViewController()
         let shortcuts = vs.voiceShortcuts
+        //getShortcuts()
         
        
       }

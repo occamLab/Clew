@@ -98,6 +98,8 @@ enum AppState {
     }
 }
 
+
+
 /// The view controller that handles the main Clew window.  This view controller is always active and handles the various views that are used for different app functionalities.
 class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDelegate, AVSpeechSynthesizerDelegate {
     
@@ -256,6 +258,26 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         showRecordPathButton(announceArrival: announceArrival)
         ///get the value of current route from defaults to start the experment with
         
+        ///
+  ///      set s
+     
+        if(!setShortcutsDisplay){
+        for element in  siriShortcutDisplayList{
+            print("mdump")
+            print(element)
+           
+            ViewController.voiceCommandsList.append(shortCutInvocationPhasee(phase: element))
+            print("maindump")
+
+            
+            
+        }
+            
+            print("len maindump")
+            print(siriShortcutDisplayList.count)
+            print( ViewController.voiceCommandsList.count)
+            setShortcutsDisplay = false
+        }
         
     
             
@@ -717,8 +739,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     ///siri shortcuts VC
     var siriShortcutsController: SiriShortcutsController!
     var siriShortcutList: [String] = []
-    var voiceShortcuts: [INVoiceShortcut] = []
-    static var voiceCommandsList : [INVoiceShortcut]=[]
+    public var voiceShortcuts: [INVoiceShortcut] = []
+    static var voiceCommandsList : [shortCutInvocationPhasee]=[]
     //todel
     var cc: Int = 1
     /// called when the view has loaded.  We setup various app elements in here.
@@ -896,7 +918,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         let userDefaults: UserDefaults = UserDefaults.standard
         //todel
         // reintialise everythin for test puposes
-        
+        UserDefaults.standard.setValue(false, forKey: "siriShortcutStartNavigatingRoute")
         UserDefaults.standard.setValue(false, forKey: "siriShortcutAlert")
         UserDefaults.standard.setValue(false, forKey: "singleUseRouteExperimentFlag")
         UserDefaults.standard.setValue(false, forKey: "experimentRouteFlag")
@@ -909,17 +931,22 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         UserDefaults.standard.setValue(recondtions, forKey: "conditionsDico")
         UserDefaults.standard.setValue(recondtions, forKey: "experimentConditonsDico")
        
-      
+        
+        UserDefaults.standard.setValue(false, forKey: "siriShortcutExperimentRoute")
+        
+      //  UserDefaults.standard.setValue([""], forKey: "siriShortcutDisplayList")
         let tConditions: Dictionary? =  userDefaults.dictionary(forKey: "conditionsDico")
         
         print("After tCondition")
         print(tConditions)
-        if(!siriShortcutAlert){
-            
-            showSignificantChangesHandsFreeAlert()
-            UserDefaults.standard.setValue(true, forKey: "siriShortcutAlert")
-        }
-    
+//        if(!siriShortcutAlert){
+//
+//            showSignificantChangesHandsFreeAlert()
+//            UserDefaults.standard.setValue(true, forKey: "siriShortcutAlert")
+//        }
+        
+        
+        
         
         
         
@@ -1318,7 +1345,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// Register settings bundle
     func registerSettingsBundle(){
-        let appDefaults = ["crumbColor": 0, "showPath": true, "pathColor": 0, "hapticFeedback": true, "sendLogs": true, "voiceFeedback": true, "soundFeedback": true, "adjustOffset": false, "units": 0, "timerLength":5, "conditionsDico": ["lanyard":0,"bracing":0,"none":0],"experimentConditonsDico": ["lanyard":0,"bracing":0,"none":0], "siriShortcutSingleUseRoute": false,  "siriShortcutStopRecordingRoute": false, "experimentRouteFlag":false,"singleUseRouteExperimentFlag":false,  "currentCondition": conditionsList.randomElement(), "siriShortcutExperimentRoute": false,"siriShortcutStartNavigatingRoute": false,"currentRoute":startExperimentWithList.randomElement(), "siriShortcutAlert": false, "distance":0] as [String : Any]
+        let appDefaults = ["siriShortcutDisplayList": [""],"crumbColor": 0, "showPath": true, "pathColor": 0, "hapticFeedback": true, "sendLogs": true, "voiceFeedback": true, "soundFeedback": true, "adjustOffset": false, "units": 0, "timerLength":5, "conditionsDico": ["lanyard":0,"bracing":0,"none":0],"experimentConditonsDico": ["lanyard":0,"bracing":0,"none":0], "siriShortcutSingleUseRoute": false,  "siriShortcutStopRecordingRoute": false, "experimentRouteFlag":false,"singleUseRouteExperimentFlag":false,  "currentCondition": conditionsList.randomElement(), "siriShortcutExperimentRoute": false,"siriShortcutStartNavigatingRoute": false,"currentRoute":startExperimentWithList.randomElement(), "siriShortcutAlert": false, "distance":0] as [String : Any]
         UserDefaults.standard.register(defaults: appDefaults)
     }
 
@@ -1342,7 +1369,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         siriShortcutStartNavigatingRouteFlag = defaults.bool(forKey:"siriShortcutStartNavigatingRoute")
         siriShortcutAlert = defaults.bool(forKey: "siriShortcutAlert")
         //distance = defaults.float(forKey: "distance")
-        
+        siriShortcutDisplayList = defaults.stringArray(forKey: "siriShortcutDisplayList")
         sendLogs = true // (making this mandatory) defaults.bool(forKey: "sendLogs")
         timerLength = defaults.integer(forKey: "timerLength")
         currentCondition = defaults.string(forKey: "currentCondition")
@@ -1353,12 +1380,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         conditionsDico = defaults.dictionary(forKey:"conditionsDico")
         currentRoute =  defaults.string(forKey: "currentRoute")
         nav.useHeadingOffset = adjustOffset
-       
+        
+        
         
         // TODO: log settings here
         logger.logSettings(defaultUnit: defaultUnit, defaultColor: defaultColor, soundFeedback: soundFeedback, voiceFeedback: voiceFeedback, hapticFeedback: hapticFeedback, sendLogs: sendLogs, timerLength: timerLength, currentRoute: currentRoute,adjustOffset: adjustOffset,
                            currentCondition:currentCondition, experimentRouteFlag: experimentRouteFlag, experimentConditonsDico: experimentConditonsDico,
-                           conditionsDico: conditionsDico)
+                           conditionsDico: conditionsDico,siriShortcutDisplayList:siriShortcutDisplayList)
         
         // leads to JSON like:
         //   options: { "unit": "meter", "soundFeedback", true, ... }
@@ -1368,6 +1396,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     @objc func defaultsChanged(){
         updateDisplayFromDefaults()
     }
+    
+     
     
     /// Create a new ARSession.
     func createARSessionConfiguration() {
@@ -1752,9 +1782,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     ///list of condition to randomise from
     var conditionsList:[String]! = ["lanyard", "none", "bracing"]
 
+    var setShortcutsDisplay: Bool = false
     
     var conditionsDico: [String :Any]!
     var experimentConditonsDico: [String :Any]!
+    // stores sirishorcuts phrases to display on burger menu
+    var siriShortcutDisplayList : [String]!
     //var conditionsDicoSet =
     
     /// This keeps track of the paused transform while the current session is being realigned to the saved route
@@ -1951,7 +1984,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             
            // UserDefaults.standard.setValue(distance ?? 0.0, forKey: "distance")
             print(distance)
-            
+            logger.logFrameDistance(distance: distance)
             sendLogExperimentRouteDataHelper(pathStatus: true)
 //            self.state = .mainScreen(announceArrival: true)
 //            let logFileURLs = logger.compileLogData(nil)
@@ -2077,6 +2110,15 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         
         UserDefaults.standard.set(false, forKey: "adjustOffset")
         
+        //todel
+        print("dumpVS")
+        //dump(siriShortcutList)
+        //print("extd")
+        dump(voiceShortcuts)
+//        for element in voiceShortcuts{
+//            ViewController.voiceCommandsList.append(shortCutInvocationPhasee(phase: element.invocationPhrase))
+//           print(element.invocationPhrase)
+//        }
        
     
         rootContainerView.homeButton.isHidden = false
@@ -2169,6 +2211,25 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         
         if(!siriShortcutExperimentRouteFlag){
             present(vcc, animated: true, completion: nil)
+            
+                    for element in voiceShortcuts{
+                        ViewController.voiceCommandsList.append(shortCutInvocationPhasee(phase: element.invocationPhrase))
+                       print(element.invocationPhrase)
+                    }
+            
+            
+            for element in voiceShortcuts{
+             
+               print(element.invocationPhrase)
+                siriShortcutDisplayList.append(element.invocationPhrase)
+              
+            }
+            siriShortcutDisplayList = unique(source: siriShortcutDisplayList)
+            print("lenExp")
+            print(siriShortcutDisplayList.count)
+          
+            UserDefaults.standard.setValue(siriShortcutDisplayList, forKey: "siriShortcutDisplayList")
+            
             UserDefaults.standard.setValue(true, forKey: "siriShortcutExperimentRoute")
         }
     }
@@ -2265,9 +2326,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         //dump(siriShortcutList)
         //print("extd")
         dump(voiceShortcuts)
-        for element in voiceShortcuts{
-           print(element.invocationPhrase)
-        }
+     
         if(!siriShortcutStartNavigatingRouteFlag){
             present(vcc, animated: true, completion: nil)
             UserDefaults.standard.setValue(true, forKey: "siriShortcutStartNavigatingRoute")
@@ -2275,6 +2334,19 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
            
        }
     
+    ///store unique values
+    
+    func unique<S : Sequence, T : Hashable>(source: S) -> [T] where S.Iterator.Element == T {
+        var buffer = [T]()
+        var added = Set<T>()
+        for elem in source {
+            if !added.contains(elem) {
+                buffer.append(elem)
+                added.insert(elem)
+            }
+        }
+        return buffer
+    }
 
     /// this is called after the alignment countdown timer finishes in order to complete the pause tracking procedure
     @objc func pauseTracking() {
@@ -2440,6 +2512,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         var Condd = UserDefaults.standard.dictionary(forKey: "conditionsDico")
         var prevCondd = Condd![currentCondition]
         var prevC = ViewController.ConditionsCount
+        // send success log data to Firebase
+          logger.logCurrentExpCondition(condition: currentCondition)
+          
+          logger.logCurrentRoute(route: currentRoute)
         if(!singleUseRouteExperimentFlag && !experimentRouteFlag){
             print("inside startExp")
             startExperiment()
@@ -2546,7 +2622,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         //only log if user confirmed completion of route
        
         // send success log data to Firebase
-          
+        
+        
         let logFileURLs = logger.compileLogData(true)
         logger.resetStateSequenceLog()
           
@@ -2706,6 +2783,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
           print("insideSendLog")
       // send success log data to Firebase
+        logger.logCurrentExpCondition(condition: currentCondition)
+        logger.logCurrentRoute(route: currentRoute)
         let logFileURLs = logger.compileLogData(true)
       logger.resetStateSequenceLog()
         
@@ -3581,6 +3660,17 @@ extension ViewController: INUIAddVoiceShortcutViewControllerDelegate {
         updateVoiceShortcuts(completion: nil)
         print("extdel")
         dump(voiceShortcut)
+        var shortcutStrings: [String]! = []
+        
+        for element in voiceShortcuts{
+            ViewController.voiceCommandsList.append(shortCutInvocationPhasee(phase: element.invocationPhrase))
+            print(element.invocationPhrase)
+            siriShortcutDisplayList.append(element.invocationPhrase)
+          
+        }
+     
+     
+        UserDefaults.standard.setValue(siriShortcutDisplayList, forKey: "siriShortcutDisplayList")
         dismiss(animated: true, completion: nil)
 
     }

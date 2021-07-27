@@ -55,12 +55,23 @@ class PathLogger {
     var speechDataTime: LinkedList<Double> = []
     /// list of keypoints - [[(LocationInfo)x, y, z, yaw]]
     var keypointData: LinkedList<Array<Any>> = []
-    
+    /// dictonary of conditions
+    var experimentDico : Dictionary<String, Any> = [:]
+    /// current condtion
+    ///
+    var currentCondition: String!
+///     current route
+    ///
+
+    var currentRoute: String!
     /// the navigation route that the user is currently navigating
     var currentNavigationRoute: SavedRoute?
     /// the ARWorldMap that is currently navigating
     var currentNavigationMap: Any?
-    
+    /// distance between the first and last frame of Experiment route
+    ///
+
+    var frameDistance : Float!
     /// language used in recording
     func currentLocale() -> String {
         let preferredLanguage = Locale.preferredLanguages[0] as String
@@ -75,6 +86,22 @@ class PathLogger {
     func setCurrentRoute(route: SavedRoute, worldMap: Any?) {
         currentNavigationRoute = route
         currentNavigationMap = worldMap
+    }
+    ///stores the dictionar of the current route for either experiment route or single user route
+    ///Parametrr
+///         dico:the dictonary the contains the conditons and  count
+    func logExpDico(dico: Dictionary<String, Any>){
+        experimentDico = dico
+        
+    }
+    func logFrameDistance(distance: Float){
+        frameDistance = distance
+    }
+    func logCurrentExpCondition(condition: String){
+        currentCondition = condition
+    }
+    func logCurrentRoute(route: String!){
+        currentRoute = route
     }
     
     /// Add the specified state transition to the log.
@@ -143,8 +170,8 @@ class PathLogger {
         }
     }
     
-    func logSettings(defaultUnit: Int, defaultColor: Int, soundFeedback: Bool, voiceFeedback: Bool, hapticFeedback: Bool, sendLogs: Bool, timerLength: Int,  currentRoute: String, adjustOffset: Bool, currentCondition: String, experimentRouteFlag: Bool,experimentConditonsDico: [String: Any]!,conditionsDico: [String : Any]!) {
-        settingsHistory.append((Date(), ["defaultUnit": defaultUnit, "defaultColor": defaultColor, "soundFeedback": soundFeedback, "voiceFeedback": voiceFeedback, "hapticFeedback": hapticFeedback, "sendLogs": sendLogs, "timerLength": timerLength, "adjustOffset": adjustOffset,"currentCondition":currentCondition,"experimentRouteFlag": experimentRouteFlag, "conditionsDico": conditionsDico,"experimentConditonsDico": experimentConditonsDico, "currentRoute":currentRoute]))
+    func logSettings(defaultUnit: Int, defaultColor: Int, soundFeedback: Bool, voiceFeedback: Bool, hapticFeedback: Bool, sendLogs: Bool, timerLength: Int,  currentRoute: String, adjustOffset: Bool, currentCondition: String, experimentRouteFlag: Bool,experimentConditonsDico: [String: Any]!,conditionsDico: [String : Any]!, siriShortcutDisplayList: [String]) {
+        settingsHistory.append((Date(), ["defaultUnit": defaultUnit, "defaultColor": defaultColor, "soundFeedback": soundFeedback, "voiceFeedback": voiceFeedback, "hapticFeedback": hapticFeedback, "sendLogs": sendLogs, "timerLength": timerLength, "adjustOffset": adjustOffset,"currentCondition":currentCondition,"experimentRouteFlag": experimentRouteFlag, "conditionsDico": conditionsDico,"experimentConditonsDico": experimentConditonsDico, "currentRoute":currentRoute, "siriShortcutDisplayList": siriShortcutDisplayList]))
     }
     
     /// Log language used by user in recording.
@@ -249,6 +276,10 @@ class PathLogger {
                                     "PathDate": pathDate,
                                    // "crumbs": //ViewController.scrumbs,
                                     "PathType": pathType,
+                                    "experimentDico": experimentDico,
+                                    "currentExpRoute": currentRoute ?? "NA",
+                                    "currentExpCondition": currentCondition ?? "NA",
+                                    "frameDistance": frameDistance,
                                     "isVoiceOverOn": UIAccessibility.isVoiceOverRunning,
                                     "isGrayscaleOn": UIAccessibility.isGrayscaleEnabled,
                                     "isInvertColorsOn": UIAccessibility.isInvertColorsEnabled,

@@ -28,8 +28,8 @@ class BurgerMenuViewController: UITableViewController, UIPopoverPresentationCont
             feedbackButtonPressed()
         }
         if indexPath == [0,3] {
-           //shortcutswasPressed()
-            voiceCommandsWasPressed()
+        shortcutswasPressed()
+            //voiceCommandsWasPressed()
         }
         
         
@@ -91,9 +91,12 @@ class BurgerMenuViewController: UITableViewController, UIPopoverPresentationCont
     
     func shortcutswasPressed(){
         
-   //     let view =  siriShortcutsView()
-        //let shortcutsHostingController =  UIHostingController(rootView: view)
-       // self.present(shortcutsHostingController, animated: true, completion: nil)
+        let view =  siriShortcutsView()
+        let shortcutsHostingController =  UIHostingController(rootView: view)
+        print("inside shortcutwaspress")
+        print(ViewController.voiceCommandsList)
+        print(ViewController().voiceShortcuts)
+        self.present(shortcutsHostingController, animated: true, completion: nil)
     }
     
     func voiceCommandsWasPressed(){
