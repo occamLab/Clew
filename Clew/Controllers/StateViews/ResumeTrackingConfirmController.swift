@@ -23,6 +23,9 @@ class ResumeTrackingConfirmController: UIViewController, UIScrollViewDelegate {
     /// text for Anchor Point information
     var anchorPointLabel: UILabel!
     
+    /// flags whether or not this is displayed as part of the tutorial
+    var isTutorial = false
+    
     /// called when the view loads (any time)
     override func viewDidAppear(_ animated: Bool) {
         /// update label font

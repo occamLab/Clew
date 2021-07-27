@@ -283,7 +283,10 @@
 "tutorialTitleText" = "CLEW Tutorial";
 
 "ClewIntroTutorialTitle" = "Intro to Clew"; 
-"ClewIntroTutorialText" = "Clew allows you to record routes using your phone so that you can then navigate them at a later point in time with precise, automatic guidance from the app. Clew can be used in situations where you want to immediately navigate back to your starting location (e.g., if you went somewhere with a sighted guide or if it is harder to navigate the reverse journey) or when you want to remember a route that you are learning so you can navigate it more confidently in the future. importantly , Clew does not use your phone’s GPS so it can be used indoors.";
+"ClewIntroTutorialText1" = "Welcome to Clew! Clew is a tool for accuratly navigating indoor spaces as it does not use your phone’s GPS. If you are new to Clew we recomend that you get used to using Clew in spaces that you are familiar with and that you walk through the Clew Tutorial.";
+"ClewIntroTutorialText2" = "Clew can be used in situations where you want to immediately navigate back to your starting location (e.g., if you went somewhere with a sighted guide or if it is harder to navigate the reverse journey) or when you want to remember a route that you are learning so you can navigate it more confidently in the future.";
+"ClewIntroTutorialText3" = "Importantly, Clew is not a substitute for Oritentation and Mobilty practices and/or a white cane or guide dog.  does not use your phone’s GPS so it can be used indoors.";
+
 
 "orientPhoneTutorialButtonText" = "Holding Your Phone";
 "orientPhoneTutorialInstructionText" = "Clew uses your phone's camera and other sensors to track the environment as you move along a route. To ensure Clew is getting good information from your camera, you should hold your phone vertically with the rear camera facing forward whenever you are using Clew. It is important to maintain the phone in the vertical orientation or ‘pose’ at all times whenever you are navigating a route. Select the Practice button below to try out holding your phone in the correct position.";

@@ -11,6 +11,8 @@
 		14A90C0526A211BF003DAB30 /* ClewTutorialFeedback.wav in Resources */ = {isa = PBXBuildFile; fileRef = 14A90C0326A211BE003DAB30 /* ClewTutorialFeedback.wav */; };
 		14A90C0726A86A82003DAB30 /* TutorialFollowPath1.crd in Resources */ = {isa = PBXBuildFile; fileRef = 14A90C0626A86A82003DAB30 /* TutorialFollowPath1.crd */; };
 		14A90C0826A86A82003DAB30 /* TutorialFollowPath1.crd in Resources */ = {isa = PBXBuildFile; fileRef = 14A90C0626A86A82003DAB30 /* TutorialFollowPath1.crd */; };
+		14A90C0A26AEF5CE003DAB30 /* TutorialFollowPath2.crd in Resources */ = {isa = PBXBuildFile; fileRef = 14A90C0926AEF5CE003DAB30 /* TutorialFollowPath2.crd */; };
+		14A90C0B26AEF5CE003DAB30 /* TutorialFollowPath2.crd in Resources */ = {isa = PBXBuildFile; fileRef = 14A90C0926AEF5CE003DAB30 /* TutorialFollowPath2.crd */; };
 		14B02B3226823E2C00174B36 /* TutorialTestViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14B02B3126823E2C00174B36 /* TutorialTestViews.swift */; };
 		14B02B3326823E2C00174B36 /* TutorialTestViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14B02B3126823E2C00174B36 /* TutorialTestViews.swift */; };
 		14B7EA09268E052100E4A3CE /* SettingWalkThrough.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14B7EA08268E052100E4A3CE /* SettingWalkThrough.swift */; };
@@ -168,6 +170,7 @@
 		08FA9C31721F9F8CDCC23AE9 /* Pods-Clew.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Clew/Pods-Clew.debug.xcconfig"; sourceTree = "<group>"; };
 		14A90C0326A211BE003DAB30 /* ClewTutorialFeedback.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = ClewTutorialFeedback.wav; sourceTree = "<group>"; };
 		14A90C0626A86A82003DAB30 /* TutorialFollowPath1.crd */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = TutorialFollowPath1.crd; sourceTree = "<group>"; };
+		14A90C0926AEF5CE003DAB30 /* TutorialFollowPath2.crd */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = TutorialFollowPath2.crd; sourceTree = "<group>"; };
 		14B02B3126823E2C00174B36 /* TutorialTestViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialTestViews.swift; sourceTree = "<group>"; };
 		14B7EA08268E052100E4A3CE /* SettingWalkThrough.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingWalkThrough.swift; sourceTree = "<group>"; };
 		14B7EA0B268E147A00E4A3CE /* TextBoarder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextBoarder.swift; sourceTree = "<group>"; };
@@ -297,7 +300,6 @@
 				14B02B3126823E2C00174B36 /* TutorialTestViews.swift */,
 				14B7EA08268E052100E4A3CE /* SettingWalkThrough.swift */,
 				14B7EA0B268E147A00E4A3CE /* TextBoarder.swift */,
-				14A90C0626A86A82003DAB30 /* TutorialFollowPath1.crd */,
 			);
 			path = Tutorial;
 			sourceTree = "<group>";
@@ -306,6 +308,8 @@
 			isa = PBXGroup;
 			children = (
 				82A417EC262A2140001FCB8C /* Clew Dev.entitlements */,
+				14A90C0626A86A82003DAB30 /* TutorialFollowPath1.crd */,
+				14A90C0926AEF5CE003DAB30 /* TutorialFollowPath2.crd */,
 				E5470EA922C119F4001092A4 /* Clew */,
 				77467DAE22BBC1D300FA7DEE /* Default-568h@2x.png */,
 				82569F4D22187E6500448B45 /* help */,
@@ -631,6 +635,7 @@
 				E5470F1822C119F5001092A4 /* StartRecording.aiff in Resources */,
 				14A90C0726A86A82003DAB30 /* TutorialFollowPath1.crd in Resources */,
 				4D6B00E51F33C9B800952242 /* Crumb.obj in Resources */,
+				14A90C0A26AEF5CE003DAB30 /* TutorialFollowPath2.crd in Resources */,
 				E5470F1C22C119F5001092A4 /* GoogleService-Info.plist in Resources */,
 				14B7EA12269631C500E4A3CE /* ClewSuccessSound.wav in Resources */,
 				E5470F0E22C119F5001092A4 /* Settings.bundle in Resources */,
@@ -661,6 +666,7 @@
 				82AD6A26252F80AA00902A11 /* speaker.mtl in Resources */,
 				B7EB59E220F693EB00FBBC6A /* Confirm.mp3 in Resources */,
 				B7EB59E320F693EB00FBBC6A /* Crumb.obj in Resources */,
+				14A90C0B26AEF5CE003DAB30 /* TutorialFollowPath2.crd in Resources */,
 				E5470F4F22C119F5001092A4 /* GoogleService-Info_dev.plist in Resources */,
 				82569F4F22187E6500448B45 /* help in Resources */,
 				E5D1695F22E103A0008754D0 /* Localizable.strings in Resources */,

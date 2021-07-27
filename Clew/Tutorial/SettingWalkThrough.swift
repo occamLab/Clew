@@ -13,10 +13,10 @@ struct SettingWalkThrough: View {
     var body: some View {
         TutorialScreen{
             Text(NSLocalizedString("settingsWalkThroughIntro", comment: "Intro text to the settings walk through"))
-            
-            Spacer()
-            TutorialNavLink(destination: setUnit()) {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
+        
         }
+        Spacer()
+        TutorialNavLink(destination: setUnit()) {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
     }
 }
 
@@ -115,10 +115,10 @@ struct setUnit: View{
                     }
                 }
                 }
-                Spacer()
-                TutorialNavLink(destination: setUpCrumbColor()) {
-                    Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
-                }
+        }
+        Spacer()
+        TutorialNavLink(destination: setUpCrumbColor()) {
+            Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
         }
     }
 }
@@ -217,12 +217,12 @@ struct setUpCrumbColor: View {
                     }
                 }
                 
-                Spacer()
-                TutorialNavLink(destination: setUpPathColor())
-                    {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
             
             }
         }
+        Spacer()
+        TutorialNavLink(destination: setUpPathColor())
+            {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
     }
 }
 
@@ -319,13 +319,12 @@ struct setUpPathColor: View {
                         }
                     }
                 }
-                
-                Spacer()
-                TutorialNavLink(destination: setUpFeedback())
-                    {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
             
             }
         }
+        Spacer()
+        TutorialNavLink(destination: setUpFeedback())
+            {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
     }
 }
 
