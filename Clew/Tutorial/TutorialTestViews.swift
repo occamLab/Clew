@@ -50,11 +50,40 @@ struct TutorialNavLink<Destination: View, Content: View>: View {
     let destination: Destination
     init(destination: Destination, @ViewBuilder content: () -> Content) {
         self.destination = destination
-    self.content = content()
+        self.content = content()
   }
     
     var body: some View {
         NavigationLink(destination: self.destination) {
+            content
+                //.textboarder(color: .black, lineWidth: 3)
+                .frame(minWidth: 0, maxWidth: 300)
+                .padding()
+                .foregroundColor(.black)
+                .background(Color.yellow)
+                .cornerRadius(10)
+                .font(.system(size: 18, weight: .regular))
+        }
+    }
+  }
+
+
+struct TutorialNavLinkWithRedirection<Destination: View, Content: View>: View {
+    //creates a button format for all the CLEW tutorial navigation links to use. only works for navigation links
+  let content: Content
+    let destination: Destination
+    let activationTag: String
+    let selection: Binding<String?>
+    
+    init(destination: Destination, tag: String, selection: Binding<String?>, @ViewBuilder content: () -> Content) {
+        self.destination = destination
+        self.selection = selection
+        self.activationTag = tag
+        self.content = content()
+  }
+    
+    var body: some View {
+        NavigationLink(destination: self.destination, tag: activationTag, selection: selection) {
             content
                 //.textboarder(color: .black, lineWidth: 3)
                 .frame(minWidth: 0, maxWidth: 300)
@@ -86,10 +115,16 @@ struct TutorialButton<Content: View>: View {
     }
 }
 
+class showTutorialPage: ObservableObject {
+    //@Published var showFindPath = false
+    @Published var selectedView: String? = ""
+}
+
 struct TutorialTestView: View {
     @ObservedObject var settings = SettingsWrapper.shared
-    @State var selection: String? = nil
-
+    @StateObject var showPage = showTutorialPage()
+    let pub = NotificationCenter.default
+            .publisher(for: NSNotification.Name("ShowTutorialPage"))
     var body: some View {
         NavigationView{
 
@@ -97,7 +132,7 @@ struct TutorialTestView: View {
                 Text(NSLocalizedString("tutorialTitleText", comment: "Title of the Clew Tutorial Screen. Top of the first tutorial page"))
                         
                 HStack{
-                TutorialNavLink(destination: CLEWintro()) {
+                TutorialNavLinkWithRedirection(destination: CLEWintro(), tag: "CLEWintro", selection: $showPage.selectedView){
                     Text(NSLocalizedString("ClewIntroTutorialTitle", comment: "Intro to Clew Tutorial Title"))
                     }
                     if UserDefaults.standard.bool(forKey: "IntroTutorialCompleted") == true {
@@ -115,7 +150,7 @@ struct TutorialTestView: View {
                 }
                 
                 HStack{
-                TutorialNavLink(destination: OrientPhone()){
+                TutorialNavLinkWithRedirection(destination: OrientPhone(), tag: "OrientPhone", selection: $showPage.selectedView){
                     Text(NSLocalizedString("orientPhoneTutorialButtonText", comment: "Text for the tutorial screem for phone position"))
                 }
                     if UserDefaults.standard.bool(forKey: "OrientPhoneTutorialCompleted") == true {
@@ -131,9 +166,14 @@ struct TutorialTestView: View {
                 }
                     
                 HStack{
-                    //NavigationLink("FindPath", destination: FindPath(), tag: "FindPath", selection: $selection)
-                TutorialNavLink(destination: FindPath()) {Text(NSLocalizedString( "findPathTutorialButtonText", comment: "Title for the finding and following path part of the tutorial"))
-                }
+                    TutorialNavLinkWithRedirection(destination: FindPath(), tag: "FindPath", selection: $showPage.selectedView) {
+                        Text(NSLocalizedString( "findPathTutorialButtonText", comment: "Title for the finding and following path part of the tutorial"))
+                    }
+                /*NavigationLink(
+                    "FindPath",
+                    destination: FindPath(),
+                    isActive: $showPage.showFindPath)*/
+                //TutorialNavLink(destination: FindPath()) {Text(NSLocalizedString( "findPathTutorialButtonText", comment: "Title for the finding and following path part of the tutorial"))}
                 if UserDefaults.standard.bool(forKey: "FindPathTutorialCompleted") == true {
                     Circle()
                         .fill(Color.yellow)
@@ -147,7 +187,28 @@ struct TutorialTestView: View {
                 }
                 
                 HStack{
-                TutorialNavLink(destination: SingleUse()) {Text(NSLocalizedString( "singleUseRouteTutorialButtonText", comment: "Title for the single use route part of the tutorial"))
+                    TutorialNavLinkWithRedirection(destination: AnchorPoints(), tag: "AnchorPoints", selection: $showPage.selectedView) {
+                        Text("Anchor Points")
+                    }
+                /*NavigationLink(
+                    "FindPath",
+                    destination: FindPath(),
+                    isActive: $showPage.showFindPath)*/
+                //TutorialNavLink(destination: FindPath()) {Text(NSLocalizedString( "findPathTutorialButtonText", comment: "Title for the finding and following path part of the tutorial"))}
+                if UserDefaults.standard.bool(forKey: "FindPathTutorialCompleted") == true { //Fix to anchor point completion
+                    Circle()
+                        .fill(Color.yellow)
+                        .frame(width: 30, height: 30)
+                        
+                } else {
+                    Circle()
+                        .stroke(Color.gray, lineWidth: 1)
+                        .frame(width: 30, height: 30)
+                }
+                }
+                
+                HStack{
+                    TutorialNavLinkWithRedirection(destination: SingleUse(), tag: "SingleUse", selection: $showPage.selectedView) {Text(NSLocalizedString( "singleUseRouteTutorialButtonText", comment: "Title for the single use route part of the tutorial"))
                 }
                 if UserDefaults.standard.bool(forKey: "SingleUseTutorialCompleted") == true {
                     Circle()
@@ -162,7 +223,7 @@ struct TutorialTestView: View {
                 }
                 
                 HStack{
-                TutorialNavLink(destination: SavedRoutes()) {Text(NSLocalizedString( "savedRoutesTutorialButtonText", comment: "Title for the saved route part of the tutorial"))
+                TutorialNavLinkWithRedirection(destination: SavedRoutes(), tag: "SavedRoutes", selection: $showPage.selectedView) {Text(NSLocalizedString( "savedRoutesTutorialButtonText", comment: "Title for the saved route part of the tutorial"))
                 }
                 if UserDefaults.standard.bool(forKey: "SavedRoutesTutorialCompleted") == true {
                     Circle()
@@ -177,7 +238,7 @@ struct TutorialTestView: View {
                 }
                 
                 HStack{
-                TutorialNavLink(destination: FindingSavedRoutes()) {Text(NSLocalizedString( "findingSavedRoutesTutorialButtonText", comment: "Title for the finding saved route part of the tutorial"))
+                TutorialNavLinkWithRedirection(destination: FindingSavedRoutes(), tag: "FindPath", selection: $showPage.selectedView) {Text(NSLocalizedString( "findingSavedRoutesTutorialButtonText", comment: "Title for the finding saved route part of the tutorial"))
                 }
                 if UserDefaults.standard.bool(forKey: "FindingSavedRoutesTutorialCompleted") {
                     Circle()
@@ -192,7 +253,7 @@ struct TutorialTestView: View {
                 }
                 
                 HStack{
-                TutorialNavLink(destination: SettingOptions()) {Text(NSLocalizedString( "settingOptionsTutorialButtonText", comment: "Title for the setting options part of the tutorial"))
+                TutorialNavLinkWithRedirection(destination: SettingOptions(), tag: "SettingOptions", selection: $showPage.selectedView) {Text(NSLocalizedString( "settingOptionsTutorialButtonText", comment: "Title for the setting options part of the tutorial"))
                 }
                 if UserDefaults.standard.bool(forKey: "SettingsOptionsTutorialCompleted") == true {
                     Circle()
@@ -205,6 +266,12 @@ struct TutorialTestView: View {
                         .frame(width: 30, height: 30)
                     }
                 }
+            }
+        }
+        .onReceive(pub)
+        { obj in
+            if let obj = obj.userInfo as? [String: String] {
+                showPage.selectedView = obj["pageToDisplay"]
             }
         }
     }

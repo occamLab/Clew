@@ -2147,74 +2147,58 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     // Called when help button is pressed
     @objc func helpButtonPressed() {
+        var pageToDisplay: String = ""
+        
+        let tutorialView = TutorialTestView()
+        tutorialHostingController = UIHostingController(rootView: tutorialView)
+        
         switch state {
         case .recordingRoute:
-           let tutorialView = NavigationView {
-              FindPath()}
-            tutorialHostingController = UIHostingController(rootView: tutorialView)
-            
+           pageToDisplay = "FindPath"
         case .mainScreen(_, _):
-            let tutorialView = TutorialTestView()
-            tutorialHostingController = UIHostingController(rootView: tutorialView)
-            
+            break
         case .readyToNavigateOrPause(allowPause: let allowPause, let isTutorial):
-            let tutorialView = NavigationView {
-                FindPath()}
-            tutorialHostingController = UIHostingController(rootView: tutorialView)
+            pageToDisplay = "FindPath"
             
         case .navigatingRoute:
-            let tutorialView = NavigationView {
-                FindPath()}
-            tutorialHostingController = UIHostingController(rootView: tutorialView)
+            pageToDisplay = "FindPath"
             
         case .initializing:
-            let tutorialView = NavigationView {
-                FindPath()}
-            tutorialHostingController = UIHostingController(rootView: tutorialView)
+            pageToDisplay = "FindPath"
             
         case .startingPauseProcedure:
-            let tutorialView = NavigationView {
-                SavedRoutes()}
-            tutorialHostingController = UIHostingController(rootView: tutorialView)
+            pageToDisplay = "SavedRoutes"
             
         case .pauseWaitingPeriod:
-            let tutorialView = NavigationView {
-                AnchorPoints()}
-            tutorialHostingController = UIHostingController(rootView: tutorialView)
+            pageToDisplay = "AnchorPoints"
             
         case .completingPauseProcedure:
-            let tutorialView = NavigationView {
-                AnchorPoints()}
-            tutorialHostingController = UIHostingController(rootView: tutorialView)
+            pageToDisplay = "AnchorPoints"
             
         case .pauseProcedureCompleted:
-            let tutorialView = NavigationView {
-                AnchorPoints()}
-            tutorialHostingController = UIHostingController(rootView: tutorialView)
+            pageToDisplay = "AnchorPoints"
             
         case .startingResumeProcedure(route: let route, worldMap: let worldMap, navigateStartToEnd: let navigateStartToEnd, let isTutorial):
-            let tutorialView = NavigationView {
-                FindPath()
-            }
-            tutorialHostingController = UIHostingController(rootView: tutorialView)
+            pageToDisplay = "FindPath"
             
         case .readyForFinalResumeAlignment:
-            let tutorialView = NavigationView {
-                FindPath()}
-            tutorialHostingController = UIHostingController(rootView: tutorialView)
+            pageToDisplay = "FindPath"
             
         case .startingNameSavedRouteProcedure(worldMap: let worldMap):
-            let tutorialView = NavigationView {
-                FindingSavedRoutes()}
-            tutorialHostingController = UIHostingController(rootView: tutorialView)
+                pageToDisplay = "FindingSavedRoutes"
+            
         case .finishedTutorialRoute(let announceArrival):
             let tutorialView = NavigationView {
-                PracticeSuccess()
+                PracticeSuccess()//TODO: pop up success page when finished tutorial route
             }
             tutorialHostingController = UIHostingController(rootView: tutorialView)
         }
         NotificationCenter.default.post(name: Notification.Name("ClewPopoverDisplayed"), object: nil)
         self.present(tutorialHostingController!, animated: true, completion: nil)
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(name: Notification.Name("ShowTutorialPage"), object: nil, userInfo: ["pageToDisplay":  pageToDisplay])
+        }
+
 
     }
     
