@@ -17,9 +17,9 @@ struct EndNavigationScreen: View {
                 .foregroundColor(.black)
             // placeholder: rating route system
             routeFeedbackButtons()
-            
             RecordFeedbackView()
                 .padding()
+
             
             Button(action: {
                 vc.hideAllViewsHelper()
@@ -29,23 +29,29 @@ struct EndNavigationScreen: View {
                 
             }){
                 homeButtonView()
+                    .padding()
             }
+            Spacer()
         }
+        
  
     }
 }
 
 struct routeFeedbackButtons: View {
     var body: some View {
-        HStack {
-            Spacer()
-            Image("thumbs_up")
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-            Image("thumbs_down")
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-            Spacer()
+        VStack{
+            Text("Please rate your route experience")
+            HStack {
+                Spacer()
+                Image("thumbs_up")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                Image("thumbs_down")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                Spacer()
+            }
         }
     }
 }
@@ -56,6 +62,7 @@ struct homeButtonView: View {
             Image("homeButton")
                 .resizable()
                 .frame(width: 50, height: 50)
+                .padding()
             Text("Main Menu")
                 .bold()
                 
