@@ -72,6 +72,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         // Override point for customization after application launch.
         vc = ViewController()
+            //vc.stack.push("start")
         window = UIWindow(frame:UIScreen.main.bounds)
         window?.rootViewController = vc
         window?.makeKeyAndVisible()
@@ -147,53 +148,59 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
        
         print("indelact")
         print(userActivity.activityType)
-      
-        if(userActivity.activityType == kNewSingleUseRouteType){
+        print("stackPeack")
+        print(vc.stack.peek())
+        print(userActivity.activityType == kStartNavigationType)
+        print(vc.stack.peek() == kStopRecordingType )
+        if(userActivity.activityType == kNewSingleUseRouteType && vc.stack.peek() == "start"){
              
         
-             vc.startCreateAnchorPointProcedure()
-            
-             vc.prevSiriActivity = kNewSingleUseRouteType
+            vc.startCreateAnchorPointProcedure()
+            vc.stack.push(kNewSingleUseRouteType)
+             //vc.prevSiriActivity = kNewSingleUseRouteType
 
              }
         if(userActivity.activityType == kExperimentRouteType){
              
         
              vc.experimentProcedure()
-            
-             vc.prevSiriActivity = kExperimentRouteType
+            vc.stack.push(kExperimentRouteType)
+             //vc.prevSiriActivity = kExperimentRouteType
 
              }
         
         
-        if(userActivity.activityType == kStopRecordingType &&  vc.prevSiriActivity == kNewSingleUseRouteType){
+        if(userActivity.activityType == kStopRecordingType && vc.stack.peek() == kNewSingleUseRouteType){
              
+        
+            vc.stopRecording(nil)
+            vc.stack.push(kStopRecordingType)
+                //vc.prevSiriActivity = kStopRecordingType
+
+             }
+        
+        if(userActivity.activityType == kStopRecordingType &&  vc.stack.peek() == kExperimentRouteType){
+            vc.stack.pop()
         
              vc.stopRecording(nil)
                 //vc.prevSiriActivity = kStopRecordingType
 
              }
         
-        if(userActivity.activityType == kStopRecordingType &&  vc.prevSiriActivity == kExperimentRouteType){
+        if(userActivity.activityType == kStopRecordingType &&  kNewSingleUseRouteType == vc.stack.peek() ){
              
-        
-             vc.stopRecording(nil)
-                //vc.prevSiriActivity = kStopRecordingType
-
-             }
-        
-        if(userActivity.activityType == kStopRecordingType ){
-             
-        
+            vc.stack.push(kStopRecordingType)
              vc.stopRecording(nil)
                 //vc.prevSiriActivity = kStopRecordingType
 
              }
         
         
-               if(userActivity.activityType == kStartNavigationType &&  vc.prevSiriActivity == kStopRecordingType ){
-             
+        if(userActivity.activityType == kStartNavigationType &&  vc.stack.peek() == kStopRecordingType ){
+           
                 vc.startNavigation(nil)
+            vc.stack.pop()
+            vc.stack.pop()
             
 
                

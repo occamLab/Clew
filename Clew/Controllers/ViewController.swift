@@ -110,6 +110,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// How long to wait (in seconds) between the alignment request and grabbing the transform
     static var alignmentWaitingPeriod = 5
     /// keep count of conditions routes
+    ///
     
     static var ConditionsCount = 0
    // static var ConditionsCount = nav.crembs
@@ -260,7 +261,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         
         ///
   ///      set s
-     
+        stack = Stack()
+        
+        stack.push("start")
         if(!setShortcutsDisplay){
         for element in  siriShortcutDisplayList{
             print("mdump")
@@ -917,8 +920,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
 //        updateExperiment()
         let userDefaults: UserDefaults = UserDefaults.standard
         //todel
-        // reintialise everythin for test puposes
-        UserDefaults.standard.setValue(false, forKey: "siriShortcutStartNavigatingRoute")
+        //reintialise everythin for test puposes
+        //UserDefaults.standard.setValue(false, forKey: "siriShortcutStartNavigatingRoute")
         UserDefaults.standard.setValue(false, forKey: "siriShortcutAlert")
         UserDefaults.standard.setValue(false, forKey: "singleUseRouteExperimentFlag")
         UserDefaults.standard.setValue(false, forKey: "experimentRouteFlag")
@@ -932,18 +935,18 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         UserDefaults.standard.setValue(recondtions, forKey: "experimentConditonsDico")
        
         
-        UserDefaults.standard.setValue(false, forKey: "siriShortcutExperimentRoute")
+    //    UserDefaults.standard.setValue(false, forKey: "siriShortcutExperimentRoute")
         
       //  UserDefaults.standard.setValue([""], forKey: "siriShortcutDisplayList")
         let tConditions: Dictionary? =  userDefaults.dictionary(forKey: "conditionsDico")
         
         print("After tCondition")
         print(tConditions)
-//        if(!siriShortcutAlert){
-//
-//            showSignificantChangesHandsFreeAlert()
-//            UserDefaults.standard.setValue(true, forKey: "siriShortcutAlert")
-//        }
+        if(!siriShortcutAlert){
+
+            showSignificantChangesHandsFreeAlert()
+            UserDefaults.standard.setValue(true, forKey: "siriShortcutAlert")
+        }
         
         
         
@@ -1769,6 +1772,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
 
     /// true if we should prompt the user to rate route navigation and then send log data to the cloud
     var sendLogs: Bool!
+    ///
+    ///used in app delegate to determine which states are valid to transitin to when using siri shortcuts. 
+    var stack: Stack!
+    
     
     /// The length of time that the timer will run for
     var timerLength: Int!
@@ -1781,10 +1788,16 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     var nextCondition: String!
     ///list of condition to randomise from
     var conditionsList:[String]! = ["lanyard", "none", "bracing"]
-
-    var setShortcutsDisplay: Bool = false
+///used in AppDelegate to detemine if a state transition is valid
+  
     
+    var setShortcutsDisplay: Bool = false
+    // dictionary that holds the state of the experiment in Single user route, where:
+    //keys: String: conditions names,
+    //values: Any: number of times this conditons has been completed.
+    // stored in settings history.
     var conditionsDico: [String :Any]!
+    
     var experimentConditonsDico: [String :Any]!
     // stores sirishorcuts phrases to display on burger menu
     var siriShortcutDisplayList : [String]!
