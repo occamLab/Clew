@@ -31,7 +31,7 @@ import AudioToolbox
 import MediaPlayer
 import VectorMath
 import Firebase
-import SRCountdownTimer
+//import SRCountdownTimer
 import SwiftUI
 import Firebase
 import ARDataLogger
@@ -285,8 +285,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     ///
     /// - Parameter announceArrival: a Boolean that indicates whether the user's arrival should be announced (true means the user has arrived)
     func handleStateTransitionToMainScreen(announceArrival: Bool) {
-        arLogger.finalizeTrial()
-        arLogger.startTrial()
+        //arLogger.finalizeTrial()
+        //arLogger.startTrial()
         // cancel the timer that announces tracking errors
         trackingErrorsAnnouncementTimer?.invalidate()
         // if the ARSession is running, pause it to conserve battery
@@ -767,7 +767,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         enterCodeIDController.remove()
         manageRoutesController.remove()
         routeOptionsController?.dismiss(animated: false)
-
+        endNavigationController?.remove()
         #endif
         rootContainerView.countdownTimer.isHidden = true
     }
@@ -907,6 +907,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// saving route name VC
     var nameSavedRouteController: UIViewController!
+    
+    var endNavigationController: UIViewController?
     #endif
     
 //    /// saving route code ID VC
@@ -982,6 +984,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                                                                        width: UIConstants.buttonFrameWidth * 1,
                                                                        height: UIScreen.main.bounds.size.height*0.85)
         nameCodeIDController.view.backgroundColor = .clear
+        
+        
+        endNavigationController = UIHostingController(rootView: EndNavigationScreen(vc: self))
+        endNavigationController?.view.frame = CGRect(x: 0,
+                                                                       y: UIScreen.main.bounds.size.height*0.15,
+                                                                       width: UIConstants.buttonFrameWidth * 1,
+                                                                       height: UIScreen.main.bounds.size.height*0.85)
+        endNavigationController?.view.backgroundColor = .clear
         #endif
         
         
@@ -1060,6 +1070,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 }
             }
         }
+        arLogger.startTrial()
     }
     
     /// Create the audio player objects for the various app sounds.  Creating them ahead of time helps reduce latency when playing them later.
@@ -2142,6 +2153,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
         #if !APPCLIP
         self.surveyInterface.sendLogDataHelper(pathStatus: nil, vc: self)
+        self.hideAllViewsHelper()
+        self.add(self.endNavigationController!)
+        print("end screen displayed")
         #else
         self.state = .endScreen(completedRoute: false)
         #endif
@@ -2412,6 +2426,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 
                 #if !APPCLIP
                 self.surveyInterface.sendLogDataHelper(pathStatus: nil, announceArrival: true, vc: self)
+                self.hideAllViewsHelper()
+                self.add(self.endNavigationController!)
+                print("end screen displayed")
                 #else
                 self.state = .endScreen(completedRoute: true)
                 #endif

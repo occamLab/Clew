@@ -7,7 +7,6 @@ def all_pods
   # Pods for Clew
   pod 'InAppSettingsKit'
   pod 'VectorMath', '~> 0.3'
-  pod 'SRCountdownTimer'
   pod 'PRTween', '~> 0.1'
 end
 

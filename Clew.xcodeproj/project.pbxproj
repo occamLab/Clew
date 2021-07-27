@@ -11,12 +11,10 @@
 		1F27632422FCBB9900E1FCF8 /* BurgerMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F27632222FCBB6E00E1FCF8 /* BurgerMenuViewController.swift */; };
 		1F2971A522DF60F700B896C6 /* HelpCompiler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2B9D7022C3B50D00317DC8 /* HelpCompiler.swift */; };
 		1F2B9D7222C3B50D00317DC8 /* HelpCompiler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2B9D7022C3B50D00317DC8 /* HelpCompiler.swift */; };
-		1F2B9D8722C5446B00317DC8 /* (null) in Resources */ = {isa = PBXBuildFile; };
-		2748B8490FCBA95C7AA028D7 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
-		3DBEC496C9116A423F25BE4D /* Pods_UIKit_Clip.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6C2332AC2227FD725BAB3B4 /* Pods_UIKit_Clip.framework */; };
+		1F2B9D8722C5446B00317DC8 /* BuildFile in Resources */ = {isa = PBXBuildFile; };
+		371A46B5E20F66A9DB4F8726 /* Pods_UIKit_Clip.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F537ADD044C8642577A1484 /* Pods_UIKit_Clip.framework */; };
 		4D6B00E51F33C9B800952242 /* Crumb.obj in Resources */ = {isa = PBXBuildFile; fileRef = 4D6B00E41F33C85500952242 /* Crumb.obj */; };
 		4DF05CC81F34EB6B008B0E31 /* Confirm.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4DF05CC71F34EB56008B0E31 /* Confirm.mp3 */; };
-		748B6F898F06CEE869609B9F /* Pods_Clew.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 046467AC747558B8CAE722D0 /* Pods_Clew.framework */; };
 		772E4563236CC155008EF6AC /* SettingsAndHelp.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 772E4566236CC155008EF6AC /* SettingsAndHelp.storyboard */; };
 		772E4564236CC155008EF6AC /* SettingsAndHelp.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 772E4566236CC155008EF6AC /* SettingsAndHelp.storyboard */; };
 		77365B182343ECBA008BC35C /* BurgerMenu.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 77365B1B2343ECBA008BC35C /* BurgerMenu.storyboard */; };
@@ -35,18 +33,19 @@
 		82AD6A26252F80AA00902A11 /* speaker.mtl in Resources */ = {isa = PBXBuildFile; fileRef = 82AD6A24252F80AA00902A11 /* speaker.mtl */; };
 		82BC47FE2640383300C7D364 /* Surveys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82BC47FD2640383300C7D364 /* Surveys.swift */; };
 		82BC47FF2640396700C7D364 /* Surveys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82BC47FD2640383300C7D364 /* Surveys.swift */; };
-		82D94B63266FC7CF00EE2C1C /* SimpleForm in Frameworks */ = {isa = PBXBuildFile; productRef = 82D94B62266FC7CF00EE2C1C /* SimpleForm */; };
-		82D94B65266FC86200EE2C1C /* SimpleForm in Frameworks */ = {isa = PBXBuildFile; productRef = 82D94B64266FC86200EE2C1C /* SimpleForm */; };
-		8614596626AB35E500CF4840 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 8614596526AB35E500CF4840 /* FirebaseAnalytics */; };
-		8614596826AB35E500CF4840 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 8614596726AB35E500CF4840 /* FirebaseStorage */; };
-		8614596A26AB35E500CF4840 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 8614596926AB35E500CF4840 /* FirebaseAuth */; };
-		8614596C26AB35E500CF4840 /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = 8614596B26AB35E500CF4840 /* FirebaseDatabase */; };
-		8614596E26AB360C00CF4840 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 8614596D26AB360C00CF4840 /* FirebaseAuth */; };
-		8614597026AB362500CF4840 /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = 8614596F26AB362500CF4840 /* FirebaseDatabase */; };
-		8614597226AB363100CF4840 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 8614597126AB363100CF4840 /* FirebaseAnalytics */; };
-		8614597426AB363800CF4840 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 8614597326AB363800CF4840 /* FirebaseStorage */; };
-		8614597626AB36EC00CF4840 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 8614597526AB36EC00CF4840 /* FirebaseStorage */; };
-		8614597926AB3F4F00CF4840 /* ARDataLogger in Frameworks */ = {isa = PBXBuildFile; productRef = 8614597826AB3F4F00CF4840 /* ARDataLogger */; };
+		82D94B63266FC7CF00EE2C1C /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 82D94B62266FC7CF00EE2C1C /* SwiftPackageProductDependency */; };
+		82D94B65266FC86200EE2C1C /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 82D94B64266FC86200EE2C1C /* SwiftPackageProductDependency */; };
+		8392F59EB44C08F44418DA86 /* Pods_Clew.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 93086D2A8C7861CB8FFFF31A /* Pods_Clew.framework */; };
+		8614596626AB35E500CF4840 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 8614596526AB35E500CF4840 /* SwiftPackageProductDependency */; };
+		8614596826AB35E500CF4840 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 8614596726AB35E500CF4840 /* SwiftPackageProductDependency */; };
+		8614596A26AB35E500CF4840 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 8614596926AB35E500CF4840 /* SwiftPackageProductDependency */; };
+		8614596C26AB35E500CF4840 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 8614596B26AB35E500CF4840 /* SwiftPackageProductDependency */; };
+		8614596E26AB360C00CF4840 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 8614596D26AB360C00CF4840 /* SwiftPackageProductDependency */; };
+		8614597026AB362500CF4840 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 8614596F26AB362500CF4840 /* SwiftPackageProductDependency */; };
+		8614597226AB363100CF4840 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 8614597126AB363100CF4840 /* SwiftPackageProductDependency */; };
+		8614597426AB363800CF4840 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 8614597326AB363800CF4840 /* SwiftPackageProductDependency */; };
+		8614597626AB36EC00CF4840 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 8614597526AB36EC00CF4840 /* SwiftPackageProductDependency */; };
+		8614597926AB3F4F00CF4840 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 8614597826AB3F4F00CF4840 /* SwiftPackageProductDependency */; };
 		98006F7B268382D600E61861 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98006F7A268382D600E61861 /* SceneDelegate.swift */; };
 		98006F82268382D800E61861 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 98006F81268382D800E61861 /* Assets.xcassets */; };
 		98006F85268382D800E61861 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 98006F83268382D800E61861 /* LaunchScreen.storyboard */; };
@@ -92,6 +91,7 @@
 		9815CEFC268512AB008FCF74 /* clew-test.crd in Resources */ = {isa = PBXBuildFile; fileRef = 9815CEF7268512AB008FCF74 /* clew-test.crd */; };
 		9819E2F2268BA6AB0008CA82 /* PauseTrackingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470EE622C119F4001092A4 /* PauseTrackingController.swift */; };
 		98260258268CC1DB00D66811 /* speaker.obj in Resources */ = {isa = PBXBuildFile; fileRef = 823DA453252F7EA800BB5E6B /* speaker.obj */; };
+		9826B6D526B07C3F00EC563C /* End Navigation Screen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9826B6D426B07C3F00EC563C /* End Navigation Screen.swift */; };
 		984FBD312695EC0200B63A6A /* SetTagController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 984FBD302695EC0200B63A6A /* SetTagController.swift */; };
 		984FBD322695EC0200B63A6A /* SetTagController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 984FBD302695EC0200B63A6A /* SetTagController.swift */; };
 		984FBD342696179800B63A6A /* NameCodeIDController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 984FBD332696179800B63A6A /* NameCodeIDController.swift */; };
@@ -100,7 +100,6 @@
 		984FBD3C26962E4900B63A6A /* EnterCodeIDView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 984FBD3B26962E4900B63A6A /* EnterCodeIDView.swift */; };
 		984FBD3D26962E4900B63A6A /* EnterCodeIDView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 984FBD3B26962E4900B63A6A /* EnterCodeIDView.swift */; };
 		984FBD3E26962E4900B63A6A /* EnterCodeIDView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 984FBD3B26962E4900B63A6A /* EnterCodeIDView.swift */; };
-		985CA012269CD9840031773D /* Pods_Clew_More.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 985CA011269CD9840031773D /* Pods_Clew_More.framework */; };
 		986640CE22FB68F2005AA1F6 /* NameSavedRouteController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986640CD22FB68F2005AA1F6 /* NameSavedRouteController.swift */; };
 		986640CF22FC9606005AA1F6 /* NameSavedRouteController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986640CD22FB68F2005AA1F6 /* NameSavedRouteController.swift */; };
 		987BA6F4268E53C0008B129E /* StartNavigationPopoverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 987BA6F3268E53C0008B129E /* StartNavigationPopoverView.swift */; };
@@ -201,11 +200,11 @@
 		98FF7AE1269CC172008C64E5 /* speaker.obj in Resources */ = {isa = PBXBuildFile; fileRef = 823DA453252F7EA800BB5E6B /* speaker.obj */; };
 		98FF7AE2269CC175008C64E5 /* Crumb.obj in Resources */ = {isa = PBXBuildFile; fileRef = 4D6B00E41F33C85500952242 /* Crumb.obj */; };
 		98FF7AE3269CC178008C64E5 /* speaker.mtl in Resources */ = {isa = PBXBuildFile; fileRef = 82AD6A24252F80AA00902A11 /* speaker.mtl */; };
-		98FF7AEC269CC1F2008C64E5 /* SimpleForm in Frameworks */ = {isa = PBXBuildFile; productRef = 98FF7AEB269CC1F2008C64E5 /* SimpleForm */; };
-		B0A563F6FE1007A2716DC876 /* Pods_Clew_Dev.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3532E390954571B93729786A /* Pods_Clew_Dev.framework */; };
+		98FF7AEC269CC1F2008C64E5 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 98FF7AEB269CC1F2008C64E5 /* SwiftPackageProductDependency */; };
+		A7A52ABE797C06D54FDF7483 /* Pods_Clew_More.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C425443A7035B60DFEAFB3 /* Pods_Clew_More.framework */; };
 		B7EB59E220F693EB00FBBC6A /* Confirm.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4DF05CC71F34EB56008B0E31 /* Confirm.mp3 */; };
 		B7EB59E320F693EB00FBBC6A /* Crumb.obj in Resources */ = {isa = PBXBuildFile; fileRef = 4D6B00E41F33C85500952242 /* Crumb.obj */; };
-		D2D61E81E40DC0EEF6D25EBA /* Pods_Clew_Dev.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 98006FAE2683838000E61861 /* Pods_Clew_Dev.framework */; };
+		DB500DE42B5CE9DEDBB25010 /* Pods_Clew_Dev.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FFFDAAB1A1D0BF650C697BC3 /* Pods_Clew_Dev.framework */; };
 		E538EF4F22D3BFEC004216E9 /* TransparentTouchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E538EF4E22D3BFEC004216E9 /* TransparentTouchView.swift */; };
 		E538EF5022D3BFEC004216E9 /* TransparentTouchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E538EF4E22D3BFEC004216E9 /* TransparentTouchView.swift */; };
 		E5470EF622C119F5001092A4 /* RecordButtonKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470EAB22C119F4001092A4 /* RecordButtonKit.swift */; };
@@ -361,15 +360,18 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		046467AC747558B8CAE722D0 /* Pods_Clew.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Clew.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		08FA9C31721F9F8CDCC23AE9 /* Pods-Clew.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Clew/Pods-Clew.debug.xcconfig"; sourceTree = "<group>"; };
+		00C425443A7035B60DFEAFB3 /* Pods_Clew_More.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Clew_More.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		0F32C110E340068D62EA3932 /* Pods-UIKit Clip.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UIKit Clip.debug.xcconfig"; path = "Target Support Files/Pods-UIKit Clip/Pods-UIKit Clip.debug.xcconfig"; sourceTree = "<group>"; };
+		0F537ADD044C8642577A1484 /* Pods_UIKit_Clip.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_UIKit_Clip.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F27632222FCBB6E00E1FCF8 /* BurgerMenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BurgerMenuViewController.swift; sourceTree = "<group>"; };
 		1F2B9D7022C3B50D00317DC8 /* HelpCompiler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HelpCompiler.swift; sourceTree = "<group>"; };
-		3532E390954571B93729786A /* Pods_Clew_Dev.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Clew_Dev.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		448C1A68927B7E4075A5382A /* Pods-UIKit Clip.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UIKit Clip.debug.xcconfig"; path = "Pods/Target Support Files/Pods-UIKit Clip/Pods-UIKit Clip.debug.xcconfig"; sourceTree = "<group>"; };
+		272EE1EC3B03BFEB21C69F59 /* Pods-Clew.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew.debug.xcconfig"; path = "Target Support Files/Pods-Clew/Pods-Clew.debug.xcconfig"; sourceTree = "<group>"; };
+		2F90CAA64A3BAA7E25A7F923 /* Pods-Clew-More.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew-More.release.xcconfig"; path = "Target Support Files/Pods-Clew-More/Pods-Clew-More.release.xcconfig"; sourceTree = "<group>"; };
+		4D4826DE15B4321C963EA352 /* Pods-UIKit Clip.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UIKit Clip.release.xcconfig"; path = "Target Support Files/Pods-UIKit Clip/Pods-UIKit Clip.release.xcconfig"; sourceTree = "<group>"; };
 		4D6B00C01F33C1C400952242 /* Clew.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Clew.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4D6B00E41F33C85500952242 /* Crumb.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = Crumb.obj; sourceTree = "<group>"; };
 		4DF05CC71F34EB56008B0E31 /* Confirm.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = Confirm.mp3; sourceTree = "<group>"; };
+		61C589445D2C1030E4D56570 /* Pods-Clew.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew.release.xcconfig"; path = "Target Support Files/Pods-Clew/Pods-Clew.release.xcconfig"; sourceTree = "<group>"; };
 		772E455F235F91C6008EF6AC /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
 		772E4562236CC0A7008EF6AC /* es */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = es; path = es.lproj/BurgerMenu.storyboard; sourceTree = "<group>"; };
 		772E4565236CC155008EF6AC /* es */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = es; path = es.lproj/SettingsAndHelp.storyboard; sourceTree = "<group>"; };
@@ -377,6 +379,7 @@
 		772E4568236CC7BE008EF6AC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/BurgerMenu.storyboard; sourceTree = "<group>"; };
 		7743819F2343E3F8003EBD85 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/SettingsAndHelp.strings; sourceTree = "<group>"; };
 		77467DAE22BBC1D300FA7DEE /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		7DB15BEF7E1EBDCA803A736F /* Pods-Clew Dev.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew Dev.release.xcconfig"; path = "Target Support Files/Pods-Clew Dev/Pods-Clew Dev.release.xcconfig"; sourceTree = "<group>"; };
 		8206436A23B556A200DEE347 /* es */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = es; path = es.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
 		821CF7832513264400A7B3C2 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		821CF7892513264400A7B3C2 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -396,7 +399,7 @@
 		82E4A5CE262A26DC000BEB44 /* Clew.entitlements */ = {isa = PBXFileReference; explicitFileType = text.plist.entitlements; path = Clew.entitlements; sourceTree = "<group>"; };
 		82F2DDD122E26A44005CD7D0 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		82F2DDD322E26A44005CD7D0 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/SettingsAndHelp.strings; sourceTree = "<group>"; };
-		85A1A72DC19F87F15B738291 /* Pods-Clew Dev.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew Dev.release.xcconfig"; path = "Pods/Target Support Files/Pods-Clew Dev/Pods-Clew Dev.release.xcconfig"; sourceTree = "<group>"; };
+		93086D2A8C7861CB8FFFF31A /* Pods_Clew.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Clew.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		98006F76268382D600E61861 /* UIKit Clip.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "UIKit Clip.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		98006F7A268382D600E61861 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		98006F81268382D800E61861 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -409,12 +412,12 @@
 		98006F97268382D800E61861 /* UIKit ClipUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "UIKit ClipUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		98006F9B268382D800E61861 /* UIKit_ClipUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIKit_ClipUITests.swift; sourceTree = "<group>"; };
 		98006F9D268382D800E61861 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		98006FAE2683838000E61861 /* Pods_Clew_Dev.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Pods_Clew_Dev.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9805366626838E130065E80F /* InAppSettingsKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = InAppSettingsKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		980536732683C1D10065E80F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9815CEEA26851049008FCF74 /* test-route2.crd */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = "test-route2.crd"; sourceTree = "<group>"; };
 		9815CEF6268512AB008FCF74 /* clew-dev-route.crd */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = "clew-dev-route.crd"; sourceTree = "<group>"; };
 		9815CEF7268512AB008FCF74 /* clew-test.crd */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = "clew-test.crd"; sourceTree = "<group>"; };
+		9826B6D426B07C3F00EC563C /* End Navigation Screen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "End Navigation Screen.swift"; sourceTree = "<group>"; };
 		98384367269C9CC800B6CFC7 /* Clew_Public_SpacesApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Clew_Public_SpacesApp.swift; sourceTree = "<group>"; };
 		98384369269C9CC800B6CFC7 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		9838436B269C9CC900B6CFC7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -423,7 +426,6 @@
 		984FBD302695EC0200B63A6A /* SetTagController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetTagController.swift; sourceTree = "<group>"; };
 		984FBD332696179800B63A6A /* NameCodeIDController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NameCodeIDController.swift; sourceTree = "<group>"; };
 		984FBD3B26962E4900B63A6A /* EnterCodeIDView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterCodeIDView.swift; sourceTree = "<group>"; };
-		985CA011269CD9840031773D /* Pods_Clew_More.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Pods_Clew_More.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		986640CD22FB68F2005AA1F6 /* NameSavedRouteController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NameSavedRouteController.swift; sourceTree = "<group>"; };
 		987BA6F3268E53C0008B129E /* StartNavigationPopoverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartNavigationPopoverView.swift; sourceTree = "<group>"; };
 		98A2DABA26A709C400158F83 /* NameSavedRouteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NameSavedRouteView.swift; sourceTree = "<group>"; };
@@ -452,12 +454,9 @@
 		98FF7A98269CBFE9008C64E5 /* Clew-More.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Clew-More.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		98FF7AA1269CBFEB008C64E5 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		98FF7AA3269CBFEB008C64E5 /* Info.plist */ = {isa = PBXFileReference; explicitFileType = text.plist.entitlements; path = Info.plist; sourceTree = "<group>"; };
-		9EDA0709B865627072DE3218 /* Pods-Clew-More.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew-More.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Clew-More/Pods-Clew-More.debug.xcconfig"; sourceTree = "<group>"; };
-		9EDFDA535567F76C1EB516EF /* Pods-Clew-More.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew-More.release.xcconfig"; path = "Pods/Target Support Files/Pods-Clew-More/Pods-Clew-More.release.xcconfig"; sourceTree = "<group>"; };
-		B6E04179254C52D5DB1CCBA5 /* Pods-UIKit Clip.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UIKit Clip.release.xcconfig"; path = "Pods/Target Support Files/Pods-UIKit Clip/Pods-UIKit Clip.release.xcconfig"; sourceTree = "<group>"; };
+		9AD67605C8A0098F11E72209 /* Pods-Clew Dev.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew Dev.debug.xcconfig"; path = "Target Support Files/Pods-Clew Dev/Pods-Clew Dev.debug.xcconfig"; sourceTree = "<group>"; };
 		B7EB59EC20F693EB00FBBC6A /* Clew Dev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Clew Dev.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		C68778047D8E263D2FB04989 /* Pods-Clew Dev.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew Dev.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Clew Dev/Pods-Clew Dev.debug.xcconfig"; sourceTree = "<group>"; };
-		D89DDB87A8AE1A9ECEAFCEC6 /* Pods-Clew.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew.release.xcconfig"; path = "Pods/Target Support Files/Pods-Clew/Pods-Clew.release.xcconfig"; sourceTree = "<group>"; };
+		DB9C5E254344ED84CE7AE85B /* Pods-Clew-More.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew-More.debug.xcconfig"; path = "Target Support Files/Pods-Clew-More/Pods-Clew-More.debug.xcconfig"; sourceTree = "<group>"; };
 		E538EF4E22D3BFEC004216E9 /* TransparentTouchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransparentTouchView.swift; sourceTree = "<group>"; };
 		E5470EAB22C119F4001092A4 /* RecordButtonKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecordButtonKit.swift; sourceTree = "<group>"; };
 		E5470EAC22C119F4001092A4 /* AudioVisualizerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioVisualizerView.swift; sourceTree = "<group>"; };
@@ -505,8 +504,7 @@
 		E5E9016A22FB4D4A00AD0E95 /* PreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewViewController.swift; sourceTree = "<group>"; };
 		E5E9016D22FB4D4A00AD0E95 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
 		E5E9016F22FB4D4A00AD0E95 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		E6C2332AC2227FD725BAB3B4 /* Pods_UIKit_Clip.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_UIKit_Clip.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		F3E4B04419E42D13D087DFEC /* Pods_Clew_More.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Clew_More.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		FFFDAAB1A1D0BF650C697BC3 /* Pods_Clew_Dev.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Clew_Dev.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -514,13 +512,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				82D94B63266FC7CF00EE2C1C /* SimpleForm in Frameworks */,
-				8614596A26AB35E500CF4840 /* FirebaseAuth in Frameworks */,
-				2748B8490FCBA95C7AA028D7 /* (null) in Frameworks */,
-				8614596626AB35E500CF4840 /* FirebaseAnalytics in Frameworks */,
-				8614596826AB35E500CF4840 /* FirebaseStorage in Frameworks */,
-				8614596C26AB35E500CF4840 /* FirebaseDatabase in Frameworks */,
-				748B6F898F06CEE869609B9F /* Pods_Clew.framework in Frameworks */,
+				82D94B63266FC7CF00EE2C1C /* BuildFile in Frameworks */,
+				8614596A26AB35E500CF4840 /* BuildFile in Frameworks */,
+				8614596626AB35E500CF4840 /* BuildFile in Frameworks */,
+				8614596826AB35E500CF4840 /* BuildFile in Frameworks */,
+				8614596C26AB35E500CF4840 /* BuildFile in Frameworks */,
+				8392F59EB44C08F44418DA86 /* Pods_Clew.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -528,8 +525,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3DBEC496C9116A423F25BE4D /* Pods_UIKit_Clip.framework in Frameworks */,
-				8614597626AB36EC00CF4840 /* FirebaseStorage in Frameworks */,
+				8614597626AB36EC00CF4840 /* BuildFile in Frameworks */,
+				371A46B5E20F66A9DB4F8726 /* Pods_UIKit_Clip.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -551,13 +548,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				985CA012269CD9840031773D /* Pods_Clew_More.framework in Frameworks */,
-				8614596E26AB360C00CF4840 /* FirebaseAuth in Frameworks */,
-				8614597026AB362500CF4840 /* FirebaseDatabase in Frameworks */,
-				8614597226AB363100CF4840 /* FirebaseAnalytics in Frameworks */,
-				98FF7AEC269CC1F2008C64E5 /* SimpleForm in Frameworks */,
-				8614597426AB363800CF4840 /* FirebaseStorage in Frameworks */,
-				8614597926AB3F4F00CF4840 /* ARDataLogger in Frameworks */,
+				8614596E26AB360C00CF4840 /* BuildFile in Frameworks */,
+				8614597026AB362500CF4840 /* BuildFile in Frameworks */,
+				8614597226AB363100CF4840 /* BuildFile in Frameworks */,
+				98FF7AEC269CC1F2008C64E5 /* BuildFile in Frameworks */,
+				8614597426AB363800CF4840 /* BuildFile in Frameworks */,
+				8614597926AB3F4F00CF4840 /* BuildFile in Frameworks */,
+				A7A52ABE797C06D54FDF7483 /* Pods_Clew_More.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -565,9 +562,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				82D94B65266FC86200EE2C1C /* SimpleForm in Frameworks */,
-				B0A563F6FE1007A2716DC876 /* Pods_Clew_Dev.framework in Frameworks */,
-				D2D61E81E40DC0EEF6D25EBA /* Pods_Clew_Dev.framework in Frameworks */,
+				82D94B65266FC86200EE2C1C /* BuildFile in Frameworks */,
+				DB500DE42B5CE9DEDBB25010 /* Pods_Clew_Dev.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -604,9 +600,9 @@
 				98384366269C9CC800B6CFC7 /* Clew Public Spaces */,
 				98FF7A99269CBFE9008C64E5 /* Clew-More */,
 				4D6B00C11F33C1C400952242 /* Products */,
-				645269AB241294DCBFA0E1B0 /* Pods */,
 				C63B435EA8A32350A76E47DD /* Frameworks */,
 				822E27F8210E3F260024A5E3 /* Clew Dev-Info.plist */,
+				F291A592C10D0E9D32157E9D /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -622,21 +618,6 @@
 				98FF7A98269CBFE9008C64E5 /* Clew-More.app */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		645269AB241294DCBFA0E1B0 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				08FA9C31721F9F8CDCC23AE9 /* Pods-Clew.debug.xcconfig */,
-				D89DDB87A8AE1A9ECEAFCEC6 /* Pods-Clew.release.xcconfig */,
-				C68778047D8E263D2FB04989 /* Pods-Clew Dev.debug.xcconfig */,
-				85A1A72DC19F87F15B738291 /* Pods-Clew Dev.release.xcconfig */,
-				448C1A68927B7E4075A5382A /* Pods-UIKit Clip.debug.xcconfig */,
-				B6E04179254C52D5DB1CCBA5 /* Pods-UIKit Clip.release.xcconfig */,
-				9EDA0709B865627072DE3218 /* Pods-Clew-More.debug.xcconfig */,
-				9EDFDA535567F76C1EB516EF /* Pods-Clew-More.release.xcconfig */,
-			);
-			name = Pods;
 			sourceTree = "<group>";
 		};
 		98006F77268382D600E61861 /* UIKit Clip */ = {
@@ -722,18 +703,16 @@
 		C63B435EA8A32350A76E47DD /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				985CA011269CD9840031773D /* Pods_Clew_More.framework */,
 				98CC59BE269CD4C9002EF6D7 /* InAppSettingsKit.framework */,
 				98CC59BB269CD48C002EF6D7 /* InAppSettingsKit.bundle */,
 				98CC59B2269CCE31002EF6D7 /* FirebaseAnalytics.xcframework */,
 				98CC59AE269CCE11002EF6D7 /* FirebaseCore.framework */,
 				9805366626838E130065E80F /* InAppSettingsKit.framework */,
-				98006FAE2683838000E61861 /* Pods_Clew_Dev.framework */,
-				3532E390954571B93729786A /* Pods_Clew_Dev.framework */,
 				E5E9015322FB4CEB00AD0E95 /* QuickLook.framework */,
-				E6C2332AC2227FD725BAB3B4 /* Pods_UIKit_Clip.framework */,
-				F3E4B04419E42D13D087DFEC /* Pods_Clew_More.framework */,
-				046467AC747558B8CAE722D0 /* Pods_Clew.framework */,
+				93086D2A8C7861CB8FFFF31A /* Pods_Clew.framework */,
+				FFFDAAB1A1D0BF650C697BC3 /* Pods_Clew_Dev.framework */,
+				00C425443A7035B60DFEAFB3 /* Pods_Clew_More.framework */,
+				0F537ADD044C8642577A1484 /* Pods_UIKit_Clip.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -868,6 +847,7 @@
 				98AB6071269889B700613BB5 /* LoadFromAppClipView.swift */,
 				98A2DABA26A709C400158F83 /* NameSavedRouteView.swift */,
 				98A2DAC426A76ACA00158F83 /* NameCodeIDView.swift */,
+				9826B6D426B07C3F00EC563C /* End Navigation Screen.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -892,6 +872,21 @@
 			path = "route-quicklook";
 			sourceTree = "<group>";
 		};
+		F291A592C10D0E9D32157E9D /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				272EE1EC3B03BFEB21C69F59 /* Pods-Clew.debug.xcconfig */,
+				61C589445D2C1030E4D56570 /* Pods-Clew.release.xcconfig */,
+				9AD67605C8A0098F11E72209 /* Pods-Clew Dev.debug.xcconfig */,
+				7DB15BEF7E1EBDCA803A736F /* Pods-Clew Dev.release.xcconfig */,
+				DB9C5E254344ED84CE7AE85B /* Pods-Clew-More.debug.xcconfig */,
+				2F90CAA64A3BAA7E25A7F923 /* Pods-Clew-More.release.xcconfig */,
+				0F32C110E340068D62EA3932 /* Pods-UIKit Clip.debug.xcconfig */,
+				4D4826DE15B4321C963EA352 /* Pods-UIKit Clip.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -899,13 +894,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 4D6B00D21F33C1C400952242 /* Build configuration list for PBXNativeTarget "Clew" */;
 			buildPhases = (
-				FC3FD998D963F5FE0C5C7B8E /* [CP] Check Pods Manifest.lock */,
+				AF4436774F25D06D80C718BF /* [CP] Check Pods Manifest.lock */,
 				4D6B00BC1F33C1C400952242 /* Sources */,
 				4D6B00BD1F33C1C400952242 /* Frameworks */,
 				4D6B00BE1F33C1C400952242 /* Resources */,
-				7D513714488F266F881D7CB7 /* [CP] Embed Pods Frameworks */,
 				E5E9016222FB4CEB00AD0E95 /* Embed App Extensions */,
 				98576739267A8A5A00ACA326 /* Embed App Clips */,
+				48D4E087413FEE98F8423D29 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -915,11 +910,11 @@
 			);
 			name = Clew;
 			packageProductDependencies = (
-				82D94B62266FC7CF00EE2C1C /* SimpleForm */,
-				8614596526AB35E500CF4840 /* FirebaseAnalytics */,
-				8614596726AB35E500CF4840 /* FirebaseStorage */,
-				8614596926AB35E500CF4840 /* FirebaseAuth */,
-				8614596B26AB35E500CF4840 /* FirebaseDatabase */,
+				82D94B62266FC7CF00EE2C1C /* SwiftPackageProductDependency */,
+				8614596526AB35E500CF4840 /* SwiftPackageProductDependency */,
+				8614596726AB35E500CF4840 /* SwiftPackageProductDependency */,
+				8614596926AB35E500CF4840 /* SwiftPackageProductDependency */,
+				8614596B26AB35E500CF4840 /* SwiftPackageProductDependency */,
 			);
 			productName = Clew;
 			productReference = 4D6B00C01F33C1C400952242 /* Clew.app */;
@@ -929,11 +924,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 98006FA1268382D800E61861 /* Build configuration list for PBXNativeTarget "UIKit Clip" */;
 			buildPhases = (
-				392E1F161A6DBE32CD3029F3 /* [CP] Check Pods Manifest.lock */,
+				8A34FC35125184E7329805E2 /* [CP] Check Pods Manifest.lock */,
 				98006F72268382D600E61861 /* Sources */,
 				98006F73268382D600E61861 /* Frameworks */,
 				98006F74268382D600E61861 /* Resources */,
-				C8186AE9AD8154C6B8DAE3E8 /* [CP] Embed Pods Frameworks */,
+				0F128D3D7113F7A2212C93FF /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -941,7 +936,7 @@
 			);
 			name = "UIKit Clip";
 			packageProductDependencies = (
-				8614597526AB36EC00CF4840 /* FirebaseStorage */,
+				8614597526AB36EC00CF4840 /* SwiftPackageProductDependency */,
 			);
 			productName = "UIKit Clip";
 			productReference = 98006F76268382D600E61861 /* UIKit Clip.app */;
@@ -987,11 +982,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 98FF7AA6269CBFEB008C64E5 /* Build configuration list for PBXNativeTarget "Clew-More" */;
 			buildPhases = (
-				69A619C2162B47D3C96DDE47 /* [CP] Check Pods Manifest.lock */,
+				61005431B85B28CBA6975F8D /* [CP] Check Pods Manifest.lock */,
 				98FF7A94269CBFE9008C64E5 /* Sources */,
 				98FF7A95269CBFE9008C64E5 /* Frameworks */,
 				98FF7A96269CBFE9008C64E5 /* Resources */,
-				B2B3EA1684A4FE17C61D5314 /* [CP] Embed Pods Frameworks */,
+				9BEE32B9D6841B0ACC94FBC0 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -999,12 +994,12 @@
 			);
 			name = "Clew-More";
 			packageProductDependencies = (
-				98FF7AEB269CC1F2008C64E5 /* SimpleForm */,
-				8614596D26AB360C00CF4840 /* FirebaseAuth */,
-				8614596F26AB362500CF4840 /* FirebaseDatabase */,
-				8614597126AB363100CF4840 /* FirebaseAnalytics */,
-				8614597326AB363800CF4840 /* FirebaseStorage */,
-				8614597826AB3F4F00CF4840 /* ARDataLogger */,
+				98FF7AEB269CC1F2008C64E5 /* SwiftPackageProductDependency */,
+				8614596D26AB360C00CF4840 /* SwiftPackageProductDependency */,
+				8614596F26AB362500CF4840 /* SwiftPackageProductDependency */,
+				8614597126AB363100CF4840 /* SwiftPackageProductDependency */,
+				8614597326AB363800CF4840 /* SwiftPackageProductDependency */,
+				8614597826AB3F4F00CF4840 /* SwiftPackageProductDependency */,
 			);
 			productName = "Clew-More";
 			productReference = 98FF7A98269CBFE9008C64E5 /* Clew-More.app */;
@@ -1014,12 +1009,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = B7EB59E920F693EB00FBBC6A /* Build configuration list for PBXNativeTarget "Clew Dev" */;
 			buildPhases = (
-				B7EB59D820F693EB00FBBC6A /* [CP] Check Pods Manifest.lock */,
+				93228D10ADC67BC5922081A7 /* [CP] Check Pods Manifest.lock */,
 				B7EB59D920F693EB00FBBC6A /* Sources */,
 				B7EB59DF20F693EB00FBBC6A /* Frameworks */,
 				B7EB59E120F693EB00FBBC6A /* Resources */,
-				B7EB59E820F693EB00FBBC6A /* [CP] Embed Pods Frameworks */,
 				98C288E2268A422000B59B7F /* Embed App Clips */,
+				857A28BB6B1164F06C55D7D0 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1028,7 +1023,7 @@
 			);
 			name = "Clew Dev";
 			packageProductDependencies = (
-				82D94B64266FC86200EE2C1C /* SimpleForm */,
+				82D94B64266FC86200EE2C1C /* SwiftPackageProductDependency */,
 			);
 			productName = Clew;
 			productReference = B7EB59EC20F693EB00FBBC6A /* Clew Dev.app */;
@@ -1106,9 +1101,9 @@
 			);
 			mainGroup = 4D6B00B71F33C1C400952242;
 			packageReferences = (
-				82D94B61266FC7CF00EE2C1C /* XCRemoteSwiftPackageReference "SimpleForm" */,
-				8614596426AB35E500CF4840 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
-				8614597726AB3F4F00CF4840 /* XCRemoteSwiftPackageReference "ARDataLogger" */,
+				82D94B61266FC7CF00EE2C1C /* RemoteSwiftPackageReference */,
+				8614596426AB35E500CF4840 /* RemoteSwiftPackageReference */,
+				8614597726AB3F4F00CF4840 /* RemoteSwiftPackageReference */,
 			);
 			productRefGroup = 4D6B00C11F33C1C400952242 /* Products */;
 			projectDirPath = "";
@@ -1143,7 +1138,7 @@
 				988A7577269CDF32008D6F34 /* route-quicklook.appex in Resources */,
 				98AB6077269DDCC700613BB5 /* anchorInFrame.mp3 in Resources */,
 				9815CEF8268512AB008FCF74 /* clew-dev-route.crd in Resources */,
-				1F2B9D8722C5446B00317DC8 /* (null) in Resources */,
+				1F2B9D8722C5446B00317DC8 /* BuildFile in Resources */,
 				9815CEEB26851049008FCF74 /* test-route2.crd in Resources */,
 				82AD6A25252F80AA00902A11 /* speaker.mtl in Resources */,
 				E5D1695E22E103A0008754D0 /* Localizable.strings in Resources */,
@@ -1252,29 +1247,51 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		392E1F161A6DBE32CD3029F3 /* [CP] Check Pods Manifest.lock */ = {
+		0F128D3D7113F7A2212C93FF /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputFileListPaths = (
-			);
 			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
+				"${PODS_ROOT}/Target Support Files/Pods-UIKit Clip/Pods-UIKit Clip-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/PRTween/PRTween.framework",
+				"${BUILT_PRODUCTS_DIR}/VectorMath/VectorMath.framework",
+				"${BUILT_PRODUCTS_DIR}/SRCountdownTimer/SRCountdownTimer.framework",
 			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
+			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-UIKit Clip-checkManifestLockResult.txt",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PRTween.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/VectorMath.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SRCountdownTimer.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-UIKit Clip/Pods-UIKit Clip-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		69A619C2162B47D3C96DDE47 /* [CP] Check Pods Manifest.lock */ = {
+		48D4E087413FEE98F8423D29 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Clew/Pods-Clew-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/InAppSettingsKit/InAppSettingsKit.framework",
+				"${BUILT_PRODUCTS_DIR}/PRTween/PRTween.framework",
+				"${BUILT_PRODUCTS_DIR}/VectorMath/VectorMath.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/InAppSettingsKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PRTween.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/VectorMath.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Clew/Pods-Clew-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		61005431B85B28CBA6975F8D /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1296,73 +1313,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		7D513714488F266F881D7CB7 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Clew/Pods-Clew-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/InAppSettingsKit/InAppSettingsKit.framework",
-				"${BUILT_PRODUCTS_DIR}/PRTween/PRTween.framework",
-				"${BUILT_PRODUCTS_DIR}/SRCountdownTimer/SRCountdownTimer.framework",
-				"${BUILT_PRODUCTS_DIR}/VectorMath/VectorMath.framework",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/InAppSettingsKit.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PRTween.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SRCountdownTimer.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/VectorMath.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Clew/Pods-Clew-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		B2B3EA1684A4FE17C61D5314 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Clew-More/Pods-Clew-More-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/InAppSettingsKit/InAppSettingsKit.framework",
-				"${BUILT_PRODUCTS_DIR}/PRTween/PRTween.framework",
-				"${BUILT_PRODUCTS_DIR}/SRCountdownTimer/SRCountdownTimer.framework",
-				"${BUILT_PRODUCTS_DIR}/VectorMath/VectorMath.framework",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/InAppSettingsKit.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PRTween.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SRCountdownTimer.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/VectorMath.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Clew-More/Pods-Clew-More-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		B7EB59D820F693EB00FBBC6A /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-Clew Dev-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		B7EB59E820F693EB00FBBC6A /* [CP] Embed Pods Frameworks */ = {
+		857A28BB6B1164F06C55D7D0 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1371,14 +1322,12 @@
 				"${PODS_ROOT}/Target Support Files/Pods-Clew Dev/Pods-Clew Dev-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/InAppSettingsKit/InAppSettingsKit.framework",
 				"${BUILT_PRODUCTS_DIR}/PRTween/PRTween.framework",
-				"${BUILT_PRODUCTS_DIR}/SRCountdownTimer/SRCountdownTimer.framework",
 				"${BUILT_PRODUCTS_DIR}/VectorMath/VectorMath.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/InAppSettingsKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PRTween.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SRCountdownTimer.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/VectorMath.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1386,38 +1335,86 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Clew Dev/Pods-Clew Dev-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		C8186AE9AD8154C6B8DAE3E8 /* [CP] Embed Pods Frameworks */ = {
+		8A34FC35125184E7329805E2 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-UIKit Clip/Pods-UIKit Clip-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/PRTween/PRTween.framework",
-				"${BUILT_PRODUCTS_DIR}/SRCountdownTimer/SRCountdownTimer.framework",
-				"${BUILT_PRODUCTS_DIR}/VectorMath/VectorMath.framework",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PRTween.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SRCountdownTimer.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/VectorMath.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-UIKit Clip/Pods-UIKit Clip-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		FC3FD998D963F5FE0C5C7B8E /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
+			inputFileListPaths = (
 			);
 			inputPaths = (
 				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
 				"${PODS_ROOT}/Manifest.lock",
 			);
 			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-UIKit Clip-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		93228D10ADC67BC5922081A7 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Clew Dev-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		9BEE32B9D6841B0ACC94FBC0 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Clew-More/Pods-Clew-More-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/InAppSettingsKit/InAppSettingsKit.framework",
+				"${BUILT_PRODUCTS_DIR}/PRTween/PRTween.framework",
+				"${BUILT_PRODUCTS_DIR}/VectorMath/VectorMath.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/InAppSettingsKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PRTween.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/VectorMath.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Clew-More/Pods-Clew-More-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		AF4436774F25D06D80C718BF /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
 			outputPaths = (
 				"$(DERIVED_FILE_DIR)/Pods-Clew-checkManifestLockResult.txt",
 			);
@@ -1565,6 +1562,7 @@
 				98AA5895269E0C13001123F0 /* StartMenuView.swift in Sources */,
 				98FF7AD1269CC11C008C64E5 /* HelpViewController.swift in Sources */,
 				98FF7AD7269CC143008C64E5 /* UIConstants.swift in Sources */,
+				9826B6D526B07C3F00EC563C /* End Navigation Screen.swift in Sources */,
 				98CC59AA269CC92D002EF6D7 /* FeedbackLogger.swift in Sources */,
 				98FF7AAB269CC04F008C64E5 /* RecordButton.swift in Sources */,
 				98FF7AC3269CC0F2008C64E5 /* Float4x4Extension.swift in Sources */,
@@ -1890,7 +1888,7 @@
 		};
 		4D6B00D31F33C1C400952242 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 08FA9C31721F9F8CDCC23AE9 /* Pods-Clew.debug.xcconfig */;
+			baseConfigurationReference = 272EE1EC3B03BFEB21C69F59 /* Pods-Clew.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -1917,7 +1915,7 @@
 		};
 		4D6B00D41F33C1C400952242 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = D89DDB87A8AE1A9ECEAFCEC6 /* Pods-Clew.release.xcconfig */;
+			baseConfigurationReference = 61C589445D2C1030E4D56570 /* Pods-Clew.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -1943,7 +1941,7 @@
 		};
 		98006FA2268382D800E61861 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 448C1A68927B7E4075A5382A /* Pods-UIKit Clip.debug.xcconfig */;
+			baseConfigurationReference = 0F32C110E340068D62EA3932 /* Pods-UIKit Clip.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1974,7 +1972,7 @@
 		};
 		98006FA3268382D800E61861 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B6E04179254C52D5DB1CCBA5 /* Pods-UIKit Clip.release.xcconfig */;
+			baseConfigurationReference = 4D4826DE15B4321C963EA352 /* Pods-UIKit Clip.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -2105,7 +2103,7 @@
 		};
 		98FF7AA4269CBFEB008C64E5 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9EDA0709B865627072DE3218 /* Pods-Clew-More.debug.xcconfig */;
+			baseConfigurationReference = DB9C5E254344ED84CE7AE85B /* Pods-Clew-More.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -2139,7 +2137,7 @@
 		};
 		98FF7AA5269CBFEB008C64E5 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9EDFDA535567F76C1EB516EF /* Pods-Clew-More.release.xcconfig */;
+			baseConfigurationReference = 2F90CAA64A3BAA7E25A7F923 /* Pods-Clew-More.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -2168,8 +2166,6 @@
 					"\"CFNetwork\"",
 					"-framework",
 					"\"CoreTelephony\"",
-					"-framework",
-					"\"FBLPromises\"",
 					"-framework",
 					"\"FirebaseAnalytics\"",
 					"-framework",
@@ -2230,7 +2226,7 @@
 		};
 		B7EB59EA20F693EB00FBBC6A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = C68778047D8E263D2FB04989 /* Pods-Clew Dev.debug.xcconfig */;
+			baseConfigurationReference = 9AD67605C8A0098F11E72209 /* Pods-Clew Dev.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -2261,7 +2257,7 @@
 		};
 		B7EB59EB20F693EB00FBBC6A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 85A1A72DC19F87F15B738291 /* Pods-Clew Dev.release.xcconfig */;
+			baseConfigurationReference = 7DB15BEF7E1EBDCA803A736F /* Pods-Clew Dev.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -2417,7 +2413,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		82D94B61266FC7CF00EE2C1C /* XCRemoteSwiftPackageReference "SimpleForm" */ = {
+		82D94B61266FC7CF00EE2C1C /* RemoteSwiftPackageReference */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/occamlab/SimpleForm";
 			requirement = {
@@ -2425,7 +2421,7 @@
 				kind = branch;
 			};
 		};
-		8614596426AB35E500CF4840 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+		8614596426AB35E500CF4840 /* RemoteSwiftPackageReference */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
 			requirement = {
@@ -2433,7 +2429,7 @@
 				minimumVersion = 8.4.0;
 			};
 		};
-		8614597726AB3F4F00CF4840 /* XCRemoteSwiftPackageReference "ARDataLogger" */ = {
+		8614597726AB3F4F00CF4840 /* RemoteSwiftPackageReference */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/occamLab/ARDataLogger";
 			requirement = {
@@ -2444,69 +2440,69 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		82D94B62266FC7CF00EE2C1C /* SimpleForm */ = {
+		82D94B62266FC7CF00EE2C1C /* SwiftPackageProductDependency */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 82D94B61266FC7CF00EE2C1C /* XCRemoteSwiftPackageReference "SimpleForm" */;
+			package = 82D94B61266FC7CF00EE2C1C /* RemoteSwiftPackageReference */;
 			productName = SimpleForm;
 		};
-		82D94B64266FC86200EE2C1C /* SimpleForm */ = {
+		82D94B64266FC86200EE2C1C /* SwiftPackageProductDependency */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 82D94B61266FC7CF00EE2C1C /* XCRemoteSwiftPackageReference "SimpleForm" */;
+			package = 82D94B61266FC7CF00EE2C1C /* RemoteSwiftPackageReference */;
 			productName = SimpleForm;
 		};
-		8614596526AB35E500CF4840 /* FirebaseAnalytics */ = {
+		8614596526AB35E500CF4840 /* SwiftPackageProductDependency */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 8614596426AB35E500CF4840 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			package = 8614596426AB35E500CF4840 /* RemoteSwiftPackageReference */;
 			productName = FirebaseAnalytics;
 		};
-		8614596726AB35E500CF4840 /* FirebaseStorage */ = {
+		8614596726AB35E500CF4840 /* SwiftPackageProductDependency */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 8614596426AB35E500CF4840 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			package = 8614596426AB35E500CF4840 /* RemoteSwiftPackageReference */;
 			productName = FirebaseStorage;
 		};
-		8614596926AB35E500CF4840 /* FirebaseAuth */ = {
+		8614596926AB35E500CF4840 /* SwiftPackageProductDependency */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 8614596426AB35E500CF4840 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			package = 8614596426AB35E500CF4840 /* RemoteSwiftPackageReference */;
 			productName = FirebaseAuth;
 		};
-		8614596B26AB35E500CF4840 /* FirebaseDatabase */ = {
+		8614596B26AB35E500CF4840 /* SwiftPackageProductDependency */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 8614596426AB35E500CF4840 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			package = 8614596426AB35E500CF4840 /* RemoteSwiftPackageReference */;
 			productName = FirebaseDatabase;
 		};
-		8614596D26AB360C00CF4840 /* FirebaseAuth */ = {
+		8614596D26AB360C00CF4840 /* SwiftPackageProductDependency */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 8614596426AB35E500CF4840 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			package = 8614596426AB35E500CF4840 /* RemoteSwiftPackageReference */;
 			productName = FirebaseAuth;
 		};
-		8614596F26AB362500CF4840 /* FirebaseDatabase */ = {
+		8614596F26AB362500CF4840 /* SwiftPackageProductDependency */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 8614596426AB35E500CF4840 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			package = 8614596426AB35E500CF4840 /* RemoteSwiftPackageReference */;
 			productName = FirebaseDatabase;
 		};
-		8614597126AB363100CF4840 /* FirebaseAnalytics */ = {
+		8614597126AB363100CF4840 /* SwiftPackageProductDependency */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 8614596426AB35E500CF4840 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			package = 8614596426AB35E500CF4840 /* RemoteSwiftPackageReference */;
 			productName = FirebaseAnalytics;
 		};
-		8614597326AB363800CF4840 /* FirebaseStorage */ = {
+		8614597326AB363800CF4840 /* SwiftPackageProductDependency */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 8614596426AB35E500CF4840 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			package = 8614596426AB35E500CF4840 /* RemoteSwiftPackageReference */;
 			productName = FirebaseStorage;
 		};
-		8614597526AB36EC00CF4840 /* FirebaseStorage */ = {
+		8614597526AB36EC00CF4840 /* SwiftPackageProductDependency */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 8614596426AB35E500CF4840 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			package = 8614596426AB35E500CF4840 /* RemoteSwiftPackageReference */;
 			productName = FirebaseStorage;
 		};
-		8614597826AB3F4F00CF4840 /* ARDataLogger */ = {
+		8614597826AB3F4F00CF4840 /* SwiftPackageProductDependency */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 8614597726AB3F4F00CF4840 /* XCRemoteSwiftPackageReference "ARDataLogger" */;
+			package = 8614597726AB3F4F00CF4840 /* RemoteSwiftPackageReference */;
 			productName = ARDataLogger;
 		};
-		98FF7AEB269CC1F2008C64E5 /* SimpleForm */ = {
+		98FF7AEB269CC1F2008C64E5 /* SwiftPackageProductDependency */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 82D94B61266FC7CF00EE2C1C /* XCRemoteSwiftPackageReference "SimpleForm" */;
+			package = 82D94B61266FC7CF00EE2C1C /* RemoteSwiftPackageReference */;
 			productName = SimpleForm;
 		};
 /* End XCSwiftPackageProductDependency section */

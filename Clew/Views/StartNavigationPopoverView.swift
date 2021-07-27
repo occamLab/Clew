@@ -101,6 +101,7 @@ struct StartButton: View{
     var body: some View {
         Button(action: {
             NotificationCenter.default.post(name: NSNotification.Name("shouldDismissRoutePopover"), object: nil)
+            self.vc.arLogger.startTrial()
             
         }) {
             StartButtonView()

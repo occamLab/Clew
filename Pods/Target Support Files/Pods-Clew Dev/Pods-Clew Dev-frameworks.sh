@@ -177,13 +177,11 @@ code_sign_if_enabled() {
 if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "${BUILT_PRODUCTS_DIR}/InAppSettingsKit/InAppSettingsKit.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/PRTween/PRTween.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/SRCountdownTimer/SRCountdownTimer.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/VectorMath/VectorMath.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "${BUILT_PRODUCTS_DIR}/InAppSettingsKit/InAppSettingsKit.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/PRTween/PRTween.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/SRCountdownTimer/SRCountdownTimer.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/VectorMath/VectorMath.framework"
 fi
 if [ "${COCOAPODS_PARALLEL_CODE_SIGN}" == "true" ]; then
