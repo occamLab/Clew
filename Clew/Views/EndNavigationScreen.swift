@@ -1,5 +1,5 @@
 //
-//  End Navigation Screen.swift
+//  EndNavigationScreen.swift
 //  Clew-More
 //
 //  Created by occamlab on 7/27/21.
@@ -26,19 +26,15 @@ struct EndNavigationScreen: View {
                 if !feedbackGiven{
                     vc.surveyInterface.sendLogDataHelper(pathStatus: nil, announceArrival: true, vc: vc)
                 }
-                vc.hideAllViewsHelper()
-                vc.state = .mainScreen(announceArrival: true)
-                vc.arLogger.finalizeTrial()
-                //vc.arLogger.startTrial()
-                
-            }){
-                homeButtonView()
-                    .padding()
-            }
-            Spacer()
-        }
-        
- 
+                    vc.hideAllViewsHelper()
+                    vc.state = .mainScreen(announceArrival: false)
+                    vc.arLogger.finalizeTrial()
+                }){
+                    homeButtonView()
+                }
+            
+        }.padding()
+
     }
 }
 
@@ -80,9 +76,9 @@ struct homeButtonView: View {
                 .padding()
             Text("Main Menu")
                 .bold()
-                
             Spacer()
-        }.background(Color.white)
+        }
+        .background(Color.white)
     }
 }
 

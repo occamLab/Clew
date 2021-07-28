@@ -1453,7 +1453,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 if (soundFeedback) {
                     playSystemSound(id: 1234)
                 }
-                announce(announcement: NSLocalizedString("imageTagInFrameAnnouncement", comment: "This is announced when the image tag is in frame and the user can set an anchor point."))
+                
+                if case .startingAutoAnchoring = state {
+                    announce(announcement: NSLocalizedString("anchorImageTagInFrameAnnouncement", comment: "This is announced when the image tag is in frame and the user can set an anchor point."))
+                } else if case .startingAutoAlignment = state {
+                    announce(announcement: NSLocalizedString("alignImageTagInFrameAnnouncement", comment: "This is announced when the image tag is in frame, the user is localized to the route, and they can begin navigating."))
+                }
                 
                 imageNode = SCNNode()
                 imageNode.simdTransform = imageAnchor.transform
