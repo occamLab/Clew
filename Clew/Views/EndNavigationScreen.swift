@@ -28,7 +28,7 @@ struct EndNavigationScreen: View {
                 
                 Button(action: {
                     vc.hideAllViewsHelper()
-                    vc.state = .mainScreen(announceArrival: true)
+                    vc.state = .mainScreen(announceArrival: false)
                     vc.arLogger.finalizeTrial()
                 }){
                     homeButtonView()
