@@ -20,10 +20,13 @@ struct EndNavigationScreen: View {
             VStack {
                 Text("Navigation Complete")
                     .foregroundColor(.black)
+                    .font(.largeTitle)
+                
+                Spacer()
+                
                 // placeholder: rating route system
                 routeFeedbackButtons(vc: vc)
                 RecordFeedbackView()
-                    .padding()
                 
                 Button(action: {
                     if !feedbackGiven{
@@ -46,6 +49,7 @@ struct routeFeedbackButtons: View {
     var body: some View {
         VStack{
             Text("Please rate your route experience")
+                .font(.title2)
             HStack {
                 Spacer()
                 Button(action: {
