@@ -19,11 +19,11 @@
 "ExperimentInstructions" = "Experiment Instructions";
 "ExperimentRouteControlledInstructions" = "Please record 3 \"Experiment Routes\" where you start the route, walk around, and return to the exact same position you started in. Once you've reached the starting position you can end the path recording. For this round, hold the phone with your hand and use Siri shortcuts to start and stop the recording.";
 "ExperimentRouteLanyardInstructions" = "Please record 3 \"Experiment Routes\" where you start the route, walk around, and return to the exact same position you started in. Once you've reached the starting position you can end the path recording. For this round, attach your phone to a lanyard while keeping the camera facing forwards. Also, use Siri shortcuts to start and end the route.";
-"ExperimentRouteBracingInstructions" = "Please record 3 \"Experiment Routes\" where you start the route, walk around, and return to the exact same position you started in. Once you've reached the starting position you can end the path recording. For this round,For this round, brace the phone vertically against your chest while keeping the camera facing forwards. Also, use Siri shortcuts to start and end the route.";
-"lanyardInstruction" = "Please record 3 Single Use Route using Siri shortcuts to start, end and navigate routes. For this round, attach your phone to a lanyard while keeping the camera facing forwards.";
-"bracingInstruction" = "Please record 3 Single Use Route using Siri shortcuts to start, end and navigate routes. For this round, brace the phone vertically against your chest while keeping the camera facing forwards. )";
-"contolledInstruction" = "Please record 3 Single Use Route. For this round, hold the phone with your hand and use Siri shortcuts to start, stop and navigate the routes.)";
-"significantVersionChangesPopHandsFree-UpContent" = "Now you can use Siri with this new version of Clew. Please note that you can only use Siri with \"Single Use Route\". Please ensure that you have enabled Hey Siri on your iPhone through Settings > Siri & Search > Listen for Hey Siri. You will now be prompted to add Siri shortcuts after each action you take, when this is done you can simply say: \"Hey Siri, Activity name\".";
+"ExperimentRouteBracingInstructions" = "Please record 3 \"Experiment Routes\" where you start the route, walk around, and return to the exact same position you started in. Once you've reached the starting position you can end the path recording. For this round, brace the phone vertically against your chest while keeping the camera facing forwards. Also, use Siri shortcuts to start and end the route.";
+"lanyardInstruction" = "Please record 3 Single Use Routes using Siri shortcuts to start, end and navigate routes. For this round, attach your phone to a lanyard while keeping the camera facing forward.";
+"bracingInstruction" = "Please record 3 Single Use Routes using Siri shortcuts to start, end and navigate routes. For this round, brace the phone vertically against your chest while keeping the camera facing forward. ";
+"contolledInstruction" = "Please record 3 Single Use Routes. For this round, hold the phone with your hand and use Siri shortcuts to start, stop and navigate the routes.";
+"significantVersionChangesPopHandsFree-UpContent" = "Now you can use Siri with this new version of Clew. Please note that you can only use Siri with \"Single Use Route\" and \"Experiment Route\" . Please ensure that you have enabled Hey Siri on your iPhone through Settings > Siri & Search > Listen for Hey Siri. You will now be prompted to add Siri shortcuts after each action you take, when this is done you can simply say: \"Hey Siri, Activity name\".";
 
 "significantVersionChanges-Confirmation" = "Ok";
 
@@ -279,7 +279,7 @@
 
 //Announcements which signify the end of a process
 "singleUseRouteAnchorPointToPausedStateAnnouncement" = "Anchor point saved. You may now close the app and return later for return navigation.";
-
+"experimentToRecordingRouteAnnouncement"= "Now recording an Experiment Route";
 "multipleUseRouteAnchorPointToRecordingRouteAnnouncement" = "Anchor point saved. You are now recording a route.";
 
 "multipleUseRouteAnchorPointToSaveARouteAnnouncement" = "Anchor point saved. You may now name your route.";

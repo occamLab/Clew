@@ -144,8 +144,8 @@ class RecordPathController: UIViewController {
         
         /// add elements to the stack
         stackView.addArrangedSubview(recordPathButton)
-        stackView.addArrangedSubview(addAnchorPointButton)
-        stackView.addArrangedSubview(routesButton)
+        //stackView.addArrangedSubview(addAnchorPointButton)
+        //stackView.addArrangedSubview(routesButton)
         stackView.addArrangedSubview(experimentButton)
 
         

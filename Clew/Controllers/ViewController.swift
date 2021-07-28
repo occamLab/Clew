@@ -1105,7 +1105,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
 //        self.present(alert, animated: true, completion: nil)
 //    }
 //
-    
+
+    ///presents a pop after recording an experiment route, to confirm that the use has successfully recorded the route with required condition. if the user selects "completed", route is stores and logs are uploaded. otherwise, the user can redo to the route.
+    /// parameters:
+    ///           condition: the current condition
+////                                content: String:  the localisible string message content for the specific condition
     func showRedoExperimentRoutesSuggestion (condition: String, content: String) {
         // Create alert to warn users of lost information
         let alert = UIAlertController(title: NSLocalizedString("redoRoutesSuggestionTitle", comment: "This is the title of an alert which shows up when the user completes 3  routes of a given condition"),
@@ -1149,25 +1153,30 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         
     }
     
+    ///presents a pop after recording a single use route  to confirm that the use has successfully recorded the route with required condition. if the user selects "completed", route is stores and logs are uploaded. otherwise, the user can redo to the route.
+    /// parameters:
+    ///           condition: the current condition
+////                                content: String:  the localisible string message content for the specific condition
+    
     func showRedoRoutesSuggestion(condition: String, content: String) {
         // Create alert to warn users of lost information
         let alert = UIAlertController(title: NSLocalizedString("redoRoutesSuggestionTitle", comment: "This is the title of an alert which shows up when the user completes 3  routes of a given condition"),
                                       message: NSLocalizedString(content, comment: "this is the content of an alert which tells the user that they should confirm the completion of 3 routes."),
                                       preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: NSLocalizedString("completedThreeRoutes", comment: "This text appears on a button that "), style: .default, handler: { [self] action -> Void in
-            print("in Redo b4")
-            print("before")
-            print(conditionsDico)
-            print(conditionsDico[condition]as! Int)
+           // print("in Redo b4")
+            //print("before")
+            //print(conditionsDico)
+            //print(conditionsDico[condition]as! Int)
             conditionsDico[condition] = conditionsDico[condition] as! Int + 1
-            print("in Redo after")
-            print(conditionsDico[condition]as! Int)
+          //  print("in Redo after")
+           // print(conditionsDico[condition]as! Int)
             
             
             
             UserDefaults.standard.setValue(conditionsDico, forKey: "conditionsDico")
-            print("dico after")
-            print(conditionsDico)
+           // print("dico after")
+          //  print(conditionsDico)
             ViewController.ConditionsCount =  conditionsDico[condition] as! Int
             sendLogSinglueUseRoute()
             
@@ -1348,7 +1357,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// Register settings bundle
     func registerSettingsBundle(){
-        let appDefaults = ["siriShortcutDisplayList": [""],"crumbColor": 0, "showPath": true, "pathColor": 0, "hapticFeedback": true, "sendLogs": true, "voiceFeedback": true, "soundFeedback": true, "adjustOffset": false, "units": 0, "timerLength":5, "conditionsDico": ["lanyard":0,"bracing":0,"none":0],"experimentConditonsDico": ["lanyard":0,"bracing":0,"none":0], "siriShortcutSingleUseRoute": false,  "siriShortcutStopRecordingRoute": false, "experimentRouteFlag":false,"singleUseRouteExperimentFlag":false,  "currentCondition": conditionsList.randomElement(), "siriShortcutExperimentRoute": false,"siriShortcutStartNavigatingRoute": false,"currentRoute":startExperimentWithList.randomElement(), "siriShortcutAlert": false, "distance":0] as [String : Any]
+        let appDefaults = ["siriShortcutDisplayList": [""],"crumbColor": 0, "showPath": true, "pathColor": 0, "hapticFeedback": true, "sendLogs": true, "voiceFeedback": true, "soundFeedback": true, "adjustOffset": false, "units": 0, "timerLength":5, "conditionsDico": ["lanyard":0,"bracing":0,"none":0],"experimentConditonsDico": ["lanyard":0,"bracing":0,"none":0], "siriShortcutSingleUseRoute": false,  "siriShortcutStopRecordingRoute": false, "experimentRouteFlag":false,"singleUseRouteExperimentFlag":false,  "currentCondition": conditionsList.randomElement(), "siriShortcutExperimentRoute": false,"siriShortcutStartNavigatingRoute": false,"currentRoute":startExperimentWithList.randomElement(), "siriShortcutAlert": false] as [String : Any]
         UserDefaults.standard.register(defaults: appDefaults)
     }
 
@@ -1747,13 +1756,16 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     var siriShortcutStopRecordingRouteFlag : Bool!
     var siriShortcutExperimentRouteFlag : Bool!
     var siriShortcutStartNavigatingRouteFlag : Bool!
+/// used to determine whether the user has  been shown the new feature pop up
     var siriShortcutAlert: Bool!
     /// if true means that user has been shown the first instruction of the experiment
   //flags that indicates which part of the experiment the user is in
     var experimentRouteFlag: Bool!
     var singleUseRouteExperimentFlag: Bool!
-    // list used for setting the randomisation of routes order
+   
+    // used to determine which route the user is in (single use or experiment)
     var currentRoute: String!
+    // list used for setting the randomisation of routes order
     var startExperimentWithList : [String]! = ["ExperimentRoute", "SingleUseRoute"]
     /// the color of the path.  0 is red, 1 is green, 2 is blue, and 3 is random
     var defaultPathColor: Int!
@@ -2284,7 +2296,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         continuationAfterSessionIsReady = {
             self.trackingErrorsAnnouncementTimer?.invalidate()
             ///platy an announcemnt which tells the user that a route is being recorded
-            self.delayTransition(announcement: NSLocalizedString("singleUseRouteToRecordingRouteAnnouncement", comment: "This is an announcement which is spoken when the user starts recording a single use route. it informs the user that they are recording a single use route."), initialFocus: nil)
+            self.delayTransition(announcement: NSLocalizedString("experimentToRecordingRouteAnnouncement", comment: "This is an announcement which is spoken when the user starts recording a single use route. it informs the user that they are recording a single use route."), initialFocus: nil)
 
             //sends the user to the screen where they can start recording a route
             self.state = .recordingRoute
@@ -2591,7 +2603,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 
                 if(!experimentRouteFlag){
                 updateExperimentExperimentRoute()
-                 UserDefaults.standard.setValue("ExperimentRoute", forKey: "currentRoute")
+                currentRoute = "ExperimentRoute"
+                 UserDefaults.standard.setValue(currentRoute, forKey: "currentRoute")
                 UserDefaults.standard.setValue(true, forKey: "experimentRouteFlag")
                 }else{
                     showCompletedExperimentAlert()
@@ -2629,13 +2642,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
         }
     }
+    
+    
+    ///store route logs and preent survey.  if the condtions has been satisfied, move to the next condition and present the route. if the phase has been completed, move to the experiment phase or end. 
+    ///
     func sendLogSinglueUseRoute(){
         
         
         //only log if user confirmed completion of route
        
         // send success log data to Firebase
-        
+        var presentSurvey: Bool = false
         
         let logFileURLs = logger.compileLogData(true)
         logger.resetStateSequenceLog()
@@ -2653,9 +2670,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             if(left.isEmpty){
                 print("left is empty")
                 print("val o")
+                presentSurvey = true
                 if(!experimentRouteFlag){
                 updateExperimentExperimentRoute()
-                 UserDefaults.standard.setValue("ExperimentRoute", forKey: "currentRoute")
+                currentRoute = "ExperimentRoute"
+                 UserDefaults.standard.setValue(currentRoute, forKey: "currentRoute")
                 UserDefaults.standard.setValue(true, forKey: "experimentRouteFlag")
                 }else{
                     print("completedExperiment")
@@ -2665,6 +2684,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         else{
       
             //
+            presentSurvey = true
            
             dump(left)
             let nextCondition = left.randomElement()
@@ -2683,7 +2703,21 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             }
         }
         
-        }}
+        }
+        
+        let wait: Bool = true
+        
+        if (sendLogs && presentSurvey) {
+            print("should present survey")
+            // do this in a little while to give it time
+            
+           
+            DispatchQueue.main.asyncAfter(deadline: .now() + (wait ? 3 : 1)) {
+                self.presentSurveyIfIntervalHasPassed(mode: "afterRoute", logFileURLs: logFileURLs)
+            }
+        }
+        
+    }
     
     
     func sendLogExperimentRouteDataHelper(pathStatus: Bool?, announceArrival: Bool = false) {
@@ -2749,7 +2783,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                     
                     if(!singleUseRouteExperimentFlag){
                     updateExperiment()
-                     UserDefaults.standard.setValue("SingleUseRoute", forKey: "currentRoute")
+                    currentRoute = "SingleUseRoute"
+                     UserDefaults.standard.setValue(currentRoute, forKey: "currentRoute")
                     UserDefaults.standard.setValue(true, forKey: "singleUseRouteExperimentFlag")
                     }else{
                         print("completedExperiment")
@@ -2788,21 +2823,23 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
         }
     }
-    
+   
+    // this function sends logs of the experiment rotue to firebase when the user confirms the completion of route using the required condition
     func sendExpRouteLog(){
         
-        
+
       //only log if user confirmed completion of route
     
-          print("insideSendLog")
+          
       // send success log data to Firebase
         logger.logCurrentExpCondition(condition: currentCondition)
         logger.logCurrentRoute(route: currentRoute)
+        logger.logExpDico(dico: experimentConditonsDico)
         let logFileURLs = logger.compileLogData(true)
-      logger.resetStateSequenceLog()
+        logger.resetStateSequenceLog()
         
           
-          // left
+          // determine which conditions are to be completed
               var left : [String] = []
           
               for(key) in experimentConditonsDico.keys{
@@ -2812,10 +2849,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                   
               }
               if(left.isEmpty){
+               
                   
                   if(!singleUseRouteExperimentFlag){
                   updateExperiment()
-                  UserDefaults.standard.setValue("SingleUseRoute", forKey: "currentRoute")
+                currentRoute = "SingleUseRoute"
+                  UserDefaults.standard.setValue(currentRoute, forKey: "currentRoute")
                   UserDefaults.standard.setValue(true, forKey: "singleUseRouteExperimentFlag")
                   }else{
                       showCompletedExperimentAlert()
@@ -2825,14 +2864,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
               }
       
      else{
-      //if(ViewController.ConditionsCount == 3){
+     
         if(experimentConditonsDico[currentCondition]! as! Int == 3){
-          print("insideIf 1")
+          
           print("eq3")
+          
           nextCondition = left.randomElement()
           if(experimentConditonsDico[nextCondition]! as! Int == 0){
-              print("insideIf 2")
-              print("inSendlog")
+              
               print("updateNext")
           
               
@@ -2845,7 +2884,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
           }}
       
       
-      }}
+      }
+        
+      
+        
+    }
         
     /// drop a crumb during path recording
     @objc func dropCrumb() {
