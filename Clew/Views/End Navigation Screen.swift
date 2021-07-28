@@ -11,17 +11,21 @@ import ARDataLogger
 
 struct EndNavigationScreen: View {
     var vc: ViewController
+    @State private var feedbackGiven = false
     var body: some View {
         VStack{
             Text("Navigation Complete")
                 .foregroundColor(.black)
             // placeholder: rating route system
-            routeFeedbackButtons()
+            routeFeedbackButtons(vc: vc)
             RecordFeedbackView()
                 .padding()
 
             
             Button(action: {
+                if !feedbackGiven{
+                    vc.surveyInterface.sendLogDataHelper(pathStatus: nil, announceArrival: true, vc: vc)
+                }
                 vc.hideAllViewsHelper()
                 vc.state = .mainScreen(announceArrival: true)
                 vc.arLogger.finalizeTrial()
@@ -39,17 +43,28 @@ struct EndNavigationScreen: View {
 }
 
 struct routeFeedbackButtons: View {
+    var vc: ViewController
     var body: some View {
         VStack{
             Text("Please rate your route experience")
             HStack {
                 Spacer()
-                Image("thumbs_up")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                Image("thumbs_down")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
+                Button(action: {
+                    vc.surveyInterface.sendLogDataHelper(pathStatus: false, announceArrival: true, vc: vc)
+                }){
+                    Image("thumbs_up")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                }
+                Button(action: {
+                    vc.surveyInterface.sendLogDataHelper(pathStatus: true, announceArrival: true, vc: vc)
+
+                }){
+                    Image("thumbs_down")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                }
+
                 Spacer()
             }
         }

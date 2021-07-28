@@ -2152,7 +2152,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             anchorPointNode.removeFromParentNode()
         }
         #if !APPCLIP
-        self.surveyInterface.sendLogDataHelper(pathStatus: nil, vc: self)
+        //self.surveyInterface.sendLogDataHelper(pathStatus: nil, vc: self)
         self.hideAllViewsHelper()
         self.add(self.endNavigationController!)
         print("end screen displayed")
@@ -2425,7 +2425,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 hapticTimer?.invalidate()
                 
                 #if !APPCLIP
-                self.surveyInterface.sendLogDataHelper(pathStatus: nil, announceArrival: true, vc: self)
+                //self.surveyInterface.sendLogDataHelper(pathStatus: nil, announceArrival: true, vc: self)
                 self.hideAllViewsHelper()
                 self.add(self.endNavigationController!)
                 print("end screen displayed")
