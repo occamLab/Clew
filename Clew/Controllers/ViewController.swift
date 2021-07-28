@@ -673,7 +673,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                         self.completingPauseProcedureHelper(worldMap: worldMap)
                     }
                 } else {
-                    completingPauseProcedureHelper(worldMap: nil)
+                    completingPauseProcedureHelper(worldMap: sceneView.session.getCurrentWorldMap)   // BL
                 }
             }
         }
@@ -736,15 +736,15 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         hideAllViewsHelper()
         ///Announce to the user that they have saved the route ID and are now at the saving route name screen
         self.delayTransition(announcement: NSLocalizedString("saveCodeIDtoCreatingAnchorPointAnnouncement", comment: "This is an announcement which is spoken when the user finishes saving their route's app clip code ID. This announcement signifies the transition from the view where the user can enter the app clip code ID associated with the route to the view where the user can anchor the starting point of the route they are recording."), initialFocus: nil)
-        /// send to SaveRouteButtonPressed
+        /// send to pause procedure
         self.state = .startingPauseProcedure
     }
     
-    @objc func saveRouteButtonPressed() {
+    @objc func saveRouteButtonPressed(worldMap: Any?) {
         let id = String(Int64(NSDate().timeIntervalSince1970 * 1000)) as NSString
         
-        // BL: get worldMap in here
-        try! self.archive(routeId: id, appClipCodeID: self.appClipCodeID, beginRouteAnchorPoint: self.beginRouteAnchorPoint, endRouteAnchorPoint: self.endRouteAnchorPoint, intermediateAnchorPoints: self.intermediateAnchorPoints, worldMap: nil, imageAnchoring: self.imageAnchoring)
+        // BL
+        try! self.archive(routeId: id, appClipCodeID: self.appClipCodeID, beginRouteAnchorPoint: self.beginRouteAnchorPoint, endRouteAnchorPoint: self.endRouteAnchorPoint, intermediateAnchorPoints: self.intermediateAnchorPoints, worldMap: sceneView.session.getCurrentWorldMap /*dataPersistence.unarchiveMap(id: id as String)*/, imageAnchoring: self.imageAnchoring)
         hideAllViewsHelper()
         /// PATHPOINT Save Route View -> play/pause
         ///Announce to the user that they have finished the alignment process and are now at the play pause screen
@@ -971,7 +971,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                                                                        height: UIScreen.main.bounds.size.height*0.85)
         manageRoutesController.view.backgroundColor = .clear
         
-        nameSavedRouteController = UIHostingController(rootView: NameSavedRouteView(vc: self))
+        nameSavedRouteController = UIHostingController(rootView: NameSavedRouteView(vc: self, worldMap: justUsedMap))   // BL
         nameSavedRouteController.view.frame = CGRect(x: 0,
                                                                        y: UIScreen.main.bounds.size.height*0.15,
                                                                        width: UIConstants.buttonFrameWidth * 1,
@@ -2113,8 +2113,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             creatingRouteAnchorPoint = false
             if imageAnchoring {
                 /// sends the user to naming the route, skipping creating the end anchorpoint
-
-                state = .startingPauseProcedure // BL
+                state = .startingPauseProcedure
             } else {    /// this probably shouldn't go to startingPauseProcedure but it also currently never gets here
                 ///sends the user to the process where they create an end anchorpoint
                 state = .startingPauseProcedure

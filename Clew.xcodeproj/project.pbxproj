@@ -73,7 +73,6 @@
 		98006FCC268386AD00E61861 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E5D1695822E103A0008754D0 /* Localizable.strings */; };
 		98053657268388CE0065E80F /* PathLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470EB122C119F4001092A4 /* PathLogger.swift */; };
 		98053658268388D10065E80F /* Navigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470EB222C119F4001092A4 /* Navigation.swift */; };
-		98053659268388D90065E80F /* FeedbackLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470EB322C119F4001092A4 /* FeedbackLogger.swift */; };
 		9805365A268388DD0065E80F /* PathFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470EB422C119F4001092A4 /* PathFinder.swift */; };
 		9805365B268388E00065E80F /* Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470EB522C119F4001092A4 /* Utility.swift */; };
 		9805365D268388EC0065E80F /* RouteDocumentData.swift in Sources */ = {isa = PBXBuildFile; fileRef = E565A10722F2173400C1998E /* RouteDocumentData.swift */; };
@@ -100,6 +99,7 @@
 		984FBD3C26962E4900B63A6A /* EnterCodeIDView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 984FBD3B26962E4900B63A6A /* EnterCodeIDView.swift */; };
 		984FBD3D26962E4900B63A6A /* EnterCodeIDView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 984FBD3B26962E4900B63A6A /* EnterCodeIDView.swift */; };
 		984FBD3E26962E4900B63A6A /* EnterCodeIDView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 984FBD3B26962E4900B63A6A /* EnterCodeIDView.swift */; };
+		9860892426B1E5C80073E44F /* FeedbackLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470EB322C119F4001092A4 /* FeedbackLogger.swift */; };
 		986640CE22FB68F2005AA1F6 /* NameSavedRouteController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986640CD22FB68F2005AA1F6 /* NameSavedRouteController.swift */; };
 		986640CF22FC9606005AA1F6 /* NameSavedRouteController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986640CD22FB68F2005AA1F6 /* NameSavedRouteController.swift */; };
 		987BA6F4268E53C0008B129E /* StartNavigationPopoverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 987BA6F3268E53C0008B129E /* StartNavigationPopoverView.swift */; };
@@ -1484,13 +1484,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9860892426B1E5C80073E44F /* FeedbackLogger.swift in Sources */,
 				9805365B268388E00065E80F /* Utility.swift in Sources */,
 				98006FC5268385BA00E61861 /* TransparentTouchView.swift in Sources */,
 				98006FB72683845A00E61861 /* StopNavigationController.swift in Sources */,
 				98E3A391268F99E800C3DAD1 /* DataPersistence.swift in Sources */,
 				98006FB62683845600E61861 /* NameSavedRouteController.swift in Sources */,
 				9805366526838C500065E80F /* RouteTableViewCell.swift in Sources */,
-				98053659268388D90065E80F /* FeedbackLogger.swift in Sources */,
 				98006FB22683844A00E61861 /* RecordPathController.swift in Sources */,
 				98006FB92683846200E61861 /* ResumeTrackingConfirmController.swift in Sources */,
 				98006FC7268385D400E61861 /* HelpViewController.swift in Sources */,

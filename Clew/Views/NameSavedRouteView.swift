@@ -14,9 +14,9 @@ import Combine
 struct NameSavedRouteView: View {
     @State private var routeName: String = ""
     let vc: ViewController
-//    let worldMap: Any?    // BL: add worldMap
+    let worldMap: Any?    // BL
 
-     var body: some View {
+    var body: some View {
         VStack {
             ZStack {
                 Rectangle()
@@ -37,7 +37,7 @@ struct NameSavedRouteView: View {
                                 .stroke(Color.white, lineWidth: 3))
                     .padding(20)
                     
-                EnterNameButton(vc: vc, routeName: routeName)
+                EnterNameButton(vc: vc, routeName: routeName, worldMap: worldMap)
                     .frame(minWidth: 0, maxWidth: .infinity)
                     .padding(.horizontal, 20)
             } .onAppear(perform: {
@@ -68,11 +68,12 @@ struct EnterNameButtonView: View {
 struct EnterNameButton: View {
     var vc: ViewController
     var routeName: String
+    var worldMap: Any?
     
     var body: some View {
         Button(action: {
             vc.routeName = routeName as NSString
-            vc.saveRouteButtonPressed()
+            vc.saveRouteButtonPressed(worldMap: worldMap)
             vc.state = .readyToNavigateOrPause(allowPause: false)
         }) {
             EnterNameButtonView()
