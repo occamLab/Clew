@@ -13,28 +13,31 @@ struct EndNavigationScreen: View {
     var vc: ViewController
     @State private var feedbackGiven = false
     var body: some View {
-        VStack{
-            Text("Navigation Complete")
-                .foregroundColor(.black)
-            // placeholder: rating route system
-            routeFeedbackButtons(vc: vc)
-            RecordFeedbackView()
-                .padding()
-
+        ZStack {
+            Rectangle()
+                .fill(Color.white)
             
-            Button(action: {
-                if !feedbackGiven{
-                    vc.surveyInterface.sendLogDataHelper(pathStatus: nil, announceArrival: true, vc: vc)
-                }
-                    vc.hideAllViewsHelper()
-                    vc.state = .mainScreen(announceArrival: false)
-                    vc.arLogger.finalizeTrial()
-                }){
-                    homeButtonView()
-                }
-            
-        }.padding()
-
+            VStack {
+                Text("Navigation Complete")
+                    .foregroundColor(.black)
+                // placeholder: rating route system
+                routeFeedbackButtons(vc: vc)
+                RecordFeedbackView()
+                    .padding()
+                
+                Button(action: {
+                    if !feedbackGiven{
+                        vc.surveyInterface.sendLogDataHelper(pathStatus: nil, announceArrival: true, vc: vc)
+                    }
+                        vc.hideAllViewsHelper()
+                        vc.state = .mainScreen(announceArrival: false)
+                        vc.arLogger.finalizeTrial()
+                    }){
+                        homeButtonView()
+                    }
+            }
+            .padding()
+        }
     }
 }
 
