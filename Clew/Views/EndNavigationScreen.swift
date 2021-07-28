@@ -1,5 +1,5 @@
 //
-//  End Navigation Screen.swift
+//  EndNavigationScreen.swift
 //  Clew-More
 //
 //  Created by occamlab on 7/27/21.
@@ -12,26 +12,30 @@ import ARDataLogger
 struct EndNavigationScreen: View {
     var vc: ViewController
     var body: some View {
-        VStack{
-            Text("Navigation Complete")
-                .foregroundColor(.black)
-            // placeholder: rating route system
-            routeFeedbackButtons()
+        ZStack {
+            Rectangle()
+                .fill(Color.white)
             
-            RecordFeedbackView()
-                .padding()
-            
-            Button(action: {
-                vc.hideAllViewsHelper()
-                vc.state = .mainScreen(announceArrival: true)
-                vc.arLogger.finalizeTrial()
-                //vc.arLogger.startTrial()
+            VStack {
+                Text("Navigation Complete")
+                    .foregroundColor(.black)
+                    .font(.title)
+
+                // placeholder: rating route system
+                routeFeedbackButtons()
                 
-            }){
-                homeButtonView()
+                RecordFeedbackView()
+                
+                Button(action: {
+                    vc.hideAllViewsHelper()
+                    vc.state = .mainScreen(announceArrival: false)
+                    vc.arLogger.finalizeTrial()
+                }){
+                    homeButtonView()
+                }
             }
+            .padding()
         }
- 
     }
 }
 
@@ -58,9 +62,9 @@ struct homeButtonView: View {
                 .frame(width: 50, height: 50)
             Text("Main Menu")
                 .bold()
-                
             Spacer()
-        }.background(Color.white)
+        }
+        .background(Color.white)
     }
 }
 

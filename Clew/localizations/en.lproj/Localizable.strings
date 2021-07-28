@@ -141,7 +141,9 @@
 
 "imageAnchorPointAlignmentText" = "Please align your device with the camera pointed at your anchor image. If you are using the Clew App Clip, this will be in the same location as the scanned App Clip Code. Your route navigation will start immediately after your device has anchored to the image.";
 
-"imageTagInFrameAnnouncement" = "Successfully anchored on image. Press \"Start\" to begin recording your route.";
+"anchorImageTagInFrameAnnouncement" = "Successfully anchored on image. Press \"Start\" to begin recording your route.";
+
+"alignImageTagInFrameAnnouncement" = "Successfully aligned to image. Press \"Start\" to begin navigating this route.";
 
 //Settings
 "Settings" = "Settings"; // Comments: Title/header of the settings menu.
