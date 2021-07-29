@@ -114,7 +114,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     static var ConditionsCount = 0
    // static var ConditionsCount = nav.crembs
-    static var sConditionType = "start"
+    static var sRouteType: String!
     static var sExperimentRouteFlag = false
     var storeCrumbs : [Any]!
     
@@ -283,7 +283,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
         
     
-            
+        ViewController.sExperimentRouteFlag = false
         
     }
     
@@ -921,7 +921,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         let userDefaults: UserDefaults = UserDefaults.standard
         //todel
         //reintialise everythin for test puposes
-        //UserDefaults.standard.setValue(false, forKey: "siriShortcutStartNavigatingRoute")
+        UserDefaults.standard.setValue(false, forKey: "siriShortcutStartNavigatingRoute")
         UserDefaults.standard.setValue(false, forKey: "siriShortcutAlert")
         UserDefaults.standard.setValue(false, forKey: "singleUseRouteExperimentFlag")
         UserDefaults.standard.setValue(false, forKey: "experimentRouteFlag")
@@ -1050,6 +1050,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                                       preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: NSLocalizedString("homeAlertConfirmNavigationButton", comment: "This text appears on a button in an alert notifying the user that if they navigate to the home page they will stop their curent process. This text appears on the button which signifies that the user wants to continue to the home screen"), style: .default, handler: { action -> Void in
             // proceed to home page
+            ViewController.sExperimentRouteFlag = false
             self.goHome()
         }
         ))
@@ -1289,6 +1290,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
         ))
         self.present(changesAlertVC, animated: true, completion: nil)
+        if case .recordingRoute = self.state{
+            
+            changesAlertVC.dismiss(animated: true, completion: nil)
+            print("dismiss changes")
+        }
     }
     
     ///significant changes Hands free alert
@@ -1303,6 +1309,15 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
         ))
         self.present(changesAlertVC, animated: true, completion: nil)
+       
+        if case .recordingRoute = self.state{
+            
+            changesAlertVC.dismiss(animated: true, completion: nil)
+            print("dismiss changes")
+        }
+        
+        
+        
     }
     
     func showCompletedExperimentAlert() {
@@ -1313,6 +1328,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
         ))
         self.present(changesAlertVC, animated: true, completion: nil)
+       
     }
 
     
@@ -1322,6 +1338,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                                                message: NSLocalizedString(instruction, comment: "An alert shown to the user to give them instructions."),
                                                preferredStyle: .alert)
         changesAlertVC.addAction(UIAlertAction(title: NSLocalizedString("significantVersionChanges-Confirmation", comment: "What the user clicks to acknowledge message and dismiss pop-up"), style: .default, handler: { action -> Void in
+            
         }
         ))
         self.present(changesAlertVC, animated: true, completion: nil)
@@ -1357,14 +1374,15 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// Register settings bundle
     func registerSettingsBundle(){
-        let appDefaults = ["siriShortcutDisplayList": [""],"crumbColor": 0, "showPath": true, "pathColor": 0, "hapticFeedback": true, "sendLogs": true, "voiceFeedback": true, "soundFeedback": true, "adjustOffset": false, "units": 0, "timerLength":5, "conditionsDico": ["lanyard":0,"bracing":0,"none":0],"experimentConditonsDico": ["lanyard":0,"bracing":0,"none":0], "siriShortcutSingleUseRoute": false,  "siriShortcutStopRecordingRoute": false, "experimentRouteFlag":false,"singleUseRouteExperimentFlag":false,  "currentCondition": conditionsList.randomElement(), "siriShortcutExperimentRoute": false,"siriShortcutStartNavigatingRoute": false,"currentRoute":startExperimentWithList.randomElement(), "siriShortcutAlert": false] as [String : Any]
+        let appDefaults = ["siriShortcutDisplayList": [""],"crumbColor": 0, "showPath": true, "pathColor": 0, "hapticFeedback": true, "sendLogs": true, "voiceFeedback": true, "soundFeedback": true, "adjustOffset": false, "units": 0, "timerLength":5, "conditionsDico": ["lanyard":0,"bracing":0,"none":0],"experimentConditonsDico": ["lanyard":0,"bracing":0,"none":0], "siriShortcutSingleUseRoute": false,  "siriShortcutStopRecordingRoute": false, "experimentRouteFlag":false,"singleUseRouteExperimentFlag":false,  "currentCondition": conditionsList.randomElement(), "siriShortcutExperimentRoute": false,"siriShortcutStartNavigatingRoute": false,"currentRoute":startExperimentWithList.randomElement(), "siriShortcutAlert": false, "completedExperiment":false, "startedExperiment": false] as [String : Any]
         UserDefaults.standard.register(defaults: appDefaults)
     }
 
     /// Respond to update events to the `UserDefaults` object (the settings of the app).
     func updateDisplayFromDefaults(){
         let defaults = UserDefaults.standard
-        
+        startedExperiment = defaults.bool(forKey: "startedExperiment")
+        completedExperiment = defaults.bool(forKey: "completedExperiment")
         defaultUnit = defaults.integer(forKey: "units")
         defaultColor = defaults.integer(forKey: "crumbColor")
         showPath = defaults.bool(forKey: "showPath")
@@ -1814,7 +1832,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     // stores sirishorcuts phrases to display on burger menu
     var siriShortcutDisplayList : [String]!
     //var conditionsDicoSet =
+    //determines if the user has started experiment or not
     
+    var startedExperiment: Bool!
+    var completedExperiment: Bool!
     /// This keeps track of the paused transform while the current session is being realigned to the saved route
     var pausedTransform : simd_float4x4?
     
@@ -1875,7 +1896,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
     }
     
-    /// update experiment flaags
+    /// update experiment flaags for single use route
     func updateExperiment(){
         
         if (currentCondition == "lanyard" ){
@@ -2102,8 +2123,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         for anchorPointNode in anchorPointNodes {
             anchorPointNode.removeFromParentNode()
         }
-        
-        sendLogDataHelper(pathStatus: nil)
+        if(ViewController.sExperimentRouteFlag){
+           sendLogExperimentSingleUseRouteDataHelper(pathStatus: nil)
+            
+        }else{
+            sendLogDataHelper(pathStatus: nil)
+        }
     }
     
     /// handles the user pressing the pause button
@@ -2327,9 +2352,48 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
             
     }
-
     
-       func startNavigationShortcutWasPressed(){
+    @objc func participateInExperiment(){
+        
+        if( !siriShortcutAlert){
+            ///Alert to inform users that they haven't enabled the specific shortcut
+            print("please enable shortcuts")
+        }
+        if(!singleUseRouteExperimentFlag && !experimentRouteFlag){
+                  // start experiment
+            ViewController.sExperimentRouteFlag = true
+            
+                  startExperiment()
+              
+    
+    // if completed present completed
+    //if
+    
+        }else if (completedExperiment){
+            showCompletedExperimentAlert()
+            // present completed
+        }
+        else if (currentRoute as! String == "SingleUseRoute"){
+            ViewController.sExperimentRouteFlag = true
+            ViewController.sRouteType = currentRoute
+            updateExperiment()
+            
+            
+        }else {
+            ViewController.sExperimentRouteFlag = true
+            ViewController.sRouteType = currentRoute
+            updateExperimentExperimentRoute()
+            
+           
+            
+        }
+        
+        
+    }
+    @objc func participateInExperimentWasPressed(){
+        participateInExperiment()
+    }
+     @objc  func startNavigationShortcutWasPressed(){
         ///
            let newSingleUseRouteActivity = SiriShortcutsController.startNavigationShortcut()
            let activity = SiriShortcutsController.startNavigationShortcut()
@@ -2434,7 +2498,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     }
     
     func startExperiment(){
-        
+        ViewController.sRouteType = currentRoute
         print("2flagTrue")
         print(siriShortcutAlert && siriShortcutExperimentRouteFlag)
         
@@ -2447,11 +2511,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         if(currentRoute as! String == "SingleUseRoute"){
             
             updateExperiment()
-            UserDefaults.standard.setValue(true, forKey: "singleUseRouteExperimentFlag")
+            singleUseRouteExperimentFlag = true
+            UserDefaults.standard.setValue( singleUseRouteExperimentFlag , forKey: "singleUseRouteExperimentFlag")
             
         }else {
             updateExperimentExperimentRoute()
-            UserDefaults.standard.setValue(true, forKey: "experimentRouteFlag")
+            experimentRouteFlag = true
+            UserDefaults.standard.setValue(experimentRouteFlag , forKey: "experimentRouteFlag")
             
         }
         
@@ -2530,7 +2596,21 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
     }
     
+    
     func sendLogDataHelper(pathStatus: Bool?, announceArrival: Bool = false) {
+        // send success log data to Firebase
+        let logFileURLs = logger.compileLogData(pathStatus)
+        logger.resetStateSequenceLog()
+        state = .mainScreen(announceArrival: announceArrival)
+        if sendLogs {
+            // do this in a little while to give it time to announce arrival
+            DispatchQueue.main.asyncAfter(deadline: .now() + (announceArrival ? 3 : 1)) {
+                self.presentSurveyIfIntervalHasPassed(mode: "afterRoute", logFileURLs: logFileURLs)
+            }
+        }
+    }
+    
+    func sendLogExperimentSingleUseRouteDataHelper(pathStatus: Bool?, announceArrival: Bool = false) {
        
         state = .mainScreen(announceArrival: announceArrival)
         var prevConditionsCountsv = conditionsDico[currentCondition] as! Int
@@ -2541,10 +2621,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
           logger.logCurrentExpCondition(condition: currentCondition)
           
           logger.logCurrentRoute(route: currentRoute)
-        if(!singleUseRouteExperimentFlag && !experimentRouteFlag){
-            print("inside startExp")
-            startExperiment()
-        }
+//        if(!singleUseRouteExperimentFlag && !experimentRouteFlag){
+//            print("inside startExp")
+//            startExperiment()
+//        }
          if(currentCondition == "lanyard"){
             showRedoRoutesSuggestion(condition: currentCondition, content: "lanyardRedoContent")
             print("in redo if")
@@ -2604,8 +2684,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 if(!experimentRouteFlag){
                 updateExperimentExperimentRoute()
                 currentRoute = "ExperimentRoute"
+                experimentRouteFlag = true
                  UserDefaults.standard.setValue(currentRoute, forKey: "currentRoute")
-                UserDefaults.standard.setValue(true, forKey: "experimentRouteFlag")
+                UserDefaults.standard.setValue(experimentRouteFlag, forKey: "experimentRouteFlag")
                 }else{
                     showCompletedExperimentAlert()
                     print("completedExperiment")
@@ -2644,7 +2725,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     }
     
     
-    ///store route logs and preent survey.  if the condtions has been satisfied, move to the next condition and present the route. if the phase has been completed, move to the experiment phase or end. 
+    ///store route logs and preent survey.  if the condtions has been satisfied, move to the next condition and present the route. if the phase has been completed, move to the experiment phase or end.
     ///
     func sendLogSinglueUseRoute(){
         
@@ -2672,13 +2753,16 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 print("val o")
                 presentSurvey = true
                 if(!experimentRouteFlag){
-                updateExperimentExperimentRoute()
+                //updateExperimentExperimentRoute()
                 currentRoute = "ExperimentRoute"
                  UserDefaults.standard.setValue(currentRoute, forKey: "currentRoute")
-                UserDefaults.standard.setValue(true, forKey: "experimentRouteFlag")
+                experimentRouteFlag = true
+                UserDefaults.standard.setValue(experimentRouteFlag, forKey: "experimentRouteFlag")
                 }else{
+                    completedExperiment = true
+                    showCompletedExperimentAlert()
+                    UserDefaults.standard.setValue(completedExperiment, forKey: "completedExperiment")
                     print("completedExperiment")
-                    
                 }
             }
         else{
@@ -2698,7 +2782,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 UserDefaults.standard.setValue(currentCondition, forKey: "currentCondition")
                
                 
-                updateExperiment()
+                //updateExperiment()
                 
             }
         }
@@ -2824,7 +2908,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
     }
    
-    // this function sends logs of the experiment rotue to firebase when the user confirms the completion of route using the required condition
+    /// this function sends logs of the experiment rotue to firebase when the user confirms the completion of route using the required condition
     func sendExpRouteLog(){
         
 
@@ -2852,13 +2936,15 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                
                   
                   if(!singleUseRouteExperimentFlag){
-                  updateExperiment()
+                  //updateExperiment()
                 currentRoute = "SingleUseRoute"
                   UserDefaults.standard.setValue(currentRoute, forKey: "currentRoute")
                   UserDefaults.standard.setValue(true, forKey: "singleUseRouteExperimentFlag")
                   }else{
-                      showCompletedExperimentAlert()
-                      print("completedExperiment")
+                    showCompletedExperimentAlert()
+                    completedExperiment = true
+                    UserDefaults.standard.setValue(completedExperiment, forKey: "completedExperiment")
+                    print("completedExperiment")
                       
                   }
               }
@@ -2879,7 +2965,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
               UserDefaults.standard.setValue(currentCondition, forKey: "currentCondition")
              
               
-             updateExperimentExperimentRoute()
+             //updateExperimentExperimentRoute()
               
           }}
       
@@ -2953,7 +3039,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 followingCrumbs?.invalidate()
                 hapticTimer?.invalidate()
                 
+                if(ViewController.sExperimentRouteFlag){
+                    sendLogExperimentSingleUseRouteDataHelper(pathStatus: true)}
+                else{
                 sendLogDataHelper(pathStatus: nil, announceArrival: true)
+                }
+                
             }
         }
     }

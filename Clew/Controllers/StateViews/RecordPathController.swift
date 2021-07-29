@@ -94,7 +94,7 @@ class RecordPathController: UIViewController {
         routesButton.setBackgroundImage(UIImage(named: "WhiteButtonBackground"), for: .normal)
         routesButton.imageView?.contentMode = .scaleAspectFit
         ///LOCALIZE
-        routesButton.setTitle(NSLocalizedString("savedRoutesListButtonText", comment: "This is the text which appears on the Saved routes List buttton"),for: .normal)
+        routesButton.setTitle("Participate in Experiment",for: .normal)
         routesButton.setTitleColor(.black, for: .normal)
         routesButton.titleLabel?.font = UIFont(name: "HelveticaNeue-Bold", size: 35)!
 
@@ -145,7 +145,7 @@ class RecordPathController: UIViewController {
         /// add elements to the stack
         stackView.addArrangedSubview(recordPathButton)
         //stackView.addArrangedSubview(addAnchorPointButton)
-        //stackView.addArrangedSubview(routesButton)
+        stackView.addArrangedSubview(routesButton)
         stackView.addArrangedSubview(experimentButton)
 
         
@@ -161,7 +161,7 @@ class RecordPathController: UIViewController {
                                           action: #selector(ViewController.experimentProcedure),
                                           for: .touchUpInside)
             routesButton.addTarget(parent,
-                                          action: #selector(ViewController.routesButtonPressed),
+                                   action: #selector(ViewController.participateInExperiment),
                                           for: .touchUpInside)
             addAnchorPointButton.addTarget(parent,
                                           action: #selector(ViewController.recordPath),

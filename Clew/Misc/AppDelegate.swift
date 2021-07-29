@@ -21,7 +21,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
     /// view controller!
   /// var vc: UIViewController!
-  var vc: ViewController!
+    var vc: ViewController!
     /// navigation controller
     var nav: UINavigationController?
     /// Called when the app finishes launching.  Currently, this is where we setup Firebase and make sure the phone screen doesn't lock while we are using the app.
@@ -150,25 +150,46 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         print(userActivity.activityType)
         print("stackPeack")
         print(vc.stack.peek())
+        print("indelexp")
+        print(ViewController.sExperimentRouteFlag)
+        print(ViewController.sRouteType )
+        print( vc.currentRoute)
+        print( ViewController.sRouteType == vc.currentRoute)
         print(userActivity.activityType == kStartNavigationType)
         print(vc.stack.peek() == kStopRecordingType )
         if(userActivity.activityType == kNewSingleUseRouteType && vc.stack.peek() == "start"){
-             
-        
+            if(ViewController.sExperimentRouteFlag ){
+                
+                if(ViewController.sRouteType == "SingleUseRoute"){
+                    vc.dismiss(animated: true, completion: nil)
+                    vc.startCreateAnchorPointProcedure()
+                    vc.stack.push(kNewSingleUseRouteType)
+                }
+            }else{
+           
+            
             vc.startCreateAnchorPointProcedure()
             vc.stack.push(kNewSingleUseRouteType)
-             //vc.prevSiriActivity = kNewSingleUseRouteType
+            }
+            
 
              }
         if(userActivity.activityType == kExperimentRouteType){
              
-        
-             vc.experimentProcedure()
+            if(ViewController.sRouteType == "ExperimentRoute"){
+                vc.dismiss(animated: true, completion: nil)
+              
+            vc.experimentProcedure()
             vc.stack.push(kExperimentRouteType)
              //vc.prevSiriActivity = kExperimentRouteType
 
-             }
-        
+            }else{
+                
+              vc.experimentProcedure()
+              vc.stack.push(kExperimentRouteType)
+                
+            }
+        }
         
         if(userActivity.activityType == kStopRecordingType && vc.stack.peek() == kNewSingleUseRouteType){
              
