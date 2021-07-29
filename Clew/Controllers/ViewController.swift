@@ -768,8 +768,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         pauseTrackingController.remove()
         resumeTrackingConfirmController.remove()
         resumeTrackingController.remove()
-        nameSavedRouteController.remove()
-        nameCodeIDController.remove()
+        nameSavedRouteController?.remove()
+        nameCodeIDController?.remove()
         #if CLEWMORE
         selectRouteController.remove()
         enterCodeIDController.remove()
