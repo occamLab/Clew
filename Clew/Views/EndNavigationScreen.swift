@@ -13,6 +13,7 @@ struct EndNavigationScreen: View {
     var vc: ViewController
     @State private var feedbackGiven = false
     var body: some View {
+
         
         ZStack {
             Rectangle()
@@ -63,13 +64,15 @@ struct EndNavigationScreen: View {
                         Text("Thank you for your feedback")
                     }
                 }
-
+            }
                 
                 /// Voice Feedback Interfact
                 RecordFeedbackView()
                   //  .padding()
 
                 /// Home Button
+
+       
                 Button(action: {
                     if !feedbackGiven{
                         vc.surveyInterface.sendLogDataHelper(pathStatus: nil, announceArrival: true, vc: vc)
