@@ -14,11 +14,7 @@ import Combine
 struct NameSavedRouteView: View {
     @State private var routeName: String = ""
     let vc: ViewController
-    var worldMap: Any?    // BL
-
-//    func getWorldMap() -> Any? {
-//        return self.worldMap
-//    }
+    var worldMap: Any?
     
     var body: some View {
         VStack {

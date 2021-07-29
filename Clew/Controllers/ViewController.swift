@@ -549,7 +549,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// Handler for the startingNameSavedRouteProcedure app state
     func handleStateTransitionToStartingNameSavedRouteProcedure(worldMap: Any?){
         hideAllViewsHelper()
-//        nameSavedRouteController.worldMap = worldMap // BL
+//        nameSavedRouteController.worldMap = worldMap // BL, moved this to initialization of nameSavedRouteController
         add(nameSavedRouteController)
     }
     
@@ -561,7 +561,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             try! showPauseTrackingButton()
         } else {
             endRouteAnchorPoint = RouteAnchorPoint()
-            completingPauseProcedureHelper(worldMap: sceneView.session.getCurrentWorldMap)   // BL
+            completingPauseProcedureHelper(worldMap: sceneView.session.getCurrentWorldMap)
         }
     }
     
@@ -673,7 +673,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                         self.completingPauseProcedureHelper(worldMap: worldMap)
                     }
                 } else {
-                    completingPauseProcedureHelper(worldMap: sceneView.session.getCurrentWorldMap)   // BL
+                    completingPauseProcedureHelper(worldMap: sceneView.session.getCurrentWorldMap)
                 }
             }
         }
@@ -743,8 +743,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     @objc func saveRouteButtonPressed(worldMap: Any?) {
         let id = String(Int64(NSDate().timeIntervalSince1970 * 1000)) as NSString
         
-        // BL
-        try! self.archive(routeId: id, appClipCodeID: self.appClipCodeID, beginRouteAnchorPoint: self.beginRouteAnchorPoint, endRouteAnchorPoint: self.endRouteAnchorPoint, intermediateAnchorPoints: self.intermediateAnchorPoints, worldMap: worldMap, imageAnchoring: self.imageAnchoring)
+        try! self.archive(routeId: id, appClipCodeID: self.appClipCodeID, beginRouteAnchorPoint: self.beginRouteAnchorPoint, endRouteAnchorPoint: self.endRouteAnchorPoint, intermediateAnchorPoints: self.intermediateAnchorPoints, worldMap: worldMap as? ARWorldMap, imageAnchoring: self.imageAnchoring)
         hideAllViewsHelper()
         /// PATHPOINT Save Route View -> play/pause
         ///Announce to the user that they have finished the alignment process and are now at the play pause screen
@@ -937,8 +936,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
       
         startNavigationController = StartNavigationController()
         stopNavigationController = StopNavigationController()
-//        nameSavedRouteController = NameSavedRouteController()
-//        nameCodeIDController = NameCodeIDController()
         
         #if CLEWMORE
         /// This is a wrapper to allow SwiftUI views to be used with the existing UIKit framework.
@@ -964,7 +961,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                                                                        height: UIScreen.main.bounds.size.height*0.85)
         manageRoutesController.view.backgroundColor = .clear
         
-        nameSavedRouteController = UIHostingController(rootView: NameSavedRouteView(vc: self, worldMap: sceneView.session.getCurrentWorldMap))   // BL
+        nameSavedRouteController = UIHostingController(rootView: NameSavedRouteView(vc: self, worldMap: sceneView.session.getCurrentWorldMap))
         nameSavedRouteController.view.frame = CGRect(x: 0,
                                                                        y: UIScreen.main.bounds.size.height*0.15,
                                                                        width: UIConstants.buttonFrameWidth * 1,
