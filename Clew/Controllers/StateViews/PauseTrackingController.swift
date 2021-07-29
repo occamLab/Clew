@@ -168,6 +168,8 @@ class PauseTrackingController: UIViewController, UIScrollViewDelegate {
         stackView.distribution  = UIStackView.Distribution.equalSpacing
         stackView.alignment = UIStackView.Alignment.center
         
+        //need to change this stack in order to stack buttons
+        
         /// add elements to the stack
         stackView.addArrangedSubview(enterAnchorPointDescriptionButton)
         stackView.addArrangedSubview(recordVoiceNoteButton)
