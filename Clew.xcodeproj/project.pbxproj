@@ -46,7 +46,6 @@
 		8614597426AB363800CF4840 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 8614597326AB363800CF4840 /* FirebaseStorage */; };
 		8614597626AB36EC00CF4840 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 8614597526AB36EC00CF4840 /* FirebaseStorage */; };
 		8614597926AB3F4F00CF4840 /* ARDataLogger in Frameworks */ = {isa = PBXBuildFile; productRef = 8614597826AB3F4F00CF4840 /* ARDataLogger */; };
-		98006F7B268382D600E61861 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98006F7A268382D600E61861 /* SceneDelegate.swift */; };
 		98006F82268382D800E61861 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 98006F81268382D800E61861 /* Assets.xcassets */; };
 		98006F85268382D800E61861 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 98006F83268382D800E61861 /* LaunchScreen.storyboard */; };
 		98006F91268382D800E61861 /* UIKit_ClipTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98006F90268382D800E61861 /* UIKit_ClipTests.swift */; };
@@ -1509,7 +1508,6 @@
 				98006FC3268385B300E61861 /* UIButtonExtensions.swift in Sources */,
 				9805366126838AA40065E80F /* RootContainerView.swift in Sources */,
 				98006FC2268385AF00E61861 /* UIViewExtensions.swift in Sources */,
-				98006F7B268382D600E61861 /* SceneDelegate.swift in Sources */,
 				98006FCB268386A900E61861 /* HelpCompiler.swift in Sources */,
 				984FBD3E26962E4900B63A6A /* EnterCodeIDView.swift in Sources */,
 				98006FB52683845400E61861 /* ResumeTrackingController.swift in Sources */,

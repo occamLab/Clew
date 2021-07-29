@@ -34,7 +34,9 @@ import Firebase
 //import SRCountdownTimer
 import SwiftUI
 import Firebase
+#if !APPCLIP
 import ARDataLogger
+#endif
 
 /// A custom enumeration type that describes the exact state of the app.  The state is not exhaustive (e.g., there are Boolean flags that also track app state).
 enum AppState {
@@ -229,7 +231,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     var isAutomaticAlignment: Bool = false
     
     /// ARDataLogger
+    #if !APPCLIP
     var arLogger = ARLogger.shared
+    #endif
     /// Keep track of when to log a frame
     var lastFrameLogTime = Date()
     
