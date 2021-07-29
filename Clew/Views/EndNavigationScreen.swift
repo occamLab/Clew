@@ -14,16 +14,17 @@ struct EndNavigationScreen: View {
     @State private var feedbackGiven = false
     var body: some View {
 
-        
-        ZStack {
+        ZStack{
             Rectangle()
                 .fill(Color.white)
             VStack {
-               
+                
+                /// Title
                 Text("Navigation Complete")
                     .font(.title)
                     .foregroundColor(.black)
                     .accessibility(addTraits: .isSelected)
+                
                 /// Route Feedback Stack
                 ZStack {
                     if !feedbackGiven {
@@ -64,15 +65,11 @@ struct EndNavigationScreen: View {
                         Text("Thank you for your feedback")
                     }
                 }
-            }
                 
-                /// Voice Feedback Interfact
+                /// Voice Feedback Interface
                 RecordFeedbackView()
-                  //  .padding()
-
+                
                 /// Home Button
-
-       
                 Button(action: {
                     if !feedbackGiven{
                         vc.surveyInterface.sendLogDataHelper(pathStatus: nil, announceArrival: true, vc: vc)
@@ -83,23 +80,15 @@ struct EndNavigationScreen: View {
                     }){
                         homeButtonView()
                     }
-                
+
             }.padding()
+                
         }.onAppear(perform: {
             feedbackGiven = false
-            //UIAccessibility.post(notification: .screenChanged, argument: self)
         })
-
     }
 }
 
-struct headerInfo: View {
-    var body: some View {
-        Text("Navigation Complete")
-            .font(.title)
-            .foregroundColor(.black)
-    }
-}
 
 struct homeButtonView: View {
     var body: some View {
