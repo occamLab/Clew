@@ -26,6 +26,7 @@ struct RouteManagerView: View {
         Text(String(route.name))
             .font(.title)
             .multilineTextAlignment(.center)
+            .accessibility(hint: Text("Route Name"))
         Text("\(String(NSLocalizedString("AppClipCodeIDText", comment: "describes an app clip code ID"))): \(String(route.appClipCodeID))")
             .font(.title2)
         VStack {
