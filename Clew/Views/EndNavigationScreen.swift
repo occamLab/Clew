@@ -13,21 +13,66 @@ struct EndNavigationScreen: View {
     var vc: ViewController
     @State private var feedbackGiven = false
     var body: some View {
+
+        
         ZStack {
             Rectangle()
                 .fill(Color.white)
-            
             VStack {
+               
                 Text("Navigation Complete")
+                    .font(.title)
                     .foregroundColor(.black)
-                    .font(.largeTitle)
+                    .accessibility(addTraits: .isSelected)
+                /// Route Feedback Stack
+                ZStack {
+                    if !feedbackGiven {
+                        VStack {
+                            Text("Please Rate Your Route Experience")
+                                .font(.title2)
+                                .foregroundColor(.black)
+                            HStack {
+                                Spacer()
+                                Button(action: {
+                                    vc.surveyInterface.sendLogDataHelper(pathStatus: false, announceArrival: true, vc: vc)
+                                    feedbackGiven = true
+                                }){
+                                    Image("thumbs_up")
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fit)
+                                }
+                                .accessibility(label: Text("Good"))
+                                .accessibility(hint: Text("Submit Feedback that route is good"))
+                                Button(action: {
+                                    vc.surveyInterface.sendLogDataHelper(pathStatus: true, announceArrival: true, vc: vc)
+                                    feedbackGiven = true
+                                }){
+                                    Image("thumbs_down_red")
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fit)
+                                }.accessibility(label: Text("Bad"))
+                                .accessibility(hint: Text("Submit Feedback That Route is Bad"))
+
+
+                                Spacer()
+                            }
+                        }
+                    }
+                    if feedbackGiven {
+                        Rectangle()
+                            .fill(Color.white)
+                        Text("Thank you for your feedback")
+                    }
+                }
+            }
                 
-                Spacer()
-                
-                // placeholder: rating route system
-                routeFeedbackButtons(vc: vc)
+                /// Voice Feedback Interfact
                 RecordFeedbackView()
-                
+                  //  .padding()
+
+                /// Home Button
+
+       
                 Button(action: {
                     if !feedbackGiven{
                         vc.surveyInterface.sendLogDataHelper(pathStatus: nil, announceArrival: true, vc: vc)
@@ -38,39 +83,21 @@ struct EndNavigationScreen: View {
                     }){
                         homeButtonView()
                     }
-            }
-            .padding()
-        }
+                
+            }.padding()
+        }.onAppear(perform: {
+            feedbackGiven = false
+            //UIAccessibility.post(notification: .screenChanged, argument: self)
+        })
+
     }
 }
 
-struct routeFeedbackButtons: View {
-    var vc: ViewController
+struct headerInfo: View {
     var body: some View {
-        VStack{
-            Text("Please rate your route experience")
-                .font(.title2)
-            HStack {
-                Spacer()
-                Button(action: {
-                    vc.surveyInterface.sendLogDataHelper(pathStatus: false, announceArrival: true, vc: vc)
-                }){
-                    Image("thumbs_up")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                }
-                Button(action: {
-                    vc.surveyInterface.sendLogDataHelper(pathStatus: true, announceArrival: true, vc: vc)
-
-                }){
-                    Image("thumbs_down")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                }
-
-                Spacer()
-            }
-        }
+        Text("Navigation Complete")
+            .font(.title)
+            .foregroundColor(.black)
     }
 }
 
@@ -83,6 +110,8 @@ struct homeButtonView: View {
                 .padding()
             Text("Main Menu")
                 .bold()
+                .font(.title2)
+                .foregroundColor(.black)
             Spacer()
         }
         .background(Color.white)

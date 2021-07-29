@@ -1215,6 +1215,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
         ))
         self.present(alert, animated: true, completion: nil)
+        print("alert presented")
     }
     
     /// function that creates alerts for the home button
@@ -1774,6 +1775,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     }
     
     func showEndScreenInformation(completedRoute: Bool){
+        #if APPCLIP
         self.hideAllViewsHelper()
         //self.sceneView.session.pause()
         
@@ -1786,13 +1788,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         self.rootContainerView.getDirectionButton.isHidden = true
         guard let scene = self.view.window?.windowScene else {return}
         
-        /*let label = UILabel(frame: self.view.frame)
-        let scrollView = UIScrollView(frame: self.view.frame)
-        
-        label.textColor = UIColor.white
-        label.textAlignment = .center
-        label.numberOfLines = 0
-        label.lineBreakMode = .byWordWrapping*/
         
         // TODO: i18n/l10n
         if completedRoute{
@@ -1838,7 +1833,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             let overlay = SKOverlay(configuration: config)
             overlay.present(in: scene)
         print("UI done")
+
         }
+        #else
+        self.hideAllViewsHelper()
+        self.add(self.endNavigationController!)
+        #endif
     }
     
     /// display stop navigation view/hide all other views
@@ -2159,7 +2159,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         #if !APPCLIP
         //self.surveyInterface.sendLogDataHelper(pathStatus: nil, vc: self)
         self.hideAllViewsHelper()
-        self.add(self.endNavigationController!)
+        self.sceneView.session.pause()
+        self.state = .endScreen(completedRoute: true)
+        //self.add(self.endNavigationController!)
         print("end screen displayed")
         #else
         self.state = .endScreen(completedRoute: false)
@@ -2432,7 +2434,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 #if !APPCLIP
                 //self.surveyInterface.sendLogDataHelper(pathStatus: nil, announceArrival: true, vc: self)
                 self.hideAllViewsHelper()
-                self.add(self.endNavigationController!)
+                // if everything breaks, get this outta there B)
+                self.sceneView.session.pause()
+                //self.add(self.endNavigationController!)
+                self.state = .endScreen(completedRoute: true)
                 print("end screen displayed")
                 #else
                 self.state = .endScreen(completedRoute: true)
@@ -2665,6 +2670,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             homePageNavigationProcesses()
         }
         else if case .startingNameSavedRouteProcedure = self.state {
+            homePageNavigationProcesses()
+        }
+        else if case .endScreen = self.state {
             homePageNavigationProcesses()
         }
         else {
