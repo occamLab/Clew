@@ -561,7 +561,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             try! showPauseTrackingButton()
         } else {
             endRouteAnchorPoint = RouteAnchorPoint()
-            completingPauseProcedureHelper(worldMap: nil)
+            completingPauseProcedureHelper(worldMap: sceneView.session.getCurrentWorldMap)   // BL
         }
     }
     
@@ -744,7 +744,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         let id = String(Int64(NSDate().timeIntervalSince1970 * 1000)) as NSString
         
         // BL
-        try! self.archive(routeId: id, appClipCodeID: self.appClipCodeID, beginRouteAnchorPoint: self.beginRouteAnchorPoint, endRouteAnchorPoint: self.endRouteAnchorPoint, intermediateAnchorPoints: self.intermediateAnchorPoints, worldMap: sceneView.session.getCurrentWorldMap /*dataPersistence.unarchiveMap(id: id as String)*/, imageAnchoring: self.imageAnchoring)
+        try! self.archive(routeId: id, appClipCodeID: self.appClipCodeID, beginRouteAnchorPoint: self.beginRouteAnchorPoint, endRouteAnchorPoint: self.endRouteAnchorPoint, intermediateAnchorPoints: self.intermediateAnchorPoints, worldMap: worldMap, imageAnchoring: self.imageAnchoring)
         hideAllViewsHelper()
         /// PATHPOINT Save Route View -> play/pause
         ///Announce to the user that they have finished the alignment process and are now at the play pause screen
@@ -801,7 +801,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
 
     func archive(routeId: NSString, appClipCodeID: String, beginRouteAnchorPoint: RouteAnchorPoint, endRouteAnchorPoint: RouteAnchorPoint, intermediateAnchorPoints: [RouteAnchorPoint], worldMap: Any?, imageAnchoring: Bool) throws {
         let savedRoute = SavedRoute(id: routeId, appClipCodeID: self.appClipCodeID, name: routeName!, crumbs: crumbs, dateCreated: Date() as NSDate, beginRouteAnchorPoint: beginRouteAnchorPoint, endRouteAnchorPoint: endRouteAnchorPoint, intermediateAnchorPoints: intermediateAnchorPoints, imageAnchoring: imageAnchoring)
-        print("route image anchoring: \(savedRoute.imageAnchoring)")
 
       try dataPersistence.archive(route: savedRoute, worldMap: worldMap)
         justTraveledRoute = savedRoute
@@ -911,12 +910,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     var endNavigationController: UIViewController?
     #endif
     
-//    /// saving route code ID VC
-//    var nameCodeIDController: NameCodeIDController!
-//
-//    /// saving route name VC
-//    var nameSavedRouteController: NameSavedRouteController!
-    
     /// start route navigation VC
     var startNavigationController: StartNavigationController!
     
@@ -971,7 +964,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                                                                        height: UIScreen.main.bounds.size.height*0.85)
         manageRoutesController.view.backgroundColor = .clear
         
-        nameSavedRouteController = UIHostingController(rootView: NameSavedRouteView(vc: self, worldMap: justUsedMap))   // BL
+        nameSavedRouteController = UIHostingController(rootView: NameSavedRouteView(vc: self, worldMap: sceneView.session.getCurrentWorldMap))   // BL
         nameSavedRouteController.view.frame = CGRect(x: 0,
                                                                        y: UIScreen.main.bounds.size.height*0.15,
                                                                        width: UIConstants.buttonFrameWidth * 1,
