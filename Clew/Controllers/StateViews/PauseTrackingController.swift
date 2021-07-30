@@ -142,17 +142,17 @@ class PauseTrackingController: UIViewController, UIScrollViewDelegate {
         label.lineBreakMode = NSLineBreakMode.byWordWrapping
 
         /// initialize buttons with some basic size constaints
-        enterAnchorPointDescriptionButton = UIButton.makeConstraintButton(view,
+        enterAnchorPointDescriptionButton = UIButton.makeConstraintSmallButton(view,
                                                                   alignment: UIConstants.ButtonContainerHorizontalAlignment.left,
                                                                   appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "Describe")!),
                                                                   label: NSLocalizedString("enterAnchorPointDescriptionButtonAccessibilityLabel", comment: "This is the accessibility label for the button which allows the user to save a text based description of their anchor point when saving a route. This feature should allow the user to more easily realign with their anchorpoint."))
-        
-        recordVoiceNoteButton = UIButton.makeConstraintButton(view,
+
+        recordVoiceNoteButton = UIButton.makeConstraintSmallButton(view,
                                                          alignment: UIConstants.ButtonContainerHorizontalAlignment.right,
                                                          appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "VoiceNote")!),
                                                          label: NSLocalizedString("enterAnchorPointVoiceNoteButtonAccessibilityLabel", comment: "This is the accessibility label for the button which allows the user to save a voice note description of their anchor point when saving a route. This feature should allow the user to more easily realign with their anchorpoint."))
         
-        confirmAlignmentButton = UIButton.makeConstraintButton(view,
+        confirmAlignmentButton = UIButton.makeConstraintLargeButton(view,
                                                           alignment: UIConstants.ButtonContainerHorizontalAlignment.center,
                                                           appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "Align")!),
                                                           label: NSLocalizedString("startAlignmentCountdownButtonAccessibilityLabel", comment: "this is athe accessibility label for the button which allows the user to start an alignment procedure when saving an anchor point"))
@@ -165,15 +165,28 @@ class PauseTrackingController: UIViewController, UIScrollViewDelegate {
         /// define horizonal, centered, and equal alignment of elements
         /// inside the bottom stack
         stackView.axis = NSLayoutConstraint.Axis.horizontal
-        stackView.distribution  = UIStackView.Distribution.equalSpacing
+        stackView.distribution  = UIStackView.Distribution.fill
         stackView.alignment = UIStackView.Alignment.center
+        
+        let substackView = UIStackView()
+        substackView.translatesAutoresizingMaskIntoConstraints = false;
+        substackView.axis = NSLayoutConstraint.Axis.vertical
+        substackView.distribution = UIStackView.Distribution.fill
+        substackView.alignment = UIStackView.Alignment.center
+        
+        substackView.addArrangedSubview(enterAnchorPointDescriptionButton)
+        substackView.addArrangedSubview(recordVoiceNoteButton)
+
         
         //need to change this stack in order to stack buttons
         
         /// add elements to the stack
-        stackView.addArrangedSubview(enterAnchorPointDescriptionButton)
-        stackView.addArrangedSubview(recordVoiceNoteButton)
+        //stackView.addArrangedSubview(enterAnchorPointDescriptionButton)
         stackView.addArrangedSubview(confirmAlignmentButton)
+        stackView.addArrangedSubview(substackView)
+
+        //stackView.addArrangedSubview(recordVoiceNoteButton)
+
         
         scrollView.flashScrollIndicators()
 
