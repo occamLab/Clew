@@ -1754,8 +1754,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 // yaw can be determined by projecting the camera's z-axis into the ground plane and using arc tangent (note: the camera coordinate conventions of ARKit https://developer.apple.com/documentation/arkit/arsessionconfiguration/worldalignment/camera
                 // add this call so we make sure that we log the alignment transform
                 let _ = self.getRealCoordinates(record: true)
-                let alignYaw = self.getYawHelper(alignTransform)
-                let cameraYaw = self.getYawHelper(camera.transform)
+                let alignYaw = ViewController.getYawHelper(alignTransform)
+                let cameraYaw = ViewController.getYawHelper(camera.transform)
 
                 var leveledCameraPose = simd_float4x4.makeRotate(radians: cameraYaw, 0, 1, 0)
                 leveledCameraPose.columns.3 = camera.transform.columns.3
@@ -2023,7 +2023,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     ///
     /// - Parameter transform: the position and orientation of the phone
     /// - Returns: the heading vector as a 4 dimensional vector (y-component and w-component will necessarily be 0)
-    func getProjectedHeading(_ transform: simd_float4x4) -> simd_float4 {
+    static func getProjectedHeading(_ transform: simd_float4x4) -> simd_float4 {
         if abs(transform.columns.2.y) < abs(transform.columns.0.y) {
             return -simd_make_float4(transform.columns.2.x, 0, transform.columns.2.z, 0)
         } else {
@@ -2037,8 +2037,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     }
     
     /// this gets the yaw of the phone using the heading vector returned by `getProjectedHeading`.
-    func getYawHelper(_ transform: simd_float4x4) -> Float {
-        let projectedHeading = getProjectedHeading(transform)
+    static func getYawHelper(_ transform: simd_float4x4) -> Float {
+        let projectedHeading = ViewController.getProjectedHeading(transform)
         return atan2f(-projectedHeading.x, -projectedHeading.z)
     }
     
@@ -2188,9 +2188,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 pageToDisplay = "FindingSavedRoutes"
             
         case .finishedTutorialRoute(let announceArrival):
-            let tutorialView = NavigationView {
-                PracticeSuccess()//TODO: pop up success page when finished tutorial route
-            }
+            //break
+            let tutorialView = PracticeSuccess()//TODO: pop up success page when finished tutorial route
             tutorialHostingController = UIHostingController(rootView: tutorialView)
         }
         NotificationCenter.default.post(name: Notification.Name("ClewPopoverDisplayed"), object: nil)

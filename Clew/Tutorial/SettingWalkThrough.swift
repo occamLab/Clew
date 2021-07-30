@@ -152,57 +152,6 @@ struct setUpCrumbColor: View {
                     }
                 }
                 
-                /*Button(action:{
-                        print("red")
-                        UserDefaults.standard.setValue(0, forKey: "crumbColor")
-                        //crumbColor = "red"
-                })
-                {
-                if UserDefaults.standard.integer(forKey: "crumbColor") == 0 {
-                    TutorialButtonSelected{
-                        Text("Red")}
-            
-                } else {
-                    TutorialButtonNotSelected{
-                        Text("Red")}
-                    }
-                }
-                
-                Button(action: {
-                    print("Green")
-                    UserDefaults.standard.setValue(1, forKey: "crumbColor")
-                    //crumbColor = "green"
-                
-                    //TODO: render image of green crumb color
-                })
-                {if UserDefaults.standard.integer(forKey: "crumbColor") == 1 {
-                    TutorialButtonSelected{
-                        Text("Green")}
-                        
-                } else {
-                    TutorialButtonNotSelected{
-                        Text("Green")}
-                }
-                }
-                
-                Button(action: {
-                        print("blue")
-                        UserDefaults.standard.setValue(2, forKey: "crumbColor")
-                        //crumbColor = "blue"
-                    
-                }
-                        //TODO: render image of blue crumb color
-                        )
-                {if UserDefaults.standard.integer(forKey: "crumbColor") == 2 {
-                    TutorialButtonSelected{
-                        Text("Blue")}
-                        
-                } else {
-                    TutorialButtonNotSelected{
-                        Text("Blue")}
-                }
-                }*/
-                
                 ForEach(colors.indices) { p in
                     if UserDefaults.standard.integer(forKey: "pathColor") == p {
                         ForEach(colors.indices) { c in
@@ -254,57 +203,6 @@ struct setUpPathColor: View {
                         }
                     }
                 }
-                
-                /*Button(action:{
-                        print("red")
-                        UserDefaults.standard.setValue(0, forKey: "pathColor")
-                        //crumbColor = "red"
-                })
-                {
-                if UserDefaults.standard.integer(forKey: "pathColor") == 0 {
-                    TutorialButtonSelected{
-                        Text("Red")}
-            
-                } else {
-                    TutorialButtonNotSelected{
-                        Text("Red")}
-                    }
-                }
-                
-                Button(action: {
-                    print("Green")
-                    UserDefaults.standard.setValue(1, forKey: "pathColor")
-                    //crumbColor = "green"
-                
-                    //TODO: render image of green crumb color
-                })
-                {if UserDefaults.standard.integer(forKey: "pathColor") == 1 {
-                    TutorialButtonSelected{
-                        Text("Green")}
-                        
-                } else {
-                    TutorialButtonNotSelected{
-                        Text("Green")}
-                }
-                }
-                
-                Button(action: {
-                        print("blue")
-                        UserDefaults.standard.setValue(2, forKey: "pathColor")
-                        //crumbColor = "blue"
-                    
-                }
-                        //TODO: render image of blue crumb color
-                        )
-                {if UserDefaults.standard.integer(forKey: "pathColor") == 2 {
-                    TutorialButtonSelected{
-                        Text("Blue")}
-                        
-                } else {
-                    TutorialButtonNotSelected{
-                        Text("Blue")}
-                }
-                }*/
                 
                 ForEach(colors.indices) { p in
                     if UserDefaults.standard.integer(forKey: "pathColor") == p {

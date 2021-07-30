@@ -28,6 +28,9 @@ struct TutorialScreen<Content: View>: View {
         }
 
         .navigationBarItems(
+            /*leading:
+                NavigationLink("Tutorial", destination: TutorialTestView())
+                .padding(),*/ //TODO: make a reture to tutorial menu button on all the pages
             trailing:
                 Button(NSLocalizedString("buttonTexttoExitTutorial", comment: "text of the button that dismisses the tutorial screens")) {
                     NotificationCenter.default.post(name: Notification.Name("TutorialPopoverReadyToDismiss"), object: nil)
@@ -36,13 +39,6 @@ struct TutorialScreen<Content: View>: View {
         )
     }
   }
-
-//Colors:
-let darkBlue = Color(red: 0.01, green: 0.15, blue: 1.05)
-let skyBlue = Color(red: 0.4627, green: 0.8392, blue: 1.0)
-//TODO: find our own clew colors
-
-
 
 struct TutorialNavLink<Destination: View, Content: View>: View {
     //creates a button format for all the CLEW tutorial navigation links to use. only works for navigation links
@@ -187,15 +183,9 @@ struct TutorialTestView: View {
                 }
                 
                 HStack{
-                    TutorialNavLinkWithRedirection(destination: AnchorPoints(), tag: "AnchorPoints", selection: $showPage.selectedView) {
-                        Text("Anchor Points")
-                    }
-                /*NavigationLink(
-                    "FindPath",
-                    destination: FindPath(),
-                    isActive: $showPage.showFindPath)*/
-                //TutorialNavLink(destination: FindPath()) {Text(NSLocalizedString( "findPathTutorialButtonText", comment: "Title for the finding and following path part of the tutorial"))}
-                if UserDefaults.standard.bool(forKey: "FindPathTutorialCompleted") == true { //Fix to anchor point completion
+                    TutorialNavLinkWithRedirection(destination: SingleUse(), tag: "SingleUse", selection: $showPage.selectedView) {Text(NSLocalizedString( "singleUseRouteTutorialButtonText", comment: "Title for the single use route part of the tutorial"))
+                }
+                if UserDefaults.standard.bool(forKey: "SingleUseTutorialCompleted") == true {
                     Circle()
                         .fill(Color.yellow)
                         .frame(width: 30, height: 30)
@@ -208,9 +198,10 @@ struct TutorialTestView: View {
                 }
                 
                 HStack{
-                    TutorialNavLinkWithRedirection(destination: SingleUse(), tag: "SingleUse", selection: $showPage.selectedView) {Text(NSLocalizedString( "singleUseRouteTutorialButtonText", comment: "Title for the single use route part of the tutorial"))
-                }
-                if UserDefaults.standard.bool(forKey: "SingleUseTutorialCompleted") == true {
+                    TutorialNavLinkWithRedirection(destination: AnchorPoints(), tag: "AnchorPoints", selection: $showPage.selectedView) {
+                        Text("Anchor Points")
+                    }
+                if UserDefaults.standard.bool(forKey: "AnchorPointsCompleted") == true {
                     Circle()
                         .fill(Color.yellow)
                         .frame(width: 30, height: 30)
@@ -238,7 +229,7 @@ struct TutorialTestView: View {
                 }
                 
                 HStack{
-                TutorialNavLinkWithRedirection(destination: FindingSavedRoutes(), tag: "FindPath", selection: $showPage.selectedView) {Text(NSLocalizedString( "findingSavedRoutesTutorialButtonText", comment: "Title for the finding saved route part of the tutorial"))
+                TutorialNavLinkWithRedirection(destination: FindingSavedRoutes(), tag: "FindingSavedRoutes", selection: $showPage.selectedView) {Text(NSLocalizedString( "findingSavedRoutesTutorialButtonText", comment: "Title for the finding saved route part of the tutorial"))
                 }
                 if UserDefaults.standard.bool(forKey: "FindingSavedRoutesTutorialCompleted") {
                     Circle()
@@ -253,8 +244,10 @@ struct TutorialTestView: View {
                 }
                 
                 HStack{
-                TutorialNavLinkWithRedirection(destination: SettingOptions(), tag: "SettingOptions", selection: $showPage.selectedView) {Text(NSLocalizedString( "settingOptionsTutorialButtonText", comment: "Title for the setting options part of the tutorial"))
+                TutorialNavLinkWithRedirection(destination: SettingOptions(), tag: "SettingOptions", selection: $showPage.selectedView) {
+                    Text(NSLocalizedString( "settingOptionsTutorialButtonText", comment: "Title for the setting options part of the tutorial"))
                 }
+                 //   ProgressCircle(status: Use)
                 if UserDefaults.standard.bool(forKey: "SettingsOptionsTutorialCompleted") == true {
                     Circle()
                         .fill(Color.yellow)
@@ -302,6 +295,7 @@ struct CLEWintro: View {
                 UserDefaults.standard.setValue(false, forKey: "FindPathTutorialCompleted")
                 UserDefaults.standard.setValue(false, forKey: "FindPathPractice1Completed")
                 UserDefaults.standard.setValue(false, forKey: "FindPathPractice2Completed")
+                UserDefaults.standard.setValue(false, forKey: "AnchorPointsCompleted")
                 UserDefaults.standard.setValue(false, forKey: "SingleUseTutorialCompleted")
                 UserDefaults.standard.setValue(false, forKey: "SavedRoutesTutorialCompleted")
                 UserDefaults.standard.setValue(false, forKey: "FindingSavedRoutesTutorialCompleted")
@@ -319,15 +313,28 @@ struct CLEWintro: View {
 }
 
 
+struct ClewExamples: View {
+    var body: some View {
+        TutorialScreen {
+            Text("What Can I Use Clew For?")
+            
+            Text("Clew is a versitile tool for traveling from point A to B. Below are some examples of what situations current users find Clew helpful.")
+            
+            Text("You could use Clew when visting a hotel, by saving a Clew route from the front door to the elevator and then save a route from the elevator to your room. Then you could use Clew to navigate those routes whenever you like.")
+            
+            Text("You could use Clew to navigate between your table and the restroom in a resturant.")
+            
+        }
+    }
+}
+
+
 struct OrientPhone: View {
     var body: some View {
         TutorialScreen {
             Text(NSLocalizedString("orientPhoneTutorialButtonText", comment: "Title for the setting options part of the tutorial"))
         
-            ScrollView{
             Text(NSLocalizedString("orientPhoneTutorialInstructionText", comment: "Text that explains how to orient the phone for the best experience using Clew"))
-                //.fixedSize(horizontal: false, vertical: true)
-            }
             
             TutorialNavLink(destination: OrientPhoneTips()) {Text(NSLocalizedString("tipTutorialTitle", comment: "text on button to tips page"))}
             
@@ -358,7 +365,7 @@ struct OrientPhoneTips: View {
 
 
 struct PracticeOrientPhone: View {
-    //TODO: 1 can't exit right now bc the var arData is being updated constantly. 2 give haptic feedback  3 add success notification when activity is complete
+    //TODO: 1 can't exit right now bc the var arData is being updated constantly. 2 turn off insificiant visual feature anounchment. 3 add notification to remind people that they have to move thier phone out of the correct position and back to get another point. 
     @State private var started = false
     //@State private var successAlert = false
     @State private var score = 0
@@ -439,7 +446,7 @@ struct PracticeOrientPhone: View {
             
             
             if score >= 3 {
-                Text("Nice Job! You've completed orientation practice. You can keep practicing or go to the next section")
+                Text(NSLocalizedString("orientPhoneTutorialPracticeSuccess", comment: "Text when user has completed the phone position practice"))
             }
             
         }.onDisappear() {
@@ -530,7 +537,7 @@ struct PracticeOrientPhone: View {
                         
                     if score == 3, playSuccess {
                         playSuccess = false
-                        UIAccessibility.post(notification: .announcement, argument: "Nice Job! You've completed phone orientation practice. You can keep practicing or go to the next section")
+                        UIAccessibility.post(notification: .announcement, argument: NSLocalizedString("orientPhoneTutorialPracticeSuccess", comment: "Text when user has completed the phone position practice"))
                     }
                 }
             }
@@ -568,13 +575,9 @@ struct FindPath: View {
 struct FindPathPractice1: View {
     var body: some View {
         TutorialScreen{
-            Text("Practice Path 1")
+            Text(NSLocalizedString("findPathPractice1Title", comment: "Text for the title of the first following route practice."))
             
-            Text("Here you will practice following a Clew Route. Make sure you are in a familiar place with some open space around you.")
-            
-            /*Button("Start") {
-                NotificationCenter.default.post(name: Notification.Name("StartTutorialPath"), object: nil)
-                NotificationCenter.default.post(name: Notification.Name("TutorialPopoverReadyToDismiss"), object: nil)}*/
+            Text(NSLocalizedString("findPathPractice1InstructionText", comment: "Text for the instructions of the first following route practice."))
                 
             Button(action:{
                 NotificationCenter.default.post(name: Notification.Name("StartTutorialPath"), object: nil)
@@ -582,7 +585,7 @@ struct FindPathPractice1: View {
                 NotificationCenter.default.post(name: Notification.Name("BurgerMenuReadyToDismiss"), object: nil)
                 UserDefaults.standard.setValue(false, forKey: "FindPathPractice1Completed")
             }){TutorialButton{
-                Text("Practice 1")}}
+                Text(NSLocalizedString("findPathPracticeBeginButtonText", comment: "Text for the begin button of the first following route practice."))}}
             
         }
         Spacer()
@@ -594,18 +597,19 @@ struct FindPathPractice1: View {
 struct FindPathPractice2: View {
     var body: some View {
         TutorialScreen{
-            Text("Practice Path 2")
+            Text(NSLocalizedString("findPathPractice2Title", comment: "Text for the title of the second following route practice."))
             
-            Text("Here you will practice following a Clew Route. Make sure you are in a familiar place with some open space around you.")
+            Text(NSLocalizedString("findPathPractice2InstructionText", comment: "Text for the instructions of the second following route practice."))
             
             Button(action:{
                 NotificationCenter.default.post(name: Notification.Name("StartTutorialPath2"), object: nil)
-                    NotificationCenter.default.post(name: Notification.Name("TutorialPopoverReadyToDismiss"), object: nil)})
+                NotificationCenter.default.post(name: Notification.Name("TutorialPopoverReadyToDismiss"), object: nil)
+                UserDefaults.standard.setValue(true, forKey: "FindPathPractice1Completed")})
             {TutorialButton{
-                Text("Start Practice")}}
+                Text(NSLocalizedString("findPathPracticeBeginButtonText", comment: "Text for the begin practice for the second following route practice."))}}
             
         }.onDisappear(){
-            UserDefaults.standard.setValue(true, forKey: "FindPathTutorialCompleted")
+            UserDefaults.standard.setValue(true, forKey: "FindPathCompleted")
         }
         
         Spacer()
@@ -617,15 +621,28 @@ struct FindPathPractice2: View {
 struct PracticeSuccess: View {
     @State var successSound: AVAudioPlayer?
     var body: some View {
-        TutorialScreen{
-            Text("Congradulations!")
+        NavigationView{
+            TutorialScreen{
+                Text(NSLocalizedString("findPathPracticeSuccessTitle", comment: "Text for the title of the success page for following route practice."))
             
-            if UserDefaults.standard.bool(forKey: "FindPathPractice1Complete") == true {
-                Text("You've completed the route practices. You can continue through the tutorial or go try out recording and praticing some of our own routes in a familiar space using Single Use Routes on the Clew home page.")
+                if UserDefaults.standard.bool(forKey: "FindPathPractice1Completed") == true {
+                    Text(NSLocalizedString("findPathPracticeSuccess2Text", comment: "Text for the success of the second practice route."))
+                    
+                }else {
+                    Text(NSLocalizedString("findPathPracticeSuccess1Text", comment: "Text for the success of the first practice route."))
+                    }
                 
-            }else {
-                Text("You've completed the first route practice. Continue to the next practice to try another short route.")
+            //}
+
+            Spacer() //TODO: spacer is not push next button to the bottom :(
+                if UserDefaults.standard.bool(forKey: "FindPathPractice1Completed") == true {
+                    TutorialNavLink(destination: SingleUse()) {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
+                
+                }else {
+                    TutorialNavLink(destination: FindPathPractice2()) {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
+                }
             }
+            
         }.onAppear()
         {let path1 = Bundle.main.path(forResource: "ClewSuccessSound", ofType:"wav")!
         let url1 = URL(fileURLWithPath: path1)
@@ -635,19 +652,6 @@ struct PracticeSuccess: View {
         } catch {
             // couldn't load file :(
         }
-        }.onDisappear() {
-            if UserDefaults.standard.bool(forKey: "FindPathPractice1Complete") == true {
-                UserDefaults.standard.setValue(true, forKey: "FindPathPractice2Completed")
-            }else {
-                UserDefaults.standard.setValue(true, forKey: "FindPathPractice1Completed")
-            }
-        }
-        
-        Spacer()
-        if UserDefaults.standard.bool(forKey: "FindPathPractice1Complete") == true {
-            TutorialNavLink(destination: FindPathPractice2()) {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
-        }else {
-            TutorialNavLink(destination: SingleUse()) {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
         }
     }
 }
@@ -668,7 +672,7 @@ struct SingleUse: View {
         }
         
         Spacer()
-        TutorialNavLink(destination: SavedRoutes()) {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
+        TutorialNavLink(destination: AnchorPoints()) {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
     }
 }
 
@@ -680,7 +684,105 @@ struct RecordingSingleUse: View {
         }
             
         Spacer()
-        TutorialNavLink(destination: SavedRoutes()) {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
+        TutorialNavLink(destination: AnchorPoints()) {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
+    }
+}
+
+
+struct AnchorPoints: View {
+    var body: some View {
+        TutorialScreen  {
+            Text(NSLocalizedString( "anchorPointTutorialButtonText", comment: "Title for the anchor point part of the tutorial"))
+            
+            //ScrollView{
+            Text(NSLocalizedString("anchorPointTutorialInstructionText", comment: "Instructions for setting anchor points"))
+                //.fixedSize(horizontal: false, vertical: true)
+            
+            TutorialNavLink(destination: AnchorPointTips())  {Text("Tips")}//(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
+            
+            TutorialNavLink(destination: AnchorPointPractice())  {Text("Practice")}//(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
+            
+        }.onDisappear(){
+            UserDefaults.standard.setValue(true, forKey: "AnchorPointsCompleted")}
+            
+            Spacer()
+            TutorialNavLink(destination: SavedRoutes())  {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
+                
+    }
+}
+
+
+struct AnchorPointTips: View {
+    var body: some View {
+        TutorialScreen {
+            Text("Anchor Point Tips")
+            
+            Text("")
+        }
+    }
+}
+
+struct AnchorPointPractice: View {
+    @ObservedObject private var arData = ARData.shared
+    @State var sound: AVAudioPlayer?
+    @State private var started = false
+    @State var xyzYaw: [Float] = []
+    var body: some View {
+        TutorialScreen {
+            Text("Practice Setting Anchor Points")
+            
+            Button(action:{
+                started.toggle()
+                NotificationCenter.default.post(name: Notification.Name("StartARSession"), object: nil)
+            }){
+                if started {
+                    TutorialButton{
+                        Text(NSLocalizedString("orientPhoneTutorialPracticeStop", comment: "stop orient phone practice"))}
+                } else {
+                    TutorialButton{
+                        Text(NSLocalizedString("orientPhoneTutorialPracticeStart", comment: "start orient phone practice"))}
+                }
+            }
+            
+            
+            Button(action: {
+                if let transform = arData.transform {
+                    let x = transform.columns.3.x
+                    let y = transform.columns.3.y
+                    let z = transform.columns.3.z
+                    let yaw = ViewController.getYawHelper(transform)
+                    xyzYaw = [x, y, z, yaw]
+                }
+                
+            }) {Text("capture anchorpoint")//Image(systemName: "alinement")
+                }
+            if let transform = arData.transform {
+                let x = transform.columns.3.x
+                let y = transform.columns.3.y
+                let z = transform.columns.3.z
+                let yaw = ViewController.getYawHelper(transform)
+                if xyzYaw.count == 4 {
+                    Text("x, y, z, yaw \(x - xyzYaw[0]), \(y - xyzYaw[1]), \(z - xyzYaw[2]), \(yaw - xyzYaw[3])")
+                }
+            }
+            
+            
+            
+        }.onReceive(self.arData.objectWillChange) {newARData in
+            if let transform = arData.transform {
+            let y = transform.columns.0.y
+            let path1 = Bundle.main.path(forResource: "ClewTutorialFeedback", ofType:"wav")!
+            let url1 = URL(fileURLWithPath: path1)
+                    if y < -0.9 && y > -0.8 {
+                        do {
+                            sound = try AVAudioPlayer(contentsOf: url1)
+                            sound?.play()
+                        } catch {
+                            // couldn't load file :(
+                        }
+                    }
+            }
+        }
     }
 }
 
@@ -701,7 +803,12 @@ struct SavedRoutes: View {
     }
 }
 
+/*class EnteredFrom: ObservableObject {
+    @Published var anchorPointFromSavedRoutes = false
+}*/
+
 struct RecordSavedRoutes: View {
+    //@ObservedObject var entered
     var body: some View {
         TutorialScreen {
             Text(NSLocalizedString( "recordSavedRoutesTutorialButtonText", comment: "Title for the recording saved routes part of the tutorial"))
@@ -710,7 +817,7 @@ struct RecordSavedRoutes: View {
         Text(NSLocalizedString("recordSavedRoutesTutorialInstructionText", comment: "Instructions for recording saved routes"))
             //.fixedSize(horizontal: false, vertical: true)
             
-        TutorialNavLink(destination: AnchorPoints()) {Text(NSLocalizedString( "anchorPointTutorialButtonText", comment: "Title for the anchor point part of the tutorial"))}
+            TutorialNavLink(destination: AnchorPoints()) {Text(NSLocalizedString( "anchorPointTutorialButtonText", comment: "Title for the anchor point part of the tutorial"))}//.simultaneousGesture(anchorPointFromSavedRoutes = true)
         
         TutorialNavLink(destination: VoiceNotes()) {Text(NSLocalizedString( "voiceNotesTutorialButtonText", comment: "Title for the voice notes part of the tutorial"))}
             
@@ -718,22 +825,6 @@ struct RecordSavedRoutes: View {
         
         Spacer()
         TutorialNavLink(destination: FindingSavedRoutes())  {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
-    }
-}
-
-struct AnchorPoints: View {
-    var body: some View {
-        TutorialScreen  {
-            Text(NSLocalizedString( "anchorPointTutorialButtonText", comment: "Title for the anchor point part of the tutorial"))
-            
-            //ScrollView{
-            Text(NSLocalizedString("anchorPointTutorialInstructionText", comment: "Instructions for setting anchor points"))
-                //.fixedSize(horizontal: false, vertical: true)
-            }
-            
-            Spacer()
-            TutorialNavLink(destination: VoiceNotes())  {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
-                
     }
 }
 
