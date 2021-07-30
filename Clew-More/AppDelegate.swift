@@ -30,6 +30,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let filePath = Bundle.main.path(forResource: "GoogleService-Info_dev", ofType: "plist")!
         let options = FirebaseOptions(contentsOfFile: filePath)
         FirebaseApp.configure(options: options!)
+        //vc.beginScanning(self)
 
         return true
     }
@@ -44,6 +45,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         /// import the file here
         vc?.dataPersistence.importData(from: url)
+        //vc.beginScanning(self)
         
         return true
     }
