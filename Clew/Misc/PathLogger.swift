@@ -9,9 +9,9 @@
 
 import Foundation
 import Firebase
-import FirebaseAnalytics
 import SceneKit
 #if !APPCLIP
+import FirebaseAnalytics
 import FirebaseAuth
 #endif
 
@@ -202,7 +202,8 @@ class PathLogger {
             userId = Analytics.appInstanceID()!
         }
         #else
-        userId = Analytics.appInstanceID()!
+//        userId = Analytics.appInstanceID()!
+        userId = ""     // BL
         #endif
         
         var logFileURLs: [String] = []

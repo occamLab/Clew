@@ -1,6 +1,6 @@
 //
 //  SceneDelegate.swift
-//  MyAppClip
+//  UIKit Clip
 //
 //  Created by Paul Ruvolo on 6/30/21.
 //
@@ -21,7 +21,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var popoverController: UIViewController?
     var loadFromAppClipController: UIViewController?
     
-    var homeScreenHelper: HomeScreenHelper?
+//    var homeScreenHelper: HomeScreenHelper?
 
 //    var currentAnnouncement: String?
   
@@ -33,7 +33,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let scene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: scene)
         vc = ViewController()
-        homeScreenHelper = HomeScreenHelper(vc: vc!, sceneDelegate: self)
+//        homeScreenHelper = HomeScreenHelper(vc: vc!, sceneDelegate: self)
 
         
         window?.frame = UIScreen.main.bounds
@@ -46,7 +46,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     func loadRoute() {
         //vc?.imageAnchoring = true
+        #if !APPCLIP
         vc?.arLogger.startTrial()
+        #endif
         vc?.recordPathController.remove()
         vc?.handleStateTransitionToNavigatingExternalRoute()
     }
@@ -55,7 +57,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         
         createScene(scene)
-        self.homeScreenHelper!.NavigateAppClipRouteHelper()
+//        self.homeScreenHelper!.NavigateAppClipRouteHelper()
       
 //         /// User enters their appClipCodeID
 //         self.enterCodeIDController = UIHostingController(rootView: EnterCodeIDView(vc: self.vc!))

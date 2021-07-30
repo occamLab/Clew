@@ -52,10 +52,16 @@ class DataPersistence {
     
     func importData(withData data: Data) {
         // TODO: Do this same setClass thing for Clew documents
-        NSKeyedUnarchiver.setClass(RouteDocumentData.self, forClassName: "Clew_Dev.RouteDocumentData")
-        NSKeyedUnarchiver.setClass(SavedRoute.self, forClassName: "Clew_Dev.SavedRoute")
-        NSKeyedUnarchiver.setClass(LocationInfo.self, forClassName: "Clew_Dev.LocationInfo")
-        NSKeyedUnarchiver.setClass(RouteAnchorPoint.self, forClassName: "Clew_Dev.RouteAnchorPoint")
+        #if APPCLIP
+        let className: String = "Clew_More"
+        #else
+        let className: String = "Clew_Dev"
+        #endif
+        
+        NSKeyedUnarchiver.setClass(RouteDocumentData.self, forClassName: "\(className).RouteDocumentData")
+        NSKeyedUnarchiver.setClass(SavedRoute.self, forClassName: "\(className).SavedRoute")
+        NSKeyedUnarchiver.setClass(LocationInfo.self, forClassName: "\(className).LocationInfo")
+        NSKeyedUnarchiver.setClass(RouteAnchorPoint.self, forClassName: "\(className).RouteAnchorPoint")
 
         var documentData: RouteDocumentData
         

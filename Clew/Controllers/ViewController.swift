@@ -34,7 +34,11 @@ import Firebase
 //import SRCountdownTimer
 import SwiftUI
 import Firebase
+#if !APPCLIP
 import ARDataLogger
+#else
+import SRCountdownTimer
+#endif
 
 /// A custom enumeration type that describes the exact state of the app.  The state is not exhaustive (e.g., there are Boolean flags that also track app state).
 enum AppState {
@@ -229,14 +233,15 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     var isAutomaticAlignment: Bool = false
     
     /// ARDataLogger
+    #if !APPCLIP
     var arLogger = ARLogger.shared
+    #endif
     /// Keep track of when to log a frame
     var lastFrameLogTime = Date()
     
     /// This is an audio player that queues up the voice note associated with a particular route Anchor Point. The player is created whenever a saved route is loaded. Loading it before the user clicks the "Play Voice Note" button allows us to call the prepareToPlay function which reduces the latency when the user clicks the "Play Voice Note" button.
     var voiceNoteToPlay: AVAudioPlayer?
     
-    /// These are based on querying the invocation URL
     /// This is the name of the .crd file of the path to load, which is assigned by SceneDelegate
     var routeID: String = ""
   
@@ -245,9 +250,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// This is the list of routes associated with a specific app clip code
     var availableRoutes = [[String: String]]()
-    
-    /// This is the path to download route
-    var firebasePath: String?
     
     // MARK: - Speech Synthesizer Delegate
     
@@ -378,7 +380,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         endRouteAnchorPoint = RouteAnchorPoint()
 
         logger.resetNavigationLog()
-        print("testPath", firebasePath)
         
         // this is where the code would actually pick up B)
         let pathRef = Storage.storage().reference().child("AppClipRoutes/\(routeID).crd")
@@ -393,13 +394,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 /*NotificationCenter.default.addObserver(forName: NSNotification.Name("shouldOpenRoute"), object: nil, queue: nil) { (notification) -> Void in
                     
                 }*/
-   
                 
                 self.dataPersistence.importData(withData: data!)
                 print(self.dataPersistence.routes)
                 print("data, persisted")
                 
                 let thisRoute = (self.dataPersistence.routes.first(where: {String($0.id) == self.routeID}))!
+//                let thisRoute = (self.dataPersistence.routes.last)!
                 
                 print("Soooup Time \(thisRoute.name)")
                 print("soooooup time")
@@ -409,10 +410,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 self.continuationAfterSessionIsReady = {
                     self.handleStateTransitionToStartingResumeProcedure(route: thisRoute, worldMap: nil, navigateStartToEnd: true)
                 }
-
-
             }
-          }
+        }
     }
     
     /// Handler for the navigatingRoute app state
@@ -727,7 +726,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         isAutomaticAlignment = false
         recordingSingleUseRoute = false
         self.hideAllViewsHelper()
+        #if !APPCLIP
         self.rootContainerView.homeButton.isHidden = false
+        #endif
         self.add(self.manageRoutesController)
         print("works")
     }
@@ -759,8 +760,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         pauseTrackingController.remove()
         resumeTrackingConfirmController.remove()
         resumeTrackingController.remove()
-        nameSavedRouteController.remove()
-        nameCodeIDController.remove()
+        nameSavedRouteController?.remove()
+        nameCodeIDController?.remove()
         #if CLEWMORE
         selectRouteController.remove()
         enterCodeIDController.remove()
@@ -890,8 +891,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// route recording VC (called on app start)
     var recordPathController: RecordPathController!
     
-    
-    #if CLEWMORE
+    // SwiftUI controllers
     var enterCodeIDController: UIViewController!
     
     var selectRouteController: UIViewController!
@@ -907,7 +907,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     var nameSavedRouteController: UIViewController!
     
     var endNavigationController: UIViewController?
-    #endif
     
     /// start route navigation VC
     var startNavigationController: StartNavigationController!
@@ -1060,7 +1059,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 }
             }
         }
+        #if !APPCLIP
         arLogger.startTrial()
+        #endif
     }
     
     /// Create the audio player objects for the various app sounds.  Creating them ahead of time helps reduce latency when playing them later.
@@ -1399,21 +1400,29 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     
     func session(_ session: ARSession, didUpdate anchors: [ARAnchor]) {
+        #if !APPCLIP
         arLogger.session(session, didUpdate: anchors)
+        #endif
     }
     func session(_ session: ARSession, didRemove anchors: [ARAnchor]) {
+        #if !APPCLIP
         arLogger.session(session, didRemove: anchors)
+        #endif
     }
     func session(_ session: ARSession, didAdd anchors: [ARAnchor]) {
+        #if !APPCLIP
         arLogger.session(session, didAdd: anchors)
+        #endif
     }
     
     func session(_ session: ARSession, didUpdate frame: ARFrame) {
+        #if !APPCLIP
         arLogger.session(session, didUpdate: frame)
         if -lastFrameLogTime.timeIntervalSinceNow > 1.0 {
             arLogger.log(frame: frame, withType: state.rawValue, withMeshLoggingBehavior: .none)
             lastFrameLogTime = Date()
         }
+        #endif
         if case .readyForFinalResumeAlignment = state {
             if (frame.anchors.compactMap({$0 as? ARImageAnchor}).count > 0) && (state.rawValue != "startingAutoAlignment") {
                 print("in the first if loop")
@@ -2213,7 +2222,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     @objc func enterCodeID() {
         self.recordPathController.remove()
         self.add(enterCodeIDController)
+        #if !APPCLIP
         self.rootContainerView.homeButton.isHidden = false
+        #endif
     }
     
     /// this is called once the app clip code ID has been entered
