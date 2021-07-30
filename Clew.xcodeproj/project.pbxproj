@@ -81,10 +81,6 @@
 		980536EE2684D16F0065E80F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 980536732683C1D10065E80F /* AppDelegate.swift */; };
 		9815CEEB26851049008FCF74 /* test-route2.crd in Resources */ = {isa = PBXBuildFile; fileRef = 9815CEEA26851049008FCF74 /* test-route2.crd */; };
 		9815CEEC26851049008FCF74 /* test-route2.crd in Resources */ = {isa = PBXBuildFile; fileRef = 9815CEEA26851049008FCF74 /* test-route2.crd */; };
-		9815CEF8268512AB008FCF74 /* clew-dev-route.crd in Resources */ = {isa = PBXBuildFile; fileRef = 9815CEF6268512AB008FCF74 /* clew-dev-route.crd */; };
-		9815CEF9268512AB008FCF74 /* clew-dev-route.crd in Resources */ = {isa = PBXBuildFile; fileRef = 9815CEF6268512AB008FCF74 /* clew-dev-route.crd */; };
-		9815CEFB268512AB008FCF74 /* clew-test.crd in Resources */ = {isa = PBXBuildFile; fileRef = 9815CEF7268512AB008FCF74 /* clew-test.crd */; };
-		9815CEFC268512AB008FCF74 /* clew-test.crd in Resources */ = {isa = PBXBuildFile; fileRef = 9815CEF7268512AB008FCF74 /* clew-test.crd */; };
 		9819E2F2268BA6AB0008CA82 /* PauseTrackingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470EE622C119F4001092A4 /* PauseTrackingController.swift */; };
 		98260258268CC1DB00D66811 /* speaker.obj in Resources */ = {isa = PBXBuildFile; fileRef = 823DA453252F7EA800BB5E6B /* speaker.obj */; };
 		9826B6D526B07C3F00EC563C /* EndNavigationScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9826B6D426B07C3F00EC563C /* EndNavigationScreen.swift */; };
@@ -102,6 +98,7 @@
 		9863AF0926B4383F00EF0C64 /* RouteDocumentData.swift in Sources */ = {isa = PBXBuildFile; fileRef = E565A10722F2173400C1998E /* RouteDocumentData.swift */; };
 		9863AF0A26B4384000EF0C64 /* RouteDocumentData.swift in Sources */ = {isa = PBXBuildFile; fileRef = E565A10722F2173400C1998E /* RouteDocumentData.swift */; };
 		9863AF6426B4456100EF0C64 /* UIKit Clip.app in Embed App Clips */ = {isa = PBXBuildFile; fileRef = 98006F76268382D600E61861 /* UIKit Clip.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		9863AF6926B44D9E00EF0C64 /* ScanTagView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9863AF6826B44D9E00EF0C64 /* ScanTagView.swift */; };
 		986640CE22FB68F2005AA1F6 /* NameSavedRouteController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986640CD22FB68F2005AA1F6 /* NameSavedRouteController.swift */; };
 		986640CF22FC9606005AA1F6 /* NameSavedRouteController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986640CD22FB68F2005AA1F6 /* NameSavedRouteController.swift */; };
 		987BA6F4268E53C0008B129E /* StartNavigationPopoverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 987BA6F3268E53C0008B129E /* StartNavigationPopoverView.swift */; };
@@ -434,8 +431,6 @@
 		9805366626838E130065E80F /* InAppSettingsKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = InAppSettingsKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		980536732683C1D10065E80F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9815CEEA26851049008FCF74 /* test-route2.crd */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = "test-route2.crd"; sourceTree = "<group>"; };
-		9815CEF6268512AB008FCF74 /* clew-dev-route.crd */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = "clew-dev-route.crd"; sourceTree = "<group>"; };
-		9815CEF7268512AB008FCF74 /* clew-test.crd */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = "clew-test.crd"; sourceTree = "<group>"; };
 		9826B6D426B07C3F00EC563C /* EndNavigationScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndNavigationScreen.swift; sourceTree = "<group>"; };
 		98384367269C9CC800B6CFC7 /* Clew_Public_SpacesApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Clew_Public_SpacesApp.swift; sourceTree = "<group>"; };
 		98384369269C9CC800B6CFC7 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -445,6 +440,7 @@
 		984FBD302695EC0200B63A6A /* SetTagController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetTagController.swift; sourceTree = "<group>"; };
 		984FBD332696179800B63A6A /* NameCodeIDController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NameCodeIDController.swift; sourceTree = "<group>"; };
 		984FBD3B26962E4900B63A6A /* EnterCodeIDView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterCodeIDView.swift; sourceTree = "<group>"; };
+		9863AF6826B44D9E00EF0C64 /* ScanTagView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanTagView.swift; sourceTree = "<group>"; };
 		986640CD22FB68F2005AA1F6 /* NameSavedRouteController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NameSavedRouteController.swift; sourceTree = "<group>"; };
 		987BA6F3268E53C0008B129E /* StartNavigationPopoverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartNavigationPopoverView.swift; sourceTree = "<group>"; };
 		98A2DABA26A709C400158F83 /* NameSavedRouteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NameSavedRouteView.swift; sourceTree = "<group>"; };
@@ -642,14 +638,13 @@
 		98006F77268382D600E61861 /* UIKit Clip */ = {
 			isa = PBXGroup;
 			children = (
-				9815CEF6268512AB008FCF74 /* clew-dev-route.crd */,
-				9815CEF7268512AB008FCF74 /* clew-test.crd */,
 				98006F7A268382D600E61861 /* SceneDelegate.swift */,
 				98006F81268382D800E61861 /* Assets.xcassets */,
 				98006F83268382D800E61861 /* LaunchScreen.storyboard */,
 				98006F86268382D800E61861 /* Info.plist */,
 				98006F87268382D800E61861 /* UIKit_Clip.entitlements */,
 				980536732683C1D10065E80F /* AppDelegate.swift */,
+				9863AF6826B44D9E00EF0C64 /* ScanTagView.swift */,
 			);
 			path = "UIKit Clip";
 			sourceTree = "<group>";
@@ -1158,12 +1153,10 @@
 				E59DA6BF22C65F5900FCD5A1 /* LaunchScreen.storyboard in Resources */,
 				988A7577269CDF32008D6F34 /* route-quicklook.appex in Resources */,
 				98AB6077269DDCC700613BB5 /* anchorInFrame.mp3 in Resources */,
-				9815CEF8268512AB008FCF74 /* clew-dev-route.crd in Resources */,
 				1F2B9D8722C5446B00317DC8 /* (null) in Resources */,
 				9815CEEB26851049008FCF74 /* test-route2.crd in Resources */,
 				82AD6A25252F80AA00902A11 /* speaker.mtl in Resources */,
 				E5D1695E22E103A0008754D0 /* Localizable.strings in Resources */,
-				9815CEFB268512AB008FCF74 /* clew-test.crd in Resources */,
 				E5470F1A22C119F5001092A4 /* StopRecording.aiff in Resources */,
 				77467DAF22BBC1D300FA7DEE /* Default-568h@2x.png in Resources */,
 				98AA588F269DD121001123F0 /* GoogleService-Info.plist in Resources */,
@@ -1233,14 +1226,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9815CEF9268512AB008FCF74 /* clew-dev-route.crd in Resources */,
 				98AB6078269DDCC700613BB5 /* anchorInFrame.mp3 in Resources */,
 				E5470F0F22C119F5001092A4 /* Settings.bundle in Resources */,
 				E5470F1922C119F5001092A4 /* StartRecording.aiff in Resources */,
 				77365B192343ECBA008BC35C /* BurgerMenu.storyboard in Resources */,
 				E5470F1B22C119F5001092A4 /* StopRecording.aiff in Resources */,
 				9815CEEC26851049008FCF74 /* test-route2.crd in Resources */,
-				9815CEFC268512AB008FCF74 /* clew-test.crd in Resources */,
 				82AD6A26252F80AA00902A11 /* speaker.mtl in Resources */,
 				B7EB59E220F693EB00FBBC6A /* Confirm.mp3 in Resources */,
 				98AA588A269DD119001123F0 /* GoogleService-Info_dev.plist in Resources */,
@@ -1541,6 +1532,7 @@
 				98006FC4268385B700E61861 /* Float4x4Extension.swift in Sources */,
 				9805365A268388DD0065E80F /* PathFinder.swift in Sources */,
 				9863AF0626B32EB600EF0C64 /* SceneDelegate.swift in Sources */,
+				9863AF6926B44D9E00EF0C64 /* ScanTagView.swift in Sources */,
 				98006FCA268385DD00E61861 /* RoutesViewController.swift in Sources */,
 				98006FC0268385A400E61861 /* NSStringExtension.swift in Sources */,
 			);

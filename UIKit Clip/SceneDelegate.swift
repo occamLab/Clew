@@ -20,6 +20,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var enterCodeIDController: UIViewController?
     var popoverController: UIViewController?
     var loadFromAppClipController: UIViewController?
+    var scanTagController: UIViewController?
     
 //    var homeScreenHelper: HomeScreenHelper?
 
@@ -41,7 +42,19 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window?.backgroundColor = .white
         window?.makeKeyAndVisible()
         UIApplication.shared.isIdleTimerDisabled = true
+        handleTransitionToScanTagView()
+    }
+    
+    func handleTransitionToScanTagView() {
+        scanTagController = UIHostingController(rootView: ScanTagView())
+        scanTagController?.view.frame = CGRect(x: 0,
+                                                                       y: UIScreen.main.bounds.size.height*0.15,
+                                                                       width: UIConstants.buttonFrameWidth * 1,
+                                                                       height: UIScreen.main.bounds.size.height*0.75)
+        scanTagController?.view.backgroundColor = .clear
+        
         vc!.hideAllViewsHelper()
+        vc!.add(scanTagController!)
     }
     
     func loadRoute() {
@@ -50,6 +63,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         vc?.arLogger.startTrial()
         #endif
         vc?.recordPathController.remove()
+        scanTagController?.remove()
         vc?.handleStateTransitionToNavigatingExternalRoute()
     }
     
