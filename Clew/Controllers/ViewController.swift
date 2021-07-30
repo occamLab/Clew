@@ -979,23 +979,26 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         let userDefaults: UserDefaults = UserDefaults.standard
         //todel
         //reintialise everythin for test puposes
-      UserDefaults.standard.setValue(false, forKey: "siriShortcutStartNavigatingRoute")
+      //UserDefaults.standard.setValue(false, forKey: "siriShortcutStartNavigatingRoute")
 //        siriShortcutExperimentRouteFlag = false
-     //UserDefaults.standard.setValue(false, forKey: "siriShortcutExperimentRoute")
+    // UserDefaults.standard.setValue(false, forKey: "siriShortcutExperimentRoute")
         UserDefaults.standard.setValue(false, forKey: "siriShortcutAlert")
-        //UserDefaults.standard.setValue(false, forKey: "singleUseRouteExperimentFlag")
-        //UserDefaults.standard.setValue(false, forKey: "experimentRouteFlag")
-        //UserDefaults.standard.setValue(conditionsList.randomElement(), forKey: "currentCondition")
+        UserDefaults.standard.setValue(false, forKey: "singleUseRouteExperimentFlag")
+        UserDefaults.standard.setValue(false, forKey: "experimentRouteFlag")
+        UserDefaults.standard.setValue(conditionsList.randomElement(), forKey: "currentCondition")
         let cConditions: Dictionary? =  userDefaults.dictionary(forKey: "conditionsDico")
         print("before Condition")
         print(cConditions)
         
         let recondtions = ["lanyard":0,"bracing":0,"none":0]
-        //UserDefaults.standard.setValue(recondtions, forKey: "conditionsDico")
-        //UserDefaults.standard.setValue(recondtions, forKey: "experimentConditonsDico")
+    UserDefaults.standard.setValue(recondtions, forKey: "conditionsDico")
+        
+       
+        UserDefaults.standard.setValue(false, forKey:   "completedExperiment")
+        UserDefaults.standard.setValue(recondtions, forKey: "experimentConditonsDico")
        
         
-    //    UserDefaults.standard.setValue(false, forKey: "siriShortcutExperimentRoute")
+     // UserDefaults.standard.setValue(false, forKey: "siriShortcutExperimentRoute")
       //todel
        //ch UserDefaults.standard.setValue([""], forKey: "siriShortcutDisplayList")
         let tConditions: Dictionary? =  userDefaults.dictionary(forKey: "conditionsDico")
@@ -1239,12 +1242,18 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
            // print("dico after")
           //  print(conditionsDico)
             ViewController.ConditionsCount =  conditionsDico[condition] as! Int
+            
+            if(conditionsDico[currentCondition]! as! Int == 3){
+                showCompleteSurveytAlert()
+            }
             sendLogSinglueUseRoute()
             
         }
         ))
         
         alert.addAction(UIAlertAction(title: NSLocalizedString("redoOneRoute", comment: "A button that decrements the number of routess completed"), style: .default, handler: { action -> Void in
+            
+            
             // nothing to do, just stay on the page
             
         }
@@ -1395,14 +1404,67 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         self.present(changesAlertVC, animated: true, completion: nil)
        
     }
+    
+    func showCompleteSurveytAlert() {
+        let changesAlertVC = UIAlertController(title: NSLocalizedString("completeSurveyTitle" , comment: "Notify the User that they have completed the experiment"),
+                                               message: NSLocalizedString("enableSiriContent", comment: "Notify the User that they have completed the experiment."),
+                                               preferredStyle: .alert)
+        changesAlertVC.addAction(UIAlertAction(title: NSLocalizedString("completeSurveyContent", comment: "What the user clicks to acknowledge the significant changes message and dismiss pop-up"), style: .default, handler: { action -> Void in
+            
+            
+            let logFileURLs = self.logger.compileLogData(true)
+            let wait = false
+                       
+            self.presentSurveyIfIntervalHasPassed(mode: "onAppLaunch", logFileURLs: [])
+                            
+                            
+                        
+            
+        }
+        ))
+        self.present(changesAlertVC, animated: true, completion: nil)
+       
+    }
+    
+//    ///pops up when the user has completed all routes
+//    func showCompletedExperimentAlert() {
+//        let changesAlertVC = UIAlertController(title: NSLocalizedString("completedExperimentTitle", comment: "Notify the User that they have completed the experiment"),
+//                                               message: NSLocalizedString("completedExperimentContent", comment: "Notify the User that they have completed the experiment."),
+//                                               preferredStyle: .alert)
+//        changesAlertVC.addAction(UIAlertAction(title: NSLocalizedString("significantVersionChanges-Confirmation", comment: "What the user clicks to acknowledge the significant changes message and dismiss pop-up"), style: .default, handler: { action -> Void in
+//        }
+//        ))
+//        self.present(changesAlertVC, animated: true, completion: nil)
+//
+//    }
+    
+    
 
+//    func showCompleteSurveytAlert() {
+//        let changesAlertVC = UIAlertController(title: NSLocalizedString("completeSurveyTitle", comment: "Notify the user about the survey that they should complete"),
+//                                               message: NSLocalizedString("completeSurveyContent", comment: "Notify the User that they should complete a survey."),
+//                                               preferredStyle: .alert)
+//        changesAlertVC.addAction(UIAlertAction(title: NSLocalizedString("significantVersionChanges-Confirmation", comment: "What the user clicks to acknowledge the significant changes message and dismiss pop-up"), style: .default, handler: { action -> Void in
+//
+//            let logFileURLs = logger.compileLogData(true)
+//            let wait = false
+//            DispatchQueue.main.asyncAfter(deadline: .now() + (wait ? 1 : 1)) {
+//                self.presentSurveyIfIntervalHasPassed(mode: "afterRoute", logFileURLs: logFileURLs)
+//            }
+//        }
+//        ))
+//        self.present(changesAlertVC, animated: true, completion: nil)
+//
+//    }
+//
     
     
     func experimentInstructionAlert(instruction: String) {
-        let changesAlertVC = UIAlertController(title: NSLocalizedString("ExperimentInstructions", comment: "The heading of a pop-up telling the user what actions to take"),
+        
+        let changesAlertVC = UIAlertController(title: String(format: NSLocalizedString("ExperimentInstructions", comment: "The heading of a pop-up telling the user what actions to take"), countCompleted()),
                                                message: NSLocalizedString(instruction, comment: "An alert shown to the user to give them instructions."),
                                                preferredStyle: .alert)
-        changesAlertVC.addAction(UIAlertAction(title: NSLocalizedString("significantVersionChanges-Confirmation", comment: "What the user clicks to acknowledge message and dismiss pop-up"), style: .default, handler: { action -> Void in
+        changesAlertVC.addAction(UIAlertAction(title: NSLocalizedString("QuitExperiment", comment: "What the user clicks to acknowledge message and dismiss pop-up"), style: .default, handler: { action -> Void in
             
         }
         ))
@@ -2092,14 +2154,15 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
    
         
         ///checks if the route is a single use route or a multiple use route
-        if !recordingSingleUseRoute {
-            ///PATHPOINT two way route recording finished -> create end Anchor Point
-            ///sets the variable tracking whether the route is paused to be false
-            paused = false
-            creatingRouteAnchorPoint = false
-            ///sends the user to the process where they create an end anchorpoint
-            state = .startingPauseProcedure
-        }
+//        if !recordingSingleUseRoute {
+//            ///PATHPOINT two way route recording finished -> create end Anchor Point
+//            ///sets the variable tracking whether the route is paused to be false
+//            print("Errrr")
+//            paused = false
+//            creatingRouteAnchorPoint = false
+//            ///sends the user to the process where they create an end anchorpoint
+//            state = .startingPauseProcedure
+//        }
         if(recordingExperimentRoute){
             print("insideStop")
             let size = crumbs.count
@@ -2134,6 +2197,16 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             state = .readyToNavigateOrPause(allowPause: false)
         }
         
+    }
+    func countCompleted()->Int{
+        var count:Int = 0
+        for (key, value) in conditionsDico{
+            count =  value as! Int + count
+        }
+        for (key, value ) in experimentConditonsDico{
+            count = value as! Int + count
+        }
+        return count
     }
     
     
@@ -2250,7 +2323,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         //set experiment route to false
         recordingExperimentRoute = false
         // ensure adjustoffset is turned off
-        print("checkCap")
+        print("")
         print(siriShortcutDisplayList.count)
         print("typeName")
         print(siriShortcutsTypeNameDico.count)
@@ -2268,7 +2341,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         dump(voiceShortcuts)
         print("empty")
         
-        if(siriShortcutStartNavigatingRouteFlag && !setShortcutsDisplay){
+        if(siriShortcutExperimentRouteFlag && !setShortcutsDisplay){
             setShortcutsDisplay = true
             print("expLoop")
             dump(voiceShortcuts)
@@ -2294,7 +2367,28 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 helpNameTypeDictionary[element.invocationPhrase] = element.shortcut.userActivity?.activityType
                 print(siriShortcutsNameTypeDico[element.invocationPhrase])
             
-            }}else{
+            }
+                
+                UserDefaults.standard.setValue(siriShortcutDisplayList, forKey: "siriShortcutDisplayList")
+                UserDefaults.standard.setValue(siriShortcutsNameTypeDico, forKey:  "siriShortcutsNameTypeDico")
+               UserDefaults.standard.setValue( helpTypeNameDictionary, forKey: " siriShortcutsTypeNameDico")
+                UserDefaults.standard.setValue(true, forKey: "siriShortcutExperimentRoute")
+                UserDefaults.standard.set(helpNameTypeDictionary, forKey: "siriShortcutNameTypeDictionary")
+                
+                UserDefaults.standard.set(helpTypeNameDictionary, forKey: "siriShortcutTypeNameDictionary")
+                siriShortcutNameTypeDictionary  =  UserDefaults.standard.object(forKey: "siriShortcutNameTypeDictionary")  as? [String:String] ?? [:]
+                
+                print("5get")
+                print( siriShortcutNameTypeDictionary.count)
+                print(siriShortcutTypeNameDictionary.count)
+                logger.logSettings(siriShortcutTypeNameDictionary: siriShortcutTypeNameDictionary, siriShortcutNameTypeDictionary: siriShortcutNameTypeDictionary, defaultUnit: defaultUnit, defaultColor: defaultColor, soundFeedback: soundFeedback, voiceFeedback: voiceFeedback, hapticFeedback: hapticFeedback, sendLogs: sendLogs, timerLength: timerLength, currentRoute: currentRoute,adjustOffset: adjustOffset,
+                                   currentCondition:currentCondition, experimentRouteFlag: experimentRouteFlag, experimentConditonsDico: experimentConditonsDico,
+                                   conditionsDico: conditionsDico,siriShortcutDisplayList:siriShortcutDisplayList, siriShortcutsNameTypeDico: siriShortcutsNameTypeDico, siriShortcutsTypeNameDico :siriShortcutsTypeNameDico)
+                
+            }else{
+                print("1get")
+                print(siriShortcutNameTypeDictionary.count)
+                print(siriShortcutTypeNameDictionary.count)
                 siriShortcutDisplayList = unique(source: siriShortcutDisplayList! )
                 for element in siriShortcutDisplayList {
 
@@ -2308,26 +2402,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             print("lenAnch")
             print(siriShortcutDisplayList.count)
             print(siriShortcutsNameTypeDico.count)
-            
-            print(siriShortcutsTypeNameDico.count)
+       
             print(self.siriShortcutNameTypeDictionary.count)
            siriShortcutExperimentRouteFlag = true
-            
-            UserDefaults.standard.setValue(siriShortcutDisplayList, forKey: "siriShortcutDisplayList")
-            UserDefaults.standard.setValue(siriShortcutsNameTypeDico, forKey:  "siriShortcutsNameTypeDico")
-           UserDefaults.standard.setValue( helpTypeNameDictionary, forKey: " siriShortcutsTypeNameDico")
-            UserDefaults.standard.setValue(true, forKey: "siriShortcutExperimentRoute")
-            UserDefaults.standard.set(helpNameTypeDictionary, forKey: "siriShortcutNameTypeDictionary")
-            
-            UserDefaults.standard.set(helpTypeNameDictionary, forKey: "siriShortcutTypeNameDictionary")
-            //siriShortcutNameTypeDictionary  =  UserDefaults.standard.object(forKey: "siriShortcutNameTypeDictionary")  as? [String:String] ?? [:]
-            
-            print("5get")
-            print( siriShortcutNameTypeDictionary.count)
-            print(siriShortcutTypeNameDictionary.count)
-            logger.logSettings(siriShortcutTypeNameDictionary: siriShortcutTypeNameDictionary, siriShortcutNameTypeDictionary: siriShortcutNameTypeDictionary, defaultUnit: defaultUnit, defaultColor: defaultColor, soundFeedback: soundFeedback, voiceFeedback: voiceFeedback, hapticFeedback: hapticFeedback, sendLogs: sendLogs, timerLength: timerLength, currentRoute: currentRoute,adjustOffset: adjustOffset,
-                               currentCondition:currentCondition, experimentRouteFlag: experimentRouteFlag, experimentConditonsDico: experimentConditonsDico,
-                               conditionsDico: conditionsDico,siriShortcutDisplayList:siriShortcutDisplayList, siriShortcutsNameTypeDico: siriShortcutsNameTypeDico, siriShortcutsTypeNameDico :siriShortcutsTypeNameDico)
+          
             
             sendLogDataHelper(pathStatus: nil)
         }
@@ -2774,7 +2852,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         state = .mainScreen(announceArrival: announceArrival)
         if sendLogs {
             // do this in a little while to give it time to announce arrival
+            print("ShowSurvey1")
             DispatchQueue.main.asyncAfter(deadline: .now() + (announceArrival ? 3 : 1)) {
+                print("ShowSurvey2")
                 self.presentSurveyIfIntervalHasPassed(mode: "afterRoute", logFileURLs: logFileURLs)
             }
         }
@@ -2966,9 +3046,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             // do this in a little while to give it time
             
            
-            DispatchQueue.main.asyncAfter(deadline: .now() + (wait ? 1 : 1)) {
-                self.presentSurveyIfIntervalHasPassed(mode: "afterRoute", logFileURLs: logFileURLs)
-            }
+//            DispatchQueue.main.asyncAfter(deadline: .now() + (wait ? 1 : 1)) {
+//                self.presentSurveyIfIntervalHasPassed(mode: "afterRoute", logFileURLs: logFileURLs)
+//            }
         }
         
     }

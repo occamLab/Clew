@@ -15,8 +15,8 @@
 "significantVersionChangesPop-UpHeading" = "Important Changes ";
 
 "significantVersionChangesPop-UpContent" = "This new version of Clew features a route sharing feature and a redesigned workflow for saving routes. Please note that \"landmarks\" are now called \"anchor points\". Also, some menus previously on the home screen are now available through the \"options\" menu. See the help menu for more details.";
-
-"ExperimentInstructions" = "Experiment Instructions";
+"QuitExperiment" = "Quit Experiment";
+"ExperimentInstructions" = "Experiment Instructions : \n You've Completed: %d out of 18 routes";
 "ExperimentRouteControlledInstructions" = "Please record an \"Experiment Route\" where you start the route, walk around, and return to the exact same position you started in. Once you've reached the starting position you can end the path recording. For this round, hold the phone with your hand and use Siri shortcuts to start and stop the recording. \n To Start Say: %@ \n To Stop Say: %@ \n ";
 "ExperimentRouteLanyardInstructions" = "Please record an \"Experiment Route\" where you start the route, walk around, and return to the exact same position you started in. Once you've reached the starting position you can end the path recording. For this round, attach your phone to a lanyard while keeping the camera facing forwards. Also, use Siri shortcuts to start and end the route. .\n To Start Say: %@ \n To Stop Say: %@ ";
 "ExperimentRouteBracingInstructions" = "Please record an \"Experiment Route\" where you start the route, walk around, and return to the exact same position you started in. Once you've reached the starting position you can end the path recording. For this round, brace the phone vertically against your chest while keeping the camera facing forward. Also, use Siri shortcuts to start and end the route. .\n To Start Say: %@ \n To Stop Say: %@ \n ";
@@ -154,6 +154,8 @@
 "completedExperimentTitle" = "You Have Completed the Experiemnt";
 "completedExperimentContent" = "You have completed all the required routes. Thank you for your participation. ";
 // Enable Correct Phone / Body Alignment Alert
+"completeSurveyTitle" = "Survey";
+"completeSurveyContent" = "Please Complete this short survey about this method of navigation";
 "showAdjustOffsetSuggestionTitle" = "Enable Automatic \"Correct Offset of Phone / Body\"?";
 "adjustOffsetAlertContent" = "While you were recording this route, the app determined that your phone's rear camera was not pointing straight ahead. When navigating the recorded route, if your phone is not pointing straight ahead, the app's directional guidance may be confusing. If it is difficult for you to keep you phone pointing straight ahead, the app can automatically adjust its guidance so that it is relative to your body rather than the phone's direction.  Would you like enable this feature?  You can always disable this feature in the settings menu under \"Correct Offset of Phone / Body.\"  Important details of this feature are available in the help menu.";
 "turnOnAdjustOffsetButton" = "Yes";
