@@ -94,7 +94,7 @@ class SurveyInterface {
         // send success log data to Firebase
         let logFileURLs = vc.logger.compileLogData(pathStatus)
         vc.logger.resetStateSequenceLog()
-        vc.state = .mainScreen(announceArrival: announceArrival)
+        //vc.state = .mainScreen(announceArrival: announceArrival)
         if vc.sendLogs {
             // do this in a little while to give it time to announce arrival
             DispatchQueue.main.asyncAfter(deadline: .now() + (announceArrival ? 3 : 1)) {

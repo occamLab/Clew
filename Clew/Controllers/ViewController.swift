@@ -548,7 +548,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// Handler for the startingNameSavedRouteProcedure app state
     func handleStateTransitionToStartingNameSavedRouteProcedure(worldMap: Any?){
         hideAllViewsHelper()
-//        nameSavedRouteController.worldMap = worldMap // BL
+//        nameSavedRouteController.worldMap = worldMap // BL, moved this to initialization of nameSavedRouteController
         add(nameSavedRouteController)
     }
     
@@ -560,7 +560,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             try! showPauseTrackingButton()
         } else {
             endRouteAnchorPoint = RouteAnchorPoint()
-            completingPauseProcedureHelper(worldMap: nil)
+            completingPauseProcedureHelper(worldMap: sceneView.session.getCurrentWorldMap)
         }
     }
     
@@ -672,7 +672,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                         self.completingPauseProcedureHelper(worldMap: worldMap)
                     }
                 } else {
-                    completingPauseProcedureHelper(worldMap: nil)
+                    completingPauseProcedureHelper(worldMap: sceneView.session.getCurrentWorldMap)
                 }
             }
         }
@@ -737,15 +737,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         hideAllViewsHelper()
         ///Announce to the user that they have saved the route ID and are now at the saving route name screen
         self.delayTransition(announcement: NSLocalizedString("saveCodeIDtoCreatingAnchorPointAnnouncement", comment: "This is an announcement which is spoken when the user finishes saving their route's app clip code ID. This announcement signifies the transition from the view where the user can enter the app clip code ID associated with the route to the view where the user can anchor the starting point of the route they are recording."), initialFocus: nil)
-        /// send to SaveRouteButtonPressed
+        /// send to pause procedure
         self.state = .startingPauseProcedure
     }
     
-    @objc func saveRouteButtonPressed() {
+    @objc func saveRouteButtonPressed(worldMap: Any?) {
         let id = String(Int64(NSDate().timeIntervalSince1970 * 1000)) as NSString
         
-        // BL: get worldMap in here
-        try! self.archive(routeId: id, appClipCodeID: self.appClipCodeID, beginRouteAnchorPoint: self.beginRouteAnchorPoint, endRouteAnchorPoint: self.endRouteAnchorPoint, intermediateAnchorPoints: self.intermediateAnchorPoints, worldMap: nil, imageAnchoring: self.imageAnchoring)
+        try! self.archive(routeId: id, appClipCodeID: self.appClipCodeID, beginRouteAnchorPoint: self.beginRouteAnchorPoint, endRouteAnchorPoint: self.endRouteAnchorPoint, intermediateAnchorPoints: self.intermediateAnchorPoints, worldMap: worldMap as? ARWorldMap, imageAnchoring: self.imageAnchoring)
         hideAllViewsHelper()
         /// PATHPOINT Save Route View -> play/pause
         ///Announce to the user that they have finished the alignment process and are now at the play pause screen
@@ -802,7 +801,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
 
     func archive(routeId: NSString, appClipCodeID: String, beginRouteAnchorPoint: RouteAnchorPoint, endRouteAnchorPoint: RouteAnchorPoint, intermediateAnchorPoints: [RouteAnchorPoint], worldMap: Any?, imageAnchoring: Bool) throws {
         let savedRoute = SavedRoute(id: routeId, appClipCodeID: self.appClipCodeID, name: routeName!, crumbs: crumbs, dateCreated: Date() as NSDate, beginRouteAnchorPoint: beginRouteAnchorPoint, endRouteAnchorPoint: endRouteAnchorPoint, intermediateAnchorPoints: intermediateAnchorPoints, imageAnchoring: imageAnchoring)
-        print("route image anchoring: \(savedRoute.imageAnchoring)")
 
       try dataPersistence.archive(route: savedRoute, worldMap: worldMap)
         justTraveledRoute = savedRoute
@@ -910,7 +908,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     var endNavigationController: UIViewController?
     
-    
     /// start route navigation VC
     var startNavigationController: StartNavigationController!
     
@@ -938,8 +935,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
       
         startNavigationController = StartNavigationController()
         stopNavigationController = StopNavigationController()
-//        nameSavedRouteController = NameSavedRouteController()
-//        nameCodeIDController = NameCodeIDController()
         
         #if CLEWMORE
         /// This is a wrapper to allow SwiftUI views to be used with the existing UIKit framework.
@@ -965,7 +960,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                                                                        height: UIScreen.main.bounds.size.height*0.85)
         manageRoutesController.view.backgroundColor = .clear
         
-        nameSavedRouteController = UIHostingController(rootView: NameSavedRouteView(vc: self))
+        nameSavedRouteController = UIHostingController(rootView: NameSavedRouteView(vc: self, worldMap: sceneView.session.getCurrentWorldMap))
         nameSavedRouteController.view.frame = CGRect(x: 0,
                                                                        y: UIScreen.main.bounds.size.height*0.15,
                                                                        width: UIConstants.buttonFrameWidth * 1,
@@ -1211,6 +1206,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
         ))
         self.present(alert, animated: true, completion: nil)
+        print("alert presented")
     }
     
     /// function that creates alerts for the home button
@@ -1778,6 +1774,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     }
     
     func showEndScreenInformation(completedRoute: Bool){
+        #if APPCLIP
         self.hideAllViewsHelper()
         //self.sceneView.session.pause()
         
@@ -1790,13 +1787,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         self.rootContainerView.getDirectionButton.isHidden = true
         guard let scene = self.view.window?.windowScene else {return}
         
-        /*let label = UILabel(frame: self.view.frame)
-        let scrollView = UIScrollView(frame: self.view.frame)
-        
-        label.textColor = UIColor.white
-        label.textAlignment = .center
-        label.numberOfLines = 0
-        label.lineBreakMode = .byWordWrapping*/
         
         // TODO: i18n/l10n
         if completedRoute{
@@ -1842,7 +1832,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             let overlay = SKOverlay(configuration: config)
             overlay.present(in: scene)
         print("UI done")
+
         }
+        #else
+        self.hideAllViewsHelper()
+        self.add(self.endNavigationController!)
+        #endif
     }
     
     /// display stop navigation view/hide all other views
@@ -2117,8 +2112,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             creatingRouteAnchorPoint = false
             if imageAnchoring {
                 /// sends the user to naming the route, skipping creating the end anchorpoint
-
-                state = .startingPauseProcedure // BL
+                state = .startingPauseProcedure
             } else {    /// this probably shouldn't go to startingPauseProcedure but it also currently never gets here
                 ///sends the user to the process where they create an end anchorpoint
                 state = .startingPauseProcedure
@@ -2161,9 +2155,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             anchorPointNode.removeFromParentNode()
         }
         #if !APPCLIP
-        self.surveyInterface.sendLogDataHelper(pathStatus: nil, vc: self)
+        //self.surveyInterface.sendLogDataHelper(pathStatus: nil, vc: self)
         self.hideAllViewsHelper()
-        self.add(self.endNavigationController!)
+        self.sceneView.session.pause()
+        self.state = .endScreen(completedRoute: true)
+        //self.add(self.endNavigationController!)
         print("end screen displayed")
         #else
         self.state = .endScreen(completedRoute: false)
@@ -2436,9 +2432,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 hapticTimer?.invalidate()
                 
                 #if !APPCLIP
-                self.surveyInterface.sendLogDataHelper(pathStatus: nil, announceArrival: true, vc: self)
+                //self.surveyInterface.sendLogDataHelper(pathStatus: nil, announceArrival: true, vc: self)
                 self.hideAllViewsHelper()
-                self.add(self.endNavigationController!)
+                // if everything breaks, get this outta there B)
+                self.sceneView.session.pause()
+                //self.add(self.endNavigationController!)
+                self.state = .endScreen(completedRoute: true)
                 print("end screen displayed")
                 #else
                 self.state = .endScreen(completedRoute: true)
@@ -2671,6 +2670,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             homePageNavigationProcesses()
         }
         else if case .startingNameSavedRouteProcedure = self.state {
+            homePageNavigationProcesses()
+        }
+        else if case .endScreen = self.state {
             homePageNavigationProcesses()
         }
         else {
