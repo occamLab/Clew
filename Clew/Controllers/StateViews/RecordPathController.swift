@@ -21,6 +21,9 @@ class RecordPathController: UIViewController {
     var routesButton: UIButton!
     /// button for starting the  experiment
     var experimentButton: UIButton!
+    /// button for participating in experiment
+    ///
+    var participateInexperimentButton: UIButton!
     /// called when view appears (any time)
     override func viewDidAppear(_ animated: Bool) {
         /// set thumbsUpButton as initially active voiceover button

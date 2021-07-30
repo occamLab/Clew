@@ -33,6 +33,7 @@ struct shortCutInvocationPhasee : Identifiable{
     //var id: ObjectIdentifier
     var id = UUID()
     var phase: String
+    var type: String
    // var type: String
 }
 
@@ -50,7 +51,7 @@ struct shortCutInvocationPhasee : Identifiable{
 struct shortcutRow: View{
     var shortcut: shortCutInvocationPhasee
     var body: some View{
-        Text("Siri Shortcut:\(shortcut.phase) ").foregroundColor(.yellow)
+        Text("\(ViewController.siriShortcutsTypesDico [shortcut.type] ?? "siri shortcut")\(shortcut.phase) ").foregroundColor(.yellow)
     }
     
 }

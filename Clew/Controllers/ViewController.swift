@@ -108,6 +108,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     // MARK: Properties and subview declarations
     
     /// How long to wait (in seconds) between the alignment request and grabbing the transform
+    
+    //todel
+  
     static var alignmentWaitingPeriod = 5
     /// keep count of conditions routes
     ///
@@ -116,6 +119,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
    // static var ConditionsCount = nav.crembs
     static var sRouteType: String!
     static var sExperimentRouteFlag = false
+    static var
+        s: [String:String]! = [:]
     var storeCrumbs : [Any]!
     
     /// A threshold distance between the user's current position and a voice note.  If the user is closer than this value the voice note will be played
@@ -243,6 +248,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             announce(announcement: nextAnnouncement)
         }
     }
+    //todel
+
+    
     
     /// Handler for the mainScreen app state
     ///
@@ -262,25 +270,75 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         ///
   ///      set s
         stack = Stack()
-        
+       
+      
+       // print(siriShortcutsNameTypeDico.capacity??)
         stack.push("start")
-        if(!setShortcutsDisplay){
-        for element in  siriShortcutDisplayList{
-            print("mdump")
-            print(element)
-           
-            ViewController.voiceCommandsList.append(shortCutInvocationPhasee(phase: element))
-            print("maindump")
-
+       
+       
+       //  toKeep
+        
+      //  incase user has used this before
+//      if(!setShortcutsDisplay){
+//        UserDefaults.standard.setValue(false, forKey: "siriShortcutExperimentRoute")
+//        }
+//        print("dumpAnch")
+//        print(siriShortcutExperimentRouteFlag)
+//
+//        print(!setShortcutsDisplay)
+//        //print(siriShortcutExperimentRouteFlag ?? false && !setShortcutsDisplay)
+//        dump(voiceShortcuts)
+//        print("empty")
+//        print(voiceShortcuts.isEmpty)
+//        print("announce")
+//        print(announceArrival)
+//        if( announceArrival && siriShortcutExperimentRouteFlag && !setShortcutsDisplay){
+//            setShortcutsDisplay = true
+//            print("expLoop")
+//            dump(voiceShortcuts)
+//            if(!voiceShortcuts.isEmpty){
+//                for element in voiceShortcuts{
+//                        ViewController.voiceCommandsList.append(shortCutInvocationPhasee(phase: element.invocationPhrase, type: element.shortcut.userActivity!.activityType))
+//                       print(element.invocationPhrase)
+//                    }
+//            for element in voiceShortcuts{
+//
+//               print(element.invocationPhrase)
+//                siriShortcutDisplayList.append(element.invocationPhrase)
+//                print("inExpLoop")
+//                print(element.invocationPhrase)
+//                //print(element.shortcut.userActivity?.activityType)
+//                siriShortcutsNameTypeDico[element.invocationPhrase] = element.shortcut.userActivity?.activityType
+//                siriShortcutsTypeNameDico[element.shortcut.userActivity?.activityType ?? "type"] = element.invocationPhrase
+//                print(siriShortcutsNameTypeDico[element.invocationPhrase])
+//
+//            }}else{
+//                siriShortcutDisplayList = unique(source: siriShortcutDisplayList )
+//                for element in siriShortcutDisplayList {
+//
+//                    ViewController.voiceCommandsList.append(shortCutInvocationPhasee(phase:element,type: siriShortcutsTypeNameDico[element] as! String))
+//
+//                }
+//
+//
+//            }
+//
+//            print("lenAnch")
+//            print(siriShortcutDisplayList.count)
+//            print(siriShortcutsNameTypeDico.count)
+//            print(siriShortcutsTypeNameDico.count)
+//           // siriShortcutExperimentRouteFlag = true
+//
+//            UserDefaults.standard.setValue(siriShortcutDisplayList, forKey: "siriShortcutDisplayList")
+//            UserDefaults.standard.setValue(siriShortcutsNameTypeDico, forKey:  "siriShortcutsNameTypeDico")
+//           UserDefaults.standard.setValue( siriShortcutsTypeNameDico, forKey: " siriShortcutsTypeNameDico")
+//            UserDefaults.standard.setValue(true, forKey: "siriShortcutExperimentRoute")
+//            logger.logSettings(defaultUnit: defaultUnit, defaultColor: defaultColor, soundFeedback: soundFeedback, voiceFeedback: voiceFeedback, hapticFeedback: hapticFeedback, sendLogs: sendLogs, timerLength: timerLength, currentRoute: currentRoute,adjustOffset: adjustOffset,
+//                               currentCondition:currentCondition, experimentRouteFlag: experimentRouteFlag, experimentConditonsDico: experimentConditonsDico,
+//                               conditionsDico: conditionsDico,siriShortcutDisplayList:siriShortcutDisplayList, siriShortcutsNameTypeDico: siriShortcutsNameTypeDico, siriShortcutsTypeNameDico :siriShortcutsTypeNameDico)
+//            sendLogDataHelper(pathStatus: nil)
+//        }
             
-            
-        }
-            
-            print("len maindump")
-            print(siriShortcutDisplayList.count)
-            print( ViewController.voiceCommandsList.count)
-            setShortcutsDisplay = false
-        }
         
     
         ViewController.sExperimentRouteFlag = false
@@ -921,23 +979,25 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         let userDefaults: UserDefaults = UserDefaults.standard
         //todel
         //reintialise everythin for test puposes
-        UserDefaults.standard.setValue(false, forKey: "siriShortcutStartNavigatingRoute")
+      UserDefaults.standard.setValue(false, forKey: "siriShortcutStartNavigatingRoute")
+//        siriShortcutExperimentRouteFlag = false
+     //UserDefaults.standard.setValue(false, forKey: "siriShortcutExperimentRoute")
         UserDefaults.standard.setValue(false, forKey: "siriShortcutAlert")
-        UserDefaults.standard.setValue(false, forKey: "singleUseRouteExperimentFlag")
-        UserDefaults.standard.setValue(false, forKey: "experimentRouteFlag")
-        UserDefaults.standard.setValue(conditionsList.randomElement(), forKey: "currentCondition")
+        //UserDefaults.standard.setValue(false, forKey: "singleUseRouteExperimentFlag")
+        //UserDefaults.standard.setValue(false, forKey: "experimentRouteFlag")
+        //UserDefaults.standard.setValue(conditionsList.randomElement(), forKey: "currentCondition")
         let cConditions: Dictionary? =  userDefaults.dictionary(forKey: "conditionsDico")
         print("before Condition")
         print(cConditions)
         
         let recondtions = ["lanyard":0,"bracing":0,"none":0]
-        UserDefaults.standard.setValue(recondtions, forKey: "conditionsDico")
-        UserDefaults.standard.setValue(recondtions, forKey: "experimentConditonsDico")
+        //UserDefaults.standard.setValue(recondtions, forKey: "conditionsDico")
+        //UserDefaults.standard.setValue(recondtions, forKey: "experimentConditonsDico")
        
         
     //    UserDefaults.standard.setValue(false, forKey: "siriShortcutExperimentRoute")
-        
-      //  UserDefaults.standard.setValue([""], forKey: "siriShortcutDisplayList")
+      //todel
+       //ch UserDefaults.standard.setValue([""], forKey: "siriShortcutDisplayList")
         let tConditions: Dictionary? =  userDefaults.dictionary(forKey: "conditionsDico")
         
         print("After tCondition")
@@ -1283,7 +1343,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// Show significant changes alert so the user is not surprised by new app features.
     func showSignificantChangesAlert() {
-        let changesAlertVC = UIAlertController(title: NSLocalizedString("significantVersionChangesPop-UpHeading", comment: "The heading of a pop-up telling the user that significant changes have been made to this app version"),
+        
+        
+
+       // var ss = String(format:, test1)
+        
+        let changesAlertVC = UIAlertController(title:NSLocalizedString( "SiriAlert" , comment: "The heading of a pop-up telling the user that significant changes have been made to this app version"),
                                                message: NSLocalizedString("significantVersionChangesPop-UpContent", comment: "An alert shown to the user to alert them to the fact that significant changes have been made to the app."),
                                                preferredStyle: .alert)
         changesAlertVC.addAction(UIAlertAction(title: NSLocalizedString("significantVersionChanges-Confirmation", comment: "What the user clicks to acknowledge the significant changes message and dismiss pop-up"), style: .default, handler: { action -> Void in
@@ -1297,10 +1362,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
     }
     
-    ///significant changes Hands free alert
-    
-    
-    /// Show significant changes alert so the user is not surprised by new app features.
     func showSignificantChangesHandsFreeAlert() {
         let changesAlertVC = UIAlertController(title: NSLocalizedString("significantVersionChangesPop-UpHeading", comment: "The heading of a pop-up telling the user that significant changes have been made to this app version"),
                                                message: NSLocalizedString("significantVersionChangesPopHandsFree-UpContent", comment: "An alert shown to the user to alert them to the fact that significant changes have been made to the app."),
@@ -1309,17 +1370,21 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
         ))
         self.present(changesAlertVC, animated: true, completion: nil)
-       
-        if case .recordingRoute = self.state{
-            
-            changesAlertVC.dismiss(animated: true, completion: nil)
-            print("dismiss changes")
+    }
+    ///
+/// pops up when the user presses on participate on experiment before enabling all siri shortcuts
+    func showEnableSiriAlert() {
+        let changesAlertVC = UIAlertController(title: NSLocalizedString("ExperimentInstructions" , comment: "Notify the User that they have completed the experiment"),
+                                               message: NSLocalizedString("enableSiriContent", comment: "Notify the User that they have completed the experiment."),
+                                               preferredStyle: .alert)
+        changesAlertVC.addAction(UIAlertAction(title: NSLocalizedString("significantVersionChanges-Confirmation", comment: "What the user clicks to acknowledge the significant changes message and dismiss pop-up"), style: .default, handler: { action -> Void in
         }
-        
-        
-        
+        ))
+        self.present(changesAlertVC, animated: true, completion: nil)
+       
     }
     
+    ///pops up when the user has completed all routes
     func showCompletedExperimentAlert() {
         let changesAlertVC = UIAlertController(title: NSLocalizedString("completedExperimentTitle", comment: "Notify the User that they have completed the experiment"),
                                                message: NSLocalizedString("completedExperimentContent", comment: "Notify the User that they have completed the experiment."),
@@ -1354,10 +1419,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                                                name: UserDefaults.didChangeNotification,
                                                object: nil)
     }
+   
     
     public func updateVoiceShortcuts(completion: (() -> Void)?) {
-
-           INVoiceShortcutCenter.shared.getAllVoiceShortcuts { (voiceShortcutsFromCenter, error) in
+       
+         
+        INVoiceShortcutCenter.shared.getAllVoiceShortcuts { (voiceShortcutsFromCenter, error) in
                guard let voiceShortcutsFromCenter = voiceShortcutsFromCenter else {
                    if let error = error {
                        print("Failed to fetch voice shortcuts with error: \(error.localizedDescription)")
@@ -1374,13 +1441,18 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// Register settings bundle
     func registerSettingsBundle(){
-        let appDefaults = ["siriShortcutDisplayList": [""],"crumbColor": 0, "showPath": true, "pathColor": 0, "hapticFeedback": true, "sendLogs": true, "voiceFeedback": true, "soundFeedback": true, "adjustOffset": false, "units": 0, "timerLength":5, "conditionsDico": ["lanyard":0,"bracing":0,"none":0],"experimentConditonsDico": ["lanyard":0,"bracing":0,"none":0], "siriShortcutSingleUseRoute": false,  "siriShortcutStopRecordingRoute": false, "experimentRouteFlag":false,"singleUseRouteExperimentFlag":false,  "currentCondition": conditionsList.randomElement(), "siriShortcutExperimentRoute": false,"siriShortcutStartNavigatingRoute": false,"currentRoute":startExperimentWithList.randomElement(), "siriShortcutAlert": false, "completedExperiment":false, "startedExperiment": false] as [String : Any]
+        let appDefaults = ["siriShortcutTypeNameDictionary":[" ":" " ],"siriShortcutNameTypeDictionary": [" ":" "], "siriShortcutsTypeNameDico": ["":""],"siriShortcutsNameTypeDico": ["":""],"siriShortcutDisplayList": [""],"crumbColor": 0, "showPath": true, "pathColor": 0, "hapticFeedback": true, "sendLogs": true, "voiceFeedback": true, "soundFeedback": true, "adjustOffset": false, "units": 0, "timerLength":5, "conditionsDico": ["lanyard":0,"bracing":0,"none":0],"experimentConditonsDico": ["lanyard":0,"bracing":0,"none":0], "siriShortcutSingleUseRoute": false,  "siriShortcutStopRecordingRoute": false, "experimentRouteFlag":false,"singleUseRouteExperimentFlag":false,  "currentCondition": conditionsList.randomElement(), "siriShortcutExperimentRoute": false,"siriShortcutStartNavigatingRoute": false,"currentRoute":startExperimentWithList.randomElement(), "siriShortcutAlert": false, "completedExperiment":false, "startedExperiment": false] as [String : Any]
         UserDefaults.standard.register(defaults: appDefaults)
     }
 
     /// Respond to update events to the `UserDefaults` object (the settings of the app).
     func updateDisplayFromDefaults(){
         let defaults = UserDefaults.standard
+        siriShortcutsTypeNameDico = defaults.dictionary(forKey: "siriShortcutsTypeNameDico")
+        siriShortcutNameTypeDictionary = defaults.object(forKey: "siriShortcutNameTypeDictionary")  as? [String:String] ?? [:]
+        
+        siriShortcutTypeNameDictionary = defaults.object(forKey: "siriShortcutTypeNameDictionary")  as? [String:String] ?? [:]
+        siriShortcutsNameTypeDico = defaults.dictionary(forKey: "siriShortcutsNameTypeDico")
         startedExperiment = defaults.bool(forKey: "startedExperiment")
         completedExperiment = defaults.bool(forKey: "completedExperiment")
         defaultUnit = defaults.integer(forKey: "units")
@@ -1394,7 +1466,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         singleUseRouteExperimentFlag = defaults.bool(forKey: "singleUseRouteExperimentFlag")
        
         siriShortcutSingleUseRouteFlag = defaults.bool(forKey:"siriShortcutSingleUseRoute")
-        siriShortcutExperimentRouteFlag = defaults.bool(forKey: "siriShortcutExperimentRoute")
+        //todel
+        //defaults.setValue(false, forKey:" siriShortcutExperimentRoute")
+       siriShortcutExperimentRouteFlag = defaults.bool(forKey: "siriShortcutExperimentRoute")
+       
         siriShortcutStopRecordingRouteFlag = defaults.bool(forKey:"siriShortcutStopRecordingRoute")
         siriShortcutStartNavigatingRouteFlag = defaults.bool(forKey:"siriShortcutStartNavigatingRoute")
         siriShortcutAlert = defaults.bool(forKey: "siriShortcutAlert")
@@ -1414,9 +1489,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         
         
         // TODO: log settings here
-        logger.logSettings(defaultUnit: defaultUnit, defaultColor: defaultColor, soundFeedback: soundFeedback, voiceFeedback: voiceFeedback, hapticFeedback: hapticFeedback, sendLogs: sendLogs, timerLength: timerLength, currentRoute: currentRoute,adjustOffset: adjustOffset,
+        logger.logSettings(siriShortcutTypeNameDictionary: siriShortcutTypeNameDictionary, siriShortcutNameTypeDictionary: siriShortcutNameTypeDictionary, defaultUnit: defaultUnit, defaultColor: defaultColor, soundFeedback: soundFeedback, voiceFeedback: voiceFeedback, hapticFeedback: hapticFeedback, sendLogs: sendLogs, timerLength: timerLength, currentRoute: currentRoute,adjustOffset: adjustOffset,
                            currentCondition:currentCondition, experimentRouteFlag: experimentRouteFlag, experimentConditonsDico: experimentConditonsDico,
-                           conditionsDico: conditionsDico,siriShortcutDisplayList:siriShortcutDisplayList)
+                           conditionsDico: conditionsDico,siriShortcutDisplayList:siriShortcutDisplayList, siriShortcutsNameTypeDico: siriShortcutsNameTypeDico, siriShortcutsTypeNameDico :siriShortcutsTypeNameDico )
         
         // leads to JSON like:
         //   options: { "unit": "meter", "soundFeedback", true, ... }
@@ -1831,6 +1906,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     var experimentConditonsDico: [String :Any]!
     // stores sirishorcuts phrases to display on burger menu
     var siriShortcutDisplayList : [String]!
+    var siriShortcutNameTypeDictionary : [String: String]!
+    var siriShortcutTypeNameDictionary : [String: String]!
+    var helpNameTypeDictionary : [String: String] = [:]
+    var helpTypeNameDictionary : [String: String] = [:]
     //var conditionsDicoSet =
     //determines if the user has started experiment or not
     
@@ -1844,6 +1923,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// the Anchor Point to use to mark the end of the route currently being recorded
     var endRouteAnchorPoint = RouteAnchorPoint()
+    /// storeres the types of siri shortcut, where key is type and value is the statment to display on screen
+    static var siriShortcutsTypesDico = [kNewSingleUseRouteType : "Single Use Route Siri Shortcut:", kExperimentRouteType: "Experiment Route Siri Shortcut:", kStopRecordingType: "Stop Recording Siri Shortcut:", kStartNavigationType:"Start Navigating Route Siri Shortcut"]
+    var siriShortcutsNameTypeDico: [String: Any]!
+    var siriShortcutsTypeNameDico: [String: Any]!
     
     /// Intermediate anchor points
     var intermediateAnchorPoints:[RouteAnchorPoint] = []
@@ -1899,15 +1982,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// update experiment flaags for single use route
     func updateExperiment(){
         
+      
+        
         if (currentCondition == "lanyard" ){
-            experimentInstructionAlert(instruction:  NSLocalizedString( "lanyardInstruction" , comment:"experiment instruction" )
+            experimentInstructionAlert(instruction:  String(format:NSLocalizedString( "lanyardInstruction" , comment:"experiment instruction" ),   siriShortcutTypeNameDictionary[kNewSingleUseRouteType] as! String, siriShortcutTypeNameDictionary[ kStopRecordingType] as! String, siriShortcutTypeNameDictionary[kStartNavigationType] as! String)
             )
         }
         if (currentCondition == "bracing" ){
             experimentInstructionAlert(instruction:
-                                       NSLocalizedString( "bracingInstruction", comment:"experiment instruction" ))
+                                        String(format:NSLocalizedString( "bracingInstruction", comment:"experiment instruction" ),   siriShortcutTypeNameDictionary[kNewSingleUseRouteType] as! String, siriShortcutTypeNameDictionary[ kStopRecordingType] as! String, siriShortcutTypeNameDictionary[kStartNavigationType] as! String))
         }else{
-            experimentInstructionAlert(instruction: NSLocalizedString( "contolledInstruction", comment:"experiment instruction" ))
+            experimentInstructionAlert(instruction: String(format:NSLocalizedString( "contolledInstruction", comment:"experiment instruction" ),   siriShortcutTypeNameDictionary[kNewSingleUseRouteType] as! String, siriShortcutTypeNameDictionary[ kStopRecordingType] as! String, siriShortcutTypeNameDictionary[kStartNavigationType] as! String))
         }
         
     }
@@ -1917,14 +2002,16 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     func updateExperimentExperimentRoute(){
         
         if (currentCondition == "lanyard" ){
-            experimentInstructionAlert(instruction:  NSLocalizedString( "ExperimentRouteLanyardInstructions" , comment:"experiment instruction" )
+            experimentInstructionAlert(instruction:  String(format: NSLocalizedString(
+               "ExperimentRouteLanyardInstructions" , comment:"experiment instruction" ),siriShortcutTypeNameDictionary[  kExperimentRouteType] as! String, siriShortcutTypeNameDictionary[ kStopRecordingType] as! String)
             )
         }
         if (currentCondition == "bracing" ){
             experimentInstructionAlert(instruction:
-                                       NSLocalizedString( "ExperimentRouteBracingInstructions", comment:"experiment instruction" ))
+                                        String(format:NSLocalizedString( "ExperimentRouteBracingInstructions", comment:"experiment instruction" ), siriShortcutTypeNameDictionary[  kExperimentRouteType] as! String, siriShortcutTypeNameDictionary[ kStopRecordingType] as! String))
         }else{
-            experimentInstructionAlert(instruction: NSLocalizedString( "ExperimentRouteControlledInstructions", comment:"experiment instruction" ))
+         
+            experimentInstructionAlert(instruction: String(format:NSLocalizedString( "ExperimentRouteControlledInstructions" , comment:"experiment instruction" ), siriShortcutTypeNameDictionary[  kExperimentRouteType] as! String, siriShortcutTypeNameDictionary[ kStopRecordingType] as! String))
         }
         
     }
@@ -2030,8 +2117,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             
            // UserDefaults.standard.setValue(distance ?? 0.0, forKey: "distance")
             print(distance)
+            if(ViewController.sExperimentRouteFlag){
             logger.logFrameDistance(distance: distance)
-            sendLogExperimentRouteDataHelper(pathStatus: true)
+                sendLogExperimentRouteDataHelper(pathStatus: true)}else{
+                    
+                    sendLogDataHelper(pathStatus: nil)
+                }
+            
+            
 //            self.state = .mainScreen(announceArrival: true)
 //            let logFileURLs = logger.compileLogData(nil)
 //            logger.resetStateSequenceLog()
@@ -2157,20 +2250,87 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         //set experiment route to false
         recordingExperimentRoute = false
         // ensure adjustoffset is turned off
-        
+        print("checkCap")
+        print(siriShortcutDisplayList.count)
+        print("typeName")
+        print(siriShortcutsTypeNameDico.count)
+        dump(siriShortcutTypeNameDictionary)
+        print(siriShortcutNameTypeDictionary.count)
+        print(siriShortcutTypeNameDictionary.count)
+        print("^")
+        print(helpNameTypeDictionary.count)
         UserDefaults.standard.set(false, forKey: "adjustOffset")
-        
-        //todel
-        print("dumpVS")
-        //dump(siriShortcutList)
-        //print("extd")
+        print("dumpAnch")
+        print(siriShortcutExperimentRouteFlag)
+
+        print(!setShortcutsDisplay)
+        //print(siriShortcutExperimentRouteFlag ?? false && !setShortcutsDisplay)
         dump(voiceShortcuts)
-//        for element in voiceShortcuts{
-//            ViewController.voiceCommandsList.append(shortCutInvocationPhasee(phase: element.invocationPhrase))
-//           print(element.invocationPhrase)
-//        }
-       
-    
+        print("empty")
+        
+        if(siriShortcutStartNavigatingRouteFlag && !setShortcutsDisplay){
+            setShortcutsDisplay = true
+            print("expLoop")
+            dump(voiceShortcuts)
+            if(!voiceShortcuts.isEmpty){
+                for element in voiceShortcuts{
+                        ViewController.voiceCommandsList.append(shortCutInvocationPhasee(phase: element.invocationPhrase, type: element.shortcut.userActivity!.activityType))
+                       print(element.invocationPhrase)
+                    }
+            for element in voiceShortcuts{
+
+               print(element.invocationPhrase)
+                siriShortcutDisplayList.append(element.invocationPhrase)
+                print("inExpLoop")
+                print(element.invocationPhrase)
+                //print(element.shortcut.userActivity?.activityType)
+                
+                
+                siriShortcutsNameTypeDico[element.invocationPhrase] = element.shortcut.userActivity?.activityType
+               
+                                helpTypeNameDictionary [element.shortcut.userActivity?.activityType ?? "type"] = element.invocationPhrase
+                
+                self.siriShortcutNameTypeDictionary[element.invocationPhrase] = element.shortcut.userActivity?.activityType
+                helpNameTypeDictionary[element.invocationPhrase] = element.shortcut.userActivity?.activityType
+                print(siriShortcutsNameTypeDico[element.invocationPhrase])
+            
+            }}else{
+                siriShortcutDisplayList = unique(source: siriShortcutDisplayList! )
+                for element in siriShortcutDisplayList {
+
+                    ViewController.voiceCommandsList.append(shortCutInvocationPhasee(phase:element,type: siriShortcutTypeNameDictionary[element] ?? "_" ))
+
+                }
+
+
+            }
+
+            print("lenAnch")
+            print(siriShortcutDisplayList.count)
+            print(siriShortcutsNameTypeDico.count)
+            
+            print(siriShortcutsTypeNameDico.count)
+            print(self.siriShortcutNameTypeDictionary.count)
+           siriShortcutExperimentRouteFlag = true
+            
+            UserDefaults.standard.setValue(siriShortcutDisplayList, forKey: "siriShortcutDisplayList")
+            UserDefaults.standard.setValue(siriShortcutsNameTypeDico, forKey:  "siriShortcutsNameTypeDico")
+           UserDefaults.standard.setValue( helpTypeNameDictionary, forKey: " siriShortcutsTypeNameDico")
+            UserDefaults.standard.setValue(true, forKey: "siriShortcutExperimentRoute")
+            UserDefaults.standard.set(helpNameTypeDictionary, forKey: "siriShortcutNameTypeDictionary")
+            
+            UserDefaults.standard.set(helpTypeNameDictionary, forKey: "siriShortcutTypeNameDictionary")
+            //siriShortcutNameTypeDictionary  =  UserDefaults.standard.object(forKey: "siriShortcutNameTypeDictionary")  as? [String:String] ?? [:]
+            
+            print("5get")
+            print( siriShortcutNameTypeDictionary.count)
+            print(siriShortcutTypeNameDictionary.count)
+            logger.logSettings(siriShortcutTypeNameDictionary: siriShortcutTypeNameDictionary, siriShortcutNameTypeDictionary: siriShortcutNameTypeDictionary, defaultUnit: defaultUnit, defaultColor: defaultColor, soundFeedback: soundFeedback, voiceFeedback: voiceFeedback, hapticFeedback: hapticFeedback, sendLogs: sendLogs, timerLength: timerLength, currentRoute: currentRoute,adjustOffset: adjustOffset,
+                               currentCondition:currentCondition, experimentRouteFlag: experimentRouteFlag, experimentConditonsDico: experimentConditonsDico,
+                               conditionsDico: conditionsDico,siriShortcutDisplayList:siriShortcutDisplayList, siriShortcutsNameTypeDico: siriShortcutsNameTypeDico, siriShortcutsTypeNameDico :siriShortcutsTypeNameDico)
+            
+            sendLogDataHelper(pathStatus: nil)
+        }
         rootContainerView.homeButton.isHidden = false
         creatingRouteAnchorPoint = true
 
@@ -2241,6 +2401,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             print("checkf5")
             print(siriShortcutSingleUseRouteFlag)
             present(vcc, animated: true, completion: nil)
+            singleUseRouteExperimentFlag = false
             UserDefaults.standard.setValue(true, forKey: "siriShortcutSingleUseRoute")
             print(siriShortcutSingleUseRouteFlag)
             
@@ -2258,12 +2419,15 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             
       
         vcc.delegate = self
+        print("expPressed")
+        print(!siriShortcutExperimentRouteFlag)
         
         if(!siriShortcutExperimentRouteFlag){
             present(vcc, animated: true, completion: nil)
-            
+            print("expLoop")
+            dump(voiceShortcuts)
                     for element in voiceShortcuts{
-                        ViewController.voiceCommandsList.append(shortCutInvocationPhasee(phase: element.invocationPhrase))
+                        ViewController.voiceCommandsList.append(shortCutInvocationPhasee(phase: element.invocationPhrase, type: element.shortcut.userActivity!.activityType))
                        print(element.invocationPhrase)
                     }
             
@@ -2272,14 +2436,23 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
              
                print(element.invocationPhrase)
                 siriShortcutDisplayList.append(element.invocationPhrase)
-              
+                print("inExpLoop")
+                print(element.invocationPhrase)
+                //print(element.shortcut.userActivity?.activityType)
+                siriShortcutsNameTypeDico[element.invocationPhrase] = element.shortcut.userActivity?.activityType
+                siriShortcutsTypeNameDico[element.shortcut.userActivity?.activityType ?? "type"] = element.invocationPhrase
+                print(siriShortcutsNameTypeDico[element.invocationPhrase])
             }
+            
             siriShortcutDisplayList = unique(source: siriShortcutDisplayList)
             print("lenExp")
             print(siriShortcutDisplayList.count)
-          
+            //print(siriShortcutsNameTypeDico.capacity)
+            //siriShortcutExperimentRouteFlag = true
             UserDefaults.standard.setValue(siriShortcutDisplayList, forKey: "siriShortcutDisplayList")
-            
+            print("sNdico")
+            print(siriShortcutsNameTypeDico.count)
+            //UserDefaults.standard.setValue(siriShortcutsNameTypeDico, forKey:  "siriShortcutsNameTypeDico")
             UserDefaults.standard.setValue(true, forKey: "siriShortcutExperimentRoute")
         }
     }
@@ -2355,8 +2528,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     @objc func participateInExperiment(){
         
-        if( !siriShortcutAlert){
+        if( !siriShortcutExperimentRouteFlag || !siriShortcutSingleUseRouteFlag || !siriShortcutStopRecordingRouteFlag || !siriShortcutStartNavigatingRouteFlag){
             ///Alert to inform users that they haven't enabled the specific shortcut
+            showEnableSiriAlert()
             print("please enable shortcuts")
         }
         if(!singleUseRouteExperimentFlag && !experimentRouteFlag){
@@ -2365,13 +2539,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             
                   startExperiment()
               
-    
-    // if completed present completed
-    //if
-    
         }else if (completedExperiment){
+            // if completed present completed Alert
             showCompletedExperimentAlert()
-            // present completed
         }
         else if (currentRoute as! String == "SingleUseRoute"){
             ViewController.sExperimentRouteFlag = true
@@ -2796,7 +2966,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             // do this in a little while to give it time
             
            
-            DispatchQueue.main.asyncAfter(deadline: .now() + (wait ? 3 : 1)) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + (wait ? 1 : 1)) {
                 self.presentSurveyIfIntervalHasPassed(mode: "afterRoute", logFileURLs: logFileURLs)
             }
         }
@@ -2804,12 +2974,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     }
     
     
-    func sendLogExperimentRouteDataHelper(pathStatus: Bool?, announceArrival: Bool = false) {
+    func sendLogExperimentRouteDataHelper(pathStatus: Bool?, announceArrival: Bool = true) {
        
         state = .mainScreen(announceArrival: announceArrival)
         let prevConditionsCounts = ViewController.ConditionsCount
         
-        if(!singleUseRouteExperimentFlag && !experimentRouteFlag){
+        if(!singleUseRouteExperimentFlag! && !experimentRouteFlag){
             print("inside startExp")
             startExperiment()
         }
@@ -2865,7 +3035,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 }
                 if(left.isEmpty){
                     
-                    if(!singleUseRouteExperimentFlag){
+                    if(!singleUseRouteExperimentFlag!){
                     updateExperiment()
                     currentRoute = "SingleUseRoute"
                      UserDefaults.standard.setValue(currentRoute, forKey: "currentRoute")
@@ -2935,7 +3105,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
               if(left.isEmpty){
                
                   
-                  if(!singleUseRouteExperimentFlag){
+                if(!(singleUseRouteExperimentFlag ?? false)) {
                   //updateExperiment()
                 currentRoute = "SingleUseRoute"
                   UserDefaults.standard.setValue(currentRoute, forKey: "currentRoute")
@@ -3810,14 +3980,21 @@ extension ViewController: INUIAddVoiceShortcutViewControllerDelegate {
         var shortcutStrings: [String]! = []
         
         for element in voiceShortcuts{
-            ViewController.voiceCommandsList.append(shortCutInvocationPhasee(phase: element.invocationPhrase))
+            ViewController.voiceCommandsList.append(shortCutInvocationPhasee(phase: element.invocationPhrase, type: element.shortcut.userActivity!.activityType))
             print(element.invocationPhrase)
             siriShortcutDisplayList.append(element.invocationPhrase)
+            print(element.invocationPhrase)
+                 //print(element.shortcut.userActivity?.activityType)
+                 siriShortcutsNameTypeDico[element.invocationPhrase] = element.shortcut.userActivity?.activityType
+                 siriShortcutsTypeNameDico[element.shortcut.userActivity?.activityType ?? "type"] = element.invocationPhrase
+          
           
         }
      
      
         UserDefaults.standard.setValue(siriShortcutDisplayList, forKey: "siriShortcutDisplayList")
+        UserDefaults.standard.setValue(siriShortcutsTypeNameDico, forKey: "siriShortcutsTypeNameDico")
+        UserDefaults.standard.setValue(siriShortcutsNameTypeDico, forKey:  "siriShortcutsNameTypeDico")
         dismiss(animated: true, completion: nil)
 
     }

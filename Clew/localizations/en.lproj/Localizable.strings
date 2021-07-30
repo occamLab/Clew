@@ -12,18 +12,20 @@
 
 "sharingYourExperiencePop-UpContent" = "Help us improve the app by logging your Clew experience. These logs will not include any images or personal information. You can turn this off in Settings.";
 
-"significantVersionChangesPop-UpHeading" = "Important Changes";
+"significantVersionChangesPop-UpHeading" = "Important Changes ";
 
 "significantVersionChangesPop-UpContent" = "This new version of Clew features a route sharing feature and a redesigned workflow for saving routes. Please note that \"landmarks\" are now called \"anchor points\". Also, some menus previously on the home screen are now available through the \"options\" menu. See the help menu for more details.";
 
 "ExperimentInstructions" = "Experiment Instructions";
-"ExperimentRouteControlledInstructions" = "Please record 3 \"Experiment Routes\" where you start the route, walk around, and return to the exact same position you started in. Once you've reached the starting position you can end the path recording. For this round, hold the phone with your hand and use Siri shortcuts to start and stop the recording.";
-"ExperimentRouteLanyardInstructions" = "Please record 3 \"Experiment Routes\" where you start the route, walk around, and return to the exact same position you started in. Once you've reached the starting position you can end the path recording. For this round, attach your phone to a lanyard while keeping the camera facing forwards. Also, use Siri shortcuts to start and end the route.";
-"ExperimentRouteBracingInstructions" = "Please record 3 \"Experiment Routes\" where you start the route, walk around, and return to the exact same position you started in. Once you've reached the starting position you can end the path recording. For this round, brace the phone vertically against your chest while keeping the camera facing forwards. Also, use Siri shortcuts to start and end the route.";
-"lanyardInstruction" = "Please record 3 Single Use Routes using Siri shortcuts to start, end and navigate routes. For this round, attach your phone to a lanyard while keeping the camera facing forward.";
-"bracingInstruction" = "Please record 3 Single Use Routes using Siri shortcuts to start, end and navigate routes. For this round, brace the phone vertically against your chest while keeping the camera facing forward. ";
-"contolledInstruction" = "Please record 3 Single Use Routes. For this round, hold the phone with your hand and use Siri shortcuts to start, stop and navigate the routes.";
+"ExperimentRouteControlledInstructions" = "Please record an \"Experiment Route\" where you start the route, walk around, and return to the exact same position you started in. Once you've reached the starting position you can end the path recording. For this round, hold the phone with your hand and use Siri shortcuts to start and stop the recording. \n To Start Say: %@ \n To Stop Say: %@ \n ";
+"ExperimentRouteLanyardInstructions" = "Please record an \"Experiment Route\" where you start the route, walk around, and return to the exact same position you started in. Once you've reached the starting position you can end the path recording. For this round, attach your phone to a lanyard while keeping the camera facing forwards. Also, use Siri shortcuts to start and end the route. .\n To Start Say: %@ \n To Stop Say: %@ ";
+"ExperimentRouteBracingInstructions" = "Please record an \"Experiment Route\" where you start the route, walk around, and return to the exact same position you started in. Once you've reached the starting position you can end the path recording. For this round, brace the phone vertically against your chest while keeping the camera facing forward. Also, use Siri shortcuts to start and end the route. .\n To Start Say: %@ \n To Stop Say: %@ \n ";
+"lanyardInstruction" = "Please record a Single Use Route using Siri shortcuts to start, end and navigate routes. For this round, attach your phone to a lanyard while keeping the camera facing forward. \n To Start Say: %@ \n To Stop Say: %@ \n To Navigate Say : %@ ";
+"bracingInstruction" = "Please record a Single Use Route using Siri shortcuts to start, end and navigate the route. For this round, brace the phone vertically against your chest while keeping the camera facing forward. .\n To Start Say: %@ \n To Stop Say: %@ \n To Navigate Say : %@ ";
+"contolledInstruction" = "Please record a Single Use Route. For this round, hold the phone with your hand and use Siri shortcuts to start, stop and navigate the route.\n To Start Say: %@ \n To Stop Say: %@ \n To Navigate Say : %@ ";
 "significantVersionChangesPopHandsFree-UpContent" = "Now you can use Siri with this new version of Clew. Please note that you can only use Siri with \"Single Use Route\" and \"Experiment Route\" . Please ensure that you have enabled Hey Siri on your iPhone through Settings > Siri & Search > Listen for Hey Siri. You will now be prompted to add Siri shortcuts after each action you take, when this is done you can simply say: \"Hey Siri, Activity name\".";
+
+"enableSiriContent" = "Please ensure that you have enabled Siri shortcuts for \"Single Use Route\" and \"Experiment Route\" options. To do this, select each option and follow the prompts.";
 
 "significantVersionChanges-Confirmation" = "Ok";
 
