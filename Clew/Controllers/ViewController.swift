@@ -242,7 +242,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// This is an audio player that queues up the voice note associated with a particular route Anchor Point. The player is created whenever a saved route is loaded. Loading it before the user clicks the "Play Voice Note" button allows us to call the prepareToPlay function which reduces the latency when the user clicks the "Play Voice Note" button.
     var voiceNoteToPlay: AVAudioPlayer?
     
-    /// These are based on querying the invocation URL
     /// This is the name of the .crd file of the path to load, which is assigned by SceneDelegate
     var routeID: String = ""
   
@@ -251,9 +250,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// This is the list of routes associated with a specific app clip code
     var availableRoutes = [[String: String]]()
-    
-    /// This is the path to download route
-    var firebasePath: String?
     
     // MARK: - Speech Synthesizer Delegate
     
@@ -384,7 +380,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         endRouteAnchorPoint = RouteAnchorPoint()
 
         logger.resetNavigationLog()
-        print("testPath", firebasePath)
         
         // this is where the code would actually pick up B)
         let pathRef = Storage.storage().reference().child("AppClipRoutes/\(routeID).crd")
@@ -399,13 +394,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 /*NotificationCenter.default.addObserver(forName: NSNotification.Name("shouldOpenRoute"), object: nil, queue: nil) { (notification) -> Void in
                     
                 }*/
-   
                 
                 self.dataPersistence.importData(withData: data!)
                 print(self.dataPersistence.routes)
                 print("data, persisted")
                 
                 let thisRoute = (self.dataPersistence.routes.first(where: {String($0.id) == self.routeID}))!
+//                let thisRoute = (self.dataPersistence.routes.last)!
                 
                 print("Soooup Time \(thisRoute.name)")
                 print("soooooup time")
@@ -415,10 +410,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 self.continuationAfterSessionIsReady = {
                     self.handleStateTransitionToStartingResumeProcedure(route: thisRoute, worldMap: nil, navigateStartToEnd: true)
                 }
-
-
             }
-          }
+        }
     }
     
     /// Handler for the navigatingRoute app state
