@@ -981,6 +981,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                                                                        width: UIConstants.buttonFrameWidth * 1,
                                                                        height: UIScreen.main.bounds.size.height*0.85)
         endNavigationController?.view.backgroundColor = .clear
+        
         #endif
         
         

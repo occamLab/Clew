@@ -10,6 +10,7 @@ import SwiftUI
 import Firebase
 import Foundation
 import FirebaseStorage
+import FirebaseAuth
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
@@ -25,24 +26,37 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     //var homeScreenHelper: HomeScreenHelper?
     
-
-  
-    
     func createScene(_ scene: UIScene) {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
         // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
         guard let scene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: scene)
-        vc = ViewController()
-        //homeScreenHelper = HomeScreenHelper(vc: vc!, sceneDelegate: self)
-        vc?.rootContainerView.burgerMenuButton.isHidden = false
         window?.frame = UIScreen.main.bounds
-        window?.rootViewController = vc
-        window?.backgroundColor = .white
-        window?.makeKeyAndVisible()
+
         UIApplication.shared.isIdleTimerDisabled = true
+        if UserDefaults.standard.value(forKey: "hasconsented") as? Bool == true {
+            vc = ViewController()
+            //homeScreenHelper = HomeScreenHelper(vc: vc!, sceneDelegate: self)
+            self.window?.rootViewController = vc
+        } else {
+            let consentFormController = UIHostingController(rootView: InformedConsentView())
+            consentFormController.view.frame = CGRect(x: 0,
+                                                                           y: 0,
+                                                                           width: UIConstants.buttonFrameWidth * 1,
+                                                                           height: UIScreen.main.bounds.size.height)
+            self.window?.rootViewController = consentFormController
+        }
         
+        if Auth.auth().currentUser == nil {
+            Auth.auth().signInAnonymously() { (authResult, error) in
+                self.window?.backgroundColor = .white
+                self.window?.makeKeyAndVisible()
+            }
+        } else {
+            window?.backgroundColor = .white
+            window?.makeKeyAndVisible()
+        }
     }
     
 
