@@ -1371,9 +1371,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         let waitingPeriod = ViewController.alignmentWaitingPeriod
         if isTutorial {
             resumeTrackingConfirmController.view.mainText?.text?.append(NSLocalizedString("tutorialRouteAlignmentText", comment: "Text describing the process of aligning to a tutorial route. This text shows up on the alignment screen."))
+            
         } else {
             resumeTrackingConfirmController.view.mainText?.text?.append(String.localizedStringWithFormat(NSLocalizedString("anchorPointAlignmentText", comment: "Text describing the process of aligning to an anchorpoint. This text shows up on the alignment screen."), waitingPeriod))
         }
+        
+        
         print("text", resumeTrackingController.view.mainText?.text)
         delayTransition()
     }

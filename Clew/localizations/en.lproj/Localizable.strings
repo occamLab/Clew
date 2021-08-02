@@ -303,7 +303,7 @@
 "findPathTutorialInstructionText" = "When you are on the path, Clew will give sound and haptic feedback. If the app is not making sound, it is most likely because your phone is not facing the path. Should Clew go quite you should stop and turn until you find the path again. Clew also plays a distinct sound when you pass through a waypoint. Clew way points are markers along routes that are accompanied by further directions such as turn right, or continue straight.   Clew will also anonch when you have reached the end of the route. To try out what following a Clew route is like, press Practice below.";
 "findPathPractice1Title" = "Practice First Path";
 "findPathPractice1InstructionText" = "Here you will practice following a Clew Route. Make sure you are in a familiar place with some open space around you. This path will guide you forward a few steps and then announce your arrival. Select begin to enter the practice route.";
-"findPathPracticeBeginButtonText" = "Being Practice";
+"findPathPracticeBeginButtonText" = "Practice";
 "tutorialRouteAlignmentText" = "Start practice route by selecting start alignment and wait for countdown, and then try out following a route.";
 "findPathPractice2Title" = "Practice Second Path";
 "findPathPractice2InstructionText" = "Here you will practice following a Clew Route. Make sure you are in a familiar place with some open space around you. This path will guide you forward a few steps and then you will pass through a waypoint and be instructed to turn right. Then you will take a few more steps and then arrive. Select begin to enter the practice route.";

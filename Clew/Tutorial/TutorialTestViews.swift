@@ -271,8 +271,7 @@ struct TutorialTestView: View {
 }
 
 struct CLEWintro: View {
-    //@EnvironmentObject var completed: status
-    //@StateObject var completed = status()
+    //TODO: Hid or Delete reset button
     var body: some View {
         TutorialScreen{
             Text("Introduction to Clew")
@@ -281,13 +280,6 @@ struct CLEWintro: View {
             Text(NSLocalizedString("ClewIntroTutorialText1", comment: "Text on the first page of the tutorial that describes Clew"))
             Text(NSLocalizedString("ClewIntroTutorialText2", comment: "Text on the first page of the tutorial that describes Clew"))
             Text(NSLocalizedString("ClewIntroTutorialText3", comment: "Text on the first page of the tutorial that describes Clew"))
-
-                //.fixedSize(horizontal: false, vertical: true)
-               // .lineLimit(100)//added these lines because text was being truncated and this fixed it, not sure why
-                //.minimumScaleFactor(0.5)
-                //.fixedSize()
-                //.frame(width: 50, height: 70, alignment: .topLeading)
-            //}
             
             Button(action:{
                 UserDefaults.standard.setValue(false, forKey: "IntroTutorialCompleted")
@@ -307,13 +299,51 @@ struct CLEWintro: View {
     
         }
         Spacer()
-        TutorialNavLink(destination: OrientPhone()) {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
+        TutorialNavLink(destination: UsingClew()) {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
         }
     }
 }
 
+struct UsingClew: View {
+    var body: some View {
+        TutorialScreen {
+            Text("Using Clew")
+            
+            Text("")
+            
+            //Add link to examples?
+        }
+    Spacer()
+        TutorialNavLink(destination: ClewsRole()) {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
+    }
+}
+
+struct ClewsRole: View {
+    var body: some View {
+        TutorialScreen {
+            Text("Clew's Role")
+            
+            Text("")
+        }
+    Spacer()
+        TutorialNavLink(destination: UsingClewTutorial()) {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
+    }
+}
+
+struct UsingClewTutorial: View {
+    var body: some View {
+        TutorialScreen {
+            Text("Using this Tutorial")
+            
+            Text("")
+        }
+    Spacer()
+        TutorialNavLink(destination: OrientPhone()) {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
+    }
+}
 
 struct ClewExamples: View {
+    //Not in Tutorial at the moment
     var body: some View {
         TutorialScreen {
             Text("What Can I Use Clew For?")
@@ -563,12 +593,12 @@ struct FindPath: View {
             Text(NSLocalizedString("findPathTutorialInstructionText", comment: "Text that explains what it sounds and feels like to be on the path and following the path"))
                 //.fixedSize(horizontal: false, vertical: true)
         
-            TutorialNavLink(destination: FindPathPractice1())  {Text("Practice")}
+            //TutorialNavLink(destination: FindPathPractice1())  {Text("Practice")}
             //TutorialNavLink(destination: TutorialEndView())  {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
             
         }
         Spacer()
-        TutorialNavLink(destination: SingleUse())  {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
+        TutorialNavLink(destination: FindPathPractice1())  {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
     }
 }
 
@@ -619,6 +649,7 @@ struct FindPathPractice2: View {
 
 
 struct PracticeSuccess: View {
+    //TODO: fix success page comes up even if you don't complete the practice route
     @State var successSound: AVAudioPlayer?
     var body: some View {
         NavigationView{
@@ -723,65 +754,104 @@ struct AnchorPointTips: View {
 }
 
 struct AnchorPointPractice: View {
+    //TODO: 1 write instructions 2
     @ObservedObject private var arData = ARData.shared
     @State var sound: AVAudioPlayer?
     @State private var started = false
-    @State var xyzYaw: [Float] = []
+    @State var xyzYawSet: [Float] = []
+    @State var xyzYawAlign: [Float] = []
+    @State var xyzYawDelta: [Float] = []
+    @State private var anchorPointSet = false
+    @State private var anchorPointAligned = false
     var body: some View {
         TutorialScreen {
-            Text("Practice Setting Anchor Points")
-            
-            Button(action:{
-                started.toggle()
-                NotificationCenter.default.post(name: Notification.Name("StartARSession"), object: nil)
-            }){
-                if started {
-                    TutorialButton{
-                        Text(NSLocalizedString("orientPhoneTutorialPracticeStop", comment: "stop orient phone practice"))}
+            if anchorPointAligned {
+                //once anchor point is aligned
+                Text("anchor point aligned")
+                
+                Text("x, y, z, yaw \(xyzYawAlign[0] - xyzYawSet[0]), \(xyzYawAlign[1] - xyzYawSet[1]), \(xyzYawAlign[2] - xyzYawSet[2]), \(xyzYawAlign[3] - xyzYawSet[3])")
+                
+                if xyzYawDelta[0] < 0.1 && xyzYawDelta[0] > -0.1, xyzYawDelta[1] < 0.1 && xyzYawDelta[1] > -0.1, xyzYawDelta[2] < 0.1 && xyzYawDelta[2] > -0.1, xyzYawDelta[3] < 0.1 && xyzYawDelta[3] > -0.1 {
+                    Text("Perfect!!!")
+                } else if xyzYawDelta[0] < 1 && xyzYawDelta[0] > -1, xyzYawDelta[1] < 1 && xyzYawDelta[1] > -1, xyzYawDelta[2] < 1 && xyzYawDelta[2] > -1, xyzYawDelta[3] < 1 && xyzYawDelta[3] > -1 {
+                    Text("Okay...")
                 } else {
-                    TutorialButton{
-                        Text(NSLocalizedString("orientPhoneTutorialPracticeStart", comment: "start orient phone practice"))}
+                    Text("Not so good, try again")
                 }
+                
+                Button(action: {
+                    anchorPointAligned = false
+                }) {Text("Retry Aligning Anchor Point")}
+                
+                Button(action: {
+                    anchorPointSet = false
+                    anchorPointAligned = false
+                }) {Text("Restart Practice")}
+                
+            }else if anchorPointSet {
+                //Once anchor point is set
+                Text("Align to Anchor Point")
+                
+                Text("Nice Job! You've set an anchor point!")
+                
+                Text("Now move your phone out of the position you set the ancor point in. Maybe even walk around the room you're in. Then try returning your phone to the same position and select the align button again to set a second anchor point. Wait for the count down, and then your second anchor point will be set. Then you'll recieve some feedback about how close your second anchor point was to the first you set.")
+                
+                Button(action: {
+                    NotificationCenter.default.post(name: Notification.Name("StartARSession"), object: nil)
+                    if let transform = arData.transform {
+                        let x = transform.columns.3.x
+                        let y = transform.columns.3.y
+                        let z = transform.columns.3.z
+                        let yaw = ViewController.getYawHelper(transform)
+                        xyzYawAlign = [x, y, z, yaw]
+                        xyzYawDelta = [xyzYawAlign[0] - xyzYawSet[0], xyzYawAlign[1] - xyzYawSet[1], xyzYawAlign[2] - xyzYawSet[2], xyzYawAlign[3] - xyzYawSet[3]]
+                        anchorPointAligned = true
+                    }
+                }) {//Text("capture anchorpoint")
+                    Image("Align")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                    }
+                Button(action: {
+                    anchorPointSet = false
+                    //anchorPointAligned = false
+                }) {Text("Reset Anchor Point")}
+                
+            }else {
+                //when starting anchor point practice
+                Text("Practice Setting Anchor Points")
+                
+                Text("Here you will practice setting an anchor point and then finding that anchor point. ")
+                
+                Button(action: {
+                        NotificationCenter.default.post(name: Notification.Name("StartARSession"), object: nil)
+                        //TODO: do count down, hid button until after countdown and wait a least a little bit longer before you can hit align again, play a success sound(?)
+                        if let transform = arData.transform {
+                            let x = transform.columns.3.x
+                            let y = transform.columns.3.y
+                            let z = transform.columns.3.z
+                            let yaw = ViewController.getYawHelper(transform)
+                            xyzYawSet = [x, y, z, yaw]
+                            anchorPointSet = true
+                        }
+                    
+                }) {//Text("capture anchorpoint")
+                    Image("Align")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                    }
             }
             
             
-            Button(action: {
-                if let transform = arData.transform {
-                    let x = transform.columns.3.x
-                    let y = transform.columns.3.y
-                    let z = transform.columns.3.z
-                    let yaw = ViewController.getYawHelper(transform)
-                    xyzYaw = [x, y, z, yaw]
-                }
-                
-            }) {Text("capture anchorpoint")//Image(systemName: "alinement")
-                }
-            if let transform = arData.transform {
+           /* if let transform = arData.transform {
                 let x = transform.columns.3.x
                 let y = transform.columns.3.y
                 let z = transform.columns.3.z
                 let yaw = ViewController.getYawHelper(transform)
-                if xyzYaw.count == 4 {
-                    Text("x, y, z, yaw \(x - xyzYaw[0]), \(y - xyzYaw[1]), \(z - xyzYaw[2]), \(yaw - xyzYaw[3])")
+                if xyzYawSet.count == 4 {
+                    Text("x, y, z, yaw \(x - xyzYawSet[0]), \(y - xyzYawSet[1]), \(z - xyzYawSet[2]), \(yaw - xyzYawSet[3])")
                 }
-            }
-            
-            
-            
-        }.onReceive(self.arData.objectWillChange) {newARData in
-            if let transform = arData.transform {
-            let y = transform.columns.0.y
-            let path1 = Bundle.main.path(forResource: "ClewTutorialFeedback", ofType:"wav")!
-            let url1 = URL(fileURLWithPath: path1)
-                    if y < -0.9 && y > -0.8 {
-                        do {
-                            sound = try AVAudioPlayer(contentsOf: url1)
-                            sound?.play()
-                        } catch {
-                            // couldn't load file :(
-                        }
-                    }
-            }
+            }*/
         }
     }
 }
