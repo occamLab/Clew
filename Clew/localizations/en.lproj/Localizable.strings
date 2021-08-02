@@ -36,6 +36,8 @@
 // Strings from ViewController
     // Voicing directions
 "startedTrackingSessionAnnouncement" = "Tracking session initialized.";
+"WrongRouteSingleUseAnnouncement" = "Please start a Single Use Route";
+"WrongRouteExperimentAnnouncement" = "Please start an experiment route";
 "fixedTrackingAnnouncement" = "Tracking performance normal.";
 "properDevicePositioningAnnouncement" = "Hold vertically with the rear camera facing forward.";
 "completedNavigationAnnouncement" = "You've arrived.";

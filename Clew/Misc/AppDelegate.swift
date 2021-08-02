@@ -147,6 +147,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     ) -> Bool {
        
         print("indelact")
+        print("state")
+        print(vc.state)
         print(userActivity.activityType)
         print("stackPeack")
         print(vc.stack.peek())
@@ -160,10 +162,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if(userActivity.activityType == kNewSingleUseRouteType && vc.stack.peek() == "start"){
             if(ViewController.sExperimentRouteFlag ){
                 
-                if(ViewController.sRouteType == "SingleUseRoute"){
+                if(ViewController.sRouteType as! String  == "SingleUseRoute"){
                     vc.dismiss(animated: true, completion: nil)
                     vc.startCreateAnchorPointProcedure()
                     vc.stack.push(kNewSingleUseRouteType)
+                }else{
+                    vc.announce(announcement: NSLocalizedString("WrongRouteExperimentAnnouncement", comment: "informs the user that they have started the wrong route."))
                 }
             }else{
            
@@ -174,15 +178,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             
 
              }
-        if(userActivity.activityType == kExperimentRouteType){
-             
+        if(userActivity.activityType == kExperimentRouteType ){
+            print("delD")
+            print(ViewController.sRouteType as! String == "ExperimentRoute")
+            if(ViewController.sExperimentRouteFlag ){
             if(ViewController.sRouteType == "ExperimentRoute"){
                 vc.dismiss(animated: true, completion: nil)
-              
+              print("Dis")
             vc.experimentProcedure()
             vc.stack.push(kExperimentRouteType)
              //vc.prevSiriActivity = kExperimentRouteType
 
+            }else{
+                
+                vc.announce(announcement: NSLocalizedString("WrongRouteSingleUseAnnouncement", comment: "informs the user that they have started the wrong route."))
+            }
+                
+                
             }else{
                 
               vc.experimentProcedure()

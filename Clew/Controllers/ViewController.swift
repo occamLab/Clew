@@ -983,13 +983,15 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
 //        siriShortcutExperimentRouteFlag = false
     // UserDefaults.standard.setValue(false, forKey: "siriShortcutExperimentRoute")
         UserDefaults.standard.setValue(false, forKey: "siriShortcutAlert")
+        UserDefaults.standard.setValue(startExperimentWithList.randomElement(), forKey: "currentRoute")
+        
         UserDefaults.standard.setValue(false, forKey: "singleUseRouteExperimentFlag")
         UserDefaults.standard.setValue(false, forKey: "experimentRouteFlag")
-        UserDefaults.standard.setValue(conditionsList.randomElement(), forKey: "currentCondition")
+        //UserDefaults.standard.setValue("lanyard", forKey: "currentCondition")
         let cConditions: Dictionary? =  userDefaults.dictionary(forKey: "conditionsDico")
         print("before Condition")
         print(cConditions)
-        
+        let tecondtions = ["lanyard":0,"bracing":3,"none":3]
         let recondtions = ["lanyard":0,"bracing":0,"none":0]
     UserDefaults.standard.setValue(recondtions, forKey: "conditionsDico")
         
@@ -1412,11 +1414,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         changesAlertVC.addAction(UIAlertAction(title: NSLocalizedString("completeSurveyContent", comment: "What the user clicks to acknowledge the significant changes message and dismiss pop-up"), style: .default, handler: { action -> Void in
             
             
-            let logFileURLs = self.logger.compileLogData(true)
+            
             let wait = false
                        
-            self.presentSurveyIfIntervalHasPassed(mode: "onAppLaunch", logFileURLs: [])
-                            
+            let logFileURLs = self.logger.compileLogData(nil)
+            
+             DispatchQueue.main.asyncAfter(deadline: .now() + (false ? 1 : 1)) {
+                 self.presentSurveyIfIntervalHasPassed(mode: "afterRoute", logFileURLs: logFileURLs)
+             }
                             
                         
             
@@ -2180,11 +2185,16 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             
            // UserDefaults.standard.setValue(distance ?? 0.0, forKey: "distance")
             print(distance)
+            print("CEF")
+            print(ViewController.sExperimentRouteFlag)
             if(ViewController.sExperimentRouteFlag){
+                
             logger.logFrameDistance(distance: distance)
-                sendLogExperimentRouteDataHelper(pathStatus: true)}else{
+                sendLogExperimentRouteDataHelper(pathStatus: true)
+                
+            }else{
                     
-                    sendLogDataHelper(pathStatus: nil)
+                    sendLogDataHelper(pathStatus: true)
                 }
             
             
@@ -2323,28 +2333,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         //set experiment route to false
         recordingExperimentRoute = false
         // ensure adjustoffset is turned off
-        print("")
-        print(siriShortcutDisplayList.count)
-        print("typeName")
-        print(siriShortcutsTypeNameDico.count)
-        dump(siriShortcutTypeNameDictionary)
-        print(siriShortcutNameTypeDictionary.count)
-        print(siriShortcutTypeNameDictionary.count)
-        print("^")
-        print(helpNameTypeDictionary.count)
-        UserDefaults.standard.set(false, forKey: "adjustOffset")
-        print("dumpAnch")
-        print(siriShortcutExperimentRouteFlag)
-
-        print(!setShortcutsDisplay)
-        //print(siriShortcutExperimentRouteFlag ?? false && !setShortcutsDisplay)
-        dump(voiceShortcuts)
-        print("empty")
-        
+      
         if(siriShortcutExperimentRouteFlag && !setShortcutsDisplay){
             setShortcutsDisplay = true
-            print("expLoop")
-            dump(voiceShortcuts)
+          
             if(!voiceShortcuts.isEmpty){
                 for element in voiceShortcuts{
                         ViewController.voiceCommandsList.append(shortCutInvocationPhasee(phase: element.invocationPhrase, type: element.shortcut.userActivity!.activityType))
@@ -2354,10 +2346,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
 
                print(element.invocationPhrase)
                 siriShortcutDisplayList.append(element.invocationPhrase)
-                print("inExpLoop")
-                print(element.invocationPhrase)
-                //print(element.shortcut.userActivity?.activityType)
-                
+           
                 
                 siriShortcutsNameTypeDico[element.invocationPhrase] = element.shortcut.userActivity?.activityType
                
@@ -2407,7 +2396,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
            siriShortcutExperimentRouteFlag = true
           
             
-            sendLogDataHelper(pathStatus: nil)
+            sendLogDataHelper(pathStatus: true)
         }
         rootContainerView.homeButton.isHidden = false
         creatingRouteAnchorPoint = true
@@ -2605,7 +2594,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     }
     
     @objc func participateInExperiment(){
-        
+        print("in Participate")
         if( !siriShortcutExperimentRouteFlag || !siriShortcutSingleUseRouteFlag || !siriShortcutStopRecordingRouteFlag || !siriShortcutStartNavigatingRouteFlag){
             ///Alert to inform users that they haven't enabled the specific shortcut
             showEnableSiriAlert()
@@ -2614,22 +2603,29 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         if(!singleUseRouteExperimentFlag && !experimentRouteFlag){
                   // start experiment
             ViewController.sExperimentRouteFlag = true
-            
+            print( ViewController.sRouteType )
+            print( ViewController.sExperimentRouteFlag)
                   startExperiment()
               
         }else if (completedExperiment){
             // if completed present completed Alert
+            print( ViewController.sRouteType )
+            print( ViewController.sExperimentRouteFlag)
             showCompletedExperimentAlert()
         }
         else if (currentRoute as! String == "SingleUseRoute"){
             ViewController.sExperimentRouteFlag = true
             ViewController.sRouteType = currentRoute
+            print( ViewController.sRouteType )
+            print( ViewController.sExperimentRouteFlag)
             updateExperiment()
             
             
         }else {
             ViewController.sExperimentRouteFlag = true
             ViewController.sRouteType = currentRoute
+            print( ViewController.sRouteType )
+            print( ViewController.sExperimentRouteFlag)
             updateExperimentExperimentRoute()
             
            
@@ -2862,7 +2858,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     func sendLogExperimentSingleUseRouteDataHelper(pathStatus: Bool?, announceArrival: Bool = false) {
        
-        state = .mainScreen(announceArrival: announceArrival)
+        state = .mainScreen(announceArrival: true)
         var prevConditionsCountsv = conditionsDico[currentCondition] as! Int
         var Condd = UserDefaults.standard.dictionary(forKey: "conditionsDico")
         var prevCondd = Condd![currentCondition]
@@ -3004,6 +3000,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 presentSurvey = true
                 if(!experimentRouteFlag){
                 //updateExperimentExperimentRoute()
+                print("gon next ")
                 currentRoute = "ExperimentRoute"
                  UserDefaults.standard.setValue(currentRoute, forKey: "currentRoute")
                 experimentRouteFlag = true
@@ -3025,10 +3022,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             print(nextCondition)
             if(conditionsDico[currentCondition]! as! Int == 3){
             if(conditionsDico[nextCondition ?? "none"]! as! Int == 0){
-             
-            
+             print("next")
+            print(nextCondition)
                 
                 currentCondition = nextCondition
+                print("update")
                 UserDefaults.standard.setValue(currentCondition, forKey: "currentCondition")
                
                 
@@ -3040,7 +3038,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
         
         let wait: Bool = true
-        
+        print("current")
+        print(currentCondition)
+        print(conditionsDico)
         if (sendLogs && presentSurvey) {
             print("should present survey")
             // do this in a little while to give it time
@@ -3055,12 +3055,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     
     func sendLogExperimentRouteDataHelper(pathStatus: Bool?, announceArrival: Bool = true) {
-       
+       print("in sendLogExperimentRouteDataHelper( ")
         state = .mainScreen(announceArrival: announceArrival)
         let prevConditionsCounts = ViewController.ConditionsCount
         
         if(!singleUseRouteExperimentFlag! && !experimentRouteFlag){
-            print("inside startExp")
+            print("inside move Next")
             startExperiment()
         }
         if(currentCondition == "lanyard"){
@@ -3171,7 +3171,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         logger.logExpDico(dico: experimentConditonsDico)
         let logFileURLs = logger.compileLogData(true)
         logger.resetStateSequenceLog()
-        
+        print(" in sendExpRouteLog")
+        print("sendLog")
+        print(sendLogs)
           
           // determine which conditions are to be completed
               var left : [String] = []
@@ -3182,11 +3184,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                   
                   
               }
+        print("left")
+        dump(left)
               if(left.isEmpty){
                
                   
                 if(!(singleUseRouteExperimentFlag ?? false)) {
                   //updateExperiment()
+                    print("go singluse")
                 currentRoute = "SingleUseRoute"
                   UserDefaults.standard.setValue(currentRoute, forKey: "currentRoute")
                   UserDefaults.standard.setValue(true, forKey: "singleUseRouteExperimentFlag")
@@ -3204,8 +3209,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         if(experimentConditonsDico[currentCondition]! as! Int == 3){
           
           print("eq3")
-          
+          print("next condition")
           nextCondition = left.randomElement()
+        print(nextCondition)
           if(experimentConditonsDico[nextCondition]! as! Int == 0){
               
               print("updateNext")
