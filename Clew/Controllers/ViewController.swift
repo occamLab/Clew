@@ -1385,7 +1385,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     ///
 /// pops up when the user presses on participate on experiment before enabling all siri shortcuts
     func showEnableSiriAlert() {
-        let changesAlertVC = UIAlertController(title: NSLocalizedString("ExperimentInstructions" , comment: "Notify the User that they have completed the experiment"),
+        let changesAlertVC = UIAlertController(title: NSLocalizedString("enableSiriTitle"  , comment: "Notify the User that they have completed the experiment"),
                                                message: NSLocalizedString("enableSiriContent", comment: "Notify the User that they have completed the experiment."),
                                                preferredStyle: .alert)
         changesAlertVC.addAction(UIAlertAction(title: NSLocalizedString("significantVersionChanges-Confirmation", comment: "What the user clicks to acknowledge the significant changes message and dismiss pop-up"), style: .default, handler: { action -> Void in
@@ -2599,6 +2599,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     @objc func participateInExperiment(){
         print("in Participate")
+        print( !siriShortcutExperimentRouteFlag )
+        print(!siriShortcutSingleUseRouteFlag)
+        print( !siriShortcutStopRecordingRouteFlag )
+        print(!siriShortcutStartNavigatingRouteFlag)
+        print( !siriShortcutExperimentRouteFlag || !siriShortcutSingleUseRouteFlag || !siriShortcutStopRecordingRouteFlag || !siriShortcutStartNavigatingRouteFlag)
         if( !siriShortcutExperimentRouteFlag || !siriShortcutSingleUseRouteFlag || !siriShortcutStopRecordingRouteFlag || !siriShortcutStartNavigatingRouteFlag){
             ///Alert to inform users that they haven't enabled the specific shortcut
             showEnableSiriAlert()

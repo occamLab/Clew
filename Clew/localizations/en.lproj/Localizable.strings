@@ -24,8 +24,8 @@
 "bracingInstruction" = "Please record a Single Use Route using Siri shortcuts to start, end and navigate the route. For this round, brace the phone vertically against your chest while keeping the camera facing forward. .\n To Start Say: %@ \n To Stop Say: %@ \n To Navigate Say : %@ ";
 "contolledInstruction" = "Please record a Single Use Route. For this round, hold the phone with your hand and use Siri shortcuts to start, stop and navigate the route.\n To Start Say: %@ \n To Stop Say: %@ \n To Navigate Say : %@ ";
 "significantVersionChangesPopHandsFree-UpContent" = "Now you can use Siri with this new version of Clew. Please note that you can only use Siri with \"Single Use Route\" and \"Experiment Route\" . Please ensure that you have enabled Hey Siri on your iPhone through Settings > Siri & Search > Listen for Hey Siri. You will now be prompted to add Siri shortcuts after each action you take, when this is done you can simply say: \"Hey Siri, Activity name\".";
-
-"enableSiriContent" = "Please ensure that you have enabled Siri shortcuts for \"Single Use Route\" and \"Experiment Route\" options. To do this, select each option and follow the prompts.";
+"enableSiriTitle" = "Enable Siri";
+"enableSiriContent" = "Please ensure that you have enabled Siri shortcuts for \"Single Use Route\" and \"Experiment Route\". To do this, select each option and follow the prompts.";
 
 "significantVersionChanges-Confirmation" = "Ok";
 
