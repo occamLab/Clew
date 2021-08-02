@@ -733,8 +733,7 @@ struct AnchorPoints: View {
             
             TutorialNavLink(destination: AnchorPointPractice())  {Text("Practice")}//(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
             
-        }.onDisappear(){
-            UserDefaults.standard.setValue(true, forKey: "AnchorPointsCompleted")}
+        }
             
             Spacer()
             TutorialNavLink(destination: SavedRoutes())  {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
@@ -767,26 +766,31 @@ struct AnchorPointPractice: View {
         TutorialScreen {
             if anchorPointAligned {
                 //once anchor point is aligned
-                Text("anchor point aligned")
+                Text("Anchor Point Aligned")
                 
-                Text("x, y, z, yaw \(xyzYawAlign[0] - xyzYawSet[0]), \(xyzYawAlign[1] - xyzYawSet[1]), \(xyzYawAlign[2] - xyzYawSet[2]), \(xyzYawAlign[3] - xyzYawSet[3])")
+                Text("x, y, z, yaw \(xyzYawAlign[0] - xyzYawSet[0]), \(xyzYawAlign[1] - xyzYawSet[1]), \(xyzYawAlign[2] - xyzYawSet[2]), \(xyzYawAlign[3] - xyzYawSet[3])")//TODO: Delete when done testing
                 
-                if xyzYawDelta[0] < 0.1 && xyzYawDelta[0] > -0.1, xyzYawDelta[1] < 0.1 && xyzYawDelta[1] > -0.1, xyzYawDelta[2] < 0.1 && xyzYawDelta[2] > -0.1, xyzYawDelta[3] < 0.1 && xyzYawDelta[3] > -0.1 {
+                if xyzYawDelta[0] < 0.50 && xyzYawDelta[0] > -0.50, xyzYawDelta[1] < 0.10 && xyzYawDelta[1] > -0.10, xyzYawDelta[2] < 0.50 && xyzYawDelta[2] > -0.50, xyzYawDelta[3] < 0.50 && xyzYawDelta[3] > -0.50 {
                     Text("Perfect!!!")
-                } else if xyzYawDelta[0] < 1 && xyzYawDelta[0] > -1, xyzYawDelta[1] < 1 && xyzYawDelta[1] > -1, xyzYawDelta[2] < 1 && xyzYawDelta[2] > -1, xyzYawDelta[3] < 1 && xyzYawDelta[3] > -1 {
-                    Text("Okay...")
+                    Text("Nice work! Setting and aligning anchor points like you have in this practice will work great for Clew routes! Feel free to practice again, check out our tips for setting anchor points, continuing with the tutorial, or entering the main app and start using it!")
+                } else if xyzYawDelta[0] < 1 && xyzYawDelta[0] > -1, xyzYawDelta[1] < 0.1 && xyzYawDelta[1] > -0.1, xyzYawDelta[2] < 1 && xyzYawDelta[2] > -1, xyzYawDelta[3] < 1 && xyzYawDelta[3] > -1 {
+                    Text("Pretty Good!")
+                    Text("This anchor point is pretty well aligned to the anchor point you set origanally and a Clew route from this anchor point would probably work pretty well. You might want practice again or check out our tips for setting and aligning anchor points.")
                 } else {
-                    Text("Not so good, try again")
+                    Text("Not Aligned. Try again!")
+                    Text("This anchor point is not well aligned. A Clew route started from this anchor point might not navigate to your desired location. No worries though because you can try the practice again or check out some tips we have for setting and aligning anchor points.")
                 }
                 
                 Button(action: {
                     anchorPointAligned = false
-                }) {Text("Retry Aligning Anchor Point")}
+                }) {TutorialButton{Text("Retry Aligning Anchor Point")}}
                 
                 Button(action: {
                     anchorPointSet = false
                     anchorPointAligned = false
-                }) {Text("Restart Practice")}
+                }) {TutorialButton{Text("Restart Practice")}}
+                
+                TutorialNavLink(destination: AnchorPointTips())  {Text("Tips")}//(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
                 
             }else if anchorPointSet {
                 //Once anchor point is set
@@ -815,7 +819,7 @@ struct AnchorPointPractice: View {
                 Button(action: {
                     anchorPointSet = false
                     //anchorPointAligned = false
-                }) {Text("Reset Anchor Point")}
+                }) {TutorialButton{Text("Reset Anchor Point")}}
                 
             }else {
                 //when starting anchor point practice
@@ -852,7 +856,11 @@ struct AnchorPointPractice: View {
                     Text("x, y, z, yaw \(x - xyzYawSet[0]), \(y - xyzYawSet[1]), \(z - xyzYawSet[2]), \(yaw - xyzYawSet[3])")
                 }
             }*/
-        }
+        }.onDisappear(){
+            UserDefaults.standard.setValue(true, forKey: "AnchorPointsCompleted")}
+        
+        Spacer()
+        TutorialNavLink(destination: SavedRoutes())  {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
     }
 }
 
