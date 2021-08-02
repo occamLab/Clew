@@ -979,15 +979,15 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         let userDefaults: UserDefaults = UserDefaults.standard
         //todel
         //reintialise everythin for test puposes
-      //UserDefaults.standard.setValue(false, forKey: "siriShortcutStartNavigatingRoute")
-//        siriShortcutExperimentRouteFlag = false
-    // UserDefaults.standard.setValue(false, forKey: "siriShortcutExperimentRoute")
+      UserDefaults.standard.setValue(false, forKey: "siriShortcutStartNavigatingRoute")
+        siriShortcutExperimentRouteFlag = false
+     UserDefaults.standard.setValue(false, forKey: "siriShortcutExperimentRoute")
         UserDefaults.standard.setValue(false, forKey: "siriShortcutAlert")
         UserDefaults.standard.setValue(startExperimentWithList.randomElement(), forKey: "currentRoute")
         
         UserDefaults.standard.setValue(false, forKey: "singleUseRouteExperimentFlag")
         UserDefaults.standard.setValue(false, forKey: "experimentRouteFlag")
-        //UserDefaults.standard.setValue("lanyard", forKey: "currentCondition")
+        UserDefaults.standard.setValue("lanyard", forKey: "currentCondition")
         let cConditions: Dictionary? =  userDefaults.dictionary(forKey: "conditionsDico")
         print("before Condition")
         print(cConditions)
@@ -1000,7 +1000,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         UserDefaults.standard.setValue(recondtions, forKey: "experimentConditonsDico")
        
         
-     // UserDefaults.standard.setValue(false, forKey: "siriShortcutExperimentRoute")
+      UserDefaults.standard.setValue(false, forKey: "siriShortcutExperimentRoute")
       //todel
        //ch UserDefaults.standard.setValue([""], forKey: "siriShortcutDisplayList")
         let tConditions: Dictionary? =  userDefaults.dictionary(forKey: "conditionsDico")
@@ -1052,9 +1052,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             // it's been long enough, try to trigger the survey
             DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
                 // make sure to wait for data to load from firebase.  If they have started using the app, don't interrupt them.
-                if case .mainScreen(_) = self.state {
-                    self.presentSurveyIfIntervalHasPassed(mode: "onAppLaunch", logFileURLs: [])
-                }
+            //    if case .mainScreen(_) = self.state {
+              //      self.presentSurveyIfIntervalHasPassed(mode: "onAppLaunch", logFileURLs: [])
+            //    }
             }
         }
     }
@@ -1418,7 +1418,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             let wait = false
                        
             let logFileURLs = self.logger.compileLogData(nil)
-            
+         
+            if case .mainScreen(_) = self.state {
+                self.presentSurveyIfIntervalHasPassed(mode: "afterRoute", logFileURLs:logFileURLs)
+            }
            //  DispatchQueue.main.asyncAfter(deadline: .now() + (false ? 1 : 1)) {
                 // self.presentSurveyIfIntervalHasPassed(mode: "afterRoute", logFileURLs: logFileURLs)
              //}
@@ -1470,6 +1473,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                                                message: NSLocalizedString(instruction, comment: "An alert shown to the user to give them instructions."),
                                                preferredStyle: .alert)
         changesAlertVC.addAction(UIAlertAction(title: NSLocalizedString("QuitExperiment", comment: "What the user clicks to acknowledge message and dismiss pop-up"), style: .default, handler: { action -> Void in
+            ViewController.sExperimentRouteFlag = false
             
         }
         ))
