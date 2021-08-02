@@ -52,6 +52,12 @@ struct EnterCodeIDView: View {
                 EnterButton(vc: vc, codeID: codeIDModel.code)
                     .frame(minWidth: 0, maxWidth: .infinity)
                     .padding(.horizontal, 20)
+                
+                ScanButton(vc: vc)
+                    .frame(minWidth: 0, maxWidth: .infinity)
+                    .padding(.horizontal, 20)
+                
+                
             }.onAppear(perform: {
                 codeIDModel.code = ""
             })
@@ -69,6 +75,24 @@ struct EnterButtonView: View {
                 Spacer()
 
                 Text(NSLocalizedString("enterCodeIDButtonText", comment: "This is the label of the button the user presses to have Firebase load in the routes based on the app clip code ID."))
+                    .bold()
+                    .foregroundColor(Color.black)
+                Spacer()
+            }
+        }
+    }
+}
+
+struct ScanButtonView: View {
+    var body: some View {
+        ZStack {
+            Image("WhiteButtonBackground")
+                .resizable()
+                .frame(maxWidth: UIScreen.main.bounds.size.width/1.1, maxHeight: UIScreen.main.bounds.size.height/5)
+            HStack{
+                Spacer()
+
+                Text("Scan an NFC App Clip Code")
                     .bold()
                     .foregroundColor(Color.black)
                 Spacer()
@@ -95,3 +119,17 @@ struct EnterButton: View {
         }
     }
 }
+
+/// Press this button to open the Scan NFC Tag popover
+struct ScanButton: View {
+    var vc: ViewController
+    var body: some View {
+        Button(action: {
+            vc.beginScanning(self)
+            NotificationCenter.default.post(name: NSNotification.Name("shouldDismissCodeIDPopover"), object: nil)
+        }) {
+            ScanButtonView()
+        }
+    }
+}
+

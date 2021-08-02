@@ -39,6 +39,7 @@ import ARDataLogger
 #else
 import SRCountdownTimer
 #endif
+import CoreNFC
 
 /// A custom enumeration type that describes the exact state of the app.  The state is not exhaustive (e.g., there are Boolean flags that also track app state).
 enum AppState {
@@ -120,7 +121,7 @@ extension Color {
 }
 
 /// The view controller that handles the main Clew window.  This view controller is always active and handles the various views that are used for different app functionalities.
-class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDelegate, AVSpeechSynthesizerDelegate, ARSessionDelegate {
+class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDelegate, AVSpeechSynthesizerDelegate, ARSessionDelegate, NFCNDEFReaderSessionDelegate {
     
     // MARK: - Refactoring UI definition
     
@@ -806,6 +807,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         justTraveledRoute = savedRoute
     }
 
+    /// Session for scanning NFC Tags
+    var nfcSession: NFCNDEFReaderSession?
+    
+    var nfcEntryPoint: String = ""
+
+    
     /// Timer to periodically announce tracking errors
     var trackingErrorsAnnouncementTimer: Timer?
     
@@ -916,6 +923,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// stop route navigation VC
     var stopNavigationController: StopNavigationController!
+    
 
     /// called when the view has loaded.  We setup various app elements in here.
     override func viewDidLoad() {
@@ -1481,6 +1489,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
 
             }
             
+
+            
         }
         
         // print("frame.anchors = \(frame.anchors)")   // <3 type = int counting # of anchors ID'd
@@ -1529,6 +1539,187 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             }
         } */
     }
+    
+    @IBAction func beginScanning(_ sender: Any) {
+        if type(of: sender) == ScanButton.self {
+            self.nfcEntryPoint = "EnterCode"
+        }
+        if type(of: sender) == ScanNFCButton.self {
+            self.nfcEntryPoint = "NameCode"
+        }
+        print(sender)
+        print("hee")
+        guard NFCNDEFReaderSession.readingAvailable else {
+            print("Device Won't Support NFC Scanning")
+            self.add(self.enterCodeIDController)
+            return
+        }
+        nfcSession = NFCNDEFReaderSession(delegate: self, queue: nil, invalidateAfterFirstRead: false)
+        nfcSession?.begin()
+    }
+    
+    // MARK: - NFCNDEFReaderSessionDelegate
+
+    /// - Tag: processingTagData
+    func readerSession(_ session: NFCNDEFReaderSession, didDetectNDEFs messages: [NFCNDEFMessage]) {
+        DispatchQueue.main.async {
+            // Process detected NFCNDEFMessage objects.
+            print(messages)
+            print("NFC detected")
+        }
+    }
+
+    /// - Tag: processingNDEFTag
+    func readerSession(_ session: NFCNDEFReaderSession, didDetect tags: [NFCNDEFTag]) {
+        if tags.count > 1 {
+            // Restart polling in 500ms
+            let retryInterval = DispatchTimeInterval.milliseconds(500)
+            session.alertMessage = "More than 1 tag is detected, please remove all tags and try again."
+            DispatchQueue.global().asyncAfter(deadline: .now() + retryInterval, execute: {
+                session.restartPolling()
+            })
+            return
+        }
+        
+        // Connect to the found tag and perform NDEF message reading
+        let tag = tags.first!
+        session.connect(to: tag, completionHandler: { (error: Error?) in
+            if nil != error {
+                session.alertMessage = "Unable to connect to tag."
+                session.invalidate()
+                self.NFCEntrySwitch(entryPoint: self.nfcEntryPoint)
+                return
+            }
+            
+            tag.queryNDEFStatus(completionHandler: { (ndefStatus: NFCNDEFStatus, capacity: Int, error: Error?) in
+                if .notSupported == ndefStatus {
+                    session.alertMessage = "Tag is not NDEF compliant"
+                    session.invalidate()
+                    self.NFCEntrySwitch(entryPoint: self.nfcEntryPoint)
+
+                    return
+                } else if nil != error {
+                    session.alertMessage = "Unable to query NDEF status of tag"
+                    session.invalidate()
+                    self.NFCEntrySwitch(entryPoint: self.nfcEntryPoint)
+
+                    return
+                }
+                
+                tag.readNDEF(completionHandler: { (message: NFCNDEFMessage?, error: Error?) in
+                    var statusMessage: String
+                    if nil != error || nil == message {
+                        statusMessage = "Fail to read NDEF from tag"
+                        self.NFCEntrySwitch(entryPoint: self.nfcEntryPoint)
+
+                    } else {
+                        statusMessage = "Successfully Read NFC Tag"
+                        DispatchQueue.main.async {
+                            // Process detected NFCNDEFMessage objects.
+                            //print(message)
+                            print("data type: \(message!.records[0].typeNameFormat)")
+                            
+                            let payload = message!.records[0]
+                            
+                            if payload.typeNameFormat == .nfcWellKnown {
+                                let url = payload.wellKnownTypeURIPayload()
+                                print(url)
+                                print("test")
+                                if let url = url {
+                                    if url.host == "berwinl.com" {
+                                        self.handleNFCURL(url)
+                                        if self.nfcEntryPoint == "EnterCode"{
+                                            self.codeIDEntered()
+                                        }
+                                        if self.nfcEntryPoint == "NameCode" {
+                                            self.saveCodeIDButtonPressed()
+
+                                        }
+                                    } else {
+                                        statusMessage = "Not a Recognized Clew Route Database"
+                                        self.NFCEntrySwitch(entryPoint: self.nfcEntryPoint)
+                                    }
+
+                                } else {
+                                    statusMessage = "No URL Data Read"
+                                    self.NFCEntrySwitch(entryPoint: self.nfcEntryPoint)
+
+                                    print("No URL data stored")
+                                }
+                                
+                            } else {
+                                statusMessage = "Data could not be recognized"
+                                self.NFCEntrySwitch(entryPoint: self.nfcEntryPoint)
+                                print("NFC data not recognized")
+                            }
+
+                            
+                            
+                        }
+                        print("success!")
+                    }
+                    
+                    session.alertMessage = statusMessage
+                    session.invalidate()
+                })
+            })
+        })
+    }
+    
+    func handleNFCURL(_ url: URL) {
+        self.appClipCodeID = ""
+        guard let components = NSURLComponents(url: url, resolvingAgainstBaseURL: true), let queryItems = components.queryItems else {
+          return
+        }
+        /// with the invocation URL format https://occamlab.github.io/id?p=appClipCodeID, appClipCodeID being the name of the file in Firebase
+        if let appClipCodeID = queryItems.first(where: { $0.name == "p"}) {
+            self.appClipCodeID = appClipCodeID.value!
+          print("app clip code ID from URL: \(appClipCodeID.value!)")
+        }
+    }
+    
+    func NFCEntrySwitch(entryPoint: String) {
+        switch self.nfcEntryPoint {
+        case "EnterCode":
+            self.add(self.enterCodeIDController)
+        case "NameCode":
+            self.add(self.nameCodeIDController)
+        default:
+            print("huh, weird")
+        }
+    }
+    
+    /// - Tag: sessionBecomeActive
+    func readerSessionDidBecomeActive(_ session: NFCNDEFReaderSession) {
+        
+    }
+    
+    /// - Tag: endScanning
+    func readerSession(_ session: NFCNDEFReaderSession, didInvalidateWithError error: Error) {
+        // Check the invalidation reason from the returned error.
+        if let readerError = error as? NFCReaderError {
+            // Show an alert when the invalidation reason is not because of a
+            // successful read during a single-tag read session, or because the
+            // user canceled a multiple-tag read session from the UI or
+            // programmatically using the invalidate method call.
+            if (readerError.code != .readerSessionInvalidationErrorFirstNDEFTagRead)
+                && (readerError.code != .readerSessionInvalidationErrorUserCanceled) {
+                let alertController = UIAlertController(
+                    title: "Session Invalidated",
+                    message: error.localizedDescription,
+                    preferredStyle: .alert
+                )
+                alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                DispatchQueue.main.async {
+                    self.present(alertController, animated: true, completion: nil)
+                }
+            }
+        }
+
+        // To read new tags, a new session instance is required.
+        self.nfcSession = nil
+    }
+    
     
     /// Handle the user clicking the confirm alignment to a saved Anchor Point.  Depending on the app state, the behavior of this function will differ (e.g., if the route is being resumed versus reloaded)
     @objc func confirmAlignment() {
@@ -2220,11 +2411,16 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// presents a view for the user to enter the app clip code ID
     @objc func enterCodeID() {
+        #if CLEWMORE
+        //self.beginScanning(self.recordPathController.enterCodeButton)
+        print("Scanning Started")
+        #endif
         self.recordPathController.remove()
         self.add(enterCodeIDController)
         #if !APPCLIP
         self.rootContainerView.homeButton.isHidden = false
         #endif
+
     }
     
     /// this is called once the app clip code ID has been entered
@@ -3183,6 +3379,22 @@ extension ViewController: UIPopoverPresentationControllerDelegate {
         if let popoverController = segue.destination.popoverPresentationController, let button = sender as? UIButton {
             popoverController.delegate = self
             popoverController.sourceRect = button.bounds
+        }
+    }
+}
+
+
+extension NFCTypeNameFormat: CustomStringConvertible {
+    public var description: String {
+        switch self {
+        case .nfcWellKnown: return "NFC Well Known type"
+        case .media: return "Media type"
+        case .absoluteURI: return "Absolute URI type"
+        case .nfcExternal: return "NFC External type"
+        case .unknown: return "Unknown type"
+        case .unchanged: return "Unchanged type"
+        case .empty: return "Empty payload"
+        @unknown default: return "Invalid data"
         }
     }
 }

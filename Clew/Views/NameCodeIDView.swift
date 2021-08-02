@@ -40,6 +40,10 @@ struct NameCodeIDView: View {
                 NameCodeIDButton(vc: vc, codeID: codeIDModel.code)
                     .frame(minWidth: 0, maxWidth: .infinity)
                     .padding(.horizontal, 20)
+                
+                ScanNFCButton(vc: vc)
+                    .frame(minWidth: 0, maxWidth: .infinity)
+                    .padding(.horizontal, 20)
             }.onAppear(perform: {
                 codeIDModel.code = ""
             })
@@ -64,6 +68,23 @@ struct NameCodeIDButtonView: View {
     }
 }
 
+struct ScanNFCButtonView: View {
+    var body: some View {
+        ZStack {
+            Image("WhiteButtonBackground")
+                .resizable()
+                .frame(maxWidth: UIScreen.main.bounds.size.width/1.1, maxHeight: UIScreen.main.bounds.size.height/5)
+            HStack{
+                Spacer()
+                Text("Scan NFC App Clip Code")
+                    .bold()
+                    .foregroundColor(Color.black)
+                Spacer()
+            }
+        }
+    }
+}
+
 /// Press this button to submit the app clip code ID and proceed to the routes
 struct NameCodeIDButton: View {
     var vc: ViewController
@@ -76,8 +97,22 @@ struct NameCodeIDButton: View {
             } else {
                 vc.delayTransition(announcement: NSLocalizedString("codeIDErrorAnnouncement", comment: "This announcement is read out when the user enters a code ID that does not meet the criteria"), initialFocus: nil)
             }
+
         }) {
             NameCodeIDButtonView()
+        }
+    }
+}
+
+/// Press this button to submit the app clip code ID and proceed to the routes
+struct ScanNFCButton: View {
+    var vc: ViewController
+    var body: some View {
+        Button(action: {
+            vc.beginScanning(self)
+
+        }) {
+            ScanNFCButtonView()
         }
     }
 }

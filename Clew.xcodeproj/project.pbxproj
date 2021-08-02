@@ -432,6 +432,7 @@
 		980536732683C1D10065E80F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9815CEEA26851049008FCF74 /* test-route2.crd */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = "test-route2.crd"; sourceTree = "<group>"; };
 		9826B6D426B07C3F00EC563C /* EndNavigationScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndNavigationScreen.swift; sourceTree = "<group>"; };
+		9826B6DB26B4450A00EC563C /* NFCReaderController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NFCReaderController.swift; sourceTree = "<group>"; };
 		98384367269C9CC800B6CFC7 /* Clew_Public_SpacesApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Clew_Public_SpacesApp.swift; sourceTree = "<group>"; };
 		98384369269C9CC800B6CFC7 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		9838436B269C9CC900B6CFC7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -812,6 +813,7 @@
 			isa = PBXGroup;
 			children = (
 				E5470EDE22C119F4001092A4 /* ViewController.swift */,
+				9826B6DB26B4450A00EC563C /* NFCReaderController.swift */,
 				8261892D264ACCC5007F99C4 /* AppleSignInController.swift */,
 				E5470EDF22C119F4001092A4 /* StateViews */,
 				E5470EE822C119F4001092A4 /* PopOvers */,
