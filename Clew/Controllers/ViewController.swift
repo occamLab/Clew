@@ -405,7 +405,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 
                 print("Soooup Time \(thisRoute.name)")
                 print("soooooup time")
-                self.sceneView.debugOptions = [.showWorldOrigin]
+                
+                //self.sceneView.debugOptions = [.showWorldOrigin]
                 self.sceneView.session.run(self.configuration, options: [.removeExistingAnchors, .resetTracking])
                 
                 self.continuationAfterSessionIsReady = {
@@ -515,7 +516,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         
         intermediateAnchorPoints = route.intermediateAnchorPoints
         // don't reset tracking, but do clear anchors and switch to the new map
-        sceneView.debugOptions = [.showWorldOrigin]
+        //sceneView.debugOptions = [.showWorldOrigin]
         sceneView.session.run(configuration, options: [.removeExistingAnchors, .resetTracking])
 
         if isTrackingPerformanceNormal, isSameMap {
@@ -2286,7 +2287,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         if #available(iOS 12.0, *) {
             configuration.initialWorldMap = nil
         }
-        sceneView.debugOptions = [.showWorldOrigin]
+//        sceneView.debugOptions = [.showWorldOrigin]
         sceneView.session.run(configuration, options: [.removeExistingAnchors, .resetTracking])
     }
     
