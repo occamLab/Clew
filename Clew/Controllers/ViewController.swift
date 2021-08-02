@@ -989,6 +989,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                                                                        width: UIConstants.buttonFrameWidth * 1,
                                                                        height: UIScreen.main.bounds.size.height*0.85)
         endNavigationController?.view.backgroundColor = .clear
+        
         #endif
         
         
@@ -1142,12 +1143,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         let firstUsageTimeStamp =  userDefaults.object(forKey: "firstUsageTimeStamp") as? Double ?? 0.0
         if Date().timeIntervalSince1970 - firstUsageTimeStamp > 3600*24 {
             // it's been long enough, try to trigger the survey
+            #if !CLEWMORE
             DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
                 // make sure to wait for data to load from firebase.  If they have started using the app, don't interrupt them.
                 if case .mainScreen(_) = self.state {
                     self.surveyInterface.presentSurveyIfIntervalHasPassed(mode: "onAppLaunch", logFileURLs: [], vc: self)
                 }
             }
+            #endif
         }
     }
     

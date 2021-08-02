@@ -99,6 +99,10 @@
 		9863AF0A26B4384000EF0C64 /* RouteDocumentData.swift in Sources */ = {isa = PBXBuildFile; fileRef = E565A10722F2173400C1998E /* RouteDocumentData.swift */; };
 		9863AF6426B4456100EF0C64 /* UIKit Clip.app in Embed App Clips */ = {isa = PBXBuildFile; fileRef = 98006F76268382D600E61861 /* UIKit Clip.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		9863AF6926B44D9E00EF0C64 /* ScanTagView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9863AF6826B44D9E00EF0C64 /* ScanTagView.swift */; };
+		9863AF6E26B4965600EF0C64 /* consentFormContent.html in Resources */ = {isa = PBXBuildFile; fileRef = 9863AF6B26B4965600EF0C64 /* consentFormContent.html */; };
+		9863AF6F26B4965600EF0C64 /* InformedConsentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9863AF6C26B4965600EF0C64 /* InformedConsentView.swift */; };
+		9863AF7026B4965600EF0C64 /* WebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9863AF6D26B4965600EF0C64 /* WebView.swift */; };
+		9863AF7226B496C200EF0C64 /* InformedConsentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9863AF7126B496C200EF0C64 /* InformedConsentViewModel.swift */; };
 		986640CE22FB68F2005AA1F6 /* NameSavedRouteController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986640CD22FB68F2005AA1F6 /* NameSavedRouteController.swift */; };
 		986640CF22FC9606005AA1F6 /* NameSavedRouteController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986640CD22FB68F2005AA1F6 /* NameSavedRouteController.swift */; };
 		987BA6F4268E53C0008B129E /* StartNavigationPopoverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 987BA6F3268E53C0008B129E /* StartNavigationPopoverView.swift */; };
@@ -442,6 +446,10 @@
 		984FBD332696179800B63A6A /* NameCodeIDController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NameCodeIDController.swift; sourceTree = "<group>"; };
 		984FBD3B26962E4900B63A6A /* EnterCodeIDView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterCodeIDView.swift; sourceTree = "<group>"; };
 		9863AF6826B44D9E00EF0C64 /* ScanTagView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanTagView.swift; sourceTree = "<group>"; };
+		9863AF6B26B4965600EF0C64 /* consentFormContent.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = consentFormContent.html; sourceTree = "<group>"; };
+		9863AF6C26B4965600EF0C64 /* InformedConsentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InformedConsentView.swift; sourceTree = "<group>"; };
+		9863AF6D26B4965600EF0C64 /* WebView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebView.swift; sourceTree = "<group>"; };
+		9863AF7126B496C200EF0C64 /* InformedConsentViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = InformedConsentViewModel.swift; path = ../../../../Downloads/InformedConsentViewModel.swift; sourceTree = "<group>"; };
 		986640CD22FB68F2005AA1F6 /* NameSavedRouteController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NameSavedRouteController.swift; sourceTree = "<group>"; };
 		987BA6F3268E53C0008B129E /* StartNavigationPopoverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartNavigationPopoverView.swift; sourceTree = "<group>"; };
 		98A2DABA26A709C400158F83 /* NameSavedRouteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NameSavedRouteView.swift; sourceTree = "<group>"; };
@@ -688,6 +696,17 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
+		9863AF6A26B495CD00EF0C64 /* Experiment */ = {
+			isa = PBXGroup;
+			children = (
+				9863AF6B26B4965600EF0C64 /* consentFormContent.html */,
+				9863AF6C26B4965600EF0C64 /* InformedConsentView.swift */,
+				9863AF7126B496C200EF0C64 /* InformedConsentViewModel.swift */,
+				9863AF6D26B4965600EF0C64 /* WebView.swift */,
+			);
+			path = Experiment;
+			sourceTree = "<group>";
+		};
 		98FF7A99269CBFE9008C64E5 /* Clew-More */ = {
 			isa = PBXGroup;
 			children = (
@@ -735,6 +754,7 @@
 		E5470EA922C119F4001092A4 /* Clew */ = {
 			isa = PBXGroup;
 			children = (
+				9863AF6A26B495CD00EF0C64 /* Experiment */,
 				82E4A5CE262A26DC000BEB44 /* Clew.entitlements */,
 				E5D1695522E103A0008754D0 /* localizations */,
 				E5470EAA22C119F4001092A4 /* Voice Notes */,
@@ -1219,6 +1239,7 @@
 				98FF7AE3269CC178008C64E5 /* speaker.mtl in Resources */,
 				98FF7ABD269CC0E0008C64E5 /* StopRecording.aiff in Resources */,
 				98FF7ABC269CC0DD008C64E5 /* StartRecording.aiff in Resources */,
+				9863AF6E26B4965600EF0C64 /* consentFormContent.html in Resources */,
 				98FF7ABB269CC0CE008C64E5 /* Assets.xcassets in Resources */,
 				98AB607A269DDCC700613BB5 /* anchorInFrame.mp3 in Resources */,
 			);
@@ -1579,6 +1600,7 @@
 				9826B6D526B07C3F00EC563C /* EndNavigationScreen.swift in Sources */,
 				98CC59AA269CC92D002EF6D7 /* FeedbackLogger.swift in Sources */,
 				98FF7AAB269CC04F008C64E5 /* RecordButton.swift in Sources */,
+				9863AF6F26B4965600EF0C64 /* InformedConsentView.swift in Sources */,
 				98FF7AC3269CC0F2008C64E5 /* Float4x4Extension.swift in Sources */,
 				98FF7AAC269CC0A0008C64E5 /* DataPersistence.swift in Sources */,
 				98AA589B269E2217001123F0 /* Surveys.swift in Sources */,
@@ -1601,6 +1623,7 @@
 				98FF7AB2269CC0B0008C64E5 /* HelpCompiler.swift in Sources */,
 				98FF7ADB269CC153008C64E5 /* RouteTableViewCell.swift in Sources */,
 				98FF7ACF269CC117008C64E5 /* NameCodeIDController.swift in Sources */,
+				9863AF7226B496C200EF0C64 /* InformedConsentViewModel.swift in Sources */,
 				98FF7AD4269CC125008C64E5 /* RoutesViewController.swift in Sources */,
 				98FF7ACE269CC114008C64E5 /* ResumeTrackingConfirmController.swift in Sources */,
 				98FF7AC2269CC0F0008C64E5 /* UIButtonExtensions.swift in Sources */,
@@ -1610,6 +1633,7 @@
 				98FF7AA9269CC04A008C64E5 /* AudioVisualizerView.swift in Sources */,
 				98FF7ACB269CC10C008C64E5 /* NameSavedRouteController.swift in Sources */,
 				98AA58A426A1C13D001123F0 /* RecordPathController.swift in Sources */,
+				9863AF7026B4965600EF0C64 /* WebView.swift in Sources */,
 				98FF7ABF269CC0E9008C64E5 /* NSStringExtension.swift in Sources */,
 				98AA58A2269F8651001123F0 /* DefaultView.swift in Sources */,
 			);

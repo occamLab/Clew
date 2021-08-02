@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SwiftUI
 import Firebase
 import ARKit
 
@@ -17,7 +18,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
         
     /// view controller!
-    var vc: ViewController!
+    var vc: UIViewController!
     
     
     /// Called when the app finishes launching.  Currently, this is where we setup Firebase and make sure the phone screen doesn't lock while we are using the app.
@@ -31,7 +32,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let options = FirebaseOptions(contentsOfFile: filePath)
         FirebaseApp.configure(options: options!)
         //vc.beginScanning(self)
-
         return true
     }
     
@@ -44,8 +44,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         guard url.pathExtension == "crd" else { return false }
         
         /// import the file here
-        vc?.dataPersistence.importData(from: url)
         //vc.beginScanning(self)
+//        vc?.dataPersistence.importData(from: url)
         
         return true
     }
