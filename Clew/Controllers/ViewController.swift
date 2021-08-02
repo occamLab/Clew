@@ -1419,9 +1419,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                        
             let logFileURLs = self.logger.compileLogData(nil)
             
-             DispatchQueue.main.asyncAfter(deadline: .now() + (false ? 1 : 1)) {
-                 self.presentSurveyIfIntervalHasPassed(mode: "afterRoute", logFileURLs: logFileURLs)
-             }
+           //  DispatchQueue.main.asyncAfter(deadline: .now() + (false ? 1 : 1)) {
+                // self.presentSurveyIfIntervalHasPassed(mode: "afterRoute", logFileURLs: logFileURLs)
+             //}
                             
                         
             
@@ -2849,10 +2849,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         if sendLogs {
             // do this in a little while to give it time to announce arrival
             print("ShowSurvey1")
-            DispatchQueue.main.asyncAfter(deadline: .now() + (announceArrival ? 3 : 1)) {
-                print("ShowSurvey2")
-                self.presentSurveyIfIntervalHasPassed(mode: "afterRoute", logFileURLs: logFileURLs)
-            }
+//            DispatchQueue.main.asyncAfter(deadline: .now() + (announceArrival ? 3 : 1)) {
+//                print("ShowSurvey2")
+//                self.presentSurveyIfIntervalHasPassed(mode: "afterRoute", logFileURLs: logFileURLs)
+//            }
         }
     }
     
@@ -2963,9 +2963,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             // do this in a little while to give it time to announce arrival
             
            
-            DispatchQueue.main.asyncAfter(deadline: .now() + (announceArrival ? 3 : 1)) {
-                self.presentSurveyIfIntervalHasPassed(mode: "afterRoute", logFileURLs: logFileURLs)
-            }
+//            DispatchQueue.main.asyncAfter(deadline: .now() + (announceArrival ? 3 : 1)) {
+//                self.presentSurveyIfIntervalHasPassed(mode: "afterRoute", logFileURLs: logFileURLs)
+//            }
         }
         }
     }
@@ -3151,9 +3151,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             // do this in a little while to give it time to announce arrival
             
            
-            DispatchQueue.main.asyncAfter(deadline: .now() + (announceArrival ? 3 : 1)) {
-                self.presentSurveyIfIntervalHasPassed(mode: "afterRoute", logFileURLs: logFileURLs)
-            }
+            //DispatchQueue.main.asyncAfter(deadline: .now() + (announceArrival ? 3 : 1)) {
+                //self.presentSurveyIfIntervalHasPassed(mode: "afterRoute", logFileURLs: logFileURLs)
+          //  }
         }
         }
     }
