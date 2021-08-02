@@ -1626,7 +1626,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                                 print(url)
                                 print("test")
                                 if let url = url {
+                                    // currently hardcoded :/, should probably change
                                     if url.host == "berwinl.com" {
+                                        statusMessage = "Successfully Accessed Clew Route Database"
+                                        session.alertMessage = statusMessage
+                                        session.invalidate()
                                         self.handleNFCURL(url)
                                         if self.nfcEntryPoint == "EnterCode"{
                                             self.codeIDEntered()
@@ -1635,13 +1639,18 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                                             self.saveCodeIDButtonPressed()
 
                                         }
+
                                     } else {
                                         statusMessage = "Not a Recognized Clew Route Database"
+                                        session.alertMessage = statusMessage
+                                        session.invalidate()
                                         self.NFCEntrySwitch(entryPoint: self.nfcEntryPoint)
                                     }
 
                                 } else {
                                     statusMessage = "No URL Data Read"
+                                    session.alertMessage = statusMessage
+                                    session.invalidate()
                                     self.NFCEntrySwitch(entryPoint: self.nfcEntryPoint)
 
                                     print("No URL data stored")
@@ -1649,6 +1658,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                                 
                             } else {
                                 statusMessage = "Data could not be recognized"
+                                session.alertMessage = statusMessage
+                                session.invalidate()
                                 self.NFCEntrySwitch(entryPoint: self.nfcEntryPoint)
                                 print("NFC data not recognized")
                             }
@@ -1657,10 +1668,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                             
                         }
                         print("success!")
+
                     }
-                    
-                    session.alertMessage = statusMessage
-                    session.invalidate()
+
+
                 })
             })
         })
