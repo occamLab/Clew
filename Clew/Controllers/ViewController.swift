@@ -1409,9 +1409,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     func showCompleteSurveytAlert() {
         let changesAlertVC = UIAlertController(title: NSLocalizedString("completeSurveyTitle" , comment: "Notify the User that they have completed the experiment"),
-                                               message: NSLocalizedString("enableSiriContent", comment: "Notify the User that they have completed the experiment."),
+                                               message: NSLocalizedString("completeSurveyContent", comment: "Notify the User that they have completed the experiment."),
                                                preferredStyle: .alert)
-        changesAlertVC.addAction(UIAlertAction(title: NSLocalizedString("completeSurveyContent", comment: "What the user clicks to acknowledge the significant changes message and dismiss pop-up"), style: .default, handler: { action -> Void in
+        changesAlertVC.addAction(UIAlertAction(title: NSLocalizedString("significantVersionChanges-Confirmation", comment: "What the user clicks to acknowledge the significant changes message and dismiss pop-up"), style: .default, handler: { action -> Void in
             
             
             
