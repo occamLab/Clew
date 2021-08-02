@@ -1479,17 +1479,18 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         changesAlertVC.addAction(UIAlertAction(title: NSLocalizedString("significantVersionChanges-Confirmation", comment: "What the user clicks to acknowledge the significant changes message and dismiss pop-up"), style: .default, handler: { action -> Void in
             
             
-            
-            let wait = false
-                       
+                     
             let logFileURLs = self.logger.compileLogData(nil)
-         
-            if case .mainScreen(_) = self.state {
-                self.presentSurveyIfIntervalHasPassed(mode: "afterRoute", logFileURLs:logFileURLs)
-            }
-           //  DispatchQueue.main.asyncAfter(deadline: .now() + (false ? 1 : 1)) {
-                // self.presentSurveyIfIntervalHasPassed(mode: "afterRoute", logFileURLs: logFileURLs)
-             //}
+
+           self.presentSurveyIfIntervalHasPassed(mode: "afterRoute", logFileURLs:logFileURLs)
+          if case .mainScreen(_) = self.state {
+                print("completeSurvey")
+                         DispatchQueue.main.asyncAfter(deadline: .now() + (true ? 1 : 1)) {
+                             self.presentSurveyIfIntervalHasPassed(mode: "afterRoute", logFileURLs:logFileURLs)
+                         }
+          }
+
+//            }
                             
                         
             
@@ -2531,7 +2532,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         dump(voiceShortcuts)
         print("empty")
         
-        if(siriShortcutExperimentRouteFlag && !setShortcutsDisplay){
+        if(siriShortcutExperimentRouteFlag && siriShortcutSingleUseRouteFlag && siriShortcutStopRecordingRouteFlag && siriShortcutStartNavigatingRouteFlag && !setShortcutsDisplay){
             setShortcutsDisplay = true
             print("expLoop")
             dump(voiceShortcuts)
@@ -2758,7 +2759,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     @objc func participateInExperiment(){
         print("in Participate")
       
-        
+  
         if( !siriShortcutExperimentRouteFlag || !siriShortcutSingleUseRouteFlag || !siriShortcutStopRecordingRouteFlag || !siriShortcutStartNavigatingRouteFlag){
             ///Alert to inform users that they haven't enabled the specific shortcut
             showEnableSiriAlert()
@@ -3012,14 +3013,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         let logFileURLs = logger.compileLogData(pathStatus)
         logger.resetStateSequenceLog()
         state = .mainScreen(announceArrival: announceArrival)
-        if sendLogs {
-            // do this in a little while to give it time to announce arrival
-            print("ShowSurvey1")
-//            DispatchQueue.main.asyncAfter(deadline: .now() + (announceArrival ? 3 : 1)) {
-//                print("ShowSurvey2")
-//                self.presentSurveyIfIntervalHasPassed(mode: "afterRoute", logFileURLs: logFileURLs)
-//            }
-        }
+    
     }
     
     func sendLogExperimentSingleUseRouteDataHelper(pathStatus: Bool?, announceArrival: Bool = false) {
@@ -3207,15 +3201,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         print("current")
         print(currentCondition)
         print(conditionsDico)
-        if (sendLogs && presentSurvey) {
-            print("should present survey")
-            // do this in a little while to give it time
-            
-           
-//            DispatchQueue.main.asyncAfter(deadline: .now() + (wait ? 1 : 1)) {
-//                self.presentSurveyIfIntervalHasPassed(mode: "afterRoute", logFileURLs: logFileURLs)
-//            }
-        }
+     
         
     }
     
