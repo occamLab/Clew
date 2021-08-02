@@ -249,7 +249,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             announce(announcement: nextAnnouncement)
         }
     }
-    //todel
+
 
     
     
@@ -1031,43 +1031,43 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-//        if(!experimentRouteFlag){
-//
-//            showSignificantChangesHandsFreeAlert()
-//            UserDefaults.standard.setValue(true, forKey: "experimentRouteFlag")
-//            //expeimentRouteFlag
-//        }
-//
-//
+        if(!siriShortcutExperimentRouteFlag){
+
+            showSignificantChangesHandsFreeAlert()
+            UserDefaults.standard.setValue(true, forKey: "siriShortcutExperimentRoute")
+          
+            }
+
+
 //        updateExperiment()
         let userDefaults: UserDefaults = UserDefaults.standard
         //todel
         //reintialise everythin for test puposes
-      UserDefaults.standard.setValue(false, forKey: "siriShortcutStartNavigatingRoute")
-        siriShortcutExperimentRouteFlag = false
-     UserDefaults.standard.setValue(false, forKey: "siriShortcutExperimentRoute")
-        UserDefaults.standard.setValue(false, forKey: "siriShortcutAlert")
-        UserDefaults.standard.setValue(startExperimentWithList.randomElement(), forKey: "currentRoute")
-        //siriShortcutTypeNameDictionary[  kExperimentRouteType]
-        UserDefaults.standard.setValue(["":""], forKey: "siriShortcutTypeNameDictionary")
-        UserDefaults.standard.setValue(false, forKey: "singleUseRouteExperimentFlag")
-        UserDefaults.standard.setValue(false, forKey: "experimentRouteFlag")
-        UserDefaults.standard.setValue("lanyard", forKey: "currentCondition")
-        let cConditions: Dictionary? =  userDefaults.dictionary(forKey: "conditionsDico")
-        print("before Condition")
-        print(cConditions)
-        let tecondtions = ["lanyard":0,"bracing":3,"none":3]
-        let recondtions = ["lanyard":0,"bracing":0,"none":0]
-    UserDefaults.standard.setValue(recondtions, forKey: "conditionsDico")
-        
-       
-        UserDefaults.standard.setValue(false, forKey:   "completedExperiment")
-        UserDefaults.standard.setValue(recondtions, forKey: "experimentConditonsDico")
-       
-        
-      UserDefaults.standard.setValue(false, forKey: "siriShortcutExperimentRoute")
-      //todel
-       //ch UserDefaults.standard.setValue([""], forKey: "siriShortcutDisplayList")
+//      UserDefaults.standard.setValue(false, forKey: "siriShortcutStartNavigatingRoute")
+//        siriShortcutExperimentRouteFlag = false
+//     UserDefaults.standard.setValue(false, forKey: "siriShortcutExperimentRoute")
+//        UserDefaults.standard.setValue(false, forKey: "siriShortcutAlert")
+//        UserDefaults.standard.setValue(startExperimentWithList.randomElement(), forKey: "currentRoute")
+//       
+//        UserDefaults.standard.setValue(["":""], forKey: "siriShortcutTypeNameDictionary")
+//        UserDefaults.standard.setValue(false, forKey: "singleUseRouteExperimentFlag")
+//        UserDefaults.standard.setValue(false, forKey: "experimentRouteFlag")
+//        UserDefaults.standard.setValue("lanyard", forKey: "currentCondition")
+//        let cConditions: Dictionary? =  userDefaults.dictionary(forKey: "conditionsDico")
+//        print("before Condition")
+//        print(cConditions)
+//        let tecondtions = ["lanyard":0,"bracing":3,"none":3]
+//        let recondtions = ["lanyard":0,"bracing":0,"none":0]
+//    UserDefaults.standard.setValue(recondtions, forKey: "conditionsDico")
+//        
+//       
+//        UserDefaults.standard.setValue(false, forKey:   "completedExperiment")
+//        UserDefaults.standard.setValue(recondtions, forKey: "experimentConditonsDico")
+//       
+//        
+//      UserDefaults.standard.setValue(false, forKey: "siriShortcutExperimentRoute")
+//   
+//        UserDefaults.standard.setValue([""], forKey: "siriShortcutDisplayList")
         let tConditions: Dictionary? =  userDefaults.dictionary(forKey: "conditionsDico")
         
         print("After tCondition")
@@ -1482,12 +1482,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                      
             let logFileURLs = self.logger.compileLogData(nil)
 
-           self.presentSurveyIfIntervalHasPassed(mode: "afterRoute", logFileURLs:logFileURLs)
           if case .mainScreen(_) = self.state {
+            
+            self.presentSurveyIfIntervalHasPassed(mode: "afterRoute", logFileURLs:logFileURLs)
                 print("completeSurvey")
-                         DispatchQueue.main.asyncAfter(deadline: .now() + (true ? 1 : 1)) {
-                             self.presentSurveyIfIntervalHasPassed(mode: "afterRoute", logFileURLs:logFileURLs)
-                         }
+//                         DispatchQueue.main.asyncAfter(deadline: .now() + (true ? 1 : 1)) {
+//                             self.presentSurveyIfIntervalHasPassed(mode: "afterRoute", logFileURLs:logFileURLs)
+//                         }
           }
 
 //            }
@@ -2580,6 +2581,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 
             }else{
                 print("1get")
+                ViewController.siriShortcutsTypesDico = [kNewSingleUseRouteType : "Single Use Route Siri Shortcut:", kExperimentRouteType: "Experiment Route Siri Shortcut:", kStopRecordingType: "Stop Recording Siri Shortcut:", kStartNavigationType:"Start Navigation Siri Shortcut:"]
                 print(siriShortcutNameTypeDictionary.count)
                 print(siriShortcutTypeNameDictionary.count)
                 siriShortcutDisplayList = unique(source: siriShortcutDisplayList! )
