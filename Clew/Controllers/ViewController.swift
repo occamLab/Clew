@@ -1623,15 +1623,23 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                             
                             if payload.typeNameFormat == .nfcWellKnown {
                                 let url = payload.wellKnownTypeURIPayload()
+                                print(url)
+                                print("test")
                                 if let url = url {
-                                    self.handleNFCURL(url)
-                                    if self.nfcEntryPoint == "EnterCode"{
-                                        self.codeIDEntered()
-                                    }
-                                    if self.nfcEntryPoint == "NameCode" {
-                                        self.saveCodeIDButtonPressed()
+                                    if url.host == "berwinl.com" {
+                                        self.handleNFCURL(url)
+                                        if self.nfcEntryPoint == "EnterCode"{
+                                            self.codeIDEntered()
+                                        }
+                                        if self.nfcEntryPoint == "NameCode" {
+                                            self.saveCodeIDButtonPressed()
 
+                                        }
+                                    } else {
+                                        statusMessage = "Not a Recognized Clew Route Database"
+                                        self.NFCEntrySwitch(entryPoint: self.nfcEntryPoint)
                                     }
+
                                 } else {
                                     statusMessage = "No URL Data Read"
                                     self.NFCEntrySwitch(entryPoint: self.nfcEntryPoint)
@@ -1659,6 +1667,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     }
     
     func handleNFCURL(_ url: URL) {
+        self.appClipCodeID = ""
         guard let components = NSURLComponents(url: url, resolvingAgainstBaseURL: true), let queryItems = components.queryItems else {
           return
         }
