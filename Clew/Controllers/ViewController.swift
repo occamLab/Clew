@@ -339,71 +339,71 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
 //            sendLogDataHelper(pathStatus: nil)
 //        }
             
-        if( siriShortcutExperimentRouteFlag && siriShortcutSingleUseRouteFlag && siriShortcutStopRecordingRouteFlag && siriShortcutStartNavigatingRouteFlag && setShortcutsDisplay){
-            setShortcutsDisplay = true
-          
-            if(!voiceShortcuts.isEmpty){
-                for element in voiceShortcuts{
-                        ViewController.voiceCommandsList.append(shortCutInvocationPhasee(phase: element.invocationPhrase, type: element.shortcut.userActivity!.activityType))
-                       print(element.invocationPhrase)
-                    }
-            for element in voiceShortcuts{
-
-               print(element.invocationPhrase)
-                siriShortcutDisplayList.append(element.invocationPhrase)
-           
-                
-                siriShortcutsNameTypeDico[element.invocationPhrase] = element.shortcut.userActivity?.activityType
-               
-                                helpTypeNameDictionary [element.shortcut.userActivity?.activityType ?? "type"] = element.invocationPhrase
-                
-                self.siriShortcutNameTypeDictionary[element.invocationPhrase] = element.shortcut.userActivity?.activityType
-                helpNameTypeDictionary[element.invocationPhrase] = element.shortcut.userActivity?.activityType
-                print(siriShortcutsNameTypeDico[element.invocationPhrase])
-            
-            }
-                
-                UserDefaults.standard.setValue(siriShortcutDisplayList, forKey: "siriShortcutDisplayList")
-                UserDefaults.standard.setValue(siriShortcutsNameTypeDico, forKey:  "siriShortcutsNameTypeDico")
-               UserDefaults.standard.setValue( helpTypeNameDictionary, forKey: " siriShortcutsTypeNameDico")
-                UserDefaults.standard.setValue(true, forKey: "siriShortcutExperimentRoute")
-                UserDefaults.standard.set(helpNameTypeDictionary, forKey: "siriShortcutNameTypeDictionary")
-                
-                UserDefaults.standard.set(helpTypeNameDictionary, forKey: "siriShortcutTypeNameDictionary")
-                siriShortcutNameTypeDictionary  =  UserDefaults.standard.object(forKey: "siriShortcutNameTypeDictionary")  as? [String:String] ?? [:]
-                
-                print("5get")
-                print( siriShortcutNameTypeDictionary.count)
-                print(siriShortcutTypeNameDictionary.count)
-                logger.logSettings(siriShortcutTypeNameDictionary: siriShortcutTypeNameDictionary, siriShortcutNameTypeDictionary: siriShortcutNameTypeDictionary, defaultUnit: defaultUnit, defaultColor: defaultColor, soundFeedback: soundFeedback, voiceFeedback: voiceFeedback, hapticFeedback: hapticFeedback, sendLogs: sendLogs, timerLength: timerLength, currentRoute: currentRoute,adjustOffset: adjustOffset,
-                                   currentCondition:currentCondition, experimentRouteFlag: experimentRouteFlag, experimentConditonsDico: experimentConditonsDico,
-                                   conditionsDico: conditionsDico,siriShortcutDisplayList:siriShortcutDisplayList, siriShortcutsNameTypeDico: siriShortcutsNameTypeDico, siriShortcutsTypeNameDico :siriShortcutsTypeNameDico)
-                
-            }else{
-                print("1get")
-                print(siriShortcutNameTypeDictionary.count)
-                print(siriShortcutTypeNameDictionary.count)
-                siriShortcutDisplayList = unique(source: siriShortcutDisplayList! )
-                for element in siriShortcutDisplayList {
-
-                    ViewController.voiceCommandsList.append(shortCutInvocationPhasee(phase:element,type: siriShortcutTypeNameDictionary[element] ?? "_" ))
-
-                }
-
-
-            }
-
-            print("lenAnch")
-            print(siriShortcutDisplayList.count)
-            print(siriShortcutsNameTypeDico.count)
-       
-            print(self.siriShortcutNameTypeDictionary.count)
-           siriShortcutExperimentRouteFlag = true
-          
-            
-            sendLogDataHelper(pathStatus: true)
-        }
-    
+//        if( siriShortcutExperimentRouteFlag && siriShortcutSingleUseRouteFlag && siriShortcutStopRecordingRouteFlag && siriShortcutStartNavigatingRouteFlag && setShortcutsDisplay){
+//            setShortcutsDisplay = true
+//          
+//            if(!voiceShortcuts.isEmpty){
+//                for element in voiceShortcuts{
+//                        ViewController.voiceCommandsList.append(shortCutInvocationPhasee(phase: element.invocationPhrase, type: element.shortcut.userActivity!.activityType))
+//                       print(element.invocationPhrase)
+//                    }
+//            for element in voiceShortcuts{
+//
+//               print(element.invocationPhrase)
+//                siriShortcutDisplayList.append(element.invocationPhrase)
+//           
+//                
+//                siriShortcutsNameTypeDico[element.invocationPhrase] = element.shortcut.userActivity?.activityType
+//               
+//                                helpTypeNameDictionary [element.shortcut.userActivity?.activityType ?? "type"] = element.invocationPhrase
+//                
+//                self.siriShortcutNameTypeDictionary[element.invocationPhrase] = element.shortcut.userActivity?.activityType
+//                helpNameTypeDictionary[element.invocationPhrase] = element.shortcut.userActivity?.activityType
+//                print(siriShortcutsNameTypeDico[element.invocationPhrase])
+//            
+//            }
+//                
+//                UserDefaults.standard.setValue(siriShortcutDisplayList, forKey: "siriShortcutDisplayList")
+//                UserDefaults.standard.setValue(siriShortcutsNameTypeDico, forKey:  "siriShortcutsNameTypeDico")
+//               UserDefaults.standard.setValue( helpTypeNameDictionary, forKey: " siriShortcutsTypeNameDictionary")
+//                UserDefaults.standard.setValue(true, forKey: "siriShortcutExperimentRoute")
+//                UserDefaults.standard.set(helpNameTypeDictionary, forKey: "siriShortcutNameTypeDictionary")
+//                
+//                UserDefaults.standard.set(helpTypeNameDictionary, forKey: "siriShortcutTypeNameDictionary")
+//                siriShortcutNameTypeDictionary  =  UserDefaults.standard.object(forKey: "siriShortcutNameTypeDictionary")  as? [String:String] ?? [:]
+//                
+//                print("5get")
+//                print( siriShortcutNameTypeDictionary.count)
+//                print(siriShortcutTypeNameDictionary.count)
+//                logger.logSettings(siriShortcutTypeNameDictionary: siriShortcutTypeNameDictionary, siriShortcutNameTypeDictionary: siriShortcutNameTypeDictionary, defaultUnit: defaultUnit, defaultColor: defaultColor, soundFeedback: soundFeedback, voiceFeedback: voiceFeedback, hapticFeedback: hapticFeedback, sendLogs: sendLogs, timerLength: timerLength, currentRoute: currentRoute,adjustOffset: adjustOffset,
+//                                   currentCondition:currentCondition, experimentRouteFlag: experimentRouteFlag, experimentConditonsDico: experimentConditonsDico,
+//                                   conditionsDico: conditionsDico,siriShortcutDisplayList:siriShortcutDisplayList, siriShortcutsNameTypeDico: siriShortcutsNameTypeDico, siriShortcutsTypeNameDico :siriShortcutsTypeNameDico)
+//                
+//            }else{
+//                print("1get")
+//                print(siriShortcutNameTypeDictionary.count)
+//                print(siriShortcutTypeNameDictionary.count)
+//                siriShortcutDisplayList = unique(source: siriShortcutDisplayList! )
+//                for element in siriShortcutDisplayList {
+//
+//                    ViewController.voiceCommandsList.append(shortCutInvocationPhasee(phase:element,type: siriShortcutTypeNameDictionary[element] ?? "_" ))
+//
+//                }
+//
+//
+//            }
+//
+//            print("lenAnch")
+//            print(siriShortcutDisplayList.count)
+//            print(siriShortcutsNameTypeDico.count)
+//       
+//            print(self.siriShortcutNameTypeDictionary.count)
+//           siriShortcutExperimentRouteFlag = true
+//          
+//            
+//            //sendLogDataHelper(pathStatus: true)
+//        }
+//    
         ViewController.sExperimentRouteFlag = false
         
     }
@@ -2401,72 +2401,157 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         //set experiment route to false
         recordingExperimentRoute = false
         // ensure adjustoffset is turned off
-      
-//        if(siriShortcutExperimentRouteFlag && !setShortcutsDisplay){
-//            setShortcutsDisplay = true
 //
-//            if(!voiceShortcuts.isEmpty){
-//                for element in voiceShortcuts{
-//                        ViewController.voiceCommandsList.append(shortCutInvocationPhasee(phase: element.invocationPhrase, type: element.shortcut.userActivity!.activityType))
-//                       print(element.invocationPhrase)
-//                    }
-//            for element in voiceShortcuts{
-//
-//               print(element.invocationPhrase)
-//                siriShortcutDisplayList.append(element.invocationPhrase)
-//
-//
-//                siriShortcutsNameTypeDico[element.invocationPhrase] = element.shortcut.userActivity?.activityType
-//
-//                                helpTypeNameDictionary [element.shortcut.userActivity?.activityType ?? "type"] = element.invocationPhrase
-//
-//                self.siriShortcutNameTypeDictionary[element.invocationPhrase] = element.shortcut.userActivity?.activityType
-//                helpNameTypeDictionary[element.invocationPhrase] = element.shortcut.userActivity?.activityType
-//                print(siriShortcutsNameTypeDico[element.invocationPhrase])
-//
-//            }
-//
-//                UserDefaults.standard.setValue(siriShortcutDisplayList, forKey: "siriShortcutDisplayList")
-//                UserDefaults.standard.setValue(siriShortcutsNameTypeDico, forKey:  "siriShortcutsNameTypeDico")
-//               UserDefaults.standard.setValue( helpTypeNameDictionary, forKey: " siriShortcutsTypeNameDico")
-//                UserDefaults.standard.setValue(true, forKey: "siriShortcutExperimentRoute")
-//                UserDefaults.standard.set(helpNameTypeDictionary, forKey: "siriShortcutNameTypeDictionary")
-//
-//                UserDefaults.standard.set(helpTypeNameDictionary, forKey: "siriShortcutTypeNameDictionary")
-//                siriShortcutNameTypeDictionary  =  UserDefaults.standard.object(forKey: "siriShortcutNameTypeDictionary")  as? [String:String] ?? [:]
-//
-//                print("5get")
-//                print( siriShortcutNameTypeDictionary.count)
-//                print(siriShortcutTypeNameDictionary.count)
-//                logger.logSettings(siriShortcutTypeNameDictionary: siriShortcutTypeNameDictionary, siriShortcutNameTypeDictionary: siriShortcutNameTypeDictionary, defaultUnit: defaultUnit, defaultColor: defaultColor, soundFeedback: soundFeedback, voiceFeedback: voiceFeedback, hapticFeedback: hapticFeedback, sendLogs: sendLogs, timerLength: timerLength, currentRoute: currentRoute,adjustOffset: adjustOffset,
-//                                   currentCondition:currentCondition, experimentRouteFlag: experimentRouteFlag, experimentConditonsDico: experimentConditonsDico,
-//                                   conditionsDico: conditionsDico,siriShortcutDisplayList:siriShortcutDisplayList, siriShortcutsNameTypeDico: siriShortcutsNameTypeDico, siriShortcutsTypeNameDico :siriShortcutsTypeNameDico)
-//
-//            }else{
-//                print("1get")
-//                print(siriShortcutNameTypeDictionary.count)
-//                print(siriShortcutTypeNameDictionary.count)
-//                siriShortcutDisplayList = unique(source: siriShortcutDisplayList! )
-//                for element in siriShortcutDisplayList {
-//
-//                    ViewController.voiceCommandsList.append(shortCutInvocationPhasee(phase:element,type: siriShortcutTypeNameDictionary[element] ?? "_" ))
-//
-//                }
-//
-//
-//            }
-//
-//            print("lenAnch")
-//            print(siriShortcutDisplayList.count)
-//            print(siriShortcutsNameTypeDico.count)
-//
-//            print(self.siriShortcutNameTypeDictionary.count)
-//           siriShortcutExperimentRouteFlag = true
-//
-//
-//            sendLogDataHelper(pathStatus: true)
-//        }
-        rootContainerView.homeButton.isHidden = false
+////        if(siriShortcutExperimentRouteFlag && !setShortcutsDisplay){
+////            setShortcutsDisplay = true
+////
+////            if(!voiceShortcuts.isEmpty){
+////                for element in voiceShortcuts{
+////                        ViewController.voiceCommandsList.append(shortCutInvocationPhasee(phase: element.invocationPhrase, type: element.shortcut.userActivity!.activityType))
+////                       print(element.invocationPhrase)
+////                    }
+////            for element in voiceShortcuts{
+////
+////               print(element.invocationPhrase)
+////                siriShortcutDisplayList.append(element.invocationPhrase)
+////
+////
+////                siriShortcutsNameTypeDico[element.invocationPhrase] = element.shortcut.userActivity?.activityType
+////
+////                                helpTypeNameDictionary [element.shortcut.userActivity?.activityType ?? "type"] = element.invocationPhrase
+////
+////                self.siriShortcutNameTypeDictionary[element.invocationPhrase] = element.shortcut.userActivity?.activityType
+////                helpNameTypeDictionary[element.invocationPhrase] = element.shortcut.userActivity?.activityType
+////                print(siriShortcutsNameTypeDico[element.invocationPhrase])
+////
+////            }
+////
+////                UserDefaults.standard.setValue(siriShortcutDisplayList, forKey: "siriShortcutDisplayList")
+////                UserDefaults.standard.setValue(siriShortcutsNameTypeDico, forKey:  "siriShortcutsNameTypeDico")
+////               UserDefaults.standard.setValue( helpTypeNameDictionary, forKey: " siriShortcutsTypeNameDico")
+////                UserDefaults.standard.setValue(true, forKey: "siriShortcutExperimentRoute")
+////                UserDefaults.standard.set(helpNameTypeDictionary, forKey: "siriShortcutNameTypeDictionary")
+////
+////                UserDefaults.standard.set(helpTypeNameDictionary, forKey: "siriShortcutTypeNameDictionary")
+////                siriShortcutNameTypeDictionary  =  UserDefaults.standard.object(forKey: "siriShortcutNameTypeDictionary")  as? [String:String] ?? [:]
+////
+////                print("5get")
+////                print( siriShortcutNameTypeDictionary.count)
+////                print(siriShortcutTypeNameDictionary.count)
+////                logger.logSettings(siriShortcutTypeNameDictionary: siriShortcutTypeNameDictionary, siriShortcutNameTypeDictionary: siriShortcutNameTypeDictionary, defaultUnit: defaultUnit, defaultColor: defaultColor, soundFeedback: soundFeedback, voiceFeedback: voiceFeedback, hapticFeedback: hapticFeedback, sendLogs: sendLogs, timerLength: timerLength, currentRoute: currentRoute,adjustOffset: adjustOffset,
+////                                   currentCondition:currentCondition, experimentRouteFlag: experimentRouteFlag, experimentConditonsDico: experimentConditonsDico,
+////                                   conditionsDico: conditionsDico,siriShortcutDisplayList:siriShortcutDisplayList, siriShortcutsNameTypeDico: siriShortcutsNameTypeDico, siriShortcutsTypeNameDico :siriShortcutsTypeNameDico)
+////
+////            }else{
+////                print("1get")
+////                print(siriShortcutNameTypeDictionary.count)
+////                print(siriShortcutTypeNameDictionary.count)
+////                siriShortcutDisplayList = unique(source: siriShortcutDisplayList! )
+////                for element in siriShortcutDisplayList {
+////
+////                    ViewController.voiceCommandsList.append(shortCutInvocationPhasee(phase:element,type: siriShortcutTypeNameDictionary[element] ?? "_" ))
+////
+////                }
+////
+////
+////            }
+////
+////            print("lenAnch")
+////            print(siriShortcutDisplayList.count)
+////            print(siriShortcutsNameTypeDico.count)
+////
+////            print(self.siriShortcutNameTypeDictionary.count)
+////           siriShortcutExperimentRouteFlag = true
+////
+////
+////            sendLogDataHelper(pathStatus: true)
+////        }
+//        rootContainerView.homeButton.isHidden = false
+        print(siriShortcutDisplayList.count)
+        print("typeName")
+        print(siriShortcutsTypeNameDico.count)
+        dump(siriShortcutTypeNameDictionary)
+        print(siriShortcutNameTypeDictionary.count)
+        print(siriShortcutTypeNameDictionary.count)
+        print("^")
+        print(helpNameTypeDictionary.count)
+        UserDefaults.standard.set(false, forKey: "adjustOffset")
+        print("dumpAnch")
+        print(siriShortcutExperimentRouteFlag)
+
+        print(!setShortcutsDisplay)
+        //print(siriShortcutExperimentRouteFlag ?? false && !setShortcutsDisplay)
+        dump(voiceShortcuts)
+        print("empty")
+        
+        if(siriShortcutExperimentRouteFlag && !setShortcutsDisplay){
+            setShortcutsDisplay = true
+            print("expLoop")
+            dump(voiceShortcuts)
+            if(!voiceShortcuts.isEmpty){
+                for element in voiceShortcuts{
+                        ViewController.voiceCommandsList.append(shortCutInvocationPhasee(phase: element.invocationPhrase, type: element.shortcut.userActivity!.activityType))
+                       print(element.invocationPhrase)
+                    }
+            for element in voiceShortcuts{
+
+               print(element.invocationPhrase)
+                siriShortcutDisplayList.append(element.invocationPhrase)
+                print("inExpLoop")
+                print(element.invocationPhrase)
+                //print(element.shortcut.userActivity?.activityType)
+                
+                
+                siriShortcutsNameTypeDico[element.invocationPhrase] = element.shortcut.userActivity?.activityType
+               
+                                helpTypeNameDictionary [element.shortcut.userActivity?.activityType ?? "type"] = element.invocationPhrase
+                
+                self.siriShortcutNameTypeDictionary[element.invocationPhrase] = element.shortcut.userActivity?.activityType
+                helpNameTypeDictionary[element.invocationPhrase] = element.shortcut.userActivity?.activityType
+                print(siriShortcutsNameTypeDico[element.invocationPhrase])
+            
+            }
+                
+                UserDefaults.standard.setValue(siriShortcutDisplayList, forKey: "siriShortcutDisplayList")
+                UserDefaults.standard.setValue(siriShortcutsNameTypeDico, forKey:  "siriShortcutsNameTypeDico")
+               UserDefaults.standard.setValue( helpTypeNameDictionary, forKey: " siriShortcutsTypeNameDico")
+                UserDefaults.standard.setValue(true, forKey: "siriShortcutExperimentRoute")
+                UserDefaults.standard.set(helpNameTypeDictionary, forKey: "siriShortcutNameTypeDictionary")
+                
+                UserDefaults.standard.set(helpTypeNameDictionary, forKey: "siriShortcutTypeNameDictionary")
+                siriShortcutNameTypeDictionary  =  UserDefaults.standard.object(forKey: "siriShortcutNameTypeDictionary")  as? [String:String] ?? [:]
+                
+                print("5get")
+                print( siriShortcutNameTypeDictionary.count)
+                print(siriShortcutTypeNameDictionary.count)
+                logger.logSettings(siriShortcutTypeNameDictionary: siriShortcutTypeNameDictionary, siriShortcutNameTypeDictionary: siriShortcutNameTypeDictionary, defaultUnit: defaultUnit, defaultColor: defaultColor, soundFeedback: soundFeedback, voiceFeedback: voiceFeedback, hapticFeedback: hapticFeedback, sendLogs: sendLogs, timerLength: timerLength, currentRoute: currentRoute,adjustOffset: adjustOffset,
+                                   currentCondition:currentCondition, experimentRouteFlag: experimentRouteFlag, experimentConditonsDico: experimentConditonsDico,
+                                   conditionsDico: conditionsDico,siriShortcutDisplayList:siriShortcutDisplayList, siriShortcutsNameTypeDico: siriShortcutsNameTypeDico, siriShortcutsTypeNameDico :siriShortcutsTypeNameDico)
+                
+            }else{
+                print("1get")
+                print(siriShortcutNameTypeDictionary.count)
+                print(siriShortcutTypeNameDictionary.count)
+                siriShortcutDisplayList = unique(source: siriShortcutDisplayList! )
+                for element in siriShortcutDisplayList {
+
+                    ViewController.voiceCommandsList.append(shortCutInvocationPhasee(phase:element,type: siriShortcutTypeNameDictionary[element] ?? "_" ))
+
+                }
+
+
+            }
+
+            print("lenAnch")
+            print(siriShortcutDisplayList.count)
+            print(siriShortcutsNameTypeDico.count)
+       
+            print(self.siriShortcutNameTypeDictionary.count)
+           siriShortcutExperimentRouteFlag = true
+          
+            
+            sendLogDataHelper(pathStatus: nil)
+        }
         creatingRouteAnchorPoint = true
 
         /// create an activity and attach it to the VC
@@ -2814,6 +2899,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     func startExperiment(){
         ViewController.sRouteType = currentRoute
+        print(ViewController.sRouteType)
         print("2flagTrue")
         print(siriShortcutAlert && siriShortcutExperimentRouteFlag)
         
@@ -2822,7 +2908,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         if(siriShortcutAlert && siriShortcutExperimentRouteFlag){
        
             print("inside Both not")
-        
+            print(currentRoute)
         if(currentRoute as! String == "SingleUseRoute"){
             
             updateExperiment()
