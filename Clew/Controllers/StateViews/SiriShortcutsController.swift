@@ -79,7 +79,7 @@ class SiriShortcutsController: UIViewController {
         attributes.contentDescription = "Tell Clew to start navigating the route"
      
        
-        activity.suggestedInvocationPhrase = "Return me back"
+        activity.suggestedInvocationPhrase = "start navigating the route"
 
         activity.contentAttributeSet = attributes
 

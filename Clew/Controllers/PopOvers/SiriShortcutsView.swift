@@ -51,7 +51,11 @@ struct shortCutInvocationPhasee : Identifiable{
 struct shortcutRow: View{
     var shortcut: shortCutInvocationPhasee
     var body: some View{
-        Text("\(ViewController.siriShortcutsTypesDico [shortcut.type] ?? "siri shortcut")\(shortcut.phase) ").foregroundColor(.yellow)
+        Text("\(ViewController.siriShortcutsTypesDico [shortcut.type] ?? "siri shortcut : /n /n")\(shortcut.phase) ").foregroundColor(.white).bold()
+     
+//        Text("\(ViewController.siriShortcutsTypesDico [shortcut.type] ?? "siri shortcut : /n")").foregroundColor(.yellow).bold()
+//        Text("\(shortcut.phase) ").foregroundColor(.white)
+//
     }
     
 }

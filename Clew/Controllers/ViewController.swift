@@ -2059,7 +2059,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// the Anchor Point to use to mark the end of the route currently being recorded
     var endRouteAnchorPoint = RouteAnchorPoint()
     /// storeres the types of siri shortcut, where key is type and value is the statment to display on screen
-    static var siriShortcutsTypesDico = [kNewSingleUseRouteType : "Single Use Route Siri Shortcut:", kExperimentRouteType: "Experiment Route Siri Shortcut:", kStopRecordingType: "Stop Recording Siri Shortcut:", kStartNavigationType:"Start Navigating Route Siri Shortcut"]
+    static var siriShortcutsTypesDico = [kNewSingleUseRouteType : "Single Use Route Siri Shortcut:", kExperimentRouteType: "Experiment Route Siri Shortcut:", kStopRecordingType: "Stop Recording Siri Shortcut:", kStartNavigationType:"Start Navigation Siri Shortcut:"]
     var siriShortcutsNameTypeDico: [String: Any]!
     var siriShortcutsTypeNameDico: [String: Any]!
     
@@ -2670,8 +2670,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             showEnableSiriAlert()
             print("please enable shortcuts")
         }
-        if(!singleUseRouteExperimentFlag && !experimentRouteFlag){
+        else if(!singleUseRouteExperimentFlag && !experimentRouteFlag){
                   // start experiment
+            print("inside changed")
             ViewController.sExperimentRouteFlag = true
             print( ViewController.sRouteType )
             print( ViewController.sExperimentRouteFlag)
