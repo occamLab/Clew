@@ -402,9 +402,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 
                 let thisRoute = (self.dataPersistence.routes.first(where: {String($0.id) == self.routeID}))!
 //                let thisRoute = (self.dataPersistence.routes.last)!
-                
-                print("Soooup Time \(thisRoute.name)")
-                print("soooooup time")
+    
                 self.sceneView.debugOptions = [.showWorldOrigin]
                 self.sceneView.session.run(self.configuration, options: [.removeExistingAnchors, .resetTracking])
                 
