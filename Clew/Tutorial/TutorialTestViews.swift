@@ -415,7 +415,6 @@ struct PracticeOrientPhone: View {
             
             //ScrollView{
             Text(NSLocalizedString("orientPhoneTutorialPracticeInstructions", comment: "Instructions for practicing holding phone activity"))
-                //.fixedSize(horizontal: false, vertical: true)
             //}
             
             Button(action:{
@@ -753,7 +752,7 @@ struct AnchorPointTips: View {
 }
 
 struct AnchorPointPractice: View {
-    //TODO: 1 write instructions 2
+    //TODO: 1 write instructions 2 align to anchor point twice? 3 shrink button size 4 count down 5 voice announcments?
     @ObservedObject private var arData = ARData.shared
     @State var sound: AVAudioPlayer?
     @State private var started = false
@@ -762,6 +761,9 @@ struct AnchorPointPractice: View {
     @State var xyzYawDelta: [Float] = []
     @State private var anchorPointSet = false
     @State private var anchorPointAligned = false
+    
+    static let xPerfectThreshold = Float(0.1)
+    
     var body: some View {
         TutorialScreen {
             if anchorPointAligned {
@@ -770,10 +772,10 @@ struct AnchorPointPractice: View {
                 
                 Text("x, y, z, yaw \(xyzYawAlign[0] - xyzYawSet[0]), \(xyzYawAlign[1] - xyzYawSet[1]), \(xyzYawAlign[2] - xyzYawSet[2]), \(xyzYawAlign[3] - xyzYawSet[3])")//TODO: Delete when done testing
                 
-                if xyzYawDelta[0] < 0.50 && xyzYawDelta[0] > -0.50, xyzYawDelta[1] < 0.10 && xyzYawDelta[1] > -0.10, xyzYawDelta[2] < 0.50 && xyzYawDelta[2] > -0.50, xyzYawDelta[3] < 0.50 && xyzYawDelta[3] > -0.50 {
+                if abs(xyzYawDelta[0]) < AnchorPointPractice.xPerfectThreshold, xyzYawDelta[1] < 0.10 && xyzYawDelta[1] > -0.10, xyzYawDelta[2] < 0.10 && xyzYawDelta[2] > -0.10, xyzYawDelta[3] < 0.10 && xyzYawDelta[3] > -0.10 {
                     Text("Perfect!!!")
                     Text("Nice work! Setting and aligning anchor points like you have in this practice will work great for Clew routes! Feel free to practice again, check out our tips for setting anchor points, continuing with the tutorial, or entering the main app and start using it!")
-                } else if xyzYawDelta[0] < 1 && xyzYawDelta[0] > -1, xyzYawDelta[1] < 0.1 && xyzYawDelta[1] > -0.1, xyzYawDelta[2] < 1 && xyzYawDelta[2] > -1, xyzYawDelta[3] < 1 && xyzYawDelta[3] > -1 {
+                } else if xyzYawDelta[0] < 0.5 && xyzYawDelta[0] > -0.5, xyzYawDelta[1] < 0.5 && xyzYawDelta[1] > -0.5, xyzYawDelta[2] < 0.5 && xyzYawDelta[2] > -0.5, xyzYawDelta[3] < 0.5 && xyzYawDelta[3] > -0.5 {
                     Text("Pretty Good!")
                     Text("This anchor point is pretty well aligned to the anchor point you set origanally and a Clew route from this anchor point would probably work pretty well. You might want practice again or check out our tips for setting and aligning anchor points.")
                 } else {
@@ -801,7 +803,6 @@ struct AnchorPointPractice: View {
                 Text("Now move your phone out of the position you set the ancor point in. Maybe even walk around the room you're in. Then try returning your phone to the same position and select the align button again to set a second anchor point. Wait for the count down, and then your second anchor point will be set. Then you'll recieve some feedback about how close your second anchor point was to the first you set.")
                 
                 Button(action: {
-                    NotificationCenter.default.post(name: Notification.Name("StartARSession"), object: nil)
                     if let transform = arData.transform {
                         let x = transform.columns.3.x
                         let y = transform.columns.3.y
@@ -814,7 +815,7 @@ struct AnchorPointPractice: View {
                 }) {//Text("capture anchorpoint")
                     Image("Align")
                         .resizable()
-                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 200, height: 200)
                     }
                 Button(action: {
                     anchorPointSet = false
@@ -825,10 +826,9 @@ struct AnchorPointPractice: View {
                 //when starting anchor point practice
                 Text("Practice Setting Anchor Points")
                 
-                Text("Here you will practice setting an anchor point and then finding that anchor point. ")
+                Text("Here you will practice setting an anchor point and then finding that anchor point. This practice will then give you feedback on how close you were to setting the anchor points in the same spot. To set your first anchor point, press the align button and wait for the count down.")
                 
                 Button(action: {
-                        NotificationCenter.default.post(name: Notification.Name("StartARSession"), object: nil)
                         //TODO: do count down, hid button until after countdown and wait a least a little bit longer before you can hit align again, play a success sound(?)
                         if let transform = arData.transform {
                             let x = transform.columns.3.x
@@ -842,7 +842,7 @@ struct AnchorPointPractice: View {
                 }) {//Text("capture anchorpoint")
                     Image("Align")
                         .resizable()
-                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 200, height: 200)
                     }
             }
             
@@ -858,6 +858,10 @@ struct AnchorPointPractice: View {
             }*/
         }.onDisappear(){
             UserDefaults.standard.setValue(true, forKey: "AnchorPointsCompleted")}
+        
+        .onAppear() {
+            NotificationCenter.default.post(name: Notification.Name("StartARSession"), object: nil)
+        }
         
         Spacer()
         TutorialNavLink(destination: SavedRoutes())  {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
