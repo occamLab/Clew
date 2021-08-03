@@ -126,6 +126,9 @@
 		E5E9016B22FB4D4A00AD0E95 /* PreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E9016A22FB4D4A00AD0E95 /* PreviewViewController.swift */; };
 		E5E9016E22FB4D4A00AD0E95 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E5E9016C22FB4D4A00AD0E95 /* MainInterface.storyboard */; };
 		E5E9017222FB4D4A00AD0E95 /* route-quicklook.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = E5E9016722FB4D4A00AD0E95 /* route-quicklook.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		E84904652698BB7E008F8E5D /* SiriShortcutsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E84904642698BB7E008F8E5D /* SiriShortcutsView.swift */; };
+		E84904662698BB7E008F8E5D /* SiriShortcutsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E84904642698BB7E008F8E5D /* SiriShortcutsView.swift */; };
+		E866909226B9CB6B00690354 /* VoiceCommandView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E866909126B9CB6B00690354 /* VoiceCommandView.swift */; };
 		E8773AFB268B874F003EA863 /* SiriShortcutsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8773AFA268B874F003EA863 /* SiriShortcutsController.swift */; };
 		E8773AFF268B875C003EA863 /* SiriShortcutsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8773AFA268B874F003EA863 /* SiriShortcutsController.swift */; };
 /* End PBXBuildFile section */
@@ -243,6 +246,8 @@
 		E5E9016A22FB4D4A00AD0E95 /* PreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewViewController.swift; sourceTree = "<group>"; };
 		E5E9016D22FB4D4A00AD0E95 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
 		E5E9016F22FB4D4A00AD0E95 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E84904642698BB7E008F8E5D /* SiriShortcutsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SiriShortcutsView.swift; sourceTree = "<group>"; };
+		E866909126B9CB6B00690354 /* VoiceCommandView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VoiceCommandView.swift; path = ../../../../../studyversion/Clew/Clew/Controllers/StateViews/VoiceCommandView.swift; sourceTree = "<group>"; };
 		E8773AFA268B874F003EA863 /* SiriShortcutsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SiriShortcutsController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -416,6 +421,7 @@
 		E5470EDF22C119F4001092A4 /* StateViews */ = {
 			isa = PBXGroup;
 			children = (
+				E866909126B9CB6B00690354 /* VoiceCommandView.swift */,
 				E5470EE022C119F4001092A4 /* RecordPathController.swift */,
 				E5470EE122C119F4001092A4 /* StartNavigationController.swift */,
 				E5470EE222C119F4001092A4 /* StopRecordingController.swift */,
@@ -436,6 +442,7 @@
 				1F27632222FCBB6E00E1FCF8 /* BurgerMenuViewController.swift */,
 				E5470EEA22C119F4001092A4 /* FeedbackViewController.swift */,
 				E5470EEB22C119F4001092A4 /* RoutesViewController.swift */,
+				E84904642698BB7E008F8E5D /* SiriShortcutsView.swift */,
 			);
 			path = PopOvers;
 			sourceTree = "<group>";
@@ -802,6 +809,7 @@
 				E5470F0822C119F5001092A4 /* Utility.swift in Sources */,
 				E5470EFC22C119F5001092A4 /* RecordButton.swift in Sources */,
 				8261892E264ACCC5007F99C4 /* AppleSignInController.swift in Sources */,
+				E84904652698BB7E008F8E5D /* SiriShortcutsView.swift in Sources */,
 				1F27632322FCBB6E00E1FCF8 /* BurgerMenuViewController.swift in Sources */,
 				E5470F0C22C119F5001092A4 /* SettingsViewController.m in Sources */,
 				E5470F2622C119F5001092A4 /* Float4x4Extension.swift in Sources */,
@@ -810,6 +818,7 @@
 				E5470F0622C119F5001092A4 /* PathFinder.swift in Sources */,
 				E5470F2C22C119F5001092A4 /* StartNavigationController.swift in Sources */,
 				E5470F4222C119F5001092A4 /* UIConstants.swift in Sources */,
+				E866909226B9CB6B00690354 /* VoiceCommandView.swift in Sources */,
 				E8773AFB268B874F003EA863 /* SiriShortcutsController.swift in Sources */,
 				E5470F2022C119F5001092A4 /* UIViewControllerExtensions.swift in Sources */,
 				E5470F3A22C119F5001092A4 /* HelpViewController.swift in Sources */,
@@ -849,6 +858,7 @@
 				E5470F0922C119F5001092A4 /* Utility.swift in Sources */,
 				E5470EFD22C119F5001092A4 /* RecordButton.swift in Sources */,
 				8261892F264ACCC5007F99C4 /* AppleSignInController.swift in Sources */,
+				E84904662698BB7E008F8E5D /* SiriShortcutsView.swift in Sources */,
 				1F27632422FCBB9900E1FCF8 /* BurgerMenuViewController.swift in Sources */,
 				E5470F0D22C119F5001092A4 /* SettingsViewController.m in Sources */,
 				E5470F2722C119F5001092A4 /* Float4x4Extension.swift in Sources */,

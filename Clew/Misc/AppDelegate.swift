@@ -57,6 +57,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                         self.window?.rootViewController = self.vc
                         self.window?.makeKeyAndVisible()
                     }
+                    print("firstdel")
+                print(vc.userActivity)
                     return true
                 #else
                     window = UIWindow(frame:UIScreen.main.bounds)
@@ -144,43 +146,35 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
        
         print("indelact")
         print(userActivity.activityType)
-      
-        if(userActivity.activityType == kNewSingleUseRouteType){
-             
-             let vcc = ViewController()
+        print(vc.stack.peek())
+        print("start" == vc.stack.peek() )
+        
+        if(userActivity.activityType == kNewSingleUseRouteType && vc.stack.peek() == "start"){
+             print("in1")
+        
              vc.startCreateAnchorPointProcedure()
-              //nav?.pushViewController(vcc, animated: false)
-          //  vc.present(vcc, animated: true, completion: nil)
+            vc.stack.push(kNewSingleUseRouteType)
+            // vc.prevSiriActivity = kNewSingleUseRouteType
 
              }
         
-        if(userActivity.activityType == kStopRecordingType){
-             
-            // let vcc = ViewController()
+        if(userActivity.activityType == kStopRecordingType &&  kNewSingleUseRouteType == vc.stack.peek() ){
+             print("in start")
+            vc.stack.push(kStopRecordingType)
              vc.stopRecording(nil)
-            //nav?.pushViewController(vcc, animated: false)
-            //self.vc = vcc
-            
-          //  vc.present(vcc, animated: true, completion: nil)
+           // vc.stack.push(kNewSingleUseRouteType)
+                //vc.prevSiriActivity = kStopRecordingType
 
              }
         
         
-               if(userActivity.activityType == kStartNavigationType){
-             
+        
+        if(userActivity.activityType == kStartNavigationType &&  vc.stack.peek() == kStopRecordingType ){
+           
                 vc.startNavigation(nil)
-                
-//
-//                let vcc = ViewController()
-////                print("appdelcheck:")
-////                print(userActivity.activityType)
-//                vcc.startNavigation(nil)
-////                /// nav?.pushViewController(vcc, animated: false)
-////               vc = ViewController()
-//               vc = vcc
-//                vc.present(vcc, animated: true, completion: nil)
-//               //nav?.pushViewController(vc, animated: false)
-//           ///   // vc.present(vc, animated: true, completion: nil)
+            vc.stack.pop()
+            vc.stack.pop()
+            
 
                
                }

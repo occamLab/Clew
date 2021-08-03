@@ -110,15 +110,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// A threshold distance between the user's current position and a voice note.  If the user is closer than this value the voice note will be played
     static let voiceNotePlayDistanceThreshold : Float = 0.75
-    
+    static var testLis : [String] = ["one", "two", "three"]
     /// The state of the ARKit tracking session as last communicated to us through the delgate protocol.  This is useful if you want to do something different in the delegate method depending on the previous state
     var trackingSessionState : ARCamera.TrackingState?
+  
     
     let surveyModel = FirebaseFeedbackSurveyModel.shared
     
     /// the last time this particular user was surveyed (nil if we don't know this information or it hasn't been loaded from the database yet)
     var lastSurveyTime: [String: Double] = [:]
-    
+    /// the var for holding previous activity
+    var prevSiriActivity: String = "start"
     /// the last time this particular user submitted each survey (nil if we don't know this information or it hasn't been loaded from the database yet)
     var lastSurveySubmissionTime: [String: Double] = [:]
     
@@ -237,6 +239,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// - Parameter announceArrival: a Boolean that indicates whether the user's arrival should be announced (true means the user has arrived)
     func handleStateTransitionToMainScreen(announceArrival: Bool) {
         // cancel the timer that announces tracking errors
+        
+        stack = Stack()
+       
+   
+        stack.push("start")
+        
         trackingErrorsAnnouncementTimer?.invalidate()
         // if the ARSession is running, pause it to conserve battery
         sceneView.session.pause()
@@ -244,6 +252,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         if #available(iOS 12.0, *) {
             configuration.initialWorldMap = nil
         }
+      
         showRecordPathButton(announceArrival: announceArrival)
     }
     
@@ -695,7 +704,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     var stopNavigationController: StopNavigationController!
     ///siri shortcuts VC
     var siriShortcutsController: SiriShortcutsController!
-  
+    var siriShortcutList: [String] = []
+    var voiceShortcuts: [INVoiceShortcut] = []
+    static var voiceCommandsList : [INVoiceShortcut]=[]
+    
     /// called when the view has loaded.  We setup various app elements in here.
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -875,6 +887,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             // don't show this for now, but leave the plumbing in place for a future significant change
             // showSignificantChangesAlert()
         }
+//        UserDefaults.standard.setValue(false, forKey: "siriShortcutAlert")
+//        UserDefaults.standard.setValue(false, forKey: "siriShortcutSingleUseRoute")
+//        UserDefaults.standard.setValue(false, forKey: "siriShortcutStartNavigatingRoute")
+//        UserDefaults.standard.setValue(false, forKey: "siriShortcutStopRecordingRoute")
         
         if(!siriShortcutAlert){
             
@@ -1106,6 +1122,23 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                                                name: UserDefaults.didChangeNotification,
                                                object: nil)
     }
+    
+    public func updateVoiceShortcuts(completion: (() -> Void)?) {
+
+           INVoiceShortcutCenter.shared.getAllVoiceShortcuts { (voiceShortcutsFromCenter, error) in
+               guard let voiceShortcutsFromCenter = voiceShortcutsFromCenter else {
+                   if let error = error {
+                       print("Failed to fetch voice shortcuts with error: \(error.localizedDescription)")
+                   }
+                   return
+               }
+               self.voiceShortcuts = voiceShortcutsFromCenter
+               if let completion = completion {
+                   completion()
+               }
+           }
+       }
+
     
     /// Register settings bundle
     func registerSettingsBundle(){
@@ -1512,6 +1545,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// This keeps track of the paused transform while the current session is being realigned to the saved route
     var pausedTransform : simd_float4x4?
     
+    var stack: Stack!
     /// the Anchor Point to use to mark the beginning of the route currently being recorded
     var beginRouteAnchorPoint = RouteAnchorPoint()
     
@@ -1613,7 +1647,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         let activity = SiriShortcutsController.stopRecordingShortcut()
       
         self.userActivity = activity
-        
+        self.prevSiriActivity = kStopRecordingType
  
         
         activity.becomeCurrent()
@@ -1834,7 +1868,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
            vcc.delegate = self
         print("adjustoffset flag")
         print(adjustOffset)
-        if(!siriShortcutSingleUseRouteFlag ){
+        //if(!siriShortcutSingleUseRouteFlag )
+        let sudosirish = false
+        if(!siriShortcutSingleUseRouteFlag){
             print("checkf5")
             print(siriShortcutSingleUseRouteFlag)
             present(vcc, animated: true, completion: nil)
@@ -1855,9 +1891,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         
         let vcc = INUIAddVoiceShortcutViewController(shortcut:shortcut)
             
-     
+        
         vcc.delegate = self
-       
+        
         if(!siriShortcutStopRecordingRouteFlag){
             present(vcc, animated: true, completion: nil)
             UserDefaults.standard.setValue(true, forKey: "siriShortcutStopRecordingRoute")
@@ -1878,7 +1914,19 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                
          
            vcc.delegate = self
-        
+         
+    //present(vcc, animated: true, completion: nil)
+        let titlestr = shortcut.userActivity?.suggestedInvocationPhrase
+        print(titlestr)
+        type(of: titlestr)
+        //   siriShortcutList.append(shortcut.userActivity.title!)
+        print("dump")
+        //dump(siriShortcutList)
+        //print("extd")
+        dump(voiceShortcuts)
+        for element in voiceShortcuts{
+           print(element.invocationPhrase)
+        }
         if(!siriShortcutStartNavigatingRouteFlag){
             present(vcc, animated: true, completion: nil)
             UserDefaults.standard.setValue(true, forKey: "siriShortcutStartNavigatingRoute")
@@ -2853,6 +2901,9 @@ extension ViewController: INUIAddVoiceShortcutViewControllerDelegate {
       didFinishWith voiceShortcut: INVoiceShortcut?,
       error: Error?
     ) {
+        updateVoiceShortcuts(completion: nil)
+        print("extdel")
+        dump(voiceShortcut)
         dismiss(animated: true, completion: nil)
 
     }

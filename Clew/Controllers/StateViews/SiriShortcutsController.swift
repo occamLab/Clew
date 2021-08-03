@@ -18,6 +18,31 @@ public let kStopRecordingType = "com.occamlab.StopRecording"
 public let kStartNavigationType = "com.occamlab.StartNavigation"
 
 
+struct Stack {
+    private var items: [String] = []
+    
+    func peek() -> String {
+        guard let topElement = items.first else { fatalError("This stack is empty.") }
+        return topElement
+    }
+    
+    mutating func pop() -> String {
+        return items.removeFirst()
+    }
+  
+    mutating func push(_ element: String) {
+        items.insert(element, at: 0)
+    }
+}
+
+
+
+struct shortCutPhase : Identifiable{
+    //var id: ObjectIdentifier
+    var id = UUID()
+    var phrase: String!
+   // var type: String
+}
 class SiriShortcutsController: UIViewController {
 
     ///Siri ShortCuts Functions
