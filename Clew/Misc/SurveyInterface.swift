@@ -97,9 +97,11 @@ class SurveyInterface {
         //vc.state = .mainScreen(announceArrival: announceArrival)
         if vc.sendLogs {
             // do this in a little while to give it time to announce arrival
+            #if !CLEWMORE
             DispatchQueue.main.asyncAfter(deadline: .now() + (announceArrival ? 3 : 1)) {
                 self.presentSurveyIfIntervalHasPassed(mode: "afterRoute", logFileURLs: logFileURLs, vc: vc)
             }
+            #endif
         }
 
     }
