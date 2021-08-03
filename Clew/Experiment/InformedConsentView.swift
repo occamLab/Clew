@@ -22,7 +22,7 @@ struct InformedConsentView : View {
                     VStack {
                         WebView(urlType: .localUrl, viewModel: ViewModel()).frame(height: geometry.size.height*8/10)
                         ZStack {
-                            TextField("Enter mail", text: $informedConsentModel.userEmail)
+                            TextField("Enter email", text: $informedConsentModel.userEmail)
                                 .frame(height: 45)
                                 .keyboardType(.emailAddress)
                                 .padding(.leading, 12)
