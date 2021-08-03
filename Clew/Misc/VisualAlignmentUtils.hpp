@@ -95,7 +95,7 @@ Eigen::Matrix4f poseToMatrix(simd_float4x4 pose);
  - points2: The points in the second image which are matched by index to the specified points in the second image.
  - intrinsics: The camera intrinsics of the camera used to get the points.
  */
-float getYaw(std::vector<cv::Point2f> points1, std::vector<cv::Point2f> points2, Eigen::Matrix3f intrinsics);
+float getYaw(std::vector<cv::Point2f> points1, std::vector<cv::Point2f> points2, Eigen::Matrix3f intrinsics, int& numInliers, float& residualAngle, float& tx, float& ty, float& tz);
 
 /**
  Encode rotation matrix from an Eigen::Matrix3f to a simd_float3x3.

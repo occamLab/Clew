@@ -17,6 +17,12 @@ typedef struct {
     simd_float3x3 square_rotation1;
     simd_float3x3 square_rotation2;
     bool is_valid;
+    int numInliers;
+    int numMatches;
+    float residualAngle;
+    float tx;
+    float ty;
+    float tz;
 } VisualAlignmentReturn;
 
 @interface VisualAlignment : NSObject

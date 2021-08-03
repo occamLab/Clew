@@ -58,14 +58,17 @@
     
     const auto square_image_mat1 = warpPerspectiveWithGlobalRotation(image_mat1, intrinsics1_matrix, pose1_matrix.block(0, 0, 3, 3), square_rotation1);
     const auto square_image_mat2 = warpPerspectiveWithGlobalRotation(image_mat2, intrinsics2_matrix, pose2_matrix.block(0, 0, 3, 3), square_rotation2);
-
-
-    const auto keypoints_and_descriptors1 = getKeyPointsAndDescriptors(square_image_mat1);
-    const auto keypoints_and_descriptors2 = getKeyPointsAndDescriptors(square_image_mat2);
+    cv::Mat square_image_mat1_resized, square_image_mat2_resized;
+    const int downSampleFactor = 2;
+    cv::resize(square_image_mat1, square_image_mat1_resized, cv::Size(square_image_mat1.size().width/downSampleFactor, square_image_mat1.size().height/downSampleFactor));
+    cv::resize(square_image_mat2, square_image_mat2_resized, cv::Size(square_image_mat2.size().width/downSampleFactor, square_image_mat2.size().height/downSampleFactor));
+    
+    const auto keypoints_and_descriptors1 = getKeyPointsAndDescriptors(square_image_mat1_resized);
+    const auto keypoints_and_descriptors2 = getKeyPointsAndDescriptors(square_image_mat2_resized);
 
     const auto matches = getMatches(keypoints_and_descriptors1.descriptors, keypoints_and_descriptors2.descriptors);
     
-    if (matches.size() < 8) {
+    if (matches.size() < 20) {
         ret.is_valid = false;
         ret.yaw = 0;
         return ret;
@@ -77,22 +80,24 @@
     for (const auto& match : matches) {
         const auto keypoint1 = keypoints_and_descriptors1.keypoints[match.queryIdx];
         const auto keypoint2 = keypoints_and_descriptors2.keypoints[match.trainIdx];
-        vectors1.push_back(keypoint1.pt);
+        // correct for the downsampling
+        vectors1.push_back(downSampleFactor*keypoint1.pt);
         
         // Convert the second keypoint to one with the intrinsics of the first camera.
         Eigen::Vector3f keypoint2vec;
-        keypoint2vec << keypoint2.pt.x, keypoint2.pt.y, 1;
+        keypoint2vec << downSampleFactor*keypoint2.pt.x, downSampleFactor*keypoint2.pt.y, 1;
         Eigen::Vector3f keypoint2projected = intrinsics1_matrix * intrinsics2_matrix.inverse() * keypoint2vec;
         vectors2.push_back(cv::Point2f(keypoint2projected(0), keypoint2projected(1)));
     }
 
     ret.is_valid = true;
-    const auto yaw = getYaw(vectors1, vectors2, intrinsics1_matrix);
+    ret.numMatches = vectors1.size();
+    const auto yaw = getYaw(vectors1, vectors2, intrinsics1_matrix, ret.numInliers, ret.residualAngle, ret.tx, ret.ty, ret.tz);
     
     // Uncomment the lines below and add a breakpoint to see the found matches between the perspective-warped images.
-//    cv::Mat debug_match_image;
-//    cv::drawMatches(square_image_mat1, keypoints_and_descriptors1.keypoints, square_image_mat2, keypoints_and_descriptors2.keypoints, matches, debug_match_image);
-//    UIImage *debug_match_image_ui = MatToUIImage(debug_match_image);
+    cv::Mat debug_match_image;
+    cv::drawMatches(square_image_mat1, keypoints_and_descriptors1.keypoints, square_image_mat2, keypoints_and_descriptors2.keypoints, matches, debug_match_image);
+    UIImage *debug_match_image_ui = MatToUIImage(debug_match_image);
 
     ret.yaw = yaw;
 

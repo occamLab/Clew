@@ -16,7 +16,7 @@
 
 KeyPointsAndDescriptors getKeyPointsAndDescriptors(cv::Mat image) {
     // Acquire features and their descriptors, and match them.
-    auto feature_descriptor = cv::AKAZE::create();
+    auto feature_descriptor = cv::AKAZE::create(cv::AKAZE::DESCRIPTOR_MLDB_UPRIGHT);
     std::vector<cv::KeyPoint> keypoints;
     cv::Mat descriptors;
     
@@ -35,10 +35,9 @@ std::vector<cv::DMatch> getMatches(cv::Mat descriptors1, cv::Mat descriptors2) {
     for (const auto match : matches)
         if (match.size() > 1 && match[0].distance < 0.6 * match[1].distance)
         {
-            std::cout << "counter" << std::endl;
             good_matches.push_back(match[0]);
         }
-    
+    std::cout << "num good matches " << good_matches.size() << std::endl;
     return good_matches;
 }
 
@@ -81,19 +80,26 @@ Eigen::Matrix4f poseToMatrix(simd_float4x4 pose) {
     return matrix;
 }
 
-float getYaw(std::vector<cv::Point2f> points1, std::vector<cv::Point2f> points2, Eigen::Matrix3f intrinsics) {
+float getYaw(std::vector<cv::Point2f> points1, std::vector<cv::Point2f> points2, Eigen::Matrix3f intrinsics, int& numInliers, float& residualAngle, float& tx, float& ty, float& tz) {
     const auto essential_mat = cv::findEssentialMat(points1, points2, intrinsics(0, 0), cv::Point2f(intrinsics(0, 2), intrinsics(1, 2)));
     cv::Mat dcm_mat, translation_mat;
     Eigen::Matrix3f essential_matrix;
     cv2eigen(essential_mat, essential_matrix);
 
-    int inliers = cv::recoverPose(essential_mat, points1, points2, dcm_mat, translation_mat, intrinsics(0, 0), cv::Point2f(intrinsics(0, 2), intrinsics(1, 2)));
+    numInliers = cv::recoverPose(essential_mat, points1, points2, dcm_mat, translation_mat, intrinsics(0, 0), cv::Point2f(intrinsics(0, 2), intrinsics(1, 2)));
     
     Eigen::Matrix3f dcm;
     cv2eigen(dcm_mat, dcm);
+    std::cout << translation_mat.size() << std::endl;
+    tx = translation_mat.at<double>(0, 0);
+    ty = translation_mat.at<double>(0, 1);
+    tz = translation_mat.at<double>(0, 2);
+    std::cout << translation_mat << std::endl;
     const auto rotated = dcm * Eigen::Vector3f::UnitZ();
     const float yaw = atan2(rotated(0), rotated(2));
-    
+    residualAngle = abs(yaw) - acos((dcm.trace() - 1)/2);
+    std::cout << "numInliers " << numInliers << " residualAngle " << residualAngle << std::endl;
+
     return yaw;
 }
 simd_float3x3 rotationToSIMD(Eigen::Matrix3f matrix) {

@@ -36,12 +36,28 @@ class RoutesViewController : UIViewController, UITableViewDataSource, UITableVie
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         self.tableView.deselectRow(at: indexPath, animated: true)
         // Set title and message for the alert dialog
-        let alertController = UIAlertController(title: NSLocalizedString("routeDirectionPop-UpHeader", comment: "The header of a pop-up where the user selects which direction they want to navigate their route"), message: "", preferredStyle: .alert)
+        let alertController = UIAlertController(title: NSLocalizedString("routeDirectionPop-UpHeader", comment: "The header of a pop-up where the user selects which direction they want to navigate their route"), message: "", preferredStyle: .actionSheet)
         // The confirm action taking the inputs
         let startToEndAction = UIAlertAction(title: NSLocalizedString("routeDirectionStartToEndButtonLabel", comment: "The text on a button in the select navigational direction menu of the app. This button allows the user to navigate a route in the same direction as it was originally recorded."), style: .default) { (_) in
             self.rootViewController?.onRouteTableViewCellClicked(route: self.routes[indexPath.row], navigateStartToEnd: true)
             self.dismiss(animated: true, completion: nil)
         }
+        self.routes[indexPath.row].beginRouteAnchorPoint.loadImage()
+        self.routes[indexPath.row].endRouteAnchorPoint.loadImage()
+        var beginImageThumbnail: UIImage?
+        var endImageThumbnail: UIImage?
+        if let beginImage = self.routes[indexPath.row].beginRouteAnchorPoint.image {
+            let imageHeight = CGFloat(100)
+            let imageWidth = beginImage.size.width * imageHeight / beginImage.size.height
+            beginImageThumbnail = beginImage.imageWithSize(scaledToSize: CGSize(width: imageWidth, height: imageHeight))
+        }
+        if let endImage = self.routes[indexPath.row].endRouteAnchorPoint.image {
+            let imageHeight = CGFloat(100)
+            let imageWidth = endImage.size.width * imageHeight / endImage.size.height
+            endImageThumbnail = endImage.imageWithSize(scaledToSize: CGSize(width: imageWidth, height: imageHeight))
+        }
+
+        startToEndAction.setValue(beginImageThumbnail?.rotate(radians: Float.pi/2)?.withRenderingMode(.alwaysOriginal), forKey: "image")
         if routes[indexPath.row].beginRouteAnchorPoint.transform == nil {
             startToEndAction.isEnabled = false
         }
@@ -50,7 +66,8 @@ class RoutesViewController : UIViewController, UITableViewDataSource, UITableVie
             self.rootViewController?.onRouteTableViewCellClicked(route: self.routes[indexPath.row], navigateStartToEnd: false)
             self.dismiss(animated: true, completion: nil)
         }
-        
+        endToStartAction.setValue(endImageThumbnail?.rotate(radians: Float.pi/2)?.withRenderingMode(.alwaysOriginal), forKey: "image")
+
         let cancelAction = UIAlertAction(title: NSLocalizedString("cancelPop-UpButtonLabel", comment: "A button which closes the current pop up"), style: .default) {action -> Void in
         }
         

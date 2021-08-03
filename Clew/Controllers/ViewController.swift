@@ -108,6 +108,19 @@ enum AppState {
             return "startingNameSavedRouteProcedure"
         }
     }
+    
+    var isTryingToAlign: Bool {
+        if case .readyForFinalResumeAlignment = self {
+            return true
+        }
+        if case .resumeWaitingPeriod = self {
+            return true
+        }
+        if case .visualAlignmentWaitingPeriod = self {
+            return true
+        }
+        return false
+    }
 }
 
 /// The view controller that handles the main Clew window.  This view controller is always active and handles the various views that are used for different app functionalities.
@@ -119,6 +132,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// How long to wait (in seconds) between the alignment request and grabbing the transform
     static var alignmentWaitingPeriod = 5
+    
+    /// maximum number of times to try to visually align
+    static let maxVisualAlignmentRetryCount = 25
+    
+    var visualTransforms: [simd_float4x4] = []
     
     /// Used for synchrony when saving in background threads.
     let routeSaveGroup = DispatchGroup()
@@ -1183,6 +1201,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// Create a new ARSession.
     func createARSessionConfiguration() {
+        // configuration = ARPositionalTrackingConfiguration()
         configuration = ARWorldTrackingConfiguration()
         configuration.planeDetection = [.horizontal, .vertical]
         configuration.isAutoFocusEnabled = false
@@ -1437,6 +1456,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     // MARK: - BreadCrumbs
     
     /// AR Session Configuration
+    //var configuration: ARPositionalTrackingConfiguration!
     var configuration: ARWorldTrackingConfiguration!
     
     /// MARK: - Clew internal datastructures
@@ -1781,45 +1801,80 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         self.rootContainerView.countdownTimer.isHidden = true
         self.pausedAnchorPoint?.loadImage()
         // The first check is necessary in case the phone relocalizes before this code executes
+        visualTransforms = []
+        tryVisualAlignment(triesLeft: ViewController.maxVisualAlignmentRetryCount, makeAnnounement: true)
+    }
+        
+    func getRelativeTransform(frame: ARFrame, alignTransform: simd_float4x4, visualYawReturn: VisualAlignmentReturn)->simd_float4x4 {
+        let alignRotation = simd_float3x3(simd_float3(alignTransform[0, 0], alignTransform[0, 1], alignTransform[0, 2]),
+                                          simd_float3(alignTransform[1, 0], alignTransform[1, 1], alignTransform[1, 2]),
+                                          simd_float3(alignTransform[2, 0], alignTransform[2, 1], alignTransform[2, 2]))
+        
+        let leveledAlignRotation = visualYawReturn.square_rotation1.inverse * alignRotation;
+        
+        var leveledAlignPose = leveledAlignRotation.toPose()
+        leveledAlignPose[3] = alignTransform[3]
+        
+        let cameraTransform = frame.camera.transform
+        let cameraRotation = cameraTransform.rotation()
+        let leveledCameraRotation = visualYawReturn.square_rotation2.inverse * cameraRotation;
+        var leveledCameraPose = leveledCameraRotation.toPose()
+        leveledCameraPose[3] = cameraTransform[3]
+        
+        let yawRotation = simd_float4x4.makeRotate(radians: visualYawReturn.yaw, -1, 0, 0)
+        
+        return leveledCameraPose * yawRotation.inverse * leveledAlignPose.inverse
+    }
+    
+    func tryVisualAlignment(triesLeft: Int, makeAnnounement: Bool = false) {
+        if !state.isTryingToAlign {
+            return
+        }
         if case .visualAlignmentWaitingPeriod = self.state, let alignAnchorPoint = self.pausedAnchorPoint, let alignAnchorPointImage = alignAnchorPoint.image, let alignTransform = alignAnchorPoint.transform, let frame = self.sceneView.session.currentFrame {
-            announce(announcement: NSLocalizedString("visualAlignmentConfirmation", comment: "Announce that visual alignment process has began"))
-            // yaw can be determined by projecting the camera's z-axis into the ground plane and using arc tangent (note: the camera coordinate conventions of ARKit https://developer.apple.com/documentation/arkit/arsessionconfiguration/worldalignment/camera
-            
-            DispatchQueue.global(qos: .background).async {
+            if makeAnnounement {
+                announce(announcement: NSLocalizedString("visualAlignmentConfirmation", comment: "Announce that visual alignment process has began"))
+            }
+
+            DispatchQueue.global(qos: .userInitiated).async {
                 let intrinsics = frame.camera.intrinsics
                 let capturedUIImage = self.pixelBufferToUIImage(pixelBuffer: frame.capturedImage)!
-                var visualYawReturn: VisualAlignmentReturn
-                
                 self.currentIntrinsics = intrinsics
                 self.currentImage = capturedUIImage
                 self.currentPose = frame.camera.transform
+                let visualYawReturn = VisualAlignment.visualYaw(alignAnchorPointImage, alignAnchorPoint.intrinsics!, alignTransform,
+                                                                capturedUIImage,
+                                                                simd_float4(intrinsics[0, 0], intrinsics[1, 1], intrinsics[2, 0], intrinsics[2, 1]),
+                                                                frame.camera.transform)
+                UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
                 
-                visualYawReturn = VisualAlignment.visualYaw(alignAnchorPointImage, alignAnchorPoint.intrinsics!, alignTransform,
-                                                            capturedUIImage,
-                                                            simd_float4(intrinsics[0, 0], intrinsics[1, 1], intrinsics[2, 0], intrinsics[2, 1]),
-                                                            frame.camera.transform)
+               let propInliers = visualYawReturn.numMatches > 0 ? Float(visualYawReturn.numInliers) / Float(visualYawReturn.numMatches) : 0.0
+                print("alignment inliers \(visualYawReturn.numInliers) \(visualYawReturn.numMatches) \(propInliers) \(visualYawReturn.residualAngle)")
+
+                if visualYawReturn.is_valid, abs(visualYawReturn.residualAngle) < 0.01 {
+                    let relativeTransform = self.getRelativeTransform(frame: frame, alignTransform: alignTransform, visualYawReturn: visualYawReturn)
+                    self.visualTransforms.append(relativeTransform)
+                    self.playSystemSound(id: 1103)
+                }
+                if triesLeft > 1 {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+                        self.tryVisualAlignment(triesLeft: triesLeft-1)
+                    }
+                    return
+                }
                 
                 DispatchQueue.main.async {
-                    if visualYawReturn.is_valid {
-                        let alignRotation = simd_float3x3(simd_float3(alignTransform[0, 0], alignTransform[0, 1], alignTransform[0, 2]),
-                                                          simd_float3(alignTransform[1, 0], alignTransform[1, 1], alignTransform[1, 2]),
-                                                          simd_float3(alignTransform[2, 0], alignTransform[2, 1], alignTransform[2, 2]))
+                    if !self.state.isTryingToAlign {
+                        // we must have localized to the map... let's bail
+                        return
+                    }
+                    if !self.visualTransforms.isEmpty {
+                        // Average the SE3 transforms (rotation and translation in 3D).  The averaging is only valid since we constrain the transforms to involve rotation about a common axis.
+                        var averageTransform = self.visualTransforms.reduce(simd_float4x4(0.0), { (x,y) in x + y}) * (1.0 / Float(self.visualTransforms.count))
+                        averageTransform.columns.0 = simd_normalize(averageTransform.columns.0)
+                        averageTransform.columns.1 = simd_normalize(averageTransform.columns.1)
+                        averageTransform.columns.2 = simd_normalize(averageTransform.columns.2)
                         
-                        let leveledAlignRotation = visualYawReturn.square_rotation1.inverse * alignRotation;
-                        
-                        var leveledAlignPose = leveledAlignRotation.toPose()
-                        leveledAlignPose[3] = alignTransform[3]
-                        
-                        
-                        let cameraTransform = frame.camera.transform
-                        let cameraRotation = cameraTransform.rotation()
-                        let leveledCameraRotation = visualYawReturn.square_rotation2.inverse * cameraRotation;
-                        var leveledCameraPose = leveledCameraRotation.toPose()
-                        leveledCameraPose[3] = cameraTransform[3]
-                        
-                        let yawRotation = simd_float4x4.makeRotate(radians: visualYawReturn.yaw, -1, 0, 0)
-                        
-                        let relativeTransform = leveledCameraPose * yawRotation.inverse * leveledAlignPose.inverse
+                        let relativeTransform = averageTransform
                         if self.attemptingRelocalization || self.configuration.initialWorldMap == nil {
                             self.sceneView.session.setWorldOrigin(relativeTransform: relativeTransform)
                         }
@@ -2412,8 +2467,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 }
             }
 
-            if case .readyForFinalResumeAlignment = state {
+            if state.isTryingToAlign && configuration.initialWorldMap != nil {
                 // this will cancel any realignment if it hasn't happened yet and go straight to route navigation mode
+                attemptingRelocalization = false
                 rootContainerView.countdownTimer.isHidden = true
                 isResumedRoute = true
                 
