@@ -1031,12 +1031,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        if(!siriShortcutExperimentRouteFlag){
-
-            showSignificantChangesHandsFreeAlert()
-            UserDefaults.standard.setValue(true, forKey: "siriShortcutExperimentRoute")
-          
-            }
+        
 
 
 //        updateExperiment()
@@ -1048,17 +1043,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
 //     UserDefaults.standard.setValue(false, forKey: "siriShortcutExperimentRoute")
 //        UserDefaults.standard.setValue(false, forKey: "siriShortcutAlert")
 //        UserDefaults.standard.setValue(startExperimentWithList.randomElement(), forKey: "currentRoute")
-//       
+//
 //        UserDefaults.standard.setValue(["":""], forKey: "siriShortcutTypeNameDictionary")
-//        UserDefaults.standard.setValue(false, forKey: "singleUseRouteExperimentFlag")
-//        UserDefaults.standard.setValue(false, forKey: "experimentRouteFlag")
-//        UserDefaults.standard.setValue("lanyard", forKey: "currentCondition")
+  //      UserDefaults.standard.setValue(false, forKey: "singleUseRouteExperimentFlag")
+    //    UserDefaults.standard.setValue(false, forKey: "experimentRouteFlag")
+      //  UserDefaults.standard.setValue("lanyard", forKey: "currentCondition")
 //        let cConditions: Dictionary? =  userDefaults.dictionary(forKey: "conditionsDico")
 //        print("before Condition")
 //        print(cConditions)
 //        let tecondtions = ["lanyard":0,"bracing":3,"none":3]
-//        let recondtions = ["lanyard":0,"bracing":0,"none":0]
-//    UserDefaults.standard.setValue(recondtions, forKey: "conditionsDico")
+        let recondtions = ["lanyard":0,"bracing":0,"none":0]
+            //    UserDefaults.standard.setValue(recondtions, forKey: "conditionsDico")
 //        
 //       
 //        UserDefaults.standard.setValue(false, forKey:   "completedExperiment")
@@ -1067,7 +1062,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
 //        
 //      UserDefaults.standard.setValue(false, forKey: "siriShortcutExperimentRoute")
 //   
-//        UserDefaults.standard.setValue([""], forKey: "siriShortcutDisplayList")
+ //       UserDefaults.standard.setValue([""], forKey: "siriShortcutDisplayList")
         let tConditions: Dictionary? =  userDefaults.dictionary(forKey: "conditionsDico")
         
         print("After tCondition")
@@ -2063,6 +2058,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     var endRouteAnchorPoint = RouteAnchorPoint()
     /// storeres the types of siri shortcut, where key is type and value is the statment to display on screen
     static var siriShortcutsTypesDico = [kNewSingleUseRouteType : "Single Use Route Siri Shortcut:", kExperimentRouteType: "Experiment Route Siri Shortcut:", kStopRecordingType: "Stop Recording Siri Shortcut:", kStartNavigationType:"Start Navigation Siri Shortcut:"]
+   var siriShortcutsTypesDico = [kNewSingleUseRouteType : "Single Use Route Siri Shortcut:", kExperimentRouteType: "Experiment Route Siri Shortcut:", kStopRecordingType: "Stop Recording Siri Shortcut:", kStartNavigationType:"Start Navigation Siri Shortcut:"]
     var siriShortcutsNameTypeDico: [String: Any]!
     var siriShortcutsTypeNameDico: [String: Any]!
     
@@ -2532,8 +2528,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         //print(siriShortcutExperimentRouteFlag ?? false && !setShortcutsDisplay)
         dump(voiceShortcuts)
         print("empty")
-        
+        if(siriShortcutExperimentRouteFlag && siriShortcutSingleUseRouteFlag && siriShortcutStopRecordingRouteFlag && siriShortcutStartNavigatingRouteFlag ){
+            ViewController.siriShortcutsTypesDico = [kNewSingleUseRouteType : "Single Use Route Siri Shortcut:", kExperimentRouteType: "Experiment Route Siri Shortcut:", kStopRecordingType: "Stop Recording Siri Shortcut:", kStartNavigationType:"Start Navigation Siri Shortcut:"]
+            print("u3")
+        }
         if(siriShortcutExperimentRouteFlag && siriShortcutSingleUseRouteFlag && siriShortcutStopRecordingRouteFlag && siriShortcutStartNavigatingRouteFlag && !setShortcutsDisplay){
+            print("u1u")
             setShortcutsDisplay = true
             print("expLoop")
             dump(voiceShortcuts)
@@ -2580,8 +2580,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                                    conditionsDico: conditionsDico,siriShortcutDisplayList:siriShortcutDisplayList, siriShortcutsNameTypeDico: siriShortcutsNameTypeDico, siriShortcutsTypeNameDico :siriShortcutsTypeNameDico)
                 
             }else{
+                print("u2")
                 print("1get")
-                ViewController.siriShortcutsTypesDico = [kNewSingleUseRouteType : "Single Use Route Siri Shortcut:", kExperimentRouteType: "Experiment Route Siri Shortcut:", kStopRecordingType: "Stop Recording Siri Shortcut:", kStartNavigationType:"Start Navigation Siri Shortcut:"]
+               
                 print(siriShortcutNameTypeDictionary.count)
                 print(siriShortcutTypeNameDictionary.count)
                 siriShortcutDisplayList = unique(source: siriShortcutDisplayList! )
@@ -2968,9 +2969,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         if FirebaseFeedbackSurveyModel.shared.questions[surveyToTrigger] == nil {
             return
         }
-        if self.lastSurveySubmissionTime[surveyToTrigger] != nil {
-            return
-        }
+//        if self.lastSurveySubmissionTime[surveyToTrigger] != nil {
+//            return
+//        }
         if self.lastSurveyTime[surveyToTrigger] == nil || -Date(timeIntervalSince1970: self.lastSurveyTime[surveyToTrigger]!).timeIntervalSinceNow >= FirebaseFeedbackSurveyModel.shared.intervals[surveyToTrigger] ?? 0.0 {
             self.lastSurveyTime[surveyToTrigger] = Date().timeIntervalSince1970
             

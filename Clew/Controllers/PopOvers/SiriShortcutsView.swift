@@ -50,8 +50,9 @@ struct shortCutInvocationPhasee : Identifiable{
 
 struct shortcutRow: View{
     var shortcut: shortCutInvocationPhasee
+    var siriShortcutsTypesDico = [kNewSingleUseRouteType : "Single Use Route Siri Shortcut:", kExperimentRouteType: "Experiment Route Siri Shortcut:", kStopRecordingType: "Stop Recording Siri Shortcut:", kStartNavigationType:"Start Navigation Siri Shortcut:"]
     var body: some View{
-        Text("\(ViewController.siriShortcutsTypesDico [shortcut.type] ?? "siri shortcut : /n /n")\(shortcut.phase) ").foregroundColor(.white).bold()
+        Text("\(siriShortcutsTypesDico [shortcut.type] ?? "siri shortcut :  ")\(shortcut.phase) ").foregroundColor(.white).bold()
      
 //        Text("\(ViewController.siriShortcutsTypesDico [shortcut.type] ?? "siri shortcut : /n")").foregroundColor(.yellow).bold()
 //        Text("\(shortcut.phase) ").foregroundColor(.white)
