@@ -82,6 +82,7 @@
 		9815CEEB26851049008FCF74 /* test-route2.crd in Resources */ = {isa = PBXBuildFile; fileRef = 9815CEEA26851049008FCF74 /* test-route2.crd */; };
 		9815CEEC26851049008FCF74 /* test-route2.crd in Resources */ = {isa = PBXBuildFile; fileRef = 9815CEEA26851049008FCF74 /* test-route2.crd */; };
 		9819E2F2268BA6AB0008CA82 /* PauseTrackingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470EE622C119F4001092A4 /* PauseTrackingController.swift */; };
+		9824AB5826B981900016225C /* InformedConsentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9824AB5726B981900016225C /* InformedConsentViewModel.swift */; };
 		98260258268CC1DB00D66811 /* speaker.obj in Resources */ = {isa = PBXBuildFile; fileRef = 823DA453252F7EA800BB5E6B /* speaker.obj */; };
 		9826B6D526B07C3F00EC563C /* EndNavigationScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9826B6D426B07C3F00EC563C /* EndNavigationScreen.swift */; };
 		984FBD312695EC0200B63A6A /* SetTagController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 984FBD302695EC0200B63A6A /* SetTagController.swift */; };
@@ -102,7 +103,6 @@
 		9863AF6E26B4965600EF0C64 /* consentFormContent.html in Resources */ = {isa = PBXBuildFile; fileRef = 9863AF6B26B4965600EF0C64 /* consentFormContent.html */; };
 		9863AF6F26B4965600EF0C64 /* InformedConsentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9863AF6C26B4965600EF0C64 /* InformedConsentView.swift */; };
 		9863AF7026B4965600EF0C64 /* WebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9863AF6D26B4965600EF0C64 /* WebView.swift */; };
-		9863AF7226B496C200EF0C64 /* InformedConsentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9863AF7126B496C200EF0C64 /* InformedConsentViewModel.swift */; };
 		986640CE22FB68F2005AA1F6 /* NameSavedRouteController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986640CD22FB68F2005AA1F6 /* NameSavedRouteController.swift */; };
 		986640CF22FC9606005AA1F6 /* NameSavedRouteController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986640CD22FB68F2005AA1F6 /* NameSavedRouteController.swift */; };
 		987BA6F4268E53C0008B129E /* StartNavigationPopoverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 987BA6F3268E53C0008B129E /* StartNavigationPopoverView.swift */; };
@@ -435,6 +435,7 @@
 		9805366626838E130065E80F /* InAppSettingsKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = InAppSettingsKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		980536732683C1D10065E80F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9815CEEA26851049008FCF74 /* test-route2.crd */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = "test-route2.crd"; sourceTree = "<group>"; };
+		9824AB5726B981900016225C /* InformedConsentViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InformedConsentViewModel.swift; sourceTree = "<group>"; };
 		9826B6D426B07C3F00EC563C /* EndNavigationScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndNavigationScreen.swift; sourceTree = "<group>"; };
 		9826B6DB26B4450A00EC563C /* NFCReaderController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NFCReaderController.swift; sourceTree = "<group>"; };
 		98384367269C9CC800B6CFC7 /* Clew_Public_SpacesApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Clew_Public_SpacesApp.swift; sourceTree = "<group>"; };
@@ -449,7 +450,6 @@
 		9863AF6B26B4965600EF0C64 /* consentFormContent.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = consentFormContent.html; sourceTree = "<group>"; };
 		9863AF6C26B4965600EF0C64 /* InformedConsentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InformedConsentView.swift; sourceTree = "<group>"; };
 		9863AF6D26B4965600EF0C64 /* WebView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebView.swift; sourceTree = "<group>"; };
-		9863AF7126B496C200EF0C64 /* InformedConsentViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = InformedConsentViewModel.swift; path = ../../../../Downloads/InformedConsentViewModel.swift; sourceTree = "<group>"; };
 		986640CD22FB68F2005AA1F6 /* NameSavedRouteController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NameSavedRouteController.swift; sourceTree = "<group>"; };
 		987BA6F3268E53C0008B129E /* StartNavigationPopoverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartNavigationPopoverView.swift; sourceTree = "<group>"; };
 		98A2DABA26A709C400158F83 /* NameSavedRouteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NameSavedRouteView.swift; sourceTree = "<group>"; };
@@ -701,7 +701,7 @@
 			children = (
 				9863AF6B26B4965600EF0C64 /* consentFormContent.html */,
 				9863AF6C26B4965600EF0C64 /* InformedConsentView.swift */,
-				9863AF7126B496C200EF0C64 /* InformedConsentViewModel.swift */,
+				9824AB5726B981900016225C /* InformedConsentViewModel.swift */,
 				9863AF6D26B4965600EF0C64 /* WebView.swift */,
 			);
 			path = Experiment;
@@ -1623,7 +1623,7 @@
 				98FF7AB2269CC0B0008C64E5 /* HelpCompiler.swift in Sources */,
 				98FF7ADB269CC153008C64E5 /* RouteTableViewCell.swift in Sources */,
 				98FF7ACF269CC117008C64E5 /* NameCodeIDController.swift in Sources */,
-				9863AF7226B496C200EF0C64 /* InformedConsentViewModel.swift in Sources */,
+				9824AB5826B981900016225C /* InformedConsentViewModel.swift in Sources */,
 				98FF7AD4269CC125008C64E5 /* RoutesViewController.swift in Sources */,
 				98FF7ACE269CC114008C64E5 /* ResumeTrackingConfirmController.swift in Sources */,
 				98FF7AC2269CC0F0008C64E5 /* UIButtonExtensions.swift in Sources */,

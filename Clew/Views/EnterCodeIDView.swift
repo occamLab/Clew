@@ -53,6 +53,8 @@ struct EnterCodeIDView: View {
                     .frame(minWidth: 0, maxWidth: .infinity)
                     .padding(.horizontal, 20)
                 
+                Text("OR")
+                
                 ScanButton(vc: vc)
                     .frame(minWidth: 0, maxWidth: .infinity)
                     .padding(.horizontal, 20)
