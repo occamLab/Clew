@@ -350,7 +350,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         
         navStart.addAction(start)
         
-        self.present(navStart, animated: true, completion: nil)
+//        self.present(navStart, animated: true, completion: nil)
     }
     
     /// Automatically sets up anchor point for route recording
@@ -1439,9 +1439,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             if (frame.anchors.compactMap({$0 as? ARImageAnchor}).count > 0) && (state.rawValue != "startingAutoAlignment") {
                 print("in the first if loop")
                 if (frame.anchors.compactMap({$0 as? ARImageAnchor}).first!.isTracked) {
-//                    self.state = .startingAutoAlignment
-                    hideAllViewsHelper()
-                    self.state = .navigatingRoute
+                    self.state = .startingAutoAlignment
+                    resumeTracking()
                     print("auto alignment")
                 }
             }
