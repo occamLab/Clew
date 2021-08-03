@@ -960,14 +960,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                                                                        width: UIConstants.buttonFrameWidth * 1,
                                                                        height: UIScreen.main.bounds.size.height*0.75)
         
-        selectRouteController.view.backgroundColor = .clear
+        selectRouteController.view.backgroundColor = .white
         
         manageRoutesController = UIHostingController(rootView: SavedRoutesList(vc: self))
         manageRoutesController.view.frame = CGRect(x: 0,
                                                                        y: UIScreen.main.bounds.size.height*0.15,
                                                                        width: UIConstants.buttonFrameWidth * 1,
                                                                        height: UIScreen.main.bounds.size.height*0.85)
-        manageRoutesController.view.backgroundColor = .clear
+        manageRoutesController.view.backgroundColor = .white
         
         nameSavedRouteController = UIHostingController(rootView: NameSavedRouteView(vc: self, worldMap: sceneView.session.getCurrentWorldMap))
         nameSavedRouteController.view.frame = CGRect(x: 0,
@@ -989,7 +989,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                                                                        y: UIScreen.main.bounds.size.height*0.15,
                                                                        width: UIConstants.buttonFrameWidth * 1,
                                                                        height: UIScreen.main.bounds.size.height*0.85)
-        endNavigationController?.view.backgroundColor = .clear
+        endNavigationController?.view.backgroundColor = .white
         
         #endif
         
@@ -1439,7 +1439,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             if (frame.anchors.compactMap({$0 as? ARImageAnchor}).count > 0) && (state.rawValue != "startingAutoAlignment") {
                 print("in the first if loop")
                 if (frame.anchors.compactMap({$0 as? ARImageAnchor}).first!.isTracked) {
-                    self.state = .startingAutoAlignment
+//                    self.state = .startingAutoAlignment
+                    hideAllViewsHelper()
+                    self.state = .navigatingRoute
                     print("auto alignment")
                 }
             }

@@ -342,7 +342,7 @@
     // EnterCodeIDView
     "enterCodeIDLabel" = "Enter the three-digit code ID below.";
     "enterCodeIDTextField" = "3-digit code ID";
-    "enterCodeIDButtonText" = "Continue to Routes";
+    "enterCodeIDButtonText" = "Submit code ID";
 
     // NameCodeIDView
     "nameCodeIDLabel" = "To create a route, the starting anchor point must be associated with an app clip code ID. Enter the three-digit ID for this route's starting point below.";
