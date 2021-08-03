@@ -887,6 +887,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             // don't show this for now, but leave the plumbing in place for a future significant change
             // showSignificantChangesAlert()
         }
+        //reset defaults
 //        UserDefaults.standard.setValue(false, forKey: "siriShortcutAlert")
 //        UserDefaults.standard.setValue(false, forKey: "siriShortcutSingleUseRoute")
 //        UserDefaults.standard.setValue(false, forKey: "siriShortcutStartNavigatingRoute")
