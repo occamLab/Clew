@@ -287,8 +287,24 @@ struct setUpFeedback: View{
                 }
             }
             
-        Spacer()
-            
         }
+        Spacer()
+        TutorialNavLink(destination: settingsWalkThroughEndPage())
+            {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
+    }
+}
+
+
+struct settingsWalkThroughEndPage: View{
+    var body: some View{
+        TutorialScreen{
+            Text("End of Settings Walk Through")
+            
+            Text("Clew is all set up according to your preferences. You can change any settings at anytime through the settings page. You can also access this settings walk through again by entering the tutorial and then going to 'Settings Options'.")
+        }
+        Spacer()
+        Button(action: {
+            NotificationCenter.default.post(name: Notification.Name("TutorialPopoverReadyToDismiss"), object: nil)
+        }) {TutorialButton{Text("Exit Walk Through")}}
     }
 }

@@ -280,12 +280,24 @@
 "buttonTexttoExitTutorial" = "Exit";
 "buttonTexttoNextScreenTutorial" = "Next";
 "buttonTexttoSkip" = "Skip";
+"tipTutorialTitle" = "Tips";
+"practiceTutorialTitle" = "Practice";
 "tutorialTitleText" = "CLEW Tutorial";
 
+
 "ClewIntroTutorialTitle" = "Intro to Clew";
-"ClewIntroTutorialText1" = "Welcome to Clew! Clew is a tool for accurately navigating indoor spaces as it does not use your phone’s GPS. If you are new to Clew we recommend that you get used to using Clew in spaces that you are familiar with and that you walk through the Clew Tutorial.";
-"ClewIntroTutorialText2" = "Clew can be used in situations where you want to immediately navigate back to your starting location (e.g., if you went somewhere with a sighted guide or if it is harder to navigate the reverse journey) or when you want to remember a route that you are learning so you can navigate it more confidently in the future.";
-"ClewIntroTutorialText3" = "Importantly, Clew is not a substitute for Orientation and Mobility practices and/or a white cane or guide dog.  Additionally, Clew does not use your phone’s GPS so it can be used indoors. This also means Clew is not ideal for outdoor routes or routes over long distances";
+"ClewIntroTutorialText" = "Welcome to Clew! Clew helps you navigate and explore indoor spaces by using your phone's camera. It acts as a 'sighted companion' that helps guide you by providing audio directions and queues along a route. Clew works best in indoor spaces, where GPS doesn't work or is unreliable.";
+"introUsingClewTitle" = "Using Clew";
+"introUsingClewText" = "Clew helps you find your way around indoors spaces by recording your route when you're going from one place to another. For example, from a lobby area to a room. By recording your route, Clew then helps you navigate your way back to where you started. Clew can help you learn a new environment, so you can confidently navigate it in the future.";
+"introClewsRoleTutorialTitle" = "Clew’s Role";
+"introClewsRoleTutorialText" = "Importantly, Clew is not a substitute for your orientation and mobility skills, nor a replacement for your white cane or guide dog. It's intended to work as an additional aid and can be used with or without a sighted guide.
+
+Clew is best used indoors. The app doesn't rely on your phone's GPS. This means that Clew is limited in outdoors spaces and for routes over long distances.";
+"introUsingClewTutorialTitle" = "Using this Tutorial";
+"introUsingClewTutorialText" = "This tutorial will help you learn the skills needed to use Clew. If you are new to Clew, we recommend that you first use the app in an indoor setting that is safe and familiar to you.
+
+The tutorials in the series include interactive practice exercises that you can do while in a familiar setting. We recommend that you practice using Clew by interacting with this tutorial, and by practicing using the main Clew app in your familiar space. You can always come back to any of the guides in this series.";
+
 
 "orientPhoneTutorialButtonText" = "Holding Your Phone";
 "orientPhoneTutorialInstructionText" = "Clew uses your phone's camera and other sensors to track the environment as you move along a route. To ensure Clew is getting good information from your camera, you should hold your phone vertically with the rear camera facing forward. It is important to maintain the phone in the vertical orientation whenever you are navigating or saving a route. Select the Practice button below to try out holding your phone in the correct position.";
@@ -313,9 +325,43 @@
 
 
 "singleUseRouteTutorialButtonText" = "Single Use Routes";
-"singleUseRouteTutorialInstructionText" = "You can use single use routes in Clew to return along a route you have walked. To use this feature you can select the Single Use Route button on the home screen which will begin a recording. Once Clew is recording you should navigate from where you are to where you want to go, potentially with the help of a seeing guide. When you get to your destination you will want to stop the recording. From there you can immediately return to your starting point with guidance from Clew, or you can pause and do the return navigation in a little while. If you pause the navigation, Clew will ask you to set an anchor point that you will have to reline to when you want to start the return navigation.
- 
-Single use routes can only be used once and are great if you only need to get back from a location once, but if you want to be able to navigate a route more than once you can save a route. Click next to learn about Saved Routes.";
+"singleUseRouteTutorialInstructionText" = "Clew’s Single Use Routes feature helps you find your way back after going from one place to another. This feature records your path when you walk from point-A to point-B. It then provides you the return route directions and queues. For example, when you go from a lobby area to a room and you then want to find your way back to the lobby area.";
+"usingSingleUseRouteTutorialTitle" = "Using Single Use Routes";
+"usingSingleUseRouteTutorialText" = "To start a Single Use Route, tap the Single Use Route button on the home screen. Clew will immediately begin recording your route. Now you can navigate to where you want to go. Tap the ‘stop recording’ button once you’ve arrived at your destination.
+
+To return, tap the ‘play’ button to initiate the return route directions. Clew will then guide you back to your starting point.
+
+Once you have reached your destination, you can pause before using the return navigation. However, Clew will require that you set an ‘anchor point’ when you pause the route. The anchor point is needed to realign you to the correct direction when the route is initiated at a later time. Setting and aligning anchor points will be explained in the following section.
+
+The Single Use Route feature only allows you to navigate a return route once. If you want to be able to navigate the route multiple times you’ll want to check out Saved Routes which will be discussed in future sections.";
+
+
+"anchorPointsTutorialTitle" = "Anchor Points";
+"anchorPointsTutorialText" = "In Clew you will have to set anchor points for a few different functions. You have to set an anchor point at the beginning and end of saving a route, you’ll have to set one when you go to start a saved route, and if you want to pause a single use route.
+
+It is essential that you set anchor points in a place where you can find them again when you go to restart a route or start a route that you’ve saved. This is essential because Clew uses the motion of your phone along the route to guide you, so if your starting point is a few feet off the starting point you saved initially, then the rest of the route will be a few feet off. Look in Tips for some recommendations on how to set anchor points.";
+"anchorPointsTutorialTipsTitle" = "Anchor Point Tips";
+"anchorPointsTutorialTipsText" = "Anchor Points are essential to the accuracy of Clew Routes. Here are some tips to set anchor points that are easier to find later when you go to restart, or use a saved route.
+
+Line your body up with a doorway, or put your back against a wall, brace your phone against your chest and then set an anchor point. Then when you go to a line to that anchor point again, line your body up in the same spot and brace your phone against your chest again.
+
+You could also try pressing the top edge of your phone against a table, wall or doorway and then setting the anchor point. That way when you go to find the spot where you should set the anchor point again, you only have to find a table or wall again and then you know you’re at least pretty close.";
+"anchorPointPracticeSetTutorialTitle" = "Set Anchor Point";
+"anchorPointPracticeSetTutorialText" = "Here you will practice setting an anchor point and then finding that anchor point. This practice will then give you feedback on how close you were to setting the anchor points in the same spot. To set your first anchor point, press the align button and wait for the count down.";
+"anchorPointPracticeAlignTitle" = "Align to Anchor Point";
+"anchorPointPracticeAlignText" = "Nice Job! You've set an anchor point!
+
+Now move your phone out of the position you set the anchor point in. Maybe even walk around the room you're in. Then try returning your phone to the same position and select the align button again to set a second anchor point. Wait for the count down, and then your second anchor point will be set. Then you'll receive some feedback about how close your second anchor point was to the first you set.";
+"anchorPointPracticeFeedbackPerfectTitle" = "Perfect!!!";
+"anchorPointPracticeFeedbackPerfectText" = "Setting and aligning anchor points like you have in this practice will work great for Clew routes! Feel free to practice again, check out our tips for setting anchor points, continuing with the tutorial, or entering the main app and start using it!";
+"anchorPointPracticeFeedbackGoodTitle" = "Pretty Good!";
+"anchorPointPracticeFeedbackGoodText" = "This anchor point is pretty well aligned to the anchor point you set originally and a Clew route from this anchor point would probably work pretty well. You might want to practice again or check out our tips for setting and aligning anchor points.";
+"anchorPointPracticeFeedbackBadTitle" = "Not Aligned. Try again!";
+"anchorPointPracticeFeedbackBadText" = "This anchor point is not well aligned. A Clew route started from this anchor point might not navigate to your desired location. No worries though because you can try the practice again or check out some tips we have for setting and aligning anchor points.";
+"anchorPointPracticeRetryAlignButton" = "Retry Aligning Anchor Point";
+"anchorPointPracticeRetryButton" = "Restart Practice";
+
+//Done to here (?)
 
 "savedRoutesTutorialButtonText" = "Saved Routes";
 "savedRouteTutorialInstructionText" = "In Clew you can save routes which you can then return to at any time for guidance along that route. A saved route can be useful for paths that you would want to come back to multiple times or as a tool when practicing a new route. For example if you’re in a hotel you could save a route from the front desk to the elevator, and/or from the elevator to your door.
@@ -325,8 +371,6 @@ Go to the next page for more details on how to Save a Route. ";
 "recordSavedRoutesTutorialButtonText" = "Recording Saved Routes";
 "recordSavedRoutesTutorialInstructionText" = "To save a route, click on the Save Route button on the home screen. You will then set an anchor point by clicking the set anchor point button. The anchor point serves as the beginning of the saved route and you will have to find the location where you set the anchor point when you wish to use the route in the future. Once the anchor point is set, then Clew is recording and you should walk the path you want to save. You can leave voice notes along the way if you wish to help orient yourself when you go to walk the route in the future. When you get to the end of your route, you’ll have to set another anchor point to mark the ending point of your route. Once the last anchor point is set, you’ll name the route and press Save Route. At that point you can access that route at any time for guidance along that path. To learn more about Anchor Points and Voice Notes selecting the buttons for those below.";
 
-"anchorPointTutorialButtonText" = "Making Anchor Points";
-"anchorPointTutorialInstructionText" = "In Clew you will have to set anchor points for a few different functions.";
 
 "voiceNotesTutorialButtonText" = "Recording Voice Notes";
 "voiceNotesTutorialInstructionText" = "When recording a saved route, there is a button on the right that allows you to record a voice note. A voice note is a note you can leave yourself, that will play when you go to use the save route that you are recording. It can be any information that is helpful to you, such as noting where a landmark like a doorway or front desk is as you pass, or instructions for your future self. Later when you go to use a save route the voice notes will appear as speaker icons on your path at the point they were recorded. As you pass the note will play.";
@@ -341,7 +385,7 @@ You can also reenter the settings walk through that popped up when you first ent
 
 //Settings Walk Through
 "settingsWalkThroughTitle" = "Settings Walk Through";
-"settingsWalkThroughIntro" = "You can ajust all the settings from the settings tap in the main menu at anytime, or go to the next page to walk through the settings options.";
+"settingsWalkThroughIntro" = "You can adjust all the settings from the settings tap in the main menu at anytime, or go to the next page to walk through the settings options.";
 "settingsWalkThroughSetUnitsTitle" = "Distance Units";
 "settingsWalkThroughSetUnitsImperialButton" = "Imperial";
 "settingsWalkThroughSetUnitsMetricButton" = "Metric";

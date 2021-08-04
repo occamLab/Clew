@@ -2194,6 +2194,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             //break
             let tutorialView = PracticeSuccess()//TODO: pop up success page when finished tutorial route
             tutorialHostingController = UIHostingController(rootView: tutorialView)
+        default:
+            pageToDisplay = ""
+            print("nothing to set!")
         }
         NotificationCenter.default.post(name: Notification.Name("ClewPopoverDisplayed"), object: nil)
         self.present(tutorialHostingController!, animated: true, completion: nil)

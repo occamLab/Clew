@@ -271,15 +271,13 @@ struct TutorialTestView: View {
 }
 
 struct CLEWintro: View {
-    //TODO: Hid or Delete reset button
+    //TODO: Hide or Delete reset button
     var body: some View {
         TutorialScreen{
-            Text("Introduction to Clew")
+            Text(NSLocalizedString("ClewIntroTutorialTitle", comment: "Title for Clew Intro"))
             
             //ScrollView{
-            Text(NSLocalizedString("ClewIntroTutorialText1", comment: "Text on the first page of the tutorial that describes Clew"))
-            Text(NSLocalizedString("ClewIntroTutorialText2", comment: "Text on the first page of the tutorial that describes Clew"))
-            Text(NSLocalizedString("ClewIntroTutorialText3", comment: "Text on the first page of the tutorial that describes Clew"))
+            Text(NSLocalizedString("ClewIntroTutorialText", comment: "Text on the first page of the tutorial that describes Clew"))
             
             Button(action:{
                 UserDefaults.standard.setValue(false, forKey: "IntroTutorialCompleted")
@@ -294,8 +292,6 @@ struct CLEWintro: View {
                 UserDefaults.standard.setValue(false, forKey: "SettingsOptionsTutorialCompleted")
             }) {Text("Reset Tutorial Progress")}
                 
-            }.onDisappear() {
-                UserDefaults.standard.setValue(true, forKey: "IntroTutorialCompleted")
     
         }
         Spacer()
@@ -307,10 +303,11 @@ struct CLEWintro: View {
 struct UsingClew: View {
     var body: some View {
         TutorialScreen {
-            Text("Using Clew")
             
-            Text("")
+            Text(NSLocalizedString("introUsingClewTitle", comment: "Title for intro to Using Clew Page"))
             
+            Text(NSLocalizedString("introUsingClewText", comment: "Text for intro to Using Clew Page"))
+
             //Add link to examples?
         }
     Spacer()
@@ -321,9 +318,10 @@ struct UsingClew: View {
 struct ClewsRole: View {
     var body: some View {
         TutorialScreen {
-            Text("Clew's Role")
             
-            Text("")
+            Text(NSLocalizedString("introClewsRoleTutorialTitle", comment: "Title for intro to Clew's role Page"))
+
+            Text(NSLocalizedString("introClewsRoleTutorialText", comment: "Text for intro to Clew's role Page"))
         }
     Spacer()
         TutorialNavLink(destination: UsingClewTutorial()) {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
@@ -333,9 +331,13 @@ struct ClewsRole: View {
 struct UsingClewTutorial: View {
     var body: some View {
         TutorialScreen {
-            Text("Using this Tutorial")
             
-            Text("")
+            Text(NSLocalizedString("introUsingClewTutorialTitle", comment: "Title for intro to Using Clew Tutorial Page"))
+
+            Text(NSLocalizedString("introUsingClewTutorialText", comment: "Text for intro to Using Clew Tutorial Page"))
+            
+        }.onDisappear() {
+            UserDefaults.standard.setValue(true, forKey: "IntroTutorialCompleted")
         }
     Spacer()
         TutorialNavLink(destination: OrientPhone()) {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
@@ -437,6 +439,7 @@ struct PracticeOrientPhone: View {
                 if started {
                     if y < -0.9 {
                         Text("score \(self.score)")
+                            //TODO: localize string score
                             .frame(minWidth: 0, maxWidth: 150)
                             .padding()
                             .foregroundColor(.black)
@@ -614,7 +617,7 @@ struct FindPathPractice1: View {
                 NotificationCenter.default.post(name: Notification.Name("BurgerMenuReadyToDismiss"), object: nil)
                 UserDefaults.standard.setValue(false, forKey: "FindPathPractice1Completed")
             }){TutorialButton{
-                Text(NSLocalizedString("findPathPracticeBeginButtonText", comment: "Text for the begin button of the first following route practice."))}}
+                Text(NSLocalizedString("practiceTutorialTitle", comment: "Text for the begin button of the first following route practice."))}}
             
         }
         Spacer()
@@ -635,10 +638,10 @@ struct FindPathPractice2: View {
                 NotificationCenter.default.post(name: Notification.Name("TutorialPopoverReadyToDismiss"), object: nil)
                 UserDefaults.standard.setValue(true, forKey: "FindPathPractice1Completed")})
             {TutorialButton{
-                Text(NSLocalizedString("findPathPracticeBeginButtonText", comment: "Text for the begin practice for the second following route practice."))}}
+                Text(NSLocalizedString("practiceTutorialTitle", comment: "Text for the begin practice for the second following route practice."))}}
             
         }.onDisappear(){
-            UserDefaults.standard.setValue(true, forKey: "FindPathCompleted")
+            UserDefaults.standard.setValue(true, forKey: "FindPathTutorialCompleted")
         }
         
         Spacer()
@@ -702,15 +705,16 @@ struct SingleUse: View {
         }
         
         Spacer()
-        TutorialNavLink(destination: AnchorPoints()) {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
+        TutorialNavLink(destination: UsingSingleUse()) {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
     }
 }
 
-struct RecordingSingleUse: View {
+struct UsingSingleUse: View {
     var body: some View {
         TutorialScreen{
+            Text(NSLocalizedString("usingSingleUseRouteTutorialTitle", comment: "Title for using single use route section"))
             
-        TutorialNavLink(destination: AnchorPoints()) {Text(NSLocalizedString( "anchorPointTutorialButtonText", comment: "Title for the anchor point part of the tutorial"))}
+            Text(NSLocalizedString("usingSingleUseRouteTutorialText", comment: "Instruction for how to use single use routes"))
         }
             
         Spacer()
@@ -722,15 +726,14 @@ struct RecordingSingleUse: View {
 struct AnchorPoints: View {
     var body: some View {
         TutorialScreen  {
-            Text(NSLocalizedString( "anchorPointTutorialButtonText", comment: "Title for the anchor point part of the tutorial"))
+            Text(NSLocalizedString( "anchorPointsTutorialTitle", comment: "Title for the anchor point part of the tutorial"))
             
             //ScrollView{
-            Text(NSLocalizedString("anchorPointTutorialInstructionText", comment: "Instructions for setting anchor points"))
-                //.fixedSize(horizontal: false, vertical: true)
+            Text(NSLocalizedString("anchorPointsTutorialText", comment: "Instructions for setting anchor points"))
             
-            TutorialNavLink(destination: AnchorPointTips())  {Text("Tips")}//(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
+            TutorialNavLink(destination: AnchorPointTips())  {Text(NSLocalizedString("tipTutorialTitle", comment: "Tip page button text"))}
             
-            TutorialNavLink(destination: AnchorPointPractice())  {Text("Practice")}//(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
+            TutorialNavLink(destination: AnchorPointPractice())  {Text(NSLocalizedString("practiceTutorialTitle", comment: "Text for practice button"))}
             
         }
             
@@ -744,15 +747,18 @@ struct AnchorPoints: View {
 struct AnchorPointTips: View {
     var body: some View {
         TutorialScreen {
-            Text("Anchor Point Tips")
+            Text(NSLocalizedString("anchorPointsTutorialTipsTitle", comment: "Title of anchor point tips page"))
             
-            Text("")
+            Text(NSLocalizedString("anchorPointsTutorialTipsText", comment: "Text of anchor point tips page"))
         }
+        
+        Spacer()
+        TutorialNavLink(destination: AnchorPointPractice())  {Text(NSLocalizedString("practiceTutorialTitle", comment: "Text for practice button"))}
     }
 }
 
 struct AnchorPointPractice: View {
-    //TODO: 1 write instructions 2 align to anchor point twice? 3 shrink button size 4 count down 5 voice announcments?
+    //TODO: 1 write instructions 2 align to anchor point twice? 4 count down 5 voice announcments?
     @ObservedObject private var arData = ARData.shared
     @State var sound: AVAudioPlayer?
     @State private var started = false
@@ -761,46 +767,51 @@ struct AnchorPointPractice: View {
     @State var xyzYawDelta: [Float] = []
     @State private var anchorPointSet = false
     @State private var anchorPointAligned = false
+    @State var successSound: AVAudioPlayer?
     
     static let xPerfectThreshold = Float(0.1)
+    static let yPerfectThreshold = Float(0.1)
+    static let zPerfectThreshold = Float(0.1)
+    static let yawPerfectThreshold = Float(0.1)
+    static let xGoodThreshold = Float(0.5)
+    static let yGoodThreshold = Float(0.5)
+    static let zGoodThreshold = Float(0.5)
+    static let yawGoodThreshold = Float(0.5)
     
     var body: some View {
         TutorialScreen {
             if anchorPointAligned {
-                //once anchor point is aligned
-                Text("Anchor Point Aligned")
-                
+                //once anchor point is aligned                
                 Text("x, y, z, yaw \(xyzYawAlign[0] - xyzYawSet[0]), \(xyzYawAlign[1] - xyzYawSet[1]), \(xyzYawAlign[2] - xyzYawSet[2]), \(xyzYawAlign[3] - xyzYawSet[3])")//TODO: Delete when done testing
                 
-                if abs(xyzYawDelta[0]) < AnchorPointPractice.xPerfectThreshold, xyzYawDelta[1] < 0.10 && xyzYawDelta[1] > -0.10, xyzYawDelta[2] < 0.10 && xyzYawDelta[2] > -0.10, xyzYawDelta[3] < 0.10 && xyzYawDelta[3] > -0.10 {
-                    Text("Perfect!!!")
-                    Text("Nice work! Setting and aligning anchor points like you have in this practice will work great for Clew routes! Feel free to practice again, check out our tips for setting anchor points, continuing with the tutorial, or entering the main app and start using it!")
-                } else if xyzYawDelta[0] < 0.5 && xyzYawDelta[0] > -0.5, xyzYawDelta[1] < 0.5 && xyzYawDelta[1] > -0.5, xyzYawDelta[2] < 0.5 && xyzYawDelta[2] > -0.5, xyzYawDelta[3] < 0.5 && xyzYawDelta[3] > -0.5 {
-                    Text("Pretty Good!")
-                    Text("This anchor point is pretty well aligned to the anchor point you set origanally and a Clew route from this anchor point would probably work pretty well. You might want practice again or check out our tips for setting and aligning anchor points.")
+                if abs(xyzYawDelta[0]) < AnchorPointPractice.xPerfectThreshold, abs(xyzYawDelta[1]) < AnchorPointPractice.yPerfectThreshold, abs(xyzYawDelta[2]) < AnchorPointPractice.zPerfectThreshold, abs(xyzYawDelta[3]) < AnchorPointPractice.yawPerfectThreshold {
+                    Text(NSLocalizedString("anchorPointPracticeFeedbackPerfectTitle", comment: "anchor point perfectly aligned heading"))
+                    Text(NSLocalizedString("anchorPointPracticeFeedbackPerfectText", comment: "anchor point perfectly aligned text"))
+                } else if abs(xyzYawDelta[0]) < AnchorPointPractice.xGoodThreshold, abs(xyzYawDelta[1]) < AnchorPointPractice.yGoodThreshold, abs(xyzYawDelta[2]) < AnchorPointPractice.zGoodThreshold, abs(xyzYawDelta[3]) < AnchorPointPractice.yawGoodThreshold {
+                    Text(NSLocalizedString("anchorPointPracticeFeedbackGoodTitle", comment: "anchor point well aligned header"))
+                    Text(NSLocalizedString("anchorPointPracticeFeedbackGoodText", comment: "anchor point well aligned text"))
+
                 } else {
-                    Text("Not Aligned. Try again!")
-                    Text("This anchor point is not well aligned. A Clew route started from this anchor point might not navigate to your desired location. No worries though because you can try the practice again or check out some tips we have for setting and aligning anchor points.")
+                    Text(NSLocalizedString("anchorPointPracticeFeedbackBadTitle", comment: "anchor point not well aligned header"))
+                    Text(NSLocalizedString("anchorPointPracticeFeedbackBadText", comment: "anchor point not well aligned text"))
                 }
                 
                 Button(action: {
                     anchorPointAligned = false
-                }) {TutorialButton{Text("Retry Aligning Anchor Point")}}
+                }) {TutorialButton{Text(NSLocalizedString("anchorPointPracticeRetryAlignButton", comment: "button text to retry aligning the anchor point"))}}
                 
                 Button(action: {
                     anchorPointSet = false
                     anchorPointAligned = false
-                }) {TutorialButton{Text("Restart Practice")}}
+                }) {TutorialButton{Text(NSLocalizedString("anchorPointPracticeRetryButton", comment: "button text to retry setting the anchor point"))}}
                 
-                TutorialNavLink(destination: AnchorPointTips())  {Text("Tips")}//(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
+                TutorialNavLink(destination: AnchorPointTips())  {Text(NSLocalizedString("tipTutorialTitle", comment: "Button to tips page"))}
                 
             }else if anchorPointSet {
                 //Once anchor point is set
-                Text("Align to Anchor Point")
+                Text(NSLocalizedString("anchorPointPracticeAlignTitle", comment: "Align to anchor point page title"))
                 
-                Text("Nice Job! You've set an anchor point!")
-                
-                Text("Now move your phone out of the position you set the ancor point in. Maybe even walk around the room you're in. Then try returning your phone to the same position and select the align button again to set a second anchor point. Wait for the count down, and then your second anchor point will be set. Then you'll recieve some feedback about how close your second anchor point was to the first you set.")
+                Text(NSLocalizedString("anchorPointPracticeAlignText", comment: "Align to anchor point page instructions"))
                 
                 Button(action: {
                     if let transform = arData.transform {
@@ -819,14 +830,13 @@ struct AnchorPointPractice: View {
                     }
                 Button(action: {
                     anchorPointSet = false
-                    //anchorPointAligned = false
-                }) {TutorialButton{Text("Reset Anchor Point")}}
+                }) {TutorialButton{Text(NSLocalizedString("anchorPointPracticeRetryButton", comment: "button text to retry setting the anchor point"))}}
                 
             }else {
                 //when starting anchor point practice
-                Text("Practice Setting Anchor Points")
+                Text(NSLocalizedString("anchorPointPracticeSetTutorialTitle", comment: "Set an anchor point practice page title"))
                 
-                Text("Here you will practice setting an anchor point and then finding that anchor point. This practice will then give you feedback on how close you were to setting the anchor points in the same spot. To set your first anchor point, press the align button and wait for the count down.")
+                Text(NSLocalizedString("anchorPointPracticeSetTutorialText", comment: "Set an anchor point practice page instructions"))
                 
                 Button(action: {
                         //TODO: do count down, hid button until after countdown and wait a least a little bit longer before you can hit align again, play a success sound(?)
@@ -861,6 +871,7 @@ struct AnchorPointPractice: View {
         
         .onAppear() {
             NotificationCenter.default.post(name: Notification.Name("StartARSession"), object: nil)
+            
         }
         
         Spacer()
@@ -885,9 +896,6 @@ struct SavedRoutes: View {
     }
 }
 
-/*class EnteredFrom: ObservableObject {
-    @Published var anchorPointFromSavedRoutes = false
-}*/
 
 struct RecordSavedRoutes: View {
     //@ObservedObject var entered
@@ -899,7 +907,7 @@ struct RecordSavedRoutes: View {
         Text(NSLocalizedString("recordSavedRoutesTutorialInstructionText", comment: "Instructions for recording saved routes"))
             //.fixedSize(horizontal: false, vertical: true)
             
-            TutorialNavLink(destination: AnchorPoints()) {Text(NSLocalizedString( "anchorPointTutorialButtonText", comment: "Title for the anchor point part of the tutorial"))}//.simultaneousGesture(anchorPointFromSavedRoutes = true)
+            TutorialNavLink(destination: AnchorPoints()) {Text(NSLocalizedString("anchorPointsTutorialTitle", comment: "Title for the anchor point part of the tutorial"))}
         
         TutorialNavLink(destination: VoiceNotes()) {Text(NSLocalizedString( "voiceNotesTutorialButtonText", comment: "Title for the voice notes part of the tutorial"))}
             
@@ -951,10 +959,13 @@ struct SettingOptions: View {
             //ScrollView{
             Text(NSLocalizedString( "settingOptionsTutorialInstructionText", comment: "Information about what the setting options are"))
                 //.fixedSize(horizontal: false, vertical: true)
+            
+            TutorialNavLink(destination: SettingWalkThrough()) {Text(NSLocalizedString("settingsWalkThroughTitle", comment: "Title for the Settings Walk Through"))}
+            
         }.onDisappear(){UserDefaults.standard.setValue(true, forKey: "SettingsOptionsTutorialCompleted")}
         
         Spacer()
-        TutorialNavLink(destination: SettingWalkThrough()) {Text(NSLocalizedString("settingsWalkThroughTitle", comment: "Title for the Settings Walk Through"))}
+        TutorialNavLink(destination: TutorialEndView()) {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
         
     }
 }
@@ -967,6 +978,10 @@ struct TutorialEndView: View {
             
             Text("Nice Job! You've completed the Clew tutorial. You can come back to this information at anytime through the menu options or by pressing the help button on the Clew main screens.")
         }
+        Spacer()
+        Button(action: {
+            NotificationCenter.default.post(name: Notification.Name("TutorialPopoverReadyToDismiss"), object: nil)
+        }) {TutorialButton{Text("Exit Tutorial")}}
     }
 }
 
