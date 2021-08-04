@@ -239,6 +239,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     #endif
     /// Keep track of when to log a frame
     var lastFrameLogTime = Date()
+    /// Keep track of when to log a pose
+    var lastPoseLogTime = Date()
     
     /// This is an audio player that queues up the voice note associated with a particular route Anchor Point. The player is created whenever a saved route is loaded. Loading it before the user clicks the "Play Voice Note" button allows us to call the prepareToPlay function which reduces the latency when the user clicks the "Play Voice Note" button.
     var voiceNoteToPlay: AVAudioPlayer?
@@ -1199,6 +1201,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         // proceed to home page
         self.clearState()
         self.hideAllViewsHelper()
+        #if !APPCLIP
+        self.arLogger.finalizeTrial()
+        #endif
         self.state = .mainScreen(announceArrival: false)
     }
     
@@ -1433,6 +1438,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         if -lastFrameLogTime.timeIntervalSinceNow > 1.0 {
             arLogger.log(frame: frame, withType: state.rawValue, withMeshLoggingBehavior: .none)
             lastFrameLogTime = Date()
+        }
+        if -lastPoseLogTime.timeIntervalSinceNow > 0.1 {
+            arLogger.logPose(pose: frame.camera.transform, at: frame.timestamp)
+            lastPoseLogTime = Date()
         }
         #endif
         if case .readyForFinalResumeAlignment = state {
@@ -2891,6 +2900,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             // proceed to home page
             clearState()
             hideAllViewsHelper()
+            #if !APPCLIP
+            self.arLogger.finalizeTrial()
+            #endif
             self.state = .mainScreen(announceArrival: false)
         }
         

@@ -11,6 +11,7 @@ import Firebase
 import Foundation
 import FirebaseStorage
 import FirebaseAuth
+import ARDataLogger
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
@@ -34,6 +35,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window = UIWindow(windowScene: scene)
         window?.frame = UIScreen.main.bounds
 
+        ARDataLogger.ARLogger.shared.dataDir = "appClipTest"
+        
         UIApplication.shared.isIdleTimerDisabled = true
         if UserDefaults.standard.value(forKey: "hasconsented") as? Bool == true {
             vc = ViewController()
