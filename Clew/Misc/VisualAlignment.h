@@ -26,6 +26,11 @@ typedef struct {
 } VisualAlignmentReturn;
 
 @interface VisualAlignment : NSObject
+
+
++ (bool) calibrate :(UIImage *)image :(simd_float4)intrinsics;
+
+
 /**
  Deduce the yaw between two images.
  

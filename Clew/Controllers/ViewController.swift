@@ -239,6 +239,20 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     }
     
     func session(_ session: ARSession, didUpdate: ARFrame) {
+        if !checkingFrame, -lastCapturedCalibFrameTime.timeIntervalSinceNow > 2.0 {
+            if let uiImage = pixelBufferToUIImage(pixelBuffer: didUpdate.capturedImage) {
+                checkingFrame = true
+                DispatchQueue.global(qos: .userInitiated).async {
+                    let success = VisualAlignment.calibrate(uiImage, simd_float4(didUpdate.camera.intrinsics.columns.0.x, didUpdate.camera.intrinsics.columns.1.y, didUpdate.camera.intrinsics.columns.2.x, didUpdate.camera.intrinsics.columns.2.y))
+                    if success {
+                        self.lastCapturedCalibFrameTime = Date()
+                        self.playSystemSound(id: 1103)
+                    }
+                    self.checkingFrame = false
+                }
+            }
+        }
+        
         switch state {
         case .pauseWaitingPeriod:
             recordRouteLandmarkHelper(timer: recordRouteLandmarkTimer, startTimerFunc: startRecordRouteLandmarkTimer)
@@ -273,6 +287,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// This Boolean marks whether or not the pause procedure is being used to create a Anchor Point at the start of a route (true) or if it is being used to pause an already recorded route
     var creatingRouteAnchorPoint: Bool = false
+    
+    var checkingFrame = false
     
     /// This Boolean marks whether or not the user is resuming a route
     var isResumedRoute: Bool = false
@@ -460,7 +476,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
         let isSameMap = configuration.initialWorldMap != nil && configuration.initialWorldMap == worldMap
         //print("disabling world map")
-        configuration.initialWorldMap = worldMap // nil
+        configuration.initialWorldMap = worldMap
     
         attemptingRelocalization =  isSameMap && !isTrackingPerformanceNormal || worldMap != nil && !isSameMap
 
@@ -1522,6 +1538,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     var waypointFeedbackGenerator: UINotificationFeedbackGenerator?
     /// The time of last haptic feedback
     var feedbackTimer: Date!
+    
+    var lastCapturedCalibFrameTime = Date()
+    
     /// The delay between haptic feedback pulses in seconds
     static let FEEDBACKDELAY = 0.4
     

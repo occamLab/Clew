@@ -20,6 +20,102 @@
 
 @implementation VisualAlignment
 
+std::vector< std::vector<cv::Point2f> > allImagePoints;
+cv::Mat cameraMatrix = cv::Mat::eye(3, 3, CV_32FC1);
+cv::Mat distCoeffs;
+bool calibrated = false;
+
+static void calcBoardCornerPositions(cv::Size boardSize, float squareSize, std::vector<cv::Point3f>& corners)
+{
+    corners.clear();
+
+    for( int i = 0; i < boardSize.height; ++i ) {
+        for( int j = 0; j < boardSize.width; ++j ) {
+            corners.push_back(cv::Point3f(j*squareSize, i*squareSize, 0));
+        }
+    }
+}
+
++ (bool) calibrate :(UIImage *)image :(simd_float4)intrinsics {
+    if (calibrated) {
+        cv::Mat image_mat, imageUndistorted;
+        UIImageToMat(image, image_mat);
+        cv::Mat cameraMatrixThisFrame = cv::Mat::eye(3, 3, CV_32FC1);
+        cameraMatrixThisFrame.at<float>(0, 0) = intrinsics[0];
+        cameraMatrixThisFrame.at<float>(0, 2) = intrinsics[2];
+        cameraMatrixThisFrame.at<float>(1, 1) = intrinsics[1];
+        cameraMatrixThisFrame.at<float>(1, 2) = intrinsics[3];
+
+        cv::undistort(image_mat, imageUndistorted, cameraMatrixThisFrame, distCoeffs);
+        UIImage *debug_undistort_image = MatToUIImage(imageUndistorted);
+        UIImage *orig_image = MatToUIImage(image_mat);
+
+        return false;
+    }
+    cv::Mat image_mat;
+    bool release_object = false;
+    int iFixedPoint = -1;
+    cv::Size boardSize(9,6);
+    double squareSize = 0.1;
+    double grid_width = squareSize * (boardSize.width - 1);
+    if (release_object) {
+        iFixedPoint = boardSize.width - 1;
+    }
+    int winSize = 11;
+    UIImageToMat(image, image_mat);
+    int chessBoardFlags = cv::CALIB_CB_ADAPTIVE_THRESH | cv::CALIB_CB_NORMALIZE_IMAGE;
+    std::vector<cv::Point2f> pointBuf;
+    std::cout << "checking corners" << std::endl;
+    bool found = cv::findChessboardCorners( image_mat, boardSize, pointBuf, chessBoardFlags );
+    
+    if ( found) {
+        // improve the found corners' coordinate accuracy for chessboard
+        cv::Mat viewGray;
+        cv::cvtColor(image_mat, viewGray, cv::COLOR_BGR2GRAY);
+        cv::cornerSubPix( viewGray, pointBuf, cv::Size(winSize,winSize),
+                            cv::Size(-1,-1), cv::TermCriteria( cv::TermCriteria::EPS+cv::TermCriteria::COUNT, 30, 0.0001 ));
+        // store the points somewhere
+        // Draw the corners.
+        //cv::drawChessboardCorners( image_mat, boardSize, cv::Mat(pointBuf), found );
+        for (int i = 0; i < pointBuf.size(); i++) {
+            // convert to camera coordinates using the following formulas
+            // x/fx - cx/fx
+            // y/fy - cy/fy
+            pointBuf[i].x = pointBuf[i].x / intrinsics[0] - intrinsics[2]/intrinsics[0];
+            pointBuf[i].y = pointBuf[i].y / intrinsics[1] - intrinsics[3]/intrinsics[1];
+        }
+        allImagePoints.push_back(pointBuf);
+        //UIImage *debug_chess_board_img = MatToUIImage(image_mat);
+        std::cout << "found chessboard" << std::endl;
+    }
+    std::cout << "allImagePoints " << allImagePoints.size() << std::endl;
+    if (allImagePoints.size() > 50) {
+        std::vector<cv::Mat> rvecs, tvecs;
+        cv::Size imageSize(640, 480);   // Note: this is not actually used.
+        
+        std::vector<std::vector<cv::Point3f> > objectPoints(1);
+        calcBoardCornerPositions(boardSize, squareSize, objectPoints[0]);
+        std::cout << objectPoints[0] << std::endl;
+        std::cout << objectPoints[0][boardSize.width - 1].x << std::endl;
+
+        // TODO: I don't understand the purpose of this next line (might have to do with release_object true?)
+        // objectPoints[0][boardSize.width - 1].x = objectPoints[0][0].x + grid_width;
+        std::vector<cv::Point3f> newObjPoints = objectPoints[0];
+        objectPoints.resize(allImagePoints.size(),objectPoints[0]);
+        // TODO: probably fix some of the distortion parameters
+        // TODO: provide some auditory feedback when a successful capture happens
+        double rms = cv::calibrateCameraRO(objectPoints, allImagePoints, imageSize, iFixedPoint,
+                                cameraMatrix, distCoeffs, rvecs, tvecs, newObjPoints,
+                                           cv::CALIB_USE_LU | cv::CALIB_USE_INTRINSIC_GUESS | cv::CALIB_FIX_ASPECT_RATIO | cv::CALIB_FIX_PRINCIPAL_POINT | cv::CALIB_FIX_FOCAL_LENGTH);
+        
+        std::cout << distCoeffs << std::endl;
+        calibrated = true;
+        std::cout << "calibration complete" << std::endl;
+    }
+    return found;
+}
+
+
 + (VisualAlignmentReturn) visualYaw :(UIImage *)image1 :(simd_float4)intrinsics1 :(simd_float4x4)pose1
                     :(UIImage *)image2 :(simd_float4)intrinsics2 :(simd_float4x4)pose2 {
     
