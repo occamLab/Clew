@@ -459,7 +459,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             isRelocalizing = true
         }
         let isSameMap = configuration.initialWorldMap != nil && configuration.initialWorldMap == worldMap
-        configuration.initialWorldMap = worldMap
+        //print("disabling world map")
+        configuration.initialWorldMap = worldMap // nil
     
         attemptingRelocalization =  isSameMap && !isTrackingPerformanceNormal || worldMap != nil && !isSameMap
 
@@ -1201,10 +1202,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// Create a new ARSession.
     func createARSessionConfiguration() {
-        // configuration = ARPositionalTrackingConfiguration()
+        //configuration = ARPositionalTrackingConfiguration()
         configuration = ARWorldTrackingConfiguration()
         configuration.planeDetection = [.horizontal, .vertical]
-        configuration.isAutoFocusEnabled = false
+        //configuration.isAutoFocusEnabled = false
         sceneView.delegate = self
     }
     
@@ -1797,6 +1798,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// Action to take place after route resume countdown
     @objc
     func afterResumeTimerAction(_ timer: Timer) {
+        if !state.isTryingToAlign {
+            // we must have already aligned using the ARWorldMap, we can stop trying now
+            return
+        }
         state = .visualAlignmentWaitingPeriod
         self.rootContainerView.countdownTimer.isHidden = true
         self.pausedAnchorPoint?.loadImage()

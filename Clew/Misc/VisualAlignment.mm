@@ -68,7 +68,12 @@
 
     const auto matches = getMatches(keypoints_and_descriptors1.descriptors, keypoints_and_descriptors2.descriptors);
     
-    if (matches.size() < 20) {
+    // Uncomment the lines below and add a breakpoint to see the found matches between the perspective-warped images.
+    //cv::Mat debug_match_image;
+    //cv::drawMatches(square_image_mat1_resized, keypoints_and_descriptors1.keypoints, square_image_mat2_resized, keypoints_and_descriptors2.keypoints, matches, debug_match_image);
+    //UIImage *debug_match_image_ui = MatToUIImage(debug_match_image);
+    
+    if (matches.size() < 10) {
         ret.is_valid = false;
         ret.yaw = 0;
         return ret;
@@ -93,11 +98,6 @@
     ret.is_valid = true;
     ret.numMatches = vectors1.size();
     const auto yaw = getYaw(vectors1, vectors2, intrinsics1_matrix, ret.numInliers, ret.residualAngle, ret.tx, ret.ty, ret.tz);
-    
-    // Uncomment the lines below and add a breakpoint to see the found matches between the perspective-warped images.
-    cv::Mat debug_match_image;
-    cv::drawMatches(square_image_mat1, keypoints_and_descriptors1.keypoints, square_image_mat2, keypoints_and_descriptors2.keypoints, matches, debug_match_image);
-    UIImage *debug_match_image_ui = MatToUIImage(debug_match_image);
 
     ret.yaw = yaw;
 
