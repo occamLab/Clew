@@ -781,7 +781,7 @@ struct AnchorPointPractice: View {
     var body: some View {
         TutorialScreen {
             if anchorPointAligned {
-                //once anchor point is aligned                
+                //once anchor point is aligned
                 Text("x, y, z, yaw \(xyzYawAlign[0] - xyzYawSet[0]), \(xyzYawAlign[1] - xyzYawSet[1]), \(xyzYawAlign[2] - xyzYawSet[2]), \(xyzYawAlign[3] - xyzYawSet[3])")//TODO: Delete when done testing
                 
                 if abs(xyzYawDelta[0]) < AnchorPointPractice.xPerfectThreshold, abs(xyzYawDelta[1]) < AnchorPointPractice.yPerfectThreshold, abs(xyzYawDelta[2]) < AnchorPointPractice.zPerfectThreshold, abs(xyzYawDelta[3]) < AnchorPointPractice.yawPerfectThreshold {

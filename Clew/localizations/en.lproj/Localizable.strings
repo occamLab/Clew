@@ -300,19 +300,20 @@ The tutorials in the series include interactive practice exercises that you can 
 
 
 "orientPhoneTutorialButtonText" = "Holding Your Phone";
-"orientPhoneTutorialInstructionText" = "Clew uses your phone's camera and other sensors to track the environment as you move along a route. To ensure Clew is getting good information from your camera, you should hold your phone vertically with the rear camera facing forward. It is important to maintain the phone in the vertical orientation whenever you are navigating or saving a route. Select the Practice button below to try out holding your phone in the correct position.";
-"tipTutorialTitle" = "Tips";
+"orientPhoneTutorialInstructionText" = "Clew uses your phone's camera and other sensors to track the environment as you move along a route. To ensure Clew is getting good information from your camera, you should hold your phone in the portrait orientation with the rear camera facing forward. It is important to maintain the phone in the vertical pose whenever you are navigating or saving a route, to help reduce errors from the app. Select the Practice button below to try out holding your phone in the correct position.";
 "orientPhoneTutorialTipsTitle" = "Tips for holding your phone";
 "orientPhoneTutorialTip1" = "Try holding your phone against your chest when you’re navigating a route to insure it remains upright with the camera facing directly in front of you.";
 "orientPhoneTutorialTip2" = "We also recommend that you hold the phone in the opposite hand as you use your white cane or guide dog.";
 "orientPhoneTutorialPracticeTitle" = "Practice Holding Phone";
-"orientPhoneTutorialPracticeInstructions" = "Here you will practice holding your phone in the correct position for recording and navigating routes. Click start and try moving your phone around. You’ll see that the further you are from holding your phone upright the more your phone will buzz when you get it in the right position there will be a success sound and you'll get a point. To get more points you will have to move your phone out of the correct orientation and then back into it and hold it there again. Try to do this at least three times.";
+"orientPhoneTutorialPracticeInstructions" = "Here you will practice holding your phone in the correct pose for recording and navigating routes. Click start and try moving your phone from a horizontal pose to a more vertical pose. Your phone will buzz and make more sound the further you are away from the correct vertical pose. Finally, you'll hear a success tone once you are holding the phone in the correct vertical pose. To earn more points you’ll have to move your phone out of the correct pose and back into the correct vertical pose.
+Now it's your turn. Try doing this exercise at least 3 times!";
 "orientPhoneTutorialPracticeStart" = "Start";
 "orientPhoneTutorialPracticeStop" = "Stop";
-"orientPhoneTutorialPracticeSuccess" = "Nice Job! You've completed orientation practice. You can keep practicing or go to the next section";
+"orientPhoneTutorialPracticeSuccess" = "Nice Job! You've completed orientation practice. You can keep practicing or go to the next section.";
+
 
 "findPathTutorialButtonText" = "Finding and Following a Path";
-"findPathTutorialInstructionText" = "When you are on the path, Clew will give sound and haptic feedback. If the app is not making sound, it is most likely because your phone is not facing the path. Should Clew go quite you should stop and turn until you find the path again. Clew also plays a distinct sound when you pass through a waypoint. Clew way points are markers along routes that are accompanied by further directions such as turn right, or continue straight.   Clew will also anonch when you have reached the end of the route. To try out what following a Clew route is like, press Practice below.";
+"findPathTutorialInstructionText" = "When you are on the path, Clew will give sound and haptic feedback. If the app is not making sound, it is most likely because your phone is not facing in the direction of  the path. Should Clew go quiet you should stop and turn until you find the path again. Clew also plays a distinct sound when you pass through a waypoint. Clew waypoints are markers along routes that are accompanied by audio directions such as: turn right, or continue straight. Clew will also announce when you have reached the end of the route.";
 "findPathPractice1Title" = "Practice First Path";
 "findPathPractice1InstructionText" = "Here you will practice following a Clew Route. Make sure you are in a familiar place with some open space around you. This path will guide you forward a few steps and then announce your arrival. Select begin to enter the practice route.";
 "findPathPracticeBeginButtonText" = "Practice";
