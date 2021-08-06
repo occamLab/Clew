@@ -301,6 +301,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// This is an audio player that queues up the voice note associated with a particular route Anchor Point. The player is created whenever a saved route is loaded. Loading it before the user clicks the "Play Voice Note" button allows us to call the prepareToPlay function which reduces the latency when the user clicks the "Play Voice Note" button.
     var voiceNoteToPlay: AVAudioPlayer?
     
+    var visualAlignmentSuccessSound: AVAudioPlayer?
+    
     // MARK: - Speech Synthesizer Delegate
     
     /// Called when an utterance is finished.  We implement this function so that we can keep track of
@@ -898,6 +900,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             audioPlayers[1016] = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: "/System/Library/Audio/UISounds/tweet_sent.caf"))
             audioPlayers[1050] = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: "/System/Library/Audio/UISounds/ussd.caf"))
             audioPlayers[1025] = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: "/System/Library/Audio/UISounds/New/Fanfare.caf"))
+            visualAlignmentSuccessSound = try AVAudioPlayer(contentsOf: Bundle.main.url(forResource: "ClewSuccessSound", withExtension: "wav")!)
+            visualAlignmentSuccessSound?.prepareToPlay()
 
             for p in audioPlayers.values {
                 p.prepareToPlay()
@@ -1862,7 +1866,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 if visualYawReturn.is_valid, abs(visualYawReturn.residualAngle) < 0.01 {
                     let relativeTransform = self.getRelativeTransform(frame: frame, alignTransform: alignTransform, visualYawReturn: visualYawReturn)
                     self.visualTransforms.append(relativeTransform)
-                    self.playSystemSound(id: 1103)
+                    self.visualAlignmentSuccessSound?.play()
                 } else if self.backupTransform == nil {
                     var visualYawReturnCopy = visualYawReturn
                     visualYawReturnCopy.yaw = 0

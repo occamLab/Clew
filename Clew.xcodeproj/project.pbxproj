@@ -23,6 +23,10 @@
 		82569F4F22187E6500448B45 /* help in Resources */ = {isa = PBXBuildFile; fileRef = 82569F4D22187E6500448B45 /* help */; };
 		825C7D6822CCDDA600545605 /* PathMatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 825C7D6722CCDDA600545605 /* PathMatcher.swift */; };
 		825C7D6922CCDDA600545605 /* PathMatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 825C7D6722CCDDA600545605 /* PathMatcher.swift */; };
+		82A5946A26BDD36F00BC482C /* ClewSuccessSound.wav in Resources */ = {isa = PBXBuildFile; fileRef = 82A5946926BDD36F00BC482C /* ClewSuccessSound.wav */; };
+		82A5946B26BDD36F00BC482C /* ClewSuccessSound.wav in Resources */ = {isa = PBXBuildFile; fileRef = 82A5946926BDD36F00BC482C /* ClewSuccessSound.wav */; };
+		82A5946D26BDD38100BC482C /* ClewTutorialFeedback.wav in Resources */ = {isa = PBXBuildFile; fileRef = 82A5946C26BDD38100BC482C /* ClewTutorialFeedback.wav */; };
+		82A5946E26BDD38100BC482C /* ClewTutorialFeedback.wav in Resources */ = {isa = PBXBuildFile; fileRef = 82A5946C26BDD38100BC482C /* ClewTutorialFeedback.wav */; };
 		986640CE22FB68F2005AA1F6 /* NameSavedRouteController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986640CD22FB68F2005AA1F6 /* NameSavedRouteController.swift */; };
 		986640CF22FC9606005AA1F6 /* NameSavedRouteController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986640CD22FB68F2005AA1F6 /* NameSavedRouteController.swift */; };
 		B0A563F6FE1007A2716DC876 /* Pods_Clew_Dev.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3532E390954571B93729786A /* Pods_Clew_Dev.framework */; };
@@ -174,6 +178,8 @@
 		822E27F8210E3F260024A5E3 /* Clew Dev-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Clew Dev-Info.plist"; sourceTree = "<group>"; };
 		82569F4D22187E6500448B45 /* help */ = {isa = PBXFileReference; lastKnownFileType = folder; path = help; sourceTree = "<group>"; };
 		825C7D6722CCDDA600545605 /* PathMatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PathMatcher.swift; sourceTree = "<group>"; };
+		82A5946926BDD36F00BC482C /* ClewSuccessSound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = ClewSuccessSound.wav; sourceTree = "<group>"; };
+		82A5946C26BDD38100BC482C /* ClewTutorialFeedback.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = ClewTutorialFeedback.wav; sourceTree = "<group>"; };
 		82F2DDD122E26A44005CD7D0 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		82F2DDD322E26A44005CD7D0 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/SettingsAndHelp.strings; sourceTree = "<group>"; };
 		85A1A72DC19F87F15B738291 /* Pods-Clew Dev.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew Dev.release.xcconfig"; path = "Pods/Target Support Files/Pods-Clew Dev/Pods-Clew Dev.release.xcconfig"; sourceTree = "<group>"; };
@@ -393,6 +399,8 @@
 		E5470ED122C119F4001092A4 /* Sound Effects */ = {
 			isa = PBXGroup;
 			children = (
+				82A5946926BDD36F00BC482C /* ClewSuccessSound.wav */,
+				82A5946C26BDD38100BC482C /* ClewTutorialFeedback.wav */,
 				E5470EBA22C119F4001092A4 /* SettingsTableViewController.h */,
 				E5470ED222C119F4001092A4 /* StartRecording.aiff */,
 				E5470ED322C119F4001092A4 /* StopRecording.aiff */,
@@ -598,11 +606,13 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				82A5946A26BDD36F00BC482C /* ClewSuccessSound.wav in Resources */,
 				772E4563236CC155008EF6AC /* SettingsAndHelp.storyboard in Resources */,
 				4DF05CC81F34EB6B008B0E31 /* Confirm.mp3 in Resources */,
 				E5470F1822C119F5001092A4 /* StartRecording.aiff in Resources */,
 				4D6B00E51F33C9B800952242 /* Crumb.obj in Resources */,
 				E5470F1C22C119F5001092A4 /* GoogleService-Info.plist in Resources */,
+				82A5946D26BDD38100BC482C /* ClewTutorialFeedback.wav in Resources */,
 				E5470F0E22C119F5001092A4 /* Settings.bundle in Resources */,
 				82569F4E22187E6500448B45 /* help in Resources */,
 				E5470F1622C119F5001092A4 /* Assets.xcassets in Resources */,
@@ -629,12 +639,14 @@
 				B7EB59E320F693EB00FBBC6A /* Crumb.obj in Resources */,
 				E5470F4F22C119F5001092A4 /* GoogleService-Info_dev.plist in Resources */,
 				82569F4F22187E6500448B45 /* help in Resources */,
+				82A5946E26BDD38100BC482C /* ClewTutorialFeedback.wav in Resources */,
 				E5D1695D22E103A0008754D0 /* SettingsAndHelp.strings in Resources */,
 				E5D1695F22E103A0008754D0 /* Localizable.strings in Resources */,
 				E59DA6C022C65F5900FCD5A1 /* LaunchScreen.storyboard in Resources */,
 				772E4564236CC155008EF6AC /* SettingsAndHelp.storyboard in Resources */,
 				E5470F1D22C119F5001092A4 /* GoogleService-Info.plist in Resources */,
 				E5470F1722C119F5001092A4 /* Assets.xcassets in Resources */,
+				82A5946B26BDD36F00BC482C /* ClewSuccessSound.wav in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1040,7 +1052,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = 36;
+				CURRENT_PROJECT_VERSION = 37;
 				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/Clew/PrefixHeader.pch";
@@ -1064,7 +1076,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = 36;
+				CURRENT_PROJECT_VERSION = 37;
 				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/Clew/PrefixHeader.pch";
@@ -1088,7 +1100,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 36;
+				CURRENT_PROJECT_VERSION = 37;
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/Clew/PrefixHeader.pch";
 				INFOPLIST_FILE = "Clew Dev-Info.plist";
@@ -1115,7 +1127,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 36;
+				CURRENT_PROJECT_VERSION = 37;
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/Clew/PrefixHeader.pch";
 				INFOPLIST_FILE = "Clew Dev-Info.plist";
@@ -1138,7 +1150,7 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 36;
+				CURRENT_PROJECT_VERSION = 37;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
 				INFOPLIST_FILE = "route-quicklook/Info.plist";
@@ -1160,7 +1172,7 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 36;
+				CURRENT_PROJECT_VERSION = 37;
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
 				INFOPLIST_FILE = "route-quicklook/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
