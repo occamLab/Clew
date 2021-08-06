@@ -138,6 +138,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     var visualTransforms: [simd_float4x4] = []
     
+    var backupTransform: simd_float4x4?
+
+    
     /// Used for synchrony when saving in background threads.
     let routeSaveGroup = DispatchGroup()
     
@@ -1807,6 +1810,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         self.pausedAnchorPoint?.loadImage()
         // The first check is necessary in case the phone relocalizes before this code executes
         visualTransforms = []
+        backupTransform = nil
         tryVisualAlignment(triesLeft: ViewController.maxVisualAlignmentRetryCount, makeAnnounement: true)
     }
         
@@ -1859,6 +1863,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                     let relativeTransform = self.getRelativeTransform(frame: frame, alignTransform: alignTransform, visualYawReturn: visualYawReturn)
                     self.visualTransforms.append(relativeTransform)
                     self.playSystemSound(id: 1103)
+                } else if self.backupTransform == nil {
+                    var visualYawReturnCopy = visualYawReturn
+                    visualYawReturnCopy.yaw = 0
+                    visualYawReturnCopy.is_valid = true
+                    self.backupTransform = self.getRelativeTransform(frame: frame, alignTransform: alignTransform, visualYawReturn: visualYawReturnCopy)
                 }
                 if triesLeft > 1 {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
@@ -1887,6 +1896,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                     
                     else {
                         self.announce(announcement: NSLocalizedString("noVisualMatchesUseSnapToRoute", comment: "Instruct to use snap-to-route when no visual matches are found"))
+                        
+                        if let backupTransform = self.backupTransform {
+                            self.sceneView.session.setWorldOrigin(relativeTransform: backupTransform)
+                        }
                     }
 
                     
