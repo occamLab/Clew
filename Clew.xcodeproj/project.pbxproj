@@ -19,6 +19,7 @@
 		77365B182343ECBA008BC35C /* BurgerMenu.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 77365B1B2343ECBA008BC35C /* BurgerMenu.storyboard */; };
 		77365B192343ECBA008BC35C /* BurgerMenu.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 77365B1B2343ECBA008BC35C /* BurgerMenu.storyboard */; };
 		77467DAF22BBC1D300FA7DEE /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 77467DAE22BBC1D300FA7DEE /* Default-568h@2x.png */; };
+		8233042626C168BA00787637 /* arrow.obj in Resources */ = {isa = PBXBuildFile; fileRef = 8233042526C168BA00787637 /* arrow.obj */; };
 		82569F4E22187E6500448B45 /* help in Resources */ = {isa = PBXBuildFile; fileRef = 82569F4D22187E6500448B45 /* help */; };
 		82569F4F22187E6500448B45 /* help in Resources */ = {isa = PBXBuildFile; fileRef = 82569F4D22187E6500448B45 /* help */; };
 		825C7D6822CCDDA600545605 /* PathMatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 825C7D6722CCDDA600545605 /* PathMatcher.swift */; };
@@ -176,6 +177,7 @@
 		7743819F2343E3F8003EBD85 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/SettingsAndHelp.strings; sourceTree = "<group>"; };
 		77467DAE22BBC1D300FA7DEE /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		822E27F8210E3F260024A5E3 /* Clew Dev-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Clew Dev-Info.plist"; sourceTree = "<group>"; };
+		8233042526C168BA00787637 /* arrow.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = arrow.obj; sourceTree = "<group>"; };
 		82569F4D22187E6500448B45 /* help */ = {isa = PBXFileReference; lastKnownFileType = folder; path = help; sourceTree = "<group>"; };
 		825C7D6722CCDDA600545605 /* PathMatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PathMatcher.swift; sourceTree = "<group>"; };
 		82A5946926BDD36F00BC482C /* ClewSuccessSound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = ClewSuccessSound.wav; sourceTree = "<group>"; };
@@ -293,6 +295,7 @@
 				77467DAE22BBC1D300FA7DEE /* Default-568h@2x.png */,
 				82569F4D22187E6500448B45 /* help */,
 				4DF05CC71F34EB56008B0E31 /* Confirm.mp3 */,
+				8233042526C168BA00787637 /* arrow.obj */,
 				4D6B00E41F33C85500952242 /* Crumb.obj */,
 				E5E9016922FB4D4A00AD0E95 /* route-quicklook */,
 				4D6B00C11F33C1C400952242 /* Products */,
@@ -634,6 +637,7 @@
 				E5470F0F22C119F5001092A4 /* Settings.bundle in Resources */,
 				E5470F1922C119F5001092A4 /* StartRecording.aiff in Resources */,
 				77365B192343ECBA008BC35C /* BurgerMenu.storyboard in Resources */,
+				8233042626C168BA00787637 /* arrow.obj in Resources */,
 				E5470F1B22C119F5001092A4 /* StopRecording.aiff in Resources */,
 				B7EB59E220F693EB00FBBC6A /* Confirm.mp3 in Resources */,
 				B7EB59E320F693EB00FBBC6A /* Crumb.obj in Resources */,

@@ -464,8 +464,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             isRelocalizing = true
         }
         let isSameMap = configuration.initialWorldMap != nil && configuration.initialWorldMap == worldMap
-        //print("disabling world map")
-        configuration.initialWorldMap = worldMap // nil
+        print("disabling world map")
+        configuration.initialWorldMap = nil //worldMap
     
         attemptingRelocalization =  isSameMap && !isTrackingPerformanceNormal || worldMap != nil && !isSameMap
 
@@ -756,6 +756,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// Keypoint object
     var keypointObject : MDLObject!
     
+    /// Arrow object
+    var arrowObject : MDLObject!
+    
     /// Route persistence
     var dataPersistence = DataPersistence()
     
@@ -916,6 +919,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         let url = NSURL(fileURLWithPath: Bundle.main.path(forResource: "Crumb", ofType: "obj")!)
         let asset = MDLAsset(url: url as URL)
         keypointObject = asset.object(at: 0)
+        
+        let arrowUrl = NSURL(fileURLWithPath: Bundle.main.path(forResource: "arrow", ofType: "obj")!)
+        let arrowAsset = MDLAsset(url: arrowUrl as URL)
+        arrowObject = arrowAsset.object(at: 0)
     }
     
     /// Observe the relevant Firebase paths to handle any dynamic reconfiguration requests (this is currently not used in the app store version of Clew)
@@ -1489,6 +1496,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// SCNNode of the next keypoint
     var keypointNode: SCNNode!
     
+    /// SCNNode of the arrow that shows the alignment
+    var arrowNode: SCNNode?
+    
     /// previous keypoint location - originally set to current location
     var prevKeypointPosition: LocationInfo!
 
@@ -1864,6 +1874,23 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 print("alignment inliers \(visualYawReturn.numInliers) \(visualYawReturn.numMatches) \(propInliers) \(visualYawReturn.residualAngle)")
 
                 if visualYawReturn.is_valid, abs(visualYawReturn.residualAngle) < 0.01 {
+                    
+                    var arrowTransform = matrix_identity_float4x4
+                    arrowTransform.columns.3 = frame.camera.transform.columns.3 - simd_float4(0, 0.5, 0, 0)
+                    
+                    let yaw = ViewController.getYawHelper(frame.camera.transform) + atan2(-visualYawReturn.tx, visualYawReturn.tz)
+
+                    arrowTransform.columns.0 = simd_float4(-sin(yaw), 0, -cos(yaw), 0)
+                    arrowTransform.columns.1 = simd_float4(cos(yaw), 0, -sin(yaw), 0)
+                    arrowTransform.columns.2 = simd_float4(0, -1, 0, 0)
+                    
+                    arrowTransform.columns.3 = arrowTransform.columns.3 + arrowTransform.columns.0
+                    print("tx \(visualYawReturn.tx) tz \(visualYawReturn.tz)")
+                    DispatchQueue.main.async {
+                        self.renderArrow(transform: arrowTransform)
+                    }
+                    
+                    
                     let relativeTransform = self.getRelativeTransform(frame: frame, alignTransform: alignTransform, visualYawReturn: visualYawReturn)
                     self.visualTransforms.append(relativeTransform)
                     self.visualAlignmentSuccessSound?.play()
@@ -2291,6 +2318,18 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             }
             updateDirectionText(dir, distance: direction.distance, displayDistance:  displayDistance)
         }
+    }
+    
+    func renderArrow(transform: simd_float4x4) {
+        arrowNode?.removeFromParentNode()
+        arrowNode = SCNNode(mdlObject: arrowObject)
+        arrowNode?.simdTransform = transform
+        arrowNode?.scale = SCNVector3(1, 0.25, 0.25)
+        for material in arrowNode!.geometry!.materials {
+            material.diffuse.contents = UIColor.red
+        }
+
+        sceneView.scene.rootNode.addChildNode(arrowNode!)
     }
     
     /// Create the keypoint SCNNode that corresponds to the rotating flashing element that looks like a navigation pin.
