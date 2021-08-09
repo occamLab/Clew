@@ -248,7 +248,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
 
         case .resumeWaitingPeriod:
             recordRouteLandmarkHelper(timer: resumeRouteTimer, startTimerFunc: startResumeRouteTimer)
-
+        case .navigatingRoute:
+                if !keypoints.isEmpty, let alignmentTransform = keypoints[0].alignmentImageTransform, let alignmentImage = keypoints[0].alignmentImage, let alignmentIntrinsics = keypoints[0].alignmentIntrinsics {
+                    pausedAnchorPoint = RouteAnchorPoint()
+                    pausedAnchorPoint?.transform = alignmentTransform
+                    pausedAnchorPoint?.image = alignmentImage
+                    pausedAnchorPoint?.intrinsics = alignmentIntrinsics
+                }
         default:
             phoneVertical = nil
         }
@@ -356,6 +362,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         attemptingRelocalization = false
         
         crumbs = []
+        intermediateRouteAnchorPoints = []
         logger.resetPathLog()
         
         showStopRecordingButton()
@@ -402,8 +409,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
 
         // generate path from PathFinder class
         // enabled hapticFeedback generates more keypoints
-        let path = PathFinder(crumbs: crumbs.reversed(), hapticFeedback: hapticFeedback, voiceFeedback: voiceFeedback)
+        let path = PathFinder(crumbs: crumbs.reversed(), intermediateRouteAnchorPoints: intermediateRouteAnchorPoints.reversed(), hapticFeedback: hapticFeedback, voiceFeedback: voiceFeedback)
         keypoints = path.keypoints
+        print("kp", keypoints!.map({[$0.location.x, $0.location.y, $0.location.z]}))
         checkedOffKeypoints = []
         
         // save keypoints data for debug log
@@ -471,12 +479,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
 
         if navigateStartToEnd {
             crumbs = route.crumbs.reversed()
-            
+            intermediateRouteAnchorPoints = route.intermediateRouteAnchorPoints.reversed()
             pausedAnchorPoint = route.beginRouteAnchorPoint
         } else {
             crumbs = route.crumbs
             pausedAnchorPoint = route.endRouteAnchorPoint
+            intermediateRouteAnchorPoints = route.intermediateRouteAnchorPoints
         }
+        print("Intermediate route anchors", intermediateRouteAnchorPoints.count)
         // don't reset tracking, but do clear anchors and switch to the new map
         sceneView.session.run(configuration, options: [.removeExistingAnchors, .resetTracking])
 
@@ -607,7 +617,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 if self.paused {
                     ///PATHPOINT pause recording anchor point alignment timer -> resume tracking
                     //proceed as normal with the pause structure (single use route)
-                    self.justTraveledRoute = SavedRoute(id: "single use", name: "single use", crumbs: self.crumbs, dateCreated: Date() as NSDate, beginRouteAnchorPoint: self.beginRouteAnchorPoint, endRouteAnchorPoint: self.endRouteAnchorPoint)
+                    self.justTraveledRoute = SavedRoute(id: "single use", name: "single use", crumbs: self.crumbs, dateCreated: Date() as NSDate, beginRouteAnchorPoint: self.beginRouteAnchorPoint, endRouteAnchorPoint: self.endRouteAnchorPoint, intermediateRouteAnchorPoints: self.intermediateRouteAnchorPoints)
                     self.justUsedMap = worldMap
                     self.showResumeTrackingButton()
                     self.state = .pauseProcedureCompleted
@@ -724,7 +734,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     ///   - worldMap: the world map
     /// - Throws: an error if something goes wrong
     func archive(routeId: NSString, beginRouteAnchorPoint: RouteAnchorPoint, endRouteAnchorPoint: RouteAnchorPoint, worldMap: ARWorldMap?) throws {
-        let savedRoute = SavedRoute(id: routeId, name: routeName!, crumbs: crumbs, dateCreated: Date() as NSDate, beginRouteAnchorPoint: beginRouteAnchorPoint, endRouteAnchorPoint: endRouteAnchorPoint)
+        let savedRoute = SavedRoute(id: routeId, name: routeName!, crumbs: crumbs, dateCreated: Date() as NSDate, beginRouteAnchorPoint: beginRouteAnchorPoint, endRouteAnchorPoint: endRouteAnchorPoint, intermediateRouteAnchorPoints: intermediateRouteAnchorPoints)
         try dataPersistence.archive(route: savedRoute, worldMap: worldMap)
         justTraveledRoute = savedRoute
     }
@@ -1067,7 +1077,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         
         // The cancel action saves the just traversed route so you can navigate back along it later
         let cancelAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: "An option for the user to select"), style: .cancel) { (_) in
-            self.justTraveledRoute = SavedRoute(id: "dummyid", name: "Last route", crumbs: self.crumbs, dateCreated: Date() as NSDate, beginRouteAnchorPoint: self.beginRouteAnchorPoint, endRouteAnchorPoint: self.endRouteAnchorPoint)
+            self.justTraveledRoute = SavedRoute(id: "dummyid", name: "Last route", crumbs: self.crumbs, dateCreated: Date() as NSDate, beginRouteAnchorPoint: self.beginRouteAnchorPoint, endRouteAnchorPoint: self.endRouteAnchorPoint, intermediateRouteAnchorPoints: self.intermediateRouteAnchorPoints)
         }
         
         // Add textfield to our dialog box
@@ -1479,6 +1489,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// list of crumbs dropped when recording pth
     var crumbs: [LocationInfo]!
     
+    /// list of images from the route while recording the path
+    var intermediateRouteAnchorPoints: [RouteAnchorPoint] = []
+    
     /// list of crumbs dropped when following path
     var followCrumbs: [LocationInfo] {
         guard let anchors = sceneView.session.currentFrame?.anchors else {
@@ -1697,6 +1710,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         self.delayTransition(announcement: NSLocalizedString("startingReturnNavigationAnnouncement", comment: "This is an anouncement which is played when the user performs return navigation from the play pause menu. It signifies the start of a navigation session."), initialFocus: nil)
         // this will handle the appropriate state transition if we pass the warning
         state = .navigatingRoute
+        tryVisualAlignment(triesLeft: 10000, makeAnnounement: false)
     }
     
     /// handles the user pressing the stop navigation button.
@@ -1850,10 +1864,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     }
     
     func tryVisualAlignment(triesLeft: Int, makeAnnounement: Bool = false) {
-        if !state.isTryingToAlign {
+        /*if !state.isTryingToAlign {
             return
-        }
-        if case .visualAlignmentWaitingPeriod = self.state, let alignAnchorPoint = self.pausedAnchorPoint, let alignAnchorPointImage = alignAnchorPoint.image, let alignTransform = alignAnchorPoint.transform, let frame = self.sceneView.session.currentFrame {
+        }*/
+        if let alignAnchorPoint = self.pausedAnchorPoint, let alignAnchorPointImage = alignAnchorPoint.image, let alignTransform = alignAnchorPoint.transform, let frame = self.sceneView.session.currentFrame {
             if makeAnnounement {
                 announce(announcement: NSLocalizedString("visualAlignmentConfirmation", comment: "Announce that visual alignment process has began"))
             }
@@ -1909,7 +1923,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 
                 DispatchQueue.main.async {
                     if !self.state.isTryingToAlign {
-                        // we must have localized to the map... let's bail
+                        // we must have localized to the map or are doign this during the route... let's bail
                         return
                     }
                     if !self.visualTransforms.isEmpty {
@@ -1983,10 +1997,25 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// drop a crumb during path recording
     @objc func dropCrumb() {
-        guard let curLocation = getRealCoordinates(record: true)?.location else {
+        guard let frame = sceneView.session.currentFrame, let curLocation = getRealCoordinates(record: true)?.location else {
             return
         }
+        
         crumbs.append(curLocation)
+        let routeAnchor = RouteAnchorPoint()
+        routeAnchor.transform = frame.camera.transform
+        let anchorPointImageIdentifier = UUID()
+        routeAnchor.intrinsics = simd_float4(frame.camera.intrinsics[0, 0], frame.camera.intrinsics[1, 1], frame.camera.intrinsics[2, 0], frame.camera.intrinsics[2, 1])
+        routeAnchor.imageFileName = "\(anchorPointImageIdentifier).jpg" as NSString
+        
+        guard let anchorPointImage = pixelBufferToUIImage(pixelBuffer: frame.capturedImage) else {
+            return
+        }
+        
+        let routeAnchorPointJpeg = anchorPointImage.jpegData(compressionQuality: 1)
+        try! routeAnchorPointJpeg?.write(to: routeAnchor.imageFileName!.documentURL, options: .atomic)
+        routeAnchor.loadImage()
+        intermediateRouteAnchorPoints.append(routeAnchor)
     }
     
     /// checks to see if user is on the right path during navigation.

@@ -151,6 +151,12 @@ public struct KeypointInfo {
     public var location: LocationInfo
     /// the orientation of a keypoint is a unit vector that points from the previous keypoint to current keypoint.  The orientation is useful for defining the area where we check off the user as having reached a keypoint
     public var orientation: Vector3
+    
+    public var alignmentImage: UIImage?
+    
+    public var alignmentImageTransform: simd_float4x4?
+    
+    public var alignmentIntrinsics: simd_float4?
 }
 
 /// An encapsulation of a route Anchor Point, including position, text, and audio information.
@@ -350,6 +356,8 @@ class SavedRoute: NSObject, NSSecureCoding {
     public var beginRouteAnchorPoint : RouteAnchorPoint
     /// The Anchor Point marks the end of the route (needed for end to start navigation)
     public var endRouteAnchorPoint: RouteAnchorPoint
+    /// The Anchor Points from the middle of the route recording
+    public var intermediateRouteAnchorPoints: [RouteAnchorPoint]
 
     /// Initialize the route.
     ///
@@ -360,13 +368,14 @@ class SavedRoute: NSObject, NSSecureCoding {
     ///   - dateCreated: the route creation date
     ///   - beginRouteAnchorPoint: the Anchor Point for the beginning of the route (pass a `RouteAnchorPoint` with default initialization if no Anchor Point was recorded at the beginning of the route)
     ///   - endRouteAnchorPoint: the Anchor Point for the end of the route (pass a `RouteAnchorPoint` with default initialization if no Anchor Point was recorded at the end of the route)
-    public init(id: NSString, name: NSString, crumbs: [LocationInfo], dateCreated: NSDate = NSDate(), beginRouteAnchorPoint: RouteAnchorPoint, endRouteAnchorPoint: RouteAnchorPoint) {
+    public init(id: NSString, name: NSString, crumbs: [LocationInfo], dateCreated: NSDate = NSDate(), beginRouteAnchorPoint: RouteAnchorPoint, endRouteAnchorPoint: RouteAnchorPoint, intermediateRouteAnchorPoints: [RouteAnchorPoint]) {
         self.id = id
         self.name = name
         self.crumbs = crumbs
         self.dateCreated = dateCreated
         self.beginRouteAnchorPoint = beginRouteAnchorPoint
         self.endRouteAnchorPoint = endRouteAnchorPoint
+        self.intermediateRouteAnchorPoints = intermediateRouteAnchorPoints
     }
     
     /// Encodes the object to the specified coder object
@@ -379,6 +388,8 @@ class SavedRoute: NSObject, NSSecureCoding {
         aCoder.encode(dateCreated, forKey: "dateCreated")
         aCoder.encode(beginRouteAnchorPoint, forKey: "beginRouteAnchorPoint")
         aCoder.encode(endRouteAnchorPoint, forKey: "endRouteAnchorPoint")
+        print("saving anchor points", intermediateRouteAnchorPoints.count)
+        aCoder.encode(intermediateRouteAnchorPoints, forKey: "intermediateRouteAnchorPoints")
     }
     
     /// Initialize an object based using data from a decoder
@@ -421,8 +432,14 @@ class SavedRoute: NSObject, NSSecureCoding {
             // convert to the new format
             endRouteAnchorPoint = RouteAnchorPoint(transform: endRouteLandmark.transform, information: endRouteLandmark.information, voiceNote: endRouteLandmark.voiceNote)
         }
+        
+        var intermediateRouteAnchorPoints: [RouteAnchorPoint] = []
+        if let anchorPoints = aDecoder.decodeObject(of: [].self, forKey: "intermediateRouteAnchorPoints") as? [RouteAnchorPoint] {
+            print("found some intermediate anchorpoints")
+            intermediateRouteAnchorPoints = anchorPoints
+        }
 
-        self.init(id: id, name: name, crumbs: crumbs, dateCreated: dateCreated, beginRouteAnchorPoint: beginRouteAnchorPoint, endRouteAnchorPoint: endRouteAnchorPoint)
+        self.init(id: id, name: name, crumbs: crumbs, dateCreated: dateCreated, beginRouteAnchorPoint: beginRouteAnchorPoint, endRouteAnchorPoint: endRouteAnchorPoint, intermediateRouteAnchorPoints: intermediateRouteAnchorPoints)
     }
 }
 
@@ -439,6 +456,8 @@ class PathFinder {
     /// The crumbs that make up the desired path. These should be ordered with respect to the user's intended direction of travel (start to end versus end to start)
     private var crumbs: [LocationInfo]
     
+    private var intermediateRouteAnchorPoints: [RouteAnchorPoint]
+    
     /// Initializes the PathFinder class and determines the value of `pathWidth`
     ///
     /// - Parameters:
@@ -448,8 +467,9 @@ class PathFinder {
     ///
     /// - TODO:
     ///   - Clarify why these magic `pathWidth` values are as they are.
-    init(crumbs: [LocationInfo], hapticFeedback: Bool, voiceFeedback: Bool) {
+    init(crumbs: [LocationInfo], intermediateRouteAnchorPoints: [RouteAnchorPoint], hapticFeedback: Bool, voiceFeedback: Bool) {
         self.crumbs = crumbs
+        self.intermediateRouteAnchorPoints = intermediateRouteAnchorPoints
         if(!hapticFeedback && voiceFeedback) {
             pathWidth = 0.3
         } else {
@@ -460,7 +480,7 @@ class PathFinder {
     /// a list of `KeypointInfo` objects representing the important turns in the path.
     public var keypoints: [KeypointInfo] {
         get {
-            return getKeypoints(edibleCrumbs: crumbs)
+            return getKeypoints(edibleCrumbs: crumbs, edibleIntermediateRouteAnchorPoints: intermediateRouteAnchorPoints)
         }
     }
     
@@ -468,19 +488,35 @@ class PathFinder {
     ///
     /// - Parameter edibleCrumbs: a list of `LocationInfo` objects representing the trail of breadcrumbs left on the path.
     /// - Returns: a list of `KeypointInfo` objects representing the turns in the path
-    func getKeypoints(edibleCrumbs: [LocationInfo]) -> [KeypointInfo] {
+    func getKeypoints(edibleCrumbs: [LocationInfo], edibleIntermediateRouteAnchorPoints: [RouteAnchorPoint]) -> [KeypointInfo] {
         var keypoints = [KeypointInfo]()
         let firstKeypointLocation = edibleCrumbs.first!
         let firstKeypointOrientation = Vector3.x
         keypoints.append(KeypointInfo(location: firstKeypointLocation, orientation: firstKeypointOrientation))
+        // add in the alignment info if it exists
+        if !edibleIntermediateRouteAnchorPoints.isEmpty {
+            edibleIntermediateRouteAnchorPoints.first?.loadImage()
+            keypoints[keypoints.count-1].alignmentImage = edibleIntermediateRouteAnchorPoints.first!.image
+            keypoints[keypoints.count-1].alignmentImageTransform = edibleIntermediateRouteAnchorPoints.first!.transform
+            keypoints[keypoints.count-1].alignmentIntrinsics = edibleIntermediateRouteAnchorPoints.first!.intrinsics
+
+        }
         
-        keypoints += calculateKeypoints(edibleCrumbs: edibleCrumbs)
+        keypoints += calculateKeypoints(edibleCrumbs: edibleCrumbs, edibleIntermediateRouteAnchorPoints: edibleIntermediateRouteAnchorPoints)
         
         let lastKeypointLocation = edibleCrumbs.last!
         let lastKeypointOrientation = Vector3(_: [(keypoints.last?.location.x)! - edibleCrumbs.last!.x,
                                                   0,
                                                   (keypoints.last?.location.z)! - edibleCrumbs.last!.z]).normalized()
         keypoints.append(KeypointInfo(location: lastKeypointLocation, orientation: lastKeypointOrientation))
+        // add in the alignment info if it exists
+        if !edibleIntermediateRouteAnchorPoints.isEmpty {
+            edibleIntermediateRouteAnchorPoints.last?.loadImage()
+            keypoints[keypoints.count-1].alignmentImage = edibleIntermediateRouteAnchorPoints.last!.image
+            keypoints[keypoints.count-1].alignmentImageTransform = edibleIntermediateRouteAnchorPoints.last!.transform
+            keypoints[keypoints.count-1].alignmentIntrinsics = edibleIntermediateRouteAnchorPoints.last!.intrinsics
+
+        }
         return keypoints
     }
     
@@ -488,7 +524,7 @@ class PathFinder {
     ///
     /// - Parameter edibleCrumbs: a list of `LocationInfo` objects representing the trail of breadcrumbs left on the path.
     /// - Returns: a list of `KeypointInfo` objects representing the important turns in the path.
-    func calculateKeypoints(edibleCrumbs: [LocationInfo]) -> [KeypointInfo] {
+    func calculateKeypoints(edibleCrumbs: [LocationInfo], edibleIntermediateRouteAnchorPoints: [RouteAnchorPoint]) -> [KeypointInfo] {
         var keypoints = [KeypointInfo]()
         
         let firstCrumb = edibleCrumbs.first
@@ -531,8 +567,10 @@ class PathFinder {
             //  Recursively find all keypoints before the detected keypoint and
             //  after the detected keypoint, and add them in a list with the
             //  detected keypoint.
-            let prevKeypoints = calculateKeypoints(edibleCrumbs: Array(edibleCrumbs[0..<(maxIndex!+1)]))
-            let postKeypoints = calculateKeypoints(edibleCrumbs: Array(edibleCrumbs[maxIndex!...]))
+            let prevRouteAnchorPoints = edibleIntermediateRouteAnchorPoints.isEmpty ? [] : Array(edibleIntermediateRouteAnchorPoints[0..<(maxIndex!+1)])
+            let prevKeypoints = calculateKeypoints(edibleCrumbs: Array(edibleCrumbs[0..<(maxIndex!+1)]), edibleIntermediateRouteAnchorPoints: prevRouteAnchorPoints)
+            let postRouteAnchorPoints = edibleIntermediateRouteAnchorPoints.isEmpty ? [] : Array(edibleIntermediateRouteAnchorPoints[maxIndex!...])
+            let postKeypoints = calculateKeypoints(edibleCrumbs: Array(edibleCrumbs[maxIndex!...]), edibleIntermediateRouteAnchorPoints: postRouteAnchorPoints)
             
             var prevKeypointLocation = edibleCrumbs.first!
             var prevKeypointOrientation = Vector3.x
@@ -552,6 +590,10 @@ class PathFinder {
             
             
             keypoints.append(KeypointInfo(location: newKeypointLocation, orientation: newKeypointOrientation))
+            edibleIntermediateRouteAnchorPoints[maxIndex!].loadImage()
+            keypoints[keypoints.count-1].alignmentImage = edibleIntermediateRouteAnchorPoints[maxIndex!].image
+            keypoints[keypoints.count-1].alignmentImageTransform = edibleIntermediateRouteAnchorPoints[maxIndex!].transform
+            keypoints[keypoints.count-1].alignmentIntrinsics = edibleIntermediateRouteAnchorPoints[maxIndex!].intrinsics
             
             if (!postKeypoints.isEmpty) {
                 keypoints += postKeypoints
