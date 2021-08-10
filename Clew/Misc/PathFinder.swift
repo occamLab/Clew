@@ -590,10 +590,12 @@ class PathFinder {
             
             
             keypoints.append(KeypointInfo(location: newKeypointLocation, orientation: newKeypointOrientation))
-            edibleIntermediateRouteAnchorPoints[maxIndex!].loadImage()
-            keypoints[keypoints.count-1].alignmentImage = edibleIntermediateRouteAnchorPoints[maxIndex!].image
-            keypoints[keypoints.count-1].alignmentImageTransform = edibleIntermediateRouteAnchorPoints[maxIndex!].transform
-            keypoints[keypoints.count-1].alignmentIntrinsics = edibleIntermediateRouteAnchorPoints[maxIndex!].intrinsics
+            if !edibleIntermediateRouteAnchorPoints.isEmpty {
+                edibleIntermediateRouteAnchorPoints[maxIndex!].loadImage()
+                keypoints[keypoints.count-1].alignmentImage = edibleIntermediateRouteAnchorPoints[maxIndex!].image
+                keypoints[keypoints.count-1].alignmentImageTransform = edibleIntermediateRouteAnchorPoints[maxIndex!].transform
+                keypoints[keypoints.count-1].alignmentIntrinsics = edibleIntermediateRouteAnchorPoints[maxIndex!].intrinsics
+            }
             
             if (!postKeypoints.isEmpty) {
                 keypoints += postKeypoints

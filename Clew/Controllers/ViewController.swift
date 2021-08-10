@@ -473,7 +473,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
         let isSameMap = configuration.initialWorldMap != nil && configuration.initialWorldMap == worldMap
         print("disabling world map")
-        configuration.initialWorldMap = nil //worldMap
+        configuration.initialWorldMap = nil // worldMap
     
         attemptingRelocalization =  isSameMap && !isTrackingPerformanceNormal || worldMap != nil && !isSameMap
 
@@ -1907,6 +1907,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                     
                     let relativeTransform = self.getRelativeTransform(frame: frame, alignTransform: alignTransform, visualYawReturn: visualYawReturn)
                     self.visualTransforms.append(relativeTransform)
+                    DispatchQueue.main.async {
+                        self.announce(announcement: String(format: "%.2f", atan2(relativeTransform.columns.0.z, relativeTransform.columns.0.x)))
+                    }
                     self.visualAlignmentSuccessSound?.play()
                 } else if self.backupTransform == nil {
                     var visualYawReturnCopy = visualYawReturn
@@ -1927,7 +1930,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                         return
                     }
                     if !self.visualTransforms.isEmpty {
-                        // Average the SE3 transforms (rotation and translation in 3D).  The averaging is only valid since we constrain the transforms to involve rotation about a common axis.
+                        // Average the SE3 transforms (rotation and translation in 3D).  The averaging is only valid since we constrain the transforms to involve rotation about a common axis.  We still need to ensure the first three columns are all unit vectors.
+                        
+                        // TODO: this sort of averaging is very susceptible to outliers.  We need to do something smarter (e.g., median, which would be tricky with angles)
+                        // TODO: could use the idea of Generalized Cameras to triangulate the pose based on multiple matches
+                        // ALSO: http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.675.9688&rep=rep1&type=pdf
+                        // CODE: https://github.com/sweeneychris/TheiaSfM
                         var averageTransform = self.visualTransforms.reduce(simd_float4x4(0.0), { (x,y) in x + y}) * (1.0 / Float(self.visualTransforms.count))
                         averageTransform.columns.0 = simd_normalize(averageTransform.columns.0)
                         averageTransform.columns.1 = simd_normalize(averageTransform.columns.1)

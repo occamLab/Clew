@@ -22,7 +22,7 @@
 
 + (VisualAlignmentReturn) visualYaw :(UIImage *)image1 :(simd_float4)intrinsics1 :(simd_float4x4)pose1
                     :(UIImage *)image2 :(simd_float4)intrinsics2 :(simd_float4x4)pose2 {
-    
+    bool useThreePoint = false;
     VisualAlignmentReturn ret;
     // Convert the UIImages to cv::Mats and rotate them.
     cv::Mat image_mat1, image_mat2;
@@ -68,18 +68,7 @@
 
     const auto matches = getMatches(keypoints_and_descriptors1.descriptors, keypoints_and_descriptors2.descriptors);
     
-    // Uncomment the lines below and add a breakpoint to see the found matches between the perspective-warped images.
-    //cv::Mat debug_match_image;
-    //cv::drawMatches(square_image_mat1_resized, keypoints_and_descriptors1.keypoints, square_image_mat2_resized, keypoints_and_descriptors2.keypoints, matches, debug_match_image);
-    //UIImage *debug_match_image_ui = MatToUIImage(debug_match_image);
     
-    if (matches.size() < 10) {
-        ret.is_valid = false;
-        ret.yaw = 0;
-        return ret;
-    }
-
-
     std::vector<cv::Point2f> vectors1, vectors2;
     
     for (const auto& match : matches) {
@@ -95,13 +84,125 @@
         vectors2.push_back(cv::Point2f(keypoint2projected(0), keypoint2projected(1)));
     }
 
-    ret.is_valid = true;
-    ret.numMatches = vectors1.size();
-    const auto yaw = getYaw(vectors1, vectors2, intrinsics1_matrix, ret.numInliers, ret.residualAngle, ret.tx, ret.ty, ret.tz);
+    
+    // Uncomment the lines below and add a breakpoint to see the found matches between the perspective-warped images.
+    //cv::Mat debug_match_image;
+    //cv::drawMatches(square_image_mat1_resized, keypoints_and_descriptors1.keypoints, square_image_mat2_resized, keypoints_and_descriptors2.keypoints, matches, debug_match_image);
+    //UIImage *debug_match_image_ui = MatToUIImage(debug_match_image);
+    if (useThreePoint) {
+        if (matches.size() < 6) {
+            ret.is_valid = false;
+            ret.yaw = 0;
+            return ret;
+        }
+        std::vector<Eigen::Vector3d> all_rays_image_1, all_rays_image_2;
 
-    ret.yaw = yaw;
+        
+        for (unsigned int i = 0; i < matches.size(); i++) {
+            const auto& match = matches[i];
+            const auto keypoint1 = keypoints_and_descriptors1.keypoints[match.queryIdx];
+            const auto keypoint2 = keypoints_and_descriptors2.keypoints[match.trainIdx];
+            // correct for the downsampling
+            Eigen::Vector3f homogeneousKp1(downSampleFactor*keypoint1.pt.x, downSampleFactor*keypoint1.pt.y, 1.0);
+            Eigen::Vector3f image_1_ray = intrinsics1_matrix.inverse() * homogeneousKp1;
+            all_rays_image_1.push_back(Eigen::Vector3d(image_1_ray.x(), image_1_ray.y(), image_1_ray.z()));
+            Eigen::Vector3f homogeneousKp2(downSampleFactor*keypoint2.pt.x, downSampleFactor*keypoint2.pt.y, 1.0);
+            Eigen::Vector3f image_2_ray = intrinsics2_matrix.inverse() * homogeneousKp2;
+            all_rays_image_2.push_back(Eigen::Vector3d(image_2_ray.x(), image_2_ray.y(), image_2_ray.z()));
+        }
+        
+        // We'll do RANSAC to find the best three points
+        Eigen::Matrix3d bestEssential;
+        int bestInlierCount = -1;
+        double bestInlierResidualSum = -1;
 
-    return ret;
+        // to allow us to randomize for RANSAC
+        unsigned int* indices = new unsigned int[matches.size()];
+        for (unsigned int i = 0; i < matches.size(); i++) {
+            indices[i] = i;
+        }
+        
+        for (unsigned int trial = 0; trial < 100; trial++) {
+            std::random_shuffle(indices, indices+matches.size());
+            
+            Eigen::Vector3d rotation_axis = Eigen::Vector3d(0, 1, 0);
+            Eigen::Vector3d image_1_rays[3];
+            Eigen::Vector3d image_2_rays[3];
+            std::vector<Eigen::Quaterniond> soln_rotations;
+            std::vector<Eigen::Vector3d> soln_translations;
+            for (unsigned int i = 0; i < 3; i++) {
+                const auto& match = matches[indices[i]];
+                const auto keypoint1 = keypoints_and_descriptors1.keypoints[match.queryIdx];
+                const auto keypoint2 = keypoints_and_descriptors2.keypoints[match.trainIdx];
+                // correct for the downsampling
+                Eigen::Vector3f homogeneousKp1(downSampleFactor*keypoint1.pt.x, downSampleFactor*keypoint1.pt.y, 1.0);
+                Eigen::Vector3f image_1_ray = intrinsics1_matrix.inverse() * homogeneousKp1;
+                image_1_rays[i] = Eigen::Vector3d(image_1_ray.x(), image_1_ray.y(), image_1_ray.z());
+                Eigen::Vector3f homogeneousKp2(downSampleFactor*keypoint2.pt.x, downSampleFactor*keypoint2.pt.y, 1.0);
+                Eigen::Vector3f image_2_ray = intrinsics2_matrix.inverse() * homogeneousKp2;
+                image_2_rays[i] = Eigen::Vector3d(image_2_ray.x(), image_2_ray.y(), image_2_ray.z());
+            }
+
+            theia::ThreePointRelativePosePartialRotation(rotation_axis,
+                                                  image_1_rays,
+                                                  image_2_rays,
+                                                  &soln_rotations,
+                                                  &soln_translations);
+            for (unsigned int i = 0; i < soln_rotations.size(); i++) {
+                const Eigen::Matrix3d relative_rotation = soln_rotations[i].toRotationMatrix();
+                Eigen::Matrix3d essential_matrix = CrossProductMatrix(soln_translations[i]) * relative_rotation;
+                essential_matrix.normalize();
+                int totalInliers = 0;
+                double inlierResidualSum = 0.0;
+                for (unsigned int j = 0; j < all_rays_image_1.size(); j++) {
+                    double pointResidual = abs(all_rays_image_2[j].transpose() * essential_matrix * all_rays_image_1[j]);
+                    if (pointResidual < 0.001) { // TODO: this threshold is not correct, we need to figure out how to make this into something consistent (e.g., distance in pixels to epipolar line)
+                        totalInliers++;
+                        inlierResidualSum += pointResidual;
+                    }
+                }
+                if (bestInlierCount < 0 || totalInliers > bestInlierCount || (totalInliers == bestInlierCount && inlierResidualSum < bestInlierResidualSum)) {
+                    bestInlierCount = totalInliers;
+                    bestEssential = essential_matrix;
+                    bestInlierResidualSum = inlierResidualSum;
+                }
+            }
+        }
+        std::cout << "best essential " << bestEssential << std::endl;
+        std::cout << "best inlier ratio "  << bestInlierCount / (float) matches.size() << std::endl;
+        cv::Mat bestEssentialCV;
+        eigen2cv(bestEssential, bestEssentialCV);
+        cv::Mat dcm_mat, translation_mat;
+
+        int numInliers = cv::recoverPose(bestEssentialCV, vectors1, vectors2, dcm_mat, translation_mat, intrinsics1_matrix(0, 0), cv::Point2f(intrinsics1_matrix(0, 2), intrinsics1_matrix(1, 2)));
+        Eigen::Matrix3f dcm;
+        cv2eigen(dcm_mat, dcm);
+        const auto rotated = dcm * Eigen::Vector3f::UnitZ();
+        const float yaw = atan2(rotated(0), rotated(2));
+        float residualAngle = abs(yaw) - acos((dcm.trace() - 1)/2);
+        std::cout << "numInliers three point " << numInliers << " residualAngle " << residualAngle << " yaw " << yaw << std::endl;
+        ret.yaw = yaw;
+        ret.residualAngle = residualAngle;
+        ret.tx = translation_mat.at<double>(0, 0);
+        ret.ty = translation_mat.at<double>(0, 1);
+        ret.tz = translation_mat.at<double>(0, 2);
+        ret.is_valid = numInliers >= 6;
+        delete[] indices;
+        return ret;
+    } else {
+        if (matches.size() < 10) {
+            ret.is_valid = false;
+            ret.yaw = 0;
+            return ret;
+        }
+        ret.is_valid = true;
+        ret.numMatches = vectors1.size();
+        const auto yaw = getYaw(vectors1, vectors2, intrinsics1_matrix, ret.numInliers, ret.residualAngle, ret.tx, ret.ty, ret.tz);
+
+        ret.yaw = yaw;
+        std::cout << "ret.yaw " << ret.yaw << std::endl;
+        return ret;
+    }
 }
 
 + (int) numFeatures :(UIImage *)image {
