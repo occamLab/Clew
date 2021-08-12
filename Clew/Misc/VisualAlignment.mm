@@ -20,9 +20,18 @@
 
 @implementation VisualAlignment
 
+
+
+UIImage *debug_match_image_ui = 0;
+
++ (nullable UIImage*) getDebugImage {
+    return debug_match_image_ui;
+}
+
 + (VisualAlignmentReturn) visualYaw :(UIImage *)image1 :(simd_float4)intrinsics1 :(simd_float4x4)pose1
                     :(UIImage *)image2 :(simd_float4)intrinsics2 :(simd_float4x4)pose2 {
-    bool useThreePoint = false;
+    debug_match_image_ui = 0;
+    bool useThreePoint = true;
     VisualAlignmentReturn ret;
     // Convert the UIImages to cv::Mats and rotate them.
     cv::Mat image_mat1, image_mat2;
@@ -84,11 +93,6 @@
         vectors2.push_back(cv::Point2f(keypoint2projected(0), keypoint2projected(1)));
     }
 
-    
-    // Uncomment the lines below and add a breakpoint to see the found matches between the perspective-warped images.
-    //cv::Mat debug_match_image;
-    //cv::drawMatches(square_image_mat1_resized, keypoints_and_descriptors1.keypoints, square_image_mat2_resized, keypoints_and_descriptors2.keypoints, matches, debug_match_image);
-    //UIImage *debug_match_image_ui = MatToUIImage(debug_match_image);
     if (useThreePoint) {
         if (matches.size() < 6) {
             ret.is_valid = false;
@@ -121,7 +125,9 @@
         for (unsigned int i = 0; i < matches.size(); i++) {
             indices[i] = i;
         }
-        
+        std::map<int, std::vector<float> > centiradQuantization;
+        std::map<int, std::vector<cv::Mat> > centiradQuantizationTranslations;
+
         for (unsigned int trial = 0; trial < 100; trial++) {
             std::random_shuffle(indices, indices+matches.size());
             
@@ -161,6 +167,27 @@
                         inlierResidualSum += pointResidual;
                     }
                 }
+                
+                // TODO this needs to be tuned in a smarter way (e.g., by running some iterations of RANSAC first and then adapting the threshold as a proportion of the best inlier count
+                if (totalInliers > 0.5*all_rays_image_1.size()) {
+                    // compute pose for averaging purposes
+                    cv::Mat essential_matrixCV;
+                    eigen2cv(essential_matrix, essential_matrixCV);
+                    cv::Mat dcm_mat, translation_mat;
+
+                    int numInliers = cv::recoverPose(essential_matrixCV, vectors1, vectors2, dcm_mat, translation_mat, intrinsics1_matrix(0, 0), cv::Point2f(intrinsics1_matrix(0, 2), intrinsics1_matrix(1, 2)));
+                    Eigen::Matrix3f dcm;
+                    cv2eigen(dcm_mat, dcm);
+                    const auto rotated = dcm * Eigen::Vector3f::UnitZ();
+                    float yaw = atan2(rotated(0), rotated(2));
+                    int quantized = (int) (yaw*100);
+                    if (centiradQuantization.find(quantized) == centiradQuantization.end()) {
+                        centiradQuantization[quantized] = std::vector<float>();
+                        centiradQuantizationTranslations[quantized] = std::vector<cv::Mat>();
+                    }
+                    centiradQuantization[quantized].push_back(yaw);
+                    centiradQuantizationTranslations[quantized].push_back(translation_mat);
+                }
                 if (bestInlierCount < 0 || totalInliers > bestInlierCount || (totalInliers == bestInlierCount && inlierResidualSum < bestInlierResidualSum)) {
                     bestInlierCount = totalInliers;
                     bestEssential = essential_matrix;
@@ -168,6 +195,33 @@
                 }
             }
         }
+        
+        float bestConsensusYaw = 0.0;
+        cv::Mat bestConsensusTranslation = cv::Mat(3,1, CV_64F, 0.0);
+        unsigned long mostQuantized = 0;
+        for (std::map<int, std::vector<float> >::iterator i = centiradQuantization.begin(); i != centiradQuantization.end(); ++i) {
+            if (i->second.size() > mostQuantized) {
+                std::cout << "current best " << i->first << std::endl;
+                mostQuantized = i->second.size();
+                bestConsensusYaw = 0.0;
+                // take the average of all elements in the bucket
+                for (std::vector<float>::iterator j = i->second.begin(); j != i->second.end(); ++j) {
+                    bestConsensusYaw += *j / mostQuantized;
+                }
+                bestConsensusTranslation = cv::Mat(3,1, CV_64F, 0.0);
+                for (unsigned long j = 0; j < centiradQuantizationTranslations[i->first].size(); j++) {
+                    bestConsensusTranslation += centiradQuantizationTranslations[i->first][j];
+                }
+                bestConsensusTranslation = bestConsensusTranslation / cv::norm(bestConsensusTranslation);
+                std::cout << bestConsensusTranslation << std::endl;
+            }
+            
+        }
+        std::cout << "final best " << bestConsensusYaw << std::endl;
+        
+        cv::Mat debug_match_image;
+        cv::drawMatches(square_image_mat1_resized, keypoints_and_descriptors1.keypoints, square_image_mat2_resized, keypoints_and_descriptors2.keypoints, matches, debug_match_image);
+        debug_match_image_ui = MatToUIImage(debug_match_image);
         std::cout << "best essential " << bestEssential << std::endl;
         std::cout << "best inlier ratio "  << bestInlierCount / (float) matches.size() << std::endl;
         cv::Mat bestEssentialCV;
@@ -181,11 +235,11 @@
         const float yaw = atan2(rotated(0), rotated(2));
         float residualAngle = abs(yaw) - acos((dcm.trace() - 1)/2);
         std::cout << "numInliers three point " << numInliers << " residualAngle " << residualAngle << " yaw " << yaw << std::endl;
-        ret.yaw = yaw;
+        ret.yaw = mostQuantized > 0 ? bestConsensusYaw : yaw;
         ret.residualAngle = residualAngle;
-        ret.tx = translation_mat.at<double>(0, 0);
-        ret.ty = translation_mat.at<double>(0, 1);
-        ret.tz = translation_mat.at<double>(0, 2);
+        ret.tx = mostQuantized > 0 ? bestConsensusTranslation.at<double>(0, 0) : translation_mat.at<double>(0, 0);
+        ret.ty = mostQuantized > 0 ? bestConsensusTranslation.at<double>(0, 1) : translation_mat.at<double>(0, 1);
+        ret.tz = mostQuantized > 0 ? bestConsensusTranslation.at<double>(0, 2) : translation_mat.at<double>(0, 2);
         ret.is_valid = numInliers >= 6;
         delete[] indices;
         return ret;

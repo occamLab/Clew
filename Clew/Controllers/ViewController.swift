@@ -840,6 +840,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// called when the view has loaded.  We setup various app elements in here.
     override func viewDidLoad() {
         super.viewDidLoad()
+        appStartTime = Date()
         sceneView.session.delegate = self
 
         sceneView.accessibilityIgnoresInvertColors = true
@@ -1510,7 +1511,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     var keypointNode: SCNNode!
     
     /// SCNNode of the arrow that shows the alignment
-    var arrowNode: SCNNode?
+    var arrowNodes: [Int: SCNNode] = [:]
     
     /// previous keypoint location - originally set to current location
     var prevKeypointPosition: LocationInfo!
@@ -1552,6 +1553,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     var waypointFeedbackGenerator: UINotificationFeedbackGenerator?
     /// The time of last haptic feedback
     var feedbackTimer: Date!
+    /// The start time of the app
+    var appStartTime: Date!
+    /// the image counter for uploading debug images
+    var imageCounter: Int = 0
     /// The delay between haptic feedback pulses in seconds
     static let FEEDBACKDELAY = 0.4
     
@@ -1882,6 +1887,20 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                                                                 capturedUIImage,
                                                                 simd_float4(intrinsics[0, 0], intrinsics[1, 1], intrinsics[2, 0], intrinsics[2, 1]),
                                                                 frame.camera.transform)
+                if let debugImage = VisualAlignment.getDebugImage() {
+                    let storageref = Storage.storage().reference().child(String(format: "visualAlignment/\(String(self.appStartTime.timeIntervalSince1970))/%04d.jpg", self.imageCounter))
+                    self.imageCounter += 1
+                    if let imageData = debugImage.jpegData(compressionQuality: 0.25) {
+                        print("test")
+                        let metadata = StorageMetadata()
+                        metadata.contentType = "image/jpeg"
+                        storageref.putData(imageData, metadata: metadata) { (metadata, error) in
+                            if error != nil {
+                                print("unable to upload")
+                            }
+                        }
+                    }
+                }
                 UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
                 
                let propInliers = visualYawReturn.numMatches > 0 ? Float(visualYawReturn.numInliers) / Float(visualYawReturn.numMatches) : 0.0
@@ -1898,13 +1917,53 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                     arrowTransform.columns.1 = simd_float4(cos(yaw), 0, -sin(yaw), 0)
                     arrowTransform.columns.2 = simd_float4(0, -1, 0, 0)
                     
-                    arrowTransform.columns.3 = arrowTransform.columns.3 + arrowTransform.columns.0
+                    arrowTransform.columns.3 = arrowTransform.columns.3
                     print("tx \(visualYawReturn.tx) tz \(visualYawReturn.tz)")
                     DispatchQueue.main.async {
-                        self.renderArrow(transform: arrowTransform)
+                        self.renderArrow(transform: arrowTransform, arrowIndex: 0, scale: 2)
                     }
+
                     
-                    
+                    // a is the distance to the next keypoint
+                    // theta is the signed angle between the translation vector (in the plane of the floor and the translation vector)
+                    if case .navigatingRoute = self.state {
+                        let delta = alignTransform.columns.3 - frame.camera.transform.columns.3
+                        let a = simd_length(delta)
+                        let rotVec = simd_cross(simd_normalize(delta.dropW), simd_normalize(arrowTransform.columns.0.dropW))
+                        let theta = rotVec.y
+                        print("theta", theta)
+                        let b = a*tan(theta)
+                        let uVec = simd_float4x4(simd_float4(cos(Float.pi/2), 0, -sin(Float.pi/2), 0), simd_float4(0, 1, 0, 0), simd_float4(sin(Float.pi/2), 0, cos(Float.pi/2), 0), simd_float4(0, 0, 0, 1))*simd_normalize(simd_float4(delta.x, 0, delta.z, 0))
+                        print("uvec", simd_length(uVec))
+                        let shiftVec = b*uVec
+                        
+                        
+                        var arrowTransformDelta = matrix_identity_float4x4
+                        arrowTransformDelta.columns.3 = frame.camera.transform.columns.3 - simd_float4(0, 0.5, 0, 0)
+                        arrowTransformDelta.columns.0 = simd_normalize(simd_float4(delta.x, 0, delta.z, 0))
+                        arrowTransformDelta.columns.2 = simd_float4(simd_cross(arrowTransformDelta.columns.0.dropW, arrowTransformDelta.columns.1.dropW), 0)
+//
+//                        DispatchQueue.main.async {
+//                            self.renderArrow(transform: arrowTransformDelta, arrowIndex: 2, scale: simd_length(delta))
+//                        }
+                        
+                        print("theta", theta)
+                        var secondArrow = matrix_identity_float4x4
+                        secondArrow.columns.3 = alignTransform.columns.3
+                        secondArrow.columns.0 = simd_normalize(shiftVec)
+                        secondArrow.columns.2 = simd_float4(simd_cross(secondArrow.columns.0.dropW, secondArrow.columns.1.dropW), 0)
+                        print("secondArrow \(secondArrow)")
+                        DispatchQueue.main.async {
+                            self.renderArrow(transform: secondArrow, arrowIndex: 1, scale: simd_length(shiftVec))
+                        }
+                        var relativeTransform = matrix_identity_float4x4
+                        relativeTransform.columns.3 = -simd_float4(shiftVec.dropW, 1)
+                        /* //TODO: find some way to only do this shift once per keypoint
+                         if simd_length(delta) < 1.5 {
+                            self.sceneView.session.setWorldOrigin(relativeTransform: relativeTransform)
+                        }*/
+                    }
+                        
                     let relativeTransform = self.getRelativeTransform(frame: frame, alignTransform: alignTransform, visualYawReturn: visualYawReturn)
                     self.visualTransforms.append(relativeTransform)
                     DispatchQueue.main.async {
@@ -2357,16 +2416,16 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
     }
     
-    func renderArrow(transform: simd_float4x4) {
-        arrowNode?.removeFromParentNode()
-        arrowNode = SCNNode(mdlObject: arrowObject)
-        arrowNode?.simdTransform = transform
-        arrowNode?.scale = SCNVector3(1, 0.25, 0.25)
-        for material in arrowNode!.geometry!.materials {
+    func renderArrow(transform: simd_float4x4, arrowIndex: Int, scale: Float=1.0) {
+        arrowNodes[arrowIndex]?.removeFromParentNode()
+        arrowNodes[arrowIndex] = SCNNode(mdlObject: arrowObject)
+        arrowNodes[arrowIndex]!.simdTransform = transform
+        arrowNodes[arrowIndex]!.scale = SCNVector3(1*scale, 0.25*scale, 0.25*scale)
+        for material in arrowNodes[arrowIndex]!.geometry!.materials {
             material.diffuse.contents = UIColor.red
         }
 
-        sceneView.scene.rootNode.addChildNode(arrowNode!)
+        sceneView.scene.rootNode.addChildNode(arrowNodes[arrowIndex]!)
     }
     
     /// Create the keypoint SCNNode that corresponds to the rotating flashing element that looks like a navigation pin.

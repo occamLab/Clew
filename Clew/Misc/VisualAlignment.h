@@ -39,6 +39,9 @@ typedef struct {
  - intrinsics2: The camera intrinsics used to take image2 in the format [fx, fy, ppx, ppy].
  - pose2: The pose of the camera in the arsession used to take the second image.
  */
+
++ (nullable UIImage*) getDebugImage;
+
 + (VisualAlignmentReturn) visualYaw :(UIImage *)image1 :(simd_float4)intrinsics1 :(simd_float4x4)pose1 :(UIImage *)image2 :(simd_float4)intrinsics2 :(simd_float4x4)pose2;
 
 /**

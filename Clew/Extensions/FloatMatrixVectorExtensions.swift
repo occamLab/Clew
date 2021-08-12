@@ -159,6 +159,10 @@ extension float4 {
         return float3(x/w, y/w, z/w)
     }
     
+    var dropW: float3 {
+        return float3(x, y, z)
+    }
+    
     func toString()->String {
         return "\(self.x)\t\(self.y)\t\(self.z)\t\(self.w)"
     }
