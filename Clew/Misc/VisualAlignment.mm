@@ -101,8 +101,6 @@ UIImage *debug_match_image_ui = 0;
         }
         std::vector<Eigen::Vector3d> all_rays_image_1, all_rays_image_2;
 
-        std::vector<cv::Point2f> vectors1_ransac, vectors2_ransac;
-
         for (unsigned int i = 0; i < matches.size(); i++) {
             const auto& match = matches[i];
             const auto keypoint1 = keypoints_and_descriptors1.keypoints[match.queryIdx];
@@ -131,7 +129,7 @@ UIImage *debug_match_image_ui = 0;
 
         for (unsigned int trial = 0; trial < 100; trial++) {
             std::random_shuffle(indices, indices+matches.size());
-            
+            std::vector<cv::Point2f> vectors1_ransac, vectors2_ransac;
             Eigen::Vector3d rotation_axis = Eigen::Vector3d(0, 1, 0);
             Eigen::Vector3d image_1_rays[3];
             Eigen::Vector3d image_2_rays[3];
@@ -179,6 +177,10 @@ UIImage *debug_match_image_ui = 0;
                     cv::Mat dcm_mat, translation_mat;
 
                     int numInliers = cv::recoverPose(essential_matrixCV, vectors1_ransac, vectors2_ransac, dcm_mat, translation_mat, intrinsics1_matrix(0, 0), cv::Point2f(intrinsics1_matrix(0, 2), intrinsics1_matrix(1, 2)));
+                    if (numInliers < 3) {
+                        // one of the correspondences is behind the camera
+                        continue;
+                    }
                     Eigen::Matrix3f dcm;
                     cv2eigen(dcm_mat, dcm);
                     const auto rotated = dcm * Eigen::Vector3f::UnitZ();
