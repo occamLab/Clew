@@ -138,6 +138,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     var visualTransforms: [simd_float4x4] = []
     
+    var relativeYaws: [Float] = []
+    
     var backupTransform: simd_float4x4?
 
     
@@ -1848,6 +1850,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         self.pausedAnchorPoint?.loadImage()
         // The first check is necessary in case the phone relocalizes before this code executes
         visualTransforms = []
+        relativeYaws = []
         backupTransform = nil
         tryVisualAlignment(triesLeft: ViewController.maxVisualAlignmentRetryCount, makeAnnounement: true)
     }
@@ -1910,7 +1913,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 
                let propInliers = visualYawReturn.numMatches > 0 ? Float(visualYawReturn.numInliers) / Float(visualYawReturn.numMatches) : 0.0
                 print("alignment inliers \(visualYawReturn.numInliers) \(visualYawReturn.numMatches) \(propInliers) \(visualYawReturn.residualAngle)")
-
+                if self.backupTransform == nil {
+                    var visualYawReturnCopy = visualYawReturn
+                    visualYawReturnCopy.yaw = 0
+                    visualYawReturnCopy.is_valid = true
+                    self.backupTransform = self.getRelativeTransform(frame: frame, alignTransform: alignTransform, visualYawReturn: visualYawReturnCopy)
+                }
                 if visualYawReturn.is_valid, abs(visualYawReturn.residualAngle) < 0.01 {
                     
                     var arrowTransform = matrix_identity_float4x4
@@ -1970,16 +1978,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                     }
                         
                     let relativeTransform = self.getRelativeTransform(frame: frame, alignTransform: alignTransform, visualYawReturn: visualYawReturn)
+                    let relativeYaw = atan2(relativeTransform.columns.0.z, relativeTransform.columns.0.x)
+                    self.relativeYaws.append(relativeYaw)
                     self.visualTransforms.append(relativeTransform)
                     DispatchQueue.main.async {
-                        self.announce(announcement: String(format: "%.2f", atan2(relativeTransform.columns.0.z, relativeTransform.columns.0.x)))
+                        self.announce(announcement: String(format: "%.2f", relativeYaw))
                     }
                     self.visualAlignmentSuccessSound?.play()
-                } else if self.backupTransform == nil {
-                    var visualYawReturnCopy = visualYawReturn
-                    visualYawReturnCopy.yaw = 0
-                    visualYawReturnCopy.is_valid = true
-                    self.backupTransform = self.getRelativeTransform(frame: frame, alignTransform: alignTransform, visualYawReturn: visualYawReturnCopy)
                 }
                 if triesLeft > 1 {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
@@ -1997,15 +2002,21 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                         // Average the SE3 transforms (rotation and translation in 3D).  The averaging is only valid since we constrain the transforms to involve rotation about a common axis.  We still need to ensure the first three columns are all unit vectors.
                         
                         // TODO: this sort of averaging is very susceptible to outliers.  We need to do something smarter (e.g., median, which would be tricky with angles)
-                        // TODO: could use the idea of Generalized Cameras to triangulate the pose based on multiple matches
-                        // ALSO: http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.675.9688&rep=rep1&type=pdf
-                        // CODE: https://github.com/sweeneychris/TheiaSfM
-                        var averageTransform = self.visualTransforms.reduce(simd_float4x4(0.0), { (x,y) in x + y}) * (1.0 / Float(self.visualTransforms.count))
-                        averageTransform.columns.0 = simd_normalize(averageTransform.columns.0)
-                        averageTransform.columns.1 = simd_normalize(averageTransform.columns.1)
-                        averageTransform.columns.2 = simd_normalize(averageTransform.columns.2)
+                        let quantizedYaws = self.relativeYaws.map({Int($0*100)})
+                        let mostFrequent = mostFrequent(array: quantizedYaws)!
+                        var suitableYaws: [Float] = []
+                        for relativeYaw in self.relativeYaws {
+                            if Int(relativeYaw*100) == mostFrequent.mostFrequent[0] {
+                                suitableYaws.append(relativeYaw)
+                            }
+                        }
+                        let consensusYaw = suitableYaws.reduce(Float(0.0), { (x,y) in x + y/Float(mostFrequent.count)})
+                        var relativeTransform = self.backupTransform!
+                        // TODO: need to verify this is right
+                        relativeTransform.columns.0 = simd_float4(cos(consensusYaw), 0, sin(consensusYaw), 0)
+                        relativeTransform.columns.1 = simd_float4(0, 1, 0, 0)
+                        relativeTransform.columns.2 = simd_float4(-sin(consensusYaw), 0, cos(consensusYaw), 0)
                         
-                        let relativeTransform = averageTransform
                         if self.attemptingRelocalization || self.configuration.initialWorldMap == nil {
                             self.sceneView.session.setWorldOrigin(relativeTransform: relativeTransform)
                         }

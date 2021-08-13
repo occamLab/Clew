@@ -16,6 +16,15 @@ func roundToTenths(_ n: Float) -> Float {
     return roundf(10 * n)/10
 }
 
+func mostFrequent(array: [Int]) -> (mostFrequent: [Int], count: Int)? {
+    var counts: [Int: Int] = [:]
+        
+    array.forEach { counts[$0] = (counts[$0] ?? 0) + 1 }
+    if let count = counts.max(by: {$0.value < $1.value})?.value {
+        return (counts.compactMap { $0.value == count ? $0.key : nil }, count)
+    }
+    return nil
+}
 
 /// Modulus function (swift's % operator is a remainder function that doesn't work properly for negative numbers
 ///
