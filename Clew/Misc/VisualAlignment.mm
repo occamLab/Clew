@@ -206,7 +206,6 @@ UIImage *debug_match_image_ui = 0;
         unsigned long mostQuantized = 0;
         for (std::map<int, std::vector<float> >::iterator i = centiradQuantization.begin(); i != centiradQuantization.end(); ++i) {
             if (i->second.size() > mostQuantized) {
-                std::cout << "current best " << i->first << std::endl;
                 mostQuantized = i->second.size();
                 bestConsensusYaw = 0.0;
                 // take the average of all elements in the bucket
@@ -218,17 +217,13 @@ UIImage *debug_match_image_ui = 0;
                     bestConsensusTranslation += centiradQuantizationTranslations[i->first][j];
                 }
                 bestConsensusTranslation = bestConsensusTranslation / cv::norm(bestConsensusTranslation);
-                std::cout << bestConsensusTranslation << std::endl;
             }
             
         }
-        std::cout << "final best " << bestConsensusYaw << std::endl;
         
         cv::Mat debug_match_image;
         cv::drawMatches(square_image_mat1_resized, keypoints_and_descriptors1.keypoints, square_image_mat2_resized, keypoints_and_descriptors2.keypoints, matches, debug_match_image);
         debug_match_image_ui = MatToUIImage(debug_match_image);
-        std::cout << "best essential " << bestEssential << std::endl;
-        std::cout << "best inlier ratio "  << bestInlierCount / (float) matches.size() << std::endl;
         cv::Mat bestEssentialCV;
         eigen2cv(bestEssential, bestEssentialCV);
         cv::Mat dcm_mat, translation_mat;
@@ -239,7 +234,6 @@ UIImage *debug_match_image_ui = 0;
         const auto rotated = dcm * Eigen::Vector3f::UnitZ();
         const float yaw = atan2(rotated(0), rotated(2));
         float residualAngle = abs(yaw) - acos((dcm.trace() - 1)/2);
-        std::cout << "numInliers three point " << numInliers << " residualAngle " << residualAngle << " yaw " << yaw << std::endl;
         ret.yaw = mostQuantized > 0 ? bestConsensusYaw : yaw;
         ret.residualAngle = residualAngle;
         ret.tx = mostQuantized > 0 ? bestConsensusTranslation.at<double>(0, 0) : translation_mat.at<double>(0, 0);

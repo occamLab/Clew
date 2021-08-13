@@ -1999,9 +1999,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                         return
                     }
                     if !self.visualTransforms.isEmpty {
-                        // Average the SE3 transforms (rotation and translation in 3D).  The averaging is only valid since we constrain the transforms to involve rotation about a common axis.  We still need to ensure the first three columns are all unit vectors.
-                        
-                        // TODO: this sort of averaging is very susceptible to outliers.  We need to do something smarter (e.g., median, which would be tricky with angles)
                         let quantizedYaws = self.relativeYaws.map({Int($0*100)})
                         let mostFrequent = mostFrequent(array: quantizedYaws)!
                         var suitableYaws: [Float] = []
@@ -2012,11 +2009,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                         }
                         let consensusYaw = suitableYaws.reduce(Float(0.0), { (x,y) in x + y/Float(mostFrequent.count)})
                         var relativeTransform = self.backupTransform!
-                        // TODO: need to verify this is right
                         relativeTransform.columns.0 = simd_float4(cos(consensusYaw), 0, sin(consensusYaw), 0)
                         relativeTransform.columns.1 = simd_float4(0, 1, 0, 0)
                         relativeTransform.columns.2 = simd_float4(-sin(consensusYaw), 0, cos(consensusYaw), 0)
-                        
+                        print("consensusYaw \(consensusYaw)")
                         if self.attemptingRelocalization || self.configuration.initialWorldMap == nil {
                             self.sceneView.session.setWorldOrigin(relativeTransform: relativeTransform)
                         }

@@ -37,7 +37,6 @@ std::vector<cv::DMatch> getMatches(cv::Mat descriptors1, cv::Mat descriptors2) {
         {
             good_matches.push_back(match[0]);
         }
-    std::cout << "num good matches " << good_matches.size() << std::endl;
     return good_matches;
 }
 
@@ -90,11 +89,9 @@ float getYaw(std::vector<cv::Point2f> points1, std::vector<cv::Point2f> points2,
     
     Eigen::Matrix3f dcm;
     cv2eigen(dcm_mat, dcm);
-    std::cout << translation_mat.size() << std::endl;
     tx = translation_mat.at<double>(0, 0);
     ty = translation_mat.at<double>(0, 1);
     tz = translation_mat.at<double>(0, 2);
-    std::cout << translation_mat << std::endl;
     const auto rotated = dcm * Eigen::Vector3f::UnitZ();
     const float yaw = atan2(rotated(0), rotated(2));
     residualAngle = abs(yaw) - acos((dcm.trace() - 1)/2);
