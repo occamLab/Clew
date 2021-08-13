@@ -101,7 +101,8 @@ UIImage *debug_match_image_ui = 0;
         }
         std::vector<Eigen::Vector3d> all_rays_image_1, all_rays_image_2;
 
-        
+        std::vector<cv::Point2f> vectors1_ransac, vectors2_ransac;
+
         for (unsigned int i = 0; i < matches.size(); i++) {
             const auto& match = matches[i];
             const auto keypoint1 = keypoints_and_descriptors1.keypoints[match.queryIdx];
@@ -147,6 +148,8 @@ UIImage *debug_match_image_ui = 0;
                 Eigen::Vector3f homogeneousKp2(downSampleFactor*keypoint2.pt.x, downSampleFactor*keypoint2.pt.y, 1.0);
                 Eigen::Vector3f image_2_ray = intrinsics2_matrix.inverse() * homogeneousKp2;
                 image_2_rays[i] = Eigen::Vector3d(image_2_ray.x(), image_2_ray.y(), image_2_ray.z());
+                vectors1_ransac.push_back(vectors1[indices[i]]);
+                vectors2_ransac.push_back(vectors2[indices[i]]);
             }
 
             theia::ThreePointRelativePosePartialRotation(rotation_axis,
@@ -175,7 +178,7 @@ UIImage *debug_match_image_ui = 0;
                     eigen2cv(essential_matrix, essential_matrixCV);
                     cv::Mat dcm_mat, translation_mat;
 
-                    int numInliers = cv::recoverPose(essential_matrixCV, vectors1, vectors2, dcm_mat, translation_mat, intrinsics1_matrix(0, 0), cv::Point2f(intrinsics1_matrix(0, 2), intrinsics1_matrix(1, 2)));
+                    int numInliers = cv::recoverPose(essential_matrixCV, vectors1_ransac, vectors2_ransac, dcm_mat, translation_mat, intrinsics1_matrix(0, 0), cv::Point2f(intrinsics1_matrix(0, 2), intrinsics1_matrix(1, 2)));
                     Eigen::Matrix3f dcm;
                     cv2eigen(dcm_mat, dcm);
                     const auto rotated = dcm * Eigen::Vector3f::UnitZ();
