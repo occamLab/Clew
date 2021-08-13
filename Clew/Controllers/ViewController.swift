@@ -301,6 +301,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     ///this Boolean marks whether or not the app is saving a starting anchor point
     var startAnchorPoint: Bool = false
     
+    ///this Boolean controls whether the app will record intermediate anchor point imagery
+    var createIntermediateAnchorPoints = false
+    
     ///this boolean denotes whether or not the app is loading a route from an automatic alignment
     var isAutomaticAlignment: Bool = false
     
@@ -1715,7 +1718,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         self.delayTransition(announcement: NSLocalizedString("startingReturnNavigationAnnouncement", comment: "This is an anouncement which is played when the user performs return navigation from the play pause menu. It signifies the start of a navigation session."), initialFocus: nil)
         // this will handle the appropriate state transition if we pass the warning
         state = .navigatingRoute
-        tryVisualAlignment(triesLeft: 10000, makeAnnounement: false)
+        if createIntermediateAnchorPoints {
+            tryVisualAlignment(triesLeft: 10000, makeAnnounement: false)
+        }
     }
     
     /// handles the user pressing the stop navigation button.
@@ -1869,9 +1874,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     }
     
     func tryVisualAlignment(triesLeft: Int, makeAnnounement: Bool = false) {
-        /*if !state.isTryingToAlign {
+        if !state.isTryingToAlign && !createIntermediateAnchorPoints {
             return
-        }*/
+        }
         if let alignAnchorPoint = self.pausedAnchorPoint, let alignAnchorPointImage = alignAnchorPoint.image, let alignTransform = alignAnchorPoint.transform, let frame = self.sceneView.session.currentFrame {
             if makeAnnounement {
                 announce(announcement: NSLocalizedString("visualAlignmentConfirmation", comment: "Announce that visual alignment process has began"))
@@ -2069,20 +2074,22 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
         
         crumbs.append(curLocation)
-        let routeAnchor = RouteAnchorPoint()
-        routeAnchor.transform = frame.camera.transform
-        let anchorPointImageIdentifier = UUID()
-        routeAnchor.intrinsics = simd_float4(frame.camera.intrinsics[0, 0], frame.camera.intrinsics[1, 1], frame.camera.intrinsics[2, 0], frame.camera.intrinsics[2, 1])
-        routeAnchor.imageFileName = "\(anchorPointImageIdentifier).jpg" as NSString
-        
-        guard let anchorPointImage = pixelBufferToUIImage(pixelBuffer: frame.capturedImage) else {
-            return
+        if createIntermediateAnchorPoints {
+            let routeAnchor = RouteAnchorPoint()
+            routeAnchor.transform = frame.camera.transform
+            let anchorPointImageIdentifier = UUID()
+            routeAnchor.intrinsics = simd_float4(frame.camera.intrinsics[0, 0], frame.camera.intrinsics[1, 1], frame.camera.intrinsics[2, 0], frame.camera.intrinsics[2, 1])
+            routeAnchor.imageFileName = "\(anchorPointImageIdentifier).jpg" as NSString
+            
+            guard let anchorPointImage = pixelBufferToUIImage(pixelBuffer: frame.capturedImage) else {
+                return
+            }
+            
+            let routeAnchorPointJpeg = anchorPointImage.jpegData(compressionQuality: 1)
+            try! routeAnchorPointJpeg?.write(to: routeAnchor.imageFileName!.documentURL, options: .atomic)
+            routeAnchor.loadImage()
+            intermediateRouteAnchorPoints.append(routeAnchor)
         }
-        
-        let routeAnchorPointJpeg = anchorPointImage.jpegData(compressionQuality: 1)
-        try! routeAnchorPointJpeg?.write(to: routeAnchor.imageFileName!.documentURL, options: .atomic)
-        routeAnchor.loadImage()
-        intermediateRouteAnchorPoints.append(routeAnchor)
     }
     
     /// checks to see if user is on the right path during navigation.
