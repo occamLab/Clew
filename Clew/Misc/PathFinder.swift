@@ -166,12 +166,13 @@ class RouteAnchorPoint: NSObject, NSSecureCoding {
     
     /// The image associated with the anchor point
     public var imageFileName: NSString?
-//    public lazy var image: UIImage? = nil
     public var image: UIImage?
     /// The intrinsics used to take the anchor point image
     public var intrinsics: simd_float4?
     /// The position and orientation as a 4x4 matrix
     public var transform: simd_float4x4?
+    /// The yaw required to align the z-axis of the ARSession transform to magnetic north
+    public var magneticYaw: Float?
     /// Text to help user remember the anchor point
     public var information: NSString?
     /// The URL to an audio file that contains information to help the user remember an anchor point
@@ -183,10 +184,11 @@ class RouteAnchorPoint: NSObject, NSSecureCoding {
     ///   - transform: the position and orientation
     ///   - information: textual description
     ///   - voiceNote: URL to auditory description
-    public init(imageFileName: NSString? = nil, intrinsics: simd_float4? = nil, transform: simd_float4x4? = nil, information: NSString? = nil, voiceNote: NSString? = nil) {
+    public init(imageFileName: NSString? = nil, intrinsics: simd_float4? = nil, transform: simd_float4x4? = nil, magneticYaw: Float? = nil, information: NSString? = nil, voiceNote: NSString? = nil) {
         self.imageFileName = imageFileName
         self.intrinsics = intrinsics
         self.transform = transform
+        self.magneticYaw = magneticYaw
         self.information = information
         self.voiceNote = voiceNote
     }
@@ -198,7 +200,9 @@ class RouteAnchorPoint: NSObject, NSSecureCoding {
         if transform != nil {
             aCoder.encode(ARAnchor(transform: transform!), forKey: "transformAsARAnchor")
         }
-        
+        if let magneticYaw = magneticYaw {
+            aCoder.encode(magneticYaw, forKey: "magneticYaw")
+        }
         if imageFileName != nil {
             aCoder.encode(imageFileName, forKey: "image")
         }
@@ -229,11 +233,17 @@ class RouteAnchorPoint: NSObject, NSSecureCoding {
         var imageFileName : NSString?
         var intrinsics : simd_float4?
         var transform : simd_float4x4?
+        var magneticYaw: Float?
         var information : NSString?
         var voiceNote : NSString?
         
         if let transformAsARAnchor = aDecoder.decodeObject(of: ARAnchor.self, forKey: "transformAsARAnchor") {
             transform = transformAsARAnchor.transform
+        }
+        do {
+            magneticYaw = aDecoder.decodeFloat(forKey: "magneticYaw")
+        } catch {
+            print("unable to decode magnetic yaw \(error)")
         }
         
         imageFileName = aDecoder.decodeObject(of: NSString.self, forKey: "image")
@@ -245,7 +255,7 @@ class RouteAnchorPoint: NSObject, NSSecureCoding {
         information = aDecoder.decodeObject(of: NSString.self, forKey: "information")
         voiceNote = aDecoder.decodeObject(of: NSString.self, forKey: "voiceNote")
         
-        self.init(imageFileName: imageFileName, intrinsics: intrinsics, transform: transform, information: information, voiceNote: voiceNote)
+        self.init(imageFileName: imageFileName, intrinsics: intrinsics, transform: transform, magneticYaw: magneticYaw, information: information, voiceNote: voiceNote)
     }
 }
 

@@ -123,6 +123,12 @@ enum AppState {
     }
 }
 
+enum AlignmentMethod {
+    case none
+    case visual
+    case magnetometer
+}
+
 /// The view controller that handles the main Clew window.  This view controller is always active and handles the various views that are used for different app functionalities.
 class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDelegate, AVSpeechSynthesizerDelegate, ARSessionDelegate {
     
@@ -134,13 +140,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     static var alignmentWaitingPeriod = 5
     
     /// maximum number of times to try to visually align
-    static let maxVisualAlignmentRetryCount = 25
+    static let maxVisualAlignmentRetryCount = 13
+    static let maxMagneticAlignmentRetryCount = 9
     
     var visualTransforms: [simd_float4x4] = []
     
     var relativeYaws: [Float] = []
     
-    var backupTransform: simd_float4x4?
+    var alignmentMethod = AlignmentMethod.none
+    let debugAlignment = false
+    
+    var firstAlignmentPose: simd_float4x4?
 
     
     /// Used for synchrony when saving in background threads.
@@ -416,7 +426,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         // enabled hapticFeedback generates more keypoints
         let path = PathFinder(crumbs: crumbs.reversed(), intermediateRouteAnchorPoints: intermediateRouteAnchorPoints.reversed(), hapticFeedback: hapticFeedback, voiceFeedback: voiceFeedback)
         keypoints = path.keypoints
-        print("kp", keypoints!.map({[$0.location.x, $0.location.y, $0.location.z]}))
         checkedOffKeypoints = []
         
         // save keypoints data for debug log
@@ -572,7 +581,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 return
             }
             beginRouteAnchorPoint.transform = currentTransform
-            print("setting transform", beginRouteAnchorPoint.transform)
+            beginRouteAnchorPoint.magneticYaw = compassHeadingManager?.magneticYaw
+
 
             if let currentFrame = sceneView.session.currentFrame {
 
@@ -613,6 +623,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             endRouteAnchorPoint.loadImage()
             
             endRouteAnchorPoint.transform = currentFrame.camera.transform
+            endRouteAnchorPoint.magneticYaw = compassHeadingManager?.magneticYaw
 
             let intrinsics = currentFrame.camera.intrinsics
             endRouteAnchorPoint.intrinsics = simd_float4(intrinsics[0, 0], intrinsics[1, 1], intrinsics[2, 0], intrinsics[2, 1])
@@ -910,6 +921,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         NotificationCenter.default.addObserver(forName: Notification.Name("ClewPopoverDisplayed"), object: nil, queue: nil) { (notification) -> Void in
             self.suppressTrackingWarnings = true
         }
+        
+        compassHeadingManager = CompassHeadingManager(sceneView: sceneView)
     }
     
     /// Create the audio player objects for the various app sounds.  Creating them ahead of time helps reduce latency when playing them later.
@@ -1208,14 +1221,23 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// Register settings bundle
     func registerSettingsBundle(){
-        let appDefaults = ["crumbColor": 0, "hapticFeedback": true, "sendLogs": true, "voiceFeedback": true, "soundFeedback": true, "units": 0, "timerLength":5] as [String : Any]
+        let appDefaults = ["alignmentMethod": 0, "crumbColor": 0, "hapticFeedback": true, "sendLogs": true, "voiceFeedback": true, "soundFeedback": true, "units": 0, "timerLength":5] as [String : Any]
         UserDefaults.standard.register(defaults: appDefaults)
     }
 
     /// Respond to update events to the `UserDefaults` object (the settings of the app).
     func updateDisplayFromDefaults(){
         let defaults = UserDefaults.standard
-        
+        switch defaults.integer(forKey: "alignmentMethod") {
+        case 0:
+            alignmentMethod = .visual
+        case 1:
+            alignmentMethod = .magnetometer
+        case 2:
+            alignmentMethod = .none
+        default:
+            break
+        }
         defaultUnit = defaults.integer(forKey: "units")
         defaultColor = defaults.integer(forKey: "crumbColor")
         soundFeedback = defaults.bool(forKey: "soundFeedback")
@@ -1612,6 +1634,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// the route just recorded.  This is useful for when the user resumes a route that wasn't saved.
     var justTraveledRoute: SavedRoute?
     
+    /// compass heading manager
+    var compassHeadingManager: CompassHeadingManager?
     
     /// the most recently used map.  This helps us determine whether a route the user is attempting to load requires alignment.  If we have already aligned within a particular map, we can skip the alignment procedure.
     var justUsedMap : ARWorldMap?
@@ -1849,13 +1873,21 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         self.rootContainerView.countdownTimer.isHidden = true
         self.pausedAnchorPoint?.loadImage()
         // The first check is necessary in case the phone relocalizes before this code executes
-        visualTransforms = []
         relativeYaws = []
-        backupTransform = nil
-        tryVisualAlignment(triesLeft: ViewController.maxVisualAlignmentRetryCount, makeAnnounement: true)
+        firstAlignmentPose = nil
+        let tryCount: Int
+        switch alignmentMethod {
+        case .none:
+            tryCount = 0
+        case .magnetometer:
+            tryCount = ViewController.maxMagneticAlignmentRetryCount
+        case .visual:
+            tryCount = ViewController.maxVisualAlignmentRetryCount
+        }
+        tryVisualAlignment(triesLeft: tryCount, makeAnnounement: true)
     }
         
-    func getRelativeTransform(frame: ARFrame, alignTransform: simd_float4x4, visualYawReturn: VisualAlignmentReturn)->simd_float4x4 {
+    func getRelativeTransform(cameraTransform: simd_float4x4, alignTransform: simd_float4x4, visualYawReturn: VisualAlignmentReturn)->simd_float4x4 {
         let alignRotation = simd_float3x3(simd_float3(alignTransform[0, 0], alignTransform[0, 1], alignTransform[0, 2]),
                                           simd_float3(alignTransform[1, 0], alignTransform[1, 1], alignTransform[1, 2]),
                                           simd_float3(alignTransform[2, 0], alignTransform[2, 1], alignTransform[2, 2]))
@@ -1865,7 +1897,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         var leveledAlignPose = leveledAlignRotation.toPose()
         leveledAlignPose[3] = alignTransform[3]
         
-        let cameraTransform = frame.camera.transform
         let cameraRotation = cameraTransform.rotation()
         let leveledCameraRotation = visualYawReturn.square_rotation2.inverse * cameraRotation;
         var leveledCameraPose = leveledCameraRotation.toPose()
@@ -1882,7 +1913,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
         if let alignAnchorPoint = self.pausedAnchorPoint, let alignAnchorPointImage = alignAnchorPoint.image, let alignTransform = alignAnchorPoint.transform, let frame = self.sceneView.session.currentFrame {
             if makeAnnounement {
-                announce(announcement: NSLocalizedString("visualAlignmentConfirmation", comment: "Announce that visual alignment process has began"))
+                if alignmentMethod == .visual {
+                    announce(announcement: NSLocalizedString("visualAlignmentConfirmation", comment: "Announce that visual alignment process has began"))
+                } else if alignmentMethod == .magnetometer {
+                    announce(announcement: "Performing Compass-Based Alignment")
+                } else {
+                    announce(announcement: "Performing Physical Alignment")
+                }
             }
 
             DispatchQueue.global(qos: .userInitiated).async {
@@ -1911,13 +1948,29 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 }
                 UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
                 
-               let propInliers = visualYawReturn.numMatches > 0 ? Float(visualYawReturn.numInliers) / Float(visualYawReturn.numMatches) : 0.0
+                let propInliers = visualYawReturn.numMatches > 0 ? Float(visualYawReturn.numInliers) / Float(visualYawReturn.numMatches) : 0.0
                 print("alignment inliers \(visualYawReturn.numInliers) \(visualYawReturn.numMatches) \(propInliers) \(visualYawReturn.residualAngle)")
-                if self.backupTransform == nil {
-                    var visualYawReturnCopy = visualYawReturn
-                    visualYawReturnCopy.yaw = 0
-                    visualYawReturnCopy.is_valid = true
-                    self.backupTransform = self.getRelativeTransform(frame: frame, alignTransform: alignTransform, visualYawReturn: visualYawReturnCopy)
+                if self.firstAlignmentPose == nil {
+                    self.firstAlignmentPose = frame.camera.transform
+                }
+                var magneticDiffToAnnounce: Float?
+                // TODO: need to only use this if the phone is not moving
+                if let pausedMagneticYaw = self.pausedAnchorPoint?.magneticYaw, let currMagneticYaw = self.compassHeadingManager?.magneticYaw {
+                    let magneticDiff = atan2(sin(pausedMagneticYaw - currMagneticYaw), cos(pausedMagneticYaw - currMagneticYaw))
+                    if self.alignmentMethod == .magnetometer {
+                        self.relativeYaws.append(magneticDiff)
+                    }
+                    
+                    var arrowTransformMagneticYaw = matrix_identity_float4x4
+                    arrowTransformMagneticYaw.columns.3 = frame.camera.transform.columns.3 - simd_float4(0, 0.5, 0, 0) - 2*simd_normalize(simd_float4(frame.camera.transform.columns.2.x, 0, frame.camera.transform.columns.2.z, 0))
+                    arrowTransformMagneticYaw.columns.0 = simd_float4(cos(currMagneticYaw), 0, sin(currMagneticYaw), 0)
+                    arrowTransformMagneticYaw.columns.2 = simd_float4(-sin(currMagneticYaw), 0, cos(currMagneticYaw), 0)
+                    if self.alignmentMethod == .magnetometer , self.debugAlignment {
+                        DispatchQueue.main.async {
+                            self.renderArrow(transform: arrowTransformMagneticYaw, arrowIndex: 3, scale: 0.5)
+                        }
+                    }
+                    magneticDiffToAnnounce = magneticDiff
                 }
                 if visualYawReturn.is_valid, abs(visualYawReturn.residualAngle) < 0.01 {
                     
@@ -1932,8 +1985,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                     
                     arrowTransform.columns.3 = arrowTransform.columns.3
                     print("tx \(visualYawReturn.tx) tz \(visualYawReturn.tz)")
-                    DispatchQueue.main.async {
-                        self.renderArrow(transform: arrowTransform, arrowIndex: 0, scale: 2)
+                    if self.alignmentMethod == .visual, self.debugAlignment {
+                        DispatchQueue.main.async {
+                            self.renderArrow(transform: arrowTransform, arrowIndex: 0, scale: 2)
+                        }
                     }
 
                     
@@ -1966,8 +2021,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                         secondArrow.columns.0 = simd_normalize(shiftVec)
                         secondArrow.columns.2 = simd_float4(simd_cross(secondArrow.columns.0.dropW, secondArrow.columns.1.dropW), 0)
                         print("secondArrow \(secondArrow)")
-                        DispatchQueue.main.async {
-                            self.renderArrow(transform: secondArrow, arrowIndex: 1, scale: simd_length(shiftVec))
+                        if self.debugAlignment {
+                            DispatchQueue.main.async {
+                                self.renderArrow(transform: secondArrow, arrowIndex: 1, scale: simd_length(shiftVec))
+                            }
                         }
                         var relativeTransform = matrix_identity_float4x4
                         relativeTransform.columns.3 = -simd_float4(shiftVec.dropW, 1)
@@ -1977,14 +2034,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                         }*/
                     }
                         
-                    let relativeTransform = self.getRelativeTransform(frame: frame, alignTransform: alignTransform, visualYawReturn: visualYawReturn)
+                    let relativeTransform = self.getRelativeTransform(cameraTransform: frame.camera.transform, alignTransform: alignTransform, visualYawReturn: visualYawReturn)
                     let relativeYaw = atan2(relativeTransform.columns.0.z, relativeTransform.columns.0.x)
-                    self.relativeYaws.append(relativeYaw)
-                    self.visualTransforms.append(relativeTransform)
-                    DispatchQueue.main.async {
-                        self.announce(announcement: String(format: "%.2f", relativeYaw))
+                    if self.alignmentMethod == .visual {
+                        self.relativeYaws.append(relativeYaw)
+                        self.visualAlignmentSuccessSound?.play()
                     }
-                    self.visualAlignmentSuccessSound?.play()
+                    if self.debugAlignment {
+                        DispatchQueue.main.async {
+                            self.announce(announcement: String(format: "%.2f %.2f", magneticDiffToAnnounce ?? "", relativeYaw))
+                        }
+                    }
                 }
                 if triesLeft > 1 {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
@@ -1998,31 +2058,47 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                         // we must have localized to the map or are doign this during the route... let's bail
                         return
                     }
-                    if !self.visualTransforms.isEmpty {
-                        let quantizedYaws = self.relativeYaws.map({Int($0*100)})
+                    if !self.relativeYaws.isEmpty {
+                        let quantizedYaws = self.relativeYaws.map({Int($0*50)})
                         let mostFrequent = mostFrequent(array: quantizedYaws)!
                         var suitableYaws: [Float] = []
                         for relativeYaw in self.relativeYaws {
-                            if Int(relativeYaw*100) == mostFrequent.mostFrequent[0] {
+                            if Int(relativeYaw*50) == mostFrequent.mostFrequent[0] {
                                 suitableYaws.append(relativeYaw)
                             }
                         }
-                        let consensusYaw = suitableYaws.reduce(Float(0.0), { (x,y) in x + y/Float(mostFrequent.count)})
-                        var relativeTransform = self.backupTransform!
-                        relativeTransform.columns.0 = simd_float4(cos(consensusYaw), 0, sin(consensusYaw), 0)
-                        relativeTransform.columns.1 = simd_float4(0, 1, 0, 0)
-                        relativeTransform.columns.2 = simd_float4(-sin(consensusYaw), 0, cos(consensusYaw), 0)
-                        print("consensusYaw \(consensusYaw)")
+                        let consensusYaw: Float
+                        // If we don't have more than 2 colliding in the same bucket, fall back on a simple average
+                        if mostFrequent.count < 2 {
+                            let consensusUnitVec = self.relativeYaws.reduce(simd_float2(repeating: 0.0), { (x,y) in x + simd_float2(cos(y), sin(y))/Float(self.relativeYaws.count)})
+                            consensusYaw = atan2(consensusUnitVec.y, consensusUnitVec.x)
+                        } else {
+                            consensusYaw = suitableYaws.reduce(Float(0.0), { (x,y) in x + y/Float(mostFrequent.count)})
+                        }
                         if self.attemptingRelocalization || self.configuration.initialWorldMap == nil {
-                            self.sceneView.session.setWorldOrigin(relativeTransform: relativeTransform)
+                            var relativeTransform = simd_float4x4.makeRotate(radians: consensusYaw, 0, 1, 0)
+                            relativeTransform.columns.3 = simd_float4(alignTransform.columns.3.dropW - relativeTransform.rotation() * self.firstAlignmentPose!.columns.3.dropW, 1)
+                            
+                            self.sceneView.session.setWorldOrigin(relativeTransform: relativeTransform.inverse)
                         }
                     }
                     
                     else {
-                        self.announce(announcement: NSLocalizedString("noVisualMatchesUseSnapToRoute", comment: "Instruct to use snap-to-route when no visual matches are found"))
+                        if self.alignmentMethod != .none {
+                            self.announce(announcement: NSLocalizedString("noVisualMatchesUseSnapToRoute", comment: "Instruct to use snap-to-route when no visual matches are found"))
+                        } else {
+                            self.announce(announcement: "Physical alignment performed")
+                        }
                         
-                        if let backupTransform = self.backupTransform {
-                            self.sceneView.session.setWorldOrigin(relativeTransform: backupTransform)
+                        if let firstAlignmentPose = self.firstAlignmentPose {
+                            var visualYawReturnCopy = visualYawReturn
+                            visualYawReturnCopy.is_valid = true
+                            visualYawReturnCopy.yaw = 0
+                            var cameraTransform = frame.camera.transform
+                            cameraTransform.columns.3 = firstAlignmentPose.columns.3
+                            let relativeTransform = self.getRelativeTransform(cameraTransform: cameraTransform, alignTransform: alignTransform, visualYawReturn: visualYawReturnCopy)
+                            
+                            self.sceneView.session.setWorldOrigin(relativeTransform: relativeTransform)
                         }
                     }
 
