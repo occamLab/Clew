@@ -211,6 +211,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     var relativeYaws: [Float] = []
     
     var alignmentMethod = AlignmentMethod.none
+    var useARWorldMap: Bool = false
     let debugAlignment = false
     
     var firstAlignmentPose: simd_float4x4?
@@ -551,8 +552,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             isRelocalizing = true
         }
         let isSameMap = configuration.initialWorldMap != nil && configuration.initialWorldMap == worldMap
-        print("disabling world map")
-        configuration.initialWorldMap = nil // worldMap
+        configuration.initialWorldMap = useARWorldMap ? worldMap : nil
     
         attemptingRelocalization =  isSameMap && !isTrackingPerformanceNormal || worldMap != nil && !isSameMap
 
@@ -1289,7 +1289,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// Register settings bundle
     func registerSettingsBundle(){
-        let appDefaults = ["alignmentMethod": 0, "crumbColor": 0, "hapticFeedback": true, "sendLogs": true, "voiceFeedback": true, "soundFeedback": true, "units": 0, "timerLength":5] as [String : Any]
+        let appDefaults = ["alignmentMethod": 0, "useARWorldMap": false, "crumbColor": 0, "hapticFeedback": true, "sendLogs": true, "voiceFeedback": true, "soundFeedback": true, "units": 0, "timerLength":5] as [String : Any]
         UserDefaults.standard.register(defaults: appDefaults)
     }
 
@@ -1306,6 +1306,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         default:
             break
         }
+        useARWorldMap = defaults.bool(forKey: "useARWorldMap")
         defaultUnit = defaults.integer(forKey: "units")
         defaultColor = defaults.integer(forKey: "crumbColor")
         soundFeedback = defaults.bool(forKey: "soundFeedback")

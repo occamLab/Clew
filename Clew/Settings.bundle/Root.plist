@@ -17,7 +17,7 @@
 			<integer>0</integer>
 			<key>Values</key>
 			<array>
-				<string>0</string>
+				<integer>0</integer>
 				<integer>1</integer>
 				<integer>2</integer>
 			</array>
@@ -30,9 +30,13 @@
 		</dict>
 		<dict>
 			<key>Type</key>
-			<string>PSGroupSpecifier</string>
+			<string>PSToggleSwitchSpecifier</string>
 			<key>Title</key>
-			<string>General Options</string>
+			<string>Use ARWorldMap for alignment</string>
+			<key>Key</key>
+			<string>useARWorldMap</string>
+			<key>DefaultValue</key>
+			<false/>
 		</dict>
 		<dict>
 			<key>Type</key>
