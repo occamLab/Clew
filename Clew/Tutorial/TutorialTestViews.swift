@@ -14,10 +14,10 @@ import Foundation
 
 struct TutorialScreen<Content: View>: View {
     //format for all the tutorial and app set up screens. standarizes spacing and adds exit button to each page
-  let content: Content
-  init(@ViewBuilder content: () -> Content) {
-    self.content = content()
-  }
+    let content: Content
+    init(@ViewBuilder content: () -> Content) {
+        self.content = content()
+    }
     var body: some View {
         ScrollView{
             VStack(spacing: 30) {
@@ -26,28 +26,28 @@ struct TutorialScreen<Content: View>: View {
                     .padding(.trailing)
             }
         }
-
+        
         .navigationBarItems(
             /*leading:
-                NavigationLink("Tutorial", destination: TutorialTestView())
-                .padding(),*/ //TODO: make a reture to tutorial menu button on all the pages
+             NavigationLink("Tutorial", destination: TutorialTestView())
+             .padding(),*/ //TODO: make a reture to tutorial menu button on all the pages
             trailing:
                 Button(NSLocalizedString("buttonTexttoExitTutorial", comment: "text of the button that dismisses the tutorial screens")) {
                     NotificationCenter.default.post(name: Notification.Name("TutorialPopoverReadyToDismiss"), object: nil)
-                    }
+                }
                 .padding()
         )
     }
-  }
+}
 
 struct TutorialNavLink<Destination: View, Content: View>: View {
     //creates a button format for all the CLEW tutorial navigation links to use. only works for navigation links
-  let content: Content
+    let content: Content
     let destination: Destination
     init(destination: Destination, @ViewBuilder content: () -> Content) {
         self.destination = destination
         self.content = content()
-  }
+    }
     
     var body: some View {
         NavigationLink(destination: self.destination) {
@@ -61,12 +61,12 @@ struct TutorialNavLink<Destination: View, Content: View>: View {
                 .font(.system(size: 18, weight: .regular))
         }
     }
-  }
+}
 
 
 struct TutorialNavLinkWithRedirection<Destination: View, Content: View>: View {
     //creates a button format for all the CLEW tutorial navigation links to use. only works for navigation links
-  let content: Content
+    let content: Content
     let destination: Destination
     let activationTag: String
     let selection: Binding<String?>
@@ -76,7 +76,7 @@ struct TutorialNavLinkWithRedirection<Destination: View, Content: View>: View {
         self.selection = selection
         self.activationTag = tag
         self.content = content()
-  }
+    }
     
     var body: some View {
         NavigationLink(destination: self.destination, tag: activationTag, selection: selection) {
@@ -90,11 +90,11 @@ struct TutorialNavLinkWithRedirection<Destination: View, Content: View>: View {
                 .font(.system(size: 18, weight: .regular))
         }
     }
-  }
+}
 
 
 struct TutorialButton<Content: View>: View {
-        //Format for tutorial and app set up buttons that are not navigation views. these look the same as navlinks, so anything changed in TutorialNavLink should also be changed here.
+    //Format for tutorial and app set up buttons that are not navigation views. these look the same as navlinks, so anything changed in TutorialNavLink should also be changed here.
     let content: Content
     init(@ViewBuilder content: () -> Content) {
         self.content = content()
@@ -120,143 +120,143 @@ struct TutorialTestView: View {
     @ObservedObject var settings = SettingsWrapper.shared
     @StateObject var showPage = showTutorialPage()
     let pub = NotificationCenter.default
-            .publisher(for: NSNotification.Name("ShowTutorialPage"))
+        .publisher(for: NSNotification.Name("ShowTutorialPage"))
     var body: some View {
         NavigationView{
-
+            
             TutorialScreen{
                 Text(NSLocalizedString("tutorialTitleText", comment: "Title of the Clew Tutorial Screen. Top of the first tutorial page"))
-                        
+                
                 HStack{
-                TutorialNavLinkWithRedirection(destination: CLEWintro(), tag: "CLEWintro", selection: $showPage.selectedView){
-                    Text(NSLocalizedString("ClewIntroTutorialTitle", comment: "Intro to Clew Tutorial Title"))
+                    TutorialNavLinkWithRedirection(destination: CLEWintro(), tag: "CLEWintro", selection: $showPage.selectedView){
+                        Text(NSLocalizedString("ClewIntroTutorialTitle", comment: "Intro to Clew Tutorial Title"))
                     }
                     if UserDefaults.standard.bool(forKey: "IntroTutorialCompleted") == true {
                         Circle()
                             .fill(Color.yellow)
                             .frame(width: 30, height: 30)
-                            
+                        
                     } else {
                         Circle()
                             .stroke(Color.gray, lineWidth: 1)
                             .frame(width: 30, height: 30)
                     }
-                        
+                    
                     
                 }
                 
                 HStack{
-                TutorialNavLinkWithRedirection(destination: OrientPhone(), tag: "OrientPhone", selection: $showPage.selectedView){
-                    Text(NSLocalizedString("orientPhoneTutorialButtonText", comment: "Text for the tutorial screem for phone position"))
-                }
+                    TutorialNavLinkWithRedirection(destination: OrientPhone(), tag: "OrientPhone", selection: $showPage.selectedView){
+                        Text(NSLocalizedString("orientPhoneTutorialButtonText", comment: "Text for the tutorial screem for phone position"))
+                    }
                     if UserDefaults.standard.bool(forKey: "OrientPhoneTutorialCompleted") == true {
                         Circle()
                             .fill(Color.yellow)
                             .frame(width: 30, height: 30)
-                            
+                        
                     } else {
                         Circle()
                             .stroke(Color.gray, lineWidth: 1)
                             .frame(width: 30, height: 30)
                     }
                 }
-                    
+                
                 HStack{
                     TutorialNavLinkWithRedirection(destination: FindPath(), tag: "FindPath", selection: $showPage.selectedView) {
                         Text(NSLocalizedString( "findPathTutorialButtonText", comment: "Title for the finding and following path part of the tutorial"))
                     }
-                /*NavigationLink(
-                    "FindPath",
-                    destination: FindPath(),
-                    isActive: $showPage.showFindPath)*/
-                //TutorialNavLink(destination: FindPath()) {Text(NSLocalizedString( "findPathTutorialButtonText", comment: "Title for the finding and following path part of the tutorial"))}
-                if UserDefaults.standard.bool(forKey: "FindPathTutorialCompleted") == true {
-                    Circle()
-                        .fill(Color.yellow)
-                        .frame(width: 30, height: 30)
+                    /*NavigationLink(
+                     "FindPath",
+                     destination: FindPath(),
+                     isActive: $showPage.showFindPath)*/
+                    //TutorialNavLink(destination: FindPath()) {Text(NSLocalizedString( "findPathTutorialButtonText", comment: "Title for the finding and following path part of the tutorial"))}
+                    if UserDefaults.standard.bool(forKey: "FindPathTutorialCompleted") == true {
+                        Circle()
+                            .fill(Color.yellow)
+                            .frame(width: 30, height: 30)
                         
-                } else {
-                    Circle()
-                        .stroke(Color.gray, lineWidth: 1)
-                        .frame(width: 30, height: 30)
-                }
+                    } else {
+                        Circle()
+                            .stroke(Color.gray, lineWidth: 1)
+                            .frame(width: 30, height: 30)
+                    }
                 }
                 
                 HStack{
                     TutorialNavLinkWithRedirection(destination: SingleUse(), tag: "SingleUse", selection: $showPage.selectedView) {Text(NSLocalizedString( "singleUseRouteTutorialButtonText", comment: "Title for the single use route part of the tutorial"))
-                }
-                if UserDefaults.standard.bool(forKey: "SingleUseTutorialCompleted") == true {
-                    Circle()
-                        .fill(Color.yellow)
-                        .frame(width: 30, height: 30)
+                    }
+                    if UserDefaults.standard.bool(forKey: "SingleUseTutorialCompleted") == true {
+                        Circle()
+                            .fill(Color.yellow)
+                            .frame(width: 30, height: 30)
                         
-                } else {
-                    Circle()
-                        .stroke(Color.gray, lineWidth: 1)
-                        .frame(width: 30, height: 30)
-                }
+                    } else {
+                        Circle()
+                            .stroke(Color.gray, lineWidth: 1)
+                            .frame(width: 30, height: 30)
+                    }
                 }
                 
                 HStack{
                     TutorialNavLinkWithRedirection(destination: AnchorPoints(), tag: "AnchorPoints", selection: $showPage.selectedView) {
                         Text("Anchor Points")
                     }
-                if UserDefaults.standard.bool(forKey: "AnchorPointsCompleted") == true {
-                    Circle()
-                        .fill(Color.yellow)
-                        .frame(width: 30, height: 30)
+                    if UserDefaults.standard.bool(forKey: "AnchorPointsCompleted") == true {
+                        Circle()
+                            .fill(Color.yellow)
+                            .frame(width: 30, height: 30)
                         
-                } else {
-                    Circle()
-                        .stroke(Color.gray, lineWidth: 1)
-                        .frame(width: 30, height: 30)
-                }
+                    } else {
+                        Circle()
+                            .stroke(Color.gray, lineWidth: 1)
+                            .frame(width: 30, height: 30)
+                    }
                 }
                 
                 HStack{
-                TutorialNavLinkWithRedirection(destination: SavedRoutes(), tag: "SavedRoutes", selection: $showPage.selectedView) {Text(NSLocalizedString( "savedRoutesTutorialButtonText", comment: "Title for the saved route part of the tutorial"))
-                }
-                if UserDefaults.standard.bool(forKey: "SavedRoutesTutorialCompleted") == true {
-                    Circle()
-                        .fill(Color.yellow)
-                        .frame(width: 30, height: 30)
+                    TutorialNavLinkWithRedirection(destination: SavedRoutes(), tag: "SavedRoutes", selection: $showPage.selectedView) {Text(NSLocalizedString( "savedRoutesTutorialButtonText", comment: "Title for the saved route part of the tutorial"))
+                    }
+                    if UserDefaults.standard.bool(forKey: "SavedRoutesTutorialCompleted") == true {
+                        Circle()
+                            .fill(Color.yellow)
+                            .frame(width: 30, height: 30)
                         
-                } else {
-                    Circle()
-                        .stroke(Color.gray, lineWidth: 1)
-                        .frame(width: 30, height: 30)
-                }
+                    } else {
+                        Circle()
+                            .stroke(Color.gray, lineWidth: 1)
+                            .frame(width: 30, height: 30)
+                    }
                 }
                 
                 HStack{
-                TutorialNavLinkWithRedirection(destination: FindingSavedRoutes(), tag: "FindingSavedRoutes", selection: $showPage.selectedView) {Text(NSLocalizedString( "findingSavedRoutesTutorialButtonText", comment: "Title for the finding saved route part of the tutorial"))
-                }
-                if UserDefaults.standard.bool(forKey: "FindingSavedRoutesTutorialCompleted") {
-                    Circle()
-                        .fill(Color.yellow)
-                        .frame(width: 30, height: 30)
+                    TutorialNavLinkWithRedirection(destination: FindingSavedRoutes(), tag: "FindingSavedRoutes", selection: $showPage.selectedView) {Text(NSLocalizedString( "findingSavedRoutesTutorialButtonText", comment: "Title for the finding saved route part of the tutorial"))
+                    }
+                    if UserDefaults.standard.bool(forKey: "FindingSavedRoutesTutorialCompleted") {
+                        Circle()
+                            .fill(Color.yellow)
+                            .frame(width: 30, height: 30)
                         
-                } else {
-                    Circle()
-                        .stroke(Color.gray, lineWidth: 1)
-                        .frame(width: 30, height: 30)
-                }
+                    } else {
+                        Circle()
+                            .stroke(Color.gray, lineWidth: 1)
+                            .frame(width: 30, height: 30)
+                    }
                 }
                 
                 HStack{
-                TutorialNavLinkWithRedirection(destination: SettingOptions(), tag: "SettingOptions", selection: $showPage.selectedView) {
-                    Text(NSLocalizedString( "settingOptionsTutorialButtonText", comment: "Title for the setting options part of the tutorial"))
-                }
-                 //   ProgressCircle(status: Use)
-                if UserDefaults.standard.bool(forKey: "SettingsOptionsTutorialCompleted") == true {
-                    Circle()
-                        .fill(Color.yellow)
-                        .frame(width: 30, height: 30)
+                    TutorialNavLinkWithRedirection(destination: SettingOptions(), tag: "SettingOptions", selection: $showPage.selectedView) {
+                        Text(NSLocalizedString( "settingOptionsTutorialButtonText", comment: "Title for the setting options part of the tutorial"))
+                    }
+                    //   ProgressCircle(status: Use)
+                    if UserDefaults.standard.bool(forKey: "SettingsOptionsTutorialCompleted") == true {
+                        Circle()
+                            .fill(Color.yellow)
+                            .frame(width: 30, height: 30)
                         
-                } else {
-                    Circle()
-                        .stroke(Color.gray, lineWidth: 1)
-                        .frame(width: 30, height: 30)
+                    } else {
+                        Circle()
+                            .stroke(Color.gray, lineWidth: 1)
+                            .frame(width: 30, height: 30)
                     }
                 }
             }
@@ -291,8 +291,8 @@ struct CLEWintro: View {
                 UserDefaults.standard.setValue(false, forKey: "FindingSavedRoutesTutorialCompleted")
                 UserDefaults.standard.setValue(false, forKey: "SettingsOptionsTutorialCompleted")
             }) {Text("Reset Tutorial Progress")}
-                
-    
+            
+            
         }
         Spacer()
         TutorialNavLink(destination: UsingClew()) {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
@@ -307,10 +307,10 @@ struct UsingClew: View {
             Text(NSLocalizedString("introUsingClewTitle", comment: "Title for intro to Using Clew Page"))
             
             Text(NSLocalizedString("introUsingClewText", comment: "Text for intro to Using Clew Page"))
-
+            
             //Add link to examples?
         }
-    Spacer()
+        Spacer()
         TutorialNavLink(destination: ClewsRole()) {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
     }
 }
@@ -320,10 +320,10 @@ struct ClewsRole: View {
         TutorialScreen {
             
             Text(NSLocalizedString("introClewsRoleTutorialTitle", comment: "Title for intro to Clew's role Page"))
-
+            
             Text(NSLocalizedString("introClewsRoleTutorialText", comment: "Text for intro to Clew's role Page"))
         }
-    Spacer()
+        Spacer()
         TutorialNavLink(destination: UsingClewTutorial()) {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
     }
 }
@@ -333,13 +333,13 @@ struct UsingClewTutorial: View {
         TutorialScreen {
             
             Text(NSLocalizedString("introUsingClewTutorialTitle", comment: "Title for intro to Using Clew Tutorial Page"))
-
+            
             Text(NSLocalizedString("introUsingClewTutorialText", comment: "Text for intro to Using Clew Tutorial Page"))
             
         }.onDisappear() {
             UserDefaults.standard.setValue(true, forKey: "IntroTutorialCompleted")
         }
-    Spacer()
+        Spacer()
         TutorialNavLink(destination: OrientPhone()) {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
     }
 }
@@ -365,7 +365,7 @@ struct OrientPhone: View {
     var body: some View {
         TutorialScreen {
             Text(NSLocalizedString("orientPhoneTutorialButtonText", comment: "Title for the setting options part of the tutorial"))
-        
+            
             Text(NSLocalizedString("orientPhoneTutorialInstructionText", comment: "Text that explains how to orient the phone for the best experience using Clew"))
             
             TutorialNavLink(destination: OrientPhoneTips()) {Text(NSLocalizedString("tipTutorialTitle", comment: "text on button to tips page"))}
@@ -375,7 +375,7 @@ struct OrientPhone: View {
             
         }
         Spacer()
-            TutorialNavLink(destination: FindPath()) {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
+        TutorialNavLink(destination: FindPath()) {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
     }
 }
 
@@ -434,7 +434,7 @@ struct PracticeOrientPhone: View {
             
             if let transform = arData.transform {
                 //Creates a text box that gives visual feedback by shifting from red to yellow to green as a user holds thier phone correctly
-            let y = transform.columns.0.y
+                let y = transform.columns.0.y
                 //Text("y-component \(y)")
                 if started {
                     if y < -0.9 {
@@ -488,85 +488,63 @@ struct PracticeOrientPhone: View {
             
         }.onReceive(self.arData.objectWillChange) {newARData in
             if started {
-                    if let transform = arData.transform {
+                if let transform = arData.transform {
                     let y = transform.columns.0.y
-                    let path1 = Bundle.main.path(forResource: "ClewTutorialFeedback", ofType:"wav")!
-                    let url1 = URL(fileURLWithPath: path1)
-                        if y < 0.9 && y > -0.7, -lastSuccessSound.timeIntervalSinceNow > 0.2 {
-                            do {
-                                sound = try AVAudioPlayer(contentsOf: url1)
-                                sound?.play()
-                            } catch {
-                                // couldn't load file :(
-                            }
-                            //AudioServicesPlaySystemSound(SystemSoundID(1057))
-                            self.generator.notificationOccurred(.warning)
-                            lastSuccessSound = Date()
-                            lastSuccess = Date()
-                            resetPosition = true
-                        }
-                        if y < -0.7 && y > -0.9, -lastSuccessSound.timeIntervalSinceNow > 0.5 {
-                            do {
-                                sound = try AVAudioPlayer(contentsOf: url1)
-                                sound?.play()
-                            } catch {
-                                // couldn't load file :(
-                            }
-                                //AudioServicesPlaySystemSound(SystemSoundID(1057))
-                                self.generator.notificationOccurred(.warning)
-                                lastSuccessSound = Date()
-                                lastSuccess = Date()
-                                resetPosition = true
-                        }
-                        if y < -0.9, -lastSuccessSound.timeIntervalSinceNow > 0.7 {
-                            do {
-                                sound = try AVAudioPlayer(contentsOf: url1)
-                                sound?.play()
-                            } catch {
-                                // couldn't load file :(
-                            }
-                            //AudioServicesPlaySystemSound(SystemSoundID(1057))
-                            impactLight.impactOccurred()
-                            lastSuccessSound = Date()
-                        }
-                        //Version where there is more feedback when youre holding the phone correctly
-                        /*if y < 0.5 && y > -0.7, -lastSuccessSound.timeIntervalSinceNow > 0.7 {
-                            AudioServicesPlaySystemSound(SystemSoundID(1057))
-                            //AudioServicesPlaySystemSound(SystemSoundID(4095)) //TODO: add haptics
-                            lastSuccessSound = Date()
-                            lastSuccess = Date()
-                            resetPosition = true
-                        }
-                        if y < -0.7 && y > -0.9, -lastSuccessSound.timeIntervalSinceNow > 0.5 {
-                                AudioServicesPlaySystemSound(SystemSoundID(1057))
-                                //AudioServicesPlaySystemSound(SystemSoundID(4095))
-                                lastSuccessSound = Date()
-                                lastSuccess = Date()
-                                resetPosition = true
-                        }
-                        if y < -0.9, -lastSuccessSound.timeIntervalSinceNow > 0.2 {
-                            AudioServicesPlaySystemSound(SystemSoundID(1057))
-                            //AudioServicesPlaySystemSound(SystemSoundID(4095))
-                            lastSuccessSound = Date()
-                        }*/
+                    if y < 0.9 && y > -0.7, -lastSuccessSound.timeIntervalSinceNow > 0.2 {
+                        SoundEffectManager.shared.error()
+                        //AudioServicesPlaySystemSound(SystemSoundID(1057))
+                        self.generator.notificationOccurred(.warning)
+                        lastSuccessSound = Date()
+                        lastSuccess = Date()
+                        resetPosition = true
+                    }
+                    if y < -0.7 && y > -0.9, -lastSuccessSound.timeIntervalSinceNow > 0.5 {
+                        SoundEffectManager.shared.error()
+
+                        //AudioServicesPlaySystemSound(SystemSoundID(1057))
+                        self.generator.notificationOccurred(.warning)
+                        lastSuccessSound = Date()
+                        lastSuccess = Date()
+                        resetPosition = true
+                    }
+                    if y < -0.9, -lastSuccessSound.timeIntervalSinceNow > 0.7 {
+                        SoundEffectManager.shared.error()
+
+                        //AudioServicesPlaySystemSound(SystemSoundID(1057))
+                        impactLight.impactOccurred()
+                        lastSuccessSound = Date()
+                    }
+                    //Version where there is more feedback when youre holding the phone correctly
+                    /*if y < 0.5 && y > -0.7, -lastSuccessSound.timeIntervalSinceNow > 0.7 {
+                     AudioServicesPlaySystemSound(SystemSoundID(1057))
+                     //AudioServicesPlaySystemSound(SystemSoundID(4095)) //TODO: add haptics
+                     lastSuccessSound = Date()
+                     lastSuccess = Date()
+                     resetPosition = true
+                     }
+                     if y < -0.7 && y > -0.9, -lastSuccessSound.timeIntervalSinceNow > 0.5 {
+                     AudioServicesPlaySystemSound(SystemSoundID(1057))
+                     //AudioServicesPlaySystemSound(SystemSoundID(4095))
+                     lastSuccessSound = Date()
+                     lastSuccess = Date()
+                     resetPosition = true
+                     }
+                     if y < -0.9, -lastSuccessSound.timeIntervalSinceNow > 0.2 {
+                     AudioServicesPlaySystemSound(SystemSoundID(1057))
+                     //AudioServicesPlaySystemSound(SystemSoundID(4095))
+                     lastSuccessSound = Date()
+                     }*/
                     if y < -0.9, resetPosition,  -lastSuccess.timeIntervalSinceNow > 2{
-                            //to get another point, users have to move thier phones out of the correct position and then hold thier phones in the correct position for 2 seconds
+                        //to get another point, users have to move thier phones out of the correct position and then hold thier phones in the correct position for 2 seconds
                         score += 1
                         lastSuccess = Date()
                         resetPosition = false
                         self.generator.notificationOccurred(.success)
-                        let path = Bundle.main.path(forResource: "ClewSuccessSound", ofType:"wav")!
-                        let url = URL(fileURLWithPath: path)
-                        do {
-                            successSound = try AVAudioPlayer(contentsOf: url)
-                            successSound?.play()
-                        } catch {
-                            // couldn't load file :(
-                        }
+                        SoundEffectManager.shared.success()
                     }
-                        
                     
-                        
+                    
+                    
                     if score == 3, playSuccess {
                         playSuccess = false
                         UIAccessibility.post(notification: .announcement, argument: NSLocalizedString("orientPhoneTutorialPracticeSuccess", comment: "Text when user has completed the phone position practice"))
@@ -591,10 +569,10 @@ struct FindPath: View {
     var body: some View {
         TutorialScreen{
             Text(NSLocalizedString( "findPathTutorialButtonText", comment: "Title for the finding and following path part of the tutorial"))
-        
+            
             Text(NSLocalizedString("findPathTutorialInstructionText", comment: "Text that explains what it sounds and feels like to be on the path and following the path"))
-                //.fixedSize(horizontal: false, vertical: true)
-        
+            //.fixedSize(horizontal: false, vertical: true)
+            
             //TutorialNavLink(destination: FindPathPractice1())  {Text("Practice")}
             //TutorialNavLink(destination: TutorialEndView())  {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
             
@@ -610,7 +588,7 @@ struct FindPathPractice1: View {
             Text(NSLocalizedString("findPathPractice1Title", comment: "Text for the title of the first following route practice."))
             
             Text(NSLocalizedString("findPathPractice1InstructionText", comment: "Text for the instructions of the first following route practice."))
-                
+            
             Button(action:{
                 NotificationCenter.default.post(name: Notification.Name("StartTutorialPath"), object: nil)
                 NotificationCenter.default.post(name: Notification.Name("TutorialPopoverReadyToDismiss"), object: nil)
@@ -621,7 +599,7 @@ struct FindPathPractice1: View {
             
         }
         Spacer()
-            TutorialNavLink(destination: FindPathPractice2()) {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
+        TutorialNavLink(destination: FindPathPractice2()) {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
     }
 }
 
@@ -634,9 +612,9 @@ struct FindPathPractice2: View {
             Text(NSLocalizedString("findPathPractice2InstructionText", comment: "Text for the instructions of the second following route practice."))
             
             Button(action:{
-                NotificationCenter.default.post(name: Notification.Name("StartTutorialPath2"), object: nil)
-                NotificationCenter.default.post(name: Notification.Name("TutorialPopoverReadyToDismiss"), object: nil)
-                UserDefaults.standard.setValue(true, forKey: "FindPathPractice1Completed")})
+                    NotificationCenter.default.post(name: Notification.Name("StartTutorialPath2"), object: nil)
+                    NotificationCenter.default.post(name: Notification.Name("TutorialPopoverReadyToDismiss"), object: nil)
+                    UserDefaults.standard.setValue(true, forKey: "FindPathPractice1Completed")})
             {TutorialButton{
                 Text(NSLocalizedString("practiceTutorialTitle", comment: "Text for the begin practice for the second following route practice."))}}
             
@@ -645,7 +623,7 @@ struct FindPathPractice2: View {
         }
         
         Spacer()
-            TutorialNavLink(destination: SingleUse()) {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
+        TutorialNavLink(destination: SingleUse()) {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
     }
 }
 
@@ -657,34 +635,27 @@ struct PracticeSuccess: View {
         NavigationView{
             TutorialScreen{
                 Text(NSLocalizedString("findPathPracticeSuccessTitle", comment: "Text for the title of the success page for following route practice."))
-            
+                
                 if UserDefaults.standard.bool(forKey: "FindPathPractice1Completed") == true {
                     Text(NSLocalizedString("findPathPracticeSuccess2Text", comment: "Text for the success of the second practice route."))
                     
                 }else {
                     Text(NSLocalizedString("findPathPracticeSuccess1Text", comment: "Text for the success of the first practice route."))
-                    }
+                }
                 
-            //}
-
-            Spacer() //TODO: spacer is not push next button to the bottom :(
+                //}
+                
+                Spacer() //TODO: spacer is not push next button to the bottom :(
                 if UserDefaults.standard.bool(forKey: "FindPathPractice1Completed") == true {
                     TutorialNavLink(destination: SingleUse()) {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
-                
+                    
                 }else {
                     TutorialNavLink(destination: FindPathPractice2()) {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
                 }
             }
             
-        }.onAppear()
-        {let path1 = Bundle.main.path(forResource: "ClewSuccessSound", ofType:"wav")!
-        let url1 = URL(fileURLWithPath: path1)
-        do {
-            successSound = try AVAudioPlayer(contentsOf: url1)
-            successSound?.play()
-        } catch {
-            // couldn't load file :(
-        }
+        }.onAppear() {
+            SoundEffectManager.shared.success()
         }
     }
 }
@@ -697,7 +668,7 @@ struct SingleUse: View {
             
             //ScrollView{
             Text(NSLocalizedString( "singleUseRouteTutorialInstructionText", comment: "Instructions for using the single use route"))
-                //.fixedSize(horizontal: false, vertical: true)
+            //.fixedSize(horizontal: false, vertical: true)
             //}
             
         }.onDisappear(){
@@ -716,7 +687,7 @@ struct UsingSingleUse: View {
             
             Text(NSLocalizedString("usingSingleUseRouteTutorialText", comment: "Instruction for how to use single use routes"))
         }
-            
+        
         Spacer()
         TutorialNavLink(destination: AnchorPoints()) {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
     }
@@ -736,10 +707,10 @@ struct AnchorPoints: View {
             TutorialNavLink(destination: AnchorPointPractice())  {Text(NSLocalizedString("practiceTutorialTitle", comment: "Text for practice button"))}
             
         }
-            
-            Spacer()
-            TutorialNavLink(destination: SavedRoutes())  {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
-                
+        
+        Spacer()
+        TutorialNavLink(destination: SavedRoutes())  {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
+        
     }
 }
 
@@ -790,7 +761,7 @@ struct AnchorPointPractice: View {
                 } else if abs(xyzYawDelta[0]) < AnchorPointPractice.xGoodThreshold, abs(xyzYawDelta[1]) < AnchorPointPractice.yGoodThreshold, abs(xyzYawDelta[2]) < AnchorPointPractice.zGoodThreshold, abs(xyzYawDelta[3]) < AnchorPointPractice.yawGoodThreshold {
                     Text(NSLocalizedString("anchorPointPracticeFeedbackGoodTitle", comment: "anchor point well aligned header"))
                     Text(NSLocalizedString("anchorPointPracticeFeedbackGoodText", comment: "anchor point well aligned text"))
-
+                    
                 } else {
                     Text(NSLocalizedString("anchorPointPracticeFeedbackBadTitle", comment: "anchor point not well aligned header"))
                     Text(NSLocalizedString("anchorPointPracticeFeedbackBadText", comment: "anchor point not well aligned text"))
@@ -827,55 +798,59 @@ struct AnchorPointPractice: View {
                     Image("Align")
                         .resizable()
                         .frame(width: 200, height: 200)
-                    }
+                }
                 Button(action: {
                     anchorPointSet = false
-                }) {TutorialButton{Text(NSLocalizedString("anchorPointPracticeRetryButton", comment: "button text to retry setting the anchor point"))}}
-                
-            }else {
+                }) {
+                    TutorialButton{Text(NSLocalizedString("anchorPointPracticeRetryButton", comment: "button text to retry setting the anchor point"))
+                    }
+                }
+            } else {
                 //when starting anchor point practice
                 Text(NSLocalizedString("anchorPointPracticeSetTutorialTitle", comment: "Set an anchor point practice page title"))
                 
                 Text(NSLocalizedString("anchorPointPracticeSetTutorialText", comment: "Set an anchor point practice page instructions"))
                 
                 Button(action: {
-                        //TODO: do count down, hid button until after countdown and wait a least a little bit longer before you can hit align again, play a success sound(?)
-                        if let transform = arData.transform {
-                            let x = transform.columns.3.x
-                            let y = transform.columns.3.y
-                            let z = transform.columns.3.z
-                            let yaw = ViewController.getYawHelper(transform)
-                            xyzYawSet = [x, y, z, yaw]
-                            anchorPointSet = true
-                        }
+                    //TODO: do count down, hid button until after countdown and wait a least a little bit longer before you can hit align again, play a success sound(?)
+                    if let transform = arData.transform {
+                        let x = transform.columns.3.x
+                        let y = transform.columns.3.y
+                        let z = transform.columns.3.z
+                        let yaw = ViewController.getYawHelper(transform)
+                        xyzYawSet = [x, y, z, yaw]
+                        anchorPointSet = true
+                    }
                     
                 }) {//Text("capture anchorpoint")
                     Image("Align")
                         .resizable()
                         .frame(width: 200, height: 200)
-                    }
+                }
             }
             
             
-           /* if let transform = arData.transform {
-                let x = transform.columns.3.x
-                let y = transform.columns.3.y
-                let z = transform.columns.3.z
-                let yaw = ViewController.getYawHelper(transform)
-                if xyzYawSet.count == 4 {
-                    Text("x, y, z, yaw \(x - xyzYawSet[0]), \(y - xyzYawSet[1]), \(z - xyzYawSet[2]), \(yaw - xyzYawSet[3])")
-                }
-            }*/
+            /* if let transform = arData.transform {
+             let x = transform.columns.3.x
+             let y = transform.columns.3.y
+             let z = transform.columns.3.z
+             let yaw = ViewController.getYawHelper(transform)
+             if xyzYawSet.count == 4 {
+             Text("x, y, z, yaw \(x - xyzYawSet[0]), \(y - xyzYawSet[1]), \(z - xyzYawSet[2]), \(yaw - xyzYawSet[3])")
+             }
+             }*/
         }.onDisappear(){
-            UserDefaults.standard.setValue(true, forKey: "AnchorPointsCompleted")}
+            UserDefaults.standard.setValue(true, forKey: "AnchorPointsCompleted")
+        }
         
         .onAppear() {
             NotificationCenter.default.post(name: Notification.Name("StartARSession"), object: nil)
-            
         }
         
         Spacer()
-        TutorialNavLink(destination: SavedRoutes())  {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
+        TutorialNavLink(destination: SavedRoutes())  {
+            Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
+        }
     }
 }
 
@@ -884,15 +859,17 @@ struct SavedRoutes: View {
     var body: some View {
         TutorialScreen{
             Text(NSLocalizedString("savedRoutesTutorialButtonText", comment: "Title for the saved route part of the tutorial"))
-        
+            
             Text(NSLocalizedString("savedRouteTutorialInstructionText", comment: "Instructions for using saved routes"))
-                    //.fixedSize(horizontal: false, vertical: true)
-        
-        }.onDisappear(){
+            //.fixedSize(horizontal: false, vertical: true)
+            
+        }.onDisappear() {
             UserDefaults.standard.setValue(true, forKey: "SavedRoutesTutorialCompleted")
         }
         Spacer()
-        TutorialNavLink(destination: RecordSavedRoutes())  {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
+        TutorialNavLink(destination: RecordSavedRoutes()) {
+            Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
+        }
     }
 }
 
@@ -903,18 +880,24 @@ struct RecordSavedRoutes: View {
         TutorialScreen {
             Text(NSLocalizedString( "recordSavedRoutesTutorialButtonText", comment: "Title for the recording saved routes part of the tutorial"))
             
-        //ScrollView{
-        Text(NSLocalizedString("recordSavedRoutesTutorialInstructionText", comment: "Instructions for recording saved routes"))
+            //ScrollView{
+            Text(NSLocalizedString("recordSavedRoutesTutorialInstructionText", comment: "Instructions for recording saved routes"))
             //.fixedSize(horizontal: false, vertical: true)
             
-            TutorialNavLink(destination: AnchorPoints()) {Text(NSLocalizedString("anchorPointsTutorialTitle", comment: "Title for the anchor point part of the tutorial"))}
-        
-        TutorialNavLink(destination: VoiceNotes()) {Text(NSLocalizedString( "voiceNotesTutorialButtonText", comment: "Title for the voice notes part of the tutorial"))}
+            TutorialNavLink(destination: AnchorPoints()) {
+                Text(NSLocalizedString("anchorPointsTutorialTitle", comment: "Title for the anchor point part of the tutorial"))
+            }
+            
+            TutorialNavLink(destination: VoiceNotes()) {
+                Text(NSLocalizedString( "voiceNotesTutorialButtonText", comment: "Title for the voice notes part of the tutorial"))
+            }
             
         }
         
         Spacer()
-        TutorialNavLink(destination: FindingSavedRoutes())  {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
+        TutorialNavLink(destination: FindingSavedRoutes())  {
+            Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
+        }
     }
 }
 
@@ -925,11 +908,13 @@ struct VoiceNotes: View {
             
             //ScrollView{
             Text(NSLocalizedString("voiceNotesTutorialInstructionText", comment: "Instructions for leaving voice notes along a path"))
-                //.fixedSize(horizontal: false, vertical: true)
+            //.fixedSize(horizontal: false, vertical: true)
         }
-            
-            Spacer()
-            TutorialNavLink(destination: FindingSavedRoutes())  {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
+        
+        Spacer()
+        TutorialNavLink(destination: FindingSavedRoutes())  {
+            Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
+        }
     }
 }
 
@@ -941,12 +926,14 @@ struct FindingSavedRoutes: View {
             
             //ScrollView{
             Text(NSLocalizedString("findingSavedRoutesTutorialInstructionText", comment: "Instructions for finding saved routes"))
-                //.fixedSize(horizontal: false, vertical: true)
-            }.onDisappear(){
-                UserDefaults.standard.setValue(true, forKey: "FindingSavedRoutesTutorialCompleted")
-            }
+            //.fixedSize(horizontal: false, vertical: true)
+        }.onDisappear(){
+            UserDefaults.standard.setValue(true, forKey: "FindingSavedRoutesTutorialCompleted")
+        }
         Spacer()
-        TutorialNavLink(destination: SettingOptions()) {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
+        TutorialNavLink(destination: SettingOptions()) {
+            Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
+        }
     }
 }
 
@@ -958,14 +945,20 @@ struct SettingOptions: View {
             
             //ScrollView{
             Text(NSLocalizedString( "settingOptionsTutorialInstructionText", comment: "Information about what the setting options are"))
-                //.fixedSize(horizontal: false, vertical: true)
+            //.fixedSize(horizontal: false, vertical: true)
             
-            TutorialNavLink(destination: SettingWalkThrough()) {Text(NSLocalizedString("settingsWalkThroughTitle", comment: "Title for the Settings Walk Through"))}
+            TutorialNavLink(destination: SettingWalkThrough()) {
+                Text(NSLocalizedString("settingsWalkThroughTitle", comment: "Title for the Settings Walk Through"))
+            }
             
-        }.onDisappear(){UserDefaults.standard.setValue(true, forKey: "SettingsOptionsTutorialCompleted")}
+        }.onDisappear(){
+            UserDefaults.standard.setValue(true, forKey: "SettingsOptionsTutorialCompleted")
+        }
         
         Spacer()
-        TutorialNavLink(destination: TutorialEndView()) {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
+        TutorialNavLink(destination: TutorialEndView()) {
+            Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
+        }
         
     }
 }
@@ -981,7 +974,11 @@ struct TutorialEndView: View {
         Spacer()
         Button(action: {
             NotificationCenter.default.post(name: Notification.Name("TutorialPopoverReadyToDismiss"), object: nil)
-        }) {TutorialButton{Text("Exit Tutorial")}}
+        }) {
+            TutorialButton{
+                Text("Exit Tutorial")
+            }
+        }
     }
 }
 
@@ -991,79 +988,79 @@ struct TutorialEndView: View {
 
 
 /*struct Practice2Success: View {
-    @State var successSound: AVAudioPlayer?
-    var body: some View {
-        TutorialScreen{
-            Text("Congradulations!")
-            
-            Text("You've completed the route practices. You can continue through the tutorial or go try out recording and praticing some of our own routes in a familiar space using Single Use Routes on the Clew home page.")
-        }.onAppear()
-            {let path1 = Bundle.main.path(forResource: "ClewSuccessSound", ofType:"wav")!
-            let url1 = URL(fileURLWithPath: path1)
-            do {
-                successSound = try AVAudioPlayer(contentsOf: url1)
-                successSound?.play()
-            } catch {
-                // couldn't load file :(
-            }
-            }
-        Spacer()
-            TutorialNavLink(destination: SingleUse()) {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
-    }
-}*/
+ @State var successSound: AVAudioPlayer?
+ var body: some View {
+ TutorialScreen{
+ Text("Congradulations!")
+ 
+ Text("You've completed the route practices. You can continue through the tutorial or go try out recording and praticing some of our own routes in a familiar space using Single Use Routes on the Clew home page.")
+ }.onAppear()
+ {let path1 = Bundle.main.path(forResource: "ClewSuccessSound", ofType:"wav")!
+ let url1 = URL(fileURLWithPath: path1)
+ do {
+ successSound = try AVAudioPlayer(contentsOf: url1)
+ successSound?.play()
+ } catch {
+ // couldn't load file :(
+ }
+ }
+ Spacer()
+ TutorialNavLink(destination: SingleUse()) {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
+ }
+ }*/
 
 /*struct HapticTesting: View {
-    let generator = UINotificationFeedbackGenerator()
-    var body: some View{
-        TutorialScreen{
-            Button(action: {
-                self.generator.notificationOccurred(.success)
-            }) {
-                Text("Success")
-            }
-            
-            Button(action: {
-                self.generator.notificationOccurred(.error)
-            }) {
-                Text("Error")
-            }
-            
-            Button(action: {
-                self.generator.notificationOccurred(.warning)
-            }) {
-                Text("Warning")
-            }
-            
-            Button(action: {
-                let impactLight = UIImpactFeedbackGenerator(style: .light)
-                impactLight.impactOccurred()
-            }) {
-                Text("Light")
-            }
-            
-            Button(action: {
-                let impactMed = UIImpactFeedbackGenerator(style: .medium)
-                impactMed.impactOccurred()
-            }) {
-                Text("Medium")
-            }
-            
-            Button(action: {
-                let impactHeavy = UIImpactFeedbackGenerator(style: .heavy)
-                impactHeavy.impactOccurred()
-            }) {
-                Text("Heavy")
-            }
-            
-            Button(action: {
-                let selectionFeedback = UISelectionFeedbackGenerator()
-                selectionFeedback.selectionChanged()
-            }) {
-                Text("Selection Feedback Changed")
-            }
-        .padding(.all, 30.0)
-            
-        }
-    }
-}*/
-            
+ let generator = UINotificationFeedbackGenerator()
+ var body: some View{
+ TutorialScreen{
+ Button(action: {
+ self.generator.notificationOccurred(.success)
+ }) {
+ Text("Success")
+ }
+ 
+ Button(action: {
+ self.generator.notificationOccurred(.error)
+ }) {
+ Text("Error")
+ }
+ 
+ Button(action: {
+ self.generator.notificationOccurred(.warning)
+ }) {
+ Text("Warning")
+ }
+ 
+ Button(action: {
+ let impactLight = UIImpactFeedbackGenerator(style: .light)
+ impactLight.impactOccurred()
+ }) {
+ Text("Light")
+ }
+ 
+ Button(action: {
+ let impactMed = UIImpactFeedbackGenerator(style: .medium)
+ impactMed.impactOccurred()
+ }) {
+ Text("Medium")
+ }
+ 
+ Button(action: {
+ let impactHeavy = UIImpactFeedbackGenerator(style: .heavy)
+ impactHeavy.impactOccurred()
+ }) {
+ Text("Heavy")
+ }
+ 
+ Button(action: {
+ let selectionFeedback = UISelectionFeedbackGenerator()
+ selectionFeedback.selectionChanged()
+ }) {
+ Text("Selection Feedback Changed")
+ }
+ .padding(.all, 30.0)
+ 
+ }
+ }
+ }*/
+

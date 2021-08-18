@@ -41,6 +41,10 @@
 		82569F4F22187E6500448B45 /* help in Resources */ = {isa = PBXBuildFile; fileRef = 82569F4D22187E6500448B45 /* help */; };
 		8261892E264ACCC5007F99C4 /* AppleSignInController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8261892D264ACCC5007F99C4 /* AppleSignInController.swift */; };
 		8261892F264ACCC5007F99C4 /* AppleSignInController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8261892D264ACCC5007F99C4 /* AppleSignInController.swift */; };
+		827EDC3126CDA5C000AAA12A /* ClewErrorSound.wav in Resources */ = {isa = PBXBuildFile; fileRef = 827EDC3026CDA5C000AAA12A /* ClewErrorSound.wav */; };
+		827EDC3226CDA5C000AAA12A /* ClewErrorSound.wav in Resources */ = {isa = PBXBuildFile; fileRef = 827EDC3026CDA5C000AAA12A /* ClewErrorSound.wav */; };
+		827EDC3426CDA72300AAA12A /* SoundEffectManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 827EDC3326CDA72200AAA12A /* SoundEffectManager.swift */; };
+		827EDC3526CDA72300AAA12A /* SoundEffectManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 827EDC3326CDA72200AAA12A /* SoundEffectManager.swift */; };
 		82A417E1262A205A001FCB8C /* AuthenticationHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82A417E0262A205A001FCB8C /* AuthenticationHelper.swift */; };
 		82A417E2262A205A001FCB8C /* AuthenticationHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82A417E0262A205A001FCB8C /* AuthenticationHelper.swift */; };
 		82AD6A25252F80AA00902A11 /* speaker.mtl in Resources */ = {isa = PBXBuildFile; fileRef = 82AD6A24252F80AA00902A11 /* speaker.mtl */; };
@@ -200,6 +204,8 @@
 		827CB5B224932CC60032A857 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/MainInterface.strings; sourceTree = "<group>"; };
 		827CB5B324932CC70032A857 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/SettingsAndHelp.strings; sourceTree = "<group>"; };
 		827CB5B424932CC70032A857 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/Localizable.strings; sourceTree = "<group>"; };
+		827EDC3026CDA5C000AAA12A /* ClewErrorSound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = ClewErrorSound.wav; sourceTree = "<group>"; };
+		827EDC3326CDA72200AAA12A /* SoundEffectManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundEffectManager.swift; sourceTree = "<group>"; };
 		82A417E0262A205A001FCB8C /* AuthenticationHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationHelper.swift; sourceTree = "<group>"; };
 		82A417EC262A2140001FCB8C /* Clew Dev.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Clew Dev.entitlements"; sourceTree = "<group>"; };
 		82AD6A24252F80AA00902A11 /* speaker.mtl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = speaker.mtl; sourceTree = "<group>"; };
@@ -406,6 +412,7 @@
 				E565A10722F2173400C1998E /* RouteDocumentData.swift */,
 				82A417E0262A205A001FCB8C /* AuthenticationHelper.swift */,
 				82BC47FD2640383300C7D364 /* Surveys.swift */,
+				827EDC3326CDA72200AAA12A /* SoundEffectManager.swift */,
 			);
 			path = Misc;
 			sourceTree = "<group>";
@@ -416,6 +423,7 @@
 				E5470EBA22C119F4001092A4 /* SettingsTableViewController.h */,
 				E5470ED222C119F4001092A4 /* StartRecording.aiff */,
 				14B7EA11269631C500E4A3CE /* ClewSuccessSound.wav */,
+				827EDC3026CDA5C000AAA12A /* ClewErrorSound.wav */,
 				14A90C0326A211BE003DAB30 /* ClewTutorialFeedback.wav */,
 				E5470ED322C119F4001092A4 /* StopRecording.aiff */,
 			);
@@ -634,6 +642,7 @@
 				4DF05CC81F34EB6B008B0E31 /* Confirm.mp3 in Resources */,
 				E5470F1822C119F5001092A4 /* StartRecording.aiff in Resources */,
 				14A90C0726A86A82003DAB30 /* TutorialFollowPath1.crd in Resources */,
+				827EDC3126CDA5C000AAA12A /* ClewErrorSound.wav in Resources */,
 				4D6B00E51F33C9B800952242 /* Crumb.obj in Resources */,
 				14A90C0A26AEF5CE003DAB30 /* TutorialFollowPath2.crd in Resources */,
 				E5470F1C22C119F5001092A4 /* GoogleService-Info.plist in Resources */,
@@ -662,6 +671,7 @@
 				E5470F1922C119F5001092A4 /* StartRecording.aiff in Resources */,
 				14A90C0526A211BF003DAB30 /* ClewTutorialFeedback.wav in Resources */,
 				77365B192343ECBA008BC35C /* BurgerMenu.storyboard in Resources */,
+				827EDC3226CDA5C000AAA12A /* ClewErrorSound.wav in Resources */,
 				E5470F1B22C119F5001092A4 /* StopRecording.aiff in Resources */,
 				82AD6A26252F80AA00902A11 /* speaker.mtl in Resources */,
 				B7EB59E220F693EB00FBBC6A /* Confirm.mp3 in Resources */,
@@ -838,6 +848,7 @@
 				E5470F3C22C119F5001092A4 /* FeedbackViewController.swift in Sources */,
 				E5470F3422C119F5001092A4 /* StopNavigationController.swift in Sources */,
 				E5470F3E22C119F5001092A4 /* RoutesViewController.swift in Sources */,
+				827EDC3426CDA72300AAA12A /* SoundEffectManager.swift in Sources */,
 				E5470F0822C119F5001092A4 /* Utility.swift in Sources */,
 				E5470EFC22C119F5001092A4 /* RecordButton.swift in Sources */,
 				8261892E264ACCC5007F99C4 /* AppleSignInController.swift in Sources */,
@@ -887,6 +898,7 @@
 				E5470F3D22C119F5001092A4 /* FeedbackViewController.swift in Sources */,
 				E5470F3522C119F5001092A4 /* StopNavigationController.swift in Sources */,
 				E5470F3F22C119F5001092A4 /* RoutesViewController.swift in Sources */,
+				827EDC3526CDA72300AAA12A /* SoundEffectManager.swift in Sources */,
 				E5470F0922C119F5001092A4 /* Utility.swift in Sources */,
 				E5470EFD22C119F5001092A4 /* RecordButton.swift in Sources */,
 				8261892F264ACCC5007F99C4 /* AppleSignInController.swift in Sources */,
