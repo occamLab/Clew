@@ -37,6 +37,69 @@ import FirebaseDatabase
 import SRCountdownTimer
 import VideoToolbox
 
+
+enum ARConfigurationUnion {
+    case worldTracking(config: ARWorldTrackingConfiguration)
+    case positionalTracking(config: ARPositionalTrackingConfiguration)
+    
+    var initialWorldMap: ARWorldMap? {
+        get {
+            switch self {
+            case .worldTracking(let config):
+                return config.initialWorldMap
+            case .positionalTracking(let config):
+                return config.initialWorldMap
+            }
+        }
+        set {
+            switch self {
+            case .worldTracking(let config):
+                config.initialWorldMap = newValue
+            case .positionalTracking(let config):
+                config.initialWorldMap = newValue
+            }
+        }
+    }
+    
+    var configObj: ARConfiguration {
+        switch self {
+        case .worldTracking(let config):
+            return config
+        case .positionalTracking(let config):
+            return config
+        }
+    }
+    
+    var planeDetection: ARWorldTrackingConfiguration.PlaneDetection {
+        get {
+            switch self {
+            case .worldTracking(let config):
+                return config.planeDetection
+            case .positionalTracking(let config):
+                return config.planeDetection
+            }
+        }
+        set {
+            switch self {
+            case .worldTracking(let config):
+                config.planeDetection = newValue
+            case .positionalTracking(let config):
+                config.planeDetection = newValue
+            }
+        }
+    }
+    
+    var downsampleFactor: Int {
+        switch self {
+        case .worldTracking(_):
+            return 2
+        case .positionalTracking(_):
+            return 1
+        }
+    }
+}
+
+
 /// A custom enumeration type that describes the exact state of the app.  The state is not exhaustive (e.g., there are Boolean flags that also track app state).
 enum AppState {
     /// This is the screen the comes up immediately after the splash screen
@@ -323,6 +386,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     var voiceNoteToPlay: AVAudioPlayer?
     
     var visualAlignmentSuccessSound: AVAudioPlayer?
+    var visualAlignmentErrorSound: AVAudioPlayer?
+
     
     // MARK: - Speech Synthesizer Delegate
     
@@ -502,7 +567,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
         print("Intermediate route anchors", intermediateRouteAnchorPoints.count)
         // don't reset tracking, but do clear anchors and switch to the new map
-        sceneView.session.run(configuration, options: [.removeExistingAnchors, .resetTracking])
+        sceneView.session.run(configuration.configObj, options: [.removeExistingAnchors, .resetTracking])
 
         if isTrackingPerformanceNormal, isSameMap {
             // we can skip the whole process of relocalization since we are already using the correct map and tracking is normal.  It helps to strip out old anchors to reduce jitter though
@@ -934,6 +999,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             audioPlayers[1025] = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: "/System/Library/Audio/UISounds/New/Fanfare.caf"))
             visualAlignmentSuccessSound = try AVAudioPlayer(contentsOf: Bundle.main.url(forResource: "ClewSuccessSound", withExtension: "wav")!)
             visualAlignmentSuccessSound?.prepareToPlay()
+            visualAlignmentErrorSound = try AVAudioPlayer(contentsOf: Bundle.main.url(forResource: "ClewErrorSound", withExtension: "wav")!)
+            visualAlignmentErrorSound?.prepareToPlay()
+
 
             for p in audioPlayers.values {
                 p.prepareToPlay()
@@ -1254,10 +1322,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// Create a new ARSession.
     func createARSessionConfiguration() {
-        //configuration = ARPositionalTrackingConfiguration()
-        configuration = ARWorldTrackingConfiguration()
         configuration.planeDetection = [.horizontal, .vertical]
-        //configuration.isAutoFocusEnabled = false
         sceneView.delegate = self
     }
     
@@ -1509,8 +1574,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     // MARK: - BreadCrumbs
     
     /// AR Session Configuration
-    //var configuration: ARPositionalTrackingConfiguration!
-    var configuration: ARWorldTrackingConfiguration!
+    //var configuration: ARConfigurationUnion = .positionalTracking(config: ARPositionalTrackingConfiguration())
+    var configuration: ARConfigurationUnion = .worldTracking(config: ARWorldTrackingConfiguration())
     
     /// MARK: - Clew internal datastructures
     
@@ -1707,7 +1772,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             self.state = .startingPauseProcedure
         }
         configuration.initialWorldMap = nil
-        sceneView.session.run(configuration, options: [.removeExistingAnchors, .resetTracking])
+        sceneView.session.run(configuration.configObj, options: [.removeExistingAnchors, .resetTracking])
     }
     
     /// handles the user pressing the stop recording button.
@@ -1833,7 +1898,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             self.state = .recordingRoute
         }
         configuration.initialWorldMap = nil
-        sceneView.session.run(configuration, options: [.removeExistingAnchors, .resetTracking])
+        sceneView.session.run(configuration.configObj, options: [.removeExistingAnchors, .resetTracking])
     }
     
     /// this is called after the alignment countdown timer finishes in order to complete the pause tracking procedure
@@ -1928,10 +1993,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 self.currentIntrinsics = intrinsics
                 self.currentImage = capturedUIImage
                 self.currentPose = frame.camera.transform
-                let visualYawReturn = VisualAlignment.visualYaw(alignAnchorPointImage, alignAnchorPoint.intrinsics!, alignTransform,
-                                                                capturedUIImage,
-                                                                simd_float4(intrinsics[0, 0], intrinsics[1, 1], intrinsics[2, 0], intrinsics[2, 1]),
-                                                                frame.camera.transform)
+                let visualYawReturn = VisualAlignment.visualYaw(alignAnchorPointImage, alignAnchorPoint.intrinsics!, alignTransform, capturedUIImage, simd_float4(intrinsics[0, 0], intrinsics[1, 1], intrinsics[2, 0], intrinsics[2, 1]), frame.camera.transform, Int32(self.configuration.downsampleFactor))
                 if let debugImage = VisualAlignment.getDebugImage() {
                     let storageref = Storage.storage().reference().child(String(format: "visualAlignment/\(String(self.appStartTime.timeIntervalSince1970))/%04d.jpg", self.imageCounter))
                     self.imageCounter += 1
@@ -1959,6 +2021,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                     let magneticDiff = atan2(sin(pausedMagneticYaw - currMagneticYaw), cos(pausedMagneticYaw - currMagneticYaw))
                     if self.alignmentMethod == .magnetometer {
                         self.relativeYaws.append(magneticDiff)
+                        self.visualAlignmentSuccessSound?.play()
                     }
                     
                     var arrowTransformMagneticYaw = matrix_identity_float4x4
@@ -2045,6 +2108,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                             self.announce(announcement: String(format: "%.2f %.2f", magneticDiffToAnnounce ?? "", relativeYaw))
                         }
                     }
+                } else {
+                    self.visualAlignmentErrorSound?.play()
                 }
                 if triesLeft > 1 {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {

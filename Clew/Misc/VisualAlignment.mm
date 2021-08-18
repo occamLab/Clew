@@ -29,7 +29,7 @@ UIImage *debug_match_image_ui = 0;
 }
 
 + (VisualAlignmentReturn) visualYaw :(UIImage *)image1 :(simd_float4)intrinsics1 :(simd_float4x4)pose1
-                    :(UIImage *)image2 :(simd_float4)intrinsics2 :(simd_float4x4)pose2 {
+                    :(UIImage *)image2 :(simd_float4)intrinsics2 :(simd_float4x4)pose2 :(int)downSampleFactor {
     debug_match_image_ui = 0;
     bool useThreePoint = true;
     VisualAlignmentReturn ret;
@@ -68,7 +68,6 @@ UIImage *debug_match_image_ui = 0;
     const auto square_image_mat1 = warpPerspectiveWithGlobalRotation(image_mat1, intrinsics1_matrix, pose1_matrix.block(0, 0, 3, 3), square_rotation1);
     const auto square_image_mat2 = warpPerspectiveWithGlobalRotation(image_mat2, intrinsics2_matrix, pose2_matrix.block(0, 0, 3, 3), square_rotation2);
     cv::Mat square_image_mat1_resized, square_image_mat2_resized;
-    const int downSampleFactor = 2;
     cv::resize(square_image_mat1, square_image_mat1_resized, cv::Size(square_image_mat1.size().width/downSampleFactor, square_image_mat1.size().height/downSampleFactor));
     cv::resize(square_image_mat2, square_image_mat2_resized, cv::Size(square_image_mat2.size().width/downSampleFactor, square_image_mat2.size().height/downSampleFactor));
     

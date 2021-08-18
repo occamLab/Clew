@@ -30,6 +30,8 @@
 		82A5946E26BDD38100BC482C /* ClewTutorialFeedback.wav in Resources */ = {isa = PBXBuildFile; fileRef = 82A5946C26BDD38100BC482C /* ClewTutorialFeedback.wav */; };
 		82E5504726C8B35600D0F8E8 /* CompassHeading.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82E5504626C8B35600D0F8E8 /* CompassHeading.swift */; };
 		82E5504826C8B35600D0F8E8 /* CompassHeading.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82E5504626C8B35600D0F8E8 /* CompassHeading.swift */; };
+		82ED60B426CD65DF00527BA9 /* ClewErrorSound.wav in Resources */ = {isa = PBXBuildFile; fileRef = 82ED60B326CD65DF00527BA9 /* ClewErrorSound.wav */; };
+		82ED60B526CD65DF00527BA9 /* ClewErrorSound.wav in Resources */ = {isa = PBXBuildFile; fileRef = 82ED60B326CD65DF00527BA9 /* ClewErrorSound.wav */; };
 		986640CE22FB68F2005AA1F6 /* NameSavedRouteController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986640CD22FB68F2005AA1F6 /* NameSavedRouteController.swift */; };
 		986640CF22FC9606005AA1F6 /* NameSavedRouteController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986640CD22FB68F2005AA1F6 /* NameSavedRouteController.swift */; };
 		B0A563F6FE1007A2716DC876 /* Pods_Clew_Dev.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3532E390954571B93729786A /* Pods_Clew_Dev.framework */; };
@@ -185,6 +187,7 @@
 		82A5946926BDD36F00BC482C /* ClewSuccessSound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = ClewSuccessSound.wav; sourceTree = "<group>"; };
 		82A5946C26BDD38100BC482C /* ClewTutorialFeedback.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = ClewTutorialFeedback.wav; sourceTree = "<group>"; };
 		82E5504626C8B35600D0F8E8 /* CompassHeading.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompassHeading.swift; sourceTree = "<group>"; };
+		82ED60B326CD65DF00527BA9 /* ClewErrorSound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = ClewErrorSound.wav; sourceTree = "<group>"; };
 		82F2DDD122E26A44005CD7D0 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		82F2DDD322E26A44005CD7D0 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/SettingsAndHelp.strings; sourceTree = "<group>"; };
 		85A1A72DC19F87F15B738291 /* Pods-Clew Dev.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew Dev.release.xcconfig"; path = "Pods/Target Support Files/Pods-Clew Dev/Pods-Clew Dev.release.xcconfig"; sourceTree = "<group>"; };
@@ -409,6 +412,7 @@
 				82A5946926BDD36F00BC482C /* ClewSuccessSound.wav */,
 				82A5946C26BDD38100BC482C /* ClewTutorialFeedback.wav */,
 				E5470EBA22C119F4001092A4 /* SettingsTableViewController.h */,
+				82ED60B326CD65DF00527BA9 /* ClewErrorSound.wav */,
 				E5470ED222C119F4001092A4 /* StartRecording.aiff */,
 				E5470ED322C119F4001092A4 /* StopRecording.aiff */,
 			);
@@ -613,6 +617,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				82ED60B426CD65DF00527BA9 /* ClewErrorSound.wav in Resources */,
 				82A5946A26BDD36F00BC482C /* ClewSuccessSound.wav in Resources */,
 				772E4563236CC155008EF6AC /* SettingsAndHelp.storyboard in Resources */,
 				4DF05CC81F34EB6B008B0E31 /* Confirm.mp3 in Resources */,
@@ -648,6 +653,7 @@
 				E5470F4F22C119F5001092A4 /* GoogleService-Info_dev.plist in Resources */,
 				82569F4F22187E6500448B45 /* help in Resources */,
 				82A5946E26BDD38100BC482C /* ClewTutorialFeedback.wav in Resources */,
+				82ED60B526CD65DF00527BA9 /* ClewErrorSound.wav in Resources */,
 				E5D1695D22E103A0008754D0 /* SettingsAndHelp.strings in Resources */,
 				E5D1695F22E103A0008754D0 /* Localizable.strings in Resources */,
 				E59DA6C022C65F5900FCD5A1 /* LaunchScreen.storyboard in Resources */,
