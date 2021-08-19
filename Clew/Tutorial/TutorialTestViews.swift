@@ -11,6 +11,7 @@ import AVFoundation
 import Foundation
 
 //TODO: 1 add content to all pages 4 add localized strings to everything
+//TOOD: stop AR session when needed
 //TODO: Once the tutorial routes are completed, we continuously bring up the congrats page and can't get back to the main tutorial
 struct TutorialScreen<Content: View>: View {
     //format for all the tutorial and app set up screens. standarizes spacing and adds exit button to each page
@@ -666,18 +667,22 @@ struct AnchorPointTips: View {
     }
 }
 
-struct AnchorPointPractice: View {
-    //TODO: 1 write instructions 2 align to anchor point twice? 4 count down 5 voice announcments?
+enum AlignmentAccuracy {
+    case none
+    case bad
+    case good
+    case perfect
+}
+
+struct AnchorPointPracticeSubComponent: View {
     @ObservedObject private var arData = ARData.shared
-    @State var sound: AVAudioPlayer?
-    @State private var started = false
+    @State private var anchorPointAligned = false
+    @State private var anchorPointSet = false
     @State var xyzYawSet: [Float] = []
     @State var xyzYawAlign: [Float] = []
     @State var xyzYawDelta: [Float] = []
-    @State private var anchorPointSet = false
-    @State private var anchorPointAligned = false
-    @State var successSound: AVAudioPlayer?
-    
+    @State var accuracy: AlignmentAccuracy = .none
+
     static let xPerfectThreshold = Float(0.1)
     static let yPerfectThreshold = Float(0.1)
     static let zPerfectThreshold = Float(0.1)
@@ -688,104 +693,110 @@ struct AnchorPointPractice: View {
     static let yawGoodThreshold = Float(0.5)
     
     var body: some View {
-        TutorialScreen {
-            if anchorPointAligned {
-                //once anchor point is aligned
-                Text("x, y, z, yaw \(xyzYawAlign[0] - xyzYawSet[0]), \(xyzYawAlign[1] - xyzYawSet[1]), \(xyzYawAlign[2] - xyzYawSet[2]), \(xyzYawAlign[3] - xyzYawSet[3])")//TODO: Delete when done testing
-                
-                if abs(xyzYawDelta[0]) < AnchorPointPractice.xPerfectThreshold, abs(xyzYawDelta[1]) < AnchorPointPractice.yPerfectThreshold, abs(xyzYawDelta[2]) < AnchorPointPractice.zPerfectThreshold, abs(xyzYawDelta[3]) < AnchorPointPractice.yawPerfectThreshold {
-                    Text(NSLocalizedString("anchorPointPracticeFeedbackPerfectTitle", comment: "anchor point perfectly aligned heading"))
-                    Text(NSLocalizedString("anchorPointPracticeFeedbackPerfectText", comment: "anchor point perfectly aligned text"))
-                } else if abs(xyzYawDelta[0]) < AnchorPointPractice.xGoodThreshold, abs(xyzYawDelta[1]) < AnchorPointPractice.yGoodThreshold, abs(xyzYawDelta[2]) < AnchorPointPractice.zGoodThreshold, abs(xyzYawDelta[3]) < AnchorPointPractice.yawGoodThreshold {
-                    Text(NSLocalizedString("anchorPointPracticeFeedbackGoodTitle", comment: "anchor point well aligned header"))
-                    Text(NSLocalizedString("anchorPointPracticeFeedbackGoodText", comment: "anchor point well aligned text"))
-                    
-                } else {
-                    Text(NSLocalizedString("anchorPointPracticeFeedbackBadTitle", comment: "anchor point not well aligned header"))
-                    Text(NSLocalizedString("anchorPointPracticeFeedbackBadText", comment: "anchor point not well aligned text"))
-                }
-                
-                Button(action: {
-                    anchorPointAligned = false
-                }) {
-                    TutorialButton{
-                        Text(NSLocalizedString("anchorPointPracticeRetryAlignButton", comment: "button text to retry aligning the anchor point"))
-                    }
-                }
-                
-                Button(action: {
-                    anchorPointSet = false
-                    anchorPointAligned = false
-                }) {
-                    TutorialButton{
-                        Text(NSLocalizedString("anchorPointPracticeRetryButton", comment: "button text to retry setting the anchor point"))
-                    }
-                }
-                
-                TutorialNavLink(destination: AnchorPointTips())  {
-                    Text(NSLocalizedString("tipTutorialTitle", comment: "Button to tips page"))
-                }
-            } else if anchorPointSet {
-                //Once anchor point is set
-                Text(NSLocalizedString("anchorPointPracticeAlignTitle", comment: "Align to anchor point page title"))
-                
-                Text(NSLocalizedString("anchorPointPracticeAlignText", comment: "Align to anchor point page instructions"))
-                
-                Button(action: {
-                    if let transform = arData.transform {
-                        let x = transform.columns.3.x
-                        let y = transform.columns.3.y
-                        let z = transform.columns.3.z
-                        let yaw = ViewController.getYawHelper(transform)
-                        xyzYawAlign = [x, y, z, yaw]
-                        xyzYawDelta = [xyzYawAlign[0] - xyzYawSet[0], xyzYawAlign[1] - xyzYawSet[1], xyzYawAlign[2] - xyzYawSet[2], xyzYawAlign[3] - xyzYawSet[3]]
-                        anchorPointAligned = true
-                    }
-                }) {//Text("capture anchorpoint")
-                    Image("Align")
-                        .resizable()
-                        .frame(width: 200, height: 200)
-                }
-                Button(action: {
-                    anchorPointSet = false
-                }) {
-                    TutorialButton{Text(NSLocalizedString("anchorPointPracticeRetryButton", comment: "button text to retry setting the anchor point"))
-                    }
-                }
-            } else {
-                //when starting anchor point practice
-                Text(NSLocalizedString("anchorPointPracticeSetTutorialTitle", comment: "Set an anchor point practice page title"))
-                
-                Text(NSLocalizedString("anchorPointPracticeSetTutorialText", comment: "Set an anchor point practice page instructions"))
-                
-                Button(action: {
-                    //TODO: do count down, hid button until after countdown and wait a least a little bit longer before you can hit align again, play a success sound(?)
-                    if let transform = arData.transform {
-                        let x = transform.columns.3.x
-                        let y = transform.columns.3.y
-                        let z = transform.columns.3.z
-                        let yaw = ViewController.getYawHelper(transform)
-                        xyzYawSet = [x, y, z, yaw]
-                        anchorPointSet = true
-                    }
-                    
-                }) {//Text("capture anchorpoint")
-                    Image("Align")
-                        .resizable()
-                        .frame(width: 200, height: 200)
+        if anchorPointAligned {
+            //once anchor point is aligned
+            Text("x, y, z, yaw \(xyzYawAlign[0] - xyzYawSet[0]), \(xyzYawAlign[1] - xyzYawSet[1]), \(xyzYawAlign[2] - xyzYawSet[2]), \(xyzYawAlign[3] - xyzYawSet[3])")//TODO: Delete when done testing
+            
+            switch accuracy {
+            case .perfect:
+                Text(NSLocalizedString("anchorPointPracticeFeedbackPerfectTitle", comment: "anchor point perfectly aligned heading"))
+                Text(NSLocalizedString("anchorPointPracticeFeedbackPerfectText", comment: "anchor point perfectly aligned text"))
+            case .good:
+                Text(NSLocalizedString("anchorPointPracticeFeedbackGoodTitle", comment: "anchor point well aligned header"))
+                Text(NSLocalizedString("anchorPointPracticeFeedbackGoodText", comment: "anchor point well aligned text"))
+            default:
+                Text(NSLocalizedString("anchorPointPracticeFeedbackBadTitle", comment: "anchor point not well aligned header"))
+                Text(NSLocalizedString("anchorPointPracticeFeedbackBadText", comment: "anchor point not well aligned text"))
+            }
+            
+            Button(action: {
+                anchorPointAligned = false
+            }) {
+                TutorialButton{
+                    Text(NSLocalizedString("anchorPointPracticeRetryAlignButton", comment: "button text to retry aligning the anchor point"))
                 }
             }
             
+            Button(action: {
+                anchorPointSet = false
+                anchorPointAligned = false
+            }) {
+                TutorialButton{
+                    Text(NSLocalizedString("anchorPointPracticeRetryButton", comment: "button text to retry setting the anchor point"))
+                }
+            }
             
-            /* if let transform = arData.transform {
-             let x = transform.columns.3.x
-             let y = transform.columns.3.y
-             let z = transform.columns.3.z
-             let yaw = ViewController.getYawHelper(transform)
-             if xyzYawSet.count == 4 {
-             Text("x, y, z, yaw \(x - xyzYawSet[0]), \(y - xyzYawSet[1]), \(z - xyzYawSet[2]), \(yaw - xyzYawSet[3])")
-             }
-             }*/
+            TutorialNavLink(destination: AnchorPointTips())  {
+                Text(NSLocalizedString("tipTutorialTitle", comment: "Button to tips page"))
+            }
+        } else if anchorPointSet {
+            //Once anchor point is set
+            Text(NSLocalizedString("anchorPointPracticeAlignTitle", comment: "Align to anchor point page title"))
+            
+            Text(NSLocalizedString("anchorPointPracticeAlignText", comment: "Align to anchor point page instructions"))
+            
+            Button(action: {
+                if let transform = arData.transform {
+                    let x = transform.columns.3.x
+                    let y = transform.columns.3.y
+                    let z = transform.columns.3.z
+                    let yaw = ViewController.getYawHelper(transform)
+                    xyzYawAlign = [x, y, z, yaw]
+                    xyzYawDelta = [xyzYawAlign[0] - xyzYawSet[0], xyzYawAlign[1] - xyzYawSet[1], xyzYawAlign[2] - xyzYawSet[2], xyzYawAlign[3] - xyzYawSet[3]]
+                    if abs(xyzYawDelta[0]) < Self.xPerfectThreshold, abs(xyzYawDelta[1]) < Self.yPerfectThreshold, abs(xyzYawDelta[2]) < Self.zPerfectThreshold, abs(xyzYawDelta[3]) < Self.yawPerfectThreshold {
+                        accuracy = .perfect
+                        SoundEffectManager.shared.success()
+                    } else if abs(xyzYawDelta[0]) < Self.xGoodThreshold, abs(xyzYawDelta[1]) < Self.yGoodThreshold, abs(xyzYawDelta[2]) < Self.zGoodThreshold, abs(xyzYawDelta[3]) < Self.yawGoodThreshold  {
+                        accuracy = .good
+                        SoundEffectManager.shared.meh()
+                    } else {
+                        accuracy = .bad
+                        SoundEffectManager.shared.error()
+                    }
+                    anchorPointAligned = true
+                }
+            }) {
+                Image("Align")
+                    .resizable()
+                    .frame(width: 200, height: 200)
+            }
+            Button(action: {
+                anchorPointSet = false
+            }) {
+                TutorialButton{Text(NSLocalizedString("anchorPointPracticeRetryButton", comment: "button text to retry setting the anchor point"))
+                }
+            }
+        } else {
+            //when starting anchor point practice
+            Text(NSLocalizedString("anchorPointPracticeSetTutorialTitle", comment: "Set an anchor point practice page title"))
+            
+            Text(NSLocalizedString("anchorPointPracticeSetTutorialText", comment: "Set an anchor point practice page instructions"))
+            
+            Button(action: {
+                //TODO: do count down, hid button until after countdown and wait a least a little bit longer before you can hit align again, play a success sound(?)
+                if let transform = arData.transform {
+                    let x = transform.columns.3.x
+                    let y = transform.columns.3.y
+                    let z = transform.columns.3.z
+                    let yaw = ViewController.getYawHelper(transform)
+                    xyzYawSet = [x, y, z, yaw]
+                    anchorPointSet = true
+                }
+                
+            }) {//Text("capture anchorpoint")
+                Image("Align")
+                    .resizable()
+                    .frame(width: 200, height: 200)
+            }
+        }
+    }
+}
+
+struct AnchorPointPractice: View {
+    //TODO: 1 write instructions 2 align to anchor point twice? 4 count down 5 voice announcments?
+    var body: some View {
+        TutorialScreen {
+            AnchorPointPracticeSubComponent()
         }.onDisappear(){
             UserDefaults.standard.setValue(true, forKey: "AnchorPointsTutorialCompleted")
         }
@@ -928,86 +939,3 @@ struct TutorialEndView: View {
         }
     }
 }
-
-
-
-
-
-
-/*struct Practice2Success: View {
- @State var successSound: AVAudioPlayer?
- var body: some View {
- TutorialScreen{
- Text("Congradulations!")
- 
- Text("You've completed the route practices. You can continue through the tutorial or go try out recording and praticing some of our own routes in a familiar space using Single Use Routes on the Clew home page.")
- }.onAppear()
- {let path1 = Bundle.main.path(forResource: "ClewSuccessSound", ofType:"wav")!
- let url1 = URL(fileURLWithPath: path1)
- do {
- successSound = try AVAudioPlayer(contentsOf: url1)
- successSound?.play()
- } catch {
- // couldn't load file :(
- }
- }
- Spacer()
- TutorialNavLink(destination: SingleUse()) {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
- }
- }*/
-
-/*struct HapticTesting: View {
- let generator = UINotificationFeedbackGenerator()
- var body: some View{
- TutorialScreen{
- Button(action: {
- self.generator.notificationOccurred(.success)
- }) {
- Text("Success")
- }
- 
- Button(action: {
- self.generator.notificationOccurred(.error)
- }) {
- Text("Error")
- }
- 
- Button(action: {
- self.generator.notificationOccurred(.warning)
- }) {
- Text("Warning")
- }
- 
- Button(action: {
- let impactLight = UIImpactFeedbackGenerator(style: .light)
- impactLight.impactOccurred()
- }) {
- Text("Light")
- }
- 
- Button(action: {
- let impactMed = UIImpactFeedbackGenerator(style: .medium)
- impactMed.impactOccurred()
- }) {
- Text("Medium")
- }
- 
- Button(action: {
- let impactHeavy = UIImpactFeedbackGenerator(style: .heavy)
- impactHeavy.impactOccurred()
- }) {
- Text("Heavy")
- }
- 
- Button(action: {
- let selectionFeedback = UISelectionFeedbackGenerator()
- selectionFeedback.selectionChanged()
- }) {
- Text("Selection Feedback Changed")
- }
- .padding(.all, 30.0)
- 
- }
- }
- }*/
-

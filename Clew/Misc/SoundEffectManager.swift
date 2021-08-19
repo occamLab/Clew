@@ -12,6 +12,7 @@ import AVFoundation
 class SoundEffectManager {
     public static var shared = SoundEffectManager()
     private var successSound: AVAudioPlayer?
+    private var mehSound: AVAudioPlayer?
     private var errorSound: AVAudioPlayer?
 
     private init() {
@@ -21,8 +22,8 @@ class SoundEffectManager {
     private func loadSoundEffects() {
         if let successPath = Bundle.main.path(forResource: "ClewSuccessSound", ofType:"wav") {
             do {
-                let url1 = URL(fileURLWithPath: successPath)
-                successSound = try AVAudioPlayer(contentsOf: url1)
+                let url = URL(fileURLWithPath: successPath)
+                successSound = try AVAudioPlayer(contentsOf: url)
                 successSound?.prepareToPlay()
             } catch {
                 print("error \(error)")
@@ -30,9 +31,18 @@ class SoundEffectManager {
         }
         if let errorPath = Bundle.main.path(forResource: "ClewErrorSound", ofType:"wav") {
             do {
-                let url2 = URL(fileURLWithPath: errorPath)
-                errorSound = try AVAudioPlayer(contentsOf: url2)
+                let url = URL(fileURLWithPath: errorPath)
+                errorSound = try AVAudioPlayer(contentsOf: url)
                 errorSound?.prepareToPlay()
+            } catch {
+                print("error \(error)")
+            }
+        }
+        if let mehPath = Bundle.main.path(forResource: "ClewTutorialFeedback", ofType:"wav") {
+            do {
+                let url = URL(fileURLWithPath: mehPath)
+                mehSound = try AVAudioPlayer(contentsOf: url)
+                mehSound?.prepareToPlay()
             } catch {
                 print("error \(error)")
             }
@@ -45,5 +55,9 @@ class SoundEffectManager {
     
     func error() {
         errorSound?.play()
+    }
+    
+    func meh() {
+        mehSound?.play()
     }
 }
