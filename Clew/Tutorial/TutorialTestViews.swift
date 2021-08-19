@@ -9,13 +9,16 @@
 import SwiftUI
 import AVFoundation
 import Foundation
+import SRCountdownTimer
 
 //TODO: 1 add content to all pages 4 add localized strings to everything
 //TODO: stop AR session when needed based on the tutorial state
-//TODO: refactor the tutorial state (and possibly other state in the app)
 //TODO: make sure contextual help makes sense in all cases (e.g., the recording use case doesn't really work)
 //TODO: thin out the on-screen instructions for anchor points
-//TODO: Once the tutorial routes are completed, we continuously bring up the congrats page and can't get back to the main tutorial
+//TODO: polish the anchor point practice page (needs to maybe have less text appearing randomly and also provide more announcements to help guide the user)
+//TODO: move reset tutorial practice onto main page
+//TODO: make sounds play even with silent switch on
+//TODO: better instructions for the how to hold your phone
 struct TutorialScreen<Content: View>: View {
     //format for all the tutorial and app set up screens. standarizes spacing and adds exit button to each page
     let content: Content
@@ -677,10 +680,30 @@ enum AlignmentAccuracy {
     case perfect
 }
 
+class TimerDelegate: SRCountdownTimerDelegate, ObservableObject {
+    var timerEnded = false
+
+    func timerDidEnd() {
+        timerEnded = true
+        objectWillChange.send()
+    }
+    func timerDidUpdateCounterValue(newValue: Int) {
+        UIAccessibility.post(notification: .announcement, argument: String(newValue))
+    }
+}
+
+enum AnchorPointPracticeState {
+    case initial
+    case anchorPointCreationRequested
+    case anchorPointSet
+    case anchorPointAlignmentRequested
+    case anchorPointAligned
+}
+
 struct AnchorPointPracticeSubComponent: View {
     @ObservedObject private var arData = ARData.shared
-    @State private var anchorPointAligned = false
-    @State private var anchorPointSet = false
+    @StateObject private var timerDelegate = TimerDelegate()
+    @State private var practiceState: AnchorPointPracticeState = .initial
     @State var xyzYawSet: [Float] = []
     @State var xyzYawAlign: [Float] = []
     @State var xyzYawDelta: [Float] = []
@@ -696,9 +719,50 @@ struct AnchorPointPracticeSubComponent: View {
     static let yawGoodThreshold = Float(0.5)
     
     var body: some View {
-        if anchorPointAligned {
+        if practiceState == .anchorPointCreationRequested {
+            CountdownView(timerDelegate: timerDelegate)
+                .frame(minWidth: 100, maxWidth: 100, minHeight: 100, maxHeight: 100)
+                .onReceive(self.timerDelegate.objectWillChange) { timer in
+                    if self.timerDelegate.timerEnded {
+                        if let transform = arData.transform {
+                            let x = transform.columns.3.x
+                            let y = transform.columns.3.y
+                            let z = transform.columns.3.z
+                            let yaw = ViewController.getYawHelper(transform)
+                            xyzYawSet = [x, y, z, yaw]
+                        }
+                        practiceState = .anchorPointSet
+                        SoundEffectManager.shared.success()
+                    }
+                }
+        } else if practiceState == .anchorPointAlignmentRequested {
+            CountdownView(timerDelegate: timerDelegate)
+                .frame(minWidth: 100, maxWidth: 100, minHeight: 100, maxHeight: 100)
+                .onReceive(self.timerDelegate.objectWillChange) { timer in
+                    if let transform = arData.transform {
+                        let x = transform.columns.3.x
+                        let y = transform.columns.3.y
+                        let z = transform.columns.3.z
+                        let yaw = ViewController.getYawHelper(transform)
+                        xyzYawAlign = [x, y, z, yaw]
+                        xyzYawDelta = [xyzYawAlign[0] - xyzYawSet[0], xyzYawAlign[1] - xyzYawSet[1], xyzYawAlign[2] - xyzYawSet[2], xyzYawAlign[3] - xyzYawSet[3]]
+                        if abs(xyzYawDelta[0]) < Self.xPerfectThreshold, abs(xyzYawDelta[1]) < Self.yPerfectThreshold, abs(xyzYawDelta[2]) < Self.zPerfectThreshold, abs(xyzYawDelta[3]) < Self.yawPerfectThreshold {
+                            accuracy = .perfect
+                            SoundEffectManager.shared.success()
+                        } else if abs(xyzYawDelta[0]) < Self.xGoodThreshold, abs(xyzYawDelta[1]) < Self.yGoodThreshold, abs(xyzYawDelta[2]) < Self.zGoodThreshold, abs(xyzYawDelta[3]) < Self.yawGoodThreshold  {
+                            accuracy = .good
+                            SoundEffectManager.shared.meh()
+                        } else {
+                            accuracy = .bad
+                            SoundEffectManager.shared.error()
+                        }
+                        practiceState = .anchorPointAligned
+                    }
+            }
+        }
+        if practiceState == .anchorPointAligned {
             //once anchor point is aligned
-            Text("x, y, z, yaw \(xyzYawAlign[0] - xyzYawSet[0]), \(xyzYawAlign[1] - xyzYawSet[1]), \(xyzYawAlign[2] - xyzYawSet[2]), \(xyzYawAlign[3] - xyzYawSet[3])")//TODO: Delete when done testing
+            // Text("x, y, z, yaw \(xyzYawAlign[0] - xyzYawSet[0]), \(xyzYawAlign[1] - xyzYawSet[1]), \(xyzYawAlign[2] - xyzYawSet[2]), \(xyzYawAlign[3] - xyzYawSet[3])")//TODO: Delete when done testing
             
             switch accuracy {
             case .perfect:
@@ -713,7 +777,7 @@ struct AnchorPointPracticeSubComponent: View {
             }
             
             Button(action: {
-                anchorPointAligned = false
+                practiceState = .anchorPointSet
             }) {
                 TutorialButton{
                     Text(NSLocalizedString("anchorPointPracticeRetryAlignButton", comment: "button text to retry aligning the anchor point"))
@@ -721,8 +785,7 @@ struct AnchorPointPracticeSubComponent: View {
             }
             
             Button(action: {
-                anchorPointSet = false
-                anchorPointAligned = false
+                practiceState = .initial
             }) {
                 TutorialButton{
                     Text(NSLocalizedString("anchorPointPracticeRetryButton", comment: "button text to retry setting the anchor point"))
@@ -732,39 +795,23 @@ struct AnchorPointPracticeSubComponent: View {
             TutorialNavLink(destination: AnchorPointTips())  {
                 Text(NSLocalizedString("tipTutorialTitle", comment: "Button to tips page"))
             }
-        } else if anchorPointSet {
+        } else if practiceState == .anchorPointSet {
             //Once anchor point is set
             Text(NSLocalizedString("anchorPointPracticeAlignTitle", comment: "Align to anchor point page title"))
             
             Text(NSLocalizedString("anchorPointPracticeAlignText", comment: "Align to anchor point page instructions"))
             
             Button(action: {
-                if let transform = arData.transform {
-                    let x = transform.columns.3.x
-                    let y = transform.columns.3.y
-                    let z = transform.columns.3.z
-                    let yaw = ViewController.getYawHelper(transform)
-                    xyzYawAlign = [x, y, z, yaw]
-                    xyzYawDelta = [xyzYawAlign[0] - xyzYawSet[0], xyzYawAlign[1] - xyzYawSet[1], xyzYawAlign[2] - xyzYawSet[2], xyzYawAlign[3] - xyzYawSet[3]]
-                    if abs(xyzYawDelta[0]) < Self.xPerfectThreshold, abs(xyzYawDelta[1]) < Self.yPerfectThreshold, abs(xyzYawDelta[2]) < Self.zPerfectThreshold, abs(xyzYawDelta[3]) < Self.yawPerfectThreshold {
-                        accuracy = .perfect
-                        SoundEffectManager.shared.success()
-                    } else if abs(xyzYawDelta[0]) < Self.xGoodThreshold, abs(xyzYawDelta[1]) < Self.yGoodThreshold, abs(xyzYawDelta[2]) < Self.zGoodThreshold, abs(xyzYawDelta[3]) < Self.yawGoodThreshold  {
-                        accuracy = .good
-                        SoundEffectManager.shared.meh()
-                    } else {
-                        accuracy = .bad
-                        SoundEffectManager.shared.error()
-                    }
-                    anchorPointAligned = true
+                if practiceState == .anchorPointSet {
+                    practiceState = .anchorPointAlignmentRequested
                 }
             }) {
                 Image("Align")
                     .resizable()
                     .frame(width: 200, height: 200)
-            }
+            }.disabled(practiceState == .anchorPointAlignmentRequested)
             Button(action: {
-                anchorPointSet = false
+                practiceState = .initial
             }) {
                 TutorialButton{Text(NSLocalizedString("anchorPointPracticeRetryButton", comment: "button text to retry setting the anchor point"))
                 }
@@ -777,20 +824,14 @@ struct AnchorPointPracticeSubComponent: View {
             
             Button(action: {
                 //TODO: do count down, hid button until after countdown and wait a least a little bit longer before you can hit align again, play a success sound(?)
-                if let transform = arData.transform {
-                    let x = transform.columns.3.x
-                    let y = transform.columns.3.y
-                    let z = transform.columns.3.z
-                    let yaw = ViewController.getYawHelper(transform)
-                    xyzYawSet = [x, y, z, yaw]
-                    anchorPointSet = true
+                if practiceState == .initial {
+                    practiceState = .anchorPointCreationRequested
                 }
-                
-            }) {//Text("capture anchorpoint")
+            }) {
                 Image("Align")
                     .resizable()
                     .frame(width: 200, height: 200)
-            }
+            }.disabled(practiceState == .anchorPointCreationRequested)
         }
     }
 }
@@ -799,7 +840,9 @@ struct AnchorPointPractice: View {
     //TODO: 1 write instructions 2 align to anchor point twice? 4 count down 5 voice announcments?
     var body: some View {
         TutorialScreen {
-            AnchorPointPracticeSubComponent()
+            VStack {
+                AnchorPointPracticeSubComponent()
+            }
         }.onDisappear(){
             UserDefaults.standard.setValue(true, forKey: "AnchorPointsTutorialCompleted")
         }
@@ -940,5 +983,31 @@ struct TutorialEndView: View {
                 Text("Exit Tutorial")
             }
         }
+    }
+}
+
+
+struct CountdownView: UIViewRepresentable {
+    let timerDelegate: SRCountdownTimerDelegate
+    
+    func makeUIView(context: Context) -> SRCountdownTimer {
+        let srCountdownTimer = SRCountdownTimer()
+        srCountdownTimer.labelFont = UIFont(name: "HelveticaNeue-Light", size: 20)
+        srCountdownTimer.labelTextColor = UIColor.black
+        
+        srCountdownTimer.timerFinishingText = "End"
+        srCountdownTimer.lineWidth = 10
+        srCountdownTimer.lineColor = UIColor.black
+        srCountdownTimer.backgroundColor = UIColor.white
+        /// hide the timer as an accessibility element
+        /// and announce through VoiceOver by posting appropriate notifications
+        srCountdownTimer.accessibilityElementsHidden = true
+        srCountdownTimer.delegate = timerDelegate
+        srCountdownTimer.start(beginingValue: 5)
+        return srCountdownTimer
+    }
+
+    func updateUIView(_ uiView: SRCountdownTimer, context: Context) {
+
     }
 }

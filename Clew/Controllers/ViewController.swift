@@ -37,15 +37,15 @@ import SwiftUI
 /// A custom enumeration type that describes the exact state of the app.  The state is not exhaustive (e.g., there are Boolean flags that also track app state).
 enum AppState {
     /// This is the screen the comes up immediately after the splash screen
-    case mainScreen(announceArrival: Bool, isTutorial: Bool)
+    case mainScreen(announceArrival: Bool)
     /// User is recording the route
     case recordingRoute
     /// User can either navigate back or pause
-    case readyToNavigateOrPause(allowPause: Bool, isTutorial: Bool)
+    case readyToNavigateOrPause(allowPause: Bool)
     /// Finished the tutorial route
     case finishedTutorialRoute(announceArrival: Bool)
     /// User is navigating along a route
-    case navigatingRoute(isTutorial: Bool)
+    case navigatingRoute
     /// The app is starting up
     case initializing
     /// The user has requested a pause, but has not yet put the phone in the save location
@@ -57,9 +57,9 @@ enum AppState {
     /// user has successfully paused the ARSession
     case pauseProcedureCompleted
     /// user has hit the resume button and is waiting for the volume to hit
-    case startingResumeProcedure(route: SavedRoute, worldMap: Any?, navigateStartToEnd: Bool, isTutorial: Bool)
+    case startingResumeProcedure(route: SavedRoute, worldMap: Any?, navigateStartToEnd: Bool)
     /// the AR session has entered the relocalizing state, which means that we can now realign the session
-    case readyForFinalResumeAlignment(isTutorial: Bool)
+    case readyForFinalResumeAlignment
     /// the user is attempting to name the route they're in the process of saving
     case startingNameSavedRouteProcedure(worldMap: Any?)
     
@@ -84,8 +84,8 @@ enum AppState {
             return "completingPauseProcedure"
         case .pauseProcedureCompleted:
             return "pauseProcedureCompleted"
-        case .startingResumeProcedure(let route, let worldMap, let navigateStartToEnd, let isTutorial):
-            return "startingResumeProcedure(route=\(route.id), mapexists=\(worldMap != nil), navigateStartToEnd=\(navigateStartToEnd), isTutorial=\(isTutorial)"
+        case .startingResumeProcedure(let route, let worldMap, let navigateStartToEnd):
+            return "startingResumeProcedure(route=\(route.id), mapexists=\(worldMap != nil), navigateStartToEnd=\(navigateStartToEnd))"
         case .readyForFinalResumeAlignment:
             return "readyForFinalResumeAlignment"
         case .startingNameSavedRouteProcedure:
@@ -127,12 +127,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             switch state {
             case .recordingRoute:
                 handleStateTransitionToRecordingRoute()
-            case .readyToNavigateOrPause(let allowPause, let isTutorial):
+            case .readyToNavigateOrPause(let allowPause):
                 handleStateTransitionToReadyToNavigateOrPause(allowPause: recordingSingleUseRoute, isTutorial: isTutorial)
             case .navigatingRoute:
                 handleStateTransitionToNavigatingRoute()
-            case .mainScreen(let announceArrival, let isTutorial):
-                handleStateTransitionToMainScreen(announceArrival: announceArrival, isTutorial: isTutorial)
+            case .mainScreen(let announceArrival):
+                handleStateTransitionToMainScreen(announceArrival: announceArrival)
             case .startingPauseProcedure:
                 handleStateTransitionToStartingPauseProcedure()
             case .pauseWaitingPeriod:
@@ -142,8 +142,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             case .pauseProcedureCompleted:
                 // nothing happens currently
                 break
-            case .startingResumeProcedure(let route, let worldMap, let navigateStartToEnd, let isTutorial):
-                handleStateTransitionToStartingResumeProcedure(route: route, worldMap: worldMap, navigateStartToEnd: navigateStartToEnd, isTutorial: isTutorial)
+            case .startingResumeProcedure(let route, let worldMap, let navigateStartToEnd):
+                handleStateTransitionToStartingResumeProcedure(route: route, worldMap: worldMap, navigateStartToEnd: navigateStartToEnd)
             case .readyForFinalResumeAlignment:
                 // nothing happens currently
                 break
@@ -201,6 +201,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     ///this boolean denotes whether or not the app is loading a route from an automatic alignment
     var isAutomaticAlignment: Bool = false
     
+    ///this Boolean markes whether or not the current activities are conducted within the context of the tutorial
+    var isTutorial: Bool = false
+
     /// This is an audio player that queues up the voice note associated with a particular route Anchor Point. The player is created whenever a saved route is loaded. Loading it before the user clicks the "Play Voice Note" button allows us to call the prepareToPlay function which reduces the latency when the user clicks the "Play Voice Note" button.
     var voiceNoteToPlay: AVAudioPlayer?
     
@@ -239,7 +242,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// Handler for the mainScreen app state
     ///
     /// - Parameter announceArrival: a Boolean that indicates whether the user's arrival should be announced (true means the user has arrived)
-    func handleStateTransitionToMainScreen(announceArrival: Bool, isTutorial: Bool) {
+    func handleStateTransitionToMainScreen(announceArrival: Bool) {
+        isTutorial = false
         // cancel the timer that announces tracking errors
         trackingErrorsAnnouncementTimer?.invalidate()
         // if the ARSession is running, pause it to conserve battery
@@ -367,8 +371,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     ///   - route: the route to navigate
     ///   - worldMap: the world map to use
     ///   - navigateStartToEnd: a Boolean that is true if we want to navigate from the start to the end and false if we want to navigate from the end to the start.
-    ///   - isTutorial: true if we are resuming a tutorial route, false otherwise
-    func handleStateTransitionToStartingResumeProcedure(route: SavedRoute, worldMap: Any?, navigateStartToEnd: Bool, isTutorial: Bool) {
+    func handleStateTransitionToStartingResumeProcedure(route: SavedRoute, worldMap: Any?, navigateStartToEnd: Bool) {
         logger.setCurrentRoute(route: route, worldMap: worldMap)
         
         // load the world map and restart the session so that things have a chance to quiet down before putting it up to the wall
@@ -405,20 +408,16 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             
             isResumedRoute = true
             isAutomaticAlignment = true
-            state = .readyToNavigateOrPause(allowPause: false, isTutorial: isTutorial)
+            state = .readyToNavigateOrPause(allowPause: false)
         } else if isRelocalizing && isSameMap || isTrackingPerformanceNormal && worldMap == nil  {
             // we don't have to wait for the session to start up.  It will be created automatically.
-            if case .startingResumeProcedure(_, _, _, let isTutorial) = state {
-                self.state = .readyForFinalResumeAlignment(isTutorial: isTutorial)
-            } else {
-                self.state = .readyForFinalResumeAlignment(isTutorial: false)
-            }
-            self.showResumeTrackingConfirmButton(route: route, navigateStartToEnd: navigateStartToEnd, isTutorial: isTutorial)
+            self.state = .readyForFinalResumeAlignment
+            self.showResumeTrackingConfirmButton(route: route, navigateStartToEnd: navigateStartToEnd)
         } else {
             // this makes sure that the user doesn't resume the session until the session is initialized
             continuationAfterSessionIsReady = {
-                self.state = .readyForFinalResumeAlignment(isTutorial: false)
-                self.showResumeTrackingConfirmButton(route: route, navigateStartToEnd: navigateStartToEnd, isTutorial: isTutorial)
+                self.state = .readyForFinalResumeAlignment
+                self.showResumeTrackingConfirmButton(route: route, navigateStartToEnd: navigateStartToEnd)
             }
         }
     }
@@ -576,7 +575,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         ///Clearing the save route text field
         nameSavedRouteController.textField.text = ""
         ///perform the state transition
-        self.state = .readyToNavigateOrPause(allowPause: true, isTutorial: false)
+        self.state = .readyToNavigateOrPause(allowPause: true)
     }
     
     /// Hide all the subviews.  TODO: This should probably eventually refactored so it happens more automatically.
@@ -600,7 +599,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     func onRouteTableViewCellClicked(route: SavedRoute, navigateStartToEnd: Bool) {
         let worldMap = dataPersistence.unarchiveMap(id: route.id as String)
         hideAllViewsHelper()
-        state = .startingResumeProcedure(route: route, worldMap: worldMap, navigateStartToEnd: navigateStartToEnd, isTutorial: false)
+        state = .startingResumeProcedure(route: route, worldMap: worldMap, navigateStartToEnd: navigateStartToEnd)
     }
     
     /// Saves the specified route.  The bulk of the work is done by the `DataPersistence` class, but this is a convenient wrapper.
@@ -746,7 +745,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         createARSessionConfiguration()
         
         // TODO: we might want to make this wait on the AR session starting up, but since it happens pretty fast it's likely not a big deal
-        state = .mainScreen(announceArrival: false, isTutorial: false)
+        state = .mainScreen(announceArrival: false)
         view.sendSubviewToBack(sceneView)
         
         // targets for global buttons
@@ -942,11 +941,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
     }
     
-    /// Display a warning that tells the user they must create a Anchor Point to be able to use this route again in the forward direction
-    func showRecordPathWithoutAnchorPointWarning() {
-        state = .recordingRoute
-    }
-    
     /// func that prepares the state transition to home by clearing active processes and data
     func clearState() {
         // TODO: check for code reuse
@@ -987,7 +981,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         if case .startingNameSavedRouteProcedure = self.state {
             self.nameSavedRouteController.textField.text = ""
         }
-        self.state = .mainScreen(announceArrival: false, isTutorial: false)
+        self.state = .mainScreen(announceArrival: false)
     }
     
     /// function that creates alerts for the home button
@@ -1328,7 +1322,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     }
     
     /// Display the resume tracking confirm view/hide all other views.
-    func showResumeTrackingConfirmButton(route: SavedRoute, navigateStartToEnd: Bool, isTutorial: Bool) {
+    func showResumeTrackingConfirmButton(route: SavedRoute, navigateStartToEnd: Bool) {
         rootContainerView.homeButton.isHidden = false
         hideAllViewsHelper()
         add(resumeTrackingConfirmController)
@@ -1644,7 +1638,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             state = .startingPauseProcedure
         } else {
             ///PATHPOINT one way route recording finished -> play/pause
-            state = .readyToNavigateOrPause(allowPause: true, isTutorial: false)
+            state = .readyToNavigateOrPause(allowPause: true)
         }
         
     }
@@ -1656,12 +1650,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         ///announce to the user that return navigation has started.
         self.delayTransition(announcement: NSLocalizedString("startingReturnNavigationAnnouncement", comment: "This is an anouncement which is played when the user performs return navigation from the play pause menu. It signifies the start of a navigation session."), initialFocus: nil)
         // this will handle the appropriate state transition if we pass the warning
-        if case .readyToNavigateOrPause(let allowPause, let isTutorial) = state {
-            state = .navigatingRoute(isTutorial: isTutorial)
-        } else {
-            state = .navigatingRoute(isTutorial: false)
-        }
-        
+        state = .navigatingRoute
     }
     
     /// handles the user pressing the stop navigation button.
@@ -1775,18 +1764,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                     ///announce to the user that they have aligned to the anchor point sucessfully and are starting  navigation.
                     self.paused = false
                     self.delayTransition(announcement: NSLocalizedString("resumeAnchorPointToReturnNavigationAnnouncement", comment: "This is an Announcement which indicates that the pause session is complete, that the program was able to align with the anchor point, and that return navigation has started."), initialFocus: nil)
-                    self.state = .navigatingRoute(isTutorial: false)
+                    self.state = .navigatingRoute
 
                 } else {
                     ///PATHPOINT load saved route -> start navigation
 
                     ///announce to the user that they have sucessfully aligned with their saved anchor point.
                     self.delayTransition(announcement: NSLocalizedString("resumeAnchorPointToReturnNavigationAnnouncement", comment: "This is an Announcement which indicates that the pause session is complete, that the program was able to align with the anchor point, and that return navigation has started."), initialFocus: nil)
-                    if case .readyForFinalResumeAlignment(let isTutorial) = self.state {
-                        self.state = .navigatingRoute(isTutorial: isTutorial)
-                    } else {
-                        self.state = .navigatingRoute(isTutorial: false)
-                    }
+                    self.state = .navigatingRoute
                 }
             }
         }
@@ -1795,7 +1780,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// handles the user pressing the resume tracking confirmation button.
     @objc func confirmResumeTracking() {
         if let route = justTraveledRoute {
-            state = .startingResumeProcedure(route: route, worldMap: justUsedMap, navigateStartToEnd: false, isTutorial: false)
+            state = .startingResumeProcedure(route: route, worldMap: justUsedMap, navigateStartToEnd: false)
         }
     }
     
@@ -1875,11 +1860,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         // send success log data to Firebase
         let logFileURLs = logger.compileLogData(pathStatus)
         logger.resetStateSequenceLog()
-        if case .navigatingRoute(isTutorial: true) = state {
-            // TODO: redirect to the doneWithTutorial
+        if case .navigatingRoute = state, isTutorial {
+            // TODO: might be able to remove this finishedTutorialRoute state and use the Boolean instead
             state = .finishedTutorialRoute(announceArrival: announceArrival)
         } else {
-            state = .mainScreen(announceArrival: announceArrival, isTutorial: false)
+            state = .mainScreen(announceArrival: announceArrival)
         }
         if sendLogs {
             // do this in a little while to give it time to announce arrival
@@ -2158,9 +2143,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         switch state {
         case .recordingRoute:
            pageToDisplay = "FindPath"
-        case .mainScreen(_, _):
+        case .mainScreen(_):
             break
-        case .readyToNavigateOrPause(allowPause: let allowPause, let isTutorial):
+        case .readyToNavigateOrPause(allowPause: let allowPause):
             pageToDisplay = "FindPath"
             
         case .navigatingRoute:
@@ -2181,7 +2166,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         case .pauseProcedureCompleted:
             pageToDisplay = "AnchorPoints"
             
-        case .startingResumeProcedure(route: let route, worldMap: let worldMap, navigateStartToEnd: let navigateStartToEnd, let isTutorial):
+        case .startingResumeProcedure(route: let route, worldMap: let worldMap, navigateStartToEnd: let navigateStartToEnd):
             pageToDisplay = "FindPath"
             
         case .readyForFinalResumeAlignment:
@@ -2190,13 +2175,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         case .startingNameSavedRouteProcedure(worldMap: let worldMap):
                 pageToDisplay = "FindingSavedRoutes"
             
-        case .finishedTutorialRoute(let announceArrival):
-            //break
-            let tutorialView = PracticeSuccess()//TODO: pop up success page when finished tutorial route
+        case .finishedTutorialRoute(_):
+            let tutorialView = PracticeSuccess()
             tutorialHostingController = UIHostingController(rootView: tutorialView)
-        default:
-            pageToDisplay = ""
-            print("nothing to set!")
+            self.state = .mainScreen(announceArrival: false)
         }
         NotificationCenter.default.post(name: Notification.Name("ClewPopoverDisplayed"), object: nil)
         self.present(tutorialHostingController!, animated: true, completion: nil)
@@ -2245,7 +2227,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             // proceed to home page
             clearState()
             hideAllViewsHelper()
-            self.state = .mainScreen(announceArrival: false, isTutorial: false)
+            self.state = .mainScreen(announceArrival: false)
         }
     }
     
@@ -2659,12 +2641,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 isAutomaticAlignment = true
                 
                 ///PATHPOINT: Auto Alignment -> resume route
-                if case .readyForFinalResumeAlignment(let isTutorial) = state {
+                // TODO: we mgiht be able to simplify this flow w.r.t. isTutorial flag
+                if case .readyForFinalResumeAlignment = state {
                     if !isTutorial {
-                        state = .readyToNavigateOrPause(allowPause: false, isTutorial: isTutorial)
+                        state = .readyToNavigateOrPause(allowPause: false)
                     }
                 } else {
-                    state = .readyToNavigateOrPause(allowPause: false, isTutorial: false)
+                    state = .readyToNavigateOrPause(allowPause: false)
                 }
             }
             print("normal")
@@ -2683,7 +2666,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         trackingSessionState = camera.trackingState
     }
     
-    func runTutorialPath(routeName: String){
+    func runTutorialPath(routeName: String) {
+        isTutorial = true
         let path = Bundle.main.path(forResource: routeName, ofType:"crd")!
         let url = URL(fileURLWithPath: path)
         //let isTutorial = true
@@ -2696,7 +2680,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             }
             self.sceneView.session.run(self.configuration, options: [.removeExistingAnchors, .resetTracking])
             self.continuationAfterSessionIsReady = {
-                self.state = .startingResumeProcedure(route: thisRoute, worldMap: nil, navigateStartToEnd: true, isTutorial: true)
+                self.state = .startingResumeProcedure(route: thisRoute, worldMap: nil, navigateStartToEnd: true)
                 //self.handleStateTransitionToStartingResumeProcedure(route: thisRoute, worldMap: nil, navigateStartToEnd: true)
             }
         }
