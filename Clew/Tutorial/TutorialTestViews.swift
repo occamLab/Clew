@@ -11,7 +11,7 @@ import AVFoundation
 import Foundation
 
 //TODO: 1 add content to all pages 4 add localized strings to everything
-
+//TODO: Once the tutorial routes are completed, we continuously bring up the congrats page and can't get back to the main tutorial
 struct TutorialScreen<Content: View>: View {
     //format for all the tutorial and app set up screens. standarizes spacing and adds exit button to each page
     let content: Content
@@ -88,6 +88,18 @@ struct TutorialNavLinkWithRedirection<Destination: View, Content: View>: View {
                 .background(Color.yellow)
                 .cornerRadius(10)
                 .font(.system(size: 18, weight: .regular))
+                .accessibility(hint: UserDefaults.standard.bool(forKey: activationTag + "TutorialCompleted") ? Text("Module Completed") : Text("Module Not Completed") )
+            if UserDefaults.standard.bool(forKey: activationTag + "TutorialCompleted") {
+                Circle()
+                    .fill(Color.yellow)
+                    .frame(width: 30, height: 30)
+                
+            } else {
+                Circle()
+                    .stroke(Color.gray, lineWidth: 1)
+                    .frame(width: 30, height: 30)
+            }
+            
         }
     }
 }
@@ -130,33 +142,11 @@ struct TutorialTestView: View {
                     TutorialNavLinkWithRedirection(destination: CLEWintro(), tag: "CLEWintro", selection: $showPage.selectedView){
                         Text(NSLocalizedString("ClewIntroTutorialTitle", comment: "Intro to Clew Tutorial Title"))
                     }
-                    if UserDefaults.standard.bool(forKey: "IntroTutorialCompleted") == true {
-                        Circle()
-                            .fill(Color.yellow)
-                            .frame(width: 30, height: 30)
-                        
-                    } else {
-                        Circle()
-                            .stroke(Color.gray, lineWidth: 1)
-                            .frame(width: 30, height: 30)
-                    }
-                    
-                    
                 }
                 
                 HStack{
                     TutorialNavLinkWithRedirection(destination: OrientPhone(), tag: "OrientPhone", selection: $showPage.selectedView){
                         Text(NSLocalizedString("orientPhoneTutorialButtonText", comment: "Text for the tutorial screem for phone position"))
-                    }
-                    if UserDefaults.standard.bool(forKey: "OrientPhoneTutorialCompleted") {
-                        Circle()
-                            .fill(Color.yellow)
-                            .frame(width: 30, height: 30)
-                        
-                    } else {
-                        Circle()
-                            .stroke(Color.gray, lineWidth: 1)
-                            .frame(width: 30, height: 30)
                     }
                 }
                 
@@ -164,35 +154,11 @@ struct TutorialTestView: View {
                     TutorialNavLinkWithRedirection(destination: FindPath(), tag: "FindPath", selection: $showPage.selectedView) {
                         Text(NSLocalizedString( "findPathTutorialButtonText", comment: "Title for the finding and following path part of the tutorial"))
                     }
-                    /*NavigationLink(
-                     "FindPath",
-                     destination: FindPath(),
-                     isActive: $showPage.showFindPath)*/
-                    //TutorialNavLink(destination: FindPath()) {Text(NSLocalizedString( "findPathTutorialButtonText", comment: "Title for the finding and following path part of the tutorial"))}
-                    if UserDefaults.standard.bool(forKey: "FindPathTutorialCompleted") {
-                        Circle()
-                            .fill(Color.yellow)
-                            .frame(width: 30, height: 30)
-                        
-                    } else {
-                        Circle()
-                            .stroke(Color.gray, lineWidth: 1)
-                            .frame(width: 30, height: 30)
-                    }
                 }
                 
                 HStack{
-                    TutorialNavLinkWithRedirection(destination: SingleUse(), tag: "SingleUse", selection: $showPage.selectedView) {Text(NSLocalizedString( "singleUseRouteTutorialButtonText", comment: "Title for the single use route part of the tutorial"))
-                    }
-                    if UserDefaults.standard.bool(forKey: "SingleUseTutorialCompleted") == true {
-                        Circle()
-                            .fill(Color.yellow)
-                            .frame(width: 30, height: 30)
-                        
-                    } else {
-                        Circle()
-                            .stroke(Color.gray, lineWidth: 1)
-                            .frame(width: 30, height: 30)
+                    TutorialNavLinkWithRedirection(destination: SingleUse(), tag: "SingleUse", selection: $showPage.selectedView) {
+                        Text(NSLocalizedString( "singleUseRouteTutorialButtonText", comment: "Title for the single use route part of the tutorial"))
                     }
                 }
                 
@@ -200,62 +166,21 @@ struct TutorialTestView: View {
                     TutorialNavLinkWithRedirection(destination: AnchorPoints(), tag: "AnchorPoints", selection: $showPage.selectedView) {
                         Text("Anchor Points")
                     }
-                    if UserDefaults.standard.bool(forKey: "AnchorPointsCompleted") == true {
-                        Circle()
-                            .fill(Color.yellow)
-                            .frame(width: 30, height: 30)
-                        
-                    } else {
-                        Circle()
-                            .stroke(Color.gray, lineWidth: 1)
-                            .frame(width: 30, height: 30)
-                    }
                 }
                 
                 HStack{
                     TutorialNavLinkWithRedirection(destination: SavedRoutes(), tag: "SavedRoutes", selection: $showPage.selectedView) {Text(NSLocalizedString( "savedRoutesTutorialButtonText", comment: "Title for the saved route part of the tutorial"))
-                    }
-                    if UserDefaults.standard.bool(forKey: "SavedRoutesTutorialCompleted") == true {
-                        Circle()
-                            .fill(Color.yellow)
-                            .frame(width: 30, height: 30)
-                        
-                    } else {
-                        Circle()
-                            .stroke(Color.gray, lineWidth: 1)
-                            .frame(width: 30, height: 30)
                     }
                 }
                 
                 HStack{
                     TutorialNavLinkWithRedirection(destination: FindingSavedRoutes(), tag: "FindingSavedRoutes", selection: $showPage.selectedView) {Text(NSLocalizedString( "findingSavedRoutesTutorialButtonText", comment: "Title for the finding saved route part of the tutorial"))
                     }
-                    if UserDefaults.standard.bool(forKey: "FindingSavedRoutesTutorialCompleted") {
-                        Circle()
-                            .fill(Color.yellow)
-                            .frame(width: 30, height: 30)
-                        
-                    } else {
-                        Circle()
-                            .stroke(Color.gray, lineWidth: 1)
-                            .frame(width: 30, height: 30)
-                    }
                 }
                 
                 HStack{
-                    TutorialNavLinkWithRedirection(destination: SettingOptions(), tag: "SettingOptions", selection: $showPage.selectedView) {
+                    TutorialNavLinkWithRedirection(destination: SettingOptions(), tag: "SettingsOptions", selection: $showPage.selectedView) {
                         Text(NSLocalizedString( "settingOptionsTutorialButtonText", comment: "Title for the setting options part of the tutorial"))
-                    }
-                    //   ProgressCircle(status: Use)
-                    if UserDefaults.standard.bool(forKey: "SettingsOptionsTutorialCompleted") == true {
-                        Circle()
-                            .fill(Color.yellow)
-                            .frame(width: 30, height: 30)
-                        
-                    } else {
-                        Circle()
-                            .stroke(Color.gray, lineWidth: 1)
-                            .frame(width: 30, height: 30)
                     }
                 }
             }
@@ -278,12 +203,12 @@ struct CLEWintro: View {
             Text(NSLocalizedString("ClewIntroTutorialText", comment: "Text on the first page of the tutorial that describes Clew"))
             
             Button(action:{
-                UserDefaults.standard.setValue(false, forKey: "IntroTutorialCompleted")
+                UserDefaults.standard.setValue(false, forKey: "CLEWintroTutorialCompleted")
                 UserDefaults.standard.setValue(false, forKey: "OrientPhoneTutorialCompleted")
                 UserDefaults.standard.setValue(false, forKey: "FindPathTutorialCompleted")
                 UserDefaults.standard.setValue(false, forKey: "FindPathPractice1Completed")
                 UserDefaults.standard.setValue(false, forKey: "FindPathPractice2Completed")
-                UserDefaults.standard.setValue(false, forKey: "AnchorPointsCompleted")
+                UserDefaults.standard.setValue(false, forKey: "AnchorPointsTutorialCompleted")
                 UserDefaults.standard.setValue(false, forKey: "SingleUseTutorialCompleted")
                 UserDefaults.standard.setValue(false, forKey: "SavedRoutesTutorialCompleted")
                 UserDefaults.standard.setValue(false, forKey: "FindingSavedRoutesTutorialCompleted")
@@ -341,7 +266,7 @@ struct UsingClewTutorial: View {
             Text(NSLocalizedString("introUsingClewTutorialText", comment: "Text for intro to Using Clew Tutorial Page"))
             
         }.onDisappear() {
-            UserDefaults.standard.setValue(true, forKey: "IntroTutorialCompleted")
+            UserDefaults.standard.setValue(true, forKey: "CLEWintroTutorialCompleted")
         }
         Spacer()
         TutorialNavLink(destination: OrientPhone()) {
@@ -862,7 +787,7 @@ struct AnchorPointPractice: View {
              }
              }*/
         }.onDisappear(){
-            UserDefaults.standard.setValue(true, forKey: "AnchorPointsCompleted")
+            UserDefaults.standard.setValue(true, forKey: "AnchorPointsTutorialCompleted")
         }
         
         .onAppear() {
