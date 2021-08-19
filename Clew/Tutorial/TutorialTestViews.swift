@@ -11,7 +11,10 @@ import AVFoundation
 import Foundation
 
 //TODO: 1 add content to all pages 4 add localized strings to everything
-//TOOD: stop AR session when needed
+//TODO: stop AR session when needed based on the tutorial state
+//TODO: refactor the tutorial state (and possibly other state in the app)
+//TODO: make sure contextual help makes sense in all cases (e.g., the recording use case doesn't really work)
+//TODO: thin out the on-screen instructions for anchor points
 //TODO: Once the tutorial routes are completed, we continuously bring up the congrats page and can't get back to the main tutorial
 struct TutorialScreen<Content: View>: View {
     //format for all the tutorial and app set up screens. standarizes spacing and adds exit button to each page
