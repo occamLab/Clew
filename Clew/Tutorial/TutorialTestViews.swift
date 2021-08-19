@@ -490,61 +490,24 @@ struct PracticeOrientPhone: View {
             if started {
                 if let transform = arData.transform {
                     let y = transform.columns.0.y
-                    if y < 0.9 && y > -0.7, -lastSuccessSound.timeIntervalSinceNow > 0.2 {
-                        SoundEffectManager.shared.error()
-                        //AudioServicesPlaySystemSound(SystemSoundID(1057))
-                        self.generator.notificationOccurred(.warning)
-                        lastSuccessSound = Date()
-                        lastSuccess = Date()
-                        resetPosition = true
+                    if y < -0.9 {
+                        if resetPosition {
+                            score += 1
+                            lastSuccess = Date()
+                            resetPosition = false
+                            self.generator.notificationOccurred(.success)
+                            SoundEffectManager.shared.success()
+                        }
+                    } else {
+                        let desiredInterval = y > -0.7 ? 0.2 : 0.5
+                        resetPosition = y > -0.7 || resetPosition
+                        if -lastSuccessSound.timeIntervalSinceNow > desiredInterval {
+                            SoundEffectManager.shared.error()
+                            impactLight.impactOccurred()
+                            lastSuccessSound = Date()
+                        }
                     }
-                    if y < -0.7 && y > -0.9, -lastSuccessSound.timeIntervalSinceNow > 0.5 {
-                        SoundEffectManager.shared.error()
-
-                        //AudioServicesPlaySystemSound(SystemSoundID(1057))
-                        self.generator.notificationOccurred(.warning)
-                        lastSuccessSound = Date()
-                        lastSuccess = Date()
-                        resetPosition = true
-                    }
-                    if y < -0.9, -lastSuccessSound.timeIntervalSinceNow > 0.7 {
-                        SoundEffectManager.shared.error()
-
-                        //AudioServicesPlaySystemSound(SystemSoundID(1057))
-                        impactLight.impactOccurred()
-                        lastSuccessSound = Date()
-                    }
-                    //Version where there is more feedback when youre holding the phone correctly
-                    /*if y < 0.5 && y > -0.7, -lastSuccessSound.timeIntervalSinceNow > 0.7 {
-                     AudioServicesPlaySystemSound(SystemSoundID(1057))
-                     //AudioServicesPlaySystemSound(SystemSoundID(4095)) //TODO: add haptics
-                     lastSuccessSound = Date()
-                     lastSuccess = Date()
-                     resetPosition = true
-                     }
-                     if y < -0.7 && y > -0.9, -lastSuccessSound.timeIntervalSinceNow > 0.5 {
-                     AudioServicesPlaySystemSound(SystemSoundID(1057))
-                     //AudioServicesPlaySystemSound(SystemSoundID(4095))
-                     lastSuccessSound = Date()
-                     lastSuccess = Date()
-                     resetPosition = true
-                     }
-                     if y < -0.9, -lastSuccessSound.timeIntervalSinceNow > 0.2 {
-                     AudioServicesPlaySystemSound(SystemSoundID(1057))
-                     //AudioServicesPlaySystemSound(SystemSoundID(4095))
-                     lastSuccessSound = Date()
-                     }*/
-                    if y < -0.9, resetPosition,  -lastSuccess.timeIntervalSinceNow > 2{
-                        //to get another point, users have to move thier phones out of the correct position and then hold thier phones in the correct position for 2 seconds
-                        score += 1
-                        lastSuccess = Date()
-                        resetPosition = false
-                        self.generator.notificationOccurred(.success)
-                        SoundEffectManager.shared.success()
-                    }
-                    
-                    
-                    
+                
                     if score == 3, playSuccess {
                         playSuccess = false
                         UIAccessibility.post(notification: .announcement, argument: NSLocalizedString("orientPhoneTutorialPracticeSuccess", comment: "Text when user has completed the phone position practice"))
