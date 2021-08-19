@@ -30,7 +30,7 @@ struct TutorialScreen<Content: View>: View {
         .navigationBarItems(
             /*leading:
              NavigationLink("Tutorial", destination: TutorialTestView())
-             .padding(),*/ //TODO: make a reture to tutorial menu button on all the pages
+             .padding(),*/ //TODO: make a return to tutorial menu button on all the pages
             trailing:
                 Button(NSLocalizedString("buttonTexttoExitTutorial", comment: "text of the button that dismisses the tutorial screens")) {
                     NotificationCenter.default.post(name: Notification.Name("TutorialPopoverReadyToDismiss"), object: nil)
@@ -122,8 +122,7 @@ struct TutorialTestView: View {
     let pub = NotificationCenter.default
         .publisher(for: NSNotification.Name("ShowTutorialPage"))
     var body: some View {
-        NavigationView{
-            
+        NavigationView {
             TutorialScreen{
                 Text(NSLocalizedString("tutorialTitleText", comment: "Title of the Clew Tutorial Screen. Top of the first tutorial page"))
                 
@@ -149,7 +148,7 @@ struct TutorialTestView: View {
                     TutorialNavLinkWithRedirection(destination: OrientPhone(), tag: "OrientPhone", selection: $showPage.selectedView){
                         Text(NSLocalizedString("orientPhoneTutorialButtonText", comment: "Text for the tutorial screem for phone position"))
                     }
-                    if UserDefaults.standard.bool(forKey: "OrientPhoneTutorialCompleted") == true {
+                    if UserDefaults.standard.bool(forKey: "OrientPhoneTutorialCompleted") {
                         Circle()
                             .fill(Color.yellow)
                             .frame(width: 30, height: 30)
@@ -170,7 +169,7 @@ struct TutorialTestView: View {
                      destination: FindPath(),
                      isActive: $showPage.showFindPath)*/
                     //TutorialNavLink(destination: FindPath()) {Text(NSLocalizedString( "findPathTutorialButtonText", comment: "Title for the finding and following path part of the tutorial"))}
-                    if UserDefaults.standard.bool(forKey: "FindPathTutorialCompleted") == true {
+                    if UserDefaults.standard.bool(forKey: "FindPathTutorialCompleted") {
                         Circle()
                             .fill(Color.yellow)
                             .frame(width: 30, height: 30)
@@ -261,8 +260,7 @@ struct TutorialTestView: View {
                 }
             }
         }
-        .onReceive(pub)
-        { obj in
+        .onReceive(pub) { obj in
             if let obj = obj.userInfo as? [String: String] {
                 showPage.selectedView = obj["pageToDisplay"]
             }
@@ -411,105 +409,94 @@ struct OrientPhoneTips: View {
     }
 }
 
-
-struct PracticeOrientPhone: View {
-    //TODO: 1 can't exit right now bc the var arData is being updated constantly. 2 turn off insificiant visual feature anounchment. 3 add notification to remind people that they have to move thier phone out of the correct position and back to get another point. 
-    @State private var started = false
-    //@State private var successAlert = false
-    @State private var score = 0
+struct PracticeOrientPhoneSubComponent: View {
+    let didCompleteActivity: Binding<Bool>
+    @ObservedObject private var arData = ARData.shared
     @State var lastSuccessSound = Date()
     @State var lastSuccess = Date()
-    @State var playSuccess = true
+    @State private var started = false
+    @State private var score = 0
     @State var resetPosition = true
-    @State var successSound: AVAudioPlayer?
-    @State var sound: AVAudioPlayer?
-    @ObservedObject private var arData = ARData.shared
-    let impactLight = UIImpactFeedbackGenerator(style: .light)
+    @State var playSuccess = true
     let generator = UINotificationFeedbackGenerator()
-    var body: some View{
-        TutorialScreen {
-            
-            Text(NSLocalizedString("orientPhoneTutorialPracticeTitle", comment: "Title for holding phone practice"))
-            
-            //ScrollView{
-            Text(NSLocalizedString("orientPhoneTutorialPracticeInstructions", comment: "Instructions for practicing holding phone activity"))
-            //}
-            
-            Button(action:{
-                started.toggle()
-                NotificationCenter.default.post(name: Notification.Name("StartARSession"), object: nil)
-            }){
-                if started {
-                    TutorialButton{
-                        Text(NSLocalizedString("orientPhoneTutorialPracticeStop", comment: "stop orient phone practice"))
-                    }
-                } else {
-                    TutorialButton {
-                        Text(NSLocalizedString("orientPhoneTutorialPracticeStart", comment: "start orient phone practice"))
-                    }
+    let impactLight = UIImpactFeedbackGenerator(style: .light)
+
+    var body: some View {
+        Text(NSLocalizedString("orientPhoneTutorialPracticeTitle", comment: "Title for holding phone practice"))
+        
+        //ScrollView{
+        Text(NSLocalizedString("orientPhoneTutorialPracticeInstructions", comment: "Instructions for practicing holding phone activity"))
+        //}
+        
+        Button(action:{
+            started.toggle()
+            NotificationCenter.default.post(name: Notification.Name("StartARSession"), object: nil)
+        }){
+            if started {
+                TutorialButton{
+                    Text(NSLocalizedString("orientPhoneTutorialPracticeStop", comment: "stop orient phone practice"))
+                }
+            } else {
+                TutorialButton {
+                    Text(NSLocalizedString("orientPhoneTutorialPracticeStart", comment: "start orient phone practice"))
                 }
             }
-            
-            if let transform = arData.transform {
-                //Creates a text box that gives visual feedback by shifting from red to yellow to green as a user holds thier phone correctly
-                let y = transform.columns.0.y
-                //Text("y-component \(y)")
-                if started {
-                    if y < -0.9 {
-                        Text("score \(self.score)")
-                            //TODO: localize string score
-                            .frame(minWidth: 0, maxWidth: 150)
-                            .padding()
-                            .foregroundColor(.black)
-                            .background(Color.green)
-                            .cornerRadius(10)
-                            .font(.system(size: 18, weight: .bold))
-                    }
-                    else if y < -0.7 && y > -0.9 {
-                        Text("score \(self.score)")
-                            .frame(minWidth: 0, maxWidth: 150) //TODO: figure out how to not write all of this over and over again and be able to change the color
-                            .padding()
-                            .foregroundColor(.black)
-                            .background(Color.yellow)
-                            .cornerRadius(10)
-                            .font(.system(size: 18, weight: .bold))
-                    }
-                    else {
-                        Text("score \(self.score)")
-                            .frame(minWidth: 0, maxWidth: 150)
-                            .padding()
-                            .foregroundColor(.black)
-                            .background(Color.red)
-                            .cornerRadius(10)
-                            .font(.system(size: 18, weight: .bold))
-                    }
-                } else {
+        }
+        
+        if let transform = arData.transform {
+            //Creates a text box that gives visual feedback by shifting from red to yellow to green as a user holds thier phone correctly
+            let y = transform.columns.0.y
+            //Text("y-component \(y)")
+            if started {
+                if y < -0.9 {
+                    Text("score \(self.score)")
+                        //TODO: localize string score
+                        .frame(minWidth: 0, maxWidth: 150)
+                        .padding()
+                        .foregroundColor(.black)
+                        .background(Color.green)
+                        .cornerRadius(10)
+                        .font(.system(size: 18, weight: .bold))
+                }
+                else if y < -0.7 && y > -0.9 {
+                    Text("score \(self.score)")
+                        .frame(minWidth: 0, maxWidth: 150) //TODO: figure out how to not write all of this over and over again and be able to change the color
+                        .padding()
+                        .foregroundColor(.black)
+                        .background(Color.yellow)
+                        .cornerRadius(10)
+                        .font(.system(size: 18, weight: .bold))
+                }
+                else {
                     Text("score \(self.score)")
                         .frame(minWidth: 0, maxWidth: 150)
                         .padding()
                         .foregroundColor(.black)
-                        .background(Color.blue)
+                        .background(Color.red)
                         .cornerRadius(10)
                         .font(.system(size: 18, weight: .bold))
                 }
+            } else {
+                Text("score \(self.score)")
+                    .frame(minWidth: 0, maxWidth: 150)
+                    .padding()
+                    .foregroundColor(.black)
+                    .background(Color.blue)
+                    .cornerRadius(10)
+                    .font(.system(size: 18, weight: .bold))
             }
-            
-            
-            if score >= 3 {
-                Text(NSLocalizedString("orientPhoneTutorialPracticeSuccess", comment: "Text when user has completed the phone position practice"))
-            }
-            
-        }.onDisappear() {
-            started = false //turn feedback off when exiting the practice page or hitting stop
-            
-            UserDefaults.standard.setValue(true, forKey: "OrientPhoneTutorialCompleted")
-            
-        }.onReceive(self.arData.objectWillChange) {newARData in
+        }
+        
+        
+        if score >= 3 {
+            Text(NSLocalizedString("orientPhoneTutorialPracticeSuccess", comment: "Text when user has completed the phone position practice"))
+        }
+        Spacer().onReceive(self.arData.objectWillChange) { newARData in
             if started {
                 if let transform = arData.transform {
                     let y = transform.columns.0.y
                     if y < -0.9 {
-                        if resetPosition {
+                        if resetPosition, -lastSuccess.timeIntervalSinceNow > 2 {
                             score += 1
                             lastSuccess = Date()
                             resetPosition = false
@@ -529,18 +516,36 @@ struct PracticeOrientPhone: View {
                     if score == 3, playSuccess {
                         playSuccess = false
                         UIAccessibility.post(notification: .announcement, argument: NSLocalizedString("orientPhoneTutorialPracticeSuccess", comment: "Text when user has completed the phone position practice"))
+                        didCompleteActivity.wrappedValue.toggle()
                     }
                 }
             }
+        }.onDisappear() {
+            started = false //turn feedback off when exiting the practice page or hitting stop
+            
+            UserDefaults.standard.setValue(true, forKey: "OrientPhoneTutorialCompleted")
         }
-        if score >= 3 {
+    }
+}
+
+
+struct PracticeOrientPhone: View {
+    //TODO: 1 add notification to remind people that they have to move their phone out of the correct position and back to get another point.
+    //@State private var successAlert = false
+
+    @State var successSound: AVAudioPlayer?
+    @State var didCompleteActivity: Bool = false
+    var body: some View {
+        TutorialScreen {
+            // we nest the AR interactive component inside of a view component to prevent the constant AR session updates from invalidating the exit button
+            PracticeOrientPhoneSubComponent(didCompleteActivity: $didCompleteActivity)
+        }
+        if didCompleteActivity {
             Spacer()
             TutorialNavLink(destination: FindPath()) {
                 Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
             } //change skip button to next button when score equals three because the user has completed the practice
-        }
-        
-        else if score < 3 {
+        } else {
             Spacer()
             TutorialNavLink(destination: FindPath()) {
                 Text(NSLocalizedString("buttonTexttoSkip", comment: "Text on skip button"))
@@ -628,7 +633,7 @@ struct PracticeSuccess: View {
     //TODO: fix success page comes up even if you don't complete the practice route
     @State var successSound: AVAudioPlayer?
     var body: some View {
-        NavigationView{
+        NavigationView {
             TutorialScreen{
                 Text(NSLocalizedString("findPathPracticeSuccessTitle", comment: "Text for the title of the success page for following route practice."))
                 
