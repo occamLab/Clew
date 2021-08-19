@@ -290,7 +290,9 @@ struct CLEWintro: View {
                 UserDefaults.standard.setValue(false, forKey: "SavedRoutesTutorialCompleted")
                 UserDefaults.standard.setValue(false, forKey: "FindingSavedRoutesTutorialCompleted")
                 UserDefaults.standard.setValue(false, forKey: "SettingsOptionsTutorialCompleted")
-            }) {Text("Reset Tutorial Progress")}
+            }) {
+                Text("Reset Tutorial Progress")
+            }
             
             
         }
@@ -311,7 +313,9 @@ struct UsingClew: View {
             //Add link to examples?
         }
         Spacer()
-        TutorialNavLink(destination: ClewsRole()) {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
+        TutorialNavLink(destination: ClewsRole()) {
+            Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
+        }
     }
 }
 
@@ -324,7 +328,9 @@ struct ClewsRole: View {
             Text(NSLocalizedString("introClewsRoleTutorialText", comment: "Text for intro to Clew's role Page"))
         }
         Spacer()
-        TutorialNavLink(destination: UsingClewTutorial()) {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
+        TutorialNavLink(destination: UsingClewTutorial()) {
+            Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
+        }
     }
 }
 
@@ -340,7 +346,9 @@ struct UsingClewTutorial: View {
             UserDefaults.standard.setValue(true, forKey: "IntroTutorialCompleted")
         }
         Spacer()
-        TutorialNavLink(destination: OrientPhone()) {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
+        TutorialNavLink(destination: OrientPhone()) {
+            Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
+        }
     }
 }
 
@@ -368,14 +376,20 @@ struct OrientPhone: View {
             
             Text(NSLocalizedString("orientPhoneTutorialInstructionText", comment: "Text that explains how to orient the phone for the best experience using Clew"))
             
-            TutorialNavLink(destination: OrientPhoneTips()) {Text(NSLocalizedString("tipTutorialTitle", comment: "text on button to tips page"))}
+            TutorialNavLink(destination: OrientPhoneTips()) {
+                Text(NSLocalizedString("tipTutorialTitle", comment: "text on button to tips page"))
+            }
             
-            TutorialNavLink(destination: PracticeOrientPhone()) {Text(NSLocalizedString("orientPhoneTutorialPracticeTitle", comment: "Title for holding phone practice"))}
+            TutorialNavLink(destination: PracticeOrientPhone()) {
+                Text(NSLocalizedString("orientPhoneTutorialPracticeTitle", comment: "Title for holding phone practice"))
+            }
             
             
         }
         Spacer()
-        TutorialNavLink(destination: FindPath()) {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
+        TutorialNavLink(destination: FindPath()) {
+            Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
+        }
     }
 }
 
@@ -391,7 +405,9 @@ struct OrientPhoneTips: View {
             
         }
         Spacer()
-        TutorialNavLink(destination: PracticeOrientPhone()) {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
+        TutorialNavLink(destination: PracticeOrientPhone()) {
+            Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
+        }
     }
 }
 
@@ -425,10 +441,12 @@ struct PracticeOrientPhone: View {
             }){
                 if started {
                     TutorialButton{
-                        Text(NSLocalizedString("orientPhoneTutorialPracticeStop", comment: "stop orient phone practice"))}
+                        Text(NSLocalizedString("orientPhoneTutorialPracticeStop", comment: "stop orient phone practice"))
+                    }
                 } else {
-                    TutorialButton{
-                        Text(NSLocalizedString("orientPhoneTutorialPracticeStart", comment: "start orient phone practice"))}
+                    TutorialButton {
+                        Text(NSLocalizedString("orientPhoneTutorialPracticeStart", comment: "start orient phone practice"))
+                    }
                 }
             }
             
@@ -517,12 +535,16 @@ struct PracticeOrientPhone: View {
         }
         if score >= 3 {
             Spacer()
-            TutorialNavLink(destination: FindPath()) {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))} //change skip button to next button when score equals three because the user has completed the practice
+            TutorialNavLink(destination: FindPath()) {
+                Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
+            } //change skip button to next button when score equals three because the user has completed the practice
         }
         
         else if score < 3 {
             Spacer()
-            TutorialNavLink(destination: FindPath()) {Text(NSLocalizedString("buttonTexttoSkip", comment: "Text on skip button"))}
+            TutorialNavLink(destination: FindPath()) {
+                Text(NSLocalizedString("buttonTexttoSkip", comment: "Text on skip button"))
+            }
         }
     }
 }
@@ -541,7 +563,9 @@ struct FindPath: View {
             
         }
         Spacer()
-        TutorialNavLink(destination: FindPathPractice1())  {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
+        TutorialNavLink(destination: FindPathPractice1())  {
+            Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
+        }
     }
 }
 
@@ -552,17 +576,21 @@ struct FindPathPractice1: View {
             
             Text(NSLocalizedString("findPathPractice1InstructionText", comment: "Text for the instructions of the first following route practice."))
             
-            Button(action:{
+            Button(action: {
                 NotificationCenter.default.post(name: Notification.Name("StartTutorialPath"), object: nil)
                 NotificationCenter.default.post(name: Notification.Name("TutorialPopoverReadyToDismiss"), object: nil)
                 NotificationCenter.default.post(name: Notification.Name("BurgerMenuReadyToDismiss"), object: nil)
                 UserDefaults.standard.setValue(false, forKey: "FindPathPractice1Completed")
-            }){TutorialButton{
-                Text(NSLocalizedString("practiceTutorialTitle", comment: "Text for the begin button of the first following route practice."))}}
-            
+            }) {
+                TutorialButton {
+                    Text(NSLocalizedString("practiceTutorialTitle", comment: "Text for the begin button of the first following route practice."))
+                }
+            }
         }
         Spacer()
-        TutorialNavLink(destination: FindPathPractice2()) {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
+        TutorialNavLink(destination: FindPathPractice2()) {
+            Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
+        }
     }
 }
 
@@ -577,16 +605,21 @@ struct FindPathPractice2: View {
             Button(action:{
                     NotificationCenter.default.post(name: Notification.Name("StartTutorialPath2"), object: nil)
                     NotificationCenter.default.post(name: Notification.Name("TutorialPopoverReadyToDismiss"), object: nil)
-                    UserDefaults.standard.setValue(true, forKey: "FindPathPractice1Completed")})
-            {TutorialButton{
-                Text(NSLocalizedString("practiceTutorialTitle", comment: "Text for the begin practice for the second following route practice."))}}
+                    UserDefaults.standard.setValue(true, forKey: "FindPathPractice1Completed")
+            }) {
+                TutorialButton {
+                Text(NSLocalizedString("practiceTutorialTitle", comment: "Text for the begin practice for the second following route practice."))
+                }
+            }
             
         }.onDisappear(){
             UserDefaults.standard.setValue(true, forKey: "FindPathTutorialCompleted")
         }
         
         Spacer()
-        TutorialNavLink(destination: SingleUse()) {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
+        TutorialNavLink(destination: SingleUse()) {
+            Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
+        }
     }
 }
 
@@ -609,11 +642,14 @@ struct PracticeSuccess: View {
                 //}
                 
                 Spacer() //TODO: spacer is not push next button to the bottom :(
-                if UserDefaults.standard.bool(forKey: "FindPathPractice1Completed") == true {
-                    TutorialNavLink(destination: SingleUse()) {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
-                    
-                }else {
-                    TutorialNavLink(destination: FindPathPractice2()) {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
+                if UserDefaults.standard.bool(forKey: "FindPathPractice1Completed") {
+                    TutorialNavLink(destination: SingleUse()) {
+                        Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
+                    }
+                } else {
+                    TutorialNavLink(destination: FindPathPractice2()) {
+                        Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
+                    }
                 }
             }
             
@@ -639,7 +675,9 @@ struct SingleUse: View {
         }
         
         Spacer()
-        TutorialNavLink(destination: UsingSingleUse()) {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
+        TutorialNavLink(destination: UsingSingleUse()) {
+            Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
+        }
     }
 }
 
@@ -652,7 +690,9 @@ struct UsingSingleUse: View {
         }
         
         Spacer()
-        TutorialNavLink(destination: AnchorPoints()) {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
+        TutorialNavLink(destination: AnchorPoints()) {
+            Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
+        }
     }
 }
 
@@ -665,14 +705,20 @@ struct AnchorPoints: View {
             //ScrollView{
             Text(NSLocalizedString("anchorPointsTutorialText", comment: "Instructions for setting anchor points"))
             
-            TutorialNavLink(destination: AnchorPointTips())  {Text(NSLocalizedString("tipTutorialTitle", comment: "Tip page button text"))}
+            TutorialNavLink(destination: AnchorPointTips())  {
+                Text(NSLocalizedString("tipTutorialTitle", comment: "Tip page button text"))
+            }
             
-            TutorialNavLink(destination: AnchorPointPractice())  {Text(NSLocalizedString("practiceTutorialTitle", comment: "Text for practice button"))}
+            TutorialNavLink(destination: AnchorPointPractice())  {
+                Text(NSLocalizedString("practiceTutorialTitle", comment: "Text for practice button"))
+            }
             
         }
         
         Spacer()
-        TutorialNavLink(destination: SavedRoutes())  {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
+        TutorialNavLink(destination: SavedRoutes())  {
+            Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
+        }
         
     }
 }
@@ -687,7 +733,9 @@ struct AnchorPointTips: View {
         }
         
         Spacer()
-        TutorialNavLink(destination: AnchorPointPractice())  {Text(NSLocalizedString("practiceTutorialTitle", comment: "Text for practice button"))}
+        TutorialNavLink(destination: AnchorPointPractice())  {
+            Text(NSLocalizedString("practiceTutorialTitle", comment: "Text for practice button"))
+        }
     }
 }
 
@@ -732,16 +780,25 @@ struct AnchorPointPractice: View {
                 
                 Button(action: {
                     anchorPointAligned = false
-                }) {TutorialButton{Text(NSLocalizedString("anchorPointPracticeRetryAlignButton", comment: "button text to retry aligning the anchor point"))}}
+                }) {
+                    TutorialButton{
+                        Text(NSLocalizedString("anchorPointPracticeRetryAlignButton", comment: "button text to retry aligning the anchor point"))
+                    }
+                }
                 
                 Button(action: {
                     anchorPointSet = false
                     anchorPointAligned = false
-                }) {TutorialButton{Text(NSLocalizedString("anchorPointPracticeRetryButton", comment: "button text to retry setting the anchor point"))}}
+                }) {
+                    TutorialButton{
+                        Text(NSLocalizedString("anchorPointPracticeRetryButton", comment: "button text to retry setting the anchor point"))
+                    }
+                }
                 
-                TutorialNavLink(destination: AnchorPointTips())  {Text(NSLocalizedString("tipTutorialTitle", comment: "Button to tips page"))}
-                
-            }else if anchorPointSet {
+                TutorialNavLink(destination: AnchorPointTips())  {
+                    Text(NSLocalizedString("tipTutorialTitle", comment: "Button to tips page"))
+                }
+            } else if anchorPointSet {
                 //Once anchor point is set
                 Text(NSLocalizedString("anchorPointPracticeAlignTitle", comment: "Align to anchor point page title"))
                 
