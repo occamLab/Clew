@@ -637,16 +637,13 @@ struct PracticeSuccess: View {
             TutorialScreen{
                 Text(NSLocalizedString("findPathPracticeSuccessTitle", comment: "Text for the title of the success page for following route practice."))
                 
-                if UserDefaults.standard.bool(forKey: "FindPathPractice1Completed") == true {
+                if UserDefaults.standard.bool(forKey: "FindPathPractice1Completed") {
                     Text(NSLocalizedString("findPathPracticeSuccess2Text", comment: "Text for the success of the second practice route."))
-                    
-                }else {
+                } else {
                     Text(NSLocalizedString("findPathPracticeSuccess1Text", comment: "Text for the success of the first practice route."))
                 }
                 
-                //}
-                
-                Spacer() //TODO: spacer is not push next button to the bottom :(
+                Spacer() //TODO: spacer does not push next button to the bottom :(
                 if UserDefaults.standard.bool(forKey: "FindPathPractice1Completed") {
                     TutorialNavLink(destination: SingleUse()) {
                         Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
