@@ -133,6 +133,7 @@ class AuthenticationHelper: NSObject, ASAuthorizationControllerDelegate, ASAutho
             appDelegate.window?.makeKeyAndVisible()
             appDelegate.window?.rootViewController = ViewController()
             appDelegate.vc = appDelegate.window?.rootViewController
+            UIAccessibility.post(notification: .screenChanged, argument: nil)
         }
 
 }
