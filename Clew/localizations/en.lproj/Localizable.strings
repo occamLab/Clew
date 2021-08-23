@@ -424,3 +424,4 @@ You can also reenter the settings walk through that popped up when you first ent
 "setRecordRouteShortcut" = "Set Shortcut for Recording a Single Use Route";
 "setEndRecordingShortcut" = "Set Shortcut for Ending a Route Recording";
 "setNavigateBackShortcut" = "Set Shortcut for Navigating a Single Use Route";
+"siriWalkthroughTutorialButtonText" = "Siri Shortcuts";
