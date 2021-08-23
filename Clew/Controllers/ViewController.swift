@@ -1895,7 +1895,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 // arrived at keypoint
                 // send haptic/sonic feedback
                 waypointFeedbackGenerator?.notificationOccurred(.success)
-                if (soundFeedback) { playSystemSound(id: 1016) }
+                if (soundFeedback) { SoundEffectManager.shared.meh() }
                 
                 // remove current visited keypont from keypoint list
                 prevKeypointPosition = keypoints[0].location
@@ -1923,7 +1923,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 // arrived at final keypoint
                 // send haptic/sonic feedback
                 waypointFeedbackGenerator?.notificationOccurred(.success)
-                if (soundFeedback) { playSystemSound(id: 1016) }
+                if (soundFeedback) { SoundEffectManager.shared.success() }
                 
                 // erase current keypoint node
                 keypointNode.removeFromParentNode()
@@ -2059,7 +2059,15 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 if (soundFeedback) { playSystemSound(id: 1103) }
                 feedbackTimer = Date()
             }
-        }
+        } /*else { // TODO: maybe this should be an announcement after they've been off the route for a certain amount of time or just activate the directions button.  Combine thud sound at low frequency
+            // TODO: fix this to be a separate counter
+            let timeInterval = feedbackTimer.timeIntervalSinceNow
+            if(-timeInterval > ViewController.FEEDBACKDELAY) {
+                // wait until desired time interval before sending another feedback
+                if (soundFeedback) { SoundEffectManager.shared.error() }
+                feedbackTimer = Date()
+            }
+        }*/
         for anchorPoint in intermediateAnchorPoints {
             guard let anchorPointTransform = anchorPoint.transform else {
                 continue
