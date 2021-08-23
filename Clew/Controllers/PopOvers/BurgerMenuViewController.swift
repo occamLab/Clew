@@ -37,6 +37,9 @@ class BurgerMenuViewController: UITableViewController, UIPopoverPresentationCont
         if indexPath == [0,3] {
             tutorialButtonPressed()
         }
+        if indexPath == [0,4] {
+            siriShortcutsButtonPressed()
+        }
     }
     
     /// Called when the settings button is pressed.  This function will display the settings view (managed by SettingsViewController) as a popover.
@@ -80,6 +83,16 @@ class BurgerMenuViewController: UITableViewController, UIPopoverPresentationCont
         let tutorialView = TutorialTestView()
         tutorialHostingController = UIHostingController(rootView: tutorialView)
         self.present(tutorialHostingController!, animated: true, completion: nil)
+    }
+    
+    func siriShortcutsButtonPressed() {
+        let tutorialView = TutorialTestView()
+        tutorialHostingController = UIHostingController(rootView: tutorialView)
+        NotificationCenter.default.post(name: Notification.Name("ClewPopoverDisplayed"), object: nil)
+
+        self.present(tutorialHostingController!, animated: true) {
+            NotificationCenter.default.post(name: Notification.Name("ShowTutorialPage"), object: nil, userInfo: ["pageToDisplay":  "SiriWalkthrough"])
+        }
     }
     
     /// Called when the help button is pressed.  This function will display the help view (managed by HelpViewController) as a popover.

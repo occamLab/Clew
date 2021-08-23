@@ -34,6 +34,8 @@
 		77365B182343ECBA008BC35C /* BurgerMenu.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 77365B1B2343ECBA008BC35C /* BurgerMenu.storyboard */; };
 		77365B192343ECBA008BC35C /* BurgerMenu.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 77365B1B2343ECBA008BC35C /* BurgerMenu.storyboard */; };
 		77467DAF22BBC1D300FA7DEE /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 77467DAE22BBC1D300FA7DEE /* Default-568h@2x.png */; };
+		8214120526D41476003EC2D4 /* SiriWalkThrough.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8214120426D41476003EC2D4 /* SiriWalkThrough.swift */; };
+		8214120626D41477003EC2D4 /* SiriWalkThrough.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8214120426D41476003EC2D4 /* SiriWalkThrough.swift */; };
 		821CF7842513264400A7B3C2 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 821CF7822513264400A7B3C2 /* InfoPlist.strings */; };
 		823DA454252F7EA800BB5E6B /* speaker.obj in Resources */ = {isa = PBXBuildFile; fileRef = 823DA453252F7EA800BB5E6B /* speaker.obj */; };
 		823DA455252F7EA800BB5E6B /* speaker.obj in Resources */ = {isa = PBXBuildFile; fileRef = 823DA453252F7EA800BB5E6B /* speaker.obj */; };
@@ -144,6 +146,8 @@
 		E5E9016B22FB4D4A00AD0E95 /* PreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E9016A22FB4D4A00AD0E95 /* PreviewViewController.swift */; };
 		E5E9016E22FB4D4A00AD0E95 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E5E9016C22FB4D4A00AD0E95 /* MainInterface.storyboard */; };
 		E5E9017222FB4D4A00AD0E95 /* route-quicklook.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = E5E9016722FB4D4A00AD0E95 /* route-quicklook.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		E8773AFB268B874F003EA863 /* SiriShortcutsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8773AFA268B874F003EA863 /* SiriShortcutsController.swift */; };
+		E8773AFF268B875C003EA863 /* SiriShortcutsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8773AFA268B874F003EA863 /* SiriShortcutsController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -193,6 +197,7 @@
 		7743819F2343E3F8003EBD85 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/SettingsAndHelp.strings; sourceTree = "<group>"; };
 		77467DAE22BBC1D300FA7DEE /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		8206436A23B556A200DEE347 /* es */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = es; path = es.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
+		8214120426D41476003EC2D4 /* SiriWalkThrough.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SiriWalkThrough.swift; sourceTree = "<group>"; };
 		821CF7832513264400A7B3C2 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		821CF7892513264400A7B3C2 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		822E27F8210E3F260024A5E3 /* Clew Dev-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Clew Dev-Info.plist"; sourceTree = "<group>"; };
@@ -268,6 +273,7 @@
 		E5E9016A22FB4D4A00AD0E95 /* PreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewViewController.swift; sourceTree = "<group>"; };
 		E5E9016D22FB4D4A00AD0E95 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
 		E5E9016F22FB4D4A00AD0E95 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E8773AFA268B874F003EA863 /* SiriShortcutsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SiriShortcutsController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -306,6 +312,7 @@
 				14B02B3126823E2C00174B36 /* TutorialTestViews.swift */,
 				14B7EA08268E052100E4A3CE /* SettingWalkThrough.swift */,
 				14B7EA0B268E147A00E4A3CE /* TextBoarder.swift */,
+				8214120426D41476003EC2D4 /* SiriWalkThrough.swift */,
 			);
 			path = Tutorial;
 			sourceTree = "<group>";
@@ -465,6 +472,7 @@
 				E5470EE522C119F4001092A4 /* StopNavigationController.swift */,
 				E5470EE622C119F4001092A4 /* PauseTrackingController.swift */,
 				E5470EE722C119F4001092A4 /* ResumeTrackingConfirmController.swift */,
+				E8773AFA268B874F003EA863 /* SiriShortcutsController.swift */,
 			);
 			path = StateViews;
 			sourceTree = "<group>";
@@ -862,6 +870,7 @@
 				E5470F0622C119F5001092A4 /* PathFinder.swift in Sources */,
 				E5470F2C22C119F5001092A4 /* StartNavigationController.swift in Sources */,
 				E5470F4222C119F5001092A4 /* UIConstants.swift in Sources */,
+				E8773AFB268B874F003EA863 /* SiriShortcutsController.swift in Sources */,
 				E5470F2022C119F5001092A4 /* UIViewControllerExtensions.swift in Sources */,
 				E5470F3A22C119F5001092A4 /* HelpViewController.swift in Sources */,
 				E565A10822F2173400C1998E /* RouteDocumentData.swift in Sources */,
@@ -872,6 +881,7 @@
 				E5470F4622C119F5001092A4 /* RootContainerView.swift in Sources */,
 				E5470F4A22C119F5001092A4 /* RouteTableViewCell.swift in Sources */,
 				E5470F0422C119F5001092A4 /* FeedbackLogger.swift in Sources */,
+				8214120526D41476003EC2D4 /* SiriWalkThrough.swift in Sources */,
 				E5470F2822C119F5001092A4 /* ViewController.swift in Sources */,
 				82A417E1262A205A001FCB8C /* AuthenticationHelper.swift in Sources */,
 				E5470F3622C119F5001092A4 /* PauseTrackingController.swift in Sources */,
@@ -907,11 +917,13 @@
 				14B02B3326823E2C00174B36 /* TutorialTestViews.swift in Sources */,
 				E5470F2722C119F5001092A4 /* Float4x4Extension.swift in Sources */,
 				E5470EF722C119F5001092A4 /* RecordButtonKit.swift in Sources */,
+				8214120626D41477003EC2D4 /* SiriWalkThrough.swift in Sources */,
 				14B7EA0A268E052100E4A3CE /* SettingWalkThrough.swift in Sources */,
 				82BC47FF2640396700C7D364 /* Surveys.swift in Sources */,
 				E5470F0722C119F5001092A4 /* PathFinder.swift in Sources */,
 				E5470F2D22C119F5001092A4 /* StartNavigationController.swift in Sources */,
 				1F2B9D7222C3B50D00317DC8 /* HelpCompiler.swift in Sources */,
+				E8773AFF268B875C003EA863 /* SiriShortcutsController.swift in Sources */,
 				E5470F4322C119F5001092A4 /* UIConstants.swift in Sources */,
 				E5470F2122C119F5001092A4 /* UIViewControllerExtensions.swift in Sources */,
 				E565A10922F2173400C1998E /* RouteDocumentData.swift in Sources */,
@@ -1205,7 +1217,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Clew Dev.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 103;
+				CURRENT_PROJECT_VERSION = 104;
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
 				INFOPLIST_FILE = "Clew Dev-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
@@ -1235,7 +1247,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Clew Dev.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 103;
+				CURRENT_PROJECT_VERSION = 104;
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
 				INFOPLIST_FILE = "Clew Dev-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 14.1;

@@ -33,6 +33,10 @@ import Firebase
 import FirebaseDatabase
 import SRCountdownTimer
 import SwiftUI
+import Intents
+import IntentsUI
+import CoreSpotlight
+import MobileCoreServices
 
 /// A custom enumeration type that describes the exact state of the app.  The state is not exhaustive (e.g., there are Boolean flags that also track app state).
 enum AppState {
@@ -715,7 +719,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// stop route navigation VC
     var stopNavigationController: StopNavigationController!
-
+    ///siri shortcuts VC
+    var siriShortcutsController: SiriShortcutsController!
+    var voiceShortcuts: [INVoiceShortcut] = []
+    
     /// called when the view has loaded.  We setup various app elements in here.
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -724,7 +731,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         
         // set the main view as active
         view = RootContainerView(frame: UIScreen.main.bounds)
-        
+        self.modalPresentationStyle = .fullScreen
         // initialize child view controllers
         pauseTrackingController = PauseTrackingController()
         resumeTrackingController = ResumeTrackingController()
@@ -819,6 +826,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                     self.announce(announcement: NSLocalizedString("thanksForFeedbackAnnouncement", comment: "This is read right after the user fills out a feedback survey."))
                 }
             }
+        }
+        updateVoiceShortcuts() {
+            
         }
     }
     
@@ -918,6 +928,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             userDefaults.set(true, forKey: "showedSignificantChangesAlertv1_3")
             // don't show this for now, but leave the plumbing in place for a future significant change
             // showSignificantChangesAlert()
+        }
+        //print("always showing alert!")
+        //siriShortcutAlert = false
+        if(!siriShortcutAlert){
+            
+            showSignificantChangesHandsFreeAlert()
+            siriShortcutAlert = true
         }
         
         synth.delegate = self
@@ -1116,6 +1133,24 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         self.present(changesAlertVC, animated: true, completion: nil)
     }
     
+    ///significant changes Hands free alert
+    
+    
+    /// Show significant changes alert so the user is not surprised by new app features.
+    func showSignificantChangesHandsFreeAlert() {
+        let changesAlertVC = UIAlertController(title: NSLocalizedString("significantVersionChangesPop-UpHeading", comment: "The heading of a pop-up telling the user that significant changes have been made to this app version"),
+                                               message: NSLocalizedString("significantVersionChangesPopHandsFree-UpContent", comment: "An alert shown to the user to alert them to the fact that significant changes have been made to the app."),
+                                               preferredStyle: .actionSheet)
+        changesAlertVC.addAction(UIAlertAction(title: NSLocalizedString("significantVersionChanges-HelpMeWithSiri", comment: "What the user clicks to request help setting up Siri shortcuts"), style: .default, handler: { action -> Void in
+            self.helpButtonPressed(withOverride: "SiriWalkthrough")
+        }
+        ))
+        changesAlertVC.addAction(UIAlertAction(title: NSLocalizedString("dismissSurvey", comment: "This is used for dismissing popovers"), style: .default, handler: { action -> Void in
+        }
+        ))
+        self.present(changesAlertVC, animated: true, completion: nil)
+    }
+    
     /// Configure Settings Bundle
     func createSettingsBundle() {
         registerSettingsBundle()
@@ -1126,9 +1161,24 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                                                object: nil)
     }
     
+    public func updateVoiceShortcuts(completion: (() -> Void)?) {
+       INVoiceShortcutCenter.shared.getAllVoiceShortcuts { (voiceShortcutsFromCenter, error) in
+           guard let voiceShortcutsFromCenter = voiceShortcutsFromCenter else {
+               if let error = error {
+                   print("Failed to fetch voice shortcuts with error: \(error.localizedDescription)")
+               }
+               return
+           }
+           self.voiceShortcuts = voiceShortcutsFromCenter
+           if let completion = completion {
+               completion()
+           }
+       }
+   }
+
     /// Register settings bundle
     func registerSettingsBundle(){
-        let appDefaults = ["crumbColor": 0, "showPath": true, "pathColor": 0, "hapticFeedback": true, "sendLogs": true, "voiceFeedback": true, "soundFeedback": true, "adjustOffset": false, "units": 0, "timerLength":5] as [String : Any]
+        let appDefaults = ["crumbColor": 0, "showPath": true, "pathColor": 0, "hapticFeedback": true, "sendLogs": true, "voiceFeedback": true, "soundFeedback": true, "adjustOffset": false, "units": 0, "timerLength":5, "siriShortcutSingleUseRoute": false,  "siriShortcutStopRecordingRoute": false,  "siriShortcutStartNavigatingRoute": false, "siriShortcutAlert": false] as [String : Any]
         UserDefaults.standard.register(defaults: appDefaults)
     }
 
@@ -1294,6 +1344,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         startNavigationController.pauseButton.isHidden = !allowPause
         startNavigationController.largeHomeButton.isHidden = recordingSingleUseRoute
         startNavigationController.stackView.layoutIfNeeded()
+    
+        // TODO: why is this here?
+        announce(announcement: NSLocalizedString("stoppedTrachingSessionAnnouncement", comment: "An announcement which lets the user know that they have stopped recording the route."))
+        
         UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: startNavigationController.startNavigationButton)
     }
 
@@ -1498,7 +1552,40 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// true if path should be shown between waypoints, false otherwise
     var showPath: Bool!
-    
+  ///  true if shortcuts are set, false otherwise.
+    var siriShortcutSingleUseRouteFlag: Bool {
+        get {
+            return UserDefaults.standard.bool(forKey:"siriShortcutSingleUseRoute")
+        }
+        set {
+            UserDefaults.standard.setValue(newValue, forKey: "siriShortcutSingleUseRoute")
+        }
+    }
+    var siriShortcutStopRecordingRouteFlag : Bool {
+        get {
+            return UserDefaults.standard.bool(forKey:"siriShortcutStopRecordingRoute")
+        }
+        set {
+            UserDefaults.standard.setValue(newValue, forKey: "siriShortcutStopRecordingRoute")
+        }
+    }
+    var siriShortcutStartNavigatingRouteFlag : Bool {
+        get {
+            UserDefaults.standard.bool(forKey:"siriShortcutStartNavigatingRoute")
+        }
+        set {
+            UserDefaults.standard.setValue(newValue, forKey:"siriShortcutStartNavigatingRoute")
+        }
+
+    }
+    var siriShortcutAlert: Bool {
+        get {
+            UserDefaults.standard.bool(forKey: "siriShortcutAlert")
+        }
+        set {
+            UserDefaults.standard.setValue(newValue, forKey: "siriShortcutAlert")
+        }
+    }
     /// the color of the path.  0 is red, 1 is green, 2 is blue, and 3 is random
     var defaultPathColor: Int!
     
@@ -1614,7 +1701,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// handles the user pressing the stop recording button.
     ///
     /// - Parameter sender: the button that generated the event
-    @objc func stopRecording(_ sender: UIButton) {
+    @objc func stopRecording(_ sender: UIButton?) {
         // copy the recordingCrumbs over for use in path creation
         crumbs = Array(recordingCrumbs)
         isResumedRoute = false
@@ -1646,7 +1733,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// handles the user pressing the start navigation button.
     ///
     /// - Parameter sender: the button that generated the event
-    @objc func startNavigation(_ sender: UIButton) {
+    @objc func startNavigation(_ sender: UIButton?) {
         ///announce to the user that return navigation has started.
         self.delayTransition(announcement: NSLocalizedString("startingReturnNavigationAnnouncement", comment: "This is an anouncement which is played when the user performs return navigation from the play pause menu. It signifies the start of a navigation session."), initialFocus: nil)
         // this will handle the appropriate state transition if we pass the warning
@@ -1724,7 +1811,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
         sceneView.session.run(configuration, options: [.removeExistingAnchors, .resetTracking])
     }
-    
     /// this is called after the alignment countdown timer finishes in order to complete the pause tracking procedure
     @objc func pauseTracking() {
         // pause AR pose tracking
@@ -2141,52 +2227,59 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: (#selector(announceDirectionHelp)), userInfo: nil, repeats: false)
     }
     
-    // Called when help button is pressed
     @objc func helpButtonPressed() {
-        var pageToDisplay: String = ""
+        helpButtonPressed(withOverride: nil)
+    }
+    
+    // Called when help button is pressed
+    @objc func helpButtonPressed(withOverride pageToDisplayOverride: String? = nil) {
+        // TODO: allow override of next button if requesting a specific tutorial view (for instance in Siri setup)
+        var pageToDisplay = pageToDisplayOverride == nil ? "" : pageToDisplayOverride!
         
         let tutorialView = TutorialTestView()
         tutorialHostingController = UIHostingController(rootView: tutorialView)
         
-        switch state {
-        case .recordingRoute:
-           pageToDisplay = "FindPath"
-        case .mainScreen(_):
-            break
-        case .readyToNavigateOrPause(allowPause: let allowPause):
-            pageToDisplay = "FindPath"
-            
-        case .navigatingRoute:
-            pageToDisplay = "FindPath"
-            
-        case .initializing:
-            pageToDisplay = "FindPath"
-            
-        case .startingPauseProcedure:
-            pageToDisplay = "SavedRoutes"
-            
-        case .pauseWaitingPeriod:
-            pageToDisplay = "AnchorPoints"
-            
-        case .completingPauseProcedure:
-            pageToDisplay = "AnchorPoints"
-            
-        case .pauseProcedureCompleted:
-            pageToDisplay = "AnchorPoints"
-            
-        case .startingResumeProcedure(route: let route, worldMap: let worldMap, navigateStartToEnd: let navigateStartToEnd):
-            pageToDisplay = "FindPath"
-            
-        case .readyForFinalResumeAlignment:
-            pageToDisplay = "FindPath"
-            
-        case .startingNameSavedRouteProcedure(worldMap: let worldMap):
-                pageToDisplay = "FindingSavedRoutes"
-            
-        case .finishedTutorialRoute(_):
-            let tutorialView = PracticeSuccess()
-            tutorialHostingController = UIHostingController(rootView: tutorialView)
-            self.state = .mainScreen(announceArrival: false)
+        if pageToDisplayOverride == nil { // determine based on the state
+            switch state {
+            case .recordingRoute:
+               pageToDisplay = "FindPath"
+            case .mainScreen(_):
+                break
+            case .readyToNavigateOrPause(allowPause: let allowPause):
+                pageToDisplay = "FindPath"
+                
+            case .navigatingRoute:
+                pageToDisplay = "FindPath"
+                
+            case .initializing:
+                pageToDisplay = "FindPath"
+                
+            case .startingPauseProcedure:
+                pageToDisplay = "SavedRoutes"
+                
+            case .pauseWaitingPeriod:
+                pageToDisplay = "AnchorPoints"
+                
+            case .completingPauseProcedure:
+                pageToDisplay = "AnchorPoints"
+                
+            case .pauseProcedureCompleted:
+                pageToDisplay = "AnchorPoints"
+                
+            case .startingResumeProcedure(route: let route, worldMap: let worldMap, navigateStartToEnd: let navigateStartToEnd):
+                pageToDisplay = "FindPath"
+                
+            case .readyForFinalResumeAlignment:
+                pageToDisplay = "FindPath"
+                
+            case .startingNameSavedRouteProcedure(worldMap: let worldMap):
+                    pageToDisplay = "FindingSavedRoutes"
+                
+            case .finishedTutorialRoute(_):
+                let tutorialView = PracticeSuccess()
+                tutorialHostingController = UIHostingController(rootView: tutorialView)
+                self.state = .mainScreen(announceArrival: false)
+            }
         }
         NotificationCenter.default.post(name: Notification.Name("ClewPopoverDisplayed"), object: nil)
         self.present(tutorialHostingController!, animated: true, completion: nil)

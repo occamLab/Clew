@@ -10,6 +10,7 @@ import UIKit
 import Firebase
 import FirebaseAuth
 import FirebaseAnalytics
+import IntentsUI
 
 /// This class handles various state changes for the app.
 @UIApplicationMain
@@ -19,8 +20,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
         
     /// view controller!
-    var vc: UIViewController!
-    
+    var vc: ViewController!
+    /// navigation controller
+    var nav: UINavigationController?
     /// Called when the app finishes launching.  Currently, this is where we setup Firebase and make sure the phone screen doesn't lock while we are using the app.
     ///
     /// - Parameters:
@@ -134,4 +136,30 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         Analytics.setUserProperty(String(UIAccessibility.isInvertColorsEnabled), forName: "isInvertColorsEnabled")
     }
         
+    
+    func application(
+      _ application: UIApplication,
+      continue userActivity: NSUserActivity,
+      restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void
+    ) -> Bool {
+        if userActivity.activityType == kNewSingleUseRouteType {
+            if case .mainScreen(_) = vc.state {
+                vc.startCreateAnchorPointProcedure()
+            } // TODO: display a warning about improper state
+        }
+        
+        if userActivity.activityType == kStopRecordingType {
+            if case .recordingRoute = vc.state {
+                vc.stopRecording(nil)
+            } // TODO: display a warning about improper state
+        }
+
+        if userActivity.activityType == kStartNavigationType {
+            if case .readyToNavigateOrPause(_) = vc.state {
+                vc.startNavigation(nil)
+            } // TODO: display a warning about improper state
+        }
+        
+        return true
+    }
 }

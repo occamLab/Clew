@@ -16,6 +16,9 @@
 
 "significantVersionChangesPop-UpContent" = "This new version of Clew features a route sharing feature and a redesigned workflow for saving routes. Please note that \"landmarks\" are now called \"anchor points\". Also, some menus previously on the home screen are now available through the \"options\" menu. See the help menu for more details.";
 
+
+"significantVersionChangesPopHandsFree-UpContent" = "Now you can use Siri with this new version of Clew. Please note that you can only use Siri with \"Single Use Route\". Please ensure that you have enabled Hey Siri on your iPhone through Settings > Siri & Search > Listen for Hey Siri. You will now be prompted to add Siri shortcuts after each action you take, when this is done you can simply say: \"Hey Siri, Activity name\".";
+
 "significantVersionChanges-Confirmation" = "Ok";
 
 "forYourSafetyPop-UpHeading" = "For your safety";
@@ -28,7 +31,7 @@
 "fixedTrackingAnnouncement" = "Tracking performance normal.";
 "properDevicePositioningAnnouncement" = "Hold vertically with the rear camera facing forward.";
 "completedNavigationAnnouncement" = "You've arrived.";
-
+"stoppedTrachingSessionAnnouncement"="You've now stopped recording the route";
     // Name of labels that appear in UI
 "saveARouteButtonText" = "Save Route";
 "saveARouteButtonAccessibilityLabel" = "Save a route";
@@ -408,3 +411,16 @@ You can also reenter the settings walk through that popped up when you first ent
 "signInWithAppleButtonText" = "Sign In";
 "dismissSurvey" = "Dismiss";
 "thanksForFeedbackAnnouncement" = "Thank you for your feedback";
+
+"significantVersionChanges-HelpMeWithSiri" = "Setup Siri Shortcuts Now";
+"siriWalkthroughTutorialTitleText" = "Siri Shortcuts";
+"siriWalkthroughTutorialInstructionText" = "Placeholder for the text to set Siri shortcuts";
+"siriWalkthroughButtonText" = "Setup Siri Shortcuts";
+"siriWalkthroughSetRecordRouteShortcutText" = "This is placeholder text for where we would explain the role of the record a single use route shortcut.";
+
+"siriWalkthroughSetEndRecordingShortcutText" = "This is placeholder text for where we would explain the role of the stop recording a single use route shortcut.";
+
+"siriWalkthroughSetNavigateBackText" = "This is placeholder text for where we would explain the role of the navigate back along a single use route shortcut.";
+"setRecordRouteShortcut" = "Set Shortcut for Recording a Single Use Route";
+"setEndRecordingShortcut" = "Set Shortcut for Ending a Route Recording";
+"setNavigateBackShortcut" = "Set Shortcut for Navigating a Single Use Route";

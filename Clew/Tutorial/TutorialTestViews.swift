@@ -131,7 +131,6 @@ struct TutorialButton<Content: View>: View {
 }
 
 class showTutorialPage: ObservableObject {
-    //@Published var showFindPath = false
     @Published var selectedView: String? = ""
 }
 
@@ -188,6 +187,12 @@ struct TutorialTestView: View {
                 HStack{
                     TutorialNavLinkWithRedirection(destination: SettingOptions(), tag: "SettingsOptions", selection: $showPage.selectedView) {
                         Text(NSLocalizedString( "settingOptionsTutorialButtonText", comment: "Title for the setting options part of the tutorial"))
+                    }
+                }
+                
+                HStack{
+                    TutorialNavLinkWithRedirection(destination: SiriWalkthrough(), tag: "SiriWalkthrough", selection: $showPage.selectedView) {
+                        Text(NSLocalizedString( "siriWalkthroughTutorialButtonText", comment: "Title for the siri walkthrough part of the tutorial"))
                     }
                 }
             }
@@ -960,13 +965,54 @@ struct SettingOptions: View {
         }
         
         Spacer()
-        TutorialNavLink(destination: TutorialEndView()) {
+        TutorialNavLink(destination: SiriWalkthrough()) {
             Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
         }
         
     }
 }
 
+struct SiriWalkthrough: View {
+    let activityIdentifiers: [String] = [kNewSingleUseRouteType, kStopRecordingType, kStartNavigationType]
+    let minRowHeight = 50
+    var body: some View {
+        TutorialScreen{
+            Text(NSLocalizedString( "siriWalkthroughTutorialTitleText", comment: "Title for the Siri walkthrough part of the tutorial"))
+            
+            //ScrollView{
+            Text(NSLocalizedString( "siriWalkthroughTutorialInstructionText", comment: "Information about what the setting options are"))
+            //.fixedSize(horizontal: false, vertical: true)
+            
+            
+            if !((UIApplication.shared.delegate as? AppDelegate)?.vc.voiceShortcuts.isEmpty ?? true) {
+                Text("Current Siri Shortcuts for Clew").padding()
+
+                List {
+                    ForEach(activityIdentifiers, id: \.self) { identifier in
+                        if let siriShortcut = findShortcut(persistentIdentifier: identifier) {
+                            HStack {
+                                Text(siriShortcut.shortcut.userActivity!.title!).padding()
+                                Text("\"\(siriShortcut.invocationPhrase)\"").padding()
+                            }
+                        }
+                    }
+                }.frame(minHeight: CGFloat(minRowHeight) * 3).border(Color.black)
+            }
+            TutorialNavLink(destination: SetRecordShortcut()) {
+                Text(NSLocalizedString("siriWalkthroughButtonText", comment: "Title for the Siri Walk Through"))
+            }
+            
+        }.onDisappear(){
+            UserDefaults.standard.setValue(true, forKey: "SiriWalkthroughTutorialCompleted")
+        }
+        
+        Spacer()
+        TutorialNavLink(destination: TutorialEndView()) {
+            Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
+        }
+        
+    }
+}
 
 struct TutorialEndView: View {
     var body: some View {

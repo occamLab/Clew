@@ -29,7 +29,7 @@ class StopRecordingController: UIViewController {
     /// called when the view has loaded.  We setup various app elements in here.
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        self.modalPresentationStyle = .fullScreen
         view.frame = CGRect(x: 0,
                             y: UIConstants.yOriginOfButtonFrame,
                             width: UIConstants.buttonFrameWidth,
