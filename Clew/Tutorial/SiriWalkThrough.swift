@@ -11,24 +11,11 @@ import SwiftUI
 import Intents
 import IntentsUI
 
-func findShortcut(persistentIdentifier: String)->INVoiceShortcut? {
-    if let currentSiriShortcuts = (UIApplication.shared.delegate as? AppDelegate)?.vc.voiceShortcuts {
-        for currentSiriShortcut in currentSiriShortcuts {
-            if currentSiriShortcut.shortcut.userActivity?.persistentIdentifier == persistentIdentifier {
-                return currentSiriShortcut
-            }
-        }
-    }
-    return nil
-}
-
 class AddSiriShortcutViewControllerDelegate: NSObject, ObservableObject, INUIAddVoiceShortcutViewControllerDelegate {
     var shouldDismiss = false
     func addVoiceShortcutViewController(_ controller: INUIAddVoiceShortcutViewController, didFinishWith voiceShortcut: INVoiceShortcut?, error: Error?) {
         shouldDismiss = true
-        (UIApplication.shared.delegate as! AppDelegate).vc.updateVoiceShortcuts() {
-            
-        }
+        SiriShortcutsManager.shared.updateVoiceShortcuts(completion: nil)
         objectWillChange.send()
     }
     
@@ -41,17 +28,13 @@ class AddSiriShortcutViewControllerDelegate: NSObject, ObservableObject, INUIAdd
 class EditSiriShortcutViewControllerDelegate: NSObject, INUIEditVoiceShortcutViewControllerDelegate, ObservableObject {
     func editVoiceShortcutViewController(_ controller: INUIEditVoiceShortcutViewController, didUpdate voiceShortcut: INVoiceShortcut?, error: Error?) {
         shouldDismiss = true
-        (UIApplication.shared.delegate as! AppDelegate).vc.updateVoiceShortcuts() {
-
-        }
+        SiriShortcutsManager.shared.updateVoiceShortcuts(completion: nil)
         objectWillChange.send()
     }
     
     func editVoiceShortcutViewController(_ controller: INUIEditVoiceShortcutViewController, didDeleteVoiceShortcutWithIdentifier deletedVoiceShortcutIdentifier: UUID) {
         shouldDismiss = true
-        (UIApplication.shared.delegate as! AppDelegate).vc.updateVoiceShortcuts() {
-
-        }
+        SiriShortcutsManager.shared.updateVoiceShortcuts(completion: nil)
         objectWillChange.send()
     }
     
@@ -115,7 +98,7 @@ struct SetRecordShortcut: View{
                     }
                 }
             }.sheet(isPresented: $presentPopup) {
-                if let voiceShortcut = findShortcut(persistentIdentifier: kNewSingleUseRouteType) {
+                if let voiceShortcut = SiriShortcutsManager.shared.findShortcut(persistentIdentifier: kNewSingleUseRouteType) {
                     EditShortcutWrapper(voiceShortCut: voiceShortcut, showModal: $presentPopup)
                 } else {
                     SetNewShortcutWrapper(activity: SiriShortcutsController.newSingleUseRouteShortcut(), showModal: $presentPopup)
@@ -144,7 +127,7 @@ struct SetEndRecordingShortcut: View{
                     }
                 }
             }.sheet(isPresented: $presentPopup) {
-                if let voiceShortcut = findShortcut(persistentIdentifier: kStopRecordingType) {
+                if let voiceShortcut = SiriShortcutsManager.shared.findShortcut(persistentIdentifier: kStopRecordingType) {
                     EditShortcutWrapper(voiceShortCut: voiceShortcut, showModal: $presentPopup)
                 } else {
                     SetNewShortcutWrapper(activity: SiriShortcutsController.stopRecordingShortcut(), showModal: $presentPopup)
@@ -160,6 +143,7 @@ struct SetEndRecordingShortcut: View{
 
 struct SetNavigateBackShortcut: View{
     @State var presentPopup = false
+    @ObservedObject var showPage = ShowTutorialPage.shared
     var body: some View {
         TutorialScreen{
             VStack {
@@ -172,7 +156,7 @@ struct SetNavigateBackShortcut: View{
                     }
                 }
             }.sheet(isPresented: $presentPopup) {
-                if let voiceShortcut = findShortcut(persistentIdentifier: kStartNavigationType) {
+                if let voiceShortcut = SiriShortcutsManager.shared.findShortcut(persistentIdentifier: kStartNavigationType) {
                     EditShortcutWrapper(voiceShortCut: voiceShortcut, showModal: $presentPopup)
                 } else {
                     SetNewShortcutWrapper(activity: SiriShortcutsController.startNavigationShortcut(), showModal: $presentPopup)
@@ -180,8 +164,19 @@ struct SetNavigateBackShortcut: View{
             }
         }
         Spacer()
-        TutorialNavLink(destination: TutorialEndView()) {
-            Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
+
+        if showPage.confineToSection {
+            Button(action: {
+                NotificationCenter.default.post(name: Notification.Name("TutorialPopoverReadyToDismiss"), object: nil)
+            }) {
+                TutorialButton{
+                    Text("Exit")
+                }
+            }
+        } else {
+            TutorialNavLink(destination: TutorialEndView()) {
+                Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
+            }
         }
     }
 }

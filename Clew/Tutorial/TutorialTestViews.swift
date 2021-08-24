@@ -19,6 +19,7 @@ import SRCountdownTimer
 //TODO: move reset tutorial practice onto main page
 //TODO: make sounds play even with silent switch on
 //TODO: better instructions for the how to hold your phone
+//TODO: Figure out why do anchor points show up as their own section and under saved routes
 struct TutorialScreen<Content: View>: View {
     //format for all the tutorial and app set up screens. standarizes spacing and adds exit button to each page
     let content: Content
@@ -130,28 +131,32 @@ struct TutorialButton<Content: View>: View {
     }
 }
 
-class showTutorialPage: ObservableObject {
+class ShowTutorialPage: ObservableObject {
     @Published var selectedView: String? = ""
+    @Published var confineToSection: Bool = false
+    
+    public static var shared = ShowTutorialPage()
+    private init() {
+        
+    }
 }
 
 struct TutorialTestView: View {
     @ObservedObject var settings = SettingsWrapper.shared
-    @StateObject var showPage = showTutorialPage()
-    let pub = NotificationCenter.default
-        .publisher(for: NSNotification.Name("ShowTutorialPage"))
+    @ObservedObject var showPage = ShowTutorialPage.shared
     var body: some View {
         NavigationView {
             TutorialScreen{
                 Text(NSLocalizedString("tutorialTitleText", comment: "Title of the Clew Tutorial Screen. Top of the first tutorial page"))
                 
                 HStack{
-                    TutorialNavLinkWithRedirection(destination: CLEWintro(), tag: "CLEWintro", selection: $showPage.selectedView){
+                    TutorialNavLinkWithRedirection(destination: CLEWintro(), tag: "CLEWintro", selection: $showPage.selectedView) {
                         Text(NSLocalizedString("ClewIntroTutorialTitle", comment: "Intro to Clew Tutorial Title"))
                     }
                 }
                 
                 HStack{
-                    TutorialNavLinkWithRedirection(destination: OrientPhone(), tag: "OrientPhone", selection: $showPage.selectedView){
+                    TutorialNavLinkWithRedirection(destination: OrientPhone(), tag: "OrientPhone", selection: $showPage.selectedView) {
                         Text(NSLocalizedString("orientPhoneTutorialButtonText", comment: "Text for the tutorial screem for phone position"))
                     }
                 }
@@ -197,11 +202,6 @@ struct TutorialTestView: View {
                 }
             }
         }
-        .onReceive(pub) { obj in
-            if let obj = obj.userInfo as? [String: String] {
-                showPage.selectedView = obj["pageToDisplay"]
-            }
-        }
     }
 }
 
@@ -225,6 +225,7 @@ struct CLEWintro: View {
                 UserDefaults.standard.setValue(false, forKey: "SavedRoutesTutorialCompleted")
                 UserDefaults.standard.setValue(false, forKey: "FindingSavedRoutesTutorialCompleted")
                 UserDefaults.standard.setValue(false, forKey: "SettingsOptionsTutorialCompleted")
+                UserDefaults.standard.setValue(false, forKey: "SiriWalkthroughTutorialCompleted")
             }) {
                 Text("Reset Tutorial Progress")
             }
@@ -493,6 +494,7 @@ struct PracticeOrientPhone: View {
 
 
 struct FindPath: View {
+    // TODO: when called contextually, we don't want to launch into the test routes
     var body: some View {
         TutorialScreen{
             Text(NSLocalizedString( "findPathTutorialButtonText", comment: "Title for the finding and following path part of the tutorial"))
@@ -637,6 +639,7 @@ struct UsingSingleUse: View {
 
 
 struct AnchorPoints: View {
+    @ObservedObject var showPage = ShowTutorialPage.shared
     var body: some View {
         TutorialScreen  {
             Text(NSLocalizedString( "anchorPointsTutorialTitle", comment: "Title for the anchor point part of the tutorial"))
@@ -654,11 +657,12 @@ struct AnchorPoints: View {
             
         }
         
-        Spacer()
-        TutorialNavLink(destination: SavedRoutes())  {
-            Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
+        if !showPage.confineToSection {
+            Spacer()
+            TutorialNavLink(destination: SavedRoutes())  {
+                Text(NSLocalizedString("buttonTexttoSkip", comment: "Text on the button that brings user to the next page of the tutorial"))
+            }
         }
-        
     }
 }
 
@@ -842,6 +846,7 @@ struct AnchorPointPracticeSubComponent: View {
 }
 
 struct AnchorPointPractice: View {
+    @ObservedObject var showPage = ShowTutorialPage.shared
     //TODO: 1 write instructions 2 align to anchor point twice? 4 count down 5 voice announcments?
     var body: some View {
         TutorialScreen {
@@ -856,9 +861,19 @@ struct AnchorPointPractice: View {
             NotificationCenter.default.post(name: Notification.Name("StartARSession"), object: nil)
         }
         
-        Spacer()
-        TutorialNavLink(destination: SavedRoutes())  {
-            Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
+        if !showPage.confineToSection {
+            Spacer()
+            TutorialNavLink(destination: SavedRoutes())  {
+                Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
+            }
+        } else {
+            Button(action: {
+                NotificationCenter.default.post(name: Notification.Name("TutorialPopoverReadyToDismiss"), object: nil)
+            }) {
+                TutorialButton{
+                    Text("Exit")
+                }
+            }
         }
     }
 }
@@ -973,8 +988,10 @@ struct SettingOptions: View {
 }
 
 struct SiriWalkthrough: View {
+    @ObservedObject var showPage = ShowTutorialPage.shared
     let activityIdentifiers: [String] = [kNewSingleUseRouteType, kStopRecordingType, kStartNavigationType]
-    let minRowHeight = 50
+    let minRowHeight = 75
+    @ObservedObject var siriShortcutsManager = SiriShortcutsManager.shared
     var body: some View {
         TutorialScreen{
             Text(NSLocalizedString( "siriWalkthroughTutorialTitleText", comment: "Title for the Siri walkthrough part of the tutorial"))
@@ -983,20 +1000,19 @@ struct SiriWalkthrough: View {
             Text(NSLocalizedString( "siriWalkthroughTutorialInstructionText", comment: "Information about what the setting options are"))
             //.fixedSize(horizontal: false, vertical: true)
             
-            
-            if !((UIApplication.shared.delegate as? AppDelegate)?.vc.voiceShortcuts.isEmpty ?? true) {
+            if !SiriShortcutsManager.shared.voiceShortcuts.isEmpty {
                 Text("Current Siri Shortcuts for Clew").padding()
 
                 List {
                     ForEach(activityIdentifiers, id: \.self) { identifier in
-                        if let siriShortcut = findShortcut(persistentIdentifier: identifier) {
+                        if let siriShortcut = SiriShortcutsManager.shared.findShortcut(persistentIdentifier: identifier) {
                             HStack {
                                 Text(siriShortcut.shortcut.userActivity!.title!).padding()
                                 Text("\"\(siriShortcut.invocationPhrase)\"").padding()
                             }
                         }
                     }
-                }.frame(minHeight: CGFloat(minRowHeight) * 3).border(Color.black)
+                }.frame(minHeight: CGFloat(minRowHeight * SiriShortcutsManager.shared.voiceShortcuts.count)).border(Color.black)
             }
             TutorialNavLink(destination: SetRecordShortcut()) {
                 Text(NSLocalizedString("siriWalkthroughButtonText", comment: "Title for the Siri Walk Through"))
@@ -1005,12 +1021,12 @@ struct SiriWalkthrough: View {
         }.onDisappear(){
             UserDefaults.standard.setValue(true, forKey: "SiriWalkthroughTutorialCompleted")
         }
-        
-        Spacer()
-        TutorialNavLink(destination: TutorialEndView()) {
-            Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
+        if !showPage.confineToSection {
+            Spacer()
+            TutorialNavLink(destination: TutorialEndView()) {
+                Text(NSLocalizedString("buttonTexttoSkip", comment: "Text on the button that brings user to the next section of the tutorial"))
+            }
         }
-        
     }
 }
 

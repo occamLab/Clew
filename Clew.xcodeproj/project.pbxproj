@@ -36,6 +36,8 @@
 		77467DAF22BBC1D300FA7DEE /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 77467DAE22BBC1D300FA7DEE /* Default-568h@2x.png */; };
 		8214120526D41476003EC2D4 /* SiriWalkThrough.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8214120426D41476003EC2D4 /* SiriWalkThrough.swift */; };
 		8214120626D41477003EC2D4 /* SiriWalkThrough.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8214120426D41476003EC2D4 /* SiriWalkThrough.swift */; };
+		8214120826D497DE003EC2D4 /* SiriShortcutsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8214120726D497DE003EC2D4 /* SiriShortcutsManager.swift */; };
+		8214120926D497DE003EC2D4 /* SiriShortcutsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8214120726D497DE003EC2D4 /* SiriShortcutsManager.swift */; };
 		821CF7842513264400A7B3C2 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 821CF7822513264400A7B3C2 /* InfoPlist.strings */; };
 		823DA454252F7EA800BB5E6B /* speaker.obj in Resources */ = {isa = PBXBuildFile; fileRef = 823DA453252F7EA800BB5E6B /* speaker.obj */; };
 		823DA455252F7EA800BB5E6B /* speaker.obj in Resources */ = {isa = PBXBuildFile; fileRef = 823DA453252F7EA800BB5E6B /* speaker.obj */; };
@@ -198,6 +200,7 @@
 		77467DAE22BBC1D300FA7DEE /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		8206436A23B556A200DEE347 /* es */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = es; path = es.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
 		8214120426D41476003EC2D4 /* SiriWalkThrough.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SiriWalkThrough.swift; sourceTree = "<group>"; };
+		8214120726D497DE003EC2D4 /* SiriShortcutsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SiriShortcutsManager.swift; sourceTree = "<group>"; };
 		821CF7832513264400A7B3C2 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		821CF7892513264400A7B3C2 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		822E27F8210E3F260024A5E3 /* Clew Dev-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Clew Dev-Info.plist"; sourceTree = "<group>"; };
@@ -420,6 +423,7 @@
 				82A417E0262A205A001FCB8C /* AuthenticationHelper.swift */,
 				82BC47FD2640383300C7D364 /* Surveys.swift */,
 				827EDC3326CDA72200AAA12A /* SoundEffectManager.swift */,
+				8214120726D497DE003EC2D4 /* SiriShortcutsManager.swift */,
 			);
 			path = Misc;
 			sourceTree = "<group>";
@@ -893,6 +897,7 @@
 				E5470EF822C119F5001092A4 /* AudioVisualizerView.swift in Sources */,
 				1F2971A522DF60F700B896C6 /* HelpCompiler.swift in Sources */,
 				E5470F1E22C119F5001092A4 /* NSStringExtension.swift in Sources */,
+				8214120826D497DE003EC2D4 /* SiriShortcutsManager.swift in Sources */,
 				E5470F3222C119F5001092A4 /* ResumeTrackingController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -945,6 +950,7 @@
 				E5470F2522C119F5001092A4 /* UIButtonExtensions.swift in Sources */,
 				E5470EF922C119F5001092A4 /* AudioVisualizerView.swift in Sources */,
 				E5470F1F22C119F5001092A4 /* NSStringExtension.swift in Sources */,
+				8214120926D497DE003EC2D4 /* SiriShortcutsManager.swift in Sources */,
 				E5470F3322C119F5001092A4 /* ResumeTrackingController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -719,9 +719,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// stop route navigation VC
     var stopNavigationController: StopNavigationController!
-    ///siri shortcuts VC
-    var siriShortcutsController: SiriShortcutsController!
-    var voiceShortcuts: [INVoiceShortcut] = []
     
     /// called when the view has loaded.  We setup various app elements in here.
     override func viewDidLoad() {
@@ -827,9 +824,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 }
             }
         }
-        updateVoiceShortcuts() {
-            
-        }
+        // make sure to fetch these before we need them
+        SiriShortcutsManager.shared.updateVoiceShortcuts(completion: nil)
     }
     
     /// Create the audio player objdcts for the various app sounds.  Creating them ahead of time helps reduce latency when playing them later.
@@ -929,10 +925,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             // don't show this for now, but leave the plumbing in place for a future significant change
             // showSignificantChangesAlert()
         }
-        //print("always showing alert!")
+        // To test the SiriShortcut alert, comment out the line below
         //siriShortcutAlert = false
         if(!siriShortcutAlert){
-            
             showSignificantChangesHandsFreeAlert()
             siriShortcutAlert = true
         }
@@ -1133,9 +1128,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         self.present(changesAlertVC, animated: true, completion: nil)
     }
     
-    ///significant changes Hands free alert
-    
-    
     /// Show significant changes alert so the user is not surprised by new app features.
     func showSignificantChangesHandsFreeAlert() {
         let changesAlertVC = UIAlertController(title: NSLocalizedString("significantVersionChangesPop-UpHeading", comment: "The heading of a pop-up telling the user that significant changes have been made to this app version"),
@@ -1160,25 +1152,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                                                name: UserDefaults.didChangeNotification,
                                                object: nil)
     }
-    
-    public func updateVoiceShortcuts(completion: (() -> Void)?) {
-       INVoiceShortcutCenter.shared.getAllVoiceShortcuts { (voiceShortcutsFromCenter, error) in
-           guard let voiceShortcutsFromCenter = voiceShortcutsFromCenter else {
-               if let error = error {
-                   print("Failed to fetch voice shortcuts with error: \(error.localizedDescription)")
-               }
-               return
-           }
-           self.voiceShortcuts = voiceShortcutsFromCenter
-           if let completion = completion {
-               completion()
-           }
-       }
-   }
 
     /// Register settings bundle
     func registerSettingsBundle(){
-        let appDefaults = ["crumbColor": 0, "showPath": true, "pathColor": 0, "hapticFeedback": true, "sendLogs": true, "voiceFeedback": true, "soundFeedback": true, "adjustOffset": false, "units": 0, "timerLength":5, "siriShortcutSingleUseRoute": false,  "siriShortcutStopRecordingRoute": false,  "siriShortcutStartNavigatingRoute": false, "siriShortcutAlert": false] as [String : Any]
+        let appDefaults = ["crumbColor": 0, "showPath": true, "pathColor": 0, "hapticFeedback": true, "sendLogs": true, "voiceFeedback": true, "soundFeedback": true, "adjustOffset": false, "units": 0, "timerLength":5, "siriShortcutAlert": false] as [String : Any]
         UserDefaults.standard.register(defaults: appDefaults)
     }
 
@@ -1198,11 +1175,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         adjustOffset = defaults.bool(forKey: "adjustOffset")
         nav.useHeadingOffset = adjustOffset
         
-        // TODO: log settings here
         logger.logSettings(defaultUnit: defaultUnit, defaultColor: defaultColor, soundFeedback: soundFeedback, voiceFeedback: voiceFeedback, hapticFeedback: hapticFeedback, sendLogs: sendLogs, timerLength: timerLength, adjustOffset: adjustOffset)
-        
-        // leads to JSON like:
-        //   options: { "unit": "meter", "soundFeedback", true, ... }
     }
     
     /// Handles updates to the app settings.
@@ -1552,32 +1525,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// true if path should be shown between waypoints, false otherwise
     var showPath: Bool!
-  ///  true if shortcuts are set, false otherwise.
-    var siriShortcutSingleUseRouteFlag: Bool {
-        get {
-            return UserDefaults.standard.bool(forKey:"siriShortcutSingleUseRoute")
-        }
-        set {
-            UserDefaults.standard.setValue(newValue, forKey: "siriShortcutSingleUseRoute")
-        }
-    }
-    var siriShortcutStopRecordingRouteFlag : Bool {
-        get {
-            return UserDefaults.standard.bool(forKey:"siriShortcutStopRecordingRoute")
-        }
-        set {
-            UserDefaults.standard.setValue(newValue, forKey: "siriShortcutStopRecordingRoute")
-        }
-    }
-    var siriShortcutStartNavigatingRouteFlag : Bool {
-        get {
-            UserDefaults.standard.bool(forKey:"siriShortcutStartNavigatingRoute")
-        }
-        set {
-            UserDefaults.standard.setValue(newValue, forKey:"siriShortcutStartNavigatingRoute")
-        }
-
-    }
+  
     var siriShortcutAlert: Bool {
         get {
             UserDefaults.standard.bool(forKey: "siriShortcutAlert")
@@ -1882,9 +1830,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     ///   - mode: type of survey, accepts "onAppLaunch" and "afterRoute" which correspond to the value of the "currentAppLaunchSurvey" and "currentAfterRouteSurvey" keys respectively located in the Firebase Realtime Database at surveys/
     ///   - logFileURLs: this list of URLs will be added to the survey response JSON file if the user winds up submitting the survey.  This makes it easier to link together feedback in the survey with data logs.
     func presentSurveyIfIntervalHasPassed(mode: String, logFileURLs: [String]) {
-        print("overriding surveys!")
-        return
-        
         var surveyToTrigger: String = ""
         
         switch mode {
@@ -2233,9 +2178,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     // Called when help button is pressed
     @objc func helpButtonPressed(withOverride pageToDisplayOverride: String? = nil) {
-        // TODO: allow override of next button if requesting a specific tutorial view (for instance in Siri setup)
+        // TODO: confineToSection is not respected for all tutorial views yet
         var pageToDisplay = pageToDisplayOverride == nil ? "" : pageToDisplayOverride!
-        
+        var confineToSection: Bool = true
         let tutorialView = TutorialTestView()
         tutorialHostingController = UIHostingController(rootView: tutorialView)
         
@@ -2244,6 +2189,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             case .recordingRoute:
                pageToDisplay = "FindPath"
             case .mainScreen(_):
+                confineToSection = false
                 break
             case .readyToNavigateOrPause(allowPause: let allowPause):
                 pageToDisplay = "FindPath"
@@ -2281,13 +2227,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 self.state = .mainScreen(announceArrival: false)
             }
         }
+        ShowTutorialPage.shared.confineToSection = confineToSection
+        ShowTutorialPage.shared.selectedView = pageToDisplay
         NotificationCenter.default.post(name: Notification.Name("ClewPopoverDisplayed"), object: nil)
         self.present(tutorialHostingController!, animated: true, completion: nil)
-        DispatchQueue.main.async {
-            NotificationCenter.default.post(name: Notification.Name("ShowTutorialPage"), object: nil, userInfo: ["pageToDisplay":  pageToDisplay])
-        }
-
-
     }
     
     // Called when home button is pressed

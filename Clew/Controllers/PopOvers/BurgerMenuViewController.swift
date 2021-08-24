@@ -89,10 +89,9 @@ class BurgerMenuViewController: UITableViewController, UIPopoverPresentationCont
         let tutorialView = TutorialTestView()
         tutorialHostingController = UIHostingController(rootView: tutorialView)
         NotificationCenter.default.post(name: Notification.Name("ClewPopoverDisplayed"), object: nil)
-
-        self.present(tutorialHostingController!, animated: true) {
-            NotificationCenter.default.post(name: Notification.Name("ShowTutorialPage"), object: nil, userInfo: ["pageToDisplay":  "SiriWalkthrough"])
-        }
+        ShowTutorialPage.shared.selectedView = "SiriWalkthrough"
+        ShowTutorialPage.shared.confineToSection = true
+        self.present(tutorialHostingController!, animated: true)
     }
     
     /// Called when the help button is pressed.  This function will display the help view (managed by HelpViewController) as a popover.
