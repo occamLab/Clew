@@ -880,7 +880,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             if currentAnnouncement == nil {
                 UIAccessibility.post(notification: UIAccessibility.Notification.announcement, argument: String(newValue))
             }
-//            announce(announcement: String(newValue))
         }
     }
     
@@ -1786,7 +1785,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         resumeTrackingController.remove()
         resumeTrackingConfirmController.remove()
         stopRecordingController.remove()
-        
+        droppingCrumbs?.invalidate()
         ///checks if the route is a single use route or a multiple use route
         if !recordingSingleUseRoute {
             ///PATHPOINT two way route recording finished -> create end Anchor Point

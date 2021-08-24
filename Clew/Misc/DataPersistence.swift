@@ -52,7 +52,6 @@ class DataPersistence {
     /// handler for importing routes from an external temporary file
     /// called in the case of a route being shared from the UIActivityViewController
     /// library
-    /// TODO: Does this need to be a static function?
     func importData(from url: URL) {
         var documentData: RouteDocumentData
         
@@ -141,13 +140,11 @@ class DataPersistence {
                 endVoiceFile = data.base64EncodedString()
             }
         }
-        
-        /// TODO: need to fix to include functionality for phones which don't support
-        /// world maps (> iOS 12)
-            let routeData = RouteDocumentData(route: route,
-                                              map: worldMap,
-                                              beginVoiceNote: beginVoiceFile,
-                                              endVoiceNote: endVoiceFile)
+
+        let routeData = RouteDocumentData(route: route,
+                                          map: worldMap,
+                                          beginVoiceNote: beginVoiceFile,
+                                          endVoiceNote: endVoiceFile)
 
         /// fetch the documents directory where apple stores temporary files
         let documents = FileManager.default.urls(

@@ -32,6 +32,7 @@
 		82E5504826C8B35600D0F8E8 /* CompassHeading.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82E5504626C8B35600D0F8E8 /* CompassHeading.swift */; };
 		82ED60B426CD65DF00527BA9 /* ClewErrorSound.wav in Resources */ = {isa = PBXBuildFile; fileRef = 82ED60B326CD65DF00527BA9 /* ClewErrorSound.wav */; };
 		82ED60B526CD65DF00527BA9 /* ClewErrorSound.wav in Resources */ = {isa = PBXBuildFile; fileRef = 82ED60B326CD65DF00527BA9 /* ClewErrorSound.wav */; };
+		82FE1E4926D53B66008672CE /* arrow.obj in Resources */ = {isa = PBXBuildFile; fileRef = 8233042526C168BA00787637 /* arrow.obj */; };
 		986640CE22FB68F2005AA1F6 /* NameSavedRouteController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986640CD22FB68F2005AA1F6 /* NameSavedRouteController.swift */; };
 		986640CF22FC9606005AA1F6 /* NameSavedRouteController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986640CD22FB68F2005AA1F6 /* NameSavedRouteController.swift */; };
 		B0A563F6FE1007A2716DC876 /* Pods_Clew_Dev.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3532E390954571B93729786A /* Pods_Clew_Dev.framework */; };
@@ -630,6 +631,7 @@
 				E5470F1622C119F5001092A4 /* Assets.xcassets in Resources */,
 				77365B182343ECBA008BC35C /* BurgerMenu.storyboard in Resources */,
 				E59DA6BF22C65F5900FCD5A1 /* LaunchScreen.storyboard in Resources */,
+				82FE1E4926D53B66008672CE /* arrow.obj in Resources */,
 				E5470F4E22C119F5001092A4 /* GoogleService-Info_dev.plist in Resources */,
 				1F2B9D8722C5446B00317DC8 /* (null) in Resources */,
 				E5D1695E22E103A0008754D0 /* Localizable.strings in Resources */,
@@ -1068,12 +1070,12 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = 38;
+				CURRENT_PROJECT_VERSION = 300;
 				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/Clew/PrefixHeader.pch";
 				INFOPLIST_FILE = Clew/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 2.1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = edu.occam.Clew;
@@ -1092,12 +1094,12 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = 38;
+				CURRENT_PROJECT_VERSION = 300;
 				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/Clew/PrefixHeader.pch";
 				INFOPLIST_FILE = Clew/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 2.1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = edu.occam.Clew;
@@ -1116,7 +1118,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 38;
+				CURRENT_PROJECT_VERSION = 300;
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/Clew/PrefixHeader.pch";
 				INFOPLIST_FILE = "Clew Dev-Info.plist";
@@ -1143,7 +1145,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 38;
+				CURRENT_PROJECT_VERSION = 300;
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/Clew/PrefixHeader.pch";
 				INFOPLIST_FILE = "Clew Dev-Info.plist";
@@ -1166,7 +1168,7 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 38;
+				CURRENT_PROJECT_VERSION = 39;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
 				INFOPLIST_FILE = "route-quicklook/Info.plist";
@@ -1188,7 +1190,7 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 38;
+				CURRENT_PROJECT_VERSION = 39;
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
 				INFOPLIST_FILE = "route-quicklook/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
