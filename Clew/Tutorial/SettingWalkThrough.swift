@@ -289,10 +289,53 @@ struct setUpFeedback: View{
             
         }
         Spacer()
-        TutorialNavLink(destination: settingsWalkThroughEndPage())
+        TutorialNavLink(destination: SetPhoneBodyOffset())
             {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
     }
 }
+
+struct SetPhoneBodyOffset: View{
+    @ObservedObject var settings = SettingsWrapper.shared
+    var body: some View {
+        TutorialScreen{
+            Text(NSLocalizedString("settingsWalkThroughPhoneBodyOffsetTitle", comment: "Determine whether to use the phone body offset correction page title")).padding()
+            
+            Text(NSLocalizedString("settingsWalkThroughPhoneBodyOffsetText", comment: "Determine whether to use the phone body offset correction page text"))
+            
+            Button(action:{
+                UserDefaults.standard.setValue(false, forKey: "adjustOffset")
+            }) {
+                if UserDefaults.standard.bool(forKey: "adjustOffset") {
+                    TutorialButtonNotSelected{
+                        Text(NSLocalizedString("settingsWalkThroughDontAdjustPhoneBodyOffset", comment: "Don't correct for phone body offset settings adjustment"))
+                    }
+                } else {
+                    TutorialButtonSelected{
+                        Text(NSLocalizedString("settingsWalkThroughDontAdjustPhoneBodyOffset", comment: "Don't correct for phone body offset settings adjustment"))
+                    }
+                }
+            }
+            
+            Button(action: {
+                UserDefaults.standard.setValue(true, forKey: "adjustOffset")
+            }) {
+                if UserDefaults.standard.bool(forKey: "adjustOffset") {                    TutorialButtonSelected {
+                        Text(NSLocalizedString("settingsWalkThroughAdjustPhoneBodyOffset", comment: "Correct for phone body offset settings adjustment"))
+                    }
+                } else {
+                    TutorialButtonNotSelected {
+                        Text(NSLocalizedString("settingsWalkThroughAdjustPhoneBodyOffset", comment: "Correct for phone body offset settings adjustment"))
+                    }
+                }
+            }
+        }
+        Spacer()
+        TutorialNavLink(destination: settingsWalkThroughEndPage()) {
+            Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
+        }
+    }
+}
+
 
 
 struct settingsWalkThroughEndPage: View{

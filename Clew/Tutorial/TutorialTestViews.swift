@@ -10,6 +10,8 @@ import SwiftUI
 import AVFoundation
 import Foundation
 import SRCountdownTimer
+import Intents
+import IntentsUI
 
 //TODO: make sure we can't access old tutorial modes when clicking next
 //TODO: 1 add content to all pages 4 add localized strings to everything
@@ -986,11 +988,14 @@ struct SettingOptions: View {
     }
 }
 
+// TODO: we are hacking this as a global variable as it does not work properly as @State in SiriWalkthrough
+var siriShortcutToEdit: INVoiceShortcut?
+
 struct SiriWalkthrough: View {
     @ObservedObject var showPage = ShowTutorialPage.shared
     let activityIdentifiers: [String] = [kNewSingleUseRouteType, kStopRecordingType, kStartNavigationType]
-    let minRowHeight = 75
     @ObservedObject var siriShortcutsManager = SiriShortcutsManager.shared
+    @State var presentPopup = false
     var body: some View {
         TutorialScreen{
             Text(NSLocalizedString( "siriWalkthroughTutorialTitleText", comment: "Title for the Siri walkthrough part of the tutorial"))
@@ -1000,18 +1005,28 @@ struct SiriWalkthrough: View {
             //.fixedSize(horizontal: false, vertical: true)
             
             if !SiriShortcutsManager.shared.voiceShortcuts.isEmpty {
-                Text("Current Siri Shortcuts for Clew").padding()
+                Text(NSLocalizedString("currentSiriShortcuts", comment: "this is header text for the list of current Siri shortcuts the user has created within the Clew app")).padding()
 
-                List {
+                VStack(alignment: .leading, spacing: 10) {
                     ForEach(activityIdentifiers, id: \.self) { identifier in
                         if let siriShortcut = SiriShortcutsManager.shared.findShortcut(persistentIdentifier: identifier) {
                             HStack {
-                                Text(siriShortcut.shortcut.userActivity!.title!).padding()
-                                Text("\"\(siriShortcut.invocationPhrase)\"").padding()
+                                Text(siriShortcut.shortcut.userActivity!.title!)
+                                Spacer()
+                                Button(action: {
+                                    siriShortcutToEdit = siriShortcut
+                                    presentPopup.toggle()
+                                }) {
+                                    Text("\"\(siriShortcut.invocationPhrase)\"")
+                                }
                             }
                         }
                     }
-                }.frame(minHeight: CGFloat(minRowHeight * SiriShortcutsManager.shared.voiceShortcuts.count)).border(Color.black)
+                }.sheet(isPresented: $presentPopup) {
+                    if let siriShortcut = siriShortcutToEdit {
+                        EditShortcutWrapper(voiceShortCut: siriShortcut, showModal: $presentPopup)
+                    }
+                }
             }
             TutorialNavLink(destination: SetRecordShortcut()) {
                 Text(NSLocalizedString("siriWalkthroughButtonText", comment: "Title for the Siri Walk Through"))
