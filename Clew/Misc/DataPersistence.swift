@@ -166,8 +166,6 @@ class DataPersistence {
             }
         }
         
-        /// TODO: need to fix to include functionality for phones which don't support
-        /// world maps (> iOS 12)
         let routeData = RouteDocumentData(route: route,
                                           map: worldMap,
                                           beginVoiceNote: beginVoiceFile,
@@ -204,16 +202,14 @@ class DataPersistence {
     ///
     /// - Parameter id: the map id to fetch
     /// - Returns: the stored map
-    func unarchiveMap(id: String) -> Any? {
-        if #available(iOS 12.0, *) {
-            do {
-                let data = try Data(contentsOf: getWorldMapURL(id: id))
-                guard let unarchivedObject = ((try? NSKeyedUnarchiver.unarchivedObject(ofClass: ARWorldMap.self, from: data)) as ARWorldMap??),
-                    let worldMap = unarchivedObject else { return nil }
-                return worldMap
-            } catch {
-                print("Error retrieving world map data.")
-            }
+    func unarchiveMap(id: String) -> ARWorldMap? {
+        do {
+            let data = try Data(contentsOf: getWorldMapURL(id: id))
+            guard let unarchivedObject = ((try? NSKeyedUnarchiver.unarchivedObject(ofClass: ARWorldMap.self, from: data)) as ARWorldMap??),
+                let worldMap = unarchivedObject else { return nil }
+            return worldMap
+        } catch {
+            print("Error retrieving world map data.")
         }
         return nil
     }

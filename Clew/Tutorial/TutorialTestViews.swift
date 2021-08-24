@@ -11,6 +11,7 @@ import AVFoundation
 import Foundation
 import SRCountdownTimer
 
+//TODO: make sure we can't access old tutorial modes when clicking next
 //TODO: 1 add content to all pages 4 add localized strings to everything
 //TODO: stop AR session when needed based on the tutorial state
 //TODO: make sure contextual help makes sense in all cases (e.g., the recording use case doesn't really work)
@@ -384,47 +385,8 @@ struct PracticeOrientPhoneSubComponent: View {
         if let transform = arData.transform {
             //Creates a text box that gives visual feedback by shifting from red to yellow to green as a user holds thier phone correctly
             let y = transform.columns.0.y
-            //Text("y-component \(y)")
-            if started {
-                if y < -0.9 {
-                    Text("score \(self.score)")
-                        //TODO: localize string score
-                        .frame(minWidth: 0, maxWidth: 150)
-                        .padding()
-                        .foregroundColor(.black)
-                        .background(Color.green)
-                        .cornerRadius(10)
-                        .font(.system(size: 18, weight: .bold))
-                }
-                else if y < -0.7 && y > -0.9 {
-                    Text("score \(self.score)")
-                        .frame(minWidth: 0, maxWidth: 150) //TODO: figure out how to not write all of this over and over again and be able to change the color
-                        .padding()
-                        .foregroundColor(.black)
-                        .background(Color.yellow)
-                        .cornerRadius(10)
-                        .font(.system(size: 18, weight: .bold))
-                }
-                else {
-                    Text("score \(self.score)")
-                        .frame(minWidth: 0, maxWidth: 150)
-                        .padding()
-                        .foregroundColor(.black)
-                        .background(Color.red)
-                        .cornerRadius(10)
-                        .font(.system(size: 18, weight: .bold))
-                }
-            } else {
-                Text("score \(self.score)")
-                    .frame(minWidth: 0, maxWidth: 150)
-                    .padding()
-                    .foregroundColor(.black)
-                    .background(Color.blue)
-                    .cornerRadius(10)
-                    .font(.system(size: 18, weight: .bold))
-            }
+            Text("\(NSLocalizedString("score", comment: "used to define the score of the user when practicing a skill")) \(self.score)").applyStylingForOrientationTutorial(started: started, xDeviceOnGlobalY: y)
         }
-        
         
         if score >= 3 {
             Text(NSLocalizedString("orientPhoneTutorialPracticeSuccess", comment: "Text when user has completed the phone position practice"))
@@ -466,11 +428,49 @@ struct PracticeOrientPhoneSubComponent: View {
     }
 }
 
+extension Text {
+    func applyStylingForOrientationTutorial(started: Bool, xDeviceOnGlobalY: Float)->some View {
+        if started {
+            if xDeviceOnGlobalY < -0.9 {
+                return self
+                .frame(minWidth: 0, maxWidth: 150)
+                .padding()
+                .foregroundColor(.black)
+                .background(Color.green)
+                .cornerRadius(10)
+                .font(.system(size: 18, weight: .bold))
+            } else if xDeviceOnGlobalY < -0.7 {
+                return self
+                    .frame(minWidth: 0, maxWidth: 150) //TODO: figure out how to not write all of this over and over again and be able to change the color
+                    .padding()
+                    .foregroundColor(.black)
+                    .background(Color.yellow)
+                    .cornerRadius(10)
+                    .font(.system(size: 18, weight: .bold))
+            } else {
+                return self
+                    .frame(minWidth: 0, maxWidth: 150)
+                    .padding()
+                    .foregroundColor(.black)
+                    .background(Color.red)
+                    .cornerRadius(10)
+                    .font(.system(size: 18, weight: .bold))
+            }
+        } else {
+            return self
+                .frame(minWidth: 0, maxWidth: 150)
+                .padding()
+                .foregroundColor(.black)
+                .background(Color.blue)
+                .cornerRadius(10)
+                .font(.system(size: 18, weight: .bold))
+        }
+    }
+}
+
 
 struct PracticeOrientPhone: View {
     //TODO: 1 add notification to remind people that they have to move their phone out of the correct position and back to get another point.
-    //@State private var successAlert = false
-
     @State var successSound: AVAudioPlayer?
     @State var didCompleteActivity: Bool = false
     var body: some View {
@@ -728,6 +728,21 @@ struct AnchorPointPracticeSubComponent: View {
     static let yawGoodThreshold = Float(0.5)
     
     var body: some View {
+        Image("Align")
+            .resizable()
+            .frame(width: 100, height: 100)
+        
+        if practiceState == .anchorPointSet || practiceState == .anchorPointAlignmentRequested {
+            Text(NSLocalizedString("anchorPointPracticeAlignTitle", comment: "Align to anchor point page title")).padding()
+            
+            Text(NSLocalizedString("anchorPointPracticeAlignText", comment: "Align to anchor point page instructions")).padding()
+        } else if practiceState == .initial || practiceState == .anchorPointCreationRequested {
+            //when starting anchor point practice
+            Text(NSLocalizedString("anchorPointPracticeSetTutorialTitle", comment: "Set an anchor point practice page title")).padding()
+            
+            Text(NSLocalizedString("anchorPointPracticeSetTutorialText", comment: "Set an anchor point practice page instructions")).padding()
+        }
+        
         if practiceState == .anchorPointCreationRequested {
             CountdownView(timerDelegate: timerDelegate)
                 .frame(minWidth: 100, maxWidth: 100, minHeight: 100, maxHeight: 100)
@@ -741,7 +756,7 @@ struct AnchorPointPracticeSubComponent: View {
                             xyzYawSet = [x, y, z, yaw]
                         }
                         practiceState = .anchorPointSet
-                        SoundEffectManager.shared.success()
+                        SoundEffectManager.shared.meh()
                     }
                 }
         } else if practiceState == .anchorPointAlignmentRequested {
@@ -765,24 +780,24 @@ struct AnchorPointPracticeSubComponent: View {
                             accuracy = .bad
                             SoundEffectManager.shared.error()
                         }
-                        practiceState = .anchorPointAligned
+                        DispatchQueue.main.async {
+                            practiceState = .anchorPointAligned
+                        }
                     }
             }
         }
         if practiceState == .anchorPointAligned {
             //once anchor point is aligned
-            // Text("x, y, z, yaw \(xyzYawAlign[0] - xyzYawSet[0]), \(xyzYawAlign[1] - xyzYawSet[1]), \(xyzYawAlign[2] - xyzYawSet[2]), \(xyzYawAlign[3] - xyzYawSet[3])")//TODO: Delete when done testing
-            
             switch accuracy {
             case .perfect:
-                Text(NSLocalizedString("anchorPointPracticeFeedbackPerfectTitle", comment: "anchor point perfectly aligned heading"))
-                Text(NSLocalizedString("anchorPointPracticeFeedbackPerfectText", comment: "anchor point perfectly aligned text"))
+                Text(NSLocalizedString("anchorPointPracticeFeedbackPerfectTitle", comment: "anchor point perfectly aligned heading")).padding()
+                Text(NSLocalizedString("anchorPointPracticeFeedbackPerfectText", comment: "anchor point perfectly aligned text")).padding()
             case .good:
-                Text(NSLocalizedString("anchorPointPracticeFeedbackGoodTitle", comment: "anchor point well aligned header"))
-                Text(NSLocalizedString("anchorPointPracticeFeedbackGoodText", comment: "anchor point well aligned text"))
+                Text(NSLocalizedString("anchorPointPracticeFeedbackGoodTitle", comment: "anchor point well aligned header")).padding()
+                Text(NSLocalizedString("anchorPointPracticeFeedbackGoodText", comment: "anchor point well aligned text")).padding()
             default:
-                Text(NSLocalizedString("anchorPointPracticeFeedbackBadTitle", comment: "anchor point not well aligned header"))
-                Text(NSLocalizedString("anchorPointPracticeFeedbackBadText", comment: "anchor point not well aligned text"))
+                Text(NSLocalizedString("anchorPointPracticeFeedbackBadTitle", comment: "anchor point not well aligned header")).padding()
+                Text(NSLocalizedString("anchorPointPracticeFeedbackBadText", comment: "anchor point not well aligned text")).padding()
             }
             
             Button(action: {
@@ -791,7 +806,7 @@ struct AnchorPointPracticeSubComponent: View {
                 TutorialButton{
                     Text(NSLocalizedString("anchorPointPracticeRetryAlignButton", comment: "button text to retry aligning the anchor point"))
                 }
-            }
+            }.padding()
             
             Button(action: {
                 practiceState = .initial
@@ -799,48 +814,32 @@ struct AnchorPointPracticeSubComponent: View {
                 TutorialButton{
                     Text(NSLocalizedString("anchorPointPracticeRetryButton", comment: "button text to retry setting the anchor point"))
                 }
-            }
+            }.padding()
             
             TutorialNavLink(destination: AnchorPointTips())  {
                 Text(NSLocalizedString("tipTutorialTitle", comment: "Button to tips page"))
-            }
+            }.padding()
         } else if practiceState == .anchorPointSet {
             //Once anchor point is set
-            Text(NSLocalizedString("anchorPointPracticeAlignTitle", comment: "Align to anchor point page title"))
-            
-            Text(NSLocalizedString("anchorPointPracticeAlignText", comment: "Align to anchor point page instructions"))
-            
             Button(action: {
                 if practiceState == .anchorPointSet {
                     practiceState = .anchorPointAlignmentRequested
                 }
             }) {
-                Image("Align")
-                    .resizable()
-                    .frame(width: 200, height: 200)
-            }.disabled(practiceState == .anchorPointAlignmentRequested)
-            Button(action: {
-                practiceState = .initial
-            }) {
-                TutorialButton{Text(NSLocalizedString("anchorPointPracticeRetryButton", comment: "button text to retry setting the anchor point"))
+                TutorialButton {
+                    Text(NSLocalizedString("alignToAnchorPointButtonText", comment: "The text shown on the button that aligns to the anchor point during the tutorial"))
                 }
-            }
-        } else {
-            //when starting anchor point practice
-            Text(NSLocalizedString("anchorPointPracticeSetTutorialTitle", comment: "Set an anchor point practice page title"))
-            
-            Text(NSLocalizedString("anchorPointPracticeSetTutorialText", comment: "Set an anchor point practice page instructions"))
-            
+            }.disabled(practiceState == .anchorPointAlignmentRequested)
+        } else if practiceState == .initial {
             Button(action: {
-                //TODO: do count down, hid button until after countdown and wait a least a little bit longer before you can hit align again, play a success sound(?)
                 if practiceState == .initial {
                     practiceState = .anchorPointCreationRequested
                 }
             }) {
-                Image("Align")
-                    .resizable()
-                    .frame(width: 200, height: 200)
-            }.disabled(practiceState == .anchorPointCreationRequested)
+                TutorialButton {
+                    Text(NSLocalizedString("setAnchorPointButtonText", comment: "The text shown on the button that sets the anchor point during the tutorial"))
+                }
+            }
         }
     }
 }

@@ -109,8 +109,8 @@ class FeedbackLogger {
             let data = try JSONSerialization.data(withJSONObject: body, options: .prettyPrinted)
             ///returns the data properly combined and formatted
             return data
-        }catch {
-        print(error.localizedDescription)
+        } catch {
+            print(error.localizedDescription)
         }
         return nil
     }

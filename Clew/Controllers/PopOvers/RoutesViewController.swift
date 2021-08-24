@@ -106,7 +106,6 @@ class RoutesViewController : UIViewController, UITableViewDataSource, UITableVie
             let url = self.rootViewController?.dataPersistence.exportToURL(route: self.routes[indexPath.row])
             
             /// define share menu content and a message to show with it
-            /// TODO: localize
             let activity = UIActivityViewController(
                 activityItems: [NSLocalizedString("automaticEmailTextWhenSharingRoutes", comment: "The text added to an email for sharing routes."), url as Any],
                 applicationActivities: nil

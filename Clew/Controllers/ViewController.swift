@@ -61,11 +61,11 @@ enum AppState {
     /// user has successfully paused the ARSession
     case pauseProcedureCompleted
     /// user has hit the resume button and is waiting for the volume to hit
-    case startingResumeProcedure(route: SavedRoute, worldMap: Any?, navigateStartToEnd: Bool)
+    case startingResumeProcedure(route: SavedRoute, worldMap: ARWorldMap?, navigateStartToEnd: Bool)
     /// the AR session has entered the relocalizing state, which means that we can now realign the session
     case readyForFinalResumeAlignment
     /// the user is attempting to name the route they're in the process of saving
-    case startingNameSavedRouteProcedure(worldMap: Any?)
+    case startingNameSavedRouteProcedure(worldMap: ARWorldMap?)
     
     /// rawValue is useful for serializing state values, which we are currently using for our logging feature
     var rawValue: String {
@@ -253,9 +253,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         // if the ARSession is running, pause it to conserve battery
         sceneView.session.pause()
         // set this to nil to prevent the app from erroneously detecting that we can auto-align to the route
-        if #available(iOS 12.0, *) {
-            configuration.initialWorldMap = nil
-        }
+        configuration.initialWorldMap = nil
         showRecordPathButton(announceArrival: announceArrival)
     }
     
@@ -268,9 +266,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         // if the ARSession is running, pause it to conserve battery
         sceneView.session.pause()
         // set this to nil to prevent the app from erroneously detecting that we can auto-align to the route
-        if #available(iOS 12.0, *) {
-            configuration.initialWorldMap = nil
-        }
+        configuration.initialWorldMap = nil
         showRecordPathButton(announceArrival: announceArrival)
         helpButtonPressed()
         // show the tutorial again
@@ -375,7 +371,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     ///   - route: the route to navigate
     ///   - worldMap: the world map to use
     ///   - navigateStartToEnd: a Boolean that is true if we want to navigate from the start to the end and false if we want to navigate from the end to the start.
-    func handleStateTransitionToStartingResumeProcedure(route: SavedRoute, worldMap: Any?, navigateStartToEnd: Bool) {
+    func handleStateTransitionToStartingResumeProcedure(route: SavedRoute, worldMap: ARWorldMap?, navigateStartToEnd: Bool) {
         logger.setCurrentRoute(route: route, worldMap: worldMap)
         
         // load the world map and restart the session so that things have a chance to quiet down before putting it up to the wall
@@ -388,7 +384,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             isRelocalizing = true
         }
         var isSameMap = false
-        if #available(iOS 12.0, *), let worldMap = worldMap as? ARWorldMap? {
+        if let worldMap = worldMap {
             isSameMap = configuration.initialWorldMap != nil && configuration.initialWorldMap == worldMap
             configuration.initialWorldMap = worldMap
             attemptingRelocalization =  isSameMap && !isTrackingPerformanceNormal || worldMap != nil && !isSameMap
@@ -514,17 +510,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             // no more crumbs
             droppingCrumbs?.invalidate()
 
-            if #available(iOS 12.0, *) {
-                sceneView.session.getCurrentWorldMap { worldMap, error in
-                    self.completingPauseProcedureHelper(worldMap: worldMap)
-                }
-            } else {
-                completingPauseProcedureHelper(worldMap: nil)
+            sceneView.session.getCurrentWorldMap { worldMap, error in
+                self.completingPauseProcedureHelper(worldMap: worldMap)
             }
         }
     }
     
-    func completingPauseProcedureHelper(worldMap: Any?) {
+    func completingPauseProcedureHelper(worldMap: ARWorldMap?) {
         //check whether or not the path was called from the pause menu or not
         if paused {
             ///PATHPOINT pause recording anchor point alignment timer -> resume tracking
@@ -1318,8 +1310,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         startNavigationController.largeHomeButton.isHidden = recordingSingleUseRoute
         startNavigationController.stackView.layoutIfNeeded()
     
-        // TODO: why is this here?
-        announce(announcement: NSLocalizedString("stoppedTrachingSessionAnnouncement", comment: "An announcement which lets the user know that they have stopped recording the route."))
+        announce(announcement: NSLocalizedString("stoppedRecordingAnnouncement", comment: "An announcement which lets the user know that they have stopped recording the route."))
         
         UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: startNavigationController.startNavigationButton)
     }
@@ -1570,9 +1561,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// the route just recorded.  This is useful for when the user resumes a route that wasn't saved.
     var justTraveledRoute: SavedRoute?
     
-    
     /// the most recently used map.  This helps us determine whether a route the user is attempting to load requires alignment.  If we have already aligned within a particular map, we can skip the alignment procedure.
-    var justUsedMap : Any?
+    var justUsedMap : ARWorldMap?
     
     /// DirectionText based on hapic/voice settings
     var Directions: Dictionary<Int, String> {
@@ -1640,9 +1630,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             //sends the user to the screen where they can start recording a route
             self.state = .startingPauseProcedure
         }
-        if #available(iOS 12.0, *) {
-            configuration.initialWorldMap = nil
-        }
+        configuration.initialWorldMap = nil
         sceneView.session.run(configuration, options: [.removeExistingAnchors, .resetTracking])
     }
     
@@ -1754,9 +1742,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             //sends the user to the screen where they can start recording a route
             self.state = .recordingRoute
         }
-        if #available(iOS 12.0, *) {
-            configuration.initialWorldMap = nil
-        }
+        configuration.initialWorldMap = nil
         sceneView.session.run(configuration, options: [.removeExistingAnchors, .resetTracking])
     }
     /// this is called after the alignment countdown timer finishes in order to complete the pause tracking procedure
@@ -2185,41 +2171,43 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         tutorialHostingController = UIHostingController(rootView: tutorialView)
         
         if pageToDisplayOverride == nil { // determine based on the state
+            // TODO: we are turning off contextual help for this release
+            confineToSection = false
             switch state {
             case .recordingRoute:
-               pageToDisplay = "FindPath"
+                break //pageToDisplay = "FindPath"
             case .mainScreen(_):
                 confineToSection = false
                 break
             case .readyToNavigateOrPause(allowPause: let allowPause):
-                pageToDisplay = "FindPath"
+                break // pageToDisplay = "FindPath"
                 
             case .navigatingRoute:
-                pageToDisplay = "FindPath"
+                break // pageToDisplay = "FindPath"
                 
             case .initializing:
-                pageToDisplay = "FindPath"
+                break // pageToDisplay = "FindPath"
                 
             case .startingPauseProcedure:
-                pageToDisplay = "SavedRoutes"
+                break // pageToDisplay = "SavedRoutes"
                 
             case .pauseWaitingPeriod:
-                pageToDisplay = "AnchorPoints"
+                break // pageToDisplay = "AnchorPoints"
                 
             case .completingPauseProcedure:
-                pageToDisplay = "AnchorPoints"
+                break // pageToDisplay = "AnchorPoints"
                 
             case .pauseProcedureCompleted:
-                pageToDisplay = "AnchorPoints"
+                break // pageToDisplay = "AnchorPoints"
                 
             case .startingResumeProcedure(route: let route, worldMap: let worldMap, navigateStartToEnd: let navigateStartToEnd):
-                pageToDisplay = "FindPath"
+                break // pageToDisplay = "FindPath"
                 
             case .readyForFinalResumeAlignment:
-                pageToDisplay = "FindPath"
+                break // pageToDisplay = "FindPath"
                 
             case .startingNameSavedRouteProcedure(worldMap: let worldMap):
-                    pageToDisplay = "FindingSavedRoutes"
+                break // pageToDisplay = "FindingSavedRoutes"
                 
             case .finishedTutorialRoute(_):
                 let tutorialView = PracticeSuccess()
@@ -2230,7 +2218,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         ShowTutorialPage.shared.confineToSection = confineToSection
         ShowTutorialPage.shared.selectedView = pageToDisplay
         NotificationCenter.default.post(name: Notification.Name("ClewPopoverDisplayed"), object: nil)
-        self.present(tutorialHostingController!, animated: true, completion: nil)
+        self.present(tutorialHostingController!, animated: false, completion: nil)
     }
     
     // Called when home button is pressed
@@ -2336,7 +2324,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
     }
     
-    /// TODO
+    /// This function renders a spinning blue speaker icon at the location of a voice note
     func renderIntermediateAnchorPoints() {
         for intermediateAnchorPoint in intermediateAnchorPoints {
             guard let transform = intermediateAnchorPoint.transform else {
@@ -2660,7 +2648,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 continuation()
             }
             
-            if #available(iOS 12.0, *), configuration.initialWorldMap != nil, attemptingRelocalization {
+            if configuration.initialWorldMap != nil, attemptingRelocalization {
                 // This call is necessary to cancel any pending setWorldOrigin call from the alignment procedure.  Depending on timing, it's possible for the relocalization *and* the realignment to both be applied.  This results in the origin essentially being shifted twice and things are then way off
                 session.setWorldOrigin(relativeTransform: matrix_identity_float4x4)
                 if !suppressTrackingWarnings {
@@ -2685,7 +2673,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 isAutomaticAlignment = true
                 
                 ///PATHPOINT: Auto Alignment -> resume route
-                // TODO: we mgiht be able to simplify this flow w.r.t. isTutorial flag
                 if case .readyForFinalResumeAlignment = state {
                     if !isTutorial {
                         state = .readyToNavigateOrPause(allowPause: false)

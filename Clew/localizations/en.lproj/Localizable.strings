@@ -31,7 +31,7 @@
 "fixedTrackingAnnouncement" = "Tracking performance normal.";
 "properDevicePositioningAnnouncement" = "Hold vertically with the rear camera facing forward.";
 "completedNavigationAnnouncement" = "You've arrived.";
-"stoppedTrachingSessionAnnouncement"="You've now stopped recording the route";
+"stoppedRecordingAnnouncement"="You've now stopped recording the route";
     // Name of labels that appear in UI
 "saveARouteButtonText" = "Save Route";
 "saveARouteButtonAccessibilityLabel" = "Save a route";
@@ -351,6 +351,9 @@ Line your body up with a doorway, or put your back against a wall, brace your ph
 
 You could also try pressing the top edge of your phone against a table, wall or doorway and then setting the anchor point. That way when you go to find the spot where you should set the anchor point again, you only have to find a table or wall again and then you know you’re at least pretty close.";
 "anchorPointPracticeSetTutorialTitle" = "Set Anchor Point";
+"setAnchorPointButtonText" = "Set Anchor Point";
+"alignToAnchorPointButtonText" = "Align to Anchor Point";
+
 "anchorPointPracticeSetTutorialText" = "Here you will practice setting an anchor point and then finding that anchor point. This practice will then give you feedback on how close you were to setting the anchor points in the same spot. To set your first anchor point, press the align button and wait for the count down.";
 "anchorPointPracticeAlignTitle" = "Align to Anchor Point";
 "anchorPointPracticeAlignText" = "Nice Job! You've set an anchor point!

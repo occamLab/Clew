@@ -54,7 +54,6 @@ class AuthenticationHelper: NSObject, ASAuthorizationControllerDelegate, ASAutho
     // Unhashed nonce.
     fileprivate var currentNonce: String?
 
-    @available(iOS 13, *)
     func startSignInWithAppleFlow() {
       let nonce = randomNonceString()
       currentNonce = nonce
@@ -69,7 +68,6 @@ class AuthenticationHelper: NSObject, ASAuthorizationControllerDelegate, ASAutho
       authorizationController.performRequests()
     }
 
-    @available(iOS 13, *)
     private func sha256(_ input: String) -> String {
       let inputData = Data(input.utf8)
       let hashedData = SHA256.hash(data: inputData)

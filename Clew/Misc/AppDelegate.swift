@@ -41,32 +41,29 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         #endif
         logUserProperties()
         // use for testing sign-in flow
-        
-        try? Auth.auth().signOut()
-        if #available(iOS 13.0, *) {
-            if (Auth.auth().currentUser == nil) {
-                #if IS_DEV_TARGET
-                    Auth.auth().signInAnonymously() { (authResult, error) in
-                        guard let authResult = authResult else {
-                            print("login error", error!.localizedDescription)
-                            return
-                        }
-                        print("successful login", Auth.auth().currentUser?.uid)
-                        // Override point for customization after application launch.
-                        self.vc = ViewController()
-                        self.window = UIWindow(frame:UIScreen.main.bounds)
-                        self.window?.rootViewController = self.vc
-                        self.window?.makeKeyAndVisible()
+        // try? Auth.auth().signOut()
+        if (Auth.auth().currentUser == nil) {
+            #if IS_DEV_TARGET
+                Auth.auth().signInAnonymously() { (authResult, error) in
+                    guard let authResult = authResult else {
+                        print("login error", error!.localizedDescription)
+                        return
                     }
-                    return true
-                #else
-                    window = UIWindow(frame:UIScreen.main.bounds)
-                    window?.makeKeyAndVisible()
-                    window?.rootViewController = AppleSignInController()
-                    UIApplication.shared.isIdleTimerDisabled = true
-                    return true
-                #endif
-            }
+                    print("successful login", Auth.auth().currentUser?.uid)
+                    // Override point for customization after application launch.
+                    self.vc = ViewController()
+                    self.window = UIWindow(frame:UIScreen.main.bounds)
+                    self.window?.rootViewController = self.vc
+                    self.window?.makeKeyAndVisible()
+                }
+                return true
+            #else
+                window = UIWindow(frame:UIScreen.main.bounds)
+                window?.makeKeyAndVisible()
+                window?.rootViewController = AppleSignInController()
+                UIApplication.shared.isIdleTimerDisabled = true
+                return true
+            #endif
         }
         
         // Override point for customization after application launch.
