@@ -227,9 +227,9 @@
 
 "followingARouteCorrectOffsetAutomaticallyHeader" = "Automatic Correction of Phone / Body Offset";
 
-"followingARouteCorrectOffsetAutomaticallyContentParagraph1" = "By default, Clew guides you along a route using the direction your phone is facing.  Because of this, if you are walking forward but your phone is not pointing straight ahead, the guidance the app provides may be confusing.  If you are finding this to be an issue, you can enable the setting &quot;Correct Offset of Phone / Body&quot;.  When this setting is enabled, the app will use periods where you are moving to determine if your phone is not pointing straight ahead (in the same direction as you are facing).  If the app determines that your phone is not pointing straight ahead, the app will adjust its feedback so that it is relative to the direction your body is facing rather than the direction that your phone is facing.";
+"followingARouteCorrectOffsetAutomaticallyContentParagraph1" = "By default, Clew provides guidance in reference to the direction your phone is facing.  If you have difficulty perceibing your phone's direction, the guidance the app provides may be confusing.  If this is an issue for you, you can enable automatic correction of phone / body offset below.";
 
-"followingARouteCorrectOffsetAutomaticallyContentParagraph2" = "When using the &quot;Correct Offset of Phone / Body&quot; it is best to brace your phone against your chest and rotate your body to find the correct direction to travel next (as you rotate your body, the phone should stay braced to your chest and rotate with you).  Note that walking backwards or sideways will cause the app to incorrectly determine the relationship between the phone and your body.  if this happens, you can either disable the option or walk forward a few steps to reset the app's estimates.";
+"followingARouteCorrectOffsetAutomaticallyContentParagraph2" = "If you enable this setting, you should scan for the next waypoint by rotating your body while holding your phone fixed (e.g., against braced against your chest).";
 
 "appSoundsAndTheirMeaningsHeader" = "App sounds and their meanings";
 
@@ -401,7 +401,6 @@ You can also reenter the settings walk through that popped up when you first ent
 "settingsWalkThroughPhoneBodyOffsetTitle" = "Correct for Phone / Body Offset?";
 "settingsWalkThroughDontAdjustPhoneBodyOffset" = "Don't Automatically Correct Offset";
 "settingsWalkThroughAdjustPhoneBodyOffset" = "Automatically Correct Offset";
-"settingsWalkThroughPhoneBodyOffsetText" = "Explanatory text goes here";
 
 //Sharing routes
 "automaticEmailTextWhenSharingRoutes" = "Check out this route!";

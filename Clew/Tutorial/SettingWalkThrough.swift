@@ -300,7 +300,10 @@ struct SetPhoneBodyOffset: View{
         TutorialScreen{
             Text(NSLocalizedString("settingsWalkThroughPhoneBodyOffsetTitle", comment: "Determine whether to use the phone body offset correction page title")).padding()
             
-            Text(NSLocalizedString("settingsWalkThroughPhoneBodyOffsetText", comment: "Determine whether to use the phone body offset correction page text"))
+            Text(NSLocalizedString("followingARouteCorrectOffsetAutomaticallyContentParagraph1", comment: "Determine whether to use the phone body offset correction page text"))
+            
+            Text(NSLocalizedString("followingARouteCorrectOffsetAutomaticallyContentParagraph2", comment: "Determine whether to use the phone body offset correction page text"))
+
             
             Button(action:{
                 UserDefaults.standard.setValue(false, forKey: "adjustOffset")
