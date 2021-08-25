@@ -227,7 +227,7 @@
 
 "followingARouteCorrectOffsetAutomaticallyHeader" = "Automatic Correction of Phone / Body Offset";
 
-"followingARouteCorrectOffsetAutomaticallyContentParagraph1" = "By default, Clew provides guidance in reference to the direction your phone is facing.  If you have difficulty perceibing your phone's direction, the guidance the app provides may be confusing.  If this is an issue for you, you can enable automatic correction of phone / body offset below.";
+"followingARouteCorrectOffsetAutomaticallyContentParagraph1" = "By default, Clew provides guidance in reference to the direction your phone is facing.  If you have difficulty perceiving your phone's direction, the guidance the app provides may be confusing.  If this is an issue for you, you can enable automatic correction of phone / body offset below.";
 
 "followingARouteCorrectOffsetAutomaticallyContentParagraph2" = "If you enable this setting, you should scan for the next waypoint by rotating your body while holding your phone fixed (e.g., against braced against your chest).";
 
@@ -289,67 +289,148 @@
 
 
 "ClewIntroTutorialTitle" = "Intro to Clew";
-"ClewIntroTutorialText" = "Welcome to Clew! Clew helps you navigate and explore indoor spaces by using your phone's camera. It acts as a 'sighted companion' that helps guide you by providing audio directions and queues along a route. Clew works best in indoor spaces, where GPS doesn't work or is unreliable.";
+"ClewIntroTutorialText" = "Welcome to Clew! Clew helps you navigate and explore indoor spaces by using your phone's camera and inertial sensors. It acts as a 'sighted companion' that helps guide you along a route by providing audio directions and cues. Clew works best within indoor spaces, where GPS doesn't work or is unreliable.";
+
 "introUsingClewTitle" = "Using Clew";
-"introUsingClewText" = "Clew helps you find your way around indoors spaces by recording your route when you're going from one place to another. For example, from a lobby area to a room. By recording your route, Clew then helps you navigate your way back to where you started. Clew can help you learn a new environment, so you can confidently navigate it in the future.";
-"introClewsRoleTutorialTitle" = "Clew’s Role";
-"introClewsRoleTutorialText" = "Importantly, Clew is not a substitute for your orientation and mobility skills, nor a replacement for your white cane or guide dog. It's intended to work as an additional aid and can be used with or without a sighted guide.
+"introUsingClewTextParagraph1" = "Clew helps you find your way around indoors spaces by recording your route when you're going from one place to another. For example, from a lobby area to a room. By recording your route, Clew then helps you navigate your way back to where you started. Clew can help you learn a new environment, so you can confidently navigate it in the future.";
 
-Clew is best used indoors. The app doesn't rely on your phone's GPS. This means that Clew is limited in outdoors spaces and for routes over long distances.";
-"introUsingClewTutorialTitle" = "Using this Tutorial";
-"introUsingClewTutorialText" = "This tutorial will help you learn the skills needed to use Clew. If you are new to Clew, we recommend that you first use the app in an indoor setting that is safe and familiar to you.
+"introUsingClewTextParagraph2" = "Clew is best used indoors. The app doesn't rely on your phone's GPS. This means that Clew is limited in outdoors spaces and for routes over long distances.";
 
-The tutorials in the series include interactive practice exercises that you can do while in a familiar setting. We recommend that you practice using Clew by interacting with this tutorial, and by practicing using the main Clew app in your familiar space. You can always come back to any of the guides in this series.";
+"introClewsRoleTutorialTitle" = "Important Safety Info - Clew’s Intended Role";
+
+"introClewsRoleTutorialTextParagraph1" = "Clew is not a substitute for your orientation and mobility skills. It is not a replacement for your white cane, guide dog or primary mobility aid. Clew is intended to work as an additional aid or to complement and enhance your orientation and navigation skills.";
+
+"introClewsRoleTutorialTextParagraph2" = "Please be aware of your surroundings while using the app. It is your responsibility to maintain your personal safety at all times while using Clew.";
+
+"introClewsRoleTutorialTextParagraph3" = "If you are new to Clew, we recommend that you first use the app in an indoor setting that is safe and familiar to you.";
+
+"introClewsRoleTutorialTextParagraph4" = "You acknowledge and agree that your use of the app is at your own risk.";
+
+"introUsingClewTutorialTitle" = "Using This Tutorial";
+"introUsingClewTutorialText" = "This tutorial will help you learn the skills needed to use Clew. Each module focuses on a particular skill set and feature of the app. Some of the modules include interactive practice exercises. We recommend that you first use the app in an indoor setting that is safe and familiar to you.";
 
 
-"orientPhoneTutorialButtonText" = "Holding Your Phone";
-"orientPhoneTutorialInstructionText" = "Clew uses your phone's camera and other sensors to track the environment as you move along a route. To ensure Clew is getting good information from your camera, you should hold your phone in the portrait orientation with the rear camera facing forward. It is important to maintain the phone in the vertical pose whenever you are navigating or saving a route, to help reduce errors from the app. Select the Practice button below to try out holding your phone in the correct position.";
-"orientPhoneTutorialTipsTitle" = "Tips for holding your phone";
-"orientPhoneTutorialTip1" = "Try holding your phone against your chest when you’re navigating a route to insure it remains upright with the camera facing directly in front of you.";
-"orientPhoneTutorialTip2" = "We also recommend that you hold the phone in the opposite hand as you use your white cane or guide dog.";
-"orientPhoneTutorialPracticeTitle" = "Practice Holding Phone";
-"orientPhoneTutorialPracticeInstructions" = "Here you will practice holding your phone in the correct pose for recording and navigating routes. Click start and try moving your phone from a horizontal pose to a more vertical pose. Your phone will buzz and make more sound the further you are away from the correct vertical pose. Finally, you'll hear a success tone once you are holding the phone in the correct vertical pose. To earn more points you’ll have to move your phone out of the correct pose and back into the correct vertical pose.
-Now it's your turn. Try doing this exercise at least 3 times!";
+"orientPhoneTutorialButtonText" = "Holding Your Phone for Best Results";
+"orientPhoneTutorialInstructionTextParagraph1" = "Clew uses your phone's camera and inertial sensors to track your position as you move along the environment and when you navigate a route. Holding your phone in the correct pose or orientation is essential in order for the app to work correctly. You should hold your phone in the portrait orientation (vertically), with the rear camera facing forward.";
+
+"orientPhoneTutorialInstructionTextParagraph2" = "It is important to maintain the phone in the vertical pose, with the rear camera facing forward (pointed away from your body) whenever you are navigating or saving a route. Maintaining the phone in this pose helps reduce errors from the app.";
+
+
+"orientPhoneTutorialInstructionTextParagraph3" = "The following exercise will help you practice holding your phone in the correct pose for Clew. Tap the Practice button to begin.";
+
+
+"orientPhoneTutorialTipsTitle" = "Tips";
+"orientPhoneTutorialTip1" = "Try holding your phone against your chest when you’re navigating a route to ensure it remains in the correct vertical pose with the camera facing directly in front of you.";
+"orientPhoneTutorialTip2" = "We also recommend that you hold the phone in the opposite hand that you use to work with your white cane or guide dog.";
+
+"orientPhoneTutorialPracticeTitle" = "Practicing the Correct Phone Pose";
+
+"orientPhoneTutorialPracticeInstructionsParagraph1" = "Now you can practice holding your phone in the correct pose for using Clew. Remember that the rear camera should face forward or away from you.";
+
+"orientPhoneTutorialPracticeInstructionsParagraph2" = "Begin the exercise by moving your phone from a horizontal pose to a more vertical pose. Your phone will buzz and make a distinct tone the further you are off from the correct pose. You’ll then hear a success chime when you achieve the correct vertical pose. Try moving your phone in and out of the correct pose a couple of times to hear the difference.";
+
+"orientPhoneTutorialPracticeInstructionsParagraph3" = "Now it's your turn. Tap the Start button to begin.";
+
 "orientPhoneTutorialPracticeStart" = "Start";
 "orientPhoneTutorialPracticeStop" = "Stop";
-"orientPhoneTutorialPracticeSuccess" = "Nice Job! You've completed orientation practice. You can keep practicing or go to the next section.";
+"orientPhoneTutorialPracticeSuccess" = "Nice Job! You now know how to hold the phone in the correct pose. You can keep practicing or go to the next section.";
 
 
-"findPathTutorialButtonText" = "Finding and Following a Path";
-"findPathTutorialInstructionText" = "When you are on the path, Clew will give sound and haptic feedback. If the app is not making sound, it is most likely because your phone is not facing in the direction of  the path. Should Clew go quiet you should stop and turn until you find the path again. Clew also plays a distinct sound when you pass through a waypoint. Clew waypoints are markers along routes that are accompanied by audio directions such as: turn right, or continue straight. Clew will also announce when you have reached the end of the route.";
-"findPathPractice1Title" = "Practice First Path";
-"findPathPractice1InstructionText" = "Here you will practice following a Clew Route. Make sure you are in a familiar place with some open space around you. This path will guide you forward a few steps and then announce your arrival. Select begin to enter the practice route.";
+"findPathTutorialButtonText" = "Following a Route";
+"findPathTutorialInstructionText" = "Clew will make sounds, haptic feedback and provide directional audio cues whenever you are navigating a route. These distinct sounds, feedback and directional cues enable you to navigate the route correctly. They help you know when you are correctly on the path or if you are slightly off the correct path or have completely deviated from the route.";
+
+"movingOnCorrectPathTitleText" = "Moving Along the Correct Path";
+"movingOnCorrectPathInstructionTextParagraph1" = "Whenever you begin navigating a route, you will hear a distinct ‘ticking’ sound. Clew plays the ticking sound whenever you are correctly aligned to the route. It will play through the entire time until you complete the route, pause or stop navigation.";
+"movingOnCorrectPathInstructionTextParagraph2" = "Sighted users will see a colored line showing the correct path on the screen. The path color can be changed in the settings.";
+
+"waypointsTutorialTitleText" = "Waypoints or Virtual Crumbs";
+"waypointsTutorialInstructionTextParagraph1" = "Clew provides waypoints or virtual crumbs to keep you in the right orientation as you navigate the route. The app will play a distinct ‘chime’ when you pass through a waypoint or virtual crumb.";
+"waypointsTutorialInstructionTextParagraph2" = "Sighted users will see a colored crumb in the shape of a map point on the screen. The crumb color can be changed in the settings.";
+
+"directionalCuesTutorialTitleText" = "Directional Cues";
+"directionalCuesTutorialInstructionText" = "Clew will provide directional cues as soon as you begin navigating a route and to keep oriented correctly. The app will announce directions whenever you pass through a waypoint or virtual crumb. The directional cues include: continue straight, slight right, slight left, turn right, turn left. Clew will also announce when you have reached the end of the route.";
+
+"gettingBackToTheCorrectPathTutorialTitleText" = "Getting Back to the Correct Path";
+"gettingBackToTheCorrectPathTutorialInstructionTextParagraph1" = "A distinct tone will play whenever you are off the correct path. This may also happen if your phone is not facing in the direction of the path. If you find yourself off the path, you should stop, try turning around until you hear the ‘ticking’ sounds that indicate that you’re on the correct direction of the path.";
+"gettingBackToTheCorrectPathTutorialInstructionTextParagraph2" = "Press the ‘Get Directions’ button to receive audio directions on how to get back on the route. This is especially helpful if you’ve become disoriented or off the correct path.";
+
+"findPathPractice1Title" = "Practice Your First Route";
+
+"findPathPractice1InstructionTextParagraph1" = "This first exercise will have you practice the simple route in order to get you accustomed to Clew’s sounds and feedback. This first route will guide you forward a few steps and then announce the end of the route. Pay particular attention to the sounds and directional cues.";
+"findPathPractice1InstructionTextParagraph2" = "Please make sure that you’re in a familiar area with sufficient space to move about before you begin this exercise. ";
+"findPathPractice1InstructionTextParagraph3" = "Tap the 'Practice' button and then tap 'Play' to begin the exercise.";
+
 "findPathPracticeBeginButtonText" = "Practice";
-"tutorialRouteAlignmentText" = "Start practice route by selecting start alignment and wait for countdown, and then try out following a route.";
+
+"tutorialRouteAlignmentText" = "Begin the route by selecting start alignment and wait for the countdown to complete.";
+
 "findPathPractice2Title" = "Practice Second Path";
 "findPathPractice2InstructionText" = "Here you will practice following a Clew Route. Make sure you are in a familiar place with some open space around you. This path will guide you forward a few steps and then you will pass through a waypoint and be instructed to turn right. Then you will take a few more steps and then arrive. Select begin to enter the practice route.";
+
 "findPathPracticeSuccessTitle" = "Congratulations!";
-"findPathPracticeSuccess1Text" = "You've completed the first route practice. Continue to the next practice to try another short route.";
-"findPathPracticeSuccess2Text" = "You've completed the route practices. You can continue through the tutorial or go try out recording and practicing some of our own routes in a familiar space using Single Use Routes on the Clew home page.";
+"findPathPracticeSuccess1Text" = "You've completed your first route. Continue to the next exercise to try another route.";
+"findPathPracticeSuccess2Text" = "You now know how to navigate a route! You may continue the tutorial or go to the Home Screen and try performing a Single Use Route. Remember that practice makes perfect!";
 
 
 "singleUseRouteTutorialButtonText" = "Single Use Routes";
-"singleUseRouteTutorialInstructionText" = "Clew’s Single Use Routes feature helps you find your way back after going from one place to another. This feature records your path when you walk from point-A to point-B. It then provides you the return route directions and queues. For example, when you go from a lobby area to a room and you then want to find your way back to the lobby area.";
+
+"singleUseRouteTutorialInstructionTextParagraph1" = "Clew’s Single Use Routes feature helps you find your way back after going from one place to another. This feature records your path when you walk from point-A to point-B. It then provides you with the return route directions and necessary cues.";
+
+"singleUseRouteTutorialInstructionTextParagraph2" = "For example, you can perform a single use route when going from a lobby area to a room, and then you want to return back to the lobby area.";
+
+"singleUseRouteTutorialInstructionTextParagraph3" = "The Single Use Route allows you to navigate a return route only once. The Save Routes feature allows you to navigate a route multiple times.";
+
 "usingSingleUseRouteTutorialTitle" = "Using Single Use Routes";
-"usingSingleUseRouteTutorialText" = "To start a Single Use Route, tap the Single Use Route button on the home screen. Clew will immediately begin recording your route. Now you can navigate to where you want to go. Tap the ‘stop recording’ button once you’ve arrived at your destination.
 
-To return, tap the ‘play’ button to initiate the return route directions. Clew will then guide you back to your starting point.
+"usingSingleUseRouteTutorialTextParagraph1" = "Tap the Single Use Route button on the home screen to activate this feature. Clew will immediately begin recording your route.";
 
-Once you have reached your destination, you can pause before using the return navigation. However, Clew will require that you set an ‘anchor point’ when you pause the route. The anchor point is needed to realign you to the correct direction when the route is initiated at a later time. Setting and aligning anchor points will be explained in the following section.
+"usingSingleUseRouteTutorialTextParagraph2" = "Now you can navigate to where you want to go. Remember to hold your phone in the correct vertical pose with the rear camera facing forward. Tap the ‘stop recording’ button once you’ve arrived at your destination.";
 
-The Single Use Route feature only allows you to navigate a return route once. If you want to be able to navigate the route multiple times you’ll want to check out Saved Routes which will be discussed in future sections.";
+"usingSingleUseRouteTutorialTextParagraph3" = "Tap the ‘play’ button to initiate the return route navigation. Clew will then guide you back to your starting point.";
 
 
-"anchorPointsTutorialTitle" = "Anchor Points";
-"anchorPointsTutorialText" = "In Clew you will have to set anchor points for a few different functions. You have to set an anchor point at the beginning and end of saving a route, you’ll have to set one when you go to start a saved route, and if you want to pause a single use route.
+"addingALandmarkTutorialTitle" = "Adding a Landmark - Voice Notes";
+"addingALandmarkTutorialTextParagraph1" = "Voice notes allow you to record a landmark or leave specific information that you want to hear later when navigating in the return direction. To leave a voice note:";
+"addingALandmarkTutorialTextParagraph2" = "Tap the voice note button at any time that you are recording a route. The app will then open the voice recorder. Press the record button to leave a voice memo.";
+"addingALandmarkTutorialTextParagraph3" = "Tap the stop recording button and resume recording your route.";
+"addingALandmarkTutorialTextParagraph4" = "When you navigate your route, Clew will play your voice note when you pass through your recorded landmark. You can record as many voice notes as you want.";
 
-It is essential that you set anchor points in a place where you can find them again when you go to restart a route or start a route that you’ve saved. This is essential because Clew uses the motion of your phone along the route to guide you, so if your starting point is a few feet off the starting point you saved initially, then the rest of the route will be a few feet off. Look in Tips for some recommendations on how to set anchor points.";
-"anchorPointsTutorialTipsTitle" = "Anchor Point Tips";
-"anchorPointsTutorialTipsText" = "Anchor Points are essential to the accuracy of Clew Routes. Here are some tips to set anchor points that are easier to find later when you go to restart, or use a saved route.
+"pausingNavigationTutorialTitle" = "Pausing Navigation";
+"pausingNavigationTutorialText" = "You can pause Clew if you want to initiate the return navigation at a later time. Pausing Clew will require you to set an ‘anchor point’. The anchor point stores important orientation and directional information and is needed to realign you to the correct path. The following module will teach you how to use anchor points.";
 
-Line your body up with a doorway, or put your back against a wall, brace your phone against your chest and then set an anchor point. Then when you go to a line to that anchor point again, line your body up in the same spot and brace your phone against your chest again.
+"anchorPointsTutorialTitle" = "Setting and Finding Anchor Points";
+"anchorPointsTutorialText" = "Setting anchor points is an important skill that is needed in order to save routes or pause navigation. Anchor points allow Clew to record your position and orientation within the route’s environment. The anchor point realigns you to the correct path whenever you want to navigate a route that has been saved for later use and they are essential to Clew’s navigation accuracy.";
 
-You could also try pressing the top edge of your phone against a table, wall or doorway and then setting the anchor point. That way when you go to find the spot where you should set the anchor point again, you only have to find a table or wall again and then you know you’re at least pretty close.";
+"settingAnAnchorPointTutorialTitle" = "Setting an Anchor Point";
+"settingAnAnchorPointTutorialText" = "Anchor points are created at the beginning and at the end of a route. We recommend setting the anchor point at a location that is easy to remember and find at a later time. A good anchor point could be set at a wall, a doorframe, or a piece of furniture like a table.";
+
+"textOrVoiceNotesTutorialTitle" = "Text or Voice Notes";
+"textOrVoiceNotesTutorialText" = "Clew allows you to record a text or voice note to describe the location of your anchor point. This can be especially helpful when you want to find and realign yourself to the saved anchor point at a later time.";
+
+"physicalAlignmentTutorialTitle" = "Physical Alignment";
+"physicalAlignmentTutorialTextParagraph1" = "Physical alignment sets the anchor point using the phone’s inertial sensors. This method requires you to hold the phone in the horizontal or flat pose with the screen facing up, and press the top (short edge) of the phone against a vertical edge, like against a wall, a doorframe or a table.";
+"physicalAlignmentTutorialTextParagraph2" = "Press the align button and wait for the countdown. The anchor point will be saved at the end of the countdown.";
+
+"findingAnAnchorPointTutorialTitle" = "Finding an Anchor Point";
+"findingAnAnchorPointTutorialTextParagraph1" = "The accuracy of the navigation will depend on how well you can realign yourself to the saved anchor point. To find and realign yourself to a saved anchor point, you should try to position yourself as closely as possible to the exact location of the originally saved anchor point.";
+"findingAnAnchorPointTutorialTextParagraph2" = "Finding the saved anchor point from the physical alignment requires you to hold your phone in the same horizontal or flat pose, pressing it against the same edge that was used to set the anchor point.";
+"findingAnAnchorPointTutorialTextParagraph3" = "Finding the saved anchor point from the visual alignment simply requires you to hold the phone in the vertical pose and realign the camera to the same location that was used to set the original anchor point.";
+
+"applesARWorldMapTutorialTitle" = "Apple's ARWorld Map";
+"applesARWorldMapTutorialTextParagraph1" = "Apple's ARWorld map can help make the process of finding and aligning to a saved anchor point easier on some of the latest iPhone models. With the more recent phones, the physical alignment can simply be achieved by holding the phone in the vertical pose. However, we recommend that you be consistent in holding the phone pose and relocalizing yourself as best as possible to the originally saved anchor point in order to ensure the best accuracy from Clew.";
+
+"applesARWorldMapTutorialTextParagraph2" = "Next you will have a chance to practice setting and aligning to anchor points.  Tap the 'Practice' button to start the exercise.";
+
+// The tips page is currently deprecated
+//"anchorPointsTutorialTipsTitle" = "Anchor Point Tips";
+//"anchorPointsTutorialTipsText" = "Anchor Points are essential to the accuracy of Clew Routes. Here are some tips to set anchor points that are easier to find later when you go to restart, or use a saved route.
+//
+//Line your body up with a doorway, or put your back against a wall, brace your phone against your chest and then set an anchor point. Then when you go to a line to that anchor point again, line your body up in the same spot and brace your phone against your chest again.
+//
+//You could also try pressing the top edge of your phone against a table, wall or doorway and then setting the anchor point. That way when you go to find the spot where you should set the anchor point again, you only have to find a table or wall again and then you know you’re at least pretty close.";
+
+// BOOKMARK
+
 "anchorPointPracticeSetTutorialTitle" = "Set Anchor Point";
 "setAnchorPointButtonText" = "Set Anchor Point";
 "alignToAnchorPointButtonText" = "Find and Align to Anchor Point";
@@ -401,6 +482,9 @@ You can also reenter the settings walk through that popped up when you first ent
 "settingsWalkThroughPhoneBodyOffsetTitle" = "Correct for Phone / Body Offset?";
 "settingsWalkThroughDontAdjustPhoneBodyOffset" = "Don't Automatically Correct Offset";
 "settingsWalkThroughAdjustPhoneBodyOffset" = "Automatically Correct Offset";
+
+"endOfTutorialTitleText" = "End of Tutorial";
+"endOfTutorialMainText" = "Nice Job! You've completed the Clew tutorial. You can come back to this information at anytime through the menu options or by pressing the help button on the Clew main screens.";
 
 //Sharing routes
 "automaticEmailTextWhenSharingRoutes" = "Check out this route!";
