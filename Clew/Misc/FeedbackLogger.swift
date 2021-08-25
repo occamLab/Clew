@@ -22,13 +22,13 @@ class FeedbackLogger {
     
     //MARK: functions
     ///a function which saves the feedback and publishes it to the firebase website
-    func writeFeedbackToFirebase(name : String, data : Data, audio audioFileURL : URL?) -> Int {
+    func writeFeedbackToFirebase(data : Data, audio audioFileURL : URL?) -> Int {
         
         ///creates an integer which stores the return value of the function (0 for no errors and 1 for a failed build)
         var returnValue = 0
         
         ///creates a reference to the location we want to save the new file
-        let fileRef = feedbackRef.child("\(name)_\(uniqueID)_metadata.json")
+        let fileRef = feedbackRef.child("\(uniqueID)_metadata.json")
         
         let fileType = StorageMetadata()
         fileType.contentType = "application/json"
@@ -50,7 +50,7 @@ class FeedbackLogger {
         if audioFileURL != nil{
             
             ///stores a reference to the aidiofile URL
-            let audioref = "\(name)_Recording_\(uniqueID).wav"
+            let audioref = "\(uniqueID).wav"
             
             if let data = try? Data(contentsOf: audioFileURL!) {
                 ///sets the file type to the proper audio file
@@ -66,6 +66,7 @@ class FeedbackLogger {
                         ///quits the conditional
                         return
                     }
+                    print("Successfully uploaded audio")
                 }
             }
         }
@@ -75,34 +76,20 @@ class FeedbackLogger {
     }
     
     ///takes in all the different pieces of data and combines them into a properly formatted string of type Data
-    func makeData(name: String, message: String, country inputCountry: String?, phone: String, email: String,isAudio: Bool) -> Data? {
-        
-        var country: String = "NONE"
-        
-        ///performs input processing on the country Field
-        if inputCountry == ""{
-            country = "NONE"
-        }else{
-            country = inputCountry!
-        }
-        
+    func makeData(message: String, isAudio: Bool) -> Data? {
         ///sets the default state to not have an audio file
         var audioData = "NONE"
         
         ///performs input processing on the audio data to say whether or not there is an audio file
         if isAudio {
             ///sets the address of the audio file if there is one
-            audioData = "\(name)_Recording_\(uniqueID).wav"
+            audioData = "\(uniqueID).wav"
         }
         
         ///places the data into a dictionary to be formatted into JSON later
         let body: [String : Any] = ["FeedbackDate": "\(Date().description(with: .current))",
-                                    "PhoneNumber": phone,
-                                    "Email": email,
-                                    "Name": name,
-                                    "Country": country,
                                     "Message": message,
-                                    "AppInstanceID": Analytics.appInstanceID(),
+                                    "userID": Auth.auth().currentUser?.uid ?? "",
                                     "AudioFileName": audioData]
         do {
             ///converts the data into JSON
@@ -115,14 +102,14 @@ class FeedbackLogger {
         return nil
     }
     ///combines the information together and saves a file to Firebase containing the user's feedback
-    func saveFeedback(name: String, message: String, country: String?, phone: String, email: String,audio: URL?) -> Int{
+    func saveFeedback(message: String, audio: URL?) -> Int{
         ///calls the functions to create the properly formatted data and upload the result to firebase
         if audio == nil {
             ///if there is no audio log tell the program to notate theat in the log
-            return writeFeedbackToFirebase(name: name, data: makeData(name: name, message: message, country: country, phone: phone, email: email, isAudio: false)!,audio: audio)
+            return writeFeedbackToFirebase(data: makeData(message: message, isAudio: false)!,audio: audio)
         }else{
             ///if there is an audio file tell the program to notate that in the log
-            return writeFeedbackToFirebase(name: name, data: makeData(name: name, message: message, country: country, phone: phone, email: email, isAudio: true)!,audio: audio)
+            return writeFeedbackToFirebase(data: makeData(message: message, isAudio: true)!,audio: audio)
         }
         
     }
