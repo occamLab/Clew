@@ -188,11 +188,6 @@ struct TutorialTestView: View {
                 }
                 
                 HStack{
-                    TutorialNavLinkWithRedirection(destination: FindingSavedRoutes(), tag: "FindingSavedRoutes", selection: $showPage.selectedView) {Text(NSLocalizedString( "findingSavedRoutesTutorialButtonText", comment: "Title for the finding saved route part of the tutorial"))
-                    }
-                }
-                
-                HStack{
                     TutorialNavLinkWithRedirection(destination: SettingOptions(), tag: "SettingsOptions", selection: $showPage.selectedView) {
                         Text(NSLocalizedString( "settingOptionsTutorialButtonText", comment: "Title for the setting options part of the tutorial"))
                     }
@@ -910,6 +905,7 @@ enum AnchorPointPracticeState {
     case initial
     case anchorPointCreationRequested
     case anchorPointSet
+    case readyForAlignmentInstructions
     case anchorPointAlignmentRequested
     case anchorPointAligned
 }
@@ -937,15 +933,27 @@ struct AnchorPointPracticeSubComponent: View {
             .resizable()
             .frame(width: 100, height: 100)
         
-        if practiceState == .anchorPointSet || practiceState == .anchorPointAlignmentRequested {
+        if practiceState == .anchorPointSet {
             Text(NSLocalizedString("anchorPointPracticeAlignTitle", comment: "Align to anchor point page title")).padding()
-            
-            Text(NSLocalizedString("anchorPointPracticeAlignText", comment: "Align to anchor point page instructions")).padding()
+            VStack(alignment: .leading, spacing: 20) {
+                Text(NSLocalizedString("anchorPointPracticeAlignTextParagraph1", comment: "Align to anchor point page instructions paragraph 1"))
+                Text(NSLocalizedString("anchorPointPracticeAlignTextParagraph2", comment: "Align to anchor point page instructions paragraph 2"))
+            }
+        } else if practiceState == .readyForAlignmentInstructions || practiceState == .anchorPointAlignmentRequested {
+            Text(NSLocalizedString("findingSavedAnchorPointTitle", comment: "Find anchor point page title")).padding()
+            VStack(alignment: .leading, spacing: 20) {
+                Text(NSLocalizedString("findingSavedAnchorPointTextParagraph1", comment: "Find anchor point page instructions paragraph 1"))
+                Text(NSLocalizedString("findingSavedAnchorPointTextParagraph2", comment: "Find anchor point page instructions paragraph 2"))
+                Text(NSLocalizedString("findingSavedAnchorPointTextParagraph3", comment: "Find anchor point page instructions paragraph 3"))
+            }
         } else if practiceState == .initial || practiceState == .anchorPointCreationRequested {
             //when starting anchor point practice
             Text(NSLocalizedString("anchorPointPracticeSetTutorialTitle", comment: "Set an anchor point practice page title")).padding()
             
-            Text(NSLocalizedString("anchorPointPracticeSetTutorialText", comment: "Set an anchor point practice page instructions")).padding()
+            VStack(alignment: .leading, spacing: 20) {
+                Text(NSLocalizedString("anchorPointPracticeSetTutorialTextParagraph1", comment: "Set an anchor point practice page instructions paragraph 1"))
+                Text(NSLocalizedString("anchorPointPracticeSetTutorialTextParagraph2", comment: "Set an anchor point practice page instructions paragraph 2"))
+            }
         }
         
         if practiceState == .anchorPointCreationRequested {
@@ -995,13 +1003,10 @@ struct AnchorPointPracticeSubComponent: View {
             //once anchor point is aligned
             switch accuracy {
             case .perfect:
-                Text(NSLocalizedString("anchorPointPracticeFeedbackPerfectTitle", comment: "anchor point perfectly aligned heading")).padding()
                 Text(NSLocalizedString("anchorPointPracticeFeedbackPerfectText", comment: "anchor point perfectly aligned text")).padding()
             case .good:
-                Text(NSLocalizedString("anchorPointPracticeFeedbackGoodTitle", comment: "anchor point well aligned header")).padding()
                 Text(NSLocalizedString("anchorPointPracticeFeedbackGoodText", comment: "anchor point well aligned text")).padding()
             default:
-                Text(NSLocalizedString("anchorPointPracticeFeedbackBadTitle", comment: "anchor point not well aligned header")).padding()
                 Text(NSLocalizedString("anchorPointPracticeFeedbackBadText", comment: "anchor point not well aligned text")).padding()
             }
             
@@ -1011,7 +1016,7 @@ struct AnchorPointPracticeSubComponent: View {
                 TutorialButton{
                     Text(NSLocalizedString("anchorPointPracticeRetryAlignButton", comment: "button text to retry aligning the anchor point"))
                 }
-            }.padding()
+            }
             
             Button(action: {
                 practiceState = .initial
@@ -1020,15 +1025,20 @@ struct AnchorPointPracticeSubComponent: View {
                     Text(NSLocalizedString("anchorPointPracticeRetryButton", comment: "button text to retry setting the anchor point"))
                 }
             }.padding()
+            
+            TutorialNavLink(destination: SavedRoutes()) {
+                Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
+            }.padding()
+            
         } else if practiceState == .anchorPointSet {
             //Once anchor point is set
             Button(action: {
                 if practiceState == .anchorPointSet {
-                    practiceState = .anchorPointAlignmentRequested
+                    practiceState = .readyForAlignmentInstructions
                 }
             }) {
                 TutorialButton {
-                    Text(NSLocalizedString("alignToAnchorPointButtonText", comment: "The text shown on the button that aligns to the anchor point during the tutorial"))
+                    Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
                 }
             }.disabled(practiceState == .anchorPointAlignmentRequested)
         } else if practiceState == .initial {
@@ -1040,6 +1050,14 @@ struct AnchorPointPracticeSubComponent: View {
                 TutorialButton {
                     Text(NSLocalizedString("setAnchorPointButtonText", comment: "The text shown on the button that sets the anchor point during the tutorial"))
                 }
+            }
+        } else if practiceState == .readyForAlignmentInstructions {
+            Button(action: {
+                practiceState = .anchorPointAlignmentRequested
+            }) {
+                TutorialButton {
+                    Text(NSLocalizedString("alignToAnchorPointButtonText", comment: "The text shown on the button that aligns to the anchor point during the tutorial"))
+                }.padding()
             }
         }
     }
@@ -1061,12 +1079,7 @@ struct AnchorPointPractice: View {
             NotificationCenter.default.post(name: Notification.Name("StartARSession"), object: nil)
         }
         
-        if !showPage.confineToSection {
-            Spacer()
-            TutorialNavLink(destination: SavedRoutes())  {
-                Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
-            }
-        } else {
+        if showPage.confineToSection {
             Button(action: {
                 NotificationCenter.default.post(name: Notification.Name("TutorialPopoverReadyToDismiss"), object: nil)
             }) {
@@ -1083,56 +1096,46 @@ struct SavedRoutes: View {
     var body: some View {
         TutorialScreen{
             Text(NSLocalizedString("savedRoutesTutorialButtonText", comment: "Title for the saved route part of the tutorial"))
-            
-            Text(NSLocalizedString("savedRouteTutorialInstructionText", comment: "Instructions for using saved routes"))
-            //.fixedSize(horizontal: false, vertical: true)
-            
+            VStack(alignment: .leading, spacing: 20) {
+                Text(NSLocalizedString("savedRouteTutorialInstructionTextParagraph1", comment: "Instructions for using saved routes paragraph 1"))
+                Text(NSLocalizedString("savedRouteTutorialInstructionTextParagraph2", comment: "Instructions for using saved routes paragraph 2"))
+            }
         }.onDisappear() {
             UserDefaults.standard.setValue(true, forKey: "SavedRoutesTutorialCompleted")
         }
         Spacer()
-        TutorialNavLink(destination: RecordSavedRoutes()) {
+        TutorialNavLink(destination: SavingARoute()) {
             Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
         }
     }
 }
 
 
-struct RecordSavedRoutes: View {
-    //@ObservedObject var entered
+struct SavingARoute: View {
     var body: some View {
         TutorialScreen {
-            Text(NSLocalizedString( "recordSavedRoutesTutorialButtonText", comment: "Title for the recording saved routes part of the tutorial"))
+            Text(NSLocalizedString( "savingARouteTutorialTitle", comment: "Title for the saving a part of the tutorial"))
             
-            //ScrollView{
-            Text(NSLocalizedString("recordSavedRoutesTutorialInstructionText", comment: "Instructions for recording saved routes"))
-            //.fixedSize(horizontal: false, vertical: true)
-            
-            TutorialNavLink(destination: AnchorPoints()) {
-                Text(NSLocalizedString("anchorPointsTutorialTitle", comment: "Title for the anchor point part of the tutorial"))
+            VStack(alignment: .leading, spacing: 20) {
+                Text(NSLocalizedString("savingARouteTutorialTextParagraph1", comment: "Instructions for saving routes paragraph 1"))
+                Text(NSLocalizedString("savingARouteTutorialTextParagraph2", comment: "Instructions for saving routes paragraph 2"))
+                Text(NSLocalizedString("savingARouteTutorialTextParagraph3", comment: "Instructions for saving routes paragraph 3"))
             }
-            
-            TutorialNavLink(destination: VoiceNotes()) {
-                Text(NSLocalizedString( "voiceNotesTutorialButtonText", comment: "Title for the voice notes part of the tutorial"))
-            }
-            
         }
         
         Spacer()
-        TutorialNavLink(destination: FindingSavedRoutes())  {
+        TutorialNavLink(destination: NamingYourRoute())  {
             Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
         }
     }
 }
 
-struct VoiceNotes: View {
+struct NamingYourRoute: View {
     var body: some View {
-        TutorialScreen  {
-            Text(NSLocalizedString( "voiceNotesTutorialButtonText", comment: "Title for the voice notes part of the tutorial"))
+        TutorialScreen {
+            Text(NSLocalizedString( "namingYourRouteTutorialTitle", comment: "Title for the naming your route part of the tutorial"))
             
-            //ScrollView{
-            Text(NSLocalizedString("voiceNotesTutorialInstructionText", comment: "Instructions for leaving voice notes along a path"))
-            //.fixedSize(horizontal: false, vertical: true)
+            Text(NSLocalizedString("namingYourRouteTutorialText", comment: "Instructions for naming your route")).padding()
         }
         
         Spacer()
@@ -1141,16 +1144,17 @@ struct VoiceNotes: View {
         }
     }
 }
-
 
 struct FindingSavedRoutes: View {
     var body: some View {
         TutorialScreen  {
             Text(NSLocalizedString("findingSavedRoutesTutorialButtonText", comment: "Title for the finding saved route part of the tutorial"))
             
-            //ScrollView{
-            Text(NSLocalizedString("findingSavedRoutesTutorialInstructionText", comment: "Instructions for finding saved routes"))
-            //.fixedSize(horizontal: false, vertical: true)
+            VStack(alignment: .leading, spacing: 20) {
+                Text(NSLocalizedString("findingSavedRoutesTutorialInstructionTextParagraph1", comment: "Instructions for finding saved routes paragraph 1"))
+                Text(NSLocalizedString("findingSavedRoutesTutorialInstructionTextParagraph2", comment: "Instructions for finding saved routes paragraph 2"))
+                Text(NSLocalizedString("findingSavedRoutesTutorialInstructionTextParagraph3", comment: "Instructions for finding saved routes paragraph 3"))
+            }
         }.onDisappear(){
             UserDefaults.standard.setValue(true, forKey: "FindingSavedRoutesTutorialCompleted")
         }

@@ -429,41 +429,65 @@
 //
 //You could also try pressing the top edge of your phone against a table, wall or doorway and then setting the anchor point. That way when you go to find the spot where you should set the anchor point again, you only have to find a table or wall again and then you know you’re at least pretty close.";
 
-// BOOKMARK
 
-"anchorPointPracticeSetTutorialTitle" = "Set Anchor Point";
+"anchorPointPracticeSetTutorialTitle" = "Setting an Anchor Point";
 "setAnchorPointButtonText" = "Set Anchor Point";
 "alignToAnchorPointButtonText" = "Find and Align to Anchor Point";
 
-"anchorPointPracticeSetTutorialText" = "Here you will practice setting an anchor point and then finding that anchor point. This practice will then give you feedback on how close you were to setting the anchor points in the same spot. To set your first anchor point, press the align button and wait for the count down.";
-"anchorPointPracticeAlignTitle" = "Align to Anchor Point";
-"anchorPointPracticeAlignText" = "Nice Job! You've set an anchor point!
+"anchorPointPracticeSetTutorialTextParagraph1" = "This exercise will have you practice setting an anchor point. Remember to choose a location for your anchor point that you can easily find at some later time. You’ll practice setting the anchor point using the physical alignment method. Remember to position your phone flat with the screen facing up against a vertical edge of a wall, or doorframe or a table.";
 
-Now move your phone out of the position you set the anchor point in. Maybe even walk around the room you're in. Then try returning your phone to the same position and select the align button again to set a second anchor point. Wait for the count down, and then your second anchor point will be set. Then you'll receive some feedback about how close your second anchor point was to the first you set.";
-"anchorPointPracticeFeedbackPerfectTitle" = "Perfect!!!";
-"anchorPointPracticeFeedbackPerfectText" = "Setting and aligning anchor points like you have in this practice will work great for Clew routes! Feel free to practice again, check out our tips for setting anchor points, continuing with the tutorial, or entering the main app and start using it!";
-"anchorPointPracticeFeedbackGoodTitle" = "Pretty Good!";
-"anchorPointPracticeFeedbackGoodText" = "This anchor point is pretty well aligned to the anchor point you set originally and a Clew route from this anchor point would probably work pretty well. You might want to practice again or check out our tips for setting and aligning anchor points.";
-"anchorPointPracticeFeedbackBadTitle" = "Not Aligned. Try again!";
-"anchorPointPracticeFeedbackBadText" = "This anchor point is not well aligned. A Clew route started from this anchor point might not navigate to your desired location. No worries though because you can try the practice again or check out some tips we have for setting and aligning anchor points.";
-"anchorPointPracticeRetryAlignButton" = "Retry Aligning Anchor Point";
+"anchorPointPracticeSetTutorialTextParagraph2" = "Press the Set Anchor Point button, position your phone, and wait for the countdown.";
+
+"anchorPointPracticeAlignTitle" = "Align to Anchor Point";
+
+"findingSavedAnchorPointTitle" = "Finding the Saved Anchor Point";
+"findingSavedAnchorPointTextParagraph1" = "This exercise will have you practice finding and realigning yourself to a saved anchor point. After some time, try returning to the same location of your anchor point. Next realign your phone to the same position.";
+
+"findingSavedAnchorPointTextParagraph2" = "Hold your phone in the same horizontal or flat pose, pressing it against the same edge that was used to set the anchor point.";
+
+"findingSavedAnchorPointTextParagraph3" = "Press the Find Anchor Point button. Wait for the countdown to complete. The app will provide feedback about how closely aligned you were to the saved anchor point.";
+
+"anchorPointPracticeAlignTextParagraph1" = "Nice Job! You've set an anchor point!";
+
+"anchorPointPracticeAlignTextParagraph2" = "Now that you’ve saved an anchor point, try walking away from it- or wait a few minutes to return to the next exercise.";
+
+"alignToAnchorPointButtonText" = "Find Anchor Point";
+
+"anchorPointPracticeFeedbackPerfectText" = "Great job! You were very well aligned to the saved anchor point, which would have resulted in a very good route navigation. You now know how to find and align to anchor points and you’re ready to start saving routes.";
+"anchorPointPracticeFeedbackGoodText" = "Good job! You were fairly aligned to the saved anchor point, which would have resulted in a route navigation with some potential misalignment. Try practicing again to get a perfect alignment.";
+"anchorPointPracticeFeedbackBadText" = "Oh no, try again! You were poorly aligned to the saved anchor point. This would have resulted in a route navigation with significant errors. Try practicing again to get a perfect alignment.";
+"anchorPointPracticeRetryAlignButton" = "Retry Finding Anchor Point Step";
 "anchorPointPracticeRetryButton" = "Restart Practice";
 
-//Done to here (?)
+"savedRoutesTutorialButtonText" = "Saving and Finding Routes";
+"savedRouteTutorialInstructionTextParagraph1" = "Clew allows you to record a route that you can return to at a later time. The Save Routes feature is useful for paths that you want to come back to frequently. The route is stored on your device’s memory (and soon on the cloud). You can navigate a saved route from A-to-B and back.";
 
-"savedRoutesTutorialButtonText" = "Saved Routes";
-"savedRouteTutorialInstructionText" = "In Clew you can save routes which you can then return to at any time for guidance along that route. A saved route can be useful for paths that you would want to come back to multiple times or as a tool when practicing a new route. For example if you’re in a hotel you could save a route from the front desk to the elevator, and/or from the elevator to your door.
+"savedRouteTutorialInstructionTextParagraph2" = "For example, you can save a route at a hotel which could navigate you from the front desk to the elevator and back. Or from the elevator to your hotel room and back to the elevator.";
 
-Go to the next page for more details on how to Save a Route. ";
+"savingARouteTutorialTitle" = "Saving a Route";
+"savingARouteTutorialTextParagraph1" = "Saving a route records both the route from points A-to-B, referred to as ‘Start-to-End’, and the return route, referred to as ‘End-to-Start’. Keep this reference in mind whenever you want to navigate a saved route.";
+"savingARouteTutorialTextParagraph2" = "Saving a route requires you to set an anchor point at the start of the route. Clew will then record the route until you’ve reached your destination. You’ll then be required to set the anchor point at the end of the route.";
+"savingARouteTutorialTextParagraph3" = "Tap the Save Route button in the home screen to begin recording a route.";
 
-"recordSavedRoutesTutorialButtonText" = "Recording Saved Routes";
-"recordSavedRoutesTutorialInstructionText" = "To save a route, click on the Save Route button on the home screen. You will then set an anchor point by clicking the set anchor point button. The anchor point serves as the beginning of the saved route and you will have to find the location where you set the anchor point when you wish to use the route in the future. Once the anchor point is set, then Clew is recording and you should walk the path you want to save. You can leave voice notes along the way if you wish to help orient yourself when you go to walk the route in the future. When you get to the end of your route, you’ll have to set another anchor point to mark the ending point of your route. Once the last anchor point is set, you’ll name the route and press Save Route. At that point you can access that route at any time for guidance along that path. To learn more about Anchor Points and Voice Notes selecting the buttons for those below.";
+"namingYourRouteTutorialTitle" = "Naming your Route";
+"namingYourRouteTutorialText" = "Once you've recorded the route and set your end anchor point, Clew will prompt you to name your route. We recommend using a name that best describes the route and that you’ll remember at a later time.";
 
+//
+//"recordSavedRoutesTutorialButtonText" = "Recording Saved Routes";
+//"recordSavedRoutesTutorialInstructionText" = "To save a route, click on the Save Route button on the home screen. You will then set an anchor point by clicking the set anchor point button. The anchor point serves as the beginning of the saved route and you will have to find the location where you set the anchor point when you wish to use the route in the future. Once the anchor point is set, then Clew is recording and you should walk the path you want to save. You can leave voice notes along the way if you wish to help orient yourself when you go to walk the route in the future. When you get to the end of your route, you’ll have to set another anchor point to mark the ending point of your route. Once the last anchor point is set, you’ll name the route and press Save Route. At that point you can access that route at any time for guidance along that path. To learn more about Anchor Points and Voice Notes selecting the buttons for those below.";
 
-"voiceNotesTutorialButtonText" = "Recording Voice Notes";
-"voiceNotesTutorialInstructionText" = "When recording a saved route, there is a button on the right that allows you to record a voice note. A voice note is a note you can leave yourself, that will play when you go to use the save route that you are recording. It can be any information that is helpful to you, such as noting where a landmark like a doorway or front desk is as you pass, or instructions for your future self. Later when you go to use a save route the voice notes will appear as speaker icons on your path at the point they were recorded. As you pass the note will play.";
+//
+//"voiceNotesTutorialButtonText" = "Recording Voice Notes";
+//"voiceNotesTutorialInstructionText" = "When recording a saved route, there is a button on the right that allows you to record a voice note. A voice note is a note you can leave yourself, that will play when you go to use the save route that you are recording. It can be any information that is helpful to you, such as noting where a landmark like a doorway or front desk is as you pass, or instructions for your future self. Later when you go to use a save route the voice notes will appear as speaker icons on your path at the point they were recorded. As you pass the note will play.";
 
 "findingSavedRoutesTutorialButtonText" = "Finding Saved Routes";
+
+"findingSavedRoutesTutorialInstructionTextParagraph1" = "Clew stores all the saved routes within your Saved Routes List. Tap the Saved Routes Button on the Home Screen when you want to navigate a previously saved route. Scroll through the list and tap on the route name.";
+
+"findingSavedRoutesTutorialInstructionTextParagraph2" = "Select the direction of travel that you wish to navigate. You’ll be able to navigate the route from either ‘Start-to-End’ or in the reverse direction, from ‘End-to-Start’. Please be aware of the direction of travel that you wish to navigate.";
+
+"findingSavedRoutesTutorialInstructionTextParagraph3" = "Next, find and realign yourself to the corresponding Anchor Point. Finally, wait for the countdown to complete and the navigation will begin.";
+
 "findingSavedRoutesTutorialInstructionText" = "Once you save a route, it can be found in your Saved Routes List. You can enter the list from the third button on the home screen. From the list click the route that you want to follow, line your phone up with your anchor point and follow the route.";
 
 "settingOptionsTutorialButtonText" = "Setting Options";
