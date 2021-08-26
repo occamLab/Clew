@@ -16,7 +16,7 @@ class AppleSignInController: UIViewController {
     
     var authHelper: AuthenticationHelper?
     var signInTitle: UILabel!
-    var signInDescription: UILabel!
+    var signInDescription: UITextView!
     var signInButton: UIButton!
     
     /// called when the view has loaded.  We setup various app elements in here.
@@ -46,20 +46,24 @@ class AppleSignInController: UIViewController {
         signInTitle.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 1.1).isActive = true
                 
         
-        signInDescription = UILabel()
+        signInDescription = UITextView()
 
         var mainText:String
 
-        mainText = String.localizedStringWithFormat(NSLocalizedString("signInWithAppleDescription", comment: "A description of why we'd like the user to sign in with their Apple ID"), waitingPeriod)
+        mainText = NSLocalizedString("signInWithAppleDescription", comment: "A description of why we'd like the user to sign in with their Apple ID") + "\n\n" +
+            NSLocalizedString("introClewsRoleTutorialTextParagraph1", comment: "Text for intro to Clew's role Page Paragraph 1") + "\n\n" +
+            NSLocalizedString("introClewsRoleTutorialTextParagraph2", comment: "Text for intro to Clew's role Page Paragraph 2") + "\n\n" +
+            NSLocalizedString("introClewsRoleTutorialTextParagraph3", comment: "Text for intro to Clew's role Page Paragraph 3") + "\n\n" +
+            NSLocalizedString("introClewsRoleTutorialTextParagraph4", comment: "Text for intro to Clew's role Page Paragraph 4")
         
         signInDescription.textColor = UIColor.black
-        signInDescription.textAlignment = .center
-        signInDescription.numberOfLines = 0
-        signInDescription.lineBreakMode = .byWordWrapping
+        signInDescription.textAlignment = .left
         signInDescription.font = UIFont.preferredFont(forTextStyle: .body)
         signInDescription.text = mainText
         signInDescription.tag = UIView.mainTextTag
         
+        signInDescription.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 1.1).isActive = true
+        signInDescription.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.height / 3).isActive = true
         
         signInButton = UIButton(type: .custom)
         signInButton.layer.cornerRadius = 0.5 * signInButton.bounds.size.width
@@ -72,7 +76,6 @@ class AppleSignInController: UIViewController {
         signInButton.setTitle(NSLocalizedString("signInWithAppleButtonText", comment: "This is the text which appears on the sign in with Apple buttton"),for: .normal)
         signInButton.setTitleColor(.black, for: .normal)
         signInButton.titleLabel?.font = UIFont(name: "HelveticaNeue-Bold", size: 35)!
-//        signInButton.accessibilityLabel = NSLocalizedString("signInwithAppleButtonAccessibilityLabel", comment: "A button that allows the user to sign into Clew with their Apple ID.")
         signInButton.titleLabel?.textAlignment = .center
         signInButton.titleLabel?.numberOfLines = 0
         signInButton.titleLabel?.lineBreakMode = .byWordWrapping
@@ -103,7 +106,7 @@ class AppleSignInController: UIViewController {
         stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8.0).isActive = true
         stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8.0).isActive = true
         stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -100).isActive = true
-        stackView.topAnchor.constraint(equalTo: view.topAnchor, constant: 200).isActive = true
+        stackView.topAnchor.constraint(equalTo: view.topAnchor, constant: 100).isActive = true
         
         /// add target action for sign in button
         signInButton.addTarget(parent,

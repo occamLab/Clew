@@ -358,6 +358,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
         
         feedbackTimer = Date()
+        errorFeedbackTimer = Date()
+        playedErrorSoundForOffRoute = false
         // make sure there are no old values hanging around
         headingRingBuffer.clear()
         locationRingBuffer.clear()
@@ -764,11 +766,19 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
         
         NotificationCenter.default.addObserver(forName: Notification.Name("StartTutorialPath"), object: nil, queue: nil) { (notification) -> Void in
-            self.runTutorialPath(routeName: "TutorialFollowPath1")
+            #if IS_DEV_TARGET
+                self.runTutorialPath(routeName: "TutorialFollowPath1")
+            #else
+                self.runTutorialPath(routeName: "TutorialFollowPathRelease1")
+            #endif
         }
         
         NotificationCenter.default.addObserver(forName: Notification.Name("StartTutorialPath2"), object: nil, queue: nil) { (notification) -> Void in
-            self.runTutorialPath(routeName: "TutorialFollowPath2")
+            #if IS_DEV_TARGET
+                self.runTutorialPath(routeName: "TutorialFollowPath2")
+            #else
+                self.runTutorialPath(routeName: "TutorialFollowPathRelease2")
+            #endif
         }
         
         NotificationCenter.default.addObserver(forName: UIAccessibility.voiceOverStatusDidChangeNotification, object: nil, queue: nil) { (notification) -> Void in
@@ -1457,7 +1467,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     var feedbackTimer: Date!
     /// The delay between haptic feedback pulses in seconds
     static let FEEDBACKDELAY = 0.4
-    
+
+    var errorFeedbackTimer = Date()
+    var playedErrorSoundForOffRoute = false
+    /// Delay (and interval) before playing the error sound when the user is not facing the next keypoint of the route
+    static let delayBeforeErrorSound = 3.0
+    /// Delay (and interval) before announcing to the user that they should press the get directions button
+    static let delayBeforeErrorAnnouncement = 8.0
+
     // MARK: - Settings bundle configuration
     
     /// the bundle configuration has 0 as feet and 1 as meters
@@ -2030,6 +2047,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         
         // use a stricter criteria than 12 o'clock for providing haptic feedback
         if directionToNextKeypoint.lateralDistanceRatioWhenCrossingTarget < lateralDisplacementToleranceRatio || abs(directionToNextKeypoint.angleDiff) < coneWidth {
+            // mark this since we now want to wait a while before giving error feedback
+            errorFeedbackTimer = Date()
+            playedErrorSoundForOffRoute = false
             let timeInterval = feedbackTimer.timeIntervalSinceNow
             if(-timeInterval > ViewController.FEEDBACKDELAY) {
                 // wait until desired time interval before sending another feedback
@@ -2040,15 +2060,22 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 }
                 feedbackTimer = Date()
             }
-        } /*else { // TODO: maybe this should be an announcement after they've been off the route for a certain amount of time or just activate the directions button.  Combine thud sound at low frequency
-            // TODO: fix this to be a separate counter
-            let timeInterval = feedbackTimer.timeIntervalSinceNow
-            if(-timeInterval > ViewController.FEEDBACKDELAY) {
+        } else {
+            let timeInterval = errorFeedbackTimer.timeIntervalSinceNow
+            if -timeInterval > ViewController.delayBeforeErrorAnnouncement {
                 // wait until desired time interval before sending another feedback
-                if (soundFeedback) { SoundEffectManager.shared.error() }
-                feedbackTimer = Date()
+                if (voiceFeedback) {
+                    announce(announcement: "If you are having trouble following the route, press the \"get directions\" button.")
+                }
+                errorFeedbackTimer = Date()
+                playedErrorSoundForOffRoute = false
+            } else if -timeInterval > ViewController.delayBeforeErrorSound {
+                // wait until desired time interval before sending another feedback
+                if soundFeedback, !playedErrorSoundForOffRoute { SoundEffectManager.shared.error()
+                    playedErrorSoundForOffRoute = true
+                }
             }
-        }*/
+        }
         for anchorPoint in intermediateAnchorPoints {
             guard let anchorPointTransform = anchorPoint.transform else {
                 continue
@@ -2665,18 +2692,22 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         isTutorial = true
         let path = Bundle.main.path(forResource: routeName, ofType:"crd")!
         let url = URL(fileURLWithPath: path)
-
-        if  let data = try? Data(contentsOf: url), let document = try? NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data) as? RouteDocumentData {
-            //self.dataPersistence.importData(from: url)
-            let thisRoute = document.route
-            for crumb in document.route.crumbs.reversed() {
-                print(crumb.transform.columns.3)
+        guard let data = try? Data(contentsOf: url) else {
+            return
+        }
+        do {
+            if let document = try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data) as? RouteDocumentData {
+                let thisRoute = document.route
+                for crumb in document.route.crumbs.reversed() {
+                    print(crumb.transform.columns.3)
+                }
+                self.sceneView.session.run(self.configuration, options: [.removeExistingAnchors, .resetTracking])
+                self.continuationAfterSessionIsReady = {
+                    self.state = .startingResumeProcedure(route: thisRoute, worldMap: nil, navigateStartToEnd: true)
+                }
             }
-            self.sceneView.session.run(self.configuration, options: [.removeExistingAnchors, .resetTracking])
-            self.continuationAfterSessionIsReady = {
-                self.state = .startingResumeProcedure(route: thisRoute, worldMap: nil, navigateStartToEnd: true)
-                //self.handleStateTransitionToStartingResumeProcedure(route: thisRoute, worldMap: nil, navigateStartToEnd: true)
-            }
+        } catch {
+            print("error \(error)")
         }
     }
     

@@ -247,6 +247,7 @@ struct SetPhoneBodyOffset: View{
                 Text(NSLocalizedString("settingsWalkThroughPhoneBodyOffsetTextParagraph1", comment: "Determine whether to use the phone body offset correction page text paragraph 1"))
                 Text(NSLocalizedString("settingsWalkThroughPhoneBodyOffsetTextParagraph2", comment: "Determine whether to use the phone body offset correction page text paragraph 2"))
                 Text(NSLocalizedString("settingsWalkThroughPhoneBodyOffsetTextParagraph3", comment: "Determine whether to use the phone body offset correction page text paragraph 3"))
+                Text(NSLocalizedString("settingsWalkThroughPhoneBodyOffsetTextParagraph4", comment: "Determine whether to use the phone body offset correction page text paragraph 4"))
             }
 
             

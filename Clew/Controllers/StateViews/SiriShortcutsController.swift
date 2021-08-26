@@ -31,7 +31,7 @@ class SiriShortcutsController: UIViewController {
         
         activity.title = "Start Single Use Route"
         attributes.contentDescription = "Let Clew help you navigate a single route!"
-        activity.suggestedInvocationPhrase = "Start a single use route"
+        activity.suggestedInvocationPhrase = "Clew Record Single Use Route"
         activity.contentAttributeSet = attributes
         return activity
     }
@@ -44,7 +44,7 @@ class SiriShortcutsController: UIViewController {
         let attributes = CSSearchableItemAttributeSet(itemContentType: kUTTypeItem as String)
         activity.title = "Stop Recording Route"
         attributes.contentDescription = "Tell Clew to stop recording the route"
-        activity.suggestedInvocationPhrase = "End the Route"
+        activity.suggestedInvocationPhrase = "Clew Stop Recording"
         activity.contentAttributeSet = attributes
         return activity
     }
@@ -55,9 +55,10 @@ class SiriShortcutsController: UIViewController {
         activity.isEligibleForSearch = true
         activity.isEligibleForPrediction = true
         let attributes = CSSearchableItemAttributeSet(itemContentType: kUTTypeItem as String)
+        // TODO localization
         activity.title = "Return me back"
         attributes.contentDescription = "Tell Clew to start navigating the route"
-        activity.suggestedInvocationPhrase = "Return me back"
+        activity.suggestedInvocationPhrase = "Clew Navigate Route"
         activity.contentAttributeSet = attributes
         return activity
     }

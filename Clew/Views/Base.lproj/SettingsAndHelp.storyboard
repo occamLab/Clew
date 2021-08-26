@@ -127,7 +127,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="JVb-Ok-OEz">
-                                <rect key="frame" x="19" y="30" width="337.5" height="333.5"/>
+                                <rect key="frame" x="19" y="228" width="337.5" height="167"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <accessibility key="accessibilityConfiguration" label="Message"/>
                                 <color key="textColor" systemColor="labelColor"/>
@@ -135,7 +135,7 @@
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rhX-Qq-6R4">
-                                <rect key="frame" x="19" y="393.5" width="337.5" height="133.5"/>
+                                <rect key="frame" x="19" y="425" width="337.5" height="100"/>
                                 <connections>
                                     <segue destination="IOh-XI-Mj0" kind="embed" identifier="recorderSubView" id="8da-yn-Zbe"/>
                                 </connections>
@@ -175,21 +175,32 @@
                                     <constraint firstItem="Vev-Xw-aTF" firstAttribute="centerX" secondItem="B8M-ht-rXG" secondAttribute="centerX" id="w1M-sD-6od"/>
                                 </constraints>
                             </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="imz-c1-4Fu">
+                                <rect key="frame" x="16" y="20" width="343" height="172"/>
+                                <string key="text">Please reach out to us if you have any questions about using Clew or to report an issue with the app. Please be specific when describing an issue to ensure that we can best respond to it. We encourage you to share your feedback and experience with Clew. You can contact us via text message using the form below or leave an audio note.</string>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Xa5-xY-BVv"/>
                         <color key="backgroundColor" systemColor="opaqueSeparatorColor"/>
                         <constraints>
-                            <constraint firstItem="JVb-Ok-OEz" firstAttribute="top" secondItem="Xa5-xY-BVv" secondAttribute="top" constant="30" id="03b-6Q-JhE"/>
+                            <constraint firstItem="imz-c1-4Fu" firstAttribute="centerX" secondItem="Xa5-xY-BVv" secondAttribute="centerX" id="07a-Gp-uxf"/>
                             <constraint firstItem="JVb-Ok-OEz" firstAttribute="width" secondItem="wFg-yk-usG" secondAttribute="width" multiplier="0.9" id="2zj-eh-6tt"/>
                             <constraint firstItem="JVb-Ok-OEz" firstAttribute="centerX" secondItem="Xa5-xY-BVv" secondAttribute="centerX" id="860-MV-RUB"/>
+                            <constraint firstItem="imz-c1-4Fu" firstAttribute="height" secondItem="wFg-yk-usG" secondAttribute="height" multiplier="0.3" id="96z-iu-gjJ"/>
                             <constraint firstItem="Xa5-xY-BVv" firstAttribute="bottom" secondItem="B8M-ht-rXG" secondAttribute="bottom" id="D8U-Zc-llW"/>
+                            <constraint firstItem="JVb-Ok-OEz" firstAttribute="top" secondItem="imz-c1-4Fu" secondAttribute="bottom" constant="8" symbolic="YES" id="Gcr-eP-mIN"/>
                             <constraint firstItem="B8M-ht-rXG" firstAttribute="trailing" secondItem="Xa5-xY-BVv" secondAttribute="trailing" id="HZP-Kf-CoB"/>
-                            <constraint firstItem="JVb-Ok-OEz" firstAttribute="height" secondItem="wFg-yk-usG" secondAttribute="height" multiplier="0.5" id="IDE-mF-9jE"/>
+                            <constraint firstItem="JVb-Ok-OEz" firstAttribute="height" secondItem="wFg-yk-usG" secondAttribute="height" multiplier="0.25" id="IDE-mF-9jE"/>
                             <constraint firstItem="rhX-Qq-6R4" firstAttribute="top" secondItem="JVb-Ok-OEz" secondAttribute="bottom" constant="30" id="KKi-u4-cht"/>
+                            <constraint firstItem="imz-c1-4Fu" firstAttribute="top" secondItem="Xa5-xY-BVv" secondAttribute="top" constant="20" id="SvZ-nx-Mcg"/>
                             <constraint firstItem="B8M-ht-rXG" firstAttribute="leading" secondItem="Xa5-xY-BVv" secondAttribute="leading" id="czY-8Z-eXc"/>
-                            <constraint firstItem="rhX-Qq-6R4" firstAttribute="height" secondItem="wFg-yk-usG" secondAttribute="height" multiplier="0.2" id="hhe-8z-r1g"/>
+                            <constraint firstItem="rhX-Qq-6R4" firstAttribute="height" secondItem="wFg-yk-usG" secondAttribute="height" multiplier="0.15" id="hhe-8z-r1g"/>
                             <constraint firstItem="rhX-Qq-6R4" firstAttribute="width" secondItem="wFg-yk-usG" secondAttribute="width" multiplier="0.9" id="jI3-vI-R4q"/>
                             <constraint firstItem="rhX-Qq-6R4" firstAttribute="centerX" secondItem="Xa5-xY-BVv" secondAttribute="centerX" id="jYw-Xj-pRW"/>
+                            <constraint firstItem="imz-c1-4Fu" firstAttribute="width" secondItem="JVb-Ok-OEz" secondAttribute="width" id="vwK-zI-O6g"/>
                         </constraints>
                     </view>
                     <connections>
@@ -205,7 +216,7 @@
             <objects>
                 <viewController id="IOh-XI-Mj0" customClass="RecorderViewController" customModule="Clew" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="TNg-XO-bTf">
-                        <rect key="frame" x="0.0" y="0.0" width="337.5" height="133.5"/>
+                        <rect key="frame" x="0.0" y="0.0" width="337.5" height="100"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <viewLayoutGuide key="safeArea" id="xdJ-M9-0cS"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>

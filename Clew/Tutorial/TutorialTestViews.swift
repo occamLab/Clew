@@ -16,7 +16,7 @@ import IntentsUI
 //For current Sprint
 //TODO: make sure we can't access old tutorial modules from VoiceOver when clicking next
 //TODO: 1 add content to all pages 4 add localized strings to everything
-//TODO: stop AR session when needed based on the tutorial state
+//TODO: (tabled) stop AR session when needed based on the tutorial state
 
 //For the future
 //TODO: make sure contextual help makes sense in all cases (e.g., the recording use case doesn't really work)
@@ -319,10 +319,6 @@ struct OrientPhone: View {
                 Text(NSLocalizedString("orientPhoneTutorialInstructionTextParagraph2", comment: "Text that explains how to orient the phone for the best experience using Clew Paragraph 2"))
                 Text(NSLocalizedString("orientPhoneTutorialInstructionTextParagraph3", comment: "Text that explains how to orient the phone for the best experience using Clew Paragraph 3"))
             }
-
-            TutorialNavLink(destination: OrientPhoneTips()) {
-                Text(NSLocalizedString("tipTutorialTitle", comment: "text on button to tips page"))
-            }
             
             TutorialNavLink(destination: PracticeOrientPhone()) {
                 Text(NSLocalizedString("practiceTutorialTitle", comment: "button for practicing a skill in the tutorial"))
@@ -349,7 +345,7 @@ struct OrientPhoneTips: View {
             
         }
         Spacer()
-        TutorialNavLink(destination: PracticeOrientPhone()) {
+        TutorialNavLink(destination: SingleUse()) {
             Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
         }
     }
@@ -491,12 +487,12 @@ struct PracticeOrientPhone: View {
         }
         if didCompleteActivity {
             Spacer()
-            TutorialNavLink(destination: FindPath()) {
+            TutorialNavLink(destination: OrientPhoneTips()) {
                 Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
             } //change skip button to next button when score equals three because the user has completed the practice
         } else {
             Spacer()
-            TutorialNavLink(destination: FindPath()) {
+            TutorialNavLink(destination: OrientPhoneTips()) {
                 Text(NSLocalizedString("buttonTexttoSkip", comment: "Text on skip button"))
             }
         }
@@ -642,7 +638,7 @@ struct FindPathPractice2: View {
         }
         
         Spacer()
-        TutorialNavLink(destination: SingleUse()) {
+        TutorialNavLink(destination: OrientPhoneTips()) {
             Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
         }
     }
@@ -666,7 +662,7 @@ struct PracticeSuccess: View {
                 Spacer()
                     .frame(height: 100)
                 if UserDefaults.standard.bool(forKey: "FindPathPractice1Completed") {
-                    TutorialNavLink(destination: SingleUse()) {
+                    TutorialNavLink(destination: OrientPhoneTips()) {
                         Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
                     }
                 } else {

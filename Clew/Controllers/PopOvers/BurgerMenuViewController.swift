@@ -32,13 +32,13 @@ class BurgerMenuViewController: UITableViewController, UIPopoverPresentationCont
 //            helpButtonPressed()
 //        }
         if indexPath == [0,1] {
-            feedbackButtonPressed()
-        }
-        if indexPath == [0,2] {
             tutorialButtonPressed()
         }
-        if indexPath == [0,3] {
+        if indexPath == [0,2] {
             siriShortcutsButtonPressed()
+        }
+        if indexPath == [0,3] {
+            feedbackButtonPressed()
         }
     }
     
