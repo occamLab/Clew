@@ -490,25 +490,41 @@
 
 "findingSavedRoutesTutorialInstructionText" = "Once you save a route, it can be found in your Saved Routes List. You can enter the list from the third button on the home screen. From the list click the route that you want to follow, line your phone up with your anchor point and follow the route.";
 
-"settingOptionsTutorialButtonText" = "Setting Options";
-"settingOptionsTutorialInstructionText" = "When you go into settings which is located at the top of the menu, you can chose to change the units the app works in, the color of the path that shows up on your phone, what kind of feedback Clew gives you, and a few other settings.
+"settingOptionsTutorialButtonText" = "Settings";
+"settingOptionsTutorialInstructionTextParagraph1" = "Clew settings allow you to customize your experience with the app. This module will walk you through some of the important feature settings within Clew. You can always return to the Settings by tapping on the main menu icon.";
 
-You can also reenter the settings walk through that popped up when you first entered Clew by clicking below.";
+"settingOptionsTutorialInstructionTextParagraph2" = "Tap the 'Clew Initial Setup' button to begin.";
 
 //Settings Walk Through
-"settingsWalkThroughTitle" = "Settings Walk Through";
-"settingsWalkThroughIntro" = "You can adjust all the settings from the settings tap in the main menu at anytime, or go to the next page to walk through the settings options.";
-"settingsWalkThroughSetUnitsTitle" = "Distance Units";
-"settingsWalkThroughSetUnitsImperialButton" = "Imperial";
-"settingsWalkThroughSetUnitsMetricButton" = "Metric";
-"settingsWalkThroughCrumbColorTitle" = "Choose Crumb Color";
-"settingsWalkThroughPathColorTitle" = "Choose Path Color";
-"settingsWalkThroughPhoneBodyOffsetTitle" = "Correct for Phone / Body Offset?";
-"settingsWalkThroughDontAdjustPhoneBodyOffset" = "Don't Automatically Correct Offset";
-"settingsWalkThroughAdjustPhoneBodyOffset" = "Automatically Correct Offset";
+"settingsWalkThroughTitle" = "Clew Initial Setup";
+"settingsWalkThroughSetUnitsTitle" = "Units of Distance";
+"settingsWalkThroughSetUnitsText" = "When providing directional cues, Clew may announce distance using either metric units (meters) or Imperial units (Feet). Please select the unit system that’s best for you.";
+"settingsWalkThroughSetUnitsImperialButton" = "Imperial (feet)";
+"settingsWalkThroughSetUnitsMetricButton" = "Metric (meters)";
+"settingsWalkThroughCrumbColorTitle" = "Crumb or Waypoint Color";
+"settingsWalkThroughCrumbColorText" = "Clew displays virtual crumb or waypoints along the route. Please select a color from the list below. You can always change the color later.";
+"settingsWalkThroughPathColorTitle" = "Path Line Color";
+"settingsWalkThroughPathColorText" = "Clew shows the route path by displaying a virtual line that intersects with the waypoints or crumbs. Please select a color for your path line from the list. Tip: You can make the path line a different color from the crumb in order to improve contrast between them.";
+"settingsWalkThroughFeedbackOptionsTitle" = "Feedback";
+"settingsWalkThroughFeedbackOptionsText" = "Clew provides sounds, haptic (vibration) feedback and voice cues to help you navigate a route. You can turn these ON/OFF at any time in the Settings. But, we recommend that you at least keep one mode of feedback active in order to have the best experience with Clew. Tip: new users are encouraged to keep all feedback modes on.";
+"settingsWalkThroughFeedbackOptionsSound" = "Sound";
+"settingsWalkThroughFeedbackOptionsSpeech" = "Voice cues";
+"settingsWalkThroughFeedbackOptionsHaptic" = "Haptic (vibrations)";
+
+"settingsWalkThroughPhoneBodyOffsetTitle" = "Automatic Phone Pose Correction";
+"settingsWalkThroughPhoneBodyOffsetTextParagraph1" = "The accuracy of Clew’s navigation and directional guidance relies heavily on you holding and maintaining your phone in the correct 'pose' (the direction which it’s facing) when you’re traveling along a route.";
+"settingsWalkThroughPhoneBodyOffsetTextParagraph2" = "Clew's Automatic Phone Pose Correction feature helps correct for any offset or changes to the pose of your phone. It’s especially useful for users who have difficulty perceiving their phone's spatial orientation or direction during travel and will make the navigation guidance from Clew more accurate.";
+"settingsWalkThroughPhoneBodyOffsetTextParagraph3" = "Select below to enable or disable the Automatic Phone Pose Correction.";
+
+"settingsWalkThroughDontAdjustPhoneBodyOffset" = "Disable Automatic Correction";
+"settingsWalkThroughAdjustPhoneBodyOffset" = "Enable Automatic Correction";
+
+"settingsWalkThroughCompleteTitle" = "Clew Initial Setup Complete";
+"settingsWalkThroughCompleteText" = "Congratulations! You’ve completed the initial settings for Clew. Remember that you can change your settings at any time by tapping the main menu icon and selecting Settings.";
+
 
 "endOfTutorialTitleText" = "End of Tutorial";
-"endOfTutorialMainText" = "Nice Job! You've completed the Clew tutorial. You can come back to this information at anytime through the menu options or by pressing the help button on the Clew main screens.";
+"endOfTutorialMainText" = "Nice Job! You've completed the Clew tutorial. You can come back to this information at anytime through the menu options or by pressing the help button on the Clew main screen.";
 
 //Sharing routes
 "automaticEmailTextWhenSharingRoutes" = "Check out this route!";
@@ -529,15 +545,23 @@ You can also reenter the settings walk through that popped up when you first ent
 "currentSiriShortcuts" = "Current Siri Shortcuts for Clew";
 
 "significantVersionChanges-HelpMeWithSiri" = "Setup Siri Shortcuts Now";
-"siriWalkthroughTutorialTitleText" = "Siri Shortcuts";
-"siriWalkthroughTutorialInstructionText" = "Placeholder for the text to set Siri shortcuts";
-"siriWalkthroughButtonText" = "Siri Shortcuts Setup Walkthrough";
-"siriWalkthroughSetRecordRouteShortcutText" = "This is placeholder text for where we would explain the role of the record a single use route shortcut.";
-
-"siriWalkthroughSetEndRecordingShortcutText" = "This is placeholder text for where we would explain the role of the stop recording a single use route shortcut.";
-
-"siriWalkthroughSetNavigateBackText" = "This is placeholder text for where we would explain the role of the navigate back along a single use route shortcut.";
-"setRecordRouteShortcut" = "Set Shortcut for Recording a Single Use Route";
-"setEndRecordingShortcut" = "Set Shortcut for Ending a Route Recording";
-"setNavigateBackShortcut" = "Set Shortcut for Navigating a Single Use Route";
 "siriWalkthroughTutorialButtonText" = "Siri Shortcuts";
+"siriWalkthroughTutorialTitleText" = "Siri Shortcuts";
+"siriWalkthroughTutorialInstructionTextParagraph1" = "Siri shortcuts offer a convenient and hand-free way to use apps by voice commands You can control certain functions within Clew using Siri voice commands. Please note that it’s important to speak the correct voice command in order for the shortcut to work. The list below shows the currently available Siri shortcuts for Clew.";
+
+"siriWalkthroughTutorialInstructionTextParagraph2" = "Tap the 'Siri Shortcuts Setup' button if it’s your first time using Siri for Clew.";
+"siriWalkthroughButtonText" = "Siri Shortcuts Setup";
+
+
+"siriWalkthroughSetRecordRouteShortcutTitle" = "Start Single Use Route";
+"siriWalkthroughSetRecordRouteShortcutText" = "The setup will take you to Apple's Siri shortcuts where you'll write the phrase that you want Siri to recall as the voice command. We recommend using short phrases that are easy to remember and are specific to its feature or function. Some suggested phrases are: \"Start a single use route\", \"Clew start single use route\". Tap the Setup button below to begin.";
+
+"siriWalkthroughSetEndRecordingShortcutTitle" = "Stop Recording Route";
+"siriWalkthroughSetEndRecordingShortcutText" = "The setup will take you to Apple’s Siri shortcuts where you'll write the phrase that you want Siri to recall as the voice command. We recommend using short phrases that are easy to remember and are specific to its feature or function. Some suggested phrases are: \"End the route\", \"Clew stop recording the route\". Tap the Setup button below to begin.";
+
+"siriWalkthroughSetNavigateBackTitle" = "Return Me Back";
+"siriWalkthroughSetNavigateBackText" = "The setup will take you to Apple's Siri shortcuts where you'll write the phrase that you want Siri to recall as the voice command. We recommend using short phrases that are easy to remember and are specific to its feature or function. Some suggested phrases are: \"Return me back\", \"Clew start return navigation\". Tap the Setup button below to begin.";
+"setSiriShortcutButton" = "Set Siri shortcut";
+
+"siriWalkthroughCompleteTitle" = "Siri Shortcuts Setup Complete";
+"siriWalkthroughCompleteText" = "Nice Job! Your Siri shortcuts are now ready for you to use. You can come back to Siri shortcuts to make any changes to the shortcuts at any time by tapping on the Main Menu icon or from within the tutorials.";

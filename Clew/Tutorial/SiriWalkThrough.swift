@@ -87,14 +87,17 @@ struct EditShortcutWrapper: UIViewControllerRepresentable {
 struct SetRecordShortcut: View{
     @State var presentPopup = false
     var body: some View {
+        Text(NSLocalizedString("siriWalkthroughSetRecordRouteShortcutTitle", comment: "The page title for the Siri shortcut for recording a route")).padding()
+
+        Text(NSLocalizedString("siriWalkthroughSetRecordRouteShortcutText", comment: "The page text for the Siri shortcut for recording a route")).padding()
+        
         TutorialScreen{
             VStack {
-                Text(NSLocalizedString("siriWalkthroughSetRecordRouteShortcutText", comment: "The page title for the Siri shortcut for recording a route")).padding()
                 Button(action:{
                     presentPopup.toggle()
                 }) {
                     TutorialButton {
-                        Text(NSLocalizedString("setRecordRouteShortcut", comment: "Set the record route Siri shortcut"))
+                        Text(NSLocalizedString("setSiriShortcutButton", comment: "Set a Siri shortcut"))
                     }
                 }
             }.sheet(isPresented: $presentPopup) {
@@ -117,13 +120,16 @@ struct SetEndRecordingShortcut: View{
     @State var presentPopup = false
     var body: some View {
         TutorialScreen{
+            Text(NSLocalizedString("siriWalkthroughSetEndRecordingShortcutTitle", comment: "The page title for setting the Siri shortcut for ending the route recording")).padding()
+            
+            Text(NSLocalizedString("siriWalkthroughSetEndRecordingShortcutText", comment: "The page text for setting the Siri shortcut for ending the route recording")).padding()
+            
             VStack {
-                Text(NSLocalizedString("siriWalkthroughSetEndRecordingShortcutText", comment: "The page title for setting the Siri shortcut for ending the route recording")).padding()
                 TutorialButton {
                     Button(action:{
                         presentPopup.toggle()
                     }) {
-                        Text(NSLocalizedString("setEndRecordingShortcut", comment: "Set the record route Siri shortcut"))
+                        Text(NSLocalizedString("setSiriShortcutButton", comment: "Set a Siri shortcut"))
                     }
                 }
             }.sheet(isPresented: $presentPopup) {
@@ -143,16 +149,18 @@ struct SetEndRecordingShortcut: View{
 
 struct SetNavigateBackShortcut: View{
     @State var presentPopup = false
-    @ObservedObject var showPage = ShowTutorialPage.shared
     var body: some View {
         TutorialScreen{
+            Text(NSLocalizedString("siriWalkthroughSetNavigateBackTitle", comment: "Title for setting the Siri shortcut for ending the route recording")).padding()
+
+            Text(NSLocalizedString("siriWalkthroughSetNavigateBackText", comment: "Text for setting the Siri shortcut for ending the route recording")).padding()
+
             VStack {
-                Text(NSLocalizedString("siriWalkthroughSetNavigateBackText", comment: "Set the Siri shortcut for ending the route recording")).padding()
                 TutorialButton {
                     Button(action:{
                         presentPopup.toggle()
                     }) {
-                        Text(NSLocalizedString("setNavigateBackShortcut", comment: "Set the Siri shortcut for navigating back"))
+                        Text(NSLocalizedString("setSiriShortcutButton", comment: "Set a Siri shortcut"))
                     }
                 }
             }.sheet(isPresented: $presentPopup) {
@@ -162,6 +170,22 @@ struct SetNavigateBackShortcut: View{
                     SetNewShortcutWrapper(activity: SiriShortcutsController.startNavigationShortcut(), showModal: $presentPopup)
                 }
             }
+        }
+        Spacer()
+
+        TutorialNavLink(destination: SiriSetupComplete()) {
+            Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
+        }
+    }
+}
+
+struct SiriSetupComplete: View {
+    @ObservedObject var showPage = ShowTutorialPage.shared
+    var body: some View {
+        TutorialScreen{
+            Text(NSLocalizedString("siriWalkthroughCompleteTitle", comment: "Title for when you complete the Siri shortcut setup")).padding()
+
+            Text(NSLocalizedString("siriWalkthroughCompleteText", comment: "Text for when you complete the Siri shortcut setup")).padding()
         }
         Spacer()
 

@@ -14,7 +14,8 @@ import Intents
 import IntentsUI
 
 //For current Sprint
-//TODO: make sure we can't access old tutorial modes when clicking next
+//TODO: make sure we can't access old tutorial modules from VoiceOver when clicking next
+//TODO: selecting tutorial from the burger menu doesn't seem to clear out the old selection of active tutorial link
 //TODO: 1 add content to all pages 4 add localized strings to everything
 //TODO: stop AR session when needed based on the tutorial state
 //TODO: Get rid of reset tutorial practice onto main page
@@ -402,7 +403,9 @@ struct PracticeOrientPhoneSubComponent: View {
         if score >= 3 {
             Text(NSLocalizedString("orientPhoneTutorialPracticeSuccess", comment: "Text when user has completed the phone position practice"))
         }
-        Spacer().onReceive(self.arData.objectWillChange) { newARData in
+        Spacer()
+            .frame(height: 50)
+            .onReceive(self.arData.objectWillChange) { newARData in
             if started {
                 if let transform = arData.transform {
                     let y = transform.columns.0.y
@@ -663,7 +666,8 @@ struct PracticeSuccess: View {
                     Text(NSLocalizedString("findPathPracticeSuccess1Text", comment: "Text for the success of the first practice route."))
                 }
                 
-                Spacer() //TODO: spacer does not push next button to the bottom :(
+                Spacer()
+                    .frame(height: 100)
                 if UserDefaults.standard.bool(forKey: "FindPathPractice1Completed") {
                     TutorialNavLink(destination: SingleUse()) {
                         Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
@@ -1171,11 +1175,13 @@ struct SettingOptions: View {
         TutorialScreen{
             Text(NSLocalizedString( "settingOptionsTutorialButtonText", comment: "Title for the setting options part of the tutorial"))
             
-            //ScrollView{
-            Text(NSLocalizedString( "settingOptionsTutorialInstructionText", comment: "Information about what the setting options are"))
-            //.fixedSize(horizontal: false, vertical: true)
+            VStack(alignment: .leading, spacing: 20) {
+                Text(NSLocalizedString( "settingOptionsTutorialInstructionTextParagraph1", comment: "Information about what the setting options are paragraph 1"))
+                Text(NSLocalizedString( "settingOptionsTutorialInstructionTextParagraph2", comment: "Information about what the setting options are paragraph 2"))
+            }
+
             
-            TutorialNavLink(destination: SettingWalkThrough()) {
+            TutorialNavLink(destination: setUnit()) {
                 Text(NSLocalizedString("settingsWalkThroughTitle", comment: "Title for the Settings Walk Through"))
             }
             
@@ -1203,9 +1209,10 @@ struct SiriWalkthrough: View {
         TutorialScreen{
             Text(NSLocalizedString( "siriWalkthroughTutorialTitleText", comment: "Title for the Siri walkthrough part of the tutorial"))
             
-            //ScrollView{
-            Text(NSLocalizedString( "siriWalkthroughTutorialInstructionText", comment: "Information about what the setting options are"))
-            //.fixedSize(horizontal: false, vertical: true)
+            VStack(alignment: .leading, spacing: 20) {
+                Text(NSLocalizedString( "siriWalkthroughTutorialInstructionTextParagraph1", comment: "Information about what the siri shortcuts are paragraph 1"))
+                Text(NSLocalizedString( "siriWalkthroughTutorialInstructionTextParagraph2", comment: "Information about what the siri shortcuts are paragraph 2"))
+            }
             
             if !SiriShortcutsManager.shared.voiceShortcuts.isEmpty {
                 Text(NSLocalizedString("currentSiriShortcuts", comment: "this is header text for the list of current Siri shortcuts the user has created within the Clew app")).padding()

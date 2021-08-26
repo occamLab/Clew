@@ -8,19 +8,6 @@
 
 import SwiftUI
 
-
-struct SettingWalkThrough: View {
-    var body: some View {
-        TutorialScreen{
-            Text(NSLocalizedString("settingsWalkThroughIntro", comment: "Intro text to the settings walk through"))
-        
-        }
-        Spacer()
-        TutorialNavLink(destination: setUnit()) {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
-    }
-}
-
-
 struct TutorialButtonSelected<Content: View>: View {
     //Button format when an option is selected, highlights and outlines the option selected
     let content: Content
@@ -88,6 +75,9 @@ struct setUnit: View{
         TutorialScreen{
             Text(NSLocalizedString("settingsWalkThroughSetUnitsTitle", comment: "Set units page title"))
             
+            Text(NSLocalizedString("settingsWalkThroughSetUnitsText", comment: "Set units page text")).padding()
+
+            
             Button(action:{
                     UserDefaults.standard.setValue(0, forKey: "units")
             }) {
@@ -134,11 +124,11 @@ struct setUpCrumbColor: View {
             VStack {
                 Text(NSLocalizedString("settingsWalkThroughCrumbColorTitle", comment: "Crumb color title"))
                 
+                Text(NSLocalizedString("settingsWalkThroughCrumbColorText", comment: "Crumb color text")).padding()
+                
                 ForEach(colors.indices) { i in
                     Button(action:{
-                            print(colors[i])
                             UserDefaults.standard.setValue(i, forKey: "crumbColor")
-                            //crumbColor = "red"
                     })
                     {
                     if UserDefaults.standard.integer(forKey: "crumbColor") == i {
@@ -184,6 +174,8 @@ struct setUpPathColor: View {
         TutorialScreen{
             VStack {
                 Text(NSLocalizedString("settingsWalkThroughPathColorTitle", comment: "Path color title"))
+                
+                Text(NSLocalizedString("settingsWalkThroughPathColorText", comment: "Path color text")).padding()
                 
                 ForEach(colors.indices) { i in
                  // trying to make a button for each button
@@ -231,9 +223,9 @@ struct setUpFeedback: View{
     //let feedback = ["Sound", "Voice", "Haptic"]
     var body: some View{
         TutorialScreen{
-            Text("Feedback Options")
-            
-            Text("We recomend that you leave all of the feedback options on until you have played around with Clew for a while. Then you can return to settings and decide if you want to turn off any of the feedback features.")
+            Text(NSLocalizedString("settingsWalkThroughFeedbackOptionsTitle", comment: "the title of the feedback options portion of the tutorial"))
+                 
+            Text(NSLocalizedString("settingsWalkThroughFeedbackOptionsText", comment: "the text of the feedback options portion of the tutorial")).padding()
             
             Button(action: {
                 if UserDefaults.standard.bool(forKey: "soundFeedback"){
@@ -241,14 +233,15 @@ struct setUpFeedback: View{
                 } else{
                     UserDefaults.standard.setValue(true, forKey: "soundFeedback")
                 }
-            })
-            {if UserDefaults.standard.bool(forKey: "soundFeedback"){
-                TutorialButtonSelected{
-                    Text("Sound")}
-        
-            } else {
-                TutorialButtonNotSelected{
-                    Text("Sound")}
+            }) {
+                if UserDefaults.standard.bool(forKey: "soundFeedback"){
+                    TutorialButtonSelected{
+                        Text(NSLocalizedString("settingsWalkThroughFeedbackOptionsSound", comment: "button text for turning on sound feedback in the tutorial"))
+                    }
+                } else {
+                    TutorialButtonNotSelected{
+                        Text(NSLocalizedString("settingsWalkThroughFeedbackOptionsSound", comment: "button text for turning on sound feedback in the tutorial"))
+                    }
                 }
             }
             
@@ -259,14 +252,15 @@ struct setUpFeedback: View{
                 } else{
                     UserDefaults.standard.setValue(true, forKey: "voiceFeedback")
                 }
-            })
-            {if UserDefaults.standard.bool(forKey: "voiceFeedback"){
-                TutorialButtonSelected{
-                    Text("Voice")}
-        
-            } else {
-                TutorialButtonNotSelected{
-                    Text("Voice")}
+            }) {
+                if UserDefaults.standard.bool(forKey: "voiceFeedback"){
+                    TutorialButtonSelected {
+                        Text(NSLocalizedString("settingsWalkThroughFeedbackOptionsSpeech", comment: "button text for turning on voice feedback in the tutorial"))
+                    }
+                } else {
+                    TutorialButtonNotSelected{
+                        Text(NSLocalizedString("settingsWalkThroughFeedbackOptionsSpeech", comment: "button text for turning on voice feedback in the tutorial"))
+                    }
                 }
             }
             
@@ -276,17 +270,17 @@ struct setUpFeedback: View{
                 } else{
                     UserDefaults.standard.setValue(true, forKey: "hapticFeedback")
                 }
-            })
-            {if UserDefaults.standard.bool(forKey: "hapticFeedback"){
-                TutorialButtonSelected{
-                    Text("Haptic")}
-        
-            } else {
-                TutorialButtonNotSelected{
-                    Text("Haptic")}
+            }) {
+                if UserDefaults.standard.bool(forKey: "hapticFeedback"){
+                    TutorialButtonSelected{
+                        Text(NSLocalizedString("settingsWalkThroughFeedbackOptionsHaptic", comment: "button text for turning on haptic feedback in the tutorial"))
+                    }
+                } else {
+                    TutorialButtonNotSelected{
+                        Text(NSLocalizedString("settingsWalkThroughFeedbackOptionsHaptic", comment: "button text for turning on haptic feedback in the tutorial"))
+                    }
                 }
             }
-            
         }
         Spacer()
         TutorialNavLink(destination: SetPhoneBodyOffset())
@@ -298,11 +292,13 @@ struct SetPhoneBodyOffset: View{
     @ObservedObject var settings = SettingsWrapper.shared
     var body: some View {
         TutorialScreen{
-            Text(NSLocalizedString("settingsWalkThroughPhoneBodyOffsetTitle", comment: "Determine whether to use the phone body offset correction page title")).padding()
+            Text(NSLocalizedString("settingsWalkThroughPhoneBodyOffsetTitle", comment: "Determine whether to use the phone body offset correction page title"))
             
-            Text(NSLocalizedString("followingARouteCorrectOffsetAutomaticallyContentParagraph1", comment: "Determine whether to use the phone body offset correction page text"))
-            
-            Text(NSLocalizedString("followingARouteCorrectOffsetAutomaticallyContentParagraph2", comment: "Determine whether to use the phone body offset correction page text"))
+            VStack(alignment: .leading, spacing: 20) {
+                Text(NSLocalizedString("settingsWalkThroughPhoneBodyOffsetTextParagraph1", comment: "Determine whether to use the phone body offset correction page text paragraph 1"))
+                Text(NSLocalizedString("settingsWalkThroughPhoneBodyOffsetTextParagraph2", comment: "Determine whether to use the phone body offset correction page text paragraph 2"))
+                Text(NSLocalizedString("settingsWalkThroughPhoneBodyOffsetTextParagraph3", comment: "Determine whether to use the phone body offset correction page text paragraph 3"))
+            }
 
             
             Button(action:{
@@ -344,13 +340,13 @@ struct SetPhoneBodyOffset: View{
 struct settingsWalkThroughEndPage: View{
     var body: some View{
         TutorialScreen{
-            Text("End of Settings Walk Through")
+            Text(NSLocalizedString("settingsWalkThroughCompleteTitle", comment: "Title of the screen displayed at the end of the settings walkthrough")).padding()
             
-            Text("Clew is all set up according to your preferences. You can change any settings at anytime through the settings page. You can also access this settings walk through again by entering the tutorial and then going to 'Settings Options'.")
+            Text(NSLocalizedString("settingsWalkThroughCompleteText", comment: "Text of the screen displayed at the end of the settings walkthrough")).padding()
         }
         Spacer()
-        Button(action: {
-            NotificationCenter.default.post(name: Notification.Name("TutorialPopoverReadyToDismiss"), object: nil)
-        }) {TutorialButton{Text("Exit Walk Through")}}
+        TutorialNavLink(destination: SiriWalkthrough()) {
+            Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
+        }
     }
 }
