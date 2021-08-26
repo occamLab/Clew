@@ -345,7 +345,7 @@ struct OrientPhoneTips: View {
             
         }
         Spacer()
-        TutorialNavLink(destination: SingleUse()) {
+        TutorialNavLink(destination: FindPath()) {
             Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
         }
     }
@@ -638,7 +638,7 @@ struct FindPathPractice2: View {
         }
         
         Spacer()
-        TutorialNavLink(destination: OrientPhoneTips()) {
+        TutorialNavLink(destination: SingleUse()) {
             Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
         }
     }
@@ -662,7 +662,7 @@ struct PracticeSuccess: View {
                 Spacer()
                     .frame(height: 100)
                 if UserDefaults.standard.bool(forKey: "FindPathPractice1Completed") {
-                    TutorialNavLink(destination: OrientPhoneTips()) {
+                    TutorialNavLink(destination: SingleUse()) {
                         Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
                     }
                 } else {
@@ -901,13 +901,13 @@ struct AnchorPointPracticeSubComponent: View {
     @State var accuracy: AlignmentAccuracy = .none
 
     static let xPerfectThreshold = Float(0.1)
-    static let yPerfectThreshold = Float(0.1)
+    static let yPerfectThreshold = Float(0.5)
     static let zPerfectThreshold = Float(0.1)
     static let yawPerfectThreshold = Float(0.1)
-    static let xGoodThreshold = Float(0.5)
+    static let xGoodThreshold = Float(0.3)
     static let yGoodThreshold = Float(0.5)
-    static let zGoodThreshold = Float(0.5)
-    static let yawGoodThreshold = Float(0.5)
+    static let zGoodThreshold = Float(0.3)
+    static let yawGoodThreshold = Float(0.2)
     
     var body: some View {
         Image("Align")
@@ -992,7 +992,7 @@ struct AnchorPointPracticeSubComponent: View {
             }
             
             Button(action: {
-                practiceState = .anchorPointSet
+                practiceState = .readyForAlignmentInstructions
             }) {
                 TutorialButton{
                     Text(NSLocalizedString("anchorPointPracticeRetryAlignButton", comment: "button text to retry aligning the anchor point"))

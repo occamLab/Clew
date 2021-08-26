@@ -125,10 +125,10 @@ struct SetEndRecordingShortcut: View{
             Text(NSLocalizedString("siriWalkthroughSetEndRecordingShortcutText", comment: "The page text for setting the Siri shortcut for ending the route recording")).padding()
             
             VStack {
-                TutorialButton {
-                    Button(action:{
-                        presentPopup.toggle()
-                    }) {
+                Button(action:{
+                    presentPopup.toggle()
+                }) {
+                    TutorialButton {
                         Text(NSLocalizedString("setSiriShortcutButton", comment: "Set a Siri shortcut"))
                     }
                 }
@@ -156,10 +156,10 @@ struct SetNavigateBackShortcut: View{
             Text(NSLocalizedString("siriWalkthroughSetNavigateBackText", comment: "Text for setting the Siri shortcut for ending the route recording")).padding()
 
             VStack {
-                TutorialButton {
-                    Button(action:{
-                        presentPopup.toggle()
-                    }) {
+                Button(action:{
+                    presentPopup.toggle()
+                }) {
+                    TutorialButton {
                         Text(NSLocalizedString("setSiriShortcutButton", comment: "Set a Siri shortcut"))
                     }
                 }
