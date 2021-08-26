@@ -81,6 +81,8 @@ class BurgerMenuViewController: UITableViewController, UIPopoverPresentationCont
     
     func tutorialButtonPressed() {
         let tutorialView = TutorialTestView()
+        ShowTutorialPage.shared.selectedView = ""
+        ShowTutorialPage.shared.confineToSection = false
         tutorialHostingController = UIHostingController(rootView: tutorialView)
         self.present(tutorialHostingController!, animated: true, completion: nil)
     }

@@ -665,9 +665,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         return true
     }
 
-    /// audio players for playing system sounds through an `AVAudioSession` (this allows them to be audible even when the rocker switch is muted.
-    var audioPlayers: [Int: AVAudioPlayer] = [:]
-    
     /// Callback function for when `countdownTimer` updates.  This allows us to announce the new value via voice
     ///
     /// - Parameter newValue: the new value (in seconds) displayed on the countdown timer
@@ -735,7 +732,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         sceneView.frame = view.frame
         view.addSubview(sceneView)
         
-        setupAudioPlayers()
         loadAssets()
         createSettingsBundle()
         createARSessionConfiguration()
@@ -819,23 +815,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         // make sure to fetch these before we need them
         SiriShortcutsManager.shared.updateVoiceShortcuts(completion: nil)
     }
-    
-    /// Create the audio player objdcts for the various app sounds.  Creating them ahead of time helps reduce latency when playing them later.
-    func setupAudioPlayers() {
-        do {
-            audioPlayers[1103] = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: "/System/Library/Audio/UISounds/Tink.caf"))
-            audioPlayers[1016] = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: "/System/Library/Audio/UISounds/tweet_sent.caf"))
-            audioPlayers[1050] = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: "/System/Library/Audio/UISounds/ussd.caf"))
-            audioPlayers[1025] = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: "/System/Library/Audio/UISounds/New/Fanfare.caf"))
-
-            for p in audioPlayers.values {
-                p.prepareToPlay()
-            }
-        } catch let error {
-            print("count not setup audio players", error)
-        }
-    }
-
     
     /// Load the crumb 3D model
     func loadAssets() {
@@ -1195,25 +1174,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
     }
 
-    /// Play the specified system sound.  If the system sound has been preloaded as an audio player, then play using the AVAudioSession.  If there is no corresponding player, use the `AudioServicesPlaySystemSound` function.
-    ///
-    /// - Parameter id: the id of the system sound to play
-    func playSystemSound(id: Int) {
-        do {
-            try AVAudioSession.sharedInstance().setCategory(AVAudioSession.Category.playback)
-            try AVAudioSession.sharedInstance().setActive(true)
-            guard let player = audioPlayers[id] else {
-                // fallback on system sounds
-                AudioServicesPlaySystemSound(SystemSoundID(id))
-                return
-            }
-            
-            player.play()
-        } catch let error {
-            print(error.localizedDescription)
-        }
-    }
-    
     /// Adds double tap gesture to the sceneView to handle the anounce direction button (TODO: I'm not sure exactly what this does at the moment and how it differs from the button itself)
     func addGestures() {
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(announceDirectionHelp))
@@ -1343,6 +1303,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     func showResumeTrackingConfirmButton(route: SavedRoute, navigateStartToEnd: Bool) {
         rootContainerView.homeButton.isHidden = false
         hideAllViewsHelper()
+        resumeTrackingConfirmController.isTutorial = isTutorial
         add(resumeTrackingConfirmController)
         resumeTrackingConfirmController.view.mainText?.text = ""
         voiceNoteToPlay = nil
@@ -1583,7 +1544,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 if !self.suppressTrackingWarnings {
                     self.announce(announcement: NSLocalizedString("excessiveMotionDegradedTrackingAnnouncemnt", comment: "An announcement which lets the user know that there is too much movement of their device and thus the app's ability to track a route has been lowered."))
                     if self.soundFeedback {
-                        self.playSystemSound(id: 1050)
+                        SoundEffectManager.shared.playSystemSound(id: 1050)
                     }
                 }
             case .insufficientFeatures:
@@ -1591,7 +1552,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 if !self.suppressTrackingWarnings {
                     self.announce(announcement: NSLocalizedString("insuficientFeaturesDegradedTrackingAnnouncemnt", comment: "An announcement which lets the user know  that their current surroundings do not have enough visual markers and thus the app's ability to track a route has been lowered."))
                     if self.soundFeedback {
-                        self.playSystemSound(id: 1050)
+                        SoundEffectManager.shared.playSystemSound(id: 1050)
                     }
                 }
             default:
@@ -2072,8 +2033,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             let timeInterval = feedbackTimer.timeIntervalSinceNow
             if(-timeInterval > ViewController.FEEDBACKDELAY) {
                 // wait until desired time interval before sending another feedback
-                if (hapticFeedback) { feedbackGenerator?.impactOccurred() }
-                if (soundFeedback) { playSystemSound(id: 1103) }
+                if (hapticFeedback) {
+                    feedbackGenerator?.impactOccurred()
+                }
+                if (soundFeedback) { SoundEffectManager.shared.playSystemSound(id: 1103)
+                }
                 feedbackTimer = Date()
             }
         } /*else { // TODO: maybe this should be an announcement after they've been off the route for a certain amount of time or just activate the directions button.  Combine thud sound at low frequency
@@ -2613,7 +2577,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 if !suppressTrackingWarnings {
                     announce(announcement: NSLocalizedString("excessiveMotionDegradedTrackingAnnouncemnt", comment: "An announcement which lets the user know that there is too much movement of their device and thus the app's ability to track a route has been lowered."))
                     if soundFeedback {
-                        playSystemSound(id: 1050)
+                        SoundEffectManager.shared.playSystemSound(id: 1050)
                     }
                 }
             case .insufficientFeatures:
@@ -2622,7 +2586,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 if !suppressTrackingWarnings {
                     announce(announcement: NSLocalizedString("insuficientFeaturesDegradedTrackingAnnouncemnt", comment: "An announcement which lets the user know  that their current surroundings do not have enough visual markers and thus the app's ability to track a route has been lowered."))
                     if soundFeedback {
-                        playSystemSound(id: 1050)
+                        SoundEffectManager.shared.playSystemSound(id: 1050)
                     }
                 }
             case .initializing:
@@ -2660,7 +2624,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                     if reason != .initializing {
                         announce(announcement: NSLocalizedString("fixedTrackingAnnouncement", comment: "Let user know that the ARKit tracking session has returned to its normal quality (this is played after the tracking has been restored from thir being insuficent visual features or excessive motion which degrade the tracking)"))
                         if soundFeedback {
-                            playSystemSound(id: 1025)
+                            SoundEffectManager.shared.playSystemSound(id: 1025)
                         }
                     }
                 }
@@ -2701,8 +2665,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         isTutorial = true
         let path = Bundle.main.path(forResource: routeName, ofType:"crd")!
         let url = URL(fileURLWithPath: path)
-        //let isTutorial = true
-        
+
         if  let data = try? Data(contentsOf: url), let document = try? NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data) as? RouteDocumentData {
             //self.dataPersistence.importData(from: url)
             let thisRoute = document.route

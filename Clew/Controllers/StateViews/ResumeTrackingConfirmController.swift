@@ -38,6 +38,17 @@ class ResumeTrackingConfirmController: UIViewController, UIScrollViewDelegate {
         UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: self.confirmAlignmentButton)
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        if isTutorial {
+            confirmAlignmentButton.setImage(UIImage(named: "StartNavigation")!, for: .normal)
+            confirmAlignmentButton.accessibilityLabel = NSLocalizedString("startReturnNavigationButtonAccessibilityLabel", comment: "The accessibility label for the button that allows user to start navigating back along their route.")
+        } else {
+            confirmAlignmentButton.setImage(UIImage(named: "Align")!, for: .normal)
+            confirmAlignmentButton.accessibilityLabel = NSLocalizedString("startAlignmentCountdownButtonAccessibilityLabel", comment: "this is athe accessibility label for the button which allows the user to start an alignment procedure when saving an anchor point")
+        }
+        super.viewWillAppear(animated)
+    }
+    
     /// called when the view has loaded.  We setup various app elements in here.
     override func viewDidLoad() {
         super.viewDidLoad()

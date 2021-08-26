@@ -15,11 +15,8 @@ import IntentsUI
 
 //For current Sprint
 //TODO: make sure we can't access old tutorial modules from VoiceOver when clicking next
-//TODO: selecting tutorial from the burger menu doesn't seem to clear out the old selection of active tutorial link
 //TODO: 1 add content to all pages 4 add localized strings to everything
 //TODO: stop AR session when needed based on the tutorial state
-//TODO: Get rid of reset tutorial practice onto main page
-//TODO: make sounds play even with silent switch on
 
 //For the future
 //TODO: make sure contextual help makes sense in all cases (e.g., the recording use case doesn't really work)
@@ -328,7 +325,7 @@ struct OrientPhone: View {
             }
             
             TutorialNavLink(destination: PracticeOrientPhone()) {
-                Text(NSLocalizedString("orientPhoneTutorialPracticeTitle", comment: "Title for holding phone practice"))
+                Text(NSLocalizedString("practiceTutorialTitle", comment: "button for practicing a skill in the tutorial"))
             }
             
             
@@ -869,22 +866,6 @@ struct ApplesARWorldMap: View {
         }
     }
 }
-
-// Note: deprecated
-//struct AnchorPointTips: View {
-//    var body: some View {
-//        TutorialScreen {
-//            Text(NSLocalizedString("anchorPointsTutorialTipsTitle", comment: "Title of anchor point tips page"))
-//
-//            Text(NSLocalizedString("anchorPointsTutorialTipsText", comment: "Text of anchor point tips page"))
-//        }
-//
-//        Spacer()
-//        TutorialNavLink(destination: AnchorPointPractice())  {
-//            Text(NSLocalizedString("practiceTutorialTitle", comment: "Text for practice button"))
-//        }
-//    }
-//}
 
 enum AlignmentAccuracy {
     case none

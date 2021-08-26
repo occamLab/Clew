@@ -323,6 +323,8 @@
 "orientPhoneTutorialTip1" = "Try holding your phone against your chest when you’re navigating a route to ensure it remains in the correct vertical pose with the camera facing directly in front of you.";
 "orientPhoneTutorialTip2" = "We also recommend that you hold the phone in the opposite hand that you use to work with your white cane or guide dog.";
 
+"orientPhoneTutorialPracticeButton" = "Practicing the Correct Phone Pose";
+
 "orientPhoneTutorialPracticeTitle" = "Practicing the Correct Phone Pose";
 
 "orientPhoneTutorialPracticeInstructionsParagraph1" = "Now you can practice holding your phone in the correct pose for using Clew. Remember that the rear camera should face forward or away from you.";
@@ -355,14 +357,11 @@
 "gettingBackToTheCorrectPathTutorialInstructionTextParagraph2" = "Press the ‘Get Directions’ button to receive audio directions on how to get back on the route. This is especially helpful if you’ve become disoriented or off the correct path.";
 
 "findPathPractice1Title" = "Practice Your First Route";
-
 "findPathPractice1InstructionTextParagraph1" = "This first exercise will have you practice the simple route in order to get you accustomed to Clew’s sounds and feedback. This first route will guide you forward a few steps and then announce the end of the route. Pay particular attention to the sounds and directional cues.";
 "findPathPractice1InstructionTextParagraph2" = "Please make sure that you’re in a familiar area with sufficient space to move about before you begin this exercise. ";
 "findPathPractice1InstructionTextParagraph3" = "Tap the 'Practice' button and then tap 'Play' to begin the exercise.";
 
-"findPathPracticeBeginButtonText" = "Practice";
-
-"tutorialRouteAlignmentText" = "Begin the route by selecting start alignment and wait for the countdown to complete.";
+"tutorialRouteAlignmentText" = "To begin the route, tap the \"start navigation\" button below and wait for the countdown.";
 
 "findPathPractice2Title" = "Practice Second Path";
 "findPathPractice2InstructionText" = "Here you will practice following a Clew Route. Make sure you are in a familiar place with some open space around you. This path will guide you forward a few steps and then you will pass through a waypoint and be instructed to turn right. Then you will take a few more steps and then arrive. Select begin to enter the practice route.";
