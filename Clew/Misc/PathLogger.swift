@@ -17,6 +17,7 @@ import SceneKit
 
 /// A class to handle logging app usage data
 class PathLogger {
+    public static var shared = PathLogger()
     /// A handle to the Firebase storage
     let storageBaseRef = Storage.storage().reference()
     /// history of settings in the app
@@ -56,10 +57,18 @@ class PathLogger {
     /// list of keypoints - [[(LocationInfo)x, y, z, yaw]]
     var keypointData: LinkedList<Array<Any>> = []
     
+    /// the events that have been logged with the session
+    var eventData: LinkedList<String> = []
+    /// the events that have been logged with the session
+    var eventDataTime: LinkedList<Double> = []
+    
     /// the navigation route that the user is currently navigating
     var currentNavigationRoute: SavedRoute?
     /// the ARWorldMap that is currently navigating
     var currentNavigationMap: Any?
+    
+    private init() {
+    }
     
     /// language used in recording
     func currentLocale() -> String {
@@ -147,6 +156,12 @@ class PathLogger {
         settingsHistory.append((Date(), ["defaultUnit": defaultUnit, "defaultColor": defaultColor, "soundFeedback": soundFeedback, "voiceFeedback": voiceFeedback, "hapticFeedback": hapticFeedback, "sendLogs": sendLogs, "timerLength": timerLength, "adjustOffset": adjustOffset]))
     }
     
+    func logEvent(eventDescription: String) {
+        eventData.append(eventDescription)
+        let logTime = -stateTransitionLogTimer.timeIntervalSinceNow
+        eventDataTime.append(logTime)
+    }
+    
     /// Log language used by user in recording.
     //
     ///
@@ -191,6 +206,9 @@ class PathLogger {
         
         alignmentData = []
         alignmentDataTime = []
+        
+        eventData = []
+        eventDataTime = []
     }
     
     /// Compile log data and send it to the cloud
@@ -256,7 +274,9 @@ class PathLogger {
                                     "trackingErrorData": Array(trackingErrorData),
                                     "stateSequence": Array(stateSequence),
                                     "stateSequenceTime": Array(stateSequenceTime),
-                                    "settingsHistory": settingsHistory.map({$0.1})]
+                                    "settingsHistory": settingsHistory.map({$0.1}),
+                                    "eventData": Array(eventData),
+                                    "eventDataTime": Array(eventDataTime)]
         do {
             let jsonData = try JSONSerialization.data(withJSONObject: body, options: .prettyPrinted)
             // here "jsonData" is the dictionary encoded in JSON data

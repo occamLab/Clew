@@ -141,18 +141,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     ) -> Bool {
         if userActivity.activityType == kNewSingleUseRouteType {
             if case .mainScreen(_) = vc.state {
+                PathLogger.shared.logEvent(eventDescription: "SiriShortCut \(userActivity.activityType)")
                 vc.startCreateAnchorPointProcedure()
             } // TODO: display a warning about improper state
         }
         
         if userActivity.activityType == kStopRecordingType {
             if case .recordingRoute = vc.state {
+                PathLogger.shared.logEvent(eventDescription: "SiriShortCut \(userActivity.activityType)")
                 vc.stopRecording(nil)
             } // TODO: display a warning about improper state
         }
 
         if userActivity.activityType == kStartNavigationType {
             if case .readyToNavigateOrPause(_) = vc.state {
+                PathLogger.shared.logEvent(eventDescription: "SiriShortCut \(userActivity.activityType)")
                 vc.startNavigation(nil)
             } // TODO: display a warning about improper state
         }

@@ -1435,7 +1435,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     var prevKeypointPosition: LocationInfo!
 
     /// Interface for logging data about the session and the path
-    var logger = PathLogger()
+    var logger = PathLogger.shared
     
     // MARK: - Timers for background functions
     
