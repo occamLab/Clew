@@ -900,13 +900,13 @@ struct AnchorPointPracticeSubComponent: View {
     @State var xyzYawDelta: [Float] = []
     @State var accuracy: AlignmentAccuracy = .none
 
-    static let xPerfectThreshold = Float(0.1)
+    static let xPerfectThreshold = Float(0.3)
     static let yPerfectThreshold = Float(0.5)
-    static let zPerfectThreshold = Float(0.1)
+    static let zPerfectThreshold = Float(0.3)
     static let yawPerfectThreshold = Float(0.1)
-    static let xGoodThreshold = Float(0.3)
-    static let yGoodThreshold = Float(0.5)
-    static let zGoodThreshold = Float(0.3)
+    static let xGoodThreshold = Float(0.6)
+    static let yGoodThreshold = Float(1.0)
+    static let zGoodThreshold = Float(0.6)
     static let yawGoodThreshold = Float(0.2)
     
     var body: some View {
