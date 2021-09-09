@@ -290,8 +290,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     ///
     /// - Parameter announceArrival: a Boolean that indicates whether the user's arrival should be announced (true means the user has arrived)
     func handleStateTransitionToMainScreen(announceArrival: Bool) {
-        //arLogger.finalizeTrial()
-        //arLogger.startTrial()
         // cancel the timer that announces tracking errors
         trackingErrorsAnnouncementTimer?.invalidate()
         // if the ARSession is running, pause it to conserve battery
@@ -1204,7 +1202,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         #if !APPCLIP
         self.arLogger.finalizeTrial()
         // TODO this is not popping up the uploading spinner view
-        self.arLogger.uploadLocalDataToCloud()
+        // TODO this doesn't compile for some odd reason (probably due to the #if)
+        // ARLogger.shared.uploadLocalDataToCloud()
         #endif
         self.state = .mainScreen(announceArrival: false)
     }
@@ -2904,6 +2903,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             hideAllViewsHelper()
             #if !APPCLIP
             self.arLogger.finalizeTrial()
+            // TODO this is not popping up the uploading spinner view
+            // TODO this doesn't compile for some odd reason (probably due to the #if)
+            // self.arLogger.uploadLocalDataToCloud()
             #endif
             self.state = .mainScreen(announceArrival: false)
         }

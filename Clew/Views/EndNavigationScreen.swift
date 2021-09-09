@@ -10,23 +10,10 @@ import SwiftUI
 import ARDataLogger
 import FirebaseStorage
 
-class LoggerDelegate: ObservableObject, ARDataLoggerDelegate {
-    var uploadPending = false
-    func dataUploadDidFinishWithError(error: Error) {
-        uploadPending = false
-        objectWillChange.send()
-    }
-    
-    func dataUploadDidFinishSuccessfully(metadata: StorageMetadata) {
-        uploadPending = false
-        objectWillChange.send()
-    }
-}
-
 struct EndNavigationScreen: View {
     var vc: ViewController
     @State private var feedbackGiven = false
-    @StateObject var loggerDelegate = LoggerDelegate()
+    @State private var uploadPending = false
     var body: some View {
 
         ZStack{
@@ -53,8 +40,10 @@ struct EndNavigationScreen: View {
                                     vc.surveyInterface.sendLogDataHelper(pathStatus: false, announceArrival: true, vc: vc)
                                     feedbackGiven = true
                                     // TODO: figure out how to have this get invoked from other views (e.g., the root container view) for cases when we don't have the user giving feedback (e.g., they just hit the home button).
-                                    loggerDelegate.uploadPending = true
-                                    vc.arLogger.uploadLocalDataToCloud()
+                                    uploadPending = true
+                                    vc.arLogger.uploadLocalDataToCloud() { (metdata, error) in
+                                        uploadPending = false
+                                    }
                                 }){
                                     Image("thumbs_up")
                                         .resizable()
@@ -65,8 +54,10 @@ struct EndNavigationScreen: View {
                                 Button(action: {
                                     vc.surveyInterface.sendLogDataHelper(pathStatus: true, announceArrival: true, vc: vc)
                                     feedbackGiven = true
-                                    loggerDelegate.uploadPending = true
-                                    vc.arLogger.uploadLocalDataToCloud()
+                                    uploadPending = true
+                                    vc.arLogger.uploadLocalDataToCloud() { (metadata, error) in
+                                        uploadPending = false
+                                    }
                                 }){
                                     Image("thumbs_down_red")
                                         .resizable()
@@ -94,21 +85,23 @@ struct EndNavigationScreen: View {
                     if !feedbackGiven{
                         vc.surveyInterface.sendLogDataHelper(pathStatus: nil, announceArrival: true, vc: vc)
                     }
-                        vc.hideAllViewsHelper()
-                        vc.state = .mainScreen(announceArrival: false)
-                        vc.arLogger.finalizeTrial()
-                    }){
-                        homeButtonView()
+                    vc.arLogger.finalizeTrial()
+                    uploadPending = true
+                    vc.arLogger.uploadLocalDataToCloud() { (metaData, error) in
+                        uploadPending = false
+                        self.vc.hideAllViewsHelper()
+                        self.vc.state = .mainScreen(announceArrival: false)
                     }
-
+                }){
+                    homeButtonView()
+                }
             }.padding()
                 
         }.onAppear(perform: {
             feedbackGiven = false
-            ARLogger.shared.delegate = loggerDelegate
         })
-        .sheet(isPresented: $loggerDelegate.uploadPending) {
-            UploadingView(loadingViewShowing: $loggerDelegate.uploadPending)
+        .sheet(isPresented: $uploadPending) {
+            UploadingView(loadingViewShowing: $uploadPending)
         }
     }
 }
