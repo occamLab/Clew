@@ -1194,6 +1194,22 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         logger.resetStateSequenceLog()
     }
     
+    func uploadLocalDataToCloudHelper() {
+        #if !APPCLIP
+        guard arLogger.hasLocalDataToUploadToCloud() else {
+            return
+        }
+        let popoverController = UIHostingController(rootView: UploadingViewNoBinding())
+        popoverController.modalPresentationStyle = .fullScreen
+        self.present(popoverController, animated: true)
+        self.arLogger.uploadLocalDataToCloud() { wasSuccessful in
+            DispatchQueue.main.async {
+                popoverController.dismiss(animated: true)
+            }
+        }
+        #endif
+    }
+    
     /// This finishes the process of pressing the home button (after user has given confirmation)
     @objc func goHome() {
         // proceed to home page
@@ -1202,8 +1218,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         #if !APPCLIP
         self.arLogger.finalizeTrial()
         // TODO this is not popping up the uploading spinner view
-        // TODO this doesn't compile for some odd reason (probably due to the #if)
-        // ARLogger.shared.uploadLocalDataToCloud()
+        uploadLocalDataToCloudHelper()
         #endif
         self.state = .mainScreen(announceArrival: false)
     }
@@ -2903,9 +2918,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             hideAllViewsHelper()
             #if !APPCLIP
             self.arLogger.finalizeTrial()
-            // TODO this is not popping up the uploading spinner view
-            // TODO this doesn't compile for some odd reason (probably due to the #if)
-            // self.arLogger.uploadLocalDataToCloud()
+            uploadLocalDataToCloudHelper()
             #endif
             self.state = .mainScreen(announceArrival: false)
         }

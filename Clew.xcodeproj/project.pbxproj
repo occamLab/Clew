@@ -21,6 +21,9 @@
 		77365B192343ECBA008BC35C /* BurgerMenu.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 77365B1B2343ECBA008BC35C /* BurgerMenu.storyboard */; };
 		77467DAF22BBC1D300FA7DEE /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 77467DAE22BBC1D300FA7DEE /* Default-568h@2x.png */; };
 		821CF7842513264400A7B3C2 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 821CF7822513264400A7B3C2 /* InfoPlist.strings */; };
+		822C3A1326EA493400F627D4 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 82C7170726E9AF0B002403A2 /* FirebaseAuth */; };
+		822C3A1426EA493400F627D4 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 82C7170926E9AF26002403A2 /* FirebaseStorage */; };
+		822C3A1526EA493400F627D4 /* ARDataLogger in Frameworks */ = {isa = PBXBuildFile; productRef = 82C7170B26E9AF41002403A2 /* ARDataLogger */; };
 		823DA454252F7EA800BB5E6B /* speaker.obj in Resources */ = {isa = PBXBuildFile; fileRef = 823DA453252F7EA800BB5E6B /* speaker.obj */; };
 		823DA455252F7EA800BB5E6B /* speaker.obj in Resources */ = {isa = PBXBuildFile; fileRef = 823DA453252F7EA800BB5E6B /* speaker.obj */; };
 		82569F4E22187E6500448B45 /* help in Resources */ = {isa = PBXBuildFile; fileRef = 82569F4D22187E6500448B45 /* help */; };
@@ -587,9 +590,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				82D94B65266FC86200EE2C1C /* SimpleForm in Frameworks */,
-				82C7170C26E9AF41002403A2 /* ARDataLogger in Frameworks */,
-				82C7170A26E9AF26002403A2 /* FirebaseStorage in Frameworks */,
-				82C7170826E9AF0B002403A2 /* FirebaseAuth in Frameworks */,
+				822C3A1526EA493400F627D4 /* ARDataLogger in Frameworks */,
+				822C3A1426EA493400F627D4 /* FirebaseStorage in Frameworks */,
+				822C3A1326EA493400F627D4 /* FirebaseAuth in Frameworks */,
 				DB500DE42B5CE9DEDBB25010 /* Pods_Clew_Dev.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
