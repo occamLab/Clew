@@ -1203,6 +1203,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         self.hideAllViewsHelper()
         #if !APPCLIP
         self.arLogger.finalizeTrial()
+        // TODO this is not popping up the uploading spinner view
+        self.arLogger.uploadLocalDataToCloud()
         #endif
         self.state = .mainScreen(announceArrival: false)
     }

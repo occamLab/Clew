@@ -587,6 +587,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				82D94B65266FC86200EE2C1C /* SimpleForm in Frameworks */,
+				82C7170C26E9AF41002403A2 /* ARDataLogger in Frameworks */,
+				82C7170A26E9AF26002403A2 /* FirebaseStorage in Frameworks */,
+				82C7170826E9AF0B002403A2 /* FirebaseAuth in Frameworks */,
 				DB500DE42B5CE9DEDBB25010 /* Pods_Clew_Dev.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1062,6 +1065,9 @@
 			name = "Clew Dev";
 			packageProductDependencies = (
 				82D94B64266FC86200EE2C1C /* SimpleForm */,
+				82C7170726E9AF0B002403A2 /* FirebaseAuth */,
+				82C7170926E9AF26002403A2 /* FirebaseStorage */,
+				82C7170B26E9AF41002403A2 /* ARDataLogger */,
 			);
 			productName = Clew;
 			productReference = B7EB59EC20F693EB00FBBC6A /* Clew Dev.app */;
@@ -2484,6 +2490,21 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		82C7170726E9AF0B002403A2 /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 8614596426AB35E500CF4840 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+		82C7170926E9AF26002403A2 /* FirebaseStorage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 8614596426AB35E500CF4840 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseStorage;
+		};
+		82C7170B26E9AF41002403A2 /* ARDataLogger */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 8614597726AB3F4F00CF4840 /* XCRemoteSwiftPackageReference "ARDataLogger" */;
+			productName = ARDataLogger;
+		};
 		82D94B62266FC7CF00EE2C1C /* SimpleForm */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 82D94B61266FC7CF00EE2C1C /* XCRemoteSwiftPackageReference "SimpleForm" */;
