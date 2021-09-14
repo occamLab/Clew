@@ -833,8 +833,8 @@ struct FindingAnAnchorPoint: View {
             
             VStack(alignment: .leading, spacing: 20) {
                 Text(NSLocalizedString("findingAnAnchorPointTutorialTextParagraph1", comment: "Text of the finding your anchor point part of the tutorial paragraph 1"))
-                Text(NSLocalizedString("findingAnAnchorPointTutorialTextParagraph1", comment: "Text of the finding your anchor point part of the tutorial paragraph 2"))
-                Text(NSLocalizedString("findingAnAnchorPointTutorialTextParagraph1", comment: "Text of the finding your anchor point part of the tutorial paragraph 3"))
+                Text(NSLocalizedString("findingAnAnchorPointTutorialTextParagraph2", comment: "Text of the finding your anchor point part of the tutorial paragraph 2"))
+//                Text(NSLocalizedString("findingAnAnchorPointTutorialTextParagraph3", comment: "Text of the finding your anchor point part of the tutorial paragraph 3"))
             }
         }
         

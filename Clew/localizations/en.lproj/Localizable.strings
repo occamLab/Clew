@@ -416,7 +416,7 @@
 "findingAnAnchorPointTutorialTextParagraph3" = "Finding the saved anchor point from the visual alignment simply requires you to hold the phone in the vertical pose and realign the camera to the same location that was used to set the original anchor point.";
 
 "applesARWorldMapTutorialTitle" = "Apple's ARWorld Map";
-"applesARWorldMapTutorialTextParagraph1" = "Apple's ARWorld map can help make the process of finding and aligning to a saved anchor point easier on some of the latest iPhone models. With the more recent phones, the physical alignment can simply be achieved by holding the phone in the vertical pose. However, we recommend that you be consistent in holding the phone pose and relocalizing yourself as best as possible to the originally saved anchor point in order to ensure the best accuracy from Clew.";
+"applesARWorldMapTutorialTextParagraph1" = "Apple's ARWorld map can help make the process of finding and aligning to a saved anchor point easier. Especially for those that have newer iPhone models and for environments with consistent, artificial lighting, the physical alignment can simply be achieved by holding the phone in the vertical pose. However, we recommend that you be consistent in holding the phone pose and relocalizing yourself as best as possible to the originally saved anchor point in order to ensure the best accuracy from Clew.";
 
 "applesARWorldMapTutorialTextParagraph2" = "Next you will have a chance to practice setting and aligning to anchor points.  Tap the 'Practice' button to start the exercise.";
 
