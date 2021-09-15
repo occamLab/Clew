@@ -290,22 +290,22 @@ struct UsingClewTutorial: View {
         }.padding()
     }
 }
-
-struct ClewExamples: View {
-    //Not in Tutorial at the moment
-    var body: some View {
-        TutorialScreen {
-            Text("What Can I Use Clew For?")
-            
-            Text("Clew is a versitile tool for traveling from point A to B. Below are some examples of what situations current users find Clew helpful.")
-            
-            Text("You could use Clew when visting a hotel, by saving a Clew route from the front door to the elevator and then save a route from the elevator to your room. Then you could use Clew to navigate those routes whenever you like.")
-            
-            Text("You could use Clew to navigate between your table and the restroom in a resturant.")
-            
-        }
-    }
-}
+//
+//struct ClewExamples: View {
+//    //Not in Tutorial at the moment
+//    var body: some View {
+//        TutorialScreen {
+//            Text("What Can I Use Clew For?")
+//            
+//            Text("Clew is a versitile tool for traveling from point A to B. Below are some examples of what situations current users find Clew helpful.")
+//            
+//            Text("You could use Clew when visting a hotel, by saving a Clew route from the front door to the elevator and then save a route from the elevator to your room. Then you could use Clew to navigate those routes whenever you like.")
+//            
+//            Text("You could use Clew to navigate between your table and the restroom in a resturant.")
+//            
+//        }
+//    }
+//}
 
 
 struct OrientPhone: View {

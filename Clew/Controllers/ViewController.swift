@@ -2064,7 +2064,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             if -timeInterval > ViewController.delayBeforeErrorAnnouncement {
                 // wait until desired time interval before sending another feedback
                 if (voiceFeedback) {
-                    announce(announcement: "If you are having trouble following the route, press the \"get directions\" button.")
+                    announce(announcement: NSLocalizedString("offThePathAnnouncement", comment: "this announcemet is delivered if the user is off the path for 10 seconds or more."))
                 }
                 errorFeedbackTimer = Date()
                 playedErrorSoundForOffRoute = false

@@ -1,0 +1,6 @@
+/* Bundle name */
+"CFBundleName" = "Clew Dev";
+/* Privacy - Camera Usage Description */
+"NSCameraUsageDescription" = "Clew needs to access your camera to track your orientation.";
+/* Privacy - Microphone Usage Description */
+"NSMicrophoneUsageDescription" = "Permission to use the microphone is required to use the voice notes feature.";
