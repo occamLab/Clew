@@ -304,3 +304,8 @@
 "surveyPopoverTitle" = "Nos encantaría recibir tu opinión";
 "thanksForFeedbackAnnouncement" = "Gracias por tus comentarios";
 
+// copying these over from settings bundle
+"Red" = "Roja"; // Comments: The option for the markers to be red.
+"Green" = "Verde"; // Comments: The option for the markers to be green.
+"Blue" = "Azul"; // Comments: The option for the markers to be blue.
+"Random" = "Color al azar"; // Comments: The option for each marker to be a random color.

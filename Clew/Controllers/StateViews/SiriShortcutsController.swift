@@ -29,9 +29,9 @@ class SiriShortcutsController: UIViewController {
         activity.isEligibleForPrediction = true
         let attributes = CSSearchableItemAttributeSet(itemContentType: kUTTypeItem as String)
         
-        activity.title = "Start Single Use Route"
-        attributes.contentDescription = "Let Clew help you navigate a single route!"
-        activity.suggestedInvocationPhrase = "Clew Record Single Use Route"
+        activity.title = NSLocalizedString("startSingleUseRouteRecordingShortcutTitle", comment: "The title to use for the single use route recording Siri shortcut")
+        attributes.contentDescription = NSLocalizedString("startSingleUseRouteRecordingShortcutDescription", comment: "The description to use for the single use route recording Siri shortcut")
+        activity.suggestedInvocationPhrase = NSLocalizedString("startSingleUseRouteRecordingShortcutSuggestedPhrase", comment: "This is the default invocation phrase suggested to the user for the single use route recording shortcut")
         activity.contentAttributeSet = attributes
         return activity
     }
@@ -42,9 +42,9 @@ class SiriShortcutsController: UIViewController {
         activity.isEligibleForSearch = true
         activity.isEligibleForPrediction = true
         let attributes = CSSearchableItemAttributeSet(itemContentType: kUTTypeItem as String)
-        activity.title = "Stop Recording Route"
-        attributes.contentDescription = "Tell Clew to stop recording the route"
-        activity.suggestedInvocationPhrase = "Clew Stop Recording"
+        activity.title = NSLocalizedString("stopRecordingShortcutTitle", comment: "The title to use for stopping a route recording")
+        attributes.contentDescription = NSLocalizedString("stopRecordingShortcutDescription", comment: "The description to use for the stopping a route recording Siri shortcut")
+        activity.suggestedInvocationPhrase = NSLocalizedString("stopRecordingShortcutSuggestedPhrase", comment: "This is the default invocation phrase suggested to the user for the  stop route recording shortcut")
         activity.contentAttributeSet = attributes
         return activity
     }
@@ -55,11 +55,10 @@ class SiriShortcutsController: UIViewController {
         activity.isEligibleForSearch = true
         activity.isEligibleForPrediction = true
         let attributes = CSSearchableItemAttributeSet(itemContentType: kUTTypeItem as String)
-        // TODO localization
-        activity.title = "Return me back"
-        attributes.contentDescription = "Tell Clew to start navigating the route"
-        activity.suggestedInvocationPhrase = "Clew Navigate Route"
-        activity.contentAttributeSet = attributes
+        
+        activity.title = NSLocalizedString("startNavigationShortcutTitle", comment: "The title to use for the starting to navigate a route Siri shortcut")
+        attributes.contentDescription = NSLocalizedString("startNavigationShortcutDescription", comment: "The description to use for the starting to navigate a route Siri shortcut")
+        activity.suggestedInvocationPhrase = NSLocalizedString("startNavigationShortcutSuggestedPhrase", comment: "This is the default invocation phrase suggested to the user for the start navigation shortcut")
         return activity
     }
 }

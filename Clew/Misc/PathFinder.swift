@@ -362,11 +362,9 @@ class SavedRoute: NSObject, NSSecureCoding {
 /// Pathfinder class calculates turns or "keypoints" given a path array of LocationInfo
 class PathFinder {
     
-    ///  Maximum width of the breadcrumb path.
+    ///  Maximum width of the breadcrumb path in meters.
     ///
     /// Points falling outside this margin will produce more keypoints, through Ramer-Douglas-Peucker algorithm
-    ///
-    /// - TODO: Clarify units
     private let pathWidth: Scalar!
     
     /// The crumbs that make up the desired path. These should be ordered with respect to the user's intended direction of travel (start to end versus end to start)

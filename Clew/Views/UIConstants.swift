@@ -44,7 +44,8 @@ enum UIConstants {
     
     /// y-origin of the get directions button
     static var yOriginOfGetDirectionsButton: CGFloat {
-        return UIScreen.main.bounds.size.height - settingsAndHelpFrameHeight - settingsAndHelpMargin
+        return UIScreen.main.bounds.size.height - settingsAndHelpFrameHeight - settingsAndHelpMargin -
+            buttonFrameHeight
     }
     
     /// y-origin of the settings and help buttons
@@ -60,17 +61,6 @@ enum UIConstants {
         return UIScreen.main.bounds.size.height/6
     }
     
-    /// center of screen
-    static var verticalCenter: CGFloat {
-        return UIScreen.main.bounds.size.height/6/3
-    }
-    
-    static var bottomScreen: CGFloat {
-        return UIScreen.main.bounds.size.height/6/5
-    }
-    
-    
-    
     /// y-origin of button frame
     static var yOriginOfButtonFrame: CGFloat {
         return UIScreen.main.bounds.size.height - buttonFrameHeight - settingsAndHelpFrameHeight - settingsAndHelpMargin
@@ -82,11 +72,11 @@ enum UIConstants {
     }
     
     static var yButtonFrameMargin: CGFloat {
-        return 25.0
+        return 10.0
     }
     
-    static var topButtonFrameMargin: CGFloat {
-        return 450.0
+    static var numButtonsInContainer: Int {
+        return 3
     }
     
     /// How to align the button horizontally within the button frame

@@ -216,7 +216,7 @@
             <objects>
                 <viewController id="IOh-XI-Mj0" customClass="RecorderViewController" customModule="Clew" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="TNg-XO-bTf">
-                        <rect key="frame" x="0.0" y="0.0" width="337.5" height="100"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <viewLayoutGuide key="safeArea" id="xdJ-M9-0cS"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>

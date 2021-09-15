@@ -87,11 +87,11 @@ struct EditShortcutWrapper: UIViewControllerRepresentable {
 struct SetRecordShortcut: View{
     @State var presentPopup = false
     var body: some View {
-        Text(NSLocalizedString("siriWalkthroughSetRecordRouteShortcutTitle", comment: "The page title for the Siri shortcut for recording a route")).padding()
-
-        Text(NSLocalizedString("siriWalkthroughSetRecordRouteShortcutText", comment: "The page text for the Siri shortcut for recording a route")).padding()
-        
         TutorialScreen{
+            Text(NSLocalizedString("siriWalkthroughSetRecordRouteShortcutTitle", comment: "The page title for the Siri shortcut for recording a route")).padding()
+
+            Text(NSLocalizedString("siriWalkthroughSetRecordRouteShortcutText", comment: "The page text for the Siri shortcut for recording a route")).padding()
+        
             VStack {
                 Button(action:{
                     presentPopup.toggle()
@@ -111,7 +111,7 @@ struct SetRecordShortcut: View{
         Spacer()
         TutorialNavLink(destination: SetEndRecordingShortcut()) {
             Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
-        }
+        }.padding()
     }
 }
 
@@ -143,7 +143,7 @@ struct SetEndRecordingShortcut: View{
         Spacer()
         TutorialNavLink(destination: SetNavigateBackShortcut()) {
             Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
-        }
+        }.padding()
     }
 }
 
@@ -175,7 +175,7 @@ struct SetNavigateBackShortcut: View{
 
         TutorialNavLink(destination: SiriSetupComplete()) {
             Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
-        }
+        }.padding()
     }
 }
 
@@ -200,7 +200,7 @@ struct SiriSetupComplete: View {
         } else {
             TutorialNavLink(destination: TutorialEndView()) {
                 Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
-            }
+            }.padding()
         }
     }
 }

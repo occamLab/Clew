@@ -156,7 +156,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             case .initializing:
                 break
             case .finishedTutorialRoute(let announceArrival):
-                // TODO write this
                 handleStateTransitionToFinishedTutorialRoute(announceArrival: announceArrival)
             }
         }

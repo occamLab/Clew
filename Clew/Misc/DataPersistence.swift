@@ -52,7 +52,6 @@ class DataPersistence {
     /// handler for importing routes from an external temporary file
     /// called in the case of a route being shared from the UIActivityViewController
     /// library
-    /// TODO: Does this need to be a static function?
     func importData(from url: URL) {
         var documentData: RouteDocumentData
         

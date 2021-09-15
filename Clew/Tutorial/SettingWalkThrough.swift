@@ -89,7 +89,7 @@ struct setUnit: View{
         Spacer()
         TutorialNavLink(destination: setUpCrumbColor()) {
             Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
-        }
+        }.padding()
     }
 }
 
@@ -111,7 +111,7 @@ struct setUpCrumbColor: View {
                             UserDefaults.standard.setValue(i, forKey: "crumbColor")
                     }) {
                         TutorialButtonToggle(isSelected: UserDefaults.standard.integer(forKey: "crumbColor") == i) {
-                            Text(colors[i])
+                            Text(NSLocalizedString(colors[i], comment: "no localization needed"))
                         }
                     }
                 }
@@ -134,8 +134,9 @@ struct setUpCrumbColor: View {
             }
         }
         Spacer()
-        TutorialNavLink(destination: setUpPathColor())
-            {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))}
+        TutorialNavLink(destination: setUpPathColor()) {
+            Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
+        }.padding()
     }
 }
 
@@ -157,7 +158,7 @@ struct setUpPathColor: View {
                             UserDefaults.standard.setValue(i, forKey: "pathColor")
                     }) {
                         TutorialButtonToggle(isSelected: UserDefaults.standard.integer(forKey: "pathColor") == i) {
-                            Text(colors[i])
+                            Text(NSLocalizedString(colors[i], comment: "no localization needed"))
                         }
                     }
                 }
@@ -180,7 +181,7 @@ struct setUpPathColor: View {
         Spacer()
         TutorialNavLink(destination: setUpFeedback()) {
             Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
-        }
+        }.padding()
     }
 }
 
@@ -233,7 +234,7 @@ struct setUpFeedback: View{
         Spacer()
         TutorialNavLink(destination: SetPhoneBodyOffset()) {
             Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
-        }
+        }.padding()
     }
 }
 
@@ -270,7 +271,7 @@ struct SetPhoneBodyOffset: View{
         Spacer()
         TutorialNavLink(destination: settingsWalkThroughEndPage()) {
             Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
-        }
+        }.padding()
     }
 }
 
@@ -286,6 +287,6 @@ struct settingsWalkThroughEndPage: View{
         Spacer()
         TutorialNavLink(destination: SiriWalkthrough()) {
             Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
-        }
+        }.padding()
     }
 }

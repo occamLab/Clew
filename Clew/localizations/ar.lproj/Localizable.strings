@@ -480,3 +480,8 @@
 "dismissSurvey" = "استبعاد";
 "thanksForFeedbackAnnouncement" = "شكرا جزيلا على تقديم رأيك";
 
+// copying these over from settings.bundle
+"Red" = "أحمر";
+"Green" = "أخضر";
+"Random" = "عشوائي";
+"Blue" = "أزرق";

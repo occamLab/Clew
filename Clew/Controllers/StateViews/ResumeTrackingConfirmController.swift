@@ -98,12 +98,12 @@ class ResumeTrackingConfirmController: UIViewController, UIScrollViewDelegate {
         
         /// set top, left, right constraints on scrollView to
         /// "main" view + 8.0 padding on each side
-        scrollView.topAnchor.constraint(equalTo: view.topAnchor, constant: UIScreen.main.bounds.size.height*0.15).isActive = true
+        scrollView.topAnchor.constraint(equalTo: view.topAnchor, constant: UIScreen.main.bounds.size.height*0.2).isActive = true
         scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8.0).isActive = true
         scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8.0).isActive = true
         
         /// set the height constraint on the scrollView to 0.5 * the main view height
-        scrollView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.5).isActive = true
+        scrollView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.45).isActive = true
         
         /// constraints for anchorPointLabel
         anchorPointLabel.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 8.0).isActive = true
@@ -159,9 +159,10 @@ class ResumeTrackingConfirmController: UIViewController, UIScrollViewDelegate {
         scrollView.flashScrollIndicators()
         
         /// size the stack
-        stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8.0).isActive = true
-        stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8.0).isActive = true
-        stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -UIConstants.buttonFrameWidth/7 * 2).isActive = true
+        stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: UIConstants.yButtonFrameMargin).isActive = true
+        stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -UIConstants.yButtonFrameMargin).isActive = true
+        stackView.topAnchor.constraint(equalTo: view.topAnchor, constant: UIConstants.yOriginOfButtonFrame + UIConstants.yButtonFrameMargin).isActive = true
+        stackView.bottomAnchor.constraint(equalTo: view.topAnchor, constant: UIConstants.yOriginOfButtonFrame + UIConstants.buttonFrameHeight - UIConstants.yButtonFrameMargin).isActive = true
 
         if let parent: UIViewController = parent {
             readVoiceNoteButton.addTarget(parent,

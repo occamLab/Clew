@@ -565,3 +565,20 @@
 
 "siriWalkthroughCompleteTitle" = "Siri Shortcuts Setup Complete";
 "siriWalkthroughCompleteText" = "Nice Job! Your Siri shortcuts are now ready for you to use. You can come back to Siri shortcuts to make any changes to the shortcuts at any time by tapping on the Main Menu icon or from within the tutorials.";
+
+"startSingleUseRouteRecordingShortcutTitle" = "Record Single Use Route";
+"startSingleUseRouteRecordingShortcutDescription" = "Tell Clew to you record a single use route!";
+"startSingleUseRouteRecordingShortcutSuggestedPhrase" = "Clew Record Single Use Route";
+
+"stopRecordingShortcutTitle" = "Stop Recording Route";
+"stopRecordingShortcutDescription" = "Tell Clew to stop recording the route";
+"stopRecordingShortcutSuggestedPhrase" = "Clew Stop Recording";
+
+"startNavigationShortcutTitle" = "Navigate Route";
+"startNavigationShortcutDescription" = "Tell Clew to start navigating the route";
+"startNavigationShortcutSuggestedPhrase" = "Clew Navigate Route";
+
+"exitTutorial" = "Exit Tutorial";
+"moduleCompleted" = "Module Completed";
+"moduleNotCompleted" = "Module Not Completed";
+

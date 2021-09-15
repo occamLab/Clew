@@ -15,7 +15,6 @@ import IntentsUI
 
 //For current Sprint
 //TODO: make sure we can't access old tutorial modules from VoiceOver when clicking next
-//TODO: 1 add content to all pages 4 add localized strings to everything
 //TODO: (tabled) stop AR session when needed based on the tutorial state
 
 //For the future
@@ -97,7 +96,7 @@ struct TutorialNavLinkWithRedirection<Destination: View, Content: View>: View {
                 .background(Color.yellow)
                 .cornerRadius(10)
                 .font(.system(size: 18, weight: .regular))
-                .accessibility(hint: UserDefaults.standard.bool(forKey: activationTag + "TutorialCompleted") ? Text("Module Completed") : Text("Module Not Completed") )
+                .accessibility(hint: UserDefaults.standard.bool(forKey: activationTag + "TutorialCompleted") ? Text(NSLocalizedString("moduleCompleted", comment: "played as the accessibility hint in the tutorial to indicate that the current module has been completed")) : Text(NSLocalizedString("moduleNotCompleted", comment: "played as the accessibility hint in the tutorial to indicate that the current module has not been completed")) )
             if UserDefaults.standard.bool(forKey: activationTag + "TutorialCompleted") {
                 Circle()
                     .fill(Color.yellow)
@@ -230,7 +229,7 @@ struct CLEWintro: View {
         }
         Spacer()
         TutorialNavLink(destination: UsingClew()) {Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
-        }
+        }.padding()
     }
 }
 
@@ -250,7 +249,7 @@ struct UsingClew: View {
         Spacer()
         TutorialNavLink(destination: ClewsRole()) {
             Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
-        }
+        }.padding()
     }
 }
 
@@ -270,7 +269,7 @@ struct ClewsRole: View {
         Spacer()
         TutorialNavLink(destination: UsingClewTutorial()) {
             Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
-        }
+        }.padding()
     }
 }
 
@@ -288,7 +287,7 @@ struct UsingClewTutorial: View {
         Spacer()
         TutorialNavLink(destination: OrientPhone()) {
             Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
-        }
+        }.padding()
     }
 }
 
@@ -322,14 +321,14 @@ struct OrientPhone: View {
             
             TutorialNavLink(destination: PracticeOrientPhone()) {
                 Text(NSLocalizedString("practiceTutorialTitle", comment: "button for practicing a skill in the tutorial"))
-            }
+            }.padding()
             
             
         }
         Spacer()
         TutorialNavLink(destination: FindPath()) {
             Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
-        }
+        }.padding()
     }
 }
 
@@ -347,7 +346,7 @@ struct OrientPhoneTips: View {
         Spacer()
         TutorialNavLink(destination: FindPath()) {
             Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
-        }
+        }.padding()
     }
 }
 
@@ -489,12 +488,12 @@ struct PracticeOrientPhone: View {
             Spacer()
             TutorialNavLink(destination: OrientPhoneTips()) {
                 Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
-            } //change skip button to next button when score equals three because the user has completed the practice
+            }.padding() //change skip button to next button when score equals three because the user has completed the practice
         } else {
             Spacer()
             TutorialNavLink(destination: OrientPhoneTips()) {
                 Text(NSLocalizedString("buttonTexttoSkip", comment: "Text on skip button"))
-            }
+            }.padding()
         }
     }
 }
@@ -511,7 +510,7 @@ struct FindPath: View {
         Spacer()
         TutorialNavLink(destination: MovingOnCorrectPath())  {
             Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
-        }
+        }.padding()
     }
 }
 
@@ -529,7 +528,7 @@ struct MovingOnCorrectPath: View {
         Spacer()
         TutorialNavLink(destination: Waypoints())  {
             Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
-        }
+        }.padding()
     }
 }
 
@@ -547,7 +546,7 @@ struct Waypoints: View {
         Spacer()
         TutorialNavLink(destination: DirectionalCues())  {
             Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
-        }
+        }.padding()
     }
 }
 
@@ -562,7 +561,7 @@ struct DirectionalCues: View {
         Spacer()
         TutorialNavLink(destination: GettingBackToTheCorrectPath())  {
             Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
-        }
+        }.padding()
     }
 }
 
@@ -583,7 +582,7 @@ struct GettingBackToTheCorrectPath: View {
         Spacer()
         TutorialNavLink(destination: FindPathPractice1())  {
             Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
-        }
+        }.padding()
     }
 }
 
@@ -611,7 +610,7 @@ struct FindPathPractice1: View {
         Spacer()
         TutorialNavLink(destination: FindPathPractice2()) {
             Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
-        }
+        }.padding()
     }
 }
 
@@ -640,7 +639,7 @@ struct FindPathPractice2: View {
         Spacer()
         TutorialNavLink(destination: SingleUse()) {
             Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
-        }
+        }.padding()
     }
 }
 
@@ -664,11 +663,11 @@ struct PracticeSuccess: View {
                 if UserDefaults.standard.bool(forKey: "FindPathPractice1Completed") {
                     TutorialNavLink(destination: SingleUse()) {
                         Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
-                    }
+                    }.padding()
                 } else {
                     TutorialNavLink(destination: FindPathPractice2()) {
                         Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
-                    }
+                    }.padding()
                 }
             }
             
@@ -697,7 +696,7 @@ struct SingleUse: View {
         Spacer()
         TutorialNavLink(destination: UsingSingleUse()) {
             Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
-        }
+        }.padding()
     }
 }
 
@@ -716,7 +715,7 @@ struct UsingSingleUse: View {
         Spacer()
         TutorialNavLink(destination: AddingALandmark()) {
             Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
-        }
+        }.padding()
     }
 }
 
@@ -736,7 +735,7 @@ struct AddingALandmark: View {
         Spacer()
         TutorialNavLink(destination: PausingNavigation()) {
             Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
-        }
+        }.padding()
     }
 }
 
@@ -751,7 +750,7 @@ struct PausingNavigation: View {
         Spacer()
         TutorialNavLink(destination: AnchorPoints()) {
             Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
-        }
+        }.padding()
     }
 }
 
@@ -765,14 +764,14 @@ struct AnchorPoints: View {
             
             TutorialNavLink(destination: SettingAnAnchorPoint())  {
                 Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
-            }
+            }.padding()
         }
         
         if !showPage.confineToSection {
             Spacer()
             TutorialNavLink(destination: SavedRoutes())  {
                 Text(NSLocalizedString("buttonTexttoSkip", comment: "Text on the button that brings user to the next page of the tutorial"))
-            }
+            }.padding()
         }
     }
 }
@@ -788,7 +787,7 @@ struct SettingAnAnchorPoint: View {
         Spacer()
         TutorialNavLink(destination: TextOrVoiceNotes())  {
             Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
-        }
+        }.padding()
     }
 }
 
@@ -803,7 +802,7 @@ struct TextOrVoiceNotes: View {
         Spacer()
         TutorialNavLink(destination: PhysicalAlignment())  {
             Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
-        }
+        }.padding()
     }
 }
 
@@ -822,7 +821,7 @@ struct PhysicalAlignment: View {
         Spacer()
         TutorialNavLink(destination: FindingAnAnchorPoint())  {
             Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
-        }
+        }.padding()
     }
 }
 
@@ -841,7 +840,7 @@ struct FindingAnAnchorPoint: View {
         Spacer()
         TutorialNavLink(destination: ApplesARWorldMap())  {
             Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
-        }
+        }.padding()
     }
 }
 
@@ -859,7 +858,7 @@ struct ApplesARWorldMap: View {
         Spacer()
         TutorialNavLink(destination: AnchorPointPractice())  {
             Text(NSLocalizedString("practiceTutorialTitle", comment: "Text for practice button"))
-        }
+        }.padding()
     }
 }
 
@@ -1087,7 +1086,7 @@ struct SavedRoutes: View {
         Spacer()
         TutorialNavLink(destination: SavingARoute()) {
             Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
-        }
+        }.padding()
     }
 }
 
@@ -1107,7 +1106,7 @@ struct SavingARoute: View {
         Spacer()
         TutorialNavLink(destination: NamingYourRoute())  {
             Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
-        }
+        }.padding()
     }
 }
 
@@ -1122,7 +1121,7 @@ struct NamingYourRoute: View {
         Spacer()
         TutorialNavLink(destination: FindingSavedRoutes())  {
             Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
-        }
+        }.padding()
     }
 }
 
@@ -1142,7 +1141,7 @@ struct FindingSavedRoutes: View {
         Spacer()
         TutorialNavLink(destination: SettingOptions()) {
             Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
-        }
+        }.padding()
     }
 }
 
@@ -1160,7 +1159,7 @@ struct SettingOptions: View {
             
             TutorialNavLink(destination: setUnit()) {
                 Text(NSLocalizedString("settingsWalkThroughTitle", comment: "Title for the Settings Walk Through"))
-            }
+            }.padding()
             
         }.onDisappear(){
             UserDefaults.standard.setValue(true, forKey: "SettingsOptionsTutorialCompleted")
@@ -1169,7 +1168,7 @@ struct SettingOptions: View {
         Spacer()
         TutorialNavLink(destination: SiriWalkthrough()) {
             Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
-        }
+        }.padding()
         
     }
 }
@@ -1217,7 +1216,7 @@ struct SiriWalkthrough: View {
             }
             TutorialNavLink(destination: SetRecordShortcut()) {
                 Text(NSLocalizedString("siriWalkthroughButtonText", comment: "Title for the Siri Walk Through"))
-            }
+            }.padding()
             
         }.onDisappear(){
             UserDefaults.standard.setValue(true, forKey: "SiriWalkthroughTutorialCompleted")
@@ -1226,7 +1225,7 @@ struct SiriWalkthrough: View {
             Spacer()
             TutorialNavLink(destination: TutorialEndView()) {
                 Text(NSLocalizedString("buttonTexttoSkip", comment: "Text on the button that brings user to the next section of the tutorial"))
-            }
+            }.padding()
         }
     }
 }
@@ -1242,9 +1241,9 @@ struct TutorialEndView: View {
         Button(action: {
             NotificationCenter.default.post(name: Notification.Name("TutorialPopoverReadyToDismiss"), object: nil)
         }) {
-            TutorialButton{
-                Text("Exit Tutorial")
-            }
+            TutorialButton {
+                Text(NSLocalizedString("exitTutorial", comment: "Text on the button that exits the tutorial after the user has gone through it the whole thing"))
+            }.padding()
         }
     }
 }
