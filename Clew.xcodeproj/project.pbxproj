@@ -194,7 +194,6 @@
 		4D6B00E41F33C85500952242 /* Crumb.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = Crumb.obj; sourceTree = "<group>"; };
 		4DF05CC71F34EB56008B0E31 /* Confirm.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = Confirm.mp3; sourceTree = "<group>"; };
 		772E455F235F91C6008EF6AC /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
-		772E4565236CC155008EF6AC /* es */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = es; path = es.lproj/SettingsAndHelp.storyboard; sourceTree = "<group>"; };
 		772E4567236CC15F008EF6AC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/SettingsAndHelp.storyboard; sourceTree = "<group>"; };
 		772E4568236CC7BE008EF6AC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/BurgerMenu.storyboard; sourceTree = "<group>"; };
 		7743819F2343E3F8003EBD85 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/SettingsAndHelp.strings; sourceTree = "<group>"; };
@@ -208,7 +207,6 @@
 		823DA453252F7EA800BB5E6B /* speaker.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = speaker.obj; sourceTree = "<group>"; };
 		82569F4D22187E6500448B45 /* help */ = {isa = PBXFileReference; lastKnownFileType = folder; path = help; sourceTree = "<group>"; };
 		8261892D264ACCC5007F99C4 /* AppleSignInController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppleSignInController.swift; sourceTree = "<group>"; };
-		827CB5B024932CC60032A857 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/SettingsAndHelp.strings; sourceTree = "<group>"; };
 		827CB5B224932CC60032A857 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/MainInterface.strings; sourceTree = "<group>"; };
 		827CB5B324932CC70032A857 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/SettingsAndHelp.strings; sourceTree = "<group>"; };
 		827CB5B424932CC70032A857 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -220,6 +218,8 @@
 		82BC47FD2640383300C7D364 /* Surveys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Surveys.swift; sourceTree = "<group>"; };
 		82DDE1EE26F38D1300C58FA4 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/BurgerMenu.strings; sourceTree = "<group>"; };
 		82DDE1F026F38D4000C58FA4 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/BurgerMenu.strings; sourceTree = "<group>"; };
+		82DDE1F226F38F6F00C58FA4 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/SettingsAndHelp.strings; sourceTree = "<group>"; };
+		82DDE1F326F3912800C58FA4 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/SettingsAndHelp.strings; sourceTree = "<group>"; };
 		82E4A5CE262A26DC000BEB44 /* Clew.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Clew.entitlements; sourceTree = "<group>"; };
 		82F2DDD122E26A44005CD7D0 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		82F2DDD322E26A44005CD7D0 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/SettingsAndHelp.strings; sourceTree = "<group>"; };
@@ -985,9 +985,9 @@
 		772E4566236CC155008EF6AC /* SettingsAndHelp.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
-				772E4565236CC155008EF6AC /* es */,
 				772E4567236CC15F008EF6AC /* Base */,
-				827CB5B024932CC60032A857 /* ar */,
+				82DDE1F226F38F6F00C58FA4 /* ar */,
+				82DDE1F326F3912800C58FA4 /* es */,
 			);
 			name = SettingsAndHelp.storyboard;
 			sourceTree = "<group>";
