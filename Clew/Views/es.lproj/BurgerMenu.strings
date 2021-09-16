@@ -3,7 +3,7 @@
 "JnB-cV-dtW.text" = "Contact Us";
 
 /* Class = "UILabel"; text = "Settings"; ObjectID = "TCm-6A-2mu"; */
-"TCm-6A-2mu.text" = "الإعدادات";
+"TCm-6A-2mu.text" = "Ajustes";
 
 /* Class = "UILabel"; text = "Tutorial"; ObjectID = "bRT-jQ-jxr"; */
 "bRT-jQ-jxr.text" = "Tutorial";
@@ -12,5 +12,4 @@
 "xAa-Jq-64c.text" = "Siri Shortcuts";
 
 /* Class = "UITableViewSection"; headerTitle = "Menu"; ObjectID = "zjo-RA-y09"; */
-"zjo-RA-y09.headerTitle" = "القائمة";
-
+"zjo-RA-y09.headerTitle" = "Menú";
