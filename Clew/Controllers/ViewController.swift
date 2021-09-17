@@ -891,22 +891,16 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         
         let userDefaults: UserDefaults = UserDefaults.standard
         let firstTimeLoggingIn: Bool? = userDefaults.object(forKey: "firstTimeLogin") as? Bool
-        let showedSignificantChangesAlert: Bool? = userDefaults.object(forKey: "showedSignificantChangesAlertv1_3") as? Bool
         
         if firstTimeLoggingIn == nil {
             userDefaults.set(Date().timeIntervalSince1970, forKey: "firstUsageTimeStamp")
             userDefaults.set(true, forKey: "firstTimeLogin")
             // make sure not to show the significant changes alert in the future
             userDefaults.set(true, forKey: "showedSignificantChangesAlertv1_3")
-            showLogAlert()
-        } else if showedSignificantChangesAlert == nil {
-            // we only show the significant changes alert if this is an old installation
-            userDefaults.set(true, forKey: "showedSignificantChangesAlertv1_3")
-            // don't show this for now, but leave the plumbing in place for a future significant change
-            // showSignificantChangesAlert()
+            showSafetyAlert()
         }
         // To test the SiriShortcut alert, comment out the line below
-        //siriShortcutAlert = false
+        // siriShortcutAlert = false
         if(!siriShortcutAlert){
             showSignificantChangesHandsFreeAlert()
             siriShortcutAlert = true
@@ -1076,18 +1070,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         self.present(nav, animated: true, completion: nil)
     }
     
-    /// Show logging disclaimer when user opens app for the first time.
-    func showLogAlert() {
-        let logAlertVC = UIAlertController(title: NSLocalizedString("sharingYourExperiencePop-UpHeading", comment: "The heading of a pop-up telling the user that their data is being saved with error logs"),
-                                           message: NSLocalizedString("sharingYourExperiencePop-UpContent", comment: "Disclaimer shown to the user when they open the app for the first time"),
-                                           preferredStyle: .alert)
-        logAlertVC.addAction(UIAlertAction(title: NSLocalizedString("anchorPointTextPop-UpConfirmation", comment: "What the user clicks to acknowledge a message and dismiss pop-up"), style: .default, handler: { action -> Void in
-            self.showSafetyAlert()
-        }
-        ))
-        self.present(logAlertVC, animated: true, completion: nil)
-    }
-    
     /// Show safety disclaimer when user opens app for the first time.
     func showSafetyAlert() {
         let safetyAlertVC = UIAlertController(title: NSLocalizedString("forYourSafetyPop-UpHeading", comment: "The heading of a pop-up telling the user to be aware of their surroundings while using clew"),
@@ -1135,7 +1117,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
 
     /// Register settings bundle
     func registerSettingsBundle(){
-        let appDefaults = ["crumbColor": 0, "showPath": true, "pathColor": 0, "hapticFeedback": true, "sendLogs": true, "voiceFeedback": true, "soundFeedback": true, "adjustOffset": false, "units": 0, "timerLength":5, "siriShortcutAlert": false] as [String : Any]
+        let usesMetric = Locale.current.usesMetricSystem
+        let appDefaults = ["crumbColor": 0, "showPath": true, "pathColor": 0, "hapticFeedback": true, "sendLogs": true, "voiceFeedback": true, "soundFeedback": true, "adjustOffset": false, "units": usesMetric ? 1 : 0, "timerLength":5, "siriShortcutAlert": false] as [String : Any]
         UserDefaults.standard.register(defaults: appDefaults)
     }
 

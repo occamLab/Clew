@@ -115,22 +115,11 @@ struct setUpCrumbColor: View {
                         }
                     }
                 }
-                
-                ForEach(colors.indices) { p in
-                    if UserDefaults.standard.integer(forKey: "pathColor") == p {
-                        // TODO: this could probably be simplified by just indexing into the color array (might be bad if we update the color list though)
-                        ForEach(colors.indices) { c in
-                            if UserDefaults.standard.integer(forKey: "crumbColor") == c {
-                            
-                                Image(images[c][p])
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fit)
-                            }
-                        }
-                    }
-                }
-                
-            
+                let c = colors[UserDefaults.standard.integer(forKey: "crumbColor")] == "Random" ? 0 : UserDefaults.standard.integer(forKey: "crumbColor")
+                let p = colors[UserDefaults.standard.integer(forKey: "pathColor")] == "Random" ? 0 : UserDefaults.standard.integer(forKey: "pathColor")
+                Image(images[c][p])
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
             }
         }
         Spacer()
@@ -162,20 +151,11 @@ struct setUpPathColor: View {
                         }
                     }
                 }
-                
-                ForEach(colors.indices) { p in
-                    if UserDefaults.standard.integer(forKey: "pathColor") == p {
-                        ForEach(colors.indices) { c in
-                            if UserDefaults.standard.integer(forKey: "crumbColor") == c{
-                            
-                                Image(images[c][p])
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fit)
-                            }
-                        }
-                    }
-                }
-            
+                let c = colors[UserDefaults.standard.integer(forKey: "crumbColor")] == "Random" ? 0 : UserDefaults.standard.integer(forKey: "crumbColor")
+                let p = colors[UserDefaults.standard.integer(forKey: "pathColor")] == "Random" ? 0 : UserDefaults.standard.integer(forKey: "pathColor")
+                Image(images[c][p])
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
             }
         }
         Spacer()

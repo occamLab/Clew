@@ -13,13 +13,11 @@ import SRCountdownTimer
 import Intents
 import IntentsUI
 
-//For current Sprint
-//TODO: make sure we can't access old tutorial modules from VoiceOver when clicking next
-//TODO: (tabled) stop AR session when needed based on the tutorial state
+// TODOs
+// Stop AR session when needed based on the tutorial state
+// Maybe add a warning if the user turns off the feedback options.
+// Go into Clew Initial Setup (or other suitable screen) on first app launch.
 
-//For the future
-//TODO: make sure contextual help makes sense in all cases (e.g., the recording use case doesn't really work)
-//TODO: thin out the on-screen instructions for anchor points
 struct TutorialScreen<Content: View>: View {
     //format for all the tutorial and app set up screens. standarizes spacing and adds exit button to each page
     let content: Content
