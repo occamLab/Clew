@@ -1,6 +1,6 @@
 
 /* Class = "UITextView"; accessibilityLabel = "Message"; ObjectID = "JVb-Ok-OEz"; */
-"JVb-Ok-OEz.accessibilityLabel" = "Message";
+"JVb-Ok-OEz.accessibilityLabel" = "Mensaje";
 
 /* Class = "UIButton"; accessibilityLabel = "Send Feedback"; ObjectID = "Yh2-1z-izX"; */
 "Yh2-1z-izX.accessibilityLabel" = "Enviar comentario";
@@ -8,7 +8,7 @@
 "Yh2-1z-izX.normalTitle" = "Enviar";
 
 /* Class = "UILabel"; text = "Please reach out to us if you have any questions about using Clew or to report an issue with the app. Please be specific when describing an issue to ensure that we can best respond to it. We encourage you to share your feedback and experience with Clew. You can contact us via text message using the form below or leave an audio note."; ObjectID = "imz-c1-4Fu"; */
-"imz-c1-4Fu.text" = "Please reach out to us if you have any questions about using Clew or to report an issue with the app. Please be specific when describing an issue to ensure that we can best respond to it. We encourage you to share your feedback and experience with Clew. You can contact us via text message using the form below or leave an audio note.";
+"imz-c1-4Fu.text" = "Ponte en contacto con nosotros si tienes alguna pregunta sobre el uso de Clew o para informar de un problema con la aplicación. Por favor, sé específico cuando describas un problema para asegurar que podamos responder de la mejor manera posible. Te animamos a que compartas tus comentarios y experiencias con Clew. Puedes ponerte en contacto con nosotros a través de un mensaje de texto utilizando el siguiente formulario o dejando una nota de audio.";
 
 /* Class = "UILabel"; text = "Date created:"; ObjectID = "tUX-fc-ttC"; */
 "tUX-fc-ttC.text" = "";

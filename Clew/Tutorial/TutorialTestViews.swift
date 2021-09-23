@@ -58,7 +58,6 @@ struct TutorialNavLink<Destination: View, Content: View>: View {
     var body: some View {
         NavigationLink(destination: self.destination) {
             content
-                //.textboarder(color: .black, lineWidth: 3)
                 .frame(minWidth: 0, maxWidth: 300)
                 .padding()
                 .foregroundColor(.black)
@@ -87,7 +86,6 @@ struct TutorialNavLinkWithRedirection<Destination: View, Content: View>: View {
     var body: some View {
         NavigationLink(destination: self.destination, tag: activationTag, selection: selection) {
             content
-                //.textboarder(color: .black, lineWidth: 3)
                 .frame(minWidth: 0, maxWidth: 300)
                 .padding()
                 .foregroundColor(.black)
@@ -119,7 +117,6 @@ struct TutorialButton<Content: View>: View {
     }
     var body: some View {
         content
-            //.textboarder(color: .black, lineWidth: 3)
             .frame(minWidth: 0, maxWidth: 300)
             .padding()
             .foregroundColor(.black)
@@ -130,7 +127,11 @@ struct TutorialButton<Content: View>: View {
 }
 
 class ShowTutorialPage: ObservableObject {
-    @Published var selectedView: String? = ""
+    @Published var selectedView: String? {
+        willSet(newValue) {
+            print("SELECTED \(newValue)")
+        }
+    }
     @Published var confineToSection: Bool = false
     
     public static var shared = ShowTutorialPage()

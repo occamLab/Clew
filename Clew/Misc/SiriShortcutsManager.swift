@@ -27,9 +27,11 @@ class SiriShortcutsManager: ObservableObject {
                 return
             }
             self.voiceShortcuts = voiceShortcutsFromCenter
-            self.objectWillChange.send()
-            if let completion = completion {
-                completion()
+            DispatchQueue.main.async {
+                self.objectWillChange.send()
+                if let completion = completion {
+                    completion()
+                }
             }
         }
     }
