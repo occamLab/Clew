@@ -69,22 +69,20 @@ struct TutorialNavLink<Destination: View, Content: View>: View {
 }
 
 
-struct TutorialNavLinkWithRedirection<Destination: View, Content: View>: View {
+struct TutorialNavLinkWithProgress<Destination: View, Content: View>: View {
     //creates a button format for all the CLEW tutorial navigation links to use. only works for navigation links
     let content: Content
     let destination: Destination
-    let activationTag: String
-    let selection: Binding<String?>
+    let tag: String
     
-    init(destination: Destination, tag: String, selection: Binding<String?>, @ViewBuilder content: () -> Content) {
+    init(destination: Destination, tag: String, @ViewBuilder content: () -> Content) {
         self.destination = destination
-        self.selection = selection
-        self.activationTag = tag
+        self.tag = tag
         self.content = content()
     }
     
     var body: some View {
-        NavigationLink(destination: self.destination, tag: activationTag, selection: selection) {
+        NavigationLink(destination: self.destination) {
             content
                 .frame(minWidth: 0, maxWidth: 300)
                 .padding()
@@ -92,8 +90,8 @@ struct TutorialNavLinkWithRedirection<Destination: View, Content: View>: View {
                 .background(Color.yellow)
                 .cornerRadius(10)
                 .font(.system(size: 18, weight: .regular))
-                .accessibility(hint: UserDefaults.standard.bool(forKey: activationTag + "TutorialCompleted") ? Text(NSLocalizedString("moduleCompleted", comment: "played as the accessibility hint in the tutorial to indicate that the current module has been completed")) : Text(NSLocalizedString("moduleNotCompleted", comment: "played as the accessibility hint in the tutorial to indicate that the current module has not been completed")) )
-            if UserDefaults.standard.bool(forKey: activationTag + "TutorialCompleted") {
+                .accessibility(hint: UserDefaults.standard.bool(forKey: tag + "TutorialCompleted") ? Text(NSLocalizedString("moduleCompleted", comment: "played as the accessibility hint in the tutorial to indicate that the current module has been completed")) : Text(NSLocalizedString("moduleNotCompleted", comment: "played as the accessibility hint in the tutorial to indicate that the current module has not been completed")) )
+            if UserDefaults.standard.bool(forKey: tag + "TutorialCompleted") {
                 Circle()
                     .fill(Color.yellow)
                     .frame(width: 30, height: 30)
@@ -127,16 +125,10 @@ struct TutorialButton<Content: View>: View {
 }
 
 class ShowTutorialPage: ObservableObject {
-    @Published var selectedView: String? {
-        willSet(newValue) {
-            print("SELECTED \(newValue)")
-        }
-    }
     @Published var confineToSection: Bool = false
-    
     public static var shared = ShowTutorialPage()
+    
     private init() {
-        
     }
 }
 
@@ -148,49 +140,49 @@ struct TutorialTestView: View {
             TutorialScreen{
                 Text(NSLocalizedString("tutorialTitleText", comment: "Title of the Clew Tutorial Screen. Top of the first tutorial page"))
                 
-                HStack{
-                    TutorialNavLinkWithRedirection(destination: CLEWintro(), tag: "CLEWintro", selection: $showPage.selectedView) {
+                HStack {
+                    TutorialNavLinkWithProgress(destination: CLEWintro(), tag: "CLEWintro") {
                         Text(NSLocalizedString("ClewIntroTutorialTitle", comment: "Intro to Clew Tutorial Title"))
                     }
                 }
                 
-                HStack{
-                    TutorialNavLinkWithRedirection(destination: OrientPhone(), tag: "OrientPhone", selection: $showPage.selectedView) {
+                HStack {
+                    TutorialNavLinkWithProgress(destination: OrientPhone(), tag: "OrientPhone") {
                         Text(NSLocalizedString("orientPhoneTutorialButtonText", comment: "Text for the tutorial screem for phone position"))
                     }
                 }
                 
-                HStack{
-                    TutorialNavLinkWithRedirection(destination: FindPath(), tag: "FindPath", selection: $showPage.selectedView) {
+                HStack {
+                    TutorialNavLinkWithProgress(destination: FindPath(), tag: "FindPath") {
                         Text(NSLocalizedString( "findPathTutorialButtonText", comment: "Title for the finding and following path part of the tutorial"))
                     }
                 }
                 
-                HStack{
-                    TutorialNavLinkWithRedirection(destination: SingleUse(), tag: "SingleUse", selection: $showPage.selectedView) {
+                HStack {
+                    TutorialNavLinkWithProgress(destination: SingleUse(), tag: "SingleUse") {
                         Text(NSLocalizedString( "singleUseRouteTutorialButtonText", comment: "Title for the single use route part of the tutorial"))
                     }
                 }
                 
-                HStack{
-                    TutorialNavLinkWithRedirection(destination: AnchorPoints(), tag: "AnchorPoints", selection: $showPage.selectedView) {
+                HStack {
+                    TutorialNavLinkWithProgress(destination: AnchorPoints(), tag: "AnchorPoints") {
                         Text(NSLocalizedString("anchorPointsTutorialTitle", comment: "this is the title of the anchor points tutorial section"))
                     }
                 }
                 
-                HStack{
-                    TutorialNavLinkWithRedirection(destination: SavedRoutes(), tag: "SavedRoutes", selection: $showPage.selectedView) {Text(NSLocalizedString( "savedRoutesTutorialButtonText", comment: "Title for the saved route part of the tutorial"))
+                HStack {
+                    TutorialNavLinkWithProgress(destination: SavedRoutes(), tag: "SavedRoutes") {Text(NSLocalizedString( "savedRoutesTutorialButtonText", comment: "Title for the saved route part of the tutorial"))
                     }
                 }
                 
-                HStack{
-                    TutorialNavLinkWithRedirection(destination: SettingOptions(), tag: "SettingsOptions", selection: $showPage.selectedView) {
+                HStack {
+                    TutorialNavLinkWithProgress(destination: SettingOptions(), tag: "SettingsOptions") {
                         Text(NSLocalizedString( "settingOptionsTutorialButtonText", comment: "Title for the setting options part of the tutorial"))
                     }
                 }
                 
-                HStack{
-                    TutorialNavLinkWithRedirection(destination: SiriWalkthrough(), tag: "SiriWalkthrough", selection: $showPage.selectedView) {
+                HStack {
+                    TutorialNavLinkWithProgress(destination: SiriWalkthrough(), tag: "SiriWalkthrough") {
                         Text(NSLocalizedString( "siriWalkthroughTutorialButtonText", comment: "Title for the siri walkthrough part of the tutorial"))
                     }
                 }

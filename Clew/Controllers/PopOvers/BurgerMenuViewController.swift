@@ -11,10 +11,12 @@ import SwiftUI
 
 class BurgerMenuViewController: UITableViewController, UIPopoverPresentationControllerDelegate {
     var tutorialHostingController: UIHostingController<TutorialTestView>?
-    
+    var siriHostingController: UIHostingController<NavigationView<SiriWalkthrough>>?
+
     override func viewDidLoad() {
         NotificationCenter.default.addObserver(forName: Notification.Name("TutorialPopoverReadyToDismiss"), object: nil, queue: nil) { (notification) -> Void in
             self.tutorialHostingController?.dismiss(animated: true)
+            self.siriHostingController?.dismiss(animated: true)
         }
     }
     
@@ -81,19 +83,19 @@ class BurgerMenuViewController: UITableViewController, UIPopoverPresentationCont
     
     func tutorialButtonPressed() {
         let tutorialView = TutorialTestView()
-        ShowTutorialPage.shared.selectedView = ""
         ShowTutorialPage.shared.confineToSection = false
         tutorialHostingController = UIHostingController(rootView: tutorialView)
         self.present(tutorialHostingController!, animated: true, completion: nil)
     }
     
     func siriShortcutsButtonPressed() {
-        let tutorialView = TutorialTestView()
-        tutorialHostingController = UIHostingController(rootView: tutorialView)
+        let siriView = NavigationView {
+            SiriWalkthrough()
+        }
+        siriHostingController = UIHostingController(rootView: siriView)
         NotificationCenter.default.post(name: Notification.Name("ClewPopoverDisplayed"), object: nil)
-        ShowTutorialPage.shared.selectedView = "SiriWalkthrough"
         ShowTutorialPage.shared.confineToSection = true
-        self.present(tutorialHostingController!, animated: true)
+        self.present(siriHostingController!, animated: true)
     }
     
     /// Called when the help button is pressed.  This function will display the help view (managed by HelpViewController) as a popover.

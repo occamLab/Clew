@@ -2137,6 +2137,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     // Called when help button is pressed
     @objc func helpButtonPressed(withOverride pageToDisplayOverride: String? = nil) {
+        // TODO: our mechanism of redirecting to links is currently not working (iOS 15.0)
         // TODO: confineToSection is not respected for all tutorial views yet
         var pageToDisplay = pageToDisplayOverride == nil ? "" : pageToDisplayOverride!
         var confineToSection: Bool = true
@@ -2189,7 +2190,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             }
         }
         ShowTutorialPage.shared.confineToSection = confineToSection
-        ShowTutorialPage.shared.selectedView = pageToDisplay
         NotificationCenter.default.post(name: Notification.Name("ClewPopoverDisplayed"), object: nil)
         self.present(tutorialHostingController!, animated: false, completion: nil)
     }
