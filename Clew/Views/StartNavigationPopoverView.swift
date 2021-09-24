@@ -19,33 +19,35 @@ struct StartNavigationPopoverView: View {
              
         
         VStack {
-            #if APPCLIP
+//            #if APPCLIP
             Text(NSLocalizedString("startNavigationPopoverText", comment: "This is text that appears with the list of routes in the app clip."))
                 .multilineTextAlignment(.center)
                 .font(.system(size: 24, weight: .bold))
-            #endif
+//            #endif
             NavigationView {
-                List(routeList, id: \.first!.key) { routeInfo in
-                    
-                    Button(action: {
-                        vc.routeID = routeInfo.first!.key
-                        print(vc.routeID)
-                        print("B)")
-                        selectedRouteName = routeInfo.first!.value
-                        vc.recordPathController.remove()
-                            
-                    }) {
-                        if selectedRouteName == routeInfo.first!.value {
-                            RowSelected {
-                                RouteList(RouteName: routeInfo.first!.value)
-                            }
-                        } else {
-                            RowNotSelected {
-                                RouteList(RouteName: routeInfo.first!.value)
+//                HStack {
+                    List(routeList, id: \.first!.key) { routeInfo in
+                        
+                        Button(action: {
+                            vc.routeID = routeInfo.first!.key
+                            print(vc.routeID)
+                            print("B)")
+                            selectedRouteName = routeInfo.first!.value
+                            vc.recordPathController.remove()
+//                            UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: self)
+                        }) {
+                            if selectedRouteName == routeInfo.first!.value {
+                                RowSelected {
+                                    RouteList(RouteName: routeInfo.first!.value)
+                                }
+                            } else {
+                                RowNotSelected {
+                                    RouteList(RouteName: routeInfo.first!.value)
+                                }
                             }
                         }
                     }
-                }
+//                }
                 .navigationTitle(NSLocalizedString("selectRoutePopoverLabel", comment: "This is text instructing the user to select a route from a list."))
             }
             

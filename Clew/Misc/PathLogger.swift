@@ -10,6 +10,7 @@
 import Foundation
 import Firebase
 import SceneKit
+import ARKit
 #if !APPCLIP
 import FirebaseAnalytics
 import FirebaseAuth
@@ -58,7 +59,7 @@ class PathLogger {
     /// the navigation route that the user is currently navigating
     var currentNavigationRoute: SavedRoute?
     /// the ARWorldMap that is currently navigating
-    var currentNavigationMap: Any?
+    var currentNavigationMap: ARWorldMap?
     
     /// language used in recording
     func currentLocale() -> String {
@@ -71,7 +72,7 @@ class PathLogger {
     /// - Parameters:
     ///   - route: the route being navigated
     ///   - worldMap: the world map expressed as an optional Any type
-    func setCurrentRoute(route: SavedRoute, worldMap: Any?) {
+    func setCurrentRoute(route: SavedRoute, worldMap: ARWorldMap?) {
         currentNavigationRoute = route
         currentNavigationMap = worldMap
     }

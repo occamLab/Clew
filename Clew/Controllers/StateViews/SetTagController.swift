@@ -22,7 +22,7 @@ class SetTagController: UIViewController, UITextFieldDelegate {
     var textField: UITextField!
     
     /// The ARWorldMap to associate with this route
-    var worldMap: Any?
+    var worldMap: ARWorldMap?
     
     override func viewDidAppear(_ animated: Bool){
         super.viewDidAppear(animated)
