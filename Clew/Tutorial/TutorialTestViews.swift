@@ -34,9 +34,6 @@ struct TutorialScreen<Content: View>: View {
         }
         
         .navigationBarItems(
-            /*leading:
-             NavigationLink("Tutorial", destination: TutorialTestView())
-             .padding(),*/ //TODO: make a return to tutorial menu button on all the pages
             trailing:
                 Button(NSLocalizedString("buttonTexttoExitTutorial", comment: "text of the button that dismisses the tutorial screens")) {
                     NotificationCenter.default.post(name: Notification.Name("TutorialPopoverReadyToDismiss"), object: nil)

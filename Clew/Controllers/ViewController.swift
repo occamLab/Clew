@@ -891,19 +891,23 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         
         let userDefaults: UserDefaults = UserDefaults.standard
         let firstTimeLoggingIn: Bool? = userDefaults.object(forKey: "firstTimeLogin") as? Bool
-        
+
+        // To test the SiriShortcut alert, comment out the line below
+        // siriShortcutAlert = false
         if firstTimeLoggingIn == nil {
             userDefaults.set(Date().timeIntervalSince1970, forKey: "firstUsageTimeStamp")
             userDefaults.set(true, forKey: "firstTimeLogin")
-            // make sure not to show the significant changes alert in the future
-            userDefaults.set(true, forKey: "showedSignificantChangesAlertv1_3")
-            showSafetyAlert()
-        }
-        // To test the SiriShortcut alert, comment out the line below
-        // siriShortcutAlert = false
-        if(!siriShortcutAlert){
-            showSignificantChangesHandsFreeAlert()
-            siriShortcutAlert = true
+            showSafetyAlert() {
+                if(!self.siriShortcutAlert){
+                    self.showSignificantChangesHandsFreeAlert()
+                    self.siriShortcutAlert = true
+                }
+            }
+        } else {
+            if(!siriShortcutAlert){
+                showSignificantChangesHandsFreeAlert()
+                siriShortcutAlert = true
+            }
         }
         
         synth.delegate = self
@@ -1071,11 +1075,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     }
     
     /// Show safety disclaimer when user opens app for the first time.
-    func showSafetyAlert() {
+    func showSafetyAlert(continuationAfterConfirmation: @escaping ()->()) {
         let safetyAlertVC = UIAlertController(title: NSLocalizedString("forYourSafetyPop-UpHeading", comment: "The heading of a pop-up telling the user to be aware of their surroundings while using clew"),
                                               message: NSLocalizedString("forYourSafetyPop-UpContent", comment: "Disclaimer shown to the user when they open the app for the first time"),
                                               preferredStyle: .alert)
-        safetyAlertVC.addAction(UIAlertAction(title: NSLocalizedString("anchorPointTextPop-UpConfirmation", comment: "What the user clicks to acknowledge a message and dismiss pop-up"), style: .default, handler: nil))
+        safetyAlertVC.addAction(UIAlertAction(title: NSLocalizedString("anchorPointTextPop-UpConfirmation", comment: "What the user clicks to acknowledge a message and dismiss pop-up"), style: .default) { _ in
+            continuationAfterConfirmation()
+        })
         self.present(safetyAlertVC, animated: true, completion: nil)
     }
     
@@ -1096,7 +1102,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                                                message: NSLocalizedString("significantVersionChangesPopHandsFree-UpContent", comment: "An alert shown to the user to alert them to the fact that significant changes have been made to the app."),
                                                preferredStyle: .actionSheet)
         changesAlertVC.addAction(UIAlertAction(title: NSLocalizedString("significantVersionChanges-HelpMeWithSiri", comment: "What the user clicks to request help setting up Siri shortcuts"), style: .default, handler: { action -> Void in
-            self.helpButtonPressed(withOverride: "SiriWalkthrough")
+            let rootView = NavigationView {
+                SiriWalkthrough()
+            }
+            self.tutorialHostingController = UIHostingController(rootView: rootView)
+            self.present(self.tutorialHostingController!, animated: true, completion: nil)
         }
         ))
         changesAlertVC.addAction(UIAlertAction(title: NSLocalizedString("dismissSurvey", comment: "This is used for dismissing popovers"), style: .default, handler: { action -> Void in

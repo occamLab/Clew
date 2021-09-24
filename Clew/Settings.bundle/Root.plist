@@ -178,14 +178,6 @@
 			<key>DefaultValue</key>
 			<false/>
 		</dict>
-		<dict>
-			<key>Type</key>
-			<string>PSGroupSpecifier</string>
-			<key>Title</key>
-			<string>Send Feedback</string>
-			<key>FooterText</key>
-			<string>Help us improve the app by logging your Clew experience. These logs will not include any images or personal information.</string>
-		</dict>
 	</array>
 </dict>
 </plist>
