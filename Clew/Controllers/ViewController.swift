@@ -11,7 +11,7 @@
 // - think about direction of device and how it relates to the route itself (e.g., look to your left)
 // - Get buttons to align in the recording view (add transparent third button)
 //
-// Unconfirmed issues issues
+// Unconfirmed issues
 // - Maybe intercept session was interrupted so that we don't mistakenly try to navigate saved route before relocalization
 //
 // Major features to implement
@@ -176,6 +176,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// A boolean that tracks whether or not to suppress tracking warnings.  By default we don't suppress, but when the help popover is presented we do.
     var suppressTrackingWarnings = false
     
+    /// A computed attributed that tests if tracking warnings has been suppressed and ensures that the app is in an active state
+    var trackingWarningsAllowed: Bool {
+        if case .mainScreen(_) = state {
+            return false
+        }
+        if case .finishedTutorialRoute(_) = state {
+            return false
+        }
+        return !suppressTrackingWarnings
+    }
+    
     var tutorialHostingController: UIViewController?
     
     var burgerMenuController: UIViewController?
@@ -249,8 +260,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         isTutorial = false
         // cancel the timer that announces tracking errors
         trackingErrorsAnnouncementTimer?.invalidate()
-        // if the ARSession is running, pause it to conserve battery
-        sceneView.session.pause()
+        // TODO: we used to pause the session here, but it appears that the workaround mentioned at this link (https://developer.apple.com/forums/thread/690668) will only work, consistently, with an unpaused session
         // set this to nil to prevent the app from erroneously detecting that we can auto-align to the route
         configuration.initialWorldMap = nil
         showRecordPathButton(announceArrival: announceArrival)
@@ -262,8 +272,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     func handleStateTransitionToFinishedTutorialRoute(announceArrival: Bool) {
         // cancel the timer that announces tracking errors
         trackingErrorsAnnouncementTimer?.invalidate()
-        // if the ARSession is running, pause it to conserve battery
-        sceneView.session.pause()
+        // TODO: see note elsewhere about needing to disable thsi for now. (previous: if the ARSession is running, pause it to conserve battery)
         // set this to nil to prevent the app from erroneously detecting that we can auto-align to the route
         configuration.initialWorldMap = nil
         showRecordPathButton(announceArrival: announceArrival)
@@ -388,9 +397,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         if let worldMap = worldMap {
             isSameMap = configuration.initialWorldMap != nil && configuration.initialWorldMap == worldMap
             configuration.initialWorldMap = worldMap
-            attemptingRelocalization =  isSameMap && !isTrackingPerformanceNormal || worldMap != nil && !isSameMap
+            attemptingRelocalization = isSameMap && !isTrackingPerformanceNormal || worldMap != nil && !isSameMap
         }
-    
 
         if navigateStartToEnd {
             crumbs = route.crumbs.reversed()
@@ -660,6 +668,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// This is embeds an AR scene.  The ARSession is a part of the scene view, which allows us to capture where the phone is in space and the state of the world tracking.  The scene also allows us to insert virtual objects
     var sceneView = ARSCNView()
+    
+    /// Keep track of last world origin adjustment to prevent "ringing"
+    var lastWorldOriginShift = Date()
     
     /// Hide status bar
     override var prefersStatusBarHidden: Bool {
@@ -1272,7 +1283,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         startNavigationController.largeHomeButton.isHidden = recordingSingleUseRoute
         startNavigationController.stackView.layoutIfNeeded()
     
-        announce(announcement: NSLocalizedString("stoppedRecordingAnnouncement", comment: "An announcement which lets the user know that they have stopped recording the route."))
+        if !isResumedRoute {
+            announce(announcement: NSLocalizedString("stoppedRecordingAnnouncement", comment: "An announcement which lets the user know that they have stopped recording the route."))
+        }
         
         UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: startNavigationController.startNavigationButton)
     }
@@ -1550,7 +1563,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             switch reason {
             case .excessiveMotion:
                 print("Excessive motion")
-                if !self.suppressTrackingWarnings {
+                if trackingWarningsAllowed {
                     self.announce(announcement: NSLocalizedString("excessiveMotionDegradedTrackingAnnouncemnt", comment: "An announcement which lets the user know that there is too much movement of their device and thus the app's ability to track a route has been lowered."))
                     if self.soundFeedback {
                         SoundEffectManager.shared.playSystemSound(id: 1050)
@@ -1558,7 +1571,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 }
             case .insufficientFeatures:
                 print("InsufficientFeatures")
-                if !self.suppressTrackingWarnings {
+                if trackingWarningsAllowed {
                     self.announce(announcement: NSLocalizedString("insuficientFeaturesDegradedTrackingAnnouncemnt", comment: "An announcement which lets the user know  that their current surroundings do not have enough visual markers and thus the app's ability to track a route has been lowered."))
                     if self.soundFeedback {
                         SoundEffectManager.shared.playSystemSound(id: 1050)
@@ -1598,6 +1611,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         continuationAfterSessionIsReady = {
             self.trackingErrorsAnnouncementTimer?.invalidate()
             //sends the user to the screen where they can start recording a route
+            // This anchor is necessary to manually adjust the origin
+            self.sceneView.session.add(anchor: ARAnchor(name: "origin", transform: matrix_identity_float4x4))
             self.state = .startingPauseProcedure
         }
         configuration.initialWorldMap = nil
@@ -1660,8 +1675,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         // erase nearest keypoint
         keypointNode.removeFromParentNode()
         pathObj?.removeFromParentNode()
-//        pathpointObjs.map({$0.removeFromParentNode()})
-//        pathpointObjs = []
         for anchorPointNode in anchorPointNodes {
             anchorPointNode.removeFromParentNode()
         }
@@ -1710,6 +1723,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             self.delayTransition(announcement: NSLocalizedString("singleUseRouteToRecordingRouteAnnouncement", comment: "This is an announcement which is spoken when the user starts recording a single use route. it informs the user that they are recording a single use route."), initialFocus: nil)
             
             //sends the user to the screen where they can start recording a route
+            // this is used if we ever want to save the ARWorldMap and manually set the world origin
+            self.sceneView.session.add(anchor: ARAnchor(name: "origin", transform: matrix_identity_float4x4))
             self.state = .recordingRoute
         }
         configuration.initialWorldMap = nil
@@ -1898,11 +1913,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                     renderPath(prevKeypointPosition, keypoints[0].location)
                 }
                 
-                // erase current set of pathpoints and render next
-//                pathpointObjs.map({$0.removeFromParentNode()})
-//                pathpointObjs = []
-//                renderPathpoints(prevKeypointPosition, keypoints[0].location)
-                
                 // update directions to next keypoint
                 directionToNextKeypoint = getDirectionToNextKeypoint(currentLocation: curLocation)
                 setDirectionText(currentLocation: curLocation.location, direction: directionToNextKeypoint, displayDistance: false)
@@ -1915,8 +1925,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 // erase current keypoint node
                 keypointNode.removeFromParentNode()
                 pathObj?.removeFromParentNode()
-//                pathpointObjs.map({$0.removeFromParentNode()})
-//                pathpointObjs = []
                 for anchorPointNode in anchorPointNodes {
                     anchorPointNode.removeFromParentNode()
                 }
@@ -2593,7 +2601,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             case .excessiveMotion:
                 logString = "ExcessiveMotion"
                 print("Excessive motion")
-                if !suppressTrackingWarnings {
+                if trackingWarningsAllowed {
                     announce(announcement: NSLocalizedString("excessiveMotionDegradedTrackingAnnouncemnt", comment: "An announcement which lets the user know that there is too much movement of their device and thus the app's ability to track a route has been lowered."))
                     if soundFeedback {
                         SoundEffectManager.shared.playSystemSound(id: 1050)
@@ -2602,7 +2610,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             case .insufficientFeatures:
                 logString = "InsufficientFeatures"
                 print("InsufficientFeatures")
-                if !suppressTrackingWarnings {
+                if trackingWarningsAllowed {
                     announce(announcement: NSLocalizedString("insuficientFeaturesDegradedTrackingAnnouncemnt", comment: "An announcement which lets the user know  that their current surroundings do not have enough visual markers and thus the app's ability to track a route has been lowered."))
                     if soundFeedback {
                         SoundEffectManager.shared.playSystemSound(id: 1050)
@@ -2632,14 +2640,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             }
             
             if configuration.initialWorldMap != nil, attemptingRelocalization {
-                // This call is necessary to cancel any pending setWorldOrigin call from the alignment procedure.  Depending on timing, it's possible for the relocalization *and* the realignment to both be applied.  This results in the origin essentially being shifted twice and things are then way off
-                session.setWorldOrigin(relativeTransform: matrix_identity_float4x4)
-                if !suppressTrackingWarnings {
+                if trackingWarningsAllowed {
                     announce(announcement: NSLocalizedString("realignToSavedRouteAnnouncement", comment: "An announcement which lets the user know that their surroundings have been matched to a saved route"))
                 }
                 attemptingRelocalization = false
+                // This call is necessary to cancel any pending setWorldOrigin call from the alignment procedure.  Depending on timing, it's possible for the relocalization *and* the realignment to both be applied.  This results in the origin essentially being shifted twice and things are then way off
+                session.setWorldOrigin(relativeTransform: matrix_identity_float4x4)
             } else if case let .limited(reason)? = trackingSessionState {
-                if !suppressTrackingWarnings {
+                if trackingWarningsAllowed {
                     if reason != .initializing {
                         announce(announcement: NSLocalizedString("fixedTrackingAnnouncement", comment: "Let user know that the ARKit tracking session has returned to its normal quality (this is played after the tracking has been restored from thir being insuficent visual features or excessive motion which degrade the tracking)"))
                         if soundFeedback {
@@ -2811,7 +2819,12 @@ class ARData: ObservableObject {
 extension ViewController: ARSessionDelegate {
     func session(_ session: ARSession, didUpdate frame: ARFrame) {
         ARData.shared.set(transform: frame.camera.transform)
-        //print("got a frame", frame.camera.transform.columns.0.y)
+        for anchor in frame.anchors {
+            if anchor.name?.starts(with: "origin") == true, !simd_almost_equal_elements(anchor.transform, matrix_identity_float4x4, 0.01), -lastWorldOriginShift.timeIntervalSinceNow > 2.0 {
+                sceneView.session.setWorldOrigin(relativeTransform: anchor.transform)
+                lastWorldOriginShift = Date()
+            }
+        }
     }
 }
 
