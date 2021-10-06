@@ -375,6 +375,20 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         hapticTimer = Timer.scheduledTimer(timeInterval: 0.01, target: self, selector: (#selector(getHapticFeedback)), userInfo: nil, repeats: true)
     }
     
+    /// Analyzes the map to determine if there is an anchor we can use for relocalization.  This is necessary to work around issues with iOS 15 and ARWorldMap
+    /// - Parameter map: the map to analyze
+    /// - Returns: the anchor UUID and transform from the ARWorldMap
+    func getBestReferenceAnchor(_ map: ARWorldMap)->(UUID, simd_float4x4)? {
+        if let originAnchor = map.anchors.first(where: { $0.name == "origin" }) {
+            return (originAnchor.identifier, originAnchor.transform)
+        }
+        // TODO: this is probably going to be hit or miss (the old anchors are not always propagated to the new session) for now we won't attempt to use ARPlaneAnchor
+//        if let planeAnchor = map.anchors.first(where: { $0 is ARPlaneAnchor }) {
+//            return (planeAnchor.identifier, planeAnchor.transform)
+//        }
+        return nil
+    }
+    
     /// Handler for the startingResumeProcedure app state
     ///
     /// - Parameters:
@@ -395,9 +409,20 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
         var isSameMap = false
         if let worldMap = worldMap {
-            isSameMap = configuration.initialWorldMap != nil && configuration.initialWorldMap == worldMap
-            configuration.initialWorldMap = worldMap
-            attemptingRelocalization = isSameMap && !isTrackingPerformanceNormal || worldMap != nil && !isSameMap
+            // analyze the map to see if we can relocalize
+            referenceAnchor = getBestReferenceAnchor(worldMap)
+            if #available(iOS 15.0, *), referenceAnchor == nil {
+                // unfortunately, we are out of luck.  Better to not use the ARWorldMap
+                configuration.initialWorldMap = nil
+                attemptingRelocalization = false
+            } else {
+                isSameMap = configuration.initialWorldMap != nil && configuration.initialWorldMap == worldMap
+                configuration.initialWorldMap = worldMap
+                // TODO: see if we can move this out of this if statement
+                attemptingRelocalization = isSameMap && !isTrackingPerformanceNormal || worldMap != nil && !isSameMap
+            }
+        } else {
+            configuration.initialWorldMap = nil
         }
 
         if navigateStartToEnd {
@@ -669,6 +694,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// This is embeds an AR scene.  The ARSession is a part of the scene view, which allows us to capture where the phone is in space and the state of the world tracking.  The scene also allows us to insert virtual objects
     var sceneView = ARSCNView()
     
+    /// If this exists, use it as a reference for shiting the world origin
+    var referenceAnchor: (UUID, simd_float4x4)?
+    
     /// Keep track of last world origin adjustment to prevent "ringing"
     var lastWorldOriginShift = Date()
     
@@ -806,6 +834,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
 
         NotificationCenter.default.addObserver(forName: Notification.Name("StartARSession"), object: nil, queue: nil) { (notification) -> Void in
             // TODO if session is already running, don't restart it
+            self.referenceAnchor = nil
             self.sceneView.session.run(self.configuration, options: [.removeExistingAnchors, .resetTracking])
         }
         
@@ -951,8 +980,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         if case .navigatingRoute = self.state {
             keypointNode.removeFromParentNode()
             pathObj?.removeFromParentNode()
-//            pathpointObjs.map({$0.removeFromParentNode()})
-//            pathpointObjs = []
             for anchorPointNode in anchorPointNodes {
                 anchorPointNode.removeFromParentNode()
             }
@@ -1616,6 +1643,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             self.state = .startingPauseProcedure
         }
         configuration.initialWorldMap = nil
+        referenceAnchor = nil
         sceneView.session.run(configuration, options: [.removeExistingAnchors, .resetTracking])
     }
     
@@ -1728,6 +1756,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             self.state = .recordingRoute
         }
         configuration.initialWorldMap = nil
+        referenceAnchor = nil
         sceneView.session.run(configuration, options: [.removeExistingAnchors, .resetTracking])
     }
     /// this is called after the alignment countdown timer finishes in order to complete the pause tracking procedure
@@ -2215,7 +2244,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     // Called when home button is pressed
     // Chooses the states in which the home page alerts pop up
     @objc func homeButtonPressed() {
-    // if the state case needs to have a home button alert, send it to the function that creates the relevant alert
+        // if the state case needs to have a home button alert, send it to the function that creates the relevant alert
         if case .navigatingRoute = self.state {
             homePageNavigationProcesses()
         }
@@ -2663,12 +2692,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 
                 isAutomaticAlignment = true
                 
-                ///PATHPOINT: Auto Alignment -> resume route
-                if case .readyForFinalResumeAlignment = state {
-                    if !isTutorial {
-                        state = .readyToNavigateOrPause(allowPause: false)
-                    }
-                } else {
+                ///PA THPOINT: Auto Alignment -> resume route
+                if !isTutorial, configuration.initialWorldMap != nil {
                     state = .readyToNavigateOrPause(allowPause: false)
                 }
             }
@@ -2698,9 +2723,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         do {
             if let document = try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data) as? RouteDocumentData {
                 let thisRoute = document.route
-                for crumb in document.route.crumbs.reversed() {
-                    print(crumb.transform.columns.3)
-                }
+                referenceAnchor = nil
+                configuration.initialWorldMap = nil
                 self.sceneView.session.run(self.configuration, options: [.removeExistingAnchors, .resetTracking])
                 self.continuationAfterSessionIsReady = {
                     self.state = .startingResumeProcedure(route: thisRoute, worldMap: nil, navigateStartToEnd: true)
@@ -2819,9 +2843,12 @@ class ARData: ObservableObject {
 extension ViewController: ARSessionDelegate {
     func session(_ session: ARSession, didUpdate frame: ARFrame) {
         ARData.shared.set(transform: frame.camera.transform)
+        guard #available(iOS 15.0, *), let referenceAnchor = referenceAnchor else {
+            return
+        }
         for anchor in frame.anchors {
-            if anchor.name?.starts(with: "origin") == true, !simd_almost_equal_elements(anchor.transform, matrix_identity_float4x4, 0.01), -lastWorldOriginShift.timeIntervalSinceNow > 2.0 {
-                sceneView.session.setWorldOrigin(relativeTransform: anchor.transform)
+            if anchor.identifier == referenceAnchor.0, !simd_almost_equal_elements(anchor.transform, referenceAnchor.1, 0.01), -lastWorldOriginShift.timeIntervalSinceNow > 2.0 {
+                sceneView.session.setWorldOrigin(relativeTransform: anchor.transform * referenceAnchor.1.inverse)
                 lastWorldOriginShift = Date()
             }
         }
