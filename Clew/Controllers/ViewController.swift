@@ -2714,6 +2714,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     }
     
     func runTutorialPath(routeName: String) {
+        goHome()
         isTutorial = true
         let path = Bundle.main.path(forResource: routeName, ofType:"crd")!
         let url = URL(fileURLWithPath: path)
