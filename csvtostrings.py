@@ -18,4 +18,4 @@ with open(sys.argv[1]) as f:
         if dest_filename not in f_handles:
             f_handles[dest_filename] = open(dest_filename, 'wt')
             print("opened " + dest_filename)
-        f_handles[dest_filename].write('"' + row[1] + '" = "' + row[4] + '";\n')
+        f_handles[dest_filename].write('"' + row[1] + '" = "' + row[4].replace('"', r'\"') + '";\n')

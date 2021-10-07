@@ -1,13 +1,6 @@
-/* Bundle name */
 "CFBundleName" = "Clew";
-
-/* (No Comment) */
-"Clew Route Document" = "طريق Clew الموثوق"
-;
-
-/* Privacy - Camera Usage Description */
+"Clew Route Document" = "طريق Clew الموثوق";
 "NSCameraUsageDescription" = "يحتاج Clew للوصول إلى الكاميرا لكي يتمكن من تتبع اتجاهك";
-
-/* Privacy - Microphone Usage Description */
-"NSMicrophoneUsageDescription" = "يجب الحصول على إِذن المايكروفون لكي تتمكن من استخدام ميزة الملاحظات الصوتية";
-
+"NSMicrophoneUsageDescription" = "يحتاج التطبيق إلى الحصول على إِذن المايكروفون لكي تتمكن من استخدام ميزة الملاحظات الصوتية";
+"CFBundleDisplayName" = "النظرة السريعة على الطريق";
+"CFBundleName" = "نظرة سريعة على الطريق";

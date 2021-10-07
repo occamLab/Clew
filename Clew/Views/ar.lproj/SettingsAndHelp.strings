@@ -1,13 +1,9 @@
-/* Class = "UITextView"; accessibilityLabel = "Message"; ObjectID = "JVb-Ok-OEz"; */
-"JVb-Ok-OEz.accessibilityLabel" = "Message";
-
-/* Class = "UILabel"; text = "Title"; ObjectID = "Vtf-R1-h2R"; */
+"MessageBodyAccessibilityLabel" = "الرسالة";
+"FeedbackFormInformationalText" = "الرجاء التواصل معنا إذا كان لديك أي أسئلة حول استخدام Clew أو للإبلاغ عن مشكلة في التطبيق. الرجاء عرض المشكلة بشكل واضح لكي نتمكن من الرد عليك بشكل أفضل. نشجعك دائماً على مشاركة ملاحظاتك وتجربتك باستخدام Clew. يمكنك الاتصال بنا عبر رسالة نصية باستخدام النموذج أدناه أو عبر ترك ملاحظة صوتية.";
+"ERa-SA-HJx.title" = "التعليقات";
+"JVb-Ok-OEz.accessibilityLabel" = "الرسالة";
 "Vtf-R1-h2R.text" = "الموضوع";
-
-/* Class = "UIButton"; accessibilityLabel = "Send Feedback"; ObjectID = "Yh2-1z-izX"; */
 "Yh2-1z-izX.accessibilityLabel" = "أرسل رأيك";
-/* Class = "UIButton"; normalTitle = "Send"; ObjectID = "Yh2-1z-izX"; */
 "Yh2-1z-izX.normalTitle" = "إرسال";
-
-/* Class = "UILabel"; text = "Please reach out to us if you have any questions about using Clew or to report an issue with the app. Please be specific when describing an issue to ensure that we can best respond to it. We encourage you to share your feedback and experience with Clew. You can contact us via text message using the form below or leave an audio note."; ObjectID = "imz-c1-4Fu"; */
-"imz-c1-4Fu.text" = "Please reach out to us if you have any questions about using Clew or to report an issue with the app. Please be specific when describing an issue to ensure that we can best respond to it. We encourage you to share your feedback and experience with Clew. You can contact us via text message using the form below or leave an audio note.";
+"imz-c1-4Fu.text" = "يرجى التواصل معنا إذا كان لديك أي أسئلة حول استخدام Clew أو للإبلاغ عن مشكلة في التطبيق. يرجى ذكر أدق التفاصيل عند وصف مشكلة لضمان استجابتنا لها بشكل أفضل. ونحن نشجعك على مشاركة ملاحظاتك وتجربتك مع Clew. يمكنك التواصل معنا عبر رسالة نصية باستخدام النموذج أدناه أو حتى ترك ملاحظة صوتية.";
+"tUX-fc-ttC.text" = "تاريخ الإنشاء";

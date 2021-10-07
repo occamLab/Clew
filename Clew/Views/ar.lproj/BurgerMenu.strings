@@ -1,16 +1,7 @@
-
-/* Class = "UILabel"; text = "Contact Us"; ObjectID = "JnB-cV-dtW"; */
-"JnB-cV-dtW.text" = "ملاحظات حول Clew";
-
-/* Class = "UILabel"; text = "Settings"; ObjectID = "TCm-6A-2mu"; */
+"TutorialMenuItem" = "التعليمات";
+"SiriShortcutsBurgerMenuEntry" = "اختصارات سيري";
+"JnB-cV-dtW.text" = "اتصل بنا";
 "TCm-6A-2mu.text" = "الإعدادات";
-
-/* Class = "UILabel"; text = "Tutorial"; ObjectID = "bRT-jQ-jxr"; */
-"bRT-jQ-jxr.text" = "Tutorial";
-
-/* Class = "UILabel"; text = "Siri Shortcuts"; ObjectID = "xAa-Jq-64c"; */
-"xAa-Jq-64c.text" = "Siri Shortcuts";
-
-/* Class = "UITableViewSection"; headerTitle = "Menu"; ObjectID = "zjo-RA-y09"; */
+"bRT-jQ-jxr.text" = "التعليمات";
+"xAa-Jq-64c.text" = "اهختصارات Siri";
 "zjo-RA-y09.headerTitle" = "القائمة";
-
