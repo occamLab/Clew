@@ -361,7 +361,7 @@ struct PracticeOrientPhoneSubComponent: View {
         
         Button(action:{
             started.toggle()
-            NotificationCenter.default.post(name: Notification.Name("StartARSession"), object: nil)
+            NotificationCenter.default.post(name: Notification.Name("StartARSessionForTutorialModule"), object: nil)
         }){
             if started {
                 TutorialButton{
@@ -1044,7 +1044,7 @@ struct AnchorPointPractice: View {
         }
         
         .onAppear() {
-            NotificationCenter.default.post(name: Notification.Name("StartARSession"), object: nil)
+            NotificationCenter.default.post(name: Notification.Name("StartARSessionForTutorialModule"), object: nil)
         }
         
         if showPage.confineToSection {

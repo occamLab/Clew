@@ -832,7 +832,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             }
         }
 
-        NotificationCenter.default.addObserver(forName: Notification.Name("StartARSession"), object: nil, queue: nil) { (notification) -> Void in
+        NotificationCenter.default.addObserver(forName: Notification.Name("StartARSessionForTutorialModule"), object: nil, queue: nil) { (notification) -> Void in
+            // in case something was already happening, goHome to clear out state
+            self.goHome()
             // TODO if session is already running, don't restart it
             self.referenceAnchor = nil
             self.sceneView.session.run(self.configuration, options: [.removeExistingAnchors, .resetTracking])
