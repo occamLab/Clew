@@ -1,0 +1,15 @@
+
+/* Class = "UILabel"; text = "Contact Us"; ObjectID = "JnB-cV-dtW"; */
+"JnB-cV-dtW.text" = "Opina sobre Clew";
+
+/* Class = "UILabel"; text = "Settings"; ObjectID = "TCm-6A-2mu"; */
+"TCm-6A-2mu.text" = "Ajustes";
+
+/* Class = "UILabel"; text = "Tutorial"; ObjectID = "bRT-jQ-jxr"; */
+"bRT-jQ-jxr.text" = "Tutorial";
+
+/* Class = "UILabel"; text = "Siri Shortcuts"; ObjectID = "xAa-Jq-64c"; */
+"xAa-Jq-64c.text" = "Atajos de Siri";
+
+/* Class = "UITableViewSection"; headerTitle = "Menu"; ObjectID = "zjo-RA-y09"; */
+"zjo-RA-y09.headerTitle" = "Menú";

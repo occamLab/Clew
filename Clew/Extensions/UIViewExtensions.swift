@@ -33,6 +33,8 @@ extension UIView {
         for subview in subviews {
             if subview.tag == UIView.mainTextTag, let textLabel = subview as? UILabel {
                 return textLabel
+            } else if let textLabel = subview.mainText {
+                return textLabel
             }
         }
         return nil

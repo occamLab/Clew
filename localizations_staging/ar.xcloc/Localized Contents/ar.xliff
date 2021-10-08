@@ -1,0 +1,1992 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 http://docs.oasis-open.org/xliff/v1.2/os/xliff-core-1.2-strict.xsd">
+  <file original="Clew/en.lproj/InfoPlist.strings" source-language="en" target-language="ar" datatype="plaintext">
+    <header>
+      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="12.5.1" build-num="12E507"/>
+    </header>
+    <body>
+      <trans-unit id="CFBundleName" xml:space="preserve">
+        <source>Clew</source>
+        <target>Clew</target>
+        <note>Bundle name</note>
+      </trans-unit>
+      <trans-unit id="Clew Route Document" xml:space="preserve">
+        <source>Clew Route Document</source>
+        <target>طريق Clew الموثوق</target>
+        <note/>
+      </trans-unit>
+      <trans-unit id="NSCameraUsageDescription" xml:space="preserve">
+        <source>Clew needs to access your camera to track your orientation.</source>
+        <target>يحتاج Clew للوصول إلى الكاميرا لكي يتمكن من تتبع اتجاهك</target>
+        <note>Privacy - Camera Usage Description</note>
+      </trans-unit>
+      <trans-unit id="NSMicrophoneUsageDescription" xml:space="preserve">
+        <source>Permission to use the microphone is required to use the voice notes feature.</source>
+        <target>يجب الحصول على إِذن المايكروفون لكي تتمكن من استخدام ميزة الملاحظات الصوتية</target>
+        <note>Privacy - Microphone Usage Description</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="Clew/localizations/en.lproj/Localizable.strings" source-language="en" target-language="ar" datatype="plaintext">
+    <header>
+      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="12.5.1" build-num="12E507"/>
+    </header>
+    <body>
+      <trans-unit id=" and proceed upstairs" xml:space="preserve">
+        <source> and proceed upstairs</source>
+        <target>قم بصعود الدرج</target>
+        <note>Additional directions given to user telling them to climb stairs</note>
+      </trans-unit>
+      <trans-unit id="&quot;%@&quot;" xml:space="preserve">
+        <source>"%@"</source>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="%@ %@" xml:space="preserve">
+        <source>%1$@ %2$@</source>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="1o'clockDirection" xml:space="preserve">
+        <source>Slight right towards 1 o'clock</source>
+        <target>إلى اليمين قليلاً نحو الساعة الواحدة</target>
+        <note>Version of directions given when haptic feedback function is turned off (Clock directions)</note>
+      </trans-unit>
+      <trans-unit id="2o'clockDirection" xml:space="preserve">
+        <source>Slight right towards 2 o'clock</source>
+        <target>إلى اليمين قليلاً نحو الساعة الثانية</target>
+        <note>direction to the user to turn towards the 2 o'clock direction</note>
+      </trans-unit>
+      <trans-unit id="4o'clockDirection" xml:space="preserve">
+        <source>Turn towards 4 o'clock</source>
+        <target>انعَطِف نحو الساعة الرابعة</target>
+        <note>direction to the user to turn towards the 4 o'clock direction</note>
+      </trans-unit>
+      <trans-unit id="5o'clockDirection" xml:space="preserve">
+        <source>Turn around towards 5 o'clock</source>
+        <target>انعَطِف إلى الخلف نحو الساعة الخامسة</target>
+        <note>direction to the user to turn towards the 5 o'clock direction</note>
+      </trans-unit>
+      <trans-unit id="6o'clockDirection" xml:space="preserve">
+        <source>Turn around towards 6 o'clock</source>
+        <target>انعَطِف إلى الخلف نحو الساعة السادسة</target>
+        <note>direction to the user to turn towards the 6 o'clock direction</note>
+      </trans-unit>
+      <trans-unit id="7o'clockDirection" xml:space="preserve">
+        <source>Turn around towards 7 o'clock</source>
+        <target>انعَطِف إلى الخلف نحو الساعة السابعة</target>
+        <note>direction to the user to turn towards the 7 o'clock direction</note>
+      </trans-unit>
+      <trans-unit id="8o'clockDirection" xml:space="preserve">
+        <source>Turn towards 8 o'clock</source>
+        <target>انعَطِف نحو الساعة الثامنة</target>
+        <note>direction to the user to turn towards the 8 o'clock direction</note>
+      </trans-unit>
+      <trans-unit id="10o'clockDirection" xml:space="preserve">
+        <source>Slight left towards 10 o'clock</source>
+        <target>إلى اليسار قليلا نحو الساعة العاشرة</target>
+        <note>direction to the user to turn towards the 10 o'clock direction</note>
+      </trans-unit>
+      <trans-unit id="11o'clockDirection" xml:space="preserve">
+        <source>Slight left towards 11 o'clock</source>
+        <target>إلى اليسار قليلا نحو الساعة الحادية عشر</target>
+        <note>direction to the user to turn towards the 11 o'clock direction</note>
+      </trans-unit>
+      <trans-unit id="Clew is a versitile tool for traveling from point A to B. Below are some examples of what situations current users find Clew helpful." xml:space="preserve">
+        <source>Clew is a versitile tool for traveling from point A to B. Below are some examples of what situations current users find Clew helpful.</source>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="Clew needs to access your camera to track your orientation." xml:space="preserve">
+        <source>Clew needs to access your camera to track your orientation.</source>
+        <target>يحتاج Clew للوصول إلى الكاميرا لكي يتمكن من تتبع اتجاهك</target>
+        <note>Info.plist</note>
+      </trans-unit>
+      <trans-unit id="ClewIntroTutorialText" xml:space="preserve">
+        <source>Welcome to Clew! Clew helps you navigate and explore indoor spaces by using your phone's camera and inertial sensors. It acts as a 'sighted companion' that helps guide you along a route by providing audio directions and cues. Clew works best within indoor spaces, where GPS doesn't work or is unreliable.</source>
+        <note>Text on the first page of the tutorial that describes Clew</note>
+      </trans-unit>
+      <trans-unit id="ClewIntroTutorialTitle" xml:space="preserve">
+        <source>Intro to Clew</source>
+        <note>Intro to Clew Tutorial Title
+   Title for Clew Intro</note>
+      </trans-unit>
+      <trans-unit id="Exit" xml:space="preserve">
+        <source>Exit</source>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="PausingARouteOrRecordingAAnchorPointContentParagraph1" xml:space="preserve">
+        <source>The procedure for pausing the route and recording an anchor point are the same. The key idea is that in order to reuse routes, your phone must be able to align its current position with a position from the recorded route. In some cases, Apple's ARKit will be able to automatically do this alignment (for example, when the camera sees a distinctive visual feature that can be matched to the recording); however, in many situations this will not be possible.</source>
+        <target>تعتبر عملية الايقاف المؤقت للطريق وتسجيل نقطة ثابتة بمثابة الشيء نفسه. تكمن الفكرة الرئيسية بأنك عندما تود استخدام الطريق المسجل مرة أخرى، يجب عليك وضع الهاتف بنفس الطريقة التي قمت بتسجيل الطريق بها. في بعض الأحيان، سيقوم الواقع المعزز الخاص بApple بعمل هذا الأمر تلقائيا، (على سبيل المثال، عندما تلتقط الكاميرا ميزة بصرية ظاهرة، فيمكن مطابقتها مع التسجيل) وفي معظم الأوقات يكون هذا الأمر غير متاح.</target>
+        <note>This is a content paragraph in the Pausing a Route or Recording a Anchor Point section of the help menu which talks about why an allignment process is necessary</note>
+      </trans-unit>
+      <trans-unit id="PausingARouteOrRecordingAAnchorPointContentParagraph2" xml:space="preserve">
+        <source>In order to align your position in such cases you must be able to place the phone in a position and orientation such that you can reliably return the phone to that same position and orientation when reloading a saved route. While it is not crucial that you position the phone in exactly the same place (although the more accurately you can do this, the better the app will work), you must be able to place the phone in precisely the same orientation. To make it easy to return the phone to the same orientation, you should hold your phone flat with the screen facing up and press the top (short-edge) of your phone flush with a vertical surface (like a wall). More instructions are provided in the app when you activate the pause feature or the create anchor point feature.</source>
+        <target>ولكي تتمكن من عمل هذا الأمر بشكل جيد، يجب عليك وضع الهاتف باتجاه ثابت، بحيث يمكنك العودة لهذا الاتجاه عندما ترغب في إعادة تحميل الطريق المحفوظ مسبقا.
+فليس من الضروري وضع الهاتف في نفس المكان بالضبط (فكلما فعلت ذلك جيدا، سيعمل التطبيق بشكل أفضل)، ويجب عليك أن تكون قادرا دوما على وضع الهاتف باتجاه ثابت.
+ولتسهيل عملية إعادة الهاتف إلى نفس الاتجاه، يجب عليك وضع هاتفك بشكل ثابت، ثم وجه الشاشة لأعلى واضغط على الجزء العلوي (الزاوية القصيرة من الهاتف). سيتم عرض المزيد من المعلومات داخل التطبيق عند تفعيل ميزة الإيقاف المؤقت أو ميزة إنشاء النقطة الثابتة.</target>
+        <note>This is the second paragraph in the Pausing a Route and Recording a Anchor Point section of the help menu. This paragraph discusses the process of creating a Anchor Point including reasoning for why a Anchor Points are necessary and some tips for most effective use of the feature.</note>
+      </trans-unit>
+      <trans-unit id="PausingARouteOrRecordingAAnchorPointHeader" xml:space="preserve">
+        <source>Pausing a route or recording an Anchor Point</source>
+        <target>إيقاف الطريق مؤقتاً أو تسجيل نقطة ثابتة</target>
+        <note>This is a section heading in the help documentation menu</note>
+      </trans-unit>
+      <trans-unit id="Permission to use the microphone is required to use the voice notes feature." xml:space="preserve">
+        <source>Permission to use the microphone is required to use the voice notes feature.</source>
+        <target>يجب الحصول على إِذن المايكروفون لكي تتمكن من استخدام ميزة الملاحظات الصوتية</target>
+        <note/>
+      </trans-unit>
+      <trans-unit id="Reset Tutorial Progress" xml:space="preserve">
+        <source>Reset Tutorial Progress</source>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="Settings" xml:space="preserve">
+        <source>Settings</source>
+        <target>الإعدادات</target>
+        <note>Settings &amp; Comments: Title/header of the settings menu.</note>
+      </trans-unit>
+      <trans-unit id="What Can I Use Clew For?" xml:space="preserve">
+        <source>What Can I Use Clew For?</source>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="You could use Clew to navigate between your table and the restroom in a resturant." xml:space="preserve">
+        <source>You could use Clew to navigate between your table and the restroom in a resturant.</source>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="You could use Clew when visting a hotel, by saving a Clew route from the front door to the elevator and then save a route from the elevator to your room. Then you could use Clew to navigate those routes whenever you like." xml:space="preserve">
+        <source>You could use Clew when visting a hotel, by saving a Clew route from the front door to the elevator and then save a route from the elevator to your room. Then you could use Clew to navigate those routes whenever you like.</source>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="addingALandmarkTutorialTextParagraph1" xml:space="preserve">
+        <source>Voice notes allow you to record a landmark or leave specific information that you want to hear later when navigating in the return direction. To leave a voice note:</source>
+        <note>Instruction for how to add a landmark paragraph 1</note>
+      </trans-unit>
+      <trans-unit id="addingALandmarkTutorialTextParagraph2" xml:space="preserve">
+        <source>Tap the voice note button at any time that you are recording a route. The app will then open the voice recorder. Press the record button to leave a voice memo.</source>
+        <note>Instruction for how to add a landmark paragraph 2</note>
+      </trans-unit>
+      <trans-unit id="addingALandmarkTutorialTextParagraph3" xml:space="preserve">
+        <source>Tap the stop recording button and resume recording your route.</source>
+        <note>Instruction for how to add a landmark paragraph 3</note>
+      </trans-unit>
+      <trans-unit id="addingALandmarkTutorialTextParagraph4" xml:space="preserve">
+        <source>When you navigate your route, Clew will play your voice note when you pass through your recorded landmark. You can record as many voice notes as you want.</source>
+        <note>Instruction for how to add a landmark paragraph 4</note>
+      </trans-unit>
+      <trans-unit id="addingALandmarkTutorialTitle" xml:space="preserve">
+        <source>Adding a Landmark - Voice Notes</source>
+        <note>Title for the add a landmark  section of the tutorial</note>
+      </trans-unit>
+      <trans-unit id="adjustOffsetAlertContent" xml:space="preserve">
+        <source>While you were recording this route, the app determined that your phone's rear camera was not pointing straight ahead. When navigating the recorded route, if your phone is not pointing straight ahead, the app's directional guidance may be confusing. If it is difficult for you to keep you phone pointing straight ahead, the app can automatically adjust its guidance so that it is relative to your body rather than the phone's direction.  Would you like enable this feature?  You can always disable this feature in the settings menu under "Correct Offset of Phone / Body."  Important details of this feature are available in the help menu.</source>
+        <target>عند قيامك بتسجيل هذا الطريق, لاحظ التطبيق بأن الكاميرا الخلفية لهاتفك لم تكن موجهة للأمام مباشرة.
+وبما أن هاتفك لم يكن موجها للأمام مباشرة، فعند التنقل في الطريق المسجل، ربما تخطئ الاتجاهات قليلا.
+إذا كان من الصعب عليك وضع الهاتف في اتجاه ثابت، فيمكن للتطبيق تعديل اتجاهاته تلقائيا، بحيث يكون التطبيق معتمدا على جسمك بدلا من كاميرا الهاتف.
+هل تريد تفعيل هذه الميزة؟
+ويمكنك دائما تعطيل هذه الميزة عن طريق قائمة الإعدادات داخل خيار  "ضبط موازنة الهاتف مع الجسم."
+تتوفر معلومات مهمة لهذه الميزة داخل قائمة المساعدة.</target>
+        <note>this is the content of an alert which tells the user that they should consider enabling the adjust offset feature.</note>
+      </trans-unit>
+      <trans-unit id="adjustOffsetReminderAnnouncement" xml:space="preserve">
+        <source>Correction for phone / body offset will be updated as you start walking.</source>
+        <target>سيتم تحديث التصحيح التلقائي لإزاحة الهاتف / الجسم عندما تبدء بالسير</target>
+        <note>This is the announcement which is spoken after starting navigation if the user has enabled the Correct Offset of Phone / Body option.</note>
+      </trans-unit>
+      <trans-unit id="alignToAnchorPointButtonText" xml:space="preserve">
+        <source>Find Anchor Point</source>
+        <note>The text shown on the button that aligns to the anchor point during the tutorial</note>
+      </trans-unit>
+      <trans-unit id="anchorPointAlignmentText" xml:space="preserve">
+        <source>Please align your device with your previously recorded anchor point. To do this hold your device flat with the screen pointing up. Press the top (short) edge flush with the same vertical surface that you used to create the anchor point. Activating the align button will start an alignment countdown this is intended to give you time to make final adjustments to the positioning of your device. At the end of the countdown the alignment will be taken and the device will provide an announcement indicating that the anchor point was saved.</source>
+        <target>الرجاء محاذة هاتفك مع نفس النقطة الثابتة التي قمت بتسجيلها مسبقًا. وللقيام بذلك، يجب عليك وضع هاتفك بشكل ثابت، ثم وجه الشاشة لأعلى واضغط على الجزء العلوي (الزاوية القصيرة من الهاتف)، استخدم نفس الطريقة المستخدمة عند تسجيل النقطة الثابتة.
+عند تفعيل زر المحاذاة سيبدأ العد التنازلي للمحاذاة، ويهدف هذا الزر لمنحك الوقت لإجراء التعديلات النهائية على اتجاه جهازك. في نهاية العد التنازلي، سيتم اعتماد اتجاه الجهاز وسيعلمك الهاتف بأنه قد تم حفظ النقطة الثابتة بنجاح.</target>
+        <note>Text describing the process of aligning to an anchorpoint. This text shows up on the alignment screen.</note>
+      </trans-unit>
+      <trans-unit id="anchorPointIntroductionToSavedText" xml:space="preserve">
+        <source>The Anchor Point information you entered is: </source>
+        <target>معلومات النقطة الثابتة التي أدخلتها هي:</target>
+        <note>This is the text which delineates the text that a user saved witht their saved anchor point. This text is shown when a suer loads an anchor point and the text that the user saved with their anchor point appears right after this string.</note>
+      </trans-unit>
+      <trans-unit id="anchorPointPop-UpCancel" xml:space="preserve">
+        <source>Don't specify this information</source>
+        <target>لا تُفصّل هذهي المعلومات</target>
+        <note>A button for user to click which will close the pop up without saving any information the user put in</note>
+      </trans-unit>
+      <trans-unit id="anchorPointPracticeAlignTextParagraph1" xml:space="preserve">
+        <source>Nice Job! You've set an anchor point!</source>
+        <note>Align to anchor point page instructions paragraph 1</note>
+      </trans-unit>
+      <trans-unit id="anchorPointPracticeAlignTextParagraph2" xml:space="preserve">
+        <source>Now that you've saved an anchor point, try walking away from it- or wait a few minutes to return to the next exercise.</source>
+        <note>Align to anchor point page instructions paragraph 2</note>
+      </trans-unit>
+      <trans-unit id="anchorPointPracticeAlignTitle" xml:space="preserve">
+        <source>Align to Anchor Point</source>
+        <note>Align to anchor point page title</note>
+      </trans-unit>
+      <trans-unit id="anchorPointPracticeFeedbackBadText" xml:space="preserve">
+        <source>Oh no, try again! You were poorly aligned to the saved anchor point. This would have resulted in a route navigation with significant errors. Try practicing again to get a perfect alignment.</source>
+        <note>anchor point not well aligned text</note>
+      </trans-unit>
+      <trans-unit id="anchorPointPracticeFeedbackGoodText" xml:space="preserve">
+        <source>Good job! You were fairly aligned to the saved anchor point, which would have resulted in a route navigation with some potential misalignment. Try practicing again to get a perfect alignment.</source>
+        <note>anchor point well aligned text</note>
+      </trans-unit>
+      <trans-unit id="anchorPointPracticeFeedbackPerfectText" xml:space="preserve">
+        <source>Great job! You were very well aligned to the saved anchor point, which would have resulted in a very good route navigation. You now know how to find and align to anchor points and you're ready to start saving routes.</source>
+        <note>anchor point perfectly aligned text</note>
+      </trans-unit>
+      <trans-unit id="anchorPointPracticeRetryAlignButton" xml:space="preserve">
+        <source>Retry Finding Anchor Point Step</source>
+        <note>button text to retry aligning the anchor point</note>
+      </trans-unit>
+      <trans-unit id="anchorPointPracticeRetryButton" xml:space="preserve">
+        <source>Restart Practice</source>
+        <note>button text to retry setting the anchor point</note>
+      </trans-unit>
+      <trans-unit id="anchorPointPracticeSetTutorialTextParagraph1" xml:space="preserve">
+        <source>This exercise will have you practice setting an anchor point. Remember to choose a location for your anchor point that you can easily find at some later time. You'll practice setting the anchor point using the physical alignment method. Remember to position your phone flat with the screen facing up against a vertical edge of a wall, or doorframe or a table.</source>
+        <note>Set an anchor point practice page instructions paragraph 1</note>
+      </trans-unit>
+      <trans-unit id="anchorPointPracticeSetTutorialTextParagraph2" xml:space="preserve">
+        <source>Press the Set Anchor Point button, position your phone, and wait for the countdown.</source>
+        <note>Set an anchor point practice page instructions paragraph 2</note>
+      </trans-unit>
+      <trans-unit id="anchorPointPracticeSetTutorialTitle" xml:space="preserve">
+        <source>Setting an Anchor Point</source>
+        <note>You could also try pressing the top edge of your phone against a table, wall or doorway and then setting the anchor point. That way when you go to find the spot where you should set the anchor point again, you only have to find a table or wall again and then you know you're at least pretty close.";</note>
+      </trans-unit>
+      <trans-unit id="anchorPointTextHeading" xml:space="preserve">
+        <source>Anchor Point information</source>
+        <target>معلومات النقطة الثابتة</target>
+        <note>Anchor Points</note>
+      </trans-unit>
+      <trans-unit id="anchorPointTextPlaceholder" xml:space="preserve">
+        <source>Enter Anchor Point information</source>
+        <target>أدخل معلومات النقطة الثابتة</target>
+        <note>A placeholder that appears in text box which the user uses to enter a text label for an anchor point.</note>
+      </trans-unit>
+      <trans-unit id="anchorPointTextPop-UpConfirmation" xml:space="preserve">
+        <source>Ok</source>
+        <target>موافق</target>
+        <note>A button for user to click to confirm the text note they added to their anchor point and close a pop-up
+   What the user clicks to acknowledge a message and dismiss pop-up</note>
+      </trans-unit>
+      <trans-unit id="anchorPointTextPrompt" xml:space="preserve">
+        <source>Enter text about the Anchor Point that will allow you to find the exact same point later on.</source>
+        <target>أدخل نصًا حول النقطة الثابتة التي تمكنك من العثور عليها لاحقا.</target>
+        <note>Prompts user to enter descriptive text about their anchor point</note>
+      </trans-unit>
+      <trans-unit id="anchorPointsTutorialText" xml:space="preserve">
+        <source>Setting anchor points is an important skill that is needed in order to save routes or pause navigation. Anchor points allow Clew to record your position and orientation within the route's environment. The anchor point realigns you to the correct path whenever you want to navigate a route that has been saved for later use and they are essential to Clew's navigation accuracy.</source>
+        <note>Instructions for setting anchor points</note>
+      </trans-unit>
+      <trans-unit id="anchorPointsTutorialTitle" xml:space="preserve">
+        <source>Setting and Finding Anchor Points</source>
+        <note>this is the title of the anchor points tutorial section
+   Title for the anchor point part of the tutorial</note>
+      </trans-unit>
+      <trans-unit id="appFeaturesCurrentVersionHeading" xml:space="preserve">
+        <source>Current Version</source>
+        <target>الإصدار الحالي</target>
+        <note>this is a heading in the help documentation and part of the app features section.</note>
+      </trans-unit>
+      <trans-unit id="appFeaturesFutureVersionsContent" xml:space="preserve">
+        <source>We are working on improving alignment mechanisms to make it easier and quicker to begin navigation of routes.</source>
+        <target>نحن نعمل جاهدين على تحسين آلِيَّة مناسبة لجعل عملية الملاحة  أسهل وأسرع.</target>
+        <note>this is a paragraph in the app Features section of the help documentation which describes the features which are under development for future versions of the app.</note>
+      </trans-unit>
+      <trans-unit id="appFeaturesFutureVersionsHeader" xml:space="preserve">
+        <source>Future Versions</source>
+        <target>الإصدارات المستقبلية</target>
+        <note>This is a heading in the app features section of the help documentation.</note>
+      </trans-unit>
+      <trans-unit id="appFeaturesHeading" xml:space="preserve">
+        <source>App features</source>
+        <target>مميزات التطبيق</target>
+        <note>this is a heading in the help documentation. it is also used for the creation of the accessibility labels used to inform the user as to how to interact with the help documantatio's accordian menu</note>
+      </trans-unit>
+      <trans-unit id="appSoundsAndTheirMeaningsContent" xml:space="preserve">
+        <source>In addition to the auditory guidance that you get when navigating along a route (described previously), there are some additional sounds that help you understand what is currently happening with the app. If you have enabled the speech feedback option in the app settings, each of these sounds is accompanied by speech that briefly explains the sounds meaning. Note that these sounds are not delivered when you are in the help menu (to avoid distracting you while you are reading through the help information).</source>
+        <target>بالإضافة إلى الإشارات الصوتية التي تحصل عليها أثناء تنقلك عبر الطريق، (الموصوفة مسبقا)، تتوفر أيضا مجموعة إضافية من الأصوات التي تساعدك على فهم الإحداث الحالية التي تَحدُث في التطبيق.
+إذا قمت مسبقا بتفعيل خيار تعليقات الكلام عن طريق إعدادات التطبيق، فسيكون كل صوت من هذه الأصوات مصحوبا بجملة تَِصف المعنا الخاص بالصوت.
+لاحظ بأن هذه الأصوات لا تصلك عندما تكون في قائمة المساعدة (وذلك لتجنب إزعاجك أثناء تنقلك بين المعلومات).</target>
+        <note>This is a paragraph in the App sounds and their meanings section.</note>
+      </trans-unit>
+      <trans-unit id="appSoundsAndTheirMeaningsHeader" xml:space="preserve">
+        <source>App sounds and their meanings</source>
+        <target>أصوات التطبيق ومعانيها</target>
+        <note>This is a section header in the help documentation</note>
+      </trans-unit>
+      <trans-unit id="appSoundsAndTheirMeaningsMotionTrackingWarningSoundBullet" xml:space="preserve">
+        <source>Motion tracking warning sound: this sound is a short recording of a stringed instrument playing a slightly scratchy note. This sound indicates that the app's position tracking has been degraded either due to the phone moving too rapidly or due to the environment not having an adequate amount of visual detail. The latter condition occurs if your environment is too dark or if the camera is occluded.</source>
+        <target>صوت تحذير تتبع الحركة: هو عبارة عن مقطع صوتي قصير لآلة وترية خشنة. ويشير هذا الصوت بأن تتبع التطبيق للحركة قد انخفض إما بسبب تحرك الهاتف بسرعة أو بسبب انعدام الضوضاء في المكان. ويحدث هذا الأمر إذا كانت المنطقة مظلمة جدا أو إذا كان مدخل الكاميرا مغلقاً.
+</target>
+        <note>This is a bullet point which describes the motion tracking warning sound and its meaning</note>
+      </trans-unit>
+      <trans-unit id="appSoundsAndTheirMeaningsNormalMotionTrackingSoundBullet" xml:space="preserve">
+        <source>Normal motion tracking sound: this sound is a short recording of a brass instrument. It indicates that the app's position tracking has entered into the &amp;quot;normal&amp;quot; state. If the app has just started up this means that the motion tracking is now active. If the app previously experienced diminished accuracy, see next sound description, it means that the motion tracking has recovered. If you hear this sound after loading or resuming a route, this means that ARKit has been able to automatically align the route to the recording.</source>
+        <target>صوت تتبع الحركة العادي: هو عبارة عن صوت آلة نحاسية قصير. ويشير هذا الصوت إلى أن تتبع الحركة في التطبيق هو طبيعياً. إذا بدأ التطبيق للتو، فهذا يعني أن تتبع الحركة نشط. وإذا كان التطبيق قد مرة سابقًا بضعف في الإضاءة، فقرء الوصف الصوتي التالي، فهذا يعني أن تتبع الحركة قد عاد لوضعه الطبيعي. أما إذا استمعت لهذا الصوت بعد تحميل أو استئناف الطريق، فهذا يعني أن الواقع الافتراضي قد تمكن من تعديل المسار تلقائياً.</target>
+        <note>This is a bullet point which describes the normal motion tracking sound and its meaning</note>
+      </trans-unit>
+      <trans-unit id="appfeaturesCurrentVersionContent" xml:space="preserve">
+        <source>Clew allows you to record routes using your phone so that you can then navigate them at a later point in time with precise, automatic guidance from the app. Clew can be used in situations where you want to immediately navigate back to your starting location (e.g., if you went somewhere with a sighted guide or if it is harder to navigate the reverse journey) or when you want to remember a route that you are learning so you can navigate it more confidently in the future.  Importantly, Clew does not use your phone's GPS, so it can be used indoors.</source>
+        <target>يسمح لك Clew بتسجيل الطرق عن طريق هاتفك والذي يمكنك من استخدامهم في أوقات لاحقة بمصاحبة توجيهات تلقائية ودقيقة من التطبيق.
+يمكن استخدام Clew لأغراض متعددة، إذا رغبت مثلا بالعودة مجددا إلى نقطة البداية لموقعك، (فعلى سبيل المثال)، إذا خرجت لمكان مع شخص مبصر، أو إذا كان من الصعب عليك العودة مجددا.
+أو حتى إذا رغبت في تذكر طريق لكي تتعلمه، يمكنك التنقل به بحرية مطلقة في المستقبل.
+معلومة مهمة: لا يستخدم Clew خدمات تحديد الموقع لهاتفك، فَيتيح لك هذا استخدامه في الأماكن المغلقة.</target>
+        <note>this is a paragraph in the app features section of the help menu which describes the main features of Clew</note>
+      </trans-unit>
+      <trans-unit id="applesARWorldMapTutorialTextParagraph1" xml:space="preserve">
+        <source>Apple's ARWorld map can help make the process of finding and aligning to a saved anchor point easier. Especially for those that have newer iPhone models and for environments with consistent, artificial lighting, the physical alignment can simply be achieved by holding the phone in the vertical pose. However, we recommend that you be consistent in holding the phone pose and relocalizing yourself as best as possible to the originally saved anchor point in order to ensure the best accuracy from Clew.</source>
+        <note>Text of the AR world map part of the tutorial paragraph 1</note>
+      </trans-unit>
+      <trans-unit id="applesARWorldMapTutorialTextParagraph2" xml:space="preserve">
+        <source>Next you will have a chance to practice setting and aligning to anchor points.  Tap the 'Practice' button to start the exercise.</source>
+        <note>Text of the AR world map part of the tutorial paragraph 2</note>
+      </trans-unit>
+      <trans-unit id="applesARWorldMapTutorialTitle" xml:space="preserve">
+        <source>Apple's ARWorld Map</source>
+        <note>Title of the AR world map part of the tutorial</note>
+      </trans-unit>
+      <trans-unit id="automaticAlignmentPlayPauseViewText" xml:space="preserve">
+        <source>You have been automatically realigned with your route. Press the play button to perform navigation.</source>
+        <target>تم إعادة محاذاتك تلقائيًا مع الطريق. اضغط على زر التشغيل لبدء التنقل.</target>
+        <note>Play/Pause text</note>
+      </trans-unit>
+      <trans-unit id="automaticEmailTextWhenSharingRoutes" xml:space="preserve">
+        <source>Check out this route!</source>
+        <target>قم بتجربة هذا الطريق</target>
+        <note>Sharing routes</note>
+      </trans-unit>
+      <trans-unit id="badServiceButtonAccessibilityLabel" xml:space="preserve">
+        <source>Bad</source>
+        <target>رديء </target>
+        <note/>
+      </trans-unit>
+      <trans-unit id="buttonTexttoExitTutorial" xml:space="preserve">
+        <source>Exit</source>
+        <note>Tutorial</note>
+      </trans-unit>
+      <trans-unit id="buttonTexttoNextScreenTutorial" xml:space="preserve">
+        <source>Next</source>
+        <note>Text on the button that brings user to the next page of the tutorial</note>
+      </trans-unit>
+      <trans-unit id="buttonTexttoSkip" xml:space="preserve">
+        <source>Skip</source>
+        <note>Text on skip button
+   Text on the button that brings user to the next page of the tutorial
+   Text on the button that brings user to the next section of the tutorial</note>
+      </trans-unit>
+      <trans-unit id="cancelPop-UpButtonLabel" xml:space="preserve">
+        <source>Cancel</source>
+        <target>إلغاء</target>
+        <note>A button which closes the current pop up</note>
+      </trans-unit>
+      <trans-unit id="clewAppLogoAccessibilityText" xml:space="preserve">
+        <source>The Clew App Logo</source>
+        <target>شعار تطبيق Clew</target>
+        <note>HelpCompiler.swift</note>
+      </trans-unit>
+      <trans-unit id="clewHelpTitle" xml:space="preserve">
+        <source>Clew Help</source>
+        <target>مساعد Clew </target>
+        <note>This is the top heading of the help documentation</note>
+      </trans-unit>
+      <trans-unit id="climbStairsDirection" xml:space="preserve">
+        <source> and proceed upstairs</source>
+        <target>قم بصعود الدرج</target>
+        <note>Strings from Navigation</note>
+      </trans-unit>
+      <trans-unit id="completedNavigationAnnouncement" xml:space="preserve">
+        <source>You've arrived.</source>
+        <target>لقد وصلت</target>
+        <note>An announcement which is played to notify the user that they have arrived at the end of their route.</note>
+      </trans-unit>
+      <trans-unit id="contractSectionAccessibilityTag" xml:space="preserve">
+        <source>contract section</source>
+        <target>طي القسم</target>
+        <note>This is a tag that is spoken by the accessibility elements. This tag describes the action a user must take to collapse one of the sections in the help documentation</note>
+      </trans-unit>
+      <trans-unit id="currentSiriShortcuts" xml:space="preserve">
+        <source>Current Siri Shortcuts for Clew</source>
+        <note>this is header text for the list of current Siri shortcuts the user has created within the Clew app</note>
+      </trans-unit>
+      <trans-unit id="declineTurnOnAdjustOffsetButton" xml:space="preserve">
+        <source>No</source>
+        <target>لا</target>
+        <note>A button which declines to turn on the adjust offset feature</note>
+      </trans-unit>
+      <trans-unit id="deleteActionText" xml:space="preserve">
+        <source>Delete</source>
+        <target>حذف</target>
+        <note>This is the text that appears when a user tries to delete a saved route. This text is used in an option menu when a route is selected and it describes the action for deleting a route.</note>
+      </trans-unit>
+      <trans-unit id="descendStairsDirection" xml:space="preserve">
+        <source> and proceed downstairs</source>
+        <target>قم بنزول الدرج</target>
+        <note>This is a direction which instructs the user to descend stairs</note>
+      </trans-unit>
+      <trans-unit id="directionalCuesTutorialInstructionText" xml:space="preserve">
+        <source>Clew will provide directional cues as soon as you begin navigating a route and to keep oriented correctly. The app will announce directions whenever you pass through a waypoint or virtual crumb. The directional cues include: continue straight, slight right, slight left, turn right, turn left. Clew will also announce when you have reached the end of the route.</source>
+        <note>Instructions for the directional cues part of the tutorial</note>
+      </trans-unit>
+      <trans-unit id="directionalCuesTutorialTitleText" xml:space="preserve">
+        <source>Directional Cues</source>
+        <note>Title for the directional cues part of the tutorial</note>
+      </trans-unit>
+      <trans-unit id="dismissSurvey" xml:space="preserve">
+        <source>Dismiss</source>
+        <target>استبعاد</target>
+        <note>dismiss the keyboard in the feedback form
+   this is the button text that dismisses the survey
+   This is used for dismissing popovers</note>
+      </trans-unit>
+      <trans-unit id="endOfTutorialMainText" xml:space="preserve">
+        <source>Nice Job! You've completed the Clew tutorial. You can come back to this information at anytime through the menu options or by pressing the help button on the Clew main screen.</source>
+        <note>the main text at the end of the Clew tutorial</note>
+      </trans-unit>
+      <trans-unit id="endOfTutorialTitleText" xml:space="preserve">
+        <source>End of Tutorial</source>
+        <note>The title of the tutorial page that shows up when you complete the tutorial</note>
+      </trans-unit>
+      <trans-unit id="enterAnchorPointDescriptionButtonAccessibilityLabel" xml:space="preserve">
+        <source>Enter text to help you remember this Anchor Point</source>
+        <target>أدخل نصًا لمساعدتك على تذكر نقطة الثبات هذه</target>
+        <note>This is the accessibility label for the button which allows the user to save a text based description of their anchor point when saving a route. This feature should allow the user to more easily realign with their anchorpoint.</note>
+      </trans-unit>
+      <trans-unit id="enterAnchorPointVoiceNoteButtonAccessibilityLabel" xml:space="preserve">
+        <source>Record audio to help you remember this Anchor Point</source>
+        <target>سجل مقطعا صوتيا لمساعدتك على تذكر نقطة الثبات هذه</target>
+        <note>This is the accessibility label for the button which allows the user to save a voice note description of their anchor point when saving a route. This feature should allow the user to more easily realign with their anchorpoint.</note>
+      </trans-unit>
+      <trans-unit id="excessiveMotionDegradedTrackingAnnouncemnt" xml:space="preserve">
+        <source>Excessive motion.
+Tracking performance is degraded.</source>
+        <target>حركة زائدة. تتبع الأداء منخفض.</target>
+        <note>An announcement which lets the user know that there is too much movement of their device and thus the app's ability to track a route has been lowered.</note>
+      </trans-unit>
+      <trans-unit id="exitTutorial" xml:space="preserve">
+        <source>Exit Tutorial</source>
+        <note>Text on the button that exits the tutorial after the user has gone through it the whole thing</note>
+      </trans-unit>
+      <trans-unit id="expandSectionAccessibilityTag" xml:space="preserve">
+        <source>expand section</source>
+        <target>فتح القسم</target>
+        <note>This is a tag that is spoken by the accessibility elements. This tag describes the action a user must take to expand one of the sections in the help documentation</note>
+      </trans-unit>
+      <trans-unit id="feedbackButtonAccessibilityLabel" xml:space="preserve">
+        <source>Feedback</source>
+        <target>الاهتزازات</target>
+        <note/>
+      </trans-unit>
+      <trans-unit id="feedbackMenuTitle" xml:space="preserve">
+        <source>Contact Us</source>
+        <target>ملاحظات حول Clew</target>
+        <note>FeedbackViewController.swift</note>
+      </trans-unit>
+      <trans-unit id="findPathPractice1InstructionTextParagraph1" xml:space="preserve">
+        <source>This first exercise will have you practice the simple route in order to get you accustomed to Clew's sounds and feedback. This first route will guide you forward a few steps and then announce the end of the route. Pay particular attention to the sounds and directional cues.</source>
+        <note>Text for the instructions of the first following route practice paragraph 1</note>
+      </trans-unit>
+      <trans-unit id="findPathPractice1InstructionTextParagraph2" xml:space="preserve">
+        <source>Please make sure that you're in a familiar area with sufficient space to move about before you begin this exercise. </source>
+        <note>Text for the instructions of the first following route practice paragraph 2</note>
+      </trans-unit>
+      <trans-unit id="findPathPractice1InstructionTextParagraph3" xml:space="preserve">
+        <source>Tap the 'Practice' button and then tap 'Play' to begin the exercise.</source>
+        <note>Text for the instructions of the first following route practice paragraph 3</note>
+      </trans-unit>
+      <trans-unit id="findPathPractice1Title" xml:space="preserve">
+        <source>Practice Your First Route</source>
+        <note>Text for the title of the first following route practice.</note>
+      </trans-unit>
+      <trans-unit id="findPathPractice2InstructionText" xml:space="preserve">
+        <source>Here you will practice following a Clew Route. Make sure you are in a familiar place with some open space around you. This path will guide you forward a few steps and then you will pass through a waypoint and be instructed to turn right. Then you will take a few more steps and then arrive. Select begin to enter the practice route.</source>
+        <note>Text for the instructions of the second following route practice.</note>
+      </trans-unit>
+      <trans-unit id="findPathPractice2Title" xml:space="preserve">
+        <source>Practice Second Path</source>
+        <note>Text for the title of the second following route practice.</note>
+      </trans-unit>
+      <trans-unit id="findPathPracticeSuccess1Text" xml:space="preserve">
+        <source>You've completed your first route. Continue to the next exercise to try another route.</source>
+        <note>Text for the success of the first practice route.</note>
+      </trans-unit>
+      <trans-unit id="findPathPracticeSuccess2Text" xml:space="preserve">
+        <source>You now know how to navigate a route! You may continue the tutorial or go to the Home Screen and try performing a Single Use Route. Remember that practice makes perfect!</source>
+        <note>Text for the success of the second practice route.</note>
+      </trans-unit>
+      <trans-unit id="findPathPracticeSuccessTitle" xml:space="preserve">
+        <source>Congratulations!</source>
+        <note>Text for the title of the success page for following route practice.</note>
+      </trans-unit>
+      <trans-unit id="findPathTutorialButtonText" xml:space="preserve">
+        <source>Following a Route</source>
+        <note>Title for the finding and following path part of the tutorial</note>
+      </trans-unit>
+      <trans-unit id="findPathTutorialInstructionText" xml:space="preserve">
+        <source>Clew will make sounds, haptic feedback and provide directional audio cues whenever you are navigating a route. These distinct sounds, feedback and directional cues enable you to navigate the route correctly. They help you know when you are correctly on the path or if you are slightly off the correct path or have completely deviated from the route.</source>
+        <note>Text that explains what it sounds and feels like to be on the path and following the path</note>
+      </trans-unit>
+      <trans-unit id="findingAnAnchorPointTutorialTextParagraph1" xml:space="preserve">
+        <source>The accuracy of the navigation will depend on how well you can realign yourself to the saved anchor point. To find and realign yourself to a saved anchor point, you should try to position yourself as closely as possible to the exact location of the originally saved anchor point.</source>
+        <note>Text of the finding your anchor point part of the tutorial paragraph 1</note>
+      </trans-unit>
+      <trans-unit id="findingAnAnchorPointTutorialTextParagraph2" xml:space="preserve">
+        <source>Finding the saved anchor point from the physical alignment requires you to hold your phone in the same horizontal or flat pose, pressing it against the same edge that was used to set the anchor point.</source>
+        <note>Text of the finding your anchor point part of the tutorial paragraph 2</note>
+      </trans-unit>
+      <trans-unit id="findingAnAnchorPointTutorialTextParagraph3" xml:space="preserve">
+        <source>Finding the saved anchor point from the visual alignment simply requires you to hold the phone in the vertical pose and realign the camera to the same location that was used to set the original anchor point.</source>
+        <note>Text of the finding your anchor point part of the tutorial paragraph 3</note>
+      </trans-unit>
+      <trans-unit id="findingAnAnchorPointTutorialTitle" xml:space="preserve">
+        <source>Finding an Anchor Point</source>
+        <note>Title of the finding your anchor point part of the tutorial</note>
+      </trans-unit>
+      <trans-unit id="findingSavedAnchorPointTextParagraph1" xml:space="preserve">
+        <source>This exercise will have you practice finding and realigning yourself to a saved anchor point. After some time, try returning to the same location of your anchor point. Next realign your phone to the same position.</source>
+        <note>Find anchor point page instructions paragraph 1</note>
+      </trans-unit>
+      <trans-unit id="findingSavedAnchorPointTextParagraph2" xml:space="preserve">
+        <source>Hold your phone in the same horizontal or flat pose, pressing it against the same edge that was used to set the anchor point.</source>
+        <note>Find anchor point page instructions paragraph 2</note>
+      </trans-unit>
+      <trans-unit id="findingSavedAnchorPointTextParagraph3" xml:space="preserve">
+        <source>Press the Find Anchor Point button. Wait for the countdown to complete. The app will provide feedback about how closely aligned you were to the saved anchor point.</source>
+        <note>Find anchor point page instructions paragraph 3</note>
+      </trans-unit>
+      <trans-unit id="findingSavedAnchorPointTitle" xml:space="preserve">
+        <source>Finding the Saved Anchor Point</source>
+        <note>Find anchor point page title</note>
+      </trans-unit>
+      <trans-unit id="findingSavedRoutesTutorialButtonText" xml:space="preserve">
+        <source>Finding Saved Routes</source>
+        <note>"voiceNotesTutorialInstructionText" = "When recording a saved route, there is a button on the right that allows you to record a voice note. A voice note is a note you can leave yourself, that will play when you go to use the save route that you are recording. It can be any information that is helpful to you, such as noting where a landmark like a doorway or front desk is as you pass, or instructions for your future self. Later when you go to use a save route the voice notes will appear as speaker icons on your path at the point they were recorded. As you pass the note will play.";</note>
+      </trans-unit>
+      <trans-unit id="findingSavedRoutesTutorialInstructionText" xml:space="preserve">
+        <source>Once you save a route, it can be found in your Saved Routes List. You can enter the list from the third button on the home screen. From the list click the route that you want to follow, line your phone up with your anchor point and follow the route.</source>
+        <note/>
+      </trans-unit>
+      <trans-unit id="findingSavedRoutesTutorialInstructionTextParagraph1" xml:space="preserve">
+        <source>Clew stores all the saved routes within your Saved Routes List. Tap the Saved Routes Button on the Home Screen when you want to navigate a previously saved route. Scroll through the list and tap on the route name.</source>
+        <note>Instructions for finding saved routes paragraph 1</note>
+      </trans-unit>
+      <trans-unit id="findingSavedRoutesTutorialInstructionTextParagraph2" xml:space="preserve">
+        <source>Select the direction of travel that you wish to navigate. You'll be able to navigate the route from either 'Start-to-End' or in the reverse direction, from 'End-to-Start'. Please be aware of the direction of travel that you wish to navigate.</source>
+        <note>Instructions for finding saved routes paragraph 2</note>
+      </trans-unit>
+      <trans-unit id="findingSavedRoutesTutorialInstructionTextParagraph3" xml:space="preserve">
+        <source>Next, find and realign yourself to the corresponding Anchor Point. Finally, wait for the countdown to complete and the navigation will begin.</source>
+        <note>Instructions for finding saved routes paragraph 3</note>
+      </trans-unit>
+      <trans-unit id="fixedTrackingAnnouncement" xml:space="preserve">
+        <source>Tracking performance normal.</source>
+        <target>تتبع الأداء عادي</target>
+        <note>Let user know that the ARKit tracking session has returned to its normal quality (this is played after the tracking has been restored from thir being insuficent visual features or excessive motion which degrade the tracking)</note>
+      </trans-unit>
+      <trans-unit id="followingARouteAuditoryBeepsContent" xml:space="preserve">
+        <source>Assuming you have enabled sound feedback in the app settings and your iphone doesn't have system sounds muted, the phone will make a beeping sound when it is facing in the correct direction of travel for the route. It is important to keep in mind that this feedback is relative to the direction of the phone, rather than your body. When you achieve a milestone in the route (we call these anchor points), you will hear a different sound effect.</source>
+        <target>على فرض بأنك قمت بتفعيل وصف الأصوات من إعدادات التطبيق وكان الآيفون الخاص بك غير مكتوماً، فعند التنقل عبر الطريق سيصدر الهاتف صفارات صوتية عندما يكون موجها بالاتجاه الصحيح.
+من المهم الأخذ بعين الاعتبار بأن هذه العلامات مرتبطة بالهاتف بدلا من جسمك.
+وعند قطع مسافة من الطريق (نسمي هذا بالنقاط الثابتة)،
+ستستمع لمجموعة من المؤثرات الصوتية المختلفة.</target>
+        <note>This is a paragraph in the following a route section of the help documentation which describes the menaing of audityory meps during navigation.</note>
+      </trans-unit>
+      <trans-unit id="followingARouteAuditoryBeepsHeader" xml:space="preserve">
+        <source>Auditory beeps</source>
+        <target>الصافِرات السمعية</target>
+        <note>This is a header inside the following a route section of the help documentation</note>
+      </trans-unit>
+      <trans-unit id="followingARouteContent" xml:space="preserve">
+        <source>Once you activate the start navigation feature, the app will provide you with instructions to navigate back to your starting location. The app provides feedback in the following formats.</source>
+        <target>عند القيام بتفعيل ميزة بدء التنقل، سيزودك التطبيق بإرشادات تمكنك من العودة مجددا إلى نقطة البداية.
+وسيزودك التطبيق بصيغ الإرشادات التالية:</target>
+        <note>This is a paragraph which is in the following a route section of the help documentation.</note>
+      </trans-unit>
+      <trans-unit id="followingARouteCorrectOffsetAutomaticallyContentParagraph1" xml:space="preserve">
+        <source>By default, Clew provides guidance in reference to the direction your phone is facing.  If you have difficulty perceiving your phone's direction, the guidance the app provides may be confusing.  If this is an issue for you, you can enable automatic correction of phone / body offset below.</source>
+        <target>يساعدك Clew على التنقل عبر الطريق ويستخدم افتراضياً الاتجاه الخاص بهاتفك.
+ولِهذا، إذا كنت تسير بشكل مستقيم ولم يكن هاتفك موجهاً إلى الأمام، فمن الممكن أن تكون الاتجاهات التي يزودك بها التطبيق خاطئة.
+إذا وجدت هذا الأمر صعبا، فيمكنك تفعيل إعداد التصحيح التلقائي لإزاحة الهاتف / الجسم.
+وعندما يكون هذا الخيار مفعلا، سيستخدم التطبيق بعضا من العلامات أثناء تنقلك ليتأكد من أن هاتفك غير موجه إلى الأمام مباشرةً.
+(في نفس الجهة التي تتوجه نحوها)
+إذا لاحظ التطبيق بأن الكاميرا الخلفية لهاتفك لم تكن موجهة للأمام مباشرة، سيقوم التطبيق بتعديل اتجاهاته تلقائيا، بحيث يعتمد التطبيق على جسمك بدلا من اتجاه الهاتف.</target>
+        <note>this is paragraph 1 in the following a route section of the help documentation which describes the functionality of the correct for phone / body offset feature.</note>
+      </trans-unit>
+      <trans-unit id="followingARouteCorrectOffsetAutomaticallyContentParagraph2" xml:space="preserve">
+        <source>If you enable this setting, you should scan for the next waypoint by rotating your body while holding your phone fixed (e.g., against braced against your chest).</source>
+        <target>عند استخدامك لخيار التصحيح التلقائي لإزاحة الهاتف / الجسم، فمن الأفضل لك وضع الهاتف مقابل القفص الصدري، ثم قم بالدوران بجسمك للعثور على الاتجاه الصحيح الذي يجب اتباعه
+(فعند الدوران بجسمك، يجب أن يبقى الهاتف مقابل القفص الصدري ملتفا معك حيثما تذهب.)
+لاحظ بأن المشي الخلفي والجانبي يؤثر بشكل سلبي على التطبيق وذلك بفصل الارتباط بين الهاتف وجسمك.
+إذا حدث ذلك، فيمكنك تعطيل هذا الخيار، أو القيام بالمشي للأمام لعدة خطوات وذلك لإعادة حسابات التطبيق.</target>
+        <note>this is paragraph 2 in the following a route section of the help documentation which describes the functionality of the correct for phone / body offset feature.</note>
+      </trans-unit>
+      <trans-unit id="followingARouteCorrectOffsetAutomaticallyHeader" xml:space="preserve">
+        <source>Automatic Correction of Phone / Body Offset</source>
+        <target>التصحيح التلقائي لإزاحة الهاتف / الجسم</target>
+        <note>This is a header inside the following a route section of the help documentation</note>
+      </trans-unit>
+      <trans-unit id="followingARouteHapticFeedbackContent" xml:space="preserve">
+        <source>Assuming you have enabled haptic feedback in the app settings and you have an iPhone that supports haptics (iPhone 7 or later should work), the phone will provide haptic vibration when it is facing in the correct direction of travel for the route. It is important to keep in mind that this feedback is relative to the direction of the phone, rather than your body. When you achieve a milestone in the route (we call these anchor points), you will feel a stronger haptic vibration.</source>
+        <target>على فرض بأنك قمت بتفعيل اهتزازات الحس اللمسي من إعدادات التطبيق وكان الآيفون الخاص بك يدعم اهتزازات الحس اللمسي، (آيفون 7 أو أعلى)، عند التنقل عبر الطريق، سيصدر الهاتف اهتزازات لمسية عندما يكون موجها بالاتجاه الصحيح.
+من المهم الأخذ بعين الاعتبار بأن هذه العلامات مرتبطة بالهاتف بدلا من جسمك.
+وعند قطع مسافة من الطريق (نسمي هذا بالنقاط الثابتة).
+ستشعر أيضا باهتزازات لمسية أقوى.
+
+</target>
+        <note>this is a paragraph in the following a route section of the help documentation which describes the meaning of haptic feedback that the user recieves during navigation.</note>
+      </trans-unit>
+      <trans-unit id="followingARouteHapticFeedbackHeader" xml:space="preserve">
+        <source>Haptic feedback</source>
+        <target>اهتزازات الحس اللمسي</target>
+        <note>This is a header inside the following a route section of the help documentation</note>
+      </trans-unit>
+      <trans-unit id="followingARouteHeader" xml:space="preserve">
+        <source>Following a route</source>
+        <target>متابعة الطريق</target>
+        <note>This is a header for the following a route section of the help documentation.</note>
+      </trans-unit>
+      <trans-unit id="followingARouteSpeechFeedbackContent" xml:space="preserve">
+        <source>Assuming you have enabled speech feedback in the app settings and voice over is on, the phone will provide you with voice directions whenever you encounter an anchor point on your route, start a route, or complete a route. If you want to hear voice directions again, you can use the &amp;quot;Get Directions&amp;quot; button.</source>
+        <target>على فرض بأنك قمت بتفعيل الإرشادات الصوتية من إعدادات التطبيق وكان ال Voiceover مشغلاً، سيعطيك الهاتف إرشادات صوتية عند مصادفة نقاط ثابتة في طريقك, بدء الطريق, تابع الطريق.
+إذا رغبت بالاستماع إلى الإرشادات الصوتية مجددا، فيمكنك استخدام زر الحصول على الاتجاهات،</target>
+        <note>this is a paragraph in the following a route section of the help documentation which describes the meaning of auditory speech feedback during navigation.</note>
+      </trans-unit>
+      <trans-unit id="followingARouteSpeechFeedbackHeader" xml:space="preserve">
+        <source>Speech feedback</source>
+        <target>إرشادات الكلام</target>
+        <note>This is a header inside the following a route section of the help documentation</note>
+      </trans-unit>
+      <trans-unit id="forYourSafetyPop-UpContent" xml:space="preserve">
+        <source>While using the app, please be aware of your surroundings. You agree that your use of the App is at your own risk, and it is solely your responsibility to maintain your personal safety. Visit www.clewapp.org for more information on how to use the app.</source>
+        <target>عند استخدامك للتطبيق، الرجاء أخذ الحيطة والانتباه لمحيطك.
+باستخدامك للتطبيق أنت تقر وتوافق على أن استخدامك للتطبيق يقع ضمن مسؤوليتك الخاصة فقط، فأنت وحدك المسؤول   عن حماية سلامتك الشخصية.
+الرجاء التفضل بزيارة www.clewapp.org للمزيد من المعلومات حول كيفية استخدام التطبيق.</target>
+        <note>Disclaimer shown to the user when they open the app for the first time</note>
+      </trans-unit>
+      <trans-unit id="forYourSafetyPop-UpHeading" xml:space="preserve">
+        <source>For your safety</source>
+        <target>من أجل سلامتك</target>
+        <note>The heading of a pop-up telling the user to be aware of their surroundings while using clew</note>
+      </trans-unit>
+      <trans-unit id="getDirectionsButtonAccessibilityLabel" xml:space="preserve">
+        <source>Get Directions</source>
+        <target>الحصول على الاتجاهات</target>
+        <note>This is the accessibility label for the get directions button</note>
+      </trans-unit>
+      <trans-unit id="gettingBackToTheCorrectPathTutorialInstructionTextParagraph1" xml:space="preserve">
+        <source>A distinct tone will play whenever you are off the correct path. This may also happen if your phone is not facing in the direction of the path. If you find yourself off the path, you should stop, try turning around until you hear the 'ticking' sounds that indicate that you're on the correct direction of the path.</source>
+        <note>Text that explains getting back to the correct path paragraph 1</note>
+      </trans-unit>
+      <trans-unit id="gettingBackToTheCorrectPathTutorialInstructionTextParagraph2" xml:space="preserve">
+        <source>Press the 'Get Directions' button to receive audio directions on how to get back on the route. This is especially helpful if you've become disoriented or off the correct path.</source>
+        <note>Text that explains getting back to the correct path paragraph 2</note>
+      </trans-unit>
+      <trans-unit id="gettingBackToTheCorrectPathTutorialTitleText" xml:space="preserve">
+        <source>Getting Back to the Correct Path</source>
+        <note>Title for the getting back to the path part of the tutorial</note>
+      </trans-unit>
+      <trans-unit id="goodServiceButtonAccessibilityLabel" xml:space="preserve">
+        <source>Good</source>
+        <target>جيد</target>
+        <note/>
+      </trans-unit>
+      <trans-unit id="helpButtonAccessibilityLabel" xml:space="preserve">
+        <source>Help</source>
+        <target>المساعدة</target>
+        <note>This is the accessibility label for the help button</note>
+      </trans-unit>
+      <trans-unit id="homeAlertConfirmNavigationButton" xml:space="preserve">
+        <source>Go to the Home Page</source>
+        <target>أِذهب إلى الصفحة الرئيسية</target>
+        <note>This text appears on a button in an alert notifying the user that if they navigate to the home page they will stop their curent process. This text appears on the button which signifies that the user wants to continue to the home screen</note>
+      </trans-unit>
+      <trans-unit id="homeAlertContent" xml:space="preserve">
+        <source>If you exit this process right now, your active route information will be lost.</source>
+        <target>إذا خرجت الآن من هذه العملية ، ستفقد معلومات الطريق الحالي.</target>
+        <note>this is the content of an alert which tells the user that if they continue with going to the home page the current process will be stopped.</note>
+      </trans-unit>
+      <trans-unit id="homeAlertTitle" xml:space="preserve">
+        <source>Are you sure?</source>
+        <target>هل أنت متأكد؟</target>
+        <note>GoHomeAlert</note>
+      </trans-unit>
+      <trans-unit id="homeButtonAccessibilityLabel" xml:space="preserve">
+        <source>Clew Home Screen</source>
+        <target>الصفحة الرئيسية</target>
+        <note>This is the accessibility label for the home button</note>
+      </trans-unit>
+      <trans-unit id="howWellDoesClewWorkContentParagraph1" xml:space="preserve">
+        <source>Clew relies on the position tracking technology provided by Apple's ARKit. These motion estimates are based on tracking elements in the environment visually (using your phone's camera) and on motion estimates from inertial sensors in your phone. While this technology is advanced, it does not work perfectly. You should expect that over very long routes, particular ones with limited visual features or poor lighting, that the accuracy of the tracking (and hence the app's guidance) will decrease. We have found that Clew works best when you navigate routes along the same direction as they were originally recorded (&amp;quot;Start to End &amp;quot; rather than &amp;quot;End to Start &amp;quot; navigation mode).</source>
+        <target>يعتمد Clew أثناء التنقل على تكنولوجيا الواقع المعزز المقدمة من آبل.
+ويعتمد تقدير الحركة على الرؤية في المكان (وذلك باستخدام كاميرا الهاتف) ويعتمد التطبيق أيضا على المستشعرات الخاصة بالهاتف.
+فبالرغم من أن هذه التكنولوجيا متقدما جدا، فهي لا تعمل بشكل احترافي.
+توقع دائما أثناء تنقلك في الطرق الطويلة انخفاضا في دقة اتجاهات وإرشادات التطبيق وخاصة في الطرق التي تحتوي على رؤية معدومة، أو أضواء خافتة.
+قد لحظنا بأن Clew يعمل بشكل جيد عند التنقل في الطرق باستخدام نفس الاتجاهات المسجلة مسبقا، فينصح باستخدام وضع التنقل (من البداية للنهاية، بدلا من النهاية للبداية.</target>
+        <note>This is a paragraph in the How well does Clew work? section of the help documentation. This paragraph describes how the app actually works</note>
+      </trans-unit>
+      <trans-unit id="howWellDoesClewWorkContentParagraph2" xml:space="preserve">
+        <source>Given the limitations of Clew, you should always use your orientation and mobility skills to ensure your personal safety when using Clew. We are working on additional strategies for improving the accuracy of Clew.</source>
+        <target>عند استخدامك للتطبيق، لا تقم بالاعتماد دائما على Clew, ويجب عليك دائما استخدام مهاراتك الحركية، وتكييف نفسك دائما مع الظروف المحيطة بك للحفاظ على سلامتك الخاصة.
+نحن نعمل على خلق استراتيجيات إضافية لتحسين دقة Clew.</target>
+        <note>This is a paragraph in the How well does Clew work section of the help documentation. This paragraph describes how users should use CLew to supplement their orientation and mobility skills rather than using the app as a replacement for their traditional. orientation and mobility skills</note>
+      </trans-unit>
+      <trans-unit id="howWellDoesClewWorkHeader" xml:space="preserve">
+        <source>How well does Clew work?</source>
+        <target>كيف يعمل Clew?</target>
+        <note>This is a section heading in the help documentation menu</note>
+      </trans-unit>
+      <trans-unit id="imperialUnitText" xml:space="preserve">
+        <source> feet</source>
+        <target>أقدام</target>
+        <note>this is the text which is displayed in the settings to show the user the option of imperial measurements</note>
+      </trans-unit>
+      <trans-unit id="insuficientFeaturesDegradedTrackingAnnouncemnt" xml:space="preserve">
+        <source>Insufficient visual features.
+Tracking performance is degraded.</source>
+        <target>ميزات الرؤية معدومة.
+تتبع الأداء منخفض.</target>
+        <note>An announcement which lets the user know  that their current surroundings do not have enough visual markers and thus the app's ability to track a route has been lowered.</note>
+      </trans-unit>
+      <trans-unit id="introClewsRoleTutorialTextParagraph1" xml:space="preserve">
+        <source>Clew is not a substitute for your orientation and mobility skills. It is not a replacement for your white cane, guide dog or primary mobility aid. Clew is intended to work as an additional aid or to complement and enhance your orientation and navigation skills.</source>
+        <note>Text for intro to Clew's role Page Paragraph 1</note>
+      </trans-unit>
+      <trans-unit id="introClewsRoleTutorialTextParagraph2" xml:space="preserve">
+        <source>Please be aware of your surroundings while using the app. It is your responsibility to maintain your personal safety at all times while using Clew.</source>
+        <note>Text for intro to Clew's role Page Paragraph 2</note>
+      </trans-unit>
+      <trans-unit id="introClewsRoleTutorialTextParagraph3" xml:space="preserve">
+        <source>If you are new to Clew, we recommend that you first use the app in an indoor setting that is safe and familiar to you.</source>
+        <note>Text for intro to Clew's role Page Paragraph 3</note>
+      </trans-unit>
+      <trans-unit id="introClewsRoleTutorialTextParagraph4" xml:space="preserve">
+        <source>You acknowledge and agree that your use of the app is at your own risk.</source>
+        <note>Text for intro to Clew's role Page Paragraph 4</note>
+      </trans-unit>
+      <trans-unit id="introClewsRoleTutorialTitle" xml:space="preserve">
+        <source>Important Safety Info - Clew's Intended Role</source>
+        <note>Title for intro to Clew's role Page</note>
+      </trans-unit>
+      <trans-unit id="introUsingClewTextParagraph1" xml:space="preserve">
+        <source>Clew helps you find your way around indoors spaces by recording your route when you're going from one place to another. For example, from a lobby area to a room. By recording your route, Clew then helps you navigate your way back to where you started. Clew can help you learn a new environment, so you can confidently navigate it in the future.</source>
+        <note>Text for intro to Using Clew Page Paragraph 1</note>
+      </trans-unit>
+      <trans-unit id="introUsingClewTextParagraph2" xml:space="preserve">
+        <source>Clew is best used indoors. The app doesn't rely on your phone's GPS. This means that Clew is limited in outdoors spaces and for routes over long distances.</source>
+        <note>Text for intro to Using Clew Page Paragraph 2</note>
+      </trans-unit>
+      <trans-unit id="introUsingClewTitle" xml:space="preserve">
+        <source>Using Clew</source>
+        <note>Title for intro to Using Clew Page</note>
+      </trans-unit>
+      <trans-unit id="introUsingClewTutorialText" xml:space="preserve">
+        <source>This tutorial will help you learn the skills needed to use Clew. Each module focuses on a particular skill set and feature of the app. Some of the modules include interactive practice exercises. We recommend that you first use the app in an indoor setting that is safe and familiar to you.</source>
+        <note>Text for intro to Using Clew Tutorial Page</note>
+      </trans-unit>
+      <trans-unit id="introUsingClewTutorialTitle" xml:space="preserve">
+        <source>Using This Tutorial</source>
+        <note>Title for intro to Using Clew Tutorial Page</note>
+      </trans-unit>
+      <trans-unit id="leftDirection" xml:space="preserve">
+        <source>Turn left</source>
+        <target>اِنعَطِف يساراً</target>
+        <note>Direction to the user to make an approximately 90 degree left turn.</note>
+      </trans-unit>
+      <trans-unit id="metricUnitText" xml:space="preserve">
+        <source> meters</source>
+        <target>أمتار</target>
+        <note>this is the text which is displayed in the settings to show the user the option of metric measurements</note>
+      </trans-unit>
+      <trans-unit id="moduleCompleted" xml:space="preserve">
+        <source>Module Completed</source>
+        <note>played as the accessibility hint in the tutorial to indicate that the current module has been completed</note>
+      </trans-unit>
+      <trans-unit id="moduleNotCompleted" xml:space="preserve">
+        <source>Module Not Completed</source>
+        <note>played as the accessibility hint in the tutorial to indicate that the current module has not been completed</note>
+      </trans-unit>
+      <trans-unit id="movingOnCorrectPathInstructionTextParagraph1" xml:space="preserve">
+        <source>Whenever you begin navigating a route, you will hear a distinct 'ticking' sound. Clew plays the ticking sound whenever you are correctly aligned to the route. It will play through the entire time until you complete the route, pause or stop navigation.</source>
+        <note>Text that explains how to move on the correfct path paragraph 1</note>
+      </trans-unit>
+      <trans-unit id="movingOnCorrectPathInstructionTextParagraph2" xml:space="preserve">
+        <source>Sighted users will see a colored line showing the correct path on the screen. The path color can be changed in the settings.</source>
+        <note>Text that explains how to move on the correfct path paragraph 2</note>
+      </trans-unit>
+      <trans-unit id="movingOnCorrectPathTitleText" xml:space="preserve">
+        <source>Moving Along the Correct Path</source>
+        <note>Title for the moving on the correfct path</note>
+      </trans-unit>
+      <trans-unit id="multipleUseRouteAnchorPointToRecordingRouteAnnouncement" xml:space="preserve">
+        <source>Anchor point saved. You are now recording a route.</source>
+        <target>تم حفظ النقطة الثابتة. أنت الآن تقوم بتسجيل الطريق.</target>
+        <note>This is the announcement which is spoken after the first anchor point of a multiple use route is saved. this signifies the completeion of the saving an anchor point procedure and the start of recording a route to be saved.</note>
+      </trans-unit>
+      <trans-unit id="multipleUseRouteAnchorPointToSaveARouteAnnouncement" xml:space="preserve">
+        <source>Anchor point saved. You may now name your route.</source>
+        <target>تم حفظ النقطة الثابتة. يمكنك الآن تسمية الطريق الخاص بك.</target>
+        <note>This is an announcement which is spoken when the user saves the end anchor point for a multiple use route. This signifies the transition from saving an anchor point to the screen where the user can name and save their route</note>
+      </trans-unit>
+      <trans-unit id="multipleUseRouteEndAnchorPointText" xml:space="preserve">
+        <source>To allow your route to be navigated in the reverse direction you need to record an anchor point for the end of your route. An anchor point records the position and alignment of your device so the app can reload your route from a saved file. As a result the accuracy of your saved route navigation relies entirely on how accurately you can realign and position your phone with your saved anchor point at a later point. We suggest using the text and voice note buttons to record a text note and/or a voice recording which can help you realign your device to the anchor point you recorded at a later time.
+To create an anchor point, hold your device flat with the screen facing up. Press the top (short) edge flush against a flat vertical surface (such as a wall) the ”align” button starts a %lu-second countdown. The countdown is intended to give you time to position your device; the anchor point will be saved at the end of the countdown.</source>
+        <target>ولكي تتمكن من استخدام الطريق بشكل عكسي، يجب عليك تسجيل نقطة ثابتة في نهاية الطريق. 
+تسجل النقطة الثابتة موقع واتجاه الهاتف الخاص بك، فيمكن للتطبيق إعادة تحميل الطريق عن طريق الملف المحفوظ.
+ونتيجة لذلك، تعتمد دقة الطريق المحفوظ على مدى قدرتك على المحاذاة ومطابقة الهاتف مع النقطة الثابتة التي تم تسجيلها.
+ننصحك باستخدام زري النص والملحوظة الصوتية لكتابة ملحوظة أو تسجيلها لمساعدتك على محاذاة الهاتف مع نفس النقطة التي قمت بتسجيلها.
+وللقيام بتسجيل نقطة ثابتة: يجب عليك وضع هاتفك بشكل ثابت، ثم وجه الشاشة لأعلى واضغط على الجزء العلوي (الزاوية القصيرة من الهاتف) وسيبدأ العد التنازلي.
+ويهدف العد التنازلي لمنحك الوقت لإجراء التعديلات النهائية على اتجاه جهازك. وسيتم حفظ النقطة الثابتة عندما ينتهي العد التنازلي.</target>
+        <note>Information on how to record an anchor point when used recording the ending anchor point of a multiple use route.</note>
+      </trans-unit>
+      <trans-unit id="multipleUseRoutePlayPauseViewText" xml:space="preserve">
+        <source>In order to immediately navigate back along the path you recorded, press the play button and follow the instructions provided. If you'd like to navigate the route later, you can return to the home screen and load the route you've just saved when you're ready to navigate along it.</source>
+        <target>ولكي تتمكن من العودة إلى الطريق الذي قمت بتسجيله، اضغط على زر التشغيل، ثم اتبع الإرشادات المقدمة لك.
+إذا رغبت في العودة لاحقا، فيمكنك الرجوع إلى الصفحة الرئيسية ثم قم بتحميل الطريق الذي قمت بحفظه للتو عند رغبتك في العودة له مجددا.</target>
+        <note>Information displayed to the user on the play pause screen after they have just recorded a multiple use route. This describes the functionality of the play and pause buttons.</note>
+      </trans-unit>
+      <trans-unit id="multipleUseRouteStartAnchorPointText" xml:space="preserve">
+        <source>To allow your route to be navigated at a later point you need to record an anchor point for the start of your route. An anchor point records the position and alignment of your device so the app can reload your route from a saved file. As a result the accuracy of your saved route navigation relies entirely on how accurately you can realign and position your phone with your saved anchor point at a later point. We suggest using the text and voice note buttons to record a text note and/or a voice recording which can help you realign your device to the anchor point you recorded at a later time.
+To create an anchor point, hold your device flat with the screen facing up. Press the top (short) edge flush against a flat vertical surface (such as a wall) the ”align” button starts a %lu-second countdown. The countdown is intended to give you time to position your device; the anchor point will be saved at the end of the countdown.</source>
+        <target>لكي تتمكن من استخدام الطريق في وقت لاحق، يجب عليك تسجيل نقطة ثابتة في بداية الطريق. 
+تسجل النقطة الثابتة موقع واتجاه الهاتف الخاص بك، فيمكن للتطبيق إعادة تحميل الطريق عن طريق الملف المحفوظ.
+ونتيجة لذلك، تعتمد دقة الطريق المحفوظ على مدى قدرتك على المحاذاة ومطابقة الهاتف مع النقطة الثابتة التي تم تسجيلها.
+ننصحك باستخدام زري النص والملحوظة الصوتية لكتابة ملحوظة أو تسجيلها لمساعدتك على محاذاة الهاتف مع نفس النقطة التي قمت بتسجيلها.
+وللقيام بتسجيل نقطة ثابتة: يجب عليك وضع هاتفك بشكل ثابت، ثم وجه الشاشة لأعلى واضغط على الجزء العلوي (الزاوية القصيرة من الهاتف) وسيبدأ العد التنازلي.
+ويهدف العد التنازلي لمنحك الوقت لإجراء التعديلات النهائية على اتجاه جهازك. وسيتم حفظ النقطة الثابتة عندما ينتهي العد التنازلي.</target>
+        <note>Information on how to record an anchor point when used recording the starting anchor point of a multiple use route.</note>
+      </trans-unit>
+      <trans-unit id="nameSavedRouteLabel" xml:space="preserve">
+        <source>Type your route name below</source>
+        <target>اكتب اسم الطريق الخاص بك أدناه</target>
+        <note>Message displayed to the user when saving a route by name.</note>
+      </trans-unit>
+      <trans-unit id="nameSavedRouteTextField" xml:space="preserve">
+        <source>Enter route name here</source>
+        <target>اكتب اسم الطريق</target>
+        <note>Message displayed to the user when typing to save a route by name.</note>
+      </trans-unit>
+      <trans-unit id="namingYourRouteTutorialText" xml:space="preserve">
+        <source>Once you've recorded the route and set your end anchor point, Clew will prompt you to name your route. We recommend using a name that best describes the route and that you'll remember at a later time.</source>
+        <note>Instructions for naming your route</note>
+      </trans-unit>
+      <trans-unit id="namingYourRouteTutorialTitle" xml:space="preserve">
+        <source>Naming your Route</source>
+        <note>Title for the naming your route part of the tutorial</note>
+      </trans-unit>
+      <trans-unit id="offThePathAnnouncement" xml:space="preserve">
+        <source>If you are having trouble following the route, press the "get directions" button.</source>
+        <note>this announcemet is delivered if the user is off the path for 10 seconds or more.</note>
+      </trans-unit>
+      <trans-unit id="optionsButtonAccessibilityLabel" xml:space="preserve">
+        <source>Options</source>
+        <target>الخيارات</target>
+        <note>This is the accessibility label for the home button</note>
+      </trans-unit>
+      <trans-unit id="orientPhoneTutorialButtonText" xml:space="preserve">
+        <source>Holding Your Phone for Best Results</source>
+        <note>Text for the tutorial screem for phone position
+   Title for the setting options part of the tutorial</note>
+      </trans-unit>
+      <trans-unit id="orientPhoneTutorialInstructionTextParagraph1" xml:space="preserve">
+        <source>Clew uses your phone's camera and inertial sensors to track your position as you move around the environment and when you navigate a route. Holding your phone in the correct pose or orientation is essential in order for the app to work correctly. You should hold your phone in the portrait orientation (vertically), with the rear camera facing forward.</source>
+        <note>Text that explains how to orient the phone for the best experience using Clew Paragraph 1</note>
+      </trans-unit>
+      <trans-unit id="orientPhoneTutorialInstructionTextParagraph2" xml:space="preserve">
+        <source>It is important to maintain the phone in the vertical pose, with the rear camera facing forward (pointed away from your body) whenever you are navigating or saving a route. Maintaining the phone in this pose helps reduce errors from the app.</source>
+        <note>Text that explains how to orient the phone for the best experience using Clew Paragraph 2</note>
+      </trans-unit>
+      <trans-unit id="orientPhoneTutorialInstructionTextParagraph3" xml:space="preserve">
+        <source>The following exercise will help you practice holding your phone in the correct pose for Clew. Tap the Practice button to begin.</source>
+        <note>Text that explains how to orient the phone for the best experience using Clew Paragraph 3</note>
+      </trans-unit>
+      <trans-unit id="orientPhoneTutorialPracticeButton" xml:space="preserve">
+        <source>Practicing the Correct Phone Pose</source>
+        <note/>
+      </trans-unit>
+      <trans-unit id="orientPhoneTutorialPracticeInstructionsParagraph1" xml:space="preserve">
+        <source>Now you can practice holding your phone in the correct pose for using Clew. Remember that the rear camera should face forward or away from you.</source>
+        <note>Instructions for practicing holding phone activity paragraph 1</note>
+      </trans-unit>
+      <trans-unit id="orientPhoneTutorialPracticeInstructionsParagraph2" xml:space="preserve">
+        <source>Begin the exercise by moving your phone from a horizontal pose to a more vertical pose. Your phone will buzz and make a distinct tone the further you are off from the correct pose. You'll then hear a success chime when you achieve the correct vertical pose. Try moving your phone in and out of the correct pose a couple of times to hear the difference.</source>
+        <note>Instructions for practicing holding phone activity paragraph 2</note>
+      </trans-unit>
+      <trans-unit id="orientPhoneTutorialPracticeInstructionsParagraph3" xml:space="preserve">
+        <source>Now it's your turn. Tap the Start button to begin.</source>
+        <note>Instructions for practicing holding phone activity paragraph 3</note>
+      </trans-unit>
+      <trans-unit id="orientPhoneTutorialPracticeStart" xml:space="preserve">
+        <source>Start</source>
+        <note>start orient phone practice</note>
+      </trans-unit>
+      <trans-unit id="orientPhoneTutorialPracticeStop" xml:space="preserve">
+        <source>Stop</source>
+        <note>stop orient phone practice</note>
+      </trans-unit>
+      <trans-unit id="orientPhoneTutorialPracticeSuccess" xml:space="preserve">
+        <source>Nice Job! You now know how to hold the phone in the correct pose. You can keep practicing or go to the next section.</source>
+        <note>Text when user has completed the phone position practice</note>
+      </trans-unit>
+      <trans-unit id="orientPhoneTutorialPracticeTitle" xml:space="preserve">
+        <source>Practicing the Correct Phone Pose</source>
+        <note>Title for holding phone practice</note>
+      </trans-unit>
+      <trans-unit id="orientPhoneTutorialTip1" xml:space="preserve">
+        <source>Try holding your phone against your chest when you're navigating a route to ensure it remains in the correct vertical pose with the camera facing directly in front of you.</source>
+        <note>Tip for holding phone against chest</note>
+      </trans-unit>
+      <trans-unit id="orientPhoneTutorialTip2" xml:space="preserve">
+        <source>We also recommend that you hold the phone in the opposite hand that you use to work with your white cane or guide dog.</source>
+        <note>Tip for using Clew with cane or guide dog</note>
+      </trans-unit>
+      <trans-unit id="orientPhoneTutorialTipsTitle" xml:space="preserve">
+        <source>Tips</source>
+        <note>Tips for holding phone title</note>
+      </trans-unit>
+      <trans-unit id="pauseButtonAccessibilityLabel" xml:space="preserve">
+        <source>Pause session</source>
+        <target>إيقاف مؤقت</target>
+        <note>Pause</note>
+      </trans-unit>
+      <trans-unit id="pausingNavigationTutorialText" xml:space="preserve">
+        <source>You can pause Clew if you want to initiate the return navigation at a later time. Pausing Clew will require you to set an 'anchor point'. The anchor point stores important orientation and directional information and is needed to realign you to the correct path. The following module will teach you how to use anchor points.</source>
+        <note>Instruction for how to pause navigation</note>
+      </trans-unit>
+      <trans-unit id="pausingNavigationTutorialTitle" xml:space="preserve">
+        <source>Pausing Navigation</source>
+        <note>Title for the pause navigation section of the tutorial</note>
+      </trans-unit>
+      <trans-unit id="physicalAlignmentTutorialTextParagraph1" xml:space="preserve">
+        <source>Physical alignment sets the anchor point using the phone's inertial sensors. This method requires you to hold the phone in the horizontal or flat pose with the screen facing up, and press the top (short edge) of the phone against a vertical edge, like against a wall, a doorframe or a table.</source>
+        <note>Text of the physical alignment part of the tutorial paragraph 1</note>
+      </trans-unit>
+      <trans-unit id="physicalAlignmentTutorialTextParagraph2" xml:space="preserve">
+        <source>Press the align button and wait for the countdown. The anchor point will be saved at the end of the countdown.</source>
+        <note>Text of the physical alignment part of the tutorial paragraph 2</note>
+      </trans-unit>
+      <trans-unit id="physicalAlignmentTutorialTitle" xml:space="preserve">
+        <source>Physical Alignment</source>
+        <note>Title of the physical alignment part of the tutorial</note>
+      </trans-unit>
+      <trans-unit id="playVoiceNoteButtonAccessibilityLabel" xml:space="preserve">
+        <source>Play recorded voice note</source>
+        <target>تشغيل الملاحظة الصوتية المسجلة</target>
+        <note>This is the accessibility label for the button which allows the user to replay their recorded voice note when loading an anchor point.</note>
+      </trans-unit>
+      <trans-unit id="practiceTutorialTitle" xml:space="preserve">
+        <source>Practice</source>
+        <note>button for practicing a skill in the tutorial
+   Text for practice button
+   Text for the begin button of the first following route practice.
+   Text for the begin practice for the second following route practice.</note>
+      </trans-unit>
+      <trans-unit id="properDevicePositioningAnnouncement" xml:space="preserve">
+        <source>Hold vertically with the rear camera facing forward.</source>
+        <target>أمسك الهاتف عموديًا مع توجيه الكاميرا الخلفية إلى الأمام.</target>
+        <note>This is an announcement which plays to tell the user the best practices for aligning the phone</note>
+      </trans-unit>
+      <trans-unit id="providingFeedbackToTheDevelopmentTeamContent" xml:space="preserve">
+        <source>Please send all feedback to the development team through the feedback popover in the Clew app. The feedback popover is accessible by tapping the feedback button in the app. We take your feedback seriously and will do our best to act on it.</source>
+        <target>الرجاء القيام بإرسال الملاحظات إلى فريق المطورين عن طريق خيار ارسال الملاحظات من داخل تطبيق Clew.
+ويمكن الوصول إلى هذا الخيار عن طريق الضغط على زر الملاحظات داخل التطبيق.
+نحن نأخذ ملاحظاتك على محمل الجد وسوف نبذل كل ما بوسعنا لتطبيقها والعمل عليها.</target>
+        <note>This is a paragraph which describes how to send feedback to the development team</note>
+      </trans-unit>
+      <trans-unit id="providingFeedbackToTheDevelopmentTeamHeader" xml:space="preserve">
+        <source>Providing feedback to the development team</source>
+        <target>ارسال الملاحظات لفريق المطورين</target>
+        <note>this is a section in the help documentation menu</note>
+      </trans-unit>
+      <trans-unit id="ratingYourNavigationExperienceContent" xml:space="preserve">
+        <source>Once you are done navigating, assuming you have enabled the &amp;quot;Send Logs&amp;quot; setting, the app will ask you to rate your service. These ratings help us improve the app experience and the app's accuracy. Along with your rating, your phone's path will be sent in the log. Please note that this data is not linked to you in any way and it does not contain any information about the location where the path was recorded (e.g., no GPS coordinates are logged). Further, no images or other sensitive information are logged by the app. If you have any concerns about the data in the logs, please contact us (or simply switch off the &amp;quot;Send Logs&amp;quot; feature in the app settings).</source>
+        <target>عندما تنتهي من التنقل، وعلى فرض بأنك قمت بتفعيل خيار ارسال البيانات، سيطلب منك التطبيق القيام بتقييم الخدمة.
+تساعدنا هذه التقييمات على تحسين الجودة والدقة في التطبيق. سيتم ارسال مسار الهاتف مع البيانات.
+ونود إعلامك بأن هذه البيانات ليست مرتبطة بك في أي حال من الأحوال، ولا تتضمن البيانات أي معلومات متعلقة بمكان تسجيل المسار.
+(لا تتضمن البيانات إشارات GPS ولا تتضمن أي صور أو معلومات حساسة).
+إذا كان لديك قلق حول البيانات داخل السجلات، الرجاء التواصل معنا (أو قم وبكل بساطة بتعطيل خيار إرسال البيانات من داخل إعدادات التطبيق.</target>
+        <note>This is a paragraph in the rating your navigation experiennce section of the help menu.</note>
+      </trans-unit>
+      <trans-unit id="ratingYourNavigationExperienceHeader" xml:space="preserve">
+        <source>Rating your navigation experience</source>
+        <target>تقييم الملاحة</target>
+        <note>This is a section header in the help documentation menu</note>
+      </trans-unit>
+      <trans-unit id="ratingYourServiceViewText" xml:space="preserve">
+        <source>Navigation complete. Please rate the quality of your navigation experience.</source>
+        <target>اكتملت الملاحة. الرجاء تقييم جودة تجربة الملاحة الخاصة بك.</target>
+        <note>Rating service view</note>
+      </trans-unit>
+      <trans-unit id="realignToSavedRouteAnnouncement" xml:space="preserve">
+        <source>Successfully matched current environment to saved route.</source>
+        <target>تمت مطابقة موقعك الحالي مع الطريق المحفوظ بنجاح.</target>
+        <note>Other</note>
+      </trans-unit>
+      <trans-unit id="recordSingleUseRouteButtonAccessibilityLabel" xml:space="preserve">
+        <source>Record a single use route</source>
+        <target>تسجيل طريق فردي</target>
+        <note>A button that allows the user to navigate a route one time.</note>
+      </trans-unit>
+      <trans-unit id="recordSpatialVoiceNoteAccessibilityLabel" xml:space="preserve">
+        <source>Record a voice note anchored to your current location</source>
+        <target>تسجيل ملاحظة صوتية كإشارة إلى موقعك الحالي</target>
+        <note>This is the accessibility label for the button which allows the user to save a voice note to their current location in space.</note>
+      </trans-unit>
+      <trans-unit id="recordingARouteContent" xml:space="preserve">
+        <source>As soon as the app launches, the app will present three buttons: save route, single use route, and saved routes list. To navigate a route that you don't need to save, simply press the single use route button and follow the app's instructions. To save a route, activate the save route button. The app will walk you through the process of saving a route by first asking you to create an anchor point. The procedure for creating an anchor point is described later in this document and also through in-app instructions. If at any point you want to cancel an activity and return to this recording screen from any other part of the app, either the home button, or in some cases a “done” button, can be pressed to reset the app status and return to the recording view.</source>
+        <target>عندما يعمل التطبيق، سيعرض لك ثلاثة أزرار مختلفة: حفظ الطريق، استخدام طريقا فرديا، وقائمة الطرق المحفوظة.
+ولكي تتنقل في طريق ما دون الرغبة في حفظه، قم ببساطة بالضغط على زر استخدام طريق فردي، وتابع إرشادات التطبيق.
+ولحفظ الطريق، قم بضغط زر حفظ الطريق.
+وسيرشدك التطبيق بطريقة تسجيل الطريق بالطلب منك أولا القيام بأنشاء نقطة ثابتة.
+وسيتم تفصيل طريقة انشاء النقطة الثابتة لاحقاً في هذه القائمة، ومن خلال إرشادات التطبيق.
+إذا كنت ترغب وفي أي وقت بإلغاء نشاطاً ما والعودة لشاشة التسجيل هذه في أي جزء من التطبيق، فيمكن ضغط زر الصفحة الرئيسية أو زر تم للعودة إلى شاشة التسجيل.</target>
+        <note>This is a paragraph in the recording a route section which describes how to record a single use route</note>
+      </trans-unit>
+      <trans-unit id="recordingARouteHeader" xml:space="preserve">
+        <source>Recording a route</source>
+        <target>تسجيل الطريق</target>
+        <note>This is a section heading in the help documentation menu</note>
+      </trans-unit>
+      <trans-unit id="recordingARouteProperPositioningContent" xml:space="preserve">
+        <source>The app's motion estimates are based primarily on analyzing images from your phone's camera. The app will not work unless your phone's rear camera is capturing images of your environment. The app will not work if the phone is in your pocket or if any part of your body is blocking your phone's rear camera. We have found that the app works best when you hold the phone in portrait orientation with the rear camera facing directly ahead of you and the phone oriented vertically. Other orientations can work, but may result in diminished accuracy.</source>
+        <target>تعتمد تقديرات الحركة في التطبيق على تحليل الصور من كاميرا هاتفك. فلن يعمل التطبيق إلا إذا كانت الكاميرا الخلفية لهاتفك قادرة على التقاط صورًا لمحيطك.
+لن يعمل التطبيق إذا كان الهاتف في جيبك أو إذا كان أي جزء من جسمك يغطي الكاميرا الخلفية لهاتفك.
+لقد وجدنا بأن التطبيق يعمل بشكل جيد عندما تمسك الهاتف بشكل عمودي ثم قم بتوجيه الكاميرا الخلفية أمامك مباشرةً.
+يعمل الاتجاه الآخر أيضا، ولكن من الممكن أن يسبب نقصان في الدقة.</target>
+        <note>This is a paragraph in the recording a route section of the help menu. This paragraph describes how to properly hold the phone while recording a route for optimal performance</note>
+      </trans-unit>
+      <trans-unit id="recordingARouteProperPositioningHeading" xml:space="preserve">
+        <source>Properly positioning your phone when using Clew</source>
+        <target>وضع الهاتف بشكل صحيح عند استخدام Clew</target>
+        <note>This is a heading in the recording a route section of the help documentation.</note>
+      </trans-unit>
+      <trans-unit id="resumeAnchorPointToReturnNavigationAnnouncement" xml:space="preserve">
+        <source>Aligned to anchor point. Starting navigation.</source>
+        <target>تمت المحاذاة مع النقطة الثابتة. جاري بدء التنقل.</target>
+        <note>This is an Announcement which indicates that the pause session is complete, that the program was able to align with the anchor point, and that return navigation has started.</note>
+      </trans-unit>
+      <trans-unit id="resumePausedRouteButtonAccessibilityLabel" xml:space="preserve">
+        <source>Resume</source>
+        <target>متابعة </target>
+        <note>Accessibility label for button allowing the user to resume a paused route</note>
+      </trans-unit>
+      <trans-unit id="resumeRouteViewText" xml:space="preserve">
+        <source>Your route tracking is now paused. When you would like to navigate back, return to the location of your last anchor point and press the resume button.</source>
+        <target>تم إيقاف تتبع طريقك مؤقتًا. عند رغبتك في متابعة الطريق، قم بالرجوع إلى آخر نقطة ثابتة ثم اضغط على زر المتابعة.</target>
+        <note>Resume</note>
+      </trans-unit>
+      <trans-unit id="rightDirection" xml:space="preserve">
+        <source>Turn right</source>
+        <target>اِنعَطِف يميناً</target>
+        <note>Direction to the user to make an approximately 90 degree right turn.</note>
+      </trans-unit>
+      <trans-unit id="routeDirectionEndToStartButtonLabel" xml:space="preserve">
+        <source>End to Start</source>
+        <target>من النهاية للبداية</target>
+        <note>The text on a button in the select navigational direction menu of the app. This button allows the user to navigate a route in the opposite direction as it was originally recorded.</note>
+      </trans-unit>
+      <trans-unit id="routeDirectionPop-UpHeader" xml:space="preserve">
+        <source>Route direction</source>
+        <target>اتجاه الطريق</target>
+        <note>RoutesViewController</note>
+      </trans-unit>
+      <trans-unit id="routeDirectionStartToEndButtonLabel" xml:space="preserve">
+        <source>Start to End</source>
+        <target>من البداية لالنهاية</target>
+        <note>The text on a button in the select navigational direction menu of the app. This button allows the user to navigate a route in the same direction as it was originally recorded.</note>
+      </trans-unit>
+      <trans-unit id="routeNamePlaceholder" xml:space="preserve">
+        <source>Enter route title</source>
+        <target>أدخل عنوان الطريق</target>
+        <note/>
+      </trans-unit>
+      <trans-unit id="saveARouteButtonAccessibilityLabel" xml:space="preserve">
+        <source>Save a route</source>
+        <target>احفظ الطريق</target>
+        <note>A button that allows the user to save a path to a destination.</note>
+      </trans-unit>
+      <trans-unit id="saveARouteButtonText" xml:space="preserve">
+        <source>Save Route</source>
+        <target>حفظ الطريق</target>
+        <note>Name of labels that appear in UI</note>
+      </trans-unit>
+      <trans-unit id="saveRouteConfirmationLabel" xml:space="preserve">
+        <source>Save</source>
+        <target>حفظ </target>
+        <note/>
+      </trans-unit>
+      <trans-unit id="saveRoutePop-UpTextBoxPrompt" xml:space="preserve">
+        <source>Enter the name of the route</source>
+        <target>أدخل اسم الطريق</target>
+        <note/>
+      </trans-unit>
+      <trans-unit id="saveRoutePop-UpTitle" xml:space="preserve">
+        <source>Save route</source>
+        <target>حفظ الطريق</target>
+        <note>Save routes</note>
+      </trans-unit>
+      <trans-unit id="saveRouteToPlayPauseAnnouncement" xml:space="preserve">
+        <source>Route saved. You may now perform return navigation or return to the home screen.</source>
+        <target>تم حفظ الطريق. يمكنك الآن العودة للتنقل أو العودة إلى الصفحة الرئيسية.</target>
+        <note>This is an announcement which is spoken when the user finishes saving their route. This announcement signifies the transition from the view where the user can name or save their route to the screen where the user can either pause the AR session tracking or they can perform return navigation.</note>
+      </trans-unit>
+      <trans-unit id="savedRouteTutorialInstructionTextParagraph1" xml:space="preserve">
+        <source>Clew allows you to record a route that you can return to at a later time. The Save Routes feature is useful for paths that you want to come back to frequently. The route is stored on your device's memory (and soon on the cloud). You can navigate a saved route from A-to-B and back.</source>
+        <note>Instructions for using saved routes paragraph 1</note>
+      </trans-unit>
+      <trans-unit id="savedRouteTutorialInstructionTextParagraph2" xml:space="preserve">
+        <source>For example, you can save a route at a hotel which could navigate you from the front desk to the elevator and back. Or from the elevator to your hotel room and back to the elevator.</source>
+        <note>Instructions for using saved routes paragraph 2</note>
+      </trans-unit>
+      <trans-unit id="savedRoutesContent" xml:space="preserve">
+        <source>The saved routes menu allows you to load recorded routes and navigate along them in either the forward or reverse direction.</source>
+        <target>تتيح لك قائمة الطرق المحفوظة تحميل الطرق المسجلة والتنقل بها إما في الاتجاه الأمامي أو الاتجاه العكسي.</target>
+        <note>this is a paragraph in the saved routes section of the help documentation. this paragraph describes the basic functionaliuty of the saved routes feature</note>
+      </trans-unit>
+      <trans-unit id="savedRoutesDeletingASavedRouteContent" xml:space="preserve">
+        <source>You can delete routes from this menu either by swiping left (if not using VoiceOver) or by activating the secondary action on the route (if you are using VoiceOver).</source>
+        <target>يمكنك حذف الطرق المسجلة عن طريق هذه القائمة إما عن طريق السحب إلى اليسار (إذا لم تكن تستخدم ال VoiceOver). أو إذا كنت تستخدم VoiceOver فيمكنك فعل ذلك عن طريق تفعيل الخيار الثانوي داخل الطريق.</target>
+        <note>This is a paragraph in the saved routes section of the help documentation. This paragraph describes how to delete a saved route.</note>
+      </trans-unit>
+      <trans-unit id="savedRoutesDeletingASavedRouteHeader" xml:space="preserve">
+        <source>Deleting a saved route</source>
+        <target>حذف طريق محفوظ</target>
+        <note>This is a header in the saved routes section of the help documentation</note>
+      </trans-unit>
+      <trans-unit id="savedRoutesHeader" xml:space="preserve">
+        <source>Saved routes</source>
+        <target>الطرق المحفوظة</target>
+        <note>This is a section header in the help documentation</note>
+      </trans-unit>
+      <trans-unit id="savedRoutesListButtonAccessibilityLabel" xml:space="preserve">
+        <source>Saved Routes List</source>
+        <target>قائمة الطرق المحفوظة</target>
+        <note>The accessibility tag for a button which opens a menu which displays all the saved routes created by the user.</note>
+      </trans-unit>
+      <trans-unit id="savedRoutesListButtonText" xml:space="preserve">
+        <source>Saved Routes List</source>
+        <target>الطرق المحفوظة</target>
+        <note>This is the text which appears on the Saved routes List buttton</note>
+      </trans-unit>
+      <trans-unit id="savedRoutesListPop-UpHeading" xml:space="preserve">
+        <source>Saved Routes List</source>
+        <target>قائمة الطرق المحفوظة</target>
+        <note>The title to a list of routes that have been saved by the user.</note>
+      </trans-unit>
+      <trans-unit id="savedRoutesLoadingARouteContent" xml:space="preserve">
+        <source>The saved routes menu provides you with a list of recorded routes ordered from most to least recent. Once you tap on a route, you can select navigation in &amp;quot;start to end&amp;quot; or &amp;quot;end to start&amp;quot; mode. &amp;quot;Start to end&amp;quot; means that you navigate along the route in the same direction as it was recorded. &amp;quot;End to start&amp;quot; means that you navigate the route in the reverse direction as it was recorded.</source>
+        <target>توفر لك قائمة الطرق المحفوظة قائمة بالطرق من الأكثر طلبا، إلى الأحدث.
+فعند اختيار طريقا ما، يمكنك اختيار التنقل بوضعين إما التنقل من البداية للنهاية، أو التنقل من النهاية للبداية.
+فالبداية للنهاية تعني بأنك تتنقل عبر الطريق بنفس الاتجاه الذي قد تم تسجيل الطريق به.
+أما النهاية للبداية، فيعني بأنك تتنقل في الطريق بشكل عكسي كما تم تسجيله مسبقا.</target>
+        <note>This is a paragraph in the saving routes section of the help menu which describes the process for loading a saved route for navigation.</note>
+      </trans-unit>
+      <trans-unit id="savedRoutesLoadingARouteHeader" xml:space="preserve">
+        <source>Loading a route</source>
+        <target>تحميل الطريق</target>
+        <note>This is a header in the saving routes section of the help documentation menu</note>
+      </trans-unit>
+      <trans-unit id="savedRoutesSharingASavedRouteContent" xml:space="preserve">
+        <source>You can share routes from this menu either by swiping left (if not using VoiceOver) or by activating the secondary action on the route (if you are using VoiceOver). Pressing on the share button will then open a share selector which lets you share a route over text, email, airdrop, or through many other apps. When sharing a route please be sure that you have entered detailed instructions (either as a voice note or as text) to help the person you are sharing the route with find the route's anchor points. If this person cannot accurately find the anchor points, the app will not provide accurate guidance.</source>
+        <target>يمكنك مشاركة الطرق من هذه القائمة إما عن طريق السحب إلى اليسار (إذا لم تكن تستخدم الVoiceOver) أو عن طريق تنشيط الإجراء الثانوي داخل الطريق (إذا كنت تستخدم VoiceOver).
+اضغط على زر المشاركة لفتح قائمة المشاركة والتي تتيح لك مشاركة طريق عبر رسالة نصية أو عن طريق البريد الإلكتروني أو عن طريق العديد من التطبيقات الأخرى. عند مشاركتك لطريقا ما، الرجاء التأكد بأنك قد أدخلت تعليمات مفصلة (إما كملاحظة صوتية أو كنص) وذلك لمساعدة الشخص الذي تشاركه الطريق على العثور على النقاط الثابتة داخل الطريق. إذا لم يتمكن هذا الشخص من العثور على النقاط الثابتة بدقة، فلن يوفر التطبيق له إرشادات دقيقة.</target>
+        <note>This is a paragraph in the saved routes section of the help documentation. This paragraph describes how to share a saved route.</note>
+      </trans-unit>
+      <trans-unit id="savedRoutesSharingASavedRouteHeader" xml:space="preserve">
+        <source>Sharing a saved route</source>
+        <target>جاري مشاركة طريقاً محفوظاً</target>
+        <note>This is a header in the saved routes section of the help documentation</note>
+      </trans-unit>
+      <trans-unit id="savedRoutesTutorialButtonText" xml:space="preserve">
+        <source>Saving and Finding Routes</source>
+        <note>Title for the saved route part of the tutorial</note>
+      </trans-unit>
+      <trans-unit id="savingARouteTutorialTextParagraph1" xml:space="preserve">
+        <source>Saving a route records both the route from points A-to-B, referred to as 'Start-to-End', and the return route, referred to as 'End-to-Start'. Keep this reference in mind whenever you want to navigate a saved route.</source>
+        <note>Instructions for saving routes paragraph 1</note>
+      </trans-unit>
+      <trans-unit id="savingARouteTutorialTextParagraph2" xml:space="preserve">
+        <source>Saving a route requires you to set an anchor point at the start of the route. Clew will then record the route until you've reached your destination. You'll then be required to set the anchor point at the end of the route.</source>
+        <note>Instructions for saving routes paragraph 2</note>
+      </trans-unit>
+      <trans-unit id="savingARouteTutorialTextParagraph3" xml:space="preserve">
+        <source>Tap the Save Route button in the home screen to begin recording a route.</source>
+        <note>Instructions for saving routes paragraph 3</note>
+      </trans-unit>
+      <trans-unit id="savingARouteTutorialTitle" xml:space="preserve">
+        <source>Saving a Route</source>
+        <note>Title for the saving a part of the tutorial</note>
+      </trans-unit>
+      <trans-unit id="score" xml:space="preserve">
+        <source>score</source>
+        <note>used to define the score of the user when practicing a skill</note>
+      </trans-unit>
+      <trans-unit id="setAnchorPointButtonText" xml:space="preserve">
+        <source>Set Anchor Point</source>
+        <note>The text shown on the button that sets the anchor point during the tutorial</note>
+      </trans-unit>
+      <trans-unit id="setSiriShortcutButton" xml:space="preserve">
+        <source>Set Siri shortcut</source>
+        <note>Set a Siri shortcut</note>
+      </trans-unit>
+      <trans-unit id="settingAnAnchorPointTutorialText" xml:space="preserve">
+        <source>Anchor points are created at the beginning and at the end of a route. We recommend setting the anchor point at a location that is easy to remember and find at a later time. A good anchor point could be set at a wall, a doorframe, or a piece of furniture like a table.</source>
+        <note>Text of setting an anchor point page</note>
+      </trans-unit>
+      <trans-unit id="settingAnAnchorPointTutorialTitle" xml:space="preserve">
+        <source>Setting an Anchor Point</source>
+        <note>Title of setting an anchor point page</note>
+      </trans-unit>
+      <trans-unit id="settingOptionsTutorialButtonText" xml:space="preserve">
+        <source>Settings</source>
+        <note>Title for the setting options part of the tutorial</note>
+      </trans-unit>
+      <trans-unit id="settingOptionsTutorialInstructionTextParagraph1" xml:space="preserve">
+        <source>Clew settings allow you to customize your experience with the app. This module will walk you through some of the important feature settings within Clew. You can always return to the Settings by tapping on the main menu icon.</source>
+        <note>Information about what the setting options are paragraph 1</note>
+      </trans-unit>
+      <trans-unit id="settingOptionsTutorialInstructionTextParagraph2" xml:space="preserve">
+        <source>Tap the 'Clew Initial Setup' button to begin.</source>
+        <note>Information about what the setting options are paragraph 2</note>
+      </trans-unit>
+      <trans-unit id="settingsButtonAccessibilityLabel" xml:space="preserve">
+        <source>Settings</source>
+        <target>الإعدادات</target>
+        <note/>
+      </trans-unit>
+      <trans-unit id="settingsWalkThroughAdjustPhoneBodyOffset" xml:space="preserve">
+        <source>Enable Automatic Correction</source>
+        <note>Correct for phone body offset settings adjustment</note>
+      </trans-unit>
+      <trans-unit id="settingsWalkThroughCompleteText" xml:space="preserve">
+        <source>Congratulations! You've completed the initial settings for Clew. Remember that you can change your settings at any time by tapping the main menu icon and selecting Settings.</source>
+        <note>Text of the screen displayed at the end of the settings walkthrough</note>
+      </trans-unit>
+      <trans-unit id="settingsWalkThroughCompleteTitle" xml:space="preserve">
+        <source>Clew Initial Setup Complete</source>
+        <note>Title of the screen displayed at the end of the settings walkthrough</note>
+      </trans-unit>
+      <trans-unit id="settingsWalkThroughCrumbColorText" xml:space="preserve">
+        <source>Clew displays virtual crumb or waypoints along the route. Please select a color from the list below. You can always change the color later.</source>
+        <note>Crumb color text</note>
+      </trans-unit>
+      <trans-unit id="settingsWalkThroughCrumbColorTitle" xml:space="preserve">
+        <source>Crumb or Waypoint Color</source>
+        <note>Crumb color title</note>
+      </trans-unit>
+      <trans-unit id="settingsWalkThroughDontAdjustPhoneBodyOffset" xml:space="preserve">
+        <source>Disable Automatic Correction</source>
+        <note>Don't correct for phone body offset settings adjustment</note>
+      </trans-unit>
+      <trans-unit id="settingsWalkThroughFeedbackOptionsHaptic" xml:space="preserve">
+        <source>Haptic (vibrations)</source>
+        <note>button text for turning on haptic feedback in the tutorial</note>
+      </trans-unit>
+      <trans-unit id="settingsWalkThroughFeedbackOptionsSound" xml:space="preserve">
+        <source>Sound</source>
+        <note>button text for turning on sound feedback in the tutorial</note>
+      </trans-unit>
+      <trans-unit id="settingsWalkThroughFeedbackOptionsSpeech" xml:space="preserve">
+        <source>Voice cues</source>
+        <note>button text for turning on voice feedback in the tutorial</note>
+      </trans-unit>
+      <trans-unit id="settingsWalkThroughFeedbackOptionsText" xml:space="preserve">
+        <source>Clew provides sounds, haptic (vibration) feedback and voice cues to help you navigate a route. You can turn these ON/OFF at any time in the Settings. But, we recommend that you at least keep one mode of feedback active in order to have the best experience with Clew. Tip: new users are encouraged to keep all feedback modes on.</source>
+        <note>the text of the feedback options portion of the tutorial</note>
+      </trans-unit>
+      <trans-unit id="settingsWalkThroughFeedbackOptionsTitle" xml:space="preserve">
+        <source>Feedback</source>
+        <note>the title of the feedback options portion of the tutorial</note>
+      </trans-unit>
+      <trans-unit id="settingsWalkThroughPathColorText" xml:space="preserve">
+        <source>Clew shows the route path by displaying a virtual line that intersects with the waypoints or crumbs. Please select a color for your path line from the list. Tip: You can make the path line a different color from the crumb in order to improve contrast between them.</source>
+        <note>Path color text</note>
+      </trans-unit>
+      <trans-unit id="settingsWalkThroughPathColorTitle" xml:space="preserve">
+        <source>Path Line Color</source>
+        <note>Path color title</note>
+      </trans-unit>
+      <trans-unit id="settingsWalkThroughPhoneBodyOffsetTextParagraph1" xml:space="preserve">
+        <source>The accuracy of Clew's navigation and directional guidance relies heavily on you holding and maintaining your phone in the correct 'pose' (the direction which it's facing) when you're traveling along a route.</source>
+        <note>Determine whether to use the phone body offset correction page text paragraph 1</note>
+      </trans-unit>
+      <trans-unit id="settingsWalkThroughPhoneBodyOffsetTextParagraph2" xml:space="preserve">
+        <source>Clew's Automatic Phone Pose &amp; Alignment Correction feature helps correct for any offset or changes to the pose of your phone. It's especially useful for users who have difficulty perceiving their phone's spatial orientation or direction during travel and will make the navigation with Clew more accurate.</source>
+        <note>Determine whether to use the phone body offset correction page text paragraph 2</note>
+      </trans-unit>
+      <trans-unit id="settingsWalkThroughPhoneBodyOffsetTextParagraph3" xml:space="preserve">
+        <source>If you enable this feature, we recommend that you maintain your phone in a fixed position, like against your chest whenever you're navigating with Clew.</source>
+        <note>Determine whether to use the phone body offset correction page text paragraph 3</note>
+      </trans-unit>
+      <trans-unit id="settingsWalkThroughPhoneBodyOffsetTextParagraph4" xml:space="preserve">
+        <source>Select below to enable or disable the Automatic Phone Pose Correction.</source>
+        <note>Determine whether to use the phone body offset correction page text paragraph 4</note>
+      </trans-unit>
+      <trans-unit id="settingsWalkThroughPhoneBodyOffsetTitle" xml:space="preserve">
+        <source>Automatic Phone Pose Correction</source>
+        <note>Determine whether to use the phone body offset correction page title</note>
+      </trans-unit>
+      <trans-unit id="settingsWalkThroughSetUnitsImperialButton" xml:space="preserve">
+        <source>Imperial (feet)</source>
+        <note>Imperial option button text</note>
+      </trans-unit>
+      <trans-unit id="settingsWalkThroughSetUnitsMetricButton" xml:space="preserve">
+        <source>Metric (meters)</source>
+        <note>Metric option button text</note>
+      </trans-unit>
+      <trans-unit id="settingsWalkThroughSetUnitsText" xml:space="preserve">
+        <source>When providing directional cues, Clew may announce distance using either metric units (meters) or Imperial units (Feet). Please select the unit system that's best for you.</source>
+        <note>Set units page text</note>
+      </trans-unit>
+      <trans-unit id="settingsWalkThroughSetUnitsTitle" xml:space="preserve">
+        <source>Units of Distance</source>
+        <note>Set units page title</note>
+      </trans-unit>
+      <trans-unit id="settingsWalkThroughTitle" xml:space="preserve">
+        <source>Clew Initial Setup</source>
+        <note>Settings Walk Through</note>
+      </trans-unit>
+      <trans-unit id="shareActionText" xml:space="preserve">
+        <source>Share</source>
+        <target>مشاركة</target>
+        <note>This is the text that appears when a user tries to share a saved route. This text is used in an option menu when a route is selected and it describes the action for share a route.</note>
+      </trans-unit>
+      <trans-unit id="sharingYourExperiencePop-UpContent" xml:space="preserve">
+        <source>Help us improve the app by logging your Clew experience. These logs will not include any images or personal information. You can turn this off in Settings.</source>
+        <target>ساعدنا على تحسين التطبيق عن طريق مشاركة تجربتك مع Clew. ولن تتضمن هذه البيانات أي صور أو معلومات شخصية. ويمكنك إيقاف تشغيل هذا الخيار عن طريق الإعدادات.</target>
+        <note>Disclaimer shown to the user when they open the app for the first time</note>
+      </trans-unit>
+      <trans-unit id="sharingYourExperiencePop-UpHeading" xml:space="preserve">
+        <source>Sharing your experience with Clew</source>
+        <target>شارك تجربتك مع Clew</target>
+        <note>When opening the app for the first time</note>
+      </trans-unit>
+      <trans-unit id="showAdjustOffsetSuggestionTitle" xml:space="preserve">
+        <source>Enable Automatic "Correct Offset of Phone / Body"?</source>
+        <target>هل تريد تفعيل التصحيح التلقائي لإزاحة الهاتف / الجسم؟</target>
+        <note>Enable Correct Phone / Body Alignment Alert</note>
+      </trans-unit>
+      <trans-unit id="signInWithAppleButtonText" xml:space="preserve">
+        <source>Sign In</source>
+        <target>تسجيل الدخول</target>
+        <note>This is the text which appears on the sign in with Apple buttton</note>
+      </trans-unit>
+      <trans-unit id="signInWithAppleDescription" xml:space="preserve">
+        <source>As we develop Clew, we're seeking feedback so we can make the app a better tool for navigation. Please sign in with Apple to help our team improve the app!</source>
+        <target>نعمل دائما على تطوير Clew، فمن المهم الحصول على تعليقات وآراء المستخدمين حول التطبيق، حتى نتمكن من جعله أداة أفضل للتنقل.
+الرجاء تسجيل الدخول باستخدام آبل لمساعدة فريقنا على تحسين التطبيق!
+</target>
+        <note>A description of why we'd like the user to sign in with their Apple ID</note>
+      </trans-unit>
+      <trans-unit id="signInWithAppleTitle" xml:space="preserve">
+        <source>Please sign in.</source>
+        <target>الرجاء تسجيل الدخول</target>
+        <note>Signing in with apple id</note>
+      </trans-unit>
+      <trans-unit id="signInwithAppleButtonAccessibilityLabel" xml:space="preserve">
+        <source>Sign In</source>
+        <note/>
+      </trans-unit>
+      <trans-unit id="significantVersionChanges-Confirmation" xml:space="preserve">
+        <source>Ok</source>
+        <target>موافق</target>
+        <note>What the user clicks to acknowledge the significant changes message and dismiss pop-up</note>
+      </trans-unit>
+      <trans-unit id="significantVersionChanges-HelpMeWithSiri" xml:space="preserve">
+        <source>Setup Siri Shortcuts Now</source>
+        <note>What the user clicks to request help setting up Siri shortcuts</note>
+      </trans-unit>
+      <trans-unit id="significantVersionChangesPop-UpContent" xml:space="preserve">
+        <source>This new version of Clew features a route sharing feature and a redesigned workflow for saving routes. Please note that "landmarks" are now called "anchor points". Also, some menus previously on the home screen are now available through the "options" menu. See the help menu for more details.</source>
+        <target>يحتوي الإصدار الجديد من Clew على ميزة مشاركة الطريق. قد تم إعادة تصميم التطبيق لكي تتمكن من حفظ الطرق بكل سهولة. يرجى العلم بأنه "قد تم إعادة تسمية العلامات المرجعية" لتصبح "نقاط ثابتة". ، وقد تم نقل بعض القوائم من الشاشة الرئيسية لقائمة "الخيارات". اطلع على قائمة المساعدة للمزيد من المعلومات.</target>
+        <note>An alert shown to the user to alert them to the fact that significant changes have been made to the app.</note>
+      </trans-unit>
+      <trans-unit id="significantVersionChangesPop-UpHeading" xml:space="preserve">
+        <source>Important Changes</source>
+        <target>تعديلات مهمة</target>
+        <note>The heading of a pop-up telling the user that significant changes have been made to this app version</note>
+      </trans-unit>
+      <trans-unit id="significantVersionChangesPopHandsFree-UpContent" xml:space="preserve">
+        <source>Now you can use Siri with this new version of Clew. Please note that you can only use Siri with "Single Use Route". Please ensure that you have enabled Hey Siri on your iPhone through Settings &gt; Siri &amp; Search &gt; Listen for Hey Siri. You will now be prompted to add Siri shortcuts after each action you take, when this is done you can simply say: "Hey Siri, Activity name".</source>
+        <note>An alert shown to the user to alert them to the fact that significant changes have been made to the app.</note>
+      </trans-unit>
+      <trans-unit id="singleUsePlayPauseViewText" xml:space="preserve">
+        <source>In order to immediately perform return navigation, press the play button and follow the instructions provided. In order to pause the session to perform return navigation at a later point, press the pause button and complete the anchor point procedure.</source>
+        <target>لكي تتمكن من الانتقال لِطريق العودة، اضغط على زر التشغيل، ثم تابع التعليمات. ولكي تتمكن من الإيقاف المؤقت والعودة للطريق لاحقاً، قم بالضغط على زر الإيقاف المؤقت، وتابع عمل النقطة الثابتة.</target>
+        <note>Information displayed to the user on the play pause screen after they have recorded a single use route. This describes the functionality of the play and pause buttons.</note>
+      </trans-unit>
+      <trans-unit id="singleUseRouteAnchorPointText" xml:space="preserve">
+        <source>To be able to resume your tracking at a later point you need to record an anchor point for the end of your route. An anchor point records the position and alignment of your device so the app can reload your route from a temporary file. As a result the accuracy of your return navigation relies entirely on how accurately you can realign and position your phone with your saved anchor point at a later point. We suggest using the text and voice note buttons to record a text note and/or a voice recording which can help you realign your device to the anchor point you recorded at a later time.
+To create an anchor point, hold your device flat with the screen facing up. Press the top (short) edge flush against a flat vertical surface (such as a wall) the ”align” button starts a %lu-second countdown. The countdown is intended to give you time to position your device; the anchor point will be saved at the end of the countdown.</source>
+        <target>"ولكي تتمكن من متابعة تنقلك في وقت لاحق، يجب عليك تسجيل نقطة ثابتة في نهاية الطريق.
+تسجل النقطة الثابتة موقع واتجاه الهاتف الخاص بك، فيمكن للتطبيق إعادة تحميل الطريق عن طريق الملف المحفوظ.
+نتيجة لذلك، تعتمد دقة الطريق المحفوظ على مدى قدرتك على المحاذاة ومطابقة الهاتف مع النقطة الثابتة التي تم تسجيلها.و
+وننصحك باستخدام زرّي النص والملحوظة الصوتية لكتابة ملحوظة أو تسجيلها لمساعدتك على مطابقة الهاتف مع نفس النقطة التي قمت بتسجيلها.
+وللقيام بتسجيل نقطة ثابتة: يجب عليك وضع هاتفك بشكل ثابت، ثم وجه الشاشة لأعلى واضغط على الجزء العلوي (الزاوية القصيرة من الهاتف) وسيبدأ العد التنازلي.
+ويهدف العد التنازلي لمنحك الوقت لإجراء التعديلات النهائية على اتجاه جهازك. وسيتم حفظ النقطة الثابتة عندما ينتهي العد التنازلي."</target>
+        <note>Information on how to record an anchor point when used for pausing a single use route</note>
+      </trans-unit>
+      <trans-unit id="singleUseRouteAnchorPointToPausedStateAnnouncement" xml:space="preserve">
+        <source>Anchor point saved. You may now close the app and return later for return navigation.</source>
+        <target>تم حفظ النقطة الثابتة. يمكنك إغلاق التطبيق والعودة لاحقًا للتنقل عبر طريق العودة.</target>
+        <note>Announcements which signify the end of a process</note>
+      </trans-unit>
+      <trans-unit id="singleUseRouteButtonText" xml:space="preserve">
+        <source>Single Use Route</source>
+        <target>طريق فردي</target>
+        <note>This is the text which appears on the single use route buttton</note>
+      </trans-unit>
+      <trans-unit id="singleUseRouteToRecordingRouteAnnouncement" xml:space="preserve">
+        <source>Now recording a single use route.</source>
+        <target>جاري تسجيل طريق فردي</target>
+        <note>This is an announcement which is spoken when the user starts recording a single use route. it informs the user that they are recording a single use route.</note>
+      </trans-unit>
+      <trans-unit id="singleUseRouteTutorialButtonText" xml:space="preserve">
+        <source>Single Use Routes</source>
+        <note>Title for the single use route part of the tutorial</note>
+      </trans-unit>
+      <trans-unit id="singleUseRouteTutorialInstructionTextParagraph1" xml:space="preserve">
+        <source>Clew's Single Use Routes feature helps you find your way back after going from one place to another. This feature records your path when you walk from point-A to point-B. It then provides you with the return route directions and necessary cues.</source>
+        <note>Instructions for using the single use route paragraph 1</note>
+      </trans-unit>
+      <trans-unit id="singleUseRouteTutorialInstructionTextParagraph2" xml:space="preserve">
+        <source>For example, you can perform a single use route when going from a lobby area to a room, and then you want to return back to the lobby area.</source>
+        <note>Instructions for using the single use route paragraph 2</note>
+      </trans-unit>
+      <trans-unit id="singleUseRouteTutorialInstructionTextParagraph3" xml:space="preserve">
+        <source>The Single Use Route allows you to navigate a return route only once. The Save Routes feature allows you to navigate a route multiple times.</source>
+        <note>Instructions for using the single use route paragraph 3</note>
+      </trans-unit>
+      <trans-unit id="siriWalkthroughButtonText" xml:space="preserve">
+        <source>Siri Shortcuts Setup</source>
+        <note>Title for the Siri Walk Through</note>
+      </trans-unit>
+      <trans-unit id="siriWalkthroughCompleteText" xml:space="preserve">
+        <source>Nice Job! Your Siri shortcuts are now ready for you to use. You can come back to Siri shortcuts to make any changes to the shortcuts at any time by tapping on the Main Menu icon or from within the tutorials.</source>
+        <note>Text for when you complete the Siri shortcut setup</note>
+      </trans-unit>
+      <trans-unit id="siriWalkthroughCompleteTitle" xml:space="preserve">
+        <source>Siri Shortcuts Setup Complete</source>
+        <note>Title for when you complete the Siri shortcut setup</note>
+      </trans-unit>
+      <trans-unit id="siriWalkthroughSetEndRecordingShortcutText" xml:space="preserve">
+        <source>The setup will take you to Apple's Siri shortcuts where you'll write the phrase that you want Siri to recall as the voice command. We recommend using short phrases that are easy to remember and are specific to its feature or function. Some suggested phrases are: "End the route", "Clew stop recording the route". Tap the Setup button below to begin.</source>
+        <note>The page text for setting the Siri shortcut for ending the route recording</note>
+      </trans-unit>
+      <trans-unit id="siriWalkthroughSetEndRecordingShortcutTitle" xml:space="preserve">
+        <source>Stop Recording Route</source>
+        <note>The page title for setting the Siri shortcut for ending the route recording</note>
+      </trans-unit>
+      <trans-unit id="siriWalkthroughSetNavigateBackText" xml:space="preserve">
+        <source>The setup will take you to Apple's Siri shortcuts where you'll write the phrase that you want Siri to recall as the voice command. We recommend using short phrases that are easy to remember and are specific to its feature or function. Some suggested phrases are: "Return me back", "Clew start return navigation". Tap the Setup button below to begin.</source>
+        <note>Text for setting the Siri shortcut for ending the route recording</note>
+      </trans-unit>
+      <trans-unit id="siriWalkthroughSetNavigateBackTitle" xml:space="preserve">
+        <source>Return Me Back</source>
+        <note>Title for setting the Siri shortcut for ending the route recording</note>
+      </trans-unit>
+      <trans-unit id="siriWalkthroughSetRecordRouteShortcutText" xml:space="preserve">
+        <source>The setup will take you to Apple's Siri shortcuts where you'll write the phrase that you want Siri to recall as the voice command. We recommend using short phrases that are easy to remember and are specific to its feature or function. Some suggested phrases are: "Start a single use route", "Clew start single use route". Tap the Setup button below to begin.</source>
+        <note>The page text for the Siri shortcut for recording a route</note>
+      </trans-unit>
+      <trans-unit id="siriWalkthroughSetRecordRouteShortcutTitle" xml:space="preserve">
+        <source>Start Single Use Route</source>
+        <note>The page title for the Siri shortcut for recording a route</note>
+      </trans-unit>
+      <trans-unit id="siriWalkthroughTutorialButtonText" xml:space="preserve">
+        <source>Siri Shortcuts</source>
+        <note>Title for the siri walkthrough part of the tutorial</note>
+      </trans-unit>
+      <trans-unit id="siriWalkthroughTutorialInstructionTextParagraph1" xml:space="preserve">
+        <source>Siri shortcuts offer a convenient and hand-free way to use apps by voice commands You can control certain functions within Clew using Siri voice commands. Please note that it's important to speak the correct voice command in order for the shortcut to work. The list below shows the currently available Siri shortcuts for Clew.</source>
+        <note>Information about what the siri shortcuts are paragraph 1</note>
+      </trans-unit>
+      <trans-unit id="siriWalkthroughTutorialInstructionTextParagraph2" xml:space="preserve">
+        <source>Tap the 'Siri Shortcuts Setup' button if it's your first time using Siri for Clew.</source>
+        <note>Information about what the siri shortcuts are paragraph 2</note>
+      </trans-unit>
+      <trans-unit id="siriWalkthroughTutorialTitleText" xml:space="preserve">
+        <source>Siri Shortcuts</source>
+        <note>Title for the Siri walkthrough part of the tutorial</note>
+      </trans-unit>
+      <trans-unit id="slightLeftDirection" xml:space="preserve">
+        <source>Slight left</source>
+        <target>انعَطِف يساراً</target>
+        <note>Direction to user to take a slight left turn</note>
+      </trans-unit>
+      <trans-unit id="slightRightDirection" xml:space="preserve">
+        <source>Slight right</source>
+        <target>توجه إلى اليمين قليلاً</target>
+        <note>Direction to user to take a slight right turn</note>
+      </trans-unit>
+      <trans-unit id="startAlignmentCountdownButtonAccessibilityLabel" xml:space="preserve">
+        <source>Start alignment countdown</source>
+        <target>بدء مؤقت المحاذاة</target>
+        <note>this is athe accessibility label for the button which allows the user to start an alignment procedure when saving an anchor point</note>
+      </trans-unit>
+      <trans-unit id="startNavigationShortcutDescription" xml:space="preserve">
+        <source>Tell Clew to start navigating the route</source>
+        <note>The description to use for the starting to navigate a route Siri shortcut</note>
+      </trans-unit>
+      <trans-unit id="startNavigationShortcutSuggestedPhrase" xml:space="preserve">
+        <source>Clew Navigate Route</source>
+        <note>This is the default invocation phrase suggested to the user for the start navigation shortcut</note>
+      </trans-unit>
+      <trans-unit id="startNavigationShortcutTitle" xml:space="preserve">
+        <source>Navigate Route</source>
+        <note>The title to use for the starting to navigate a route Siri shortcut</note>
+      </trans-unit>
+      <trans-unit id="startRecordingVoiceNoteAccessibilityLabel" xml:space="preserve">
+        <source>Record Voice Note</source>
+        <target>تسجيل ملحوظة صوتية</target>
+        <note>This is the accessibility label which is played when a user with voice over selects the button to record a voice recording in the voice recorder view</note>
+      </trans-unit>
+      <trans-unit id="startReturnNavigationButtonAccessibilityLabel" xml:space="preserve">
+        <source>Start navigation</source>
+        <target>بدء التنقل</target>
+        <note>The accessibility label for the button that allows user to start navigating back along their route.</note>
+      </trans-unit>
+      <trans-unit id="startReturnNavigationButtonAcessabilityLabel" xml:space="preserve">
+        <source>Start return navigation</source>
+        <target>بدء التنقل إلى نقطة البداية</target>
+        <note/>
+      </trans-unit>
+      <trans-unit id="startSingleUseRouteRecordingShortcutDescription" xml:space="preserve">
+        <source>Tell Clew to you record a single use route!</source>
+        <note>The description to use for the single use route recording Siri shortcut</note>
+      </trans-unit>
+      <trans-unit id="startSingleUseRouteRecordingShortcutSuggestedPhrase" xml:space="preserve">
+        <source>Clew Record Single Use Route</source>
+        <note>This is the default invocation phrase suggested to the user for the single use route recording shortcut</note>
+      </trans-unit>
+      <trans-unit id="startSingleUseRouteRecordingShortcutTitle" xml:space="preserve">
+        <source>Record Single Use Route</source>
+        <note>The title to use for the single use route recording Siri shortcut</note>
+      </trans-unit>
+      <trans-unit id="startedTrackingSessionAnnouncement" xml:space="preserve">
+        <source>Tracking session initialized.</source>
+        <target>تم تهيئة جلسة التنقل</target>
+        <note>Voicing directions</note>
+      </trans-unit>
+      <trans-unit id="startingReturnNavigationAnnouncement" xml:space="preserve">
+        <source>Starting navigation</source>
+        <target>جاري بدء التنقل</target>
+        <note>This is an anouncement which is played when the user performs return navigation from the play pause menu. It signifies the start of a navigation session.</note>
+      </trans-unit>
+      <trans-unit id="stopNavigationButtonAccessibilityLabel" xml:space="preserve">
+        <source>Stop navigation</source>
+        <target>إيقاف التنقل</target>
+        <note>The accessibility label of the button that allows user to stop navigating.</note>
+      </trans-unit>
+      <trans-unit id="stopRecordingButtonAccessibilityLabel" xml:space="preserve">
+        <source>Stop recording</source>
+        <target>إيقاف التسجيل</target>
+        <note>The accessibility label of the button that allows user to stop recording a route.</note>
+      </trans-unit>
+      <trans-unit id="stopRecordingShortcutDescription" xml:space="preserve">
+        <source>Tell Clew to stop recording the route</source>
+        <note>The description to use for the stopping a route recording Siri shortcut</note>
+      </trans-unit>
+      <trans-unit id="stopRecordingShortcutSuggestedPhrase" xml:space="preserve">
+        <source>Clew Stop Recording</source>
+        <note>This is the default invocation phrase suggested to the user for the  stop route recording shortcut</note>
+      </trans-unit>
+      <trans-unit id="stopRecordingShortcutTitle" xml:space="preserve">
+        <source>Stop Recording Route</source>
+        <note>The title to use for stopping a route recording</note>
+      </trans-unit>
+      <trans-unit id="stopRecordingVoiceNoteAccessibilityLabel" xml:space="preserve">
+        <source>Stop Recording</source>
+        <target>تم إيقاف التسجيل</target>
+        <note>This is the accessibility label which is played when a user with voice over selects the button to stop their voice recording</note>
+      </trans-unit>
+      <trans-unit id="stoppedRecordingAnnouncement" xml:space="preserve">
+        <source>You've now stopped recording the route</source>
+        <note>An announcement which lets the user know that they have stopped recording the route.</note>
+      </trans-unit>
+      <trans-unit id="straightDirection" xml:space="preserve">
+        <source>Continue straight</source>
+        <target>تابع السير إلى الأمام</target>
+        <note>Version of directions given when haptic feedback function is turned on (Simpler)</note>
+      </trans-unit>
+      <trans-unit id="submitSurvey" xml:space="preserve">
+        <source>Submit</source>
+        <target>إرسال</target>
+        <note>this is the button text that submits the survey</note>
+      </trans-unit>
+      <trans-unit id="surveyPopoverTitle" xml:space="preserve">
+        <source>We'd love to get your feedback</source>
+        <target>نرغب في الحصول على رأيك</target>
+        <note>Feedback</note>
+      </trans-unit>
+      <trans-unit id="textOrVoiceNotesTutorialText" xml:space="preserve">
+        <source>Clew allows you to record a text or voice note to describe the location of your anchor point. This can be especially helpful when you want to find and realign yourself to the saved anchor point at a later time.</source>
+        <note>Text of text or voice notes page</note>
+      </trans-unit>
+      <trans-unit id="textOrVoiceNotesTutorialTitle" xml:space="preserve">
+        <source>Text or Voice Notes</source>
+        <note>Title of text or voice notes page</note>
+      </trans-unit>
+      <trans-unit id="thanksForFeedbackAnnouncement" xml:space="preserve">
+        <source>Thank you for your feedback</source>
+        <target>شكرا جزيلا على تقديم رأيك</target>
+        <note>This is read right after the user fills out a feedback survey.</note>
+      </trans-unit>
+      <trans-unit id="tipTutorialTitle" xml:space="preserve">
+        <source>Tips</source>
+        <note/>
+      </trans-unit>
+      <trans-unit id="turnOnAdjustOffsetButton" xml:space="preserve">
+        <source>Yes</source>
+        <target>نعم</target>
+        <note>This text appears on a button that turns on the adjust offset feature</note>
+      </trans-unit>
+      <trans-unit id="tutorialRouteAlignmentText" xml:space="preserve">
+        <source>To begin the route, tap the "start navigation" button below and wait for the countdown.</source>
+        <note>Text describing the process of aligning to a tutorial route. This text shows up on the alignment screen.</note>
+      </trans-unit>
+      <trans-unit id="tutorialTitleText" xml:space="preserve">
+        <source>CLEW Tutorial</source>
+        <note>Title of the Clew Tutorial Screen. Top of the first tutorial page</note>
+      </trans-unit>
+      <trans-unit id="uTurnDirection" xml:space="preserve">
+        <source>Turn around</source>
+        <target>انعطف للخلف</target>
+        <note>Direction to the user to turn around</note>
+      </trans-unit>
+      <trans-unit id="usingSingleUseRouteTutorialTextParagraph1" xml:space="preserve">
+        <source>Tap the Single Use Route button on the home screen to activate this feature. Clew will immediately begin recording your route.</source>
+        <note>Instruction for how to use single use routes paragraph 1</note>
+      </trans-unit>
+      <trans-unit id="usingSingleUseRouteTutorialTextParagraph2" xml:space="preserve">
+        <source>Now you can navigate to where you want to go. Remember to hold your phone in the correct vertical pose with the rear camera facing forward. Tap the 'stop recording' button once you've arrived at your destination.</source>
+        <note>Instruction for how to use single use routes paragraph 2</note>
+      </trans-unit>
+      <trans-unit id="usingSingleUseRouteTutorialTextParagraph3" xml:space="preserve">
+        <source>Tap the 'play' button to initiate the return route navigation. Clew will then guide you back to your starting point.</source>
+        <note>Instruction for how to use single use routes paragraph 3</note>
+      </trans-unit>
+      <trans-unit id="usingSingleUseRouteTutorialTitle" xml:space="preserve">
+        <source>Using Single Use Routes</source>
+        <note>Title for using single use route section</note>
+      </trans-unit>
+      <trans-unit id="voiceNoteRecorderPop-UpHeader" xml:space="preserve">
+        <source>Voice Note Recorder</source>
+        <target>مسجل الصوت</target>
+        <note>Voicenote</note>
+      </trans-unit>
+      <trans-unit id="waypointsTutorialInstructionTextParagraph1" xml:space="preserve">
+        <source>Clew provides waypoints or virtual crumbs to keep you in the right orientation as you navigate the route. The app will play a distinct 'chime' when you pass through a waypoint or virtual crumb.</source>
+        <note>Text that explains the concept of waypoints paragraph 1</note>
+      </trans-unit>
+      <trans-unit id="waypointsTutorialInstructionTextParagraph2" xml:space="preserve">
+        <source>Sighted users will see a colored crumb in the shape of a map point on the screen. The crumb color can be changed in the settings.</source>
+        <note>Text that explains the concept of waypoints paragraph 2</note>
+      </trans-unit>
+      <trans-unit id="waypointsTutorialTitleText" xml:space="preserve">
+        <source>Waypoints or Virtual Crumbs</source>
+        <note>Title for the waypoints part of the tutorial</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="Clew/Settings.bundle/en.lproj/Root.strings" source-language="en" target-language="ar" datatype="plaintext">
+    <header>
+      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="12.5.1" build-num="12E507"/>
+    </header>
+    <body>
+      <trans-unit id="1 second" xml:space="preserve">
+        <source>1 second</source>
+        <target>ثانية</target>
+        <note/>
+      </trans-unit>
+      <trans-unit id="2 seconds" xml:space="preserve">
+        <source>2 seconds</source>
+        <target>ثانيتين</target>
+        <note/>
+      </trans-unit>
+      <trans-unit id="3 seconds" xml:space="preserve">
+        <source>3 seconds</source>
+        <target>ثلاث ثواني</target>
+        <note/>
+      </trans-unit>
+      <trans-unit id="4 seconds" xml:space="preserve">
+        <source>4 seconds</source>
+        <target>أربع ثواني</target>
+        <note/>
+      </trans-unit>
+      <trans-unit id="5 seconds" xml:space="preserve">
+        <source>5 seconds</source>
+        <target>خمس ثواني</target>
+        <note/>
+      </trans-unit>
+      <trans-unit id="6 seconds" xml:space="preserve">
+        <source>6 seconds</source>
+        <target>ست ثواني</target>
+        <note/>
+      </trans-unit>
+      <trans-unit id="7 seconds" xml:space="preserve">
+        <source>7 seconds</source>
+        <target>سبع ثواني</target>
+        <note/>
+      </trans-unit>
+      <trans-unit id="8 seconds" xml:space="preserve">
+        <source>8 seconds</source>
+        <target>ثمانية ثواني</target>
+        <note/>
+      </trans-unit>
+      <trans-unit id="9 seconds" xml:space="preserve">
+        <source>9 seconds</source>
+        <target>تسع ثواني</target>
+        <note/>
+      </trans-unit>
+      <trans-unit id="10 seconds" xml:space="preserve">
+        <source>10 seconds</source>
+        <target>عشر ثواني</target>
+        <note/>
+      </trans-unit>
+      <trans-unit id="Alignment Timer Options" xml:space="preserve">
+        <source>Alignment Timer Options</source>
+        <target>خيارات مؤقت المحاذاة</target>
+        <note>"Settings" = "Settings"; // Comments: Title/header of the settings menu. &amp; Comments: A header for the slider which adjusts the length of the alignment timer</note>
+      </trans-unit>
+      <trans-unit id="Blue" xml:space="preserve">
+        <source>Blue</source>
+        <target>أزرق</target>
+        <note>Comments: The option for the markers to be blue.</note>
+      </trans-unit>
+      <trans-unit id="Crumb Color" xml:space="preserve">
+        <source>Crumb Color</source>
+        <target>اللون الخافت</target>
+        <note>Comments: The title of the menu that allows the user to change the color of each marker/goal that the user need to reach to get to their destination.</note>
+      </trans-unit>
+      <trans-unit id="Distance Units" xml:space="preserve">
+        <source>Distance Units</source>
+        <target>وحدات المسافة</target>
+        <note>Strings that are in the settings pop-up &amp; Comments: The title of the menu that allows the user to change the units distance is displayed. with</note>
+      </trans-unit>
+      <trans-unit id="Enabled" xml:space="preserve">
+        <source>Enabled</source>
+        <target>مفعلة</target>
+        <note/>
+      </trans-unit>
+      <trans-unit id="Feedback Options" xml:space="preserve">
+        <source>Feedback Options</source>
+        <target>خيارات الاهتزازات</target>
+        <note>Comments: The header for choosing different ways to receive navigation directions/feedback.</note>
+      </trans-unit>
+      <trans-unit id="General Options" xml:space="preserve">
+        <source>General Options</source>
+        <target>الإعدادات العامة</target>
+        <note>Comments: A header for the general options that could be adjusted</note>
+      </trans-unit>
+      <trans-unit id="Green" xml:space="preserve">
+        <source>Green</source>
+        <target>أخضر</target>
+        <note>Comments: The option for the markers to be green.</note>
+      </trans-unit>
+      <trans-unit id="Group" xml:space="preserve">
+        <source>Group</source>
+        <target>المجموع</target>
+        <note>A single strings file, whose title is specified in your preferences schema. The strings files provide the localized content to display to the user for each of your preferences.</note>
+      </trans-unit>
+      <trans-unit id="Haptic" xml:space="preserve">
+        <source>Haptic</source>
+        <target>الحس اللمسي</target>
+        <note>Comments: The option for the user to get navigation directions through vibrations/sensations given by the phone.</note>
+      </trans-unit>
+      <trans-unit id="Help us improve the app by logging your Clew experience. These logs will not include any images or personal information." xml:space="preserve">
+        <source>Help us improve the app by logging your Clew experience. These logs will not include any images or personal information.</source>
+        <target>ساعدنا على تحسين التطبيق عن طريق مشاركة تجربتك مع Clew. ولن تتضمن هذه البيانات أي صور أو معلومات شخصية.</target>
+        <note>Comments: A comment on what turning on the button of "Send Logs" does.</note>
+      </trans-unit>
+      <trans-unit id="Imperial (ft)" xml:space="preserve">
+        <source>Imperial (ft)</source>
+        <target>وحدة القياس الإمبريالية (قدم)</target>
+        <note>Comments: The option of having imperial units.</note>
+      </trans-unit>
+      <trans-unit id="Metric (m)" xml:space="preserve">
+        <source>Metric (m)</source>
+        <target>وحدة القياس المترية (متر)</target>
+        <note>Comments: The option of having metric units.</note>
+      </trans-unit>
+      <trans-unit id="Name" xml:space="preserve">
+        <source>Name</source>
+        <target>اسم</target>
+        <note/>
+      </trans-unit>
+      <trans-unit id="Path Color" xml:space="preserve">
+        <source>Path Color</source>
+        <target>لون المسار</target>
+        <note>Comments: The title of the menu that allows the user to change the color of the paths connecting keypoints along a route.</note>
+      </trans-unit>
+      <trans-unit id="Random" xml:space="preserve">
+        <source>Random</source>
+        <target>عشوائي</target>
+        <note>Comments: The option for each marker to be a random color.</note>
+      </trans-unit>
+      <trans-unit id="Red" xml:space="preserve">
+        <source>Red</source>
+        <target>أحمر</target>
+        <note>Comments: The option for the markers to be red.</note>
+      </trans-unit>
+      <trans-unit id="Send Feedback" xml:space="preserve">
+        <source/>
+        <target>ارسل رأيك</target>
+        <note>Comments: The header for choosing whether or not to send feedback to the developers.</note>
+      </trans-unit>
+      <trans-unit id="Send Logs" xml:space="preserve">
+        <source>Send Logs</source>
+        <target>إرسال سجل المعلومات</target>
+        <note>Comments: The name of a button that allows the user to send their route navigation data that could help improve the app.</note>
+      </trans-unit>
+      <trans-unit id="Settings" xml:space="preserve">
+        <source>Settings</source>
+        <target>الإعدادات</target>
+        <note>Comment: The title of a menu that allows the user to change the settings.</note>
+      </trans-unit>
+      <trans-unit id="Show Path" xml:space="preserve">
+        <source>Show Path</source>
+        <target>عرض المسار</target>
+        <note>Comments: The option for the user to see a path in between keypoints.</note>
+      </trans-unit>
+      <trans-unit id="Sound" xml:space="preserve">
+        <source>Sound</source>
+        <target>اصوات التطبيق</target>
+        <note>Comments: The option for the user to get navigation directions/hints through sounds.</note>
+      </trans-unit>
+      <trans-unit id="Timer Length" xml:space="preserve">
+        <source>Timer Length</source>
+        <target>طول المؤقت</target>
+        <note/>
+      </trans-unit>
+      <trans-unit id="Voice" xml:space="preserve">
+        <source>Voice</source>
+        <target>أصوات الكلام</target>
+        <note>Comments: The option for the user to get navigation directions through vocal narration.</note>
+      </trans-unit>
+      <trans-unit id="none given" xml:space="preserve">
+        <source>none given</source>
+        <target>لا ترسل شيءاً</target>
+        <note/>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="Clew/Views/Base.lproj/BurgerMenu.storyboard" source-language="en" target-language="ar" datatype="plaintext">
+    <header>
+      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="12.5.1" build-num="12E507"/>
+    </header>
+    <body>
+      <trans-unit id="JnB-cV-dtW.text" xml:space="preserve">
+        <source>Contact Us</source>
+        <target>أعطنا رأيك</target>
+        <note>Class = "UILabel"; text = "Contact Us"; ObjectID = "JnB-cV-dtW";</note>
+      </trans-unit>
+      <trans-unit id="TCm-6A-2mu.text" xml:space="preserve">
+        <source>Settings</source>
+        <target>الإعدادات</target>
+        <note>Class = "UILabel"; text = "Settings"; ObjectID = "TCm-6A-2mu";</note>
+      </trans-unit>
+      <trans-unit id="bRT-jQ-jxr.text" xml:space="preserve">
+        <source>Tutorial</source>
+        <note>Class = "UILabel"; text = "Tutorial"; ObjectID = "bRT-jQ-jxr";</note>
+      </trans-unit>
+      <trans-unit id="xAa-Jq-64c.text" xml:space="preserve">
+        <source>Siri Shortcuts</source>
+        <note>Class = "UILabel"; text = "Siri Shortcuts"; ObjectID = "xAa-Jq-64c";</note>
+      </trans-unit>
+      <trans-unit id="zjo-RA-y09.headerTitle" xml:space="preserve">
+        <source>Menu</source>
+        <target>القائمة</target>
+        <note>Class = "UITableViewSection"; headerTitle = "Menu"; ObjectID = "zjo-RA-y09";</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="Clew/Views/Base.lproj/SettingsAndHelp.storyboard" source-language="en" target-language="ar" datatype="plaintext">
+    <header>
+      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="12.5.1" build-num="12E507"/>
+    </header>
+    <body>
+      <trans-unit id="ERa-SA-HJx.title" xml:space="preserve">
+        <source>Feedback</source>
+        <target>التعليق</target>
+        <note>Class = "UIViewController"; title = "Feedback"; ObjectID = "ERa-SA-HJx";</note>
+      </trans-unit>
+      <trans-unit id="JVb-Ok-OEz.accessibilityLabel" xml:space="preserve">
+        <source>Message</source>
+        <note>Class = "UITextView"; accessibilityLabel = "Message"; ObjectID = "JVb-Ok-OEz";</note>
+      </trans-unit>
+      <trans-unit id="Vtf-R1-h2R.text" xml:space="preserve">
+        <source>Title</source>
+        <target>الموضوع</target>
+        <note>Class = "UILabel"; text = "Title"; ObjectID = "Vtf-R1-h2R";</note>
+      </trans-unit>
+      <trans-unit id="Yh2-1z-izX.accessibilityLabel" xml:space="preserve">
+        <source>Send Feedback</source>
+        <target>أرسل رأيك</target>
+        <note>Class = "UIButton"; accessibilityLabel = "Send Feedback"; ObjectID = "Yh2-1z-izX";</note>
+      </trans-unit>
+      <trans-unit id="Yh2-1z-izX.normalTitle" xml:space="preserve">
+        <source>Send</source>
+        <target>إرسال</target>
+        <note>Class = "UIButton"; normalTitle = "Send"; ObjectID = "Yh2-1z-izX";</note>
+      </trans-unit>
+      <trans-unit id="imz-c1-4Fu.text" xml:space="preserve">
+        <source>Please reach out to us if you have any questions about using Clew or to report an issue with the app. Please be specific when describing an issue to ensure that we can best respond to it. We encourage you to share your feedback and experience with Clew. You can contact us via text message using the form below or leave an audio note.</source>
+        <note>Class = "UILabel"; text = "Please reach out to us if you have any questions about using Clew or to report an issue with the app. Please be specific when describing an issue to ensure that we can best respond to it. We encourage you to share your feedback and experience with Clew. You can contact us via text message using the form below or leave an audio note."; ObjectID = "imz-c1-4Fu";</note>
+      </trans-unit>
+      <trans-unit id="tUX-fc-ttC.text" xml:space="preserve">
+        <source>Date created:</source>
+        <target>تاريخ الإنشاء</target>
+        <note>Class = "UILabel"; text = "Date created:"; ObjectID = "tUX-fc-ttC";</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="en.lproj/Clew Dev-InfoPlist.strings" datatype="plaintext" source-language="en" target-language="ar">
+    <header>
+      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="12.5.1" build-num="12E507"/>
+    </header>
+    <body>
+      <trans-unit id="CFBundleName" xml:space="preserve">
+        <source>Clew Dev</source>
+        <note>Bundle name</note>
+      </trans-unit>
+      <trans-unit id="NSCameraUsageDescription" xml:space="preserve">
+        <source>Clew needs to access your camera to track your orientation.</source>
+        <note>Privacy - Camera Usage Description</note>
+      </trans-unit>
+      <trans-unit id="NSMicrophoneUsageDescription" xml:space="preserve">
+        <source>Permission to use the microphone is required to use the voice notes feature.</source>
+        <note>Privacy - Microphone Usage Description</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="route-quicklook/Base.lproj/MainInterface.storyboard" source-language="en" target-language="ar" datatype="plaintext">
+    <header>
+      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="12.5.1" build-num="12E507"/>
+    </header>
+    <body>
+      <trans-unit id="GcN-lo-r42.text" xml:space="preserve">
+        <source>Open this file in the Clew app to navigate the route.</source>
+        <target>فتح هذا الملف في تطبيق Clew لكي تتمكن من التنقل عبر الطريق</target>
+        <note>Class = "UILabel"; text = "Open this file in the Clew app to navigate the route."; ObjectID = "GcN-lo-r42";</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="route-quicklook/en.lproj/InfoPlist.strings" source-language="en" target-language="ar" datatype="plaintext">
+    <header>
+      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="12.5.1" build-num="12E507"/>
+    </header>
+    <body>
+      <trans-unit id="CFBundleDisplayName" xml:space="preserve">
+        <source>route-quicklook</source>
+        <target>النظرة السريعة على الطريق</target>
+        <note>Bundle display name</note>
+      </trans-unit>
+      <trans-unit id="CFBundleName" xml:space="preserve">
+        <source>route-quicklook</source>
+        <target>نظرة سريعة على الطريق</target>
+        <note>Bundle name</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

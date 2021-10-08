@@ -1,35 +1,9 @@
-/* Class = "UILabel"; text = "Please give us your feedback!"; ObjectID = "9cz-vg-ExE"; */
-"9cz-vg-ExE.text" = "الرجاء تزويدنا برأيك";
-
-/* Class = "UILabel"; text = "Attach a voice recording"; ObjectID = "AwY-9g-fYn"; */
-"AwY-9g-fYn.text" = "إرفِق تسجيلاً صوتياً";
-
-/* Class = "UIViewController"; title = "Feedback"; ObjectID = "ERa-SA-HJx"; */
-"ERa-SA-HJx.title" = "التعليق";
-
-/* Class = "UITextField"; placeholder = "Email (optional)"; ObjectID = "gdh-cx-htS"; */
-"gdh-cx-htS.placeholder" = "البريد الإلكتروني (اختياري)";
-
-/* Class = "UITextField"; placeholder = "Phone Number (optional)"; ObjectID = "ona-NU-g6a"; */
-"ona-NU-g6a.placeholder" = "رقم الهاتف (اختياري)";
-
-/* Class = "UITextField"; placeholder = "Name"; ObjectID = "rLz-VJ-aNK"; */
-"rLz-VJ-aNK.placeholder" = "الاسم";
-
-/* Class = "UILabel"; text = "Date created:"; ObjectID = "tUX-fc-ttC"; */
-"tUX-fc-ttC.text" = "تاريخ الإنشاء";
-
-/* Class = "UITextField"; placeholder = "Country (optional)"; ObjectID = "u2H-bu-ac3"; */
-"u2H-bu-ac3.placeholder" = "البلد (اختياري)";
-
-/* Class = "UILabel"; text = "Title"; ObjectID = "Vtf-R1-h2R"; */
+"MessageBodyAccessibilityLabel" = "الرسالة";
+"FeedbackFormInformationalText" = "الرجاء التواصل معنا إذا كان لديك أي أسئلة حول استخدام Clew أو للإبلاغ عن مشكلة في التطبيق. الرجاء عرض المشكلة بشكل واضح لكي نتمكن من الرد عليك بشكل أفضل. نشجعك دائماً على مشاركة ملاحظاتك وتجربتك باستخدام Clew. يمكنك الاتصال بنا عبر رسالة نصية باستخدام النموذج أدناه أو عبر ترك ملاحظة صوتية.";
+"ERa-SA-HJx.title" = "التعليقات";
+"JVb-Ok-OEz.accessibilityLabel" = "الرسالة";
 "Vtf-R1-h2R.text" = "الموضوع";
-
-/* Class = "UIButton"; accessibilityLabel = "Send Feedback"; ObjectID = "Yh2-1z-izX"; */
 "Yh2-1z-izX.accessibilityLabel" = "أرسل رأيك";
-
-/* Class = "UIButton"; normalTitle = "Send >"; ObjectID = "Yh2-1z-izX"; */
 "Yh2-1z-izX.normalTitle" = "إرسال";
-
-// write your message here
-"n1S-uX-9Ze.accessibilityLabel" = "اكتب رسالتك هنا";
+"imz-c1-4Fu.text" = "يرجى التواصل معنا إذا كان لديك أي أسئلة حول استخدام Clew أو للإبلاغ عن مشكلة في التطبيق. يرجى ذكر أدق التفاصيل عند وصف مشكلة لضمان استجابتنا لها بشكل أفضل. ونحن نشجعك على مشاركة ملاحظاتك وتجربتك مع Clew. يمكنك التواصل معنا عبر رسالة نصية باستخدام النموذج أدناه أو حتى ترك ملاحظة صوتية.";
+"tUX-fc-ttC.text" = "تاريخ الإنشاء";

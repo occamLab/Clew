@@ -7,8 +7,18 @@
 //
 
 import Foundation
+import SwiftUI
 
 class BurgerMenuViewController: UITableViewController, UIPopoverPresentationControllerDelegate {
+    var tutorialHostingController: UIHostingController<TutorialTestView>?
+    var siriHostingController: UIHostingController<NavigationView<SiriWalkthrough>>?
+
+    override func viewDidLoad() {
+        NotificationCenter.default.addObserver(forName: Notification.Name("TutorialPopoverReadyToDismiss"), object: nil, queue: nil) { (notification) -> Void in
+            self.tutorialHostingController?.dismiss(animated: true)
+            self.siriHostingController?.dismiss(animated: true)
+        }
+    }
     
     /// Called when the user selects an element from the routes table. Different indexPath/tableViewCell being tapped triggers different popup that is indicated by the content of the UILabel inside the tableViewCell (check corresponding storyboard).
     ///
@@ -20,10 +30,16 @@ class BurgerMenuViewController: UITableViewController, UIPopoverPresentationCont
         if indexPath == [0,0] {
             settingsButtonPressed()
         }
+//        if indexPath == [0,1] {
+//            helpButtonPressed()
+//        }
         if indexPath == [0,1] {
-            helpButtonPressed()
+            tutorialButtonPressed()
         }
         if indexPath == [0,2] {
+            siriShortcutsButtonPressed()
+        }
+        if indexPath == [0,3] {
             feedbackButtonPressed()
         }
     }
@@ -63,6 +79,23 @@ class BurgerMenuViewController: UITableViewController, UIPopoverPresentationCont
         NotificationCenter.default.post(name: Notification.Name("ClewPopoverDisplayed"), object: nil)
 
         self.present(nav, animated: true, completion: nil)
+    }
+    
+    func tutorialButtonPressed() {
+        let tutorialView = TutorialTestView()
+        ShowTutorialPage.shared.confineToSection = false
+        tutorialHostingController = UIHostingController(rootView: tutorialView)
+        self.present(tutorialHostingController!, animated: true, completion: nil)
+    }
+    
+    func siriShortcutsButtonPressed() {
+        let siriView = NavigationView {
+            SiriWalkthrough()
+        }
+        siriHostingController = UIHostingController(rootView: siriView)
+        NotificationCenter.default.post(name: Notification.Name("ClewPopoverDisplayed"), object: nil)
+        ShowTutorialPage.shared.confineToSection = true
+        self.present(siriHostingController!, animated: true)
     }
     
     /// Called when the help button is pressed.  This function will display the help view (managed by HelpViewController) as a popover.

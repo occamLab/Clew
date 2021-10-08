@@ -23,6 +23,9 @@ class ResumeTrackingConfirmController: UIViewController, UIScrollViewDelegate {
     /// text for Anchor Point information
     var anchorPointLabel: UILabel!
     
+    /// flags whether or not this is displayed as part of the tutorial
+    var isTutorial = false
+    
     /// called when the view loads (any time)
     override func viewDidAppear(_ animated: Bool) {
         /// update label font
@@ -33,6 +36,17 @@ class ResumeTrackingConfirmController: UIViewController, UIScrollViewDelegate {
 
         /// set confirm alignment button as initially active voiceover button
         UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: self.confirmAlignmentButton)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        if isTutorial {
+            confirmAlignmentButton.setImage(UIImage(named: "StartNavigation")!, for: .normal)
+            confirmAlignmentButton.accessibilityLabel = NSLocalizedString("startReturnNavigationButtonAccessibilityLabel", comment: "The accessibility label for the button that allows user to start navigating back along their route.")
+        } else {
+            confirmAlignmentButton.setImage(UIImage(named: "Align")!, for: .normal)
+            confirmAlignmentButton.accessibilityLabel = NSLocalizedString("startAlignmentCountdownButtonAccessibilityLabel", comment: "this is athe accessibility label for the button which allows the user to start an alignment procedure when saving an anchor point")
+        }
+        super.viewWillAppear(animated)
     }
     
     /// called when the view has loaded.  We setup various app elements in here.
@@ -84,12 +98,12 @@ class ResumeTrackingConfirmController: UIViewController, UIScrollViewDelegate {
         
         /// set top, left, right constraints on scrollView to
         /// "main" view + 8.0 padding on each side
-        scrollView.topAnchor.constraint(equalTo: view.topAnchor, constant: UIScreen.main.bounds.size.height*0.15).isActive = true
+        scrollView.topAnchor.constraint(equalTo: view.topAnchor, constant: UIScreen.main.bounds.size.height*0.2).isActive = true
         scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8.0).isActive = true
         scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8.0).isActive = true
         
         /// set the height constraint on the scrollView to 0.5 * the main view height
-        scrollView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.5).isActive = true
+        scrollView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.45).isActive = true
         
         /// constraints for anchorPointLabel
         anchorPointLabel.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 8.0).isActive = true
@@ -145,9 +159,10 @@ class ResumeTrackingConfirmController: UIViewController, UIScrollViewDelegate {
         scrollView.flashScrollIndicators()
         
         /// size the stack
-        stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8.0).isActive = true
-        stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8.0).isActive = true
-        stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -UIConstants.buttonFrameWidth/7 * 2).isActive = true
+        stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: UIConstants.yButtonFrameMargin).isActive = true
+        stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -UIConstants.yButtonFrameMargin).isActive = true
+        stackView.topAnchor.constraint(equalTo: view.topAnchor, constant: UIConstants.yOriginOfButtonFrame + UIConstants.yButtonFrameMargin).isActive = true
+        stackView.bottomAnchor.constraint(equalTo: view.topAnchor, constant: UIConstants.yOriginOfButtonFrame + UIConstants.buttonFrameHeight - UIConstants.yButtonFrameMargin).isActive = true
 
         if let parent: UIViewController = parent {
             readVoiceNoteButton.addTarget(parent,

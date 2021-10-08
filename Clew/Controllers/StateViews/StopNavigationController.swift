@@ -25,7 +25,6 @@ class StopNavigationController: UIViewController {
         super.viewDidLoad()
 
         view.frame = CGRect(x: 0,
-//                            y: UIConstants.yOriginOfButtonFrame+80,
                             y: UIConstants.yOriginOfButtonFrame,
                             width: UIConstants.buttonFrameWidth,
                             height: UIConstants.buttonFrameHeight)
@@ -53,11 +52,12 @@ class StopNavigationController: UIViewController {
         buttonStackView.addArrangedSubview(stopNavigationButton)
 
         /// size the stack
-        buttonStackView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         buttonStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: UIConstants.yButtonFrameMargin).isActive = true
         buttonStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -UIConstants.yButtonFrameMargin).isActive = true
-        buttonStackView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-
+        
+        buttonStackView.topAnchor.constraint(equalTo: view.topAnchor, constant: UIConstants.yButtonFrameMargin).isActive = true
+        buttonStackView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -UIConstants.yButtonFrameMargin).isActive = true
+        
         if let parent: UIViewController = parent {
             stopNavigationButton.addTarget(parent,
                                             action: #selector(ViewController.stopNavigation),

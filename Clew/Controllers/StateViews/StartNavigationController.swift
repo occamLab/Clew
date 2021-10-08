@@ -30,11 +30,17 @@ class StartNavigationController: UIViewController {
     /// the isAutomaticAlignment Boolean that should be passed in from the ViewController before this view is presented
     var isAutomaticAlignment: Bool!
     
+    /// True if this is part of a tutorial route
+    var isTutorial: Bool!
+    
     /// called when view appears (any time)
     override func viewWillAppear(_ animated: Bool) {
         
         var mainText : String
-        if recordingSingleUseRoute {
+        if isTutorial {
+            mainText = "Practice following a route by selecting the start navigation button"
+            largeHomeButton.isHidden = true
+        } else if recordingSingleUseRoute {
             mainText = NSLocalizedString("singleUsePlayPauseViewText", comment: "Information displayed to the user on the play pause screen after they have recorded a single use route. This describes the functionality of the play and pause buttons.")
             largeHomeButton.isHidden = true
         } else {
@@ -62,7 +68,7 @@ class StartNavigationController: UIViewController {
     /// called when the view has loaded.  We setup various app elements in here.
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        self.modalPresentationStyle = .fullScreen
         // we subtract one pixel from the height to prevent accessibility elements in the parent view from being hidden (Warning: this is not documented behavior, so we may need to revisit this down the road)
         view = TransparentTouchView(frame:CGRect(x: 0,
                                                  y: 0,
@@ -107,7 +113,7 @@ class StartNavigationController: UIViewController {
         
         /// set top, left, right constraints on scrollView to
         /// "main" view + 8.0 padding on each side
-        scrollView.topAnchor.constraint(equalTo: view.topAnchor, constant: UIScreen.main.bounds.size.height*0.15).isActive = true
+        scrollView.topAnchor.constraint(equalTo: view.topAnchor, constant: UIScreen.main.bounds.size.height*0.2).isActive = true
         scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8.0).isActive = true
         scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8.0).isActive = true
         
@@ -161,9 +167,10 @@ class StartNavigationController: UIViewController {
         scrollView.flashScrollIndicators()
         
         /// size the stack
-        stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8.0).isActive = true
-        stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8.0).isActive = true
-        stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -UIConstants.buttonFrameWidth/7 * 2).isActive = true
+        stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: UIConstants.yButtonFrameMargin).isActive = true
+        stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -UIConstants.yButtonFrameMargin).isActive = true
+        stackView.topAnchor.constraint(equalTo: view.topAnchor, constant: UIConstants.yOriginOfButtonFrame + UIConstants.yButtonFrameMargin).isActive = true
+        stackView.bottomAnchor.constraint(equalTo: view.topAnchor, constant: UIConstants.yOriginOfButtonFrame + UIConstants.buttonFrameHeight - UIConstants.yButtonFrameMargin).isActive = true
 
         if let parent: UIViewController = parent {
             startNavigationButton.addTarget(parent,

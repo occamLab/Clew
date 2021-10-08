@@ -10,6 +10,7 @@ import UIKit
 import Firebase
 import FirebaseAuth
 import FirebaseAnalytics
+import IntentsUI
 
 /// This class handles various state changes for the app.
 @UIApplicationMain
@@ -19,8 +20,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
         
     /// view controller!
-    var vc: UIViewController!
-    
+    var vc: ViewController!
+    /// navigation controller
+    var nav: UINavigationController?
     /// Called when the app finishes launching.  Currently, this is where we setup Firebase and make sure the phone screen doesn't lock while we are using the app.
     ///
     /// - Parameters:
@@ -38,31 +40,30 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             FirebaseApp.configure()
         #endif
         logUserProperties()
-        // use for testing sign-in flow try? Auth.auth().signOut()
-        if #available(iOS 13.0, *) {
-            if (Auth.auth().currentUser == nil) {
-                #if IS_DEV_TARGET
-                    Auth.auth().signInAnonymously() { (authResult, error) in
-                        guard let authResult = authResult else {
-                            print("login error", error!.localizedDescription)
-                            return
-                        }
-                        print("successful login", Auth.auth().currentUser?.uid)
-                        // Override point for customization after application launch.
-                        self.vc = ViewController()
-                        self.window = UIWindow(frame:UIScreen.main.bounds)
-                        self.window?.rootViewController = self.vc
-                        self.window?.makeKeyAndVisible()
+        // use for testing sign-in flow
+        // try? Auth.auth().signOut()
+        if (Auth.auth().currentUser == nil) {
+            #if IS_DEV_TARGET
+                Auth.auth().signInAnonymously() { (authResult, error) in
+                    guard let authResult = authResult else {
+                        print("login error", error!.localizedDescription)
+                        return
                     }
-                    return true
-                #else
-                    window = UIWindow(frame:UIScreen.main.bounds)
-                    window?.makeKeyAndVisible()
-                    window?.rootViewController = AppleSignInController()
-                    UIApplication.shared.isIdleTimerDisabled = true
-                    return true
-                #endif
-            }
+                    print("successful login", Auth.auth().currentUser?.uid)
+                    // Override point for customization after application launch.
+                    self.vc = ViewController()
+                    self.window = UIWindow(frame:UIScreen.main.bounds)
+                    self.window?.rootViewController = self.vc
+                    self.window?.makeKeyAndVisible()
+                }
+                return true
+            #else
+                window = UIWindow(frame:UIScreen.main.bounds)
+                window?.makeKeyAndVisible()
+                window?.rootViewController = AppleSignInController()
+                UIApplication.shared.isIdleTimerDisabled = true
+                return true
+            #endif
         }
         
         // Override point for customization after application launch.
@@ -132,4 +133,33 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         Analytics.setUserProperty(String(UIAccessibility.isInvertColorsEnabled), forName: "isInvertColorsEnabled")
     }
         
+    
+    func application(
+      _ application: UIApplication,
+      continue userActivity: NSUserActivity,
+      restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void
+    ) -> Bool {
+        if userActivity.activityType == kNewSingleUseRouteType {
+            if case .mainScreen(_) = vc.state {
+                PathLogger.shared.logEvent(eventDescription: "SiriShortCut \(userActivity.activityType)")
+                vc.startCreateAnchorPointProcedure()
+            } // TODO: display a warning about improper state
+        }
+        
+        if userActivity.activityType == kStopRecordingType {
+            if case .recordingRoute = vc.state {
+                PathLogger.shared.logEvent(eventDescription: "SiriShortCut \(userActivity.activityType)")
+                vc.stopRecording(nil)
+            } // TODO: display a warning about improper state
+        }
+
+        if userActivity.activityType == kStartNavigationType {
+            if case .readyToNavigateOrPause(_) = vc.state {
+                PathLogger.shared.logEvent(eventDescription: "SiriShortCut \(userActivity.activityType)")
+                vc.startNavigation(nil)
+            } // TODO: display a warning about improper state
+        }
+        
+        return true
+    }
 }
