@@ -254,6 +254,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// This is the list of routes associated with a specific app clip code
     var availableRoutes = [[String: String]]()
     
+    /// This is the ARWorldMap of the route being navigated.
+    var routeWorldMap: ARWorldMap?
+    
     // MARK: - Speech Synthesizer Delegate
     
     /// Called when an utterance is finished.  We implement this function so that we can keep track of
@@ -565,7 +568,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         } else {
             endRouteAnchorPoint = RouteAnchorPoint()
             
-            sceneView.session.getCurrentWorldMap { worldMap, error in
+            // if you can get non-nil worldMap, assign it to vc variable
+            sceneView.session.getCurrentWorldMap { worldMap, error in   // BL: worldMap exists here
+                self.routeWorldMap = worldMap
                 self.completingPauseProcedureHelper(worldMap: worldMap)
             }
         }
@@ -752,8 +757,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     @objc func saveRouteButtonPressed(worldMap: ARWorldMap?) {
         let id = String(Int64(NSDate().timeIntervalSince1970 * 1000)) as NSString
-        
-        try! self.archive(routeId: id, appClipCodeID: self.appClipCodeID, beginRouteAnchorPoint: self.beginRouteAnchorPoint, endRouteAnchorPoint: self.endRouteAnchorPoint, intermediateAnchorPoints: self.intermediateAnchorPoints, worldMap: worldMap as? ARWorldMap, imageAnchoring: self.imageAnchoring)
+        // BL
+        try! self.archive(routeId: id, appClipCodeID: self.appClipCodeID, beginRouteAnchorPoint: self.beginRouteAnchorPoint, endRouteAnchorPoint: self.endRouteAnchorPoint, intermediateAnchorPoints: self.intermediateAnchorPoints, worldMap: self.routeWorldMap as? ARWorldMap, imageAnchoring: self.imageAnchoring)
         hideAllViewsHelper()
         /// PATHPOINT Save Route View -> play/pause
         ///Announce to the user that they have finished the alignment process and are now at the play pause screen

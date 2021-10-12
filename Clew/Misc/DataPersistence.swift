@@ -44,7 +44,7 @@ class DataPersistence {
         let data = try NSKeyedArchiver.archivedData(withRootObject: self.routes, requiringSecureCoding: true)
         try data.write(to: self.getRoutesURL(), options: [.atomic])
         // Save the world map corresponding to the route
-        if let worldMap = worldMap {
+        if let worldMap = worldMap {                // BL: worldMap does not exist here
             let data = try NSKeyedArchiver.archivedData(withRootObject: worldMap, requiringSecureCoding: true)
             try data.write(to: self.getWorldMapURL(id: route.id as String), options: [.atomic])
         }

@@ -74,7 +74,7 @@ struct EnterNameButton: View {
     var body: some View {
         Button(action: {
             vc.routeName = routeName as NSString
-            vc.saveRouteButtonPressed(worldMap: worldMap)
+            vc.saveRouteButtonPressed(worldMap: vc.routeWorldMap)
             vc.state = .readyToNavigateOrPause(allowPause: false)
         }) {
             EnterNameButtonView()
