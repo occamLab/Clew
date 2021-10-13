@@ -30,10 +30,12 @@ struct StartNavigationPopoverView: View {
                         
                         Button(action: {
                             vc.routeID = routeInfo.first!.key
-                            print(vc.routeID)
-                            print("B)")
                             selectedRouteName = routeInfo.first!.value
                             vc.recordPathController.remove()
+                            NotificationCenter.default.post(name: NSNotification.Name("shouldDismissRoutePopover"), object: nil)
+                            #if !APPCLIP
+                            self.vc.arLogger.startTrial()
+                            #endif
 //                            UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: self)
                         }) {
                             if selectedRouteName == routeInfo.first!.value {
@@ -51,10 +53,10 @@ struct StartNavigationPopoverView: View {
                 .navigationTitle(NSLocalizedString("selectRoutePopoverLabel", comment: "This is text instructing the user to select a route from a list."))
             }
             
-            if selectedRouteName.count > 0 {
+           /* if selectedRouteName.count > 0 {
                 StartButton(vc: vc)
                     .background(Color.white)
-            }
+            }*/
         }.onAppear(perform: {
             routeList = self.vc.availableRoutes
             selectedRouteName = ""
