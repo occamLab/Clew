@@ -14,7 +14,7 @@ struct EndNavigationScreen: View {
     @State private var feedbackGiven = false
     var body: some View {
 
-        ZStack{
+        ZStack {
             Rectangle()
                 .fill(Color.white)
             VStack {
