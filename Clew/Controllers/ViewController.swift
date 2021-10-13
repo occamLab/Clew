@@ -1972,6 +1972,34 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         return leveledCameraPose * yawRotation.inverse * leveledAlignPose.inverse
     }
     
+    func uploadJPEG(image: UIImage, to: StorageReference, transform: simd_float4x4?=nil, intrinsics: simd_float3x3?=nil, quality: CGFloat=1.0) {
+        if let imageData = image.jpegData(compressionQuality: quality) {
+            let metadata = StorageMetadata()
+            metadata.contentType = "image/jpeg"
+            to.putData(imageData, metadata: metadata) { (metadata, error) in
+                if error != nil {
+                    print("unable to upload")
+                } else {
+                    print("uploaded \(to.fullPath)")
+                }
+            }
+        }
+        if let intrinsics = intrinsics, let transform = transform, let jsonData = try? JSONSerialization.data(withJSONObject: ["transform": transform.toFlatArray(), "intrinsics": intrinsics.toFlatArray()], options: .prettyPrinted) {
+            let frameMetadataPath = to.fullPath.replacingOccurrences(of: ".jpg", with: "_metadata.json")
+            
+            let frameMetaDataStorageRef = Storage.storage().reference(withPath: frameMetadataPath)
+            let metadata = StorageMetadata()
+            metadata.contentType = "application/json"
+            frameMetaDataStorageRef.putData(jsonData, metadata: metadata) { (metadata, error) in
+                if error != nil {
+                    print("unable to upload")
+                } else {
+                    print("uploaded \(frameMetaDataStorageRef.fullPath)")
+                }
+            }
+        }
+    }
+    
     func tryVisualAlignment(triesLeft: Int, makeAnnounement: Bool = false) {
         if !state.isTryingToAlign && !createIntermediateAnchorPoints {
             return
@@ -1994,20 +2022,18 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 self.currentImage = capturedUIImage
                 self.currentPose = frame.camera.transform
                 let visualYawReturn = VisualAlignment.visualYaw(alignAnchorPointImage, alignAnchorPoint.intrinsics!, alignTransform, capturedUIImage, simd_float4(intrinsics[0, 0], intrinsics[1, 1], intrinsics[2, 0], intrinsics[2, 1]), frame.camera.transform, Int32(self.configuration.downsampleFactor))
+                
+                let capturedImageRef = Storage.storage().reference().child(String(format: "visualAlignmentComparison/\(String(self.appStartTime.timeIntervalSince1970))/cameraimage_%04d.jpg", self.imageCounter))
+                self.uploadJPEG(image: capturedUIImage, to: capturedImageRef, transform: frame.camera.transform, intrinsics: frame.camera.intrinsics)
+                
+                let alignImageRef = Storage.storage().reference().child(String(format: "visualAlignmentComparison/\(String(self.appStartTime.timeIntervalSince1970))/alignimage_%04d.jpg", self.imageCounter))
+                self.uploadJPEG(image: alignAnchorPointImage, to: alignImageRef, transform: alignTransform, intrinsics: simd_float3x3.from(intrinsicsVector: alignAnchorPoint.intrinsics!))
+                
                 if let debugImage = VisualAlignment.getDebugImage() {
-                    let storageref = Storage.storage().reference().child(String(format: "visualAlignment/\(String(self.appStartTime.timeIntervalSince1970))/%04d.jpg", self.imageCounter))
-                    self.imageCounter += 1
-                    if let imageData = debugImage.jpegData(compressionQuality: 0.25) {
-                        print("test")
-                        let metadata = StorageMetadata()
-                        metadata.contentType = "image/jpeg"
-                        storageref.putData(imageData, metadata: metadata) { (metadata, error) in
-                            if error != nil {
-                                print("unable to upload")
-                            }
-                        }
-                    }
+                    let storageref = Storage.storage().reference().child(String(format: "visualAlignmentComparison/\(String(self.appStartTime.timeIntervalSince1970))/%04d.jpg", self.imageCounter))
+                    self.uploadJPEG(image: debugImage, to: storageref, quality: 0.25)
                 }
+                self.imageCounter += 1
                 UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
                 
                 let propInliers = visualYawReturn.numMatches > 0 ? Float(visualYawReturn.numInliers) / Float(visualYawReturn.numMatches) : 0.0
