@@ -262,7 +262,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         trackingErrorsAnnouncementTimer?.invalidate()
         // TODO: we used to pause the session here, but it appears that the workaround mentioned at this link (https://developer.apple.com/forums/thread/690668) will only work, consistently, with an unpaused session
         // set this to nil to prevent the app from erroneously detecting that we can auto-align to the route
-        configuration.initialWorldMap = nil
+        ARSessionManager.shared.initialWorldMap = nil
         showRecordPathButton(announceArrival: announceArrival)
     }
     
@@ -274,7 +274,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         trackingErrorsAnnouncementTimer?.invalidate()
         // TODO: see note elsewhere about needing to disable thsi for now. (previous: if the ARSession is running, pause it to conserve battery)
         // set this to nil to prevent the app from erroneously detecting that we can auto-align to the route
-        configuration.initialWorldMap = nil
+        ARSessionManager.shared.initialWorldMap = nil
         showRecordPathButton(announceArrival: announceArrival)
         helpButtonPressed()
         // show the tutorial again
@@ -326,28 +326,25 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
 
         // generate path from PathFinder class
         // enabled hapticFeedback generates more keypoints
-        let path = PathFinder(crumbs: crumbs.reversed(), hapticFeedback: hapticFeedback, voiceFeedback: voiceFeedback)
-        keypoints = path.keypoints
+        let routeKeypoints = PathFinder(crumbs: crumbs.reversed(), hapticFeedback: hapticFeedback, voiceFeedback: voiceFeedback).keypoints
+        RouteManager.shared.setRouteKeypoints(kps: routeKeypoints)
         
         // save keypoints data for debug log
-        logger.logKeypoints(keypoints: keypoints)
+        logger.logKeypoints(keypoints: routeKeypoints)
         
         // render 3D keypoints
-        renderKeypoint(keypoints[0].location)
+        ARSessionManager.shared.renderKeypoint(RouteManager.shared.nextKeypoint!.location, defaultColor: defaultColor)
         
         // ? getting user location
         prevKeypointPosition = getRealCoordinates(record: true)!.location
         
         // render path
-        if (showPath) {
-            renderPath(prevKeypointPosition, keypoints[0].location)
+        if showPath, let nextKeypoint = RouteManager.shared.nextKeypoint {
+            ARSessionManager.shared.renderPath(prevKeypointPosition, nextKeypoint.location, defaultPathColor: defaultPathColor)
         }
         
-        // render pathpoints
-//        renderPathpoints(prevKeypointPosition, keypoints[0].location)
-        
         // render intermediate anchor points
-        renderIntermediateAnchorPoints()
+        ARSessionManager.shared.render(intermediateAnchorPoints: intermediateAnchorPoints)
         
         feedbackGenerator = UIImpactFeedbackGenerator(style: .light)
         waypointFeedbackGenerator = UINotificationFeedbackGenerator()
@@ -375,20 +372,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         hapticTimer = Timer.scheduledTimer(timeInterval: 0.01, target: self, selector: (#selector(getHapticFeedback)), userInfo: nil, repeats: true)
     }
     
-    /// Analyzes the map to determine if there is an anchor we can use for relocalization.  This is necessary to work around issues with iOS 15 and ARWorldMap
-    /// - Parameter map: the map to analyze
-    /// - Returns: the anchor UUID and transform from the ARWorldMap
-    func getBestReferenceAnchor(_ map: ARWorldMap)->(UUID, simd_float4x4)? {
-        if let originAnchor = map.anchors.first(where: { $0.name == "origin" }) {
-            return (originAnchor.identifier, originAnchor.transform)
-        }
-        // TODO: this is probably going to be hit or miss (the old anchors are not always propagated to the new session) for now we won't attempt to use ARPlaneAnchor
-//        if let planeAnchor = map.anchors.first(where: { $0 is ARPlaneAnchor }) {
-//            return (planeAnchor.identifier, planeAnchor.transform)
-//        }
-        return nil
-    }
-    
     /// Handler for the startingResumeProcedure app state
     ///
     /// - Parameters:
@@ -400,41 +383,41 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         
         // load the world map and restart the session so that things have a chance to quiet down before putting it up to the wall
         var isTrackingPerformanceNormal = false
-        if case .normal? = sceneView.session.currentFrame?.camera.trackingState {
+        if case .normal? = ARSessionManager.shared.currentFrame?.camera.trackingState {
             isTrackingPerformanceNormal = true
         }
         var isRelocalizing = false
-        if case .limited(reason: .relocalizing)? = sceneView.session.currentFrame?.camera.trackingState {
+        if case .limited(reason: .relocalizing)? = ARSessionManager.shared.currentFrame?.camera.trackingState {
             isRelocalizing = true
         }
         var isSameMap = false
         if let worldMap = worldMap {
             // analyze the map to see if we can relocalize
-            referenceAnchor = getBestReferenceAnchor(worldMap)
-            if #available(iOS 15.0, *), referenceAnchor == nil {
+            /// TODO: need to replace this with some other check
+            if false { //#available(iOS 15.0, *), referenceAnchor == nil {
                 // unfortunately, we are out of luck.  Better to not use the ARWorldMap
-                configuration.initialWorldMap = nil
+                ARSessionManager.shared.initialWorldMap = nil
                 attemptingRelocalization = false
             } else {
-                isSameMap = configuration.initialWorldMap != nil && configuration.initialWorldMap == worldMap
-                configuration.initialWorldMap = worldMap
+                isSameMap = ARSessionManager.shared.initialWorldMap != nil && ARSessionManager.shared.initialWorldMap == worldMap
+                ARSessionManager.shared.initialWorldMap = worldMap
                 // TODO: see if we can move this out of this if statement
                 attemptingRelocalization = isSameMap && !isTrackingPerformanceNormal || worldMap != nil && !isSameMap
             }
         } else {
-            configuration.initialWorldMap = nil
+            ARSessionManager.shared.initialWorldMap = nil
         }
 
         if navigateStartToEnd {
             crumbs = route.crumbs.reversed()
-            pausedTransform = route.beginRouteAnchorPoint.transform
+            pausedTransform = route.beginRouteAnchorPoint.anchor?.transform
         } else {
             crumbs = route.crumbs
-            pausedTransform = route.endRouteAnchorPoint.transform
+            pausedTransform = route.endRouteAnchorPoint.anchor?.transform
         }
         intermediateAnchorPoints = route.intermediateAnchorPoints
         // don't reset tracking, but do clear anchors and switch to the new map
-        sceneView.session.run(configuration, options: [.removeExistingAnchors, .resetTracking])
+        ARSessionManager.shared.startSession()
 
         if isTrackingPerformanceNormal, isSameMap {
             // we can skip the whole process of relocalization since we are already using the correct map and tracking is normal.  It helps to strip out old anchors to reduce jitter though
@@ -459,6 +442,22 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// Handler for the startingNameSavedRouteProcedure app state
     func handleStateTransitionToStartingNameSavedRouteProcedure(worldMap: Any?){
         hideAllViewsHelper()
+        if let map = worldMap as? ARWorldMap {
+            for anchor in map.anchors {
+                if let name = anchor.name, name.starts(with: "recording_crumb_") {
+                    let lastUnderscore = name.lastIndex(of: "_")!
+                    let startSubstring = name.index(after: lastUnderscore)
+                    let idx = Int(name.substring(from: startSubstring))
+                    let crumbTransform =  recordingCrumbs[idx!-1].transform
+                    let anchorTransform = anchor.transform
+                    let relativeTransform = crumbTransform.inverse * anchorTransform
+                    let angle = simd_quatf(relativeTransform).angle
+                    let translation = simd_length(simd_float3(relativeTransform.columns.3.x, relativeTransform.columns.3.y, relativeTransform.columns.3.z))
+                    print("\(idx): ", angle, translation)
+                }
+            }
+        }
+        
         nameSavedRouteController.worldMap = worldMap
         add(nameSavedRouteController)
     }
@@ -522,13 +521,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         // TODO: we should not be able to create a route Anchor Point if we are in the relocalizing state... (might want to handle this when the user stops navigation on a route they loaded.... This would obviate the need to handle this in the recordPath code as well
         print("completing pause procedure")
         if creatingRouteAnchorPoint {
-            guard let currentTransform = sceneView.session.currentFrame?.camera.transform else {
+            guard let currentTransform = ARSessionManager.shared.currentFrame?.camera.transform else {
                 print("can't properly save Anchor Point: TODO communicate this to the user somehow")
                 return
             }
             // make sure we log the transform
             let _ = self.getRealCoordinates(record: true)
-            beginRouteAnchorPoint.transform = currentTransform
+            beginRouteAnchorPoint.anchor = ARAnchor(transform: currentTransform)
             pauseTrackingController.remove()
             
             ///PATHPOINT begining anchor point alignment timer -> record route
@@ -537,14 +536,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             ///sends the user to a route recording of the program is creating a beginning route Anchor Point
             state = .recordingRoute
             return
-        } else if let currentTransform = sceneView.session.currentFrame?.camera.transform {
+        } else if let currentTransform = ARSessionManager.shared.currentFrame?.camera.transform {
             // make sure to log transform
             let _ = self.getRealCoordinates(record: true)
-            endRouteAnchorPoint.transform = currentTransform
+            endRouteAnchorPoint.anchor = ARAnchor(transform: currentTransform)
             // no more crumbs
             droppingCrumbs?.invalidate()
 
-            sceneView.session.getCurrentWorldMap { worldMap, error in
+            ARSessionManager.shared.sceneView.session.getCurrentWorldMap { worldMap, error in
                 self.completingPauseProcedureHelper(worldMap: worldMap)
             }
         }
@@ -588,7 +587,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         popover?.sourceView = self.view
         popover?.sourceRect = CGRect(x: 0,
                                      y: UIConstants.settingsAndHelpFrameHeight/2,
-                                     width: 0,height: 0)
+                                     width: 0,
+                                     height: 0)
         
         self.present(nav, animated: true, completion: nil)
     }
@@ -671,12 +671,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// The conection to the Firebase real-time database
     var databaseHandle = Database.database()
     
-    /// Keypoint object
-    var keypointObject : MDLObject!
-    
-    /// Speaker object
-    var speakerObject: MDLObject!
-    
     /// Route persistence
     var dataPersistence = DataPersistence()
     
@@ -690,12 +684,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// True if we should use a cone of pi/12 and false if we should use a cone of pi/6 when deciding whether to issue haptic feedback
     var strictHaptic = true
-    
-    /// This is embeds an AR scene.  The ARSession is a part of the scene view, which allows us to capture where the phone is in space and the state of the world tracking.  The scene also allows us to insert virtual objects
-    var sceneView = ARSCNView()
-    
-    /// If this exists, use it as a reference for shiting the world origin
-    var referenceAnchor: (UUID, simd_float4x4)?
     
     /// Keep track of last world origin adjustment to prevent "ringing"
     var lastWorldOriginShift = Date()
@@ -752,9 +740,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// called when the view has loaded.  We setup various app elements in here.
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        sceneView.accessibilityIgnoresInvertColors = true
-        
+                
         // set the main view as active
         view = RootContainerView(frame: UIScreen.main.bounds)
         self.modalPresentationStyle = .fullScreen
@@ -768,17 +754,19 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         stopNavigationController = StopNavigationController()
         nameSavedRouteController = NameSavedRouteController()
         
-        // Add the scene to the view, which is a RootContainerView
-        sceneView.frame = view.frame
-        view.addSubview(sceneView)
+        // set ViewController as the delegate (not great)
+        ARSessionManager.shared.sceneView.delegate = self
+        ARSessionManager.shared.sceneView.session.delegate = self
         
-        loadAssets()
+        // Add the scene to the view, which is a RootContainerView
+        ARSessionManager.shared.sceneView.frame = view.frame
+        view.addSubview(ARSessionManager.shared.sceneView)
+        
         createSettingsBundle()
-        createARSessionConfiguration()
         
         // TODO: we might want to make this wait on the AR session starting up, but since it happens pretty fast it's likely not a big deal
         state = .mainScreen(announceArrival: false)
-        view.sendSubviewToBack(sceneView)
+        view.sendSubviewToBack(ARSessionManager.shared.sceneView)
         
         // targets for global buttons
         ///// TRACK
@@ -836,8 +824,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             // in case something was already happening, goHome to clear out state
             self.goHome()
             // TODO if session is already running, don't restart it
-            self.referenceAnchor = nil
-            self.sceneView.session.run(self.configuration, options: [.removeExistingAnchors, .resetTracking])
+            ARSessionManager.shared.startSession()
         }
         
         NotificationCenter.default.addObserver(forName: Notification.Name("TutorialPopoverReadyToDismiss"), object: nil, queue: nil) { (notification) -> Void in
@@ -865,16 +852,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
         // make sure to fetch these before we need them
         SiriShortcutsManager.shared.updateVoiceShortcuts(completion: nil)
-    }
-    
-    /// Load the crumb 3D model
-    func loadAssets() {
-        let url = NSURL(fileURLWithPath: Bundle.main.path(forResource: "Crumb", ofType: "obj")!)
-        let asset = MDLAsset(url: url as URL)
-        keypointObject = asset.object(at: 0)
-        let speakerUrl = NSURL(fileURLWithPath: Bundle.main.path(forResource: "speaker", ofType: "obj")!)
-        let speakerAsset = MDLAsset(url: speakerUrl as URL)
-        speakerObject = speakerAsset.object(at: 0)
     }
     
     /// Observe the relevant Firebase paths to handle any dynamic reconfiguration requests (this is currently not used in the app store version of Clew)
@@ -980,11 +957,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         rootContainerView.homeButton.isHidden = true
         recordPathController.isAccessibilityElement = false
         if case .navigatingRoute = self.state {
-            keypointNode.removeFromParentNode()
-            pathObj?.removeFromParentNode()
-            for anchorPointNode in anchorPointNodes {
-                anchorPointNode.removeFromParentNode()
-            }
+            ARSessionManager.shared.removeNavigationNodes()
         }
         followingCrumbs?.invalidate()
         recordPhaseHeadingOffsets = []
@@ -1194,15 +1167,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// Handles updates to the app settings.
     @objc func defaultsChanged(){
         updateDisplayFromDefaults()
-    }
-    
-    /// Create a new ARSession.
-    func createARSessionConfiguration() {
-        configuration = ARWorldTrackingConfiguration()
-        configuration.planeDetection = [.horizontal, .vertical]
-        configuration.isAutoFocusEnabled = false
-        sceneView.delegate = self
-        sceneView.session.delegate = self
     }
     
     /// Handle the user clicking the confirm alignment to a saved Anchor Point.  Depending on the app state, the behavior of this function will differ (e.g., if the route is being resumed versus reloaded)
@@ -1436,12 +1400,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
         announce(announcement: altText)
     }
-    
-    // MARK: - BreadCrumbs
-    
-    /// AR Session Configuration
-    var configuration: ARWorldTrackingConfiguration!
-    
+        
     /// MARK: - Clew internal datastructures
     
     /// list of crumbs dropped when recording path
@@ -1449,21 +1408,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// list of crumbs to use for route creation
     var crumbs: [LocationInfo]!
-    
-    /// list of keypoints calculated after path completion
-    var keypoints: [KeypointInfo]!
-    
-    /// SCNNode of the next keypoint
-    var keypointNode: SCNNode!
-    
-    /// SCNNode of the bar path
-    var pathObj: SCNNode?
-    
-    /// SCNNode of the spherical pathpoints
-    var pathpointObjs: [SCNNode] = []
-    
-    /// SCNNode of the intermediate anchor points
-    var anchorPointNodes: [SCNNode] = []
     
     /// previous keypoint location - originally set to current location
     var prevKeypointPosition: LocationInfo!
@@ -1640,13 +1584,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         continuationAfterSessionIsReady = {
             self.trackingErrorsAnnouncementTimer?.invalidate()
             //sends the user to the screen where they can start recording a route
-            // This anchor is necessary to manually adjust the origin
-            self.sceneView.session.add(anchor: ARAnchor(name: "origin", transform: matrix_identity_float4x4))
             self.state = .startingPauseProcedure
         }
-        configuration.initialWorldMap = nil
-        referenceAnchor = nil
-        sceneView.session.run(configuration, options: [.removeExistingAnchors, .resetTracking])
+        ARSessionManager.shared.initialWorldMap = nil
+        ARSessionManager.shared.startSession()
     }
     
     /// handles the user pressing the stop recording button.
@@ -1701,14 +1642,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         
         feedbackGenerator = nil
         waypointFeedbackGenerator = nil
-        
-        // erase nearest keypoint
-        keypointNode.removeFromParentNode()
-        pathObj?.removeFromParentNode()
-        for anchorPointNode in anchorPointNodes {
-            anchorPointNode.removeFromParentNode()
-        }
-        
+        ARSessionManager.shared.removeNavigationNodes()
         sendLogDataHelper(pathStatus: nil)
     }
     
@@ -1753,13 +1687,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             self.delayTransition(announcement: NSLocalizedString("singleUseRouteToRecordingRouteAnnouncement", comment: "This is an announcement which is spoken when the user starts recording a single use route. it informs the user that they are recording a single use route."), initialFocus: nil)
             
             //sends the user to the screen where they can start recording a route
-            // this is used if we ever want to save the ARWorldMap and manually set the world origin
-            self.sceneView.session.add(anchor: ARAnchor(name: "origin", transform: matrix_identity_float4x4))
             self.state = .recordingRoute
         }
-        configuration.initialWorldMap = nil
-        referenceAnchor = nil
-        sceneView.session.run(configuration, options: [.removeExistingAnchors, .resetTracking])
+        ARSessionManager.shared.initialWorldMap = nil
+        ARSessionManager.shared.startSession()
     }
     /// this is called after the alignment countdown timer finishes in order to complete the pause tracking procedure
     @objc func pauseTracking() {
@@ -1778,7 +1709,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(ViewController.alignmentWaitingPeriod)) {
             self.rootContainerView.countdownTimer.isHidden = true
             // The first check is necessary in case the phone relocalizes before this code executes
-            if case .readyForFinalResumeAlignment = self.state, let alignTransform = self.pausedTransform, let camera = self.sceneView.session.currentFrame?.camera {
+            if case .readyForFinalResumeAlignment = self.state, let alignTransform = self.pausedTransform, let camera = ARSessionManager.shared.currentFrame?.camera {
                 // yaw can be determined by projecting the camera's z-axis into the ground plane and using arc tangent (note: the camera coordinate conventions of ARKit https://developer.apple.com/documentation/arkit/arsessionconfiguration/worldalignment/camera
                 // add this call so we make sure that we log the alignment transform
                 let _ = self.getRealCoordinates(record: true)
@@ -1791,8 +1722,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 var leveledAlignPose =  simd_float4x4.makeRotate(radians: alignYaw, 0, 1, 0)
                 leveledAlignPose.columns.3 = alignTransform.columns.3
                 
-                let relativeTransform = leveledCameraPose * leveledAlignPose.inverse
-                self.sceneView.session.setWorldOrigin(relativeTransform: relativeTransform)
+                ARSessionManager.shared.manualAlignment = leveledCameraPose * leveledAlignPose.inverse
+                //self.sceneView.session.setWorldOrigin(relativeTransform: relativeTransform)
                 
                 self.isResumedRoute = true
                 if self.paused {
@@ -1909,56 +1840,54 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         
     /// drop a crumb during path recording
     @objc func dropCrumb() {
-        guard let curLocation = getRealCoordinates(record: true)?.location else {
+        guard let curLocation = getRealCoordinates(record: true)?.location, case .recordingRoute = state else {
             return
         }
         recordingCrumbs.append(curLocation)
+        print("adding anchor \(recordingCrumbs.count)")
+        ARSessionManager.shared.add(anchor: curLocation)
     }
     
     /// checks to see if user is on the right path during navigation.
     @objc func followCrumb() {
-        guard let curLocation = getRealCoordinates(record: true) else {
+        guard let curLocation = getRealCoordinates(record: true), let nextKeypoint = RouteManager.shared.nextKeypoint else {
             // TODO: might want to indicate that something is wrong to the user
             return
         }
-        var directionToNextKeypoint = getDirectionToNextKeypoint(currentLocation: curLocation)
+        guard let directionToNextKeypoint = getDirectionToNextKeypoint(currentLocation: curLocation) else {
+            return
+        }
         
         if (directionToNextKeypoint.targetState == PositionState.atTarget) {
-            if (keypoints.count > 1) {
+            if !RouteManager.shared.onLastKeypoint {
                 // arrived at keypoint
                 // send haptic/sonic feedback
                 waypointFeedbackGenerator?.notificationOccurred(.success)
                 if (soundFeedback) { SoundEffectManager.shared.meh() }
                 
                 // remove current visited keypont from keypoint list
-                prevKeypointPosition = keypoints[0].location
-                keypoints.remove(at: 0)
+                prevKeypointPosition = nextKeypoint.location
+                RouteManager.shared.checkOffKeypoint()
                 
                 // erase current keypoint and render next keypoint node
-                keypointNode.removeFromParentNode()
-                renderKeypoint(keypoints[0].location)
+                ARSessionManager.shared.renderKeypoint(RouteManager.shared.nextKeypoint!.location, defaultColor: defaultColor)
                 
-                // erase current path and render next path
                 if (showPath) {
-                    pathObj?.removeFromParentNode()
-                    renderPath(prevKeypointPosition, keypoints[0].location)
+                    // TODO: this needs to be modified to handle the new system of relocalization
+                    ARSessionManager.shared.renderPath(prevKeypointPosition, RouteManager.shared.nextKeypoint!.location, defaultPathColor: defaultPathColor)
                 }
                 
                 // update directions to next keypoint
-                directionToNextKeypoint = getDirectionToNextKeypoint(currentLocation: curLocation)
-                setDirectionText(currentLocation: curLocation.location, direction: directionToNextKeypoint, displayDistance: false)
+                if let newDirectionToNextKeypoint = getDirectionToNextKeypoint(currentLocation: curLocation) {
+                    setDirectionText(currentLocation: curLocation.location, direction: newDirectionToNextKeypoint, displayDistance: false)
+                }
             } else {
                 // arrived at final keypoint
                 // send haptic/sonic feedback
                 waypointFeedbackGenerator?.notificationOccurred(.success)
                 if (soundFeedback) { SoundEffectManager.shared.success() }
-                
-                // erase current keypoint node
-                keypointNode.removeFromParentNode()
-                pathObj?.removeFromParentNode()
-                for anchorPointNode in anchorPointNodes {
-                    anchorPointNode.removeFromParentNode()
-                }
+
+                ARSessionManager.shared.removeNavigationNodes()
                 
                 followingCrumbs?.invalidate()
                 hapticTimer?.invalidate()
@@ -2065,7 +1994,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             // TODO: might want to indicate that something is wrong to the user
             return
         }
-        let directionToNextKeypoint = getDirectionToNextKeypoint(currentLocation: curLocation)
+        guard let directionToNextKeypoint = getDirectionToNextKeypoint(currentLocation: curLocation) else {
+            return
+        }
         let coneWidth: Float!
         let lateralDisplacementToleranceRatio: Float
         if strictHaptic {
@@ -2108,7 +2039,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             }
         }
         for anchorPoint in intermediateAnchorPoints {
-            guard let anchorPointTransform = anchorPoint.transform else {
+            guard let arAnchor = anchorPoint.anchor, let anchorPointTransform = ARSessionManager.shared.getCurrentLocation(of: arAnchor)?.transform else {
                 continue
             }
             // TODO think about breaking ties by playing the least recently played voice note
@@ -2168,9 +2099,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     ///
     /// - Parameter currentLocation: the current location of the device
     /// - Returns: the direction to the next keypoint with the distance rounded to the nearest tenth of a meter
-    func getDirectionToNextKeypoint(currentLocation: CurrentCoordinateInfo) -> DirectionInfo {
+    func getDirectionToNextKeypoint(currentLocation: CurrentCoordinateInfo) -> DirectionInfo? {
         // returns direction to next keypoint from current location
-        var dir = nav.getDirections(currentLocation: currentLocation, nextKeypoint: keypoints[0], isLastKeypoint: keypoints.count == 1)
+        guard let nextKeypoint = RouteManager.shared.nextKeypoint, var dir = nav.getDirections(currentLocation: currentLocation, nextKeypoint: nextKeypoint, isLastKeypoint: RouteManager.shared.onLastKeypoint) else {
+            return nil
+        }
         dir.distance = roundToTenths(dir.distance)
         return dir
     }
@@ -2304,8 +2237,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     /// Announce directions at any given point to the next keypoint
     @objc func announceDirectionHelp() {
         if case .navigatingRoute = state, let curLocation = getRealCoordinates(record: false) {
-            let directionToNextKeypoint = getDirectionToNextKeypoint(currentLocation: curLocation)
-            setDirectionText(currentLocation: curLocation.location, direction: directionToNextKeypoint, displayDistance: true)
+            if let directionToNextKeypoint = getDirectionToNextKeypoint(currentLocation: curLocation) {
+                setDirectionText(currentLocation: curLocation.location, direction: directionToNextKeypoint, displayDistance: true)
+            }
         }
     }
     
@@ -2316,10 +2250,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     ///   - direction: the direction info struct (e.g., as computed by the `Navigation` class)
     ///   - displayDistance: a Boolean that indicates whether the distance to the net keypoint should be displayed (true if it should be displayed, false otherwise)
     func setDirectionText(currentLocation: LocationInfo, direction: DirectionInfo, displayDistance: Bool) {
+        guard let nextKeypoint = RouteManager.shared.nextKeypoint else {
+            return
+        }
         // Set direction text for text label and VoiceOver
-        let xzNorm = sqrtf(powf(currentLocation.x - keypoints[0].location.x, 2) + powf(currentLocation.z - keypoints[0].location.z, 2))
-        let slope = (keypoints[0].location.y - prevKeypointPosition.y) / xzNorm
-        let yDistance = abs(keypoints[0].location.y - prevKeypointPosition.y)
+        let xzNorm = sqrtf(powf(currentLocation.x - nextKeypoint.location.x, 2) + powf(currentLocation.z - nextKeypoint.location.z, 2))
+        let slope = (nextKeypoint.location.y - prevKeypointPosition.y) / xzNorm
+        let yDistance = abs(nextKeypoint.location.y - prevKeypointPosition.y)
         var dir = ""
         
         if yDistance > 1 && slope > 0.3 { // Go upstairs
@@ -2346,264 +2283,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
     }
     
-    /// This function renders a spinning blue speaker icon at the location of a voice note
-    func renderIntermediateAnchorPoints() {
-        for intermediateAnchorPoint in intermediateAnchorPoints {
-            guard let transform = intermediateAnchorPoint.transform else {
-                continue
-            }
-            // render SCNNode of given keypoint
-            let anchorPointNode = SCNNode(mdlObject: speakerObject)
-            // configure node attributes
-            anchorPointNode.scale = SCNVector3(0.02, 0.02, 0.02)
-            anchorPointNode.geometry?.firstMaterial?.diffuse.contents = UIColor.blue
-            anchorPointNode.position = SCNVector3(transform.columns.3.x, transform.columns.3.y, transform.columns.3.z)
-            // I don't think yaw really matters here (so we are putting 0 where we used to have location.yaw
-            anchorPointNode.rotation = SCNVector4(0, 1, 0, (0 - Float.pi/2))
-            
-            let bound = SCNVector3(
-                x: anchorPointNode.boundingBox.max.x - anchorPointNode.boundingBox.min.x,
-                y: anchorPointNode.boundingBox.max.y - anchorPointNode.boundingBox.min.y,
-                z: anchorPointNode.boundingBox.max.z - anchorPointNode.boundingBox.min.z)
-            anchorPointNode.pivot = SCNMatrix4MakeTranslation(0, bound.y / 2, 0)
-            let spin = CABasicAnimation(keyPath: "rotation")
-            spin.fromValue = NSValue(scnVector4: SCNVector4(x: 0, y: 1, z: 0, w: 0))
-            spin.toValue = NSValue(scnVector4: SCNVector4(x: 0, y: 1, z: 0, w: Float(CGFloat(2 * Float.pi))))
-            spin.duration = 3
-            spin.repeatCount = .infinity
-            anchorPointNode.addAnimation(spin, forKey: "spin around")
-
-            // animation - SCNNode flashes blue
-            let flashBlue = SCNAction.customAction(duration: 2) { (node, elapsedTime) -> () in
-                let percentage = Float(elapsedTime / 2)
-                var color = UIColor.clear
-                let power: Float = 2.0
-                
-                
-                if (percentage < 0.5) {
-                    color = UIColor(red: CGFloat(powf(2.0*percentage, power)),
-                                    green: CGFloat(powf(2.0*percentage, power)),
-                                    blue: 1,
-                                    alpha: 1)
-                } else {
-                    color = UIColor(red: CGFloat(powf(2-2.0*percentage, power)),
-                                    green: CGFloat(powf(2-2.0*percentage, power)),
-                                    blue: 1,
-                                    alpha: 1)
-                }
-                node.geometry!.firstMaterial!.diffuse.contents = color
-            }
-            // set flashing color based on settings bundle configuration
-            let changeColor = SCNAction.repeatForever(flashBlue)
-            // add keypoint node to view
-            anchorPointNode.runAction(changeColor)
-            anchorPointNodes.append(anchorPointNode)
-            sceneView.scene.rootNode.addChildNode(anchorPointNode)
-        }
-    }
-    
-    
-    /// Create the keypoint SCNNode that corresponds to the rotating flashing element that looks like a navigation pin.
-    ///
-    /// - Parameter location: the location of the keypoint
-    func renderKeypoint(_ location: LocationInfo) {
-        // render SCNNode of given keypoint
-        keypointNode = SCNNode(mdlObject: keypointObject)
-
-        // configure node attributes
-        keypointNode.scale = SCNVector3(0.0004, 0.0004, 0.0004)
-        keypointNode.geometry?.firstMaterial?.diffuse.contents = UIColor.red
-        keypointNode.position = SCNVector3(location.x, location.y - 0.2, location.z)
-        keypointNode.rotation = SCNVector4(0, 1, 0, (location.yaw - Float.pi/2))
-        
-        let bound = SCNVector3(
-            x: keypointNode.boundingBox.max.x - keypointNode.boundingBox.min.x,
-            y: keypointNode.boundingBox.max.y - keypointNode.boundingBox.min.y,
-            z: keypointNode.boundingBox.max.z - keypointNode.boundingBox.min.z)
-        keypointNode.pivot = SCNMatrix4MakeTranslation(bound.x / 2, bound.y / 2, bound.z / 2)
-        
-        let spin = CABasicAnimation(keyPath: "rotation")
-        spin.fromValue = NSValue(scnVector4: SCNVector4(x: 0, y: 1, z: 0, w: 0))
-        spin.toValue = NSValue(scnVector4: SCNVector4(x: 0, y: 1, z: 0, w: Float(CGFloat(2 * Float.pi))))
-        spin.duration = 3
-        spin.repeatCount = .infinity
-        keypointNode.addAnimation(spin, forKey: "spin around")
-        
-        // animation - SCNNode flashes red
-        let flashRed = SCNAction.customAction(duration: 2) { (node, elapsedTime) -> () in
-            let percentage = Float(elapsedTime / 2)
-            var color = UIColor.clear
-            let power: Float = 2.0
-            
-            
-            if (percentage < 0.5) {
-                color = UIColor(red: 1,
-                                green: CGFloat(powf(2.0*percentage, power)),
-                                blue: CGFloat(powf(2.0*percentage, power)),
-                                alpha: 1)
-            } else {
-                color = UIColor(red: 1,
-                                green: CGFloat(powf(2-2.0*percentage, power)),
-                                blue: CGFloat(powf(2-2.0*percentage, power)),
-                                alpha: 1)
-            }
-            node.geometry!.firstMaterial!.diffuse.contents = color
-        }
-        
-        // animation - SCNNode flashes green
-        let flashGreen = SCNAction.customAction(duration: 2) { (node, elapsedTime) -> () in
-            let percentage = Float(elapsedTime / 2)
-            var color = UIColor.clear
-            let power: Float = 2.0
-            
-            
-            if (percentage < 0.5) {
-                color = UIColor(red: CGFloat(powf(2.0*percentage, power)),
-                                green: 1,
-                                blue: CGFloat(powf(2.0*percentage, power)),
-                                alpha: 1)
-            } else {
-                color = UIColor(red: CGFloat(powf(2-2.0*percentage, power)),
-                                green: 1,
-                                blue: CGFloat(powf(2-2.0*percentage, power)),
-                                alpha: 1)
-            }
-            node.geometry!.firstMaterial!.diffuse.contents = color
-        }
-        
-        // animation - SCNNode flashes blue
-        let flashBlue = SCNAction.customAction(duration: 2) { (node, elapsedTime) -> () in
-            let percentage = Float(elapsedTime / 2)
-            var color = UIColor.clear
-            let power: Float = 2.0
-            
-            
-            if (percentage < 0.5) {
-                color = UIColor(red: CGFloat(powf(2.0*percentage, power)),
-                                green: CGFloat(powf(2.0*percentage, power)),
-                                blue: 1,
-                                alpha: 1)
-            } else {
-                color = UIColor(red: CGFloat(powf(2-2.0*percentage, power)),
-                                green: CGFloat(powf(2-2.0*percentage, power)),
-                                blue: 1,
-                                alpha: 1)
-            }
-            node.geometry!.firstMaterial!.diffuse.contents = color
-        }
-        let flashColors = [flashRed, flashGreen, flashBlue]
-        
-        // set flashing color based on settings bundle configuration
-        var changeColor: SCNAction!
-        if (defaultColor == 3) {
-            changeColor = SCNAction.repeatForever(flashColors[Int(arc4random_uniform(3))])
-        } else {
-            changeColor = SCNAction.repeatForever(flashColors[defaultColor])
-        }
-        
-        // add keypoint node to view
-        keypointNode.runAction(changeColor)
-        sceneView.scene.rootNode.addChildNode(keypointNode)
-    }
-    
-    /// Create the path SCNNode that corresponds to the long translucent bar element that looks like a route path.
-    /// - Parameters:
-    ///  - locationFront: the location of the keypoint user is approaching
-    ///  - locationBack: the location of the keypoint user is currently at
-    func renderPath(_ locationFront: LocationInfo, _ locationBack: LocationInfo) {
-        
-        let x = (locationFront.x + locationBack.x) / 2
-        let y = (locationFront.y + locationBack.y) / 2
-        let z = (locationFront.z + locationBack.z) / 2
-        let xDist = locationFront.x - locationBack.x
-        let yDist = locationFront.y - locationBack.y
-        let zDist = locationFront.z - locationBack.z
-        let pathDist = sqrt(pow(xDist, 2) + pow(yDist, 2) + pow(zDist, 2))
-        
-        // render SCNNode of given keypoint
-        pathObj = SCNNode(geometry: SCNBox(width: CGFloat(pathDist), height: 0.25, length: 0.08, chamferRadius: 3))
-        
-        let colors = [UIColor.red, UIColor.green, UIColor.blue]
-        var color: UIColor!
-        // set color based on settings bundle configuration
-        if (defaultPathColor == 3) {
-            color = colors[Int(arc4random_uniform(3))]
-        } else {
-            color = colors[defaultPathColor]
-        }
-        pathObj?.geometry?.firstMaterial!.diffuse.contents = color
-        let xAxis = simd_normalize(simd_float3(xDist, yDist, zDist))
-        let yAxis: simd_float3
-        if xDist == 0 && zDist == 0 {
-            // this is the case where the path goes straight up and we can set yAxis more or less arbitrarily
-            yAxis = simd_float3(1, 0, 0)
-        } else if xDist == 0 {
-            // zDist must be non-zero, which means that for yAxis to be perpendicular to the xAxis and have a zero y-component, we must make yAxis equal to simd_float3(1, 0, 0)
-            yAxis = simd_float3(1, 0, 0)
-        } else if zDist == 0 {
-            // xDist must be non-zero, which means that for yAxis to be perpendicular to the xAxis and have a zero y-component, we must make yAxis equal to simd_float3(0, 0, 1)
-            yAxis = simd_float3(0, 0, 1)
-        } else {
-            // TODO: real math
-            let yAxisZComponent = sqrt(1 / (zDist*zDist/(xDist*xDist) + 1))
-            let yAxisXComponent = -zDist*yAxisZComponent/xDist
-            yAxis = simd_float3(yAxisXComponent, 0, yAxisZComponent)
-        }
-        let zAxis = simd_cross(xAxis, yAxis)
-        
-        let pathTransform = simd_float4x4(columns: (simd_float4(xAxis, 0), simd_float4(yAxis, 0), simd_float4(zAxis, 0), simd_float4(x, y - 0.6, z, 1)))
-        // configure node attributes
-        pathObj!.opacity = CGFloat(0.7)
-        pathObj!.simdTransform = pathTransform
-        
-        sceneView.scene.rootNode.addChildNode(pathObj!)
-    }
-    
-    /// Create several spherical SCNNodes that make up a dotted route path.
-    /// - Parameters:
-    ///  - locationFront: the location of the keypoint user is approaching
-    ///  - locationBack: the location of the keypoint user is currently at
-    func renderPathpoints(_ locationFront: LocationInfo, _ locationBack: LocationInfo) {
-        
-        let xDist = locationFront.x - locationBack.x
-        let yDist = locationFront.y - locationBack.y
-        let zDist = locationFront.z - locationBack.z
-        let pathDist = sqrt(pow(xDist, 2) + pow(yDist, 2) + pow(zDist, 2))
-        print(pathDist)
-        var numPathpoints = Int(pathDist / 0.5)
-
-        if (numPathpoints == 0) {
-            numPathpoints = 1
-        }
-
-//         configure attributes for each node
-        for index in 1...numPathpoints {
-            
-            print("Index: ", index)
-            // render SCNNode of given keypoint
-            let pathpointObj = SCNNode(geometry: SCNSphere(radius: 0.07))
-            pathpointObj.geometry?.firstMaterial!.diffuse.contents = UIColor.blue
-            pathpointObj.opacity = CGFloat(0.7)
-            
-            let pointDist = (pathDist / Float(numPathpoints+1)) * Float(index)
-            let ratio = pointDist/pathDist
-            let x = locationBack.x + ratio * xDist
-            let y = locationBack.y + ratio * yDist
-            let z = locationBack.z + ratio * zDist
-            pathpointObj.position = SCNVector3(x, y - 0.6, z)
-            pathpointObjs.append(pathpointObj)
-            sceneView.scene.rootNode.addChildNode(pathpointObj)
-            print("Here ", index)
-        }
-        
-    }
-    
     /// Compute the location of the device based on the ARSession.  If the record flag is set to true, record this position in the logs.
     ///
     /// - Parameter record: a Boolean indicating whether to record the computed position (true if it should be computed, false otherwise)
     /// - Returns: the current location as a `CurrentCoordinateInfo` object
     func getRealCoordinates(record: Bool) -> CurrentCoordinateInfo? {
-        guard let currTransform = sceneView.session.currentFrame?.camera.transform else {
+        guard let currTransform = ARSessionManager.shared.currentFrame?.camera.transform else {
             return nil
         }
         // returns current location & orientation based on starting origin
@@ -2670,13 +2355,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 continuation()
             }
             
-            if configuration.initialWorldMap != nil, attemptingRelocalization {
+            if ARSessionManager.shared.initialWorldMap != nil, attemptingRelocalization {
                 if trackingWarningsAllowed {
                     announce(announcement: NSLocalizedString("realignToSavedRouteAnnouncement", comment: "An announcement which lets the user know that their surroundings have been matched to a saved route"))
                 }
                 attemptingRelocalization = false
                 // This call is necessary to cancel any pending setWorldOrigin call from the alignment procedure.  Depending on timing, it's possible for the relocalization *and* the realignment to both be applied.  This results in the origin essentially being shifted twice and things are then way off
-                session.setWorldOrigin(relativeTransform: matrix_identity_float4x4)
+                //session.setWorldOrigin(relativeTransform: matrix_identity_float4x4)
             } else if case let .limited(reason)? = trackingSessionState {
                 if trackingWarningsAllowed {
                     if reason != .initializing {
@@ -2695,7 +2380,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 isAutomaticAlignment = true
                 
                 ///PA THPOINT: Auto Alignment -> resume route
-                if !isTutorial, configuration.initialWorldMap != nil {
+                if !isTutorial, ARSessionManager.shared.initialWorldMap != nil {
                     state = .readyToNavigateOrPause(allowPause: false)
                 }
             }
@@ -2726,9 +2411,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         do {
             if let document = try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data) as? RouteDocumentData {
                 let thisRoute = document.route
-                referenceAnchor = nil
-                configuration.initialWorldMap = nil
-                self.sceneView.session.run(self.configuration, options: [.removeExistingAnchors, .resetTracking])
+                ARSessionManager.shared.startSession()
                 self.continuationAfterSessionIsReady = {
                     self.state = .startingResumeProcedure(route: thisRoute, worldMap: nil, navigateStartToEnd: true)
                 }
@@ -2758,13 +2441,14 @@ extension ViewController: RecorderViewControllerDelegate {
     /// - Parameter audioFileURL: the URL to the audio recording
     func didFinishRecording(audioFileURL: URL) {
         if case .recordingRoute = state {
-            guard let currentTransform = sceneView.session.currentFrame?.camera.transform else {
+            guard let currentTransform = ARSessionManager.shared.currentFrame?.camera.transform else {
                 print("can't properly save Anchor Point since AR session is not running")
                 return
             }
             let noteAnchorPoint = RouteAnchorPoint()
             noteAnchorPoint.voiceNote = audioFileURL.lastPathComponent as NSString
-            noteAnchorPoint.transform = currentTransform
+            noteAnchorPoint.anchor = ARAnchor(transform: currentTransform)
+            ARSessionManager.shared.sceneView.session.add(anchor: noteAnchorPoint.anchor!)
             intermediateAnchorPoints.append(noteAnchorPoint)
         } else {
             print(audioFileURL)
@@ -2846,13 +2530,36 @@ class ARData: ObservableObject {
 extension ViewController: ARSessionDelegate {
     func session(_ session: ARSession, didUpdate frame: ARFrame) {
         ARData.shared.set(transform: frame.camera.transform)
-        guard #available(iOS 15.0, *), let referenceAnchor = referenceAnchor else {
-            return
+    }
+    
+    public func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
+        if let nextKeypoint = RouteManager.shared.nextKeypoint, nextKeypoint.location.identifier == anchor.identifier {
+            ARSessionManager.shared.renderKeypoint(nextKeypoint.location, defaultColor: defaultColor)
+            if let nextNextKeypoint = RouteManager.shared.nextNextKeypoint, nextKeypoint.location.identifier == anchor.identifier || nextNextKeypoint.location.identifier == anchor.identifier {
+                ARSessionManager.shared.renderPath(nextKeypoint.location, nextNextKeypoint.location, defaultPathColor: defaultPathColor)
+            }
         }
-        for anchor in frame.anchors {
-            if anchor.identifier == referenceAnchor.0, !simd_almost_equal_elements(anchor.transform, referenceAnchor.1, 0.01), -lastWorldOriginShift.timeIntervalSinceNow > 2.0 {
-                sceneView.session.setWorldOrigin(relativeTransform: anchor.transform * referenceAnchor.1.inverse)
-                lastWorldOriginShift = Date()
+        for intermediateAnchorPoint in intermediateAnchorPoints {
+            if let arAnchor = intermediateAnchorPoint.anchor, arAnchor.identifier == anchor.identifier {
+                // TODO: this might result in a lot of effort if there are many voice notes
+                ARSessionManager.shared.render(intermediateAnchorPoints: intermediateAnchorPoints)
+                break
+            }
+        }
+    }
+    func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
+        if let nextKeypoint = RouteManager.shared.nextKeypoint, nextKeypoint.location.identifier == anchor.identifier {
+            ARSessionManager.shared.renderKeypoint(nextKeypoint.location, defaultColor: defaultColor)
+            if let nextNextKeypoint = RouteManager.shared.nextNextKeypoint, nextKeypoint.location.identifier == anchor.identifier || nextNextKeypoint.location.identifier == anchor.identifier {
+                print("NEED TO ACCESS previously checked off keypoint location")
+                ARSessionManager.shared.renderPath(nextKeypoint.location, nextNextKeypoint.location, defaultPathColor: defaultPathColor)
+            }
+        }
+        for intermediateAnchorPoint in intermediateAnchorPoints {
+            if let arAnchor = intermediateAnchorPoint.anchor, arAnchor.identifier == anchor.identifier {
+                // TODO: this might result in a lot of effort if there are many voice notes
+                ARSessionManager.shared.render(intermediateAnchorPoints: intermediateAnchorPoints)
+                break
             }
         }
     }
