@@ -17,6 +17,7 @@ enum ARTrackingError {
 protocol ARSessionManagerDelegate {
     func trackingErrorOccurred(_ : ARTrackingError)
     func sessionInitialized()
+    func sessionRelocalizing()
     func trackingIsNormal()
     func isRecording()->Bool
     func getPathColor()->Int
@@ -410,6 +411,7 @@ extension ARSessionManager: ARSessionDelegate {
                 print("initializing")
             case .relocalizing:
                 delegate?.sessionInitialized()
+                delegate?.sessionRelocalizing()
             @unknown default:
                 print("An error condition arose that we didn't know about when the app was last compiled")
             }

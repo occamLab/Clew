@@ -113,7 +113,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     /// A threshold distance between the user's current position and a voice note.  If the user is closer than this value the voice note will be played
     static let voiceNotePlayDistanceThreshold : Float = 0.75
     
-    /// The state of the ARKit tracking session as last communicated to us through the delgate protocol.  This is useful if you want to do something different in the delegate method depending on the previous state
+    /// The state of the tracking session as last communicated to us through the delgate protocol.  This is useful if you want to do something different in the delegate method depending on whether there has been an error
     var trackingSessionErrorState : ARTrackingError?
     
     let surveyModel = FirebaseFeedbackSurveyModel.shared
@@ -2435,6 +2435,10 @@ extension ViewController: ARSessionManagerDelegate {
             continuationAfterSessionIsReady = nil
             continuation()
         }
+    }
+    
+    func sessionRelocalizing() {
+        trackingSessionErrorState = nil
     }
     
     func trackingIsNormal() {
