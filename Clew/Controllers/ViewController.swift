@@ -17,26 +17,15 @@
 // Major features to implement
 //
 // Potential enhancements
-//  - Warn user via an alert if they have an iPhone 5S or 6
 //  - Possibly create a warning if the phone doesn't appear to be in the correct orientation
 //  - revisit turn warning feature.  It doesn't seem to actually help all that much at the moment.
 
 import UIKit
 import ARKit
-import SceneKit
-import SceneKit.ModelIO
-import AVFoundation
-import AudioToolbox
-import MediaPlayer
 import VectorMath
 import Firebase
-import FirebaseDatabase
 import SRCountdownTimer
 import SwiftUI
-import Intents
-import IntentsUI
-import CoreSpotlight
-import MobileCoreServices
 
 /// A custom enumeration type that describes the exact state of the app.  The state is not exhaustive (e.g., there are Boolean flags that also track app state).
 enum AppState {
@@ -102,9 +91,6 @@ enum AppState {
 
 /// The view controller that handles the main Clew window.  This view controller is always active and handles the various views that are used for different app functionalities.
 class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthesizerDelegate {
-    
-    // MARK: - Refactoring UI definition
-    
     // MARK: Properties and subview declarations
     
     /// How long to wait (in seconds) between the alignment request and grabbing the transform
@@ -116,6 +102,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     /// The state of the tracking session as last communicated to us through the delgate protocol.  This is useful if you want to do something different in the delegate method depending on whether there has been an error
     var trackingSessionErrorState : ARTrackingError?
     
+    /// The data source for in-app surveys
     let surveyModel = FirebaseFeedbackSurveyModel.shared
     
     /// the last time this particular user was surveyed (nil if we don't know this information or it hasn't been loaded from the database yet)
@@ -260,7 +247,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         isTutorial = false
         // cancel the timer that announces tracking errors
         trackingErrorsAnnouncementTimer?.invalidate()
-        // TODO: we used to pause the session here, but it appears that the workaround mentioned at this link (https://developer.apple.com/forums/thread/690668) will only work, consistently, with an unpaused session
+        ARSessionManager.shared.pauseSession()
         // set this to nil to prevent the app from erroneously detecting that we can auto-align to the route
         ARSessionManager.shared.initialWorldMap = nil
         showRecordPathButton(announceArrival: announceArrival)

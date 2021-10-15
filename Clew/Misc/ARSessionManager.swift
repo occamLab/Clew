@@ -92,6 +92,10 @@ class ARSessionManager: NSObject {
         sceneView.session.run(configuration, options: [.removeExistingAnchors, .resetTracking])
     }
     
+    func pauseSession() {
+        sceneView.session.pause()
+    }
+    
     /// Create the keypoint SCNNode that corresponds to the rotating flashing element that looks like a navigation pin.
     ///
     /// - Parameter location: the location of the keypoint
