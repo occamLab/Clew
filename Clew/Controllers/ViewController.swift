@@ -2541,25 +2541,23 @@ extension ViewController: ARSessionDelegate {
         }
         for intermediateAnchorPoint in intermediateAnchorPoints {
             if let arAnchor = intermediateAnchorPoint.anchor, arAnchor.identifier == anchor.identifier {
-                // TODO: this might result in a lot of effort if there are many voice notes
-                ARSessionManager.shared.render(intermediateAnchorPoints: intermediateAnchorPoints)
-                break
+                ARSessionManager.shared.render(intermediateAnchorPoints: [intermediateAnchorPoint])
             }
         }
     }
     func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
-        if let nextKeypoint = RouteManager.shared.nextKeypoint, nextKeypoint.location.identifier == anchor.identifier {
-            ARSessionManager.shared.renderKeypoint(nextKeypoint.location, defaultColor: defaultColor)
-            if let nextNextKeypoint = RouteManager.shared.nextNextKeypoint, nextKeypoint.location.identifier == anchor.identifier || nextNextKeypoint.location.identifier == anchor.identifier {
-                print("NEED TO ACCESS previously checked off keypoint location")
-                ARSessionManager.shared.renderPath(nextKeypoint.location, nextNextKeypoint.location, defaultPathColor: defaultPathColor)
+        if let nextKeypoint = RouteManager.shared.nextKeypoint, let cameraTransform = ARSessionManager.shared.currentFrame?.camera.transform {
+            let previousKeypointLocation = RouteManager.shared.getPreviousKeypoint(to: nextKeypoint)?.location ?? LocationInfo(transform: cameraTransform)
+            if nextKeypoint.location.identifier == anchor.identifier {
+                ARSessionManager.shared.renderKeypoint(nextKeypoint.location, defaultColor: defaultColor)
+            }
+            if nextKeypoint.location.identifier == anchor.identifier || previousKeypointLocation.identifier == anchor.identifier {
+                ARSessionManager.shared.renderPath(nextKeypoint.location, previousKeypointLocation, defaultPathColor: defaultPathColor)
             }
         }
         for intermediateAnchorPoint in intermediateAnchorPoints {
             if let arAnchor = intermediateAnchorPoint.anchor, arAnchor.identifier == anchor.identifier {
-                // TODO: this might result in a lot of effort if there are many voice notes
-                ARSessionManager.shared.render(intermediateAnchorPoints: intermediateAnchorPoints)
-                break
+                ARSessionManager.shared.render(intermediateAnchorPoints: [intermediateAnchorPoint])
             }
         }
     }
