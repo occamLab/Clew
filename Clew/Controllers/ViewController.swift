@@ -101,7 +101,7 @@ enum AppState {
 }
 
 /// The view controller that handles the main Clew window.  This view controller is always active and handles the various views that are used for different app functionalities.
-class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDelegate, AVSpeechSynthesizerDelegate {
+class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthesizerDelegate {
     
     // MARK: - Refactoring UI definition
     
@@ -114,7 +114,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     static let voiceNotePlayDistanceThreshold : Float = 0.75
     
     /// The state of the ARKit tracking session as last communicated to us through the delgate protocol.  This is useful if you want to do something different in the delegate method depending on the previous state
-    var trackingSessionState : ARCamera.TrackingState?
+    var trackingSessionErrorState : ARTrackingError?
     
     let surveyModel = FirebaseFeedbackSurveyModel.shared
     
@@ -280,6 +280,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         // show the tutorial again
     }
     
+    func mapIsSuitableForLocalization(worldMap: ARWorldMap)->Bool {
+        if #available(iOS 15.0, *) {
+            return worldMap.anchors.firstIndex(where: {anchor in anchor is LocationInfo}) != nil
+        } else {
+            return true
+        }
+    }
+    
     /// Handler for the recordingRoute app state
     func handleStateTransitionToRecordingRoute() {
         // records a new path
@@ -290,7 +298,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         // TODO: probably don't need to set this to [], but erring on the side of begin conservative
         crumbs = []
         recordingCrumbs = []
-        intermediateAnchorPoints = []
+        RouteManager.shared.intermediateAnchorPoints = []
         logger.resetPathLog()
         
         showStopRecordingButton()
@@ -344,7 +352,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
         
         // render intermediate anchor points
-        ARSessionManager.shared.render(intermediateAnchorPoints: intermediateAnchorPoints)
+        ARSessionManager.shared.render(intermediateAnchorPoints: RouteManager.shared.intermediateAnchorPoints)
         
         feedbackGenerator = UIImpactFeedbackGenerator(style: .light)
         waypointFeedbackGenerator = UINotificationFeedbackGenerator()
@@ -394,7 +402,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         if let worldMap = worldMap {
             // analyze the map to see if we can relocalize
             /// TODO: need to replace this with some other check
-            if false { //#available(iOS 15.0, *), referenceAnchor == nil {
+            if !mapIsSuitableForLocalization(worldMap: worldMap) {
                 // unfortunately, we are out of luck.  Better to not use the ARWorldMap
                 ARSessionManager.shared.initialWorldMap = nil
                 attemptingRelocalization = false
@@ -415,8 +423,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             crumbs = route.crumbs
             pausedTransform = route.endRouteAnchorPoint.anchor?.transform
         }
-        intermediateAnchorPoints = route.intermediateAnchorPoints
-        // don't reset tracking, but do clear anchors and switch to the new map
+        RouteManager.shared.intermediateAnchorPoints = route.intermediateAnchorPoints
+        trackingSessionErrorState = nil
         ARSessionManager.shared.startSession()
 
         if isTrackingPerformanceNormal, isSameMap {
@@ -554,7 +562,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         if paused {
             ///PATHPOINT pause recording anchor point alignment timer -> resume tracking
             //proceed as normal with the pause structure (single use route)
-            justTraveledRoute = SavedRoute(id: "single use", name: "single use", crumbs: self.crumbs, dateCreated: Date() as NSDate, beginRouteAnchorPoint: self.beginRouteAnchorPoint, endRouteAnchorPoint: self.endRouteAnchorPoint, intermediateAnchorPoints: intermediateAnchorPoints)
+            justTraveledRoute = SavedRoute(id: "single use", name: "single use", crumbs: self.crumbs, dateCreated: Date() as NSDate, beginRouteAnchorPoint: self.beginRouteAnchorPoint, endRouteAnchorPoint: self.endRouteAnchorPoint, intermediateAnchorPoints: RouteManager.shared.intermediateAnchorPoints)
             justUsedMap = worldMap
             showResumeTrackingButton()
             state = .pauseProcedureCompleted
@@ -597,7 +605,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         let id = String(Int64(NSDate().timeIntervalSince1970 * 1000)) as NSString
         // Get the input values from user, if it's nil then use timestamp
         self.routeName = nameSavedRouteController.textField.text as NSString? ?? id
-        try! self.archive(routeId: id, beginRouteAnchorPoint: self.beginRouteAnchorPoint, endRouteAnchorPoint: self.endRouteAnchorPoint, intermediateAnchorPoints: self.intermediateAnchorPoints, worldMap: nameSavedRouteController.worldMap)
+        try! self.archive(routeId: id, beginRouteAnchorPoint: self.beginRouteAnchorPoint, endRouteAnchorPoint: self.endRouteAnchorPoint, intermediateAnchorPoints: RouteManager.shared.intermediateAnchorPoints, worldMap: nameSavedRouteController.worldMap)
         hideAllViewsHelper()
         /// PATHPOINT Save Route View -> play/pause
         ///Announce to the user that they have finished the alignment process and are now at the play pause screen
@@ -753,10 +761,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         startNavigationController = StartNavigationController()
         stopNavigationController = StopNavigationController()
         nameSavedRouteController = NameSavedRouteController()
-        
-        // set ViewController as the delegate (not great)
-        ARSessionManager.shared.sceneView.delegate = self
-        ARSessionManager.shared.sceneView.session.delegate = self
+        ARSessionManager.shared.delegate = self
         
         // Add the scene to the view, which is a RootContainerView
         ARSessionManager.shared.sceneView.frame = view.frame
@@ -824,6 +829,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             // in case something was already happening, goHome to clear out state
             self.goHome()
             // TODO if session is already running, don't restart it
+            self.trackingSessionErrorState = nil
             ARSessionManager.shared.startSession()
         }
         
@@ -964,7 +970,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         routeName = nil
         beginRouteAnchorPoint = RouteAnchorPoint()
         endRouteAnchorPoint = RouteAnchorPoint()
-        intermediateAnchorPoints = []
+        RouteManager.shared.intermediateAnchorPoints = []
         playAlignmentConfirmation?.cancel()
         rootContainerView.announcementText.isHidden = true
         nav.headingOffset = 0.0
@@ -1507,9 +1513,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// the Anchor Point to use to mark the end of the route currently being recorded
     var endRouteAnchorPoint = RouteAnchorPoint()
-    
-    /// Intermediate anchor points
-    var intermediateAnchorPoints:[RouteAnchorPoint] = []
 
     /// the name of the route being recorded
     var routeName: NSString?
@@ -1531,29 +1534,22 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// Announces the any excessive motion or insufficient visual features errors as specified in the last observed tracking state
     func announceCurrentTrackingErrors() {
-        switch self.trackingSessionState {
-        case .limited(let reason):
-            switch reason {
-            case .excessiveMotion:
-                print("Excessive motion")
-                if trackingWarningsAllowed {
-                    self.announce(announcement: NSLocalizedString("excessiveMotionDegradedTrackingAnnouncemnt", comment: "An announcement which lets the user know that there is too much movement of their device and thus the app's ability to track a route has been lowered."))
-                    if self.soundFeedback {
-                        SoundEffectManager.shared.playSystemSound(id: 1050)
-                    }
+        switch trackingSessionErrorState {
+        case .insufficientFeatures:
+            if trackingWarningsAllowed {
+                self.announce(announcement: NSLocalizedString("insuficientFeaturesDegradedTrackingAnnouncemnt", comment: "An announcement which lets the user know  that their current surroundings do not have enough visual markers and thus the app's ability to track a route has been lowered."))
+                if self.soundFeedback {
+                    SoundEffectManager.shared.playSystemSound(id: 1050)
                 }
-            case .insufficientFeatures:
-                print("InsufficientFeatures")
-                if trackingWarningsAllowed {
-                    self.announce(announcement: NSLocalizedString("insuficientFeaturesDegradedTrackingAnnouncemnt", comment: "An announcement which lets the user know  that their current surroundings do not have enough visual markers and thus the app's ability to track a route has been lowered."))
-                    if self.soundFeedback {
-                        SoundEffectManager.shared.playSystemSound(id: 1050)
-                    }
-                }
-            default:
-                break
             }
-        default:
+        case .excessiveMotion:
+            if trackingWarningsAllowed {
+                self.announce(announcement: NSLocalizedString("excessiveMotionDegradedTrackingAnnouncemnt", comment: "An announcement which lets the user know that there is too much movement of their device and thus the app's ability to track a route has been lowered."))
+                if self.soundFeedback {
+                    SoundEffectManager.shared.playSystemSound(id: 1050)
+                }
+            }
+        case .none:
             break
         }
     }
@@ -1587,6 +1583,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             self.state = .startingPauseProcedure
         }
         ARSessionManager.shared.initialWorldMap = nil
+        trackingSessionErrorState = nil
         ARSessionManager.shared.startSession()
     }
     
@@ -1690,6 +1687,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             self.state = .recordingRoute
         }
         ARSessionManager.shared.initialWorldMap = nil
+        trackingSessionErrorState = nil
         ARSessionManager.shared.startSession()
     }
     /// this is called after the alignment countdown timer finishes in order to complete the pause tracking procedure
@@ -1844,7 +1842,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             return
         }
         recordingCrumbs.append(curLocation)
-        print("adding anchor \(recordingCrumbs.count)")
         ARSessionManager.shared.add(anchor: curLocation)
     }
     
@@ -2038,7 +2035,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 }
             }
         }
-        for anchorPoint in intermediateAnchorPoints {
+        for anchorPoint in RouteManager.shared.intermediateAnchorPoints {
             guard let arAnchor = anchorPoint.anchor, let anchorPointTransform = ARSessionManager.shared.getCurrentLocation(of: arAnchor)?.transform else {
                 continue
             }
@@ -2304,102 +2301,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         return CurrentCoordinateInfo(LocationInfo(transform: currTransform), transMatrix: transMatrix)
     }
     
-    /// Called when there is a change in tracking state.  This is important for both announcing tracking errors to the user and also to triggering some app state transitions.
-    /// - Parameters:
-    ///   - session: the AR session associated with the change in tracking state
-    ///   - camera: the AR camera associated with the change in tracking state
-    func session(_ session: ARSession, cameraDidChangeTrackingState camera: ARCamera) {
-        var logString: String? = nil
-
-        switch camera.trackingState {
-        case .limited(let reason):
-            switch reason {
-            case .excessiveMotion:
-                logString = "ExcessiveMotion"
-                print("Excessive motion")
-                if trackingWarningsAllowed {
-                    announce(announcement: NSLocalizedString("excessiveMotionDegradedTrackingAnnouncemnt", comment: "An announcement which lets the user know that there is too much movement of their device and thus the app's ability to track a route has been lowered."))
-                    if soundFeedback {
-                        SoundEffectManager.shared.playSystemSound(id: 1050)
-                    }
-                }
-            case .insufficientFeatures:
-                logString = "InsufficientFeatures"
-                print("InsufficientFeatures")
-                if trackingWarningsAllowed {
-                    announce(announcement: NSLocalizedString("insuficientFeaturesDegradedTrackingAnnouncemnt", comment: "An announcement which lets the user know  that their current surroundings do not have enough visual markers and thus the app's ability to track a route has been lowered."))
-                    if soundFeedback {
-                        SoundEffectManager.shared.playSystemSound(id: 1050)
-                    }
-                }
-            case .initializing:
-                // don't log anything
-                print("initializing")
-            case .relocalizing:
-                // if we are waiting on the session, proceed now
-                if let continuation = continuationAfterSessionIsReady {
-                    continuationAfterSessionIsReady = nil
-                    continuation()
-                }
-                logString = "Relocalizing"
-                print("Relocalizing")
-            @unknown default:
-                print("An error condition arose that we didn't know about when the app was last compiled")
-            }
-        case .normal:
-            logString = "Normal"
-            
-            // if we are waiting on the session, proceed now
-            if let continuation = continuationAfterSessionIsReady {
-                continuationAfterSessionIsReady = nil
-                continuation()
-            }
-            
-            if ARSessionManager.shared.initialWorldMap != nil, attemptingRelocalization {
-                if trackingWarningsAllowed {
-                    announce(announcement: NSLocalizedString("realignToSavedRouteAnnouncement", comment: "An announcement which lets the user know that their surroundings have been matched to a saved route"))
-                }
-                attemptingRelocalization = false
-                // This call is necessary to cancel any pending setWorldOrigin call from the alignment procedure.  Depending on timing, it's possible for the relocalization *and* the realignment to both be applied.  This results in the origin essentially being shifted twice and things are then way off
-                //session.setWorldOrigin(relativeTransform: matrix_identity_float4x4)
-            } else if case let .limited(reason)? = trackingSessionState {
-                if trackingWarningsAllowed {
-                    if reason != .initializing {
-                        announce(announcement: NSLocalizedString("fixedTrackingAnnouncement", comment: "Let user know that the ARKit tracking session has returned to its normal quality (this is played after the tracking has been restored from thir being insuficent visual features or excessive motion which degrade the tracking)"))
-                        if soundFeedback {
-                            SoundEffectManager.shared.playSystemSound(id: 1025)
-                        }
-                    }
-                }
-            }
-            if case .readyForFinalResumeAlignment = state {
-                // this will cancel any realignment if it hasn't happened yet and go straight to route navigation mode
-                rootContainerView.countdownTimer.isHidden = true
-                isResumedRoute = true
-                
-                isAutomaticAlignment = true
-                
-                ///PA THPOINT: Auto Alignment -> resume route
-                if !isTutorial, ARSessionManager.shared.initialWorldMap != nil {
-                    state = .readyToNavigateOrPause(allowPause: false)
-                }
-            }
-            print("normal")
-        case .notAvailable:
-            logString = "NotAvailable"
-            print("notAvailable")
-        }
-        if let logString = logString {
-            if case .recordingRoute = state {
-                logger.logTrackingError(isRecordingPhase: true, trackingError: logString)
-            } else if case .navigatingRoute = state {
-                logger.logTrackingError(isRecordingPhase: false, trackingError: logString)
-            }
-        }
-        // update the tracking state so we can use it in the next call to this function
-        trackingSessionState = camera.trackingState
-    }
-    
     func runTutorialPath(routeName: String) {
         goHome()
         isTutorial = true
@@ -2411,6 +2312,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         do {
             if let document = try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data) as? RouteDocumentData {
                 let thisRoute = document.route
+                trackingSessionErrorState = nil
                 ARSessionManager.shared.startSession()
                 self.continuationAfterSessionIsReady = {
                     self.state = .startingResumeProcedure(route: thisRoute, worldMap: nil, navigateStartToEnd: true)
@@ -2449,7 +2351,7 @@ extension ViewController: RecorderViewControllerDelegate {
             noteAnchorPoint.voiceNote = audioFileURL.lastPathComponent as NSString
             noteAnchorPoint.anchor = ARAnchor(transform: currentTransform)
             ARSessionManager.shared.sceneView.session.add(anchor: noteAnchorPoint.anchor!)
-            intermediateAnchorPoints.append(noteAnchorPoint)
+            RouteManager.shared.intermediateAnchorPoints.append(noteAnchorPoint)
         } else {
             print(audioFileURL)
             if creatingRouteAnchorPoint {
@@ -2497,7 +2399,6 @@ extension ViewController: UIPopoverPresentationControllerDelegate {
     ///   - segue: the segue
     ///   - sender: the sender who generated this prepare call
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        
         // All popover segues should be popovers even on iPhone.
         if let popoverController = segue.destination.popoverPresentationController, let button = sender as? UIButton {
             popoverController.delegate = self
@@ -2515,52 +2416,67 @@ class UISurveyHostingController: UIHostingController<FirebaseFeedbackSurvey> {
     }
 }
 
-class ARData: ObservableObject {
-    public static var shared = ARData()
-    
-    private(set) var transform: simd_float4x4?
-    
-    func set(transform: simd_float4x4) {
-        self.transform = transform
-        objectWillChange.send()
+extension ViewController: ARSessionManagerDelegate {
+    func getPathColor() -> Int {
+        return defaultPathColor
     }
     
+    func getKeypointColor() -> Int {
+        return defaultColor
+    }
+    
+    func trackingErrorOccurred(_ trackingError : ARTrackingError) {
+        trackingSessionErrorState = trackingError
+        announceCurrentTrackingErrors()
+    }
+    
+    func sessionInitialized() {
+        if let continuation = continuationAfterSessionIsReady {
+            continuationAfterSessionIsReady = nil
+            continuation()
+        }
+    }
+    
+    func trackingIsNormal() {
+        let oldTrackingSessionErrorState = trackingSessionErrorState
+        trackingSessionErrorState = nil
+        // if we are waiting on the session, proceed now
+        if let continuation = continuationAfterSessionIsReady {
+            continuationAfterSessionIsReady = nil
+            continuation()
+        }
+        if ARSessionManager.shared.initialWorldMap != nil, attemptingRelocalization {
+            if trackingWarningsAllowed {
+                announce(announcement: NSLocalizedString("realignToSavedRouteAnnouncement", comment: "An announcement which lets the user know that their surroundings have been matched to a saved route"))
+            }
+            attemptingRelocalization = false
+        } else if oldTrackingSessionErrorState != nil {
+            if trackingWarningsAllowed {
+                announce(announcement: NSLocalizedString("fixedTrackingAnnouncement", comment: "Let user know that the ARKit tracking session has returned to its normal quality (this is played after the tracking has been restored from thir being insuficent visual features or excessive motion which degrade the tracking)"))
+                if soundFeedback {
+                    SoundEffectManager.shared.playSystemSound(id: 1025)
+                }
+            }
+        }
+        if case .readyForFinalResumeAlignment = state {
+            // this will cancel any realignment if it hasn't happened yet and go straight to route navigation mode
+            rootContainerView.countdownTimer.isHidden = true
+            isResumedRoute = true
+            
+            isAutomaticAlignment = true
+            
+            ///PATHPOINT: Auto Alignment -> resume route
+            if !isTutorial, ARSessionManager.shared.initialWorldMap != nil {
+                state = .readyToNavigateOrPause(allowPause: false)
+            }
+        }
+    }
+    
+    func isRecording() -> Bool {
+        if case .recordingRoute = state {
+            return true
+        } else {
+            return false
+        }
+    }
 }
-
-extension ViewController: ARSessionDelegate {
-    func session(_ session: ARSession, didUpdate frame: ARFrame) {
-        ARData.shared.set(transform: frame.camera.transform)
-    }
-    
-    public func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
-        if let nextKeypoint = RouteManager.shared.nextKeypoint, nextKeypoint.location.identifier == anchor.identifier {
-            ARSessionManager.shared.renderKeypoint(nextKeypoint.location, defaultColor: defaultColor)
-            if let nextNextKeypoint = RouteManager.shared.nextNextKeypoint, nextKeypoint.location.identifier == anchor.identifier || nextNextKeypoint.location.identifier == anchor.identifier {
-                ARSessionManager.shared.renderPath(nextKeypoint.location, nextNextKeypoint.location, defaultPathColor: defaultPathColor)
-            }
-        }
-        for intermediateAnchorPoint in intermediateAnchorPoints {
-            if let arAnchor = intermediateAnchorPoint.anchor, arAnchor.identifier == anchor.identifier {
-                ARSessionManager.shared.render(intermediateAnchorPoints: [intermediateAnchorPoint])
-            }
-        }
-    }
-    func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
-        if let nextKeypoint = RouteManager.shared.nextKeypoint, let cameraTransform = ARSessionManager.shared.currentFrame?.camera.transform {
-            let previousKeypointLocation = RouteManager.shared.getPreviousKeypoint(to: nextKeypoint)?.location ?? LocationInfo(transform: cameraTransform)
-            if nextKeypoint.location.identifier == anchor.identifier {
-                ARSessionManager.shared.renderKeypoint(nextKeypoint.location, defaultColor: defaultColor)
-            }
-            if nextKeypoint.location.identifier == anchor.identifier || previousKeypointLocation.identifier == anchor.identifier {
-                ARSessionManager.shared.renderPath(nextKeypoint.location, previousKeypointLocation, defaultPathColor: defaultPathColor)
-            }
-        }
-        for intermediateAnchorPoint in intermediateAnchorPoints {
-            if let arAnchor = intermediateAnchorPoint.anchor, arAnchor.identifier == anchor.identifier {
-                ARSessionManager.shared.render(intermediateAnchorPoints: [intermediateAnchorPoint])
-            }
-        }
-    }
-}
-
-

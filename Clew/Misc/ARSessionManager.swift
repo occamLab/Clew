@@ -9,10 +9,28 @@
 import Foundation
 import ARKit
 
-class ARSessionManager {
+enum ARTrackingError {
+    case insufficientFeatures
+    case excessiveMotion
+}
+
+protocol ARSessionManagerDelegate {
+    func trackingErrorOccurred(_ : ARTrackingError)
+    func sessionInitialized()
+    func trackingIsNormal()
+    func isRecording()->Bool
+    func getPathColor()->Int
+    func getKeypointColor()->Int
+}
+
+class ARSessionManager: NSObject {
     static var shared = ARSessionManager()
+    var delegate: ARSessionManagerDelegate?
     
-    private init() {
+    private override init() {
+        super.init()
+        sceneView.session.delegate = self
+        sceneView.delegate = self
         sceneView.accessibilityIgnoresInvertColors = true
         createARSessionConfiguration()
         loadAssets()
@@ -353,5 +371,98 @@ class ARSessionManager {
         let speakerUrl = NSURL(fileURLWithPath: Bundle.main.path(forResource: "speaker", ofType: "obj")!)
         let speakerAsset = MDLAsset(url: speakerUrl as URL)
         speakerObject = speakerAsset.object(at: 0)
+    }
+}
+
+class ARData: ObservableObject {
+    public static var shared = ARData()
+    
+    private(set) var transform: simd_float4x4?
+    
+    func set(transform: simd_float4x4) {
+        self.transform = transform
+        objectWillChange.send()
+    }
+}
+
+extension ARSessionManager: ARSessionDelegate {
+    func session(_ session: ARSession, didUpdate frame: ARFrame) {
+        ARData.shared.set(transform: frame.camera.transform)
+    }
+    /// Called when there is a change in tracking state.  This is important for both announcing tracking errors to the user and also to triggering some app state transitions.
+    /// - Parameters:
+    ///   - session: the AR session associated with the change in tracking state
+    ///   - camera: the AR camera associated with the change in tracking state
+    func session(_ session: ARSession, cameraDidChangeTrackingState camera: ARCamera) {
+        var logString: String? = nil
+
+        switch camera.trackingState {
+        case .limited(let reason):
+            switch reason {
+            case .excessiveMotion:
+                logString = "ExcessiveMotion"
+                delegate?.trackingErrorOccurred(.excessiveMotion)
+            case .insufficientFeatures:
+                logString = "InsufficientFeatures"
+                delegate?.trackingErrorOccurred(.insufficientFeatures)
+            case .initializing:
+                // don't log anything
+                print("initializing")
+            case .relocalizing:
+                delegate?.sessionInitialized()
+            @unknown default:
+                print("An error condition arose that we didn't know about when the app was last compiled")
+            }
+        case .normal:
+            logString = "Normal"
+            delegate?.sessionInitialized()
+            delegate?.trackingIsNormal()
+            print("normal")
+        case .notAvailable:
+            logString = "NotAvailable"
+            print("notAvailable")
+        }
+        if let logString = logString, let recordingPhase = delegate?.isRecording() {
+            PathLogger.shared.logTrackingError(isRecordingPhase: recordingPhase, trackingError: logString)
+        }
+    }
+}
+
+extension ARSessionManager: ARSCNViewDelegate {
+    public func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
+        guard let defaultColor = delegate?.getKeypointColor(), let defaultPathColor = delegate?.getPathColor() else {
+            return
+        }
+        
+        if let nextKeypoint = RouteManager.shared.nextKeypoint, nextKeypoint.location.identifier == anchor.identifier {
+            ARSessionManager.shared.renderKeypoint(nextKeypoint.location, defaultColor: defaultColor)
+            if let nextNextKeypoint = RouteManager.shared.nextNextKeypoint, nextKeypoint.location.identifier == anchor.identifier || nextNextKeypoint.location.identifier == anchor.identifier {
+                ARSessionManager.shared.renderPath(nextKeypoint.location, nextNextKeypoint.location, defaultPathColor: defaultPathColor)
+            }
+        }
+        for intermediateAnchorPoint in RouteManager.shared.intermediateAnchorPoints {
+            if let arAnchor = intermediateAnchorPoint.anchor, arAnchor.identifier == anchor.identifier {
+                ARSessionManager.shared.render(intermediateAnchorPoints: [intermediateAnchorPoint])
+            }
+        }
+    }
+    func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
+        guard let defaultColor = delegate?.getKeypointColor(), let defaultPathColor = delegate?.getPathColor() else {
+            return
+        }
+        if let nextKeypoint = RouteManager.shared.nextKeypoint, let cameraTransform = ARSessionManager.shared.currentFrame?.camera.transform {
+            let previousKeypointLocation = RouteManager.shared.getPreviousKeypoint(to: nextKeypoint)?.location ?? LocationInfo(transform: cameraTransform)
+            if nextKeypoint.location.identifier == anchor.identifier {
+                ARSessionManager.shared.renderKeypoint(nextKeypoint.location, defaultColor: defaultColor)
+            }
+            if nextKeypoint.location.identifier == anchor.identifier || previousKeypointLocation.identifier == anchor.identifier {
+                ARSessionManager.shared.renderPath(nextKeypoint.location, previousKeypointLocation, defaultPathColor: defaultPathColor)
+            }
+        }
+        for intermediateAnchorPoint in RouteManager.shared.intermediateAnchorPoints {
+            if let arAnchor = intermediateAnchorPoint.anchor, arAnchor.identifier == anchor.identifier {
+                ARSessionManager.shared.render(intermediateAnchorPoints: [intermediateAnchorPoint])
+            }
+        }
     }
 }
