@@ -178,9 +178,6 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     
     var burgerMenuController: UIViewController?
     
-    
-    // TODO: the number of Booleans is a bit out of control.  We need a better way to manage them.  Some of them may be redundant with each other at this point.
-    
     /// This Boolean marks whether or not the pause procedure is being used to create a Anchor Point at the start of a route (true) or if it is being used to pause an already recorded route
     var creatingRouteAnchorPoint: Bool = false
     
