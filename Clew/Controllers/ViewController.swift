@@ -344,7 +344,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         hideAllViewsHelper()
         print("Aligning")
         
-        let navStart = UIAlertController(title: "Start Navigating", message: "Aligned to anchor image, click Start to begin navigation", preferredStyle: .alert)
+        // TODO: L10N
+        let navStart = UIAlertController(title: "Press start to begin navigation", message: "", preferredStyle: .alert)
         
         let start = UIAlertAction(title: "Start", style: .default, handler: {(action) -> Void in    // BL L10N
             self.confirmAlignment()
@@ -361,7 +362,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         
         hideAllViewsHelper()
         
-        let recordStart = UIAlertController(title: "Start Recording", message: "Aligned to anchor image, click Start to begin recording route", preferredStyle: .alert)
+        // TODO: L10N
+        let recordStart = UIAlertController(title: "Press start to begin recording", message: "", preferredStyle: .alert)
+        // TODO: cancel any alignment text being read out
         
         let start = UIAlertAction(title: "Start", style: .default, handler: {(action) -> Void in    // BL L10N
             self.confirmAlignment()
