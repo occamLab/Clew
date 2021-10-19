@@ -35,6 +35,7 @@ class ARSessionManager: NSObject {
         sceneView.accessibilityIgnoresInvertColors = true
         createARSessionConfiguration()
         loadAssets()
+        sceneView.backgroundColor = .systemBackground
     }
     /// This is embeds an AR scene.  The ARSession is a part of the scene view, which allows us to capture where the phone is in space and the state of the world tracking.  The scene also allows us to insert virtual objects
     var sceneView: ARSCNView = ARSCNView()

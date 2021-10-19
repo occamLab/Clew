@@ -63,7 +63,7 @@ class ResumeTrackingController: UIViewController {
         
         /// set top, left, right constraints on scrollView to
         /// "main" view + 8.0 padding on each side
-        scrollView.topAnchor.constraint(equalTo: view.topAnchor, constant: UIScreen.main.bounds.size.height*0.2).isActive = true
+        scrollView.topAnchor.constraint(equalTo: view.topAnchor, constant: UIScreen.main.bounds.size.height*0.2+30).isActive = true
         scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8.0).isActive = true
         scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8.0).isActive = true
         

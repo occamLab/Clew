@@ -1,3 +1,9 @@
+// These should not be overwritten
+"Red" = "Roja";
+"Green" = "Verde";
+"Blue" = "Azul";
+"Random" = "Color al azar";
+
 "1o'clockDirection" = "Gira ligeramente a la derecha hacia la una";
 "2o'clockDirection" = "Gira ligeramente a la derecha hacia las 2";
 "4o'clockDirection" = "Gira hacia las 4";
@@ -72,6 +78,7 @@
 "currentSiriShortcuts" = "Atajos Actuales de Siri para Clew";
 "declineTurnOnAdjustOffsetButton" = "No";
 "deleteActionText" = "Eliminar";
+"confirmDeletion" = "¿Estás seguro de que deseas eliminar esta ruta?";
 "descendStairsDirection" = " y baja las escaleras";
 "directionalCuesTutorialInstructionText" = "En cuanto comiences a navegar por una ruta, Clew te proporcionará indicaciones de dirección para que te orientes correctamente durante el trayecto. La aplicación anunciará las direcciones cada vez que pases por un Punto de paso o Miga Virtual. Las indicaciones de dirección incluyen: continúa recto, gira ligeramente a la derecha, gira ligeramente a la izquierda, gira a la derecha, gira a la izquierda... Clew también te anunciará cuando hayas llegado al final de la ruta.";
 "directionalCuesTutorialTitleText" = "Indicaciones de Dirección";
@@ -149,6 +156,7 @@ El rendimiento del seguimiento se ve afectado.";
 "introUsingClewTitle" = "Uso de Clew";
 "introUsingClewTutorialText" = "Este tutorial te ayudará a aprender las habilidades necesarias para utilizar Clew. Cada módulo se centra en un conjunto de habilidades y características concretas de la aplicación. Algunos de los módulos incluyen ejercicios prácticos interactivos. Te recomendamos que utilices primero la app en un entorno interior que te resulte seguro y familiar.";
 "introUsingClewTutorialTitle" = "Uso de Este Tutorial";
+"and walk" = "y camina";
 "leftDirection" = "Gira a la izquierda";
 "metricUnitText" = " metros";
 "moduleCompleted" = "Módulo completado";

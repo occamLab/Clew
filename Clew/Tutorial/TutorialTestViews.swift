@@ -900,6 +900,7 @@ struct AnchorPointPracticeSubComponent: View {
         Image("Align")
             .resizable()
             .frame(width: 100, height: 100)
+            .accessibility(hidden: true)
         
         if practiceState == .anchorPointSet {
             Text(NSLocalizedString("anchorPointPracticeAlignTitle", comment: "Align to anchor point page title")).padding()

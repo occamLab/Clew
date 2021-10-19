@@ -1,3 +1,11 @@
+// These should not be overwritten
+"Green" = "أخضر";
+"Blue" = "أزرق";
+"Random" = "عشوائي";
+"Red" = "أحمر";
+
+// begin part that can be replaced
+"and walk" = "و امشي";
 "and proceed upstairs" = "ثم قم بصعود الدرج";
 "1o'clockDirection" = "إلى اليمين قليلاً نحو اتجاه الساعة الواحدة";
 "2o'clockDirection" = "إلى اليمين قليلاً نحو اتجاه الساعة الثانية";
@@ -91,6 +99,7 @@
 "currentSiriShortcuts" = "اختصارات سيري الحالية الخاصة بClew";
 "declineTurnOnAdjustOffsetButton" = "لا";
 "deleteActionText" = "حذف";
+"confirmDeletion" = "هل أنت متاكد من حذف المسار؟";
 "descendStairsDirection" = "ثم قم بنزول الدرج";
 "directionalCuesTutorialInstructionText" = "سيوفر Clew إشارات اتجاهية بمجرد أن تبدأ في التنقل في طريق ما وللحفاظ على توجيهك بشكل صحيح. وسيعلن التطبيق عن الاتجاهات كلما مررت عبر إحداثية أو تفصيل افتراضي محفوظ. تشمل إشارات الاتجاه: العبارات التالية: تابع إلى الأمام، تحرك إلى اليمين قليلاً، تحرك إلى اليسار قليلاً، انعطف يميناً، انعطف يساراً. وسيعلمك Clew أيضاً عندما تصل إلى نهاية الطريق.";
 "directionalCuesTutorialTitleText" = "الإشارات الاتجاهية";

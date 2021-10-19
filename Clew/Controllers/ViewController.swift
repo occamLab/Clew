@@ -679,11 +679,6 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     
     /// Keep track of last world origin adjustment to prevent "ringing"
     var lastWorldOriginShift = Date()
-    
-    /// Hide status bar
-    override var prefersStatusBarHidden: Bool {
-        return true
-    }
 
     /// Callback function for when `countdownTimer` updates.  This allows us to announce the new value via voice
     ///
@@ -1376,9 +1371,9 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
             if defaultUnit == 0 || distanceToDisplay >= 10 {
                 // don't use fractional feet or for higher numbers of meters (round instead)
                 // Related to higher number of meters, there is a somewhat strange behavior in VoiceOver where numbers greater than 10 will be read as, for instance, 11 dot 4 meters (instead of 11 point 4 meters).
-                altText += " for \(Int(distanceToDisplay))" + unitText[defaultUnit]!
+                altText += " " + NSLocalizedString("and walk", comment: "this text is presented when getting directions.  It is placed between a direction of how to turn and a distance to travel") + " \(Int(distanceToDisplay))" + unitText[defaultUnit]!
             } else {
-                altText += " for \(distanceToDisplay)" + unitText[defaultUnit]!
+                altText += " " + NSLocalizedString("and walk", comment: "this text is presented when getting directions.  It is placed between a direction of how to turn and a distance to travel") + " \(distanceToDisplay)" + unitText[defaultUnit]!
             }
         }
         if !remindedUserOfOffsetAdjustment && adjustOffset {

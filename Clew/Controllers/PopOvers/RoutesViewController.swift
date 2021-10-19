@@ -91,14 +91,26 @@ class RoutesViewController : UIViewController, UITableViewDataSource, UITableVie
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         
         let delete = UITableViewRowAction(style: .destructive, title: NSLocalizedString("deleteActionText", comment: "This is the text that appears when a user tries to delete a saved route. This text is used in an option menu when a route is selected and it describes the action for deleting a route.")) { (action, indexPath) in
-            // delete item at indexPath
-            do {
-                try self.rootViewController?.dataPersistence.delete(route: self.routes[indexPath.row])
-                self.routes.remove(at: indexPath.row)
-                self.tableView.deleteRows(at: [indexPath], with: .fade)
-            } catch {
-                print("Unexpectedly failed to persist the new routes data")
-            }
+            
+            let confirmAlert = UIAlertController(title: NSLocalizedString("deleteActionText", comment: "This is the text that appears when a user tries to delete a saved route. This text is used in an option menu when a route is selected and it describes the action for deleting a route."), message: NSLocalizedString("confirmDeletion", comment: "this is the text that asks the user if they are sure they want to delete the route"), preferredStyle: .alert)
+
+            confirmAlert.addAction(UIAlertAction(title: "Ok", style: .default, handler: { (action: UIAlertAction!) in
+                
+                // delete item at indexPath
+                do {
+                    try self.rootViewController?.dataPersistence.delete(route: self.routes[indexPath.row])
+                    self.routes.remove(at: indexPath.row)
+                    self.tableView.deleteRows(at: [indexPath], with: .fade)
+                } catch {
+                    print("Unexpectedly failed to persist the new routes data")
+                }
+            }))
+
+            confirmAlert.addAction(UIAlertAction(title: NSLocalizedString("cancelPop-UpButtonLabel", comment: "A button which closes the current pop up"), style: .cancel, handler: { (action: UIAlertAction!) in
+              
+              }))
+
+            self.present(confirmAlert, animated: true, completion: nil)
         }
         
         let share = UITableViewRowAction(style: .normal, title: NSLocalizedString("shareActionText", comment: "This is the text that appears when a user tries to share a saved route. This text is used in an option menu when a route is selected and it describes the action for share a route.")) { (action, indexPath) in

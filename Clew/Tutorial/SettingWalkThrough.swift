@@ -30,6 +30,7 @@ struct TutorialButtonToggle<Content: View>: View {
                 .overlay(
                         RoundedRectangle(cornerRadius: 10)
                             .stroke(Color.yellow, lineWidth: 4))
+                .accessibility(addTraits: [.isSelected])
         } else {
             content
                 .frame(minWidth: 0, maxWidth: 300)
@@ -42,6 +43,8 @@ struct TutorialButtonToggle<Content: View>: View {
                 .overlay(
                         RoundedRectangle(cornerRadius: 10)
                             .stroke(Color.clear, lineWidth: 4))
+            // TODO: this doesn't verbalize "not selected" as one might hope
+                .accessibility(removeTraits: [.isSelected])
         }
     }
 }
@@ -120,6 +123,7 @@ struct setUpCrumbColor: View {
                 Image(images[c][p])
                     .resizable()
                     .aspectRatio(contentMode: .fit)
+                    .accessibility(hidden: true)
             }
         }
         Spacer()
@@ -156,6 +160,7 @@ struct setUpPathColor: View {
                 Image(images[c][p])
                     .resizable()
                     .aspectRatio(contentMode: .fit)
+                    .accessibility(hidden: true)
             }
         }
         Spacer()
