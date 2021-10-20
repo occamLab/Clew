@@ -67,8 +67,8 @@ class ResumeTrackingController: UIViewController {
         scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8.0).isActive = true
         scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8.0).isActive = true
         
-        /// set the height constraint on the scrollView to 0.5 * the main view height
-        scrollView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.5).isActive = true
+        /// set the height constraint on the scrollView to 0.4 * the main view height
+        scrollView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.4).isActive = true
         
         /// set top, left, right AND bottom constraints on label to
         /// scrollView + 8.0 padding on each side

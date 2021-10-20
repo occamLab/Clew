@@ -34,9 +34,9 @@ class RecordPathController: UIViewController {
         super.viewDidLoad()
         self.modalPresentationStyle = .fullScreen
         view = TransparentTouchView(frame:CGRect(x: 0,
-                                                 y: UIScreen.main.bounds.size.height*0.2,
+                                                 y: UIScreen.main.bounds.size.height*0.2+30,
                                                  width: UIConstants.buttonFrameWidth * 1,
-                                                 height: UIScreen.main.bounds.size.height*0.7))
+                                                 height: UIScreen.main.bounds.size.height*0.7-30))
         
         /// Creating a button that can be used to start the creation of a saved route.
         addAnchorPointButton = UIButton(type: .custom)
