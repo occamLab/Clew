@@ -14,6 +14,18 @@ enum ARTrackingError {
     case excessiveMotion
 }
 
+/// This tells the app how to deal with the ARWorldMap in light of the major changes introduced iOS 15 with regards to handling the ARWorldMap
+enum RelocalizationStrategy {
+    /// The map is unusable
+    case none
+    /// The current session's coordinate system will be mapped to the ARWorldMap's coordinate system (we don't have to do very much)
+    case coordinateSystemAutoAligns
+    /// We can use the origin as a guide for updating all of the anchors
+    case useOriginAnchorForAlignment
+    /// Each individual crumb will have its own anchor
+    case useCrumbAnchorsForAlignment
+}
+
 protocol ARSessionManagerDelegate {
     func trackingErrorOccurred(_ : ARTrackingError)
     func sessionInitialized()
@@ -22,6 +34,7 @@ protocol ARSessionManagerDelegate {
     func isRecording()->Bool
     func getPathColor()->Int
     func getKeypointColor()->Int
+    func getShowPath()->Bool
 }
 
 class ARSessionManager: NSObject {
@@ -42,6 +55,9 @@ class ARSessionManager: NSObject {
     
     /// this is the alignment between the reloaded route
     var manualAlignment: simd_float4x4?
+    
+    /// the strategy to employ with respect to the worldmap
+    var relocalizationStrategy: RelocalizationStrategy = .none
     
     var initialWorldMap: ARWorldMap? {
         set {
@@ -93,8 +109,24 @@ class ARSessionManager: NSObject {
         sceneView.session.run(configuration, options: [.removeExistingAnchors, .resetTracking])
     }
     
+    /// This seems to interfere with placement of ARAnchors in the scene when reloading maps
     func pauseSession() {
         sceneView.session.pause()
+    }
+    
+    func adjustRelocalizationStrategy(worldMap: ARWorldMap)->RelocalizationStrategy {
+        if #available(iOS 15.0, *) {
+            if worldMap.anchors.firstIndex(where: {anchor in anchor is LocationInfo}) != nil {
+                relocalizationStrategy = .useCrumbAnchorsForAlignment
+            } else if worldMap.anchors.firstIndex(where: {anchor in anchor.name == "origin"}) != nil {
+                relocalizationStrategy = .useOriginAnchorForAlignment
+            } else {
+                relocalizationStrategy = .none
+            }
+        } else {
+            relocalizationStrategy = .coordinateSystemAutoAligns
+        }
+        return relocalizationStrategy
     }
     
     /// Create the keypoint SCNNode that corresponds to the rotating flashing element that looks like a navigation pin.
@@ -308,9 +340,12 @@ class ARSessionManager: NSObject {
     func removeNavigationNodes() {
         keypointNode?.removeFromParentNode()
         pathObj?.removeFromParentNode()
+        keypointNode = nil
+        pathObj = nil
         for anchorPointNode in anchorPointNodes {
             anchorPointNode.removeFromParentNode()
         }
+        anchorPointNodes = []
     }
     
     /// Create the path SCNNode that corresponds to the long translucent bar element that looks like a route path.
@@ -318,6 +353,7 @@ class ARSessionManager: NSObject {
     ///  - locationFront: the location of the keypoint user is approaching
     ///  - locationBack: the location of the keypoint user is currently at
     func renderPath(_ locationFront: LocationInfo, _ locationBack: LocationInfo, defaultPathColor: Int) {
+        print("RENDERING PATH")
         pathObj?.removeFromParentNode()
         guard let locationFront = getCurrentLocation(of: locationFront), let locationBack = getCurrentLocation(of: locationBack) else {
             return
@@ -424,6 +460,10 @@ extension ARSessionManager: ARSessionDelegate {
             logString = "Normal"
             delegate?.sessionInitialized()
             delegate?.trackingIsNormal()
+            if relocalizationStrategy == .coordinateSystemAutoAligns {
+                manualAlignment = matrix_identity_float4x4
+                legacyHandleRelocalization()
+            }
             print("normal")
         case .notAvailable:
             logString = "NotAvailable"
@@ -433,28 +473,42 @@ extension ARSessionManager: ARSessionDelegate {
             PathLogger.shared.logTrackingError(isRecordingPhase: recordingPhase, trackingError: logString)
         }
     }
-}
-
-extension ARSessionManager: ARSCNViewDelegate {
-    public func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
-        guard let defaultColor = delegate?.getKeypointColor(), let defaultPathColor = delegate?.getPathColor() else {
+    
+    func legacyHandleRelocalization() {
+        removeNavigationNodes()
+        guard let defaultColor = delegate?.getKeypointColor(), let defaultPathColor = delegate?.getPathColor(), let showPath = delegate?.getShowPath() else {
             return
         }
-        
-        if let nextKeypoint = RouteManager.shared.nextKeypoint, nextKeypoint.location.identifier == anchor.identifier {
+        if let nextKeypoint = RouteManager.shared.nextKeypoint, let cameraTransform = ARSessionManager.shared.currentFrame?.camera.transform {
+            let previousKeypointLocation = RouteManager.shared.getPreviousKeypoint(to: nextKeypoint)?.location ?? LocationInfo(transform: cameraTransform)
             ARSessionManager.shared.renderKeypoint(nextKeypoint.location, defaultColor: defaultColor)
-            if let nextNextKeypoint = RouteManager.shared.nextNextKeypoint, nextKeypoint.location.identifier == anchor.identifier || nextNextKeypoint.location.identifier == anchor.identifier {
-                ARSessionManager.shared.renderPath(nextKeypoint.location, nextNextKeypoint.location, defaultPathColor: defaultPathColor)
+            if showPath {
+                print("LEGACY RENDER PATH")
+                ARSessionManager.shared.renderPath(nextKeypoint.location, previousKeypointLocation, defaultPathColor: defaultPathColor)
             }
         }
         for intermediateAnchorPoint in RouteManager.shared.intermediateAnchorPoints {
-            if let arAnchor = intermediateAnchorPoint.anchor, arAnchor.identifier == anchor.identifier {
-                ARSessionManager.shared.render(intermediateAnchorPoints: [intermediateAnchorPoint])
-            }
+            ARSessionManager.shared.render(intermediateAnchorPoints: [intermediateAnchorPoint])
         }
     }
+}
+
+
+extension ARSessionManager: ARSCNViewDelegate {
+    public func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
+        handleAnchorUpdate(anchor: anchor)
+    }
     func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
-        guard let defaultColor = delegate?.getKeypointColor(), let defaultPathColor = delegate?.getPathColor() else {
+       handleAnchorUpdate(anchor: anchor)
+    }
+    
+    func handleAnchorUpdate(anchor: ARAnchor) {
+        if anchor.name == "origin", relocalizationStrategy == .useOriginAnchorForAlignment {
+            manualAlignment = anchor.transform
+            legacyHandleRelocalization()
+            return
+        }
+        guard let defaultColor = delegate?.getKeypointColor(), let defaultPathColor = delegate?.getPathColor(), relocalizationStrategy == .useCrumbAnchorsForAlignment, let showPath = delegate?.getShowPath() else {
             return
         }
         if let nextKeypoint = RouteManager.shared.nextKeypoint, let cameraTransform = ARSessionManager.shared.currentFrame?.camera.transform {
@@ -462,7 +516,7 @@ extension ARSessionManager: ARSCNViewDelegate {
             if nextKeypoint.location.identifier == anchor.identifier {
                 ARSessionManager.shared.renderKeypoint(nextKeypoint.location, defaultColor: defaultColor)
             }
-            if nextKeypoint.location.identifier == anchor.identifier || previousKeypointLocation.identifier == anchor.identifier {
+            if nextKeypoint.location.identifier == anchor.identifier || previousKeypointLocation.identifier == anchor.identifier, showPath {
                 ARSessionManager.shared.renderPath(nextKeypoint.location, previousKeypointLocation, defaultPathColor: defaultPathColor)
             }
         }

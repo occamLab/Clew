@@ -244,7 +244,6 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         isTutorial = false
         // cancel the timer that announces tracking errors
         trackingErrorsAnnouncementTimer?.invalidate()
-        ARSessionManager.shared.pauseSession()
         // set this to nil to prevent the app from erroneously detecting that we can auto-align to the route
         ARSessionManager.shared.initialWorldMap = nil
         showRecordPathButton(announceArrival: announceArrival)
@@ -262,14 +261,6 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         showRecordPathButton(announceArrival: announceArrival)
         helpButtonPressed()
         // show the tutorial again
-    }
-    
-    func mapIsSuitableForLocalization(worldMap: ARWorldMap)->Bool {
-        if #available(iOS 15.0, *) {
-            return worldMap.anchors.firstIndex(where: {anchor in anchor is LocationInfo}) != nil
-        } else {
-            return true
-        }
     }
     
     /// Handler for the recordingRoute app state
@@ -385,8 +376,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         var isSameMap = false
         if let worldMap = worldMap {
             // analyze the map to see if we can relocalize
-            /// TODO: need to replace this with some other check
-            if !mapIsSuitableForLocalization(worldMap: worldMap) {
+            if ARSessionManager.shared.adjustRelocalizationStrategy(worldMap: worldMap) == .none {
                 // unfortunately, we are out of luck.  Better to not use the ARWorldMap
                 ARSessionManager.shared.initialWorldMap = nil
                 attemptingRelocalization = false
@@ -397,6 +387,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
                 attemptingRelocalization = isSameMap && !isTrackingPerformanceNormal || worldMap != nil && !isSameMap
             }
         } else {
+            ARSessionManager.shared.relocalizationStrategy = .none
             ARSessionManager.shared.initialWorldMap = nil
         }
 
@@ -568,19 +559,13 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         
         let storyBoard: UIStoryboard = UIStoryboard(name: "SettingsAndHelp", bundle: nil)
         let popoverContent = storyBoard.instantiateViewController(withIdentifier: "Routes") as! RoutesViewController
-        popoverContent.preferredContentSize = CGSize(width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height)
         popoverContent.rootViewController = self
         popoverContent.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: popoverContent, action: #selector(popoverContent.doneWithRoutes))
         popoverContent.updateRoutes(routes: dataPersistence.routes)
         let nav = UINavigationController(rootViewController: popoverContent)
-        nav.modalPresentationStyle = .popover
         let popover = nav.popoverPresentationController
         popover?.delegate = self
         popover?.sourceView = self.view
-        popover?.sourceRect = CGRect(x: 0,
-                                     y: UIConstants.settingsAndHelpFrameHeight/2,
-                                     width: 0,
-                                     height: 0)
         
         self.present(nav, animated: true, completion: nil)
     }
@@ -1700,7 +1685,6 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
                 leveledAlignPose.columns.3 = alignTransform.columns.3
                 
                 ARSessionManager.shared.manualAlignment = leveledCameraPose * leveledAlignPose.inverse
-                //self.sceneView.session.setWorldOrigin(relativeTransform: relativeTransform)
                 
                 self.isResumedRoute = true
                 if self.paused {
@@ -1848,8 +1832,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
                 // erase current keypoint and render next keypoint node
                 ARSessionManager.shared.renderKeypoint(RouteManager.shared.nextKeypoint!.location, defaultColor: defaultColor)
                 
-                if (showPath) {
-                    // TODO: this needs to be modified to handle the new system of relocalization
+                if showPath {
                     ARSessionManager.shared.renderPath(prevKeypointPosition, RouteManager.shared.nextKeypoint!.location, defaultPathColor: defaultPathColor)
                 }
                 
@@ -1863,6 +1846,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
                 waypointFeedbackGenerator?.notificationOccurred(.success)
                 if (soundFeedback) { SoundEffectManager.shared.success() }
 
+                RouteManager.shared.checkOffKeypoint()
                 ARSessionManager.shared.removeNavigationNodes()
                 
                 followingCrumbs?.invalidate()
@@ -2095,7 +2079,6 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     
     // Called when help button is pressed
     @objc func helpButtonPressed(withOverride pageToDisplayOverride: String? = nil) {
-        // TODO: our mechanism of redirecting to links is currently not working (iOS 15.0)
         // TODO: confineToSection is not respected for all tutorial views yet
         var pageToDisplay = pageToDisplayOverride == nil ? "" : pageToDisplayOverride!
         var confineToSection: Bool = true
@@ -2399,6 +2382,10 @@ extension ViewController: ARSessionManagerDelegate {
     
     func getKeypointColor() -> Int {
         return defaultColor
+    }
+    
+    func getShowPath() ->Bool {
+        return showPath
     }
     
     func trackingErrorOccurred(_ trackingError : ARTrackingError) {
