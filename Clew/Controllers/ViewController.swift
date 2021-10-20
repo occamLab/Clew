@@ -921,6 +921,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     override func viewDidLoad() {
         super.viewDidLoad()
         appStartTime = Date()
+        Database.database().reference().child("last_start_time").setValue(appStartTime.timeIntervalSince1970)
         sceneView.session.delegate = self
 
         sceneView.accessibilityIgnoresInvertColors = true
