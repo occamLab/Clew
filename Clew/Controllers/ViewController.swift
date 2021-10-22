@@ -1289,7 +1289,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// Register settings bundle
     func registerSettingsBundle(){
-        let appDefaults = ["alignmentMethod": 0, "useARWorldMap": false, "crumbColor": 0, "hapticFeedback": true, "sendLogs": true, "voiceFeedback": true, "soundFeedback": true, "units": 0, "timerLength":5] as [String : Any]
+        let appDefaults = ["alignmentMethod": 0, "useARWorldMap": false, "crumbColor": 0, "hapticFeedback": true, "sendLogs": true, "voiceFeedback": true, "soundFeedback": true, "continuousAlign": false, "units": 0, "timerLength":5] as [String : Any]
         UserDefaults.standard.register(defaults: appDefaults)
     }
 
@@ -1307,6 +1307,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             break
         }
         useARWorldMap = defaults.bool(forKey: "useARWorldMap")
+        createIntermediateAnchorPoints = defaults.bool(forKey: "continuousAlign")
+
         defaultUnit = defaults.integer(forKey: "units")
         defaultColor = defaults.integer(forKey: "crumbColor")
         soundFeedback = defaults.bool(forKey: "soundFeedback")
@@ -2249,22 +2251,20 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         }
         
         crumbs.append(curLocation)
-        if createIntermediateAnchorPoints {
-            let routeAnchor = RouteAnchorPoint()
-            routeAnchor.transform = frame.camera.transform
-            let anchorPointImageIdentifier = UUID()
-            routeAnchor.intrinsics = simd_float4(frame.camera.intrinsics[0, 0], frame.camera.intrinsics[1, 1], frame.camera.intrinsics[2, 0], frame.camera.intrinsics[2, 1])
-            routeAnchor.imageFileName = "\(anchorPointImageIdentifier).jpg" as NSString
-            
-            guard let anchorPointImage = pixelBufferToUIImage(pixelBuffer: frame.capturedImage) else {
-                return
-            }
-            
-            let routeAnchorPointJpeg = anchorPointImage.jpegData(compressionQuality: 1)
-            try! routeAnchorPointJpeg?.write(to: routeAnchor.imageFileName!.documentURL, options: .atomic)
-            routeAnchor.loadImage()
-            intermediateRouteAnchorPoints.append(routeAnchor)
+        let routeAnchor = RouteAnchorPoint()
+        routeAnchor.transform = frame.camera.transform
+        let anchorPointImageIdentifier = UUID()
+        routeAnchor.intrinsics = simd_float4(frame.camera.intrinsics[0, 0], frame.camera.intrinsics[1, 1], frame.camera.intrinsics[2, 0], frame.camera.intrinsics[2, 1])
+        routeAnchor.imageFileName = "\(anchorPointImageIdentifier).jpg" as NSString
+        
+        guard let anchorPointImage = pixelBufferToUIImage(pixelBuffer: frame.capturedImage) else {
+            return
         }
+        
+        let routeAnchorPointJpeg = anchorPointImage.jpegData(compressionQuality: 1)
+        try! routeAnchorPointJpeg?.write(to: routeAnchor.imageFileName!.documentURL, options: .atomic)
+        routeAnchor.loadImage()
+        intermediateRouteAnchorPoints.append(routeAnchor)
     }
     
     /// checks to see if user is on the right path during navigation.
