@@ -158,12 +158,14 @@
 "routeDirectionEndToStartButtonLabel" = "End to Start";
 
 "deleteActionText" = "Delete";
-
+"confirmDeletion" = "Are you sure you want to delete this route?";
 "shareActionText" = "Share";
 
 // Info.plist
 "Clew needs to access your camera to track your orientation." = "Clew needs to access your camera to track your orientation.";
 "Permission to use the microphone is required to use the voice notes feature." = "Permission to use the microphone is required to use the voice notes feature.";
+
+"and walk" = "and walk";
 
 // FeedbackViewController.swift
 "feedbackMenuTitle" = "Contact Us";

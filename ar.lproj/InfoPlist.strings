@@ -1,6 +1,11 @@
-"CFBundleName" = "Clew";
+/* 
+  InfoPlist.strings
+  Clew
+
+  Created by Paul Ruvolo on 10/19/21.
+  Copyright © 2021 OccamLab. All rights reserved.
+*/
+
 "Clew Route Document" = "طريق Clew الموثوق";
 "NSCameraUsageDescription" = "يحتاج Clew للوصول إلى الكاميرا لكي يتمكن من تتبع اتجاهك";
 "NSMicrophoneUsageDescription" = "يحتاج التطبيق إلى الحصول على إِذن المايكروفون لكي تتمكن من استخدام ميزة الملاحظات الصوتية";
-"CFBundleDisplayName" = "النظرة السريعة على الطريق";
-"CFBundleName" = "نظرة سريعة على الطريق";

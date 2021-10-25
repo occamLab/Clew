@@ -47,6 +47,8 @@
 		827EDC3226CDA5C000AAA12A /* ClewErrorSound.wav in Resources */ = {isa = PBXBuildFile; fileRef = 827EDC3026CDA5C000AAA12A /* ClewErrorSound.wav */; };
 		827EDC3426CDA72300AAA12A /* SoundEffectManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 827EDC3326CDA72200AAA12A /* SoundEffectManager.swift */; };
 		827EDC3526CDA72300AAA12A /* SoundEffectManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 827EDC3326CDA72200AAA12A /* SoundEffectManager.swift */; };
+		82984803271F106E00DA3005 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 82984806271F106E00DA3005 /* InfoPlist.strings */; };
+		82984804271F106E00DA3005 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 82984806271F106E00DA3005 /* InfoPlist.strings */; };
 		82A417E1262A205A001FCB8C /* AuthenticationHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82A417E0262A205A001FCB8C /* AuthenticationHelper.swift */; };
 		82A417E2262A205A001FCB8C /* AuthenticationHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82A417E0262A205A001FCB8C /* AuthenticationHelper.swift */; };
 		82AD6A25252F80AA00902A11 /* speaker.mtl in Resources */ = {isa = PBXBuildFile; fileRef = 82AD6A24252F80AA00902A11 /* speaker.mtl */; };
@@ -55,6 +57,10 @@
 		82BC47FF2640396700C7D364 /* Surveys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82BC47FD2640383300C7D364 /* Surveys.swift */; };
 		82D94B63266FC7CF00EE2C1C /* SimpleForm in Frameworks */ = {isa = PBXBuildFile; productRef = 82D94B62266FC7CF00EE2C1C /* SimpleForm */; };
 		82D94B65266FC86200EE2C1C /* SimpleForm in Frameworks */ = {isa = PBXBuildFile; productRef = 82D94B64266FC86200EE2C1C /* SimpleForm */; };
+		82DE9224271876910086F5A4 /* ARSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82DE9223271876900086F5A4 /* ARSessionManager.swift */; };
+		82DE9225271876910086F5A4 /* ARSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82DE9223271876900086F5A4 /* ARSessionManager.swift */; };
+		82DE922727188ACE0086F5A4 /* RouteManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82DE922627188ACE0086F5A4 /* RouteManager.swift */; };
+		82DE922827188ACE0086F5A4 /* RouteManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82DE922627188ACE0086F5A4 /* RouteManager.swift */; };
 		82FB2F1426D82B35005E5088 /* TutorialFollowPathRelease1.crd in Resources */ = {isa = PBXBuildFile; fileRef = 82FB2F1326D82B35005E5088 /* TutorialFollowPathRelease1.crd */; };
 		82FB2F1626D82BB4005E5088 /* TutorialFollowPathRelease2.crd in Resources */ = {isa = PBXBuildFile; fileRef = 82FB2F1526D82BB4005E5088 /* TutorialFollowPathRelease2.crd */; };
 		986640CE22FB68F2005AA1F6 /* NameSavedRouteController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986640CD22FB68F2005AA1F6 /* NameSavedRouteController.swift */; };
@@ -199,7 +205,6 @@
 		8214120426D41476003EC2D4 /* SiriWalkThrough.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SiriWalkThrough.swift; sourceTree = "<group>"; };
 		8214120726D497DE003EC2D4 /* SiriShortcutsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SiriShortcutsManager.swift; sourceTree = "<group>"; };
 		821CF7832513264400A7B3C2 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		821CF7892513264400A7B3C2 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		822E27F8210E3F260024A5E3 /* Clew Dev-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Clew Dev-Info.plist"; sourceTree = "<group>"; };
 		823DA453252F7EA800BB5E6B /* speaker.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = speaker.obj; sourceTree = "<group>"; };
 		82569F4D22187E6500448B45 /* help */ = {isa = PBXFileReference; lastKnownFileType = folder; path = help; sourceTree = "<group>"; };
@@ -209,6 +214,8 @@
 		827CB5B424932CC70032A857 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/Localizable.strings; sourceTree = "<group>"; };
 		827EDC3026CDA5C000AAA12A /* ClewErrorSound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = ClewErrorSound.wav; sourceTree = "<group>"; };
 		827EDC3326CDA72200AAA12A /* SoundEffectManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundEffectManager.swift; sourceTree = "<group>"; };
+		82984805271F106E00DA3005 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		82984807271F107400DA3005 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		82A417E0262A205A001FCB8C /* AuthenticationHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationHelper.swift; sourceTree = "<group>"; };
 		82A417EC262A2140001FCB8C /* Clew Dev.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Clew Dev.entitlements"; sourceTree = "<group>"; };
 		82AD6A24252F80AA00902A11 /* speaker.mtl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = speaker.mtl; sourceTree = "<group>"; };
@@ -217,6 +224,8 @@
 		82DDE1F026F38D4000C58FA4 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/BurgerMenu.strings; sourceTree = "<group>"; };
 		82DDE1F226F38F6F00C58FA4 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/SettingsAndHelp.strings; sourceTree = "<group>"; };
 		82DDE1F326F3912800C58FA4 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/SettingsAndHelp.strings; sourceTree = "<group>"; };
+		82DE9223271876900086F5A4 /* ARSessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARSessionManager.swift; sourceTree = "<group>"; };
+		82DE922627188ACE0086F5A4 /* RouteManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteManager.swift; sourceTree = "<group>"; };
 		82E4A5CE262A26DC000BEB44 /* Clew.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Clew.entitlements; sourceTree = "<group>"; };
 		82F2DDD122E26A44005CD7D0 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		82F2DDD322E26A44005CD7D0 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/SettingsAndHelp.strings; sourceTree = "<group>"; };
@@ -323,6 +332,7 @@
 		4D6B00B71F33C1C400952242 = {
 			isa = PBXGroup;
 			children = (
+				82984806271F106E00DA3005 /* InfoPlist.strings */,
 				82A417EC262A2140001FCB8C /* Clew Dev.entitlements */,
 				82FB2F1326D82B35005E5088 /* TutorialFollowPathRelease1.crd */,
 				82FB2F1526D82BB4005E5088 /* TutorialFollowPathRelease2.crd */,
@@ -393,7 +403,6 @@
 				E5470EDC22C119F4001092A4 /* Clew-Bridging-Header.h */,
 				E5470EDD22C119F4001092A4 /* Controllers */,
 				E5470EED22C119F4001092A4 /* Views */,
-				821CF7882513264400A7B3C2 /* InfoPlist.strings */,
 				E5470EF522C119F4001092A4 /* GoogleService-Info_dev.plist */,
 			);
 			path = Clew;
@@ -426,6 +435,8 @@
 				82BC47FD2640383300C7D364 /* Surveys.swift */,
 				827EDC3326CDA72200AAA12A /* SoundEffectManager.swift */,
 				8214120726D497DE003EC2D4 /* SiriShortcutsManager.swift */,
+				82DE9223271876900086F5A4 /* ARSessionManager.swift */,
+				82DE922627188ACE0086F5A4 /* RouteManager.swift */,
 			);
 			path = Misc;
 			sourceTree = "<group>";
@@ -671,6 +682,7 @@
 				E5470F4E22C119F5001092A4 /* GoogleService-Info_dev.plist in Resources */,
 				1F2B9D8722C5446B00317DC8 /* (null) in Resources */,
 				82AD6A25252F80AA00902A11 /* speaker.mtl in Resources */,
+				82984803271F106E00DA3005 /* InfoPlist.strings in Resources */,
 				E5D1695E22E103A0008754D0 /* Localizable.strings in Resources */,
 				E5470F1A22C119F5001092A4 /* StopRecording.aiff in Resources */,
 				77467DAF22BBC1D300FA7DEE /* Default-568h@2x.png in Resources */,
@@ -684,6 +696,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E5470F0F22C119F5001092A4 /* Settings.bundle in Resources */,
+				82984804271F106E00DA3005 /* InfoPlist.strings in Resources */,
 				E5470F1922C119F5001092A4 /* StartRecording.aiff in Resources */,
 				14A90C0526A211BF003DAB30 /* ClewTutorialFeedback.wav in Resources */,
 				77365B192343ECBA008BC35C /* BurgerMenu.storyboard in Resources */,
@@ -868,6 +881,7 @@
 				E5470F0822C119F5001092A4 /* Utility.swift in Sources */,
 				E5470EFC22C119F5001092A4 /* RecordButton.swift in Sources */,
 				8261892E264ACCC5007F99C4 /* AppleSignInController.swift in Sources */,
+				82DE9224271876910086F5A4 /* ARSessionManager.swift in Sources */,
 				1F27632322FCBB6E00E1FCF8 /* BurgerMenuViewController.swift in Sources */,
 				E5470F0C22C119F5001092A4 /* SettingsViewController.m in Sources */,
 				14B02B3226823E2C00174B36 /* TutorialTestViews.swift in Sources */,
@@ -890,6 +904,7 @@
 				E5470F0422C119F5001092A4 /* FeedbackLogger.swift in Sources */,
 				8214120526D41476003EC2D4 /* SiriWalkThrough.swift in Sources */,
 				E5470F2822C119F5001092A4 /* ViewController.swift in Sources */,
+				82DE922727188ACE0086F5A4 /* RouteManager.swift in Sources */,
 				82A417E1262A205A001FCB8C /* AuthenticationHelper.swift in Sources */,
 				E5470F3622C119F5001092A4 /* PauseTrackingController.swift in Sources */,
 				E5470F2A22C119F5001092A4 /* RecordPathController.swift in Sources */,
@@ -920,6 +935,7 @@
 				E5470F0922C119F5001092A4 /* Utility.swift in Sources */,
 				E5470EFD22C119F5001092A4 /* RecordButton.swift in Sources */,
 				8261892F264ACCC5007F99C4 /* AppleSignInController.swift in Sources */,
+				82DE9225271876910086F5A4 /* ARSessionManager.swift in Sources */,
 				1F27632422FCBB9900E1FCF8 /* BurgerMenuViewController.swift in Sources */,
 				E5470F0D22C119F5001092A4 /* SettingsViewController.m in Sources */,
 				14B02B3326823E2C00174B36 /* TutorialTestViews.swift in Sources */,
@@ -942,6 +958,7 @@
 				E5470F4722C119F5001092A4 /* RootContainerView.swift in Sources */,
 				E5470F4B22C119F5001092A4 /* RouteTableViewCell.swift in Sources */,
 				E5470F0522C119F5001092A4 /* FeedbackLogger.swift in Sources */,
+				82DE922827188ACE0086F5A4 /* RouteManager.swift in Sources */,
 				82A417E2262A205A001FCB8C /* AuthenticationHelper.swift in Sources */,
 				E5470F2922C119F5001092A4 /* ViewController.swift in Sources */,
 				E5470F3722C119F5001092A4 /* PauseTrackingController.swift in Sources */,
@@ -1004,10 +1021,11 @@
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
 		};
-		821CF7882513264400A7B3C2 /* InfoPlist.strings */ = {
+		82984806271F106E00DA3005 /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
-				821CF7892513264400A7B3C2 /* ar */,
+				82984805271F106E00DA3005 /* ar */,
+				82984807271F107400DA3005 /* es */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
@@ -1171,7 +1189,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Clew/Clew.entitlements;
-				CURRENT_PROJECT_VERSION = 159;
+				CURRENT_PROJECT_VERSION = 162;
 				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
 				INFOPLIST_FILE = Clew/Info.plist;
@@ -1180,7 +1198,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0.20;
+				MARKETING_VERSION = 2.0.21;
 				PRODUCT_BUNDLE_IDENTIFIER = edu.occam.Clew;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Clew/Clew-Bridging-Header.h";
@@ -1198,7 +1216,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Clew/Clew.entitlements;
-				CURRENT_PROJECT_VERSION = 159;
+				CURRENT_PROJECT_VERSION = 162;
 				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
 				INFOPLIST_FILE = Clew/Info.plist;
@@ -1207,7 +1225,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0.20;
+				MARKETING_VERSION = 2.0.21;
 				PRODUCT_BUNDLE_IDENTIFIER = edu.occam.Clew;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Clew/Clew-Bridging-Header.h";
@@ -1225,7 +1243,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Clew Dev.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 159;
+				CURRENT_PROJECT_VERSION = 162;
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
 				INFOPLIST_FILE = "Clew Dev-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
@@ -1233,7 +1251,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0.20;
+				MARKETING_VERSION = 2.0.21;
 				OTHER_SWIFT_FLAGS = "$(inherited) \"-DDEVELOPER\" \"-DIS_DEV_TARGET\"";
 				PRODUCT_BUNDLE_IDENTIFIER = "edu.occam.Clew-Dev";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1255,7 +1273,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Clew Dev.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 159;
+				CURRENT_PROJECT_VERSION = 162;
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
 				INFOPLIST_FILE = "Clew Dev-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
@@ -1263,7 +1281,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0.20;
+				MARKETING_VERSION = 2.0.21;
 				OTHER_SWIFT_FLAGS = "$(inherited) \"-DDEVELOPER\" \"-DIS_DEV_TARGET\"";
 				PRODUCT_BUNDLE_IDENTIFIER = "edu.occam.Clew-Dev";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1280,7 +1298,7 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 159;
+				CURRENT_PROJECT_VERSION = 162;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
 				INFOPLIST_FILE = "route-quicklook/Info.plist";
@@ -1290,7 +1308,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 2.0.20;
+				MARKETING_VERSION = 2.0.21;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "edu.occam.Clew.route-quicklook";
@@ -1306,7 +1324,7 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 159;
+				CURRENT_PROJECT_VERSION = 162;
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
 				INFOPLIST_FILE = "route-quicklook/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -1315,7 +1333,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 2.0.20;
+				MARKETING_VERSION = 2.0.21;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "edu.occam.Clew.route-quicklook";
 				PRODUCT_NAME = "$(TARGET_NAME)";

@@ -66,7 +66,7 @@ class RootContainerView: UIView {
         
         // MARK: Burger Menu Button
         burgerMenuButton = UIButton(frame: CGRect(x: UIConstants.buttonFrameWidth/(10/0.5),
-                                                  y: 10,
+                                                  y: 40,
                                                   width: UIConstants.buttonFrameWidth/7,
                                                   height: UIConstants.buttonFrameWidth/7))
         burgerMenuButton.isAccessibilityElement = true
@@ -76,7 +76,7 @@ class RootContainerView: UIView {
 
         // MARK: Home Button
         homeButton = UIButton(frame: CGRect(x: UIConstants.buttonFrameWidth/(10/8),
-                                            y: 10,
+                                            y: 40,
                                             width: UIConstants.buttonFrameWidth/7,
                                             height: UIConstants.buttonFrameWidth/7))
         homeButton.isAccessibilityElement = true
@@ -89,7 +89,7 @@ class RootContainerView: UIView {
         
         // MARK: Home Button
         helpButton = UIButton(frame: CGRect(x: UIConstants.buttonFrameWidth/(10/8),
-                                            y: 10 + UIConstants.buttonFrameWidth/7,
+                                            y: 40 + UIConstants.buttonFrameWidth/7,
                                             width: UIConstants.buttonFrameWidth/7,
                                             height: UIConstants.buttonFrameWidth/7))
         helpButton.isAccessibilityElement = true

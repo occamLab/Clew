@@ -1,0 +1,11 @@
+/* 
+  InfoPlist.strings
+  Clew
+
+  Created by Paul Ruvolo on 10/19/21.
+  Copyright © 2021 OccamLab. All rights reserved.
+*/
+
+"Clew Route Document" = "Ruta de Clew";
+"NSCameraUsageDescription" = "Clew necesita acceder a tu cámara para poder rastrear tu orientación";
+"NSMicrophoneUsageDescription" = "Para utilizar la función de notas de voz es necesario dar permiso de acceso al micrófono";
