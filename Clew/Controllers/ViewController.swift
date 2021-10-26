@@ -384,29 +384,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
 
         logger.resetNavigationLog()
         
-//    func runTutorialPath(routeName: String) {
-//        isTutorial = true
-//        let path = Bundle.main.path(forResource: routeName, ofType:"crd")!
-//        let url = URL(fileURLWithPath: path)
-//        guard let data = try? Data(contentsOf: url) else {
-//            return
-//        }
-//        do {
-//            if let document = try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data) as? RouteDocumentData {
-//                let thisRoute = document.route
-//                for crumb in document.route.crumbs.reversed() {
-//                    print(crumb.transform.columns.3)
-//                }
-//                self.sceneView.session.run(self.configuration, options: [.removeExistingAnchors, .resetTracking])
-//                self.continuationAfterSessionIsReady = {
-//                    self.state = .startingResumeProcedure(route: thisRoute, worldMap: nil, navigateStartToEnd: true)
-//                }
-//            }
-//        } catch {
-//            print("error \(error)")
-//        }
-//    }
-        
         // this is where the code would actually pick up B)
         let pathRef = Storage.storage().reference().child("AppClipRoutes/\(routeID).crd")       // type StorageReference
 
@@ -419,33 +396,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 do {
                     if let document = try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data!) as? RouteDocumentData {
                         let thisRoute = document.route
-                        
-                        for crumb in document.route.crumbs.reversed() {
-                            print(crumb.transform.columns.3)
-                        }
-                        
                         self.sceneView.session.run(self.configuration, options: [.removeExistingAnchors, .resetTracking])
-                        
                         self.continuationAfterSessionIsReady = {
                             self.state = .startingResumeProcedure(route: thisRoute, worldMap: nil, navigateStartToEnd: true)
                         }
                     }
                 } catch {
                     print("error \(error)")
-                }
-//                self.dataPersistence.importData(withData: data!)
-//                print(self.dataPersistence.routes)
-//                print("data, persisted")
-//
-//                let thisRoute = (self.dataPersistence.routes.first(where: {String($0.id) == self.routeID}))!
-//
-//                print("Soooup Time \(thisRoute.name)")
-//                print("soooooup time")
-//
-//                self.sceneView.session.run(self.configuration, options: [.removeExistingAnchors, .resetTracking])
-//
-//                self.continuationAfterSessionIsReady = {
-//                    self.handleStateTransitionToStartingResumeProcedure(route: thisRoute, worldMap: nil, navigateStartToEnd: true)
                 }
             }
         }
@@ -2612,7 +2569,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
 
                 }
             }
-        }
+            }
         }
     }
     
