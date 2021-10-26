@@ -2512,7 +2512,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             let tagToWorld = tagAnchor.transform
             let tagToRoute = routeTransform
             
-            let relativeTransform = tagToWorld * tagToRoute.inverse
+            var relativeTransform = (tagToWorld * tagToRoute.inverse).alignY()
+            
             print("relativeTransform \(relativeTransform)")
             self.sceneView.session.setWorldOrigin(relativeTransform: relativeTransform)
             
