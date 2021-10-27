@@ -184,6 +184,10 @@ extension float4 {
     func toString()->String {
         return "\(self.x)\t\(self.y)\t\(self.z)\t\(self.w)"
     }
+    
+    var asArray: [Float] {
+        return [x, y, z, w]
+    }
 }
 
 // MARK: - Extension for the two dimensional floating point vector type

@@ -20,6 +20,8 @@
 		77365B192343ECBA008BC35C /* BurgerMenu.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 77365B1B2343ECBA008BC35C /* BurgerMenu.storyboard */; };
 		77467DAF22BBC1D300FA7DEE /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 77467DAE22BBC1D300FA7DEE /* Default-568h@2x.png */; };
 		8233042626C168BA00787637 /* arrow.obj in Resources */ = {isa = PBXBuildFile; fileRef = 8233042526C168BA00787637 /* arrow.obj */; };
+		824F44682729B97300E5FFF0 /* PointCloud.swift in Sources */ = {isa = PBXBuildFile; fileRef = 824F44672729B97300E5FFF0 /* PointCloud.swift */; };
+		824F44692729B97400E5FFF0 /* PointCloud.swift in Sources */ = {isa = PBXBuildFile; fileRef = 824F44672729B97300E5FFF0 /* PointCloud.swift */; };
 		82569F4E22187E6500448B45 /* help in Resources */ = {isa = PBXBuildFile; fileRef = 82569F4D22187E6500448B45 /* help */; };
 		82569F4F22187E6500448B45 /* help in Resources */ = {isa = PBXBuildFile; fileRef = 82569F4D22187E6500448B45 /* help */; };
 		825C7D6822CCDDA600545605 /* PathMatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 825C7D6722CCDDA600545605 /* PathMatcher.swift */; };
@@ -183,6 +185,7 @@
 		77467DAE22BBC1D300FA7DEE /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		822E27F8210E3F260024A5E3 /* Clew Dev-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Clew Dev-Info.plist"; sourceTree = "<group>"; };
 		8233042526C168BA00787637 /* arrow.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = arrow.obj; sourceTree = "<group>"; };
+		824F44672729B97300E5FFF0 /* PointCloud.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PointCloud.swift; sourceTree = "<group>"; };
 		82569F4D22187E6500448B45 /* help */ = {isa = PBXFileReference; lastKnownFileType = folder; path = help; sourceTree = "<group>"; };
 		825C7D6722CCDDA600545605 /* PathMatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PathMatcher.swift; sourceTree = "<group>"; };
 		82A5946926BDD36F00BC482C /* ClewSuccessSound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = ClewSuccessSound.wav; sourceTree = "<group>"; };
@@ -403,6 +406,7 @@
 				825C7D6722CCDDA600545605 /* PathMatcher.swift */,
 				E565A10722F2173400C1998E /* RouteDocumentData.swift */,
 				82E5504626C8B35600D0F8E8 /* CompassHeading.swift */,
+				824F44672729B97300E5FFF0 /* PointCloud.swift */,
 			);
 			path = Misc;
 			sourceTree = "<group>";
@@ -801,6 +805,7 @@
 				E5470EFC22C119F5001092A4 /* RecordButton.swift in Sources */,
 				1F27632322FCBB6E00E1FCF8 /* BurgerMenuViewController.swift in Sources */,
 				E5470F0C22C119F5001092A4 /* SettingsViewController.m in Sources */,
+				824F44682729B97300E5FFF0 /* PointCloud.swift in Sources */,
 				E5470F2622C119F5001092A4 /* FloatMatrixVectorExtensions.swift in Sources */,
 				E5470EF622C119F5001092A4 /* RecordButtonKit.swift in Sources */,
 				E5470F0622C119F5001092A4 /* PathFinder.swift in Sources */,
@@ -850,6 +855,7 @@
 				E5470EFD22C119F5001092A4 /* RecordButton.swift in Sources */,
 				1F27632422FCBB9900E1FCF8 /* BurgerMenuViewController.swift in Sources */,
 				E5470F0D22C119F5001092A4 /* SettingsViewController.m in Sources */,
+				824F44692729B97400E5FFF0 /* PointCloud.swift in Sources */,
 				E5470F2722C119F5001092A4 /* FloatMatrixVectorExtensions.swift in Sources */,
 				E5470EF722C119F5001092A4 /* RecordButtonKit.swift in Sources */,
 				E5470F0722C119F5001092A4 /* PathFinder.swift in Sources */,
@@ -1070,7 +1076,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = 302;
+				CURRENT_PROJECT_VERSION = 304;
 				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/Clew/PrefixHeader.pch";
@@ -1094,7 +1100,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = 302;
+				CURRENT_PROJECT_VERSION = 304;
 				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/Clew/PrefixHeader.pch";
@@ -1118,7 +1124,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 302;
+				CURRENT_PROJECT_VERSION = 304;
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/Clew/PrefixHeader.pch";
 				INFOPLIST_FILE = "Clew Dev-Info.plist";
@@ -1145,7 +1151,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 302;
+				CURRENT_PROJECT_VERSION = 304;
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/Clew/PrefixHeader.pch";
 				INFOPLIST_FILE = "Clew Dev-Info.plist";
@@ -1168,7 +1174,7 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 303;
+				CURRENT_PROJECT_VERSION = 304;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
 				INFOPLIST_FILE = "route-quicklook/Info.plist";
@@ -1190,7 +1196,7 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 303;
+				CURRENT_PROJECT_VERSION = 304;
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
 				INFOPLIST_FILE = "route-quicklook/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;

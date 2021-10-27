@@ -923,6 +923,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         appStartTime = Date()
         Database.database().reference().child("last_start_time").setValue(appStartTime.timeIntervalSince1970)
         sceneView.session.delegate = self
+        
+        // override the configuration for LIDAR phones
+        if ARWorldTrackingConfiguration.supportsFrameSemantics(.sceneDepth) {
+            let newConfiguration = ARWorldTrackingConfiguration()
+
+            newConfiguration.frameSemantics.insert(.sceneDepth)
+            configuration = .worldTracking(config: newConfiguration)
+        }
 
         sceneView.accessibilityIgnoresInvertColors = true
         
@@ -1975,7 +1983,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         return leveledCameraPose * yawRotation.inverse * leveledAlignPose.inverse
     }
     
-    func uploadJPEG(image: UIImage, to: StorageReference, transform: simd_float4x4?=nil, intrinsics: simd_float3x3?=nil, quality: CGFloat=1.0) {
+    func uploadJPEG(image: UIImage, to: StorageReference, transform: simd_float4x4?=nil, intrinsics: simd_float3x3?=nil, quality: CGFloat=1.0, transformedCloud: [simd_float4]? = nil) {
         if let imageData = image.jpegData(compressionQuality: quality) {
             let metadata = StorageMetadata()
             metadata.contentType = "image/jpeg"
@@ -1987,7 +1995,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 }
             }
         }
-        if let intrinsics = intrinsics, let transform = transform, let jsonData = try? JSONSerialization.data(withJSONObject: ["transform": transform.toFlatArray(), "intrinsics": intrinsics.toFlatArray()], options: .prettyPrinted) {
+        // Convert depthData into an array of floats that can be written into JSON
+        var depthTable: [[Float]] = []
+        for depthDatum in transformedCloud ?? [] {
+            depthTable.append(depthDatum.asArray)
+        }
+        if let intrinsics = intrinsics, let transform = transform, let jsonData = try? JSONSerialization.data(withJSONObject: ["transform": transform.toFlatArray(), "intrinsics": intrinsics.toFlatArray(), "depth": depthTable], options: .prettyPrinted) {
             let frameMetadataPath = to.fullPath.replacingOccurrences(of: ".jpg", with: "_metadata.json")
             
             let frameMetaDataStorageRef = Storage.storage().reference(withPath: frameMetadataPath)
@@ -2025,9 +2038,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 self.currentImage = capturedUIImage
                 self.currentPose = frame.camera.transform
                 let visualYawReturn = VisualAlignment.visualYaw(alignAnchorPointImage, alignAnchorPoint.intrinsics!, alignTransform, capturedUIImage, simd_float4(intrinsics[0, 0], intrinsics[1, 1], intrinsics[2, 0], intrinsics[2, 1]), frame.camera.transform, Int32(self.configuration.downsampleFactor))
-                
+                // Pointclouds for LiDAR phones
+                var transformedCloud: [simd_float4] = []
+                if let depthMap = frame.sceneDepth?.depthMap, let confMap = frame.sceneDepth?.confidenceMap {
+                    let pointCloud = self.saveSceneDepth(depthMapBuffer: depthMap, confMapBuffer: confMap)
+                    let xyz = pointCloud.getFastCloud(intrinsics: frame.camera.intrinsics, strideStep: 2, maxDepth: 1000, throwAwayPadding: 0, rgbWidth: CVPixelBufferGetWidth(frame.capturedImage), rgbHeight: CVPixelBufferGetHeight(frame.capturedImage))
+                    for p in xyz {
+                        transformedCloud.append(simd_float4(simd_normalize(p.0), simd_length(p.0)))
+                    }
+                }
                 let capturedImageRef = Storage.storage().reference().child(String(format: "visualAlignmentComparison/\(String(self.appStartTime.timeIntervalSince1970))/cameraimage_%04d.jpg", self.imageCounter))
-                self.uploadJPEG(image: capturedUIImage, to: capturedImageRef, transform: frame.camera.transform, intrinsics: frame.camera.intrinsics)
+                self.uploadJPEG(image: capturedUIImage, to: capturedImageRef, transform: frame.camera.transform, intrinsics: frame.camera.intrinsics, transformedCloud: transformedCloud)
                 
                 let alignImageRef = Storage.storage().reference().child(String(format: "visualAlignmentComparison/\(String(self.appStartTime.timeIntervalSince1970))/alignimage_%04d.jpg", self.imageCounter))
                 self.uploadJPEG(image: alignAnchorPointImage, to: alignImageRef, transform: alignTransform, intrinsics: simd_float3x3.from(intrinsicsVector: alignAnchorPoint.intrinsics!))
@@ -2902,5 +2923,28 @@ extension ViewController: UIPopoverPresentationControllerDelegate {
             popoverController.delegate = self
             popoverController.sourceRect = button.bounds
         }
+    }
+    // - MARK: Creating point cloud
+    func saveSceneDepth(depthMapBuffer: CVPixelBuffer, confMapBuffer: CVPixelBuffer, getConfidenceLevels: Bool = true) -> PointCloud {
+        let width = CVPixelBufferGetWidth(depthMapBuffer)
+        let height = CVPixelBufferGetHeight(depthMapBuffer)
+        CVPixelBufferLockBaseAddress(depthMapBuffer, CVPixelBufferLockFlags(rawValue: 0))
+        let depthBuffer = unsafeBitCast(CVPixelBufferGetBaseAddress(depthMapBuffer), to: UnsafeMutablePointer<Float32>.self)
+        var depthCopy = [Float32](repeating: 0.0, count: width*height)
+        memcpy(&depthCopy, depthBuffer, width*height*MemoryLayout<Float32>.size)
+        CVPixelBufferUnlockBaseAddress(depthMapBuffer, CVPixelBufferLockFlags(rawValue: 0))
+        var confCopy = [ARConfidenceLevel](repeating: .high, count: width*height)
+        if getConfidenceLevels {
+            // TODO: speed this up using some unsafe C-like operations. Currently we just allow it to be turned off to save time
+            CVPixelBufferLockBaseAddress(confMapBuffer, CVPixelBufferLockFlags(rawValue: 0))
+            let confBuffer = unsafeBitCast(CVPixelBufferGetBaseAddress(confMapBuffer), to: UnsafeMutablePointer<UInt8>.self)
+            for i in 0..<width*height {
+                confCopy[i] = ARConfidenceLevel(rawValue: Int(confBuffer[i])) ?? .low
+                
+            }
+            CVPixelBufferUnlockBaseAddress(confMapBuffer, CVPixelBufferLockFlags(rawValue: 0))
+            
+        }
+        return PointCloud(width: width, height: height, depthData: depthCopy)
     }
 }
