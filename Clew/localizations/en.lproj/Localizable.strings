@@ -141,9 +141,9 @@
 
 "imageAnchorPointAlignmentText" = "Please align your device with the camera pointed at your anchor image. If you are using the Clew App Clip, this will be in the same location as the scanned App Clip Code. Your route navigation will start immediately after your device has anchored to the image.";
 
-"anchorImageTagInFrameAnnouncement" = "Successfully anchored on image. Press \"Start\" to begin recording your route.";
+"anchorImageTagInFrameAnnouncement" = "Successfully anchored on image. Start recording your route";
 
-"alignImageTagInFrameAnnouncement" = "Successfully aligned to image. Press \"Start\" to begin navigating this route.";
+"alignImageTagInFrameAnnouncement" = "Successfully aligned to image. Navigation will start automatically.";
 
 //Settings
 "Settings" = "Settings"; // Comments: Title/header of the settings menu.
@@ -323,7 +323,7 @@
     "invalidCodeID" = "Invalid app clip code ID, please try again.";
 
     // Popover
-    "startNavigationPopoverText" = "I am placeholder text that will explain what clew is :)";
+    "startNavigationPopoverText" = "Chose a route to navigate along. Clew Maps will provide guidance such as turn left or right, and will indicate when you have reached your destination";
     "selectRoutePopoverLabel" = "Select Route";
     "startNavigatingLabel" = "Start Navigating";
 
