@@ -35,25 +35,40 @@ struct InformedConsentView : View {
                         }
                         .padding([.leading, .top, .trailing], 8)
                         
-                        
-                        Button(informedConsentModel.didEnterValidEmail ? "Consent to Participate" : "Please enter your email address") {
-                            // TODO redirect to main UI
-                            guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-                                  let sceneDelegate = windowScene.delegate as? SceneDelegate, let uid = Auth.auth().currentUser?.uid
-                              else {
-                                return
-                              }
-                            let ref = Database.database().reference().child("appclipexperiment").child("emails").child(uid)
-                            print(ref.url)
-                            ref.setValue(["email": informedConsentModel.userEmail])
-                            UserDefaults.standard.setValue(true, forKey: "hasconsented")
-                            
-                              let vc = ViewController()
+                        VStack {
+                            Button(informedConsentModel.didEnterValidEmail ? "Consent to Participate" : "Please enter your email address") {
+                                // TODO redirect to main UI
+                                guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                                      let sceneDelegate = windowScene.delegate as? SceneDelegate, let uid = Auth.auth().currentUser?.uid
+                                  else {
+                                    return
+                                  }
+                                let ref = Database.database().reference().child("appclipexperiment").child("emails").child(uid)
+                                print(ref.url)
+                                ref.setValue(["email": informedConsentModel.userEmail])
+                                UserDefaults.standard.setValue(true, forKey: "hasconsented")
+                                
+                                  let vc = ViewController()
 
-                              sceneDelegate.window?.rootViewController = vc
+                                  sceneDelegate.window?.rootViewController = vc
+                            }
+                            .disabled(!informedConsentModel.didEnterValidEmail)
+                            .padding([.leading, .top, .trailing], 8)
                         }
-                        .disabled(!informedConsentModel.didEnterValidEmail)
-                        .padding([.leading, .top, .trailing], 8)
+                        
+                        Button("or Continue without data logging") {
+                                // TODO redirect to main UI
+                                guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                                      let sceneDelegate = windowScene.delegate as? SceneDelegate, let uid = Auth.auth().currentUser?.uid
+                                  else {
+                                    return
+                                  }
+                                
+                                  let vc = ViewController()
+
+                                  sceneDelegate.window?.rootViewController = vc
+                            }
+                            .padding([.leading, .top, .trailing], 8)
                     }
                     .padding()
                 }
