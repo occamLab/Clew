@@ -8,7 +8,6 @@
 
 import UIKit
 import AVFoundation
-import PRTween
 
 /// a button that can initiate an audio recording
 @IBDesignable

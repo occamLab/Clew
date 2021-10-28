@@ -36,8 +36,6 @@ import SwiftUI
 import Firebase
 #if !APPCLIP
 import ARDataLogger
-#else
-import SRCountdownTimer
 #endif
 import CoreNFC
 
