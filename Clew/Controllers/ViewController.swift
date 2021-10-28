@@ -1192,7 +1192,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     func uploadLocalDataToCloudHelper() {
         #if !APPCLIP
-        guard arLogger.hasLocalDataToUploadToCloud() else {
+        guard arLogger.hasLocalDataToUploadToCloud(), arLogger.isConnectedToNetwork() else {
             return
         }
         let popoverController = UIHostingController(rootView: UploadingViewNoBinding())
