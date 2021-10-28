@@ -8,13 +8,14 @@
 
 import SwiftUI
 import Combine
+import ARKit
 
 
 /// A text entry box in which to enter the recorded route's name
 struct NameSavedRouteView: View {
     @State private var routeName: String = ""
     let vc: ViewController
-    var worldMap: Any?
+    var worldMap: ARWorldMap?
     
     var body: some View {
         VStack {
@@ -68,7 +69,7 @@ struct EnterNameButtonView: View {
 struct EnterNameButton: View {
     var vc: ViewController
     var routeName: String
-    var worldMap: Any?
+    var worldMap: ARWorldMap?
     
     var body: some View {
         Button(action: {

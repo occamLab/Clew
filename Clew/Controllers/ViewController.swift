@@ -62,11 +62,11 @@ enum AppState {
     /// user has successfully paused the ARSession
     case pauseProcedureCompleted
     /// user has hit the resume button and is waiting for the volume to hit
-    case startingResumeProcedure(route: SavedRoute, worldMap: Any?, navigateStartToEnd: Bool)
+    case startingResumeProcedure(route: SavedRoute, worldMap: ARWorldMap?, navigateStartToEnd: Bool)
     /// the AR session has entered the relocalizing state, which means that we can now realign the session
     case readyForFinalResumeAlignment
     /// the user is attempting to name the route they're in the process of saving
-    case startingNameSavedRouteProcedure(worldMap: Any?)
+    case startingNameSavedRouteProcedure(worldMap: ARWorldMap?)
     /// the user is attempting to name the app clip code ID for the route they're in the process of saving
     case startingNameCodeIDProcedure
     /// the user is navigating a recorded route from an ARImageAnchor
@@ -342,7 +342,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         hideAllViewsHelper()
         print("Aligning")
         
-        let navStart = UIAlertController(title: "Start Navigating", message: "Aligned to anchor image, click Start to begin navigation", preferredStyle: .alert)
+        // TODO: L10N
+        let navStart = UIAlertController(title: "Press start to begin navigation", message: "", preferredStyle: .alert)
         
         let start = UIAlertAction(title: "Start", style: .default, handler: {(action) -> Void in    // BL L10N
             self.confirmAlignment()
@@ -359,7 +360,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         
         hideAllViewsHelper()
         
-        let recordStart = UIAlertController(title: "Start Recording", message: "Aligned to anchor image, click Start to begin recording route", preferredStyle: .alert)
+        // TODO: L10N
+        let recordStart = UIAlertController(title: "Press start to begin recording", message: "", preferredStyle: .alert)
+        // TODO: cancel any alignment text being read out
         
         let start = UIAlertAction(title: "Start", style: .default, handler: {(action) -> Void in    // BL L10N
             self.confirmAlignment()
@@ -383,34 +386,24 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         logger.resetNavigationLog()
         
         // this is where the code would actually pick up B)
-        let pathRef = Storage.storage().reference().child("AppClipRoutes/\(routeID).crd")
-        
+        let pathRef = Storage.storage().reference().child("AppClipRoutes/\(routeID).crd")       // type StorageReference
+
         // download path from Firebase
         pathRef.getData(maxSize: 100000000000) { data, error in
             if error != nil {
                 // Handle any errors
                 print("Failed to download route from Firebase due to the following error: \(error)")
             } else {
-                
-                /*NotificationCenter.default.addObserver(forName: NSNotification.Name("shouldOpenRoute"), object: nil, queue: nil) { (notification) -> Void in
-                    
-                }*/
-                
-                self.dataPersistence.importData(withData: data!)
-                print(self.dataPersistence.routes)
-                print("data, persisted")
-                
-                let thisRoute = (self.dataPersistence.routes.first(where: {String($0.id) == self.routeID}))!
-//                let thisRoute = (self.dataPersistence.routes.last)!
-                
-                print("Soooup Time \(thisRoute.name)")
-                print("soooooup time")
-                
-                //self.sceneView.debugOptions = [.showWorldOrigin]
-                self.sceneView.session.run(self.configuration, options: [.removeExistingAnchors, .resetTracking])
-                
-                self.continuationAfterSessionIsReady = {
-                    self.handleStateTransitionToStartingResumeProcedure(route: thisRoute, worldMap: nil, navigateStartToEnd: true)
+                do {
+                    if let document = try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data!) as? RouteDocumentData {
+                        let thisRoute = document.route
+                        self.sceneView.session.run(self.configuration, options: [.removeExistingAnchors, .resetTracking])
+                        self.continuationAfterSessionIsReady = {
+                            self.state = .startingResumeProcedure(route: thisRoute, worldMap: nil, navigateStartToEnd: true)
+                        }
+                    }
+                } catch {
+                    print("error \(error)")
                 }
             }
         }
@@ -482,7 +475,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     ///   - route: the route to navigate
     ///   - worldMap: the world map to use
     ///   - navigateStartToEnd: a Boolean that is true if we want to navigate from the start to the end and false if we want to navigate from the end to the start.
-    func handleStateTransitionToStartingResumeProcedure(route: SavedRoute, worldMap: Any?, navigateStartToEnd: Bool) {
+    func handleStateTransitionToStartingResumeProcedure(route: SavedRoute, worldMap: ARWorldMap?, navigateStartToEnd: Bool) {
         logger.setCurrentRoute(route: route, worldMap: worldMap)
         
         // load the world map and restart the session so that things have a chance to quiet down before putting it up to the wall
@@ -548,7 +541,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     }
     
     /// Handler for the startingNameSavedRouteProcedure app state
-    func handleStateTransitionToStartingNameSavedRouteProcedure(worldMap: Any?){
+    func handleStateTransitionToStartingNameSavedRouteProcedure(worldMap: ARWorldMap?){
         hideAllViewsHelper()
 //        nameSavedRouteController.worldMap = worldMap // BL, moved this to initialization of nameSavedRouteController
         add(nameSavedRouteController)
@@ -562,7 +555,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             try! showPauseTrackingButton()
         } else {
             endRouteAnchorPoint = RouteAnchorPoint()
-            completingPauseProcedureHelper(worldMap: sceneView.session.getCurrentWorldMap)
+            
+            sceneView.session.getCurrentWorldMap { worldMap, error in
+                self.completingPauseProcedureHelper(worldMap: worldMap)
+            }
         }
     }
     
@@ -674,13 +670,15 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                         self.completingPauseProcedureHelper(worldMap: worldMap)
                     }
                 } else {
-                    completingPauseProcedureHelper(worldMap: sceneView.session.getCurrentWorldMap)
+                    sceneView.session.getCurrentWorldMap { worldMap, error in
+                        self.completingPauseProcedureHelper(worldMap: worldMap)
+                    }
                 }
             }
         }
     }
     
-    func completingPauseProcedureHelper(worldMap: Any?) {
+    func completingPauseProcedureHelper(worldMap: ARWorldMap?) {
         //check whether or not the path was called from the pause menu or not
         if paused {
             ///PATHPOINT pause recording anchor point alignment timer -> resume tracking
@@ -743,7 +741,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         self.state = .startingPauseProcedure
     }
     
-    @objc func saveRouteButtonPressed(worldMap: Any?) {
+    @objc func saveRouteButtonPressed(worldMap: ARWorldMap?) {
         let id = String(Int64(NSDate().timeIntervalSince1970 * 1000)) as NSString
         
         try! self.archive(routeId: id, appClipCodeID: self.appClipCodeID, beginRouteAnchorPoint: self.beginRouteAnchorPoint, endRouteAnchorPoint: self.endRouteAnchorPoint, intermediateAnchorPoints: self.intermediateAnchorPoints, worldMap: worldMap as? ARWorldMap, imageAnchoring: self.imageAnchoring)
@@ -801,7 +799,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     ///   - worldMap: the world map
     /// - Throws: an error if something goes wrong
 
-    func archive(routeId: NSString, appClipCodeID: String, beginRouteAnchorPoint: RouteAnchorPoint, endRouteAnchorPoint: RouteAnchorPoint, intermediateAnchorPoints: [RouteAnchorPoint], worldMap: Any?, imageAnchoring: Bool) throws {
+    func archive(routeId: NSString, appClipCodeID: String, beginRouteAnchorPoint: RouteAnchorPoint, endRouteAnchorPoint: RouteAnchorPoint, intermediateAnchorPoints: [RouteAnchorPoint], worldMap: ARWorldMap?, imageAnchoring: Bool) throws {
         let savedRoute = SavedRoute(id: routeId, appClipCodeID: self.appClipCodeID, name: routeName!, crumbs: crumbs, dateCreated: Date() as NSDate, beginRouteAnchorPoint: beginRouteAnchorPoint, endRouteAnchorPoint: endRouteAnchorPoint, intermediateAnchorPoints: intermediateAnchorPoints, imageAnchoring: imageAnchoring)
 
       try dataPersistence.archive(route: savedRoute, worldMap: worldMap)
@@ -969,7 +967,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                                                                        height: UIScreen.main.bounds.size.height*0.85)
         manageRoutesController.view.backgroundColor = .white
         
-        nameSavedRouteController = UIHostingController(rootView: NameSavedRouteView(vc: self, worldMap: sceneView.session.getCurrentWorldMap))
+        nameSavedRouteController = UIHostingController(rootView: NameSavedRouteView(vc: self))
         nameSavedRouteController.view.frame = CGRect(x: 0,
                                                                        y: UIScreen.main.bounds.size.height*0.15,
                                                                        width: UIConstants.buttonFrameWidth * 1,
@@ -2240,7 +2238,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     
     /// the most recently used map.  This helps us determine whether a route the user is attempting to load requires alignment.  If we have already aligned within a particular map, we can skip the alignment procedure.
-    var justUsedMap : Any?
+    var justUsedMap : ARWorldMap?
     
     /// DirectionText based on haptic/voice settings
     var Directions: Dictionary<Int, String> {
@@ -2530,7 +2528,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             let tagToWorld = tagAnchor.transform
             let tagToRoute = routeTransform
             
-            let relativeTransform = tagToWorld * tagToRoute.inverse
+            var relativeTransform = (tagToWorld * tagToRoute.inverse).alignY()
+            
             print("relativeTransform \(relativeTransform)")
             self.sceneView.session.setWorldOrigin(relativeTransform: relativeTransform)
             
@@ -2590,7 +2589,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
 
                 }
             }
-        }
+            }
         }
     }
     

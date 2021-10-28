@@ -26,6 +26,7 @@ class CodeIDModel: ObservableObject {
 struct EnterCodeIDView: View {
     let vc: ViewController
     @ObservedObject private var codeIDModel = CodeIDModel()
+
     
      var body: some View {
         VStack {
@@ -38,6 +39,7 @@ struct EnterCodeIDView: View {
                     .padding(.horizontal, 20)
             }
             VStack {
+                
                 TextField(NSLocalizedString("enterCodeIDTextField", comment: "This is a string appearing in the text box asking the user to enter their 3-digit app clip code ID"), text: $codeIDModel.code)
                     .disableAutocorrection(true)
                     .textFieldStyle(RoundedBorderTextFieldStyle())

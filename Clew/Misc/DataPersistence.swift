@@ -36,7 +36,7 @@ class DataPersistence {
     ///   - route: the route to save
     ///   - worldMap: an optional ARWorldMap to associate with the route
     /// - Throws: an error if the route could not be saved
-    func archive(route: SavedRoute, worldMap: Any?) throws {
+    func archive(route: SavedRoute, worldMap: ARWorldMap?) throws {
         // Save route to the route list
         if !update(route: route) {
             self.routes.append(route)
@@ -304,7 +304,7 @@ class DataPersistence {
     ///
     /// - Parameter id: the map id to fetch
     /// - Returns: the stored map
-    func unarchiveMap(id: String) -> Any? {
+    func unarchiveMap(id: String) -> ARWorldMap? {
         if #available(iOS 12.0, *) {
             do {
                 let data = try Data(contentsOf: getWorldMapURL(id: id))
