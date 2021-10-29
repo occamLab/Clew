@@ -53,7 +53,7 @@ xcuserdata/
 /*.gcno
 
 ### Something about removing Pods ###
-IDEWorkspaceChecks.plist
+!*.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist
 
 Package.resolved
 
