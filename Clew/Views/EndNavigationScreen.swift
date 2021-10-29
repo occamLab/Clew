@@ -8,10 +8,12 @@
 
 import SwiftUI
 import ARDataLogger
+import FirebaseStorage
 
 struct EndNavigationScreen: View {
     var vc: ViewController
     @State private var feedbackGiven = false
+    @State private var uploadPending = false
     var body: some View {
 
         ZStack{
@@ -37,6 +39,12 @@ struct EndNavigationScreen: View {
                                 Button(action: {
                                     vc.surveyInterface.sendLogDataHelper(pathStatus: false, announceArrival: true, vc: vc)
                                     feedbackGiven = true
+                                    if vc.arLogger.hasLocalDataToUploadToCloud() {
+                                        uploadPending = true
+                                        vc.arLogger.uploadLocalDataToCloud() { (metdata, error) in
+                                            uploadPending = false
+                                        }
+                                    }
                                 }){
                                     Image("thumbs_up")
                                         .resizable()
@@ -47,6 +55,12 @@ struct EndNavigationScreen: View {
                                 Button(action: {
                                     vc.surveyInterface.sendLogDataHelper(pathStatus: true, announceArrival: true, vc: vc)
                                     feedbackGiven = true
+                                    if vc.arLogger.hasLocalDataToUploadToCloud() {
+                                        uploadPending = true
+                                        vc.arLogger.uploadLocalDataToCloud() { (metadata, error) in
+                                            uploadPending = false
+                                        }
+                                    }
                                 }){
                                     Image("thumbs_down_red")
                                         .resizable()
@@ -74,18 +88,29 @@ struct EndNavigationScreen: View {
                     if !feedbackGiven{
                         vc.surveyInterface.sendLogDataHelper(pathStatus: nil, announceArrival: true, vc: vc)
                     }
-                        vc.hideAllViewsHelper()
-                        vc.state = .mainScreen(announceArrival: false)
-                        vc.arLogger.finalizeTrial()
-                    }){
-                        homeButtonView()
+                    vc.arLogger.finalizeTrial()
+                    if vc.arLogger.hasLocalDataToUploadToCloud() {
+                        uploadPending = true
+                        vc.arLogger.uploadLocalDataToCloud() { (metaData, error) in
+                            uploadPending = false
+                            self.vc.hideAllViewsHelper()
+                            self.vc.state = .mainScreen(announceArrival: false)
+                        }
+                    } else {
+                        self.vc.hideAllViewsHelper()
+                        self.vc.state = .mainScreen(announceArrival: false)
                     }
-
+                }){
+                    homeButtonView()
+                }
             }.padding()
                 
         }.onAppear(perform: {
             feedbackGiven = false
         })
+        .sheet(isPresented: $uploadPending) {
+            UploadingView(loadingViewShowing: $uploadPending)
+        }
     }
 }
 

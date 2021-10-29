@@ -36,8 +36,6 @@ import SwiftUI
 import Firebase
 #if !APPCLIP
 import ARDataLogger
-#else
-import SRCountdownTimer
 #endif
 import CoreNFC
 
@@ -290,8 +288,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     ///
     /// - Parameter announceArrival: a Boolean that indicates whether the user's arrival should be announced (true means the user has arrived)
     func handleStateTransitionToMainScreen(announceArrival: Bool) {
-        //arLogger.finalizeTrial()
-        //arLogger.startTrial()
         // cancel the timer that announces tracking errors
         trackingErrorsAnnouncementTimer?.invalidate()
         // if the ARSession is running, pause it to conserve battery
@@ -1194,6 +1190,22 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         logger.resetStateSequenceLog()
     }
     
+    func uploadLocalDataToCloudHelper() {
+        #if !APPCLIP
+        guard arLogger.hasLocalDataToUploadToCloud(), arLogger.isConnectedToNetwork() else {
+            return
+        }
+        let popoverController = UIHostingController(rootView: UploadingViewNoBinding())
+        popoverController.modalPresentationStyle = .fullScreen
+        self.present(popoverController, animated: true)
+        self.arLogger.uploadLocalDataToCloud() { wasSuccessful in
+            DispatchQueue.main.async {
+                popoverController.dismiss(animated: true)
+            }
+        }
+        #endif
+    }
+    
     /// This finishes the process of pressing the home button (after user has given confirmation)
     @objc func goHome() {
         // proceed to home page
@@ -1201,6 +1213,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         self.hideAllViewsHelper()
         #if !APPCLIP
         self.arLogger.finalizeTrial()
+        uploadLocalDataToCloudHelper()
         #endif
         self.state = .mainScreen(announceArrival: false)
     }
@@ -2901,6 +2914,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             hideAllViewsHelper()
             #if !APPCLIP
             self.arLogger.finalizeTrial()
+            uploadLocalDataToCloudHelper()
             #endif
             self.state = .mainScreen(announceArrival: false)
         }

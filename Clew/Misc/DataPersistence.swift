@@ -8,7 +8,7 @@
 
 import Foundation
 import ARKit
-import Firebase
+import FirebaseStorage
 
 /// This class handles saving and loading routes.
 /// TODO: make this a singleton

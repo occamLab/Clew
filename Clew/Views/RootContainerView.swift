@@ -20,8 +20,6 @@ import VectorMath
 import Firebase
 #if !APPCLIP
 import ARDataLogger
-#else
-import SRCountdownTimer
 #endif
 //import FirebaseDatabase
 //import SRCountdownTimer

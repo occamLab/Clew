@@ -7,8 +7,8 @@
 //
 
 import Foundation
-import Firebase
 import FirebaseStorage
+
 #if !APPCLIP
 import FirebaseAnalytics
 #endif
