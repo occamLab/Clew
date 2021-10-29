@@ -1487,11 +1487,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                     playSystemSound(id: 1234)
                 }
                 
-                if case .startingAutoAnchoring = state {
+                /*if case .startingAutoAnchoring = state {
                     announce(announcement: NSLocalizedString("anchorImageTagInFrameAnnouncement", comment: "This is announced when the image tag is in frame and the user can set an anchor point."))
                 } else if case .startingAutoAlignment = state {
                     announce(announcement: NSLocalizedString("alignImageTagInFrameAnnouncement", comment: "This is announced when the image tag is in frame, the user is localized to the route, and they can begin navigating."))
-                }
+                }*/
                 
                 imageNode = SCNNode()
                 imageNode.simdTransform = imageAnchor.transform
@@ -1875,6 +1875,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 announce(announcement: announcement)
             }
         }
+    }
+    
+    func alignmentTransition() {
+        self.announce(announcement: NSLocalizedString("resumeAnchorPointToReturnNavigationAnnouncement", comment: "This is an Announcement which indicates that the pause session is complete, that the program was able to align with the anchor point, and that return navigation has started."))
+            Timer.scheduledTimer(withTimeInterval: 3.0, repeats: false) { timer in
+                self.state = .navigatingRoute
+            }
+
     }
     
     /// Display stop recording view/hide all other views
@@ -2535,15 +2543,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                 ///PATHPOINT paused anchor point alignment timer -> return navigation
                 ///announce to the user that they have aligned to the anchor point sucessfully and are starting  navigation.
                 self.paused = false
-                self.delayTransition(announcement: NSLocalizedString("resumeAnchorPointToReturnNavigationAnnouncement", comment: "This is an Announcement which indicates that the pause session is complete, that the program was able to align with the anchor point, and that return navigation has started."), initialFocus: nil)
-                self.state = .navigatingRoute
+                self.alignmentTransition()
+                //self.delayTransition(announcement: NSLocalizedString("resumeAnchorPointToReturnNavigationAnnouncement", comment: "This is an Announcement which indicates that the pause session is complete, that the program was able to align with the anchor point, and that return navigation has started."), initialFocus: nil)
+                //self.state = .navigatingRoute
 
             } else {
                 ///PATHPOINT load saved route -> start navigation
 
                 ///announce to the user that they have sucessfully aligned with their saved anchor point.
-                self.delayTransition(announcement: NSLocalizedString("resumeAnchorPointToReturnNavigationAnnouncement", comment: "This is an Announcement which indicates that the pause session is complete, that the program was able to align with the anchor point, and that return navigation has started."), initialFocus: nil)
-                self.state = .navigatingRoute
+                self.alignmentTransition()
+                //self.delayTransition(announcement: NSLocalizedString("resumeAnchorPointToReturnNavigationAnnouncement", comment: "This is an Announcement which indicates that the pause session is complete, that the program was able to align with the anchor point, and that return navigation has started."), initialFocus: nil)
+                //self.state = .navigatingRoute
 
             }
         } else {
