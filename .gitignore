@@ -52,6 +52,9 @@ xcuserdata/
 !*.xcworkspace/contents.xcworkspacedata
 /*.gcno
 
+### Something about removing Pods ###
+!*.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist
+
 Package.resolved
 
 # End of https://www.gitignore.io/api/swift,xcode,cocoapods
