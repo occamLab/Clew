@@ -1192,7 +1192,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     func uploadLocalDataToCloudHelper() {
         #if !APPCLIP
-        guard arLogger.hasLocalDataToUploadToCloud(), arLogger.isConnectedToNetwork() else {
+        guard arLogger.hasLocalDataToUploadToCloud(), arLogger.isConnectedToNetwork(), uploadRichData == true else {
             return
         }
         let popoverController = UIHostingController(rootView: UploadingViewNoBinding())
@@ -1366,7 +1366,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// Register settings bundle
     func registerSettingsBundle(){
-        let appDefaults = ["crumbColor": 0, "showPath": true, "pathColor": 0, "hapticFeedback": true, "sendLogs": true, "voiceFeedback": true, "soundFeedback": true, "adjustOffset": false, "units": 0, "timerLength":5] as [String : Any]
+        let appDefaults = ["crumbColor": 0, "showPath": true, "pathColor": 0, "hapticFeedback": true, "sendLogs": true, "voiceFeedback": true, "soundFeedback": true, "adjustOffset": false, "units": 0, "timerLength":5, "uploadRichData": false] as [String : Any]
         UserDefaults.standard.register(defaults: appDefaults)
     }
 
@@ -1375,6 +1375,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         let defaults = UserDefaults.standard
         
         defaultUnit = defaults.integer(forKey: "units")
+        uploadRichData = defaults.bool(forKey: "uploadRichData")
         defaultColor = defaults.integer(forKey: "crumbColor")
         showPath = defaults.bool(forKey: "showPath")
         defaultPathColor = defaults.integer(forKey: "pathColor")
@@ -2195,6 +2196,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
 
     /// the selected default unit index (this index cross-references `unit`, `unitText`, and `unitConversionFactor`
     var defaultUnit: Int!
+    
+    /// Whether or not to upload the rich data
+    var uploadRichData: Bool?
     
     /// the color of the waypoints.  0 is red, 1 is green, 2 is blue, and 3 is random
     var defaultColor: Int!
