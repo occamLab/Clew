@@ -150,7 +150,15 @@ public struct KeypointInfo {
     /// the location of the keypoint
     public var location: LocationInfo
     /// the orientation of a keypoint is a unit vector that points from the previous keypoint to current keypoint.  The orientation is useful for defining the area where we check off the user as having reached a keypoint
-    public var orientation: Vector3
+    public var orientation: Vector3 {
+        if let currentKeypointLocation = ARSessionManager.shared.getCurrentLocation(of: location), let previousKeypoint = RouteManager.shared.getPreviousKeypoint(to: self), let prevKeypointLocation = ARSessionManager.shared.getCurrentLocation(of: previousKeypoint.location) {
+            return Vector3(_: [prevKeypointLocation.x - currentKeypointLocation.x,
+                                                 0,
+                               prevKeypointLocation.z - currentKeypointLocation.z]).normalized()
+        } else {
+            return Vector3.x
+        }
+    }
 }
 
 /// An encapsulation of a route Anchor Point, including position, text, and audio information.
@@ -158,8 +166,8 @@ class RouteAnchorPoint: NSObject, NSSecureCoding {
     /// Needs to be declared and assigned true to support `NSSecureCoding`
     static var supportsSecureCoding = true
     
-    /// The position and orientation as a 4x4 matrix
-    public var transform: simd_float4x4?
+    /// The position and orientation encoded as an ARAnchor
+    public var anchor: ARAnchor?
     /// Text to help user remember the Anchor Point
     public var information: NSString?
     /// The URL to an audio file that contains information to help the user remember a Anchor Point
@@ -173,8 +181,8 @@ class RouteAnchorPoint: NSObject, NSSecureCoding {
     ///   - transform: the position and orientation
     ///   - information: textual description
     ///   - voiceNote: URL to auditory description
-    public init(transform: simd_float4x4? = nil, information: NSString? = nil, voiceNote: NSString? = nil) {
-        self.transform = transform
+    public init(anchor: ARAnchor? = nil, information: NSString? = nil, voiceNote: NSString? = nil) {
+        self.anchor = anchor
         self.information = information
         self.voiceNote = voiceNote
     }
@@ -183,9 +191,7 @@ class RouteAnchorPoint: NSObject, NSSecureCoding {
     ///
     /// - Parameter aCoder: the encoder
     func encode(with aCoder: NSCoder) {
-        if transform != nil {
-            aCoder.encode(ARAnchor(transform: transform!), forKey: "transformAsARAnchor")
-        }
+        aCoder.encode(anchor, forKey: "anchor")
         aCoder.encode(information, forKey: "information")
         aCoder.encode(voiceNote, forKey: "voiceNote")
     }
@@ -194,16 +200,18 @@ class RouteAnchorPoint: NSObject, NSSecureCoding {
     ///
     /// - Parameter aDecoder: the decoder
     required convenience init?(coder aDecoder: NSCoder) {
-        var transform : simd_float4x4? = nil
+        var anchor : ARAnchor? = nil
         var information : NSString? = nil
         var voiceNote : NSString? = nil
         
         if let transformAsARAnchor = aDecoder.decodeObject(of: ARAnchor.self, forKey: "transformAsARAnchor") {
-            transform = transformAsARAnchor.transform
+            anchor = transformAsARAnchor
+        } else {
+            anchor = aDecoder.decodeObject(of: ARAnchor.self, forKey: "anchor")
         }
         information = aDecoder.decodeObject(of: NSString.self, forKey: "information")
         voiceNote = aDecoder.decodeObject(of: NSString.self, forKey: "voiceNote")
-        self.init(transform: transform, information: information, voiceNote: voiceNote)
+        self.init(anchor: anchor, information: information, voiceNote: voiceNote)
     }
     
 }
@@ -352,11 +360,11 @@ class SavedRoute: NSObject, NSSecureCoding, Identifiable {
             beginRouteAnchorPoint = anchorPoint
         } else {
             // check to see if we have a route in the old format
-            guard let beginRouteLandmark = aDecoder.decodeObject(of: RouteLandmark.self, forKey: "beginRouteLandmark") else {
+            guard let beginRouteLandmark = aDecoder.decodeObject(of: RouteLandmark.self, forKey: "beginRouteLandmark"), let landmarkTransform = beginRouteLandmark.transform else {
                     return nil
             }
             // convert to the new format
-            beginRouteAnchorPoint = RouteAnchorPoint(transform: beginRouteLandmark.transform, information: beginRouteLandmark.information, voiceNote: beginRouteLandmark.voiceNote)
+            beginRouteAnchorPoint = RouteAnchorPoint(anchor: ARAnchor(transform: landmarkTransform), information: beginRouteLandmark.information, voiceNote: beginRouteLandmark.voiceNote)
         }
         let endRouteAnchorPoint: RouteAnchorPoint
 
@@ -364,11 +372,11 @@ class SavedRoute: NSObject, NSSecureCoding, Identifiable {
             endRouteAnchorPoint = anchorPoint
         } else {
             // check to see if we have a route in the old format
-            guard let endRouteLandmark = aDecoder.decodeObject(of: RouteLandmark.self, forKey: "endRouteLandmark") else {
+            guard let endRouteLandmark = aDecoder.decodeObject(of: RouteLandmark.self, forKey: "endRouteLandmark"), let landmarkTransform = endRouteLandmark.transform else {
                 return nil
             }
             // convert to the new format
-            endRouteAnchorPoint = RouteAnchorPoint(transform: endRouteLandmark.transform, information: endRouteLandmark.information, voiceNote: endRouteLandmark.voiceNote)
+            endRouteAnchorPoint = RouteAnchorPoint(anchor: ARAnchor(transform: landmarkTransform), information: endRouteLandmark.information, voiceNote: endRouteLandmark.voiceNote)
         }
         
         var intermediateRouteAnchorPoints: [RouteAnchorPoint] = []
@@ -387,11 +395,9 @@ class SavedRoute: NSObject, NSSecureCoding, Identifiable {
 /// Pathfinder class calculates turns or "keypoints" given a path array of LocationInfo
 class PathFinder {
     
-    ///  Maximum width of the breadcrumb path.
+    ///  Maximum width of the breadcrumb path in meters.
     ///
     /// Points falling outside this margin will produce more keypoints, through Ramer-Douglas-Peucker algorithm
-    ///
-    /// - TODO: Clarify units
     private let pathWidth: Scalar!
     
     /// The crumbs that make up the desired path. These should be ordered with respect to the user's intended direction of travel (start to end versus end to start)
@@ -429,16 +435,12 @@ class PathFinder {
     func getKeypoints(edibleCrumbs: [LocationInfo]) -> [KeypointInfo] {
         var keypoints = [KeypointInfo]()
         let firstKeypointLocation = edibleCrumbs.first!
-        let firstKeypointOrientation = Vector3.x
-        keypoints.append(KeypointInfo(location: firstKeypointLocation, orientation: firstKeypointOrientation))
+        keypoints.append(KeypointInfo(location: firstKeypointLocation))
         
         keypoints += calculateKeypoints(edibleCrumbs: edibleCrumbs)
         
         let lastKeypointLocation = edibleCrumbs.last!
-        let lastKeypointOrientation = Vector3(_: [(keypoints.last?.location.x)! - edibleCrumbs.last!.x,
-                                                  0,
-                                                  (keypoints.last?.location.z)! - edibleCrumbs.last!.z]).normalized()
-        keypoints.append(KeypointInfo(location: lastKeypointLocation, orientation: lastKeypointOrientation))
+        keypoints.append(KeypointInfo(location: lastKeypointLocation))
         return keypoints
     }
     
@@ -492,24 +494,12 @@ class PathFinder {
             let prevKeypoints = calculateKeypoints(edibleCrumbs: Array(edibleCrumbs[0..<(maxIndex!+1)]))
             let postKeypoints = calculateKeypoints(edibleCrumbs: Array(edibleCrumbs[maxIndex!...]))
             
-            var prevKeypointLocation = edibleCrumbs.first!
-            var prevKeypointOrientation = Vector3.x
             if (!prevKeypoints.isEmpty) {
                 keypoints += prevKeypoints
-                
-                prevKeypointLocation = prevKeypoints.last!.location
-                prevKeypointOrientation = prevKeypoints.last!.orientation
             }
             
-            let prevKeypoint = KeypointInfo(location: prevKeypointLocation, orientation: prevKeypointOrientation)
-            
             let newKeypointLocation = edibleCrumbs[maxIndex!]
-            let newKeypointOrientation = Vector3(_: [prevKeypoint.location.x - newKeypointLocation.x,
-                                                     0,
-                                                     prevKeypoint.location.z - newKeypointLocation.z]).normalized()
-            
-            
-            keypoints.append(KeypointInfo(location: newKeypointLocation, orientation: newKeypointOrientation))
+            keypoints.append(KeypointInfo(location: newKeypointLocation))
             
             if (!postKeypoints.isEmpty) {
                 keypoints += postKeypoints

@@ -21,6 +21,7 @@ import FirebaseAuth
 
 /// A class to handle logging app usage data
 class PathLogger {
+    public static var shared = PathLogger()
     /// A handle to the Firebase storage
     let storageBaseRef = Storage.storage().reference()
     /// history of settings in the app
@@ -60,6 +61,10 @@ class PathLogger {
     var currentNavigationRoute: SavedRoute?
     /// the ARWorldMap that is currently navigating
     var currentNavigationMap: ARWorldMap?
+    
+    private init() {
+        
+    }
     
     /// language used in recording
     func currentLocale() -> String {

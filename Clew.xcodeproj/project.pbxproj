@@ -21,6 +21,18 @@
 		77365B192343ECBA008BC35C /* BurgerMenu.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 77365B1B2343ECBA008BC35C /* BurgerMenu.storyboard */; };
 		77467DAF22BBC1D300FA7DEE /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 77467DAE22BBC1D300FA7DEE /* Default-568h@2x.png */; };
 		821CF7842513264400A7B3C2 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 821CF7822513264400A7B3C2 /* InfoPlist.strings */; };
+		8227393A272C7E43006C181E /* ARSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82273939272C7E43006C181E /* ARSessionManager.swift */; };
+		8227393B272C7E43006C181E /* ARSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82273939272C7E43006C181E /* ARSessionManager.swift */; };
+		8227393C272C7E43006C181E /* ARSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82273939272C7E43006C181E /* ARSessionManager.swift */; };
+		8227393D272C7E43006C181E /* ARSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82273939272C7E43006C181E /* ARSessionManager.swift */; };
+		8227393F272C7E7D006C181E /* RouteManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8227393E272C7E7D006C181E /* RouteManager.swift */; };
+		82273940272C7E7D006C181E /* RouteManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8227393E272C7E7D006C181E /* RouteManager.swift */; };
+		82273941272C7E7D006C181E /* RouteManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8227393E272C7E7D006C181E /* RouteManager.swift */; };
+		82273942272C7E7D006C181E /* RouteManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8227393E272C7E7D006C181E /* RouteManager.swift */; };
+		8227394427308486006C181E /* SoundEffectManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8227394327308486006C181E /* SoundEffectManager.swift */; };
+		8227394527308487006C181E /* SoundEffectManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8227394327308486006C181E /* SoundEffectManager.swift */; };
+		8227394627308487006C181E /* SoundEffectManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8227394327308486006C181E /* SoundEffectManager.swift */; };
+		8227394727308487006C181E /* SoundEffectManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8227394327308486006C181E /* SoundEffectManager.swift */; };
 		823DA454252F7EA800BB5E6B /* speaker.obj in Resources */ = {isa = PBXBuildFile; fileRef = 823DA453252F7EA800BB5E6B /* speaker.obj */; };
 		823DA455252F7EA800BB5E6B /* speaker.obj in Resources */ = {isa = PBXBuildFile; fileRef = 823DA453252F7EA800BB5E6B /* speaker.obj */; };
 		82569F4E22187E6500448B45 /* help in Resources */ = {isa = PBXBuildFile; fileRef = 82569F4D22187E6500448B45 /* help */; };
@@ -403,6 +415,9 @@
 		8206436A23B556A200DEE347 /* es */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = es; path = es.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
 		821CF7832513264400A7B3C2 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		821CF7892513264400A7B3C2 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		82273939272C7E43006C181E /* ARSessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARSessionManager.swift; sourceTree = "<group>"; };
+		8227393E272C7E7D006C181E /* RouteManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteManager.swift; sourceTree = "<group>"; };
+		8227394327308486006C181E /* SoundEffectManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundEffectManager.swift; sourceTree = "<group>"; };
 		822E27F8210E3F260024A5E3 /* Clew Dev-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Clew Dev-Info.plist"; sourceTree = "<group>"; };
 		823DA453252F7EA800BB5E6B /* speaker.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = speaker.obj; sourceTree = "<group>"; };
 		82569F4D22187E6500448B45 /* help */ = {isa = PBXFileReference; lastKnownFileType = folder; path = help; sourceTree = "<group>"; };
@@ -802,6 +817,9 @@
 				82BC47FD2640383300C7D364 /* Surveys.swift */,
 				98CC6765268A1F2200E3759F /* SurveyInterface.swift */,
 				98CC6760268A0FEC00E3759F /* FirebaseSetup.swift */,
+				82273939272C7E43006C181E /* ARSessionManager.swift */,
+				8227393E272C7E7D006C181E /* RouteManager.swift */,
+				8227394327308486006C181E /* SoundEffectManager.swift */,
 			);
 			path = Misc;
 			sourceTree = "<group>";
@@ -1484,6 +1502,7 @@
 				E5470F2622C119F5001092A4 /* Float4x4Extension.swift in Sources */,
 				E5470EF622C119F5001092A4 /* RecordButtonKit.swift in Sources */,
 				82BC47FE2640383300C7D364 /* Surveys.swift in Sources */,
+				8227393F272C7E7D006C181E /* RouteManager.swift in Sources */,
 				E5470F0622C119F5001092A4 /* PathFinder.swift in Sources */,
 				E5470F2C22C119F5001092A4 /* StartNavigationController.swift in Sources */,
 				E5470F4222C119F5001092A4 /* UIConstants.swift in Sources */,
@@ -1492,6 +1511,7 @@
 				E565A10822F2173400C1998E /* RouteDocumentData.swift in Sources */,
 				E5470F0222C119F5001092A4 /* Navigation.swift in Sources */,
 				E5470F3822C119F5001092A4 /* ResumeTrackingConfirmController.swift in Sources */,
+				8227394427308486006C181E /* SoundEffectManager.swift in Sources */,
 				E5470EFA22C119F5001092A4 /* RecorderViewController.swift in Sources */,
 				E5470F4622C119F5001092A4 /* RootContainerView.swift in Sources */,
 				E5470F4A22C119F5001092A4 /* RouteTableViewCell.swift in Sources */,
@@ -1500,6 +1520,7 @@
 				98CC6761268A0FEC00E3759F /* FirebaseSetup.swift in Sources */,
 				82A417E1262A205A001FCB8C /* AuthenticationHelper.swift in Sources */,
 				E5470F3622C119F5001092A4 /* PauseTrackingController.swift in Sources */,
+				8227393A272C7E43006C181E /* ARSessionManager.swift in Sources */,
 				E5470F2A22C119F5001092A4 /* RecordPathController.swift in Sources */,
 				986640CE22FB68F2005AA1F6 /* NameSavedRouteController.swift in Sources */,
 				E5470EFE22C119F5001092A4 /* DataPersistence.swift in Sources */,
@@ -1543,9 +1564,12 @@
 				98006FB32683844D00E61861 /* StartNavigationController.swift in Sources */,
 				980536EE2684D16F0065E80F /* AppDelegate.swift in Sources */,
 				98006FC3268385B300E61861 /* UIButtonExtensions.swift in Sources */,
+				82273941272C7E7D006C181E /* RouteManager.swift in Sources */,
 				9805366126838AA40065E80F /* RootContainerView.swift in Sources */,
 				98006FC2268385AF00E61861 /* UIViewExtensions.swift in Sources */,
 				98006FCB268386A900E61861 /* HelpCompiler.swift in Sources */,
+				8227394627308487006C181E /* SoundEffectManager.swift in Sources */,
+				8227393C272C7E43006C181E /* ARSessionManager.swift in Sources */,
 				984FBD3E26962E4900B63A6A /* EnterCodeIDView.swift in Sources */,
 				98006FB52683845400E61861 /* ResumeTrackingController.swift in Sources */,
 				98CC6763268A0FEC00E3759F /* FirebaseSetup.swift in Sources */,
@@ -1593,6 +1617,7 @@
 				98FF7AD3269CC122008C64E5 /* FeedbackViewController.swift in Sources */,
 				98FF7ACD269CC112008C64E5 /* PauseTrackingController.swift in Sources */,
 				98AA5897269E1518001123F0 /* AppDelegate.swift in Sources */,
+				8227394727308487006C181E /* SoundEffectManager.swift in Sources */,
 				98FF7ACC269CC10F008C64E5 /* StopNavigationController.swift in Sources */,
 				98AA5895269E0C13001123F0 /* StartMenuView.swift in Sources */,
 				98FF7AD1269CC11C008C64E5 /* HelpViewController.swift in Sources */,
@@ -1620,10 +1645,12 @@
 				98FF7AC5269CC0FD008C64E5 /* ViewController.swift in Sources */,
 				98A2DAC826A76ACA00158F83 /* NameCodeIDView.swift in Sources */,
 				98FF7AAA269CC04C008C64E5 /* RecorderViewController.swift in Sources */,
+				82273942272C7E7D006C181E /* RouteManager.swift in Sources */,
 				98FF7AB2269CC0B0008C64E5 /* HelpCompiler.swift in Sources */,
 				98FF7ADB269CC153008C64E5 /* RouteTableViewCell.swift in Sources */,
 				98FF7ACF269CC117008C64E5 /* NameCodeIDController.swift in Sources */,
 				9824AB5826B981900016225C /* InformedConsentViewModel.swift in Sources */,
+				8227393D272C7E43006C181E /* ARSessionManager.swift in Sources */,
 				98FF7AD4269CC125008C64E5 /* RoutesViewController.swift in Sources */,
 				98FF7ACE269CC114008C64E5 /* ResumeTrackingConfirmController.swift in Sources */,
 				98FF7AC2269CC0F0008C64E5 /* UIButtonExtensions.swift in Sources */,
@@ -1662,6 +1689,7 @@
 				E5470F2722C119F5001092A4 /* Float4x4Extension.swift in Sources */,
 				E5470EF722C119F5001092A4 /* RecordButtonKit.swift in Sources */,
 				82BC47FF2640396700C7D364 /* Surveys.swift in Sources */,
+				82273940272C7E7D006C181E /* RouteManager.swift in Sources */,
 				E5470F0722C119F5001092A4 /* PathFinder.swift in Sources */,
 				E5470F2D22C119F5001092A4 /* StartNavigationController.swift in Sources */,
 				1F2B9D7222C3B50D00317DC8 /* HelpCompiler.swift in Sources */,
@@ -1670,6 +1698,7 @@
 				E565A10922F2173400C1998E /* RouteDocumentData.swift in Sources */,
 				E5470F3B22C119F5001092A4 /* HelpViewController.swift in Sources */,
 				E5470F0322C119F5001092A4 /* Navigation.swift in Sources */,
+				8227394527308487006C181E /* SoundEffectManager.swift in Sources */,
 				E5470F3922C119F5001092A4 /* ResumeTrackingConfirmController.swift in Sources */,
 				E5470EFB22C119F5001092A4 /* RecorderViewController.swift in Sources */,
 				E5470F4722C119F5001092A4 /* RootContainerView.swift in Sources */,
@@ -1678,6 +1707,7 @@
 				98CC6762268A0FEC00E3759F /* FirebaseSetup.swift in Sources */,
 				82A417E2262A205A001FCB8C /* AuthenticationHelper.swift in Sources */,
 				E5470F2922C119F5001092A4 /* ViewController.swift in Sources */,
+				8227393B272C7E43006C181E /* ARSessionManager.swift in Sources */,
 				E5470F3722C119F5001092A4 /* PauseTrackingController.swift in Sources */,
 				986640CF22FC9606005AA1F6 /* NameSavedRouteController.swift in Sources */,
 				E5470F2B22C119F5001092A4 /* RecordPathController.swift in Sources */,
@@ -2154,6 +2184,7 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CODE_SIGN_ENTITLEMENTS = "Clew-More/Clew-More.entitlements";
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 123;
 				DEBUG_INFORMATION_FORMAT = dwarf;
@@ -2172,6 +2203,7 @@
 				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = "edu.occam.Clew-Dev";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG CLEWMORE IS_DEV_TARGET";
 				SWIFT_OBJC_BRIDGING_HEADER = "Clew/Clew-More-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
@@ -2188,6 +2220,7 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CODE_SIGN_ENTITLEMENTS = "Clew-More/Clew-More.entitlements";
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 123;
 				DEVELOPMENT_ASSET_PATHS = "\"Clew-More/Preview Content\"";
@@ -2261,6 +2294,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "edu.occam.Clew-Dev";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "CLEWMORE IS_DEV_TARGET";
 				SWIFT_OBJC_BRIDGING_HEADER = "Clew/Clew-More-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;

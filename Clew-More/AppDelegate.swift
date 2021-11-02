@@ -43,10 +43,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         /// check imported file extension
         guard url.pathExtension == "crd" else { return false }
         
-        /// import the file here
-        //vc.beginScanning(self)
-//        vc?.dataPersistence.importData(from: url)
-        
         return true
     }
     
