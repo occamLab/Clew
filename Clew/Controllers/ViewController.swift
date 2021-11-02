@@ -1654,7 +1654,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
                                 if let url = url {
                                     // currently hardcoded :/, should probably change
                                     if url.host == "berwinl.com" {
-                                        statusMessage = "Successfully Accessed Clew Route Database"
+                                        statusMessage = "Success!"
                                         session.alertMessage = statusMessage
                                         session.invalidate()
                                         self.handleNFCURL(url)

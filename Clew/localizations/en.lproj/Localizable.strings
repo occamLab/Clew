@@ -30,8 +30,8 @@
 "completedNavigationAnnouncement" = "You've arrived.";
 
     // Name of labels that appear in UI
-"saveARouteButtonText" = "Create a\nNew Route";
-"saveARouteButtonAccessibilityLabel" = "Create a new route";
+"saveARouteButtonText" = "Create a Route";
+"saveARouteButtonAccessibilityLabel" = "Create a Route";
 "saveACodeIDButtonText" = "Save Code ID";
 "saveACodeIDButtonAccessiblityLabel" = "Save the Code ID of the route";
 "badServiceButtonAccessibilityLabel" = "Bad";
@@ -60,8 +60,8 @@
 "startReturnNavigationButtonAccessibilityLabel" = "Start navigation";
 "optionsButtonAccessibilityLabel" = "Options";
 "signInwithAppleButtonAccessibilityLabel" = "Sign In";
-"enterCodeButtonText" = "Navigate From\nImage Anchor";
-"enterCodeButtonAccessibilityLabel" = "Navigate routes from a physical image anchor";
+"enterCodeButtonText" = "Navigate";
+"enterCodeButtonAccessibilityLabel" = "Navigate";
 "recordSingleUseRouteButtonAccessibilityLabel" = "Navigate From app clip code ID";
 
 
@@ -323,8 +323,8 @@
     "invalidCodeID" = "Invalid app clip code ID, please try again.";
 
     // Popover
-    "startNavigationPopoverText" = "Chose a route to navigate along. Clew Maps will provide guidance such as turn left or right, and will indicate when you have reached your destination";
-    "selectRoutePopoverLabel" = "Select Route";
+    "startNavigationPopoverText" = "Select a route below";
+    "selectRoutePopoverLabel" = "Select a route below";
     "startNavigatingLabel" = "Start Navigating";
 
     // LoadFromAppClipView
@@ -343,6 +343,7 @@
     "enterCodeIDLabel" = "Enter the three-digit code ID below.";
     "enterCodeIDTextField" = "3-digit code ID";
     "enterCodeIDButtonText" = "Submit code ID";
+    "scanNfcButtonText" = "Scan NFC card";
 
     // NameCodeIDView
     "nameCodeIDLabel" = "To create a route, the starting anchor point must be associated with an app clip code ID. Enter the three-digit ID for this route's starting point below.";
