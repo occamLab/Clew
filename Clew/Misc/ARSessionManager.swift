@@ -99,10 +99,6 @@ class ARSessionManager: NSObject {
         configuration.isAutoFocusEnabled = false
     }
     
-    func setInitialWorldMap(map: ARWorldMap?) {
-        configuration.initialWorldMap = nil
-    }
-    
     func startSession() {
         manualAlignment = nil
         removeNavigationNodes()
