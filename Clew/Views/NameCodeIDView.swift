@@ -11,9 +11,11 @@ import SwiftUI
 import Combine
 
 /// A text entry box in which to enter the app clip code ID
+//@available(iOS 15.0, *)
 struct NameCodeIDView: View {
     let vc: ViewController
     @ObservedObject private var codeIDModel = CodeIDModel() /// this is in EnterCodeIDView
+    //@FocusState private var keypadIsFocused: Bool
 
      var body: some View {
         VStack {
@@ -36,6 +38,7 @@ struct NameCodeIDView: View {
                     .overlay(RoundedRectangle(cornerRadius: 2 * 3)
                                 .stroke(Color.white, lineWidth: 3))
                     .padding(20)
+                   // .focused($keypadIsFocused)
                 
                 NameCodeIDButton(vc: vc, codeID: codeIDModel.code)
                     .frame(minWidth: 0, maxWidth: .infinity)
@@ -46,6 +49,7 @@ struct NameCodeIDView: View {
                     .padding(.horizontal, 20)
             }.onAppear(perform: {
                 codeIDModel.code = ""
+                //keypadIsFocused = false
             })
          }
      }

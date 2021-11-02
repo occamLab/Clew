@@ -103,4 +103,23 @@ extension float4x4 {
     var yaw: Float {
         return LocationInfo(anchor: ARAnchor(transform: self)).yaw
     }
+    
+    func alignY(allowNegativeY: Bool = false)->float4x4 {
+        let yAxisVal = !allowNegativeY || simd_quatf(self).axis.y >= 0 ? Float(1.0) : Float(-1.0)
+        return float4x4(translation: columns.3.dropw(), rotation: simd_quatf(from: columns.1.dropw(), to: simd_float3(0, yAxisVal, 0))*simd_quatf(self))
+    }
+    
+    init(translation: simd_float3, rotation: simd_quatf) {
+        self = simd_float4x4(rotation)
+        self.columns.3.x = translation.x
+        self.columns.3.y = translation.y
+        self.columns.3.z = translation.z
+    }
 }
+
+extension float4 {
+    func dropw()->float3 {
+        return float3(self.x, self.y, self.z)
+    }
+}
+

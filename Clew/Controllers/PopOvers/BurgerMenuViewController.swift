@@ -7,11 +7,14 @@
 //
 
 import Foundation
-import UIKit // EEA
-import SceneKit
 import InAppSettingsKit
 
-class BurgerMenuViewController: UITableViewController, UIPopoverPresentationControllerDelegate {
+class BurgerMenuViewController: UITableViewController, UIPopoverPresentationControllerDelegate, IASKSettingsDelegate {
+    
+    func settingsViewControllerDidEnd(_ settingsViewController: IASKAppSettingsViewController) {
+        settingsViewController.dismiss(animated: true, completion: nil)
+        NotificationCenter.default.post(name: Notification.Name("ClewPopoverDismissed"), object: nil)
+    }
     
     /// Called when the user selects an element from the routes table. Different indexPath/tableViewCell being tapped triggers different popup that is indicated by the content of the UILabel inside the tableViewCell (check corresponding storyboard).
     ///
@@ -21,7 +24,7 @@ class BurgerMenuViewController: UITableViewController, UIPopoverPresentationCont
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print("selected", indexPath)
         if indexPath == [0,0] {
-            settingsButtonPressed() // EEA
+            settingsButtonPressed()
         }
         if indexPath == [0,1] {
             helpButtonPressed()
@@ -33,17 +36,16 @@ class BurgerMenuViewController: UITableViewController, UIPopoverPresentationCont
     
     /// Called when the settings button is pressed.  This function will display the settings view (managed by SettingsViewController) as a popover.
     func settingsButtonPressed() {
-        let storyBoard: UIStoryboard = UIStoryboard(name: "SettingsAndHelp", bundle: nil)
-        let popoverContent = storyBoard.instantiateViewController(withIdentifier: "Settings") as! SettingsViewController // EEA
+        let popoverContent = IASKAppSettingsViewController()
         popoverContent.preferredContentSize = CGSize(width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height)
+        popoverContent.delegate = self
         let nav = UINavigationController(rootViewController: popoverContent)
         nav.modalPresentationStyle = .popover
         let popover = nav.popoverPresentationController
         popover?.delegate = self
         popover?.sourceView = self.view
         popover?.sourceRect = CGRect(x: 0, y: UIConstants.settingsAndHelpFrameHeight/2, width: 0,height: 0)
-        
-        popoverContent.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: popoverContent, action: #selector(popoverContent.doneWithSettings))
+        NotificationCenter.default.post(name: Notification.Name("ClewPopoverDisplayed"), object: nil)
         
         self.present(nav, animated: true, completion: nil)
     }

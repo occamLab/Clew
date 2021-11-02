@@ -36,8 +36,6 @@ import SwiftUI
 import Firebase
 #if !APPCLIP
 import ARDataLogger
-#else
-import SRCountdownTimer
 #endif
 import CoreNFC
 
@@ -296,8 +294,6 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     ///
     /// - Parameter announceArrival: a Boolean that indicates whether the user's arrival should be announced (true means the user has arrived)
     func handleStateTransitionToMainScreen(announceArrival: Bool) {
-        //arLogger.finalizeTrial()
-        //arLogger.startTrial()
         // cancel the timer that announces tracking errors
         trackingErrorsAnnouncementTimer?.invalidate()
         // if the ARSession is running, pause it to conserve battery
@@ -349,7 +345,8 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         hideAllViewsHelper()
         print("Aligning")
         
-        let navStart = UIAlertController(title: "Start Navigating", message: "Aligned to anchor image, click Start to begin navigation", preferredStyle: .alert)
+        // TODO: L10N
+        let navStart = UIAlertController(title: "Press start to begin navigation", message: "", preferredStyle: .alert)
         
         let start = UIAlertAction(title: "Start", style: .default, handler: {(action) -> Void in    // BL L10N
             self.confirmAlignment()
@@ -366,7 +363,9 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         
         hideAllViewsHelper()
         
-        let recordStart = UIAlertController(title: "Start Recording", message: "Aligned to anchor image, click Start to begin recording route", preferredStyle: .alert)
+        // TODO: L10N
+        let recordStart = UIAlertController(title: "Press start to begin recording", message: "", preferredStyle: .alert)
+        // TODO: cancel any alignment text being read out
         
         let start = UIAlertAction(title: "Start", style: .default, handler: {(action) -> Void in    // BL L10N
             self.confirmAlignment()
@@ -398,25 +397,18 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
                 // Handle any errors
                 print("Failed to download route from Firebase due to the following error: \(error)")
             } else {
-                
-                /*NotificationCenter.default.addObserver(forName: NSNotification.Name("shouldOpenRoute"), object: nil, queue: nil) { (notification) -> Void in
-                    
-                }*/
-                
-                self.dataPersistence.importData(withData: data!)
-                print(self.dataPersistence.routes)
-                print("data, persisted")
-                
-                let thisRoute = (self.dataPersistence.routes.first(where: {String($0.id) == self.routeID}))!
-                ARSessionManager.shared.initialWorldMap = self.dataPersistence.unarchiveMap(id: thisRoute.id as String)
-
-                print("Soooup Time \(thisRoute.name) \(ARSessionManager.shared.initialWorldMap)")
-                print("soooooup time")
-                self.trackingSessionErrorState = nil
-                ARSessionManager.shared.startSession()
-                
-                self.continuationAfterSessionIsReady = {
-                    self.handleStateTransitionToStartingResumeProcedure(route: thisRoute, worldMap: ARSessionManager.shared.initialWorldMap, navigateStartToEnd: true)
+                do {
+                    if let document = try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data!) as? RouteDocumentData {
+                        let thisRoute = document.route
+                        ARSessionManager.shared.initialWorldMap = document.map
+                        self.continuationAfterSessionIsReady = {
+                            self.state = .startingResumeProcedure(route: thisRoute, worldMap: ARSessionManager.shared.initialWorldMap, navigateStartToEnd: true)
+                        }
+                        self.trackingSessionErrorState = nil
+                        ARSessionManager.shared.startSession()
+                    }
+                } catch {
+                    print("error \(error)")
                 }
             }
         }
@@ -1183,6 +1175,22 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         logger.resetStateSequenceLog()
     }
     
+    func uploadLocalDataToCloudHelper() {
+        #if !APPCLIP
+        guard arLogger.hasLocalDataToUploadToCloud(), arLogger.isConnectedToNetwork(), uploadRichData == true else {
+            return
+        }
+        let popoverController = UIHostingController(rootView: UploadingViewNoBinding())
+        popoverController.modalPresentationStyle = .fullScreen
+        self.present(popoverController, animated: true)
+        self.arLogger.uploadLocalDataToCloud() { wasSuccessful in
+            DispatchQueue.main.async {
+                popoverController.dismiss(animated: true)
+            }
+        }
+        #endif
+    }
+    
     /// This finishes the process of pressing the home button (after user has given confirmation)
     @objc func goHome() {
         // proceed to home page
@@ -1190,6 +1198,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         self.hideAllViewsHelper()
         #if !APPCLIP
         self.arLogger.finalizeTrial()
+        uploadLocalDataToCloudHelper()
         #endif
         self.state = .mainScreen(announceArrival: false)
     }
@@ -1342,7 +1351,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     
     /// Register settings bundle
     func registerSettingsBundle(){
-        let appDefaults = ["crumbColor": 0, "showPath": true, "pathColor": 0, "hapticFeedback": true, "sendLogs": true, "voiceFeedback": true, "soundFeedback": true, "adjustOffset": false, "units": 0, "timerLength":5] as [String : Any]
+        let appDefaults = ["crumbColor": 0, "showPath": true, "pathColor": 0, "hapticFeedback": true, "sendLogs": true, "voiceFeedback": true, "soundFeedback": true, "adjustOffset": false, "units": 0, "timerLength":5, "uploadRichData": false] as [String : Any]
         UserDefaults.standard.register(defaults: appDefaults)
     }
 
@@ -1351,6 +1360,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         let defaults = UserDefaults.standard
         
         defaultUnit = defaults.integer(forKey: "units")
+        uploadRichData = defaults.bool(forKey: "uploadRichData")
         defaultColor = defaults.integer(forKey: "crumbColor")
         showPath = defaults.bool(forKey: "showPath")
         defaultPathColor = defaults.integer(forKey: "pathColor")
@@ -1673,6 +1683,14 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         }
     }
     
+    func alignmentTransition() {
+        self.announce(announcement: NSLocalizedString("resumeAnchorPointToReturnNavigationAnnouncement", comment: "This is an Announcement which indicates that the pause session is complete, that the program was able to align with the anchor point, and that return navigation has started."))
+            Timer.scheduledTimer(withTimeInterval: 3.0, repeats: false) { timer in
+                self.state = .navigatingRoute
+            }
+
+    }
+    
     /// Display stop recording view/hide all other views
     @objc func showStopRecordingButton() {
         #if !APPCLIP
@@ -1963,6 +1981,9 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
 
     /// the selected default unit index (this index cross-references `unit`, `unitText`, and `unitConversionFactor`
     var defaultUnit: Int!
+    
+    /// Whether or not to upload the rich data
+    var uploadRichData: Bool?
     
     /// the color of the waypoints.  0 is red, 1 is green, 2 is blue, and 3 is random
     var defaultColor: Int!
@@ -2279,22 +2300,26 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
             
             let tagToWorld = tagAnchor.transform
             let tagToRoute = routeTransform
-            ARSessionManager.shared.manualAlignment = tagToWorld * tagToRoute.inverse
+            let relativeTransform = (tagToWorld * tagToRoute.inverse).alignY()
+            ARSessionManager.shared.manualAlignment = relativeTransform
+            print("relativeTransform \(relativeTransform)")
             
             self.isResumedRoute = true
             if self.paused {
                 ///PATHPOINT paused anchor point alignment timer -> return navigation
                 ///announce to the user that they have aligned to the anchor point sucessfully and are starting  navigation.
                 self.paused = false
-                self.delayTransition(announcement: NSLocalizedString("resumeAnchorPointToReturnNavigationAnnouncement", comment: "This is an Announcement which indicates that the pause session is complete, that the program was able to align with the anchor point, and that return navigation has started."), initialFocus: nil)
-                self.state = .navigatingRoute
+                self.alignmentTransition()
+                //self.delayTransition(announcement: NSLocalizedString("resumeAnchorPointToReturnNavigationAnnouncement", comment: "This is an Announcement which indicates that the pause session is complete, that the program was able to align with the anchor point, and that return navigation has started."), initialFocus: nil)
+                //self.state = .navigatingRoute
 
             } else {
                 ///PATHPOINT load saved route -> start navigation
 
                 ///announce to the user that they have sucessfully aligned with their saved anchor point.
-                self.delayTransition(announcement: NSLocalizedString("resumeAnchorPointToReturnNavigationAnnouncement", comment: "This is an Announcement which indicates that the pause session is complete, that the program was able to align with the anchor point, and that return navigation has started."), initialFocus: nil)
-                self.state = .navigatingRoute
+                self.alignmentTransition()
+                //self.delayTransition(announcement: NSLocalizedString("resumeAnchorPointToReturnNavigationAnnouncement", comment: "This is an Announcement which indicates that the pause session is complete, that the program was able to align with the anchor point, and that return navigation has started."), initialFocus: nil)
+                //self.state = .navigatingRoute
 
             }
         } else {
@@ -2335,7 +2360,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
 
                 }
             }
-        }
+            }
         }
     }
     
@@ -2651,6 +2676,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
             hideAllViewsHelper()
             #if !APPCLIP
             self.arLogger.finalizeTrial()
+            uploadLocalDataToCloudHelper()
             #endif
             self.state = .mainScreen(announceArrival: false)
         }
@@ -2931,11 +2957,11 @@ extension ViewController: ARSessionManagerDelegate {
                     SoundEffectManager.shared.meh()
                 }
                 
-                if case .startingAutoAnchoring = state {
+               /* if case .startingAutoAnchoring = state {
                     announce(announcement: NSLocalizedString("anchorImageTagInFrameAnnouncement", comment: "This is announced when the image tag is in frame and the user can set an anchor point."))
                 } else if case .startingAutoAlignment = state {
                     announce(announcement: NSLocalizedString("alignImageTagInFrameAnnouncement", comment: "This is announced when the image tag is in frame, the user is localized to the route, and they can begin navigating."))
-                }
+                }*/
                 
                 imageNode = SCNNode()
                 imageNode.simdTransform = imageAnchor.transform
