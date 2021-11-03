@@ -441,7 +441,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         
         // render path
         if showPath, let nextKeypoint = RouteManager.shared.nextKeypoint {
-            ARSessionManager.shared.renderPath(prevKeypointPosition, nextKeypoint.location, defaultPathColor: defaultPathColor)
+            ARSessionManager.shared.renderPath(self.prevKeypointPosition, nextKeypoint.location, defaultPathColor: self.defaultPathColor)
         }
         
         // render intermediate anchor points
@@ -1596,8 +1596,6 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
             /// for navigating a saved route
             hideAllViewsHelper()
             resumeTracking()
-            //state = .navigatingRoute
-            print("navigating route")
         } else if case .startingAutoAnchoring = state {
             /// for recording a saved route
             hideAllViewsHelper()
@@ -2302,8 +2300,6 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
             let tagToRoute = routeTransform
             let relativeTransform = (tagToWorld * tagToRoute.inverse).alignY()
             ARSessionManager.shared.manualAlignment = relativeTransform
-            print("relativeTransform \(relativeTransform)")
-            
             self.isResumedRoute = true
             if self.paused {
                 ///PATHPOINT paused anchor point alignment timer -> return navigation
@@ -2319,8 +2315,6 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
                 ///announce to the user that they have sucessfully aligned with their saved anchor point.
                 self.alignmentTransition()
                 //self.delayTransition(announcement: NSLocalizedString("resumeAnchorPointToReturnNavigationAnnouncement", comment: "This is an Announcement which indicates that the pause session is complete, that the program was able to align with the anchor point, and that return navigation has started."), initialFocus: nil)
-                //self.state = .navigatingRoute
-
             }
         } else {
             DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(ViewController.alignmentWaitingPeriod)) {
@@ -2329,10 +2323,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
                 if case .readyForFinalResumeAlignment = self.state, let routeTransform = self.pausedTransform, /*let tagAnchor = self.sceneView.session.currentFrame?.anchors.compactMap({$0 as? ARAppClipCodeAnchor}).filter({$0.isTracked}).first */ let tagAnchor = ARSessionManager.shared.currentFrame?.camera {
                 // yaw can be determined by projecting the camera's z-axis into the ground plane and using arc tangent (note: the camera coordinate conventions of ARKit https://developer.apple.com/documentation/arkit/arsessionconfiguration/worldalignment/camera
                 let alignYaw = self.getYawHelper(routeTransform)
-                // print("alignYaw = \(alignYaw*180/3.14)")
                 let cameraYaw = self.getYawHelper(tagAnchor.transform)
-                // print("cameraYaw = \(cameraYaw*180/3.14)")
-                // print("isAutomaticAlignment = \(self.isAutomaticAlignment)")
 
                 print("image tag: \(tagAnchor)")
                 var tagToWorld = simd_float4x4.makeRotate(radians: cameraYaw, 0, 1, 0)
@@ -2558,7 +2549,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
             }
         }
         for anchorPoint in RouteManager.shared.intermediateAnchorPoints {
-            guard let anchorPointTransform = anchorPoint.anchor?.transform else {
+            guard let arAnchor = anchorPoint.anchor, let anchorPointTransform = ARSessionManager.shared.getCurrentLocation(of: arAnchor)?.transform else {
                 continue
             }
             // TODO think about breaking ties by playing the least recently played voice note
@@ -2983,6 +2974,8 @@ extension ViewController: ARSessionManagerDelegate {
     
     func shouldLogRichData() -> Bool {
         if case .mainScreen(_) = state {
+            return false
+        } else if case .endScreen(_) = state {
             return false
         } else {
             return true

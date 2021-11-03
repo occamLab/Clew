@@ -39,7 +39,7 @@ struct EndNavigationScreen: View {
                                 Button(action: {
                                     vc.surveyInterface.sendLogDataHelper(pathStatus: false, announceArrival: true, vc: vc)
                                     feedbackGiven = true
-                                    if vc.arLogger.hasLocalDataToUploadToCloud() {
+                                    if vc.arLogger.hasLocalDataToUploadToCloud(), vc.arLogger.isConnectedToNetwork(), vc.uploadRichData == true {
                                         uploadPending = true
                                         vc.arLogger.uploadLocalDataToCloud() { (metdata, error) in
                                             uploadPending = false
@@ -55,7 +55,7 @@ struct EndNavigationScreen: View {
                                 Button(action: {
                                     vc.surveyInterface.sendLogDataHelper(pathStatus: true, announceArrival: true, vc: vc)
                                     feedbackGiven = true
-                                    if vc.arLogger.hasLocalDataToUploadToCloud() {
+                                    if vc.arLogger.hasLocalDataToUploadToCloud(), vc.arLogger.isConnectedToNetwork(), vc.uploadRichData == true {
                                         uploadPending = true
                                         vc.arLogger.uploadLocalDataToCloud() { (metadata, error) in
                                             uploadPending = false
@@ -89,7 +89,7 @@ struct EndNavigationScreen: View {
                         vc.surveyInterface.sendLogDataHelper(pathStatus: nil, announceArrival: true, vc: vc)
                     }
                     vc.arLogger.finalizeTrial()
-                    if vc.arLogger.hasLocalDataToUploadToCloud() {
+                    if vc.arLogger.hasLocalDataToUploadToCloud(), vc.arLogger.isConnectedToNetwork(), vc.uploadRichData == true {
                         uploadPending = true
                         vc.arLogger.uploadLocalDataToCloud() { (metaData, error) in
                             uploadPending = false
