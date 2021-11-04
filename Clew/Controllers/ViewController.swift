@@ -496,7 +496,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
                 isSameMap = ARSessionManager.shared.initialWorldMap != nil && ARSessionManager.shared.initialWorldMap == worldMap
                 ARSessionManager.shared.initialWorldMap = worldMap
                 // TODO: see if we can move this out of this if statement
-                attemptingRelocalization = isSameMap && !isTrackingPerformanceNormal || worldMap != nil && !isSameMap
+                attemptingRelocalization = isSameMap && !isTrackingPerformanceNormal || !isSameMap
             }
         } else {
             ARSessionManager.shared.relocalizationStrategy = .none
@@ -513,22 +513,26 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         RouteManager.shared.intermediateAnchorPoints = route.intermediateAnchorPoints
         trackingSessionErrorState = nil
         ARSessionManager.shared.startSession()
-
-        if isTrackingPerformanceNormal, isSameMap {
-            // we can skip the whole process of relocalization since we are already using the correct map and tracking is normal.  It helps to strip out old anchors to reduce jitter though
-            ///PATHPOINT load route from automatic alignment -> start navigation
-            
-            isResumedRoute = true
-            isAutomaticAlignment = true
-            state = .readyToNavigateOrPause(allowPause: false)
-        }
-        else if isRelocalizing && isSameMap || isTrackingPerformanceNormal && worldMap == nil  {
-            // we don't have to wait for the session to start up.  It will be created automatically.
-            self.state = .readyForFinalResumeAlignment
-            self.showResumeTrackingConfirmButton(route: route, navigateStartToEnd: navigateStartToEnd)
-        } else {
-            // this makes sure that the user doesn't resume the session until the session is initialized
-            continuationAfterSessionIsReady = {
+        continuationAfterSessionIsReady = {
+            // the relocalization strategy may have been adjusted during the session startup
+            if ARSessionManager.shared.relocalizationStrategy == .none {
+                isSameMap = false
+                self.attemptingRelocalization = false
+            }
+            if isTrackingPerformanceNormal, isSameMap {
+                // we can skip the whole process of relocalization since we are already using the correct map and tracking is normal.  It helps to strip out old anchors to reduce jitter though
+                ///PATHPOINT load route from automatic alignment -> start navigation
+                
+                self.isResumedRoute = true
+                self.isAutomaticAlignment = true
+                self.state = .readyToNavigateOrPause(allowPause: false)
+            }
+            else if isRelocalizing && isSameMap || isTrackingPerformanceNormal && worldMap == nil  {
+                // we don't have to wait for the session to start up.  It will be created automatically.
+                self.state = .readyForFinalResumeAlignment
+                self.showResumeTrackingConfirmButton(route: route, navigateStartToEnd: navigateStartToEnd)
+            } else {
+                // this makes sure that the user doesn't resume the session until the session   is initialized
                 self.state = .readyForFinalResumeAlignment
                 self.showResumeTrackingConfirmButton(route: route, navigateStartToEnd: navigateStartToEnd)
             }
@@ -2895,7 +2899,7 @@ extension ViewController: ARSessionManagerDelegate {
                 }
             }
         }
-        if case .readyForFinalResumeAlignment = state {
+        if case .readyForFinalResumeAlignment = state, ARSessionManager.shared.initialWorldMap != nil {
             // this will cancel any realignment if it hasn't happened yet and go straight to route navigation mode
             rootContainerView.countdownTimer.isHidden = true
             isResumedRoute = true
@@ -2903,9 +2907,7 @@ extension ViewController: ARSessionManagerDelegate {
             isAutomaticAlignment = true
             
             ///PATHPOINT: Auto Alignment -> resume route
-            if ARSessionManager.shared.initialWorldMap != nil {
-                state = .readyToNavigateOrPause(allowPause: false)
-            }
+            state = .readyToNavigateOrPause(allowPause: false)
         }
     }
     
