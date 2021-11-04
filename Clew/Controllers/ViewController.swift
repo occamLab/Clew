@@ -1095,6 +1095,8 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         changesAlertVC.addAction(UIAlertAction(title: NSLocalizedString("dismissSurvey", comment: "This is used for dismissing popovers"), style: .default, handler: { action -> Void in
         }
         ))
+        changesAlertVC.popoverPresentationController?.sourceView = rootContainerView.burgerMenuButton
+        changesAlertVC.popoverPresentationController?.sourceRect = CGRect.null
         self.present(changesAlertVC, animated: true, completion: nil)
     }
     

@@ -71,17 +71,19 @@ class ARSessionManager: NSObject {
     /// AR Session Configuration
     private var configuration: ARWorldTrackingConfiguration!
     
+    /// Use these variables to keep track of rendering work that has to be done.  This allows us to do all of the rendering from one thread
+    private var keypointRenderJob: (()->())?
+    private var pathRenderJob: (()->())?
+    private var intermediateAnchorRenderJobs: [RouteAnchorPoint : (()->())?] = [:]
+    
     /// SCNNode of the next keypoint
     private var keypointNode: SCNNode?
     
     /// SCNNode of the bar path
     private var pathObj: SCNNode?
     
-    /// SCNNode of the spherical pathpoints
-    private var pathpointObjs: [SCNNode] = []
-    
     /// SCNNode of the intermediate anchor points
-    var anchorPointNodes: [SCNNode] = []
+    private var anchorPointNodes: [RouteAnchorPoint: SCNNode] = [:]
     /// Keypoint object
     var keypointObject : MDLObject!
     
@@ -129,6 +131,12 @@ class ARSessionManager: NSObject {
     ///
     /// - Parameter location: the location of the keypoint
     func renderKeypoint(_ location: LocationInfo, defaultColor: Int) {
+        keypointRenderJob = {
+            self.renderKeypointHelper(location, defaultColor: defaultColor)
+        }
+    }
+    
+    func renderKeypointHelper(_ location: LocationInfo, defaultColor: Int) {
         keypointNode?.removeFromParentNode()
         keypointNode = SCNNode(mdlObject: keypointObject)
         keypointNode!.scale = SCNVector3(0.0004, 0.0004, 0.0004)
@@ -251,76 +259,84 @@ class ARSessionManager: NSObject {
     
     /// This function renders a spinning blue speaker icon at the location of a voice note
     func render(intermediateAnchorPoints: [RouteAnchorPoint]) {
-        for anchorPointNode in anchorPointNodes {
-            anchorPointNode.removeFromParentNode()
-        }
-
         for intermediateAnchorPoint in intermediateAnchorPoints {
-            guard let intermediateARAnchor = intermediateAnchorPoint.anchor else {
-                continue
+            intermediateAnchorRenderJobs[intermediateAnchorPoint] = {
+                self.renderHelper(intermediateAnchorPoint: intermediateAnchorPoint)
             }
-            let anchorPointNode = SCNNode(mdlObject: speakerObject)
-
-            let priorNode = sceneView.node(for: intermediateARAnchor)
-            if priorNode != nil {
-                anchorPointNode.position = SCNVector3(0, -0.2, 0.0)
-            } else {
-                if let manualAlignment = manualAlignment {
-                    let alignedLocation = manualAlignment*intermediateARAnchor.transform
-                    anchorPointNode.position = SCNVector3(alignedLocation.x, alignedLocation.y - 0.2, alignedLocation.z)
-                } else {
-                    anchorPointNode.position = SCNVector3(intermediateARAnchor.transform.x, intermediateARAnchor.transform.y - 0.2, intermediateARAnchor.transform.z)
-                }
-            }
-            // render SCNNode of given keypoint
-            // configure node attributes
-            anchorPointNode.scale = SCNVector3(0.02, 0.02, 0.02)
-            anchorPointNode.geometry?.firstMaterial?.diffuse.contents = UIColor.blue
-            // I don't think yaw really matters here (so we are putting 0 where we used to have location.yaw
-            anchorPointNode.rotation = SCNVector4(0, 1, 0, (0 - Float.pi/2))
-            
-            let bound = SCNVector3(
-                x: anchorPointNode.boundingBox.max.x - anchorPointNode.boundingBox.min.x,
-                y: anchorPointNode.boundingBox.max.y - anchorPointNode.boundingBox.min.y,
-                z: anchorPointNode.boundingBox.max.z - anchorPointNode.boundingBox.min.z)
-            anchorPointNode.pivot = SCNMatrix4MakeTranslation(0, bound.y / 2, 0)
-            let spin = CABasicAnimation(keyPath: "rotation")
-            spin.fromValue = NSValue(scnVector4: SCNVector4(x: 0, y: 1, z: 0, w: 0))
-            spin.toValue = NSValue(scnVector4: SCNVector4(x: 0, y: 1, z: 0, w: Float(CGFloat(2 * Float.pi))))
-            spin.duration = 3
-            spin.repeatCount = .infinity
-            anchorPointNode.addAnimation(spin, forKey: "spin around")
-
-            // animation - SCNNode flashes blue
-            let flashBlue = SCNAction.customAction(duration: 2) { (node, elapsedTime) -> () in
-                let percentage = Float(elapsedTime / 2)
-                var color = UIColor.clear
-                let power: Float = 2.0
-                
-                
-                if (percentage < 0.5) {
-                    color = UIColor(red: CGFloat(powf(2.0*percentage, power)),
-                                    green: CGFloat(powf(2.0*percentage, power)),
-                                    blue: 1,
-                                    alpha: 1)
-                } else {
-                    color = UIColor(red: CGFloat(powf(2-2.0*percentage, power)),
-                                    green: CGFloat(powf(2-2.0*percentage, power)),
-                                    blue: 1,
-                                    alpha: 1)
-                }
-                node.geometry!.firstMaterial!.diffuse.contents = color
-            }
-            // set flashing color based on settings bundle configuration
-            let changeColor = SCNAction.repeatForever(flashBlue)
-            // add keypoint node to view
-            anchorPointNode.runAction(changeColor)
-            anchorPointNodes.append(anchorPointNode)
-            if let priorNode = priorNode {
-                anchorPointNode.position = priorNode.position
-            }
-            sceneView.scene.rootNode.addChildNode(anchorPointNode)
         }
+    }
+    
+    /// This function renders a spinning blue speaker icon at the location of a voice note
+    func renderHelper(intermediateAnchorPoint: RouteAnchorPoint) {
+        if let anchorPointNode = anchorPointNodes[intermediateAnchorPoint] {
+            anchorPointNode.removeFromParentNode()
+            anchorPointNodes[intermediateAnchorPoint] = nil
+        }
+        
+        guard let intermediateARAnchor = intermediateAnchorPoint.anchor else {
+            return
+        }
+        let anchorPointNode = SCNNode(mdlObject: speakerObject)
+        
+        let priorNode = sceneView.node(for: intermediateARAnchor)
+        if priorNode != nil {
+            anchorPointNode.position = SCNVector3(0, -0.2, 0.0)
+        } else {
+            if let manualAlignment = manualAlignment {
+                let alignedLocation = manualAlignment*intermediateARAnchor.transform
+                anchorPointNode.position = SCNVector3(alignedLocation.x, alignedLocation.y - 0.2, alignedLocation.z)
+            } else {
+                anchorPointNode.position = SCNVector3(intermediateARAnchor.transform.x, intermediateARAnchor.transform.y - 0.2, intermediateARAnchor.transform.z)
+            }
+        }
+        // render SCNNode of given keypoint
+        // configure node attributes
+        anchorPointNode.scale = SCNVector3(0.02, 0.02, 0.02)
+        anchorPointNode.geometry?.firstMaterial?.diffuse.contents = UIColor.blue
+        // I don't think yaw really matters here (so we are putting 0 where we used to have location.yaw
+        anchorPointNode.rotation = SCNVector4(0, 1, 0, (0 - Float.pi/2))
+        
+        let bound = SCNVector3(
+            x: anchorPointNode.boundingBox.max.x - anchorPointNode.boundingBox.min.x,
+            y: anchorPointNode.boundingBox.max.y - anchorPointNode.boundingBox.min.y,
+            z: anchorPointNode.boundingBox.max.z - anchorPointNode.boundingBox.min.z)
+        anchorPointNode.pivot = SCNMatrix4MakeTranslation(0, bound.y / 2, 0)
+        let spin = CABasicAnimation(keyPath: "rotation")
+        spin.fromValue = NSValue(scnVector4: SCNVector4(x: 0, y: 1, z: 0, w: 0))
+        spin.toValue = NSValue(scnVector4: SCNVector4(x: 0, y: 1, z: 0, w: Float(CGFloat(2 * Float.pi))))
+        spin.duration = 3
+        spin.repeatCount = .infinity
+        anchorPointNode.addAnimation(spin, forKey: "spin around")
+        
+        // animation - SCNNode flashes blue
+        let flashBlue = SCNAction.customAction(duration: 2) { (node, elapsedTime) -> () in
+            let percentage = Float(elapsedTime / 2)
+            var color = UIColor.clear
+            let power: Float = 2.0
+            
+            
+            if (percentage < 0.5) {
+                color = UIColor(red: CGFloat(powf(2.0*percentage, power)),
+                                green: CGFloat(powf(2.0*percentage, power)),
+                                blue: 1,
+                                alpha: 1)
+            } else {
+                color = UIColor(red: CGFloat(powf(2-2.0*percentage, power)),
+                                green: CGFloat(powf(2-2.0*percentage, power)),
+                                blue: 1,
+                                alpha: 1)
+            }
+            node.geometry!.firstMaterial!.diffuse.contents = color
+        }
+        // set flashing color based on settings bundle configuration
+        let changeColor = SCNAction.repeatForever(flashBlue)
+        // add keypoint node to view
+        anchorPointNode.runAction(changeColor)
+        anchorPointNodes[intermediateAnchorPoint] = anchorPointNode
+        if let priorNode = priorNode {
+            anchorPointNode.position = priorNode.position
+        }
+        sceneView.scene.rootNode.addChildNode(anchorPointNode)
     }
     
     func getCurrentLocation(of anchor: ARAnchor)->LocationInfo? {
@@ -335,13 +351,13 @@ class ARSessionManager: NSObject {
     
     func removeNavigationNodes() {
         keypointNode?.removeFromParentNode()
-        pathObj?.removeFromParentNode()
         keypointNode = nil
+        pathObj?.removeFromParentNode()
         pathObj = nil
         for anchorPointNode in anchorPointNodes {
-            anchorPointNode.removeFromParentNode()
+            anchorPointNode.1.removeFromParentNode()
         }
-        anchorPointNodes = []
+        anchorPointNodes = [:]
     }
     
     /// Create the path SCNNode that corresponds to the long translucent bar element that looks like a route path.
@@ -349,7 +365,12 @@ class ARSessionManager: NSObject {
     ///  - locationFront: the location of the keypoint user is approaching
     ///  - locationBack: the location of the keypoint user is currently at
     func renderPath(_ locationFront: LocationInfo, _ locationBack: LocationInfo, defaultPathColor: Int) {
-        print("RENDERING PATH")
+        pathRenderJob = {
+            self.renderPathHelper(locationFront, locationBack, defaultPathColor: defaultPathColor)
+        }
+    }
+
+    func renderPathHelper(_ locationFront: LocationInfo, _ locationBack: LocationInfo, defaultPathColor: Int) {
         pathObj?.removeFromParentNode()
         guard let locationFront = getCurrentLocation(of: locationFront), let locationBack = getCurrentLocation(of: locationBack) else {
             return
@@ -426,6 +447,20 @@ class ARData: ObservableObject {
 extension ARSessionManager: ARSessionDelegate {
     func session(_ session: ARSession, didUpdate frame: ARFrame) {
         ARData.shared.set(transform: frame.camera.transform)
+        if let keypointRenderJob = keypointRenderJob {
+            keypointRenderJob()
+            self.keypointRenderJob = nil
+        }
+        if let pathRenderJob = pathRenderJob {
+            pathRenderJob()
+            self.pathRenderJob = nil
+        }
+        for intermediateAnchorRenderJob in intermediateAnchorRenderJobs {
+            if let renderJob = intermediateAnchorRenderJob.1 {
+                renderJob()
+                intermediateAnchorRenderJobs[intermediateAnchorRenderJob.0] = nil
+            }
+        }
     }
     /// Called when there is a change in tracking state.  This is important for both announcing tracking errors to the user and also to triggering some app state transitions.
     /// - Parameters:
@@ -475,16 +510,15 @@ extension ARSessionManager: ARSessionDelegate {
         guard let defaultColor = delegate?.getKeypointColor(), let defaultPathColor = delegate?.getPathColor(), let showPath = delegate?.getShowPath() else {
             return
         }
-        if let nextKeypoint = RouteManager.shared.nextKeypoint, let cameraTransform = ARSessionManager.shared.currentFrame?.camera.transform {
+        if let nextKeypoint = RouteManager.shared.nextKeypoint, let cameraTransform = currentFrame?.camera.transform {
             let previousKeypointLocation = RouteManager.shared.getPreviousKeypoint(to: nextKeypoint)?.location ?? LocationInfo(transform: cameraTransform)
-            ARSessionManager.shared.renderKeypoint(nextKeypoint.location, defaultColor: defaultColor)
+            renderKeypoint(nextKeypoint.location, defaultColor: defaultColor)
             if showPath {
-                print("LEGACY RENDER PATH")
-                ARSessionManager.shared.renderPath(nextKeypoint.location, previousKeypointLocation, defaultPathColor: defaultPathColor)
+                renderPath(nextKeypoint.location, previousKeypointLocation, defaultPathColor: defaultPathColor)
             }
         }
         for intermediateAnchorPoint in RouteManager.shared.intermediateAnchorPoints {
-            ARSessionManager.shared.render(intermediateAnchorPoints: [intermediateAnchorPoint])
+            render(intermediateAnchorPoints: [intermediateAnchorPoint])
         }
     }
 }
@@ -507,18 +541,18 @@ extension ARSessionManager: ARSCNViewDelegate {
         guard let defaultColor = delegate?.getKeypointColor(), let defaultPathColor = delegate?.getPathColor(), relocalizationStrategy == .useCrumbAnchorsForAlignment, let showPath = delegate?.getShowPath() else {
             return
         }
-        if let nextKeypoint = RouteManager.shared.nextKeypoint, let cameraTransform = ARSessionManager.shared.currentFrame?.camera.transform {
+        if let nextKeypoint = RouteManager.shared.nextKeypoint, let cameraTransform = currentFrame?.camera.transform {
             let previousKeypointLocation = RouteManager.shared.getPreviousKeypoint(to: nextKeypoint)?.location ?? LocationInfo(transform: cameraTransform)
             if nextKeypoint.location.identifier == anchor.identifier {
-                ARSessionManager.shared.renderKeypoint(nextKeypoint.location, defaultColor: defaultColor)
+                renderKeypoint(nextKeypoint.location, defaultColor: defaultColor)
             }
             if nextKeypoint.location.identifier == anchor.identifier || previousKeypointLocation.identifier == anchor.identifier, showPath {
-                ARSessionManager.shared.renderPath(nextKeypoint.location, previousKeypointLocation, defaultPathColor: defaultPathColor)
+                renderPath(nextKeypoint.location, previousKeypointLocation, defaultPathColor: defaultPathColor)
             }
         }
         for intermediateAnchorPoint in RouteManager.shared.intermediateAnchorPoints {
             if let arAnchor = intermediateAnchorPoint.anchor, arAnchor.identifier == anchor.identifier {
-                ARSessionManager.shared.render(intermediateAnchorPoints: [intermediateAnchorPoint])
+                render(intermediateAnchorPoints: [intermediateAnchorPoint])
             }
         }
     }
