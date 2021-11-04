@@ -471,6 +471,16 @@ class ARData: ObservableObject {
 }
 
 extension ARSessionManager: ARSessionDelegate {
+    func session(_ session: ARSession, didFailWithError error: Error) {
+        // When loading ARWorldMaps recorded under iOS15, they will cause an error when loaded under previous iOS versions.  If this happens, we can retry without the ARWorldMap
+        if (error as? NSError)?.code == 200, configuration.initialWorldMap != nil {
+            // try again without the world map
+            configuration.initialWorldMap = nil
+            relocalizationStrategy = .none
+            startSession()
+        }
+    }
+    
     func session(_ session: ARSession, didUpdate frame: ARFrame) {
         ARData.shared.set(transform: frame.camera.transform)
         if let keypointRenderJob = keypointRenderJob {

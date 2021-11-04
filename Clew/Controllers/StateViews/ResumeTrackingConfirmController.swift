@@ -26,7 +26,7 @@ class ResumeTrackingConfirmController: UIViewController, UIScrollViewDelegate {
     var imageAnchoring: Bool!
     
     /// called when the view loads (any time)
-    override func viewDidAppear(_ animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         /// update label font
         /// TODO: is this a safe implementation? Might crash if label has no body, unclear.
         /// called when the view loads (any time)
@@ -41,10 +41,11 @@ class ResumeTrackingConfirmController: UIViewController, UIScrollViewDelegate {
         } else {
             label.text = String.localizedStringWithFormat(NSLocalizedString("anchorPointAlignmentText", comment: "Text describing the process of aligning to an anchorpoint. This text shows up on the alignment screen."), ViewController.alignmentWaitingPeriod)
         }
-
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
         /// set confirm alignment button as initially active voiceover button
-        UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: self.label.text)
-        
+        UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: self.label)
     }
     
     /// called when the view has loaded.  We setup various app elements in here.
