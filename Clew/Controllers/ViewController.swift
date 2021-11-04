@@ -401,11 +401,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
                     if let document = try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data!) as? RouteDocumentData {
                         let thisRoute = document.route
                         ARSessionManager.shared.initialWorldMap = document.map
-                        self.continuationAfterSessionIsReady = {
-                            self.state = .startingResumeProcedure(route: thisRoute, worldMap: ARSessionManager.shared.initialWorldMap, navigateStartToEnd: true)
-                        }
-                        self.trackingSessionErrorState = nil
-                        ARSessionManager.shared.startSession()
+                        self.state = .startingResumeProcedure(route: thisRoute, worldMap: ARSessionManager.shared.initialWorldMap, navigateStartToEnd: true)
                     }
                 } catch {
                     print("error \(error)")
