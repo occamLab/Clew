@@ -63,6 +63,7 @@ struct InformedConsentView : View {
                                  }
                                 // set hasconsented key to false
                                 UserDefaults.standard.setValue(false, forKey: "hasconsented")
+                                
 
                                 // redirect to home UI
                                 let vc = ViewController()

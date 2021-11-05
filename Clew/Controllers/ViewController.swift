@@ -1386,6 +1386,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
         timerLength = defaults.integer(forKey: "timerLength")
         adjustOffset = defaults.bool(forKey: "adjustOffset")
         nav.useHeadingOffset = adjustOffset
+        logRichData = defaults.bool(forKey: "logRichData")
+
         #if CLEWMORE
         imageAnchoring = true
         #else
@@ -2223,6 +2225,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
     
     /// The length of time that the timer will run for
     var timerLength: Int!
+    
+    /// This tracks whether the user has consented to log rich (image) data
+    var logRichData: Bool!
 
     /// This keeps track of the paused transform while the current session is being realigned to the saved route
     var pausedTransform : simd_float4x4?
