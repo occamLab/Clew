@@ -25,6 +25,7 @@ class AppleSignInController: UIViewController {
         super.viewDidLoad()
         
         view = UIView(frame:CGRect(x: 0, y: UIScreen.main.bounds.size.height*0.15, width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height*0.85))
+        view.backgroundColor = .systemBackground
     
         signInTitle = UILabel()
         let titleText = NSLocalizedString("signInWithAppleTitle", comment: "Title of the sign in window")
