@@ -1066,7 +1066,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDeleg
             }
         }
         #if !APPCLIP
-        arLogger.enabled = UserDefaults.standard.bool(forKey: "hasconsented")
+        arLogger.enabled = logRichData
         arLogger.startTrial()
         #endif
     }
