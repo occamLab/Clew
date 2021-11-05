@@ -127,10 +127,11 @@ class AuthenticationHelper: NSObject, ASAuthorizationControllerDelegate, ASAutho
     func transitionToMainApp() {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         appDelegate.window?.rootViewController?.dismiss(animated: false)
+        appDelegate.window?.rootViewController?.view.isHidden = true
         appDelegate.window = UIWindow(frame:UIScreen.main.bounds)
         appDelegate.window?.makeKeyAndVisible()
         appDelegate.window?.rootViewController = ViewController()
-        appDelegate.vc = appDelegate.window?.rootViewController as! ViewController
+        appDelegate.vc = appDelegate.window?.rootViewController as? ViewController
         UIAccessibility.post(notification: .screenChanged, argument: nil)
     }
 }
