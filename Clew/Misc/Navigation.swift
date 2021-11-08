@@ -168,7 +168,11 @@ class Navigation {
     ///   - nextKeypoint
     ///   - isLastKeypoint (true if the keypoint is the last one in the route, false otherwise)
     /// - Returns: relative position of next keypoint as `DirectionInfo` object
-    public func getDirections(currentLocation: CurrentCoordinateInfo, nextKeypoint: KeypointInfo, isLastKeypoint: Bool) -> DirectionInfo {
+    public func getDirections(currentLocation: CurrentCoordinateInfo, nextKeypoint: KeypointInfo, isLastKeypoint: Bool) -> DirectionInfo? {
+        guard let nextLocation = ARSessionManager.shared.getCurrentLocation(of: nextKeypoint.location) else {
+            return nil
+        }
+
         // these tolerances are set depending on whether it is the last keypoint or not
         let keypointTargetDepth = isLastKeypoint ? lastKeypointTargetDepth : targetDepth
         let keypointTargetHeight = isLastKeypoint ? lastKeypointTargetHeight : targetHeight
@@ -177,12 +181,12 @@ class Navigation {
         let trueYaw  = getPhoneHeadingYaw(currentLocation: currentLocation) + (useHeadingOffset && headingOffset != nil ? headingOffset! : Float(0.0))
         // planar heading vector
         let planarHeading = Vector3([sin(trueYaw), 0, cos(trueYaw)])
-        let delta = currentLocation.location.translation - nextKeypoint.location.translation
+        let delta = currentLocation.location.translation - nextLocation.translation
         let planarDelta = Vector3(delta.x, 0, delta.z)
         let headingProjectedOntoKeypointXDirection = nextKeypoint.orientation.dot(planarHeading)
         
         // Finds angle from "forward"-looking towards the next keypoint in radians. Not sure which direction is negative vs. positive for now.
-        let angle = atan2f((currentLocation.location.x - nextKeypoint.location.x), (currentLocation.location.z-nextKeypoint.location.z))
+        let angle = atan2f((currentLocation.location.x - nextLocation.x), (currentLocation.location.z-nextLocation.z))
         
         let angleDiff = getAngleDiff(angle1: trueYaw, angle2: angle)
         
@@ -199,7 +203,7 @@ class Navigation {
         if headingProjectedOntoKeypointXDirection <= 0 {
             lateralDistanceRatioWhenCrossingTarget = Float.infinity
         } else {
-            lateralDistanceRatioWhenCrossingTarget = (-planarHeading*delta.dot(nextKeypoint.orientation)/headingProjectedOntoKeypointXDirection + currentLocation.location.translation - nextKeypoint.location.translation).length / keypointTargetWidth
+            lateralDistanceRatioWhenCrossingTarget = (-planarHeading*delta.dot(nextKeypoint.orientation)/headingProjectedOntoKeypointXDirection + currentLocation.location.translation - nextLocation.translation).length / keypointTargetWidth
         }
         
         var direction = DirectionInfo(distance: planarDelta.length, angleDiff: angleDiff, clockDirection: clockDirection, hapticDirection: hapticDirection, lateralDistanceRatioWhenCrossingTarget: lateralDistanceRatioWhenCrossingTarget)

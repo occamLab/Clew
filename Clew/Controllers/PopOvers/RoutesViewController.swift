@@ -44,7 +44,7 @@ class RoutesViewController : UIViewController, UITableViewDataSource, UITableVie
             self.rootViewController?.onRouteTableViewCellClicked(route: self.routes[indexPath.row], navigateStartToEnd: true)
             self.dismiss(animated: true, completion: nil)
         }
-        if routes[indexPath.row].beginRouteAnchorPoint.transform == nil {
+        if routes[indexPath.row].beginRouteAnchorPoint.anchor?.transform == nil {
             startToEndAction.isEnabled = false
         }
         
@@ -56,7 +56,7 @@ class RoutesViewController : UIViewController, UITableViewDataSource, UITableVie
         let cancelAction = UIAlertAction(title: NSLocalizedString("cancelPop-UpButtonLabel", comment: "A button which closes the current pop up"), style: .default) {action -> Void in
         }
         
-        if routes[indexPath.row].endRouteAnchorPoint.transform == nil {
+        if routes[indexPath.row].endRouteAnchorPoint.anchor?.transform == nil {
             endToStartAction.isEnabled = false
         }
         

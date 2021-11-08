@@ -28,7 +28,6 @@ struct NameCodeIDView: View {
                     .padding(.horizontal, 20)
             }
             VStack {
-
                 TextField(NSLocalizedString("nameCodeIDTextField", comment: "This is a string appearing in the text box asking the user to enter their 3-digit app clip code ID"), text: $codeIDModel.code)
                     .disableAutocorrection(true)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
