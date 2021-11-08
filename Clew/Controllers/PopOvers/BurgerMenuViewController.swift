@@ -8,11 +8,17 @@
 
 import Foundation
 import SwiftUI
+import InAppSettingsKit
 
-class BurgerMenuViewController: UITableViewController, UIPopoverPresentationControllerDelegate {
+class BurgerMenuViewController: UITableViewController, UIPopoverPresentationControllerDelegate, IASKSettingsDelegate {
     var tutorialHostingController: UIHostingController<TutorialTestView>?
     var siriHostingController: UIHostingController<NavigationView<SiriWalkthrough>>?
 
+    func settingsViewControllerDidEnd(_ settingsViewController: IASKAppSettingsViewController) {
+        settingsViewController.dismiss(animated: true, completion: nil)
+        NotificationCenter.default.post(name: Notification.Name("ClewPopoverDismissed"), object: nil)
+    }
+    
     override func viewDidLoad() {
         NotificationCenter.default.addObserver(forName: Notification.Name("TutorialPopoverReadyToDismiss"), object: nil, queue: nil) { (notification) -> Void in
             self.tutorialHostingController?.dismiss(animated: true)
@@ -46,17 +52,16 @@ class BurgerMenuViewController: UITableViewController, UIPopoverPresentationCont
     
     /// Called when the settings button is pressed.  This function will display the settings view (managed by SettingsViewController) as a popover.
     func settingsButtonPressed() {
-        let storyBoard: UIStoryboard = UIStoryboard(name: "SettingsAndHelp", bundle: nil)
-        let popoverContent = storyBoard.instantiateViewController(withIdentifier: "Settings") as! SettingsViewController
+        let popoverContent = IASKAppSettingsViewController()
         popoverContent.preferredContentSize = CGSize(width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height)
+        popoverContent.delegate = self
         let nav = UINavigationController(rootViewController: popoverContent)
         nav.modalPresentationStyle = .popover
         let popover = nav.popoverPresentationController
         popover?.delegate = self
         popover?.sourceView = self.view
         popover?.sourceRect = CGRect(x: 0, y: UIConstants.settingsAndHelpFrameHeight/2, width: 0,height: 0)
-        
-        popoverContent.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: popoverContent, action: #selector(popoverContent.doneWithSettings))
+        NotificationCenter.default.post(name: Notification.Name("ClewPopoverDisplayed"), object: nil)
         
         self.present(nav, animated: true, completion: nil)
     }

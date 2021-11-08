@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 
 /// Round a float to the nearest tenth.  Swift doesn't have a good built-in method for doing this.
 ///

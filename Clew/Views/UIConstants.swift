@@ -11,6 +11,7 @@
 
 
 import Foundation
+import UIKit
 
 /// A custom enumeration for storing UI constants defined by the phone size.
 enum UIConstants {

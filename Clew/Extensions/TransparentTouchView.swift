@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 
 /// class which, when used as a uiview in a view controller, passes all touch events
 /// down the view hierarchy. Only applies to specific instances of this class, not to

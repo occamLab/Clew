@@ -1,6 +1,0 @@
-framework module SRCountdownTimer {
-  umbrella header "SRCountdownTimer-umbrella.h"
-
-  export *
-  module * { export * }
-}
