@@ -6,14 +6,14 @@
 //  Copyright © 2019 OccamLab. All rights reserved.
 //
 
-#import "VisualAlignment.h"
-#import "VisualAlignmentUtils.hpp"
+#include <Eigen/Core>
+#include <Eigen/Geometry>
 #import <opencv2/opencv.hpp>
 #import <opencv2/imgcodecs/ios.h>
 #import <opencv2/features2d.hpp>
 #import <opencv2/core/eigen.hpp>
-#import <Eigen/Core>
-#import <Eigen/Geometry>
+#import "VisualAlignment.h"
+#import "VisualAlignmentUtils.hpp"
 #import <UIKit/UIKit.h>
 #import <fstream>
 
