@@ -30,6 +30,12 @@ Future work with Clew may include:
 
 Clew is written in Swift 4 with Xcode 9 and should work on any iPhone with an A9 or later processor.
 
+## Download OpenCV Framework
+
+1. Go to [https://opencv.org/releases.html](https://opencv.org/releases.html)
+2. Find 4.5.4 (or other suitable version) and click the iOS pack link
+3. Unzip the file and copy the entirety of `opencv2.framework` in the root of the Clew repo.
+
 ### First time setup
 
 Please read all of this! It's important.

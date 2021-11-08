@@ -72,6 +72,12 @@
 		82BE6CA0273983E200387139 /* PRTweenTimingFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 82BE6C9E273983E200387139 /* PRTweenTimingFunctions.m */; };
 		82BE6CA2273984BA00387139 /* SRCountdownTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82BE6CA1273984BA00387139 /* SRCountdownTimer.swift */; };
 		82BE6CA3273984BA00387139 /* SRCountdownTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82BE6CA1273984BA00387139 /* SRCountdownTimer.swift */; };
+		82BE6CA527398B4000387139 /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 82BE6CA427398B3F00387139 /* opencv2.framework */; };
+		82BE6CA627398B4000387139 /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 82BE6CA427398B3F00387139 /* opencv2.framework */; };
+		82BE6CAA27398C1700387139 /* VisualAlignment.mm in Sources */ = {isa = PBXBuildFile; fileRef = 82BE6CA927398C1700387139 /* VisualAlignment.mm */; };
+		82BE6CAB27398C1700387139 /* VisualAlignment.mm in Sources */ = {isa = PBXBuildFile; fileRef = 82BE6CA927398C1700387139 /* VisualAlignment.mm */; };
+		82BE6CB227398E1D00387139 /* VisualAlignmentUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82BE6CB027398E1D00387139 /* VisualAlignmentUtils.cpp */; };
+		82BE6CB327398E1D00387139 /* VisualAlignmentUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82BE6CB027398E1D00387139 /* VisualAlignmentUtils.cpp */; };
 		82D94B63266FC7CF00EE2C1C /* SimpleForm in Frameworks */ = {isa = PBXBuildFile; productRef = 82D94B62266FC7CF00EE2C1C /* SimpleForm */; };
 		82D94B65266FC86200EE2C1C /* SimpleForm in Frameworks */ = {isa = PBXBuildFile; productRef = 82D94B64266FC86200EE2C1C /* SimpleForm */; };
 		82DE9224271876910086F5A4 /* ARSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82DE9223271876900086F5A4 /* ARSessionManager.swift */; };
@@ -237,6 +243,11 @@
 		82BE6C9B273983C900387139 /* PRTween.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PRTween.m; sourceTree = "<group>"; };
 		82BE6C9E273983E200387139 /* PRTweenTimingFunctions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PRTweenTimingFunctions.m; sourceTree = "<group>"; };
 		82BE6CA1273984BA00387139 /* SRCountdownTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SRCountdownTimer.swift; sourceTree = "<group>"; };
+		82BE6CA427398B3F00387139 /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = opencv2.framework; sourceTree = "<group>"; };
+		82BE6CA827398BED00387139 /* VisualAlignment.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VisualAlignment.h; sourceTree = "<group>"; };
+		82BE6CA927398C1700387139 /* VisualAlignment.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = VisualAlignment.mm; sourceTree = "<group>"; };
+		82BE6CB027398E1D00387139 /* VisualAlignmentUtils.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = VisualAlignmentUtils.cpp; sourceTree = "<group>"; };
+		82BE6CB127398E1D00387139 /* VisualAlignmentUtils.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = VisualAlignmentUtils.hpp; sourceTree = "<group>"; };
 		82DDE1EE26F38D1300C58FA4 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/BurgerMenu.strings; sourceTree = "<group>"; };
 		82DDE1F026F38D4000C58FA4 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/BurgerMenu.strings; sourceTree = "<group>"; };
 		82DDE1F226F38F6F00C58FA4 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/SettingsAndHelp.strings; sourceTree = "<group>"; };
@@ -307,6 +318,7 @@
 			files = (
 				82BE6C952739828E00387139 /* InAppSettingsKit in Frameworks */,
 				82BE6C7F2739815900387139 /* FirebaseAnalytics in Frameworks */,
+				82BE6CA527398B4000387139 /* opencv2.framework in Frameworks */,
 				82BE6C812739815900387139 /* FirebaseAuth in Frameworks */,
 				82BE6C832739815900387139 /* FirebaseDatabase in Frameworks */,
 				82BE6C852739815900387139 /* FirebaseStorage in Frameworks */,
@@ -321,6 +333,7 @@
 			files = (
 				82BE6C97273982A100387139 /* InAppSettingsKit in Frameworks */,
 				82BE6C872739817D00387139 /* FirebaseAnalytics in Frameworks */,
+				82BE6CA627398B4000387139 /* opencv2.framework in Frameworks */,
 				82BE6C892739818A00387139 /* FirebaseAuth in Frameworks */,
 				82BE6C8B2739819100387139 /* FirebaseDatabase in Frameworks */,
 				82BE6C8D2739819700387139 /* FirebaseStorage in Frameworks */,
@@ -396,9 +409,21 @@
 			path = "imported dependencies";
 			sourceTree = "<group>";
 		};
+		82BE6CA727398BCA00387139 /* Visual Alignment */ = {
+			isa = PBXGroup;
+			children = (
+				82BE6CA827398BED00387139 /* VisualAlignment.h */,
+				82BE6CA927398C1700387139 /* VisualAlignment.mm */,
+				82BE6CB027398E1D00387139 /* VisualAlignmentUtils.cpp */,
+				82BE6CB127398E1D00387139 /* VisualAlignmentUtils.hpp */,
+			);
+			path = "Visual Alignment";
+			sourceTree = "<group>";
+		};
 		C63B435EA8A32350A76E47DD /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				82BE6CA427398B3F00387139 /* opencv2.framework */,
 				E5E9015322FB4CEB00AD0E95 /* QuickLook.framework */,
 			);
 			name = Frameworks;
@@ -407,6 +432,7 @@
 		E5470EA922C119F4001092A4 /* Clew */ = {
 			isa = PBXGroup;
 			children = (
+				82BE6CA727398BCA00387139 /* Visual Alignment */,
 				14B02B3026823E1400174B36 /* Tutorial */,
 				82E4A5CE262A26DC000BEB44 /* Clew.entitlements */,
 				E5D1695522E103A0008754D0 /* localizations */,
@@ -777,6 +803,8 @@
 				8261892E264ACCC5007F99C4 /* AppleSignInController.swift in Sources */,
 				82DE9224271876910086F5A4 /* ARSessionManager.swift in Sources */,
 				1F27632322FCBB6E00E1FCF8 /* BurgerMenuViewController.swift in Sources */,
+				82BE6CAA27398C1700387139 /* VisualAlignment.mm in Sources */,
+				82BE6CB227398E1D00387139 /* VisualAlignmentUtils.cpp in Sources */,
 				14B02B3226823E2C00174B36 /* TutorialTestViews.swift in Sources */,
 				E5470F2622C119F5001092A4 /* Float4x4Extension.swift in Sources */,
 				E5470EF622C119F5001092A4 /* RecordButtonKit.swift in Sources */,
@@ -833,6 +861,8 @@
 				8261892F264ACCC5007F99C4 /* AppleSignInController.swift in Sources */,
 				82DE9225271876910086F5A4 /* ARSessionManager.swift in Sources */,
 				1F27632422FCBB9900E1FCF8 /* BurgerMenuViewController.swift in Sources */,
+				82BE6CAB27398C1700387139 /* VisualAlignment.mm in Sources */,
+				82BE6CB327398E1D00387139 /* VisualAlignmentUtils.cpp in Sources */,
 				14B02B3326823E2C00174B36 /* TutorialTestViews.swift in Sources */,
 				E5470F2722C119F5001092A4 /* Float4x4Extension.swift in Sources */,
 				E5470EF722C119F5001092A4 /* RecordButtonKit.swift in Sources */,
@@ -1089,6 +1119,10 @@
 				CURRENT_PROJECT_VERSION = 164;
 				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				INFOPLIST_FILE = Clew/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1115,6 +1149,10 @@
 				CURRENT_PROJECT_VERSION = 164;
 				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				INFOPLIST_FILE = Clew/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1140,6 +1178,10 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 164;
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				INFOPLIST_FILE = "Clew Dev-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1169,6 +1211,10 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 164;
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				INFOPLIST_FILE = "Clew Dev-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
 				LD_RUNPATH_SEARCH_PATHS = (

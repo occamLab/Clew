@@ -40,6 +40,8 @@ xcuserdata/
 *.dSYM.zip
 *.dSYM
 
+opencv2.framework/*
+
 ### Xcode ###
 # Xcode
 
