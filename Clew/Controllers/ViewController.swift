@@ -103,6 +103,14 @@ enum AppState {
         }
         return false
     }
+    
+    var isInReadyForFinalResumeAlignment: Bool {
+        if case .readyForFinalResumeAlignment = self {
+            return true
+        }
+        return false
+    }
+    
     var isAtMainScreen: Bool {
         if case .mainScreen(_) = self {
             return true
@@ -2435,11 +2443,13 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
             if !phoneCurrentlyVertical {
                 rootContainerView.countdownTimer.isHidden = true
                 announce(announcement: "Camera not vertical, hold phone vertically to begin countdown")
-                rootContainerView.countdownTimer.start(beginingValue: ViewController.alignmentWaitingPeriod, interval: 1)
-                //rootContainerView.countdownTimer.pause()
+                rootContainerView.countdownTimer.pause()
                 rootContainerView.countdownTimer.setNeedsDisplay()
                 let nowNotVerticalVibration = UIImpactFeedbackGenerator(style: .heavy)
                 nowNotVerticalVibration.impactOccurred()
+            } else {
+                rootContainerView.countdownTimer.isHidden = false
+                rootContainerView.countdownTimer.start(beginingValue: ViewController.alignmentWaitingPeriod, interval: 1)
             }
             return
         }
@@ -2457,7 +2467,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         if phoneCurrentlyVertical && !unwrappedPhoneVertical {
             rootContainerView.countdownTimer.isHidden = false
             announce(announcement: "Camera now vertical, starting countdown")
-            rootContainerView.countdownTimer.resume()
+            rootContainerView.countdownTimer.start(beginingValue: ViewController.alignmentWaitingPeriod, interval: 1)
             let nowVerticalVibration = UIImpactFeedbackGenerator(style: .light)
             nowVerticalVibration.impactOccurred()
             phoneVertical = phoneCurrentlyVertical
@@ -2715,7 +2725,7 @@ extension ViewController: ARSessionManagerDelegate {
                 }
             }
         }
-        if case .readyForFinalResumeAlignment = state {
+        if state.isInReadyForFinalResumeAlignment || state.isInTimerCountdown || state.isTryingToAlign {
             // this will cancel any realignment if it hasn't happened yet and go straight to route navigation mode
             rootContainerView.countdownTimer.isHidden = true
             isResumedRoute = true

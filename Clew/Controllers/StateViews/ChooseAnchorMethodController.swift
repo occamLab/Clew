@@ -74,8 +74,8 @@ class ChooseAnchorMethodController: UIViewController, UIScrollViewDelegate {
         scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8.0).isActive = true
         scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8.0).isActive = true
         
-        /// set the height constraint on the scrollView to 0.4 * the main view height
-        scrollView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.4).isActive = true
+        /// set the height constraint on the scrollView to 0.25 * the main view height
+        scrollView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.25).isActive = true
         
         /// set top, left, right AND bottom constraints on label to
         /// scrollView + 8.0 padding on each side
@@ -91,10 +91,29 @@ class ChooseAnchorMethodController: UIViewController, UIScrollViewDelegate {
         label.numberOfLines = 0
         label.lineBreakMode = NSLineBreakMode.byWordWrapping
 
-        /// initialize buttons with some basic size constaints
-        visualAlignment = UIButton.makeConstraintButton(view, alignment: UIConstants.ButtonContainerHorizontalAlignment.left, appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "Describe")!), label: NSLocalizedString("enterAnchorPointDescriptionButtonAccessibilityLabel", comment: "This is the accessibility label for the button which allows the user to save a text based description of their anchor point when saving a route. This feature should allow the user to more easily realign with their anchorpoint."))
+        /// Creating a button that can be used to select visual alignment
+        visualAlignment = UIButton(type: .custom)
+        visualAlignment.layer.cornerRadius = 0.75 * visualAlignment.bounds.size.width
+        visualAlignment.clipsToBounds = true
+        visualAlignment.translatesAutoresizingMaskIntoConstraints = false
+        visualAlignment.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 1.1).isActive = true
+        visualAlignment.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.height / 10).isActive = true
+        visualAlignment.setBackgroundImage(UIImage(named: "WhiteButtonBackground"), for: .normal)
+        visualAlignment.imageView?.contentMode = .scaleAspectFit
+        visualAlignment.setImage(UIImage(named: "visualAlignment"), for: .normal)
+        visualAlignment.imageEdgeInsets =  UIEdgeInsets(top: UIScreen.main.bounds.size.height/40, left: UIScreen.main.bounds.size.height/40, bottom: UIScreen.main.bounds.size.height/40, right: UIScreen.main.bounds.size.height/40)
         
-        physicalAlignment = UIButton.makeConstraintButton(view, alignment: UIConstants.ButtonContainerHorizontalAlignment.center, appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "Align")!), label: NSLocalizedString("startAlignmentCountdownButtonAccessibilityLabel", comment: "this is athe accessibility label for the button which allows the user to start an alignment procedure when saving an anchor point"))
+        /// Creating a button that can be used to select visual alignment
+        physicalAlignment = UIButton(type: .custom)
+        physicalAlignment.layer.cornerRadius = 0.75 * visualAlignment.bounds.size.width
+        physicalAlignment.clipsToBounds = true
+        physicalAlignment.translatesAutoresizingMaskIntoConstraints = false
+        physicalAlignment.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 1.1).isActive = true
+        physicalAlignment.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.height / 10).isActive = true
+        physicalAlignment.setBackgroundImage(UIImage(named: "WhiteButtonBackground"), for: .normal)
+        physicalAlignment.imageView?.contentMode = .scaleAspectFit
+        physicalAlignment.setImage(UIImage(named: "physicalAlignment"), for: .normal)
+        physicalAlignment.imageEdgeInsets =  UIEdgeInsets(top: UIScreen.main.bounds.size.height/40, left: UIScreen.main.bounds.size.height/40, bottom: UIScreen.main.bounds.size.height/40, right: UIScreen.main.bounds.size.height/40)
         
         /// create stack view for aligning and distributing bottom layer buttons
         let stackView = UIStackView()
@@ -103,9 +122,10 @@ class ChooseAnchorMethodController: UIViewController, UIScrollViewDelegate {
         
         /// define horizonal, centered, and equal alignment of elements
         /// inside the bottom stack
-        stackView.axis = NSLayoutConstraint.Axis.horizontal
-        stackView.distribution  = UIStackView.Distribution.equalSpacing
+        stackView.axis = NSLayoutConstraint.Axis.vertical
+        stackView.distribution  = UIStackView.Distribution.fillEqually
         stackView.alignment = UIStackView.Alignment.center
+        stackView.spacing = UIScreen.main.bounds.size.height/30
         
         /// add elements to the stack
         stackView.addArrangedSubview(visualAlignment)
@@ -116,7 +136,7 @@ class ChooseAnchorMethodController: UIViewController, UIScrollViewDelegate {
         /// size the stack
         stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: UIConstants.yButtonFrameMargin).isActive = true
         stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -UIConstants.yButtonFrameMargin).isActive = true
-        stackView.topAnchor.constraint(equalTo: view.topAnchor, constant: UIConstants.yOriginOfButtonFrame + UIConstants.yButtonFrameMargin).isActive = true
+        stackView.topAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: 10).isActive = true
         stackView.bottomAnchor.constraint(equalTo: view.topAnchor, constant: UIConstants.yOriginOfButtonFrame + UIConstants.buttonFrameHeight - UIConstants.yButtonFrameMargin).isActive = true
         /// set function targets for the functions in this state
         if let parent = parent as? ViewController {
