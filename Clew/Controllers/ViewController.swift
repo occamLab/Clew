@@ -413,6 +413,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     ///   - navigateStartToEnd: a Boolean that is true if we want to navigate from the start to the end and false if we want to navigate from the end to the start.
     func handleStateTransitionToStartingResumeProcedure(route: SavedRoute, worldMap: ARWorldMap?, navigateStartToEnd: Bool) {
         logger.setCurrentRoute(route: route, worldMap: worldMap)
+        phoneVertical = nil
         isVisualAlignment = navigateStartToEnd ? route.beginRouteAnchorPoint.imageFileName != nil : route.endRouteAnchorPoint.imageFileName != nil
         
         // load the world map and restart the session so that things have a chance to quiet down before putting it up to the wall
@@ -514,8 +515,10 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         hideAllViewsHelper()
         ///sets the length of the timer to be equal to what the person has in their settings
         ViewController.alignmentWaitingPeriod = timerLength
-        rootContainerView.countdownTimer.isHidden = false
-        rootContainerView.countdownTimer.start(beginingValue: ViewController.alignmentWaitingPeriod, interval: 1)
+        if !isVisualAlignment {
+            rootContainerView.countdownTimer.isHidden = false
+            rootContainerView.countdownTimer.start(beginingValue: ViewController.alignmentWaitingPeriod, interval: 1)
+        }
         delayTransition()
         timerContinuation = {
             self.rootContainerView.countdownTimer.isHidden = true
@@ -1774,10 +1777,11 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     func resumeTracking() {
         // resume pose tracking with existing ARSessionConfiguration
         hideAllViewsHelper()
-        rootContainerView.countdownTimer.isHidden = false
         state = .resumeWaitingPeriod
-        // TODO: timer is still not quite behaving correctly for visual alignment
-        rootContainerView.countdownTimer.start(beginingValue: ViewController.alignmentWaitingPeriod, interval: 1)
+        if !isVisualAlignment {
+            rootContainerView.countdownTimer.isHidden = false
+            rootContainerView.countdownTimer.start(beginingValue: ViewController.alignmentWaitingPeriod, interval: 1)
+        }
         delayTransition()
         
         timerContinuation = {
