@@ -35,6 +35,7 @@ protocol ARSessionManagerDelegate {
     func getPathColor()->Int
     func getKeypointColor()->Int
     func getShowPath()->Bool
+    func newFrameAvailable()
 }
 
 class ARSessionManager: NSObject {
@@ -461,6 +462,7 @@ extension ARSessionManager: ARSessionDelegate {
                 intermediateAnchorRenderJobs[intermediateAnchorRenderJob.0] = nil
             }
         }
+        delegate?.newFrameAvailable()
     }
     /// Called when there is a change in tracking state.  This is important for both announcing tracking errors to the user and also to triggering some app state transitions.
     /// - Parameters:

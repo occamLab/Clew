@@ -142,6 +142,8 @@
 		82BE71D12739982200387139 /* KLUSupport in Resources */ = {isa = PBXBuildFile; fileRef = 82BE71922739982200387139 /* KLUSupport */; };
 		82BE71D22739982200387139 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 82BE71932739982200387139 /* README.md */; };
 		82BE71D32739982200387139 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 82BE71932739982200387139 /* README.md */; };
+		82C09673273AE50D0073EE6E /* ChooseAnchorMethodController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82C09672273AE50D0073EE6E /* ChooseAnchorMethodController.swift */; };
+		82C09674273AE50D0073EE6E /* ChooseAnchorMethodController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82C09672273AE50D0073EE6E /* ChooseAnchorMethodController.swift */; };
 		82D94B63266FC7CF00EE2C1C /* SimpleForm in Frameworks */ = {isa = PBXBuildFile; productRef = 82D94B62266FC7CF00EE2C1C /* SimpleForm */; };
 		82D94B65266FC86200EE2C1C /* SimpleForm in Frameworks */ = {isa = PBXBuildFile; productRef = 82D94B64266FC86200EE2C1C /* SimpleForm */; };
 		82DE9224271876910086F5A4 /* ARSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82DE9223271876900086F5A4 /* ARSessionManager.swift */; };
@@ -640,6 +642,7 @@
 		82BE71912739982200387139 /* KLUSupport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KLUSupport.h; sourceTree = "<group>"; };
 		82BE71922739982200387139 /* KLUSupport */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = KLUSupport; sourceTree = "<group>"; };
 		82BE71932739982200387139 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		82C09672273AE50D0073EE6E /* ChooseAnchorMethodController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseAnchorMethodController.swift; sourceTree = "<group>"; };
 		82DDE1EE26F38D1300C58FA4 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/BurgerMenu.strings; sourceTree = "<group>"; };
 		82DDE1F026F38D4000C58FA4 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/BurgerMenu.strings; sourceTree = "<group>"; };
 		82DDE1F226F38F6F00C58FA4 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/SettingsAndHelp.strings; sourceTree = "<group>"; };
@@ -1638,6 +1641,7 @@
 				E5470EE622C119F4001092A4 /* PauseTrackingController.swift */,
 				E5470EE722C119F4001092A4 /* ResumeTrackingConfirmController.swift */,
 				E8773AFA268B874F003EA863 /* SiriShortcutsController.swift */,
+				82C09672273AE50D0073EE6E /* ChooseAnchorMethodController.swift */,
 			);
 			path = StateViews;
 			sourceTree = "<group>";
@@ -1960,6 +1964,7 @@
 			files = (
 				E5470F2E22C119F5001092A4 /* StopRecordingController.swift in Sources */,
 				E5470F0A22C119F5001092A4 /* AppDelegate.swift in Sources */,
+				82C09673273AE50D0073EE6E /* ChooseAnchorMethodController.swift in Sources */,
 				E5470F2222C119F5001092A4 /* UIViewExtensions.swift in Sources */,
 				E538EF4F22D3BFEC004216E9 /* TransparentTouchView.swift in Sources */,
 				E5470F3C22C119F5001092A4 /* FeedbackViewController.swift in Sources */,
@@ -2018,6 +2023,7 @@
 			files = (
 				E538EF5022D3BFEC004216E9 /* TransparentTouchView.swift in Sources */,
 				E5470F2F22C119F5001092A4 /* StopRecordingController.swift in Sources */,
+				82C09674273AE50D0073EE6E /* ChooseAnchorMethodController.swift in Sources */,
 				E5470F0B22C119F5001092A4 /* AppDelegate.swift in Sources */,
 				E5470F2322C119F5001092A4 /* UIViewExtensions.swift in Sources */,
 				E5470F3D22C119F5001092A4 /* FeedbackViewController.swift in Sources */,

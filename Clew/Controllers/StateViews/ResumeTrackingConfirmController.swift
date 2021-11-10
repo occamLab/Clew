@@ -23,6 +23,9 @@ class ResumeTrackingConfirmController: UIViewController, UIScrollViewDelegate {
     /// text for Anchor Point information
     var anchorPointLabel: UILabel!
     
+    /// flags whether or not this is supposed to use visual alignment
+    var isVisualAlignment = false
+    
     /// flags whether or not this is displayed as part of the tutorial
     var isTutorial = false
     

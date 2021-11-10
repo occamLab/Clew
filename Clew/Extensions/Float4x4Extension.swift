@@ -37,6 +37,36 @@ extension Array where Element: FloatingPoint {
     }
 }
 
+extension float3x3 {
+    /// Convert the matrix to csv format.
+    func toString()->String {
+        return """
+        \(self[0, 0])\t\(self[1, 0])\t\(self[2, 0])
+        \(self[0, 1])\t\(self[1, 1])\t\(self[2, 1])
+        \(self[0, 2])\t\(self[1, 2])\t\(self[2, 2])
+        """
+    }
+    
+    func toFlatArray()->[Float] {
+        return [self[0, 0], self[1, 0], self[2, 0],
+                self[0, 1], self[1, 1], self[2, 1],
+                self[0, 2], self[1, 2], self[2, 2]]
+    }
+    
+    /// Cast the rotation as a 4x4 matrix encoding the rotation and no translation.
+    func toPose()->float4x4 {
+        return simd_float4x4(simd_float4(self[0, 0], self[0, 1], self[0, 2], 0),
+                             simd_float4(self[1, 0], self[1, 1], self[1, 2], 0),
+                             simd_float4(self[2, 0], self[2, 1], self[2, 2], 0),
+                             simd_float4(0, 0, 0, 1))
+    }
+    
+    static func from(intrinsicsVector: simd_float4)->simd_float3x3 {
+        return simd_float3x3(columns: (simd_float3(intrinsicsVector[0], 0.0, 0.0), simd_float3(0.0, intrinsicsVector[1], 0.0), simd_float3(intrinsicsVector[2], intrinsicsVector[3], 1.0)))
+        
+    }
+}
+
 extension float4x4 {
     /// Create a rotation matrix based on the angle and axis.
     ///
@@ -102,5 +132,31 @@ extension float4x4 {
     /// The yaw specified by the transforms
     var yaw: Float {
         return LocationInfo(anchor: ARAnchor(transform: self)).yaw
+    }
+    
+    /// Get the rotation component of the transform.
+    func rotation() -> float3x3 {
+        return simd_float3x3(simd_float3(self[0, 0], self[0, 1], self[0, 2]),
+                             simd_float3(self[1, 0], self[1, 1], self[1, 2]),
+                             simd_float3(self[2, 0], self[2, 1], self[2, 2]))
+    }
+}
+
+extension float4 {
+    /// convert from a 4-element homogeneous vector to a 3-element inhomogeneous one.  This attribute only makes sense if the 4-element vector is a homogeneous representation of a 3D point.
+    var inhomogeneous: float3 {
+        return float3(x/w, y/w, z/w)
+    }
+    
+    var dropW: float3 {
+        return float3(x, y, z)
+    }
+    
+    func toString()->String {
+        return "\(self.x)\t\(self.y)\t\(self.z)\t\(self.w)"
+    }
+    
+    var asArray: [Float] {
+        return [x, y, z, w]
     }
 }

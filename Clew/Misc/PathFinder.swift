@@ -172,6 +172,11 @@ class RouteAnchorPoint: NSObject, NSSecureCoding {
     public var information: NSString?
     /// The URL to an audio file that contains information to help the user remember a Anchor Point
     public var voiceNote: NSString?
+    /// The image associated with the anchor point
+    public var imageFileName: NSString?
+    public var image: UIImage?
+    /// The intrinsics used to take the anchor point image
+    public var intrinsics: simd_float4?
     
     /// Initialize the Anchor Point.
     ///
@@ -179,10 +184,12 @@ class RouteAnchorPoint: NSObject, NSSecureCoding {
     ///   - transform: the position and orientation
     ///   - information: textual description
     ///   - voiceNote: URL to auditory description
-    public init(anchor: ARAnchor? = nil, information: NSString? = nil, voiceNote: NSString? = nil) {
+    public init(anchor: ARAnchor? = nil, information: NSString? = nil, voiceNote: NSString? = nil, imageFileName: NSString? = nil, intrinsics: simd_float4? = nil) {
         self.anchor = anchor
         self.information = information
         self.voiceNote = voiceNote
+        self.imageFileName = imageFileName
+        self.intrinsics = intrinsics
     }
     
     /// Encode the Anchor Point.
@@ -192,6 +199,22 @@ class RouteAnchorPoint: NSObject, NSSecureCoding {
         aCoder.encode(anchor, forKey: "anchor")
         aCoder.encode(information, forKey: "information")
         aCoder.encode(voiceNote, forKey: "voiceNote")
+        if imageFileName != nil {
+            aCoder.encode(imageFileName, forKey: "image")
+        }
+        
+        if let intrinsics = intrinsics {
+            aCoder.encode([intrinsics.x, intrinsics.y, intrinsics.z, intrinsics.w], forKey: "intrinsics")
+        }
+    }
+    
+    /// Used to load the anchor point image when it is needed, given the imaguURL is non-nil
+    func loadImage() {
+        guard let imageFileName = imageFileName else {
+            print("Could not find url to load route anchor point image from")
+            return
+        }
+        self.image = UIImage(contentsOfFile: imageFileName.documentURL.path)
     }
     
     /// Decode the Anchor Point.
@@ -201,6 +224,8 @@ class RouteAnchorPoint: NSObject, NSSecureCoding {
         var anchor : ARAnchor? = nil
         var information : NSString? = nil
         var voiceNote : NSString? = nil
+        var imageFileName : NSString?
+        var intrinsics : simd_float4?
         
         if let transformAsARAnchor = aDecoder.decodeObject(of: ARAnchor.self, forKey: "transformAsARAnchor") {
             anchor = transformAsARAnchor
@@ -209,7 +234,12 @@ class RouteAnchorPoint: NSObject, NSSecureCoding {
         }
         information = aDecoder.decodeObject(of: NSString.self, forKey: "information")
         voiceNote = aDecoder.decodeObject(of: NSString.self, forKey: "voiceNote")
-        self.init(anchor: anchor, information: information, voiceNote: voiceNote)
+        imageFileName = aDecoder.decodeObject(of: NSString.self, forKey: "image")
+        
+        if let intrinsicsArray = aDecoder.decodeObject(forKey: "intrinsics") as? [Float] {
+            intrinsics = simd_float4(intrinsicsArray[0], intrinsicsArray[1], intrinsicsArray[2], intrinsicsArray[3])
+        }
+        self.init(anchor: anchor, information: information, voiceNote: voiceNote, imageFileName: imageFileName, intrinsics: intrinsics)
     }
     
 }

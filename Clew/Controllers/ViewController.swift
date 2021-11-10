@@ -52,6 +52,10 @@ enum AppState {
     case startingResumeProcedure(route: SavedRoute, worldMap: ARWorldMap?, navigateStartToEnd: Bool)
     /// the AR session has entered the relocalizing state, which means that we can now realign the session
     case readyForFinalResumeAlignment
+    /// the period where the timer is counting down
+    case resumeWaitingPeriod
+    /// after the countdown has elapsed and visual alignment is actually occuring
+    case visuallyAligning
     /// the user is attempting to name the route they're in the process of saving
     case startingNameSavedRouteProcedure(worldMap: ARWorldMap?)
     
@@ -80,11 +84,37 @@ enum AppState {
             return "startingResumeProcedure(route=\(route.id), mapexists=\(worldMap != nil), navigateStartToEnd=\(navigateStartToEnd))"
         case .readyForFinalResumeAlignment:
             return "readyForFinalResumeAlignment"
+        case .resumeWaitingPeriod:
+            return "resumeWaitingPeriod"
+        case .visuallyAligning:
+            return "visuallyAligning"
         case .startingNameSavedRouteProcedure:
             return "startingNameSavedRouteProcedure"
         case .finishedTutorialRoute:
             return "finishedTutorialRoute"
         }
+    }
+    
+    var isInTimerCountdown: Bool {
+        if case .pauseWaitingPeriod = self {
+            return true
+        } else if case .resumeWaitingPeriod = self {
+            return true
+        }
+        return false
+    }
+    var isAtMainScreen: Bool {
+        if case .mainScreen(_) = self {
+            return true
+        }
+        return false
+    }
+    
+    var isTryingToAlign: Bool {
+        if case .visuallyAligning = self {
+            return true
+        }
+        return false
     }
 }
 
@@ -135,6 +165,12 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
             case .startingResumeProcedure(let route, let worldMap, let navigateStartToEnd):
                 handleStateTransitionToStartingResumeProcedure(route: route, worldMap: worldMap, navigateStartToEnd: navigateStartToEnd)
             case .readyForFinalResumeAlignment:
+                // nothing happens currently
+                break
+            case .visuallyAligning:
+                // nothing happens currently
+                break
+            case .resumeWaitingPeriod:
                 // nothing happens currently
                 break
             case .startingNameSavedRouteProcedure(let worldMap):
@@ -191,6 +227,21 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     
     /// this Boolean marks whether or not the app is recording a multi use route
     var recordingSingleUseRoute: Bool = false
+    
+    /// this Boolean marks whether or not to use visual alignment with the current route (either pausing or resuming)
+    var isVisualAlignment = false
+    
+    /// the relative yaws computed during visual alignment
+    var relativeYaws: [Float] = []
+    
+    /// the first pose to use as a fallback if visual alignment fails
+    var firstAlignmentPose: simd_float4x4?
+
+    /// this boolean marks whether or not the phone is vertical (helps with visual alignment)
+    var phoneVertical : Bool? = false
+    
+    /// the action to do after the time is finished
+    var timerContinuation: (()->())?
     
     ///this Boolean marks whether or not the app is saving a starting anchor point
     var startAnchorPoint: Bool = false
@@ -362,6 +413,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     ///   - navigateStartToEnd: a Boolean that is true if we want to navigate from the start to the end and false if we want to navigate from the end to the start.
     func handleStateTransitionToStartingResumeProcedure(route: SavedRoute, worldMap: ARWorldMap?, navigateStartToEnd: Bool) {
         logger.setCurrentRoute(route: route, worldMap: worldMap)
+        isVisualAlignment = navigateStartToEnd ? route.beginRouteAnchorPoint.imageFileName != nil : route.endRouteAnchorPoint.imageFileName != nil
         
         // load the world map and restart the session so that things have a chance to quiet down before putting it up to the wall
         var isTrackingPerformanceNormal = false
@@ -392,11 +444,12 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
 
         if navigateStartToEnd {
             crumbs = route.crumbs.reversed()
-            pausedTransform = route.beginRouteAnchorPoint.anchor?.transform
+            pausedAnchorPoint = route.beginRouteAnchorPoint
         } else {
             crumbs = route.crumbs
-            pausedTransform = route.endRouteAnchorPoint.anchor?.transform
+            pausedAnchorPoint = route.endRouteAnchorPoint
         }
+        pausedAnchorPoint?.loadImage()
         RouteManager.shared.intermediateAnchorPoints = route.intermediateAnchorPoints
         trackingSessionErrorState = nil
         ARSessionManager.shared.startSession()
@@ -452,7 +505,8 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         } else {
             endRouteAnchorPoint = RouteAnchorPoint()
         }
-        try! showPauseTrackingButton()
+        phoneVertical = nil
+        try! showChooseAnchorMethodScreen()
     }
     
     /// Handler for the pauseWaitingPeriod app state
@@ -463,15 +517,14 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         rootContainerView.countdownTimer.isHidden = false
         rootContainerView.countdownTimer.start(beginingValue: ViewController.alignmentWaitingPeriod, interval: 1)
         delayTransition()
-        playAlignmentConfirmation = DispatchWorkItem{
+        timerContinuation = {
             self.rootContainerView.countdownTimer.isHidden = true
             self.pauseTracking()
-            if self.paused && self.recordingSingleUseRoute{
+            if self.paused && self.recordingSingleUseRoute {
                 ///announce to the user that they have sucessfully saved an anchor point.
                 self.delayTransition(announcement: NSLocalizedString("singleUseRouteAnchorPointToPausedStateAnnouncement", comment: "This is the announcement which is spoken after creating an anchor point in the process of pausing the tracking session of recording a single use route"), initialFocus: nil)
             }
         }
-        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(ViewController.alignmentWaitingPeriod), execute: playAlignmentConfirmation!)
     }
     
     /// Checks to see if the user had the phone pointing consistently off-center when recording the route.  If this is the case, set a flag in UserDefaults so that the app can suggests the "Correct Offset of Phone / Body" feature.
@@ -498,10 +551,32 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         }
     }
     
+    func getAlignmentImageHelper()->(NSString, simd_float4)? {
+        var imageFileName: NSString?
+        var intrinsicsVec: simd_float4?
+        if isVisualAlignment, let currentFrame = ARSessionManager.shared.currentFrame {
+            let anchorPointImageIdentifier = UUID()
+            imageFileName = "\(anchorPointImageIdentifier).jpg" as NSString
+            
+            guard let image = pixelBufferToUIImage(pixelBuffer: currentFrame.capturedImage) else {
+                return nil
+            }
+            
+            let anchorPointJpeg = image.jpegData(compressionQuality: 1)
+            try! anchorPointJpeg?.write(to: imageFileName!.documentURL, options: .atomic)
+            
+            let intrinsics = currentFrame.camera.intrinsics
+            intrinsicsVec = simd_float4(intrinsics[0, 0], intrinsics[1, 1], intrinsics[2, 0], intrinsics[2, 1])
+        }
+        if let imageFileName = imageFileName, let intrinsicsVec = intrinsicsVec {
+            return (imageFileName, intrinsicsVec)
+        }
+        return nil
+    }
+    
     /// Handler for the completingPauseProcedure app state
     func handleStateTransitionToCompletingPauseProcedure() {
         // TODO: we should not be able to create a route Anchor Point if we are in the relocalizing state... (might want to handle this when the user stops navigation on a route they loaded.... This would obviate the need to handle this in the recordPath code as well
-        print("completing pause procedure")
         if creatingRouteAnchorPoint {
             guard let currentTransform = ARSessionManager.shared.currentFrame?.camera.transform else {
                 print("can't properly save Anchor Point: TODO communicate this to the user somehow")
@@ -510,7 +585,12 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
             // make sure we log the transform
             let _ = self.getRealCoordinates(record: true)
             beginRouteAnchorPoint.anchor = ARAnchor(transform: currentTransform)
-            pauseTrackingController.remove()
+            hideAllViewsHelper()
+            if let imageAlignment = getAlignmentImageHelper() {
+                beginRouteAnchorPoint.imageFileName = imageAlignment.0
+                beginRouteAnchorPoint.loadImage()
+                beginRouteAnchorPoint.intrinsics = imageAlignment.1
+            }
             
             ///PATHPOINT begining anchor point alignment timer -> record route
             ///announce to the user that they have sucessfully saved an anchor point.
@@ -522,6 +602,11 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
             // make sure to log transform
             let _ = self.getRealCoordinates(record: true)
             endRouteAnchorPoint.anchor = ARAnchor(transform: currentTransform)
+            if let imageAlignment = getAlignmentImageHelper() {
+                endRouteAnchorPoint.imageFileName = imageAlignment.0
+                endRouteAnchorPoint.loadImage()
+                endRouteAnchorPoint.intrinsics = imageAlignment.1
+            }
             // no more crumbs
             droppingCrumbs?.invalidate()
 
@@ -586,6 +671,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     
     /// Hide all the subviews.  TODO: This should probably eventually refactored so it happens more automatically.
     func hideAllViewsHelper() {
+        chooseAnchorMethodController.remove()
         recordPathController.remove()
         stopRecordingController.remove()
         startNavigationController.remove()
@@ -667,8 +753,14 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     /// Callback function for when `countdownTimer` updates.  This allows us to announce the new value via voice
     ///
     /// - Parameter newValue: the new value (in seconds) displayed on the countdown timer
-    @objc func timerDidUpdateCounterValue(newValue: Int) {
+    @objc func timerDidUpdateCounterValue(sender: SRCountdownTimer, newValue: Int) {
         UIAccessibility.post(notification: UIAccessibility.Notification.announcement, argument: String(newValue))
+    }
+        
+    @objc func timerDidEnd(sender: SRCountdownTimer, elapsedTime: TimeInterval) {
+        if let timerContinuation = timerContinuation {
+            timerContinuation()
+        }
     }
     
     /// Hook in the view class as a view, so that we can access its variables easily
@@ -680,6 +772,9 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     
     /// the controller that hosts the popover survey
     var hostingController: UIViewController?
+    
+    /// route navigation method choosing VC
+    var chooseAnchorMethodController: ChooseAnchorMethodController!
     
     /// route navigation pausing VC
     var pauseTrackingController: PauseTrackingController!
@@ -702,9 +797,6 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     /// start route navigation VC
     var startNavigationController: StartNavigationController!
     
-    /// work item for playing alignment confirmation sound
-    var playAlignmentConfirmation: DispatchWorkItem?
-    
     /// stop route navigation VC
     var stopNavigationController: StopNavigationController!
     
@@ -716,6 +808,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         view = RootContainerView(frame: UIScreen.main.bounds)
         self.modalPresentationStyle = .fullScreen
         // initialize child view controllers
+        chooseAnchorMethodController = ChooseAnchorMethodController()
         pauseTrackingController = PauseTrackingController()
         resumeTrackingController = ResumeTrackingController()
         resumeTrackingConfirmController = ResumeTrackingConfirmController()
@@ -924,6 +1017,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         // TODO: check for code reuse
         // Clearing All State Processes and Data
         rootContainerView.homeButton.isHidden = true
+        timerContinuation = nil
         recordPathController.isAccessibilityElement = false
         if case .navigatingRoute = self.state {
             ARSessionManager.shared.removeNavigationNodes()
@@ -934,7 +1028,6 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         beginRouteAnchorPoint = RouteAnchorPoint()
         endRouteAnchorPoint = RouteAnchorPoint()
         RouteManager.shared.intermediateAnchorPoints = []
-        playAlignmentConfirmation?.cancel()
         rootContainerView.announcementText.isHidden = true
         nav.headingOffset = 0.0
         headingRingBuffer.clear()
@@ -1187,10 +1280,9 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     ///   - subview transitions?
     /// display RECORD PATH button/hide all other views
     @objc func showRecordPathButton(announceArrival: Bool) {
+        hideAllViewsHelper()
         add(recordPathController)
         /// handling main screen transitions outside of the first load
-        /// add the view of the child to the view of the parent
-        stopNavigationController.remove()
         
         rootContainerView.getDirectionButton.isHidden = true
         // the options button is hidden if the route rating shows up
@@ -1225,7 +1317,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     /// Display stop recording view/hide all other views
     @objc func showStopRecordingButton() {
         rootContainerView.homeButton.isHidden = false // home button here
-        recordPathController.remove()
+        hideAllViewsHelper()
         recordPathController.view.isAccessibilityElement = false
         add(stopRecordingController)
         delayTransition(announcement: NSLocalizedString("properDevicePositioningAnnouncement", comment: "This is an announcement which plays to tell the user the best practices for aligning the phone"))
@@ -1234,10 +1326,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     /// Display start navigation view/hide all other views
     @objc func showStartNavigationButton(allowPause: Bool, isTutorial: Bool) {
         rootContainerView.homeButton.isHidden = !recordingSingleUseRoute // home button hidden if we are doing a multi use route (we use the large home button instead)
-        resumeTrackingController.remove()
-        resumeTrackingConfirmController.remove()
-        stopRecordingController.remove()
-        
+        hideAllViewsHelper()
         // set appropriate Boolean flags for context
         startNavigationController.isTutorial = isTutorial
         startNavigationController.isAutomaticAlignment = isAutomaticAlignment
@@ -1255,15 +1344,24 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     }
 
     /// Display the pause tracking view/hide all other views
+    func showChooseAnchorMethodScreen() throws {
+        rootContainerView.homeButton.isHidden = false
+        hideAllViewsHelper()
+        
+        add(chooseAnchorMethodController)
+        delayTransition()
+    }
+    
+    /// Display the pause tracking view/hide all other views
     func showPauseTrackingButton() throws {
         rootContainerView.homeButton.isHidden = false
-        recordPathController.remove()
-        startNavigationController.remove()
+        hideAllViewsHelper()
 
         // set appropriate Boolean flags
         pauseTrackingController.paused = paused
         pauseTrackingController.recordingSingleUseRoute = recordingSingleUseRoute
         pauseTrackingController.startAnchorPoint = startAnchorPoint
+        pauseTrackingController.isVisualAlignment = isVisualAlignment
         
         add(pauseTrackingController)
         delayTransition()
@@ -1272,7 +1370,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     /// Display the resume tracking view/hide all other views
     @objc func showResumeTrackingButton() {
         rootContainerView.homeButton.isHidden = false // no home button here
-        pauseTrackingController.remove()
+        hideAllViewsHelper()
         add(resumeTrackingController)
         UIApplication.shared.keyWindow!.bringSubviewToFront(rootContainerView)
         delayTransition()
@@ -1283,6 +1381,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         rootContainerView.homeButton.isHidden = false
         hideAllViewsHelper()
         resumeTrackingConfirmController.isTutorial = isTutorial
+        resumeTrackingConfirmController.isVisualAlignment = isVisualAlignment
         add(resumeTrackingConfirmController)
         resumeTrackingConfirmController.view.mainText?.text = ""
         voiceNoteToPlay = nil
@@ -1335,9 +1434,9 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     
     /// display stop navigation view/hide all other views
     @objc func showStopNavigationButton() {
+        hideAllViewsHelper()
         rootContainerView.homeButton.isHidden = false
         rootContainerView.getDirectionButton.isHidden = false
-        startNavigationController.remove()
         add(stopNavigationController)
         
         // this does not auto update, so don't use it as an accessibility element
@@ -1416,6 +1515,8 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     var feedbackTimer: Date!
     /// The delay between haptic feedback pulses in seconds
     static let FEEDBACKDELAY = 0.4
+    
+    static let maxVisualAlignmentRetryCount = 13
 
     var errorFeedbackTimer = Date()
     var playedErrorSoundForOffRoute = false
@@ -1471,7 +1572,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     var timerLength: Int!
 
     /// This keeps track of the paused transform while the current session is being realigned to the saved route
-    var pausedTransform : simd_float4x4?
+    var pausedAnchorPoint : RouteAnchorPoint?
     
     /// the Anchor Point to use to mark the beginning of the route currently being recorded
     var beginRouteAnchorPoint = RouteAnchorPoint()
@@ -1557,13 +1658,11 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     /// - Parameter sender: the button that generated the event
     @objc func stopRecording(_ sender: UIButton?) {
         // copy the recordingCrumbs over for use in path creation
+        hideAllViewsHelper()
         crumbs = Array(recordingCrumbs)
         isResumedRoute = false
 
         rootContainerView.homeButton.isHidden = false // home button here
-        resumeTrackingController.remove()
-        resumeTrackingConfirmController.remove()
-        stopRecordingController.remove()
         setShouldSuggestAdjustOffset()
         // heading offsets should not be updated from this point until route navigation starts
         updateHeadingOffsetTimer?.invalidate()
@@ -1618,10 +1717,20 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
             hideAllViewsHelper()
             ///PATHPOINT multi use route pause -> resume route
             self.pauseTracking()
-        }else {
+        } else {
             ///PATHPOINT single use route pause -> record end Anchor Point
             state = .startingPauseProcedure
         }
+    }
+    
+    @objc func setVisualAlignment() {
+        isVisualAlignment = true
+        try? showPauseTrackingButton()
+    }
+    
+    @objc func setPhysicalAlignment() {
+        isVisualAlignment = false
+        try? showPauseTrackingButton()
     }
     
     /// handles the user pressing the Anchor Point button
@@ -1665,42 +1774,50 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     func resumeTracking() {
         // resume pose tracking with existing ARSessionConfiguration
         hideAllViewsHelper()
-        pauseTrackingController.remove()
         rootContainerView.countdownTimer.isHidden = false
+        state = .resumeWaitingPeriod
+        // TODO: timer is still not quite behaving correctly for visual alignment
         rootContainerView.countdownTimer.start(beginingValue: ViewController.alignmentWaitingPeriod, interval: 1)
         delayTransition()
-        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(ViewController.alignmentWaitingPeriod)) {
+        
+        timerContinuation = {
             self.rootContainerView.countdownTimer.isHidden = true
             // The first check is necessary in case the phone relocalizes before this code executes
-            if case .readyForFinalResumeAlignment = self.state, let alignTransform = self.pausedTransform, let camera = ARSessionManager.shared.currentFrame?.camera {
-                // yaw can be determined by projecting the camera's z-axis into the ground plane and using arc tangent (note: the camera coordinate conventions of ARKit https://developer.apple.com/documentation/arkit/arsessionconfiguration/worldalignment/camera
-                // add this call so we make sure that we log the alignment transform
-                let _ = self.getRealCoordinates(record: true)
-                let alignYaw = ViewController.getYawHelper(alignTransform)
-                let cameraYaw = ViewController.getYawHelper(camera.transform)
-
-                var leveledCameraPose = simd_float4x4.makeRotate(radians: cameraYaw, 0, 1, 0)
-                leveledCameraPose.columns.3 = camera.transform.columns.3
-                
-                var leveledAlignPose =  simd_float4x4.makeRotate(radians: alignYaw, 0, 1, 0)
-                leveledAlignPose.columns.3 = alignTransform.columns.3
-                
-                ARSessionManager.shared.manualAlignment = leveledCameraPose * leveledAlignPose.inverse
-                
-                self.isResumedRoute = true
-                if self.paused {
-                    ///PATHPOINT paused anchor point alignment timer -> return navigation
-                    ///announce to the user that they have aligned to the anchor point sucessfully and are starting  navigation.
-                    self.paused = false
-                    self.delayTransition(announcement: NSLocalizedString("resumeAnchorPointToReturnNavigationAnnouncement", comment: "This is an Announcement which indicates that the pause session is complete, that the program was able to align with the anchor point, and that return navigation has started."), initialFocus: nil)
-                    self.state = .navigatingRoute
-
+            if case .resumeWaitingPeriod = self.state, let alignTransform = self.pausedAnchorPoint?.anchor?.transform, let camera = ARSessionManager.shared.currentFrame?.camera {
+                if self.isVisualAlignment {
+                    self.state = .visuallyAligning
+                    self.relativeYaws = []
+                    self.firstAlignmentPose = nil
+                    self.tryVisualAlignment(triesLeft: ViewController.maxVisualAlignmentRetryCount, makeAnnounement: true)
                 } else {
-                    ///PATHPOINT load saved route -> start navigation
+                    // yaw can be determined by projecting the camera's z-axis into the ground plane and using arc tangent (note: the camera coordinate conventions of ARKit https://developer.apple.com/documentation/arkit/arsessionconfiguration/worldalignment/camera
+                    // add this call so we make sure that we log the alignment transform
+                    let _ = self.getRealCoordinates(record: true)
+                    let alignYaw = ViewController.getYawHelper(alignTransform)
+                    let cameraYaw = ViewController.getYawHelper(camera.transform)
 
-                    ///announce to the user that they have sucessfully aligned with their saved anchor point.
-                    self.delayTransition(announcement: NSLocalizedString("resumeAnchorPointToReturnNavigationAnnouncement", comment: "This is an Announcement which indicates that the pause session is complete, that the program was able to align with the anchor point, and that return navigation has started."), initialFocus: nil)
-                    self.state = .navigatingRoute
+                    var leveledCameraPose = simd_float4x4.makeRotate(radians: cameraYaw, 0, 1, 0)
+                    leveledCameraPose.columns.3 = camera.transform.columns.3
+                    
+                    var leveledAlignPose =  simd_float4x4.makeRotate(radians: alignYaw, 0, 1, 0)
+                    leveledAlignPose.columns.3 = alignTransform.columns.3
+                    
+                    ARSessionManager.shared.manualAlignment = leveledCameraPose * leveledAlignPose.inverse
+                    
+                    self.isResumedRoute = true
+                    if self.paused {
+                        ///PATHPOINT paused anchor point alignment timer -> return navigation
+                        ///announce to the user that they have aligned to the anchor point sucessfully and are starting  navigation.
+                        self.paused = false
+                        self.delayTransition(announcement: NSLocalizedString("resumeAnchorPointToReturnNavigationAnnouncement", comment: "This is an Announcement which indicates that the pause session is complete, that the program was able to align with the anchor point, and that return navigation has started."), initialFocus: nil)
+                        self.state = .navigatingRoute
+                    } else {
+                        ///PATHPOINT load saved route -> start navigation
+
+                        ///announce to the user that they have sucessfully aligned with their saved anchor point.
+                        self.delayTransition(announcement: NSLocalizedString("resumeAnchorPointToReturnNavigationAnnouncement", comment: "This is an Announcement which indicates that the pause session is complete, that the program was able to align with the anchor point, and that return navigation has started."), initialFocus: nil)
+                        self.state = .navigatingRoute
+                    }
                 }
             }
         }
@@ -2121,6 +2238,12 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
                 
             case .readyForFinalResumeAlignment:
                 break // pageToDisplay = "FindPath"
+            
+            case .resumeWaitingPeriod:
+                break
+                
+            case .visuallyAligning:
+                break
                 
             case .startingNameSavedRouteProcedure(worldMap: let worldMap):
                 break // pageToDisplay = "FindingSavedRoutes"
@@ -2165,6 +2288,12 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
             homePageNavigationProcesses()
         }
         else if case .startingResumeProcedure = self.state {
+            homePageNavigationProcesses()
+        }
+        else if case .resumeWaitingPeriod = self.state {
+            homePageNavigationProcesses()
+        }
+        else if case .visuallyAligning = self.state {
             homePageNavigationProcesses()
         }
         else if case .startingNameSavedRouteProcedure = self.state {
@@ -2283,6 +2412,162 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         }
     }
     
+    /// Checks to see if we need to reset the timer
+    /// - Returns: true if timer was reset
+    func recordRouteLandmarkHelper() {
+        guard isVisualAlignment, state.isInTimerCountdown else {
+            return
+        }
+        guard let poseRotation = ARSessionManager.shared.currentFrame?.camera.transform.rotation() else {
+            return
+        }
+        
+        let projectedPhoneZ = poseRotation * simd_float3(0, 0, 1)
+        let polar = acos(simd_dot(projectedPhoneZ, simd_normalize(simd_float3(projectedPhoneZ.x, 0, projectedPhoneZ.z))))
+        let phoneCurrentlyVertical = polar < 0.4
+        
+        guard let unwrappedPhoneVertical = phoneVertical else {
+            phoneVertical = phoneCurrentlyVertical
+            if !phoneCurrentlyVertical {
+                rootContainerView.countdownTimer.isHidden = true
+                announce(announcement: "Camera not vertical, hold phone vertically to begin countdown")
+                rootContainerView.countdownTimer.start(beginingValue: ViewController.alignmentWaitingPeriod, interval: 1)
+                //rootContainerView.countdownTimer.pause()
+                rootContainerView.countdownTimer.setNeedsDisplay()
+                let nowNotVerticalVibration = UIImpactFeedbackGenerator(style: .heavy)
+                nowNotVerticalVibration.impactOccurred()
+            }
+            return
+        }
+        
+        if !phoneCurrentlyVertical && unwrappedPhoneVertical {
+            announce(announcement: "Camera no longer vertical, restarting and stopping countdown")
+            rootContainerView.countdownTimer.isHidden = true
+            rootContainerView.countdownTimer.start(beginingValue: ViewController.alignmentWaitingPeriod, interval: 1)
+            rootContainerView.countdownTimer.pause()
+            rootContainerView.countdownTimer.setNeedsDisplay()
+            let nowNotVerticalVibration = UIImpactFeedbackGenerator(style: .heavy)
+            nowNotVerticalVibration.impactOccurred()
+            phoneVertical = phoneCurrentlyVertical
+        }
+        if phoneCurrentlyVertical && !unwrappedPhoneVertical {
+            rootContainerView.countdownTimer.isHidden = false
+            announce(announcement: "Camera now vertical, starting countdown")
+            rootContainerView.countdownTimer.resume()
+            let nowVerticalVibration = UIImpactFeedbackGenerator(style: .light)
+            nowVerticalVibration.impactOccurred()
+            phoneVertical = phoneCurrentlyVertical
+        }
+    }
+    
+    
+    func tryVisualAlignment(triesLeft: Int, makeAnnounement: Bool = false) {
+        if state.isAtMainScreen {
+            // once we are at the main screen, we need to stop
+            return
+        }
+        if !state.isTryingToAlign || !attemptingRelocalization {
+            return
+        }
+        if let alignAnchorPoint = self.pausedAnchorPoint, let alignAnchorPointImage = alignAnchorPoint.image, let alignTransform = alignAnchorPoint.anchor?.transform, let frame = ARSessionManager.shared.currentFrame {
+            if makeAnnounement {
+                announce(announcement: NSLocalizedString("visualAlignmentConfirmation", comment: "Announce that visual alignment process has began"))
+            }
+
+            DispatchQueue.global(qos: .userInitiated).async {
+                let intrinsics = frame.camera.intrinsics
+                let capturedUIImage = pixelBufferToUIImage(pixelBuffer: frame.capturedImage)!
+                let visualYawReturn = VisualAlignment.visualYaw(alignAnchorPointImage, alignAnchorPoint.intrinsics!, alignTransform, capturedUIImage, simd_float4(intrinsics[0, 0], intrinsics[1, 1], intrinsics[2, 0], intrinsics[2, 1]), frame.camera.transform, Int32(2))
+                
+                UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
+                
+                let propInliers = visualYawReturn.numMatches > 0 ? Float(visualYawReturn.numInliers) / Float(visualYawReturn.numMatches) : 0.0
+                print("alignment inliers \(visualYawReturn.numInliers) \(visualYawReturn.numMatches) \(propInliers) \(visualYawReturn.residualAngle)")
+                if self.firstAlignmentPose == nil {
+                    self.firstAlignmentPose = frame.camera.transform
+                }
+                if visualYawReturn.is_valid, abs(visualYawReturn.residualAngle) < 0.01 {
+                    let relativeTransform = self.getRelativeTransform(cameraTransform: frame.camera.transform, alignTransform: alignTransform, visualYawReturn: visualYawReturn)
+                    let relativeYaw = atan2(relativeTransform.columns.0.z, relativeTransform.columns.0.x)
+                    self.relativeYaws.append(relativeYaw)
+                    SoundEffectManager.shared.success()
+                } else {
+                    SoundEffectManager.shared.error()
+                }
+                if triesLeft > 1 {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+                        self.tryVisualAlignment(triesLeft: triesLeft-1)
+                    }
+                    return
+                }
+                
+                DispatchQueue.main.async {
+                    if !self.state.isTryingToAlign {
+                        // we must have localized to the map or are doign this during the route... let's bail
+                        return
+                    }
+                    if !self.relativeYaws.isEmpty {
+                        let quantizedYaws = self.relativeYaws.map({Int($0*50)})
+                        let mostFrequent = mostFrequent(array: quantizedYaws)!
+                        var suitableYaws: [Float] = []
+                        for relativeYaw in self.relativeYaws {
+                            if Int(relativeYaw*50) == mostFrequent.mostFrequent[0] {
+                                suitableYaws.append(relativeYaw)
+                            }
+                        }
+                        let consensusYaw: Float
+                        // If we don't have more than 2 colliding in the same bucket, fall back on a simple average
+                        if mostFrequent.count < 2 {
+                            let consensusUnitVec = self.relativeYaws.reduce(simd_float2(repeating: 0.0), { (x,y) in x + simd_float2(cos(y), sin(y))/Float(self.relativeYaws.count)})
+                            consensusYaw = atan2(consensusUnitVec.y, consensusUnitVec.x)
+                        } else {
+                            consensusYaw = suitableYaws.reduce(Float(0.0), { (x,y) in x + y/Float(mostFrequent.count)})
+                        }
+                        if self.attemptingRelocalization || ARSessionManager.shared.initialWorldMap == nil {
+                            var relativeTransform = simd_float4x4.makeRotate(radians: consensusYaw, 0, 1, 0)
+                            relativeTransform.columns.3 = simd_float4(alignTransform.columns.3.dropW - relativeTransform.rotation() * self.firstAlignmentPose!.columns.3.dropW, 1)
+                            ARSessionManager.shared.manualAlignment = relativeTransform.inverse
+                        }
+                    } else {
+                        self.announce(announcement: NSLocalizedString("noVisualMatchesUseSnapToRoute", comment: "Instruct to use snap-to-route when no visual matches are found"))
+                        
+                        if let firstAlignmentPose = self.firstAlignmentPose {
+                            var visualYawReturnCopy = visualYawReturn
+                            visualYawReturnCopy.is_valid = true
+                            visualYawReturnCopy.yaw = 0
+                            var cameraTransform = frame.camera.transform
+                            cameraTransform.columns.3 = firstAlignmentPose.columns.3
+                            let relativeTransform = self.getRelativeTransform(cameraTransform: cameraTransform, alignTransform: alignTransform, visualYawReturn: visualYawReturnCopy)
+                            ARSessionManager.shared.manualAlignment = relativeTransform
+                        }
+                        SoundEffectManager.shared.meh()
+                    }
+                    self.isResumedRoute = true
+                    self.state = .readyToNavigateOrPause(allowPause: false)
+                }
+            }
+        }
+    }
+    
+    func getRelativeTransform(cameraTransform: simd_float4x4, alignTransform: simd_float4x4, visualYawReturn: VisualAlignmentReturn)->simd_float4x4 {
+        let alignRotation = simd_float3x3(simd_float3(alignTransform[0, 0], alignTransform[0, 1], alignTransform[0, 2]),
+                                          simd_float3(alignTransform[1, 0], alignTransform[1, 1], alignTransform[1, 2]),
+                                          simd_float3(alignTransform[2, 0], alignTransform[2, 1], alignTransform[2, 2]))
+        
+        let leveledAlignRotation = visualYawReturn.square_rotation1.inverse * alignRotation;
+        
+        var leveledAlignPose = leveledAlignRotation.toPose()
+        leveledAlignPose[3] = alignTransform[3]
+        
+        let cameraRotation = cameraTransform.rotation()
+        let leveledCameraRotation = visualYawReturn.square_rotation2.inverse * cameraRotation;
+        var leveledCameraPose = leveledCameraRotation.toPose()
+        leveledCameraPose[3] = cameraTransform[3]
+        
+        let yawRotation = simd_float4x4.makeRotate(radians: visualYawReturn.yaw, -1, 0, 0)
+        
+        return leveledCameraPose * yawRotation.inverse * leveledAlignPose.inverse
+    }
     
     /// this tells the ARSession that when the app is becoming active again, we should try to relocalize to the previous world map (rather than proceding with the tracking session in the normal state even though the coordinate systems are no longer aligned).
     /// TODO: not sure if this is actually what we should be doing.  Perhaps we should cancel any recording or navigation if this happens rather than trying to relocalize
@@ -2446,5 +2731,9 @@ extension ViewController: ARSessionManagerDelegate {
         } else {
             return false
         }
+    }
+    
+    func newFrameAvailable() {
+        recordRouteLandmarkHelper()
     }
 }

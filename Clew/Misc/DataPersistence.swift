@@ -107,6 +107,31 @@ class DataPersistence {
                         print("couldn't write file")
                     }
                 }
+                
+                // TODO: haven't tested this yet
+                if let beginImage = documentData.beginImage {
+                    let imageData = Data(base64Encoded: beginImage)
+                    let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+                    let path = documentData.route.beginRouteAnchorPoint.imageFileName! as String
+                    let url = documentsDirectory.appendingPathComponent(path)
+                    do {
+                        try imageData?.write(to: url)
+                    } catch {
+                        print("couldn't write file")
+                    }
+                }
+                
+                if let endImage = documentData.endImage {
+                    let imageData = Data(base64Encoded: endImage)
+                    let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+                    let path = documentData.route.endRouteAnchorPoint.imageFileName! as String
+                    let url = documentsDirectory.appendingPathComponent(path)
+                    do {
+                        try imageData?.write(to: url)
+                    } catch {
+                        print("couldn't write file")
+                    }
+                }
             }
         } catch {
             print("couldn't unarchive route document")
@@ -125,9 +150,12 @@ class DataPersistence {
         /// fetch the world map if it exists. Otherwise, value is nil
         let worldMap = self.unarchiveMap(id: route.id as String)
         
-        /// paths to the beginning and ending landmark files
+        /// contents of the beginning and ending landmark files
         var beginVoiceFile: String?
         var endVoiceFile: String?
+        /// contents of the beginning and ending images
+        var beginImageData: String?
+        var endImageData: String?
         
         /// fetch begginning voice notefile if it exists
         if let beginVoiceURL = route.beginRouteAnchorPoint.voiceNote {
@@ -165,11 +193,32 @@ class DataPersistence {
             }
         }
         
+        // TODO: have not tested this yet
+        /// fetch beginning image if it exists
+        if let beginImagePath = route.beginRouteAnchorPoint.imageFileName {
+            /// encode audio file into a base64 string to be written to
+            /// a shareable file
+            if let data = try? Data(contentsOf: beginImagePath.documentURL) {
+                beginImageData = data.base64EncodedString()
+            }
+        }
+        
+        /// fetch end enchor point image if it exists
+        if let endImagePath = route.endRouteAnchorPoint.imageFileName {
+            /// encode audio file into a base64 string to be written to
+            /// a shareable file
+            if let data = try? Data(contentsOf: endImagePath.documentURL) {
+                endImageData = data.base64EncodedString()
+            }
+        }
+        
         let routeData = RouteDocumentData(route: route,
                                           map: worldMap,
                                           beginVoiceNote: beginVoiceFile,
                                           endVoiceNote: endVoiceFile,
-                                          routeVoiceNotes: routeVoiceNotes)
+                                          routeVoiceNotes: routeVoiceNotes,
+                                          beginImage: beginImageData,
+                                          endImage: endImageData)
 
         /// fetch the documents directory where apple stores temporary files
         let documents = FileManager.default.urls(

@@ -28,6 +28,9 @@ class PauseTrackingController: UIViewController, UIScrollViewDelegate {
     /// paused Boolean that should be set from ViewController in order to display appropriate text
     var paused: Bool!
     
+    /// a Boolean that indicates whether the current pause or resume process is for visual alignment
+    var isVisualAlignment: Bool!
+    
     /// recordingSingleUseRoute Boolean that should be set from ViewController in order to display appropriate text
     var recordingSingleUseRoute: Bool!
     
