@@ -53,6 +53,7 @@ class DataPersistence {
     func importData(withData data: Data) {
         // TODO: Do this same setClass thing for Clew documents
         #if APPCLIP
+        // let className: String = "Clew_More"
         let className: String = "Clew_More"
         #else
         let className: String = "Clew_Dev"

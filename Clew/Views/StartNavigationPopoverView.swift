@@ -35,6 +35,8 @@ struct StartNavigationPopoverView: View {
                             NotificationCenter.default.post(name: NSNotification.Name("shouldDismissRoutePopover"), object: nil)
                             #if !APPCLIP
                             self.vc.arLogger.startTrial()
+                            #else
+                            self.vc.handleStateTransitionToNavigatingExternalRoute()
                             #endif
 //                            UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: self)
                         }) {
