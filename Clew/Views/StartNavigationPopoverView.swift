@@ -2,7 +2,7 @@
 //  StartNavigationPopoverView.swift
 //  UIKit Clip
 //
-//  Created by occamlab on 7/1/21.
+//  Created by Esme Abbot on 7/1/21.
 //  Copyright © 2021 OccamLab. All rights reserved.
 //
 
@@ -25,34 +25,32 @@ struct StartNavigationPopoverView: View {
                 .font(.system(size: 24, weight: .bold))
 //            #endif
             NavigationView {
-//                HStack {
-                    List(routeList, id: \.first!.key) { routeInfo in
-                        
-                        Button(action: {
-                            vc.routeID = routeInfo.first!.key
-                            selectedRouteName = routeInfo.first!.value
-                            vc.recordPathController.remove()
-                            NotificationCenter.default.post(name: NSNotification.Name("shouldDismissRoutePopover"), object: nil)
-                            #if !APPCLIP
-                            self.vc.arLogger.startTrial()
-                            #endif
+                List(routeList, id: \.first!.key) { routeInfo in
+                    Button(action: {
+                        vc.routeID = routeInfo.first!.key
+                        selectedRouteName = routeInfo.first!.value
+                        vc.recordPathController.remove()
+                        NotificationCenter.default.post(name: NSNotification.Name("shouldDismissRoutePopover"), object: nil)
+                        #if !APPCLIP
+                        self.vc.arLogger.startTrial()
+                        #endif
 //                            UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: self)
-                        }) {
-                            if selectedRouteName == routeInfo.first!.value {
-                                RowSelected {
-                                    RouteList(RouteName: routeInfo.first!.value)
-                                }
-                            } else {
-                                RowNotSelected {
-                                    RouteList(RouteName: routeInfo.first!.value)
-                                }
+                    }) {
+                        if selectedRouteName == routeInfo.first!.value {
+                            RowSelected {
+                                RouteList(RouteName: routeInfo.first!.value)
+                            }
+                        } else {
+                            RowNotSelected {
+                                RouteList(RouteName: routeInfo.first!.value)
                             }
                         }
                     }
-//                }
-                .navigationTitle(NSLocalizedString("selectRoutePopoverLabel", comment: "This is text instructing the user to select a route from a list."))
+                }
+                .navigationTitle(NSLocalizedString("selectRoutePopoverLabel", comment: "This is text instructing the user to select a route from a list ."))
             }
             
+            /// The below code was for the additional start button that popped up when a route was highlighted.
            /* if selectedRouteName.count > 0 {
                 StartButton(vc: vc)
                     .background(Color.white)
