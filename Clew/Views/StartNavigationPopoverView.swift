@@ -9,15 +9,17 @@
 import SwiftUI
 import Firebase
 
+class RouteListObject: ObservableObject {
+    @Published var routeList = [[String: String]]()
+}
+
 struct StartNavigationPopoverView: View {
     let vc: ViewController
     @State private var selectedRouteName = "" //TODO: change so it know what your settings are when you enter the walkthrough
-    @State private var routeList = [[String: String]]()
+//    @State private var routeList = [[String: String]]()
+    @ObservedObject var routeList: RouteListObject
 
-    
     var body: some View {
-             
-        
         VStack {
 //            #if APPCLIP
             Text(NSLocalizedString("startNavigationPopoverText", comment: "This is text that appears with the list of routes in the app clip."))
@@ -25,7 +27,7 @@ struct StartNavigationPopoverView: View {
                 .font(.system(size: 24, weight: .bold))
 //            #endif
             NavigationView {
-                List(routeList, id: \.first!.key) { routeInfo in
+                List(routeList.routeList, id: \.first!.key) { routeInfo in
                     Button(action: {
                         vc.routeID = routeInfo.first!.key
                         selectedRouteName = routeInfo.first!.value
@@ -55,10 +57,11 @@ struct StartNavigationPopoverView: View {
                 StartButton(vc: vc)
                     .background(Color.white)
             }*/
-        }.onAppear(perform: {
-            routeList = self.vc.availableRoutes
+//        }.onAppear(perform: {
+        } .onReceive(self.routeList.objectWillChange) {
+            routeList.routeList = self.vc.availableRoutes
             selectedRouteName = ""
-        })
+        }
     }
 }
 

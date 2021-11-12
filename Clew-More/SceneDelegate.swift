@@ -118,7 +118,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             self.loadFromAppClipController?.dismiss(animated: false)
             
             /// bring up list of routes
-            self.popoverController = UIHostingController(rootView: StartNavigationPopoverView(vc: self.vc!))
+            self.popoverController = UIHostingController(rootView: StartNavigationPopoverView(vc: self.vc!, routeList: self.vc?.availableRoutes))
             self.popoverController?.modalPresentationStyle = .fullScreen
             self.vc!.present(self.popoverController!, animated: true)
             print("popover successful B)")

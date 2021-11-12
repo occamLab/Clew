@@ -1,5 +1,5 @@
 //
-//  SwiftUIView.swift
+//  SavedRoutesList.swift
 //  Clew-More
 //
 //  Created by occamlab on 7/19/21.
@@ -13,7 +13,7 @@ struct SavedRoutesList: View {
     @State private var routeList: [SavedRoute] = []
 
     var body: some View {
-        VStack{
+        VStack {
             NavigationView {
                 List(routeList) { route in
                     
