@@ -584,3 +584,5 @@
 "moduleNotCompleted" = "Module Not Completed";
 
 "offThePathAnnouncement" = "If you are having trouble following the route, press the \"get directions\" button.";
+
+"noVisualMatchesNavigationNavigationIsUnlikelyToWorkWell" = "Alignment was unsuccessful. Navigation performance will likely be poor.";

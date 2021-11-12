@@ -242,6 +242,9 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     /// the relative yaws computed during visual alignment
     var relativeYaws: [Float] = []
     
+    /// keep track of when we last announced trouble with visual alignment
+    var lastVisualAlignmentFailureAnnouncement = Date()
+    
     /// the first pose to use as a fallback if visual alignment fails
     var firstAlignmentPose: simd_float4x4?
 
@@ -757,9 +760,6 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     
     /// True if we should use a cone of pi/12 and false if we should use a cone of pi/6 when deciding whether to issue haptic feedback
     var strictHaptic = true
-    
-    /// Keep track of last world origin adjustment to prevent "ringing"
-    var lastWorldOriginShift = Date()
 
     /// Callback function for when `countdownTimer` updates.  This allows us to announce the new value via voice
     ///
@@ -772,6 +772,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         if let timerContinuation = timerContinuation {
             timerContinuation()
         }
+        timerContinuation = nil
     }
     
     /// Hook in the view class as a view, so that we can access its variables easily
@@ -1527,7 +1528,9 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     /// The delay between haptic feedback pulses in seconds
     static let FEEDBACKDELAY = 0.4
     
-    static let maxVisualAlignmentRetryCount = 13
+    static let maxVisualAlignmentRetryCount = 20
+    static let requiredSuccessfulVisualAlignmentFrames = 5
+    static let timeBetweenVisualAlignmentFailureAnnouncements = 5.0
 
     var errorFeedbackTimer = Date()
     var playedErrorSoundForOffRoute = false
@@ -1785,23 +1788,14 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     func resumeTracking() {
         // resume pose tracking with existing ARSessionConfiguration
         hideAllViewsHelper()
-        state = .resumeWaitingPeriod
         if !isVisualAlignment {
+            state = .resumeWaitingPeriod
             rootContainerView.countdownTimer.isHidden = false
             rootContainerView.countdownTimer.start(beginingValue: ViewController.alignmentWaitingPeriod, interval: 1)
-        }
-        delayTransition()
-        
-        timerContinuation = {
-            self.rootContainerView.countdownTimer.isHidden = true
-            // The first check is necessary in case the phone relocalizes before this code executes
-            if case .resumeWaitingPeriod = self.state, let alignTransform = self.pausedAnchorPoint?.anchor?.transform, let camera = ARSessionManager.shared.currentFrame?.camera {
-                if self.isVisualAlignment {
-                    self.state = .visuallyAligning
-                    self.relativeYaws = []
-                    self.firstAlignmentPose = nil
-                    self.tryVisualAlignment(triesLeft: ViewController.maxVisualAlignmentRetryCount, makeAnnounement: true)
-                } else {
+            timerContinuation = {
+                self.rootContainerView.countdownTimer.isHidden = true
+                // The first check is necessary in case the phone relocalizes before this code executes
+                if case .resumeWaitingPeriod = self.state, let alignTransform = self.pausedAnchorPoint?.anchor?.transform, let camera = ARSessionManager.shared.currentFrame?.camera {
                     // yaw can be determined by projecting the camera's z-axis into the ground plane and using arc tangent (note: the camera coordinate conventions of ARKit https://developer.apple.com/documentation/arkit/arsessionconfiguration/worldalignment/camera
                     // add this call so we make sure that we log the alignment transform
                     let _ = self.getRealCoordinates(record: true)
@@ -1817,22 +1811,21 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
                     ARSessionManager.shared.manualAlignment = leveledCameraPose * leveledAlignPose.inverse
                     
                     self.isResumedRoute = true
-                    if self.paused {
-                        ///PATHPOINT paused anchor point alignment timer -> return navigation
-                        ///announce to the user that they have aligned to the anchor point sucessfully and are starting  navigation.
-                        self.paused = false
-                        self.delayTransition(announcement: NSLocalizedString("resumeAnchorPointToReturnNavigationAnnouncement", comment: "This is an Announcement which indicates that the pause session is complete, that the program was able to align with the anchor point, and that return navigation has started."), initialFocus: nil)
-                        self.state = .navigatingRoute
-                    } else {
-                        ///PATHPOINT load saved route -> start navigation
+                    self.paused = false
 
-                        ///announce to the user that they have sucessfully aligned with their saved anchor point.
-                        self.delayTransition(announcement: NSLocalizedString("resumeAnchorPointToReturnNavigationAnnouncement", comment: "This is an Announcement which indicates that the pause session is complete, that the program was able to align with the anchor point, and that return navigation has started."), initialFocus: nil)
-                        self.state = .navigatingRoute
-                    }
+                    ///PATHPOINT paused anchor point alignment timer -> return navigation
+                    ///announce to the user that they have aligned to the anchor point sucessfully and are starting  navigation.
+                    self.delayTransition(announcement: NSLocalizedString("resumeAnchorPointToReturnNavigationAnnouncement", comment: "This is an Announcement which indicates that the pause session is complete, that the program was able to align with the anchor point, and that return navigation has started."), initialFocus: nil)
+                    self.state = .navigatingRoute
                 }
             }
+        } else {
+            state = .visuallyAligning
+            relativeYaws = []
+            firstAlignmentPose = nil
+            tryVisualAlignment(triesLeft: ViewController.maxVisualAlignmentRetryCount, makeAnnounement: false)
         }
+        delayTransition()
     }
     
     /// handles the user pressing the resume tracking confirmation button.
@@ -2427,7 +2420,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     /// Checks to see if we need to reset the timer
     /// - Returns: true if timer was reset
     func recordRouteLandmarkHelper() {
-        guard isVisualAlignment, state.isInTimerCountdown else {
+        guard isVisualAlignment, state.isTryingToAlign || state.isInTimerCountdown else {
             return
         }
         guard let poseRotation = ARSessionManager.shared.currentFrame?.camera.transform.rotation() else {
@@ -2439,39 +2432,54 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         let phoneCurrentlyVertical = polar < 0.4
         
         guard let unwrappedPhoneVertical = phoneVertical else {
-            phoneVertical = phoneCurrentlyVertical
             if !phoneCurrentlyVertical {
-                rootContainerView.countdownTimer.isHidden = true
-                announce(announcement: "Camera not vertical, hold phone vertically to begin countdown")
-                rootContainerView.countdownTimer.pause()
-                rootContainerView.countdownTimer.setNeedsDisplay()
+                if state.isTryingToAlign {
+                    announce(announcement: "Camera not vertical, hold phone vertically to begin alignment")
+                } else {
+                    rootContainerView.countdownTimer.isHidden = true
+                    announce(announcement: "Camera not vertical, hold phone vertically to begin countdown")
+                    rootContainerView.countdownTimer.setNeedsDisplay()
+                }
                 let nowNotVerticalVibration = UIImpactFeedbackGenerator(style: .heavy)
                 nowNotVerticalVibration.impactOccurred()
             } else {
-                rootContainerView.countdownTimer.isHidden = false
-                rootContainerView.countdownTimer.start(beginingValue: ViewController.alignmentWaitingPeriod, interval: 1)
+                if state.isTryingToAlign {
+                    announce(announcement: "Camera now vertical, starting alignment")
+                } else {
+                    rootContainerView.countdownTimer.isHidden = false
+                    announce(announcement: "Camera now vertical, starting countdown")
+                    rootContainerView.countdownTimer.start(beginingValue: ViewController.alignmentWaitingPeriod, interval: 1)
+                }
+                let nowVerticalVibration = UIImpactFeedbackGenerator(style: .light)
+                nowVerticalVibration.impactOccurred()
             }
+            phoneVertical = phoneCurrentlyVertical
             return
         }
         
         if !phoneCurrentlyVertical && unwrappedPhoneVertical {
-            announce(announcement: "Camera no longer vertical, restarting and stopping countdown")
-            rootContainerView.countdownTimer.isHidden = true
-            rootContainerView.countdownTimer.start(beginingValue: ViewController.alignmentWaitingPeriod, interval: 1)
-            rootContainerView.countdownTimer.pause()
-            rootContainerView.countdownTimer.setNeedsDisplay()
+            if state.isTryingToAlign {
+                announce(announcement: "Camera no longer vertical, pausing alignment")
+            } else {
+                announce(announcement: "Camera no longer vertical, restarting and stopping countdown")
+                rootContainerView.countdownTimer.isHidden = true
+                rootContainerView.countdownTimer.pause()
+                rootContainerView.countdownTimer.setNeedsDisplay()
+            }
             let nowNotVerticalVibration = UIImpactFeedbackGenerator(style: .heavy)
             nowNotVerticalVibration.impactOccurred()
-            phoneVertical = phoneCurrentlyVertical
-        }
-        if phoneCurrentlyVertical && !unwrappedPhoneVertical {
-            rootContainerView.countdownTimer.isHidden = false
-            announce(announcement: "Camera now vertical, starting countdown")
-            rootContainerView.countdownTimer.start(beginingValue: ViewController.alignmentWaitingPeriod, interval: 1)
+        } else if phoneCurrentlyVertical && !unwrappedPhoneVertical {
+            if state.isTryingToAlign {
+                announce(announcement: "Camera now vertical, continuing alignment")
+            } else {
+                rootContainerView.countdownTimer.isHidden = false
+                announce(announcement: "Camera now vertical, starting countdown")
+                rootContainerView.countdownTimer.start(beginingValue: ViewController.alignmentWaitingPeriod, interval: 1)
+            }
             let nowVerticalVibration = UIImpactFeedbackGenerator(style: .light)
             nowVerticalVibration.impactOccurred()
-            phoneVertical = phoneCurrentlyVertical
         }
+        phoneVertical = phoneCurrentlyVertical
     }
     
     
@@ -2481,6 +2489,13 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
             return
         }
         if !state.isTryingToAlign || !attemptingRelocalization {
+            return
+        }
+        if phoneVertical != true {
+            // retry later
+            DispatchQueue.global(qos: .userInitiated).asyncAfter(deadline: .now() + 0.25) {
+                self.tryVisualAlignment(triesLeft: triesLeft, makeAnnounement: makeAnnounement)
+            }
             return
         }
         if let alignAnchorPoint = self.pausedAnchorPoint, let alignAnchorPointImage = alignAnchorPoint.image, let alignTransform = alignAnchorPoint.anchor?.transform, let frame = ARSessionManager.shared.currentFrame {
@@ -2506,10 +2521,17 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
                     self.relativeYaws.append(relativeYaw)
                     SoundEffectManager.shared.success()
                 } else {
-                    SoundEffectManager.shared.error()
+                    if self.relativeYaws.isEmpty, triesLeft < ViewController.maxVisualAlignmentRetryCount - 3, -self.lastVisualAlignmentFailureAnnouncement.timeIntervalSinceNow > ViewController.timeBetweenVisualAlignmentFailureAnnouncements {
+                        self.lastVisualAlignmentFailureAnnouncement = Date()
+                        DispatchQueue.main.async {
+                            self.announce(announcement: "Having trouble aligning. Try rotating your phone slowly from side-to-side.")
+                        }
+                    } else {
+                        SoundEffectManager.shared.error()
+                    }
                 }
-                if triesLeft > 1 {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+                if triesLeft > 1 && self.relativeYaws.count < ViewController.requiredSuccessfulVisualAlignmentFrames {
+                    DispatchQueue.global(qos: .userInitiated).asyncAfter(deadline: .now() + (visualYawReturn.is_valid ? 0.25 : 1.0)) {
                         self.tryVisualAlignment(triesLeft: triesLeft-1)
                     }
                     return
@@ -2542,8 +2564,14 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
                             relativeTransform.columns.3 = simd_float4(alignTransform.columns.3.dropW - relativeTransform.rotation() * self.firstAlignmentPose!.columns.3.dropW, 1)
                             ARSessionManager.shared.manualAlignment = relativeTransform.inverse
                         }
+                        self.paused = false
+
+                        ///PATHPOINT paused anchor point alignment timer -> return navigation
+                        ///announce to the user that they have aligned to the anchor point sucessfully and are starting  navigation.
+                        self.delayTransition(announcement: NSLocalizedString("resumeAnchorPointToReturnNavigationAnnouncement", comment: "This is an Announcement which indicates that the pause session is complete, that the program was able to align with the anchor point, and that return navigation has started."), initialFocus: nil)
+                        self.state = .navigatingRoute
                     } else {
-                        self.announce(announcement: NSLocalizedString("noVisualMatchesUseSnapToRoute", comment: "Instruct to use snap-to-route when no visual matches are found"))
+                        self.announce(announcement: NSLocalizedString("noVisualMatchesNavigationNavigationIsUnlikelyToWorkWell", comment: "Instruct to use snap-to-route when no visual matches are found"))
                         
                         if let firstAlignmentPose = self.firstAlignmentPose {
                             var visualYawReturnCopy = visualYawReturn
@@ -2555,9 +2583,9 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
                             ARSessionManager.shared.manualAlignment = relativeTransform
                         }
                         SoundEffectManager.shared.meh()
+                        self.isResumedRoute = true
+                        self.state = .readyToNavigateOrPause(allowPause: false)
                     }
-                    self.isResumedRoute = true
-                    self.state = .readyToNavigateOrPause(allowPause: false)
                 }
             }
         }

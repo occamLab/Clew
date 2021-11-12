@@ -292,6 +292,12 @@ class DataPersistence {
         if let endRouteAnchorPointVoiceNote = route.endRouteAnchorPoint.voiceNote {
             try? FileManager().removeItem(at: endRouteAnchorPointVoiceNote.documentURL)
         }
+        if let beginRouteImageFileName = route.beginRouteAnchorPoint.imageFileName {
+            try? FileManager().removeItem(at: beginRouteImageFileName.documentURL)
+        }
+        if let endRouteImageFileName = route.endRouteAnchorPoint.imageFileName {
+            try? FileManager().removeItem(at: endRouteImageFileName.documentURL)
+        }
     }
     
     /// A utility method to map a file name into a URL in the app's document directory.
