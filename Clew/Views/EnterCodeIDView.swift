@@ -96,7 +96,7 @@ struct ScanButtonView: View {
             HStack{
                 Spacer()
 
-                Text("Scan an NFC App Clip Code")
+                Text(NSLocalizedString("scanNfcButtonText", comment: "This is the label of the button the user presses to scan an NFC tag containing the app clip code ID."))
                     .bold()
                     .foregroundColor(Color.black)
                 Spacer()

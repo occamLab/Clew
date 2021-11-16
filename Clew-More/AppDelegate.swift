@@ -41,6 +41,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                      options: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
         
         /// check imported file extension
+        print(url)
+        
         guard url.pathExtension == "crd" else { return false }
         
         return true
