@@ -30,8 +30,8 @@
 "completedNavigationAnnouncement" = "You've arrived.";
 
     // Name of labels that appear in UI
-"saveARouteButtonText" = "Create a\nNew Route";
-"saveARouteButtonAccessibilityLabel" = "Create a new route";
+"saveARouteButtonText" = "Create a Route";
+"saveARouteButtonAccessibilityLabel" = "Click to create a route";
 "saveACodeIDButtonText" = "Save Code ID";
 "saveACodeIDButtonAccessiblityLabel" = "Save the Code ID of the route";
 "badServiceButtonAccessibilityLabel" = "Bad";
@@ -40,7 +40,7 @@
 "singleUseRouteButtonText" = "Single Use Route";
 "recordSingleUseRouteButtonAccessibilityLabel" = "Record a single use route";
 "savedRoutesListButtonText" = "Manage and\nUpload Routes";
-"savedRoutesListButtonAccessibilityLabel" = "Manage and upload saved routes from your device";
+"savedRoutesListButtonAccessibilityLabel" = "Click to manage and upload saved routes from your device";
 "stopNavigationButtonAccessibilityLabel" = "Stop navigation";
 "startReturnNavigationButtonAcessabilityLabel" = "Start return navigation";
 "stopRecordingButtonAccessibilityLabel" = "Stop recording";
@@ -60,8 +60,8 @@
 "startReturnNavigationButtonAccessibilityLabel" = "Start navigation";
 "optionsButtonAccessibilityLabel" = "Options";
 "signInwithAppleButtonAccessibilityLabel" = "Sign In";
-"enterCodeButtonText" = "Navigate From\nImage Anchor";
-"enterCodeButtonAccessibilityLabel" = "Navigate routes from a physical image anchor";
+"enterCodeButtonText" = "Navigate";
+"enterCodeButtonAccessibilityLabel" = "Click to navigate";
 "recordSingleUseRouteButtonAccessibilityLabel" = "Navigate From app clip code ID";
 
 
@@ -139,7 +139,7 @@
 "anchorPointAlignmentText" = "Please align your device with your previously recorded anchor point. To do this hold your device flat with the screen pointing up. Press the top (short) edge flush with the same vertical surface that you used to create the anchor point. Activating the align button will start an alignment countdown this is intended to give you time to make final adjustments to the positioning of your device. At the end of the countdown the alignment will be taken and the device will provide an announcement indicating that the anchor point was saved.";
 "anchorPointIntroductionToSavedText" = "The Anchor Point information you entered is: ";
 
-"imageAnchorPointAlignmentText" = "Please align your device with the camera pointed at your anchor image. If you are using the Clew App Clip, this will be in the same location as the scanned App Clip Code. Your route navigation will start immediately after your device has anchored to the image.";
+"imageAnchorPointAlignmentText" = "Point the phone camera at the image.";
 
 "anchorImageTagInFrameAnnouncement" = "Successfully anchored on image. Start recording your route";
 
@@ -288,7 +288,7 @@
 
 "startingReturnNavigationAnnouncement" = "Starting navigation";
 
-"resumeAnchorPointToReturnNavigationAnnouncement" = "Aligned to anchor point. Starting navigation.";
+"resumeAnchorPointToReturnNavigationAnnouncement" = "Starting navigation. Audio and haptics indicate that you are on the route.";
 "singleUseRouteToRecordingRouteAnnouncement" = "Now recording a single use route.";
 "saveRouteToPlayPauseAnnouncement" = "Route saved. You may now perform return navigation or return to the home screen.";
 "saveCodeIDtoCreatingAnchorPointAnnouncement" = "App clip code ID saved. You may now set an anchor point.";
@@ -323,8 +323,8 @@
     "invalidCodeID" = "Invalid app clip code ID, please try again.";
 
     // Popover
-    "startNavigationPopoverText" = "Chose a route to navigate along. Clew Maps will provide guidance such as turn left or right, and will indicate when you have reached your destination";
-    "selectRoutePopoverLabel" = "Select Route";
+    "startNavigationPopoverText" = "Select a route below";
+    "selectRoutePopoverLabel" = "Select a route below";
     "startNavigatingLabel" = "Start Navigating";
 
     // LoadFromAppClipView
@@ -340,9 +340,10 @@
 // User Text Entry Views
 // some of this overlaps with the UI section
     // EnterCodeIDView
-    "enterCodeIDLabel" = "Enter the three-digit code ID below.";
+    "enterCodeIDLabel" = "Enter or scan the three-digit code ID below.";
     "enterCodeIDTextField" = "3-digit code ID";
     "enterCodeIDButtonText" = "Submit code ID";
+    "scanNfcButtonText" = "Scan NFC card";
 
     // NameCodeIDView
     "nameCodeIDLabel" = "To create a route, the starting anchor point must be associated with an app clip code ID. Enter the three-digit ID for this route's starting point below.";

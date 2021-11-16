@@ -18,11 +18,11 @@ struct StartNavigationPopoverView: View {
     var body: some View {
              
         
-        VStack {
+//        VStack {
 //            #if APPCLIP
-            Text(NSLocalizedString("startNavigationPopoverText", comment: "This is text that appears with the list of routes in the app clip."))
-                .multilineTextAlignment(.center)
-                .font(.system(size: 24, weight: .bold))
+//            Text(NSLocalizedString("startNavigationPopoverText", comment: "This is text that appears with the list of routes in the app clip."))
+//                .multilineTextAlignment(.center)
+//                .font(.system(size: 24, weight: .bold))
 //            #endif
             NavigationView {
 //                HStack {
@@ -53,7 +53,7 @@ struct StartNavigationPopoverView: View {
                     }
 //                }
                 .navigationTitle(NSLocalizedString("selectRoutePopoverLabel", comment: "This is text instructing the user to select a route from a list."))
-            }
+//            }
             
            /* if selectedRouteName.count > 0 {
                 StartButton(vc: vc)
