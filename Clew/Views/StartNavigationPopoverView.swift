@@ -2,30 +2,30 @@
 //  StartNavigationPopoverView.swift
 //  UIKit Clip
 //
-//  Created by occamlab on 7/1/21.
+//  Created by Esme Abbot on 7/1/21.
 //  Copyright © 2021 OccamLab. All rights reserved.
 //
 
 import SwiftUI
 import Firebase
 
+class RouteListObject: ObservableObject {
+    @Published var routeList = [[String: String]]()
+}
+
 struct StartNavigationPopoverView: View {
     let vc: ViewController
     @State private var selectedRouteName = "" //TODO: change so it know what your settings are when you enter the walkthrough
-    @State private var routeList = [[String: String]]()
+    @ObservedObject var routeList: RouteListObject
 
-    
     var body: some View {
-             
-        
-//        VStack {
+        VStack {
 //            #if APPCLIP
 //            Text(NSLocalizedString("startNavigationPopoverText", comment: "This is text that appears with the list of routes in the app clip."))
 //                .multilineTextAlignment(.center)
 //                .font(.system(size: 24, weight: .bold))
 //            #endif
             NavigationView {
-//                HStack {
                     List(routeList, id: \.first!.key) { routeInfo in
                         
                         Button(action: {
@@ -39,30 +39,15 @@ struct StartNavigationPopoverView: View {
                             self.vc.handleStateTransitionToNavigatingExternalRoute()
                             #endif
 //                            UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: self)
-                        }) {
-                            if selectedRouteName == routeInfo.first!.value {
-                                RowSelected {
-                                    RouteList(RouteName: routeInfo.first!.value)
-                                }
-                            } else {
-                                RowNotSelected {
-                                    RouteList(RouteName: routeInfo.first!.value)
-                                }
-                            }
+                    }) {
+                        RowNotSelected {
+                            RouteList(RouteName: routeInfo.first!.value)
                         }
                     }
-//                }
-                .navigationTitle(NSLocalizedString("selectRoutePopoverLabel", comment: "This is text instructing the user to select a route from a list."))
-//            }
-            
-           /* if selectedRouteName.count > 0 {
-                StartButton(vc: vc)
-                    .background(Color.white)
-            }*/
-        }.onAppear(perform: {
-            routeList = self.vc.availableRoutes
-            selectedRouteName = ""
-        })
+                }
+                .navigationTitle(NSLocalizedString("selectRoutePopoverLabel", comment: "This is text instructing the user to select a route from a list ."))
+            }
+        }
     }
 }
 
@@ -102,7 +87,7 @@ struct StartButtonView: View {
     }
 }
 
-struct StartButton: View{
+struct StartButton: View {
     var vc: ViewController
     var body: some View {
         Button(action: {
