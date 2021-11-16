@@ -16,7 +16,6 @@ class RouteListObject: ObservableObject {
 struct StartNavigationPopoverView: View {
     let vc: ViewController
     @State private var selectedRouteName = "" //TODO: change so it know what your settings are when you enter the walkthrough
-//    @State private var routeList = [[String: String]]()
     @ObservedObject var routeList: RouteListObject
 
     var body: some View {
@@ -38,29 +37,13 @@ struct StartNavigationPopoverView: View {
                         #endif
 //                            UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: self)
                     }) {
-                        if selectedRouteName == routeInfo.first!.value {
-                            RowSelected {
-                                RouteList(RouteName: routeInfo.first!.value)
-                            }
-                        } else {
-                            RowNotSelected {
-                                RouteList(RouteName: routeInfo.first!.value)
-                            }
+                        RowNotSelected {
+                            RouteList(RouteName: routeInfo.first!.value)
                         }
                     }
                 }
                 .navigationTitle(NSLocalizedString("selectRoutePopoverLabel", comment: "This is text instructing the user to select a route from a list ."))
             }
-            
-            /// The below code was for the additional start button that popped up when a route was highlighted.
-           /* if selectedRouteName.count > 0 {
-                StartButton(vc: vc)
-                    .background(Color.white)
-            }*/
-//        }.onAppear(perform: {
-        } .onReceive(self.routeList.objectWillChange) {
-            routeList.routeList = self.vc.availableRoutes
-            selectedRouteName = ""
         }
     }
 }

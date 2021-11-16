@@ -253,7 +253,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     var appClipCodeID: String = ""
     
     /// This is the list of routes associated with a specific app clip code
-    var availableRoutes = [[String: String]]()
+    var availableRoutes: RouteListObject = RouteListObject() //[[String: String]]()
     
     /// This is the ARWorldMap of the route being navigated.
     var routeWorldMap: ARWorldMap?
@@ -942,7 +942,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
                                                                        height: UIScreen.main.bounds.size.height*0.75)
         enterCodeIDController.view.backgroundColor = .clear
         
-        selectRouteController = UIHostingController(rootView: StartNavigationPopoverView(vc: self))
+        selectRouteController = UIHostingController(rootView: StartNavigationPopoverView(vc: self, routeList: self.availableRoutes))
         selectRouteController.view.frame = CGRect(x: 0,
                                                                        y: UIScreen.main.bounds.size.height*0.15,
                                                                        width: UIConstants.buttonFrameWidth * 1,
@@ -2270,7 +2270,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
                         let routesFile = try JSONSerialization.jsonObject(with: appClipJson, options: [])
                         print("File: \(routesFile)")
                         if let routesFile = routesFile as? [[String: String]] {
-                            self.availableRoutes = routesFile
+                            self.availableRoutes.routeList = routesFile
                             print("List: \(self.availableRoutes)")
                             print("æ")
                             NotificationCenter.default.post(name: NSNotification.Name("firebaseLoaded"), object: nil)

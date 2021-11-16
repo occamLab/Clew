@@ -129,7 +129,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                     let routesFile = try JSONSerialization.jsonObject(with: appClipJson, options: [])
                     print("File: \(routesFile)")
                     if let routesFile = routesFile as? [[String: String]] {
-                        self.vc?.availableRoutes = routesFile
+                        self.vc?.availableRoutes.routeList = routesFile
                         print("List: \(self.vc?.availableRoutes)")
                         NotificationCenter.default.post(name: NSNotification.Name("firebaseLoaded"), object: nil)
                         vc.announce(announcement: NSLocalizedString("firebaseSuccessfullyLoaded", comment: "This is read out when routes are successfully downloaded from Firebase."))
