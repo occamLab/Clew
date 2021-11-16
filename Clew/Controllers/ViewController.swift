@@ -398,6 +398,11 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
                 print("Failed to download route from Firebase due to the following error: \(error)")
             } else {
                 do {
+                    // TODO: Fix this so that it is a function and works for non-app clips
+                    NSKeyedUnarchiver.setClass(RouteDocumentData.self, forClassName: "Clew_More.RouteDocumentData")
+                    NSKeyedUnarchiver.setClass(SavedRoute.self, forClassName: "Clew_More.SavedRoute")
+                    NSKeyedUnarchiver.setClass(LocationInfo.self, forClassName: "Clew_More.LocationInfo")
+                    NSKeyedUnarchiver.setClass(RouteAnchorPoint.self, forClassName: "Clew_More.RouteAnchorPoint")
                     if let document = try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data!) as? RouteDocumentData {
                         let thisRoute = document.route
                         ARSessionManager.shared.initialWorldMap = document.map
@@ -1060,6 +1065,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         arLogger.enabled = logRichData
         arLogger.startTrial()
         #endif
+
     }
     
     /// Create the audio player objects for the various app sounds.  Creating them ahead of time helps reduce latency when playing them later.
