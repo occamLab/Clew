@@ -76,7 +76,7 @@ struct StartButtonView: View {
     }
 }
 
-struct StartButton: View{
+struct StartButton: View {
     var vc: ViewController
     var body: some View {
         Button(action: {
