@@ -21,20 +21,23 @@ struct StartNavigationPopoverView: View {
     var body: some View {
         VStack {
 //            #if APPCLIP
-            Text(NSLocalizedString("startNavigationPopoverText", comment: "This is text that appears with the list of routes in the app clip."))
-                .multilineTextAlignment(.center)
-                .font(.system(size: 24, weight: .bold))
+//            Text(NSLocalizedString("startNavigationPopoverText", comment: "This is text that appears with the list of routes in the app clip."))
+//                .multilineTextAlignment(.center)
+//                .font(.system(size: 24, weight: .bold))
 //            #endif
             NavigationView {
-                List(routeList.routeList, id: \.first!.key) { routeInfo in
-                    Button(action: {
-                        vc.routeID = routeInfo.first!.key
-                        selectedRouteName = routeInfo.first!.value
-                        vc.recordPathController.remove()
-                        NotificationCenter.default.post(name: NSNotification.Name("shouldDismissRoutePopover"), object: nil)
-                        #if !APPCLIP
-                        self.vc.arLogger.startTrial()
-                        #endif
+                    List(routeList, id: \.first!.key) { routeInfo in
+                        
+                        Button(action: {
+                            vc.routeID = routeInfo.first!.key
+                            selectedRouteName = routeInfo.first!.value
+                            vc.recordPathController.remove()
+                            NotificationCenter.default.post(name: NSNotification.Name("shouldDismissRoutePopover"), object: nil)
+                            #if !APPCLIP
+                            self.vc.arLogger.startTrial()
+                            #else
+                            self.vc.handleStateTransitionToNavigatingExternalRoute()
+                            #endif
 //                            UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: self)
                     }) {
                         RowNotSelected {
@@ -84,7 +87,7 @@ struct StartButtonView: View {
     }
 }
 
-struct StartButton: View{
+struct StartButton: View {
     var vc: ViewController
     var body: some View {
         Button(action: {

@@ -49,6 +49,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         scanTagController?.view.backgroundColor = .clear
         
         vc!.hideAllViewsHelper()
+        ARSessionManager.shared.startSession()
         vc!.add(scanTagController!)
     }
     

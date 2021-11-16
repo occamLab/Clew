@@ -398,6 +398,11 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
                 print("Failed to download route from Firebase due to the following error: \(error)")
             } else {
                 do {
+                    // TODO: Fix this so that it is a function and works for non-app clips
+                    NSKeyedUnarchiver.setClass(RouteDocumentData.self, forClassName: "Clew_More.RouteDocumentData")
+                    NSKeyedUnarchiver.setClass(SavedRoute.self, forClassName: "Clew_More.SavedRoute")
+                    NSKeyedUnarchiver.setClass(LocationInfo.self, forClassName: "Clew_More.LocationInfo")
+                    NSKeyedUnarchiver.setClass(RouteAnchorPoint.self, forClassName: "Clew_More.RouteAnchorPoint")
                     if let document = try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data!) as? RouteDocumentData {
                         let thisRoute = document.route
                         ARSessionManager.shared.initialWorldMap = document.map
@@ -1057,8 +1062,10 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
             }
         }
         #if !APPCLIP
+        arLogger.enabled = logRichData
         arLogger.startTrial()
         #endif
+
     }
     
     /// Create the audio player objects for the various app sounds.  Creating them ahead of time helps reduce latency when playing them later.
@@ -1371,6 +1378,8 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         timerLength = defaults.integer(forKey: "timerLength")
         adjustOffset = defaults.bool(forKey: "adjustOffset")
         nav.useHeadingOffset = adjustOffset
+        logRichData = defaults.bool(forKey: "logRichData")
+
         #if CLEWMORE
         imageAnchoring = true
         #else
@@ -1478,7 +1487,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
                                 if let url = url {
                                     // currently hardcoded :/, should probably change
                                     if url.host == "berwinl.com" {
-                                        statusMessage = "Successfully Accessed Clew Route Database"
+                                        statusMessage = "Success!"
                                         session.alertMessage = statusMessage
                                         session.invalidate()
                                         self.handleNFCURL(url)
@@ -2009,6 +2018,9 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     
     /// The length of time that the timer will run for
     var timerLength: Int!
+    
+    /// This tracks whether the user has consented to log rich (image) data
+    var logRichData: Bool!
 
     /// This keeps track of the paused transform while the current session is being realigned to the saved route
     var pausedTransform : simd_float4x4?
