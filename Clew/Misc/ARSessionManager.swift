@@ -438,16 +438,20 @@ class ARData: ObservableObject {
     public static var shared = ARData()
     
     private(set) var transform: simd_float4x4?
+    private(set) var intrinsics: simd_float3x3?
+    private(set) var image: CVPixelBuffer?
     
-    func set(transform: simd_float4x4) {
+    func set(transform: simd_float4x4, intrinsics: simd_float3x3, image: CVPixelBuffer) {
         self.transform = transform
+        self.intrinsics = intrinsics
+        self.image = image
         objectWillChange.send()
     }
 }
 
 extension ARSessionManager: ARSessionDelegate {
     func session(_ session: ARSession, didUpdate frame: ARFrame) {
-        ARData.shared.set(transform: frame.camera.transform)
+        ARData.shared.set(transform: frame.camera.transform, intrinsics: frame.camera.intrinsics, image: frame.capturedImage)
         if let keypointRenderJob = keypointRenderJob {
             keypointRenderJob()
             self.keypointRenderJob = nil

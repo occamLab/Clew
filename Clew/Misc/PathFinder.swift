@@ -177,6 +177,7 @@ class RouteAnchorPoint: NSObject, NSSecureCoding {
     public var image: UIImage?
     /// The intrinsics used to take the anchor point image
     public var intrinsics: simd_float4?
+    private var thumbnailCache: [CGFloat: UIImage] = [:]
     
     /// Initialize the Anchor Point.
     ///
@@ -242,6 +243,18 @@ class RouteAnchorPoint: NSObject, NSSecureCoding {
         self.init(anchor: anchor, information: information, voiceNote: voiceNote, imageFileName: imageFileName, intrinsics: intrinsics)
     }
     
+    func getThumbnail(imageHeight: CGFloat = 100)->UIImage? {
+        guard let image = image else {
+            return nil
+        }
+        if let cached = thumbnailCache[imageHeight] {
+            return cached
+        }
+        let imageWidth = image.size.width * imageHeight / image.size.height
+        let imageThumbnail = image.imageWithSize(scaledToSize: CGSize(width: imageWidth, height: imageHeight))
+        thumbnailCache[imageHeight] = imageThumbnail.rotate(radians: Float.pi/2)?.withRenderingMode(.alwaysOriginal)
+        return thumbnailCache[imageHeight]
+    }
 }
 
 /// [Deprecated] [Needed to load old routes] An encapsulation of a route landmark, including position, text, and audio information.
@@ -294,7 +307,6 @@ class RouteLandmark: NSObject, NSSecureCoding {
         voiceNote = aDecoder.decodeObject(of: NSString.self, forKey: "voiceNote")
         self.init(transform: transform, information: information, voiceNote: voiceNote)
     }
-    
 }
 /// This class encapsulates a route that can be persisted to storage and reloaded as needed.
 class SavedRoute: NSObject, NSSecureCoding {

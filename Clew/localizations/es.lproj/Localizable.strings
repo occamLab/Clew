@@ -36,7 +36,6 @@
 "anchorPointPop-UpCancel" = "No especificar esta información";
 "anchorPointPracticeAlignTextParagraph1" = "¡Bien hecho! ¡Has fijado un punto de anclaje!";
 "anchorPointPracticeAlignTextParagraph2" = "Ahora que has guardado un punto de anclaje, intenta alejarte de él, o espera unos minutos para volver al siguiente ejercicio.";
-"anchorPointPracticeAlignTitle" = "Alinearse con el Punto de Anclaje";
 "anchorPointPracticeFeedbackBadText" = "¡Oh no, inténtalo de nuevo! Estabas mal alineado con el punto de anclaje guardado. Ello habría dado lugar a una navegación de ruta con errores significativos. Intenta practicar de nuevo para conseguir una alineación perfecta.";
 "anchorPointPracticeFeedbackGoodText" = "¡No ha estado mal! Estabas bastante alineado con el punto de anclaje guardado, pero ello habría dado lugar a una navegación de ruta con algunos errores potenciales. Intenta practicar de nuevo para conseguir una alineación perfecta.";
 "anchorPointPracticeFeedbackPerfectText" = "¡Bien hecho! Te has alineado muy bien con el punto de anclaje guardado, lo que habría dado lugar a una navegación de ruta muy buena. Ahora ya sabes cómo encontrar y alinear los puntos de anclaje. Estás listo para empezar a guardar rutas.";

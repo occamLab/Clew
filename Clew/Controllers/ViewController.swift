@@ -127,7 +127,7 @@ enum AppState {
 }
 
 /// The view controller that handles the main Clew window.  This view controller is always active and handles the various views that are used for different app functionalities.
-class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthesizerDelegate {
+class ViewController: UIViewController, SRCountdownTimerDelegate {
     // MARK: Properties and subview declarations
     
     /// How long to wait (in seconds) between the alignment request and grabbing the transform
@@ -155,7 +155,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
             switch state {
             case .recordingRoute:
                 handleStateTransitionToRecordingRoute()
-            case .readyToNavigateOrPause(let allowPause):
+            case .readyToNavigateOrPause(_):
                 handleStateTransitionToReadyToNavigateOrPause(allowPause: recordingSingleUseRoute, isTutorial: isTutorial)
             case .navigatingRoute:
                 handleStateTransitionToNavigatingRoute()
@@ -190,15 +190,6 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
             }
         }
     }
-
-    /// When VoiceOver is not active, we use AVSpeechSynthesizer for speech feedback
-    let synth = AVSpeechSynthesizer()
-    
-    /// The announcement that is currently being read.  If this is nil, that implies nothing is being read
-    var currentAnnouncement: String?
-    
-    /// The announcement that should be read immediately after this one finishes
-    var nextAnnouncement: String?
     
     /// Actions to perform after the tracking session is ready
     var continuationAfterSessionIsReady: (()->())?
@@ -238,15 +229,6 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     
     /// this Boolean marks whether or not to use visual alignment with the current route (either pausing or resuming)
     var isVisualAlignment = false
-    
-    /// the relative yaws computed during visual alignment
-    var relativeYaws: [Float] = []
-    
-    /// keep track of when we last announced trouble with visual alignment
-    var lastVisualAlignmentFailureAnnouncement = Date()
-    
-    /// the first pose to use as a fallback if visual alignment fails
-    var firstAlignmentPose: simd_float4x4?
 
     /// this boolean marks whether or not the phone is vertical (helps with visual alignment)
     var phoneVertical : Bool? = false
@@ -265,38 +247,6 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
 
     /// This is an audio player that queues up the voice note associated with a particular route Anchor Point. The player is created whenever a saved route is loaded. Loading it before the user clicks the "Play Voice Note" button allows us to call the prepareToPlay function which reduces the latency when the user clicks the "Play Voice Note" button.
     var voiceNoteToPlay: AVAudioPlayer?
-    
-    // MARK: - Speech Synthesizer Delegate
-    
-    /// Called when an utterance is finished.  We implement this function so that we can keep track of
-    /// whether or not an announcement is currently being read to the user.
-    ///
-    /// - Parameters:
-    ///   - synthesizer: the synthesizer that finished the utterance
-    ///   - utterance: the utterance itself
-    func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer,
-                           didFinish utterance: AVSpeechUtterance) {
-        currentAnnouncement = nil
-        if let nextAnnouncement = self.nextAnnouncement {
-            self.nextAnnouncement = nil
-            announce(announcement: nextAnnouncement)
-        }
-    }
-    
-    /// Called when an utterance is canceled.  We implement this function so that we can keep track of
-    /// whether or not an announcement is currently being read to the user.
-    ///
-    /// - Parameters:
-    ///   - synthesizer: the synthesizer that finished the utterance
-    ///   - utterance: the utterance itself
-    func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer,
-                           didCancel utterance: AVSpeechUtterance) {
-        currentAnnouncement = nil
-        if let nextAnnouncement = self.nextAnnouncement {
-            self.nextAnnouncement = nil
-            announce(announcement: nextAnnouncement)
-        }
-    }
     
     /// Handler for the mainScreen app state
     ///
@@ -370,7 +320,8 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
 
         // generate path from PathFinder class
         // enabled hapticFeedback generates more keypoints
-        let routeKeypoints = PathFinder(crumbs: crumbs.reversed(), hapticFeedback: hapticFeedback, voiceFeedback: voiceFeedback).keypoints
+        // TODO: need settings manager
+        let routeKeypoints = PathFinder(crumbs: crumbs.reversed(), hapticFeedback: hapticFeedback, voiceFeedback: AnnouncementManager.shared.voiceFeedback).keypoints
         RouteManager.shared.setRouteKeypoints(kps: routeKeypoints)
         
         // save keypoints data for debug log
@@ -447,7 +398,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
                 isSameMap = ARSessionManager.shared.initialWorldMap != nil && ARSessionManager.shared.initialWorldMap == worldMap
                 ARSessionManager.shared.initialWorldMap = worldMap
                 // TODO: see if we can move this out of this if statement
-                attemptingRelocalization = isSameMap && !isTrackingPerformanceNormal || worldMap != nil && !isSameMap
+                attemptingRelocalization = isSameMap && !isTrackingPerformanceNormal || !isSameMap
             }
         } else {
             ARSessionManager.shared.relocalizationStrategy = .none
@@ -605,7 +556,8 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
                 beginRouteAnchorPoint.loadImage()
                 beginRouteAnchorPoint.intrinsics = imageAlignment.1
             }
-            
+            SoundEffectManager.shared.playSystemSound(id: 1108)
+
             ///PATHPOINT begining anchor point alignment timer -> record route
             ///announce to the user that they have sucessfully saved an anchor point.
             delayTransition(announcement: NSLocalizedString("multipleUseRouteAnchorPointToRecordingRouteAnnouncement", comment: "This is the announcement which is spoken after the first anchor point of a multiple use route is saved. this signifies the completeion of the saving an anchor point procedure and the start of recording a route to be saved."), initialFocus: nil)
@@ -621,6 +573,8 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
                 endRouteAnchorPoint.loadImage()
                 endRouteAnchorPoint.intrinsics = imageAlignment.1
             }
+            SoundEffectManager.shared.playSystemSound(id: 1108)
+
             // no more crumbs
             droppingCrumbs?.invalidate()
 
@@ -853,16 +807,14 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
 
         // make sure this happens after the view is created!
         rootContainerView.countdownTimer.delegate = self
+        
+        AnnouncementManager.shared.announcementText = rootContainerView.announcementText
+        
         ///sets the length of the timer to be equal to what the person has in their settings
         ViewController.alignmentWaitingPeriod = timerLength
         
         addGestures()
         setupFirebaseObservers()
-        
-        // create listeners to ensure that the isReadingAnnouncement flag is reset properly
-        NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification, object: nil, queue: nil) { (notification) -> Void in
-            self.currentAnnouncement = nil
-        }
         
         NotificationCenter.default.addObserver(forName: Notification.Name("StartTutorialPath"), object: nil, queue: nil) { (notification) -> Void in
             #if IS_DEV_TARGET
@@ -879,11 +831,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
                 self.runTutorialPath(routeName: "TutorialFollowPathRelease2")
             #endif
         }
-        
-        NotificationCenter.default.addObserver(forName: UIAccessibility.voiceOverStatusDidChangeNotification, object: nil, queue: nil) { (notification) -> Void in
-            self.currentAnnouncement = nil
-        }
-        
+
         // we use a custom notification to communicate from the help controller to the main view controller that a popover that should suppress tracking warnings was dimissed
         NotificationCenter.default.addObserver(forName: Notification.Name("ClewPopoverDismissed"), object: nil, queue: nil) { (notification) -> Void in
             self.suppressTrackingWarnings = false
@@ -920,7 +868,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
             NotificationCenter.default.post(name: Notification.Name("ClewPopoverDismissed"), object: nil)
             if let gaveFeedback = notification.object as? Bool, gaveFeedback {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-                    self.announce(announcement: NSLocalizedString("thanksForFeedbackAnnouncement", comment: "This is read right after the user fills out a feedback survey."))
+                    AnnouncementManager.shared.announce(announcement: NSLocalizedString("thanksForFeedbackAnnouncement", comment: "This is read right after the user fills out a feedback survey."))
                 }
             }
         }
@@ -1000,15 +948,6 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
             if(!siriShortcutAlert){
                 showSignificantChangesHandsFreeAlert()
                 siriShortcutAlert = true
-            }
-        }
-        
-        synth.delegate = self
-        NotificationCenter.default.addObserver(forName: UIAccessibility.announcementDidFinishNotification, object: nil, queue: nil) { (notification) -> Void in
-            self.currentAnnouncement = nil
-            if let nextAnnouncement = self.nextAnnouncement {
-                self.nextAnnouncement = nil
-                self.announce(announcement: nextAnnouncement)
             }
         }
         
@@ -1230,14 +1169,14 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         showPath = defaults.bool(forKey: "showPath")
         defaultPathColor = defaults.integer(forKey: "pathColor")
         soundFeedback = defaults.bool(forKey: "soundFeedback")
-        voiceFeedback = defaults.bool(forKey: "voiceFeedback")
+        AnnouncementManager.shared.voiceFeedback = defaults.bool(forKey: "voiceFeedback")
         hapticFeedback = defaults.bool(forKey: "hapticFeedback")
         sendLogs = true // (making this mandatory) defaults.bool(forKey: "sendLogs")
         timerLength = defaults.integer(forKey: "timerLength")
         adjustOffset = defaults.bool(forKey: "adjustOffset")
         nav.useHeadingOffset = adjustOffset
         
-        logger.logSettings(defaultUnit: defaultUnit, defaultColor: defaultColor, soundFeedback: soundFeedback, voiceFeedback: voiceFeedback, hapticFeedback: hapticFeedback, sendLogs: sendLogs, timerLength: timerLength, adjustOffset: adjustOffset)
+        logger.logSettings(defaultUnit: defaultUnit, defaultColor: defaultColor, soundFeedback: soundFeedback, voiceFeedback: AnnouncementManager.shared.voiceFeedback, hapticFeedback: hapticFeedback, sendLogs: sendLogs, timerLength: timerLength, adjustOffset: adjustOffset)
     }
     
     /// Handles updates to the app settings.
@@ -1318,10 +1257,10 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         if let announcement = announcement {
             if UIAccessibility.isVoiceOverRunning {
                 Timer.scheduledTimer(withTimeInterval: 2.0, repeats: false) { timer in
-                    self.announce(announcement: announcement)
+                    AnnouncementManager.shared.announce(announcement: announcement)
                 }
             } else {
-                announce(announcement: announcement)
+                AnnouncementManager.shared.announce(announcement: announcement)
             }
         }
     }
@@ -1349,7 +1288,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         startNavigationController.stackView.layoutIfNeeded()
     
         if !isResumedRoute {
-            announce(announcement: NSLocalizedString("stoppedRecordingAnnouncement", comment: "An announcement which lets the user know that they have stopped recording the route."))
+            AnnouncementManager.shared.announce(announcement: NSLocalizedString("stoppedRecordingAnnouncement", comment: "An announcement which lets the user know that they have stopped recording the route."))
         }
         
         UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: startNavigationController.startNavigationButton)
@@ -1438,9 +1377,6 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         } else {
             resumeTrackingConfirmController.view.mainText?.text?.append(String.localizedStringWithFormat(NSLocalizedString("anchorPointAlignmentText", comment: "Text describing the process of aligning to an anchorpoint. This text shows up on the alignment screen."), waitingPeriod))
         }
-        
-        
-        print("text", resumeTrackingController.view.mainText?.text)
         delayTransition()
     }
     
@@ -1480,7 +1416,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         if case .navigatingRoute = state {
             logger.logSpeech(utterance: altText)
         }
-        announce(announcement: altText)
+        AnnouncementManager.shared.announce(announcement: altText)
     }
         
     /// MARK: - Clew internal datastructures
@@ -1507,9 +1443,6 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     
     /// times the generation of haptic feedback
     var hapticTimer: Timer?
-    
-    /// times when an announcement should be removed.  These announcements are displayed on the `announcementText` label.
-    var announcementRemovalTimer: Timer?
     
     /// times when the heading offset should be recalculated.  The ability to use the heading offset is currently not exposed to the user.
     var updateHeadingOffsetTimer: Timer?
@@ -1573,9 +1506,6 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     /// true if sound feedback should be generated when the user is facing the next waypoint, false otherwise
     var soundFeedback: Bool!
     
-    /// true if the app should announce directions via text to speech, false otherwise
-    var voiceFeedback: Bool!
-    
     /// true if haptic feedback should be generated when the user is facing the next waypoint, false otherwise
     var hapticFeedback: Bool!
 
@@ -1617,14 +1547,14 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         switch trackingSessionErrorState {
         case .insufficientFeatures:
             if trackingWarningsAllowed {
-                self.announce(announcement: NSLocalizedString("insuficientFeaturesDegradedTrackingAnnouncemnt", comment: "An announcement which lets the user know  that their current surroundings do not have enough visual markers and thus the app's ability to track a route has been lowered."))
+                AnnouncementManager.shared.announce(announcement: NSLocalizedString("insuficientFeaturesDegradedTrackingAnnouncemnt", comment: "An announcement which lets the user know  that their current surroundings do not have enough visual markers and thus the app's ability to track a route has been lowered."))
                 if self.soundFeedback {
                     SoundEffectManager.shared.playSystemSound(id: 1050)
                 }
             }
         case .excessiveMotion:
             if trackingWarningsAllowed {
-                self.announce(announcement: NSLocalizedString("excessiveMotionDegradedTrackingAnnouncemnt", comment: "An announcement which lets the user know that there is too much movement of their device and thus the app's ability to track a route has been lowered."))
+                AnnouncementManager.shared.announce(announcement: NSLocalizedString("excessiveMotionDegradedTrackingAnnouncemnt", comment: "An announcement which lets the user know that there is too much movement of their device and thus the app's ability to track a route has been lowered."))
                 if self.soundFeedback {
                     SoundEffectManager.shared.playSystemSound(id: 1050)
                 }
@@ -1819,11 +1749,9 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
                     self.state = .navigatingRoute
                 }
             }
-        } else {
+        } else if let pausedAnchorPoint = pausedAnchorPoint {
             state = .visuallyAligning
-            relativeYaws = []
-            firstAlignmentPose = nil
-            tryVisualAlignment(triesLeft: ViewController.maxVisualAlignmentRetryCount, makeAnnounement: false)
+            VisualAlignmentManager.shared.doVisualAlignment(delegate: self, alignAnchorPoint: pausedAnchorPoint, maxTries: ViewController.maxVisualAlignmentRetryCount, makeAnnouncement: false)
         }
         delayTransition()
     }
@@ -2109,8 +2037,8 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
             let timeInterval = errorFeedbackTimer.timeIntervalSinceNow
             if -timeInterval > ViewController.delayBeforeErrorAnnouncement {
                 // wait until desired time interval before sending another feedback
-                if (voiceFeedback) {
-                    announce(announcement: NSLocalizedString("offThePathAnnouncement", comment: "this announcemet is delivered if the user is off the path for 10 seconds or more."))
+                if AnnouncementManager.shared.voiceFeedback {
+                    AnnouncementManager.shared.announce(announcement: NSLocalizedString("offThePathAnnouncement", comment: "this announcemet is delivered if the user is off the path for 10 seconds or more."))
                 }
                 errorFeedbackTimer = Date()
                 playedErrorSoundForOffRoute = false
@@ -2136,44 +2064,6 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
                     voiceNoteToPlay?.prepareToPlay()
                 } catch {}
                 readVoiceNote()
-            }
-        }
-    }
-    
-    
-    /// Communicates a message to the user via speech.  If VoiceOver is active, then VoiceOver is used to communicate the announcement, otherwise we use the AVSpeechEngine
-    ///
-    /// - Parameter announcement: the text to read to the user
-    func announce(announcement: String) {
-        if let currentAnnouncement = currentAnnouncement {
-            // don't interrupt current announcement, but if there is something new to say put it on the queue to say next.  Note that adding it to the queue in this fashion could result in the next queued announcement being preempted
-            if currentAnnouncement != announcement {
-                nextAnnouncement = announcement
-            }
-            return
-        }
-        
-        rootContainerView.announcementText.isHidden = false
-        rootContainerView.announcementText.text = announcement
-        announcementRemovalTimer?.invalidate()
-        announcementRemovalTimer = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: false) { timer in
-            self.rootContainerView.announcementText.isHidden = true
-        }
-        if UIAccessibility.isVoiceOverRunning {
-            // use the VoiceOver API instead of text to speech
-            currentAnnouncement = announcement
-            UIAccessibility.post(notification: UIAccessibility.Notification.announcement, argument: announcement)
-        } else if voiceFeedback {
-            let audioSession = AVAudioSession.sharedInstance()
-            do {
-                try audioSession.setCategory(AVAudioSession.Category.playback)
-                try audioSession.setActive(true)
-                let utterance = AVSpeechUtterance(string: announcement)
-                utterance.rate = 0.6
-                currentAnnouncement = announcement
-                synth.speak(utterance)
-            } catch {
-                print("Unexpeced error announcing something using AVSpeechEngine!")
             }
         }
     }
@@ -2423,31 +2313,27 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         guard isVisualAlignment, state.isTryingToAlign || state.isInTimerCountdown else {
             return
         }
-        guard let poseRotation = ARSessionManager.shared.currentFrame?.camera.transform.rotation() else {
+        guard let phoneCurrentlyVertical = ARSessionManager.shared.currentFrame?.camera.transform.isVerticalPhonePose() else {
             return
         }
-        
-        let projectedPhoneZ = poseRotation * simd_float3(0, 0, 1)
-        let polar = acos(simd_dot(projectedPhoneZ, simd_normalize(simd_float3(projectedPhoneZ.x, 0, projectedPhoneZ.z))))
-        let phoneCurrentlyVertical = polar < 0.4
         
         guard let unwrappedPhoneVertical = phoneVertical else {
             if !phoneCurrentlyVertical {
                 if state.isTryingToAlign {
-                    announce(announcement: "Camera not vertical, hold phone vertically to begin alignment")
+                    AnnouncementManager.shared.announce(announcement: "Camera not vertical, hold phone vertically to begin alignment")
                 } else {
                     rootContainerView.countdownTimer.isHidden = true
-                    announce(announcement: "Camera not vertical, hold phone vertically to begin countdown")
+                    AnnouncementManager.shared.announce(announcement: "Camera not vertical, hold phone vertically to begin countdown")
                     rootContainerView.countdownTimer.setNeedsDisplay()
                 }
                 let nowNotVerticalVibration = UIImpactFeedbackGenerator(style: .heavy)
                 nowNotVerticalVibration.impactOccurred()
             } else {
                 if state.isTryingToAlign {
-                    announce(announcement: "Camera now vertical, starting alignment")
+                    AnnouncementManager.shared.announce(announcement: "Camera now vertical, starting alignment")
                 } else {
                     rootContainerView.countdownTimer.isHidden = false
-                    announce(announcement: "Camera now vertical, starting countdown")
+                    AnnouncementManager.shared.announce(announcement: "Camera now vertical, starting countdown")
                     rootContainerView.countdownTimer.start(beginingValue: ViewController.alignmentWaitingPeriod, interval: 1)
                 }
                 let nowVerticalVibration = UIImpactFeedbackGenerator(style: .light)
@@ -2459,9 +2345,9 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         
         if !phoneCurrentlyVertical && unwrappedPhoneVertical {
             if state.isTryingToAlign {
-                announce(announcement: "Camera no longer vertical, pausing alignment")
+                AnnouncementManager.shared.announce(announcement: "Camera no longer vertical, pausing alignment")
             } else {
-                announce(announcement: "Camera no longer vertical, restarting and stopping countdown")
+                AnnouncementManager.shared.announce(announcement: "Camera no longer vertical, restarting and stopping countdown")
                 rootContainerView.countdownTimer.isHidden = true
                 rootContainerView.countdownTimer.pause()
                 rootContainerView.countdownTimer.setNeedsDisplay()
@@ -2470,145 +2356,16 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
             nowNotVerticalVibration.impactOccurred()
         } else if phoneCurrentlyVertical && !unwrappedPhoneVertical {
             if state.isTryingToAlign {
-                announce(announcement: "Camera now vertical, continuing alignment")
+                AnnouncementManager.shared.announce(announcement: "Camera now vertical, continuing alignment")
             } else {
                 rootContainerView.countdownTimer.isHidden = false
-                announce(announcement: "Camera now vertical, starting countdown")
+                AnnouncementManager.shared.announce(announcement: "Camera now vertical, starting countdown")
                 rootContainerView.countdownTimer.start(beginingValue: ViewController.alignmentWaitingPeriod, interval: 1)
             }
             let nowVerticalVibration = UIImpactFeedbackGenerator(style: .light)
             nowVerticalVibration.impactOccurred()
         }
         phoneVertical = phoneCurrentlyVertical
-    }
-    
-    
-    func tryVisualAlignment(triesLeft: Int, makeAnnounement: Bool = false) {
-        if state.isAtMainScreen {
-            // once we are at the main screen, we need to stop
-            return
-        }
-        if !state.isTryingToAlign || !attemptingRelocalization {
-            return
-        }
-        if phoneVertical != true {
-            // retry later
-            DispatchQueue.global(qos: .userInitiated).asyncAfter(deadline: .now() + 0.25) {
-                self.tryVisualAlignment(triesLeft: triesLeft, makeAnnounement: makeAnnounement)
-            }
-            return
-        }
-        if let alignAnchorPoint = self.pausedAnchorPoint, let alignAnchorPointImage = alignAnchorPoint.image, let alignTransform = alignAnchorPoint.anchor?.transform, let frame = ARSessionManager.shared.currentFrame {
-            if makeAnnounement {
-                announce(announcement: NSLocalizedString("visualAlignmentConfirmation", comment: "Announce that visual alignment process has began"))
-            }
-
-            DispatchQueue.global(qos: .userInitiated).async {
-                let intrinsics = frame.camera.intrinsics
-                let capturedUIImage = pixelBufferToUIImage(pixelBuffer: frame.capturedImage)!
-                let visualYawReturn = VisualAlignment.visualYaw(alignAnchorPointImage, alignAnchorPoint.intrinsics!, alignTransform, capturedUIImage, simd_float4(intrinsics[0, 0], intrinsics[1, 1], intrinsics[2, 0], intrinsics[2, 1]), frame.camera.transform, Int32(2))
-                
-                UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
-                
-                let propInliers = visualYawReturn.numMatches > 0 ? Float(visualYawReturn.numInliers) / Float(visualYawReturn.numMatches) : 0.0
-                print("alignment inliers \(visualYawReturn.numInliers) \(visualYawReturn.numMatches) \(propInliers) \(visualYawReturn.residualAngle)")
-                if self.firstAlignmentPose == nil {
-                    self.firstAlignmentPose = frame.camera.transform
-                }
-                if visualYawReturn.is_valid, abs(visualYawReturn.residualAngle) < 0.01 {
-                    let relativeTransform = self.getRelativeTransform(cameraTransform: frame.camera.transform, alignTransform: alignTransform, visualYawReturn: visualYawReturn)
-                    let relativeYaw = atan2(relativeTransform.columns.0.z, relativeTransform.columns.0.x)
-                    self.relativeYaws.append(relativeYaw)
-                    SoundEffectManager.shared.success()
-                } else {
-                    if self.relativeYaws.isEmpty, triesLeft < ViewController.maxVisualAlignmentRetryCount - 3, -self.lastVisualAlignmentFailureAnnouncement.timeIntervalSinceNow > ViewController.timeBetweenVisualAlignmentFailureAnnouncements {
-                        self.lastVisualAlignmentFailureAnnouncement = Date()
-                        DispatchQueue.main.async {
-                            self.announce(announcement: "Having trouble aligning. Try rotating your phone slowly from side-to-side.")
-                        }
-                    } else {
-                        SoundEffectManager.shared.error()
-                    }
-                }
-                if triesLeft > 1 && self.relativeYaws.count < ViewController.requiredSuccessfulVisualAlignmentFrames {
-                    DispatchQueue.global(qos: .userInitiated).asyncAfter(deadline: .now() + (visualYawReturn.is_valid ? 0.25 : 1.0)) {
-                        self.tryVisualAlignment(triesLeft: triesLeft-1)
-                    }
-                    return
-                }
-                
-                DispatchQueue.main.async {
-                    if !self.state.isTryingToAlign {
-                        // we must have localized to the map or are doign this during the route... let's bail
-                        return
-                    }
-                    if !self.relativeYaws.isEmpty {
-                        let quantizedYaws = self.relativeYaws.map({Int($0*50)})
-                        let mostFrequent = mostFrequent(array: quantizedYaws)!
-                        var suitableYaws: [Float] = []
-                        for relativeYaw in self.relativeYaws {
-                            if Int(relativeYaw*50) == mostFrequent.mostFrequent[0] {
-                                suitableYaws.append(relativeYaw)
-                            }
-                        }
-                        let consensusYaw: Float
-                        // If we don't have more than 2 colliding in the same bucket, fall back on a simple average
-                        if mostFrequent.count < 2 {
-                            let consensusUnitVec = self.relativeYaws.reduce(simd_float2(repeating: 0.0), { (x,y) in x + simd_float2(cos(y), sin(y))/Float(self.relativeYaws.count)})
-                            consensusYaw = atan2(consensusUnitVec.y, consensusUnitVec.x)
-                        } else {
-                            consensusYaw = suitableYaws.reduce(Float(0.0), { (x,y) in x + y/Float(mostFrequent.count)})
-                        }
-                        if self.attemptingRelocalization || ARSessionManager.shared.initialWorldMap == nil {
-                            var relativeTransform = simd_float4x4.makeRotate(radians: consensusYaw, 0, 1, 0)
-                            relativeTransform.columns.3 = simd_float4(alignTransform.columns.3.dropW - relativeTransform.rotation() * self.firstAlignmentPose!.columns.3.dropW, 1)
-                            ARSessionManager.shared.manualAlignment = relativeTransform.inverse
-                        }
-                        self.paused = false
-
-                        ///PATHPOINT paused anchor point alignment timer -> return navigation
-                        ///announce to the user that they have aligned to the anchor point sucessfully and are starting  navigation.
-                        self.delayTransition(announcement: NSLocalizedString("resumeAnchorPointToReturnNavigationAnnouncement", comment: "This is an Announcement which indicates that the pause session is complete, that the program was able to align with the anchor point, and that return navigation has started."), initialFocus: nil)
-                        self.state = .navigatingRoute
-                    } else {
-                        self.announce(announcement: NSLocalizedString("noVisualMatchesNavigationNavigationIsUnlikelyToWorkWell", comment: "Instruct to use snap-to-route when no visual matches are found"))
-                        
-                        if let firstAlignmentPose = self.firstAlignmentPose {
-                            var visualYawReturnCopy = visualYawReturn
-                            visualYawReturnCopy.is_valid = true
-                            visualYawReturnCopy.yaw = 0
-                            var cameraTransform = frame.camera.transform
-                            cameraTransform.columns.3 = firstAlignmentPose.columns.3
-                            let relativeTransform = self.getRelativeTransform(cameraTransform: cameraTransform, alignTransform: alignTransform, visualYawReturn: visualYawReturnCopy)
-                            ARSessionManager.shared.manualAlignment = relativeTransform
-                        }
-                        SoundEffectManager.shared.meh()
-                        self.isResumedRoute = true
-                        self.state = .readyToNavigateOrPause(allowPause: false)
-                    }
-                }
-            }
-        }
-    }
-    
-    func getRelativeTransform(cameraTransform: simd_float4x4, alignTransform: simd_float4x4, visualYawReturn: VisualAlignmentReturn)->simd_float4x4 {
-        let alignRotation = simd_float3x3(simd_float3(alignTransform[0, 0], alignTransform[0, 1], alignTransform[0, 2]),
-                                          simd_float3(alignTransform[1, 0], alignTransform[1, 1], alignTransform[1, 2]),
-                                          simd_float3(alignTransform[2, 0], alignTransform[2, 1], alignTransform[2, 2]))
-        
-        let leveledAlignRotation = visualYawReturn.square_rotation1.inverse * alignRotation;
-        
-        var leveledAlignPose = leveledAlignRotation.toPose()
-        leveledAlignPose[3] = alignTransform[3]
-        
-        let cameraRotation = cameraTransform.rotation()
-        let leveledCameraRotation = visualYawReturn.square_rotation2.inverse * cameraRotation;
-        var leveledCameraPose = leveledCameraRotation.toPose()
-        leveledCameraPose[3] = cameraTransform[3]
-        
-        let yawRotation = simd_float4x4.makeRotate(radians: visualYawReturn.yaw, -1, 0, 0)
-        
-        return leveledCameraPose * yawRotation.inverse * leveledAlignPose.inverse
     }
     
     /// this tells the ARSession that when the app is becoming active again, we should try to relocalize to the previous world map (rather than proceding with the tracking session in the normal state even though the coordinate systems are no longer aligned).
@@ -2742,12 +2499,12 @@ extension ViewController: ARSessionManagerDelegate {
         }
         if ARSessionManager.shared.initialWorldMap != nil, attemptingRelocalization {
             if trackingWarningsAllowed {
-                announce(announcement: NSLocalizedString("realignToSavedRouteAnnouncement", comment: "An announcement which lets the user know that their surroundings have been matched to a saved route"))
+                AnnouncementManager.shared.announce(announcement: NSLocalizedString("realignToSavedRouteAnnouncement", comment: "An announcement which lets the user know that their surroundings have been matched to a saved route"))
             }
             attemptingRelocalization = false
         } else if oldTrackingSessionErrorState != nil {
             if trackingWarningsAllowed {
-                announce(announcement: NSLocalizedString("fixedTrackingAnnouncement", comment: "Let user know that the ARKit tracking session has returned to its normal quality (this is played after the tracking has been restored from thir being insuficent visual features or excessive motion which degrade the tracking)"))
+                AnnouncementManager.shared.announce(announcement: NSLocalizedString("fixedTrackingAnnouncement", comment: "Let user know that the ARKit tracking session has returned to its normal quality (this is played after the tracking has been restored from thir being insuficent visual features or excessive motion which degrade the tracking)"))
                 if soundFeedback {
                     SoundEffectManager.shared.playSystemSound(id: 1025)
                 }
@@ -2777,5 +2534,47 @@ extension ViewController: ARSessionManagerDelegate {
     
     func newFrameAvailable() {
         recordRouteLandmarkHelper()
+    }
+}
+
+extension ViewController: VisualAlignmentManagerDelegate {
+    func shouldContinueAlignment() -> Bool {
+        if state.isAtMainScreen {
+            // once we are at the main screen, we need to stop
+            return false
+        }
+        if case .readyToNavigateOrPause(_) = state {
+            return false
+        }
+        if !state.isTryingToAlign || !attemptingRelocalization {
+            return false
+        }
+        return true
+    }
+    
+    func isPhoneVertical()->Bool? {
+        return phoneVertical
+    }
+    
+    func alignmentSuccessful(manualAlignment: simd_float4x4) {
+        if self.attemptingRelocalization || ARSessionManager.shared.initialWorldMap == nil {
+            
+            ARSessionManager.shared.manualAlignment = manualAlignment
+        }
+        paused = false
+
+        ///PATHPOINT paused anchor point alignment timer -> return navigation
+        ///announce to the user that they have aligned to the anchor point sucessfully and are starting  navigation.
+        delayTransition(announcement: NSLocalizedString("resumeAnchorPointToReturnNavigationAnnouncement", comment: "This is an Announcement which indicates that the pause session is complete, that the program was able to align with the anchor point, and that return navigation has started."), initialFocus: nil)
+        state = .navigatingRoute
+    }
+    
+    func alignmentFailed(fallbackTransform: simd_float4x4) {
+        AnnouncementManager.shared.announce(announcement: NSLocalizedString("noVisualMatchesNavigationNavigationIsUnlikelyToWorkWell", comment: "Instruct to use snap-to-route when no visual matches are found"))
+        
+        ARSessionManager.shared.manualAlignment = fallbackTransform
+        SoundEffectManager.shared.meh()
+        isResumedRoute = true
+        state = .readyToNavigateOrPause(allowPause: false)
     }
 }

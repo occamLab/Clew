@@ -36,6 +36,10 @@
 		8214120826D497DE003EC2D4 /* SiriShortcutsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8214120726D497DE003EC2D4 /* SiriShortcutsManager.swift */; };
 		8214120926D497DE003EC2D4 /* SiriShortcutsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8214120726D497DE003EC2D4 /* SiriShortcutsManager.swift */; };
 		821CF7842513264400A7B3C2 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 821CF7822513264400A7B3C2 /* InfoPlist.strings */; };
+		821D07332742B33100FE6297 /* VisualAlignmentManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 821D07322742B33100FE6297 /* VisualAlignmentManager.swift */; };
+		821D07342742B33200FE6297 /* VisualAlignmentManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 821D07322742B33100FE6297 /* VisualAlignmentManager.swift */; };
+		821D07362742B44400FE6297 /* AnnouncementManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 821D07352742B44400FE6297 /* AnnouncementManager.swift */; };
+		821D07372742B44400FE6297 /* AnnouncementManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 821D07352742B44400FE6297 /* AnnouncementManager.swift */; };
 		823DA454252F7EA800BB5E6B /* speaker.obj in Resources */ = {isa = PBXBuildFile; fileRef = 823DA453252F7EA800BB5E6B /* speaker.obj */; };
 		823DA455252F7EA800BB5E6B /* speaker.obj in Resources */ = {isa = PBXBuildFile; fileRef = 823DA453252F7EA800BB5E6B /* speaker.obj */; };
 		82569F4E22187E6500448B45 /* help in Resources */ = {isa = PBXBuildFile; fileRef = 82569F4D22187E6500448B45 /* help */; };
@@ -289,6 +293,8 @@
 		8214120426D41476003EC2D4 /* SiriWalkThrough.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SiriWalkThrough.swift; sourceTree = "<group>"; };
 		8214120726D497DE003EC2D4 /* SiriShortcutsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SiriShortcutsManager.swift; sourceTree = "<group>"; };
 		821CF7832513264400A7B3C2 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		821D07322742B33100FE6297 /* VisualAlignmentManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisualAlignmentManager.swift; sourceTree = "<group>"; };
+		821D07352742B44400FE6297 /* AnnouncementManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnouncementManager.swift; sourceTree = "<group>"; };
 		822E27F8210E3F260024A5E3 /* Clew Dev-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Clew Dev-Info.plist"; sourceTree = "<group>"; };
 		823DA453252F7EA800BB5E6B /* speaker.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = speaker.obj; sourceTree = "<group>"; };
 		82569F4D22187E6500448B45 /* help */ = {isa = PBXFileReference; lastKnownFileType = folder; path = help; sourceTree = "<group>"; };
@@ -811,6 +817,7 @@
 				82BE6CA927398C1700387139 /* VisualAlignment.mm */,
 				82BE6CB027398E1D00387139 /* VisualAlignmentUtils.cpp */,
 				82BE6CB127398E1D00387139 /* VisualAlignmentUtils.hpp */,
+				821D07322742B33100FE6297 /* VisualAlignmentManager.swift */,
 			);
 			path = "Visual Alignment";
 			sourceTree = "<group>";
@@ -1588,6 +1595,7 @@
 				8214120726D497DE003EC2D4 /* SiriShortcutsManager.swift */,
 				82DE9223271876900086F5A4 /* ARSessionManager.swift */,
 				82DE922627188ACE0086F5A4 /* RouteManager.swift */,
+				821D07352742B44400FE6297 /* AnnouncementManager.swift */,
 			);
 			path = Misc;
 			sourceTree = "<group>";
@@ -1979,6 +1987,7 @@
 				82BE6CAA27398C1700387139 /* VisualAlignment.mm in Sources */,
 				82BE6CB227398E1D00387139 /* VisualAlignmentUtils.cpp in Sources */,
 				14B02B3226823E2C00174B36 /* TutorialTestViews.swift in Sources */,
+				821D07332742B33100FE6297 /* VisualAlignmentManager.swift in Sources */,
 				E5470F2622C119F5001092A4 /* Float4x4Extension.swift in Sources */,
 				E5470EF622C119F5001092A4 /* RecordButtonKit.swift in Sources */,
 				14B7EA09268E052100E4A3CE /* SettingWalkThrough.swift in Sources */,
@@ -2013,6 +2022,7 @@
 				1F2971A522DF60F700B896C6 /* HelpCompiler.swift in Sources */,
 				E5470F1E22C119F5001092A4 /* NSStringExtension.swift in Sources */,
 				8214120826D497DE003EC2D4 /* SiriShortcutsManager.swift in Sources */,
+				821D07362742B44400FE6297 /* AnnouncementManager.swift in Sources */,
 				E5470F3222C119F5001092A4 /* ResumeTrackingController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2038,6 +2048,7 @@
 				82BE6CAB27398C1700387139 /* VisualAlignment.mm in Sources */,
 				82BE6CB327398E1D00387139 /* VisualAlignmentUtils.cpp in Sources */,
 				14B02B3326823E2C00174B36 /* TutorialTestViews.swift in Sources */,
+				821D07342742B33200FE6297 /* VisualAlignmentManager.swift in Sources */,
 				E5470F2722C119F5001092A4 /* Float4x4Extension.swift in Sources */,
 				E5470EF722C119F5001092A4 /* RecordButtonKit.swift in Sources */,
 				8214120626D41477003EC2D4 /* SiriWalkThrough.swift in Sources */,
@@ -2072,6 +2083,7 @@
 				E5470EF922C119F5001092A4 /* AudioVisualizerView.swift in Sources */,
 				E5470F1F22C119F5001092A4 /* NSStringExtension.swift in Sources */,
 				8214120926D497DE003EC2D4 /* SiriShortcutsManager.swift in Sources */,
+				821D07372742B44400FE6297 /* AnnouncementManager.swift in Sources */,
 				E5470F3322C119F5001092A4 /* ResumeTrackingController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -11,6 +11,7 @@ import AVFoundation
 import Foundation
 import Intents
 import IntentsUI
+import ARKit
 
 // TODOs
 // Stop AR session when needed based on the tutorial state
@@ -787,7 +788,7 @@ struct TextOrVoiceNotes: View {
         }
         
         Spacer()
-        TutorialNavLink(destination: PhysicalAlignment())  {
+        TutorialNavLink(destination: ApplesARWorldMap())  {
             Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
         }.padding()
     }
@@ -797,17 +798,29 @@ struct TextOrVoiceNotes: View {
 struct PhysicalAlignment: View {
     var body: some View {
         TutorialScreen {
-            Text(NSLocalizedString("physicalAlignmentTutorialTitle", comment: "Title of the physical alignment part of the tutorial"))
+            Text(NSLocalizedString("alignmentTypesTitle", comment: "Title of the alignment part of the tutorial"))
+            VStack(alignment: .leading, spacing: 20) {
+                Text(NSLocalizedString("alignmentTypesParagraph", comment: "Preamble paragraph of the alignment types part of the tutorial"))
+            }
+
+            VStack(alignment: .leading, spacing: 20) {
+                Text(NSLocalizedString("visualAlignmentTutorialTitle", comment: "Title of the physical alignment part of the tutorial"))
+                
+                Text(NSLocalizedString("visualAlignmentTutorialTextParagraph1", comment: "Text of the visual alignment part of the tutorial paragraph 1"))
+            }
             
             VStack(alignment: .leading, spacing: 20) {
+                Text(NSLocalizedString("physicalAlignmentTutorialTitle", comment: "Title of the physical alignment part of the tutorial"))
                 Text(NSLocalizedString("physicalAlignmentTutorialTextParagraph1", comment: "Text of the physical alignment part of the tutorial paragraph 1"))
-                Text(NSLocalizedString("physicalAlignmentTutorialTextParagraph2", comment: "Text of the physical alignment part of the tutorial paragraph 2"))
             }
         }
         
         Spacer()
-        TutorialNavLink(destination: FindingAnAnchorPoint())  {
-            Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
+        TutorialNavLink(destination: VisualAnchorPointPractice())  {
+            Text(NSLocalizedString("practiceVisualAlignmentTitle", comment: "Text for practice button that starts the tutorial mode for visual alignment"))
+        }.padding()
+        TutorialNavLink(destination: AnchorPointPractice())  {
+                Text(NSLocalizedString("practicePhysicalAlignmentTitle", comment: "Text for practice button that starts the tutorial for physical alignment"))
         }.padding()
     }
 }
@@ -838,13 +851,13 @@ struct ApplesARWorldMap: View {
             
             VStack(alignment: .leading, spacing: 20) {
                 Text(NSLocalizedString("applesARWorldMapTutorialTextParagraph1", comment: "Text of the AR world map part of the tutorial paragraph 1"))
-                Text(NSLocalizedString("applesARWorldMapTutorialTextParagraph2", comment: "Text of the AR world map part of the tutorial paragraph 2"))
             }
         }
         
         Spacer()
-        TutorialNavLink(destination: AnchorPointPractice())  {
-            Text(NSLocalizedString("practiceTutorialTitle", comment: "Text for practice button"))
+        //TutorialNavLink(destination: AnchorPointPractice())  {
+        TutorialNavLink(destination: PhysicalAlignment()) {
+            Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
         }.padding()
     }
 }
@@ -854,16 +867,28 @@ enum AlignmentAccuracy {
     case bad
     case good
     case perfect
+    case visualAlignmentFailed
+    case positionBadYawIsGood
 }
 
 class TimerDelegate: SRCountdownTimerDelegate, ObservableObject {
     var timerEnded = false
+    var isVisualAlignment:Bool
+    var lastAnnouncementTime: Date?
 
-    func timerDidEnd() {
+    init(isVisualAlignment: Bool) {
+        self.isVisualAlignment = isVisualAlignment
+    }
+    
+    func timerDidEnd(sender: SRCountdownTimer, elapsedTime: TimeInterval) {
         timerEnded = true
         objectWillChange.send()
     }
-    func timerDidUpdateCounterValue(newValue: Int) {
+    func timerDidUpdateCounterValue(sender: SRCountdownTimer, newValue: Int) {
+        if isVisualAlignment, ARSessionManager.shared.currentFrame?.camera.transform.isVerticalPhonePose() == false, lastAnnouncementTime == nil || -lastAnnouncementTime!.timeIntervalSinceNow > 2.0 {
+            lastAnnouncementTime = Date()
+            AnnouncementManager.shared.announce(announcement: "Hold phone vertically for best alignment")
+        }
         UIAccessibility.post(notification: .announcement, argument: String(newValue))
     }
 }
@@ -875,11 +900,12 @@ enum AnchorPointPracticeState {
     case readyForAlignmentInstructions
     case anchorPointAlignmentRequested
     case anchorPointAligned
+    case waitingForVisualAlignment
 }
 
 struct AnchorPointPracticeSubComponent: View {
     @ObservedObject private var arData = ARData.shared
-    @StateObject private var timerDelegate = TimerDelegate()
+    @StateObject private var timerDelegate = TimerDelegate(isVisualAlignment: false)
     @State private var practiceState: AnchorPointPracticeState = .initial
     @State var xyzYawSet: [Float] = []
     @State var xyzYawAlign: [Float] = []
@@ -896,140 +922,359 @@ struct AnchorPointPracticeSubComponent: View {
     static let yawGoodThreshold = Float(0.2)
     
     var body: some View {
-        Image("Align")
-            .resizable()
-            .frame(width: 100, height: 100)
-            .accessibility(hidden: true)
-        
-        if practiceState == .anchorPointSet {
-            Text(NSLocalizedString("anchorPointPracticeAlignTitle", comment: "Align to anchor point page title")).padding()
-            VStack(alignment: .leading, spacing: 20) {
-                Text(NSLocalizedString("anchorPointPracticeAlignTextParagraph1", comment: "Align to anchor point page instructions paragraph 1"))
-                Text(NSLocalizedString("anchorPointPracticeAlignTextParagraph2", comment: "Align to anchor point page instructions paragraph 2"))
-            }
-        } else if practiceState == .readyForAlignmentInstructions || practiceState == .anchorPointAlignmentRequested {
-            Text(NSLocalizedString("findingSavedAnchorPointTitle", comment: "Find anchor point page title")).padding()
-            VStack(alignment: .leading, spacing: 20) {
-                Text(NSLocalizedString("findingSavedAnchorPointTextParagraph1", comment: "Find anchor point page instructions paragraph 1"))
-                Text(NSLocalizedString("findingSavedAnchorPointTextParagraph2", comment: "Find anchor point page instructions paragraph 2"))
-                Text(NSLocalizedString("findingSavedAnchorPointTextParagraph3", comment: "Find anchor point page instructions paragraph 3"))
-            }
-        } else if practiceState == .initial || practiceState == .anchorPointCreationRequested {
-            //when starting anchor point practice
-            Text(NSLocalizedString("anchorPointPracticeSetTutorialTitle", comment: "Set an anchor point practice page title")).padding()
+        VStack {
+            Image("Align")
+                .resizable()
+                .frame(width: 100, height: 100)
+                .accessibility(hidden: true)
             
-            VStack(alignment: .leading, spacing: 20) {
-                Text(NSLocalizedString("anchorPointPracticeSetTutorialTextParagraph1", comment: "Set an anchor point practice page instructions paragraph 1"))
-                Text(NSLocalizedString("anchorPointPracticeSetTutorialTextParagraph2", comment: "Set an anchor point practice page instructions paragraph 2"))
+            if practiceState == .anchorPointSet {
+                VStack(alignment: .leading, spacing: 20) {
+                    Text(NSLocalizedString("anchorPointPracticeAlignTextParagraph1", comment: "Align to anchor point page instructions paragraph 1"))
+                    Text(NSLocalizedString("anchorPointPracticeAlignTextParagraph2", comment: "Align to anchor point page instructions paragraph 2"))
+                }
+            } else if practiceState == .readyForAlignmentInstructions || practiceState == .anchorPointAlignmentRequested {
+                Text(NSLocalizedString("findingSavedAnchorPointTitle", comment: "Find  anchor point page title")).padding()
+                VStack(alignment: .leading, spacing: 20) {
+                    Text(NSLocalizedString("findingSavedAnchorPointTextParagraph1", comment: "Find anchor point page instructions paragraph 1"))
+                    Text(NSLocalizedString("findingSavedAnchorPointTextParagraph2", comment: "Find anchor point page instructions paragraph 2"))
+                    Text(NSLocalizedString("findingSavedAnchorPointTextParagraph3", comment: "Find anchor point page instructions paragraph 3"))
+                }
+            } else if practiceState == .initial || practiceState == .anchorPointCreationRequested {
+                //when starting anchor point practice
+                Text(NSLocalizedString("physicalAnchorPointPracticeSetTutorialTitle", comment: "Set an anchor point practice page title")).padding()
+                
+                VStack(alignment: .leading, spacing: 20) {
+                    Text(NSLocalizedString("anchorPointPracticeSetTutorialTextParagraph1", comment: "Set an anchor point practice page instructions paragraph 1"))
+                    Text(NSLocalizedString("anchorPointPracticeSetTutorialTextParagraph2", comment: "Set an anchor point practice page instructions paragraph 2"))
+                }
             }
-        }
-        
-        if practiceState == .anchorPointCreationRequested {
-            CountdownView(timerDelegate: timerDelegate)
-                .frame(minWidth: 100, maxWidth: 100, minHeight: 100, maxHeight: 100)
-                .onReceive(self.timerDelegate.objectWillChange) { timer in
-                    if self.timerDelegate.timerEnded {
+            
+            if practiceState == .anchorPointCreationRequested {
+                CountdownView(timerDelegate: timerDelegate)
+                    .frame(minWidth: 100, maxWidth: 100, minHeight: 100, maxHeight: 100)
+                    .onReceive(self.timerDelegate.objectWillChange) { timer in
+                        if self.timerDelegate.timerEnded {
+                            if let transform = arData.transform {
+                                let x = transform.columns.3.x
+                                let y = transform.columns.3.y
+                                let z = transform.columns.3.z
+                                let yaw = ViewController.getYawHelper(transform)
+                                xyzYawSet = [x, y, z, yaw]
+                            }
+                            practiceState = .anchorPointSet
+                            SoundEffectManager.shared.meh()
+                        }
+                    }
+            } else if practiceState == .anchorPointAlignmentRequested {
+                CountdownView(timerDelegate: timerDelegate)
+                    .frame(minWidth: 100, maxWidth: 100, minHeight: 100, maxHeight: 100)
+                    .onReceive(self.timerDelegate.objectWillChange) { timer in
                         if let transform = arData.transform {
                             let x = transform.columns.3.x
                             let y = transform.columns.3.y
                             let z = transform.columns.3.z
                             let yaw = ViewController.getYawHelper(transform)
-                            xyzYawSet = [x, y, z, yaw]
+                            xyzYawAlign = [x, y, z, yaw]
+                            xyzYawDelta = [xyzYawAlign[0] - xyzYawSet[0], xyzYawAlign[1] - xyzYawSet[1], xyzYawAlign[2] - xyzYawSet[2], xyzYawAlign[3] - xyzYawSet[3]]
+                            if abs(xyzYawDelta[0]) < Self.xPerfectThreshold, abs(xyzYawDelta[1]) < Self.yPerfectThreshold, abs(xyzYawDelta[2]) < Self.zPerfectThreshold, abs(xyzYawDelta[3]) < Self.yawPerfectThreshold {
+                                accuracy = .perfect
+                                SoundEffectManager.shared.success()
+                            } else if abs(xyzYawDelta[0]) < Self.xGoodThreshold, abs(xyzYawDelta[1]) < Self.yGoodThreshold, abs(xyzYawDelta[2]) < Self.zGoodThreshold, abs(xyzYawDelta[3]) < Self.yawGoodThreshold  {
+                                accuracy = .good
+                                SoundEffectManager.shared.meh()
+                            } else {
+                                accuracy = .bad
+                                SoundEffectManager.shared.error()
+                            }
+                            DispatchQueue.main.async {
+                                practiceState = .anchorPointAligned
+                            }
                         }
-                        practiceState = .anchorPointSet
-                        SoundEffectManager.shared.meh()
-                    }
-                }
-        } else if practiceState == .anchorPointAlignmentRequested {
-            CountdownView(timerDelegate: timerDelegate)
-                .frame(minWidth: 100, maxWidth: 100, minHeight: 100, maxHeight: 100)
-                .onReceive(self.timerDelegate.objectWillChange) { timer in
-                    if let transform = arData.transform {
-                        let x = transform.columns.3.x
-                        let y = transform.columns.3.y
-                        let z = transform.columns.3.z
-                        let yaw = ViewController.getYawHelper(transform)
-                        xyzYawAlign = [x, y, z, yaw]
-                        xyzYawDelta = [xyzYawAlign[0] - xyzYawSet[0], xyzYawAlign[1] - xyzYawSet[1], xyzYawAlign[2] - xyzYawSet[2], xyzYawAlign[3] - xyzYawSet[3]]
-                        if abs(xyzYawDelta[0]) < Self.xPerfectThreshold, abs(xyzYawDelta[1]) < Self.yPerfectThreshold, abs(xyzYawDelta[2]) < Self.zPerfectThreshold, abs(xyzYawDelta[3]) < Self.yawPerfectThreshold {
-                            accuracy = .perfect
-                            SoundEffectManager.shared.success()
-                        } else if abs(xyzYawDelta[0]) < Self.xGoodThreshold, abs(xyzYawDelta[1]) < Self.yGoodThreshold, abs(xyzYawDelta[2]) < Self.zGoodThreshold, abs(xyzYawDelta[3]) < Self.yawGoodThreshold  {
-                            accuracy = .good
-                            SoundEffectManager.shared.meh()
-                        } else {
-                            accuracy = .bad
-                            SoundEffectManager.shared.error()
-                        }
-                        DispatchQueue.main.async {
-                            practiceState = .anchorPointAligned
-                        }
-                    }
-            }
-        }
-        if practiceState == .anchorPointAligned {
-            //once anchor point is aligned
-            switch accuracy {
-            case .perfect:
-                Text(NSLocalizedString("anchorPointPracticeFeedbackPerfectText", comment: "anchor point perfectly aligned text")).padding()
-            case .good:
-                Text(NSLocalizedString("anchorPointPracticeFeedbackGoodText", comment: "anchor point well aligned text")).padding()
-            default:
-                Text(NSLocalizedString("anchorPointPracticeFeedbackBadText", comment: "anchor point not well aligned text")).padding()
-            }
-            
-            Button(action: {
-                practiceState = .readyForAlignmentInstructions
-            }) {
-                TutorialButton{
-                    Text(NSLocalizedString("anchorPointPracticeRetryAlignButton", comment: "button text to retry aligning the anchor point"))
                 }
             }
-            
-            Button(action: {
-                practiceState = .initial
-            }) {
-                TutorialButton{
-                    Text(NSLocalizedString("anchorPointPracticeRetryButton", comment: "button text to retry setting the anchor point"))
+            if practiceState == .anchorPointAligned {
+                //once anchor point is aligned
+                switch accuracy {
+                case .perfect:
+                    Text(NSLocalizedString("anchorPointPracticeFeedbackPerfectText", comment: "anchor point perfectly aligned text")).padding()
+                case .good:
+                    Text(NSLocalizedString("anchorPointPracticeFeedbackGoodText", comment: "anchor point well aligned text")).padding()
+                default:
+                    Text(NSLocalizedString("anchorPointPracticeFeedbackBadText", comment: "anchor point not well aligned text")).padding()
                 }
-            }.padding()
-            
-            TutorialNavLink(destination: SavedRoutes()) {
-                Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
-            }.padding()
-            
-        } else if practiceState == .anchorPointSet {
-            //Once anchor point is set
-            Button(action: {
-                if practiceState == .anchorPointSet {
+                
+                Button(action: {
                     practiceState = .readyForAlignmentInstructions
+                }) {
+                    TutorialButton{
+                        Text(NSLocalizedString("anchorPointPracticeRetryAlignButton", comment: "button text to retry aligning the anchor point"))
+                    }
                 }
-            }) {
-                TutorialButton {
-                    Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
-                }
-            }.disabled(practiceState == .anchorPointAlignmentRequested)
-        } else if practiceState == .initial {
-            Button(action: {
-                if practiceState == .initial {
-                    practiceState = .anchorPointCreationRequested
-                }
-            }) {
-                TutorialButton {
-                    Text(NSLocalizedString("setAnchorPointButtonText", comment: "The text shown on the button that sets the anchor point during the tutorial"))
-                }
-            }
-        } else if practiceState == .readyForAlignmentInstructions {
-            Button(action: {
-                practiceState = .anchorPointAlignmentRequested
-            }) {
-                TutorialButton {
-                    Text(NSLocalizedString("alignToAnchorPointButtonText", comment: "The text shown on the button that aligns to the anchor point during the tutorial"))
+                
+                Button(action: {
+                    practiceState = .initial
+                }) {
+                    TutorialButton{
+                        Text(NSLocalizedString("anchorPointPracticeRetryButton", comment: "button text to retry setting the anchor point"))
+                    }
                 }.padding()
+                
+                TutorialNavLink(destination: SavedRoutes()) {
+                    Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
+                }.padding()
+                
+            } else if practiceState == .anchorPointSet {
+                //Once anchor point is set
+                Button(action: {
+                    if practiceState == .anchorPointSet {
+                        practiceState = .readyForAlignmentInstructions
+                    }
+                }) {
+                    TutorialButton {
+                        Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
+                    }
+                }.disabled(practiceState == .anchorPointAlignmentRequested)
+            } else if practiceState == .initial {
+                Button(action: {
+                    if practiceState == .initial {
+                        practiceState = .anchorPointCreationRequested
+                    }
+                }) {
+                    TutorialButton {
+                        Text(NSLocalizedString("setAnchorPointButtonText", comment: "The text shown on the button that sets the anchor point during the tutorial"))
+                    }
+                }
+            } else if practiceState == .readyForAlignmentInstructions {
+                Button(action: {
+                    practiceState = .anchorPointAlignmentRequested
+                }) {
+                    TutorialButton {
+                        Text(NSLocalizedString("alignToAnchorPointButtonText", comment: "The text shown on the button that aligns to the anchor point during the tutorial"))
+                    }.padding()
+                }
             }
         }
     }
 }
+
+class VisualAlignmentPracticeDelegate: ObservableObject, VisualAlignmentManagerDelegate {
+    var alignmentWasSuccessful: Bool?
+    var deltaYaw: Float?
+    
+    init () {
+    }
+    
+    func reset() {
+        alignmentWasSuccessful = nil
+        deltaYaw = nil
+    }
+    
+    func shouldContinueAlignment() -> Bool {
+        return true
+    }
+    
+    func isPhoneVertical() -> Bool? {
+        return ARSessionManager.shared.currentFrame?.camera.transform.isVerticalPhonePose()
+    }
+    
+    func alignmentSuccessful(manualAlignment: simd_float4x4) {
+        deltaYaw = simd_quatf(manualAlignment).angle
+        alignmentWasSuccessful = true
+        objectWillChange.send()
+    }
+    
+    func alignmentFailed(fallbackTransform: simd_float4x4) {
+        deltaYaw = nil
+        alignmentWasSuccessful = false
+        objectWillChange.send()
+    }
+}
+
+struct VisualAnchorPointPracticeSubComponent: View {
+    @ObservedObject var alignmentDelegate = VisualAlignmentPracticeDelegate()
+    @StateObject private var timerDelegate = TimerDelegate(isVisualAlignment: true)
+    @State private var practiceState: AnchorPointPracticeState = .initial
+    @State var xyzAlign: [Float] = []
+    @State var xyzSet: [Float] = []
+    @State var xyzDelta: [Float] = []
+    @State var accuracy: AlignmentAccuracy = .none
+    @State var accuracyText: String = ""
+    @State var alignAnchorPoint: RouteAnchorPoint?
+    @AccessibilityFocusState var focusOnResult
+
+    static let xPerfectThreshold = Float(0.5)
+    static let yPerfectThreshold = Float(0.5)
+    static let zPerfectThreshold = Float(0.5)
+    static let yawPerfectThreshold = Float(0.1)
+    static let xGoodThreshold = Float(0.8)
+    static let yGoodThreshold = Float(1.0)
+    static let zGoodThreshold = Float(0.8)
+    static let yawGoodThreshold = Float(0.2)
+    
+    var body: some View {
+        Image("Align")
+            .resizable()
+            .frame(width: 100, height: 100)
+            .accessibility(hidden: true)
+        VStack {
+            if practiceState == .anchorPointSet {
+                VStack(alignment: .leading, spacing: 20) {
+                    Text(NSLocalizedString("anchorPointPracticeAlignTextParagraph1", comment: "Align to anchor point page instructions paragraph 1"))
+                    Text(NSLocalizedString("visualAnchorPointPracticeAlignTextParagraph2", comment: "Align to visual anchor point page instructions paragraph 2"))
+                }
+            } else if practiceState == .readyForAlignmentInstructions || practiceState == .anchorPointAlignmentRequested {
+                Text(NSLocalizedString("findingSavedVisualAnchorPointTitle", comment: "Find visual anchor point page title")).padding()
+                VStack(alignment: .leading, spacing: 20) {
+                    Text(NSLocalizedString("findingSavedVisualAnchorPointTextParagraph1", comment: "Find visual anchor point page instructions paragraph 1"))
+                    Text(NSLocalizedString("findingSavedVisualAnchorPointTextParagraph2", comment: "Find visual anchor point page instructions paragraph 2"))
+                    Text(NSLocalizedString("findingSavedVisualAnchorPointTextParagraph3", comment: "Find visual anchor point page instructions paragraph 3"))
+                }
+            } else if practiceState == .initial || practiceState == .anchorPointCreationRequested {
+                //when starting anchor point practice
+                Text(NSLocalizedString("visualAnchorPointPracticeSetTutorialTitle", comment: "Set an anchor point practice page title")).padding()
+                
+                VStack(alignment: .leading, spacing: 20) {
+                    Text(NSLocalizedString("visualAnchorPointPracticeSetTutorialTextParagraph1", comment: "Set a visual anchor point practice page instructions paragraph 1"))
+                    Text(NSLocalizedString("anchorPointPracticeSetTutorialTextParagraph2", comment: "Set an anchor point practice page instructions paragraph 2"))
+                }
+            }
+            
+            if let anchorPointImage = alignAnchorPoint?.getThumbnail(imageHeight: 200) {
+                Image(uiImage: anchorPointImage)
+            }
+            
+            if practiceState == .anchorPointCreationRequested {
+                CountdownView(timerDelegate: timerDelegate)
+                    .frame(minWidth: 100, maxWidth: 100, minHeight: 100, maxHeight: 100)
+                    .onReceive(self.timerDelegate.objectWillChange) { timer in
+                        if self.timerDelegate.timerEnded {
+                            if let frame = ARSessionManager.shared.currentFrame, let image = pixelBufferToUIImage(pixelBuffer: frame.capturedImage) {
+                                let transform = frame.camera.transform
+                                let intrinsics = frame.camera.intrinsics
+                                xyzSet = [transform.columns.3.x, transform.columns.3.y, transform.columns.3.z]
+                                alignAnchorPoint = RouteAnchorPoint(anchor: ARAnchor(transform: transform), information: nil, voiceNote: nil, imageFileName: nil, intrinsics: simd_float4(intrinsics[0, 0], intrinsics[1, 1], intrinsics[2, 0], intrinsics[2, 1]))
+                                alignAnchorPoint?.image = image
+                                practiceState = .anchorPointSet
+                                SoundEffectManager.shared.playSystemSound(id: 1108)
+                                if ARSessionManager.shared.currentFrame?.camera.transform.isVerticalPhonePose() == false {
+                                    AnnouncementManager.shared.announce(announcement: NSLocalizedString("alignmentImageNotVertical", comment: "An announcement that the alignment image was not captured with the phone held vertically."))
+                                }
+
+                            }
+                        }
+                    }
+            }
+            if practiceState == .anchorPointAligned {
+                //once anchor point is aligned
+                Text(accuracyText).padding()
+                
+                Button(action: {
+                    practiceState = .readyForAlignmentInstructions
+                }) {
+                    TutorialButton{
+                        Text(NSLocalizedString("anchorPointPracticeRetryAlignButton", comment: "button text to retry aligning the anchor point"))
+                    }
+                }
+                
+                Button(action: {
+                    alignAnchorPoint = nil
+                    practiceState = .initial
+                }) {
+                    TutorialButton{
+                        Text(NSLocalizedString("anchorPointPracticeRetryButton", comment: "button text to retry setting the anchor point"))
+                    }
+                }.padding()
+                
+                TutorialNavLink(destination: SavedRoutes()) {
+                    Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
+                }.padding()
+                
+            } else if practiceState == .anchorPointSet {
+                //Once anchor point is set
+                Button(action: {
+                    if practiceState == .anchorPointSet {
+                        practiceState = .readyForAlignmentInstructions
+                    }
+                }) {
+                    TutorialButton {
+                        Text(NSLocalizedString("buttonTexttoNextScreenTutorial", comment: "Text on the button that brings user to the next page of the tutorial"))
+                    }
+                }.disabled(practiceState == .anchorPointAlignmentRequested)
+            } else if practiceState == .initial {
+                Button(action: {
+                    if practiceState == .initial {
+                        practiceState = .anchorPointCreationRequested
+                    }
+                }) {
+                    TutorialButton {
+                        Text(NSLocalizedString("setAnchorPointButtonText", comment: "The text shown on the button that sets the anchor point during the tutorial"))
+                    }
+                }
+            } else if practiceState == .readyForAlignmentInstructions {
+                Button(action: {
+                    if let transform = ARSessionManager.shared.currentFrame?.camera.transform {
+                        alignmentDelegate.reset()
+                        practiceState = .waitingForVisualAlignment
+                        VisualAlignmentManager.shared.doVisualAlignment(delegate: alignmentDelegate, alignAnchorPoint: alignAnchorPoint!, maxTries: 10, makeAnnouncement: true)
+                        xyzAlign = [transform.columns.3.x, transform.columns.3.y, transform.columns.3.z]
+                    }
+                }) {
+                    TutorialButton {
+                        Text(NSLocalizedString("alignToAnchorPointButtonText", comment: "The text shown on the button that aligns to the anchor point during the tutorial"))
+                    }.padding()
+                }
+            }
+        }.onReceive(alignmentDelegate.objectWillChange) {
+            if alignmentDelegate.alignmentWasSuccessful == true {
+                if let deltaYaw = alignmentDelegate.deltaYaw {
+                    xyzDelta = [xyzAlign[0] - xyzSet[0], xyzAlign[1] - xyzSet[1], xyzAlign[2] - xyzSet[2]]
+                    if abs(deltaYaw) < Self.yawPerfectThreshold {
+                        if abs(xyzDelta[0]) < Self.xPerfectThreshold, abs(xyzDelta[1]) < Self.yPerfectThreshold, abs(xyzDelta[2]) < Self.zPerfectThreshold {
+                            accuracy = .perfect
+                            SoundEffectManager.shared.success()
+                        } else {
+                            accuracy = .positionBadYawIsGood
+                            SoundEffectManager.shared.meh()
+                        }
+                    } else if abs(xyzDelta[0]) < Self.xGoodThreshold, abs(xyzDelta[1]) < Self.yGoodThreshold, abs(xyzDelta[2]) < Self.zGoodThreshold, abs(deltaYaw) < Self.yawGoodThreshold  {
+                        accuracy = .good
+                        SoundEffectManager.shared.meh()
+                    } else {
+                        accuracy = .bad
+                        SoundEffectManager.shared.error()
+                    }
+                    
+                    switch accuracy {
+                    case .perfect:
+                        accuracyText = NSLocalizedString("anchorPointPracticeFeedbackPerfectText", comment: "anchor point perfectly aligned text")
+                    case .good:
+                        accuracyText = NSLocalizedString("anchorPointPracticeFeedbackGoodText", comment: "anchor point well aligned text")
+                    case .visualAlignmentFailed:
+                        accuracyText = NSLocalizedString("visualAlignmentFailed", comment: "We had trouble matching the image to the saved anchor point")
+                    case .positionBadYawIsGood:
+                        accuracyText = NSLocalizedString("yawAlignedWellPositionWasBad", comment: "We had trouble matching the image to the saved anchor point")
+                    default:
+                        accuracyText = NSLocalizedString("anchorPointPracticeFeedbackBadText", comment: "anchor point not well aligned text")
+                    }
+                    DispatchQueue.main.async {
+                        if UIAccessibility.isVoiceOverRunning {
+                            AnnouncementManager.shared.announce(announcement: accuracyText)
+                        }
+                        practiceState = .anchorPointAligned
+                    }
+                }
+                practiceState = .anchorPointAligned
+            } else if alignmentDelegate.alignmentWasSuccessful == false {
+                accuracy = .visualAlignmentFailed
+                practiceState = .anchorPointAligned
+            }
+        }.onDisappear() {
+            VisualAlignmentManager.shared.reset()
+        }
+    }
+}
+
 
 struct AnchorPointPractice: View {
     @ObservedObject var showPage = ShowTutorialPage.shared
@@ -1059,6 +1304,34 @@ struct AnchorPointPractice: View {
     }
 }
 
+
+struct VisualAnchorPointPractice: View {
+    @ObservedObject var showPage = ShowTutorialPage.shared
+    //TODO: 1 write instructions 2 align to anchor point twice? 4 count down 5 voice announcments?
+    var body: some View {
+        TutorialScreen {
+            VStack {
+                VisualAnchorPointPracticeSubComponent()
+            }
+        }.onDisappear(){
+            UserDefaults.standard.setValue(true, forKey: "AnchorPointsTutorialCompleted")
+        }
+        
+        .onAppear() {
+            NotificationCenter.default.post(name: Notification.Name("StartARSessionForTutorialModule"), object: nil)
+        }
+        
+        if showPage.confineToSection {
+            Button(action: {
+                NotificationCenter.default.post(name: Notification.Name("TutorialPopoverReadyToDismiss"), object: nil)
+            }) {
+                TutorialButton{
+                    Text("Exit")
+                }
+            }
+        }
+    }
+}
 
 struct SavedRoutes: View {
     var body: some View {

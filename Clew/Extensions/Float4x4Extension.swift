@@ -54,7 +54,7 @@ extension float3x3 {
     }
     
     /// Cast the rotation as a 4x4 matrix encoding the rotation and no translation.
-    func toPose()->float4x4 {
+    func toPose()->simd_float4x4 {
         return simd_float4x4(simd_float4(self[0, 0], self[0, 1], self[0, 2], 0),
                              simd_float4(self[1, 0], self[1, 1], self[1, 2], 0),
                              simd_float4(self[2, 0], self[2, 1], self[2, 2], 0),
@@ -67,7 +67,7 @@ extension float3x3 {
     }
 }
 
-extension float4x4 {
+extension simd_float4x4 {
     /// Create a rotation matrix based on the angle and axis.
     ///
     /// - Parameters:
@@ -76,8 +76,8 @@ extension float4x4 {
     ///   - y: the y-component of the axis to rotate about
     ///   - z: the z-component of the axis to rotate about
     /// - Returns: a 4x4 transformation matrix that performs this rotation
-    static func makeRotate(radians: Float, _ x: Float, _ y: Float, _ z: Float) -> float4x4 {
-        return unsafeBitCast(GLKMatrix4MakeRotation(radians, x, y, z), to: float4x4.self)
+    static func makeRotate(radians: Float, _ x: Float, _ y: Float, _ z: Float) -> simd_float4x4 {
+        return unsafeBitCast(GLKMatrix4MakeRotation(radians, x, y, z), to: simd_float4x4.self)
     }
 
     /// Create a translation matrix based on the translation vector.
@@ -87,8 +87,8 @@ extension float4x4 {
     ///   - y: the y-component of the translation vector
     ///   - z: the z-component of the translation vector
     /// - Returns: a 4x4 transformation matrix that performs this translation
-    static func makeTranslation(_ x: Float, _ y: Float, _ z: Float) -> float4x4 {
-        return unsafeBitCast(GLKMatrix4MakeTranslation(x, y, z), to: float4x4.self)
+    static func makeTranslation(_ x: Float, _ y: Float, _ z: Float) -> simd_float4x4 {
+        return unsafeBitCast(GLKMatrix4MakeTranslation(x, y, z), to: simd_float4x4.self)
     }
 
     /// Perform the specified rotation (right multiply) on the 4x4 matrix
@@ -99,8 +99,8 @@ extension float4x4 {
     ///   - y: the y-component of the axis to rotate about
     ///   - z: the z-component of the axis to rotate about
     /// - Returns: the result of applying the transformation as 4x4 matrix
-    func rotate(radians: Float, _ x: Float, _ y: Float, _ z: Float) -> float4x4 {
-        return self * float4x4.makeRotate(radians: radians, x, y, z)
+    func rotate(radians: Float, _ x: Float, _ y: Float, _ z: Float) -> simd_float4x4 {
+        return self * simd_float4x4.makeRotate(radians: radians, x, y, z)
     }
 
     /// Perform the specified translation (right multiply) on the 4x4 matrix
@@ -110,8 +110,8 @@ extension float4x4 {
     ///   - y: the y-component of the translation vector
     ///   - z: the z-component of the translation vector
     /// - Returns: the result of applying the transformation as 4x4 matrix
-    func translate(x: Float, _ y: Float, _ z: Float) -> float4x4 {
-        return self * float4x4.makeTranslation(x, y, z)
+    func translate(x: Float, _ y: Float, _ z: Float) -> simd_float4x4 {
+        return self * simd_float4x4.makeTranslation(x, y, z)
     }
 
     /// The x translation specified by the transform
@@ -135,21 +135,28 @@ extension float4x4 {
     }
     
     /// Get the rotation component of the transform.
-    func rotation() -> float3x3 {
+    func rotation() -> simd_float3x3 {
         return simd_float3x3(simd_float3(self[0, 0], self[0, 1], self[0, 2]),
                              simd_float3(self[1, 0], self[1, 1], self[1, 2]),
                              simd_float3(self[2, 0], self[2, 1], self[2, 2]))
     }
+    
+    func isVerticalPhonePose()->Bool {
+        let poseRotation = self.rotation()
+        let projectedPhoneZ = poseRotation * simd_float3(0, 0, 1)
+        let polar = acos(simd_dot(projectedPhoneZ, simd_normalize(simd_float3(projectedPhoneZ.x, 0, projectedPhoneZ.z))))
+        return polar < 0.4
+    }
 }
 
-extension float4 {
+extension simd_float4 {
     /// convert from a 4-element homogeneous vector to a 3-element inhomogeneous one.  This attribute only makes sense if the 4-element vector is a homogeneous representation of a 3D point.
-    var inhomogeneous: float3 {
-        return float3(x/w, y/w, z/w)
+    var inhomogeneous: simd_float3 {
+        return simd_float3(x/w, y/w, z/w)
     }
     
-    var dropW: float3 {
-        return float3(x, y, z)
+    var dropW: simd_float3 {
+        return simd_float3(x, y, z)
     }
     
     func toString()->String {

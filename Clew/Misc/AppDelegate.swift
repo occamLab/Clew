@@ -45,11 +45,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if (Auth.auth().currentUser == nil) {
             #if IS_DEV_TARGET
                 Auth.auth().signInAnonymously() { (authResult, error) in
-                    guard let authResult = authResult else {
+                    guard authResult != nil else {
                         print("login error", error!.localizedDescription)
                         return
                     }
-                    print("successful login", Auth.auth().currentUser?.uid)
+                    print("successful login", Auth.auth().currentUser?.uid ?? "no UID available")
                     // Override point for customization after application launch.
                     self.vc = ViewController()
                     self.window = UIWindow(frame:UIScreen.main.bounds)
@@ -84,7 +84,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         guard url.pathExtension == "crd" else { return false }
         
         /// import the file here
-        (vc as? ViewController)?.dataPersistence.importData(from: url)
+        vc?.dataPersistence.importData(from: url)
         
         return true
     }
