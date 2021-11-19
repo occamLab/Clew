@@ -333,7 +333,9 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     ///
     /// - Parameter allowPause: a Boolean that determines whether the app should allow the user to pause the route (this is only allowed if it is the initial route recording)
     func handleStateTransitionToReadyToNavigateOrPause(allowPause: Bool) {
-        nameCodeIDController.dismiss(animated: false)
+        #if !APPCLIP
+            nameCodeIDController!.dismiss(animated: false)
+        #endif
         droppingCrumbs?.invalidate()
         updateHeadingOffsetTimer?.invalidate()
         showStartNavigationButton(allowPause: allowPause)

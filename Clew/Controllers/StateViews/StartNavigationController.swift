@@ -131,11 +131,12 @@ class StartNavigationController: UIViewController {
                                                          alignment: UIConstants.ButtonContainerHorizontalAlignment.left,
                                                          appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "StartNavigation")!),
                                                          label: NSLocalizedString("startReturnNavigationButtonAccessibilityLabel", comment: "The accessibility label for the button that allows user to start navigating back along their route."))
-        
+        #if !APPCLIP
         pauseButton = UIButton.makeConstraintButton(view,
                                                alignment: UIConstants.ButtonContainerHorizontalAlignment.right,
                                                appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "Pause")!),
                                                label: NSLocalizedString("pauseButtonAccessibilityLabel", comment: "The accessibility label for the pause button at the end of a single use route recording."))
+        #endif
         
         largeHomeButton = UIButton.makeConstraintButton(view,
                                                     alignment: UIConstants.ButtonContainerHorizontalAlignment.right,
@@ -154,7 +155,9 @@ class StartNavigationController: UIViewController {
         stackView.alignment = UIStackView.Alignment.center
         
         /// add elements to the stack
+        #if !APPCLIP
         stackView.addArrangedSubview(pauseButton)
+        #endif
         stackView.addArrangedSubview(startNavigationButton)
         stackView.addArrangedSubview(largeHomeButton)
         
@@ -169,10 +172,12 @@ class StartNavigationController: UIViewController {
             startNavigationButton.addTarget(parent,
                                    action: #selector(ViewController.startNavigation),
                                    for: .touchUpInside)
+            #if !APPCLIP
             pauseButton.tag = 0
             pauseButton.addTarget(parent,
                                         action: #selector(ViewController.startPauseProcedure),
                                         for: .touchUpInside)
+            #endif
             largeHomeButton.addTarget(parent,
                                   action: #selector(ViewController.goHome),
                                   for: .touchUpInside)
