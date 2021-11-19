@@ -33,8 +33,8 @@ struct StartNavigationPopoverView: View {
                             RouteList(RouteName: routeInfo.first!.value)
                         }
                     }
-                    .navigationTitle(NSLocalizedString("selectRoutePopoverLabel", comment: "This is text instructing the user to select a route from a list ."))
                 }
+                .navigationTitle(NSLocalizedString("selectRoutePopoverLabel", comment: "This is text instructing the user to select a route from a list ."))
             }
         }
     }
