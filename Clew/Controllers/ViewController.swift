@@ -947,20 +947,20 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
             userDefaults.set(Date().timeIntervalSince1970, forKey: "firstUsageTimeStamp")
             userDefaults.set(true, forKey: "firstTimeLogin")
             showSafetyAlert() {
-                if(!self.siriShortcutAlert){
-                    self.showSignificantChangesHandsFreeAlert()
-                    self.siriShortcutAlert = true
-                }
+//                if(!self.siriShortcutAlert){
+//                    self.showSignificantChangesHandsFreeAlert()
+//                    self.siriShortcutAlert = true
+//                }
                 if(!self.visualAlignmentAlert){
                     self.showSignificantChangesVisualAlignment()
                     self.visualAlignmentAlert = true
                 }
             }
         } else {
-            if(!siriShortcutAlert){
-                showSignificantChangesHandsFreeAlert()
-                siriShortcutAlert = true
-            }
+//            if(!siriShortcutAlert){
+//                showSignificantChangesHandsFreeAlert()
+//                siriShortcutAlert = true
+//            }
             if(!visualAlignmentAlert){
                 showSignificantChangesVisualAlignment()
                 visualAlignmentAlert = true
