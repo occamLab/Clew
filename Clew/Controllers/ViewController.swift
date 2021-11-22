@@ -951,11 +951,19 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
                     self.showSignificantChangesHandsFreeAlert()
                     self.siriShortcutAlert = true
                 }
+                if(!self.visualAlignmentAlert){
+                    self.showSignificantChangesVisualAlignment()
+                    self.visualAlignmentAlert = true
+                }
             }
         } else {
             if(!siriShortcutAlert){
                 showSignificantChangesHandsFreeAlert()
                 siriShortcutAlert = true
+            }
+            if(!visualAlignmentAlert){
+                showSignificantChangesVisualAlignment()
+                visualAlignmentAlert = true
             }
         }
         
@@ -1138,6 +1146,27 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
         changesAlertVC.addAction(UIAlertAction(title: NSLocalizedString("significantVersionChanges-HelpMeWithSiri", comment: "What the user clicks to request help setting up Siri shortcuts"), style: .default, handler: { action -> Void in
             let rootView = NavigationView {
                 SiriWalkthrough()
+            }
+            self.tutorialHostingController = UIHostingController(rootView: rootView)
+            self.present(self.tutorialHostingController!, animated: true, completion: nil)
+        }
+        ))
+        changesAlertVC.addAction(UIAlertAction(title: NSLocalizedString("dismissSurvey", comment: "This is used for dismissing popovers"), style: .default, handler: { action -> Void in
+        }
+        ))
+        changesAlertVC.popoverPresentationController?.sourceView = rootContainerView.burgerMenuButton
+        changesAlertVC.popoverPresentationController?.sourceRect = CGRect.null
+        self.present(changesAlertVC, animated: true, completion: nil)
+    }
+    
+    /// Show significant changes alert so the user is not surprised by new app features.
+    func showSignificantChangesVisualAlignment() {
+        let changesAlertVC = UIAlertController(title: NSLocalizedString("significantVersionChangesPop-UpHeading", comment: "The heading of a pop-up telling the user that significant changes have been made to this app version"),
+                                               message: NSLocalizedString("significantVersionChangesVisualAlignment-UpContent", comment: "An alert shown to the user to alert them to the fact that significant changes have been made to the app by adding visual alignment."),
+                                               preferredStyle: .actionSheet)
+        changesAlertVC.addAction(UIAlertAction(title: NSLocalizedString("significantVersionChanges-VisualAlignment", comment: "What the user clicks to request help learning visual alignment"), style: .default, handler: { action -> Void in
+            let rootView = NavigationView {
+                VisualAnchorPointPractice()
             }
             self.tutorialHostingController = UIHostingController(rootView: rootView)
             self.present(self.tutorialHostingController!, animated: true, completion: nil)
@@ -1504,6 +1533,15 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
         }
         set {
             UserDefaults.standard.setValue(newValue, forKey: "siriShortcutAlert")
+        }
+    }
+    
+    var visualAlignmentAlert: Bool {
+        get {
+            UserDefaults.standard.bool(forKey: "visualAlignmentAlert")
+        }
+        set {
+            UserDefaults.standard.setValue(newValue, forKey: "visualAlignmentAlert")
         }
     }
     /// the color of the path.  0 is red, 1 is green, 2 is blue, and 3 is random

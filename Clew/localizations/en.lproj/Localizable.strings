@@ -469,7 +469,7 @@
 "findingSavedAnchorPointTextParagraph3" = "Press the Find Anchor Point button. Wait for the countdown to complete. The app will provide feedback about how closely aligned you were to the saved anchor point.";
 
 "findingSavedVisualAnchorPointTitle" = "Finding the Saved Visual Anchor Point";
-"findingSavedVisualAnchorPointTextParagraph1" = "This exercise will have you practice finding and realigning yourself to a saved anchor point. Return to the location of your anchor point.";
+"findingSavedVisualAnchorPointTextParagraph1" = "This exercise will have you practice finding and realigning yourself to a saved anchor point. Return to the location of your anchor point. You should position yourself as close as possible to the location where you set the anchor point. While the app is able to align the orientation of your phone to the saved route, it cannot automatically align your position (you can accomplish this by standing in the appropriate location).";
 
 "findingSavedVisualAnchorPointTextParagraph2" = "Hold your phone vertically, with the rear camera pointing in roughly the same direction as it was when you set the anchor point.";
 
@@ -480,7 +480,7 @@
 
 "anchorPointPracticeAlignTextParagraph2" = "Now that you've saved an anchor point, try walking away from it- or wait a few minutes to return to the next exercise.";
 
-"visualAnchorPointPracticeAlignTextParagraph2" = "Now that you've saved an anchor point, try walking away from it- or wait a few minutes to return to the next exercise. Do not lock your phone or put the app into the background.";
+"visualAnchorPointPracticeAlignTextParagraph2" = "Now that you've saved an anchor point, try walking away from it and returning to the anchor point location on your own (without guidance from the app). Do not lock your phone or put the app into the background.";
 
 "alignToAnchorPointButtonText" = "Find Anchor Point";
 
@@ -636,3 +636,7 @@ There are two types of anchor points: visual and physical.  You can practice the
 
 "createPhysicalAnchorPointButtonAccessibilityLabel" = "Create a physical anchor point";
 "createVisualAnchorPointButtonAccessibilityLabel" = "Create a visual anchor point";
+
+
+"significantVersionChangesVisualAlignment-UpContent" = "Now you can use pictures to anchor saved routes or pause navigation. We have created a tutorial to help you practice this new feature. To use the feature when recording a route, select \"Create a Visual Anchor point\".";
+"significantVersionChanges-VisualAlignment" = "Start Visual Alignment Tutorial";
