@@ -551,12 +551,16 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
             let _ = self.getRealCoordinates(record: true)
             beginRouteAnchorPoint.anchor = ARAnchor(transform: currentTransform)
             hideAllViewsHelper()
-            if let imageAlignment = getAlignmentImageHelper() {
-                beginRouteAnchorPoint.imageFileName = imageAlignment.0
-                beginRouteAnchorPoint.loadImage()
-                beginRouteAnchorPoint.intrinsics = imageAlignment.1
+            if isVisualAlignment {
+                if let imageAlignment = getAlignmentImageHelper() {
+                    beginRouteAnchorPoint.imageFileName = imageAlignment.0
+                    beginRouteAnchorPoint.loadImage()
+                    beginRouteAnchorPoint.intrinsics = imageAlignment.1
+                }
+                SoundEffectManager.shared.playSystemSound(id: 1108)
+            } else {
+                SoundEffectManager.shared.meh()
             }
-            SoundEffectManager.shared.playSystemSound(id: 1108)
 
             ///PATHPOINT begining anchor point alignment timer -> record route
             ///announce to the user that they have sucessfully saved an anchor point.
@@ -568,12 +572,16 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
             // make sure to log transform
             let _ = self.getRealCoordinates(record: true)
             endRouteAnchorPoint.anchor = ARAnchor(transform: currentTransform)
-            if let imageAlignment = getAlignmentImageHelper() {
-                endRouteAnchorPoint.imageFileName = imageAlignment.0
-                endRouteAnchorPoint.loadImage()
-                endRouteAnchorPoint.intrinsics = imageAlignment.1
+            if isVisualAlignment {
+                if let imageAlignment = getAlignmentImageHelper() {
+                    endRouteAnchorPoint.imageFileName = imageAlignment.0
+                    endRouteAnchorPoint.loadImage()
+                    endRouteAnchorPoint.intrinsics = imageAlignment.1
+                }
+                SoundEffectManager.shared.playSystemSound(id: 1108)
+            } else {
+                SoundEffectManager.shared.meh()
             }
-            SoundEffectManager.shared.playSystemSound(id: 1108)
 
             // no more crumbs
             droppingCrumbs?.invalidate()
@@ -1298,7 +1306,13 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
     func showChooseAnchorMethodScreen() throws {
         rootContainerView.homeButton.isHidden = false
         hideAllViewsHelper()
-        
+        if paused {
+            chooseAnchorMethodController.anchorType = .pauseRouteAnchorPoint
+        } else if startAnchorPoint {
+            chooseAnchorMethodController.anchorType = .beginRouteAnchorPoint
+        } else {
+            chooseAnchorMethodController.anchorType = .endRouteAnchorPoint
+        }
         add(chooseAnchorMethodController)
         delayTransition()
     }
@@ -1334,7 +1348,6 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
         resumeTrackingConfirmController.isTutorial = isTutorial
         resumeTrackingConfirmController.isVisualAlignment = isVisualAlignment
         add(resumeTrackingConfirmController)
-        resumeTrackingConfirmController.view.mainText?.text = ""
         voiceNoteToPlay = nil
         if navigateStartToEnd {
             if let AnchorPointInformation = route.beginRouteAnchorPoint.information as String? {
@@ -1370,13 +1383,6 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
             }
         }
         resumeTrackingConfirmController.readVoiceNoteButton?.isHidden = voiceNoteToPlay == nil
-        let waitingPeriod = ViewController.alignmentWaitingPeriod
-        if isTutorial {
-            resumeTrackingConfirmController.view.mainText?.text?.append(NSLocalizedString("tutorialRouteAlignmentText", comment: "Text describing the process of aligning to a tutorial route. This text shows up on the alignment screen."))
-            
-        } else {
-            resumeTrackingConfirmController.view.mainText?.text?.append(String.localizedStringWithFormat(NSLocalizedString("anchorPointAlignmentText", comment: "Text describing the process of aligning to an anchorpoint. This text shows up on the alignment screen."), waitingPeriod))
-        }
         delayTransition()
     }
     

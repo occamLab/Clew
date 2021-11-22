@@ -43,20 +43,13 @@ class PauseTrackingController: UIViewController, UIScrollViewDelegate {
         
         /// label details
         let waitingPeriod = ViewController.alignmentWaitingPeriod
-        var mainText : String
-        
-        if paused  && recordingSingleUseRoute {
-            mainText = String.localizedStringWithFormat(NSLocalizedString("singleUseRouteAnchorPointText", comment: "Information on how to record an anchor point when used for pausing a single use route"), waitingPeriod)
+        var mainText: String
+        if isVisualAlignment {
+            mainText = String.localizedStringWithFormat(NSLocalizedString("visualAnchorPointInstructions", comment: "Information on how to record a visual anchor point."), waitingPeriod)
         } else {
-            if startAnchorPoint{
-                mainText = String.localizedStringWithFormat(NSLocalizedString("multipleUseRouteStartAnchorPointText", comment: "Information on how to record an anchor point when used recording the starting anchor point of a multiple use route."), waitingPeriod)
-                
-            } else {
-                mainText = String.localizedStringWithFormat(NSLocalizedString("multipleUseRouteEndAnchorPointText", comment: "Information on how to record an anchor point when used recording the ending anchor point of a multiple use route."), waitingPeriod)
-            }
-            
+            mainText = String.localizedStringWithFormat(NSLocalizedString("physicalAnchorPointInstructions", comment: "Information on how to record a physical anchor point."), waitingPeriod)
         }
-        
+        mainText += "\n\n" + NSLocalizedString("voiceNoteSuggestions", comment: "this text tells the user about the purpose of the voice note and text information buttons.")
         label.textColor = UIColor.white
         label.textAlignment = .center
         label.numberOfLines = 0
@@ -96,19 +89,13 @@ class PauseTrackingController: UIViewController, UIScrollViewDelegate {
         /// label details
         let waitingPeriod = ViewController.alignmentWaitingPeriod
         // TODO: not sure why this code is duplicated
-        var mainText:String
-        
-        if paused && recordingSingleUseRoute {
-            mainText = String.localizedStringWithFormat(NSLocalizedString("singleUseRouteAnchorPointText", comment: "Information on how to record an anchor point when used for pausing a single use route"), waitingPeriod)
+        var mainText: String
+        if isVisualAlignment {
+            mainText = String.localizedStringWithFormat(NSLocalizedString("visualAnchorPointInstructions", comment: "Information on how to record a visual anchor point."), waitingPeriod)
         } else {
-            if startAnchorPoint {
-                mainText = String.localizedStringWithFormat(NSLocalizedString("multipleUseRouteStartAnchorPointText", comment: "Information on how to record an anchor point when used recording the starting anchor point of a multiple use route."), waitingPeriod)
-            } else {
-                mainText = String.localizedStringWithFormat(NSLocalizedString("multipleUseRouteEndAnchorPointText", comment: "Information on how to record an anchor point when used recording the ending anchor point of a multiple use route."), waitingPeriod)
-            }
-            
+            mainText = String.localizedStringWithFormat(NSLocalizedString("physicalAnchorPointInstructions", comment: "Information on how to record a physical anchor point."), waitingPeriod)
         }
-        
+        mainText += "\n\n" + NSLocalizedString("voiceNoteSuggestions", comment: "this text tells the user about the purpose of the voice note and text information buttons.")
         label.textColor = UIColor.white
         label.textAlignment = .center
         label.numberOfLines = 0

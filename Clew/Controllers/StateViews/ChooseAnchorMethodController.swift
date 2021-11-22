@@ -8,6 +8,12 @@
 
 import UIKit
 
+enum AnchorType {
+    case beginRouteAnchorPoint
+    case endRouteAnchorPoint
+    case pauseRouteAnchorPoint
+}
+
 /// A View Controller for handling the pause route state
 /// also handles associated buttons
 class ChooseAnchorMethodController: UIViewController, UIScrollViewDelegate {
@@ -18,6 +24,9 @@ class ChooseAnchorMethodController: UIViewController, UIScrollViewDelegate {
     /// button for choosing physical (legacy) alignment
     var physicalAlignment: UIButton!
     
+    /// anchor type
+    var anchorType: AnchorType!
+    
     /// text label for the state
     var label: UILabel!
     
@@ -27,7 +36,17 @@ class ChooseAnchorMethodController: UIViewController, UIScrollViewDelegate {
         /// label details
         var mainText : String
     
-        mainText = NSLocalizedString("chooseAlignmentMethod", comment: "This text explains the choice of visual versus conventional alignment")
+        switch anchorType {
+        case .beginRouteAnchorPoint:
+            mainText = NSLocalizedString("chooseAlignmentMethodStartAnchor", comment: "This text explains the choice of visual versus conventional alignment in the context of recording the starting anchor point")
+        case .endRouteAnchorPoint:
+            mainText = NSLocalizedString("chooseAlignmentMethodEndAnchor", comment: "This text explains the choice of visual versus conventional alignment in the context of recording the ending anchor point")
+        case .pauseRouteAnchorPoint:
+            mainText = NSLocalizedString("chooseAlignmentMethodPauseAnchor", comment: "This text explains the choice of visual versus conventional alignment in the context of recording a pause anchor point")
+        case .none:
+            mainText = ""
+            break
+        }
         
         label.text = mainText
         
@@ -102,6 +121,7 @@ class ChooseAnchorMethodController: UIViewController, UIScrollViewDelegate {
         visualAlignment.imageView?.contentMode = .scaleAspectFit
         visualAlignment.setImage(UIImage(named: "visualAlignment"), for: .normal)
         visualAlignment.imageEdgeInsets =  UIEdgeInsets(top: UIScreen.main.bounds.size.height/40, left: UIScreen.main.bounds.size.height/40, bottom: UIScreen.main.bounds.size.height/40, right: UIScreen.main.bounds.size.height/40)
+        visualAlignment.accessibilityLabel = NSLocalizedString("createVisualAnchorPointButtonAccessibilityLabel", comment: "This is the accessibility label for the button that starts the creation of a physical anchor point.")
         
         /// Creating a button that can be used to select visual alignment
         physicalAlignment = UIButton(type: .custom)
@@ -114,6 +134,7 @@ class ChooseAnchorMethodController: UIViewController, UIScrollViewDelegate {
         physicalAlignment.imageView?.contentMode = .scaleAspectFit
         physicalAlignment.setImage(UIImage(named: "physicalAlignment"), for: .normal)
         physicalAlignment.imageEdgeInsets =  UIEdgeInsets(top: UIScreen.main.bounds.size.height/40, left: UIScreen.main.bounds.size.height/40, bottom: UIScreen.main.bounds.size.height/40, right: UIScreen.main.bounds.size.height/40)
+        physicalAlignment.accessibilityLabel = NSLocalizedString("createPhysicalAnchorPointButtonAccessibilityLabel", comment: "This is the accessibility label for the button that starts the creation of a physical anchor point.")
         
         /// create stack view for aligning and distributing bottom layer buttons
         let stackView = UIStackView()
