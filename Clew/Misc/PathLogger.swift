@@ -15,6 +15,29 @@ import SceneKit
 //FirebaseApp.configure()
 //Analytics.
 
+enum AlignmentEvent {
+    case physicalAlignment(transform: simd_float4x4)
+    case successfulVisualAlignmentTrial(transform: simd_float4x4, nInliers: Int, nMatches: Int, yaw: Float)
+    case unsuccessfulVisualAlignmentTrial(transform: simd_float4x4, nInliers: Int, nMatches: Int)
+    case finalVisualAlignmentSucceeded(transform: simd_float4x4)
+    case finalVisualAlignmentFailed(transform: simd_float4x4)
+    
+    var toJSONDict : [String:Any] {
+        switch self {
+        case .physicalAlignment(let transform):
+            return ["type": "physicalAlignment", "cameraTransformRowMajor": transform.toRowMajorOrder()]
+        case .successfulVisualAlignmentTrial(let transform, let nInliers, let nMatches, let yaw):
+            return ["type": "successfulVisualAlignmentTrial", "yaw": yaw, "nInliers": nInliers, "nMatches": nMatches, "cameraTransformRowMajor": transform.toRowMajorOrder()]
+        case .unsuccessfulVisualAlignmentTrial(let transform, let nInliers, let nMatches):
+            return ["type": "unsuccessfulVisualAlignmentTrial", "nInliers": nInliers, "cameraTransformRowMajor": transform.toRowMajorOrder(), "nMatches": nMatches]
+        case .finalVisualAlignmentSucceeded(let transform):
+            return ["type": "finalVisualAlignmentSucceeded", "relativeTransformRowMajor": transform.toRowMajorOrder()]
+        case .finalVisualAlignmentFailed(let transform):
+            return ["type": "finalVisualAlignmentFailed", "relativeTransformRowMajor": transform.toRowMajorOrder()]
+        }
+    }
+}
+
 /// A class to handle logging app usage data
 class PathLogger {
     public static var shared = PathLogger()
@@ -26,6 +49,10 @@ class PathLogger {
     var alignmentData: LinkedList<[Float]> = []
     /// time stamps for pathData
     var alignmentDataTime: LinkedList<Double> = []
+    /// alignment events
+    var alignmentEvents: [AlignmentEvent] = []
+    /// alignment event times
+    var alignmentEventTimes: [Double] = []
     /// path data taken during RECORDPATH - [[1x16 transform matrix, navigation offset, use navigation offset]]
     var pathData: LinkedList<[Float]> = []
     /// time stamps for pathData
@@ -102,6 +129,11 @@ class PathLogger {
         speechDataTime.append(-dataTimer.timeIntervalSinceNow)
     }
     
+    func logAlignmentEvent(alignmentEvent: AlignmentEvent) {
+        alignmentEventTimes.append(-stateTransitionLogTimer.timeIntervalSinceNow)
+        alignmentEvents.append(alignmentEvent)
+    }
+    
     /// Log a tracking error from the app.
     ///
     /// - Parameters:
@@ -147,7 +179,7 @@ class PathLogger {
     func logKeypoints(keypoints: [KeypointInfo]) {
         keypointData = []
         for keypoint in keypoints {
-            let data = [keypoint.location.x, keypoint.location.y, keypoint.location.z, keypoint.location.yaw]
+            let data: [Any] = [keypoint.location.x, keypoint.location.y, keypoint.location.z, keypoint.location.yaw, keypoint.location.identifier.uuidString]
             keypointData.append(data)
         }
     }
@@ -206,6 +238,8 @@ class PathLogger {
         
         alignmentData = []
         alignmentDataTime = []
+        alignmentEvents = []
+        alignmentEventTimes = []
         
         eventData = []
         eventDataTime = []
@@ -313,6 +347,8 @@ class PathLogger {
                                     "pathDataTime": Array(pathDataTime),
                                     "AlignmentData": Array(alignmentData),
                                     "AlignmentDataTime": Array(alignmentDataTime),
+                                    "alignmentEvents": alignmentEvents.map({$0.toJSONDict}),
+                                    "alignmentEventTimes": alignmentEventTimes,
                                     "navigationData": Array(navigationData),
                                     "navigationDataTime": Array(navigationDataTime),
                                     "speechData": Array(speechData),

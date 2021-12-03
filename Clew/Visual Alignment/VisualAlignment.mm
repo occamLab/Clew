@@ -93,6 +93,7 @@ UIImage *debug_match_image_ui = 0;
     }
 
     if (useThreePoint) {
+        ret.numMatches = matches.size();
         if (matches.size() < 6) {
             ret.is_valid = false;
             ret.yaw = 0;
@@ -239,16 +240,17 @@ UIImage *debug_match_image_ui = 0;
         ret.ty = mostQuantized > 0 ? bestConsensusTranslation.at<double>(0, 1) : translation_mat.at<double>(0, 1);
         ret.tz = mostQuantized > 0 ? bestConsensusTranslation.at<double>(0, 2) : translation_mat.at<double>(0, 2);
         ret.is_valid = numInliers >= 6;
+        ret.numInliers = numInliers;
         delete[] indices;
         return ret;
     } else {
+        ret.numMatches = vectors1.size();
         if (matches.size() < 10) {
             ret.is_valid = false;
             ret.yaw = 0;
             return ret;
         }
         ret.is_valid = true;
-        ret.numMatches = vectors1.size();
         const auto yaw = getYaw(vectors1, vectors2, intrinsics1_matrix, ret.numInliers, ret.residualAngle, ret.tx, ret.ty, ret.tz);
 
         ret.yaw = yaw;

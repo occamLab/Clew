@@ -147,6 +147,10 @@ extension simd_float4x4 {
         let polar = acos(simd_dot(projectedPhoneZ, simd_normalize(simd_float3(projectedPhoneZ.x, 0, projectedPhoneZ.z))))
         return polar < 0.4
     }
+    
+    func toRowMajorOrder()->[Float] {
+        return [self[0,0], self[0,1], self[0,2], self[0,3], self[1,0], self[1,1], self[1,2], self[1,3], self[2,0], self[2,1], self[2,2], self[2,3], self[3,0], self[3,1], self[3,2], self[3,3]]
+    }
 }
 
 extension simd_float4 {

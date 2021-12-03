@@ -36,6 +36,16 @@ class RouteManager {
         }
     }
     func checkOffKeypoint() {
+        guard let originalKeypoints = originalKeypoints else {
+            keypoints?.remove(at: 0)
+            return
+        }
+        for keypoint in originalKeypoints {
+            if keypoints?.first!.location.identifier == keypoint.location.identifier {
+                PathLogger.shared.logEvent(eventDescription: "keypoint checked off: \(keypoint.location.identifier)")
+                break
+            }
+        }
         keypoints?.remove(at: 0)
     }
     

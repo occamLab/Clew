@@ -1008,11 +1008,14 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
     /// This finishes the process of pressing the home button (after user has given confirmation)
     @objc func goHome() {
         // proceed to home page
-        self.clearState()
-        self.hideAllViewsHelper()
         if case .startingNameSavedRouteProcedure = self.state {
             self.nameSavedRouteController.textField.text = ""
         }
+        PathLogger.shared.logEvent(eventDescription: "home button pressed")
+        // TODO: this will be called even if nothing interesting has happened in the app.  we should probably check for something to make sure we don't get too many events.
+        sendLogDataHelper(pathStatus: nil, announceArrival: false)
+        self.clearState()
+        self.hideAllViewsHelper()
         self.state = .mainScreen(announceArrival: false)
     }
     
@@ -1692,6 +1695,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
         feedbackGenerator = nil
         waypointFeedbackGenerator = nil
         ARSessionManager.shared.removeNavigationNodes()
+        PathLogger.shared.logEvent(eventDescription: "pressed stop")
         sendLogDataHelper(pathStatus: nil)
     }
     
@@ -1784,6 +1788,8 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
                     
                     ARSessionManager.shared.manualAlignment = leveledCameraPose * leveledAlignPose.inverse
                     
+                    PathLogger.shared.logAlignmentEvent(alignmentEvent: .physicalAlignment(transform: camera.transform))
+                    
                     self.isResumedRoute = true
                     self.paused = false
 
@@ -1808,11 +1814,6 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
     }
     
     // MARK: - Logging
-    
-    /// send log data for an successful route navigation (thumbs up)
-    @objc func sendLogData() {
-        sendLogDataHelper(pathStatus: true)
-    }
     
     /// Presents a survey to the user as a popover.  The method will check to see if it has been sufficiently long since the user was last asked to fill out this survey before displaying the survey.
     /// - Parameters:
@@ -1946,7 +1947,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
                 
                 followingCrumbs?.invalidate()
                 hapticTimer?.invalidate()
-                
+                PathLogger.shared.logEvent(eventDescription: "arrived")
                 sendLogDataHelper(pathStatus: nil, announceArrival: true)
             }
         }

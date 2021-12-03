@@ -78,8 +78,13 @@ class VisualAlignmentManager {
                         .getRelativeTransform(cameraTransform: frame.camera.transform, alignTransform: alignTransform, visualYawReturn: visualYawReturn)
                     let relativeYaw = atan2(relativeTransform.columns.0.z, relativeTransform.columns.0.x)
                     self.relativeYaws.append(relativeYaw)
+                    
+                    PathLogger.shared.logAlignmentEvent(alignmentEvent: .successfulVisualAlignmentTrial(transform: frame.camera.transform, nInliers: Int(visualYawReturn.numInliers), nMatches: Int(visualYawReturn.numMatches), yaw: relativeYaw))
+
                     SoundEffectManager.shared.success()
                 } else {
+                    PathLogger.shared.logAlignmentEvent(alignmentEvent: .unsuccessfulVisualAlignmentTrial(transform: frame.camera.transform, nInliers: Int(visualYawReturn.numInliers), nMatches: Int(visualYawReturn.numMatches)))
+                    
                     if self.relativeYaws.isEmpty, triesLeft < ViewController.maxVisualAlignmentRetryCount - 3, -self.lastVisualAlignmentFailureAnnouncement.timeIntervalSinceNow > ViewController.timeBetweenVisualAlignmentFailureAnnouncements {
                         self.lastVisualAlignmentFailureAnnouncement = Date()
                         DispatchQueue.main.async {
@@ -120,6 +125,7 @@ class VisualAlignmentManager {
                         var relativeTransform = simd_float4x4.makeRotate(radians: consensusYaw, 0, 1, 0)
                         relativeTransform.columns.3 = simd_float4(alignTransform.columns.3.dropW - relativeTransform.rotation() * self.firstAlignmentPose!.columns.3.dropW, 1)
                         self.delegate?.alignmentSuccessful(manualAlignment: relativeTransform.inverse)
+                        PathLogger.shared.logAlignmentEvent(alignmentEvent: .finalVisualAlignmentSucceeded(transform: relativeTransform.inverse))
                     } else {
                         let alignmentPose = self.firstAlignmentPose ?? matrix_identity_float4x4
                         var visualYawReturnCopy = visualYawReturn
@@ -129,6 +135,8 @@ class VisualAlignmentManager {
                         cameraTransform.columns.3 = alignmentPose.columns.3
                         let relativeTransform = Self.getRelativeTransform(cameraTransform: cameraTransform, alignTransform: alignTransform, visualYawReturn: visualYawReturnCopy)
                         self.delegate?.alignmentFailed(fallbackTransform: relativeTransform)
+                        PathLogger.shared.logAlignmentEvent(alignmentEvent: .finalVisualAlignmentFailed(transform: relativeTransform))
+
                     }
                 }
             }
