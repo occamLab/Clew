@@ -154,22 +154,34 @@ class PauseTrackingController: UIViewController, UIScrollViewDelegate {
         
         /// define horizonal, centered, and equal alignment of elements
         /// inside the bottom stack
-        stackView.axis = NSLayoutConstraint.Axis.horizontal
+        stackView.axis = NSLayoutConstraint.Axis.vertical
         stackView.distribution  = UIStackView.Distribution.equalSpacing
         stackView.alignment = UIStackView.Alignment.center
         
         /// add elements to the stack
-        stackView.addArrangedSubview(enterAnchorPointDescriptionButton)
-        stackView.addArrangedSubview(recordVoiceNoteButton)
         stackView.addArrangedSubview(confirmAlignmentButton)
+
+        /// create stack view for aligning and distributing bottom layer buttons
+        let subStackView   = UIStackView()
+        stackView.addArrangedSubview(subStackView)
+        subStackView.translatesAutoresizingMaskIntoConstraints = false;
         
+        /// define horizonal, centered, and equal alignment of elements
+        /// inside the bottom stack
+        subStackView.axis = NSLayoutConstraint.Axis.horizontal
+        subStackView.distribution  = UIStackView.Distribution.equalSpacing
+        subStackView.alignment = UIStackView.Alignment.center
+        subStackView.addArrangedSubview(recordVoiceNoteButton)
+        subStackView.addArrangedSubview(enterAnchorPointDescriptionButton)
+        subStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: UIConstants.yButtonFrameMargin).isActive = true
+        subStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -UIConstants.yButtonFrameMargin).isActive = true
         scrollView.flashScrollIndicators()
 
         /// size the stack
         stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: UIConstants.yButtonFrameMargin).isActive = true
         stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -UIConstants.yButtonFrameMargin).isActive = true
         stackView.topAnchor.constraint(equalTo: view.topAnchor, constant: UIConstants.yOriginOfButtonFrame + UIConstants.yButtonFrameMargin).isActive = true
-        stackView.bottomAnchor.constraint(equalTo: view.topAnchor, constant: UIConstants.yOriginOfButtonFrame + UIConstants.buttonFrameHeight - UIConstants.yButtonFrameMargin).isActive = true
+        stackView.bottomAnchor.constraint(equalTo: view.topAnchor, constant: UIConstants.yOriginOfButtonFrame + UIConstants.hierarchyButtonFrameHeight - UIConstants.yButtonFrameMargin).isActive = true
         /// set function targets for the functions in this state
         if let parent: UIViewController = parent {
             enterAnchorPointDescriptionButton.addTarget(parent,

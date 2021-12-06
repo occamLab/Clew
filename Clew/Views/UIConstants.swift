@@ -27,6 +27,11 @@ enum UIConstants {
         return UIScreen.main.bounds.size.height * (1/5)
     }
     
+    /// Height of button frame
+    static var hierarchyButtonFrameHeight: CGFloat {
+        return UIScreen.main.bounds.size.height * (1/4)
+    }
+    
     /// Height of settings and help buttons
     static var settingsAndHelpFrameHeight: CGFloat {
         return UIScreen.main.bounds.size.height * (1/12)
