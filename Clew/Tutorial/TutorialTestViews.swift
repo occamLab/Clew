@@ -1101,7 +1101,6 @@ struct VisualAnchorPointPracticeSubComponent: View {
     @State var accuracy: AlignmentAccuracy = .none
     @State var accuracyText: String = ""
     @State var alignAnchorPoint: RouteAnchorPoint?
-    @AccessibilityFocusState var focusOnResult
 
     static let xPerfectThreshold = Float(0.5)
     static let yPerfectThreshold = Float(0.5)

@@ -130,7 +130,7 @@
 "anchorPointAlignmentText" = "Please align your device with your previously recorded anchor point. To do this hold your device flat with the screen pointing up. Press the top (short) edge flush with the same vertical surface that you used to create the anchor point. Activating the align button will start an alignment countdown this is intended to give you time to make final adjustments to the positioning of your device. At the end of the countdown the alignment will be taken and the device will provide an announcement indicating that the anchor point was saved.";
 
 
-"visualAnchorPointAlignmentText" = "Stand in the same location of your anchor point. The closer you stand to the anchor location, the more accurate your navigation will be. Next, hold your phone vertically with the rear camera pointing in roughly the same direction as it was when you set the anchor point.\n\nThe align button will start the alignment process. The app will play a success chime if alignment is working well.  If alignment is not working well, follow the instructions to adjust the tilt of your phone or to rotate it slowly from side to side.";
+"visualAnchorPointAlignmentText" = "Stand at the location of your anchor point. Next, hold your phone vertically with the rear camera pointing in the same direction as it was when you set the anchor point.\n\nThe align button will start the alignment process. The app will play a success chime if alignment is working well or provide you with additional instructions if alignment is going poorly.";
 
 "anchorPointIntroductionToSavedText" = "The Anchor Point information you entered is: ";
 
