@@ -1661,6 +1661,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
         
         ///checks if the route is a single use route or a multiple use route
         if !recordingSingleUseRoute {
+            AnnouncementManager.shared.announce(announcement: "Next, create an anchor point to mark the end of the saved route")
             ///PATHPOINT two way route recording finished -> create end Anchor Point
             ///sets the variable tracking whether the route is paused to be false
             paused = false

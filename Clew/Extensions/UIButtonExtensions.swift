@@ -10,6 +10,20 @@ import Foundation
 import UIKit
 
 extension UIButton {
+    func addLargeTitle(_ title: String) {
+        setTitle(title, for: .normal)
+        setTitleColor(.black, for: .normal)
+        titleLabel?.font = UIFont(name: "HelveticaNeue-Bold", size: 35)!
+        titleLabel?.textAlignment = .center
+        titleLabel?.numberOfLines = 0
+        titleLabel?.lineBreakMode = .byWordWrapping
+        titleLabel?.font = UIFont.preferredFont(forTextStyle: .largeTitle)
+        titleEdgeInsets.top = 0
+        titleEdgeInsets.left = 5
+        titleEdgeInsets.bottom = 0
+        titleEdgeInsets.right = 5
+    }
+    
     static func makeConstraintButton(_ containerView: UIView,
                                       alignment: UIConstants.ButtonContainerHorizontalAlignment,
                                       appearance: UIConstants.ButtonAppearance,

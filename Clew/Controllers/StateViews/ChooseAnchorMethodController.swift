@@ -119,8 +119,10 @@ class ChooseAnchorMethodController: UIViewController, UIScrollViewDelegate {
         visualAlignment.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.height / 10).isActive = true
         visualAlignment.setBackgroundImage(UIImage(named: "WhiteButtonBackground"), for: .normal)
         visualAlignment.imageView?.contentMode = .scaleAspectFit
-        visualAlignment.setImage(UIImage(named: "visualAlignment"), for: .normal)
-        visualAlignment.imageEdgeInsets =  UIEdgeInsets(top: UIScreen.main.bounds.size.height/40, left: UIScreen.main.bounds.size.height/40, bottom: UIScreen.main.bounds.size.height/40, right: UIScreen.main.bounds.size.height/40)
+        visualAlignment.addLargeTitle("Visual Anchor")
+        
+       // visualAlignment.setImage(UIImage(named: "visualAlignment"), for: .normal)
+        /*visualAlignment.imageEdgeInsets =  UIEdgeInsets(top: UIScreen.main.bounds.size.height/40, left: UIScreen.main.bounds.size.height/40, bottom: UIScreen.main.bounds.size.height/40, right: UIScreen.main.bounds.size.height/40)*/
         visualAlignment.accessibilityLabel = NSLocalizedString("createVisualAnchorPointButtonAccessibilityLabel", comment: "This is the accessibility label for the button that starts the creation of a physical anchor point.")
         
         /// Creating a button that can be used to select visual alignment
@@ -132,8 +134,11 @@ class ChooseAnchorMethodController: UIViewController, UIScrollViewDelegate {
         physicalAlignment.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.height / 10).isActive = true
         physicalAlignment.setBackgroundImage(UIImage(named: "WhiteButtonBackground"), for: .normal)
         physicalAlignment.imageView?.contentMode = .scaleAspectFit
-        physicalAlignment.setImage(UIImage(named: "physicalAlignment"), for: .normal)
-        physicalAlignment.imageEdgeInsets =  UIEdgeInsets(top: UIScreen.main.bounds.size.height/40, left: UIScreen.main.bounds.size.height/40, bottom: UIScreen.main.bounds.size.height/40, right: UIScreen.main.bounds.size.height/40)
+        physicalAlignment.addLargeTitle("Physical Anchor")
+
+        
+//        physicalAlignment.setImage(UIImage(named: "physicalAlignment"), for: .normal)
+//        physicalAlignment.imageEdgeInsets =  UIEdgeInsets(top: UIScreen.main.bounds.size.height/40, left: UIScreen.main.bounds.size.height/40, bottom: UIScreen.main.bounds.size.height/40, right: UIScreen.main.bounds.size.height/40)
         physicalAlignment.accessibilityLabel = NSLocalizedString("createPhysicalAnchorPointButtonAccessibilityLabel", comment: "This is the accessibility label for the button that starts the creation of a physical anchor point.")
         
         /// create stack view for aligning and distributing bottom layer buttons
