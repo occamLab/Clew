@@ -73,6 +73,8 @@ class PauseTrackingController: UIViewController, UIScrollViewDelegate {
                                                  y: 0,
                                                  width: UIScreen.main.bounds.size.width,
                                                  height: UIScreen.main.bounds.size.height - 1))
+        /// create stack view for aligning and distributing bottom layer buttons
+        let stackView   = UIStackView()
         
         /// create a label, and a scrollview for it to live in
         label = UILabel()
@@ -114,9 +116,6 @@ class PauseTrackingController: UIViewController, UIScrollViewDelegate {
         scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8.0).isActive = true
         scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8.0).isActive = true
         
-        /// set the height constraint on the scrollView to 0.4 * the main view height
-        scrollView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.4).isActive = true
-        
         /// set top, left, right AND bottom constraints on label to
         /// scrollView + 8.0 padding on each side
         label.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 8.0).isActive = true
@@ -147,8 +146,6 @@ class PauseTrackingController: UIViewController, UIScrollViewDelegate {
                                                           appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "Align")!),
                                                           label: NSLocalizedString("startAlignmentCountdownButtonAccessibilityLabel", comment: "this is athe accessibility label for the button which allows the user to start an alignment procedure when saving an anchor point"))
         
-        /// create stack view for aligning and distributing bottom layer buttons
-        let stackView   = UIStackView()
         view.addSubview(stackView)
         stackView.translatesAutoresizingMaskIntoConstraints = false;
         
@@ -174,7 +171,7 @@ class PauseTrackingController: UIViewController, UIScrollViewDelegate {
         subStackView.addArrangedSubview(recordVoiceNoteButton)
         subStackView.addArrangedSubview(enterAnchorPointDescriptionButton)
         subStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: UIConstants.yButtonFrameMargin).isActive = true
-        subStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -UIConstants.yButtonFrameMargin).isActive = true
+        subStackView.heightAnchor.constraint(equalTo: stackView.heightAnchor, multiplier: 0.33).isActive = true
         scrollView.flashScrollIndicators()
 
         /// size the stack
@@ -182,6 +179,10 @@ class PauseTrackingController: UIViewController, UIScrollViewDelegate {
         stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -UIConstants.yButtonFrameMargin).isActive = true
         stackView.topAnchor.constraint(equalTo: view.topAnchor, constant: UIConstants.yOriginOfButtonFrame + UIConstants.yButtonFrameMargin).isActive = true
         stackView.bottomAnchor.constraint(equalTo: view.topAnchor, constant: UIConstants.yOriginOfButtonFrame + UIConstants.hierarchyButtonFrameHeight - UIConstants.yButtonFrameMargin).isActive = true
+        
+        /// set the bottom anchor reltive to the top anchor of stack view
+        scrollView.bottomAnchor.constraint(equalTo: stackView.topAnchor, constant: -10).isActive = true
+        
         /// set function targets for the functions in this state
         if let parent: UIViewController = parent {
             enterAnchorPointDescriptionButton.addTarget(parent,
