@@ -51,6 +51,70 @@ class ARSessionManager: NSObject {
         loadAssets()
         sceneView.backgroundColor = .systemBackground
     }
+    
+    // animation - SCNNode flashes red
+    private let flashRed = SCNAction.customAction(duration: 2) { (node, elapsedTime) -> () in
+        let percentage = Float(elapsedTime / 2)
+        var color = UIColor.clear
+        let power: Float = 2.0
+        
+        
+        if (percentage < 0.5) {
+            color = UIColor(red: 1,
+                            green: CGFloat(powf(2.0*percentage, power)),
+                            blue: CGFloat(powf(2.0*percentage, power)),
+                            alpha: 1)
+        } else {
+            color = UIColor(red: 1,
+                            green: CGFloat(powf(2-2.0*percentage, power)),
+                            blue: CGFloat(powf(2-2.0*percentage, power)),
+                            alpha: 1)
+        }
+        node.geometry!.firstMaterial!.diffuse.contents = color
+    }
+    
+    // animation - SCNNode flashes green
+    private let flashGreen = SCNAction.customAction(duration: 2) { (node, elapsedTime) -> () in
+        let percentage = Float(elapsedTime / 2)
+        var color = UIColor.clear
+        let power: Float = 2.0
+        
+        
+        if (percentage < 0.5) {
+            color = UIColor(red: CGFloat(powf(2.0*percentage, power)),
+                            green: 1,
+                            blue: CGFloat(powf(2.0*percentage, power)),
+                            alpha: 1)
+        } else {
+            color = UIColor(red: CGFloat(powf(2-2.0*percentage, power)),
+                            green: 1,
+                            blue: CGFloat(powf(2-2.0*percentage, power)),
+                            alpha: 1)
+        }
+        node.geometry!.firstMaterial!.diffuse.contents = color
+    }
+    
+    // animation - SCNNode flashes blue
+    private let flashBlue = SCNAction.customAction(duration: 2) { (node, elapsedTime) -> () in
+        let percentage = Float(elapsedTime / 2)
+        var color = UIColor.clear
+        let power: Float = 2.0
+        
+        
+        if (percentage < 0.5) {
+            color = UIColor(red: CGFloat(powf(2.0*percentage, power)),
+                            green: CGFloat(powf(2.0*percentage, power)),
+                            blue: 1,
+                            alpha: 1)
+        } else {
+            color = UIColor(red: CGFloat(powf(2-2.0*percentage, power)),
+                            green: CGFloat(powf(2-2.0*percentage, power)),
+                            blue: 1,
+                            alpha: 1)
+        }
+        node.geometry!.firstMaterial!.diffuse.contents = color
+    }
+    
     /// This is embeds an AR scene.  The ARSession is a part of the scene view, which allows us to capture where the phone is in space and the state of the world tracking.  The scene also allows us to insert virtual objects
     var sceneView: ARSCNView = ARSCNView()
     
@@ -138,16 +202,42 @@ class ARSessionManager: NSObject {
     }
     
     func renderKeypointHelper(_ location: LocationInfo, defaultColor: Int) {
-        keypointNode?.removeFromParentNode()
-        keypointNode = SCNNode(mdlObject: keypointObject)
-        keypointNode!.scale = SCNVector3(0.0004, 0.0004, 0.0004)
-        // configure node attributes
-        keypointNode!.geometry?.firstMaterial?.diffuse.contents = UIColor.red
+        if keypointNode == nil {
+            keypointNode = SCNNode(mdlObject: keypointObject)
+            keypointNode!.scale = SCNVector3(0.0004, 0.0004, 0.0004)
+            // configure node attributes
+            keypointNode!.geometry?.firstMaterial?.diffuse.contents = UIColor.red
+                
+            let bound = SCNVector3(
+                x: keypointNode!.boundingBox.max.x - keypointNode!.boundingBox.min.x,
+                y: keypointNode!.boundingBox.max.y - keypointNode!.boundingBox.min.y,
+                z: keypointNode!.boundingBox.max.z - keypointNode!.boundingBox.min.z)
+            keypointNode!.pivot = SCNMatrix4MakeTranslation(bound.x / 2, bound.y / 2, bound.z / 2)
+            
+            let spin = CABasicAnimation(keyPath: "rotation")
+            spin.fromValue = NSValue(scnVector4: SCNVector4(x: 0, y: 1, z: 0, w: 0))
+            spin.toValue = NSValue(scnVector4: SCNVector4(x: 0, y: 1, z: 0, w: Float(CGFloat(2 * Float.pi))))
+            spin.duration = 3
+            spin.repeatCount = .infinity
+            keypointNode!.addAnimation(spin, forKey: "spin around")
+            let flashColors = [flashRed, flashGreen, flashBlue]
+            
+            // set flashing color based on settings bundle configuration
+            var changeColor: SCNAction!
+            if (defaultColor == 3) {
+                changeColor = SCNAction.repeatForever(flashColors[Int(arc4random_uniform(3))])
+            } else {
+                changeColor = SCNAction.repeatForever(flashColors[defaultColor])
+            }
+            
+            // add keypoint node to view
+            keypointNode!.runAction(changeColor)
+            sceneView.scene.rootNode.addChildNode(keypointNode!)
+        }
         
         // determine if the node is already in the scene
-        let priorNode = sceneView.node(for: location)
-        if priorNode != nil {
-            keypointNode!.position = SCNVector3(0, -0.2, 0.0)
+        if let priorNode = sceneView.node(for: location) {
+            keypointNode!.position = priorNode.position
         } else {
             if let manualAlignment = manualAlignment {
                 let alignedLocation = manualAlignment*location.transform
@@ -157,101 +247,6 @@ class ARSessionManager: NSObject {
             }
             keypointNode!.rotation = SCNVector4(0, 1, 0, (location.yaw - Float.pi/2))
         }
-        
-        let bound = SCNVector3(
-            x: keypointNode!.boundingBox.max.x - keypointNode!.boundingBox.min.x,
-            y: keypointNode!.boundingBox.max.y - keypointNode!.boundingBox.min.y,
-            z: keypointNode!.boundingBox.max.z - keypointNode!.boundingBox.min.z)
-        keypointNode!.pivot = SCNMatrix4MakeTranslation(bound.x / 2, bound.y / 2, bound.z / 2)
-        
-        let spin = CABasicAnimation(keyPath: "rotation")
-        spin.fromValue = NSValue(scnVector4: SCNVector4(x: 0, y: 1, z: 0, w: 0))
-        spin.toValue = NSValue(scnVector4: SCNVector4(x: 0, y: 1, z: 0, w: Float(CGFloat(2 * Float.pi))))
-        spin.duration = 3
-        spin.repeatCount = .infinity
-        keypointNode!.addAnimation(spin, forKey: "spin around")
-        
-        // animation - SCNNode flashes red
-        let flashRed = SCNAction.customAction(duration: 2) { (node, elapsedTime) -> () in
-            let percentage = Float(elapsedTime / 2)
-            var color = UIColor.clear
-            let power: Float = 2.0
-            
-            
-            if (percentage < 0.5) {
-                color = UIColor(red: 1,
-                                green: CGFloat(powf(2.0*percentage, power)),
-                                blue: CGFloat(powf(2.0*percentage, power)),
-                                alpha: 1)
-            } else {
-                color = UIColor(red: 1,
-                                green: CGFloat(powf(2-2.0*percentage, power)),
-                                blue: CGFloat(powf(2-2.0*percentage, power)),
-                                alpha: 1)
-            }
-            node.geometry!.firstMaterial!.diffuse.contents = color
-        }
-        
-        // animation - SCNNode flashes green
-        let flashGreen = SCNAction.customAction(duration: 2) { (node, elapsedTime) -> () in
-            let percentage = Float(elapsedTime / 2)
-            var color = UIColor.clear
-            let power: Float = 2.0
-            
-            
-            if (percentage < 0.5) {
-                color = UIColor(red: CGFloat(powf(2.0*percentage, power)),
-                                green: 1,
-                                blue: CGFloat(powf(2.0*percentage, power)),
-                                alpha: 1)
-            } else {
-                color = UIColor(red: CGFloat(powf(2-2.0*percentage, power)),
-                                green: 1,
-                                blue: CGFloat(powf(2-2.0*percentage, power)),
-                                alpha: 1)
-            }
-            node.geometry!.firstMaterial!.diffuse.contents = color
-        }
-        
-        // animation - SCNNode flashes blue
-        let flashBlue = SCNAction.customAction(duration: 2) { (node, elapsedTime) -> () in
-            let percentage = Float(elapsedTime / 2)
-            var color = UIColor.clear
-            let power: Float = 2.0
-            
-            
-            if (percentage < 0.5) {
-                color = UIColor(red: CGFloat(powf(2.0*percentage, power)),
-                                green: CGFloat(powf(2.0*percentage, power)),
-                                blue: 1,
-                                alpha: 1)
-            } else {
-                color = UIColor(red: CGFloat(powf(2-2.0*percentage, power)),
-                                green: CGFloat(powf(2-2.0*percentage, power)),
-                                blue: 1,
-                                alpha: 1)
-            }
-            node.geometry!.firstMaterial!.diffuse.contents = color
-        }
-        let flashColors = [flashRed, flashGreen, flashBlue]
-        
-        // set flashing color based on settings bundle configuration
-        var changeColor: SCNAction!
-        if (defaultColor == 3) {
-            changeColor = SCNAction.repeatForever(flashColors[Int(arc4random_uniform(3))])
-        } else {
-            changeColor = SCNAction.repeatForever(flashColors[defaultColor])
-        }
-        
-        // add keypoint node to view
-        keypointNode!.runAction(changeColor)
-        if let priorNode = priorNode {
-            // TODO: we are having a really hard time here
-            // If we recreate the node every time it moves, then it will track
-            keypointNode!.position = priorNode.position
-            //priorNode.addChildNode(keypointNode!)
-        }// else {
-        sceneView.scene.rootNode.addChildNode(keypointNode!)
     }
     
     func add(anchor: ARAnchor) {
@@ -269,19 +264,43 @@ class ARSessionManager: NSObject {
     
     /// This function renders a spinning blue speaker icon at the location of a voice note
     func renderHelper(intermediateAnchorPoint: RouteAnchorPoint) {
-        if let anchorPointNode = anchorPointNodes[intermediateAnchorPoint] {
-            anchorPointNode.removeFromParentNode()
-            anchorPointNodes[intermediateAnchorPoint] = nil
-        }
-        
         guard let intermediateARAnchor = intermediateAnchorPoint.anchor else {
             return
         }
-        let anchorPointNode = SCNNode(mdlObject: speakerObject)
+        let anchorPointNode: SCNNode
+        if let node = anchorPointNodes[intermediateAnchorPoint] {
+            anchorPointNode = node
+        } else {
+            anchorPointNode = SCNNode(mdlObject: speakerObject)
+            // render SCNNode of given keypoint
+            // configure node attributes
+            anchorPointNode.scale = SCNVector3(0.02, 0.02, 0.02)
+            anchorPointNode.geometry?.firstMaterial?.diffuse.contents = UIColor.blue
+            // I don't think yaw really matters here (so we are putting 0 where we used to have location.yaw
+            anchorPointNode.rotation = SCNVector4(0, 1, 0, (0 - Float.pi/2))
+            
+            let bound = SCNVector3(
+                x: anchorPointNode.boundingBox.max.x - anchorPointNode.boundingBox.min.x,
+                y: anchorPointNode.boundingBox.max.y - anchorPointNode.boundingBox.min.y,
+                z: anchorPointNode.boundingBox.max.z - anchorPointNode.boundingBox.min.z)
+            anchorPointNode.pivot = SCNMatrix4MakeTranslation(0, bound.y / 2, 0)
+            let spin = CABasicAnimation(keyPath: "rotation")
+            spin.fromValue = NSValue(scnVector4: SCNVector4(x: 0, y: 1, z: 0, w: 0))
+            spin.toValue = NSValue(scnVector4: SCNVector4(x: 0, y: 1, z: 0, w: Float(CGFloat(2 * Float.pi))))
+            spin.duration = 3
+            spin.repeatCount = .infinity
+            anchorPointNode.addAnimation(spin, forKey: "spin around")
+            
+            // set flashing color based on settings bundle configuration
+            let changeColor = SCNAction.repeatForever(flashBlue)
+            // add keypoint node to view
+            anchorPointNode.runAction(changeColor)
+            anchorPointNodes[intermediateAnchorPoint] = anchorPointNode
+            sceneView.scene.rootNode.addChildNode(anchorPointNode)
+        }
         
-        let priorNode = sceneView.node(for: intermediateARAnchor)
-        if priorNode != nil {
-            anchorPointNode.position = SCNVector3(0, -0.2, 0.0)
+        if let priorNode = sceneView.node(for: intermediateARAnchor) {
+            anchorPointNode.position = priorNode.position
         } else {
             if let manualAlignment = manualAlignment {
                 let alignedLocation = manualAlignment*intermediateARAnchor.transform
@@ -290,54 +309,6 @@ class ARSessionManager: NSObject {
                 anchorPointNode.position = SCNVector3(intermediateARAnchor.transform.x, intermediateARAnchor.transform.y - 0.2, intermediateARAnchor.transform.z)
             }
         }
-        // render SCNNode of given keypoint
-        // configure node attributes
-        anchorPointNode.scale = SCNVector3(0.02, 0.02, 0.02)
-        anchorPointNode.geometry?.firstMaterial?.diffuse.contents = UIColor.blue
-        // I don't think yaw really matters here (so we are putting 0 where we used to have location.yaw
-        anchorPointNode.rotation = SCNVector4(0, 1, 0, (0 - Float.pi/2))
-        
-        let bound = SCNVector3(
-            x: anchorPointNode.boundingBox.max.x - anchorPointNode.boundingBox.min.x,
-            y: anchorPointNode.boundingBox.max.y - anchorPointNode.boundingBox.min.y,
-            z: anchorPointNode.boundingBox.max.z - anchorPointNode.boundingBox.min.z)
-        anchorPointNode.pivot = SCNMatrix4MakeTranslation(0, bound.y / 2, 0)
-        let spin = CABasicAnimation(keyPath: "rotation")
-        spin.fromValue = NSValue(scnVector4: SCNVector4(x: 0, y: 1, z: 0, w: 0))
-        spin.toValue = NSValue(scnVector4: SCNVector4(x: 0, y: 1, z: 0, w: Float(CGFloat(2 * Float.pi))))
-        spin.duration = 3
-        spin.repeatCount = .infinity
-        anchorPointNode.addAnimation(spin, forKey: "spin around")
-        
-        // animation - SCNNode flashes blue
-        let flashBlue = SCNAction.customAction(duration: 2) { (node, elapsedTime) -> () in
-            let percentage = Float(elapsedTime / 2)
-            var color = UIColor.clear
-            let power: Float = 2.0
-            
-            
-            if (percentage < 0.5) {
-                color = UIColor(red: CGFloat(powf(2.0*percentage, power)),
-                                green: CGFloat(powf(2.0*percentage, power)),
-                                blue: 1,
-                                alpha: 1)
-            } else {
-                color = UIColor(red: CGFloat(powf(2-2.0*percentage, power)),
-                                green: CGFloat(powf(2-2.0*percentage, power)),
-                                blue: 1,
-                                alpha: 1)
-            }
-            node.geometry!.firstMaterial!.diffuse.contents = color
-        }
-        // set flashing color based on settings bundle configuration
-        let changeColor = SCNAction.repeatForever(flashBlue)
-        // add keypoint node to view
-        anchorPointNode.runAction(changeColor)
-        anchorPointNodes[intermediateAnchorPoint] = anchorPointNode
-        if let priorNode = priorNode {
-            anchorPointNode.position = priorNode.position
-        }
-        sceneView.scene.rootNode.addChildNode(anchorPointNode)
     }
     
     func getCurrentLocation(of anchor: ARAnchor)->LocationInfo? {
@@ -372,9 +343,24 @@ class ARSessionManager: NSObject {
     }
 
     func renderPathHelper(_ locationFront: LocationInfo, _ locationBack: LocationInfo, defaultPathColor: Int) {
-        pathObj?.removeFromParentNode()
         guard let locationFront = getCurrentLocation(of: locationFront), let locationBack = getCurrentLocation(of: locationBack) else {
             return
+        }
+        
+        if pathObj == nil {
+            pathObj = SCNNode(geometry: SCNBox(width: 1.0, height: 0.25, length: 0.08, chamferRadius: 3))
+            let colors = [UIColor.red, UIColor.green, UIColor.blue]
+            let color: UIColor
+            // set color based on settings bundle configuration
+            if (defaultPathColor == 3) {
+                color = colors[Int(arc4random_uniform(3))]
+            } else {
+                color = colors[defaultPathColor]
+            }
+            pathObj?.geometry?.firstMaterial!.diffuse.contents = color
+            // configure node attributes
+            pathObj?.opacity = CGFloat(0.7)
+            sceneView.scene.rootNode.addChildNode(pathObj!)
         }
         let x = (locationFront.x + locationBack.x) / 2
         let y = (locationFront.y + locationBack.y) / 2
@@ -384,18 +370,7 @@ class ARSessionManager: NSObject {
         let zDist = locationFront.z - locationBack.z
         let pathDist = sqrt(pow(xDist, 2) + pow(yDist, 2) + pow(zDist, 2))
         
-        // render SCNNode of given keypoint
-        pathObj = SCNNode(geometry: SCNBox(width: CGFloat(pathDist), height: 0.25, length: 0.08, chamferRadius: 3))
         
-        let colors = [UIColor.red, UIColor.green, UIColor.blue]
-        var color: UIColor!
-        // set color based on settings bundle configuration
-        if (defaultPathColor == 3) {
-            color = colors[Int(arc4random_uniform(3))]
-        } else {
-            color = colors[defaultPathColor]
-        }
-        pathObj?.geometry?.firstMaterial!.diffuse.contents = color
         let xAxis = simd_normalize(simd_float3(xDist, yDist, zDist))
         let yAxis: simd_float3
         if xDist == 0 && zDist == 0 {
@@ -416,11 +391,8 @@ class ARSessionManager: NSObject {
         let zAxis = simd_cross(xAxis, yAxis)
         
         let pathTransform = simd_float4x4(columns: (simd_float4(xAxis, 0), simd_float4(yAxis, 0), simd_float4(zAxis, 0), simd_float4(x, y - 0.6, z, 1)))
-        // configure node attributes
-        pathObj!.opacity = CGFloat(0.7)
         pathObj!.simdTransform = pathTransform
-        
-        sceneView.scene.rootNode.addChildNode(pathObj!)
+        pathObj!.scale.x = pathDist
     }
     
     /// Load the crumb 3D model

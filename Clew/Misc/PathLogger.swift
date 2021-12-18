@@ -312,7 +312,12 @@ class PathLogger {
                                     "eventData": Array(eventData),
                                     "eventDataTime": Array(eventDataTime)]
         do {
-            let jsonData = try JSONSerialization.data(withJSONObject: body, options: .prettyPrinted)
+            let jsonData: Data
+            if JSONSerialization.isValidJSONObject(body) {
+                jsonData = try JSONSerialization.data(withJSONObject: body, options: .prettyPrinted)
+            } else {
+                jsonData = try JSONSerialization.data(withJSONObject: ["logstatus": "invalid"], options: .prettyPrinted)
+            }
             // here "jsonData" is the dictionary encoded in JSON data
             let storageRef = storageBaseRef.child("logs").child(userId).child(pathID + "_metadata.json")
             let fileType = StorageMetadata()
@@ -355,7 +360,12 @@ class PathLogger {
                                     "speechDataTime": Array(speechDataTime)]
         
         do {
-            let jsonData = try JSONSerialization.data(withJSONObject: body, options: .prettyPrinted)
+            let jsonData: Data
+            if JSONSerialization.isValidJSONObject(body) {
+                jsonData = try JSONSerialization.data(withJSONObject: body, options: .prettyPrinted)
+            } else {
+                jsonData = try JSONSerialization.data(withJSONObject: ["logstatus": "invalid"], options: .prettyPrinted)
+            }
             // here "jsonData" is the dictionary encoded as a JSON
             let storageRef = storageBaseRef.child("logs").child(userId).child(pathID + "_pathdata.json")
             let fileType = StorageMetadata()
