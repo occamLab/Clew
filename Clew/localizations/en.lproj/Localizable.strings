@@ -645,7 +645,11 @@ There are two types of anchor points: visual and physical.  You can practice the
 "holdVerticallyToBeginAlignment" = "Camera not vertical, hold phone vertically to begin alignment";
 "holdVerticallyToBeginAnchoring" = "Camera not vertical, hold phone vertically to begin countdown";
 "cameraNowVerticalStartingAnchoring" = "Camera now vertical, starting countdown";
+"cameraNowVerticalStartingAlignment" = "Camera now vertical, starting alignment";
+
 "cameraNotVerticalPausingAlignment" = "Camera no longer vertical, pausing alignment";
 "cameraNotVerticalRestartingAnchoringCountdown" = "Camera no longer vertical, restarting and stopping countdown";
 "tutorialVerticalPhoneAnchor" = "Hold phone vertically for best alignment";
 "havingTroubleVisuallyAligning" = "Having trouble aligning. Try rotating your phone slowly from side-to-side.";
+"holdVerticallyToContinueAlignment" = "Hold phone vertically to continue alignment";
+"alignmentCanContinue" = "Camera now vertical, continuing alignment";

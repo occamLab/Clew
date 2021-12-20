@@ -49,7 +49,7 @@ class VisualAlignmentManager {
             // retry later if phone is not vertical
             if -lastVisualAlignmentFailureAnnouncement.timeIntervalSinceNow > ViewController.timeBetweenVisualAlignmentFailureAnnouncements {
                 lastVisualAlignmentFailureAnnouncement = Date()
-                AnnouncementManager.shared.announce(announcement: "Hold phone vertically to continue alignment")
+                AnnouncementManager.shared.announce(announcement: NSLocalizedString("holdVerticallyToContinueAlignment", comment: "tell the user that they need to hold their phone vertically for visual alignment to proceed"))
             }
             DispatchQueue.global(qos: .userInitiated).asyncAfter(deadline: .now() + 0.25) {
                 self.doVisualAlignmentHelper(triesLeft: triesLeft, makeAnnouncement: makeAnnouncement, isTutorial: isTutorial)

@@ -2376,7 +2376,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
                 nowNotVerticalVibration.impactOccurred()
             } else {
                 if state.isTryingToAlign {
-                    AnnouncementManager.shared.announce(announcement: "Camera now vertical, starting alignment")
+                    AnnouncementManager.shared.announce(announcement: NSLocalizedString("cameraNowVerticalStartingAlignment", comment: "tell the user that alignment countdown is starting now that phone is vertical"))
                 } else {
                     rootContainerView.countdownTimer.isHidden = false
                     AnnouncementManager.shared.announce(announcement: NSLocalizedString("cameraNowVerticalStartingAnchoring", comment: "tell the user that anchoring countdown is starting now that phone is vertical"))
@@ -2402,7 +2402,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
             nowNotVerticalVibration.impactOccurred()
         } else if phoneCurrentlyVertical && !unwrappedPhoneVertical {
             if state.isTryingToAlign {
-                AnnouncementManager.shared.announce(announcement: "Camera now vertical, continuing alignment")
+                AnnouncementManager.shared.announce(announcement: NSLocalizedString("alignmentCanContinue", comment: "Tell the user the phone is vertical and thus alignment can continue"))
             } else {
                 rootContainerView.countdownTimer.isHidden = false
                 AnnouncementManager.shared.announce(announcement: NSLocalizedString("cameraNowVerticalStartingAnchoring", comment: "tell the user that anchoring countdown is starting now that phone is vertical"))
