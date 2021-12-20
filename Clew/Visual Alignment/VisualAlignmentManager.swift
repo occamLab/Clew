@@ -85,7 +85,7 @@ class VisualAlignmentManager {
                     if self.relativeYaws.isEmpty, triesLeft < ViewController.maxVisualAlignmentRetryCount - 3, -self.lastVisualAlignmentFailureAnnouncement.timeIntervalSinceNow > ViewController.timeBetweenVisualAlignmentFailureAnnouncements {
                         self.lastVisualAlignmentFailureAnnouncement = Date()
                         DispatchQueue.main.async {
-                            AnnouncementManager.shared.announce(announcement: "Having trouble aligning. Try rotating your phone slowly from side-to-side.")
+                            AnnouncementManager.shared.announce(announcement: NSLocalizedString("havingTroubleVisuallyAligning", comment: "this is announced if visual alignment hasn't succeeded after a while."))
                         }
                     } else {
                         SoundEffectManager.shared.error()

@@ -887,7 +887,7 @@ class TimerDelegate: SRCountdownTimerDelegate, ObservableObject {
     func timerDidUpdateCounterValue(sender: SRCountdownTimer, newValue: Int) {
         if isVisualAlignment, ARSessionManager.shared.currentFrame?.camera.transform.isVerticalPhonePose() == false, lastAnnouncementTime == nil || -lastAnnouncementTime!.timeIntervalSinceNow > 2.0 {
             lastAnnouncementTime = Date()
-            AnnouncementManager.shared.announce(announcement: "Hold phone vertically for best alignment")
+            AnnouncementManager.shared.announce(announcement: NSLocalizedString("tutorialVerticalPhoneAnchor", comment: "Remind user via an announcement to hold phone vertically when capturing a visual anchor"))
         }
         UIAccessibility.post(notification: .announcement, argument: String(newValue))
     }

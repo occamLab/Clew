@@ -640,3 +640,12 @@ There are two types of anchor points: visual and physical.  You can practice the
 
 "significantVersionChangesVisualAlignment-UpContent" = "Now you can use pictures to anchor saved routes or pause navigation. We have created a tutorial to help you practice this new feature. To use the feature when recording a route, select \"Create a Visual Anchor point\".";
 "significantVersionChanges-VisualAlignment" = "Start Visual Alignment Tutorial";
+
+"returnAnchorReminder" = "Next, create an anchor point to mark the end of the saved route";
+"holdVerticallyToBeginAlignment" = "Camera not vertical, hold phone vertically to begin alignment";
+"holdVerticallyToBeginAnchoring" = "Camera not vertical, hold phone vertically to begin countdown";
+"cameraNowVerticalStartingAnchoring" = "Camera now vertical, starting countdown";
+"cameraNotVerticalPausingAlignment" = "Camera no longer vertical, pausing alignment";
+"cameraNotVerticalRestartingAnchoringCountdown" = "Camera no longer vertical, restarting and stopping countdown";
+"tutorialVerticalPhoneAnchor" = "Hold phone vertically for best alignment";
+"havingTroubleVisuallyAligning" = "Having trouble aligning. Try rotating your phone slowly from side-to-side.";

@@ -1661,7 +1661,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
         
         ///checks if the route is a single use route or a multiple use route
         if !recordingSingleUseRoute {
-            AnnouncementManager.shared.announce(announcement: "Next, create an anchor point to mark the end of the saved route")
+            AnnouncementManager.shared.announce(announcement: NSLocalizedString("returnAnchorReminder", comment: "Once the user finished stops recording the saved route, they are reminded via an announcement to record an ending anchor point"))
             ///PATHPOINT two way route recording finished -> create end Anchor Point
             ///sets the variable tracking whether the route is paused to be false
             paused = false
@@ -2366,10 +2366,10 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
         guard let unwrappedPhoneVertical = phoneVertical else {
             if !phoneCurrentlyVertical {
                 if state.isTryingToAlign {
-                    AnnouncementManager.shared.announce(announcement: "Camera not vertical, hold phone vertically to begin alignment")
+                    AnnouncementManager.shared.announce(announcement: NSLocalizedString("holdVerticallyToBeginAlignment", comment: "Tell the user that the phone must be vertical to start alignment"))
                 } else {
                     rootContainerView.countdownTimer.isHidden = true
-                    AnnouncementManager.shared.announce(announcement: "Camera not vertical, hold phone vertically to begin countdown")
+                    AnnouncementManager.shared.announce(announcement: NSLocalizedString("holdVerticallyToBeginAnchoring", comment: "tell the user that to create an anchor point the phone must be vertical"))
                     rootContainerView.countdownTimer.setNeedsDisplay()
                 }
                 let nowNotVerticalVibration = UIImpactFeedbackGenerator(style: .heavy)
@@ -2379,7 +2379,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
                     AnnouncementManager.shared.announce(announcement: "Camera now vertical, starting alignment")
                 } else {
                     rootContainerView.countdownTimer.isHidden = false
-                    AnnouncementManager.shared.announce(announcement: "Camera now vertical, starting countdown")
+                    AnnouncementManager.shared.announce(announcement: NSLocalizedString("cameraNowVerticalStartingAnchoring", comment: "tell the user that anchoring countdown is starting now that phone is vertical"))
                     rootContainerView.countdownTimer.start(beginingValue: ViewController.alignmentWaitingPeriod, interval: 1)
                 }
                 let nowVerticalVibration = UIImpactFeedbackGenerator(style: .light)
@@ -2391,9 +2391,9 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
         
         if !phoneCurrentlyVertical && unwrappedPhoneVertical {
             if state.isTryingToAlign {
-                AnnouncementManager.shared.announce(announcement: "Camera no longer vertical, pausing alignment")
+                AnnouncementManager.shared.announce(announcement: NSLocalizedString("cameraNotVerticalPausingAlignment", comment: "Announce to the user that alignment is paused until the phone becomes vertical again"))
             } else {
-                AnnouncementManager.shared.announce(announcement: "Camera no longer vertical, restarting and stopping countdown")
+                AnnouncementManager.shared.announce(announcement: NSLocalizedString("cameraNotVerticalRestartingAnchoringCountdown", comment: "announce to the user that the anchoring process cannot continue until the phone is vertical"))
                 rootContainerView.countdownTimer.isHidden = true
                 rootContainerView.countdownTimer.pause()
                 rootContainerView.countdownTimer.setNeedsDisplay()
@@ -2405,7 +2405,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
                 AnnouncementManager.shared.announce(announcement: "Camera now vertical, continuing alignment")
             } else {
                 rootContainerView.countdownTimer.isHidden = false
-                AnnouncementManager.shared.announce(announcement: "Camera now vertical, starting countdown")
+                AnnouncementManager.shared.announce(announcement: NSLocalizedString("cameraNowVerticalStartingAnchoring", comment: "tell the user that anchoring countdown is starting now that phone is vertical"))
                 rootContainerView.countdownTimer.start(beginingValue: ViewController.alignmentWaitingPeriod, interval: 1)
             }
             let nowVerticalVibration = UIImpactFeedbackGenerator(style: .light)
