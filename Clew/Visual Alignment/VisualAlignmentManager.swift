@@ -34,14 +34,14 @@ class VisualAlignmentManager {
         
     }
     
-    func doVisualAlignment(delegate: VisualAlignmentManagerDelegate, alignAnchorPoint: RouteAnchorPoint, maxTries: Int, makeAnnouncement: Bool) {
+    func doVisualAlignment(delegate: VisualAlignmentManagerDelegate, alignAnchorPoint: RouteAnchorPoint, maxTries: Int, makeAnnouncement: Bool, isTutorial: Bool = false) {
         reset()
         self.delegate = delegate
         self.alignAnchorPoint = alignAnchorPoint
-        doVisualAlignmentHelper(triesLeft: maxTries, makeAnnouncement: makeAnnouncement)
+        doVisualAlignmentHelper(triesLeft: maxTries, makeAnnouncement: makeAnnouncement, isTutorial: isTutorial)
     }
     
-    private func doVisualAlignmentHelper(triesLeft: Int, makeAnnouncement: Bool = false) {
+    private func doVisualAlignmentHelper(triesLeft: Int, makeAnnouncement: Bool = false, isTutorial: Bool = false) {
         if delegate?.shouldContinueAlignment() != true {
             return
         }
@@ -52,7 +52,7 @@ class VisualAlignmentManager {
                 AnnouncementManager.shared.announce(announcement: "Hold phone vertically to continue alignment")
             }
             DispatchQueue.global(qos: .userInitiated).asyncAfter(deadline: .now() + 0.25) {
-                self.doVisualAlignmentHelper(triesLeft: triesLeft, makeAnnouncement: makeAnnouncement)
+                self.doVisualAlignmentHelper(triesLeft: triesLeft, makeAnnouncement: makeAnnouncement, isTutorial: isTutorial)
             }
             return
         }
@@ -67,9 +67,6 @@ class VisualAlignmentManager {
                 let visualYawReturn = VisualAlignment.visualYaw(alignAnchorPointImage, alignAnchorPoint.intrinsics!, alignTransform, capturedUIImage, simd_float4(intrinsics[0, 0], intrinsics[1, 1], intrinsics[2, 0], intrinsics[2, 1]), frame.camera.transform, Int32(2))
                 
                 UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
-                
-                let propInliers = visualYawReturn.numMatches > 0 ? Float(visualYawReturn.numInliers) / Float(visualYawReturn.numMatches) : 0.0
-                //print("alignment inliers \(visualYawReturn.numInliers) \(visualYawReturn.numMatches) \(propInliers) \(visualYawReturn.residualAngle)")
                 if self.firstAlignmentPose == nil {
                     self.firstAlignmentPose = frame.camera.transform
                 }
@@ -79,11 +76,11 @@ class VisualAlignmentManager {
                     let relativeYaw = atan2(relativeTransform.columns.0.z, relativeTransform.columns.0.x)
                     self.relativeYaws.append(relativeYaw)
                     
-                    PathLogger.shared.logAlignmentEvent(alignmentEvent: .successfulVisualAlignmentTrial(transform: frame.camera.transform, nInliers: Int(visualYawReturn.numInliers), nMatches: Int(visualYawReturn.numMatches), yaw: relativeYaw))
+                    PathLogger.shared.logAlignmentEvent(alignmentEvent: .successfulVisualAlignmentTrial(transform: frame.camera.transform, nInliers: Int(visualYawReturn.numInliers), nMatches: Int(visualYawReturn.numMatches), yaw: relativeYaw, isTutorial: isTutorial))
 
                     SoundEffectManager.shared.success()
                 } else {
-                    PathLogger.shared.logAlignmentEvent(alignmentEvent: .unsuccessfulVisualAlignmentTrial(transform: frame.camera.transform, nInliers: Int(visualYawReturn.numInliers), nMatches: Int(visualYawReturn.numMatches)))
+                    PathLogger.shared.logAlignmentEvent(alignmentEvent: .unsuccessfulVisualAlignmentTrial(transform: frame.camera.transform, nInliers: Int(visualYawReturn.numInliers), nMatches: Int(visualYawReturn.numMatches), isTutorial: isTutorial))
                     
                     if self.relativeYaws.isEmpty, triesLeft < ViewController.maxVisualAlignmentRetryCount - 3, -self.lastVisualAlignmentFailureAnnouncement.timeIntervalSinceNow > ViewController.timeBetweenVisualAlignmentFailureAnnouncements {
                         self.lastVisualAlignmentFailureAnnouncement = Date()
@@ -96,7 +93,7 @@ class VisualAlignmentManager {
                 }
                 if triesLeft > 1 && self.relativeYaws.count < ViewController.requiredSuccessfulVisualAlignmentFrames {
                     DispatchQueue.global(qos: .userInitiated).asyncAfter(deadline: .now() + (visualYawReturn.is_valid ? 0.25 : 1.0)) {
-                        self.doVisualAlignmentHelper(triesLeft: triesLeft-1)
+                        self.doVisualAlignmentHelper(triesLeft: triesLeft-1, isTutorial: isTutorial)
                     }
                     return
                 }
@@ -125,7 +122,7 @@ class VisualAlignmentManager {
                         var relativeTransform = simd_float4x4.makeRotate(radians: consensusYaw, 0, 1, 0)
                         relativeTransform.columns.3 = simd_float4(alignTransform.columns.3.dropW - relativeTransform.rotation() * self.firstAlignmentPose!.columns.3.dropW, 1)
                         self.delegate?.alignmentSuccessful(manualAlignment: relativeTransform.inverse)
-                        PathLogger.shared.logAlignmentEvent(alignmentEvent: .finalVisualAlignmentSucceeded(transform: relativeTransform.inverse))
+                        PathLogger.shared.logAlignmentEvent(alignmentEvent: .finalVisualAlignmentSucceeded(transform: relativeTransform.inverse, isTutorial: isTutorial))
                     } else {
                         let alignmentPose = self.firstAlignmentPose ?? matrix_identity_float4x4
                         var visualYawReturnCopy = visualYawReturn
@@ -135,7 +132,7 @@ class VisualAlignmentManager {
                         cameraTransform.columns.3 = alignmentPose.columns.3
                         let relativeTransform = Self.getRelativeTransform(cameraTransform: cameraTransform, alignTransform: alignTransform, visualYawReturn: visualYawReturnCopy)
                         self.delegate?.alignmentFailed(fallbackTransform: relativeTransform)
-                        PathLogger.shared.logAlignmentEvent(alignmentEvent: .finalVisualAlignmentFailed(transform: relativeTransform))
+                        PathLogger.shared.logAlignmentEvent(alignmentEvent: .finalVisualAlignmentFailed(transform: relativeTransform, isTutorial: isTutorial))
 
                     }
                 }

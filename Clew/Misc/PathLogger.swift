@@ -16,24 +16,24 @@ import SceneKit
 //Analytics.
 
 enum AlignmentEvent {
-    case physicalAlignment(transform: simd_float4x4)
-    case successfulVisualAlignmentTrial(transform: simd_float4x4, nInliers: Int, nMatches: Int, yaw: Float)
-    case unsuccessfulVisualAlignmentTrial(transform: simd_float4x4, nInliers: Int, nMatches: Int)
-    case finalVisualAlignmentSucceeded(transform: simd_float4x4)
-    case finalVisualAlignmentFailed(transform: simd_float4x4)
+    case physicalAlignment(transform: simd_float4x4, isTutorial: Bool)
+    case successfulVisualAlignmentTrial(transform: simd_float4x4, nInliers: Int, nMatches: Int, yaw: Float, isTutorial: Bool)
+    case unsuccessfulVisualAlignmentTrial(transform: simd_float4x4, nInliers: Int, nMatches: Int, isTutorial: Bool)
+    case finalVisualAlignmentSucceeded(transform: simd_float4x4, isTutorial: Bool)
+    case finalVisualAlignmentFailed(transform: simd_float4x4, isTutorial: Bool)
     
     var toJSONDict : [String:Any] {
         switch self {
-        case .physicalAlignment(let transform):
-            return ["type": "physicalAlignment", "cameraTransformRowMajor": transform.toRowMajorOrder()]
-        case .successfulVisualAlignmentTrial(let transform, let nInliers, let nMatches, let yaw):
-            return ["type": "successfulVisualAlignmentTrial", "yaw": yaw, "nInliers": nInliers, "nMatches": nMatches, "cameraTransformRowMajor": transform.toRowMajorOrder()]
-        case .unsuccessfulVisualAlignmentTrial(let transform, let nInliers, let nMatches):
-            return ["type": "unsuccessfulVisualAlignmentTrial", "nInliers": nInliers, "cameraTransformRowMajor": transform.toRowMajorOrder(), "nMatches": nMatches]
-        case .finalVisualAlignmentSucceeded(let transform):
-            return ["type": "finalVisualAlignmentSucceeded", "relativeTransformRowMajor": transform.toRowMajorOrder()]
-        case .finalVisualAlignmentFailed(let transform):
-            return ["type": "finalVisualAlignmentFailed", "relativeTransformRowMajor": transform.toRowMajorOrder()]
+        case .physicalAlignment(let transform, let isTutorial):
+            return ["type": "physicalAlignment", "cameraTransformRowMajor": transform.toRowMajorOrder(), "isTutorial": isTutorial]
+        case .successfulVisualAlignmentTrial(let transform, let nInliers, let nMatches, let yaw, let isTutorial):
+            return ["type": "successfulVisualAlignmentTrial", "yaw": yaw, "nInliers": nInliers, "nMatches": nMatches, "cameraTransformRowMajor": transform.toRowMajorOrder(), "isTutorial": isTutorial]
+        case .unsuccessfulVisualAlignmentTrial(let transform, let nInliers, let nMatches, let isTutorial):
+            return ["type": "unsuccessfulVisualAlignmentTrial", "nInliers": nInliers, "cameraTransformRowMajor": transform.toRowMajorOrder(), "nMatches": nMatches, "isTutorial": isTutorial]
+        case .finalVisualAlignmentSucceeded(let transform, let isTutorial):
+            return ["type": "finalVisualAlignmentSucceeded", "relativeTransformRowMajor": transform.toRowMajorOrder(), "isTutorial": isTutorial]
+        case .finalVisualAlignmentFailed(let transform, let isTutorial):
+            return ["type": "finalVisualAlignmentFailed", "relativeTransformRowMajor": transform.toRowMajorOrder(), "isTutorial": isTutorial]
         }
     }
 }

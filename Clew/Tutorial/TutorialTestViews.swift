@@ -1215,7 +1215,7 @@ struct VisualAnchorPointPracticeSubComponent: View {
                     if let transform = ARSessionManager.shared.currentFrame?.camera.transform {
                         alignmentDelegate.reset()
                         practiceState = .waitingForVisualAlignment
-                        VisualAlignmentManager.shared.doVisualAlignment(delegate: alignmentDelegate, alignAnchorPoint: alignAnchorPoint!, maxTries: 10, makeAnnouncement: true)
+                        VisualAlignmentManager.shared.doVisualAlignment(delegate: alignmentDelegate, alignAnchorPoint: alignAnchorPoint!, maxTries: 10, makeAnnouncement: true, isTutorial: true)
                         xyzAlign = [transform.columns.3.x, transform.columns.3.y, transform.columns.3.z]
                     }
                 }) {

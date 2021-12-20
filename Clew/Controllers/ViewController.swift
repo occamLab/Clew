@@ -1789,7 +1789,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
                     
                     ARSessionManager.shared.manualAlignment = leveledCameraPose * leveledAlignPose.inverse
                     
-                    PathLogger.shared.logAlignmentEvent(alignmentEvent: .physicalAlignment(transform: camera.transform))
+                    PathLogger.shared.logAlignmentEvent(alignmentEvent: .physicalAlignment(transform: camera.transform, isTutorial: self.isTutorial))
                     
                     self.isResumedRoute = true
                     self.paused = false
