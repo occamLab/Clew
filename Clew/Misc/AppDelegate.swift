@@ -73,15 +73,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             self.window?.makeKeyAndVisible()
             
             // TODO pop up the informed consent view if they have not submitted it yet (track whether or not they submit by checking firebase?
-            var consentFormController = UIViewController!
-            
-            consentFormController = UIHostingController(rootView: InformedConsentView(vc: self))
-            consentFormController.view.frame = CGRect(x: 0,
-                                                                           y: UIScreen.main.bounds.size.height*0.15,
-                                                                           width: UIConstants.buttonFrameWidth * 1,
-                                                                           height: UIScreen.main.bounds.size.height*0.75)
-            consentFormController.view.backgroundColor = .clear
-            
+//            var consentFormController = UIHostingController(rootView: InformedConsentView(vc: self))
+//            consentFormController.view.frame = CGRect(x: 0,
+//                                                                           y: UIScreen.main.bounds.size.height*0.15,
+//                                                                           width: UIConstants.buttonFrameWidth * 1,
+//                                                                           height: UIScreen.main.bounds.size.height*0.75)
+//            consentFormController.view.backgroundColor = .clear
+//            
             return true
         }
         

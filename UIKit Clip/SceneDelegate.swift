@@ -54,7 +54,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
     
     func loadRoute() {
-        //vc?.imageAnchoring = true
         #if !APPCLIP
         vc?.arLogger.startTrial()
         #endif

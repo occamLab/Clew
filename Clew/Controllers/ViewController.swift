@@ -685,7 +685,6 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         if paused {
             ///PATHPOINT pause recording anchor point alignment timer -> resume tracking
             ///proceed as normal with the pause structure (single use route)
-
             justTraveledRoute = SavedRoute(id: "single use", appClipCodeID: self.appClipCodeID, name: "single use", crumbs: self.crumbs, dateCreated: Date() as NSDate, beginRouteAnchorPoint: self.beginRouteAnchorPoint, endRouteAnchorPoint: self.endRouteAnchorPoint, intermediateAnchorPoints: RouteManager.shared.intermediateAnchorPoints, imageAnchoring: imageAnchoring)
             justUsedMap = worldMap
             showResumeTrackingButton()
@@ -782,12 +781,6 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     func onRouteTableViewCellClicked(route: SavedRoute, navigateStartToEnd: Bool) {
         let worldMap = dataPersistence.unarchiveMap(id: route.id as String)
         hideAllViewsHelper()
-        print("imageAnchoring value: \(imageAnchoring)")
-        print("route imageAnchoring value: \(route.imageAnchoring)")
-        print(route.name)
-        imageAnchoring = true
-        route.imageAnchoring = true
-        print(route.imageAnchoring)
         state = .startingResumeProcedure(route: route, worldMap: worldMap, navigateStartToEnd: navigateStartToEnd)
     }
     
@@ -1381,13 +1374,6 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         adjustOffset = defaults.bool(forKey: "adjustOffset")
         nav.useHeadingOffset = adjustOffset
         logRichData = defaults.bool(forKey: "logRichData")
-
-        #if CLEWMORE
-        imageAnchoring = true
-        #else
-        imageAnchoring = defaults.bool(forKey: "imageAnchoring")
-        #endif
-        print(imageAnchoring)
         
         // TODO: log settings here
         logger.logSettings(defaultUnit: defaultUnit, defaultColor: defaultColor, soundFeedback: soundFeedback, voiceFeedback: voiceFeedback, hapticFeedback: hapticFeedback, sendLogs: sendLogs, timerLength: timerLength, adjustOffset: adjustOffset)
@@ -1771,7 +1757,6 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         self.hideAllViewsHelper()
         resumeTrackingController.remove()
         resumeTrackingConfirmController.imageAnchoring = route.imageAnchoring
-        print(resumeTrackingConfirmController.imageAnchoring)
         // I THINK that's the image anchoring that we want
         add(resumeTrackingConfirmController)
         resumeTrackingConfirmController.view.mainText?.text = ""
@@ -2000,8 +1985,8 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     /// true if path should be shown between waypoints, false otherwise
     var showPath: Bool!
     
-    /// true if saved route anchoring happens from images, false otherwise
-    var imageAnchoring: Bool!
+    /// true if saved route anchoring happens from images (currently the app only works with this set to true)
+    let imageAnchoring = true
     
     /// the color of the path.  0 is red, 1 is green, 2 is blue, and 3 is random
     var defaultPathColor: Int!

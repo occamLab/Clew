@@ -349,11 +349,6 @@ class SavedRoute: NSObject, NSSecureCoding, Identifiable {
         guard let dateCreated = aDecoder.decodeObject(of: NSDate.self, forKey: "dateCreated") else {
             return nil
         }
-        
-       /* guard let imageAnchoring = aDecoder.decodeBool(forKey: "imageAnchoring") else {
-            return nil
-        }*/
-
 
         let beginRouteAnchorPoint: RouteAnchorPoint
         if let anchorPoint = aDecoder.decodeObject(of: RouteAnchorPoint.self, forKey: "beginRouteAnchorPoint") {
@@ -386,7 +381,6 @@ class SavedRoute: NSObject, NSSecureCoding, Identifiable {
 
         
         let imageAnchoring = aDecoder.decodeBool(forKey: "imageAnchoring")
-        print("image anchoring: \(imageAnchoring)")
         
         self.init(id: id, appClipCodeID: appClipCodeID as String, name: name, crumbs: crumbs, dateCreated: dateCreated, beginRouteAnchorPoint: beginRouteAnchorPoint, endRouteAnchorPoint: endRouteAnchorPoint, intermediateAnchorPoints: intermediateRouteAnchorPoints, imageAnchoring: imageAnchoring)
     }

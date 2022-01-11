@@ -24,6 +24,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var enterCodeIDController: UIViewController?
     var popoverController: UIViewController?
     var loadFromAppClipController: UIViewController?
+    static var disableConsentForm = true
 
     //var homeScreenHelper: HomeScreenHelper?
     
@@ -38,7 +39,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         ARDataLogger.ARLogger.shared.dataDir = "appClipTest"
         
         UIApplication.shared.isIdleTimerDisabled = true
-        if UserDefaults.standard.value(forKey: "hasconsented") as? Bool == true {
+        if UserDefaults.standard.value(forKey: "hasconsented") as? Bool == true || SceneDelegate.disableConsentForm {
             vc = ViewController()
             //homeScreenHelper = HomeScreenHelper(vc: vc!, sceneDelegate: self)
             self.window?.rootViewController = vc
