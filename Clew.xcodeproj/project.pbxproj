@@ -29,6 +29,7 @@
 		8227FCFD272B0845001031F9 /* PRTween.m in Sources */ = {isa = PBXBuildFile; fileRef = 8227FCF9272B0845001031F9 /* PRTween.m */; };
 		8227FD03272B0954001031F9 /* PRTweenTimingFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 8227FD00272B0953001031F9 /* PRTweenTimingFunctions.m */; };
 		8227FD04272B0954001031F9 /* PRTweenTimingFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 8227FD00272B0953001031F9 /* PRTweenTimingFunctions.m */; };
+		82B25182278DF4B0001E3AB6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 82B25184278DF4B0001E3AB6 /* LaunchScreen.storyboard */; };
 		98006F82268382D800E61861 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 98006F81268382D800E61861 /* Assets.xcassets */; };
 		98006F85268382D800E61861 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 98006F83268382D800E61861 /* LaunchScreen.storyboard */; };
 		98006FB22683844A00E61861 /* RecordPathController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470EE022C119F4001092A4 /* RecordPathController.swift */; };
@@ -222,6 +223,7 @@
 		82A417E0262A205A001FCB8C /* AuthenticationHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationHelper.swift; sourceTree = "<group>"; };
 		82A417EC262A2140001FCB8C /* Clew Dev.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Clew Dev.entitlements"; sourceTree = "<group>"; };
 		82AD6A24252F80AA00902A11 /* speaker.mtl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = speaker.mtl; sourceTree = "<group>"; };
+		82B25183278DF4B0001E3AB6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		82BC47FD2640383300C7D364 /* Surveys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Surveys.swift; sourceTree = "<group>"; };
 		82E4A5CE262A26DC000BEB44 /* Clew.entitlements */ = {isa = PBXFileReference; explicitFileType = text.plist.entitlements; path = Clew.entitlements; sourceTree = "<group>"; };
 		82F2DDD122E26A44005CD7D0 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -624,6 +626,7 @@
 				98A2DABA26A709C400158F83 /* NameSavedRouteView.swift */,
 				98A2DAC426A76ACA00158F83 /* NameCodeIDView.swift */,
 				9826B6D426B07C3F00EC563C /* EndNavigationScreen.swift */,
+				82B25184278DF4B0001E3AB6 /* LaunchScreen.storyboard */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -789,6 +792,7 @@
 				98FF7AA2269CBFEB008C64E5 /* Preview Assets.xcassets in Resources */,
 				98FF7AA7269CC040008C64E5 /* Localizable.strings in Resources */,
 				98FF7AE2269CC175008C64E5 /* Crumb.obj in Resources */,
+				82B25182278DF4B0001E3AB6 /* LaunchScreen.storyboard in Resources */,
 				98AA588D269DD11E001123F0 /* GoogleService-Info_dev.plist in Resources */,
 				98AA5891269DD122001123F0 /* GoogleService-Info.plist in Resources */,
 				98FF7AE3269CC178008C64E5 /* speaker.mtl in Resources */,
@@ -974,6 +978,14 @@
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
 		};
+		82B25184278DF4B0001E3AB6 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				82B25183278DF4B0001E3AB6 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
 		98006F83268382D800E61861 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -1143,7 +1155,7 @@
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CODE_SIGN_ENTITLEMENTS = "UIKit Clip/UIKit_Clip.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 305;
+				CURRENT_PROJECT_VERSION = 306;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
 				INFOPLIST_FILE = "UIKit Clip/Info.plist";
@@ -1176,7 +1188,7 @@
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CODE_SIGN_ENTITLEMENTS = "UIKit Clip/UIKit_Clip.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 305;
+				CURRENT_PROJECT_VERSION = 306;
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
 				INFOPLIST_FILE = "UIKit Clip/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
@@ -1207,7 +1219,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Clew-More/Clew-More.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 305;
+				CURRENT_PROJECT_VERSION = 306;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_ASSET_PATHS = "\"Clew-More/Preview Content\"";
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
@@ -1244,7 +1256,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Clew-More/Clew-More.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 305;
+				CURRENT_PROJECT_VERSION = 306;
 				DEVELOPMENT_ASSET_PATHS = "\"Clew-More/Preview Content\"";
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
 				ENABLE_PREVIEWS = YES;
