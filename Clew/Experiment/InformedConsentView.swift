@@ -66,10 +66,6 @@ struct InformedConsentView : View {
 
                                 // redirect to home UI
                                 let vc = ViewController()
-                                
-                                // set logRichData toggle in settings to false
-                                vc.logRichData = false
-
                                 sceneDelegate.window?.rootViewController = vc
                             }
                             .padding([.leading, .top, .trailing], 8)
