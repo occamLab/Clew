@@ -64,8 +64,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     /// For scenes created NOT through the invocation URL
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-        
-        createScene(scene)
+        if let userActivity = connectionOptions.userActivities.first, userActivity.activityType == NSUserActivityTypeBrowsingWeb, let url = userActivity.webpageURL  {
+            populateSceneFromAppClipURL(scene: scene, url: url)
+        } else {
+            createScene(scene)
+        }
     }
     
     /// handles invocations in the App Clip
@@ -73,7 +76,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func scene(_ scene: UIScene, continue userActivity: NSUserActivity) {
         guard userActivity.activityType == NSUserActivityTypeBrowsingWeb, let url = userActivity.webpageURL else {
             return
-            }
+        }
+        populateSceneFromAppClipURL(scene: scene, url: url)
+    }
+    
+    private func populateSceneFromAppClipURL(scene: UIScene, url: URL) {
         createScene(scene)
 
         /// This loading screen should show up if the URL is properly invoked
@@ -120,7 +127,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func getFirebaseRoutesList(vc: ViewController) {
         let routeRef = Storage.storage().reference().child("AppClipRoutes")
         let appClipRef = routeRef.child("\(self.vc!.appClipCodeID).json")
-        
         /// attempt to download .json file from Firebase
         appClipRef.getData(maxSize: 100000000000) { appClipJson, error in
             do {
