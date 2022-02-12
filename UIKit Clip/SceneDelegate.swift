@@ -23,7 +23,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var scanTagController: UIViewController?
   
     
-    func createScene(_ scene: UIScene) {
+    func createScene(_ scene: UIScene, showTagScan: Bool) {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
         // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
@@ -37,7 +37,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window?.backgroundColor = .white
         window?.makeKeyAndVisible()
         UIApplication.shared.isIdleTimerDisabled = true
-        handleTransitionToScanTagView()
+        if showTagScan {
+            handleTransitionToScanTagView()
+        }
     }
     
     func handleTransitionToScanTagView() {
@@ -67,7 +69,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         if let userActivity = connectionOptions.userActivities.first, userActivity.activityType == NSUserActivityTypeBrowsingWeb, let url = userActivity.webpageURL  {
             populateSceneFromAppClipURL(scene: scene, url: url)
         } else {
-            createScene(scene)
+            createScene(scene, showTagScan: true)
         }
     }
     
@@ -81,7 +83,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
     
     private func populateSceneFromAppClipURL(scene: UIScene, url: URL) {
-        createScene(scene)
+        createScene(scene, showTagScan: false)
 
         /// This loading screen should show up if the URL is properly invoked
         self.loadFromAppClipController = UIHostingController(rootView: LoadFromAppClipView())

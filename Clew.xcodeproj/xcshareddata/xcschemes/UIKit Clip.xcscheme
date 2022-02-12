@@ -96,7 +96,7 @@
       <EnvironmentVariables>
          <EnvironmentVariable
             key = "_XCAppClipURL"
-            value = "https://berwinl.com/id?p=162"
+            value = "https://berwinl.com/id?p=888"
             isEnabled = "YES">
          </EnvironmentVariable>
       </EnvironmentVariables>
