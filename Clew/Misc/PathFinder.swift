@@ -281,6 +281,9 @@ class SavedRoute: NSObject, NSSecureCoding, Identifiable {
     public var dateCreated: NSDate
     /// The crumbs that make up the route.  The densely sampled positions (crumbs) are stored and the keypoints (sparser goal positionsare calculated on demand when navigation is requested.
     public var crumbs: [LocationInfo]
+    
+    /// The geo anchors that constitute the route
+    public var geoAnchors: [ARGeoAnchor]
     /// The Anchor Point marks the beginning of the route (needed for start to end navigation)
     public var beginRouteAnchorPoint : RouteAnchorPoint
     /// The Anchor Point marks the end of the route (needed for end to start navigation)
@@ -303,11 +306,12 @@ class SavedRoute: NSObject, NSSecureCoding, Identifiable {
     ///   - beginRouteAnchorPoint: the Anchor Point for the beginning of the route (pass a `RouteAnchorPoint` with default initialization if no Anchor Point was recorded at the beginning of the route)
     ///   - endRouteAnchorPoint: the Anchor Point for the end of the route (pass a `RouteAnchorPoint` with default initialization if no Anchor Point was recorded at the end of the route)
 
-    public init(id: NSString, appClipCodeID: String,  name: NSString, crumbs: [LocationInfo], dateCreated: NSDate = NSDate(), beginRouteAnchorPoint: RouteAnchorPoint, endRouteAnchorPoint: RouteAnchorPoint, intermediateAnchorPoints: [RouteAnchorPoint], imageAnchoring: Bool = false) {
+    public init(id: NSString, appClipCodeID: String,  name: NSString, crumbs: [LocationInfo], geoAnchors: [ARGeoAnchor], dateCreated: NSDate = NSDate(), beginRouteAnchorPoint: RouteAnchorPoint, endRouteAnchorPoint: RouteAnchorPoint, intermediateAnchorPoints: [RouteAnchorPoint], imageAnchoring: Bool = false) {
         self.id = id
         self.appClipCodeID = appClipCodeID
         self.name = name
         self.crumbs = crumbs
+        self.geoAnchors = geoAnchors
         self.dateCreated = dateCreated
         self.beginRouteAnchorPoint = beginRouteAnchorPoint
         self.endRouteAnchorPoint = endRouteAnchorPoint
@@ -323,6 +327,7 @@ class SavedRoute: NSObject, NSSecureCoding, Identifiable {
         aCoder.encode(appClipCodeID, forKey: "appClipCodeID")
         aCoder.encode(name, forKey: "name")
         aCoder.encode(crumbs, forKey: "crumbs")
+        aCoder.encode(geoAnchors, forKey: "geoAnchors")
         aCoder.encode(dateCreated, forKey: "dateCreated")
         aCoder.encode(beginRouteAnchorPoint, forKey: "beginRouteAnchorPoint")
         aCoder.encode(endRouteAnchorPoint, forKey: "endRouteAnchorPoint")
@@ -346,6 +351,11 @@ class SavedRoute: NSObject, NSSecureCoding, Identifiable {
         guard let crumbs = aDecoder.decodeObject(of: [].self, forKey: "crumbs") as? [LocationInfo] else {
             return nil
         }
+        
+        guard let geoAnchors = aDecoder.decodeObject(of: [].self, forKey: "geoAnchors") as? [ARGeoAnchor] else {
+            return nil
+        }
+        
         guard let dateCreated = aDecoder.decodeObject(of: NSDate.self, forKey: "dateCreated") else {
             return nil
         }
@@ -382,7 +392,7 @@ class SavedRoute: NSObject, NSSecureCoding, Identifiable {
         
         let imageAnchoring = aDecoder.decodeBool(forKey: "imageAnchoring")
         
-        self.init(id: id, appClipCodeID: appClipCodeID as String, name: name, crumbs: crumbs, dateCreated: dateCreated, beginRouteAnchorPoint: beginRouteAnchorPoint, endRouteAnchorPoint: endRouteAnchorPoint, intermediateAnchorPoints: intermediateRouteAnchorPoints, imageAnchoring: imageAnchoring)
+        self.init(id: id, appClipCodeID: appClipCodeID as String, name: name, crumbs: crumbs, geoAnchors: geoAnchors, dateCreated: dateCreated, beginRouteAnchorPoint: beginRouteAnchorPoint, endRouteAnchorPoint: endRouteAnchorPoint, intermediateAnchorPoints: intermediateRouteAnchorPoints, imageAnchoring: imageAnchoring)
     }
 }
 

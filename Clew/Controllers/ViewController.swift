@@ -317,6 +317,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         // TODO: probably don't need to set this to [], but erring on the side of being conservative
         crumbs = []
         recordingCrumbs = []
+        recordingGeoAnchors = []
         RouteManager.shared.intermediateAnchorPoints = []
         logger.resetPathLog()
         
@@ -520,6 +521,9 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
             crumbs = route.crumbs
             pausedTransform = route.endRouteAnchorPoint.anchor?.transform
         }
+        for geoAnchor in route.geoAnchors {
+            ARSessionManager.shared.add(anchor: geoAnchor)
+        }
         RouteManager.shared.intermediateAnchorPoints = route.intermediateAnchorPoints
         trackingSessionErrorState = nil
         ARSessionManager.shared.startSession()
@@ -688,7 +692,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         if paused {
             ///PATHPOINT pause recording anchor point alignment timer -> resume tracking
             ///proceed as normal with the pause structure (single use route)
-            justTraveledRoute = SavedRoute(id: "single use", appClipCodeID: self.appClipCodeID, name: "single use", crumbs: self.crumbs, dateCreated: Date() as NSDate, beginRouteAnchorPoint: self.beginRouteAnchorPoint, endRouteAnchorPoint: self.endRouteAnchorPoint, intermediateAnchorPoints: RouteManager.shared.intermediateAnchorPoints, imageAnchoring: imageAnchoring)
+            justTraveledRoute = SavedRoute(id: "single use", appClipCodeID: self.appClipCodeID, name: "single use", crumbs: self.crumbs, geoAnchors: recordingGeoAnchors, dateCreated: Date() as NSDate, beginRouteAnchorPoint: self.beginRouteAnchorPoint, endRouteAnchorPoint: self.endRouteAnchorPoint, intermediateAnchorPoints: RouteManager.shared.intermediateAnchorPoints, imageAnchoring: imageAnchoring)
             justUsedMap = worldMap
             showResumeTrackingButton()
             state = .pauseProcedureCompleted
@@ -799,7 +803,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     /// - Throws: an error if something goes wrong
 
     func archive(routeId: NSString, appClipCodeID: String, beginRouteAnchorPoint: RouteAnchorPoint, endRouteAnchorPoint: RouteAnchorPoint, intermediateAnchorPoints: [RouteAnchorPoint], worldMap: ARWorldMap?, imageAnchoring: Bool) throws {
-        let savedRoute = SavedRoute(id: routeId, appClipCodeID: self.appClipCodeID, name: routeName!, crumbs: crumbs, dateCreated: Date() as NSDate, beginRouteAnchorPoint: beginRouteAnchorPoint, endRouteAnchorPoint: endRouteAnchorPoint, intermediateAnchorPoints: intermediateAnchorPoints, imageAnchoring: imageAnchoring)
+        let savedRoute = SavedRoute(id: routeId, appClipCodeID: self.appClipCodeID, name: routeName!, crumbs: crumbs, geoAnchors: recordingGeoAnchors, dateCreated: Date() as NSDate, beginRouteAnchorPoint: beginRouteAnchorPoint, endRouteAnchorPoint: endRouteAnchorPoint, intermediateAnchorPoints: intermediateAnchorPoints, imageAnchoring: imageAnchoring)
 
       try dataPersistence.archive(route: savedRoute, worldMap: worldMap)
         justTraveledRoute = savedRoute
@@ -1929,6 +1933,8 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     /// list of crumbs dropped when recording path
     var recordingCrumbs: LinkedList<LocationInfo>!
     
+    var recordingGeoAnchors: [ARGeoAnchor] = []
+    
     /// list of crumbs to use for route creation
     var crumbs: [LocationInfo]!
     
@@ -2443,12 +2449,24 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         
     /// drop a crumb during path recording
     @objc func dropCrumb() {
-        guard let curLocation = getRealCoordinates(record: true)?.location, case .recordingRoute = state else {
+        guard let currentFrame = ARSessionManager.shared.currentFrame, case .recordingRoute = state else {
             return
         }
-        recordingCrumbs.append(curLocation)
-        ARSessionManager.shared.add(anchor: curLocation)
+        dropGeoAnchor(at: SIMD3<Float>(currentFrame.camera.transform.x, currentFrame.camera.transform.y, currentFrame.camera.transform.z))
     }
+    
+    func dropGeoAnchor(at worldPosition: SIMD3<Float>) {
+        ARSessionManager.shared.sceneView.session.getGeoLocation(forPoint: worldPosition) { (location, altitude, error) in
+            if let error = error {
+                print("An error occurred while translating ARKit coordinates to geo coordinates: \(error.localizedDescription)")
+                return
+            }
+            let newAnchor = ARGeoAnchor(coordinate: location)
+            ARSessionManager.shared.add(anchor: newAnchor)
+            self.recordingGeoAnchors.append(newAnchor)
+        }
+    }
+
     
     /// checks to see if user is on the right path during navigation.
     @objc func followCrumb() {

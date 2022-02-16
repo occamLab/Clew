@@ -77,16 +77,16 @@ class ARSessionManager: NSObject {
     
     var initialWorldMap: ARWorldMap? {
         set {
-            print("SETTING WORLD MAP \(newValue)")
-            configuration.initialWorldMap = newValue
+            print("SORRY!! \(newValue)")
+            //configuration.initialWorldMap = newValue
         }
         get {
-            return configuration.initialWorldMap
+            return nil //configuration.initialWorldMap
         }
     }
     
     /// AR Session Configuration
-    private var configuration: ARWorldTrackingConfiguration!
+    private var configuration: ARGeoTrackingConfiguration!
     
     /// SCNNode of the next keypoint
     private var keypointNode: SCNNode?
@@ -111,9 +111,8 @@ class ARSessionManager: NSObject {
     
     /// Create a new ARSession.
     func createARSessionConfiguration() {
-        configuration = ARWorldTrackingConfiguration()
+        configuration = ARGeoTrackingConfiguration()
         configuration.planeDetection = [.horizontal, .vertical]
-        configuration.isAutoFocusEnabled = false
         if #available(iOS 14.3, *) {
             configuration.appClipCodeTrackingEnabled = true
         }
@@ -472,13 +471,13 @@ class ARData: ObservableObject {
 
 extension ARSessionManager: ARSessionDelegate {
     func session(_ session: ARSession, didFailWithError error: Error) {
-        // When loading ARWorldMaps recorded under iOS15, they will cause an error when loaded under previous iOS versions.  If this happens, we can retry without the ARWorldMap
-        if (error as? NSError)?.code == 200, configuration.initialWorldMap != nil {
+        // When loading ARWorldMaps recorded under iOS15, they will cause an error when loaded under previous iOS vedrrsions.  If this happens, we can retry without the ARWorldMap
+       /* if (error as? NSError)?.code == 200, configuration.initialWorldMap != nil {
             // try again without the world map
             configuration.initialWorldMap = nil
             relocalizationStrategy = .none
             startSession()
-        }
+        }*/
     }
     
     func session(_ session: ARSession, didUpdate frame: ARFrame) {
@@ -519,6 +518,12 @@ extension ARSessionManager: ARSessionDelegate {
     }
     
     func session(_ session: ARSession, didUpdate anchors: [ARAnchor]) {
+        
+        print("check out the anchors here")
+        for geoAnchor in anchors.compactMap({$0 as? ARGeoAnchor}) {
+            print(geoAnchor)
+        }
+        
         #if !APPCLIP
         ARLogger.shared.session(session, didUpdate: anchors)
         #endif
