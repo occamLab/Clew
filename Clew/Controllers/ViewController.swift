@@ -238,6 +238,9 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     ///this boolean denotes whether or not the app is loading a route from an automatic alignment
     var isAutomaticAlignment: Bool = false
     
+    ///tracks the observers that have been added for handling loading routes from an app clip invocation
+    var appClipObservers: [NSObjectProtocol] = []
+    
     /// ARDataLogger
     #if !APPCLIP
     var arLogger = ARLogger.shared
@@ -763,6 +766,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         resumeTrackingController.remove()
         nameSavedRouteController?.remove()
         nameCodeIDController?.remove()
+        scanTagController?.remove()
         #if CLEWMORE
         selectRouteController.remove()
         enterCodeIDController.remove()
@@ -888,6 +892,9 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     
     /// route recording VC (called on app start)
     var recordPathController: RecordPathController!
+    
+    /// scan tag controller
+    var scanTagController: UIViewController?
     
     // SwiftUI controllers
     var enterCodeIDController: UIViewController!
@@ -2256,7 +2263,76 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         // pause AR pose tracking
         state = .completingPauseProcedure
     }
-   
+    
+    func handleTransitionToScanTagView() {
+        scanTagController = UIHostingController(rootView: ScanTagView())
+        scanTagController?.view.frame = CGRect(x: 0,
+                                                                       y: UIScreen.main.bounds.size.height*0.15,
+                                                                       width: UIConstants.buttonFrameWidth * 1,
+                                                                       height: UIScreen.main.bounds.size.height*0.75)
+        scanTagController?.view.backgroundColor = .clear
+        
+        hideAllViewsHelper()
+        ARSessionManager.shared.startSession()
+        add(scanTagController!)
+    }
+    
+    /// Configure App Clip to query items
+    func handleUserActivity(for url: URL) {
+        // TODO: update this to load urls into a list of urls to be passed into the popover list <3
+        guard let components = NSURLComponents(url: url, resolvingAgainstBaseURL: true), let queryItems = components.queryItems else {
+            return
+        }
+        
+        /// with the invocation URL format https://occamlab.github.io/id?p=appClipCodeID, appClipCodeID being the name of the file in Firebase
+        if let appClipCodeID = queryItems.first(where: { $0.name == "p"}) {
+            self.appClipCodeID = appClipCodeID.value!
+            print("app clip code ID from URL: \(appClipCodeID.value!)")
+        }
+    }
+    
+    func loadRoute() {
+        #if !APPCLIP
+        arLogger.startTrial()
+        #endif
+        recordPathController.remove()
+        scanTagController?.remove()
+        handleStateTransitionToNavigatingExternalRoute()
+    }
+    
+    func populateSceneFromAppClipURL(scene: UIScene, url: URL) {
+        appClipObservers.map({ NotificationCenter.default.removeObserver($0) })
+        appClipObservers = []
+
+        /// This loading screen should show up if the URL is properly invoked
+        let loadFromAppClipController = UIHostingController(rootView: LoadFromAppClipView())
+        loadFromAppClipController.modalPresentationStyle = .fullScreen
+        present(loadFromAppClipController, animated: false)
+        print("loading screen successful B)")
+        
+        handleUserActivity(for: url)
+        getFirebaseRoutesList()
+            
+        let newObserver = NotificationCenter.default.addObserver(forName: NSNotification.Name("firebaseLoaded"), object: nil, queue: nil) { (notification) -> Void in
+            /// dismiss loading screen
+            loadFromAppClipController.dismiss(animated: false)
+            
+            /// bring up list of routes
+            let popoverController = UIHostingController(rootView: StartNavigationPopoverView(vc: self, routeList: self.availableRoutes))
+            popoverController.modalPresentationStyle = .fullScreen
+            self.present(popoverController, animated: true)
+            print("popover successful B)")
+            // create listeners to ensure that the isReadingAnnouncement flag is reset properly
+            let dismissObserver = NotificationCenter.default.addObserver(forName: NSNotification.Name("shouldDismissRoutePopover"), object: nil, queue: nil) { (notification) -> Void in
+                popoverController.dismiss(animated: true)
+                self.hideAllViewsHelper()
+                self.loadRoute()
+            }
+            self.appClipObservers.append(dismissObserver)
+        }
+        appClipObservers.append(newObserver)
+    }
+    
     func getFirebaseRoutesList() {
         let routeRef = Storage.storage().reference().child("AppClipRoutes")
         let appClipRef = routeRef.child("\(self.appClipCodeID).json")

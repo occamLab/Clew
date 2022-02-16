@@ -24,8 +24,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var enterCodeIDController: UIViewController?
     var loadFromAppClipController: UIViewController?
     static var disableConsentForm = true
-
-    //var homeScreenHelper: HomeScreenHelper?
     
     func createScene(_ scene: UIScene) {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
@@ -40,7 +38,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         UIApplication.shared.isIdleTimerDisabled = true
         if UserDefaults.standard.value(forKey: "hasconsented") as? Bool == true || SceneDelegate.disableConsentForm {
             vc = ViewController()
-            //homeScreenHelper = HomeScreenHelper(vc: vc!, sceneDelegate: self)
             self.window?.rootViewController = vc
         } else {
             let consentFormController = UIHostingController(rootView: InformedConsentView())
@@ -64,7 +61,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         if let userActivity = connectionOptions.userActivities.first, userActivity.activityType == NSUserActivityTypeBrowsingWeb, let url = userActivity.webpageURL  {
-            populateSceneFromAppClipURL(scene: scene, url: url)
+            vc?.populateSceneFromAppClipURL(scene: scene, url: url)
         } else {
             createScene(scene)
         }
@@ -76,67 +73,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard userActivity.activityType == NSUserActivityTypeBrowsingWeb, let url = userActivity.webpageURL else {
             return
         }
-        populateSceneFromAppClipURL(scene: scene, url: url)
-    }
-    
-    private func populateSceneFromAppClipURL(scene: UIScene, url: URL) {
-        observers.map({ NotificationCenter.default.removeObserver($0) })
-        observers = []
         createScene(scene)
-
-        /// This loading screen should show up if the URL is properly invoked
-        self.loadFromAppClipController = UIHostingController(rootView: LoadFromAppClipView())
-        self.loadFromAppClipController?.modalPresentationStyle = .fullScreen
-        self.vc!.present(self.loadFromAppClipController!, animated: false)
-        print("loading screen successful B)")
-        
-        handleUserActivity(for: url)
-        vc!.getFirebaseRoutesList()
-            
-        let newObserver = NotificationCenter.default.addObserver(forName: NSNotification.Name("firebaseLoaded"), object: nil, queue: nil) { (notification) -> Void in
-            /// dismiss loading screen
-            self.loadFromAppClipController?.dismiss(animated: false)
-            
-            /// bring up list of routes
-            let popoverController = UIHostingController(rootView: StartNavigationPopoverView(vc: self.vc!, routeList: self.vc!.availableRoutes))
-            popoverController.modalPresentationStyle = .fullScreen
-            self.vc!.present(popoverController, animated: true)
-            print("popover successful B)")
-            // create listeners to ensure that the isReadingAnnouncement flag is reset properly
-            let dismissObserver = NotificationCenter.default.addObserver(forName: NSNotification.Name("shouldDismissRoutePopover"), object: nil, queue: nil) { (notification) -> Void in
-                print("DISMISSING POPOVER VIEW CONTROLLER")
-                popoverController.dismiss(animated: true)
-                self.loadRoute()
-                self.vc?.hideAllViewsHelper()
-            }
-            self.observers.append(dismissObserver)
-        }
-        observers.append(newObserver)
+        vc?.populateSceneFromAppClipURL(scene: scene, url: url)
     }
-    
-    func loadRoute() {
-        #if !APPCLIP
-        vc?.arLogger.startTrial()
-        #endif
-        vc?.recordPathController.remove()
-        vc?.handleStateTransitionToNavigatingExternalRoute()
-    }
-    
-    /// Configure App Clip to query items
-    func handleUserActivity(for url: URL) {
-        // TODO: update this to load urls into a list of urls to be passed into the popover list <3
-        guard let components = NSURLComponents(url: url, resolvingAgainstBaseURL: true), let queryItems = components.queryItems else {
-            return
-        }
-        
-        /// with the invocation URL format https://occamlab.github.io/id?p=appClipCodeID, appClipCodeID being the name of the file in Firebase
-        if let appClipCodeID = queryItems.first(where: { $0.name == "p"}) {
-            vc?.appClipCodeID = appClipCodeID.value!
-            print("app clip code ID from URL: \(appClipCodeID.value!)")
-        }
-    }
-    
-
 
     func sceneDidDisconnect(_ scene: UIScene) {
         // Called as the scene is being released by the system.

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		821FEE3227BCB47E008928E5 /* ScanTagView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9863AF6826B44D9E00EF0C64 /* ScanTagView.swift */; };
 		8227393C272C7E43006C181E /* ARSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82273939272C7E43006C181E /* ARSessionManager.swift */; };
 		8227393D272C7E43006C181E /* ARSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82273939272C7E43006C181E /* ARSessionManager.swift */; };
 		82273941272C7E7D006C181E /* RouteManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8227393E272C7E7D006C181E /* RouteManager.swift */; };
@@ -263,7 +264,6 @@
 		98AA5894269E0C13001123F0 /* StartMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartMenuView.swift; sourceTree = "<group>"; };
 		98AA5896269E1518001123F0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		98AA5898269E1BA0001123F0 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		98AA589C269E2CE3001123F0 /* HomeScreenHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeScreenHelper.swift; sourceTree = "<group>"; };
 		98AA589F269F7AD5001123F0 /* OptionsHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsHeaderView.swift; sourceTree = "<group>"; };
 		98AA58A1269F8651001123F0 /* DefaultView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultView.swift; sourceTree = "<group>"; };
 		98AA58A326A1C13D001123F0 /* RecordPathController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordPathController.swift; sourceTree = "<group>"; };
@@ -471,7 +471,6 @@
 				98FF7AA0269CBFEB008C64E5 /* Preview Content */,
 				98AA5896269E1518001123F0 /* AppDelegate.swift */,
 				98AA5898269E1BA0001123F0 /* SceneDelegate.swift */,
-				98AA589C269E2CE3001123F0 /* HomeScreenHelper.swift */,
 				98AA589F269F7AD5001123F0 /* OptionsHeaderView.swift */,
 				98AA58A326A1C13D001123F0 /* RecordPathController.swift */,
 				98AA58A526A604C3001123F0 /* RouteManagerView.swift */,
@@ -876,6 +875,7 @@
 				98AA5897269E1518001123F0 /* AppDelegate.swift in Sources */,
 				8227394727308487006C181E /* SoundEffectManager.swift in Sources */,
 				98FF7ACC269CC10F008C64E5 /* StopNavigationController.swift in Sources */,
+				821FEE3227BCB47E008928E5 /* ScanTagView.swift in Sources */,
 				98AA5895269E0C13001123F0 /* StartMenuView.swift in Sources */,
 				98FF7AD1269CC11C008C64E5 /* HelpViewController.swift in Sources */,
 				98FF7AD7269CC143008C64E5 /* UIConstants.swift in Sources */,

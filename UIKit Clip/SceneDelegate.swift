@@ -16,12 +16,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
 
     var vc: ViewController?
-    var route: SavedRoute?
-    var enterCodeIDController: UIViewController?
-    var loadFromAppClipController: UIViewController?
-    var scanTagController: UIViewController?
-    var observers: [Any] = []
-  
     
     func createScene(_ scene: UIScene, showTagScan: Bool) {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
@@ -30,7 +24,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let scene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: scene)
         vc = ViewController()
-
         
         window?.frame = UIScreen.main.bounds
         window?.rootViewController = vc
@@ -38,36 +31,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window?.makeKeyAndVisible()
         UIApplication.shared.isIdleTimerDisabled = true
         if showTagScan {
-            handleTransitionToScanTagView()
+            vc?.handleTransitionToScanTagView()
         }
-    }
-    
-    func handleTransitionToScanTagView() {
-        scanTagController = UIHostingController(rootView: ScanTagView())
-        scanTagController?.view.frame = CGRect(x: 0,
-                                                                       y: UIScreen.main.bounds.size.height*0.15,
-                                                                       width: UIConstants.buttonFrameWidth * 1,
-                                                                       height: UIScreen.main.bounds.size.height*0.75)
-        scanTagController?.view.backgroundColor = .clear
-        
-        vc!.hideAllViewsHelper()
-        ARSessionManager.shared.startSession()
-        vc!.add(scanTagController!)
-    }
-    
-    func loadRoute() {
-        #if !APPCLIP
-        vc?.arLogger.startTrial()
-        #endif
-        vc?.recordPathController.remove()
-        scanTagController?.remove()
-        vc?.handleStateTransitionToNavigatingExternalRoute()
     }
     
     /// For scenes created NOT through the invocation URL
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         if let userActivity = connectionOptions.userActivities.first, userActivity.activityType == NSUserActivityTypeBrowsingWeb, let url = userActivity.webpageURL  {
-            populateSceneFromAppClipURL(scene: scene, url: url)
+            vc?.populateSceneFromAppClipURL(scene: scene, url: url)
         } else {
             createScene(scene, showTagScan: true)
         }
@@ -79,81 +50,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard userActivity.activityType == NSUserActivityTypeBrowsingWeb, let url = userActivity.webpageURL else {
             return
         }
-        populateSceneFromAppClipURL(scene: scene, url: url)
-    }
-    
-    private func populateSceneFromAppClipURL(scene: UIScene, url: URL) {
-        observers.map({ NotificationCenter.default.removeObserver($0) })
-        observers = []
         createScene(scene, showTagScan: false)
-
-        /// This loading screen should show up if the URL is properly invoked
-        self.loadFromAppClipController = UIHostingController(rootView: LoadFromAppClipView())
-        self.loadFromAppClipController?.modalPresentationStyle = .fullScreen
-        self.vc!.present(self.loadFromAppClipController!, animated: false)
-        print("loading screen successful B)")
-        
-        handleUserActivity(for: url)
-        self.getFirebaseRoutesList(vc: self.vc!)
-            
-        let newObserver = NotificationCenter.default.addObserver(forName: NSNotification.Name("firebaseLoaded"), object: nil, queue: nil) { (notification) -> Void in
-            /// dismiss loading screen
-            self.loadFromAppClipController?.dismiss(animated: false)
-            
-            /// bring up list of routes
-            let popoverController = UIHostingController(rootView: StartNavigationPopoverView(vc: self.vc!, routeList: self.vc!.availableRoutes))
-            popoverController.modalPresentationStyle = .fullScreen
-            self.vc!.present(popoverController, animated: true)
-            print("popover successful B)")
-            // create listeners to ensure that the isReadingAnnouncement flag is reset properly
-            let dismissObserver = NotificationCenter.default.addObserver(forName: NSNotification.Name("shouldDismissRoutePopover"), object: nil, queue: nil) { (notification) -> Void in
-                popoverController.dismiss(animated: true)
-                self.vc?.hideAllViewsHelper()
-                self.loadRoute()
-            }
-            self.observers.append(dismissObserver)
-        }
-        observers.append(newObserver)
-    }
-    
-    /// Configure App Clip to query items
-    func handleUserActivity(for url: URL) {
-        // TODO: update this to load urls into a list of urls to be passed into the popover list <3
-        guard let components = NSURLComponents(url: url, resolvingAgainstBaseURL: true), let queryItems = components.queryItems else {
-            return
-        }
-        
-        /// with the invocation URL format https://occamlab.github.io/id?p=appClipCodeID, appClipCodeID being the name of the file in Firebase
-        if let appClipCodeID = queryItems.first(where: { $0.name == "p"}) {
-            vc?.appClipCodeID = appClipCodeID.value!
-            print("app clip code ID from URL: \(appClipCodeID.value!)")
-        }
-    }
-    
-    func getFirebaseRoutesList(vc: ViewController) {
-        let routeRef = Storage.storage().reference().child("AppClipRoutes")
-        let appClipRef = routeRef.child("\(self.vc!.appClipCodeID).json")
-        /// attempt to download .json file from Firebase
-        appClipRef.getData(maxSize: 100000000000) { appClipJson, error in
-            do {
-                if let appClipJson = appClipJson {
-                    /// unwrap NSData, if it exists, to a list, and set equal to existingRoutes
-                    let routesFile = try JSONSerialization.jsonObject(with: appClipJson, options: [])
-                    print("File: \(routesFile)")
-                    if let routesFile = routesFile as? [[String: String]] {
-                        self.vc?.availableRoutes.routeList = routesFile
-                        print("List: \(self.vc?.availableRoutes)")
-                        NotificationCenter.default.post(name: NSNotification.Name("firebaseLoaded"), object: nil)
-                        vc.announce(announcement: NSLocalizedString("firebaseSuccessfullyLoaded", comment: "This is read out when routes are successfully downloaded from Firebase."))
-                    }
-                } else {
-                    NotificationCenter.default.post(name: NSNotification.Name("invalidCodeID"), object: nil)
-                    vc.announce(announcement: NSLocalizedString("invalidCodeID", comment: "This is read out when the user inputs a code ID that does not have a corresponding Firebase file."))
-                }
-            } catch {
-                print("Failed to download Firebase data due to error \(error)")
-            }
-        }
+        vc?.populateSceneFromAppClipURL(scene: scene, url: url)
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
