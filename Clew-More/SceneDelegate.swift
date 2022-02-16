@@ -16,13 +16,12 @@ import ARDataLogger
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
-
+    var observers: [Any] = []
     var vc: ViewController?
     var route: SavedRoute?
     
     var startMenuController: UIViewController?
     var enterCodeIDController: UIViewController?
-    var popoverController: UIViewController?
     var loadFromAppClipController: UIViewController?
     static var disableConsentForm = true
 
@@ -63,38 +62,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
     }
     
-
-    
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-        
-        createScene(scene)
-        /*
-        self.startMenuController = UIHostingController(rootView: StartMenuView(vc: self.vc!))
-        self.startMenuController?.modalPresentationStyle = .fullScreen
-        self.vc!.present(self.startMenuController!, animated: true)
-        
-        //vc?.rootContainerView.swiftUIPlaceHolder = UIHostingController(rootView: StartMenuView(vc: self.vc!))
-        print("view created")
-        NotificationCenter.default.addObserver(forName: NSNotification.Name("shouldOpenRouteMenu"), object: nil, queue: nil) { (notification) -> Void in
-            self.startMenuController!.dismiss(animated: false)
-            
-            self.homeScreenHelper!.NavigateAppClipRouteHelper()
+        if let userActivity = connectionOptions.userActivities.first, userActivity.activityType == NSUserActivityTypeBrowsingWeb, let url = userActivity.webpageURL  {
+            populateSceneFromAppClipURL(scene: scene, url: url)
+        } else {
+            createScene(scene)
         }
-        
-        NotificationCenter.default.addObserver(forName: NSNotification.Name("shouldRouteRecording"), object: nil, queue: nil) { (notification) -> Void in
-            self.startMenuController!.dismiss(animated: false)
-            
-            self.homeScreenHelper!.RecordAppClipRouteHelper()
-        }
-        
-        NotificationCenter.default.addObserver(forName: NSNotification.Name("shouldShowRoutes"), object: nil, queue: nil) { (notification) -> Void in
-            self.startMenuController!.dismiss(animated: false)
-            
-            self.homeScreenHelper!.RouteDisplayHelper()
-        }*/
-        
-        
-        
     }
     
     /// handles invocations in the App Clip
@@ -102,9 +75,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func scene(_ scene: UIScene, continue userActivity: NSUserActivity) {
         guard userActivity.activityType == NSUserActivityTypeBrowsingWeb, let url = userActivity.webpageURL else {
             return
-            }
+        }
+        populateSceneFromAppClipURL(scene: scene, url: url)
+    }
+    
+    private func populateSceneFromAppClipURL(scene: UIScene, url: URL) {
+        observers.map({ NotificationCenter.default.removeObserver($0) })
+        observers = []
         createScene(scene)
-        
+
         /// This loading screen should show up if the URL is properly invoked
         self.loadFromAppClipController = UIHostingController(rootView: LoadFromAppClipView())
         self.loadFromAppClipController?.modalPresentationStyle = .fullScreen
@@ -112,25 +91,35 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         print("loading screen successful B)")
         
         handleUserActivity(for: url)
-        //self.getFirebaseRoutesList(vc: self.vc!)
+        vc!.getFirebaseRoutesList()
             
-        NotificationCenter.default.addObserver(forName: NSNotification.Name("firebaseLoaded"), object: nil, queue: nil) { (notification) -> Void in
+        let newObserver = NotificationCenter.default.addObserver(forName: NSNotification.Name("firebaseLoaded"), object: nil, queue: nil) { (notification) -> Void in
             /// dismiss loading screen
             self.loadFromAppClipController?.dismiss(animated: false)
             
             /// bring up list of routes
-            self.popoverController = UIHostingController(rootView: StartNavigationPopoverView(vc: self.vc!, routeList: self.vc!.availableRoutes))
-            self.popoverController?.modalPresentationStyle = .fullScreen
-            self.vc!.present(self.popoverController!, animated: true)
+            let popoverController = UIHostingController(rootView: StartNavigationPopoverView(vc: self.vc!, routeList: self.vc!.availableRoutes))
+            popoverController.modalPresentationStyle = .fullScreen
+            self.vc!.present(popoverController, animated: true)
             print("popover successful B)")
             // create listeners to ensure that the isReadingAnnouncement flag is reset properly
-            NotificationCenter.default.addObserver(forName: NSNotification.Name("shouldDismissRoutePopover"), object: nil, queue: nil) { (notification) -> Void in
-                self.popoverController?.dismiss(animated: true)
+            let dismissObserver = NotificationCenter.default.addObserver(forName: NSNotification.Name("shouldDismissRoutePopover"), object: nil, queue: nil) { (notification) -> Void in
+                print("DISMISSING POPOVER VIEW CONTROLLER")
+                popoverController.dismiss(animated: true)
+                self.loadRoute()
                 self.vc?.hideAllViewsHelper()
-               // self.loadRoute()
             }
+            self.observers.append(dismissObserver)
         }
- 
+        observers.append(newObserver)
+    }
+    
+    func loadRoute() {
+        #if !APPCLIP
+        vc?.arLogger.startTrial()
+        #endif
+        vc?.recordPathController.remove()
+        vc?.handleStateTransitionToNavigatingExternalRoute()
     }
     
     /// Configure App Clip to query items

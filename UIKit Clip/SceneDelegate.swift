@@ -18,9 +18,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var vc: ViewController?
     var route: SavedRoute?
     var enterCodeIDController: UIViewController?
-    var popoverController: UIViewController?
     var loadFromAppClipController: UIViewController?
     var scanTagController: UIViewController?
+    var observers: [Any] = []
   
     
     func createScene(_ scene: UIScene, showTagScan: Bool) {
@@ -83,6 +83,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
     
     private func populateSceneFromAppClipURL(scene: UIScene, url: URL) {
+        observers.map({ NotificationCenter.default.removeObserver($0) })
+        observers = []
         createScene(scene, showTagScan: false)
 
         /// This loading screen should show up if the URL is properly invoked
@@ -94,22 +96,24 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         handleUserActivity(for: url)
         self.getFirebaseRoutesList(vc: self.vc!)
             
-        NotificationCenter.default.addObserver(forName: NSNotification.Name("firebaseLoaded"), object: nil, queue: nil) { (notification) -> Void in
+        let newObserver = NotificationCenter.default.addObserver(forName: NSNotification.Name("firebaseLoaded"), object: nil, queue: nil) { (notification) -> Void in
             /// dismiss loading screen
             self.loadFromAppClipController?.dismiss(animated: false)
             
             /// bring up list of routes
-            self.popoverController = UIHostingController(rootView: StartNavigationPopoverView(vc: self.vc!, routeList: self.vc!.availableRoutes))
-            self.popoverController?.modalPresentationStyle = .fullScreen
-            self.vc!.present(self.popoverController!, animated: true)
+            let popoverController = UIHostingController(rootView: StartNavigationPopoverView(vc: self.vc!, routeList: self.vc!.availableRoutes))
+            popoverController.modalPresentationStyle = .fullScreen
+            self.vc!.present(popoverController, animated: true)
             print("popover successful B)")
             // create listeners to ensure that the isReadingAnnouncement flag is reset properly
-            NotificationCenter.default.addObserver(forName: NSNotification.Name("shouldDismissRoutePopover"), object: nil, queue: nil) { (notification) -> Void in
-                self.popoverController?.dismiss(animated: true)
-                self.loadRoute()
+            let dismissObserver = NotificationCenter.default.addObserver(forName: NSNotification.Name("shouldDismissRoutePopover"), object: nil, queue: nil) { (notification) -> Void in
+                popoverController.dismiss(animated: true)
                 self.vc?.hideAllViewsHelper()
+                self.loadRoute()
             }
+            self.observers.append(dismissObserver)
         }
+        observers.append(newObserver)
     }
     
     /// Configure App Clip to query items
