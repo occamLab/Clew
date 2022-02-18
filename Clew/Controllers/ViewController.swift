@@ -238,9 +238,6 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     ///this boolean denotes whether or not the app is loading a route from an automatic alignment
     var isAutomaticAlignment: Bool = false
     
-    ///tracks the observers that have been added for handling loading routes from an app clip invocation
-    var appClipObservers: [NSObjectProtocol] = []
-    
     /// ARDataLogger
     #if !APPCLIP
     var arLogger = ARLogger.shared
@@ -993,6 +990,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         ARSessionManager.shared.sceneView.frame = view.frame
         view.addSubview(ARSessionManager.shared.sceneView)
         
+        createAppClipObservers()
         setupAudioPlayers()
         loadAssets()
         createSettingsBundle()
@@ -2243,18 +2241,6 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     /// this is called once the app clip code ID has been entered
     @objc func codeIDEntered() {
         self.enterCodeIDController.remove()
-      
-        NotificationCenter.default.addObserver(forName: NSNotification.Name("firebaseLoaded"), object: nil, queue: nil) { (notification) -> Void in
-            self.add(self.selectRouteController)
-            /*self.selectRouteController.modalPresentationStyle = .formSheet
-            self.selectRouteController.modalTransitionStyle = .crossDissolve
-            self.present(self.selectRouteController, animated: true)*/
-            // create listeners to ensure that the isReadingAnnouncement flag is reset properly
-            NotificationCenter.default.addObserver(forName: NSNotification.Name("shouldDismissRoutePopover"), object: nil, queue: nil) { (notification) -> Void in
-                self.selectRouteController.remove()
-                self.handleStateTransitionToNavigatingExternalRoute()
-            }
-        }
         self.getFirebaseRoutesList()
     }
     
@@ -2300,10 +2286,27 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         handleStateTransitionToNavigatingExternalRoute()
     }
     
+    func createAppClipObservers() {
+        NotificationCenter.default.addObserver(forName: NSNotification.Name("firebaseLoaded"), object: nil, queue: nil) { (notification) -> Void in
+            /// dismiss loading screen
+            self.dismiss(animated: false)
+            
+            /// bring up list of routes
+            let popoverController = UIHostingController(rootView: StartNavigationPopoverView(vc: self, routeList: self.availableRoutes))
+            popoverController.modalPresentationStyle = .fullScreen
+            self.present(popoverController, animated: true)
+            print("popover successful B)")
+            // create listeners to ensure that the isReadingAnnouncement flag is reset properly
+        }
+        let dismissObserver = NotificationCenter.default.addObserver(forName: NSNotification.Name("shouldDismissRoutePopover"), object: nil, queue: nil) { (notification) -> Void in
+            print("ATTEMPTING TO LOAD ROUTE!!!")
+            self.dismiss(animated: true)
+            self.hideAllViewsHelper()
+            self.loadRoute()
+        }
+    }
+    
     func populateSceneFromAppClipURL(scene: UIScene, url: URL) {
-        appClipObservers.map({ NotificationCenter.default.removeObserver($0) })
-        appClipObservers = []
-
         /// This loading screen should show up if the URL is properly invoked
         let loadFromAppClipController = UIHostingController(rootView: LoadFromAppClipView())
         loadFromAppClipController.modalPresentationStyle = .fullScreen
@@ -2312,25 +2315,6 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         
         handleUserActivity(for: url)
         getFirebaseRoutesList()
-            
-        let newObserver = NotificationCenter.default.addObserver(forName: NSNotification.Name("firebaseLoaded"), object: nil, queue: nil) { (notification) -> Void in
-            /// dismiss loading screen
-            loadFromAppClipController.dismiss(animated: false)
-            
-            /// bring up list of routes
-            let popoverController = UIHostingController(rootView: StartNavigationPopoverView(vc: self, routeList: self.availableRoutes))
-            popoverController.modalPresentationStyle = .fullScreen
-            self.present(popoverController, animated: true)
-            print("popover successful B)")
-            // create listeners to ensure that the isReadingAnnouncement flag is reset properly
-            let dismissObserver = NotificationCenter.default.addObserver(forName: NSNotification.Name("shouldDismissRoutePopover"), object: nil, queue: nil) { (notification) -> Void in
-                popoverController.dismiss(animated: true)
-                self.hideAllViewsHelper()
-                self.loadRoute()
-            }
-            self.appClipObservers.append(dismissObserver)
-        }
-        appClipObservers.append(newObserver)
     }
     
     func getFirebaseRoutesList() {
@@ -2347,7 +2331,6 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
                         if let routesFile = routesFile as? [[String: String]] {
                             self.availableRoutes.routeList = routesFile
                             print("List: \(self.availableRoutes)")
-                            print("æ")
                             NotificationCenter.default.post(name: NSNotification.Name("firebaseLoaded"), object: nil)
                         }
                     }

@@ -61,6 +61,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         if let userActivity = connectionOptions.userActivities.first, userActivity.activityType == NSUserActivityTypeBrowsingWeb, let url = userActivity.webpageURL  {
+            createScene(scene)
             vc?.populateSceneFromAppClipURL(scene: scene, url: url)
         } else {
             createScene(scene)
@@ -73,7 +74,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard userActivity.activityType == NSUserActivityTypeBrowsingWeb, let url = userActivity.webpageURL else {
             return
         }
-        createScene(scene)
         vc?.populateSceneFromAppClipURL(scene: scene, url: url)
     }
 

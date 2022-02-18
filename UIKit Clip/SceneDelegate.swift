@@ -23,10 +23,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
         guard let scene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: scene)
-        vc = ViewController()
+        if vc == nil {
+            vc = ViewController()
+            window?.rootViewController = vc
+        }
         
         window?.frame = UIScreen.main.bounds
-        window?.rootViewController = vc
         window?.backgroundColor = .white
         window?.makeKeyAndVisible()
         UIApplication.shared.isIdleTimerDisabled = true
@@ -38,6 +40,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     /// For scenes created NOT through the invocation URL
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         if let userActivity = connectionOptions.userActivities.first, userActivity.activityType == NSUserActivityTypeBrowsingWeb, let url = userActivity.webpageURL  {
+            createScene(scene, showTagScan: false)
             vc?.populateSceneFromAppClipURL(scene: scene, url: url)
         } else {
             createScene(scene, showTagScan: true)
@@ -50,7 +53,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard userActivity.activityType == NSUserActivityTypeBrowsingWeb, let url = userActivity.webpageURL else {
             return
         }
-        createScene(scene, showTagScan: false)
         vc?.populateSceneFromAppClipURL(scene: scene, url: url)
     }
 
