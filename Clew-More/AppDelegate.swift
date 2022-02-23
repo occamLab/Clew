@@ -31,7 +31,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let filePath = Bundle.main.path(forResource: "GoogleService-Info_dev", ofType: "plist")!
         let options = FirebaseOptions(contentsOfFile: filePath)
         FirebaseApp.configure(options: options!)
-        //vc.beginScanning(self)
         return true
     }
     

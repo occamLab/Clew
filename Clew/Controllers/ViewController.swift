@@ -636,7 +636,6 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
                 ///announce to the user that they have sucessfully saved an anchor point.
                 delayTransition(announcement: NSLocalizedString("multipleUseRouteAnchorPointToRecordingRouteAnnouncement", comment: "This is the announcement which is spoken after the first anchor point of a multiple use route is saved. this signifies the completeion of the saving an anchor point procedure and the start of recording a route to be saved."), initialFocus: nil)
                 ///sends the user to a route recording of the program is creating a beginning route Anchor Point
-                //state = .startingNameCodeIDProcedure
                 state = .recordingRoute
                 return
             } else if let currentTransform = ARSessionManager.shared.currentFrame?.anchors.compactMap({$0 as? ARImageAnchor}).last?.transform {
@@ -1210,6 +1209,45 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         self.state = .mainScreen(announceArrival: false)
     }
     
+    func askToInitializeNFCTag(tag: NFCNDEFTag, errorMessage: String) {
+        if shouldRegister {
+            let uuidCode = UUID().uuidString
+            guard let url = URL(string: "https://berwinl.com/id?p=\(uuidCode)"), let payload = NFCNDEFPayload
+                    .wellKnownTypeURIPayload(url: url)
+              else {
+                print("Could not create payload")
+                return
+            }
+            let message = NFCNDEFMessage(records: [payload])
+
+            tag.writeNDEF(message) { error in
+                if error == nil {
+                    self.nfcSession?.invalidate()
+                    self.handleNFCURL(url)
+                    DispatchQueue.main.async {
+                        self.saveCodeIDButtonPressed()
+                    }
+                } else {
+                    self.nfcSession?.invalidate(errorMessage: error!.localizedDescription)
+                }
+            }
+        } else {
+            nfcSession?.invalidate(errorMessage: errorMessage)
+            let alert = UIAlertController(title: "Register NFC Tag as Place Identifier",
+                                          message: "This NFC tag is not registered with Clew Maps.  Would you like to register the tag with Clew Maps the next time you scan it?",
+                                          preferredStyle: .actionSheet)
+            alert.addAction(UIAlertAction(title: "Register NFC Tag on Next Scan", style: .default, handler: { action -> Void in
+                self.shouldRegister = true
+            }
+            ))
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action -> Void in
+                self.NFCEntrySwitch(entryPoint: self.nfcEntryPoint)
+            }
+            ))
+            present(alert, animated: true, completion: nil)
+        }
+    }
+    
     /// function that creates alerts for the home button
     func homePageNavigationProcesses() {
         // Create alert to warn users of lost information
@@ -1457,7 +1495,6 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
 
                     return
                 }
-                
                 tag.readNDEF(completionHandler: { (message: NFCNDEFMessage?, error: Error?) in
                     var statusMessage: String
                     if nil != error || nil == message {
@@ -1479,66 +1516,64 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
                                 print("test")
                                 if let url = url {
                                     // currently hardcoded :/, should probably change
-                                    if url.host == "berwinl.com" {
+                                    if url.host == "berwinl.com" && self.handleNFCURL(url) != nil {
                                         statusMessage = "Success!"
                                         session.alertMessage = statusMessage
                                         session.invalidate()
-                                        self.handleNFCURL(url)
                                         if self.nfcEntryPoint == "EnterCode"{
                                             self.codeIDEntered()
                                         }
                                         if self.nfcEntryPoint == "NameCode" {
                                             self.saveCodeIDButtonPressed()
-
                                         }
 
                                     } else {
                                         statusMessage = "Not a Recognized Clew Route Database"
-                                        session.alertMessage = statusMessage
-                                        session.invalidate()
-                                        self.NFCEntrySwitch(entryPoint: self.nfcEntryPoint)
+                                        if case .startingNameCodeIDProcedure = self.state {
+                                            self.askToInitializeNFCTag(tag: tag, errorMessage: statusMessage)
+                                        } else {
+                                            session.invalidate(errorMessage: statusMessage)
+                                        }
                                     }
-
                                 } else {
                                     statusMessage = "No URL Data Read"
-                                    session.alertMessage = statusMessage
-                                    session.invalidate()
-                                    self.NFCEntrySwitch(entryPoint: self.nfcEntryPoint)
-
+                                    if case .startingNameCodeIDProcedure = self.state {
+                                        self.askToInitializeNFCTag(tag: tag, errorMessage: statusMessage)
+                                    } else {
+                                        session.invalidate(errorMessage: statusMessage)
+                                    }
                                     print("No URL data stored")
                                 }
                                 
                             } else {
                                 statusMessage = "Data could not be recognized"
-                                session.alertMessage = statusMessage
-                                session.invalidate()
-                                self.NFCEntrySwitch(entryPoint: self.nfcEntryPoint)
+                                if case .startingNameCodeIDProcedure = self.state {
+                                    self.askToInitializeNFCTag(tag: tag, errorMessage: statusMessage)
+                                } else {
+                                    session.invalidate(errorMessage: statusMessage)
+                                }
                                 print("NFC data not recognized")
                             }
-
-                            
-                            
                         }
                         print("success!")
-
                     }
-
-
                 })
             })
         })
     }
     
-    func handleNFCURL(_ url: URL) {
+    func handleNFCURL(_ url: URL)->String? {
         self.appClipCodeID = ""
         guard let components = NSURLComponents(url: url, resolvingAgainstBaseURL: true), let queryItems = components.queryItems else {
-          return
+          return nil
         }
         /// with the invocation URL format https://occamlab.github.io/id?p=appClipCodeID, appClipCodeID being the name of the file in Firebase
         if let appClipCodeID = queryItems.first(where: { $0.name == "p"}) {
             self.appClipCodeID = appClipCodeID.value!
-          print("app clip code ID from URL: \(appClipCodeID.value!)")
+            print("app clip code ID from URL: \(appClipCodeID.value!)")
+            return self.appClipCodeID
         }
+        return nil
     }
     
     func NFCEntrySwitch(entryPoint: String) {
@@ -1981,6 +2016,9 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     /// the selected default unit index (this index cross-references `unit`, `unitText`, and `unitConversionFactor`
     var defaultUnit: Int!
     
+    /// register tag if invalid
+    var shouldRegister = false
+    
     /// Whether or not to upload the rich data
     var uploadRichData: Bool?
     
@@ -2076,6 +2114,8 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         paused = false
         ///update the state Boolean to say that this is recording the first anchor point
         startAnchorPoint = true
+        // clear this flag in case it was set before
+        shouldRegister = false
 
         ///sends the user to create a Anchor Point
         #if !APPCLIP
@@ -2226,16 +2266,11 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     
     /// presents a view for the user to enter the app clip code ID
     @objc func enterCodeID() {
-        #if CLEWMORE
-        //self.beginScanning(self.recordPathController.enterCodeButton)
-        print("Scanning Started")
-        #endif
         self.recordPathController.remove()
         self.add(enterCodeIDController)
         #if !APPCLIP
         self.rootContainerView.homeButton.isHidden = false
         #endif
-
     }
     
     /// this is called once the app clip code ID has been entered
@@ -2298,7 +2333,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
             print("popover successful B)")
             // create listeners to ensure that the isReadingAnnouncement flag is reset properly
         }
-        let dismissObserver = NotificationCenter.default.addObserver(forName: NSNotification.Name("shouldDismissRoutePopover"), object: nil, queue: nil) { (notification) -> Void in
+        NotificationCenter.default.addObserver(forName: NSNotification.Name("shouldDismissRoutePopover"), object: nil, queue: nil) { (notification) -> Void in
             print("ATTEMPTING TO LOAD ROUTE!!!")
             self.dismiss(animated: true)
             self.hideAllViewsHelper()
