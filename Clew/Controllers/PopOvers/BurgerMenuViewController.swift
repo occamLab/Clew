@@ -13,6 +13,8 @@ import InAppSettingsKit
 class BurgerMenuViewController: UITableViewController, UIPopoverPresentationControllerDelegate, IASKSettingsDelegate {
     var tutorialHostingController: UIHostingController<TutorialTestView>?
     var siriHostingController: UIHostingController<NavigationView<SiriWalkthrough>>?
+    var visualAlignmentHostingController: UIHostingController<NavigationView<VisualAnchorPointPractice>>?
+
 
     func settingsViewControllerDidEnd(_ settingsViewController: IASKAppSettingsViewController) {
         settingsViewController.dismiss(animated: true, completion: nil)
@@ -23,6 +25,7 @@ class BurgerMenuViewController: UITableViewController, UIPopoverPresentationCont
         NotificationCenter.default.addObserver(forName: Notification.Name("TutorialPopoverReadyToDismiss"), object: nil, queue: nil) { (notification) -> Void in
             self.tutorialHostingController?.dismiss(animated: true)
             self.siriHostingController?.dismiss(animated: true)
+            self.visualAlignmentHostingController?.dismiss(animated: true)
         }
     }
     
@@ -46,6 +49,9 @@ class BurgerMenuViewController: UITableViewController, UIPopoverPresentationCont
             siriShortcutsButtonPressed()
         }
         if indexPath == [0,3] {
+            visualAlignmentTutorialButtonPressed()
+        }
+        if indexPath == [0,4] {
             feedbackButtonPressed()
         }
     }
@@ -101,6 +107,16 @@ class BurgerMenuViewController: UITableViewController, UIPopoverPresentationCont
         NotificationCenter.default.post(name: Notification.Name("ClewPopoverDisplayed"), object: nil)
         ShowTutorialPage.shared.confineToSection = true
         self.present(siriHostingController!, animated: true)
+    }
+    
+    func visualAlignmentTutorialButtonPressed() {
+        let visualAlignmentTutorial = NavigationView {
+            VisualAnchorPointPractice()
+        }
+        visualAlignmentHostingController = UIHostingController(rootView: visualAlignmentTutorial)
+        NotificationCenter.default.post(name: Notification.Name("ClewPopoverDisplayed"), object: nil)
+        ShowTutorialPage.shared.confineToSection = true
+        self.present(visualAlignmentHostingController!, animated: true)
     }
     
     /// Called when the help button is pressed.  This function will display the help view (managed by HelpViewController) as a popover.

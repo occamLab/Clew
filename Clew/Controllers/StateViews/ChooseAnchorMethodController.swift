@@ -123,7 +123,7 @@ class ChooseAnchorMethodController: UIViewController, UIScrollViewDelegate {
         
        // visualAlignment.setImage(UIImage(named: "visualAlignment"), for: .normal)
         /*visualAlignment.imageEdgeInsets =  UIEdgeInsets(top: UIScreen.main.bounds.size.height/40, left: UIScreen.main.bounds.size.height/40, bottom: UIScreen.main.bounds.size.height/40, right: UIScreen.main.bounds.size.height/40)*/
-        visualAlignment.accessibilityLabel = NSLocalizedString("createVisualAnchorPointButtonAccessibilityLabel", comment: "This is the accessibility label for the button that starts the creation of a physical anchor point.")
+        visualAlignment.accessibilityLabel = NSLocalizedString("createVisualAnchorPointButtonAccessibilityLabel", comment: "This is the accessibility label for the button that starts the creation of a visual anchor point.")
         
         /// Creating a button that can be used to select visual alignment
         physicalAlignment = UIButton(type: .custom)

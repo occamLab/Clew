@@ -2616,7 +2616,7 @@ extension ViewController: VisualAlignmentManagerDelegate {
     }
     
     func alignmentFailed(fallbackTransform: simd_float4x4) {
-        AnnouncementManager.shared.announce(announcement: NSLocalizedString("noVisualMatchesNavigationNavigationIsUnlikelyToWorkWell", comment: "Instruct to use snap-to-route when no visual matches are found"))
+        AnnouncementManager.shared.announce(announcement: NSLocalizedString("noVisualMatchesNavigationNavigationIsUnlikelyToWorkWell", comment: "Warn user that navigation is unlikely to work well"))
         
         ARSessionManager.shared.manualAlignment = fallbackTransform
         SoundEffectManager.shared.meh()

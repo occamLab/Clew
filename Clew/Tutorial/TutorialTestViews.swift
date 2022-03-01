@@ -804,7 +804,7 @@ struct PhysicalAlignment: View {
             }
 
             VStack(alignment: .leading, spacing: 20) {
-                Text(NSLocalizedString("visualAlignmentTutorialTitle", comment: "Title of the physical alignment part of the tutorial"))
+                Text(NSLocalizedString("visualAlignmentTutorialTitle", comment: "Title of the visual alignment part of the tutorial"))
                 
                 Text(NSLocalizedString("visualAlignmentTutorialTextParagraph1", comment: "Text of the visual alignment part of the tutorial paragraph 1"))
             }
@@ -942,7 +942,7 @@ struct AnchorPointPracticeSubComponent: View {
                 }
             } else if practiceState == .initial || practiceState == .anchorPointCreationRequested {
                 //when starting anchor point practice
-                Text(NSLocalizedString("physicalAnchorPointPracticeSetTutorialTitle", comment: "Set an anchor point practice page title")).padding()
+                Text(NSLocalizedString("settingAPhysicalAnchorPointTutorialTitle", comment: "Set a physical anchor point practice page title")).padding()
                 
                 VStack(alignment: .leading, spacing: 20) {
                     Text(NSLocalizedString("anchorPointPracticeSetTutorialTextParagraph1", comment: "Set an anchor point practice page instructions paragraph 1"))
@@ -1131,7 +1131,7 @@ struct VisualAnchorPointPracticeSubComponent: View {
                 }
             } else if practiceState == .initial || practiceState == .anchorPointCreationRequested {
                 //when starting anchor point practice
-                Text(NSLocalizedString("visualAnchorPointPracticeSetTutorialTitle", comment: "Set an anchor point practice page title")).padding()
+                Text(NSLocalizedString("settingAVisualAnchorPointTutorialTitle", comment: "Set a visual anchor point practice page title")).padding()
                 
                 VStack(alignment: .leading, spacing: 20) {
                     Text(NSLocalizedString("visualAnchorPointPracticeSetTutorialTextParagraph1", comment: "Set a visual anchor point practice page instructions paragraph 1"))
