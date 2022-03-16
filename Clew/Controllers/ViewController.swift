@@ -1499,8 +1499,13 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
                     var statusMessage: String
                     if nil != error || nil == message {
                         statusMessage = "Fail to read NDEF from tag"
-                        self.NFCEntrySwitch(entryPoint: self.nfcEntryPoint)
-
+                        DispatchQueue.main.async {
+                            if case .startingNameCodeIDProcedure = self.state {
+                                self.askToInitializeNFCTag(tag: tag, errorMessage: statusMessage)
+                            } else {
+                                session.invalidate(errorMessage: statusMessage)
+                            }
+                        }
                     } else {
                         statusMessage = "Successfully Read NFC Tag"
                         DispatchQueue.main.async {
