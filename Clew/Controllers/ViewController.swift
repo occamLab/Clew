@@ -257,39 +257,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     
     /// This is the ARWorldMap of the route being navigated.
     var routeWorldMap: ARWorldMap?
-    
-    // MARK: - Speech Synthesizer Delegate
-    
-    /// Called when an utterance is finished.  We implement this function so that we can keep track of
-    /// whether or not an announcement is currently being read to the user.
-    ///
-    /// - Parameters:
-    ///   - synthesizer: the synthesizer that finished the utterance
-    ///   - utterance: the utterance itself
-    func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer,
-                           didFinish utterance: AVSpeechUtterance) {
-        currentAnnouncement = nil
-        if let nextAnnouncement = self.nextAnnouncement {
-            self.nextAnnouncement = nil
-            announce(announcement: nextAnnouncement)
-        }
-    }
-    
-    /// Called when an utterance is canceled.  We implement this function so that we can keep track of
-    /// whether or not an announcement is currently being read to the user.
-    ///
-    /// - Parameters:
-    ///   - synthesizer: the synthesizer that finished the utterance
-    ///   - utterance: the utterance itself
-    func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer,
-                           didCancel utterance: AVSpeechUtterance) {
-        currentAnnouncement = nil
-        if let nextAnnouncement = self.nextAnnouncement {
-            self.nextAnnouncement = nil
-            announce(announcement: nextAnnouncement)
-        }
-    }
-    
+        
     /// Handler for the mainScreen app state
     ///
     /// - Parameter announceArrival: a Boolean that indicates whether the user's arrival should be announced (true means the user has arrived)
@@ -430,7 +398,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
 
         // generate path from PathFinder class
         // enabled hapticFeedback generates more keypoints
-        let routeKeypoints = PathFinder(crumbs: crumbs.reversed(), hapticFeedback: hapticFeedback, voiceFeedback: voiceFeedback).keypoints
+        let routeKeypoints = PathFinder(crumbs: crumbs.reversed(), hapticFeedback: hapticFeedback, voiceFeedback: AnnouncementManager.shared.voiceFeedback).keypoints
         RouteManager.shared.setRouteKeypoints(kps: routeKeypoints)
         
         // save keypoints data for debug log
@@ -1020,8 +988,11 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         // make sure this happens after the view is created!
         rootContainerView.countdownTimer.delegate = self
         ///sets the length of the timer to be equal to what the person has in their settings
+        ///
+        ///
         ViewController.alignmentWaitingPeriod = timerLength
-        
+        AnnouncementManager.shared.announcementText = rootContainerView.announcementText
+
         addGestures()
         firebaseSetup.setupFirebaseObservers(vc: self)
         
@@ -1056,7 +1027,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
             // TODO: I18N / L10N
             if let gaveFeedback = notification.object as? Bool, gaveFeedback {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-                    self.announce(announcement: NSLocalizedString("thanksForFeedbackAnnouncement", comment: "This is read right after the user fills out a feedback survey."))
+                    AnnouncementManager.shared.announce(announcement: NSLocalizedString("thanksForFeedbackAnnouncement", comment: "This is read right after the user fills out a feedback survey."))
                 }
             }
         }
@@ -1130,7 +1101,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
             self.currentAnnouncement = nil
             if let nextAnnouncement = self.nextAnnouncement {
                 self.nextAnnouncement = nil
-                self.announce(announcement: nextAnnouncement)
+                AnnouncementManager.shared.announce(announcement: nextAnnouncement)
             }
         }
         
@@ -1410,7 +1381,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         showPath = defaults.bool(forKey: "showPath")
         defaultPathColor = defaults.integer(forKey: "pathColor")
         soundFeedback = defaults.bool(forKey: "soundFeedback")
-        voiceFeedback = defaults.bool(forKey: "voiceFeedback")
+        AnnouncementManager.shared.voiceFeedback = defaults.bool(forKey: "voiceFeedback")
         hapticFeedback = defaults.bool(forKey: "hapticFeedback")
         sendLogs = true // (making this mandatory) defaults.bool(forKey: "sendLogs")
         timerLength = defaults.integer(forKey: "timerLength")
@@ -1419,7 +1390,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         logRichData = defaults.bool(forKey: "logRichData")
         
         // TODO: log settings here
-        logger.logSettings(defaultUnit: defaultUnit, defaultColor: defaultColor, soundFeedback: soundFeedback, voiceFeedback: voiceFeedback, hapticFeedback: hapticFeedback, sendLogs: sendLogs, timerLength: timerLength, adjustOffset: adjustOffset)
+        logger.logSettings(defaultUnit: defaultUnit, defaultColor: defaultColor, soundFeedback: soundFeedback, voiceFeedback: AnnouncementManager.shared.voiceFeedback, hapticFeedback: hapticFeedback, sendLogs: sendLogs, timerLength: timerLength, adjustOffset: adjustOffset)
         
         // leads to JSON like:
         //   options: { "unit": "meter", "soundFeedback", true, ... }
@@ -1715,16 +1686,16 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         if let announcement = announcement {
             if UIAccessibility.isVoiceOverRunning {
                 Timer.scheduledTimer(withTimeInterval: 2.0, repeats: false) { timer in
-                    self.announce(announcement: announcement)
+                    AnnouncementManager.shared.announce(announcement: announcement)
                 }
             } else {
-                announce(announcement: announcement)
+                AnnouncementManager.shared.announce(announcement: announcement)
             }
         }
     }
     
     func alignmentTransition() {
-        self.announce(announcement: NSLocalizedString("resumeAnchorPointToReturnNavigationAnnouncement", comment: "This is an Announcement which indicates that the pause session is complete, that the program was able to align with the anchor point, and that return navigation has started."))
+        AnnouncementManager.shared.announce(announcement: NSLocalizedString("resumeAnchorPointToReturnNavigationAnnouncement", comment: "This is an Announcement which indicates that the pause session is complete, that the program was able to align with the anchor point, and that return navigation has started."))
             Timer.scheduledTimer(withTimeInterval: 3.0, repeats: false) { timer in
                 self.state = .navigatingRoute
             }
@@ -1957,7 +1928,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         if case .navigatingRoute = state {
             logger.logSpeech(utterance: altText)
         }
-        announce(announcement: altText)
+        AnnouncementManager.shared.announce(announcement: altText)
     }
     
     // MARK: - BreadCrumbs
@@ -2007,6 +1978,13 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     /// The delay between haptic feedback pulses in seconds
     static let FEEDBACKDELAY = 0.4
     
+    var errorFeedbackTimer = Date()
+    var playedErrorSoundForOffRoute = false
+    /// Delay (and interval) before playing the error sound when the user is not facing the next keypoint of the route
+    static let delayBeforeErrorSound = 3.0
+    /// Delay (and interval) before announcing to the user that they should press the get directions button
+    static let delayBeforeErrorAnnouncement = 8.0
+    
     // MARK: - Settings bundle configuration
     
     /// the bundle configuration has 0 as feet and 1 as meters
@@ -2041,9 +2019,6 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     
     /// true if sound feedback should be generated when the user is facing the next waypoint, false otherwise
     var soundFeedback: Bool!
-    
-    /// true if the app should announce directions via text to speech, false otherwise
-    var voiceFeedback: Bool!
     
     /// true if haptic feedback should be generated when the user is facing the next waypoint, false otherwise
     var hapticFeedback: Bool!
@@ -2091,14 +2066,14 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         switch trackingSessionErrorState {
         case .insufficientFeatures:
             if trackingWarningsAllowed {
-                self.announce(announcement: NSLocalizedString("insuficientFeaturesDegradedTrackingAnnouncemnt", comment: "An announcement which lets the user know  that their current surroundings do not have enough visual markers and thus the app's ability to track a route has been lowered."))
+                AnnouncementManager.shared.announce(announcement: NSLocalizedString("insuficientFeaturesDegradedTrackingAnnouncemnt", comment: "An announcement which lets the user know  that their current surroundings do not have enough visual markers and thus the app's ability to track a route has been lowered."))
                 if self.soundFeedback {
                     SoundEffectManager.shared.playSystemSound(id: 1050)
                 }
             }
         case .excessiveMotion:
             if trackingWarningsAllowed {
-                self.announce(announcement: NSLocalizedString("excessiveMotionDegradedTrackingAnnouncemnt", comment: "An announcement which lets the user know that there is too much movement of their device and thus the app's ability to track a route has been lowered."))
+                AnnouncementManager.shared.announce(announcement: NSLocalizedString("excessiveMotionDegradedTrackingAnnouncemnt", comment: "An announcement which lets the user know that there is too much movement of their device and thus the app's ability to track a route has been lowered."))
                 if self.soundFeedback {
                     SoundEffectManager.shared.playSystemSound(id: 1050)
                 }
@@ -2638,12 +2613,34 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         
         // use a stricter criteria than 12 o'clock for providing haptic feedback
         if directionToNextKeypoint.lateralDistanceRatioWhenCrossingTarget < lateralDisplacementToleranceRatio || abs(directionToNextKeypoint.angleDiff) < coneWidth {
+            // mark this since we now want to wait a while before giving error feedback
+            errorFeedbackTimer = Date()
+            playedErrorSoundForOffRoute = false
             let timeInterval = feedbackTimer.timeIntervalSinceNow
             if(-timeInterval > ViewController.FEEDBACKDELAY) {
                 // wait until desired time interval before sending another feedback
-                if (hapticFeedback) { feedbackGenerator?.impactOccurred() }
-                if (soundFeedback) { SoundEffectManager.shared.playSystemSound(id: 1103) }
+                if (hapticFeedback) {
+                    feedbackGenerator?.impactOccurred()
+                }
+                if (soundFeedback) { SoundEffectManager.shared.playSystemSound(id: 1103)
+                }
                 feedbackTimer = Date()
+            }
+        } else {
+            let timeInterval = errorFeedbackTimer.timeIntervalSinceNow
+            if -timeInterval > ViewController.delayBeforeErrorAnnouncement {
+                // wait until desired time interval before sending another feedback
+                if AnnouncementManager.shared.voiceFeedback {
+                    AnnouncementManager.shared.announce(announcement: NSLocalizedString("offThePathAnnouncement", comment: "this announcemet is delivered if the user is off the path for 10 seconds or more."))
+                }
+                errorFeedbackTimer = Date()
+                playedErrorSoundForOffRoute = false
+            } else if -timeInterval > ViewController.delayBeforeErrorSound {
+                // wait until desired time interval before sending another feedback
+                if soundFeedback, !playedErrorSoundForOffRoute {
+                    SoundEffectManager.shared.error()
+                    playedErrorSoundForOffRoute = true
+                }
             }
         }
         for anchorPoint in RouteManager.shared.intermediateAnchorPoints {
@@ -2661,44 +2658,6 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
                     voiceNoteToPlay?.prepareToPlay()
                 } catch {}
                 readVoiceNote()
-            }
-        }
-    }
-    
-    
-    /// Communicates a message to the user via speech.  If VoiceOver is active, then VoiceOver is used to communicate the announcement, otherwise we use the AVSpeechEngine
-    ///
-    /// - Parameter announcement: the text to read to the user
-    func announce(announcement: String) {
-        if let currentAnnouncement = currentAnnouncement {
-            // don't interrupt current announcement, but if there is something new to say put it on the queue to say next.  Note that adding it to the queue in this fashion could result in the next queued announcement being preempted
-            if currentAnnouncement != announcement {
-                nextAnnouncement = announcement
-            }
-            return
-        }
-        
-        rootContainerView.announcementText.isHidden = false
-        rootContainerView.announcementText.text = announcement
-        announcementRemovalTimer?.invalidate()
-        announcementRemovalTimer = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: false) { timer in
-            self.rootContainerView.announcementText.isHidden = true
-        }
-        if UIAccessibility.isVoiceOverRunning {
-            // use the VoiceOver API instead of text to speech
-            currentAnnouncement = announcement
-            UIAccessibility.post(notification: UIAccessibility.Notification.announcement, argument: announcement)
-        } else if voiceFeedback {
-            let audioSession = AVAudioSession.sharedInstance()
-            do {
-                try audioSession.setCategory(AVAudioSession.Category.playback)
-                try audioSession.setActive(true)
-                let utterance = AVSpeechUtterance(string: announcement)
-                utterance.rate = 0.6
-                currentAnnouncement = announcement
-                synth.speak(utterance)
-            } catch {
-                print("Unexpected error announcing something using AVSpeechEngine!")
             }
         }
     }
@@ -2986,12 +2945,12 @@ extension ViewController: ARSessionManagerDelegate {
         }
         if ARSessionManager.shared.initialWorldMap != nil, attemptingRelocalization {
             if trackingWarningsAllowed {
-                announce(announcement: NSLocalizedString("realignToSavedRouteAnnouncement", comment: "An announcement which lets the user know that their surroundings have been matched to a saved route"))
+                AnnouncementManager.shared.announce(announcement: NSLocalizedString("realignToSavedRouteAnnouncement", comment: "An announcement which lets the user know that their surroundings have been matched to a saved route"))
             }
             attemptingRelocalization = false
         } else if oldTrackingSessionErrorState != nil {
             if trackingWarningsAllowed {
-                announce(announcement: NSLocalizedString("fixedTrackingAnnouncement", comment: "Let user know that the ARKit tracking session has returned to its normal quality (this is played after the tracking has been restored from thir being insuficent visual features or excessive motion which degrade the tracking)"))
+                AnnouncementManager.shared.announce(announcement: NSLocalizedString("fixedTrackingAnnouncement", comment: "Let user know that the ARKit tracking session has returned to its normal quality (this is played after the tracking has been restored from thir being insuficent visual features or excessive motion which degrade the tracking)"))
                 if soundFeedback {
                     SoundEffectManager.shared.playSystemSound(id: 1025)
                 }

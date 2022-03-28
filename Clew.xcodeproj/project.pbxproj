@@ -31,6 +31,18 @@
 		8227FD03272B0954001031F9 /* PRTweenTimingFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 8227FD00272B0953001031F9 /* PRTweenTimingFunctions.m */; };
 		8227FD04272B0954001031F9 /* PRTweenTimingFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 8227FD00272B0953001031F9 /* PRTweenTimingFunctions.m */; };
 		82B25182278DF4B0001E3AB6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 82B25184278DF4B0001E3AB6 /* LaunchScreen.storyboard */; };
+		82C027CF27F2454C00F7B4C7 /* AnnouncementManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82C027CE27F2454C00F7B4C7 /* AnnouncementManager.swift */; };
+		82C027D027F2454C00F7B4C7 /* AnnouncementManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82C027CE27F2454C00F7B4C7 /* AnnouncementManager.swift */; };
+		82C027D827F2528300F7B4C7 /* ClewErrorSound.wav in Resources */ = {isa = PBXBuildFile; fileRef = 82C027D327F2528300F7B4C7 /* ClewErrorSound.wav */; };
+		82C027D927F2528300F7B4C7 /* ClewErrorSound.wav in Resources */ = {isa = PBXBuildFile; fileRef = 82C027D327F2528300F7B4C7 /* ClewErrorSound.wav */; };
+		82C027DA27F2528300F7B4C7 /* ClewSuccessSound.wav in Resources */ = {isa = PBXBuildFile; fileRef = 82C027D427F2528300F7B4C7 /* ClewSuccessSound.wav */; };
+		82C027DB27F2528300F7B4C7 /* ClewSuccessSound.wav in Resources */ = {isa = PBXBuildFile; fileRef = 82C027D427F2528300F7B4C7 /* ClewSuccessSound.wav */; };
+		82C027DC27F2528300F7B4C7 /* ClewTutorialFeedback.wav in Resources */ = {isa = PBXBuildFile; fileRef = 82C027D527F2528300F7B4C7 /* ClewTutorialFeedback.wav */; };
+		82C027DD27F2528300F7B4C7 /* ClewTutorialFeedback.wav in Resources */ = {isa = PBXBuildFile; fileRef = 82C027D527F2528300F7B4C7 /* ClewTutorialFeedback.wav */; };
+		82C027DE27F2528300F7B4C7 /* StartRecording.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 82C027D627F2528300F7B4C7 /* StartRecording.aiff */; };
+		82C027DF27F2528300F7B4C7 /* StartRecording.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 82C027D627F2528300F7B4C7 /* StartRecording.aiff */; };
+		82C027E027F2528300F7B4C7 /* StopRecording.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 82C027D727F2528300F7B4C7 /* StopRecording.aiff */; };
+		82C027E127F2528300F7B4C7 /* StopRecording.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 82C027D727F2528300F7B4C7 /* StopRecording.aiff */; };
 		98006F82268382D800E61861 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 98006F81268382D800E61861 /* Assets.xcassets */; };
 		98006F85268382D800E61861 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 98006F83268382D800E61861 /* LaunchScreen.storyboard */; };
 		98006FB22683844A00E61861 /* RecordPathController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470EE022C119F4001092A4 /* RecordPathController.swift */; };
@@ -226,6 +238,13 @@
 		82AD6A24252F80AA00902A11 /* speaker.mtl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = speaker.mtl; sourceTree = "<group>"; };
 		82B25183278DF4B0001E3AB6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		82BC47FD2640383300C7D364 /* Surveys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Surveys.swift; sourceTree = "<group>"; };
+		82C027CE27F2454C00F7B4C7 /* AnnouncementManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnouncementManager.swift; sourceTree = "<group>"; };
+		82C027D227F2528300F7B4C7 /* SettingsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsTableViewController.h; sourceTree = "<group>"; };
+		82C027D327F2528300F7B4C7 /* ClewErrorSound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = ClewErrorSound.wav; sourceTree = "<group>"; };
+		82C027D427F2528300F7B4C7 /* ClewSuccessSound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = ClewSuccessSound.wav; sourceTree = "<group>"; };
+		82C027D527F2528300F7B4C7 /* ClewTutorialFeedback.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = ClewTutorialFeedback.wav; sourceTree = "<group>"; };
+		82C027D627F2528300F7B4C7 /* StartRecording.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = StartRecording.aiff; sourceTree = "<group>"; };
+		82C027D727F2528300F7B4C7 /* StopRecording.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = StopRecording.aiff; sourceTree = "<group>"; };
 		82E4A5CE262A26DC000BEB44 /* Clew.entitlements */ = {isa = PBXFileReference; explicitFileType = text.plist.entitlements; path = Clew.entitlements; sourceTree = "<group>"; };
 		82F2DDD122E26A44005CD7D0 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		82F2DDD322E26A44005CD7D0 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/SettingsAndHelp.strings; sourceTree = "<group>"; };
@@ -399,6 +418,19 @@
 			path = "imported dependencies";
 			sourceTree = "<group>";
 		};
+		82C027D127F2528300F7B4C7 /* Sound Effects */ = {
+			isa = PBXGroup;
+			children = (
+				82C027D227F2528300F7B4C7 /* SettingsTableViewController.h */,
+				82C027D327F2528300F7B4C7 /* ClewErrorSound.wav */,
+				82C027D427F2528300F7B4C7 /* ClewSuccessSound.wav */,
+				82C027D527F2528300F7B4C7 /* ClewTutorialFeedback.wav */,
+				82C027D627F2528300F7B4C7 /* StartRecording.aiff */,
+				82C027D727F2528300F7B4C7 /* StopRecording.aiff */,
+			);
+			path = "Sound Effects";
+			sourceTree = "<group>";
+		};
 		98006F77268382D600E61861 /* UIKit Clip */ = {
 			isa = PBXGroup;
 			children = (
@@ -500,6 +532,7 @@
 			children = (
 				9863AF6A26B495CD00EF0C64 /* Experiment */,
 				82E4A5CE262A26DC000BEB44 /* Clew.entitlements */,
+				82C027D127F2528300F7B4C7 /* Sound Effects */,
 				E5D1695522E103A0008754D0 /* localizations */,
 				E5470EAA22C119F4001092A4 /* Voice Notes */,
 				E5470EAF22C119F4001092A4 /* Misc */,
@@ -544,6 +577,7 @@
 				82273939272C7E43006C181E /* ARSessionManager.swift */,
 				8227393E272C7E7D006C181E /* RouteManager.swift */,
 				8227394327308486006C181E /* SoundEffectManager.swift */,
+				82C027CE27F2454C00F7B4C7 /* AnnouncementManager.swift */,
 			);
 			path = Misc;
 			sourceTree = "<group>";
@@ -765,6 +799,8 @@
 			files = (
 				9805366426838C3C0065E80F /* SettingsAndHelp.storyboard in Resources */,
 				98006F85268382D800E61861 /* LaunchScreen.storyboard in Resources */,
+				82C027E027F2528300F7B4C7 /* StopRecording.aiff in Resources */,
+				82C027DE27F2528300F7B4C7 /* StartRecording.aiff in Resources */,
 				98006F82268382D800E61861 /* Assets.xcassets in Resources */,
 				98AB6079269DDCC700613BB5 /* anchorInFrame.mp3 in Resources */,
 				98006FBD2683859700E61861 /* StartRecording.aiff in Resources */,
@@ -774,7 +810,10 @@
 				9805366C2683AC780065E80F /* Crumb.obj in Resources */,
 				98AA5890269DD122001123F0 /* GoogleService-Info.plist in Resources */,
 				98260258268CC1DB00D66811 /* speaker.obj in Resources */,
+				82C027DA27F2528300F7B4C7 /* ClewSuccessSound.wav in Resources */,
+				82C027DC27F2528300F7B4C7 /* ClewTutorialFeedback.wav in Resources */,
 				98AA588C269DD11D001123F0 /* GoogleService-Info_dev.plist in Resources */,
+				82C027D827F2528300F7B4C7 /* ClewErrorSound.wav in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -782,14 +821,17 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				82C027D927F2528300F7B4C7 /* ClewErrorSound.wav in Resources */,
 				98FF7AD8269CC147008C64E5 /* SettingsAndHelp.storyboard in Resources */,
 				98FF7ADF269CC169008C64E5 /* help in Resources */,
 				98FF7AD9269CC14D008C64E5 /* BurgerMenu.storyboard in Resources */,
 				98FF7AE1269CC172008C64E5 /* speaker.obj in Resources */,
 				98FF7ABA269CC0CB008C64E5 /* Settings.bundle in Resources */,
+				82C027DD27F2528300F7B4C7 /* ClewTutorialFeedback.wav in Resources */,
 				98FF7AE0269CC16B008C64E5 /* Confirm.mp3 in Resources */,
 				98FF7AA2269CBFEB008C64E5 /* Preview Assets.xcassets in Resources */,
 				98FF7AA7269CC040008C64E5 /* Localizable.strings in Resources */,
+				82C027DB27F2528300F7B4C7 /* ClewSuccessSound.wav in Resources */,
 				98FF7AE2269CC175008C64E5 /* Crumb.obj in Resources */,
 				82B25182278DF4B0001E3AB6 /* LaunchScreen.storyboard in Resources */,
 				98AA588D269DD11E001123F0 /* GoogleService-Info_dev.plist in Resources */,
@@ -797,8 +839,10 @@
 				98FF7AE3269CC178008C64E5 /* speaker.mtl in Resources */,
 				98FF7ABD269CC0E0008C64E5 /* StopRecording.aiff in Resources */,
 				98FF7ABC269CC0DD008C64E5 /* StartRecording.aiff in Resources */,
+				82C027E127F2528300F7B4C7 /* StopRecording.aiff in Resources */,
 				9863AF6E26B4965600EF0C64 /* consentFormContent.html in Resources */,
 				98FF7ABB269CC0CE008C64E5 /* Assets.xcassets in Resources */,
+				82C027DF27F2528300F7B4C7 /* StartRecording.aiff in Resources */,
 				98AB607A269DDCC700613BB5 /* anchorInFrame.mp3 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -822,6 +866,7 @@
 				8227FCFC272B0845001031F9 /* PRTween.m in Sources */,
 				9863AF0926B4383F00EF0C64 /* RouteDocumentData.swift in Sources */,
 				98006FB92683846200E61861 /* ResumeTrackingConfirmController.swift in Sources */,
+				82C027CF27F2454C00F7B4C7 /* AnnouncementManager.swift in Sources */,
 				98006FC7268385D400E61861 /* HelpViewController.swift in Sources */,
 				9863AF0826B331E900EF0C64 /* PathLogger.swift in Sources */,
 				987BA6F4268E53C0008B129E /* StartNavigationPopoverView.swift in Sources */,
@@ -862,6 +907,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				82C027D027F2454C00F7B4C7 /* AnnouncementManager.swift in Sources */,
 				98FF7ACA269CC10A008C64E5 /* ResumeTrackingController.swift in Sources */,
 				98FF7AAD269CC0A3008C64E5 /* PathLogger.swift in Sources */,
 				98AA58A0269F7AD5001123F0 /* OptionsHeaderView.swift in Sources */,

@@ -356,3 +356,4 @@
     "nameSavedRouteLabel" = "Below, you can enter a name for the route you just recorded.";
     "nameSavedRouteTextField" = "Enter route name here";
     "nameSavedRouteButtonText" = "Save Route Name";
+"offThePathAnnouncement" = "If you are having trouble following the route, press the \"get directions\" button.";
