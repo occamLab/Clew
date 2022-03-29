@@ -356,4 +356,8 @@
     "nameSavedRouteLabel" = "Below, you can enter a name for the route you just recorded.";
     "nameSavedRouteTextField" = "Enter route name here";
     "nameSavedRouteButtonText" = "Save Route Name";
+"turnLeftUntilYouFeelHapticFeedback" = "Turn left until haptic feedback indicates you are on track";
+"turnRightUntilYouFeelHapticFeedback" = "Turn right until haptic feedback indicates you are on track";
+"youAreOnTrack" = "You are on track";
+
 "offThePathAnnouncement" = "If you are having trouble following the route, press the \"get directions\" button.";

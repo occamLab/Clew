@@ -423,6 +423,8 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         
         showStopNavigationButton()
         remindedUserOfOffsetAdjustment = false
+        playedErrorSoundForOffRoute = false
+        remindedUserOfDirectionsButton = false
 
         // wait a little bit before starting navigation to allow screen to transition and make room for the first direction announcement to be communicated
         
@@ -1977,6 +1979,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     static let FEEDBACKDELAY = 0.4
     
     var errorFeedbackTimer = Date()
+    var remindedUserOfDirectionsButton = false
     var playedErrorSoundForOffRoute = false
     /// Delay (and interval) before playing the error sound when the user is not facing the next keypoint of the route
     static let delayBeforeErrorSound = 3.0
@@ -2613,7 +2616,12 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         if directionToNextKeypoint.lateralDistanceRatioWhenCrossingTarget < lateralDisplacementToleranceRatio || abs(directionToNextKeypoint.angleDiff) < coneWidth {
             // mark this since we now want to wait a while before giving error feedback
             errorFeedbackTimer = Date()
+            if playedErrorSoundForOffRoute || remindedUserOfDirectionsButton {
+                AnnouncementManager.shared.announce(announcement: NSLocalizedString("youAreOnTrack", comment: "tell the user they are now on track"))
+            }
             playedErrorSoundForOffRoute = false
+            remindedUserOfDirectionsButton = false
+            
             let timeInterval = feedbackTimer.timeIntervalSinceNow
             if(-timeInterval > ViewController.FEEDBACKDELAY) {
                 // wait until desired time interval before sending another feedback
@@ -2628,15 +2636,20 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
             let timeInterval = errorFeedbackTimer.timeIntervalSinceNow
             if -timeInterval > ViewController.delayBeforeErrorAnnouncement {
                 // wait until desired time interval before sending another feedback
-                if AnnouncementManager.shared.voiceFeedback {
-                    AnnouncementManager.shared.announce(announcement: NSLocalizedString("offThePathAnnouncement", comment: "this announcemet is delivered if the user is off the path for 10 seconds or more."))
-                }
+                AnnouncementManager.shared.announce(announcement: NSLocalizedString("offThePathAnnouncement", comment: "this announcemet is delivered if the user is off the path for 10 seconds or more."))
                 errorFeedbackTimer = Date()
                 playedErrorSoundForOffRoute = false
+                remindedUserOfDirectionsButton = true
             } else if -timeInterval > ViewController.delayBeforeErrorSound {
                 // wait until desired time interval before sending another feedback
                 if soundFeedback, !playedErrorSoundForOffRoute {
                     SoundEffectManager.shared.error()
+                    if directionToNextKeypoint.angleDiff < 0 {
+                        AnnouncementManager.shared.announce(announcement: NSLocalizedString("turnLeftUntilYouFeelHapticFeedback", comment: "indicates you need to turn left to get on track"))
+                    } else {
+                        AnnouncementManager.shared.announce(announcement: NSLocalizedString("turnRightUntilYouFeelHapticFeedback", comment: "indicates you need to turn right to get on track"))
+
+                    }
                     playedErrorSoundForOffRoute = true
                 }
             }
