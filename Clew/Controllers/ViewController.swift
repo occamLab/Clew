@@ -129,7 +129,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     static var alignmentWaitingPeriod = 5
     
     /// A threshold distance between the user's current position and a voice note.  If the user is closer than this value the voice note will be played
-    static let voiceNotePlayDistanceThreshold : Float = 0.75
+    static let voiceNotePlayDistanceThreshold : Float = 1.5
     
     /// The state of the ARKit tracking session as last communicated to us through the delegate protocol.  This is useful if you want to do something different in the delegate method depending on the previous state
     var trackingSessionErrorState : ARTrackingError?
@@ -374,6 +374,9 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
                     NSKeyedUnarchiver.setClass(LocationInfo.self, forClassName: "Clew_More.LocationInfo")
                     NSKeyedUnarchiver.setClass(RouteAnchorPoint.self, forClassName: "Clew_More.RouteAnchorPoint")
                     if let document = try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data!) as? RouteDocumentData {
+                        
+                        document.importAudioNotes()
+                        
                         let thisRoute = document.route
                         ARSessionManager.shared.initialWorldMap = document.map
                         self.state = .startingResumeProcedure(route: thisRoute, worldMap: ARSessionManager.shared.initialWorldMap, navigateStartToEnd: true)
@@ -2628,7 +2631,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
                 if (hapticFeedback) {
                     feedbackGenerator?.impactOccurred()
                 }
-                if (soundFeedback) { SoundEffectManager.shared.playSystemSound(id: 1103)
+                if (soundFeedback) { SoundEffectManager.shared.playSystemSound(id: 4332)
                 }
                 feedbackTimer = Date()
             }

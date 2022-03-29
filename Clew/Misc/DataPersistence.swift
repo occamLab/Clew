@@ -84,42 +84,7 @@ class DataPersistence {
                 } catch {
                     print("failed to archive import route")
                 }
-                
-                if let beginNote = documentData.beginVoiceNote {
-                    let voiceData = Data(base64Encoded: beginNote)
-                    let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-                    let path = documentData.route.beginRouteAnchorPoint.voiceNote! as String
-                    let url = documentsDirectory.appendingPathComponent(path)
-                    do {
-                        try voiceData?.write(to: url)
-                    } catch {
-                        print("couldn't write file")
-                    }
-                }
-                
-                if let endNote = documentData.endVoiceNote {
-                    let voiceData = Data(base64Encoded: endNote)
-                    let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-                    let path = documentData.route.endRouteAnchorPoint.voiceNote! as String
-                    let url = documentsDirectory.appendingPathComponent(path)
-                    do {
-                        try voiceData?.write(to: url)
-                    } catch {
-                        print("couldn't write file")
-                    }
-                }
-                
-                for (i, voiceNote) in documentData.routeVoiceNotes.enumerated() {
-                    let voiceData = Data(base64Encoded: voiceNote as String)
-                    let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-                    let path = documentData.route.intermediateAnchorPoints[i].voiceNote! as String
-                    let url = documentsDirectory.appendingPathComponent(path)
-                    do {
-                        try voiceData?.write(to: url)
-                    } catch {
-                        print("couldn't write file")
-                    }
-                }
+                documentData.importAudioNotes()
                 NotificationCenter.default.post(name: NSNotification.Name("shouldOpenRoute"), object: nil)
                 print("posted")
             }

@@ -86,4 +86,42 @@ class RouteDocumentData: NSObject, NSSecureCoding {
         /// construct a new saved route from the decoded data
         self.init(route: route, map: newMap, beginVoiceNote: beginNote as String?, endVoiceNote: endNote as String?, routeVoiceNotes: routeVoiceNotesFinal)
     }
+    
+    func importAudioNotes() {
+        if let beginNote = beginVoiceNote {
+            let voiceData = Data(base64Encoded: beginNote)
+            let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+            let path = route.beginRouteAnchorPoint.voiceNote! as String
+            let url = documentsDirectory.appendingPathComponent(path)
+            do {
+                try voiceData?.write(to: url)
+            } catch {
+                print("couldn't write file")
+            }
+        }
+        
+        if let endNote = endVoiceNote {
+            let voiceData = Data(base64Encoded: endNote)
+            let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+            let path = route.endRouteAnchorPoint.voiceNote! as String
+            let url = documentsDirectory.appendingPathComponent(path)
+            do {
+                try voiceData?.write(to: url)
+            } catch {
+                print("couldn't write file")
+            }
+        }
+        
+        for (i, voiceNote) in routeVoiceNotes.enumerated() {
+            let voiceData = Data(base64Encoded: voiceNote as String)
+            let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+            let path = route.intermediateAnchorPoints[i].voiceNote! as String
+            let url = documentsDirectory.appendingPathComponent(path)
+            do {
+                try voiceData?.write(to: url)
+            } catch {
+                print("couldn't write file")
+            }
+        }
+    }
 }
