@@ -996,8 +996,6 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         addGestures()
         firebaseSetup.setupFirebaseObservers(vc: self)
         
-
-        
         // create listeners to ensure that the isReadingAnnouncement flag is reset properly
         NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification, object: nil, queue: nil) { (notification) -> Void in
             self.currentAnnouncement = nil
@@ -1916,9 +1914,9 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
             if defaultUnit == 0 || distanceToDisplay >= 10 {
                 // don't use fractional feet or for higher numbers of meters (round instead)
                 // Related to higher number of meters, there is a somewhat strange behavior in VoiceOver where numbers greater than 10 will be read as, for instance, 11 dot 4 meters (instead of 11 point 4 meters).
-                altText += " for \(Int(distanceToDisplay))" + unitText[defaultUnit]!
+                altText += " " + NSLocalizedString("and walk", comment: "this text is presented when getting directions.  It is placed between a direction of how to turn and a distance to travel") + " \(Int(distanceToDisplay))" + unitText[defaultUnit]!
             } else {
-                altText += " for \(distanceToDisplay)" + unitText[defaultUnit]!
+                altText += " " + NSLocalizedString("and walk", comment: "this text is presented when getting directions.  It is placed between a direction of how to turn and a distance to travel") + " \(distanceToDisplay)" + unitText[defaultUnit]!
             }
         }
         if !remindedUserOfOffsetAdjustment && adjustOffset {
