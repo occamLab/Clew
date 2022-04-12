@@ -26,6 +26,8 @@
 	<string>Clew needs to access your NFC scanner to discover routes</string>
 	<key>NSCameraUsageDescription</key>
 	<string>Clew needs to access your camera to track your orientation.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string></string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Permission to use the microphone is required to use the voice notes feature.</string>
 	<key>UIApplicationSceneManifest</key>

@@ -41,11 +41,13 @@ protocol ARSessionManagerDelegate {
     func receivedImageAnchors(imageAnchors: [ARImageAnchor])
     func shouldLogRichData()->Bool
     func getLoggingTag()->String
+    func geoAnchorsReadyForPathCreation(geoAnchors: [ARGeoAnchor])
 }
 
 class ARSessionManager: NSObject {
     static var shared = ARSessionManager()
     var delegate: ARSessionManagerDelegate?
+    var lastTimeOutputtedGeoAnchors = Date()
     
     private override init() {
         super.init()
@@ -112,16 +114,16 @@ class ARSessionManager: NSObject {
     /// Create a new ARSession.
     func createARSessionConfiguration() {
         configuration = ARGeoTrackingConfiguration()
-        configuration.planeDetection = [.horizontal, .vertical]
+        //configuration.planeDetection = [.horizontal, .vertical]
         if #available(iOS 14.3, *) {
-            configuration.appClipCodeTrackingEnabled = true
+            //configuration.appClipCodeTrackingEnabled = true
         }
         
         guard let referenceImages = ARReferenceImage.referenceImages(inGroupNamed: "AR Resources", bundle: nil) else {
             fatalError("Missing expected asset catalog resources.")
         }
         
-        configuration.detectionImages = referenceImages
+        //configuration.detectionImages = referenceImages
     }
     
     func startSession() {
@@ -131,7 +133,10 @@ class ARSessionManager: NSObject {
         pathRenderJob = nil
         intermediateAnchorRenderJobs = [:]
         removeNavigationNodes()
-        sceneView.session.run(configuration, options: [.removeExistingAnchors, .resetTracking])
+        sceneView.session.run(configuration, options: [.removeExistingAnchors])
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+            self.sceneView.session.run(self.configuration, options: [])
+        }
     }
     
     /// This seems to interfere with placement of ARAnchors in the scene when reloading maps
@@ -478,9 +483,51 @@ extension ARSessionManager: ARSessionDelegate {
             relocalizationStrategy = .none
             startSession()
         }*/
+        print("failure")
+    }
+    
+    /// - Tag: GeoTrackingStatus
+    func session(_ session: ARSession, didChange geoTrackingStatus: ARGeoTrackingStatus) {
+        print("rawaccuracy value", geoTrackingStatus.accuracy)
+        if geoTrackingStatus.accuracy == ARGeoTrackingStatus.Accuracy.high, let allGeoAnchors = session.currentFrame?.anchors.compactMap({$0 as? ARGeoAnchor}) {
+            print("we have high accuracy")
+            //delegate?.geoAnchorsReadyForPathCreation(geoAnchors: allGeoAnchors)
+        } else if geoTrackingStatus.accuracy == ARGeoTrackingStatus.Accuracy.medium {
+            print("we have medium accuracy")
+        } else if geoTrackingStatus.accuracy == ARGeoTrackingStatus.Accuracy.low {
+            print("we have low accuracy")
+        }
     }
     
     func session(_ session: ARSession, didUpdate frame: ARFrame) {
+        let allGeoAnchors = frame.anchors.compactMap({$0 as? ARGeoAnchor})
+        print("nGeoAnchors \(allGeoAnchors.count)")
+        var nCount = 0
+        for geoAnchor in allGeoAnchors {
+            if !simd_almost_equal_elements(geoAnchor.transform, matrix_identity_float4x4, 0.01) {
+                nCount += 1
+            }
+        }
+        if nCount == allGeoAnchors.count && nCount > 0, frame.geoTrackingStatus?.accuracy == ARGeoTrackingStatus.Accuracy.high {
+            delegate?.geoAnchorsReadyForPathCreation(geoAnchors: allGeoAnchors)
+//            let accuracy = ARGeoTrackingStatus.Accuracy.self
+//            switch accuracy {
+//            case .low:
+//                print("Accuracy: low")
+//            case .medium:
+//                print("Accuracy: medium")
+//            case .high
+//
+//
+//
+//            //}
+//
+        }
+        if -lastTimeOutputtedGeoAnchors.timeIntervalSinceNow > 1 {
+            lastTimeOutputtedGeoAnchors = Date()
+            print("nGeoAnchors \(allGeoAnchors.count) non identity \(nCount)")
+        }
+
         ARData.shared.set(transform: frame.camera.transform)
         if let keypointRenderJob = keypointRenderJob {
             keypointRenderJob()
@@ -518,15 +565,10 @@ extension ARSessionManager: ARSessionDelegate {
     }
     
     func session(_ session: ARSession, didUpdate anchors: [ARAnchor]) {
-        
-        print("check out the anchors here")
-        for geoAnchor in anchors.compactMap({$0 as? ARGeoAnchor}) {
-            print(geoAnchor)
-        }
-        
         #if !APPCLIP
         ARLogger.shared.session(session, didUpdate: anchors)
         #endif
+        //print("update geoanchors", anchors.compactMap({$0 as? ARGeoAnchor}).count)
     }
     func session(_ session: ARSession, didRemove anchors: [ARAnchor]) {
         #if !APPCLIP
@@ -534,10 +576,23 @@ extension ARSessionManager: ARSessionDelegate {
         #endif
     }
     func session(_ session: ARSession, didAdd anchors: [ARAnchor]) {
+        let geoAnchors = anchors.compactMap({$0 as? ARGeoAnchor})
+
         #if !APPCLIP
         ARLogger.shared.session(session, didAdd: anchors)
         #endif
+        for geoAnchor in geoAnchors {
+            if let nodeForAnchor = sceneView.node(for: geoAnchor), nodeForAnchor.childNodes.count == 0 {
+                let box = SCNBox(width: 0.1, height: 0.1, length: 0.1, chamferRadius: 0)
+                let node = SCNNode(geometry: box)
+                node.position = SCNVector3(0,0,0)
+                nodeForAnchor.addChildNode(node)
+                print("creating node for geoanchor")
+            }
+        }
+        print("nGeoAnchors \(geoAnchors.count)")
     }
+    
     
     /// Called when there is a change in tracking state.  This is important for both announcing tracking errors to the user and also to triggering some app state transitions.
     /// - Parameters:
@@ -603,10 +658,12 @@ extension ARSessionManager: ARSessionDelegate {
 
 extension ARSessionManager: ARSCNViewDelegate {
     public func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
+        print("handling anchor add from renderer")
         handleAnchorUpdate(anchor: anchor)
     }
     func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
-       handleAnchorUpdate(anchor: anchor)
+        //print("handling anchor update from renderer")
+       //handleAnchorUpdate(anchor: anchor)
     }
     
     func handleAnchorUpdate(anchor: ARAnchor) {
@@ -632,5 +689,23 @@ extension ARSessionManager: ARSCNViewDelegate {
                 ARSessionManager.shared.render(intermediateAnchorPoints: [intermediateAnchorPoint])
             }
         }
+    }
+}
+
+extension ARGeoTrackingStatus.Accuracy {
+    var description: String {
+        switch self {
+        case .undetermined: return "Undetermined"
+        case .low: return "Low"
+        case .medium: return "Medium"
+        case .high: return "High"
+        @unknown default: return "Unknown"
+        }
+    }
+}
+
+func getLocalizationAccuracy(geoTrackingStatus: ARGeoTrackingStatus) {
+    if geoTrackingStatus.state == .localized {
+        print("Accuracy: \(geoTrackingStatus.accuracy.description)")
     }
 }

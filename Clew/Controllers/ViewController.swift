@@ -223,6 +223,9 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     /// This Boolean marks whether or not the user is resuming a route
     var isResumedRoute: Bool = false
     
+    /// The route object when we are resuming a route
+    var resumedRoute: SavedRoute?
+    
     /// Set to true when the user is attempting to load a saved route that has a map associated with it. Once relocalization succeeds, this flag should be set back to false
     var attemptingRelocalization: Bool = false
     
@@ -324,7 +327,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         #if !APPCLIP
         showStopRecordingButton()
         #endif
-        droppingCrumbs = Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: #selector(dropCrumb), userInfo: nil, repeats: true)
+        droppingCrumbs = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(dropCrumb), userInfo: nil, repeats: true)
         // make sure there are no old values hanging around
         nav.headingOffset = 0.0
         headingRingBuffer.clear()
@@ -485,6 +488,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     ///   - worldMap: the world map to use
     ///   - navigateStartToEnd: a Boolean that is true if we want to navigate from the start to the end and false if we want to navigate from the end to the start.
     func handleStateTransitionToStartingResumeProcedure(route: SavedRoute, worldMap: ARWorldMap?, navigateStartToEnd: Bool) {
+        resumedRoute = route
         logger.setCurrentRoute(route: route, worldMap: worldMap)
         
         // load the world map and restart the session so that things have a chance to quiet down before putting it up to the wall
@@ -521,35 +525,27 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
             crumbs = route.crumbs
             pausedTransform = route.endRouteAnchorPoint.anchor?.transform
         }
-        for geoAnchor in route.geoAnchors {
-            ARSessionManager.shared.add(anchor: geoAnchor)
-        }
+
+        print("just added \(route.geoAnchors.count)")
         RouteManager.shared.intermediateAnchorPoints = route.intermediateAnchorPoints
         trackingSessionErrorState = nil
         ARSessionManager.shared.startSession()
         continuationAfterSessionIsReady = {
             // the relocalization strategy may have been adjusted during the session startup
+            for geoAnchor in route.geoAnchors {
+                print("adding")
+                ARSessionManager.shared.add(anchor: geoAnchor)
+            }
             if ARSessionManager.shared.relocalizationStrategy == .none {
                 isSameMap = false
                 self.attemptingRelocalization = false
             }
-            if isTrackingPerformanceNormal, isSameMap {
                 // we can skip the whole process of relocalization since we are already using the correct map and tracking is normal.  It helps to strip out old anchors to reduce jitter though
                 ///PATHPOINT load route from automatic alignment -> start navigation
                 
-                self.isResumedRoute = true
-                self.isAutomaticAlignment = true
-                self.state = .readyToNavigateOrPause(allowPause: false)
-            }
-            else if isRelocalizing && isSameMap || isTrackingPerformanceNormal && worldMap == nil  {
-                // we don't have to wait for the session to start up.  It will be created automatically.
-                self.state = .readyForFinalResumeAlignment
-                self.showResumeTrackingConfirmButton(route: route, navigateStartToEnd: navigateStartToEnd)
-            } else {
-                // this makes sure that the user doesn't resume the session until the session   is initialized
-                self.state = .readyForFinalResumeAlignment
-                self.showResumeTrackingConfirmButton(route: route, navigateStartToEnd: navigateStartToEnd)
-            }
+            self.isResumedRoute = true
+            self.isAutomaticAlignment = true
+            self.state = .readyToNavigateOrPause(allowPause: false)
         }
     }
     
@@ -2101,7 +2097,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         continuationAfterSessionIsReady = {
             self.trackingErrorsAnnouncementTimer?.invalidate()
             // sends the user to the screen where they can enter an app clip code ID for the route they're about to record
-            self.state = .startingNameCodeIDProcedure
+            self.state = .recordingRoute
         }
         ARSessionManager.shared.initialWorldMap = nil
         trackingSessionErrorState = nil
@@ -2456,12 +2452,14 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     }
     
     func dropGeoAnchor(at worldPosition: SIMD3<Float>) {
+        print("starting geoanchor process")
         ARSessionManager.shared.sceneView.session.getGeoLocation(forPoint: worldPosition) { (location, altitude, error) in
             if let error = error {
-                print("An error occurred while translating ARKit coordinates to geo coordinates: \(error.localizedDescription)")
+                print("error adding Geo anchor")
                 return
             }
-            let newAnchor = ARGeoAnchor(coordinate: location)
+            print("new geo anchor!!")
+            let newAnchor = ARGeoAnchor(coordinate: location, altitude: altitude)
             ARSessionManager.shared.add(anchor: newAnchor)
             self.recordingGeoAnchors.append(newAnchor)
         }
@@ -2943,6 +2941,21 @@ extension ViewController: UIPopoverPresentationControllerDelegate {
 }
 
 extension ViewController: ARSessionManagerDelegate {
+    func geoAnchorsReadyForPathCreation(geoAnchors: [ARGeoAnchor]) {
+        // transition to navigation state and create the route
+        guard let resumedRouteGeoAnchors = resumedRoute?.geoAnchors else {
+            return
+        }
+        if case .readyToNavigateOrPause(_) = state {
+            let geoAnchorsByIdentifier = Dictionary(uniqueKeysWithValues: zip(geoAnchors.map({$0.identifier}), geoAnchors))
+            crumbs = []
+            for geoAnchor in resumedRouteGeoAnchors.reversed() {
+                crumbs.append(LocationInfo(anchor: geoAnchorsByIdentifier[geoAnchor.identifier]!))
+            }
+            state = .navigatingRoute
+        }
+    }
+    
     func getPathColor() -> Int {
         return defaultPathColor
     }
