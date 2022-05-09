@@ -20,21 +20,25 @@ struct StartNavigationPopoverView: View {
     var body: some View {
         VStack {
             NavigationView {
-                List(routeList.routeList, id: \.first!.key) { routeInfo in
-                    Button(action: {
-                        vc.routeID = routeInfo.first!.key
-                        vc.recordPathController.remove()
-                        NotificationCenter.default.post(name: NSNotification.Name("shouldDismissRoutePopover"), object: nil)
-                        #if !APPCLIP
-                        self.vc.arLogger.startTrial()
-                        #endif
-                    }) {
-                        RowNotSelected {
-                            RouteList(RouteName: routeInfo.first!.value)
+                if routeList.routeList.isEmpty {
+                    Text("No routes were found to be associated with this NFC tag in Clew Maps' online database.  Did you forget to upload your route to the cloud through \"Manage and Upload Routes\" menu?")
+                        .navigationTitle("No Routes Found")
+                } else {
+                    List(routeList.routeList, id: \.first!.key) { routeInfo in
+                        Button(action: {
+                            vc.routeID = routeInfo.first!.key
+                            vc.recordPathController.remove()
+                            NotificationCenter.default.post(name: NSNotification.Name("shouldDismissRoutePopover"), object: nil)
+                            #if !APPCLIP
+                            self.vc.arLogger.startTrial()
+                            #endif
+                        }) {
+                            RowNotSelected {
+                                RouteList(RouteName: routeInfo.first!.value)
+                            }
                         }
-                    }
+                    }.navigationTitle(NSLocalizedString("selectRoutePopoverLabel", comment: "This is text instructing the user to select a route from a list ."))
                 }
-                .navigationTitle(NSLocalizedString("selectRoutePopoverLabel", comment: "This is text instructing the user to select a route from a list ."))
             }
         }
     }

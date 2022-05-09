@@ -24,10 +24,10 @@ class BurgerMenuViewController: UITableViewController, UIPopoverPresentationCont
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print("selected", indexPath)
         if indexPath == [0,0] {
-            settingsButtonPressed()
+            helpButtonPressed()
         }
         if indexPath == [0,1] {
-            helpButtonPressed()
+            settingsButtonPressed()
         }
         if indexPath == [0,2] {
             feedbackButtonPressed()

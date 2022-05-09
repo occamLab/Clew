@@ -14,32 +14,23 @@ import WebKit
 class HelpCompiler {
     
     ///creates a dictionry which sets up the HTML structure for all of the help menu sections. the format for a section is (NSLocalizedString describing the section header, html describing section content with NSLocalized strings for relevant sections)
-    let contentDictioanry = [("\(NSLocalizedString("appFeaturesHeading", comment: "this is a heading in the help documentation. it is also used for the creation of the accessibility labels used to inform the user as to how to interact with the help documantatio's accordian menu"))","""
-        <h3>\(NSLocalizedString("appFeaturesCurrentVersionHeading", comment: "this is a heading in the help documentation and part of the app features section."))</h3>
-        <p>\(NSLocalizedString("appfeaturesCurrentVersionContent", comment: "this is a paragraph in the app features section of the help menu which describes the main features of Clew"))</p>
-        <h3>\(NSLocalizedString("appFeaturesFutureVersionsHeader", comment: "This is a heading in the app features section of the help documentation."))</h3>
-        <p>\(NSLocalizedString("appFeaturesFutureVersionsContent", comment: "this is a paragraph in the app Features section of the help documentation which describes the features which are under development for future versions of the app."))</p>
-        """),("\(NSLocalizedString("howWellDoesClewWorkHeader", comment: "This is a section heading in the help documentation menu"))","""
-            <p>\(NSLocalizedString("howWellDoesClewWorkContentParagraph1", comment: "This is a paragraph in the How well does Clew work? section of the help documentation. This paragraph describes how the app actually works"))</p>
-            <p>\(NSLocalizedString("howWellDoesClewWorkContentParagraph2", comment: "This is a paragraph in the How well does Clew work section of the help documentation. This paragraph describes how users should use CLew to supplement their orientation and mobility skills rather than using the app as a replacement for their traditional. orientation and mobility skills" ))</p>
-            """),("\(NSLocalizedString("PausingARouteOrRecordingAAnchorPointHeader", comment: "This is a section heading in the help documentation menu"))","""
-            <p>\(NSLocalizedString("PausingARouteOrRecordingAAnchorPointContentParagraph1", comment: "This is a content paragraph in the Pausing a Route or Recording a Anchor Point section of the help menu which talks about why an allignment process is necessary"))</p>
-            <p>\(NSLocalizedString("PausingARouteOrRecordingAAnchorPointContentParagraph2", comment: "This is the second paragraph in the Pausing a Route and Recording a Anchor Point section of the help menu. This paragraph discusses the process of creating a Anchor Point including reasoning for why a Anchor Points are necessary and some tips for most effective use of the feature."))</p>
-            
-            
-        """),("\(NSLocalizedString("recordingARouteHeader", comment: "This is a section heading in the help documentation menu"))","""
-            <p>\(NSLocalizedString("recordingARouteContent", comment: "This is a paragraph in the recording a route section which describes how to record a single use route"))
-            <h3>\(NSLocalizedString("recordingARouteProperPositioningHeading", comment: "This is a heading in the recording a route section of the help documentation."))</h3>
-            <p>\(NSLocalizedString("recordingARouteProperPositioningContent", comment: "This is a paragraph in the recording a route section of the help menu. This paragraph describes how to properly hold the phone while recording a route for optimal performance"))</p>
-            """),("\(NSLocalizedString("savedRoutesHeader", comment: "This is a section header in the help documentation"))","""
-                <p>\(NSLocalizedString("savedRoutesContent", comment: "this is a paragraph in the saved routes section of the help documentation. this paragraph describes the basic functionaliuty of the saved routes feature"))</p>
-                <h3>\(NSLocalizedString("savedRoutesLoadingARouteHeader", comment: "This is a header in the saving routes section of the help documentation menu"))</h3>
-                <p>\(NSLocalizedString("savedRoutesLoadingARouteContent", comment: "This is a paragraph in the saving routes section of the help menu which describes the process for loading a saved route for navigation."))</p>
-                <h3>\(NSLocalizedString("savedRoutesDeletingASavedRouteHeader", comment: "This is a header in the saved routes section of the help documentation"))</h3>
-                <p>\(NSLocalizedString("savedRoutesDeletingASavedRouteContent", comment: "This is a paragraph in the saved routes section of the help documentation. This paragraph describes how to delete a saved route."))</p>
-                <h3>\(NSLocalizedString("savedRoutesSharingASavedRouteHeader", comment: "This is a header in the saved routes section of the help documentation"))</h3>
-                <p>\(NSLocalizedString("savedRoutesSharingASavedRouteContent", comment: "This is a paragraph in the saved routes section of the help documentation. This paragraph describes how to share a saved route."))</p>
-                """),("\(NSLocalizedString("followingARouteHeader", comment: "This is a header for the following a route section of the help documentation."))","""
+    let contentDictioanry = [("Video Overview","""
+        <p>The video below provides a basic overview of how the app functions. The video should be accessible to folks regardless of level of vision, but if any of it is unclear, please submit feedback to us through the \"Give Feedback\" menu.</p>
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/cVSaZxoNnZk" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        """),("Obtaining the NFC Tags","""
+            <p>As mentioned in the video overview, in order to register a place with Clew Maps, you must have an NFC tag.  NFC tags can be purchased at a low cost from many online retailers.  Here is <a href=\"https://www.amazon.com/THONSEN-NTAG215-NFC-enabled-Smartphones-Devices/dp/B074M9J5L3/ref=sr_1_5?crid=165E0S0UDPIDG&keywords=NFC+cards&qid=1652107713&sprefix=nfc+car%2Caps%2C297&sr=8-5\">a listing from the US Amazon Store</a> for 25 NFC cards.</p>
+           """),("Obtaining the Tag Image of a Tree","""
+                <p>As mentioned in the video overview, places in Clew Maps must be marked with both an NFC tag and a special image.  The image contains a picture of a tree with a black and yellow border.  We have PDFs for both <a href=\"https://drive.google.com/file/d/12Qi8qqvU5CoBhHfVSqzVI7dEd4Oks__k/view?usp=sharing\">US Letter Paper</a> and <a href=\"https://drive.google.com/file/d/1agFlpbXz2TYr0WVFXEm1oqco79obSM6U/view?usp=sharing\">A4 Paper</a> available.  It is best to print the images in color, but black and white is okay too.</p>
+        """),("Tips for Installing the Image and the NFC Tag","""
+                <p>As mentioned in the video overview, you need to install the NFC tag and the image of the tree at the start of any route.  Here are some tips to ehlp you do this well.</p>
+                <ul>
+                    <li>Choose a location that is easy to find without assistance from the app for your tag.</li>
+                    <li>Choose a location that will not move for mounting your tag (e.g., don't choose a movable partition or wall).</li>
+                    <li>You can place the NFC card underneath the image of the tree (printed tag), to make it easy to find the tree image once you have scanned the NFC card, but that is not a required.</li>
+                    <li>To make the tag easier to find for folks with no functional vision, consider adding tactile indicators around the printed tree image (e.g., bump dot stickers).</li>
+                    <li>Make sure not to obscure the printed image of the tree when you install it in your environment.  This image needs to be visible in order for the app to align properly.</li>
+                    </ul>
+        """),("\(NSLocalizedString("followingARouteHeader", comment: "This is a header for the following a route section of the help documentation."))","""
                     <p>\(NSLocalizedString("followingARouteContent", comment: "This is a paragraph which is in the following a route section of the help documentation."))</p>
                     <h3>\(NSLocalizedString("followingARouteHapticFeedbackHeader", comment: "This is a header inside the following a route section of the help documentation"))</h3>
                     <p>\(NSLocalizedString("followingARouteHapticFeedbackContent", comment: "this is a paragraph in the following a route section of the help documentation which describes the meaning of haptic feedback that the user recieves during navigation."))</p>
@@ -52,19 +43,7 @@ class HelpCompiler {
                     <p>\(NSLocalizedString("followingARouteCorrectOffsetAutomaticallyContentParagraph1", comment: "this is paragraph 1 in the following a route section of the help documentation which describes the functionality of the correct for phone / body offset feature."))</p>
                     <p>\(NSLocalizedString("followingARouteCorrectOffsetAutomaticallyContentParagraph2", comment: "this is paragraph 2 in the following a route section of the help documentation which describes the functionality of the correct for phone / body offset feature."))</p>
 
-                    """),("\(NSLocalizedString("appSoundsAndTheirMeaningsHeader", comment: "This is a section header in the help documentation"))","""
-                        <p>\(NSLocalizedString("appSoundsAndTheirMeaningsContent", comment: "This is a paragraph in the App sounds and their meanings section."))</p>
-                        <ul>
-                        <li><p>\(NSLocalizedString("appSoundsAndTheirMeaningsNormalMotionTrackingSoundBullet", comment: "This is a bullet point which describes the normal motion tracking sound and its meaning"))</p></li>
-                        <li><p>\(NSLocalizedString("appSoundsAndTheirMeaningsMotionTrackingWarningSoundBullet", comment: "This is a bullet point which describes the motion tracking warning sound and its meaning"))</p></li>
-                        </ul>
-                        """),("\(NSLocalizedString("ratingYourNavigationExperienceHeader", comment: "This is a section header in the help documentation menu"))","""
-                            <p>\(NSLocalizedString("ratingYourNavigationExperienceContent", comment: "This is a paragraph in the rating your navigation experiennce section of the help menu."))</p>
-                            """),("\(NSLocalizedString("providingFeedbackToTheDevelopmentTeamHeader", comment: "this is a section in the help documentation menu"))","""
-                                <p>\(NSLocalizedString("providingFeedbackToTheDevelopmentTeamContent", comment: "This is a paragraph which describes how to send feedback to the development team"))</p>
-                                </body>
-                                </html>
-                                """)]
+                    """)]
     
     ///compiles all of the web content into a giant string of HTML
     func compileWebContent()->String{

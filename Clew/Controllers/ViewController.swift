@@ -306,7 +306,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         #endif
         droppingCrumbs?.invalidate()
         updateHeadingOffsetTimer?.invalidate()
-        showStartNavigationButton(allowPause: allowPause)
+        showStartNavigationButton(allowPause: allowPause, allowNavigation: false)
         suggestAdjustOffsetIfAppropriate()
     }
     
@@ -1338,6 +1338,19 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         self.present(logAlertVC, animated: true, completion: nil)
     }
     
+    func showInvalidAppClipCodeAlert() {
+        let logAlertVC = UIAlertController(title: "No routes associated with this NFC tag",
+                                           message: "No routes were found to be associated with this NFC tag in Clew Maps' online database.  Did you forget to upload your route to the cloud through \"Manage and Upload Routes\" menu?",
+                                           preferredStyle: .alert)
+        logAlertVC.addAction(UIAlertAction(title: "Dismiss", style: .default, handler: { action -> Void in
+            #if !APPCLIP
+                self.goHome()
+            #endif
+        }
+        ))
+        self.present(logAlertVC, animated: true, completion: nil)
+    }
+    
     /// Show safety disclaimer when user opens app for the first time.
     func showSafetyAlert() {
         let safetyAlertVC = UIAlertController(title: NSLocalizedString("forYourSafetyPop-UpHeading", comment: "The heading of a pop-up telling the user to be aware of their surroundings while using clew"),
@@ -1717,7 +1730,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     }
     
     /// Display start navigation view/hide all other views
-    @objc func showStartNavigationButton(allowPause: Bool) {
+    @objc func showStartNavigationButton(allowPause: Bool, allowNavigation: Bool) {
         #if !APPCLIP
         rootContainerView.homeButton.isHidden = !recordingSingleUseRoute // home button hidden if we are doing a multi use route (we use the large home button instead)
         #endif
@@ -1729,6 +1742,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         startNavigationController.isAutomaticAlignment = isAutomaticAlignment
         startNavigationController.recordingSingleUseRoute = recordingSingleUseRoute
         add(startNavigationController)
+        startNavigationController.startNavigationButton.isHidden = !allowNavigation
         startNavigationController.pauseButton.isHidden = !allowPause
         startNavigationController.largeHomeButton.isHidden = recordingSingleUseRoute
         startNavigationController.stackView.layoutIfNeeded()
@@ -2317,6 +2331,19 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
             print("popover successful B)")
             // create listeners to ensure that the isReadingAnnouncement flag is reset properly
         }
+        
+        NotificationCenter.default.addObserver(forName: NSNotification.Name("firebaseLoadingFailed"), object: nil, queue: nil) { (notification) -> Void in
+            /// dismiss loading screen
+            self.dismiss(animated: false)
+            self.availableRoutes = RouteListObject()
+            /// bring up list of routes
+            let popoverController = UIHostingController(rootView: StartNavigationPopoverView(vc: self, routeList: self.availableRoutes))
+            popoverController.modalPresentationStyle = .fullScreen
+            self.present(popoverController, animated: true)
+            print("popover successful B)")
+            // create listeners to ensure that the isReadingAnnouncement flag is reset properly
+        }
+        
         NotificationCenter.default.addObserver(forName: NSNotification.Name("shouldDismissRoutePopover"), object: nil, queue: nil) { (notification) -> Void in
             print("ATTEMPTING TO LOAD ROUTE!!!")
             self.dismiss(animated: true)
@@ -2342,19 +2369,24 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
             
             /// attempt to download .json file from Firebase
             appClipRef.getData(maxSize: 100000000000) { appClipJson, error in
-                do {
-                    if let appClipJson = appClipJson {
-                        /// unwrap NSData, if it exists, to a list, and set equal to existingRoutes
-                        let routesFile = try JSONSerialization.jsonObject(with: appClipJson, options: [])
-                        print("File: \(routesFile)")
-                        if let routesFile = routesFile as? [[String: String]] {
-                            self.availableRoutes.routeList = routesFile
-                            print("List: \(self.availableRoutes)")
-                            NotificationCenter.default.post(name: NSNotification.Name("firebaseLoaded"), object: nil)
+                if error != nil {
+                    NotificationCenter.default.post(name: NSNotification.Name("firebaseLoadingFailed"), object: nil)
+                    
+                } else {
+                    do {
+                        if let appClipJson = appClipJson {
+                            /// unwrap NSData, if it exists, to a list, and set equal to existingRoutes
+                            let routesFile = try JSONSerialization.jsonObject(with: appClipJson, options: [])
+                            print("File: \(routesFile)")
+                            if let routesFile = routesFile as? [[String: String]] {
+                                self.availableRoutes.routeList = routesFile
+                                print("List: \(self.availableRoutes)")
+                                NotificationCenter.default.post(name: NSNotification.Name("firebaseLoaded"), object: nil)
+                            }
                         }
+                    } catch {
+                        print("Failed to download Firebase data due to error \(error)")
                     }
-                } catch {
-                    print("Failed to download Firebase data due to error \(error)")
                 }
             }
         }

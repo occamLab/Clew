@@ -60,54 +60,6 @@ class NameCodeIDController: UIViewController, UITextFieldDelegate {
         func dismissKeyboard(){
             view.endEditing(true)
         }
-        
-        /// Creating a button that can be used to save the name of your route
-        saveCodeIDButton = UIButton(type: .custom)
-        saveCodeIDButton.layer.cornerRadius = 0.5 * saveCodeIDButton.bounds.size.width
-        saveCodeIDButton.clipsToBounds = true
-        saveCodeIDButton.translatesAutoresizingMaskIntoConstraints = false
-        saveCodeIDButton.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 1.1).isActive = true
-        saveCodeIDButton.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 2.5).isActive = true
-        saveCodeIDButton.setBackgroundImage(UIImage(named: "WhiteButtonBackground"), for: .normal)
-        saveCodeIDButton.imageView?.contentMode = .scaleAspectFit
-        saveCodeIDButton.setTitle(NSLocalizedString("saveACodeIDButtonText", comment: "This is the text which appears on the save a code ID button."),for: .normal)
-        saveCodeIDButton.setTitleColor(.black, for: .normal)
-        saveCodeIDButton.titleLabel?.font = UIFont(name: "HelveticaNeue-Bold", size: 35)!
-        saveCodeIDButton.accessibilityLabel = NSLocalizedString("saveACodeIDButtonAccessibilityLabel", comment: "A button that allows the user to save a code ID to the route they just recorded.")
-        saveCodeIDButton.titleLabel?.textAlignment = .center
-        saveCodeIDButton.titleLabel?.numberOfLines = 0
-        saveCodeIDButton.titleLabel?.lineBreakMode = .byWordWrapping
-        saveCodeIDButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .largeTitle)
-        saveCodeIDButton.titleEdgeInsets.top = 0
-        saveCodeIDButton.titleEdgeInsets.left = 5
-        saveCodeIDButton.titleEdgeInsets.bottom = 0
-        saveCodeIDButton.titleEdgeInsets.right = 5
-        
-        label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        let mainText = NSLocalizedString("nameCodeIDLabel", comment: "Message displayed to the user when saving a route to reference its code ID.")
-        label.textColor = UIColor.white
-        label.textAlignment = .center
-        label.numberOfLines = 0
-        label.lineBreakMode = NSLineBreakMode.byWordWrapping
-        label.lineBreakMode = .byWordWrapping
-        label.font = UIFont.preferredFont(forTextStyle: .title1)
-        label.text = mainText
-        label.tag = UIView.mainTextTag
-        label.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 1.1).isActive = true
-        
-    
-        textField = UITextField()
-        textField.translatesAutoresizingMaskIntoConstraints = false
-        textField.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 1.1).isActive = true
-        textField.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 8).isActive = true
-        textField.placeholder = NSLocalizedString("nameCodeIDTextField", comment: "Message displayed to the user when typing to save a route to its code ID.")
-        textField.borderStyle = .roundedRect
-        textField.font = UIFont.preferredFont(forTextStyle: .body)
-    
-    
-        textField.delegate = self
-        
         let scrollView = UIScrollView()
 
         /// allow for constraints to be applied to label, scrollview
