@@ -2670,7 +2670,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
                 if (hapticFeedback) {
                     feedbackGenerator?.impactOccurred()
                 }
-                if (soundFeedback) { SoundEffectManager.shared.playSystemSound(id: 1050)
+                if (soundFeedback) { SoundEffectManager.shared.playSystemSound(id: 1103)
                 }
                 feedbackTimer = Date()
             }
