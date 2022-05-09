@@ -14,6 +14,9 @@ class StartNavigationController: UIViewController {
     /// button for beginning navigation along a route
     var startNavigationButton: UIButton!
     
+    /// button for beginning navigation along a route
+    var shareRouteButton: UIButton!
+    
     /// button for pausing navigation
     var pauseButton: UIButton!
     
@@ -131,6 +134,14 @@ class StartNavigationController: UIViewController {
                                                          alignment: UIConstants.ButtonContainerHorizontalAlignment.left,
                                                          appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "StartNavigation")!),
                                                          label: NSLocalizedString("startReturnNavigationButtonAccessibilityLabel", comment: "The accessibility label for the button that allows user to start navigating back along their route."))
+        
+        shareRouteButton = UIButton.makeConstraintButton(view,
+                                                         alignment: UIConstants.ButtonContainerHorizontalAlignment.left,
+                                                         appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(systemName: "square.and.arrow.up.circle.fill")!),
+                                                         label:"Upload Route to Cloud")
+
+        
+        
         #if !APPCLIP
         pauseButton = UIButton.makeConstraintButton(view,
                                                alignment: UIConstants.ButtonContainerHorizontalAlignment.right,
@@ -158,6 +169,7 @@ class StartNavigationController: UIViewController {
         #if !APPCLIP
         stackView.addArrangedSubview(pauseButton)
         #endif
+        stackView.addArrangedSubview(shareRouteButton)
         stackView.addArrangedSubview(startNavigationButton)
         stackView.addArrangedSubview(largeHomeButton)
         
@@ -172,6 +184,7 @@ class StartNavigationController: UIViewController {
             startNavigationButton.addTarget(parent,
                                    action: #selector(ViewController.startNavigation),
                                    for: .touchUpInside)
+            shareRouteButton.addTarget(parent, action: #selector(ViewController.shareRouteAfterRecording), for: .touchUpInside)
             #if !APPCLIP
             pauseButton.tag = 0
             pauseButton.addTarget(parent,

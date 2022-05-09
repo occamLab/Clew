@@ -256,6 +256,7 @@ class DataPersistence {
                                 print("could not upload route to Firebase", error!.localizedDescription)
                             } else {
                                 print("uploaded route successfully @", fileRef.fullPath)
+                                AnnouncementManager.shared.announce(announcement: "Route Successfully Uploaded")
                             }
                         }
                     }

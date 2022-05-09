@@ -2177,6 +2177,13 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         
     }
     
+    @objc func shareRouteAfterRecording(_ sender: UIButton) {
+        if let route = justTraveledRoute {
+            dataPersistence.uploadToFirebase(route: route)
+        }
+        self.goHome()
+    }
+    
     /// handles the user pressing the start navigation button.
     ///
     /// - Parameter sender: the button that generated the event
@@ -2663,7 +2670,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
                 if (hapticFeedback) {
                     feedbackGenerator?.impactOccurred()
                 }
-                if (soundFeedback) { SoundEffectManager.shared.playSystemSound(id: 4332)
+                if (soundFeedback) { SoundEffectManager.shared.playSystemSound(id: 1050)
                 }
                 feedbackTimer = Date()
             }
