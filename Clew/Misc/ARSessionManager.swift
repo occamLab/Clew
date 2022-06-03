@@ -8,6 +8,7 @@
 
 import Foundation
 import ARKit
+import Firebase
 #if !APPCLIP
 import ARDataLogger
 #endif
@@ -45,6 +46,9 @@ protocol ARSessionManagerDelegate {
 }
 
 class ARSessionManager: NSObject {
+    var counter = 0
+    var cameraPoses: [Any] = []
+    let storageBaseRef = Storage.storage().reference()
     static var shared = ARSessionManager()
     var delegate: ARSessionManagerDelegate?
     var lastTimeOutputtedGeoAnchors = Date()
@@ -499,7 +503,52 @@ extension ARSessionManager: ARSessionDelegate {
         }
     }
     
+    func sendPathData(_ id: String,_ allGeoAnchors: [ARGeoAnchor], _ cameraPositions: [Any])->String? {
+            
+        var anchorCoords: [Any] = []
+        
+        for anchor in allGeoAnchors
+        {
+            anchorCoords.append([anchor.transform.columns.3[0], anchor.transform.columns.3[2]])
+        }
+        
+        let dataDictionary: [String : Any] = ["ID": id, "GeoAnchors": anchorCoords, "CameraPositions": cameraPositions]
+        
+        do {
+            let jsonData = try
+            JSONSerialization.data(withJSONObject:dataDictionary, options:.prettyPrinted)
+            let storageRef =
+            storageBaseRef.child("GeoAnchorTest").child(id + ".json")
+            let fileType = StorageMetadata()
+            fileType.contentType = "application/json"
+            storageRef.putData(jsonData, metadata: fileType) { (metadata, error) in
+                guard metadata != nil else {
+                    // Uh-oh, an error occurred!
+                    print("could not upload meta data to firebase", error!.localizedDescription)
+                    return
+                }
+                print("Successfully uploaded log!", storageRef.fullPath)
+            }
+         
+            // How to specify where these get uploaded (Create folder for data so it doesn't clog up central bucket)
+            // How often can we upload this stuff/how big are these uploads? Don't want to overflow data limitations
+            return storageRef.fullPath
+        } catch {
+            print(error.localizedDescription)
+            return nil
+        }
+    }
+    
     func session(_ session: ARSession, didUpdate frame: ARFrame) {
+        
+        // variable that determines whether current run should be logged to firebase or not. If set to true, change id to desired file name
+        let logPath = true
+        let id = "firstTest"
+        
+        print(frame.camera.transform.columns.3)
+        
+        cameraPoses.append([frame.camera.transform.columns.3[0], frame.camera.transform.columns.3[2]])
+        
         let allGeoAnchors = frame.anchors.compactMap({$0 as? ARGeoAnchor})
         print("nGeoAnchors \(allGeoAnchors.count)")
         var nCount = 0
@@ -508,20 +557,21 @@ extension ARSessionManager: ARSessionDelegate {
                 nCount += 1
             }
         }
+        if logPath {
+            counter += 1
+            if counter > 1000
+            {
+                print("sending data to firebase")
+                counter = 0
+                sendPathData("\(id)", allGeoAnchors, cameraPoses)
+            }
+        }
+        for anchor in allGeoAnchors
+        {
+            print("[\(anchor.transform.columns.3[0]),\(anchor.transform.columns.3[2])],")
+        }
         if nCount == allGeoAnchors.count && nCount > 0, frame.geoTrackingStatus?.accuracy == ARGeoTrackingStatus.Accuracy.high {
             delegate?.geoAnchorsReadyForPathCreation(geoAnchors: allGeoAnchors)
-//            let accuracy = ARGeoTrackingStatus.Accuracy.self
-//            switch accuracy {
-//            case .low:
-//                print("Accuracy: low")
-//            case .medium:
-//                print("Accuracy: medium")
-//            case .high
-//
-//
-//
-//            //}
-//
         }
         if -lastTimeOutputtedGeoAnchors.timeIntervalSinceNow > 1 {
             lastTimeOutputtedGeoAnchors = Date()

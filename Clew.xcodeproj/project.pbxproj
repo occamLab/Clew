@@ -7,6 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2A2556FB2848038D00D137FE /* GoogleService-Info_dev.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2A2556FA2848038D00D137FE /* GoogleService-Info_dev.plist */; };
+		2A2556FC2848038D00D137FE /* GoogleService-Info_dev.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2A2556FA2848038D00D137FE /* GoogleService-Info_dev.plist */; };
+		2A2556FE284803C800D137FE /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2A2556FD284803C800D137FE /* GoogleService-Info.plist */; };
+		2A2556FF284803C800D137FE /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2A2556FD284803C800D137FE /* GoogleService-Info.plist */; };
+		2A25570128493D2600D137FE /* NECO2_center_stair.MOV in Resources */ = {isa = PBXBuildFile; fileRef = 2A25570028493D2500D137FE /* NECO2_center_stair.MOV */; };
+		2A4CC4A42849402000556268 /* center_ramp_occam_phone.mov in Resources */ = {isa = PBXBuildFile; fileRef = 2A4CC4A32849402000556268 /* center_ramp_occam_phone.mov */; };
+		2A4CC4A6284943BE00556268 /* left_ramp_occam_phone.mov in Resources */ = {isa = PBXBuildFile; fileRef = 2A4CC4A5284943BE00556268 /* left_ramp_occam_phone.mov */; };
 		2AAFF1CB27D92D3B00E9D663 /* leftsidehugramp 2.mov in Resources */ = {isa = PBXBuildFile; fileRef = 2AAFF1CA27D92D3B00E9D663 /* leftsidehugramp 2.mov */; };
 		2AB9E89527EB82B00094A231 /* rightsidehugeramp 2.mov in Resources */ = {isa = PBXBuildFile; fileRef = 2AB9E89227EB82AE0094A231 /* rightsidehugeramp 2.mov */; };
 		2AB9E89627EB82B00094A231 /* rightsidehugstair 2.mov in Resources */ = {isa = PBXBuildFile; fileRef = 2AB9E89327EB82AF0094A231 /* rightsidehugstair 2.mov */; };
@@ -87,10 +94,6 @@
 		98A2DABE26A709C400158F83 /* NameSavedRouteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98A2DABA26A709C400158F83 /* NameSavedRouteView.swift */; };
 		98A2DAC726A76ACA00158F83 /* NameCodeIDView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98A2DAC426A76ACA00158F83 /* NameCodeIDView.swift */; };
 		98A2DAC826A76ACA00158F83 /* NameCodeIDView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98A2DAC426A76ACA00158F83 /* NameCodeIDView.swift */; };
-		98AA588C269DD11D001123F0 /* GoogleService-Info_dev.plist in Resources */ = {isa = PBXBuildFile; fileRef = 98AA5888269DCC54001123F0 /* GoogleService-Info_dev.plist */; };
-		98AA588D269DD11E001123F0 /* GoogleService-Info_dev.plist in Resources */ = {isa = PBXBuildFile; fileRef = 98AA5888269DCC54001123F0 /* GoogleService-Info_dev.plist */; };
-		98AA5890269DD122001123F0 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 98AA5889269DCC54001123F0 /* GoogleService-Info.plist */; };
-		98AA5891269DD122001123F0 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 98AA5889269DCC54001123F0 /* GoogleService-Info.plist */; };
 		98AA5895269E0C13001123F0 /* StartMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98AA5894269E0C13001123F0 /* StartMenuView.swift */; };
 		98AA5897269E1518001123F0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98AA5896269E1518001123F0 /* AppDelegate.swift */; };
 		98AA5899269E1BA0001123F0 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98AA5898269E1BA0001123F0 /* SceneDelegate.swift */; };
@@ -194,6 +197,11 @@
 /* Begin PBXFileReference section */
 		1F27632222FCBB6E00E1FCF8 /* BurgerMenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BurgerMenuViewController.swift; sourceTree = "<group>"; };
 		1F2B9D7022C3B50D00317DC8 /* HelpCompiler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HelpCompiler.swift; sourceTree = "<group>"; };
+		2A2556FA2848038D00D137FE /* GoogleService-Info_dev.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info_dev.plist"; path = "../../../Downloads/GoogleService-Info_dev.plist"; sourceTree = "<group>"; };
+		2A2556FD284803C800D137FE /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		2A25570028493D2500D137FE /* NECO2_center_stair.MOV */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; name = NECO2_center_stair.MOV; path = ../../../Downloads/NECO2_center_stair.MOV; sourceTree = "<group>"; };
+		2A4CC4A32849402000556268 /* center_ramp_occam_phone.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; name = center_ramp_occam_phone.mov; path = ../../../Downloads/center_ramp_occam_phone.mov; sourceTree = "<group>"; };
+		2A4CC4A5284943BE00556268 /* left_ramp_occam_phone.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; name = left_ramp_occam_phone.mov; path = ../../../Downloads/left_ramp_occam_phone.mov; sourceTree = "<group>"; };
 		2A93C61727C41023005C8668 /* center ramp 2.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = "center ramp 2.mov"; sourceTree = "<group>"; };
 		2AAFF1CA27D92D3B00E9D663 /* leftsidehugramp 2.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; name = "leftsidehugramp 2.mov"; path = "../../../Downloads/leftsidehugramp 2.mov"; sourceTree = "<group>"; };
 		2AB9E89227EB82AE0094A231 /* rightsidehugeramp 2.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; name = "rightsidehugeramp 2.mov"; path = "../../../Downloads/rightsidehugeramp 2.mov"; sourceTree = "<group>"; };
@@ -268,8 +276,6 @@
 		987BA6F3268E53C0008B129E /* StartNavigationPopoverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartNavigationPopoverView.swift; sourceTree = "<group>"; };
 		98A2DABA26A709C400158F83 /* NameSavedRouteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NameSavedRouteView.swift; sourceTree = "<group>"; };
 		98A2DAC426A76ACA00158F83 /* NameCodeIDView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NameCodeIDView.swift; sourceTree = "<group>"; };
-		98AA5888269DCC54001123F0 /* GoogleService-Info_dev.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info_dev.plist"; sourceTree = "<group>"; };
-		98AA5889269DCC54001123F0 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		98AA5894269E0C13001123F0 /* StartMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartMenuView.swift; sourceTree = "<group>"; };
 		98AA5896269E1518001123F0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		98AA5898269E1BA0001123F0 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -361,6 +367,9 @@
 			isa = PBXGroup;
 			children = (
 				2A93C61727C41023005C8668 /* center ramp 2.mov */,
+				2A25570028493D2500D137FE /* NECO2_center_stair.MOV */,
+				2A4CC4A32849402000556268 /* center_ramp_occam_phone.mov */,
+				2A4CC4A5284943BE00556268 /* left_ramp_occam_phone.mov */,
 				2AB9E89427EB82AF0094A231 /* leftsidehugstairs.mov */,
 				2AB9E89227EB82AE0094A231 /* rightsidehugeramp 2.mov */,
 				2AB9E89327EB82AF0094A231 /* rightsidehugstair 2.mov */,
@@ -376,8 +385,8 @@
 				823DA453252F7EA800BB5E6B /* speaker.obj */,
 				4D6B00E41F33C85500952242 /* Crumb.obj */,
 				82AD6A24252F80AA00902A11 /* speaker.mtl */,
-				98AA5888269DCC54001123F0 /* GoogleService-Info_dev.plist */,
-				98AA5889269DCC54001123F0 /* GoogleService-Info.plist */,
+				2A2556FA2848038D00D137FE /* GoogleService-Info_dev.plist */,
+				2A2556FD284803C800D137FE /* GoogleService-Info.plist */,
 				E5E9016922FB4D4A00AD0E95 /* route-quicklook */,
 				98006F77268382D600E61861 /* UIKit Clip */,
 				98006F8F268382D800E61861 /* UIKit ClipTests */,
@@ -778,6 +787,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9805366426838C3C0065E80F /* SettingsAndHelp.storyboard in Resources */,
+				2A2556FB2848038D00D137FE /* GoogleService-Info_dev.plist in Resources */,
 				98006F85268382D800E61861 /* LaunchScreen.storyboard in Resources */,
 				98006F82268382D800E61861 /* Assets.xcassets in Resources */,
 				98AB6079269DDCC700613BB5 /* anchorInFrame.mp3 in Resources */,
@@ -786,9 +796,8 @@
 				980536702683AC8B0065E80F /* help in Resources */,
 				98006FBE2683859A00E61861 /* StopRecording.aiff in Resources */,
 				9805366C2683AC780065E80F /* Crumb.obj in Resources */,
-				98AA5890269DD122001123F0 /* GoogleService-Info.plist in Resources */,
 				98260258268CC1DB00D66811 /* speaker.obj in Resources */,
-				98AA588C269DD11D001123F0 /* GoogleService-Info_dev.plist in Resources */,
+				2A2556FE284803C800D137FE /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -799,9 +808,11 @@
 				98FF7AD8269CC147008C64E5 /* SettingsAndHelp.storyboard in Resources */,
 				2AB9E89627EB82B00094A231 /* rightsidehugstair 2.mov in Resources */,
 				2AB9E89527EB82B00094A231 /* rightsidehugeramp 2.mov in Resources */,
+				2A4CC4A6284943BE00556268 /* left_ramp_occam_phone.mov in Resources */,
 				98FF7ADF269CC169008C64E5 /* help in Resources */,
 				98FF7AD9269CC14D008C64E5 /* BurgerMenu.storyboard in Resources */,
 				2AB9E89727EB82B00094A231 /* leftsidehugstairs.mov in Resources */,
+				2A4CC4A42849402000556268 /* center_ramp_occam_phone.mov in Resources */,
 				98FF7AE1269CC172008C64E5 /* speaker.obj in Resources */,
 				98FF7ABA269CC0CB008C64E5 /* Settings.bundle in Resources */,
 				98FF7AE0269CC16B008C64E5 /* Confirm.mp3 in Resources */,
@@ -809,14 +820,15 @@
 				98FF7AA7269CC040008C64E5 /* Localizable.strings in Resources */,
 				98FF7AE2269CC175008C64E5 /* Crumb.obj in Resources */,
 				82B25182278DF4B0001E3AB6 /* LaunchScreen.storyboard in Resources */,
-				98AA588D269DD11E001123F0 /* GoogleService-Info_dev.plist in Resources */,
-				98AA5891269DD122001123F0 /* GoogleService-Info.plist in Resources */,
 				98FF7AE3269CC178008C64E5 /* speaker.mtl in Resources */,
 				98FF7ABD269CC0E0008C64E5 /* StopRecording.aiff in Resources */,
+				2A2556FF284803C800D137FE /* GoogleService-Info.plist in Resources */,
 				98FF7ABC269CC0DD008C64E5 /* StartRecording.aiff in Resources */,
 				9863AF6E26B4965600EF0C64 /* consentFormContent.html in Resources */,
+				2A2556FC2848038D00D137FE /* GoogleService-Info_dev.plist in Resources */,
 				2AAFF1CB27D92D3B00E9D663 /* leftsidehugramp 2.mov in Resources */,
 				98FF7ABB269CC0CE008C64E5 /* Assets.xcassets in Resources */,
+				2A25570128493D2600D137FE /* NECO2_center_stair.MOV in Resources */,
 				98AB607A269DDCC700613BB5 /* anchorInFrame.mp3 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1243,7 +1255,7 @@
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = "Clew-More/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1279,7 +1291,7 @@
 				DEVELOPMENT_TEAM = 42363V8M4P;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = "Clew-More/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
