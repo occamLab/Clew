@@ -543,9 +543,7 @@ extension ARSessionManager: ARSessionDelegate {
         
         // variable that determines whether current run should be logged to firebase or not. If set to true, change id to desired file name
         let logPath = true
-        let id = "firstTest"
-        
-        print(frame.camera.transform.columns.3)
+        let id = "secondTest"
         
         cameraPoses.append([frame.camera.transform.columns.3[0], frame.camera.transform.columns.3[2]])
         
@@ -559,16 +557,12 @@ extension ARSessionManager: ARSessionDelegate {
         }
         if logPath {
             counter += 1
-            if counter > 1000
+            if counter > 400
             {
                 print("sending data to firebase")
                 counter = 0
                 sendPathData("\(id)", allGeoAnchors, cameraPoses)
             }
-        }
-        for anchor in allGeoAnchors
-        {
-            print("[\(anchor.transform.columns.3[0]),\(anchor.transform.columns.3[2])],")
         }
         if nCount == allGeoAnchors.count && nCount > 0, frame.geoTrackingStatus?.accuracy == ARGeoTrackingStatus.Accuracy.high {
             delegate?.geoAnchorsReadyForPathCreation(geoAnchors: allGeoAnchors)

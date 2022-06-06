@@ -11,13 +11,6 @@
 		2A2556FC2848038D00D137FE /* GoogleService-Info_dev.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2A2556FA2848038D00D137FE /* GoogleService-Info_dev.plist */; };
 		2A2556FE284803C800D137FE /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2A2556FD284803C800D137FE /* GoogleService-Info.plist */; };
 		2A2556FF284803C800D137FE /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2A2556FD284803C800D137FE /* GoogleService-Info.plist */; };
-		2A25570128493D2600D137FE /* NECO2_center_stair.MOV in Resources */ = {isa = PBXBuildFile; fileRef = 2A25570028493D2500D137FE /* NECO2_center_stair.MOV */; };
-		2A4CC4A42849402000556268 /* center_ramp_occam_phone.mov in Resources */ = {isa = PBXBuildFile; fileRef = 2A4CC4A32849402000556268 /* center_ramp_occam_phone.mov */; };
-		2A4CC4A6284943BE00556268 /* left_ramp_occam_phone.mov in Resources */ = {isa = PBXBuildFile; fileRef = 2A4CC4A5284943BE00556268 /* left_ramp_occam_phone.mov */; };
-		2AAFF1CB27D92D3B00E9D663 /* leftsidehugramp 2.mov in Resources */ = {isa = PBXBuildFile; fileRef = 2AAFF1CA27D92D3B00E9D663 /* leftsidehugramp 2.mov */; };
-		2AB9E89527EB82B00094A231 /* rightsidehugeramp 2.mov in Resources */ = {isa = PBXBuildFile; fileRef = 2AB9E89227EB82AE0094A231 /* rightsidehugeramp 2.mov */; };
-		2AB9E89627EB82B00094A231 /* rightsidehugstair 2.mov in Resources */ = {isa = PBXBuildFile; fileRef = 2AB9E89327EB82AF0094A231 /* rightsidehugstair 2.mov */; };
-		2AB9E89727EB82B00094A231 /* leftsidehugstairs.mov in Resources */ = {isa = PBXBuildFile; fileRef = 2AB9E89427EB82AF0094A231 /* leftsidehugstairs.mov */; };
 		821FEE3227BCB47E008928E5 /* ScanTagView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9863AF6826B44D9E00EF0C64 /* ScanTagView.swift */; };
 		8227393C272C7E43006C181E /* ARSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82273939272C7E43006C181E /* ARSessionManager.swift */; };
 		8227393D272C7E43006C181E /* ARSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82273939272C7E43006C181E /* ARSessionManager.swift */; };
@@ -202,6 +195,7 @@
 		2A25570028493D2500D137FE /* NECO2_center_stair.MOV */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; name = NECO2_center_stair.MOV; path = ../../../Downloads/NECO2_center_stair.MOV; sourceTree = "<group>"; };
 		2A4CC4A32849402000556268 /* center_ramp_occam_phone.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; name = center_ramp_occam_phone.mov; path = ../../../Downloads/center_ramp_occam_phone.mov; sourceTree = "<group>"; };
 		2A4CC4A5284943BE00556268 /* left_ramp_occam_phone.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; name = left_ramp_occam_phone.mov; path = ../../../Downloads/left_ramp_occam_phone.mov; sourceTree = "<group>"; };
+		2A4CC4AE284AA7FC00556268 /* right_ramp_occam_phone.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; name = right_ramp_occam_phone.mov; path = ../../../Downloads/right_ramp_occam_phone.mov; sourceTree = "<group>"; };
 		2A93C61727C41023005C8668 /* center ramp 2.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = "center ramp 2.mov"; sourceTree = "<group>"; };
 		2AAFF1CA27D92D3B00E9D663 /* leftsidehugramp 2.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; name = "leftsidehugramp 2.mov"; path = "../../../Downloads/leftsidehugramp 2.mov"; sourceTree = "<group>"; };
 		2AB9E89227EB82AE0094A231 /* rightsidehugeramp 2.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; name = "rightsidehugeramp 2.mov"; path = "../../../Downloads/rightsidehugeramp 2.mov"; sourceTree = "<group>"; };
@@ -373,6 +367,7 @@
 				2AB9E89427EB82AF0094A231 /* leftsidehugstairs.mov */,
 				2AB9E89227EB82AE0094A231 /* rightsidehugeramp 2.mov */,
 				2AB9E89327EB82AF0094A231 /* rightsidehugstair 2.mov */,
+				2A4CC4AE284AA7FC00556268 /* right_ramp_occam_phone.mov */,
 				2AAFF1CA27D92D3B00E9D663 /* leftsidehugramp 2.mov */,
 				8227FCEC272B0512001031F9 /* imported dependencies */,
 				9815CEEA26851049008FCF74 /* test-route2.crd */,
@@ -806,13 +801,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				98FF7AD8269CC147008C64E5 /* SettingsAndHelp.storyboard in Resources */,
-				2AB9E89627EB82B00094A231 /* rightsidehugstair 2.mov in Resources */,
-				2AB9E89527EB82B00094A231 /* rightsidehugeramp 2.mov in Resources */,
-				2A4CC4A6284943BE00556268 /* left_ramp_occam_phone.mov in Resources */,
 				98FF7ADF269CC169008C64E5 /* help in Resources */,
 				98FF7AD9269CC14D008C64E5 /* BurgerMenu.storyboard in Resources */,
-				2AB9E89727EB82B00094A231 /* leftsidehugstairs.mov in Resources */,
-				2A4CC4A42849402000556268 /* center_ramp_occam_phone.mov in Resources */,
 				98FF7AE1269CC172008C64E5 /* speaker.obj in Resources */,
 				98FF7ABA269CC0CB008C64E5 /* Settings.bundle in Resources */,
 				98FF7AE0269CC16B008C64E5 /* Confirm.mp3 in Resources */,
@@ -826,9 +816,7 @@
 				98FF7ABC269CC0DD008C64E5 /* StartRecording.aiff in Resources */,
 				9863AF6E26B4965600EF0C64 /* consentFormContent.html in Resources */,
 				2A2556FC2848038D00D137FE /* GoogleService-Info_dev.plist in Resources */,
-				2AAFF1CB27D92D3B00E9D663 /* leftsidehugramp 2.mov in Resources */,
 				98FF7ABB269CC0CE008C64E5 /* Assets.xcassets in Resources */,
-				2A25570128493D2600D137FE /* NECO2_center_stair.MOV in Resources */,
 				98AB607A269DDCC700613BB5 /* anchorInFrame.mp3 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
