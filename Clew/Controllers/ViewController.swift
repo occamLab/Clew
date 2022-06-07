@@ -131,6 +131,8 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     /// A threshold distance between the user's current position and a voice note.  If the user is closer than this value the voice note will be played
     static let voiceNotePlayDistanceThreshold : Float = 0.75
     
+    static var routeKeypoints: [KeypointInfo] = []
+    
     /// The state of the ARKit tracking session as last communicated to us through the delegate protocol.  This is useful if you want to do something different in the delegate method depending on the previous state
     var trackingSessionErrorState : ARTrackingError?
     #if !APPCLIP
@@ -437,11 +439,11 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
 
         // generate path from PathFinder class
         // enabled hapticFeedback generates more keypoints
-        let routeKeypoints = PathFinder(crumbs: crumbs.reversed(), hapticFeedback: hapticFeedback, voiceFeedback: voiceFeedback).keypoints
-        RouteManager.shared.setRouteKeypoints(kps: routeKeypoints)
+        ViewController.routeKeypoints = PathFinder(crumbs: crumbs.reversed(), hapticFeedback: hapticFeedback, voiceFeedback: voiceFeedback).keypoints
+        RouteManager.shared.setRouteKeypoints(kps: ViewController.routeKeypoints)
         
         // save keypoints data for debug log
-        logger.logKeypoints(keypoints: routeKeypoints)
+        logger.logKeypoints(keypoints: ViewController.routeKeypoints)
         
         // render 3D keypoints
         ARSessionManager.shared.renderKeypoint(RouteManager.shared.nextKeypoint!.location, defaultColor: defaultColor)

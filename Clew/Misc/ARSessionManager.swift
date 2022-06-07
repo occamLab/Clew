@@ -47,7 +47,10 @@ protocol ARSessionManagerDelegate {
 
 class ARSessionManager: NSObject {
     var counter = 0
+    var localized = false
     var cameraPoses: [Any] = []
+    var visualKeypoints: [KeypointInfo] = []
+    var cameraLocationInfos: [LocationInfo] = []
     let storageBaseRef = Storage.storage().reference()
     static var shared = ARSessionManager()
     var delegate: ARSessionManagerDelegate?
@@ -503,6 +506,42 @@ extension ARSessionManager: ARSessionDelegate {
         }
     }
     
+    func sendPathKeypoints(_ id: String, _ allKeypoints: [KeypointInfo], _ cameraPositions: [Any]) -> String? {
+        
+        var waypointCoords: [Any] = []
+        
+        for anchor in allKeypoints
+        {
+            waypointCoords.append([anchor.location.transform.columns.3[0], anchor.location.transform.columns.3[2]])
+        }
+        
+        let dataDictionary: [String : Any] = ["ID": id, "GeoAnchors": waypointCoords, "CameraPositions": cameraPositions]
+        
+        do {
+            let jsonData = try
+            JSONSerialization.data(withJSONObject:dataDictionary, options:.prettyPrinted)
+            let storageRef =
+            storageBaseRef.child("GeoAnchorTest").child(id + ".json")
+            let fileType = StorageMetadata()
+            fileType.contentType = "application/json"
+            storageRef.putData(jsonData, metadata: fileType) { (metadata, error) in
+                guard metadata != nil else {
+                    // Uh-oh, an error occurred!
+                    print("could not upload meta data to firebase", error!.localizedDescription)
+                    return
+                }
+                print("Successfully uploaded log!", storageRef.fullPath)
+            }
+         
+            // How to specify where these get uploaded (Create folder for data so it doesn't clog up central bucket)
+            // How often can we upload this stuff/how big are these uploads? Don't want to overflow data limitations
+            return storageRef.fullPath
+        } catch {
+            print(error.localizedDescription)
+            return nil
+        }
+    }
+    
     func sendPathData(_ id: String,_ allGeoAnchors: [ARGeoAnchor], _ cameraPositions: [Any])->String? {
             
         var anchorCoords: [Any] = []
@@ -543,29 +582,45 @@ extension ARSessionManager: ARSessionDelegate {
         
         // variable that determines whether current run should be logged to firebase or not. If set to true, change id to desired file name
         let logPath = true
-        let id = "secondTest"
+        let snapToRouteStatus = true
+        let id = "snapTestTwo"
         
         cameraPoses.append([frame.camera.transform.columns.3[0], frame.camera.transform.columns.3[2]])
         
         let allGeoAnchors = frame.anchors.compactMap({$0 as? ARGeoAnchor})
-        print("nGeoAnchors \(allGeoAnchors.count)")
+//        print("nGeoAnchors \(allGeoAnchors.count)")
         var nCount = 0
         for geoAnchor in allGeoAnchors {
             if !simd_almost_equal_elements(geoAnchor.transform, matrix_identity_float4x4, 0.01) {
                 nCount += 1
             }
         }
+
+        if snapToRouteStatus {
+            visualKeypoints = ViewController.routeKeypoints
+            if counter % 200 == 0 {
+                cameraLocationInfos.append(LocationInfo(transform: frame.camera.transform))
+            }
+            if counter % 500 == 0 && localized && counter > 1800 {
+                let optimalTransform: simd_float4x4 = PathMatcher().match(points: cameraLocationInfos, toPath: visualKeypoints)
+                sceneView.session.setWorldOrigin(relativeTransform: optimalTransform.inverse)
+                print("Snapping my fingers")
+            }
+        }
+        
+        
+        
         if logPath {
             counter += 1
-            if counter > 400
+            if counter % 400 == 0
             {
                 print("sending data to firebase")
-                counter = 0
-                sendPathData("\(id)", allGeoAnchors, cameraPoses)
+                sendPathKeypoints("\(id)", ViewController.routeKeypoints, cameraPoses)
             }
         }
         if nCount == allGeoAnchors.count && nCount > 0, frame.geoTrackingStatus?.accuracy == ARGeoTrackingStatus.Accuracy.high {
             delegate?.geoAnchorsReadyForPathCreation(geoAnchors: allGeoAnchors)
+            localized = true
         }
         if -lastTimeOutputtedGeoAnchors.timeIntervalSinceNow > 1 {
             lastTimeOutputtedGeoAnchors = Date()

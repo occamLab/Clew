@@ -11,6 +11,12 @@
 		2A2556FC2848038D00D137FE /* GoogleService-Info_dev.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2A2556FA2848038D00D137FE /* GoogleService-Info_dev.plist */; };
 		2A2556FE284803C800D137FE /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2A2556FD284803C800D137FE /* GoogleService-Info.plist */; };
 		2A2556FF284803C800D137FE /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2A2556FD284803C800D137FE /* GoogleService-Info.plist */; };
+		2AC1BF20284E741400C84D8B /* LASwift in Frameworks */ = {isa = PBXBuildFile; productRef = 2AC1BF1F284E741400C84D8B /* LASwift */; };
+		2AC1BF22284E742700C84D8B /* FloatVectorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC1BF21284E742700C84D8B /* FloatVectorExtension.swift */; };
+		2AC1BF23284E742700C84D8B /* FloatVectorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC1BF21284E742700C84D8B /* FloatVectorExtension.swift */; };
+		2AC1BF25284E746300C84D8B /* PathMatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC1BF24284E746300C84D8B /* PathMatcher.swift */; };
+		2AC1BF26284E746300C84D8B /* PathMatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC1BF24284E746300C84D8B /* PathMatcher.swift */; };
+		2AC1BF29284E74AE00C84D8B /* LASwift in Frameworks */ = {isa = PBXBuildFile; productRef = 2AC1BF28284E74AE00C84D8B /* LASwift */; };
 		821FEE3227BCB47E008928E5 /* ScanTagView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9863AF6826B44D9E00EF0C64 /* ScanTagView.swift */; };
 		8227393C272C7E43006C181E /* ARSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82273939272C7E43006C181E /* ARSessionManager.swift */; };
 		8227393D272C7E43006C181E /* ARSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82273939272C7E43006C181E /* ARSessionManager.swift */; };
@@ -201,6 +207,8 @@
 		2AB9E89227EB82AE0094A231 /* rightsidehugeramp 2.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; name = "rightsidehugeramp 2.mov"; path = "../../../Downloads/rightsidehugeramp 2.mov"; sourceTree = "<group>"; };
 		2AB9E89327EB82AF0094A231 /* rightsidehugstair 2.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; name = "rightsidehugstair 2.mov"; path = "../../../Downloads/rightsidehugstair 2.mov"; sourceTree = "<group>"; };
 		2AB9E89427EB82AF0094A231 /* leftsidehugstairs.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; name = leftsidehugstairs.mov; path = ../../../Downloads/leftsidehugstairs.mov; sourceTree = "<group>"; };
+		2AC1BF21284E742700C84D8B /* FloatVectorExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatVectorExtension.swift; sourceTree = "<group>"; };
+		2AC1BF24284E746300C84D8B /* PathMatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PathMatcher.swift; sourceTree = "<group>"; };
 		4D6B00E41F33C85500952242 /* Crumb.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = Crumb.obj; sourceTree = "<group>"; };
 		4DF05CC71F34EB56008B0E31 /* Confirm.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = Confirm.mp3; sourceTree = "<group>"; };
 		772E455F235F91C6008EF6AC /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -334,6 +342,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2AC1BF29284E74AE00C84D8B /* LASwift in Frameworks */,
 				8227FCE4272B048E001031F9 /* FirebaseStorage in Frameworks */,
 				8227FCEB272B04F9001031F9 /* VectorMath in Frameworks */,
 			);
@@ -346,6 +355,7 @@
 				8227FCE2272B03B5001031F9 /* FirebaseDatabase in Frameworks */,
 				8227FCF6272B05D0001031F9 /* InAppSettingsKit in Frameworks */,
 				8227FCCC272AFFC0001031F9 /* SimpleForm in Frameworks */,
+				2AC1BF20284E741400C84D8B /* LASwift in Frameworks */,
 				8227FCE0272B0371001031F9 /* FirebaseAuth in Frameworks */,
 				8227FCDE272B036A001031F9 /* FirebaseStorage in Frameworks */,
 				8227FCE9272B04E3001031F9 /* VectorMath in Frameworks */,
@@ -562,6 +572,7 @@
 				82273939272C7E43006C181E /* ARSessionManager.swift */,
 				8227393E272C7E7D006C181E /* RouteManager.swift */,
 				8227394327308486006C181E /* SoundEffectManager.swift */,
+				2AC1BF24284E746300C84D8B /* PathMatcher.swift */,
 			);
 			path = Misc;
 			sourceTree = "<group>";
@@ -585,6 +596,7 @@
 				E5470ED922C119F4001092A4 /* UIButtonExtensions.swift */,
 				E5470EDA22C119F4001092A4 /* Float4x4Extension.swift */,
 				E538EF4E22D3BFEC004216E9 /* TransparentTouchView.swift */,
+				2AC1BF21284E742700C84D8B /* FloatVectorExtension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -687,6 +699,7 @@
 			packageProductDependencies = (
 				8227FCE3272B048E001031F9 /* FirebaseStorage */,
 				8227FCEA272B04F9001031F9 /* VectorMath */,
+				2AC1BF28284E74AE00C84D8B /* LASwift */,
 			);
 			productName = "UIKit Clip";
 			productReference = 98006F76268382D600E61861 /* UIKit Clip.app */;
@@ -717,6 +730,7 @@
 				8227FCE1272B03B5001031F9 /* FirebaseDatabase */,
 				8227FCE8272B04E3001031F9 /* VectorMath */,
 				8227FCF5272B05D0001031F9 /* InAppSettingsKit */,
+				2AC1BF1F284E741400C84D8B /* LASwift */,
 			);
 			productName = "Clew-More";
 			productReference = 98FF7A98269CBFE9008C64E5 /* Clew-More.app */;
@@ -765,6 +779,8 @@
 				8227FCD2272B0355001031F9 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				8227FCE5272B04D5001031F9 /* XCRemoteSwiftPackageReference "VectorMath" */,
 				8227FCF2272B05B8001031F9 /* XCRemoteSwiftPackageReference "InAppSettingsKit" */,
+				2AC1BF1E284E741400C84D8B /* XCRemoteSwiftPackageReference "LASwift" */,
+				2AC1BF27284E74AE00C84D8B /* XCRemoteSwiftPackageReference "LASwift" */,
 			);
 			productRefGroup = 4D6B00C11F33C1C400952242 /* Products */;
 			projectDirPath = "";
@@ -859,6 +875,7 @@
 				9805366126838AA40065E80F /* RootContainerView.swift in Sources */,
 				98006FC2268385AF00E61861 /* UIViewExtensions.swift in Sources */,
 				98006FCB268386A900E61861 /* HelpCompiler.swift in Sources */,
+				2AC1BF25284E746300C84D8B /* PathMatcher.swift in Sources */,
 				8227394627308487006C181E /* SoundEffectManager.swift in Sources */,
 				8227393C272C7E43006C181E /* ARSessionManager.swift in Sources */,
 				984FBD3E26962E4900B63A6A /* EnterCodeIDView.swift in Sources */,
@@ -869,6 +886,7 @@
 				98053658268388D10065E80F /* Navigation.swift in Sources */,
 				98006FC4268385B700E61861 /* Float4x4Extension.swift in Sources */,
 				9805365A268388DD0065E80F /* PathFinder.swift in Sources */,
+				2AC1BF22284E742700C84D8B /* FloatVectorExtension.swift in Sources */,
 				9863AF0626B32EB600EF0C64 /* SceneDelegate.swift in Sources */,
 				9863AF6926B44D9E00EF0C64 /* ScanTagView.swift in Sources */,
 				98006FCA268385DD00E61861 /* RoutesViewController.swift in Sources */,
@@ -897,6 +915,7 @@
 				98AA5895269E0C13001123F0 /* StartMenuView.swift in Sources */,
 				98FF7AD1269CC11C008C64E5 /* HelpViewController.swift in Sources */,
 				98FF7AD7269CC143008C64E5 /* UIConstants.swift in Sources */,
+				2AC1BF23284E742700C84D8B /* FloatVectorExtension.swift in Sources */,
 				9826B6D526B07C3F00EC563C /* EndNavigationScreen.swift in Sources */,
 				98CC59AA269CC92D002EF6D7 /* FeedbackLogger.swift in Sources */,
 				98FF7AAB269CC04F008C64E5 /* RecordButton.swift in Sources */,
@@ -909,6 +928,7 @@
 				98FF7AB0269CC0AB008C64E5 /* PathFinder.swift in Sources */,
 				98AA589A269E1CC2001123F0 /* StartNavigationPopoverView.swift in Sources */,
 				98AA5899269E1BA0001123F0 /* SceneDelegate.swift in Sources */,
+				2AC1BF26284E746300C84D8B /* PathMatcher.swift in Sources */,
 				98FF7AA8269CC044008C64E5 /* RecordButtonKit.swift in Sources */,
 				98FF7AC8269CC105008C64E5 /* StartNavigationController.swift in Sources */,
 				98FF7ADD269CC15A008C64E5 /* LoadFromAppClipView.swift in Sources */,
@@ -1387,6 +1407,22 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		2AC1BF1E284E741400C84D8B /* XCRemoteSwiftPackageReference "LASwift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "git@github.com:AlexanderTar/LASwift.git";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+		2AC1BF27284E74AE00C84D8B /* XCRemoteSwiftPackageReference "LASwift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "git@github.com:AlexanderTar/LASwift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.2.5;
+			};
+		};
 		8227FCC8272AFFB5001031F9 /* XCRemoteSwiftPackageReference "SimpleForm" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/occamlab/SimpleForm";
@@ -1430,6 +1466,16 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		2AC1BF1F284E741400C84D8B /* LASwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2AC1BF1E284E741400C84D8B /* XCRemoteSwiftPackageReference "LASwift" */;
+			productName = LASwift;
+		};
+		2AC1BF28284E74AE00C84D8B /* LASwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2AC1BF27284E74AE00C84D8B /* XCRemoteSwiftPackageReference "LASwift" */;
+			productName = LASwift;
+		};
 		8227FCCB272AFFC0001031F9 /* SimpleForm */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 8227FCC8272AFFB5001031F9 /* XCRemoteSwiftPackageReference "SimpleForm" */;
