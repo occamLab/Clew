@@ -8,7 +8,10 @@
 
 import UIKit
 import AVFoundation
+//import SRCountdownTimer
 import Accelerate
+import ARDataLogger
+
 
 extension Double {
     /// a double expressed as a time string of format MINUTES:SECONDS
@@ -45,7 +48,7 @@ protocol RecorderViewControllerDelegate: class {
 }
 
 /// The view controller for the audio recorder
-class RecorderViewController: UIViewController {
+class RecorderViewController: UIViewController, SRCountdownTimerDelegate {
     
     //MARK:- Properties
     /// Should automatically dismiss when the stop recording button is pressed
@@ -53,20 +56,21 @@ class RecorderViewController: UIViewController {
     
     /// the handle view (TODO: not sure exactly what this is)
     var handleView = UIView()
+    /// the countdown timer
+    var srCountdownTimer = SRCountdownTimer()
     /// the button used for recording
     var recordButton = RecordButton()
     /// the view that displays the time
     var timeLabel = UILabel()
     /// the visualizer of the audio waveform
     var audioView = AudioVisualizerView()
-    /// the audio recording settings
-    let settings = [AVFormatIDKey: kAudioFormatLinearPCM, AVLinearPCMBitDepthKey: 16, AVLinearPCMIsFloatKey: true, AVSampleRateKey: Float64(44100), AVNumberOfChannelsKey: 1] as [String : Any]
     /// a handle to the `AVAudioEngine`
     let audioEngine = AVAudioEngine()
     private var renderTs: Double = 0
     private var recordingTs: Double = 0
     private var silenceTs: Double = 0
     private var audioFile: AVAudioFile?
+    private var writeAudio = false
     /// a delegate to notify of various recording events
     weak var delegate: RecorderViewControllerDelegate?
     
@@ -85,8 +89,33 @@ class RecorderViewController: UIViewController {
         setupRecordingButton()
         setupTimeLabel()
         setupAudioView()
+        setupSRCountdownView()
         
-        title = NSLocalizedString("Voice Note Recorder", comment: "The header of a pop-up window that allows user to record a voice note")
+        title = NSLocalizedString("voiceNoteRecorderPop-UpHeader", comment: "The header of a pop-up window that allows user to record a voice note")
+    }
+    
+    func setupSRCountdownView() {
+        srCountdownTimer = SRCountdownTimer(frame: CGRect(x: 0,
+                                                        y: 0,
+                                                        width: 250,
+                                                        height: 250))
+        srCountdownTimer.labelFont = UIFont(name: "HelveticaNeue-Light", size: 100)
+        srCountdownTimer.labelTextColor = UIColor.white
+        srCountdownTimer.timerFinishingText = "End"
+        srCountdownTimer.lineWidth = 10
+        srCountdownTimer.lineColor = UIColor.white
+        srCountdownTimer.backgroundColor = UIColor.black.withAlphaComponent(0.4)
+        srCountdownTimer.isHidden = true
+        /// hide the timer as an accessibility element
+        /// and announce through VoiceOver by posting appropriate notifications
+        srCountdownTimer.accessibilityElementsHidden = true
+        view.addSubview(srCountdownTimer)
+        
+        srCountdownTimer.translatesAutoresizingMaskIntoConstraints = false
+        srCountdownTimer.widthAnchor.constraint(equalToConstant: 250).isActive = true
+        srCountdownTimer.heightAnchor.constraint(equalToConstant: 250).isActive = true
+        srCountdownTimer.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        srCountdownTimer.topAnchor.constraint(equalTo: view.topAnchor, constant: 10).isActive = true
     }
     
     /// Called when the view will appear.
@@ -207,13 +236,37 @@ class RecorderViewController: UIViewController {
         if let d = self.delegate {
             d.didStartRecording()
         }
-        
+        srCountdownTimer.isHidden = false
+        srCountdownTimer.delegate = self
+        srCountdownTimer.start(beginingValue: 3, interval: 1)
+        view.layoutIfNeeded()
+        writeAudio = false
+        DispatchQueue.global(qos: .background).async {
+            self.startAudioTap()
+        }
+        let doRecording = DispatchWorkItem{
+            self.srCountdownTimer.isHidden = true
+            DispatchQueue.global(qos: .background).async {
+                self.intiateAudioWrite()
+            }
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(3), execute: doRecording)
+    }
+    
+    func intiateAudioWrite() {
+        recordingTs = NSDate().timeIntervalSince1970
+        writeAudio = true
+    }
+    
+    func startAudioTap() {
         self.recordingTs = NSDate().timeIntervalSince1970
         self.silenceTs = 0
         
+        let sampleRate: Double
         do {
             let session = AVAudioSession.sharedInstance()
-            try session.setCategory(.playAndRecord, mode: .default)
+            try session.setCategory(.playAndRecord, mode: .videoRecording)
+            sampleRate = session.sampleRate
             try session.setActive(true)
         } catch let error as NSError {
             print(error.localizedDescription)
@@ -221,10 +274,10 @@ class RecorderViewController: UIViewController {
         }
         
         let inputNode = self.audioEngine.inputNode
-        guard let format = self.format() else {
+        guard let format = self.format(sampleRate) else {
             return
         }
-        
+        inputNode.removeTap(onBus: 0)
         inputNode.installTap(onBus: 0, bufferSize: 1024, format: format) { (buffer, time) in
             let level: Float = -50
             let length: UInt32 = 1024
@@ -240,7 +293,7 @@ class RecorderViewController: UIViewController {
             }
             let silent = average < level
             let ts = NSDate().timeIntervalSince1970
-            if ts - self.renderTs > 0.1 {
+            if self.writeAudio && ts - self.renderTs > 0.1 {
                 let floats = UnsafeBufferPointer(start: channels[0], count: Int(buffer.frameLength))
                 let frame = floats.map({ (f) -> Int in
                     return Int(f * Float(Int16.max))
@@ -259,11 +312,10 @@ class RecorderViewController: UIViewController {
                     self.audioView.setNeedsDisplay()
                 }
             }
-            
-            let write = true
-            if write {
+
+            if self.writeAudio {
                 if self.audioFile == nil {
-                    self.audioFile = self.createAudioRecordFile()
+                    self.audioFile = self.createAudioRecordFile(sampleRate)
                 }
                 if let f = self.audioFile {
                     do {
@@ -281,7 +333,9 @@ class RecorderViewController: UIViewController {
             print(error.localizedDescription)
             return
         }
-        self.updateUI(.recording)
+        DispatchQueue.main.async {
+            self.updateUI(.recording)
+        }
     }
     
     /// Called when recording is stopped.  This will also dismiss the view.
@@ -352,12 +406,19 @@ class RecorderViewController: UIViewController {
         return false
     }
     
-    /// Return the audio recording format / settings
+    
+    /// Return the audio recording  settings
     ///
     /// - Returns: the audio recording format / settings
-    private func format() -> AVAudioFormat? {
-        let format = AVAudioFormat(settings: self.settings)
-        return format
+    private func settings(_ sampleRate: Double)-> [String: Any] {
+        return [AVFormatIDKey: kAudioFormatLinearPCM, AVLinearPCMBitDepthKey: 16, AVLinearPCMIsFloatKey: true, AVSampleRateKey: Float64(sampleRate), AVNumberOfChannelsKey: 1]
+    }
+    
+    /// Return the audio recording format
+    ///
+    /// - Returns: the audio recording format / settings
+    private func format(_ sampleRate: Double) -> AVAudioFormat? {
+        return AVAudioFormat(settings: settings(sampleRate))
     }
     
     
@@ -374,12 +435,12 @@ class RecorderViewController: UIViewController {
     /// Create the audio file used for the recording.
     ///
     /// - Returns: the `AVAudioFile` object that can be used for recording
-    private func createAudioRecordFile() -> AVAudioFile? {
+    private func createAudioRecordFile(_ sampleRate: Double) -> AVAudioFile? {
         guard let path = self.createAudioRecordPath() else {
             return nil
         }
         do {
-            let file = try AVAudioFile(forWriting: path, settings: self.settings, commonFormat: .pcmFormatFloat32, interleaved: true)
+            let file = try AVAudioFile(forWriting: path, settings: settings(sampleRate), commonFormat: .pcmFormatFloat32, interleaved: true)
             return file
         } catch let error as NSError {
             print(error.localizedDescription)
@@ -402,6 +463,15 @@ class RecorderViewController: UIViewController {
                     self.stopRecording()
                 }
             }
+        }
+    }
+    
+    /// Callback function for when `srCountdownTimer` updates.  This allows us to announce the new value via voice
+    ///
+    /// - Parameter newValue: the new value (in seconds) displayed on the countdown timer
+    @objc func timerDidUpdateCounterValue(newValue: Int) {
+        if newValue > 0 {
+            UIAccessibility.post(notification: UIAccessibility.Notification.announcement, argument: String(newValue))
         }
     }
     

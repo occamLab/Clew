@@ -1,0 +1,24 @@
+/* /A prompt that tells the user to use the form to give us feedback */
+"9cz-vg-ExE.text" = "الرجاء تزويدنا برأيك حول التطبيق";
+
+/* Class = "UILabel"; text = "Attach a voice recording"; ObjectID = "AwY-9g-fYn"; */
+"AwY-9g-fYn.text" = "أرفق تسجيلاً صوتياً";
+
+/* /This is the place holder text which tell the user what sort of information to input into the respective text field */
+"gdh-cx-htS.placeholder" = "البريد الإلكتروني (اختياري)";
+
+/* /This is the place holder text which tell sthe user what sort of information to input into the respective text field */
+"ona-NU-g6a.placeholder" = "رقم الهاتف (اختياري)";
+
+/* /This is the place holder text which tell sthe user what sort of information to input into the respective text field */
+"rLz-VJ-aNK.placeholder" = "الاسم";
+
+/* /This is the place holder text which tell sthe user what sort of information to input into the respective text field */
+"u2H-bu-ac3.placeholder" = "البلد (اختياري)";
+
+/* /This is tha accessibility label that is read when the user hovers over the send feedback button */
+"Yh2-1z-izX.accessibilityLabel" = "ارسل تعليقك";
+
+/* /This is the text on the send feedback button the ">" symbol is included to represent action */
+"Yh2-1z-izX.normalTitle" = "إرسال";
+

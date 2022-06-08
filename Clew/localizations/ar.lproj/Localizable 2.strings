@@ -1,0 +1,502 @@
+/* Additional directions given to user telling them to climb stairs */
+" and proceed upstairs" = "قم بصعود الدرج";
+
+/* Version of directions given when haptic feedback function is turned off (Clock directions) */
+"1o'clockDirection" = "إلى اليمين قليلاً نحو الساعة الواحدة";
+
+/* direction to the user to turn towards the 2 o'clock direction */
+"2o'clockDirection" = "إلى اليمين قليلاً نحو الساعة الثانية";
+
+/* direction to the user to turn towards the 4 o'clock direction */
+"4o'clockDirection" = "انعَطِف نحو الساعة الرابعة";
+
+/* direction to the user to turn towards the 5 o'clock direction */
+"5o'clockDirection" = "انعَطِف إلى الخلف نحو الساعة الخامسة";
+
+/* direction to the user to turn towards the 6 o'clock direction */
+"6o'clockDirection" = "انعَطِف إلى الخلف نحو الساعة السادسة";
+
+/* direction to the user to turn towards the 7 o'clock direction */
+"7o'clockDirection" = "انعَطِف إلى الخلف نحو الساعة السابعة";
+
+/* direction to the user to turn towards the 8 o'clock direction */
+"8o'clockDirection" = "انعَطِف نحو الساعة الثامنة";
+
+/* direction to the user to turn towards the 10 o'clock direction */
+"10o'clockDirection" = "إلى اليسار قليلا نحو الساعة العاشرة";
+
+/* direction to the user to turn towards the 11 o'clock direction */
+"11o'clockDirection" = "إلى اليسار قليلا نحو الساعة الحادية عشر";
+
+/* this is the content of an alert which tells the user that they should consider enabling the adjust offset feature. */
+"adjustOffsetAlertContent" = "عند قيامك بتسجيل هذا الطريق, لاحظ التطبيق بأن الكاميرا الخلفية لهاتفك لم تكن موجهة للأمام مباشرة.\nوبما أن هاتفك لم يكن موجها للأمام مباشرة، فعند التنقل في الطريق المسجل، ربما تخطئ الاتجاهات قليلا.\nإذا كان من الصعب عليك وضع الهاتف في اتجاه ثابت، فيمكن للتطبيق تعديل اتجاهاته تلقائيا، بحيث يكون التطبيق معتمدا على جسمك بدلا من كاميرا الهاتف.\nهل تريد تفعيل هذه الميزة؟\nويمكنك دائما تعطيل هذه الميزة عن طريق قائمة الإعدادات داخل خيار  \"ضبط موازنة الهاتف مع الجسم.\"\nتتوفر معلومات مهمة لهذه الميزة داخل قائمة المساعدة.";
+
+/* This is the announcement which is spoken after starting navigation if the user has enabled the Correct Offset of Phone / Body option. */
+"adjustOffsetReminderAnnouncement" = "سيتم تحديث التصحيح التلقائي لإزاحة الهاتف / الجسم عندما تبدء بالسير";
+
+/* Text describing the process of aligning to an anchorpoint. This text shows up on the alignment screen. */
+"anchorPointAlignmentText" = "الرجاء محاذة هاتفك مع نفس النقطة الثابتة التي قمت بتسجيلها مسبقًا. وللقيام بذلك، يجب عليك وضع هاتفك بشكل ثابت، ثم وجه الشاشة لأعلى واضغط على الجزء العلوي (الزاوية القصيرة من الهاتف)، استخدم نفس الطريقة المستخدمة عند تسجيل النقطة الثابتة.\nعند تفعيل زر المحاذاة سيبدأ العد التنازلي للمحاذاة، ويهدف هذا الزر لمنحك الوقت لإجراء التعديلات النهائية على اتجاه جهازك. في نهاية العد التنازلي، سيتم اعتماد اتجاه الجهاز وسيعلمك الهاتف بأنه قد تم حفظ النقطة الثابتة بنجاح.";
+
+/* This is the text which delineates the text that a user saved witht their saved anchor point. This text is shown when a suer loads an anchor point and the text that the user saved with their anchor point appears right after this string. */
+"anchorPointIntroductionToSavedText" = "معلومات النقطة الثابتة التي أدخلتها هي:";
+
+"imageAnchorPointAlignmentText" = "";
+
+
+/* A button for user to click which will close the pop up without saving any information the user put in */
+"anchorPointPop-UpCancel" = "لا تُفصّل هذهي المعلومات";
+
+/* Anchor Points */
+"anchorPointTextHeading" = "معلومات النقطة الثابتة";
+
+/* A placeholder that appears in text box which the user uses to enter a text label for an anchor point. */
+"anchorPointTextPlaceholder" = "أدخل معلومات النقطة الثابتة";
+
+/* A button for user to click to confirm the text note they added to their anchor point and close a pop-up
+   What the user clicks to acknowledge a message and dismiss pop-up */
+"anchorPointTextPop-UpConfirmation" = "موافق";
+
+/* Prompts user to enter descriptive text about their anchor point */
+"anchorPointTextPrompt" = "أدخل نصًا حول النقطة الثابتة التي تمكنك من العثور عليها لاحقا.";
+
+/* this is a paragraph in the app features section of the help menu which describes the main features of Clew */
+"appfeaturesCurrentVersionContent" = "يسمح لك Clew بتسجيل الطرق عن طريق هاتفك والذي يمكنك من استخدامهم في أوقات لاحقة بمصاحبة توجيهات تلقائية ودقيقة من التطبيق.\nيمكن استخدام Clew لأغراض متعددة، إذا رغبت مثلا بالعودة مجددا إلى نقطة البداية لموقعك، (فعلى سبيل المثال)، إذا خرجت لمكان مع شخص مبصر، أو إذا كان من الصعب عليك العودة مجددا.\nأو حتى إذا رغبت في تذكر طريق لكي تتعلمه، يمكنك التنقل به بحرية مطلقة في المستقبل.\nمعلومة مهمة: لا يستخدم Clew خدمات تحديد الموقع لهاتفك، فَيتيح لك هذا استخدامه في الأماكن المغلقة.";
+
+/* this is a heading in the help documentation and part of the app features section. */
+"appFeaturesCurrentVersionHeading" = "الإصدار الحالي";
+
+/* this is a paragraph in the app Features section of the help documentation which describes the features which are under development for future versions of the app. */
+"appFeaturesFutureVersionsContent" = "نحن نعمل جاهدين على تحسين آلِيَّة مناسبة لجعل عملية الملاحة  أسهل وأسرع.";
+
+/* This is a heading in the app features section of the help documentation. */
+"appFeaturesFutureVersionsHeader" = "الإصدارات المستقبلية";
+
+/* this is a heading in the help documentation. it is also used for the creation of the accessibility labels used to inform the user as to how to interact with the help documantatio's accordian menu */
+"appFeaturesHeading" = "مميزات التطبيق";
+
+/* This is a paragraph in the App sounds and their meanings section. */
+"appSoundsAndTheirMeaningsContent" = "بالإضافة إلى الإشارات الصوتية التي تحصل عليها أثناء تنقلك عبر الطريق، (الموصوفة مسبقا)، تتوفر أيضا مجموعة إضافية من الأصوات التي تساعدك على فهم الإحداث الحالية التي تَحدُث في التطبيق.\nإذا قمت مسبقا بتفعيل خيار تعليقات الكلام عن طريق إعدادات التطبيق، فسيكون كل صوت من هذه الأصوات مصحوبا بجملة تَِصف المعنا الخاص بالصوت.\nلاحظ بأن هذه الأصوات لا تصلك عندما تكون في قائمة المساعدة (وذلك لتجنب إزعاجك أثناء تنقلك بين المعلومات).";
+
+/* This is a section header in the help documentation */
+"appSoundsAndTheirMeaningsHeader" = "أصوات التطبيق ومعانيها";
+
+/* This is a bullet point which describes the motion tracking warning sound and its meaning */
+"appSoundsAndTheirMeaningsMotionTrackingWarningSoundBullet" = "صوت تحذير تتبع الحركة: هو عبارة عن مقطع صوتي قصير لآلة وترية خشنة. ويشير هذا الصوت بأن تتبع التطبيق للحركة قد انخفض إما بسبب تحرك الهاتف بسرعة أو بسبب انعدام الضوضاء في المكان. ويحدث هذا الأمر إذا كانت المنطقة مظلمة جدا أو إذا كان مدخل الكاميرا مغلقاً.\n";
+
+/* This is a bullet point which describes the normal motion tracking sound and its meaning */
+"appSoundsAndTheirMeaningsNormalMotionTrackingSoundBullet" = "صوت تتبع الحركة العادي: هو عبارة عن صوت آلة نحاسية قصير. ويشير هذا الصوت إلى أن تتبع الحركة في التطبيق هو طبيعياً. إذا بدأ التطبيق للتو، فهذا يعني أن تتبع الحركة نشط. وإذا كان التطبيق قد مرة سابقًا بضعف في الإضاءة، فقرء الوصف الصوتي التالي، فهذا يعني أن تتبع الحركة قد عاد لوضعه الطبيعي. أما إذا استمعت لهذا الصوت بعد تحميل أو استئناف الطريق، فهذا يعني أن الواقع الافتراضي قد تمكن من تعديل المسار تلقائياً.";
+
+/* Play/Pause text */
+"automaticAlignmentPlayPauseViewText" = "تم إعادة محاذاتك تلقائيًا مع الطريق. اضغط على زر التشغيل لبدء التنقل.";
+
+/* Sharing routes */
+"automaticEmailTextWhenSharingRoutes" = "قم بتجربة هذا الطريق";
+
+/* The accessibility label on the button denoting that the route navigation provided unsatisfactory service */
+"badServiceButtonAccessibilityLabel" = "رديء ";
+
+/* A button which closes the current pop up */
+"cancelPop-UpButtonLabel" = "إلغاء";
+
+/* Info.plist */
+"Clew needs to access your camera to track your orientation." = "يحتاج Clew للوصول إلى الكاميرا لكي يتمكن من تتبع اتجاهك";
+
+/* HelpCompiler.swift */
+"clewAppLogoAccessibilityText" = "شعار تطبيق Clew";
+
+/* This is the top heading of the help documentation */
+"clewHelpTitle" = "مساعد Clew ";
+
+/* Strings from Navigation */
+"climbStairsDirection" = "قم بصعود الدرج";
+
+/* An announcement which is played to notify the user that they have arrived at the end of their route. */
+"completedNavigationAnnouncement" = "لقد وصلت";
+
+/* This is a tag that is spoken by the accessibility elements. This tag describes the action a user must take to collapse one of the sections in the help documentation */
+"contractSectionAccessibilityTag" = "طي القسم";
+
+/* A button which declines to turn on the adjust offset feature */
+"declineTurnOnAdjustOffsetButton" = "لا";
+
+/* This is the text that appears when a user tries to delete a saved route. This text is used in an option menu when a route is selected and it describes the action for deleting a route. */
+"deleteActionText" = "حذف";
+
+/* This is a direction which instructs the user to descend stairs */
+"descendStairsDirection" = "قم بنزول الدرج";
+
+/* This is the accessibility label for the button which allows the user to save a text based description of their anchor point when saving a route. This feature should allow the user to more easily realign with their anchorpoint. */
+"enterAnchorPointDescriptionButtonAccessibilityLabel" = "أدخل نصًا لمساعدتك على تذكر نقطة الثبات هذه";
+
+/* This is the accessibility label for the button which allows the user to save a voice note description of their anchor point when saving a route. This feature should allow the user to more easily realign with their anchorpoint. */
+"enterAnchorPointVoiceNoteButtonAccessibilityLabel" = "سجل مقطعا صوتيا لمساعدتك على تذكر نقطة الثبات هذه";
+
+/* An announcement which lets the user know that there is too much movement of their device and thus the app's ability to track a route has been lowered. */
+"excessiveMotionDegradedTrackingAnnouncemnt" = "حركة زائدة. تتبع الأداء منخفض.";
+
+/* This is a tag that is spoken by the accessibility elements. This tag describes the action a user must take to expand one of the sections in the help documentation */
+"expandSectionAccessibilityTag" = "فتح القسم";
+
+/* (No Comment) */
+"feedbackButtonAccessibilityLabel" = "الاهتزازات";
+
+/* FeedbackViewController.swift */
+"feedbackMenuTitle" = "ملاحظات حول Clew";
+
+
+/* Let user know that the ARKit tracking session has returned to its normal quality (this is played after the tracking has been restored from thir being insuficent visual features or excessive motion which degrade the tracking) */
+"fixedTrackingAnnouncement" = "تتبع الأداء عادي";
+
+/* This is a paragraph in the following a route section of the help documentation which describes the menaing of audityory meps during navigation. */
+"followingARouteAuditoryBeepsContent" = "على فرض بأنك قمت بتفعيل وصف الأصوات من إعدادات التطبيق وكان الآيفون الخاص بك غير مكتوماً، فعند التنقل عبر الطريق سيصدر الهاتف صفارات صوتية عندما يكون موجها بالاتجاه الصحيح.\nمن المهم الأخذ بعين الاعتبار بأن هذه العلامات مرتبطة بالهاتف بدلا من جسمك.\nوعند قطع مسافة من الطريق (نسمي هذا بالنقاط الثابتة)،\nستستمع لمجموعة من المؤثرات الصوتية المختلفة.";
+
+/* This is a header inside the following a route section of the help documentation */
+"followingARouteAuditoryBeepsHeader" = "الصافِرات السمعية";
+
+/* This is a paragraph which is in the following a route section of the help documentation. */
+"followingARouteContent" = "عند القيام بتفعيل ميزة بدء التنقل، سيزودك التطبيق بإرشادات تمكنك من العودة مجددا إلى نقطة البداية.\nوسيزودك التطبيق بصيغ الإرشادات التالية:";
+
+/* this is paragraph 1 in the following a route section of the help documentation which describes the functionality of the correct for phone / body offset feature. */
+"followingARouteCorrectOffsetAutomaticallyContentParagraph1" = "يساعدك Clew على التنقل عبر الطريق ويستخدم افتراضياً الاتجاه الخاص بهاتفك.\nولِهذا، إذا كنت تسير بشكل مستقيم ولم يكن هاتفك موجهاً إلى الأمام، فمن الممكن أن تكون الاتجاهات التي يزودك بها التطبيق خاطئة.\nإذا وجدت هذا الأمر صعبا، فيمكنك تفعيل إعداد التصحيح التلقائي لإزاحة الهاتف / الجسم.\nوعندما يكون هذا الخيار مفعلا، سيستخدم التطبيق بعضا من العلامات أثناء تنقلك ليتأكد من أن هاتفك غير موجه إلى الأمام مباشرةً.\n(في نفس الجهة التي تتوجه نحوها)\nإذا لاحظ التطبيق بأن الكاميرا الخلفية لهاتفك لم تكن موجهة للأمام مباشرة، سيقوم التطبيق بتعديل اتجاهاته تلقائيا، بحيث يعتمد التطبيق على جسمك بدلا من اتجاه الهاتف.";
+
+/* this is paragraph 2 in the following a route section of the help documentation which describes the functionality of the correct for phone / body offset feature. */
+"followingARouteCorrectOffsetAutomaticallyContentParagraph2" = "عند استخدامك لخيار التصحيح التلقائي لإزاحة الهاتف / الجسم، فمن الأفضل لك وضع الهاتف مقابل القفص الصدري، ثم قم بالدوران بجسمك للعثور على الاتجاه الصحيح الذي يجب اتباعه\n(فعند الدوران بجسمك، يجب أن يبقى الهاتف مقابل القفص الصدري ملتفا معك حيثما تذهب.)\nلاحظ بأن المشي الخلفي والجانبي يؤثر بشكل سلبي على التطبيق وذلك بفصل الارتباط بين الهاتف وجسمك.\nإذا حدث ذلك، فيمكنك تعطيل هذا الخيار، أو القيام بالمشي للأمام لعدة خطوات وذلك لإعادة حسابات التطبيق.";
+
+/* This is a header inside the following a route section of the help documentation */
+"followingARouteCorrectOffsetAutomaticallyHeader" = "التصحيح التلقائي لإزاحة الهاتف / الجسم";
+
+/* this is a paragraph in the following a route section of the help documentation which describes the meaning of haptic feedback that the user recieves during navigation. */
+"followingARouteHapticFeedbackContent" = "على فرض بأنك قمت بتفعيل اهتزازات الحس اللمسي من إعدادات التطبيق وكان الآيفون الخاص بك يدعم اهتزازات الحس اللمسي، (آيفون 7 أو أعلى)، عند التنقل عبر الطريق، سيصدر الهاتف اهتزازات لمسية عندما يكون موجها بالاتجاه الصحيح.\nمن المهم الأخذ بعين الاعتبار بأن هذه العلامات مرتبطة بالهاتف بدلا من جسمك.\nوعند قطع مسافة من الطريق (نسمي هذا بالنقاط الثابتة).\nستشعر أيضا باهتزازات لمسية أقوى.\n\n";
+
+/* This is a header inside the following a route section of the help documentation */
+"followingARouteHapticFeedbackHeader" = "اهتزازات الحس اللمسي";
+
+/* This is a header for the following a route section of the help documentation. */
+"followingARouteHeader" = "متابعة الطريق";
+
+/* this is a paragraph in the following a route section of the help documentation which describes the meaning of auditory speech feedback during navigation. */
+"followingARouteSpeechFeedbackContent" = "على فرض بأنك قمت بتفعيل الإرشادات الصوتية من إعدادات التطبيق وكان ال Voiceover مشغلاً، سيعطيك الهاتف إرشادات صوتية عند مصادفة نقاط ثابتة في طريقك, بدء الطريق, تابع الطريق.\nإذا رغبت بالاستماع إلى الإرشادات الصوتية مجددا، فيمكنك استخدام زر الحصول على الاتجاهات،";
+
+/* This is a header inside the following a route section of the help documentation */
+"followingARouteSpeechFeedbackHeader" = "إرشادات الكلام";
+
+/* Disclaimer shown to the user when they open the app for the first time */
+"forYourSafetyPop-UpContent" = "عند استخدامك للتطبيق، الرجاء أخذ الحيطة والانتباه لمحيطك.\nباستخدامك للتطبيق أنت تقر وتوافق على أن استخدامك للتطبيق يقع ضمن مسؤوليتك الخاصة فقط، فأنت وحدك المسؤول   عن حماية سلامتك الشخصية.\nالرجاء التفضل بزيارة www.clewapp.org للمزيد من المعلومات حول كيفية استخدام التطبيق.";
+
+/* The heading of a pop-up telling the user to be aware of their surroundings while using clew */
+"forYourSafetyPop-UpHeading" = "من أجل سلامتك";
+
+/* This is the accessibility label for the get directions button */
+"getDirectionsButtonAccessibilityLabel" = "الحصول على الاتجاهات";
+
+/* The accessibility label on the button denoting that the route navigation provided satisfactory service */
+"goodServiceButtonAccessibilityLabel" = "جيد";
+
+/* (No Comment) */
+"helpButtonAccessibilityLabel" = "المساعدة";
+
+/* This text appears on a button in an alert notifying the user that if they navigate to the home page they will stop their curent process. This text appears on the button which signifies that the user wants to continue to the home screen */
+"homeAlertConfirmNavigationButton" = "أِذهب إلى الصفحة الرئيسية";
+
+/* this is the content of an alert which tells the user that if they continue with going to the home page the current process will be stopped. */
+"homeAlertContent" = "إذا خرجت الآن من هذه العملية ، ستفقد معلومات الطريق الحالي.";
+
+/* GoHomeAlert */
+"homeAlertTitle" = "هل أنت متأكد؟";
+
+/* This is the accessibility label for the home button */
+"homeButtonAccessibilityLabel" = "الصفحة الرئيسية";
+
+/* This is a paragraph in the How well does Clew work? section of the help documentation. This paragraph describes how the app actually works */
+"howWellDoesClewWorkContentParagraph1" = "يعتمد Clew أثناء التنقل على تكنولوجيا الواقع المعزز المقدمة من آبل.\nويعتمد تقدير الحركة على الرؤية في المكان (وذلك باستخدام كاميرا الهاتف) ويعتمد التطبيق أيضا على المستشعرات الخاصة بالهاتف.\nفبالرغم من أن هذه التكنولوجيا متقدما جدا، فهي لا تعمل بشكل احترافي.\nتوقع دائما أثناء تنقلك في الطرق الطويلة انخفاضا في دقة اتجاهات وإرشادات التطبيق وخاصة في الطرق التي تحتوي على رؤية معدومة، أو أضواء خافتة.\nقد لحظنا بأن Clew يعمل بشكل جيد عند التنقل في الطرق باستخدام نفس الاتجاهات المسجلة مسبقا، فينصح باستخدام وضع التنقل (من البداية للنهاية، بدلا من النهاية للبداية.";
+
+/* This is a paragraph in the How well does Clew work section of the help documentation. This paragraph describes how users should use CLew to supplement their orientation and mobility skills rather than using the app as a replacement for their traditional. orientation and mobility skills */
+"howWellDoesClewWorkContentParagraph2" = "عند استخدامك للتطبيق، لا تقم بالاعتماد دائما على Clew, ويجب عليك دائما استخدام مهاراتك الحركية، وتكييف نفسك دائما مع الظروف المحيطة بك للحفاظ على سلامتك الخاصة.\nنحن نعمل على خلق استراتيجيات إضافية لتحسين دقة Clew.";
+
+/* This is a section heading in the help documentation menu */
+"howWellDoesClewWorkHeader" = "كيف يعمل Clew?";
+
+/* this is the text which is displayed in the settings to show the user the option of imperial measurements */
+"imperialUnitText" = "أقدام";
+
+/* An announcement which lets the user know  that their current surroundings do not have enough visual markers and thus the app's ability to track a route has been lowered. */
+"insuficientFeaturesDegradedTrackingAnnouncemnt" = "ميزات الرؤية معدومة.\nتتبع الأداء منخفض.";
+
+/* Direction to the user to make an approximately 90 degree left turn. */
+"leftDirection" = "اِنعَطِف يساراً";
+
+/* this is the text which is displayed in the settings to show the user the option of metric measurements */
+"metricUnitText" = "أمتار";
+
+/* This is the announcement which is spoken after the first anchor point of a multiple use route is saved. this signifies the completeion of the saving an anchor point procedure and the start of recording a route to be saved. */
+"multipleUseRouteAnchorPointToRecordingRouteAnnouncement" = "تم حفظ النقطة الثابتة. أنت الآن تقوم بتسجيل الطريق.";
+
+/* This is an announcement which is spoken when the user saves the end anchor point for a multiple use route. This signifies the transition from saving an anchor point to the screen where the user can name and save their route */
+"multipleUseRouteAnchorPointToSaveARouteAnnouncement" = "تم حفظ النقطة الثابتة. يمكنك الآن تسمية الطريق الخاص بك.";
+
+/* Information on how to record an anchor point when used recording the ending anchor point of a multiple use route. */
+"multipleUseRouteEndAnchorPointText" = "ولكي تتمكن من استخدام الطريق بشكل عكسي، يجب عليك تسجيل نقطة ثابتة في نهاية الطريق. \nتسجل النقطة الثابتة موقع واتجاه الهاتف الخاص بك، فيمكن للتطبيق إعادة تحميل الطريق عن طريق الملف المحفوظ.\nونتيجة لذلك، تعتمد دقة الطريق المحفوظ على مدى قدرتك على المحاذاة ومطابقة الهاتف مع النقطة الثابتة التي تم تسجيلها.\nننصحك باستخدام زري النص والملحوظة الصوتية لكتابة ملحوظة أو تسجيلها لمساعدتك على محاذاة الهاتف مع نفس النقطة التي قمت بتسجيلها.\nوللقيام بتسجيل نقطة ثابتة: يجب عليك وضع هاتفك بشكل ثابت، ثم وجه الشاشة لأعلى واضغط على الجزء العلوي (الزاوية القصيرة من الهاتف) وسيبدأ العد التنازلي.\nويهدف العد التنازلي لمنحك الوقت لإجراء التعديلات النهائية على اتجاه جهازك. وسيتم حفظ النقطة الثابتة عندما ينتهي العد التنازلي.";
+
+/* Information displayed to the user on the play pause screen after they have just recorded a multiple use route. This describes the functionality of the play and pause buttons. */
+"multipleUseRoutePlayPauseViewText" = "ولكي تتمكن من العودة إلى الطريق الذي قمت بتسجيله، اضغط على زر التشغيل، ثم اتبع الإرشادات المقدمة لك.\nإذا رغبت في العودة لاحقا، فيمكنك الرجوع إلى الصفحة الرئيسية ثم قم بتحميل الطريق الذي قمت بحفظه للتو عند رغبتك في العودة له مجددا.";
+
+/* Information on how to record an anchor point when used recording the starting anchor point of a multiple use route. */
+"multipleUseRouteStartAnchorPointText" = "لكي تتمكن من استخدام الطريق في وقت لاحق، يجب عليك تسجيل نقطة ثابتة في بداية الطريق. \nتسجل النقطة الثابتة موقع واتجاه الهاتف الخاص بك، فيمكن للتطبيق إعادة تحميل الطريق عن طريق الملف المحفوظ.\nونتيجة لذلك، تعتمد دقة الطريق المحفوظ على مدى قدرتك على المحاذاة ومطابقة الهاتف مع النقطة الثابتة التي تم تسجيلها.\nننصحك باستخدام زري النص والملحوظة الصوتية لكتابة ملحوظة أو تسجيلها لمساعدتك على محاذاة الهاتف مع نفس النقطة التي قمت بتسجيلها.\nوللقيام بتسجيل نقطة ثابتة: يجب عليك وضع هاتفك بشكل ثابت، ثم وجه الشاشة لأعلى واضغط على الجزء العلوي (الزاوية القصيرة من الهاتف) وسيبدأ العد التنازلي.\nويهدف العد التنازلي لمنحك الوقت لإجراء التعديلات النهائية على اتجاه جهازك. وسيتم حفظ النقطة الثابتة عندما ينتهي العد التنازلي.";
+
+// TODO: Translate these!!
+"multipleUseRouteStartImageAnchorPointText" = "";
+
+
+"multipleUseRouteEndImageAnchorPointText" = "";
+
+/* Message displayed to the user when saving a route by name. */
+"nameSavedRouteLabel" = "اكتب اسم الطريق الخاص بك أدناه";
+
+/* Message displayed to the user when typing to save a route by name. */
+"nameSavedRouteTextField" = "اكتب اسم الطريق";
+
+/* This is the accessibility label for the home button */
+"optionsButtonAccessibilityLabel" = "الخيارات";
+
+/* Pause */
+"pauseButtonAccessibilityLabel" = "إيقاف مؤقت";
+
+/* This is a content paragraph in the Pausing a Route or Recording a Anchor Point section of the help menu which talks about why an allignment process is necessary */
+"PausingARouteOrRecordingAAnchorPointContentParagraph1" = "تعتبر عملية الايقاف المؤقت للطريق وتسجيل نقطة ثابتة بمثابة الشيء نفسه. تكمن الفكرة الرئيسية بأنك عندما تود استخدام الطريق المسجل مرة أخرى، يجب عليك وضع الهاتف بنفس الطريقة التي قمت بتسجيل الطريق بها. في بعض الأحيان، سيقوم الواقع المعزز الخاص بApple بعمل هذا الأمر تلقائيا، (على سبيل المثال، عندما تلتقط الكاميرا ميزة بصرية ظاهرة، فيمكن مطابقتها مع التسجيل) وفي معظم الأوقات يكون هذا الأمر غير متاح.";
+
+/* This is the second paragraph in the Pausing a Route and Recording a Anchor Point section of the help menu. This paragraph discusses the process of creating a Anchor Point including reasoning for why a Anchor Points are necessary and some tips for most effective use of the feature. */
+"PausingARouteOrRecordingAAnchorPointContentParagraph2" = "ولكي تتمكن من عمل هذا الأمر بشكل جيد، يجب عليك وضع الهاتف باتجاه ثابت، بحيث يمكنك العودة لهذا الاتجاه عندما ترغب في إعادة تحميل الطريق المحفوظ مسبقا.\nفليس من الضروري وضع الهاتف في نفس المكان بالضبط (فكلما فعلت ذلك جيدا، سيعمل التطبيق بشكل أفضل)، ويجب عليك أن تكون قادرا دوما على وضع الهاتف باتجاه ثابت.\nولتسهيل عملية إعادة الهاتف إلى نفس الاتجاه، يجب عليك وضع هاتفك بشكل ثابت، ثم وجه الشاشة لأعلى واضغط على الجزء العلوي (الزاوية القصيرة من الهاتف). سيتم عرض المزيد من المعلومات داخل التطبيق عند تفعيل ميزة الإيقاف المؤقت أو ميزة إنشاء النقطة الثابتة.";
+
+/* This is a section heading in the help documentation menu */
+"PausingARouteOrRecordingAAnchorPointHeader" = "إيقاف الطريق مؤقتاً أو تسجيل نقطة ثابتة";
+
+/* (No Comment) */
+"Permission to use the microphone is required to use the voice notes feature." = "يجب الحصول على إِذن المايكروفون لكي تتمكن من استخدام ميزة الملاحظات الصوتية";
+
+/* This is the accessibility label for the button which allows the user to replay their recorded voice note when loading an anchor point. */
+"playVoiceNoteButtonAccessibilityLabel" = "تشغيل الملاحظة الصوتية المسجلة";
+
+/* This is an announcement which plays to tell the user the best practices for aligning the phone */
+"properDevicePositioningAnnouncement" = "أمسك الهاتف عموديًا مع توجيه الكاميرا الخلفية إلى الأمام.";
+
+/* This is a paragraph which describes how to send feedback to the development team */
+"providingFeedbackToTheDevelopmentTeamContent" = "الرجاء القيام بإرسال الملاحظات إلى فريق المطورين عن طريق خيار ارسال الملاحظات من داخل تطبيق Clew.\nويمكن الوصول إلى هذا الخيار عن طريق الضغط على زر الملاحظات داخل التطبيق.\nنحن نأخذ ملاحظاتك على محمل الجد وسوف نبذل كل ما بوسعنا لتطبيقها والعمل عليها.";
+
+/* this is a section in the help documentation menu */
+"providingFeedbackToTheDevelopmentTeamHeader" = "ارسال الملاحظات لفريق المطورين";
+
+/* This is a paragraph in the rating your navigation experiennce section of the help menu. */
+"ratingYourNavigationExperienceContent" = "عندما تنتهي من التنقل، وعلى فرض بأنك قمت بتفعيل خيار ارسال البيانات، سيطلب منك التطبيق القيام بتقييم الخدمة.\nتساعدنا هذه التقييمات على تحسين الجودة والدقة في التطبيق. سيتم ارسال مسار الهاتف مع البيانات.\nونود إعلامك بأن هذه البيانات ليست مرتبطة بك في أي حال من الأحوال، ولا تتضمن البيانات أي معلومات متعلقة بمكان تسجيل المسار.\n(لا تتضمن البيانات إشارات GPS ولا تتضمن أي صور أو معلومات حساسة).\nإذا كان لديك قلق حول البيانات داخل السجلات، الرجاء التواصل معنا (أو قم وبكل بساطة بتعطيل خيار إرسال البيانات من داخل إعدادات التطبيق.";
+
+/* This is a section header in the help documentation menu */
+"ratingYourNavigationExperienceHeader" = "تقييم الملاحة";
+
+/* Rating service view */
+"ratingYourServiceViewText" = "اكتملت الملاحة. الرجاء تقييم جودة تجربة الملاحة الخاصة بك.";
+
+/* Other */
+"realignToSavedRouteAnnouncement" = "تمت مطابقة موقعك الحالي مع الطريق المحفوظ بنجاح.";
+
+/* This is a paragraph in the recording a route section which describes how to record a single use route */
+"recordingARouteContent" = "عندما يعمل التطبيق، سيعرض لك ثلاثة أزرار مختلفة: حفظ الطريق، استخدام طريقا فرديا، وقائمة الطرق المحفوظة.\nولكي تتنقل في طريق ما دون الرغبة في حفظه، قم ببساطة بالضغط على زر استخدام طريق فردي، وتابع إرشادات التطبيق.\nولحفظ الطريق، قم بضغط زر حفظ الطريق.\nوسيرشدك التطبيق بطريقة تسجيل الطريق بالطلب منك أولا القيام بأنشاء نقطة ثابتة.\nوسيتم تفصيل طريقة انشاء النقطة الثابتة لاحقاً في هذه القائمة، ومن خلال إرشادات التطبيق.\nإذا كنت ترغب وفي أي وقت بإلغاء نشاطاً ما والعودة لشاشة التسجيل هذه في أي جزء من التطبيق، فيمكن ضغط زر الصفحة الرئيسية أو زر تم للعودة إلى شاشة التسجيل.";
+
+/* This is a section heading in the help documentation menu */
+"recordingARouteHeader" = "تسجيل الطريق";
+
+/* This is a paragraph in the recording a route section of the help menu. This paragraph describes how to properly hold the phone while recording a route for optimal performance */
+"recordingARouteProperPositioningContent" = "تعتمد تقديرات الحركة في التطبيق على تحليل الصور من كاميرا هاتفك. فلن يعمل التطبيق إلا إذا كانت الكاميرا الخلفية لهاتفك قادرة على التقاط صورًا لمحيطك.\nلن يعمل التطبيق إذا كان الهاتف في جيبك أو إذا كان أي جزء من جسمك يغطي الكاميرا الخلفية لهاتفك.\nلقد وجدنا بأن التطبيق يعمل بشكل جيد عندما تمسك الهاتف بشكل عمودي ثم قم بتوجيه الكاميرا الخلفية أمامك مباشرةً.\nيعمل الاتجاه الآخر أيضا، ولكن من الممكن أن يسبب نقصان في الدقة.";
+
+/* This is a heading in the recording a route section of the help documentation. */
+"recordingARouteProperPositioningHeading" = "وضع الهاتف بشكل صحيح عند استخدام Clew";
+
+/* A button that allows the user to navigate a route one time. */
+"recordSingleUseRouteButtonAccessibilityLabel" = "تسجيل طريق فردي";
+
+/* This is an Announcement which indicates that the pause session is complete, that the program was able to align with the anchor point, and that return navigation has started. */
+"resumeAnchorPointToReturnNavigationAnnouncement" = "تمت المحاذاة مع النقطة الثابتة. جاري بدء التنقل.";
+
+/* Accessibility label for button allowing the user to resume a paused route */
+"resumePausedRouteButtonAccessibilityLabel" = "متابعة ";
+
+/* Resume */
+"resumeRouteViewText" = "تم إيقاف تتبع طريقك مؤقتًا. عند رغبتك في متابعة الطريق، قم بالرجوع إلى آخر نقطة ثابتة ثم اضغط على زر المتابعة.";
+
+/* Direction to the user to make an approximately 90 degree right turn. */
+"rightDirection" = "اِنعَطِف يميناً";
+
+/* The text on a button in the select navigational direction menu of the app. This button allows the user to navigate a route in the opposite direction as it was originally recorded. */
+"routeDirectionEndToStartButtonLabel" = "من النهاية للبداية";
+
+/* RoutesViewController */
+"routeDirectionPop-UpHeader" = "اتجاه الطريق";
+
+/* The text on a button in the select navigational direction menu of the app. This button allows the user to navigate a route in the same direction as it was originally recorded. */
+"routeDirectionStartToEndButtonLabel" = "من البداية لالنهاية";
+
+/* (No Comment) */
+"routeNamePlaceholder" = "أدخل عنوان الطريق";
+
+/* A button that allows the user to save a path to a destination. */
+"saveARouteButtonAccessibilityLabel" = "احفظ الطريق";
+
+/* Name of labels that appear in UI */
+"saveARouteButtonText" = "حفظ الطريق";
+
+/* this is a paragraph in the saved routes section of the help documentation. this paragraph describes the basic functionaliuty of the saved routes feature */
+"savedRoutesContent" = "تتيح لك قائمة الطرق المحفوظة تحميل الطرق المسجلة والتنقل بها إما في الاتجاه الأمامي أو الاتجاه العكسي.";
+
+/* This is a paragraph in the saved routes section of the help documentation. This paragraph describes how to delete a saved route. */
+"savedRoutesDeletingASavedRouteContent" = "يمكنك حذف الطرق المسجلة عن طريق هذه القائمة إما عن طريق السحب إلى اليسار (إذا لم تكن تستخدم ال VoiceOver). أو إذا كنت تستخدم VoiceOver فيمكنك فعل ذلك عن طريق تفعيل الخيار الثانوي داخل الطريق.";
+
+/* This is a header in the saved routes section of the help documentation */
+"savedRoutesDeletingASavedRouteHeader" = "حذف طريق محفوظ";
+
+/* This is a section header in the help documentation */
+"savedRoutesHeader" = "الطرق المحفوظة";
+
+/* The accessibility tag for a button which opens a menu which displays all the saved routes created by the user. */
+"savedRoutesListButtonAccessibilityLabel" = "قائمة الطرق المحفوظة";
+
+/* This is the text which appears on the Saved routes List buttton */
+"savedRoutesListButtonText" = "الطرق المحفوظة";
+
+/* The title to a list of routes that have been saved by the user. */
+"savedRoutesListPop-UpHeading" = "قائمة الطرق المحفوظة";
+
+/* This is a paragraph in the saving routes section of the help menu which describes the process for loading a saved route for navigation. */
+"savedRoutesLoadingARouteContent" = "توفر لك قائمة الطرق المحفوظة قائمة بالطرق من الأكثر طلبا، إلى الأحدث.\nفعند اختيار طريقا ما، يمكنك اختيار التنقل بوضعين إما التنقل من البداية للنهاية، أو التنقل من النهاية للبداية.\nفالبداية للنهاية تعني بأنك تتنقل عبر الطريق بنفس الاتجاه الذي قد تم تسجيل الطريق به.\nأما النهاية للبداية، فيعني بأنك تتنقل في الطريق بشكل عكسي كما تم تسجيله مسبقا.";
+
+/* This is a header in the saving routes section of the help documentation menu */
+"savedRoutesLoadingARouteHeader" = "تحميل الطريق";
+
+/* This is a paragraph in the saved routes section of the help documentation. This paragraph describes how to share a saved route. */
+"savedRoutesSharingASavedRouteContent" = "يمكنك مشاركة الطرق من هذه القائمة إما عن طريق السحب إلى اليسار (إذا لم تكن تستخدم الVoiceOver) أو عن طريق تنشيط الإجراء الثانوي داخل الطريق (إذا كنت تستخدم VoiceOver).\nاضغط على زر المشاركة لفتح قائمة المشاركة والتي تتيح لك مشاركة طريق عبر رسالة نصية أو عن طريق البريد الإلكتروني أو عن طريق العديد من التطبيقات الأخرى. عند مشاركتك لطريقا ما، الرجاء التأكد بأنك قد أدخلت تعليمات مفصلة (إما كملاحظة صوتية أو كنص) وذلك لمساعدة الشخص الذي تشاركه الطريق على العثور على النقاط الثابتة داخل الطريق. إذا لم يتمكن هذا الشخص من العثور على النقاط الثابتة بدقة، فلن يوفر التطبيق له إرشادات دقيقة.";
+
+/* This is a header in the saved routes section of the help documentation */
+"savedRoutesSharingASavedRouteHeader" = "جاري مشاركة طريقاً محفوظاً";
+
+/* (No Comment) */
+"saveRouteConfirmationLabel" = "حفظ ";
+
+/* (No Comment) */
+"saveRoutePop-UpTextBoxPrompt" = "أدخل اسم الطريق";
+
+/* Save routes */
+"saveRoutePop-UpTitle" = "حفظ الطريق";
+
+/* This is an announcement which is spoken when the user finishes saving their route. This announcement signifies the transition from the view where the user can name or save their route to the screen where the user can either pause the AR session tracking or they can perform return navigation. */
+"saveRouteToPlayPauseAnnouncement" = "تم حفظ الطريق. يمكنك الآن العودة للتنقل أو العودة إلى الصفحة الرئيسية.";
+
+/* Settings & Comments: Title/header of the settings menu. */
+"Settings" = "الإعدادات";
+
+/* (No Comment) */
+"settingsButtonAccessibilityLabel" = "الإعدادات";
+
+/* This is the text that appears when a user tries to share a saved route. This text is used in an option menu when a route is selected and it describes the action for share a route. */
+"shareActionText" = "مشاركة";
+
+/* Disclaimer shown to the user when they open the app for the first time */
+"sharingYourExperiencePop-UpContent" = "ساعدنا على تحسين التطبيق عن طريق مشاركة تجربتك مع Clew. ولن تتضمن هذه البيانات أي صور أو معلومات شخصية. ويمكنك إيقاف تشغيل هذا الخيار عن طريق الإعدادات.";
+
+/* When opening the app for the first time */
+"sharingYourExperiencePop-UpHeading" = "شارك تجربتك مع Clew";
+
+/* Enable Correct Phone / Body Alignment Alert */
+"showAdjustOffsetSuggestionTitle" = "هل تريد تفعيل التصحيح التلقائي لإزاحة الهاتف / الجسم؟";
+
+/* What the user clicks to acknowledge the significant changes message and dismiss pop-up */
+"significantVersionChanges-Confirmation" = "موافق";
+
+/* An alert shown to the user to alert them to the fact that significant changes have been made to the app. */
+"significantVersionChangesPop-UpContent" = "يحتوي الإصدار الجديد من Clew على ميزة مشاركة الطريق. قد تم إعادة تصميم التطبيق لكي تتمكن من حفظ الطرق بكل سهولة. يرجى العلم بأنه \"قد تم إعادة تسمية العلامات المرجعية\" لتصبح \"نقاط ثابتة\". ، وقد تم نقل بعض القوائم من الشاشة الرئيسية لقائمة \"الخيارات\". اطلع على قائمة المساعدة للمزيد من المعلومات.";
+
+/* The heading of a pop-up telling the user that significant changes have been made to this app version */
+"significantVersionChangesPop-UpHeading" = "تعديلات مهمة";
+
+/* Information displayed to the user on the play pause screen after they have recorded a single use route. This describes the functionality of the play and pause buttons. */
+"singleUsePlayPauseViewText" = "لكي تتمكن من الانتقال لِطريق العودة، اضغط على زر التشغيل، ثم تابع التعليمات. ولكي تتمكن من الإيقاف المؤقت والعودة للطريق لاحقاً، قم بالضغط على زر الإيقاف المؤقت، وتابع عمل النقطة الثابتة.";
+
+/* Information on how to record an anchor point when used for pausing a single use route */
+"singleUseRouteAnchorPointText" = "\"ولكي تتمكن من متابعة تنقلك في وقت لاحق، يجب عليك تسجيل نقطة ثابتة في نهاية الطريق.\nتسجل النقطة الثابتة موقع واتجاه الهاتف الخاص بك، فيمكن للتطبيق إعادة تحميل الطريق عن طريق الملف المحفوظ.\nنتيجة لذلك، تعتمد دقة الطريق المحفوظ على مدى قدرتك على المحاذاة ومطابقة الهاتف مع النقطة الثابتة التي تم تسجيلها.و\nوننصحك باستخدام زرّي النص والملحوظة الصوتية لكتابة ملحوظة أو تسجيلها لمساعدتك على مطابقة الهاتف مع نفس النقطة التي قمت بتسجيلها.\nوللقيام بتسجيل نقطة ثابتة: يجب عليك وضع هاتفك بشكل ثابت، ثم وجه الشاشة لأعلى واضغط على الجزء العلوي (الزاوية القصيرة من الهاتف) وسيبدأ العد التنازلي.\nويهدف العد التنازلي لمنحك الوقت لإجراء التعديلات النهائية على اتجاه جهازك. وسيتم حفظ النقطة الثابتة عندما ينتهي العد التنازلي.\"";
+
+/* Announcements which signify the end of a process */
+"singleUseRouteAnchorPointToPausedStateAnnouncement" = "تم حفظ النقطة الثابتة. يمكنك إغلاق التطبيق والعودة لاحقًا للتنقل عبر طريق العودة.";
+
+/* This is the text which appears on the single use route buttton */
+"singleUseRouteButtonText" = "طريق فردي";
+
+/* This is an announcement which is spoken when the user starts recording a single use route. it informs the user that they are recording a single use route. */
+"singleUseRouteToRecordingRouteAnnouncement" = "جاري تسجيل طريق فردي";
+
+/* Direction to user to take a slight left turn */
+"slightLeftDirection" = "انعَطِف يساراً";
+
+/* Direction to user to take a slight right turn */
+"slightRightDirection" = "توجه إلى اليمين قليلاً";
+
+/* this is athe accessibility label for the button which allows the user to start an alignment procedure when saving an anchor point */
+"startAlignmentCountdownButtonAccessibilityLabel" = "بدء مؤقت المحاذاة";
+
+/* Voicing directions */
+"startedTrackingSessionAnnouncement" = "تم تهيئة جلسة التنقل";
+
+/* This is an anouncement which is played when the user performs return navigation from the play pause menu. It signifies the start of a navigation session. */
+"startingReturnNavigationAnnouncement" = "جاري بدء التنقل";
+
+/* This is the accessibility label which is played when a user with voice over selects the button to record a voice recording in the voice recorder view */
+"startRecordingVoiceNoteAccessibilityLabel" = "تسجيل ملحوظة صوتية";
+
+"recordSpatialVoiceNoteAccessibilityLabel" = "تسجيل ملاحظة صوتية كإشارة إلى موقعك الحالي";
+
+/* The accessibility label for the button that allows user to start navigating back along their route. */
+"startReturnNavigationButtonAccessibilityLabel" = "بدء التنقل";
+
+/* (No Comment) */
+"startReturnNavigationButtonAcessabilityLabel" = "بدء التنقل إلى نقطة البداية";
+
+/* The accessibility label of the button that allows user to stop navigating. */
+"stopNavigationButtonAccessibilityLabel" = "إيقاف التنقل";
+
+/* The accessibility label of the button that allows user to stop recording a route. */
+"stopRecordingButtonAccessibilityLabel" = "إيقاف التسجيل";
+
+/* This is the accessibility label which is played when a user with voice over selects the button to stop their voice recording */
+"stopRecordingVoiceNoteAccessibilityLabel" = "تم إيقاف التسجيل";
+
+// TODO: Translate the two below from the English file
+"enterCodeButtonText" = "";
+"recordSingleUseRouteButtonAccessibilityLabel" = "";
+
+/* Version of directions given when haptic feedback function is turned on (Simpler) */
+"straightDirection" = "تابع السير إلى الأمام";
+
+/* This text appears on a button that turns on the adjust offset feature */
+"turnOnAdjustOffsetButton" = "نعم";
+
+/* Direction to the user to turn around */
+"uTurnDirection" = "انعطف للخلف";
+
+/* Voicenote */
+"voiceNoteRecorderPop-UpHeader" = "مسجل الصوت";
+
+// Version 1.5 strings
+"surveyPopoverTitle" = "نرغب في الحصول على رأيك";
+"submitSurvey" = "إرسال";
+
+"signInWithAppleTitle" = "الرجاء تسجيل الدخول";
+"signInWithAppleButtonText" = "تسجيل الدخول";
+"signInWithAppleDescription" = "نعمل دائما على تطوير Clew، فمن المهم الحصول على تعليقات وآراء المستخدمين حول التطبيق، حتى نتمكن من جعله أداة أفضل للتنقل.
+الرجاء تسجيل الدخول باستخدام آبل لمساعدة فريقنا على تحسين التطبيق!
+";
+
+"dismissSurvey" = "استبعاد";
+"thanksForFeedbackAnnouncement" = "شكرا جزيلا على تقديم رأيك";
+
+// App Clip App Route Manager Strings
+"NavigateText" = "Navigate/Test Route";
+"UploadText" = "Upload Route";
+"DeleteText" = "Delete Route";
+"ShareText" = "Share Route";
+"AppClipCodeIDText" = "App Clip Code ID";
+

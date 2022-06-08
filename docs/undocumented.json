@@ -1,6 +1,13 @@
 {
   "warnings": [
     {
+      "file": "/Users/pruvolo/Software/Clew/Clew/Controllers/PopOvers/BurgerMenuViewController.swift",
+      "line": 11,
+      "symbol": "BurgerMenuViewController",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
       "file": "/Users/pruvolo/Software/Clew/Clew/Controllers/PopOvers/FeedbackViewController.swift",
       "line": 11,
       "symbol": "FeedbackViewController",
@@ -50,6 +57,27 @@
       "warning": "undocumented"
     },
     {
+      "file": "/Users/pruvolo/Software/Clew/Clew/Controllers/StateViews/NameSavedRouteController.swift",
+      "line": 27,
+      "symbol": "NameSavedRouteController.viewDidAppear(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/pruvolo/Software/Clew/Clew/Controllers/StateViews/NameSavedRouteController.swift",
+      "line": 36,
+      "symbol": "NameSavedRouteController.dismissKeyboard()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/pruvolo/Software/Clew/Clew/Controllers/StateViews/NameSavedRouteController.swift",
+      "line": 46,
+      "symbol": "NameSavedRouteController.viewDidLoad()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
       "file": "/Users/pruvolo/Software/Clew/Clew/Controllers/StateViews/StartNavigationController.swift",
       "line": 20,
       "symbol": "StartNavigationController.stackView",
@@ -64,9 +92,30 @@
       "warning": "undocumented"
     },
     {
+      "file": "/Users/pruvolo/Software/Clew/Clew/Controllers/StateViews/StartNavigationController.swift",
+      "line": 24,
+      "symbol": "StartNavigationController.label",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
       "file": "/Users/pruvolo/Software/Clew/Clew/Controllers/ViewController.swift",
-      "line": 1748,
+      "line": 454,
+      "symbol": "ViewController.saveRouteButtonPressed()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/pruvolo/Software/Clew/Clew/Controllers/ViewController.swift",
+      "line": 1756,
       "symbol": "ViewController.homeButtonPressed()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/pruvolo/Software/Clew/Clew/Controllers/ViewController.swift",
+      "line": 1796,
+      "symbol": "ViewController.burgerMenuButtonPressed()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
@@ -94,13 +143,20 @@
     {
       "file": "/Users/pruvolo/Software/Clew/Clew/Views/UIConstants.swift",
       "line": 68,
+      "symbol": "UIConstants.bottomScreen",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/pruvolo/Software/Clew/Clew/Views/UIConstants.swift",
+      "line": 84,
       "symbol": "UIConstants.yButtonFrameMargin",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Users/pruvolo/Software/Clew/Clew/Views/UIConstants.swift",
-      "line": 72,
+      "line": 88,
       "symbol": "UIConstants.topButtonFrameMargin",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"

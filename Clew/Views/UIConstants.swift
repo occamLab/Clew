@@ -11,6 +11,7 @@
 
 
 import Foundation
+import UIKit // EEA
 
 /// A custom enumeration for storing UI constants defined by the phone size.
 enum UIConstants {
@@ -55,6 +56,22 @@ enum UIConstants {
         }
     }
     
+    /// y-origin of whole screen
+    static var yOriginOfScreen: CGFloat {
+        return UIScreen.main.bounds.size.height/6
+    }
+    
+    /// center of screen
+    static var verticalCenter: CGFloat {
+        return UIScreen.main.bounds.size.height/6/3
+    }
+    
+    static var bottomScreen: CGFloat {
+        return UIScreen.main.bounds.size.height/6/5
+    }
+    
+    
+    
     /// y-origin of button frame
     static var yOriginOfButtonFrame: CGFloat {
         return UIScreen.main.bounds.size.height - buttonFrameHeight - settingsAndHelpFrameHeight - settingsAndHelpMargin
@@ -62,7 +79,7 @@ enum UIConstants {
     
     /// y-origin of announcement frame
     static var yOriginOfAnnouncementFrame: CGFloat {
-        return UIScreen.main.bounds.size.height/15
+        return UIScreen.main.bounds.size.height/7
     }
     
     static var yButtonFrameMargin: CGFloat {

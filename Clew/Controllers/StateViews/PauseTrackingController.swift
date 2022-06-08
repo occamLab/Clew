@@ -7,16 +7,17 @@
 //
 
 import UIKit
+import SceneKit // EEA
 
 /// A View Controller for handling the pause route state
 /// also handles associated buttons
 class PauseTrackingController: UIViewController, UIScrollViewDelegate {
 
-    /// button for storing landmark descriptions
-    var enterLandmarkDescriptionButton: UIButton!
+    /// button for storing Anchor Point descriptions
+    var enterAnchorPointDescriptionButton: UIButton!
     
     /// button for recording a voice note about a
-    /// landmark
+    /// Anchor Point
     var recordVoiceNoteButton: UIButton!
     
     /// button for aligning phone position in space
@@ -25,14 +26,48 @@ class PauseTrackingController: UIViewController, UIScrollViewDelegate {
     /// text label for the state
     var label: UILabel!
     
+    /// paused Boolean that should be set from ViewController in order to display appropriate text
+    var paused: Bool!
+    
+    /// recordingSingleUseRoute Boolean that should be set from ViewController in order to display appropriate text
+    var recordingSingleUseRoute: Bool!
+    
+    /// startAnchorPoint Boolean that should be set from ViewController in order to display appropriate text
+    var startAnchorPoint: Bool!
+    
+    /// imageAnchoring Boolean that should be set from ViewController in order to display appropriate text
+    var imageAnchoring: Bool!
+    
     /// called when the view loads (any time)
     override func viewDidAppear(_ animated: Bool) {
         /// update label font
-        /// TODO: is this a safe implementation? Might crash if label has no body, unclear.
-        label.font = UIFont.preferredFont(forTextStyle: .body)
+        
+        /// label details
+        let waitingPeriod = ViewController.alignmentWaitingPeriod
+        var mainText : String
+        
+        if paused && recordingSingleUseRoute {
+            mainText = String.localizedStringWithFormat(NSLocalizedString("singleUseRouteAnchorPointText", comment: "Information on how to record an anchor point when used for pausing a single use route"), waitingPeriod)
+        } else {
+            if startAnchorPoint {
+                mainText = String.localizedStringWithFormat(NSLocalizedString("multipleUseRouteStartAnchorPointText", comment: "Information on how to record an anchor point when used recording the starting anchor point of a multiple use route."), waitingPeriod)
+            } else {
+                /// recording an end anchor point without image anchor
+                mainText = String.localizedStringWithFormat(NSLocalizedString("multipleUseRouteEndAnchorPointText", comment: "Information on how to record an anchor point when used recording the ending anchor point of a multiple use route."), waitingPeriod)
+            }
+            
+        }
+        
+//        label.textColor = UIColor.white
+//        label.textAlignment = .center
+//        label.numberOfLines = 0
+//        label.lineBreakMode = .byWordWrapping
+//        label.font = UIFont.preferredFont(forTextStyle: .body)
+        label.text = mainText
+//        label.tag = UIView.mainTextTag
         
         /// set confirm alignment button as initially active voiceover button
-        UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: self.confirmAlignmentButton)
+        UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: self.enterAnchorPointDescriptionButton)
 
     }
     
@@ -41,10 +76,11 @@ class PauseTrackingController: UIViewController, UIScrollViewDelegate {
         super.viewDidLoad()
         
         /// create a main view which passes touch events down the hierarchy
+        // we subtract one pixel from the height to prevent accessibility elements in the parent view from being hidden (Warning: this is not documented behavior, so we may need to revisit this down the road)
         view = TransparentTouchView(frame:CGRect(x: 0,
                                                  y: 0,
                                                  width: UIScreen.main.bounds.size.width,
-                                                 height: UIScreen.main.bounds.size.height))
+                                                 height: UIScreen.main.bounds.size.height - 1))
         
         /// create a label, and a scrollview for it to live in
         label = UILabel()
@@ -60,7 +96,20 @@ class PauseTrackingController: UIViewController, UIScrollViewDelegate {
         
         /// label details
         let waitingPeriod = ViewController.alignmentWaitingPeriod
-        let mainText = String.localizedStringWithFormat(NSLocalizedString("Landmarks allow you to save or pause your route. You will need to return to the landmark to load or unpause your route. Before creating the landmark, specify text or voice to help you remember its location. To create a landmark, hold your device flat with the screen facing up. Press the top (short) edge flush against a flat vertical surface (such as a wall).  The \"align\" button starts a %lu-second countdown. During this time, do not move the device.", comment: "Info for user"), waitingPeriod)
+        // TODO: not sure why this code is duplicated
+        var mainText:String = ""
+        
+//        if paused && recordingSingleUseRoute {
+//            mainText = String.localizedStringWithFormat(NSLocalizedString("singleUseRouteAnchorPointText", comment: "Information on how to record an anchor point when used for pausing a single use route"), waitingPeriod)
+//        } else {
+//            if startAnchorPoint {
+//                mainText = String.localizedStringWithFormat(NSLocalizedString("multipleUseRouteStartAnchorPointText", comment: "Information on how to record an anchor point when used recording the starting anchor point of a multiple use route."), waitingPeriod)
+//            } else {
+//                mainText = String.localizedStringWithFormat(NSLocalizedString("multipleUseRouteEndAnchorPointText", comment: "Information on how to record an anchor point when used recording the ending anchor point of a multiple use route."), waitingPeriod)
+//            }
+//
+//        }
+        
         label.textColor = UIColor.white
         label.textAlignment = .center
         label.numberOfLines = 0
@@ -75,7 +124,7 @@ class PauseTrackingController: UIViewController, UIScrollViewDelegate {
 
         /// set top, left, right constraints on scrollView to
         /// "main" view + 8.0 padding on each side
-        scrollView.topAnchor.constraint(equalTo: view.topAnchor, constant: 100.0).isActive = true
+        scrollView.topAnchor.constraint(equalTo: view.topAnchor, constant: UIScreen.main.bounds.size.height*0.15).isActive = true
         scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8.0).isActive = true
         scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8.0).isActive = true
         
@@ -97,23 +146,23 @@ class PauseTrackingController: UIViewController, UIScrollViewDelegate {
         label.lineBreakMode = NSLineBreakMode.byWordWrapping
 
         /// initialize buttons with some basic size constaints
-        enterLandmarkDescriptionButton = UIButton.makeConstraintButton(view,
+        enterAnchorPointDescriptionButton = UIButton.makeConstraintButton(view,
                                                                   alignment: UIConstants.ButtonContainerHorizontalAlignment.left,
                                                                   appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "Describe")!),
-                                                                  label: "Enter text to help you remember this landmark")
+                                                                  label: NSLocalizedString("enterAnchorPointDescriptionButtonAccessibilityLabel", comment: "This is the accessibility label for the button which allows the user to save a text based description of their anchor point when saving a route. This feature should allow the user to more easily realign with their anchorpoint."))
         
         recordVoiceNoteButton = UIButton.makeConstraintButton(view,
                                                          alignment: UIConstants.ButtonContainerHorizontalAlignment.right,
                                                          appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "VoiceNote")!),
-                                                         label: "Record audio to help you remember this landmark")
+                                                         label: NSLocalizedString("enterAnchorPointVoiceNoteButtonAccessibilityLabel", comment: "This is the accessibility label for the button which allows the user to save a voice note description of their anchor point when saving a route. This feature should allow the user to more easily realign with their anchorpoint."))
         
         confirmAlignmentButton = UIButton.makeConstraintButton(view,
                                                           alignment: UIConstants.ButtonContainerHorizontalAlignment.center,
                                                           appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "Align")!),
-                                                          label: "Start alignment countdown")
+                                                          label: NSLocalizedString("startAlignmentCountdownButtonAccessibilityLabel", comment: "this is athe accessibility label for the button which allows the user to start an alignment procedure when saving an anchor point"))
         
         /// create stack view for aligning and distributing bottom layer buttons
-        let stackView   = UIStackView()
+        let stackView = UIStackView()
         view.addSubview(stackView)
         stackView.translatesAutoresizingMaskIntoConstraints = false;
         
@@ -124,9 +173,11 @@ class PauseTrackingController: UIViewController, UIScrollViewDelegate {
         stackView.alignment = UIStackView.Alignment.center
         
         /// add elements to the stack
-        stackView.addArrangedSubview(enterLandmarkDescriptionButton)
-        stackView.addArrangedSubview(confirmAlignmentButton)
+        stackView.addArrangedSubview(enterAnchorPointDescriptionButton)
         stackView.addArrangedSubview(recordVoiceNoteButton)
+        #if !CLEWMORE
+        stackView.addArrangedSubview(confirmAlignmentButton)
+        #endif
         
         scrollView.flashScrollIndicators()
 
@@ -137,15 +188,19 @@ class PauseTrackingController: UIViewController, UIScrollViewDelegate {
         
         /// set function targets for the functions in this state
         if let parent: UIViewController = parent {
-            enterLandmarkDescriptionButton.addTarget(parent,
-                                     action: #selector(ViewController.showLandmarkInformationDialog),
+            enterAnchorPointDescriptionButton.addTarget(parent,
+                                     action: #selector(ViewController.showAnchorPointInformationDialog),
                                      for: .touchUpInside)
+            #if !APPCLIP
             recordVoiceNoteButton.addTarget(parent,
                                        action: #selector(ViewController.recordVoiceNote),
                                        for: .touchUpInside)
+            #endif
+            #if !CLEWMORE
             confirmAlignmentButton.addTarget(parent,
                                             action: #selector(ViewController.confirmAlignment),
                                             for: .touchUpInside)
+            #endif
         }
     }
 }

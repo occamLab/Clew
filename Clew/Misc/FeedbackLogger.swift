@@ -7,7 +7,10 @@
 //
 
 import Foundation
-import Firebase
+import FirebaseStorage
+#if !APPCLIP
+import FirebaseAnalytics
+#endif
 
 
 class FeedbackLogger {
@@ -94,6 +97,7 @@ class FeedbackLogger {
         }
         
         ///places the data into a dictionary to be formatted into JSON later
+        #if !APPCLIP
         let body: [String : Any] = ["FeedbackDate": "\(Date().description(with: .current))",
                                     "PhoneNumber": phone,
                                     "Email": email,
@@ -102,6 +106,15 @@ class FeedbackLogger {
                                     "Message": message,
                                     "AppInstanceID": Analytics.appInstanceID(),
                                     "AudioFileName": audioData]
+        #else
+        let body: [String : Any] = ["FeedbackDate": "\(Date().description(with: .current))",
+                                    "PhoneNumber": phone,
+                                    "Email": email,
+                                    "Name": name,
+                                    "Country": country,
+                                    "Message": message,
+                                    "AudioFileName": audioData]
+        #endif
         do {
             ///converts the data into JSON
             let data = try JSONSerialization.data(withJSONObject: body, options: .prettyPrinted)
