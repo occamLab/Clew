@@ -31,11 +31,10 @@ class ResumeTrackingController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // we subtract one pixel from the height to prevent accessibility elements in the parent view from being hidden (Warning: this is not documented behavior, so we may need to revisit this down the road)
         view = TransparentTouchView(frame:CGRect(x: 0,
                                                  y: 0,
                                                  width: UIScreen.main.bounds.size.width,
-                                                 height: UIScreen.main.bounds.size.height - 1))
+                                                 height: UIScreen.main.bounds.size.height))
 
         label = UILabel()
         let scrollView = UIScrollView()
@@ -48,7 +47,7 @@ class ResumeTrackingController: UIViewController {
         
         view.backgroundColor = UIColor.black.withAlphaComponent(0.4)
         
-        let mainText = NSLocalizedString("resumeRouteViewText", comment: "A message displayed to the user when they have paused the route")
+        let mainText = NSLocalizedString("Return to the last paused location and press Resume for further instructions.", comment: "A message displayed to the user")
         label.textColor = UIColor.white
         label.textAlignment = .center
         label.numberOfLines = 0
@@ -63,7 +62,7 @@ class ResumeTrackingController: UIViewController {
         
         /// set top, left, right constraints on scrollView to
         /// "main" view + 8.0 padding on each side
-        scrollView.topAnchor.constraint(equalTo: view.topAnchor, constant: UIScreen.main.bounds.size.height*0.15).isActive = true
+        scrollView.topAnchor.constraint(equalTo: view.topAnchor, constant: 100.0).isActive = true
         scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8.0).isActive = true
         scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8.0).isActive = true
         
@@ -89,7 +88,7 @@ class ResumeTrackingController: UIViewController {
         resumeButton = UIButton.makeConstraintButton(view,
                                                 alignment: UIConstants.ButtonContainerHorizontalAlignment.center,
                                                 appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "Resume")!),
-                                                label: NSLocalizedString("resumePausedRouteButtonAccessibilityLabel", comment: "Accessibility label for button allowing the user to resume a paused route")) //fixed spelling mistake in key: "Bu" instead of "BU"
+                                                label: NSLocalizedString("Resume", comment: "Resume paused route"))
         
         /// create stack view for aligning and distributing bottom layer buttons
         let stackView   = UIStackView()

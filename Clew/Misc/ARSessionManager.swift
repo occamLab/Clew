@@ -71,6 +71,8 @@ class ARSessionManager: NSObject {
     /// this is the alignment between the reloaded route
     var manualAlignment: simd_float4x4?
     
+    let snapToRouteStatus: Bool = true
+    
     /// Keep track of when to log a frame
     var lastFrameLogTime = Date()
     /// Keep track of when to log a pose
@@ -169,7 +171,8 @@ class ARSessionManager: NSObject {
     /// Create the keypoint SCNNode that corresponds to the rotating flashing element that looks like a navigation pin.
     ///
     /// - Parameter location: the location of the keypoint
-    func renderKeypoint(_ location: LocationInfo, defaultColor: Int) {
+    func renderKeypoint(_ location: LocationInfo, defaultColor: Int, _ optimalTransform: simd_float4x4? = matrix_identity_float4x4) {
+        let newKeypoint = LocationInfo(transform: location.transform * optimalTransform!)
         keypointRenderJob = {
             self.renderKeypointHelper(location, defaultColor: defaultColor)
         }
@@ -181,15 +184,15 @@ class ARSessionManager: NSObject {
         keypointNode!.scale = SCNVector3(0.0004, 0.0004, 0.0004)
         // configure node attributes
         keypointNode!.geometry?.firstMaterial?.diffuse.contents = UIColor.red
-        
+        print("in render keypoint")
         // determine if the node is already in the scene
         let priorNode = sceneView.node(for: location)
-        if priorNode != nil {
+        if priorNode != nil && !snapToRouteStatus {
+            print("position keypoint relative to anchor \(location.transform.columns.3)")
             keypointNode!.position = SCNVector3(0, -0.2, 0.0)
         } else {
-            if let manualAlignment = manualAlignment {
-                let alignedLocation = manualAlignment*location.transform
-                keypointNode!.position = SCNVector3(alignedLocation.x, alignedLocation.y - 0.2, alignedLocation.z)
+            if let updatedLocation = getCurrentLocation(of: location) {
+                keypointNode!.position = SCNVector3(updatedLocation.x, updatedLocation.y - 0.2, updatedLocation.z)
             } else {
                 keypointNode!.position = SCNVector3(location.x, location.y - 0.2, location.z)
             }
@@ -283,13 +286,14 @@ class ARSessionManager: NSObject {
         
         // add keypoint node to view
         keypointNode!.runAction(changeColor)
-        if let priorNode = priorNode {
+        if let priorNode = priorNode, !snapToRouteStatus {
             // TODO: we are having a really hard time here
             // If we recreate the node every time it moves, then it will track
-            keypointNode!.position = priorNode.position
-            //priorNode.addChildNode(keypointNode!)
-        }// else {
+//            keypointNode!.position = priorNode.position
+            priorNode.addChildNode(keypointNode!)
+        } else {
         sceneView.scene.rootNode.addChildNode(keypointNode!)
+        }
     }
     func add(anchor: ARAnchor) {
         sceneView.session.add(anchor: anchor)
@@ -376,12 +380,22 @@ class ARSessionManager: NSObject {
         sceneView.scene.rootNode.addChildNode(anchorPointNode)
     }
     
-    func getCurrentLocation(of anchor: ARAnchor)->LocationInfo? {
-        if let node = sceneView.node(for: anchor), let anchor = sceneView.anchor(for: node) {
-            return LocationInfo(anchor: anchor)
-        } else if let manualAlignment = manualAlignment {
+    func getCurrentLocation(of anchor: ARAnchor, debug: Bool = false)->LocationInfo? {
+        if let manualAlignment = manualAlignment {
+            if debug {
+                print("using manual alignment")
+            }
             return LocationInfo(anchor: ARAnchor(transform: manualAlignment*anchor.transform))
+        } else if let node = sceneView.node(for: anchor), let anchor = sceneView.anchor(for: node) {
+            if debug {
+                print("found an anchor when getting current location \(anchor.transform.columns.3)")
+                print("")
+            }
+            return LocationInfo(anchor: anchor)
         } else {
+            if debug {
+                print("nil")
+            }
             return nil
         }
     }
@@ -521,7 +535,7 @@ extension ARSessionManager: ARSessionDelegate {
             let jsonData = try
             JSONSerialization.data(withJSONObject:dataDictionary, options:.prettyPrinted)
             let storageRef =
-            storageBaseRef.child("GeoAnchorTest").child(id + ".json")
+            storageBaseRef.child("GeoAnchorTest3").child(id + ".json")
             let fileType = StorageMetadata()
             fileType.contentType = "application/json"
             storageRef.putData(jsonData, metadata: fileType) { (metadata, error) in
@@ -582,8 +596,7 @@ extension ARSessionManager: ARSessionDelegate {
         
         // variable that determines whether current run should be logged to firebase or not. If set to true, change id to desired file name
         let logPath = true
-        let snapToRouteStatus = true
-        let id = "snapTestTwo"
+        let id = "snapTestFour"
         
         cameraPoses.append([frame.camera.transform.columns.3[0], frame.camera.transform.columns.3[2]])
         
@@ -598,12 +611,24 @@ extension ARSessionManager: ARSessionDelegate {
 
         if snapToRouteStatus {
             visualKeypoints = ViewController.routeKeypoints
+            var transformedKeypoints: [KeypointInfo]  = []
+            if let manualAlignment = manualAlignment {
+                for keypoint in visualKeypoints{
+                    transformedKeypoints.append(KeypointInfo(location: LocationInfo(transform: manualAlignment*keypoint.location.transform)))
+                }
+            } else {
+                transformedKeypoints = visualKeypoints
+            }
             if counter % 200 == 0 {
                 cameraLocationInfos.append(LocationInfo(transform: frame.camera.transform))
             }
             if counter % 500 == 0 && localized && counter > 1800 {
-                let optimalTransform: simd_float4x4 = PathMatcher().match(points: cameraLocationInfos, toPath: visualKeypoints)
-                sceneView.session.setWorldOrigin(relativeTransform: optimalTransform.inverse)
+                manualAlignment = PathMatcher().match(points: cameraLocationInfos, toPath: transformedKeypoints).inverse * (manualAlignment ?? matrix_identity_float4x4)
+//                renderKeypoint() handle update anchor, render path
+                let quat = simd_quatf(manualAlignment!.inverse)
+                print("optimal transform", manualAlignment!.columns.3)
+                print("axis and angle change", quat.axis, quat.angle)
+//                sceneView.session.setWorldOrigin(relativeTransform: optimalTransform.inverse)
                 print("Snapping my fingers")
             }
         }
@@ -777,7 +802,7 @@ extension ARSessionManager: ARSCNViewDelegate {
         if let nextKeypoint = RouteManager.shared.nextKeypoint, let cameraTransform = ARSessionManager.shared.currentFrame?.camera.transform {
             let previousKeypointLocation = RouteManager.shared.getPreviousKeypoint(to: nextKeypoint)?.location ?? LocationInfo(transform: cameraTransform)
             if nextKeypoint.location.identifier == anchor.identifier {
-                ARSessionManager.shared.renderKeypoint(nextKeypoint.location, defaultColor: defaultColor)
+                 ARSessionManager.shared.renderKeypoint(nextKeypoint.location, defaultColor: defaultColor)
             }
             if nextKeypoint.location.identifier == anchor.identifier || previousKeypointLocation.identifier == anchor.identifier, showPath {
                 renderPath(nextKeypoint.location, previousKeypointLocation, defaultPathColor: defaultPathColor)

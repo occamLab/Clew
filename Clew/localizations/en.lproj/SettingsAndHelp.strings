@@ -8,7 +8,8 @@
 "AwY-9g-fYn.text" = "Attach a voice recording";
 
 /* Class = "UIButton"; accessibilityLabel = "Send Feedback"; ObjectID = "Yh2-1z-izX"; */
-///This is tha accessibility label that is read when the user hovers over the send feedback button
+
+///This is tha accessability label that is read when the user hovers over the send feedback button
 "Yh2-1z-izX.accessibilityLabel" = "Send Feedback";
 
 /* Class = "UIButton"; normalTitle = "Send >"; ObjectID = "Yh2-1z-izX"; */
@@ -16,7 +17,7 @@
 "Yh2-1z-izX.normalTitle" = "Send >";
 
 /* Class = "UITextField"; placeholder = "Email (optional)"; ObjectID = "gdh-cx-htS"; */
-///This is the place holder text which tell the user what sort of information to input into the respective text field
+///This is the place holder text which tell sthe user what sort of information to input into the respective text field
 "gdh-cx-htS.placeholder" = "Email (optional)";
 
 /* Class = "UITextField"; placeholder = "Phone Number (optional)"; ObjectID = "ona-NU-g6a"; */

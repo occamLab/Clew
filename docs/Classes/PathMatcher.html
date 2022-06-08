@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>PathMatcher Class Reference</title>
+    <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
+    <meta charset='utf-8'>
+    <script src="../js/jquery.min.js" defer></script>
+    <script src="../js/jazzy.js" defer></script>
+    
+  </head>
+  <body>
+    <a name="//apple_ref/swift/Class/PathMatcher" class="dashAnchor"></a>
+    <a title="PathMatcher Class Reference"></a>
+    <header>
+      <div class="content-wrapper">
+        <p><a href="../index.html"> Docs</a> (97% documented)</p>
+        <p class="header-right"><a href="https://github.com/occamLab/Clew"><img src="../img/gh.png"/>View on GitHub</a></p>
+      </div>
+    </header>
+    <div class="content-wrapper">
+      <p id="breadcrumbs">
+        <a href="../index.html"> Reference</a>
+        <img id="carat" src="../img/carat.png" />
+        PathMatcher Class Reference
+      </p>
+    </div>
+    <div class="content-wrapper">
+      <nav class="sidebar">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a href="../Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Classes/AppDelegate.html">AppDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/AudioVisualizerView.html">AudioVisualizerView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/DataPersistence.html">DataPersistence</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FeedbackLogger.html">FeedbackLogger</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FeedbackViewController.html">FeedbackViewController</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/HelpCompiler.html">HelpCompiler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/HelpViewController.html">HelpViewController</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/LocationInfo.html">LocationInfo</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/Navigation.html">Navigation</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/PathFinder.html">PathFinder</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/PathLogger.html">PathLogger</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/PathMatcher.html">PathMatcher</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/PauseTrackingController.html">PauseTrackingController</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/RecordButton.html">RecordButton</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/RecordButtonKit.html">RecordButtonKit</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/RecordButtonKit/ResizingBehavior.html">– ResizingBehavior</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/RecordPathController.html">RecordPathController</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/RecorderViewController.html">RecorderViewController</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ResumeTrackingConfirmController.html">ResumeTrackingConfirmController</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ResumeTrackingController.html">ResumeTrackingController</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/RingBuffer.html">RingBuffer</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/RootContainerView.html">RootContainerView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/RouteLandmark.html">RouteLandmark</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/RouteRatingController.html">RouteRatingController</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/RouteTableViewCell.html">RouteTableViewCell</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/RoutesViewController.html">RoutesViewController</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/SavedRoute.html">SavedRoute</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/StartNavigationController.html">StartNavigationController</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/StopNavigationController.html">StopNavigationController</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/StopRecordingController.html">StopRecordingController</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TransparentTouchView.html">TransparentTouchView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ViewController.html">ViewController</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Global Variables.html">Global Variables</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Global Variables.html#/s:4Clew15ClockDirectionsSDySiSSGvp">ClockDirections</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global Variables.html#/s:4Clew16HapticDirectionsSDySiSSGvp">HapticDirections</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global Variables.html#/s:4Clew11targetDepthSfvp">targetDepth</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global Variables.html#/s:4Clew12targetHeightSfvp">targetHeight</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global Variables.html#/s:4Clew11targetWidthSfvp">targetWidth</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Enums.html">Enumerations</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Enums/AppState.html">AppState</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/PositionState.html">PositionState</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/RecorderState.html">RecorderState</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/UIConstants.html">UIConstants</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/UIConstants/ButtonContainerHorizontalAlignment.html">– ButtonContainerHorizontalAlignment</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/UIConstants/ButtonAppearance.html">– ButtonAppearance</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Extensions.html">Extensions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Extensions/Double.html">Double</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/Int.html">Int</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/NSString.html">NSString</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/UIButton.html">UIButton</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/UIColor.html">UIColor</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/UIView.html">UIView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/UIViewController.html">UIViewController</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/float2.html">float2</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/float2x2.html">float2x2</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/float3.html">float3</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/float4.html">float4</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/float4x4.html">float4x4</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Functions.html">Functions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:4Clew3modyS2i_SitF">mod(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:4Clew13roundToTenthsyS2fF">roundToTenths(_:)</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Protocols.html">Protocols</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Protocols/RecorderViewControllerDelegate.html">RecorderViewControllerDelegate</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Structs.html">Structures</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Structs/CurrentCoordinateInfo.html">CurrentCoordinateInfo</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/DirectionInfo.html">DirectionInfo</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/KeypointInfo.html">KeypointInfo</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+        <section>
+          <section class="section">
+            <h1>PathMatcher</h1>
+              <div class="declaration">
+                <div class="language">
+                  <pre class="highlight swift"><code><span class="kd">class</span> <span class="kt">PathMatcher</span></code></pre>
+
+                </div>
+              </div>
+            <p>This class manages the path matching process between a set of keypoints, which typically represent the piecewise linear route being traveled, and a user&rsquo;s path, which typically represent the user&rsquo;s actual position as they navigate that path.</p>
+
+          </section>
+          <section class="section task-group-section">
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Clew11PathMatcherC5match6points02toB0So13simd_float4x4aSayAA12LocationInfoCG_SayAA08KeypointJ0VGtF"></a>
+                    <a name="//apple_ref/swift/Method/match(points:toPath:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Clew11PathMatcherC5match6points02toB0So13simd_float4x4aSayAA12LocationInfoCG_SayAA08KeypointJ0VGtF">match(points:toPath:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Match a set of points to the specified route and return the optimal rigid body transform that aligns them.  We restrict ourselves to transforms that combine an arbitrary 3D translation with a rotation about the y-axis of the world.  The y-axis is aligned with gravity.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">match</span><span class="p">(</span><span class="nv">points</span><span class="p">:</span> <span class="p">[</span><span class="kt"><a href="../Classes/LocationInfo.html">LocationInfo</a></span><span class="p">],</span> <span class="n">toPath</span> <span class="nv">keypoints</span><span class="p">:</span> <span class="p">[</span><span class="kt"><a href="../Structs/KeypointInfo.html">KeypointInfo</a></span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">simd_float4x4</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>points</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the points to match</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>keypoints</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the route keypoints, which are assumed to represent a piecewise linear path.  These should be in the order in which the user is traversing the path.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>an optimal rigid body transform represented as a 4x4 matrix</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Clew11PathMatcherC21transformLocationInfo9locations0D0Says5SIMD4VySfGGSayAA0eF0CG_So13simd_float4x4atF"></a>
+                    <a name="//apple_ref/swift/Method/transformLocationInfo(locations:transform:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Clew11PathMatcherC21transformLocationInfo9locations0D0Says5SIMD4VySfGGSayAA0eF0CG_So13simd_float4x4atF">transformLocationInfo(locations:transform:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Transform location info by applying the specified transform.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">transformLocationInfo</span><span class="p">(</span><span class="nv">locations</span><span class="p">:</span> <span class="p">[</span><span class="kt"><a href="../Classes/LocationInfo.html">LocationInfo</a></span><span class="p">],</span> <span class="nv">transform</span><span class="p">:</span> <span class="n">simd_float4x4</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="n">simd_float4</span><span class="p">]</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>locations</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the array of locations</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>transform</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the transform to apply (multiplied on the left)</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>the transformed locations represented as an array of homogeneous 3D coordinates.</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Clew11PathMatcherC20getClosestRouteMatch6points14routeKeypointsSays5SIMD4VySfGGAJ_SayAA12KeypointInfoVGtF"></a>
+                    <a name="//apple_ref/swift/Method/getClosestRouteMatch(points:routeKeypoints:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Clew11PathMatcherC20getClosestRouteMatch6points14routeKeypointsSays5SIMD4VySfGGAJ_SayAA12KeypointInfoVGtF">getClosestRouteMatch(points:routeKeypoints:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Determines the closet point to each of <code>points</code> on the piecewise linear route defined by <code>routeKeypoints</code>.  The definition of closest is given by the L2 norm.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">getClosestRouteMatch</span><span class="p">(</span><span class="nv">points</span><span class="p">:</span> <span class="p">[</span><span class="n">simd_float4</span><span class="p">],</span> <span class="nv">routeKeypoints</span><span class="p">:</span> <span class="p">[</span><span class="kt"><a href="../Structs/KeypointInfo.html">KeypointInfo</a></span><span class="p">])</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="n">simd_float4</span><span class="p">]</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>points</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the points to match to the route</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>routeKeypoints</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the route keypoints</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>an array of homogenous 3D vectors representing the closet matched point.</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Clew11PathMatcherC21closestPointOnSegment_5start3ends5SIMD3VySfGAI_A2ItF"></a>
+                    <a name="//apple_ref/swift/Method/closestPointOnSegment(_:start:end:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Clew11PathMatcherC21closestPointOnSegment_5start3ends5SIMD3VySfGAI_A2ItF">closestPointOnSegment(_:start:end:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Compute the closet point on a line segment to the specified input point.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">closestPointOnSegment</span><span class="p">(</span><span class="n">_</span> <span class="nv">p</span><span class="p">:</span> <span class="n">simd_float3</span><span class="p">,</span> <span class="nv">start</span><span class="p">:</span> <span class="n">simd_float3</span><span class="p">,</span> <span class="nv">end</span><span class="p">:</span> <span class="n">simd_float3</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">simd_float3</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>p</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the point to match to the line segment</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>start</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the starting point of the line segment</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>end</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the ending point of the line segment</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>the closet point (in the L2 sense) to <code>p</code> on the line segment connecting <code>start</code> and <code>end</code>.</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </section>
+        </section>
+        <section id="footer">
+          <p>&copy; 2019 <a class="link" href="" target="_blank" rel="external"></a>. All rights reserved. (Last updated: 2019-08-07)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.9.6</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+        </section>
+      </article>
+    </div>
+  </body>
+</div>
+</html>

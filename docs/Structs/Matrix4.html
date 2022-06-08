@@ -1,0 +1,1282 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Matrix4 Structure Reference</title>
+    <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
+    <meta charset='utf-8'>
+    <script src="../js/jquery.min.js" defer></script>
+    <script src="../js/jazzy.js" defer></script>
+    
+  </head>
+  <body>
+    <a name="//apple_ref/swift/Struct/Matrix4" class="dashAnchor"></a>
+    <a title="Matrix4 Structure Reference"></a>
+    <header>
+      <div class="content-wrapper">
+        <p><a href="../index.html"> Docs</a> (7% documented)</p>
+      </div>
+    </header>
+    <div class="content-wrapper">
+      <p id="breadcrumbs">
+        <a href="../index.html"> Reference</a>
+        <img id="carat" src="../img/carat.png" />
+        Matrix4 Structure Reference
+      </p>
+    </div>
+    <div class="content-wrapper">
+      <nav class="sidebar">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a href="../Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Classes/AppDelegate.html">AppDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/Navigation.html">Navigation</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/PathFinder.html">PathFinder</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ViewController.html">ViewController</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ViewController/ButtonViewType.html">– ButtonViewType</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Global Variables.html">Global Variables</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Global Variables.html#/s:4Clew15ClockDirectionss10DictionaryVySiSSGvp">ClockDirections</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global Variables.html#/s:4Clew16HapticDirectionss10DictionaryVySiSSGvp">HapticDirections</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global Variables.html#/s:4Clew12TurnWarningss10DictionaryVySiSSGvp">TurnWarnings</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global Variables.html#/s:4Clew11targetDepthSfvp">targetDepth</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global Variables.html#/s:4Clew12targetHeightSfvp">targetHeight</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global Variables.html#/s:4Clew11targetWidthSfvp">targetWidth</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Enums.html">Enumerations</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Enums/PositionState.html">PositionState</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Extensions.html">Extensions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Extensions/Scalar.html">Scalar</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/UIView.html">UIView</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Functions.html">Functions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:4Clew8round10kS2fF">round10k(_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:4Clew13roundToTenthsS2fF">roundToTenths(_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:4Clew18roundToThousandthsS2dF">roundToThousandths(_:)</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Structs.html">Structures</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Structs/CurrentCoordinateInfo.html">CurrentCoordinateInfo</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/DirectionInfo.html">DirectionInfo</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/KeypointInfo.html">KeypointInfo</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/LocationInfo.html">LocationInfo</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/Matrix3.html">Matrix3</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/Matrix4.html">Matrix4</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/Quaternion.html">Quaternion</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/Vector2.html">Vector2</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/Vector3.html">Vector3</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/Vector4.html">Vector4</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Typealiases.html">Type Aliases</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Typealiases.html#/s:4Clew6Scalara">Scalar</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+        <section>
+          <section class="section">
+            <h1>Matrix4</h1>
+              <div class="declaration">
+                <div class="language">
+                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">Matrix4</span></code></pre>
+
+                </div>
+              </div>
+            <p>Undocumented</p>
+
+          </section>
+          <section class="section task-group-section">
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Clew7Matrix4V3m11Sfvp"></a>
+                    <a name="//apple_ref/swift/Property/m11" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Clew7Matrix4V3m11Sfvp">m11</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">m11</span><span class="p">:</span> <span class="kt"><a href="../Typealiases.html#/s:4Clew6Scalara">Scalar</a></span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Clew7Matrix4V3m12Sfvp"></a>
+                    <a name="//apple_ref/swift/Property/m12" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Clew7Matrix4V3m12Sfvp">m12</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">m12</span><span class="p">:</span> <span class="kt"><a href="../Typealiases.html#/s:4Clew6Scalara">Scalar</a></span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Clew7Matrix4V3m13Sfvp"></a>
+                    <a name="//apple_ref/swift/Property/m13" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Clew7Matrix4V3m13Sfvp">m13</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">m13</span><span class="p">:</span> <span class="kt"><a href="../Typealiases.html#/s:4Clew6Scalara">Scalar</a></span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Clew7Matrix4V3m14Sfvp"></a>
+                    <a name="//apple_ref/swift/Property/m14" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Clew7Matrix4V3m14Sfvp">m14</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">m14</span><span class="p">:</span> <span class="kt"><a href="../Typealiases.html#/s:4Clew6Scalara">Scalar</a></span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Clew7Matrix4V3m21Sfvp"></a>
+                    <a name="//apple_ref/swift/Property/m21" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Clew7Matrix4V3m21Sfvp">m21</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">m21</span><span class="p">:</span> <span class="kt"><a href="../Typealiases.html#/s:4Clew6Scalara">Scalar</a></span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Clew7Matrix4V3m22Sfvp"></a>
+                    <a name="//apple_ref/swift/Property/m22" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Clew7Matrix4V3m22Sfvp">m22</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">m22</span><span class="p">:</span> <span class="kt"><a href="../Typealiases.html#/s:4Clew6Scalara">Scalar</a></span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Clew7Matrix4V3m23Sfvp"></a>
+                    <a name="//apple_ref/swift/Property/m23" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Clew7Matrix4V3m23Sfvp">m23</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">m23</span><span class="p">:</span> <span class="kt"><a href="../Typealiases.html#/s:4Clew6Scalara">Scalar</a></span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Clew7Matrix4V3m24Sfvp"></a>
+                    <a name="//apple_ref/swift/Property/m24" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Clew7Matrix4V3m24Sfvp">m24</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">m24</span><span class="p">:</span> <span class="kt"><a href="../Typealiases.html#/s:4Clew6Scalara">Scalar</a></span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Clew7Matrix4V3m31Sfvp"></a>
+                    <a name="//apple_ref/swift/Property/m31" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Clew7Matrix4V3m31Sfvp">m31</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">m31</span><span class="p">:</span> <span class="kt"><a href="../Typealiases.html#/s:4Clew6Scalara">Scalar</a></span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Clew7Matrix4V3m32Sfvp"></a>
+                    <a name="//apple_ref/swift/Property/m32" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Clew7Matrix4V3m32Sfvp">m32</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">m32</span><span class="p">:</span> <span class="kt"><a href="../Typealiases.html#/s:4Clew6Scalara">Scalar</a></span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Clew7Matrix4V3m33Sfvp"></a>
+                    <a name="//apple_ref/swift/Property/m33" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Clew7Matrix4V3m33Sfvp">m33</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">m33</span><span class="p">:</span> <span class="kt"><a href="../Typealiases.html#/s:4Clew6Scalara">Scalar</a></span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Clew7Matrix4V3m34Sfvp"></a>
+                    <a name="//apple_ref/swift/Property/m34" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Clew7Matrix4V3m34Sfvp">m34</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">m34</span><span class="p">:</span> <span class="kt"><a href="../Typealiases.html#/s:4Clew6Scalara">Scalar</a></span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Clew7Matrix4V3m41Sfvp"></a>
+                    <a name="//apple_ref/swift/Property/m41" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Clew7Matrix4V3m41Sfvp">m41</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">m41</span><span class="p">:</span> <span class="kt"><a href="../Typealiases.html#/s:4Clew6Scalara">Scalar</a></span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Clew7Matrix4V3m42Sfvp"></a>
+                    <a name="//apple_ref/swift/Property/m42" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Clew7Matrix4V3m42Sfvp">m42</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">m42</span><span class="p">:</span> <span class="kt"><a href="../Typealiases.html#/s:4Clew6Scalara">Scalar</a></span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Clew7Matrix4V3m43Sfvp"></a>
+                    <a name="//apple_ref/swift/Property/m43" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Clew7Matrix4V3m43Sfvp">m43</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">m43</span><span class="p">:</span> <span class="kt"><a href="../Typealiases.html#/s:4Clew6Scalara">Scalar</a></span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Clew7Matrix4V3m44Sfvp"></a>
+                    <a name="//apple_ref/swift/Property/m44" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Clew7Matrix4V3m44Sfvp">m44</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">m44</span><span class="p">:</span> <span class="kt"><a href="../Typealiases.html#/s:4Clew6Scalara">Scalar</a></span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Matrix4"></a>
+                <a name="//apple_ref/swift/Section/Matrix4" class="dashAnchor"></a>
+                <a href="#/Matrix4">
+                  <h3 class="section-name">Matrix4</h3>
+                </a>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:s8HashableP9hashValueSivp"></a>
+                    <a name="//apple_ref/swift/Property/hashValue" class="dashAnchor"></a>
+                    <a class="token" href="#/s:s8HashableP9hashValueSivp">hashValue</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">hashValue</span><span class="p">:</span> <span class="kt">Int</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Matrix42"></a>
+                <a name="//apple_ref/swift/Section/Matrix4" class="dashAnchor"></a>
+                <a href="#/Matrix42">
+                  <h3 class="section-name">Matrix4</h3>
+                </a>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Clew7Matrix4V8identityACvpZ"></a>
+                    <a name="//apple_ref/swift/Variable/identity" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Clew7Matrix4V8identityACvpZ">identity</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="k">let</span> <span class="nv">identity</span><span class="p">:</span> <span class="kt">Matrix4</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Clew7Matrix4VACSf_S15ftcfc"></a>
+                    <a name="//apple_ref/swift/Method/init(_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Clew7Matrix4VACSf_S15ftcfc">init(_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="n">_</span> <span class="nv">m11</span><span class="p">:</span> <span class="kt"><a href="../Typealiases.html#/s:4Clew6Scalara">Scalar</a></span><span class="p">,</span> <span class="n">_</span> <span class="nv">m12</span><span class="p">:</span> <span class="kt"><a href="../Typealiases.html#/s:4Clew6Scalara">Scalar</a></span><span class="p">,</span> <span class="n">_</span> <span class="nv">m13</span><span class="p">:</span> <span class="kt"><a href="../Typealiases.html#/s:4Clew6Scalara">Scalar</a></span><span class="p">,</span> <span class="n">_</span> <span class="nv">m14</span><span class="p">:</span> <span class="kt"><a href="../Typealiases.html#/s:4Clew6Scalara">Scalar</a></span><span class="p">,</span>
+            <span class="n">_</span> <span class="nv">m21</span><span class="p">:</span> <span class="kt"><a href="../Typealiases.html#/s:4Clew6Scalara">Scalar</a></span><span class="p">,</span> <span class="n">_</span> <span class="nv">m22</span><span class="p">:</span> <span class="kt"><a href="../Typealiases.html#/s:4Clew6Scalara">Scalar</a></span><span class="p">,</span> <span class="n">_</span> <span class="nv">m23</span><span class="p">:</span> <span class="kt"><a href="../Typealiases.html#/s:4Clew6Scalara">Scalar</a></span><span class="p">,</span> <span class="n">_</span> <span class="nv">m24</span><span class="p">:</span> <span class="kt"><a href="../Typealiases.html#/s:4Clew6Scalara">Scalar</a></span><span class="p">,</span>
+            <span class="n">_</span> <span class="nv">m31</span><span class="p">:</span> <span class="kt"><a href="../Typealiases.html#/s:4Clew6Scalara">Scalar</a></span><span class="p">,</span> <span class="n">_</span> <span class="nv">m32</span><span class="p">:</span> <span class="kt"><a href="../Typealiases.html#/s:4Clew6Scalara">Scalar</a></span><span class="p">,</span> <span class="n">_</span> <span class="nv">m33</span><span class="p">:</span> <span class="kt"><a href="../Typealiases.html#/s:4Clew6Scalara">Scalar</a></span><span class="p">,</span> <span class="n">_</span> <span class="nv">m34</span><span class="p">:</span> <span class="kt"><a href="../Typealiases.html#/s:4Clew6Scalara">Scalar</a></span><span class="p">,</span>
+            <span class="n">_</span> <span class="nv">m41</span><span class="p">:</span> <span class="kt"><a href="../Typealiases.html#/s:4Clew6Scalara">Scalar</a></span><span class="p">,</span> <span class="n">_</span> <span class="nv">m42</span><span class="p">:</span> <span class="kt"><a href="../Typealiases.html#/s:4Clew6Scalara">Scalar</a></span><span class="p">,</span> <span class="n">_</span> <span class="nv">m43</span><span class="p">:</span> <span class="kt"><a href="../Typealiases.html#/s:4Clew6Scalara">Scalar</a></span><span class="p">,</span> <span class="n">_</span> <span class="nv">m44</span><span class="p">:</span> <span class="kt"><a href="../Typealiases.html#/s:4Clew6Scalara">Scalar</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Clew7Matrix4VAcA7Vector3V5scale_tcfc"></a>
+                    <a name="//apple_ref/swift/Method/init(scale:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Clew7Matrix4VAcA7Vector3V5scale_tcfc">init(scale:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="n">scale</span> <span class="nv">s</span><span class="p">:</span> <span class="kt"><a href="../Structs/Vector3.html">Vector3</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Clew7Matrix4VAcA7Vector3V11translation_tcfc"></a>
+                    <a name="//apple_ref/swift/Method/init(translation:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Clew7Matrix4VAcA7Vector3V11translation_tcfc">init(translation:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="n">translation</span> <span class="nv">t</span><span class="p">:</span> <span class="kt"><a href="../Structs/Vector3.html">Vector3</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Clew7Matrix4VAcA7Vector4V8rotation_tcfc"></a>
+                    <a name="//apple_ref/swift/Method/init(rotation:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Clew7Matrix4VAcA7Vector4V8rotation_tcfc">init(rotation:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="n">rotation</span> <span class="nv">axisAngle</span><span class="p">:</span> <span class="kt"><a href="../Structs/Vector4.html">Vector4</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Clew7Matrix4VAcA10QuaternionV10quaternion_tcfc"></a>
+                    <a name="//apple_ref/swift/Method/init(quaternion:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Clew7Matrix4VAcA10QuaternionV10quaternion_tcfc">init(quaternion:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="n">quaternion</span> <span class="nv">q</span><span class="p">:</span> <span class="kt"><a href="../Structs/Quaternion.html">Quaternion</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Clew7Matrix4VACSf4fovx_Sf4fovySf4nearSf3fartcfc"></a>
+                    <a name="//apple_ref/swift/Method/init(fovx:fovy:near:far:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Clew7Matrix4VACSf4fovx_Sf4fovySf4nearSf3fartcfc">init(fovx:fovy:near:far:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="nv">fovx</span><span class="p">:</span> <span class="kt"><a href="../Typealiases.html#/s:4Clew6Scalara">Scalar</a></span><span class="p">,</span> <span class="nv">fovy</span><span class="p">:</span> <span class="kt"><a href="../Typealiases.html#/s:4Clew6Scalara">Scalar</a></span><span class="p">,</span> <span class="nv">near</span><span class="p">:</span> <span class="kt"><a href="../Typealiases.html#/s:4Clew6Scalara">Scalar</a></span><span class="p">,</span> <span class="nv">far</span><span class="p">:</span> <span class="kt"><a href="../Typealiases.html#/s:4Clew6Scalara">Scalar</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Clew7Matrix4VACSf4fovx_Sf6aspectSf4nearSf3fartcfc"></a>
+                    <a name="//apple_ref/swift/Method/init(fovx:aspect:near:far:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Clew7Matrix4VACSf4fovx_Sf6aspectSf4nearSf3fartcfc">init(fovx:aspect:near:far:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="nv">fovx</span><span class="p">:</span> <span class="kt"><a href="../Typealiases.html#/s:4Clew6Scalara">Scalar</a></span><span class="p">,</span> <span class="nv">aspect</span><span class="p">:</span> <span class="kt"><a href="../Typealiases.html#/s:4Clew6Scalara">Scalar</a></span><span class="p">,</span> <span class="nv">near</span><span class="p">:</span> <span class="kt"><a href="../Typealiases.html#/s:4Clew6Scalara">Scalar</a></span><span class="p">,</span> <span class="nv">far</span><span class="p">:</span> <span class="kt"><a href="../Typealiases.html#/s:4Clew6Scalara">Scalar</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Clew7Matrix4VACSf4fovy_Sf6aspectSf4nearSf3fartcfc"></a>
+                    <a name="//apple_ref/swift/Method/init(fovy:aspect:near:far:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Clew7Matrix4VACSf4fovy_Sf6aspectSf4nearSf3fartcfc">init(fovy:aspect:near:far:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="nv">fovy</span><span class="p">:</span> <span class="kt"><a href="../Typealiases.html#/s:4Clew6Scalara">Scalar</a></span><span class="p">,</span> <span class="nv">aspect</span><span class="p">:</span> <span class="kt"><a href="../Typealiases.html#/s:4Clew6Scalara">Scalar</a></span><span class="p">,</span> <span class="nv">near</span><span class="p">:</span> <span class="kt"><a href="../Typealiases.html#/s:4Clew6Scalara">Scalar</a></span><span class="p">,</span> <span class="nv">far</span><span class="p">:</span> <span class="kt"><a href="../Typealiases.html#/s:4Clew6Scalara">Scalar</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Clew7Matrix4VACSf3top_Sf5rightSf6bottomSf4leftSf4nearSf3fartcfc"></a>
+                    <a name="//apple_ref/swift/Method/init(top:right:bottom:left:near:far:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Clew7Matrix4VACSf3top_Sf5rightSf6bottomSf4leftSf4nearSf3fartcfc">init(top:right:bottom:left:near:far:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="nv">top</span><span class="p">:</span> <span class="kt"><a href="../Typealiases.html#/s:4Clew6Scalara">Scalar</a></span><span class="p">,</span> <span class="nv">right</span><span class="p">:</span> <span class="kt"><a href="../Typealiases.html#/s:4Clew6Scalara">Scalar</a></span><span class="p">,</span> <span class="nv">bottom</span><span class="p">:</span> <span class="kt"><a href="../Typealiases.html#/s:4Clew6Scalara">Scalar</a></span><span class="p">,</span> <span class="nv">left</span><span class="p">:</span> <span class="kt"><a href="../Typealiases.html#/s:4Clew6Scalara">Scalar</a></span><span class="p">,</span> <span class="nv">near</span><span class="p">:</span> <span class="kt"><a href="../Typealiases.html#/s:4Clew6Scalara">Scalar</a></span><span class="p">,</span> <span class="nv">far</span><span class="p">:</span> <span class="kt"><a href="../Typealiases.html#/s:4Clew6Scalara">Scalar</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Clew7Matrix4VACSaySfGcfc"></a>
+                    <a name="//apple_ref/swift/Method/init(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Clew7Matrix4VACSaySfGcfc">init(_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="n">_</span> <span class="nv">m</span><span class="p">:</span> <span class="p">[</span><span class="kt"><a href="../Typealiases.html#/s:4Clew6Scalara">Scalar</a></span><span class="p">])</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Clew7Matrix4V7toArraySaySfGyF"></a>
+                    <a name="//apple_ref/swift/Method/toArray()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Clew7Matrix4V7toArraySaySfGyF">toArray()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">toArray</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt"><a href="../Typealiases.html#/s:4Clew6Scalara">Scalar</a></span><span class="p">]</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Clew7Matrix4V8adjugateACvp"></a>
+                    <a name="//apple_ref/swift/Property/adjugate" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Clew7Matrix4V8adjugateACvp">adjugate</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">adjugate</span><span class="p">:</span> <span class="kt">Matrix4</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Clew7Matrix4V11determinantSfvp"></a>
+                    <a name="//apple_ref/swift/Property/determinant" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Clew7Matrix4V11determinantSfvp">determinant</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">determinant</span><span class="p">:</span> <span class="kt"><a href="../Typealiases.html#/s:4Clew6Scalara">Scalar</a></span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Clew7Matrix4V9transposeACvp"></a>
+                    <a name="//apple_ref/swift/Property/transpose" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Clew7Matrix4V9transposeACvp">transpose</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">transpose</span><span class="p">:</span> <span class="kt">Matrix4</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Clew7Matrix4V7inverseACvp"></a>
+                    <a name="//apple_ref/swift/Property/inverse" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Clew7Matrix4V7inverseACvp">inverse</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">inverse</span><span class="p">:</span> <span class="kt">Matrix4</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Clew7Matrix4V1sopA2CFZ"></a>
+                    <a name="//apple_ref/swift/Method/-(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Clew7Matrix4V1sopA2CFZ">-(_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">prefix</span> <span class="kd">static</span> <span class="kd">func</span> <span class="o">-</span> <span class="p">(</span><span class="nv">m</span><span class="p">:</span> <span class="kt">Matrix4</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Matrix4</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Clew7Matrix4V1moiA2C_ACtFZ"></a>
+                    <a name="//apple_ref/swift/Method/*(_:_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Clew7Matrix4V1moiA2C_ACtFZ">*(_:_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="o">*</span> <span class="p">(</span><span class="nv">lhs</span><span class="p">:</span> <span class="kt">Matrix4</span><span class="p">,</span> <span class="nv">rhs</span><span class="p">:</span> <span class="kt">Matrix4</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Matrix4</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Clew7Matrix4V1moiAA7Vector3VAC_AFtFZ"></a>
+                    <a name="//apple_ref/swift/Method/*(_:_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Clew7Matrix4V1moiAA7Vector3VAC_AFtFZ">*(_:_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="o">*</span> <span class="p">(</span><span class="nv">lhs</span><span class="p">:</span> <span class="kt">Matrix4</span><span class="p">,</span> <span class="nv">rhs</span><span class="p">:</span> <span class="kt"><a href="../Structs/Vector3.html">Vector3</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Structs/Vector3.html">Vector3</a></span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Clew7Matrix4V1moiAA7Vector4VAC_AFtFZ"></a>
+                    <a name="//apple_ref/swift/Method/*(_:_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Clew7Matrix4V1moiAA7Vector4VAC_AFtFZ">*(_:_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="o">*</span> <span class="p">(</span><span class="nv">lhs</span><span class="p">:</span> <span class="kt">Matrix4</span><span class="p">,</span> <span class="nv">rhs</span><span class="p">:</span> <span class="kt"><a href="../Structs/Vector4.html">Vector4</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Structs/Vector4.html">Vector4</a></span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Clew7Matrix4V1moiA2C_SftFZ"></a>
+                    <a name="//apple_ref/swift/Method/*(_:_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Clew7Matrix4V1moiA2C_SftFZ">*(_:_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="o">*</span> <span class="p">(</span><span class="nv">lhs</span><span class="p">:</span> <span class="kt">Matrix4</span><span class="p">,</span> <span class="nv">rhs</span><span class="p">:</span> <span class="kt"><a href="../Typealiases.html#/s:4Clew6Scalara">Scalar</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Matrix4</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:s9EquatableP2eeoiSbx_xtFZ"></a>
+                    <a name="//apple_ref/swift/Method/==(_:_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:s9EquatableP2eeoiSbx_xtFZ">==(_:_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="o">==</span> <span class="p">(</span><span class="nv">lhs</span><span class="p">:</span> <span class="kt">Matrix4</span><span class="p">,</span> <span class="nv">rhs</span><span class="p">:</span> <span class="kt">Matrix4</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Clew7Matrix4V2teoiSbAC_ACtFZ"></a>
+                    <a name="//apple_ref/swift/Method/~=(_:_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Clew7Matrix4V2teoiSbAC_ACtFZ">~=(_:_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="o">~=</span> <span class="p">(</span><span class="nv">lhs</span><span class="p">:</span> <span class="kt">Matrix4</span><span class="p">,</span> <span class="nv">rhs</span><span class="p">:</span> <span class="kt">Matrix4</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </section>
+        </section>
+        <section id="footer">
+          <p>&copy; 2018 <a class="link" href="" target="_blank" rel="external"></a>. All rights reserved. (Last updated: 2018-06-28)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.9.3</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+        </section>
+      </article>
+    </div>
+  </body>
+</div>
+</html>

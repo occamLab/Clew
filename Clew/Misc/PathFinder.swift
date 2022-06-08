@@ -79,9 +79,9 @@ public class LocationInfo : ARAnchor {
     }
     
     /// the translation expressed as a 3-element vector (x, y, z)
-    public var translation: Vector3 {
+    public var translation: SCNVector3 {
         let translation = self.transform.columns.3
-        return Vector3(translation.x, translation.y, translation.z)
+        return SCNVector3(translation.x, translation.y, translation.z)
     }
     
     /// the Euler angles as a 3 element vector (pitch, yaw, roll)
@@ -150,73 +150,10 @@ public struct KeypointInfo {
     /// the location of the keypoint
     public var location: LocationInfo
     /// the orientation of a keypoint is a unit vector that points from the previous keypoint to current keypoint.  The orientation is useful for defining the area where we check off the user as having reached a keypoint
-    public var orientation: Vector3 {
-        if let currentKeypointLocation = ARSessionManager.shared.getCurrentLocation(of: location), let previousKeypoint = RouteManager.shared.getPreviousKeypoint(to: self), let prevKeypointLocation = ARSessionManager.shared.getCurrentLocation(of: previousKeypoint.location) {
-            return Vector3(_: [prevKeypointLocation.x - currentKeypointLocation.x,
-                                                 0,
-                               prevKeypointLocation.z - currentKeypointLocation.z]).normalized()
-        } else {
-            return Vector3.x
-        }
-    }
+    public var orientation: Vector3
 }
 
-/// An encapsulation of a route Anchor Point, including position, text, and audio information.
-class RouteAnchorPoint: NSObject, NSSecureCoding {
-    /// Needs to be declared and assigned true to support `NSSecureCoding`
-    static var supportsSecureCoding = true
-    
-    /// The position and orientation encoded as an ARAnchor
-    public var anchor: ARAnchor?
-    /// Text to help user remember the Anchor Point
-    public var information: NSString?
-    /// The URL to an audio file that contains information to help the user remember a Anchor Point
-    public var voiceNote: NSString?
-    public var imageFileName: NSString?
-    public var location: (Float, Float)?
-    
-    /// Initialize the Anchor Point.
-    ///
-    /// - Parameters:
-    ///   - transform: the position and orientation
-    ///   - information: textual description
-    ///   - voiceNote: URL to auditory description
-    public init(anchor: ARAnchor? = nil, information: NSString? = nil, voiceNote: NSString? = nil) {
-        self.anchor = anchor
-        self.information = information
-        self.voiceNote = voiceNote
-    }
-    
-    /// Encode the Anchor Point.
-    ///
-    /// - Parameter aCoder: the encoder
-    func encode(with aCoder: NSCoder) {
-        aCoder.encode(anchor, forKey: "anchor")
-        aCoder.encode(information, forKey: "information")
-        aCoder.encode(voiceNote, forKey: "voiceNote")
-    }
-    
-    /// Decode the Anchor Point.
-    ///
-    /// - Parameter aDecoder: the decoder
-    required convenience init?(coder aDecoder: NSCoder) {
-        var anchor : ARAnchor? = nil
-        var information : NSString? = nil
-        var voiceNote : NSString? = nil
-        
-        if let transformAsARAnchor = aDecoder.decodeObject(of: ARAnchor.self, forKey: "transformAsARAnchor") {
-            anchor = transformAsARAnchor
-        } else {
-            anchor = aDecoder.decodeObject(of: ARAnchor.self, forKey: "anchor")
-        }
-        information = aDecoder.decodeObject(of: NSString.self, forKey: "information")
-        voiceNote = aDecoder.decodeObject(of: NSString.self, forKey: "voiceNote")
-        self.init(anchor: anchor, information: information, voiceNote: voiceNote)
-    }
-    
-}
-
-/// [Deprecated] [Needed to load old routes] An encapsulation of a route landmark, including position, text, and audio information.
+/// An encapsulation of a route landmark, including position, text, and audio information.
 class RouteLandmark: NSObject, NSSecureCoding {
     /// Needs to be declared and assigned true to support `NSSecureCoding`
     static var supportsSecureCoding = true
@@ -228,16 +165,20 @@ class RouteLandmark: NSObject, NSSecureCoding {
     /// The URL to an audio file that contains information to help the user remember a landmark
     public var voiceNote: NSString?
     
+    /// true if the alignment is a soft one (based on the first crumb), false if it is a hard one (based on the landmark creation process)
+    public var isSoftAlignment: Bool = false
+    
     /// Initialize the landmark.
     ///
     /// - Parameters:
     ///   - transform: the position and orientation
     ///   - information: textual description
     ///   - voiceNote: URL to auditory description
-    public init(transform: simd_float4x4? = nil, information: NSString? = nil, voiceNote: NSString? = nil) {
+    public init(transform: simd_float4x4? = nil, information: NSString? = nil, voiceNote: NSString? = nil, isSoftAlignment: Bool = false) {
         self.transform = transform
         self.information = information
         self.voiceNote = voiceNote
+        self.isSoftAlignment = isSoftAlignment
     }
     
     /// Encode the landmark.
@@ -249,6 +190,7 @@ class RouteLandmark: NSObject, NSSecureCoding {
         }
         aCoder.encode(information, forKey: "information")
         aCoder.encode(voiceNote, forKey: "voiceNote")
+        aCoder.encode(isSoftAlignment, forKey: "isSoftAlignment")
     }
     
     /// Decode the landmark.
@@ -258,18 +200,22 @@ class RouteLandmark: NSObject, NSSecureCoding {
         var transform : simd_float4x4? = nil
         var information : NSString? = nil
         var voiceNote : NSString? = nil
+        let isSoftAlignment: Bool
         
         if let transformAsARAnchor = aDecoder.decodeObject(of: ARAnchor.self, forKey: "transformAsARAnchor") {
             transform = transformAsARAnchor.transform
         }
         information = aDecoder.decodeObject(of: NSString.self, forKey: "information")
         voiceNote = aDecoder.decodeObject(of: NSString.self, forKey: "voiceNote")
-        self.init(transform: transform, information: information, voiceNote: voiceNote)
+        isSoftAlignment = aDecoder.decodeBool(forKey: "isSoftAlignment")
+        
+        self.init(transform: transform, information: information, voiceNote: voiceNote, isSoftAlignment: isSoftAlignment)
     }
     
 }
+
 /// This class encapsulates a route that can be persisted to storage and reloaded as needed.
-class SavedRoute: NSObject, NSSecureCoding, Identifiable {
+class SavedRoute: NSObject, NSSecureCoding {
     /// This is needed to use NSSecureCoding
     static var supportsSecureCoding = true
     
@@ -281,42 +227,27 @@ class SavedRoute: NSObject, NSSecureCoding, Identifiable {
     public var dateCreated: NSDate
     /// The crumbs that make up the route.  The densely sampled positions (crumbs) are stored and the keypoints (sparser goal positionsare calculated on demand when navigation is requested.
     public var crumbs: [LocationInfo]
-    
-    /// The geo anchors that constitute the route
-    public var geoAnchors: [ARGeoAnchor]
-    /// The Anchor Point marks the beginning of the route (needed for start to end navigation)
-    public var beginRouteAnchorPoint : RouteAnchorPoint
-    /// The Anchor Point marks the end of the route (needed for end to start navigation)
-    public var endRouteAnchorPoint: RouteAnchorPoint
-    /// The Anchor Points used for recording voice notes and other information along the route
-    public var intermediateAnchorPoints: [RouteAnchorPoint]
-    /// An identifier for the App Clip code that begins a route.
-    public var appClipCodeID: String
-    
-    public var imageAnchoring: Bool
+    /// The landmark the marks the beginning of the route (needed for start to end navigation)
+    public var beginRouteLandmark : RouteLandmark
+    /// The landmark the marks the beginning of the route (needed for end to start navigation)
+    public var endRouteLandmark: RouteLandmark
 
     /// Initialize the route.
     ///
     /// - Parameters:
     ///   - id: the route id
-    ///   - appClipCodeID: the ID associating the app clip at the start of the route to the route
     ///   - name: the route name
     ///   - crumbs: the crumbs for the route
     ///   - dateCreated: the route creation date
-    ///   - beginRouteAnchorPoint: the Anchor Point for the beginning of the route (pass a `RouteAnchorPoint` with default initialization if no Anchor Point was recorded at the beginning of the route)
-    ///   - endRouteAnchorPoint: the Anchor Point for the end of the route (pass a `RouteAnchorPoint` with default initialization if no Anchor Point was recorded at the end of the route)
-
-    public init(id: NSString, appClipCodeID: String,  name: NSString, crumbs: [LocationInfo], geoAnchors: [ARGeoAnchor], dateCreated: NSDate = NSDate(), beginRouteAnchorPoint: RouteAnchorPoint, endRouteAnchorPoint: RouteAnchorPoint, intermediateAnchorPoints: [RouteAnchorPoint], imageAnchoring: Bool = false) {
+    ///   - beginRouteLandmark: the landmark for the beginning of the route (pass a `RouteLandmark` with default initialization if no landmark was recorded at the beginning of the route)
+    ///   - endRouteLandmark: the landmark for the end of the route (pass a `RouteLandmark` with default initialization if no landmark was recorded at the end of the route)
+    public init(id: NSString, name: NSString, crumbs: [LocationInfo], dateCreated: NSDate = NSDate(), beginRouteLandmark: RouteLandmark, endRouteLandmark: RouteLandmark) {
         self.id = id
-        self.appClipCodeID = appClipCodeID
         self.name = name
         self.crumbs = crumbs
-        self.geoAnchors = geoAnchors
         self.dateCreated = dateCreated
-        self.beginRouteAnchorPoint = beginRouteAnchorPoint
-        self.endRouteAnchorPoint = endRouteAnchorPoint
-        self.intermediateAnchorPoints = intermediateAnchorPoints
-        self.imageAnchoring = imageAnchoring
+        self.beginRouteLandmark = beginRouteLandmark
+        self.endRouteLandmark = endRouteLandmark
     }
     
     /// Encodes the object to the specified coder object
@@ -324,15 +255,11 @@ class SavedRoute: NSObject, NSSecureCoding, Identifiable {
     /// - Parameter aCoder: the object used for encoding
     func encode(with aCoder: NSCoder) {
         aCoder.encode(id, forKey: "id")
-        aCoder.encode(appClipCodeID, forKey: "appClipCodeID")
         aCoder.encode(name, forKey: "name")
         aCoder.encode(crumbs, forKey: "crumbs")
-        aCoder.encode(geoAnchors, forKey: "geoAnchors")
         aCoder.encode(dateCreated, forKey: "dateCreated")
-        aCoder.encode(beginRouteAnchorPoint, forKey: "beginRouteAnchorPoint")
-        aCoder.encode(endRouteAnchorPoint, forKey: "endRouteAnchorPoint")
-        aCoder.encode(intermediateAnchorPoints, forKey: "intermediateAnchorPoints")
-        aCoder.encode(imageAnchoring, forKey: "imageAnchoring")
+        aCoder.encode(beginRouteLandmark, forKey: "beginRouteLandmark")
+        aCoder.encode(endRouteLandmark, forKey: "endRouteLandmark")
     }
     
     /// Initialize an object based using data from a decoder
@@ -342,66 +269,34 @@ class SavedRoute: NSObject, NSSecureCoding, Identifiable {
         guard let id = aDecoder.decodeObject(of: NSString.self, forKey: "id") else {
             return nil
         }
-        guard let appClipCodeID = aDecoder.decodeObject(of: NSString.self, forKey: "appClipCodeID") else {
-            return nil
-        }
         guard let name = aDecoder.decodeObject(of: NSString.self, forKey: "name") else {
             return nil
         }
         guard let crumbs = aDecoder.decodeObject(of: [].self, forKey: "crumbs") as? [LocationInfo] else {
             return nil
         }
-        
-        guard let geoAnchors = aDecoder.decodeObject(of: [].self, forKey: "geoAnchors") as? [ARGeoAnchor] else {
-            return nil
-        }
-        
         guard let dateCreated = aDecoder.decodeObject(of: NSDate.self, forKey: "dateCreated") else {
             return nil
         }
-
-        let beginRouteAnchorPoint: RouteAnchorPoint
-        if let anchorPoint = aDecoder.decodeObject(of: RouteAnchorPoint.self, forKey: "beginRouteAnchorPoint") {
-            beginRouteAnchorPoint = anchorPoint
-        } else {
-            // check to see if we have a route in the old format
-            guard let beginRouteLandmark = aDecoder.decodeObject(of: RouteLandmark.self, forKey: "beginRouteLandmark"), let landmarkTransform = beginRouteLandmark.transform else {
-                    return nil
-            }
-            // convert to the new format
-            beginRouteAnchorPoint = RouteAnchorPoint(anchor: ARAnchor(transform: landmarkTransform), information: beginRouteLandmark.information, voiceNote: beginRouteLandmark.voiceNote)
+        guard let beginRouteLandmark = aDecoder.decodeObject(of: RouteLandmark.self, forKey: "beginRouteLandmark") else {
+            return nil
         }
-        let endRouteAnchorPoint: RouteAnchorPoint
-
-        if let anchorPoint = aDecoder.decodeObject(of: RouteAnchorPoint.self, forKey: "endRouteAnchorPoint") {
-            endRouteAnchorPoint = anchorPoint
-        } else {
-            // check to see if we have a route in the old format
-            guard let endRouteLandmark = aDecoder.decodeObject(of: RouteLandmark.self, forKey: "endRouteLandmark"), let landmarkTransform = endRouteLandmark.transform else {
-                return nil
-            }
-            // convert to the new format
-            endRouteAnchorPoint = RouteAnchorPoint(anchor: ARAnchor(transform: landmarkTransform), information: endRouteLandmark.information, voiceNote: endRouteLandmark.voiceNote)
-        }
-        
-        var intermediateRouteAnchorPoints: [RouteAnchorPoint] = []
-        if let anchorPoints = aDecoder.decodeObject(of: [].self, forKey: "intermediateAnchorPoints") as? [RouteAnchorPoint] {
-            intermediateRouteAnchorPoints = anchorPoints
+        guard let endRouteLandmark = aDecoder.decodeObject(of: RouteLandmark.self, forKey: "endRouteLandmark") else {
+            return nil
         }
 
-        
-        let imageAnchoring = aDecoder.decodeBool(forKey: "imageAnchoring")
-        
-        self.init(id: id, appClipCodeID: appClipCodeID as String, name: name, crumbs: crumbs, geoAnchors: geoAnchors, dateCreated: dateCreated, beginRouteAnchorPoint: beginRouteAnchorPoint, endRouteAnchorPoint: endRouteAnchorPoint, intermediateAnchorPoints: intermediateRouteAnchorPoints, imageAnchoring: imageAnchoring)
+        self.init(id: id, name: name, crumbs: crumbs, dateCreated: dateCreated, beginRouteLandmark: beginRouteLandmark, endRouteLandmark: endRouteLandmark)
     }
 }
 
 /// Pathfinder class calculates turns or "keypoints" given a path array of LocationInfo
 class PathFinder {
     
-    ///  Maximum width of the breadcrumb path in meters.
+    ///  Maximum width of the breadcrumb path.
     ///
     /// Points falling outside this margin will produce more keypoints, through Ramer-Douglas-Peucker algorithm
+    ///
+    /// - TODO: Clarify units
     private let pathWidth: Scalar!
     
     /// The crumbs that make up the desired path. These should be ordered with respect to the user's intended direction of travel (start to end versus end to start)
@@ -439,12 +334,16 @@ class PathFinder {
     func getKeypoints(edibleCrumbs: [LocationInfo]) -> [KeypointInfo] {
         var keypoints = [KeypointInfo]()
         let firstKeypointLocation = edibleCrumbs.first!
-        keypoints.append(KeypointInfo(location: firstKeypointLocation))
+        let firstKeypointOrientation = Vector3.x
+        keypoints.append(KeypointInfo(location: firstKeypointLocation, orientation: firstKeypointOrientation))
         
         keypoints += calculateKeypoints(edibleCrumbs: edibleCrumbs)
         
         let lastKeypointLocation = edibleCrumbs.last!
-        keypoints.append(KeypointInfo(location: lastKeypointLocation))
+        let lastKeypointOrientation = Vector3(_: [(keypoints.last?.location.x)! - edibleCrumbs.last!.x,
+                                                  0,
+                                                  (keypoints.last?.location.z)! - edibleCrumbs.last!.z]).normalized()
+        keypoints.append(KeypointInfo(location: lastKeypointLocation, orientation: lastKeypointOrientation))
         return keypoints
     }
     
@@ -498,12 +397,24 @@ class PathFinder {
             let prevKeypoints = calculateKeypoints(edibleCrumbs: Array(edibleCrumbs[0..<(maxIndex!+1)]))
             let postKeypoints = calculateKeypoints(edibleCrumbs: Array(edibleCrumbs[maxIndex!...]))
             
+            var prevKeypointLocation = edibleCrumbs.first!
+            var prevKeypointOrientation = Vector3.x
             if (!prevKeypoints.isEmpty) {
                 keypoints += prevKeypoints
+                
+                prevKeypointLocation = prevKeypoints.last!.location
+                prevKeypointOrientation = prevKeypoints.last!.orientation
             }
             
+            let prevKeypoint = KeypointInfo(location: prevKeypointLocation, orientation: prevKeypointOrientation)
+            
             let newKeypointLocation = edibleCrumbs[maxIndex!]
-            keypoints.append(KeypointInfo(location: newKeypointLocation))
+            let newKeypointOrientation = Vector3(_: [prevKeypoint.location.x - newKeypointLocation.x,
+                                                     0,
+                                                     prevKeypoint.location.z - newKeypointLocation.z]).normalized()
+            
+            
+            keypoints.append(KeypointInfo(location: newKeypointLocation, orientation: newKeypointOrientation))
             
             if (!postKeypoints.isEmpty) {
                 keypoints += postKeypoints
@@ -514,3 +425,5 @@ class PathFinder {
     }
     
 }
+
+

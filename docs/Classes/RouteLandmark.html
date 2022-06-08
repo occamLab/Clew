@@ -14,7 +14,7 @@
     <a title="RouteLandmark Class Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html"> Docs</a> (96% documented)</p>
+        <p><a href="../index.html"> Docs</a> (97% documented)</p>
         <p class="header-right"><a href="https://github.com/occamLab/Clew"><img src="../img/gh.png"/>View on GitHub</a></p>
       </div>
     </header>
@@ -36,9 +36,6 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/AudioVisualizerView.html">AudioVisualizerView</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Classes/BurgerMenuViewController.html">BurgerMenuViewController</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/DataPersistence.html">DataPersistence</a>
@@ -66,6 +63,9 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/PathLogger.html">PathLogger</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/PathMatcher.html">PathMatcher</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/PauseTrackingController.html">PauseTrackingController</a>
@@ -96,9 +96,6 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/RootContainerView.html">RootContainerView</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Classes/RouteDocumentData.html">RouteDocumentData</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/RouteLandmark.html">RouteLandmark</a>
@@ -198,6 +195,18 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Extensions/UIViewController.html">UIViewController</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/float2.html">float2</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/float2x2.html">float2x2</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/float3.html">float3</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/float4.html">float4</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Extensions/float4x4.html">float4x4</a>
@@ -366,9 +375,36 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:4Clew13RouteLandmarkC9transform11information9voiceNoteACSo13simd_float4x4aSg_So8NSStringCSgALtcfc"></a>
-                    <a name="//apple_ref/swift/Method/init(transform:information:voiceNote:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:4Clew13RouteLandmarkC9transform11information9voiceNoteACSo13simd_float4x4aSg_So8NSStringCSgALtcfc">init(transform:information:voiceNote:)</a>
+                    <a name="/s:4Clew13RouteLandmarkC15isSoftAlignmentSbvp"></a>
+                    <a name="//apple_ref/swift/Property/isSoftAlignment" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Clew13RouteLandmarkC15isSoftAlignmentSbvp">isSoftAlignment</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>true if the alignment is a soft one (based on the first crumb), false if it is a hard one (based on the landmark creation process)</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">isSoftAlignment</span><span class="p">:</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Clew13RouteLandmarkC9transform11information9voiceNote15isSoftAlignmentACSo13simd_float4x4aSg_So8NSStringCSgAMSbtcfc"></a>
+                    <a name="//apple_ref/swift/Method/init(transform:information:voiceNote:isSoftAlignment:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Clew13RouteLandmarkC9transform11information9voiceNote15isSoftAlignmentACSo13simd_float4x4aSg_So8NSStringCSgAMSbtcfc">init(transform:information:voiceNote:isSoftAlignment:)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -383,7 +419,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="nv">transform</span><span class="p">:</span> <span class="n">simd_float4x4</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">information</span><span class="p">:</span> <span class="kt">NSString</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">voiceNote</span><span class="p">:</span> <span class="kt">NSString</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="nv">transform</span><span class="p">:</span> <span class="n">simd_float4x4</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">information</span><span class="p">:</span> <span class="kt">NSString</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">voiceNote</span><span class="p">:</span> <span class="kt">NSString</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">isSoftAlignment</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -499,7 +535,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">required</span> <span class="n">convenience</span> <span class="nf">init</span><span class="p">?(</span><span class="n">coder</span> <span class="nv">aDecoder</span><span class="p">:</span> <span class="kt">NSCoder</span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">required</span> <span class="kd">convenience</span> <span class="nf">init</span><span class="p">?(</span><span class="n">coder</span> <span class="nv">aDecoder</span><span class="p">:</span> <span class="kt">NSCoder</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -530,7 +566,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2019 <a class="link" href="" target="_blank" rel="external"></a>. All rights reserved. (Last updated: 2019-08-08)</p>
+          <p>&copy; 2019 <a class="link" href="" target="_blank" rel="external"></a>. All rights reserved. (Last updated: 2019-08-07)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.9.6</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
         </section>
       </article>

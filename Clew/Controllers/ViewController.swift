@@ -7,37 +7,34 @@
 // Confirmed issues
 // - We are not doing a proper job dealing with resumed routes with respect to logging (we always send recorded stuff in the log file, which we don't always have access to)
 //
-// Voice Note Recording Feature
-// - think about direction of device and how it relates to the route itself (e.g., look to your left)
-// - Get buttons to align in the recording view (add transparent third button)
-//
 // Unconfirmed issues issues
 // - Maybe intercept session was interrupted so that we don't mistakenly try to navigate saved route before relocalization
 //
 // Major features to implement
 //
 // Potential enhancements
+//  - Add a tip to the help file regarding holding phone against your chest (see Per Rosqvist's suggestion)
 //  - Warn user via an alert if they have an iPhone 5S or 6
 //  - Possibly create a warning if the phone doesn't appear to be in the correct orientation
 //  - revisit turn warning feature.  It doesn't seem to actually help all that much at the moment.
+
+// Path alignment
+// TODO: implement local suppression so we don't get to many alignment points in one place.
+// TODO: implement something to keep the points moving in the proper direction (avoid reversing the route on mistake)
+// TODO: automatically add the first keypoint of the route (probably this would also involve an alignment at that point as well)
+// TODO: recency of path alignment
 
 import UIKit
 import ARKit
 import SceneKit
 import SceneKit.ModelIO
-import StoreKit
 import AVFoundation
 import AudioToolbox
 import MediaPlayer
 import VectorMath
 import Firebase
-//import SRCountdownTimer
-import SwiftUI
-import Firebase
-#if !APPCLIP
-import ARDataLogger
-#endif
-import CoreNFC
+import FirebaseDatabase
+import SRCountdownTimer
 
 /// A custom enumeration type that describes the exact state of the app.  The state is not exhaustive (e.g., there are Boolean flags that also track app state).
 enum AppState {
@@ -49,6 +46,8 @@ enum AppState {
     case readyToNavigateOrPause(allowPause: Bool)
     /// User is navigating along a route
     case navigatingRoute
+    /// User is rating the route
+    case ratingRoute(announceArrival: Bool)
     /// The app is starting up
     case initializing
     /// The user has requested a pause, but has not yet put the phone in the save location
@@ -60,19 +59,9 @@ enum AppState {
     /// user has successfully paused the ARSession
     case pauseProcedureCompleted
     /// user has hit the resume button and is waiting for the volume to hit
-    case startingResumeProcedure(route: SavedRoute, worldMap: ARWorldMap?, navigateStartToEnd: Bool)
+    case startingResumeProcedure(route: SavedRoute, mapAsAny: Any?, navigateStartToEnd: Bool)
     /// the AR session has entered the relocalizing state, which means that we can now realign the session
     case readyForFinalResumeAlignment
-    /// the user is attempting to name the route they're in the process of saving
-    case startingNameSavedRouteProcedure(worldMap: ARWorldMap?)
-    /// the user is attempting to name the app clip code ID for the route they're in the process of saving
-    case startingNameCodeIDProcedure
-    /// the user is navigating a recorded route from an ARImageAnchor
-    case startingAutoAlignment
-    /// the user is creating a route anchored from an ARImageAnchor
-    case startingAutoAnchoring
-    /// the user has stopped or completed an external route
-    case endScreen(completedRoute: Bool)
     
     /// rawValue is useful for serializing state values, which we are currently using for our logging feature
     var rawValue: String {
@@ -85,6 +74,8 @@ enum AppState {
             return "readyToNavigateOrPause"
         case .navigatingRoute:
             return "navigatingRoute"
+        case .ratingRoute(let announceArrival):
+            return "ratingRoute(announceArrival=\(announceArrival))"
         case .initializing:
             return "initializing"
         case .startingPauseProcedure:
@@ -95,31 +86,16 @@ enum AppState {
             return "completingPauseProcedure"
         case .pauseProcedureCompleted:
             return "pauseProcedureCompleted"
-        case .startingResumeProcedure(let route, let worldMap, let navigateStartToEnd):
-            return "startingResumeProcedure(route=\(route.id), mapexists=\(worldMap != nil), navigateStartToEnd=\(navigateStartToEnd))"
+        case .startingResumeProcedure(_, _, let navigateStartToEnd):
+            return "startingResumeProcedure(route=notloggedhere, map=notlogged, navigateStartToEnd=\(navigateStartToEnd))"
         case .readyForFinalResumeAlignment:
             return "readyForFinalResumeAlignment"
-        case .startingNameSavedRouteProcedure:
-            return "startingNameSavedRouteProcedure"
-        case .startingNameCodeIDProcedure:
-            return "startingNameCodeIDProcedure"
-        case .startingAutoAlignment:
-            return "startingAutoAlignment"
-        case .startingAutoAnchoring:
-            return "startingAutoAnchoring"
-        case .endScreen:
-            return "endScreen"
         }
     }
 }
 
-/// Add clewGreen as a color
-extension Color {
-    static let clewGreen = Color(red: 105 / 255, green: 189 / 255, blue: 72 / 255)
-}
-
 /// The view controller that handles the main Clew window.  This view controller is always active and handles the various views that are used for different app functionalities.
-class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthesizerDelegate, NFCNDEFReaderSessionDelegate {
+class ViewController: UIViewController, ARSCNViewDelegate, SRCountdownTimerDelegate, AVSpeechSynthesizerDelegate {
     
     // MARK: - Refactoring UI definition
     
@@ -128,27 +104,8 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     /// How long to wait (in seconds) between the alignment request and grabbing the transform
     static var alignmentWaitingPeriod = 5
     
-    /// A threshold distance between the user's current position and a voice note.  If the user is closer than this value the voice note will be played
-    static let voiceNotePlayDistanceThreshold : Float = 0.75
-    
-    static var routeKeypoints: [KeypointInfo] = []
-    
-    /// The state of the ARKit tracking session as last communicated to us through the delegate protocol.  This is useful if you want to do something different in the delegate method depending on the previous state
-    var trackingSessionErrorState : ARTrackingError?
-    #if !APPCLIP
-    let surveyModel = FirebaseFeedbackSurveyModel.shared
-    #endif
-    
-    /// the last time this particular user was surveyed (nil if we don't know this information or it hasn't been loaded from the database yet)
-    var lastSurveyTime: [String: Double] = [:]
-    
-    /// TEMPORARY to prevent multiple auto alignments
-    var autoAlignPending = false
-    
-    /// Helper Classes
-    let firebaseSetup = FirebaseSetup()
-    
-    let surveyInterface = SurveyInterface()
+    /// The state of the ARKit tracking session as last communicated to us through the delgate protocol.  This is useful if you want to do something different in the delegate method depending on the previous state
+    var trackingSessionState : ARCamera.TrackingState?
     
     /// The state of the app.  This should be constantly referenced and updated as the app transitions
     var state = AppState.initializing {
@@ -158,9 +115,11 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
             case .recordingRoute:
                 handleStateTransitionToRecordingRoute()
             case .readyToNavigateOrPause:
-                handleStateTransitionToReadyToNavigateOrPause(allowPause: recordingSingleUseRoute)
+                handleStateTransitionToReadyToNavigateOrPause(allowPause: !isResumedRoute)
             case .navigatingRoute:
                 handleStateTransitionToNavigatingRoute()
+            case .ratingRoute(let announceArrival):
+                handleStateTransitionToRatingRoute(announceArrival: announceArrival)
             case .mainScreen(let announceArrival):
                 handleStateTransitionToMainScreen(announceArrival: announceArrival)
             case .startingPauseProcedure:
@@ -172,24 +131,13 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
             case .pauseProcedureCompleted:
                 // nothing happens currently
                 break
-            case .startingResumeProcedure(let route, let worldMap, let navigateStartToEnd):
-                handleStateTransitionToStartingResumeProcedure(route: route, worldMap: worldMap, navigateStartToEnd: navigateStartToEnd)
+            case .startingResumeProcedure(let route, let mapAsAny, let navigateStartToEnd):
+                handleStateTransitionToStartingResumeProcedure(route: route, mapAsAny: mapAsAny, navigateStartToEnd: navigateStartToEnd)
             case .readyForFinalResumeAlignment:
                 // nothing happens currently
                 break
-            case .startingNameCodeIDProcedure:
-                handleStateTransitionToStartingNameCodeIDProcedure()
-            case .startingNameSavedRouteProcedure(let worldMap):
-                handleStateTransitionToStartingNameSavedRouteProcedure(worldMap: worldMap)
             case .initializing:
                 break
-            case .startingAutoAlignment:
-                handleStateTransitionToAutoAlignment()
-            case .startingAutoAnchoring:
-                handleStateTransitionToAutoAnchoring()
-            case .endScreen(let completedRoute):
-                print("transitioned to the end screen")
-                showEndScreenInformation(completedRoute: completedRoute)
             }
         }
     }
@@ -203,68 +151,20 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     /// The announcement that should be read immediately after this one finishes
     var nextAnnouncement: String?
     
-    /// Actions to perform after the tracking session is ready
-    var continuationAfterSessionIsReady: (()->())?
-    
     /// A boolean that tracks whether or not to suppress tracking warnings.  By default we don't suppress, but when the help popover is presented we do.
     var suppressTrackingWarnings = false
     
-    /// A computed attributed that tests if tracking warnings has been suppressed and ensures that the app is in an active state
-    var trackingWarningsAllowed: Bool {
-        if case .mainScreen(_) = state {
-            return false
-        }
-        return !suppressTrackingWarnings
-    }
-    
-    // TODO: the number of Booleans is a bit out of control.  We need a better way to manage them.  Some of them may be redundant with each other at this point.
-    
-    /// This Boolean marks whether or not the pause procedure is being used to create a Anchor Point at the start of a route (true) or if it is being used to pause an already recorded route
-    var creatingRouteAnchorPoint: Bool = false
+    /// This Boolean marks whether or not the pause procedure is being used to create a landmark at the start of a route (true) or if it is being used to pause an already recorded route
+    var creatingRouteLandmark: Bool = false
     
     /// This Boolean marks whether or not the user is resuming a route
     var isResumedRoute: Bool = false
     
-    /// The route object when we are resuming a route
-    var resumedRoute: SavedRoute?
-    
     /// Set to true when the user is attempting to load a saved route that has a map associated with it. Once relocalization succeeds, this flag should be set back to false
     var attemptingRelocalization: Bool = false
     
-    /// this Boolean marks whether the curent route is 'paused' or not from the use of the pause button
-    var paused: Bool = false
-    
-    /// this Boolean marks whether or not the app is recording a multi use route
-    var recordingSingleUseRoute: Bool = false
-    
-    ///this Boolean marks whether or not the app is saving a starting anchor point
-    var startAnchorPoint: Bool = false
-    
-    ///this boolean denotes whether or not the app is loading a route from an automatic alignment
-    var isAutomaticAlignment: Bool = false
-    
-    ///tracks the observers that have been added for handling loading routes from an app clip invocation
-    var appClipObservers: [NSObjectProtocol] = []
-    
-    /// ARDataLogger
-    #if !APPCLIP
-    var arLogger = ARLogger.shared
-    #endif
-    
-    /// This is an audio player that queues up the voice note associated with a particular route Anchor Point. The player is created whenever a saved route is loaded. Loading it before the user clicks the "Play Voice Note" button allows us to call the prepareToPlay function which reduces the latency when the user clicks the "Play Voice Note" button.
+    /// This is an audio player that queues up the voice note associated with a particular route landmark. The player is created whenever a saved route is loaded. Loading it before the user clicks the "Play Voice Note" button allows us to call the prepareToPlay function which reduces the latency when the user clicks the "Play Voice Note" button.
     var voiceNoteToPlay: AVAudioPlayer?
-    
-    /// This is the name of the .crd file of the path to load, which is assigned by SceneDelegate
-    var routeID: String = ""
-  
-    /// This is the identifier of the App Clip Code, which specifies the path to load and is assigned by SceneDelegate
-    var appClipCodeID: String = ""
-    
-    /// This is the list of routes associated with a specific app clip code
-    var availableRoutes: RouteListObject = RouteListObject() //[[String: String]]()
-    
-    /// This is the ARWorldMap of the route being navigated.
-    var routeWorldMap: ARWorldMap?
     
     // MARK: - Speech Synthesizer Delegate
     
@@ -302,39 +202,23 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     ///
     /// - Parameter announceArrival: a Boolean that indicates whether the user's arrival should be announced (true means the user has arrived)
     func handleStateTransitionToMainScreen(announceArrival: Bool) {
-        // cancel the timer that announces tracking errors
-        trackingErrorsAnnouncementTimer?.invalidate()
-        // if the ARSession is running, pause it to conserve battery
-        // set this to nil to prevent the app from erroneously detecting that we can auto-align to the route
-        if #available(iOS 12.0, *) {
-            ARSessionManager.shared.initialWorldMap = nil
-        }
         showRecordPathButton(announceArrival: announceArrival)
     }
     
     /// Handler for the recordingRoute app state
     func handleStateTransitionToRecordingRoute() {
         // records a new path
-        // updates the state Boolean to signify that the program is no longer saving the first anchor point
-        startAnchorPoint = false
         attemptingRelocalization = false
         
-        // TODO: probably don't need to set this to [], but erring on the side of being conservative
         crumbs = []
-        recordingCrumbs = []
-        recordingGeoAnchors = []
-        RouteManager.shared.intermediateAnchorPoints = []
         logger.resetPathLog()
         
-        #if !APPCLIP
         showStopRecordingButton()
-        #endif
-        droppingCrumbs = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(dropCrumb), userInfo: nil, repeats: true)
+        droppingCrumbs = Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: #selector(dropCrumb), userInfo: nil, repeats: true)
         // make sure there are no old values hanging around
         nav.headingOffset = 0.0
         headingRingBuffer.clear()
         locationRingBuffer.clear()
-        recordPhaseHeadingOffsets = []
         updateHeadingOffsetTimer = Timer.scheduledTimer(timeInterval: 0.01, target: self, selector: (#selector(updateHeadingOffset)), userInfo: nil, repeats: true)
     }
     
@@ -342,86 +226,19 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     ///
     /// - Parameter allowPause: a Boolean that determines whether the app should allow the user to pause the route (this is only allowed if it is the initial route recording)
     func handleStateTransitionToReadyToNavigateOrPause(allowPause: Bool) {
-        #if !APPCLIP
-            nameCodeIDController!.dismiss(animated: false)
-        #endif
         droppingCrumbs?.invalidate()
         updateHeadingOffsetTimer?.invalidate()
         showStartNavigationButton(allowPause: allowPause)
-        suggestAdjustOffsetIfAppropriate()
     }
     
-    /// Automatically localizes user with popup to begin navigation
-    func handleStateTransitionToAutoAlignment() {
-        hideAllViewsHelper()
-        print("Aligning")
-        
-        // TODO: L10N
-        let navStart = UIAlertController(title: "Press start to begin navigation", message: "", preferredStyle: .alert)
-        
-        let start = UIAlertAction(title: "Start", style: .default, handler: {(action) -> Void in    // BL L10N
-            self.confirmAlignment()
-        })
-        
-        navStart.addAction(start)
-        
-//        self.present(navStart, animated: true, completion: nil)
-    }
-    
-    /// Automatically sets up anchor point for route recording
-    func handleStateTransitionToAutoAnchoring() {
-        print("Aligning to anchor image")
-        
-        hideAllViewsHelper()
-        
-        // TODO: L10N
-        let recordStart = UIAlertController(title: "Press start to begin recording", message: "", preferredStyle: .alert)
-        // TODO: cancel any alignment text being read out
-        
-        let start = UIAlertAction(title: "Start", style: .default, handler: {(action) -> Void in    // BL L10N
-            self.confirmAlignment()
-        })
-        
-        recordStart.addAction(start)
-        
-        self.present(recordStart, animated: true, completion: nil)
-    }
-    
-    // handler for downloaded routes
-    // <3 Esme wrote a function !
-    func handleStateTransitionToNavigatingExternalRoute() {
-        // navigate the recorded path
-
-        // If the route has not yet been saved, we can no longer save this route
-        routeName = nil
-        beginRouteAnchorPoint = RouteAnchorPoint()
-        endRouteAnchorPoint = RouteAnchorPoint()
-
-        logger.resetNavigationLog()
-        
-        // this is where the code would actually pick up B)
-        let pathRef = Storage.storage().reference().child("AppClipRoutes/\(routeID).crd")
-        
-        // download path from Firebase
-        pathRef.getData(maxSize: 100000000000) { data, error in
-            if error != nil {
-                // Handle any errors
-                print("Failed to download route from Firebase due to the following error: \(error)")
-            } else {
-                do {
-                    // TODO: Fix this so that it is a function and works for non-app clips
-                    NSKeyedUnarchiver.setClass(RouteDocumentData.self, forClassName: "Clew_More.RouteDocumentData")
-                    NSKeyedUnarchiver.setClass(SavedRoute.self, forClassName: "Clew_More.SavedRoute")
-                    NSKeyedUnarchiver.setClass(LocationInfo.self, forClassName: "Clew_More.LocationInfo")
-                    NSKeyedUnarchiver.setClass(RouteAnchorPoint.self, forClassName: "Clew_More.RouteAnchorPoint")
-                    if let document = try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data!) as? RouteDocumentData {
-                        let thisRoute = document.route
-                        ARSessionManager.shared.initialWorldMap = document.map
-                        self.state = .startingResumeProcedure(route: thisRoute, worldMap: ARSessionManager.shared.initialWorldMap, navigateStartToEnd: true)
-                    }
-                } catch {
-                    print("error \(error)")
-                }
+    /// Removes all of the follow crumbs that have been built-up in the system
+    func clearAllFollowCrumbs() {
+        guard let anchors = sceneView.session.currentFrame?.anchors else {
+            return
+        }
+        for anchor in anchors {
+            if let name = anchor.name, name == "followCrumb" {
+                sceneView.session.remove(anchor: anchor)
             }
         }
     }
@@ -432,38 +249,30 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
 
         // If the route has not yet been saved, we can no longer save this route
         routeName = nil
-        beginRouteAnchorPoint = RouteAnchorPoint()
-        endRouteAnchorPoint = RouteAnchorPoint()
-
+        beginRouteLandmark = RouteLandmark()
+        endRouteLandmark = RouteLandmark()
+        clearAllFollowCrumbs()
         logger.resetNavigationLog()
 
         // generate path from PathFinder class
         // enabled hapticFeedback generates more keypoints
-        ViewController.routeKeypoints = PathFinder(crumbs: crumbs.reversed(), hapticFeedback: hapticFeedback, voiceFeedback: voiceFeedback).keypoints
-        RouteManager.shared.setRouteKeypoints(kps: ViewController.routeKeypoints)
+        let path = PathFinder(crumbs: crumbs.reversed(), hapticFeedback: hapticFeedback, voiceFeedback: voiceFeedback)
+        keypoints = path.keypoints
+        checkedOffKeypoints = []
         
         // save keypoints data for debug log
-        logger.logKeypoints(keypoints: ViewController.routeKeypoints)
+        logger.logKeypoints(keypoints: keypoints)
         
         // render 3D keypoints
-        ARSessionManager.shared.renderKeypoint(RouteManager.shared.nextKeypoint!.location, defaultColor: defaultColor)
+        renderKeypoint(keypoints[0].location)
         
-        // ? getting user location
+        // TODO: gracefully handle error
         prevKeypointPosition = getRealCoordinates(record: true)!.location
-        
-        // render path
-        if showPath, let nextKeypoint = RouteManager.shared.nextKeypoint {
-            ARSessionManager.shared.renderPath(self.prevKeypointPosition, nextKeypoint.location, defaultPathColor: self.defaultPathColor)
-        }
-        
-        // render intermediate anchor points
-        ARSessionManager.shared.render(intermediateAnchorPoints: RouteManager.shared.intermediateAnchorPoints)
         
         feedbackGenerator = UIImpactFeedbackGenerator(style: .light)
         waypointFeedbackGenerator = UINotificationFeedbackGenerator()
         
         showStopNavigationButton()
-        remindedUserOfOffsetAdjustment = false
 
         // wait a little bit before starting navigation to allow screen to transition and make room for the first direction announcement to be communicated
         
@@ -479,104 +288,75 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         // make sure there are no old values hanging around
         headingRingBuffer.clear()
         locationRingBuffer.clear()
-        
         hapticTimer = Timer.scheduledTimer(timeInterval: 0.01, target: self, selector: (#selector(getHapticFeedback)), userInfo: nil, repeats: true)
+        print("turning off auto snap to route")
+        //snapToRouteTimer = Timer.scheduledTimer(timeInterval: 5, target: self, selector: (#selector(snapToRoute)), userInfo: nil, repeats: true)
+    }
+    
+    /// Handler for the route rating app state
+    ///
+    /// - Parameter announceArrival: a Boolean that is true if we should announce that the user has arrived at the destination and false otherwise
+    func handleStateTransitionToRatingRoute(announceArrival: Bool) {
+        showRouteRating(announceArrival: announceArrival)
     }
     
     /// Handler for the startingResumeProcedure app state
     ///
     /// - Parameters:
     ///   - route: the route to navigate
-    ///   - worldMap: the world map to use
+    ///   - mapAsAny: the world map to use (expressed as `Any?` since it is optional and we want to maintain backwards compatibility with iOS 11.3)
     ///   - navigateStartToEnd: a Boolean that is true if we want to navigate from the start to the end and false if we want to navigate from the end to the start.
-    func handleStateTransitionToStartingResumeProcedure(route: SavedRoute, worldMap: ARWorldMap?, navigateStartToEnd: Bool) {
-        resumedRoute = route
-        logger.setCurrentRoute(route: route, worldMap: worldMap)
-        
+    func handleStateTransitionToStartingResumeProcedure(route: SavedRoute, mapAsAny: Any?, navigateStartToEnd: Bool) {
         // load the world map and restart the session so that things have a chance to quiet down before putting it up to the wall
-        var isTrackingPerformanceNormal = false
-        if case .normal? = ARSessionManager.shared.currentFrame?.camera.trackingState {
+        let isTrackingPerformanceNormal: Bool
+        if case .normal? = sceneView.session.currentFrame?.camera.trackingState {
             isTrackingPerformanceNormal = true
-        }
-        var isRelocalizing = false
-        if case .limited(reason: .relocalizing)? = ARSessionManager.shared.currentFrame?.camera.trackingState {
-            isRelocalizing = true
-        }
-        var isSameMap = false
-        if let worldMap = worldMap {
-            // analyze the map to see if we can relocalize
-            if ARSessionManager.shared.adjustRelocalizationStrategy(worldMap: worldMap) == .none {
-                // unfortunately, we are out of luck.  Better to not use the ARWorldMap
-                ARSessionManager.shared.initialWorldMap = nil
-                attemptingRelocalization = false
-            } else {
-                isSameMap = ARSessionManager.shared.initialWorldMap != nil && ARSessionManager.shared.initialWorldMap == worldMap
-                ARSessionManager.shared.initialWorldMap = worldMap
-                // TODO: see if we can move this out of this if statement
-                attemptingRelocalization = isSameMap && !isTrackingPerformanceNormal || !isSameMap
-            }
         } else {
-            ARSessionManager.shared.relocalizationStrategy = .none
-            ARSessionManager.shared.initialWorldMap = nil
+            isTrackingPerformanceNormal = false
+        }
+        
+        var isSameMap = false
+        if #available(iOS 12.0, *) {
+            let map = mapAsAny as! ARWorldMap?
+            isSameMap = configuration.initialWorldMap != nil && configuration.initialWorldMap == map
+            configuration.initialWorldMap = map
+        
+            attemptingRelocalization =  isSameMap && !isTrackingPerformanceNormal || map != nil && !isSameMap
         }
 
         if navigateStartToEnd {
             crumbs = route.crumbs.reversed()
-            pausedTransform = route.beginRouteAnchorPoint.anchor?.transform
+            pausedLandmark = route.beginRouteLandmark
         } else {
             crumbs = route.crumbs
-            pausedTransform = route.endRouteAnchorPoint.anchor?.transform
+            pausedLandmark = route.endRouteLandmark
         }
+        // TODO: we may need to revisit whether we need to undo previously applied relativeTransforms (I suspect not though)
+        sceneView.session.run(configuration, options: [.removeExistingAnchors])
 
-        print("just added \(route.geoAnchors.count)")
-        RouteManager.shared.intermediateAnchorPoints = route.intermediateAnchorPoints
-        trackingSessionErrorState = nil
-        ARSessionManager.shared.startSession()
-        continuationAfterSessionIsReady = {
-            // the relocalization strategy may have been adjusted during the session startup
-            for geoAnchor in route.geoAnchors {
-                print("adding")
-                ARSessionManager.shared.add(anchor: geoAnchor)
-            }
-            if ARSessionManager.shared.relocalizationStrategy == .none {
-                isSameMap = false
-                self.attemptingRelocalization = false
-            }
-                // we can skip the whole process of relocalization since we are already using the correct map and tracking is normal.  It helps to strip out old anchors to reduce jitter though
-                ///PATHPOINT load route from automatic alignment -> start navigation
-                
-            self.isResumedRoute = true
-            self.isAutomaticAlignment = true
-            self.state = .readyToNavigateOrPause(allowPause: false)
+        if isTrackingPerformanceNormal, isSameMap {
+            // we can skip the whole process of relocalization since we are already using the correct map and tracking is normal.  It helps to strip out old anchors to reduce jitter though
+            isResumedRoute = true
+            state = .readyToNavigateOrPause(allowPause: false)
+        } else {
+            // setting this flag after entering the .limited(reason: .relocalizing) state is a bit error prone.  Since there is a waiting period, there is no way that we will ever finish the alignment countdown before the session has successfully restarted
+            state = .readyForFinalResumeAlignment
+            showResumeTrackingConfirmButton(route: route, navigateStartToEnd: navigateStartToEnd)
         }
-    }
-    
-    /// Handler for the startingNameCodeIDProcedure app state
-    func handleStateTransitionToStartingNameCodeIDProcedure(){
-        hideAllViewsHelper()
-        add(nameCodeIDController)
-    }
-    
-    /// Handler for the startingNameSavedRouteProcedure app state
-    func handleStateTransitionToStartingNameSavedRouteProcedure(worldMap: ARWorldMap?){
-        hideAllViewsHelper()
-        add(nameSavedRouteController)
     }
     
     /// Handler for the startingPauseProcedure app state
     func handleStateTransitionToStartingPauseProcedure() {
         // clear out these variables in case they had already been created
-        if creatingRouteAnchorPoint {
-            beginRouteAnchorPoint = RouteAnchorPoint()
-            try! showPauseTrackingButton()
+        if creatingRouteLandmark {
+            beginRouteLandmark = RouteLandmark()
         } else {
-            endRouteAnchorPoint = RouteAnchorPoint()
-            
-            // if you can get non-nil worldMap, assign it to vc variable
-            ARSessionManager.shared.sceneView.session.getCurrentWorldMap { worldMap, error in   // BL: worldMap exists here
-                self.routeWorldMap = worldMap
-                self.completingPauseProcedureHelper(worldMap: worldMap)
-            }
+            endRouteLandmark = RouteLandmark()
+        }
+        do {
+            try showPauseTrackingButton()
+        } catch {
+            // nothing to fall back on
         }
     }
     
@@ -591,124 +371,63 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         playAlignmentConfirmation = DispatchWorkItem{
             self.rootContainerView.countdownTimer.isHidden = true
             self.pauseTracking()
-            if self.paused && self.recordingSingleUseRoute{
-                ///announce to the user that they have successfully saved an anchor point.
-                self.delayTransition(announcement: NSLocalizedString("singleUseRouteAnchorPointToPausedStateAnnouncement", comment: "This is the announcement which is spoken after creating an anchor point in the process of pausing the tracking session of recording a single use route"), initialFocus: nil)
-            }
         }
         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(ViewController.alignmentWaitingPeriod), execute: playAlignmentConfirmation!)
     }
     
-    /// Checks to see if the user had the phone pointing consistently off-center when recording the route.  If this is the case, set a flag in UserDefaults so that the app can suggests the "Correct Offset of Phone / Body" feature.
-    func setShouldSuggestAdjustOffset() {
-        // TODO: could do this without conversion by adding an extension
-        let offsetsArray = Array(recordPhaseHeadingOffsets)
-        if offsetsArray.count > 6 && abs(offsetsArray.avg()) > 0.4 && offsetsArray.mean_abs_dev() < 0.2 {
-            UserDefaults.standard.set(true, forKey: "shouldShowAdjustOffsetSuggestion")
-        }
-    }
-    
-    /// If appropriate, suggest that the user activate the "Correct Offset of Phone / Body" feature.
-    func suggestAdjustOffsetIfAppropriate() {
-        let userDefaults: UserDefaults = UserDefaults.standard
-        let shouldShowAdjustOffsetSuggestion: Bool? = userDefaults.object(forKey: "shouldShowAdjustOffsetSuggestion") as? Bool
-        let showedAdjustOffsetSuggestion: Bool? = userDefaults.object(forKey: "showedAdjustOffsetSuggestion") as? Bool
-
-        if !adjustOffset && shouldShowAdjustOffsetSuggestion == true && showedAdjustOffsetSuggestion != true {
-            showAdjustOffsetSuggestion()
-            // clear the flag
-            userDefaults.set(false, forKey: "shouldShowAdjustOffsetSuggestion")
-            // record that the alert has been shown
-            userDefaults.set(true, forKey: "showedAdjustOffsetSuggestion")
-        }
-    }
-    
     /// Handler for the completingPauseProcedure app state
     func handleStateTransitionToCompletingPauseProcedure() {
-        // TODO: we should not be able to create a route Anchor Point if we are in the relocalizing state... (might want to handle this when the user stops navigation on a route they loaded.... This would obviate the need to handle this in the recordPath code as well
+        // TODO: we should not be able to create a route landmark if we are in the relocalizing state... (might want to handle this when the user stops navigation on a route they loaded.... This would obviate the need to handle this in the recordPath code as well
         print("completing pause procedure")
-        
-        if imageAnchoring {
-            if creatingRouteAnchorPoint {
-                guard let currentTransform = ARSessionManager.shared.currentFrame?.anchors.compactMap({$0 as? ARImageAnchor}).first?.transform else {
-                    print("can't properly save Anchor Point: TODO communicate this to the user somehow")
-                    return
-                }
-                beginRouteAnchorPoint.anchor = ARAnchor(transform: currentTransform)
-                pauseTrackingController.remove()
-                
-                ///PATHPOINT begining anchor point alignment timer -> record route
-                ///announce to the user that they have sucessfully saved an anchor point.
-                delayTransition(announcement: NSLocalizedString("multipleUseRouteAnchorPointToRecordingRouteAnnouncement", comment: "This is the announcement which is spoken after the first anchor point of a multiple use route is saved. this signifies the completeion of the saving an anchor point procedure and the start of recording a route to be saved."), initialFocus: nil)
-                ///sends the user to a route recording of the program is creating a beginning route Anchor Point
-                //state = .startingNameCodeIDProcedure
-                state = .recordingRoute
+        if creatingRouteLandmark {
+            guard let currentTransform = sceneView.session.currentFrame?.camera.transform else {
+                print("can't properly save landmark: TODO communicate this to the user somehow")
                 return
-            } else if let currentTransform = ARSessionManager.shared.currentFrame?.anchors.compactMap({$0 as? ARImageAnchor}).last?.transform {
-                print("^^ image anchoring")
-                endRouteAnchorPoint.anchor = ARAnchor(transform: currentTransform)
-                // no more crumbs
-                droppingCrumbs?.invalidate()
-
-                ARSessionManager.shared.sceneView.session.getCurrentWorldMap { worldMap, error in
-                    self.completingPauseProcedureHelper(worldMap: worldMap)
-                }
             }
-        } else {
-            if creatingRouteAnchorPoint {
-                guard let currentTransform = ARSessionManager.shared.currentFrame?.camera.transform else {
-                    print("can't properly save Anchor Point: TODO communicate this to the user somehow")
-                    return
-                }
-                // make sure we log the transform
-                let _ = self.getRealCoordinates(record: true)
-                beginRouteAnchorPoint.anchor = ARAnchor(transform: currentTransform)
-                pauseTrackingController.remove()
-                
-                ///PATHPOINT begining anchor point alignment timer -> record route
-                ///announce to the user that they have sucessfully saved an anchor point.
-                delayTransition(announcement: NSLocalizedString("multipleUseRouteAnchorPointToRecordingRouteAnnouncement", comment: "This is the announcement which is spoken after the first anchor point of a multiple use route is saved. this signifies the completeion of the saving an anchor point procedure and the start of recording a route to be saved."), initialFocus: nil)
-                ///sends the user to a route recording of the program is creating a beginning route Anchor Point
-                state = .recordingRoute
-                return
-            } else if let currentTransform = ARSessionManager.shared.currentFrame?.camera.transform {
-                // make sure to log transform
-                let _ = self.getRealCoordinates(record: true)
-                endRouteAnchorPoint.anchor = ARAnchor(transform: currentTransform)
-                // no more crumbs
-                droppingCrumbs?.invalidate()
+            beginRouteLandmark.transform = currentTransform
+            Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(playSound)), userInfo: nil, repeats: false)
+            pauseTrackingController.remove()
+            state = .mainScreen(announceArrival: false)
+            return
+        } else if let currentTransform = sceneView.session.currentFrame?.camera.transform {
+            endRouteLandmark.transform = currentTransform
 
-                ARSessionManager.shared.sceneView.session.getCurrentWorldMap { worldMap, error in
-                    self.completingPauseProcedureHelper(worldMap: worldMap)
+            if #available(iOS 12.0, *) {
+                sceneView.session.getCurrentWorldMap { worldMap, error in
+                    self.getRouteNameAndSaveRouteHelper(mapAsAny: worldMap)
+                    self.showResumeTrackingButton()
+                    Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(self.playSound)), userInfo: nil, repeats: false)
+                    self.state = .pauseProcedureCompleted
                 }
+            } else {
+                getRouteNameAndSaveRouteHelper(mapAsAny: nil)
+                showResumeTrackingButton()
+                Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(self.playSound)), userInfo: nil, repeats: false)
+                state = .pauseProcedureCompleted
             }
         }
     }
     
-    func completingPauseProcedureHelper(worldMap: ARWorldMap?) {
-        //check whether or not the path was called from the pause menu or not
-        if paused {
-            ///PATHPOINT pause recording anchor point alignment timer -> resume tracking
-            ///proceed as normal with the pause structure (single use route)
-            justTraveledRoute = SavedRoute(id: "single use", appClipCodeID: self.appClipCodeID, name: "single use", crumbs: self.crumbs, geoAnchors: recordingGeoAnchors, dateCreated: Date() as NSDate, beginRouteAnchorPoint: self.beginRouteAnchorPoint, endRouteAnchorPoint: self.endRouteAnchorPoint, intermediateAnchorPoints: RouteManager.shared.intermediateAnchorPoints, imageAnchoring: imageAnchoring)
-            justUsedMap = worldMap
-            showResumeTrackingButton()
-            state = .pauseProcedureCompleted
+    /// Prompt the user for the name of a route and persist the route data if the user supplies one.  If the user cancels, no action is taken.
+    ///
+    /// - Parameter mapAsAny: the world map (the `Any?` type is used since it is optional and we want to maintain backward compatibility with iOS 11.3
+    func getRouteNameAndSaveRouteHelper(mapAsAny: Any?) {
+        if routeName == nil {
+            // get a route name
+            showRouteNamingDialog(mapAsAny: mapAsAny)
         } else {
-            ///PATHPOINT end anchor point alignment timer -> Save Route View
-            delayTransition(announcement: NSLocalizedString("multipleUseRouteAnchorPointToSaveARouteAnnouncement", comment: "This is an announcement which is spoken when the user saves the end anchor point for a multiple use route. This signifies the transition from saving an anchor point to the screen where the user can name and save their route"), initialFocus: nil)
-            ///sends the user to the screen where they name the route they're saving
-            state = .startingNameSavedRouteProcedure(worldMap: worldMap)
+            do {
+                // TODO: factor this out since it shows up in a few places
+                let id = String(Int64(NSDate().timeIntervalSince1970 * 1000)) as NSString
+                try archive(routeId: id, beginRouteLandmark: beginRouteLandmark, endRouteLandmark: endRouteLandmark, worldMapAsAny: mapAsAny)
+            } catch {
+                fatalError("Can't archive route: \(error.localizedDescription)")
+            }
         }
     }
     
     /// Called when the user presses the routes button.  The function will display the `Routes` view, which is managed by `RoutesViewController`.
     @objc func routesButtonPressed() {
-        ///update state booleans
-        paused = false
-        isAutomaticAlignment = false
-        recordingSingleUseRoute = false
-        
         let storyBoard: UIStoryboard = UIStoryboard(name: "SettingsAndHelp", bundle: nil)
         let popoverContent = storyBoard.instantiateViewController(withIdentifier: "Routes") as! RoutesViewController
         popoverContent.preferredContentSize = CGSize(width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height)
@@ -727,55 +446,16 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         self.present(nav, animated: true, completion: nil)
     }
     
-    @objc func manageRoutesButtonPressed(){
-        paused = false
-        isAutomaticAlignment = false
-        recordingSingleUseRoute = false
-        self.hideAllViewsHelper()
-        #if !APPCLIP
-        self.rootContainerView.homeButton.isHidden = false
-        #endif
-        self.add(self.manageRoutesController)
-        print("works")
-    }
-    
-    @objc func saveCodeIDButtonPressed() {
-        hideAllViewsHelper()
-        ///Announce to the user that they have saved the route ID and are now at the saving route name screen
-        self.delayTransition(announcement: NSLocalizedString("saveCodeIDtoCreatingAnchorPointAnnouncement", comment: "This is an announcement which is spoken when the user finishes saving their route's app clip code ID. This announcement signifies the transition from the view where the user can enter the app clip code ID associated with the route to the view where the user can anchor the starting point of the route they are recording."), initialFocus: nil)
-        /// send to pause procedure
-        self.state = .startingPauseProcedure
-    }
-    
-    @objc func saveRouteButtonPressed(worldMap: ARWorldMap?) {
-        let id = String(Int64(NSDate().timeIntervalSince1970 * 1000)) as NSString
-        // BL
-        try! self.archive(routeId: id, appClipCodeID: self.appClipCodeID, beginRouteAnchorPoint: self.beginRouteAnchorPoint, endRouteAnchorPoint: self.endRouteAnchorPoint, intermediateAnchorPoints: RouteManager.shared.intermediateAnchorPoints, worldMap: self.routeWorldMap, imageAnchoring: self.imageAnchoring)
-        hideAllViewsHelper()
-        /// PATHPOINT Save Route View -> play/pause
-        ///Announce to the user that they have finished the alignment process and are now at the play pause screen
-        self.delayTransition(announcement: NSLocalizedString("saveRouteToPlayPauseAnnouncement", comment: "This is an announcement which is spoken when the user finishes saving their route. This announcement signifies the transition from the view where the user can name or save their route to the screen where the user can either pause the AR session tracking or they can perform return navigation."), initialFocus: nil)
-    }
-    
     /// Hide all the subviews.  TODO: This should probably eventually refactored so it happens more automatically.
     func hideAllViewsHelper() {
         recordPathController.remove()
+        routeRatingController.remove()
         stopRecordingController.remove()
         startNavigationController.remove()
         stopNavigationController.remove()
         pauseTrackingController.remove()
         resumeTrackingConfirmController.remove()
         resumeTrackingController.remove()
-        nameSavedRouteController?.remove()
-        nameCodeIDController?.remove()
-        scanTagController?.remove()
-        #if CLEWMORE
-        selectRouteController.remove()
-        enterCodeIDController.remove()
-        manageRoutesController.remove()
-        routeOptionsController?.dismiss(animated: false)
-        endNavigationController?.remove()
-        #endif
         rootContainerView.countdownTimer.isHidden = true
     }
     
@@ -785,36 +465,27 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     ///   - route: the route that was clicked
     ///   - navigateStartToEnd: a Boolean indicating the navigation direction (true is start to end)
     func onRouteTableViewCellClicked(route: SavedRoute, navigateStartToEnd: Bool) {
-        let worldMap = dataPersistence.unarchiveMap(id: route.id as String)
+        let worldMapAsAny = dataPersistence.unarchiveMap(id: route.id as String)
         hideAllViewsHelper()
-        state = .startingResumeProcedure(route: route, worldMap: worldMap, navigateStartToEnd: navigateStartToEnd)
+        state = .startingResumeProcedure(route: route, mapAsAny: worldMapAsAny, navigateStartToEnd: navigateStartToEnd)
     }
     
     /// Saves the specified route.  The bulk of the work is done by the `DataPersistence` class, but this is a convenient wrapper.
     ///
     /// - Parameters:
     ///   - routeId: the ID of the route
-    ///   - appClipCodeID: the ID of the app clip code associated with the start point of the route
-    ///   - beginRouteAnchorPoint: the route Anchor Point for the beginning (if there is no route Anchor Point at the beginning, the elements of this struct can be nil)
-    ///   - endRouteAnchorPoint: the route Anchor Point for the end (if there is no route Anchor Point at the end, the elements of this struct can be nil)
-    ///   - worldMap: the world map
+    ///   - beginRouteLandmark: the route landmark for the beginning (if there is no route landmark at the beginning, the elements of this struct can be nil)
+    ///   - endRouteLandmark: the route landmark for the end (if there is no route landmark at the end, the elements of this struct can be nil)
+    ///   - worldMapAsAny: the world map (we use `Any?` since it is optional and we want to maintain backward compatibility with iOS 11.3)
     /// - Throws: an error if something goes wrong
-
-    func archive(routeId: NSString, appClipCodeID: String, beginRouteAnchorPoint: RouteAnchorPoint, endRouteAnchorPoint: RouteAnchorPoint, intermediateAnchorPoints: [RouteAnchorPoint], worldMap: ARWorldMap?, imageAnchoring: Bool) throws {
-        let savedRoute = SavedRoute(id: routeId, appClipCodeID: self.appClipCodeID, name: routeName!, crumbs: crumbs, geoAnchors: recordingGeoAnchors, dateCreated: Date() as NSDate, beginRouteAnchorPoint: beginRouteAnchorPoint, endRouteAnchorPoint: endRouteAnchorPoint, intermediateAnchorPoints: intermediateAnchorPoints, imageAnchoring: imageAnchoring)
-
-      try dataPersistence.archive(route: savedRoute, worldMap: worldMap)
+    func archive(routeId: NSString, beginRouteLandmark: RouteLandmark, endRouteLandmark: RouteLandmark, worldMapAsAny: Any?) throws {
+        let savedRoute = SavedRoute(id: routeId, name: routeName!, crumbs: crumbs, dateCreated: Date() as NSDate, beginRouteLandmark: beginRouteLandmark, endRouteLandmark: endRouteLandmark)
+        try dataPersistence.archive(route: savedRoute, worldMapAsAny: worldMapAsAny)
         justTraveledRoute = savedRoute
     }
 
-    /// Session for scanning NFC Tags
-    var nfcSession: NFCNDEFReaderSession?
-    
-    var nfcEntryPoint: String = ""
-
-    
-    /// Timer to periodically announce tracking errors
-    var trackingErrorsAnnouncementTimer: Timer?
+    /// A threshold to determine when a segment is long enough to use for soft alignment
+    var softAlignmentSegmentLengthThreshold = 1.0
     
     /// While recording, every 0.01s, check to see if we should reset the heading offset
     var angleOffsetTimer: Timer?
@@ -826,20 +497,16 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     /// A threshold to determine when a path is too curvy to update the angle offset
     let linearDeviationThreshold: Float = 0.05
     
-    /// an aray of heading offsets calculated during the record phase.  We use thsi to suggest that users enable the adjustOffest option
-    var recordPhaseHeadingOffsets: LinkedList<Float> = []
-    /// the last time we stored the heading offset during the record phase (we want to make sure thesse are spaced out by at least a little bit
-    var lastRecordPhaseOffsetTime = Date()
     /// a ring buffer used to keep the last 50 positions of the phone
     var locationRingBuffer = RingBuffer<Vector3>(capacity: 50)
     /// a ring buffer used to keep the last 100 headings of the phone
     var headingRingBuffer = RingBuffer<Float>(capacity: 50)
+
+    /// The conection to the Firebase real-time database
+    var databaseHandle = Database.database()
     
     /// Keypoint object
     var keypointObject : MDLObject!
-    
-    /// Speaker object
-    var speakerObject: MDLObject!
     
     /// Route persistence
     var dataPersistence = DataPersistence()
@@ -847,13 +514,13 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     // MARK: - Parameters that can be controlled remotely via Firebase
     
     /// True if the offset between direction of travel and phone should be updated over time
-    var adjustOffset: Bool!
-    
-    /// True if the user has been reminded that the adjusts offset feature is turned on
-    var remindedUserOfOffsetAdjustment = false
+    var adjustOffset = false
     
     /// True if we should use a cone of pi/12 and false if we should use a cone of pi/6 when deciding whether to issue haptic feedback
     var strictHaptic = true
+    
+    /// This is embeds an AR scene.  The ARSession is a part of the scene view, which allows us to capture where the phone is in space and the state of the world tracking.  The scene also allows us to insert virtual objects
+    var sceneView = ARSCNView()
     
     /// Hide status bar
     override var prefersStatusBarHidden: Bool {
@@ -877,8 +544,8 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     
     /// child view controllers for various app states
     
-    /// the controller that hosts the popover survey
-    var hostingController: UIViewController?
+    /// route rating VC
+    var routeRatingController: RouteRatingController!
     
     /// route navigation pausing VC
     var pauseTrackingController: PauseTrackingController!
@@ -895,26 +562,6 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     /// route recording VC (called on app start)
     var recordPathController: RecordPathController!
     
-    /// scan tag controller
-    var scanTagController: UIViewController?
-    
-    // SwiftUI controllers
-    var enterCodeIDController: UIViewController!
-    
-    var selectRouteController: UIViewController!
-    
-    var manageRoutesController: UIViewController!
-    
-    var routeOptionsController: UIViewController?
-    
-    /// saving route code ID VC
-    var nameCodeIDController: UIViewController!
-    
-    /// saving route name VC
-    var nameSavedRouteController: UIViewController!
-    
-    var endNavigationController: UIViewController?
-    
     /// start route navigation VC
     var startNavigationController: StartNavigationController!
     
@@ -923,104 +570,46 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     
     /// stop route navigation VC
     var stopNavigationController: StopNavigationController!
-    
 
     /// called when the view has loaded.  We setup various app elements in here.
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         // set the main view as active
         view = RootContainerView(frame: UIScreen.main.bounds)
         
         // initialize child view controllers
+        routeRatingController = RouteRatingController()
         pauseTrackingController = PauseTrackingController()
         resumeTrackingController = ResumeTrackingController()
         resumeTrackingConfirmController = ResumeTrackingConfirmController()
         stopRecordingController = StopRecordingController()
         recordPathController = RecordPathController()
-      
         startNavigationController = StartNavigationController()
         stopNavigationController = StopNavigationController()
         
-        #if CLEWMORE
-        /// This is a wrapper to allow SwiftUI views to be used with the existing UIKit framework.
-        enterCodeIDController = UIHostingController(rootView: EnterCodeIDView(vc: self))
-        enterCodeIDController.view.frame = CGRect(x: 0,
-                                                                       y: UIScreen.main.bounds.size.height*0.15,
-                                                                       width: UIConstants.buttonFrameWidth * 1,
-                                                                       height: UIScreen.main.bounds.size.height*0.75)
-        enterCodeIDController.view.backgroundColor = .clear
-        
-        selectRouteController = UIHostingController(rootView: StartNavigationPopoverView(vc: self, routeList: self.availableRoutes))
-        selectRouteController.view.frame = CGRect(x: 0,
-                                                                       y: UIScreen.main.bounds.size.height*0.15,
-                                                                       width: UIConstants.buttonFrameWidth * 1,
-                                                                       height: UIScreen.main.bounds.size.height*0.75)
-        
-        selectRouteController.view.backgroundColor = .white
-        
-        manageRoutesController = UIHostingController(rootView: SavedRoutesList(vc: self))
-        manageRoutesController.view.frame = CGRect(x: 0,
-                                                                       y: UIScreen.main.bounds.size.height*0.15,
-                                                                       width: UIConstants.buttonFrameWidth * 1,
-                                                                       height: UIScreen.main.bounds.size.height*0.85)
-        manageRoutesController.view.backgroundColor = .white
-        
-        nameSavedRouteController = UIHostingController(rootView: NameSavedRouteView(vc: self))
-        nameSavedRouteController.view.frame = CGRect(x: 0,
-                                                                       y: UIScreen.main.bounds.size.height*0.15,
-                                                                       width: UIConstants.buttonFrameWidth * 1,
-                                                                       height: UIScreen.main.bounds.size.height*0.85)
-        nameSavedRouteController.view.backgroundColor = .clear
-        
-        nameCodeIDController = UIHostingController(rootView: NameCodeIDView(vc: self))
-        nameCodeIDController.view.frame = CGRect(x: 0,
-                                                                       y: UIScreen.main.bounds.size.height*0.15,
-                                                                       width: UIConstants.buttonFrameWidth * 1,
-                                                                       height: UIScreen.main.bounds.size.height*0.85)
-        nameCodeIDController.view.backgroundColor = .clear
-        
-        
-        endNavigationController = UIHostingController(rootView: EndNavigationScreen(vc: self))
-        endNavigationController?.view.frame = CGRect(x: 0,
-                                                                       y: UIScreen.main.bounds.size.height*0.15,
-                                                                       width: UIConstants.buttonFrameWidth * 1,
-                                                                       height: UIScreen.main.bounds.size.height*0.85)
-        endNavigationController?.view.backgroundColor = .white
-        
-        #endif
-        ARSessionManager.shared.delegate = self
-        
         // Add the scene to the view, which is a RootContainerView
-        ARSessionManager.shared.sceneView.frame = view.frame
-        view.addSubview(ARSessionManager.shared.sceneView)
-        
+        sceneView.frame = view.frame
+        view.addSubview(sceneView)
+
         setupAudioPlayers()
         loadAssets()
         createSettingsBundle()
+        createARSession()
         
-        // TODO: we might want to make this wait on the AR session starting up, but since it happens pretty fast it's likely not a big deal
         state = .mainScreen(announceArrival: false)
-        view.sendSubviewToBack(ARSessionManager.shared.sceneView)
-
-        //rootContainerView.swiftUIPlaceHolder = UIHostingController(rootView: DefaultView())
-
-        // view.bringSubviewToFront(rootContainerView.swiftUIPlaceHolder.view)
+        view.sendSubviewToBack(sceneView)
         
-        // rootContainerView.swiftUIPlaceHolder.view.isHidden = false
-        
-        print("its in the front now")
         // targets for global buttons
-        ///// TRACK
-        #if !APPCLIP
-        rootContainerView.burgerMenuButton.addTarget(self, action: #selector(burgerMenuButtonPressed), for: .touchUpInside)
+        rootContainerView.settingsButton.addTarget(self, action: #selector(settingsButtonPressed), for: .touchUpInside)
+
+        rootContainerView.helpButton.addTarget(self, action: #selector(helpButtonPressed), for: .touchUpInside)
         
-        // need to modify this for clewmore
         rootContainerView.homeButton.addTarget(self, action: #selector(homeButtonPressed), for: .touchUpInside)
-        
-        #endif
-        
+
         rootContainerView.getDirectionButton.addTarget(self, action: #selector(announceDirectionHelpPressed), for: .touchUpInside)
+
+        rootContainerView.feedbackButton.addTarget(self, action: #selector(feedbackButtonPressed), for: .touchUpInside)
 
         // make sure this happens after the view is created!
         rootContainerView.countdownTimer.delegate = self
@@ -1028,9 +617,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         ViewController.alignmentWaitingPeriod = timerLength
         
         addGestures()
-        firebaseSetup.setupFirebaseObservers(vc: self)
-        
-
+        setupFirebaseObservers()
         
         // create listeners to ensure that the isReadingAnnouncement flag is reset properly
         NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification, object: nil, queue: nil) { (notification) -> Void in
@@ -1041,47 +628,19 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
             self.currentAnnouncement = nil
         }
         
-        // we use a custom notification to communicate from the help controller to the main view controller that a popover that should suppress tracking warnings was dimissed
+        // we use a custom notification to communicate from the help controller to the main view controller that the help was dismissed
         NotificationCenter.default.addObserver(forName: Notification.Name("ClewPopoverDismissed"), object: nil, queue: nil) { (notification) -> Void in
             self.suppressTrackingWarnings = false
-            if self.stopRecordingController.parent == self {
-                /// set  record voice note as active
-                UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: self.stopRecordingController.recordVoiceNoteButton)
-            }
         }
-
-        // we use a custom notification to communicate from the help controller to the main view controller that a popover that should suppress tracking warnings was displayed
-        NotificationCenter.default.addObserver(forName: Notification.Name("ClewPopoverDisplayed"), object: nil, queue: nil) { (notification) -> Void in
-            self.suppressTrackingWarnings = true
-        }
-        
-        NotificationCenter.default.addObserver(forName: Notification.Name("SurveyPopoverReadyToDismiss"), object: nil, queue: nil) { (notification) -> Void in
-            self.hostingController?.dismiss(animated: true)
-            NotificationCenter.default.post(name: Notification.Name("ClewPopoverDismissed"), object: nil)
-            // TODO: I18N / L10N
-            if let gaveFeedback = notification.object as? Bool, gaveFeedback {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-                    self.announce(announcement: NSLocalizedString("thanksForFeedbackAnnouncement", comment: "This is read right after the user fills out a feedback survey."))
-                }
-            }
-        }
-        #if !APPCLIP
-        arLogger.enabled = logRichData
-        arLogger.startTrial()
-        #endif
-
     }
     
     /// Create the audio player objects for the various app sounds.  Creating them ahead of time helps reduce latency when playing them later.
     func setupAudioPlayers() {
-        let anchorInFrameSound = Bundle.main.path(forResource: "anchorInFrame", ofType: "mp3")
-        
         do {
             audioPlayers[1103] = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: "/System/Library/Audio/UISounds/Tink.caf"))
             audioPlayers[1016] = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: "/System/Library/Audio/UISounds/tweet_sent.caf"))
             audioPlayers[1050] = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: "/System/Library/Audio/UISounds/ussd.caf"))
             audioPlayers[1025] = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: "/System/Library/Audio/UISounds/New/Fanfare.caf"))
-            audioPlayers[1234] = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: anchorInFrameSound!))
 
             for p in audioPlayers.values {
                 p.prepareToPlay()
@@ -1090,18 +649,41 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
             print("count not setup audio players", error)
         }
     }
-
     
     /// Load the crumb 3D model
     func loadAssets() {
         let url = NSURL(fileURLWithPath: Bundle.main.path(forResource: "Crumb", ofType: "obj")!)
         let asset = MDLAsset(url: url as URL)
         keypointObject = asset.object(at: 0)
-        let speakerUrl = NSURL(fileURLWithPath: Bundle.main.path(forResource: "speaker", ofType: "obj")!)
-        let speakerAsset = MDLAsset(url: speakerUrl as URL)
-        speakerObject = speakerAsset.object(at: 0)
     }
     
+    /// Observe the relevant Firebase paths to handle any dynamic reconfiguration requests (this is currently not used in the app store version of Clew)
+    func setupFirebaseObservers() {
+        let responsePathRef = databaseHandle.reference(withPath: "config/" + UIDevice.current.identifierForVendor!.uuidString)
+        responsePathRef.observe(.childChanged) { (snapshot) -> Void in
+            self.handleNewConfig(snapshot: snapshot)
+        }
+        responsePathRef.observe(.childAdded) { (snapshot) -> Void in
+            self.handleNewConfig(snapshot: snapshot)
+        }
+    }
+    
+    /// Respond to any dynamic reconfiguration requests (this is currently not used in the app store version of Clew).
+    ///
+    /// - Parameter snapshot: the new configuration data
+    func handleNewConfig(snapshot: DataSnapshot) {
+        if snapshot.key == "adjust_offset", let newValue = snapshot.value as? Bool {
+            adjustOffset = newValue
+            if !adjustOffset {
+                // clear the offset in case one was set from before
+                nav.headingOffset = 0.0
+            }
+            print("set new adjust offset value", newValue)
+        } else if snapshot.key == "strict_haptic", let newValue = snapshot.value as? Bool {
+            strictHaptic = newValue
+            print("set new strict haptic value", newValue)
+        }
+    }
     
     /// Called when the view appears on screen.
     ///
@@ -1111,24 +693,11 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         
         let userDefaults: UserDefaults = UserDefaults.standard
         let firstTimeLoggingIn: Bool? = userDefaults.object(forKey: "firstTimeLogin") as? Bool
-        let showedSignificantChangesAlert: Bool? = userDefaults.object(forKey: "showedSignificantChangesAlertv1_3") as? Bool
         
-        #if !APPCLIP
-        if firstTimeLoggingIn == nil {
-            userDefaults.set(Date().timeIntervalSince1970, forKey: "firstUsageTimeStamp")
+        if (firstTimeLoggingIn == nil) {
             userDefaults.set(true, forKey: "firstTimeLogin")
-            // make sure not to show the significant changes alert in the future
-            userDefaults.set(true, forKey: "showedSignificantChangesAlertv1_3")
-            #if !APPCLIP
             showLogAlert()
-            #endif
-        } else if showedSignificantChangesAlert == nil {
-            // we only show the significant changes alert if this is an old installation
-            userDefaults.set(true, forKey: "showedSignificantChangesAlertv1_3")
-            // don't show this for now, but leave the plumbing in place for a future significant change
-            // showSignificantChangesAlert()
         }
-        #endif
         
         synth.delegate = self
         NotificationCenter.default.addObserver(forName: UIAccessibility.announcementDidFinishNotification, object: nil, queue: nil) { (notification) -> Void in
@@ -1138,43 +707,22 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
                 self.announce(announcement: nextAnnouncement)
             }
         }
-        
-        let firstUsageTimeStamp =  userDefaults.object(forKey: "firstUsageTimeStamp") as? Double ?? 0.0
-        if Date().timeIntervalSince1970 - firstUsageTimeStamp > 3600*24 {
-            // it's been long enough, try to trigger the survey
-            #if !CLEWMORE
-            DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-                // make sure to wait for data to load from firebase.  If they have started using the app, don't interrupt them.
-                if case .mainScreen(_) = self.state {
-                    self.surveyInterface.presentSurveyIfIntervalHasPassed(mode: "onAppLaunch", logFileURLs: [], vc: self)
-                }
-            }
-            #endif
-        }
     }
     
-    /// Display a warning that tells the user they must create a Anchor Point to be able to use this route again in the forward direction
-    func showRecordPathWithoutAnchorPointWarning() {
-        state = .recordingRoute
-    }
     
     /// func that prepares the state transition to home by clearing active processes and data
     func clearState() {
         // TODO: check for code reuse
         // Clearing All State Processes and Data
-        #if !APPCLIP
         rootContainerView.homeButton.isHidden = true
-        #endif
         recordPathController.isAccessibilityElement = false
         if case .navigatingRoute = self.state {
-            ARSessionManager.shared.removeNavigationNodes()
+            keypointNode.removeFromParentNode()
         }
         followingCrumbs?.invalidate()
-        recordPhaseHeadingOffsets = []
         routeName = nil
-        beginRouteAnchorPoint = RouteAnchorPoint()
-        endRouteAnchorPoint = RouteAnchorPoint()
-        RouteManager.shared.intermediateAnchorPoints = []
+        beginRouteLandmark = RouteLandmark()
+        endRouteLandmark = RouteLandmark()
         playAlignmentConfirmation?.cancel()
         rootContainerView.announcementText.isHidden = true
         nav.headingOffset = 0.0
@@ -1183,68 +731,24 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         logger.resetNavigationLog()
         logger.resetPathLog()
         hapticTimer?.invalidate()
+        snapToRouteTimer?.invalidate()
         logger.resetStateSequenceLog()
-    }
-    
-    func uploadLocalDataToCloudHelper() {
-        #if !APPCLIP
-        guard arLogger.hasLocalDataToUploadToCloud(), arLogger.isConnectedToNetwork(), uploadRichData == true else {
-            return
-        }
-        let popoverController = UIHostingController(rootView: UploadingViewNoBinding())
-        popoverController.modalPresentationStyle = .fullScreen
-        self.present(popoverController, animated: true)
-        self.arLogger.uploadLocalDataToCloud() { wasSuccessful in
-            DispatchQueue.main.async {
-                popoverController.dismiss(animated: true)
-            }
-        }
-        #endif
-    }
-    
-    /// This finishes the process of pressing the home button (after user has given confirmation)
-    @objc func goHome() {
-        // proceed to home page
-        self.clearState()
-        self.hideAllViewsHelper()
-        #if !APPCLIP
-        self.arLogger.finalizeTrial()
-        uploadLocalDataToCloudHelper()
-        #endif
-        self.state = .mainScreen(announceArrival: false)
     }
     
     /// function that creates alerts for the home button
     func homePageNavigationProcesses() {
         // Create alert to warn users of lost information
-        let alert = UIAlertController(title: NSLocalizedString("homeAlertTitle", comment: "This is the title of an alert which shows up when the user tries to go home from inside an active process."),
-                                      message: NSLocalizedString("homeAlertContent", comment: "this is the content of an alert which tells the user that if they continue with going to the home page the current process will be stopped."),
+        let alert = UIAlertController(title: "Are you sure?",
+                                      message: "If you exit this process right now, your active route information will be lost.",
                                       preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: NSLocalizedString("homeAlertConfirmNavigationButton", comment: "This text appears on a button in an alert notifying the user that if they navigate to the home page they will stop their curent process. This text appears on the button which signifies that the user wants to continue to the home screen"), style: .default, handler: { action -> Void in
+        alert.addAction(UIAlertAction(title: "Go to the Home Page", style: .default, handler: { action -> Void in
             // proceed to home page
-            self.goHome()
+            self.clearState()
+            self.hideAllViewsHelper()
+            self.state = .mainScreen(announceArrival: false)
         }
         ))
-        alert.addAction(UIAlertAction(title: NSLocalizedString("cancelPop-UpButtonLabel", comment: "A button which closes the current pop up"), style: .default, handler: { action -> Void in
-            // nothing to do, just stay on the page
-        }
-        ))
-        self.present(alert, animated: true, completion: nil)
-        print("alert presented")
-    }
-    
-    /// function that creates alerts for the home button
-    func showAdjustOffsetSuggestion() {
-        // Create alert to warn users of lost information
-        let alert = UIAlertController(title: NSLocalizedString("showAdjustOffsetSuggestionTitle", comment: "This is the title of an alert which shows up when the user appears to hold their phone at a consistent offset to their direction of motion."),
-                                      message: NSLocalizedString("adjustOffsetAlertContent", comment: "this is the content of an alert which tells the user that they should consider enabling the adjust offset feature."),
-                                      preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: NSLocalizedString("turnOnAdjustOffsetButton", comment: "This text appears on a button that turns on the adjust offset feature"), style: .default, handler: { action -> Void in
-            // turn on the adjust offset feature
-            UserDefaults.standard.set(true, forKey: "adjustOffset")
-        }
-        ))
-        alert.addAction(UIAlertAction(title: NSLocalizedString("declineTurnOnAdjustOffsetButton", comment: "A button which declines to turn on the adjust offset feature"), style: .default, handler: { action -> Void in
+        alert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: { action -> Void in
             // nothing to do, just stay on the page
         }
         ))
@@ -1252,30 +756,67 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     }
 
     
-    /// Show the dialog that allows the user to enter textual information to help them remember a Anchor Point.
-    @objc func showAnchorPointInformationDialog() {
-        #if !APPCLIP
-        rootContainerView.homeButton.isHidden = false
-        #endif
+    /// Display a warning that tells the user they must create a landmark to be able to use this route again in the forward direction
+    /// Display the dialog that prompts the user to enter a route name.  If the user enters a route name, the route along with the optional world map will be persisted.
+    ///
+    /// - Parameter mapAsAny: the world map to save (the `Any?` type is used to indicate that the map is optional and to preserve backwards compatibility with iOS 11.3)
+    @objc func showRouteNamingDialog(mapAsAny: Any?) {
         // Set title and message for the alert dialog
-        let alertController = UIAlertController(title: NSLocalizedString("anchorPointTextHeading", comment: "The header of a pop-up menu which prompts the user to write descriptive text about their route anchor point"), message: NSLocalizedString("anchorPointTextPrompt", comment: "Prompts user to enter descriptive text about their anchor point"), preferredStyle: .alert)
-        // The confirm action taking the inputs
-        let saveAction = UIAlertAction(title: NSLocalizedString("anchorPointTextPop-UpConfirmation", comment: "A button for user to click to confirm the text note they added to their anchor point and close a pop-up"), style: .default) { (_) in
-            if self.creatingRouteAnchorPoint {
-                self.beginRouteAnchorPoint.information = alertController.textFields?[0].text as NSString?
-            } else {
-                self.endRouteAnchorPoint.information = alertController.textFields?[0].text as NSString?
-            }
+        if #available(iOS 12.0, *) {
+            justUsedMap = mapAsAny as! ARWorldMap?
         }
-        
+        let alertController = UIAlertController(title: NSLocalizedString("Save route", comment: "The title of a popup window where user enters a name for the route they want to save."), message: NSLocalizedString("Enter the name of the route", comment: "Ask user to provide a descriptive name for the route they want to save."), preferredStyle: .alert)
+        // The confirm action taking the inputs
+        let saveAction = UIAlertAction(title: NSLocalizedString("Save", comment: "An option for the user to select"), style: .default) { (_) in
+            let id = String(Int64(NSDate().timeIntervalSince1970 * 1000)) as NSString
+            // Get the input values from user, if it's nil then use timestamp
+            self.routeName = alertController.textFields?[0].text as NSString? ?? id
+            try! self.archive(routeId: id, beginRouteLandmark: self.beginRouteLandmark, endRouteLandmark: self.endRouteLandmark, worldMapAsAny: mapAsAny)
+        }
+            
         // The cancel action saves the just traversed route so you can navigate back along it later
-        let cancelAction = UIAlertAction(title: NSLocalizedString("anchorPointPop-UpCancel", comment: "A button for user to click which will close the pop up without saving any information the user put in"), style: .cancel) { (_) in
+        let cancelAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: "An option for the user to select"), style: .cancel) { (_) in
+            self.justTraveledRoute = SavedRoute(id: "dummyid", name: "Last route", crumbs: self.crumbs, dateCreated: Date() as NSDate, beginRouteLandmark: self.beginRouteLandmark, endRouteLandmark: self.endRouteLandmark)
         }
         
         // Add textfield to our dialog box
         alertController.addTextField { (textField) in
             textField.becomeFirstResponder()
-            textField.placeholder = NSLocalizedString("anchorPointTextPlaceholder", comment: "A placeholder that appears in text box which the user uses to enter a text label for an anchor point.")
+            textField.placeholder = NSLocalizedString("Enter route title", comment: "A placeholder before user enters text in textbox")
+        }
+            
+        // Add the action to dialogbox
+        alertController.addAction(saveAction)
+        alertController.addAction(cancelAction)
+            
+        // Finally, present the dialog box
+        present(alertController, animated: true, completion: nil)
+    }
+
+    
+    /// Show the dialog that allows the user to enter textual information to help them remember a landmark.
+    @objc func showLandmarkInformationDialog() {
+        rootContainerView.homeButton.isHidden = false
+//        backButton.isHidden = true
+        // Set title and message for the alert dialog
+        let alertController = UIAlertController(title: NSLocalizedString("Landmark information", comment: "The header of a pop-up menu"), message: NSLocalizedString("Enter text about the landmark that will help you find it later.", comment: "Prompts user to enter information"), preferredStyle: .alert)
+        // The confirm action taking the inputs
+        let saveAction = UIAlertAction(title: NSLocalizedString("Ok", comment: "A button for user to click to acknowledge and close a pop-up"), style: .default) { (_) in
+            if self.creatingRouteLandmark {
+                self.beginRouteLandmark.information = alertController.textFields?[0].text as NSString?
+            } else {
+                self.endRouteLandmark.information = alertController.textFields?[0].text as NSString?
+            }
+        }
+        
+        // The cancel action saves the just traversed route so you can navigate back along it later
+        let cancelAction = UIAlertAction(title: NSLocalizedString("Don't specify this information", comment: "A button for user to click"), style: .cancel) { (_) in
+        }
+        
+        // Add textfield to our dialog box
+        alertController.addTextField { (textField) in
+            textField.becomeFirstResponder()
+            textField.placeholder = NSLocalizedString("Enter landmark information", comment: "A placeholder that appears in text box before user enters any text.")
         }
         
         // Add the action to dialogbox
@@ -1301,7 +842,6 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     }
     
     /// Record a voice note by displaying the RecorderView
-    #if !APPCLIP
     @objc func recordVoiceNote() {
         let popoverContent = RecorderViewController()
         //says that the recorder should dismiss tiself when it is done
@@ -1317,13 +857,13 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         suppressTrackingWarnings = true
         self.present(nav, animated: true, completion: nil)
     }
-    #endif
+    
     /// Show logging disclaimer when user opens app for the first time.
     func showLogAlert() {
-        let logAlertVC = UIAlertController(title: NSLocalizedString("sharingYourExperiencePop-UpHeading", comment: "The heading of a pop-up telling the user that their data is being saved with error logs"),
-                                           message: NSLocalizedString("sharingYourExperiencePop-UpContent", comment: "Disclaimer shown to the user when they open the app for the first time"),
+        let logAlertVC = UIAlertController(title: NSLocalizedString("Sharing your experience with Clew", comment: "The heading of a pop-up"),
+                                           message: NSLocalizedString("Help us improve the app by logging your Clew experience. These logs will not include any images or personal information. You can turn this off in Settings.", comment: "Disclaimer shown to the user when they open the app for the first time"),
                                            preferredStyle: .alert)
-        logAlertVC.addAction(UIAlertAction(title: NSLocalizedString("anchorPointTextPop-UpConfirmation", comment: "What the user clicks to acknowledge a message and dismiss pop-up"), style: .default, handler: { action -> Void in
+        logAlertVC.addAction(UIAlertAction(title: NSLocalizedString("Ok", comment: "What the user clicks to acknowledge a message and dismiss pop-up"), style: .default, handler: { action -> Void in
             self.showSafetyAlert()
         }
         ))
@@ -1332,22 +872,11 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     
     /// Show safety disclaimer when user opens app for the first time.
     func showSafetyAlert() {
-        let safetyAlertVC = UIAlertController(title: NSLocalizedString("forYourSafetyPop-UpHeading", comment: "The heading of a pop-up telling the user to be aware of their surroundings while using clew"),
-                                              message: NSLocalizedString("forYourSafetyPop-UpContent", comment: "Disclaimer shown to the user when they open the app for the first time"),
+        let safetyAlertVC = UIAlertController(title: NSLocalizedString("For your safety", comment: "The heading of a pop-up"),
+                                              message: NSLocalizedString("While using the app, please be aware of your surroundings. You agree that your use of the App is at your own risk, and it is solely your responsibility to maintain your personal safety. Visit www.clewapp.org for more information on how to use the app.", comment: "Disclaimer shown to the user when they open the app for the first time"),
                                               preferredStyle: .alert)
-        safetyAlertVC.addAction(UIAlertAction(title: NSLocalizedString("anchorPointTextPop-UpConfirmation", comment: "What the user clicks to acknowledge a message and dismiss pop-up"), style: .default, handler: nil))
+        safetyAlertVC.addAction(UIAlertAction(title: NSLocalizedString("Ok", comment: "What the user clicks to acknowledge a message and dismiss pop-up"), style: .default, handler: nil))
         self.present(safetyAlertVC, animated: true, completion: nil)
-    }
-    
-    /// Show significant changes alert so the user is not surprised by new app features.
-    func showSignificantChangesAlert() {
-        let changesAlertVC = UIAlertController(title: NSLocalizedString("significantVersionChangesPop-UpHeading", comment: "The heading of a pop-up telling the user that significant changes have been made to this app version"),
-                                               message: NSLocalizedString("significantVersionChangesPop-UpContent", comment: "An alert shown to the user to alert them to the fact that significant changes have been made to the app."),
-                                               preferredStyle: .alert)
-        changesAlertVC.addAction(UIAlertAction(title: NSLocalizedString("significantVersionChanges-Confirmation", comment: "What the user clicks to acknowledge the significant changes message and dismiss pop-up"), style: .default, handler: { action -> Void in
-        }
-        ))
-        self.present(changesAlertVC, animated: true, completion: nil)
     }
     
     /// Configure Settings Bundle
@@ -1362,7 +891,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     
     /// Register settings bundle
     func registerSettingsBundle(){
-        let appDefaults = ["crumbColor": 0, "showPath": true, "pathColor": 0, "hapticFeedback": true, "sendLogs": true, "voiceFeedback": true, "soundFeedback": true, "adjustOffset": false, "units": 0, "timerLength":5, "uploadRichData": false] as [String : Any]
+        let appDefaults = ["crumbColor": 0, "hapticFeedback": true, "sendLogs": true, "voiceFeedback": true, "soundFeedback": true, "units": 0, "timerLength":5] as [String : Any]
         UserDefaults.standard.register(defaults: appDefaults)
     }
 
@@ -1371,24 +900,12 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         let defaults = UserDefaults.standard
         
         defaultUnit = defaults.integer(forKey: "units")
-        uploadRichData = defaults.bool(forKey: "uploadRichData")
         defaultColor = defaults.integer(forKey: "crumbColor")
-        showPath = defaults.bool(forKey: "showPath")
-        defaultPathColor = defaults.integer(forKey: "pathColor")
         soundFeedback = defaults.bool(forKey: "soundFeedback")
         voiceFeedback = defaults.bool(forKey: "voiceFeedback")
         hapticFeedback = defaults.bool(forKey: "hapticFeedback")
-        sendLogs = true // (making this mandatory) defaults.bool(forKey: "sendLogs")
+        sendLogs = defaults.bool(forKey: "sendLogs")
         timerLength = defaults.integer(forKey: "timerLength")
-        adjustOffset = defaults.bool(forKey: "adjustOffset")
-        nav.useHeadingOffset = adjustOffset
-        logRichData = defaults.bool(forKey: "logRichData")
-        
-        // TODO: log settings here
-        logger.logSettings(defaultUnit: defaultUnit, defaultColor: defaultColor, soundFeedback: soundFeedback, voiceFeedback: voiceFeedback, hapticFeedback: hapticFeedback, sendLogs: sendLogs, timerLength: timerLength, adjustOffset: adjustOffset)
-        
-        // leads to JSON like:
-        //   options: { "unit": "meter", "soundFeedback", true, ... }
     }
     
     /// Handles updates to the app settings.
@@ -1396,219 +913,52 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         updateDisplayFromDefaults()
     }
     
-    @IBAction func beginScanning(_ sender: Any) {
-        if type(of: sender) == ScanButton.self {
-            self.nfcEntryPoint = "EnterCode"
-        }
-        if type(of: sender) == ScanNFCButton.self {
-            self.nfcEntryPoint = "NameCode"
-        }
-        print(sender)
-        print("hee")
-        guard NFCNDEFReaderSession.readingAvailable else {
-            print("Device Won't Support NFC Scanning")
-            self.add(self.enterCodeIDController)
-            return
-        }
-        nfcSession = NFCNDEFReaderSession(delegate: self, queue: nil, invalidateAfterFirstRead: false)
-        nfcSession?.begin()
+    /// Create a new ARSession.
+    func createARSession() {
+        configuration = ARWorldTrackingConfiguration()
+        configuration.planeDetection = [.horizontal, .vertical]
+        configuration.isAutoFocusEnabled = false
+        sceneView.debugOptions = .showWorldOrigin
+        sceneView.session.run(configuration)
+        sceneView.delegate = self
     }
     
-    // MARK: - NFCNDEFReaderSessionDelegate
-
-    /// - Tag: processingTagData
-    func readerSession(_ session: NFCNDEFReaderSession, didDetectNDEFs messages: [NFCNDEFMessage]) {
-        DispatchQueue.main.async {
-            // Process detected NFCNDEFMessage objects.
-            print(messages)
-            print("NFC detected")
-        }
-    }
-
-    /// - Tag: processingNDEFTag
-    func readerSession(_ session: NFCNDEFReaderSession, didDetect tags: [NFCNDEFTag]) {
-        if tags.count > 1 {
-            // Restart polling in 500ms
-            let retryInterval = DispatchTimeInterval.milliseconds(500)
-            session.alertMessage = "More than 1 tag is detected, please remove all tags and try again."
-            DispatchQueue.global().asyncAfter(deadline: .now() + retryInterval, execute: {
-                session.restartPolling()
-            })
-            return
-        }
-        
-        // Connect to the found tag and perform NDEF message reading
-        let tag = tags.first!
-        session.connect(to: tag, completionHandler: { (error: Error?) in
-            if nil != error {
-                session.alertMessage = "Unable to connect to tag."
-                session.invalidate()
-                self.NFCEntrySwitch(entryPoint: self.nfcEntryPoint)
-                return
-            }
-            
-            tag.queryNDEFStatus(completionHandler: { (ndefStatus: NFCNDEFStatus, capacity: Int, error: Error?) in
-                if .notSupported == ndefStatus {
-                    session.alertMessage = "Tag is not NDEF compliant"
-                    session.invalidate()
-                    self.NFCEntrySwitch(entryPoint: self.nfcEntryPoint)
-
-                    return
-                } else if nil != error {
-                    session.alertMessage = "Unable to query NDEF status of tag"
-                    session.invalidate()
-                    self.NFCEntrySwitch(entryPoint: self.nfcEntryPoint)
-
-                    return
-                }
-                
-                tag.readNDEF(completionHandler: { (message: NFCNDEFMessage?, error: Error?) in
-                    var statusMessage: String
-                    if nil != error || nil == message {
-                        statusMessage = "Fail to read NDEF from tag"
-                        self.NFCEntrySwitch(entryPoint: self.nfcEntryPoint)
-
-                    } else {
-                        statusMessage = "Successfully Read NFC Tag"
-                        DispatchQueue.main.async {
-                            // Process detected NFCNDEFMessage objects.
-                            //print(message)
-                            print("data type: \(message!.records[0].typeNameFormat)")
-                            
-                            let payload = message!.records[0]
-                            
-                            if payload.typeNameFormat == .nfcWellKnown {
-                                let url = payload.wellKnownTypeURIPayload()
-                                print(url)
-                                print("test")
-                                if let url = url {
-                                    // currently hardcoded :/, should probably change
-                                    if url.host == "berwinl.com" {
-                                        statusMessage = "Success!"
-                                        session.alertMessage = statusMessage
-                                        session.invalidate()
-                                        self.handleNFCURL(url)
-                                        if self.nfcEntryPoint == "EnterCode"{
-                                            self.codeIDEntered()
-                                        }
-                                        if self.nfcEntryPoint == "NameCode" {
-                                            self.saveCodeIDButtonPressed()
-
-                                        }
-
-                                    } else {
-                                        statusMessage = "Not a Recognized Clew Route Database"
-                                        session.alertMessage = statusMessage
-                                        session.invalidate()
-                                        self.NFCEntrySwitch(entryPoint: self.nfcEntryPoint)
-                                    }
-
-                                } else {
-                                    statusMessage = "No URL Data Read"
-                                    session.alertMessage = statusMessage
-                                    session.invalidate()
-                                    self.NFCEntrySwitch(entryPoint: self.nfcEntryPoint)
-
-                                    print("No URL data stored")
-                                }
-                                
-                            } else {
-                                statusMessage = "Data could not be recognized"
-                                session.alertMessage = statusMessage
-                                session.invalidate()
-                                self.NFCEntrySwitch(entryPoint: self.nfcEntryPoint)
-                                print("NFC data not recognized")
-                            }
-
-                            
-                            
-                        }
-                        print("success!")
-
-                    }
-
-
-                })
-            })
-        })
-    }
-    
-    func handleNFCURL(_ url: URL) {
-        self.appClipCodeID = ""
-        guard let components = NSURLComponents(url: url, resolvingAgainstBaseURL: true), let queryItems = components.queryItems else {
-          return
-        }
-        /// with the invocation URL format https://occamlab.github.io/id?p=appClipCodeID, appClipCodeID being the name of the file in Firebase
-        if let appClipCodeID = queryItems.first(where: { $0.name == "p"}) {
-            self.appClipCodeID = appClipCodeID.value!
-          print("app clip code ID from URL: \(appClipCodeID.value!)")
-        }
-    }
-    
-    func NFCEntrySwitch(entryPoint: String) {
-        switch self.nfcEntryPoint {
-        case "EnterCode":
-            self.add(self.enterCodeIDController)
-        case "NameCode":
-            self.add(self.nameCodeIDController)
-        default:
-            print("huh, weird")
-        }
-    }
-    
-    /// - Tag: sessionBecomeActive
-    func readerSessionDidBecomeActive(_ session: NFCNDEFReaderSession) {
-        
-    }
-    
-    /// - Tag: endScanning
-    func readerSession(_ session: NFCNDEFReaderSession, didInvalidateWithError error: Error) {
-        // Check the invalidation reason from the returned error.
-        if let readerError = error as? NFCReaderError {
-            // Show an alert when the invalidation reason is not because of a
-            // successful read during a single-tag read session, or because the
-            // user canceled a multiple-tag read session from the UI or
-            // programmatically using the invalidate method call.
-            if (readerError.code != .readerSessionInvalidationErrorFirstNDEFTagRead)
-                && (readerError.code != .readerSessionInvalidationErrorUserCanceled) {
-                let alertController = UIAlertController(
-                    title: "Session Invalidated",
-                    message: error.localizedDescription,
-                    preferredStyle: .alert
-                )
-                alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-                DispatchQueue.main.async {
-                    self.present(alertController, animated: true, completion: nil)
-                }
-            }
-        }
-
-        // To read new tags, a new session instance is required.
-        self.nfcSession = nil
-    }
-    
-    
-    /// Handle the user clicking the confirm alignment to a saved Anchor Point.  Depending on the app state, the behavior of this function will differ (e.g., if the route is being resumed versus reloaded)
+    /// Handle the user clicking the confirm alignment to a saved landmark.  Depending on the app state, the behavior of this function will differ (e.g., if the route is being resumed versus reloaded)
     @objc func confirmAlignment() {
-        print("confirm alignment function open")
-        print("this is food this is beans")
         if case .startingPauseProcedure = state {
             state = .pauseWaitingPeriod
         } else if case .startingResumeProcedure = state {
             resumeTracking()
         } else if case .readyForFinalResumeAlignment = state {
             resumeTracking()
-        } else if case .startingAutoAlignment = state {
-            /// for navigating a saved route
-            hideAllViewsHelper()
-            resumeTracking()
-        } else if case .startingAutoAnchoring = state {
-            /// for recording a saved route
-            hideAllViewsHelper()
-            
-            state = .completingPauseProcedure
         }
-        print("alignment confirmed")
+    }
+    
+    /// Play audio feedback and system sound.  This is used currently when the user is facing the appropriate direction along the route.
+    @objc func playSound() {
+        feedbackGenerator = UIImpactFeedbackGenerator(style: .heavy)
+        feedbackGenerator?.impactOccurred()
+        feedbackGenerator = nil
+        playSystemSound(id: 1103)
+    }
+    
+    /// Play the specified system sound.  If the system sound has been preloaded as an audio player, then play using the AVAudioSession.  If there is no corresponding player, use the `AudioServicesPlaySystemSound` function.
+    ///
+    /// - Parameter id: the id of the system sound to play
+    func playSystemSound(id: Int) {
+        do {
+            try AVAudioSession.sharedInstance().setCategory(AVAudioSession.Category.playback)
+            try AVAudioSession.sharedInstance().setActive(true)
+            guard let player = audioPlayers[id] else {
+                // fallback on system sounds
+                AudioServicesPlaySystemSound(SystemSoundID(id))
+                return
+            }
+            
+            player.play()
+        } catch let error {
+            print(error.localizedDescription)
+        }
     }
     
     /// Adds double tap gesture to the sceneView to handle the anounce direction button (TODO: I'm not sure exactly what this does at the moment and how it differs from the button itself)
@@ -1618,49 +968,23 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         self.view.addGestureRecognizer(tapGestureRecognizer)
     }
 
-    // MARK: - drawUI() temp mark for navigation
-    
-    /// Initializes, configures, and adds all subviews defined programmatically.
-    ///
-    /// Subviews:
-    /// - `getDirectionButton` (`UIButton`)
-    /// - `directionText` (`UILabel`)
-    /// - `recordPathView` (`UIView`):
-    ///   - configured with `UIView.setupButtonContainer(withButton:)`
-    ///   - contains record path button, with information stored in `recordPathButton` instance of `ActionButtonComponents`
-    /// - `stopRecordingView` (`UIView`):
-    ///   - configured with `UIView.setupButtonContainer(withButton:)`
-    ///   - contains record path button, with information stored in `stopRecordingButton` instance of `ActionButtonComponents`
-    /// - `startNavigationView` (`UIView`)
-    /// - `stopNavigationView` (`UIView`):
-    ///   - configured with `UIView.setupButtonContainer(withButton:)`
-    ///   - contains record path button, with information stored in `stopNavigationButton` instance of `ActionButtonComponents`
-    /// - `pauseTrackingView` (`UIView`)
-    /// - `resumeTrackingView` (`UIView`)
-    /// - `resumeTrackingConfirmView` (`UIView`)
-    /// - `routeRatingView` (`UIView`)
-    ///
-    /// - TODO:
-    ///   - DRY
-    ///   - AutoLayout
-    ///   - `startNavigationView` pause button configuration
-    ///   - subview transitions?
     /// display RECORD PATH button/hide all other views
     @objc func showRecordPathButton(announceArrival: Bool) {
         add(recordPathController)
         /// handling main screen transitions outside of the first load
         /// add the view of the child to the view of the parent
+        routeRatingController.remove()
         stopNavigationController.remove()
         
         rootContainerView.getDirectionButton.isHidden = true
         // the options button is hidden if the route rating shows up
-        ///// TRACK
-        #if !APPCLIP
+        rootContainerView.settingsButton.isHidden = false
+        rootContainerView.helpButton.isHidden = false
+        rootContainerView.feedbackButton.isHidden = false
         rootContainerView.homeButton.isHidden = true
-        #endif
 
         if announceArrival {
-            delayTransition(announcement: NSLocalizedString("completedNavigationAnnouncement", comment: "An announcement which is played to notify the user that they have arrived at the end of their route."))
+            delayTransition(announcement: NSLocalizedString("You've arrived.", comment: "You have arrived at your destination."))
         } else {
             delayTransition()
         }
@@ -1671,11 +995,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     /// - Parameter announcement: the announcement to read after a 2 second delay
     func delayTransition(announcement: String? = nil, initialFocus: UIView? = nil) {
         // this notification currently cuts off the announcement of the button that was just pressed
-        print("initialFocus \(initialFocus) announcement \(announcement)")
         UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: initialFocus)
-        print("notification posted")
-        print(UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: initialFocus))
-        print("That was the notification")
         if let announcement = announcement {
             if UIAccessibility.isVoiceOverRunning {
                 Timer.scheduledTimer(withTimeInterval: 2.0, repeats: false) { timer in
@@ -1687,99 +1007,62 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         }
     }
     
-    func alignmentTransition() {
-        self.announce(announcement: NSLocalizedString("resumeAnchorPointToReturnNavigationAnnouncement", comment: "This is an Announcement which indicates that the pause session is complete, that the program was able to align with the anchor point, and that return navigation has started."))
-            Timer.scheduledTimer(withTimeInterval: 3.0, repeats: false) { timer in
-                self.state = .navigatingRoute
-            }
-
-    }
-    
     /// Display stop recording view/hide all other views
     @objc func showStopRecordingButton() {
-        #if !APPCLIP
         rootContainerView.homeButton.isHidden = false // home button here
-        #endif
         recordPathController.remove()
         recordPathController.view.isAccessibilityElement = false
         add(stopRecordingController)
-        delayTransition(announcement: NSLocalizedString("properDevicePositioningAnnouncement", comment: "This is an announcement which plays to tell the user the best practices for aligning the phone"))
+        delayTransition(announcement: NSLocalizedString("Hold vertically with the rear camera facing forward.", comment: "Hold the phone vertically with the rear camera facing forward."))
     }
     
     /// Display start navigation view/hide all other views
     @objc func showStartNavigationButton(allowPause: Bool) {
-        #if !APPCLIP
-        rootContainerView.homeButton.isHidden = !recordingSingleUseRoute // home button hidden if we are doing a multi use route (we use the large home button instead)
-        #endif
+        rootContainerView.homeButton.isHidden = false // home button here
         resumeTrackingController.remove()
         resumeTrackingConfirmController.remove()
         stopRecordingController.remove()
-        
-        // set appropriate Boolean flags for context
-        startNavigationController.isAutomaticAlignment = isAutomaticAlignment
-        startNavigationController.recordingSingleUseRoute = recordingSingleUseRoute
         add(startNavigationController)
         startNavigationController.pauseButton.isHidden = !allowPause
-        startNavigationController.largeHomeButton.isHidden = recordingSingleUseRoute
+        startNavigationController.fillerSpace.isHidden = !allowPause
         startNavigationController.stackView.layoutIfNeeded()
         UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: startNavigationController.startNavigationButton)
     }
 
     /// Display the pause tracking view/hide all other views
     func showPauseTrackingButton() throws {
-        #if !APPCLIP
-        rootContainerView.homeButton.isHidden = false
-        #endif
-        
-        #if CLEWMORE
-        rootContainerView.homeButton.isHidden = false
-        #endif
-        
+        rootContainerView.homeButton.isHidden = false // home button here
         recordPathController.remove()
         startNavigationController.remove()
-
-        // set appropriate Boolean flags
-        pauseTrackingController.paused = paused
-        pauseTrackingController.recordingSingleUseRoute = recordingSingleUseRoute
-        pauseTrackingController.startAnchorPoint = startAnchorPoint
-        pauseTrackingController.imageAnchoring = imageAnchoring
-        
         add(pauseTrackingController)
+        
         delayTransition()
     }
     
     /// Display the resume tracking view/hide all other views
     @objc func showResumeTrackingButton() {
-        #if !APPCLIP
-        rootContainerView.homeButton.isHidden = false // no home button here,, unhomes your button :(
-        #endif
+        rootContainerView.homeButton.isHidden = false // no home button here
         pauseTrackingController.remove()
         add(resumeTrackingController)
         UIApplication.shared.keyWindow!.bringSubviewToFront(rootContainerView)
-        delayTransition()    }
+        delayTransition()
+    }
     
     /// Display the resume tracking confirm view/hide all other views.
     func showResumeTrackingConfirmButton(route: SavedRoute, navigateStartToEnd: Bool) {
-        #if !APPCLIP
         rootContainerView.homeButton.isHidden = false
-        #endif
-        self.hideAllViewsHelper()
         resumeTrackingController.remove()
-        resumeTrackingConfirmController.imageAnchoring = route.imageAnchoring
-        // I THINK that's the image anchoring that we want
         add(resumeTrackingConfirmController)
         resumeTrackingConfirmController.view.mainText?.text = ""
         voiceNoteToPlay = nil
         if navigateStartToEnd {
-            if let AnchorPointInformation = route.beginRouteAnchorPoint.information as String? {
-                let infoString = "\n\n" + NSLocalizedString("anchorPointIntroductionToSavedText", comment: "This is the text which delineates the text that a user saved witht their saved anchor point. This text is shown when a user loads an anchor point and the text that the user saved with their anchor point appears right after this string.") + AnchorPointInformation + "\n\n"
-                resumeTrackingConfirmController.anchorPointLabel.text = infoString
-            } else {
-                // make sure to clear out any old labels that were stored here
-                resumeTrackingConfirmController.anchorPointLabel.text = nil
+            if let landmarkInformation = route.beginRouteLandmark.information as String? {
+                let infoString = "\n\n" + "The landmark information you entered is: " + landmarkInformation + "\n\n"
+                resumeTrackingConfirmController.landmarkLabel.text = infoString
+
             }
-            if let beginRouteAnchorPointVoiceNote = route.beginRouteAnchorPoint.voiceNote {
-                let voiceNoteToPlayURL = beginRouteAnchorPointVoiceNote.documentURL
+            if let beginRouteLandmarkVoiceNote = route.beginRouteLandmark.voiceNote {
+                let voiceNoteToPlayURL = beginRouteLandmarkVoiceNote.documentURL
                 do {
                     let data = try Data(contentsOf: voiceNoteToPlayURL)
                     voiceNoteToPlay = try AVAudioPlayer(data: data, fileTypeHint: AVFileType.caf.rawValue)
@@ -1787,15 +1070,12 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
                 } catch {}
             }
         } else {
-            if let AnchorPointInformation = route.endRouteAnchorPoint.information as String? {
-                let infoString = "\n\n" + NSLocalizedString("anchorPointIntroductionToSavedText", comment: "This is the text which delineates the text that a user saved with their saved anchor point. This text is shown when a user loads an anchor point and the text that the user saved with their anchor point appears right after this string.") + AnchorPointInformation + "\n\n"
-                resumeTrackingConfirmController.anchorPointLabel.text = infoString
-            } else {
-                // make sure to clear out any old labels that were stored here
-                resumeTrackingConfirmController.anchorPointLabel.text = nil
+            if let landmarkInformation = route.endRouteLandmark.information as String? {
+                let infoString = "\n\n" + "The landmark information you entered is: " + landmarkInformation + "\n\n"
+                resumeTrackingConfirmController.landmarkLabel.text = infoString
             }
-            if let endRouteAnchorPointVoiceNote = route.endRouteAnchorPoint.voiceNote {
-                let voiceNoteToPlayURL = endRouteAnchorPointVoiceNote.documentURL
+            if let endRouteLandmarkVoiceNote = route.endRouteLandmark.voiceNote {
+                let voiceNoteToPlayURL = endRouteLandmarkVoiceNote.documentURL
                 do {
                     let data = try Data(contentsOf: voiceNoteToPlayURL)
                     voiceNoteToPlay = try AVAudioPlayer(data: data, fileTypeHint: AVFileType.caf.rawValue)
@@ -1805,89 +1085,13 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         }
         resumeTrackingConfirmController.readVoiceNoteButton?.isHidden = voiceNoteToPlay == nil
         let waitingPeriod = ViewController.alignmentWaitingPeriod
-        if route.imageAnchoring {
-            print("yes good wrked correctly")
-            resumeTrackingConfirmController.view.mainText?.text?.append(String.localizedStringWithFormat(NSLocalizedString("imageAnchorPointAlignmentText", comment: "Text describing the process of aligning to an image anchorpoint. This text shows up on the alignment screen."), waitingPeriod))
-            
-        } else{
-            resumeTrackingConfirmController.view.mainText?.text?.append(String.localizedStringWithFormat(NSLocalizedString("anchorPointAlignmentText", comment: "Text describing the process of aligning to an anchorpoint. This text shows up on the alignment screen."), waitingPeriod))
-            
-        }
-        print("State: \(self.state)")
+        resumeTrackingConfirmController.view.mainText?.text?.append(String.localizedStringWithFormat(NSLocalizedString("Hold your device flat with the screen facing up. Press the top (short) edge flush against the same vertical surface that you used to create the landmark.  When you are ready, activate the align button to start the alignment countdown that will complete the procedure. Do not move the device until the phone provides confirmation via a vibration or sound cue.", comment: "Informative mssage that appears to the user."), waitingPeriod))
         delayTransition()
     }
     
-    func showEndScreenInformation(completedRoute: Bool){
-        #if APPCLIP
-        self.hideAllViewsHelper()
-        //self.sceneView.session.pause()
-        
-        trackingErrorsAnnouncementTimer?.invalidate()
-        
-        ARSessionManager.shared.initialWorldMap = nil
-        
-        self.rootContainerView.getDirectionButton.isHidden = true
-        guard let scene = self.view.window?.windowScene else {return}
-        
-        
-        // TODO: i18n/l10n
-        if completedRoute{
-            delayTransition(announcement: "You have arrived at your destination.")
-
-            //label.text = "You have arrived at your destination. Thank you for using the Clew App Clip"
-            //view.mainText?.text?.append(String.localizedStringWithFormat("You have arrived at your destination. Thank you for using the Clew App Clip", 5))
-        } else{
-            delayTransition(announcement: "Route navigation stopped. You may not have arrived at your destination yet.")
-            //label.text = "Route navigation stopped. You may not have arrived at your destination yet. Thank you for using the Clew App Clip"
-            // view.mainText?.text?.append(String.localizedStringWithFormat("Route navigation stopped. You may not have arrived at your destination yet. Thank you for using the Clew App Clip", 5))
-        }
-        /*label.tag = UIView.mainTextTag
-        /// place label inside of the scrollview
-        scrollView.addSubview(label)
-        self.view.addSubview(scrollView)
-        
-        /// set top, left, right constraints on scrollView to
-        /// "main" view + 8.0 padding on each side
-        scrollView.topAnchor.constraint(equalTo: view.topAnchor, constant: UIScreen.main.bounds.size.height*0.15).isActive = true
-        scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8.0).isActive = true
-        scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8.0).isActive = true
-        
-        /// set the height constraint on the scrollView to 0.5 * the main view height
-        scrollView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.5).isActive = true
-        
-        /// set top, left, right AND bottom constraints on label to
-        /// scrollView + 8.0 padding on each side
-        label.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 8.0).isActive = true
-        label.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 8.0).isActive = true
-        label.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -8.0).isActive = true
-        label.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -8.0).isActive = true
-        
-        /// set the width of the label to the width of the scrollView (-16 for 8.0 padding on each side)
-        label.widthAnchor.constraint(equalTo: scrollView.widthAnchor, constant: -16.0).isActive = true
-        
-        /// configure label: Zero lines + Word Wrapping
-        label.numberOfLines = 0
-        label.lineBreakMode = NSLineBreakMode.byWordWrapping */
-        
-        if #available(iOS 14.0, *){
-            let config = SKOverlay.AppClipConfiguration(position: .bottom)
-            let overlay = SKOverlay(configuration: config)
-            overlay.present(in: scene)
-        print("UI done")
-
-        }
-        #else
-        self.hideAllViewsHelper()
-        self.add(self.endNavigationController!)
-        #endif
-    }
-    
     /// display stop navigation view/hide all other views
-    // is this where the timer is set?
     @objc func showStopNavigationButton() {
-        #if !APPCLIP
         rootContainerView.homeButton.isHidden = false
-        #endif
         rootContainerView.getDirectionButton.isHidden = false
         startNavigationController.remove()
         add(stopNavigationController)
@@ -1895,6 +1099,27 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         // this does not auto update, so don't use it as an accessibility element
         delayTransition()
     }
+    
+    /// display route rating view/hide all other views
+    @objc func showRouteRating(announceArrival: Bool) {
+        rootContainerView.getDirectionButton.isHidden = true
+        rootContainerView.homeButton.isHidden = true
+        stopNavigationController.remove()
+        add(routeRatingController)
+        if announceArrival {
+            routeRatingController.view.mainText?.text = NSLocalizedString("You've arrived. Please rate your service.", comment: "Announce to the user that they have arrived at their destination and ask user to rate their experience.")
+        } else {
+            routeRatingController.view.mainText?.text = NSLocalizedString("Please rate your service.", comment: "Ask user to rate their experience.")
+        }
+        
+        feedbackGenerator = nil
+        waypointFeedbackGenerator = nil
+        delayTransition()
+    }
+    
+    /*
+     *
+     */
     
     /// Announce the direction (both in text and using speech if appropriate).  The function will automatically use the appropriate units based on settings to convert `distance` from meters to the appropriate unit.
     ///
@@ -1914,10 +1139,6 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
                 altText += " for \(distanceToDisplay)" + unitText[defaultUnit]!
             }
         }
-        if !remindedUserOfOffsetAdjustment && adjustOffset {
-            altText += ". " + NSLocalizedString("adjustOffsetReminderAnnouncement", comment: "This is the announcement which is spoken after starting navigation if the user has enabled the Correct Offset of Phone / Body option.")
-            remindedUserOfOffsetAdjustment = true
-        }
         if case .navigatingRoute = state {
             logger.logSpeech(utterance: altText)
         }
@@ -1926,21 +1147,39 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     
     // MARK: - BreadCrumbs
     
+    /// AR Session Configuration
+    var configuration: ARWorldTrackingConfiguration!
+    
     /// MARK: - Clew internal datastructures
     
-    /// list of crumbs dropped when recording path
-    var recordingCrumbs: LinkedList<LocationInfo>!
-    
-    var recordingGeoAnchors: [ARGeoAnchor] = []
-    
-    /// list of crumbs to use for route creation
+    /// list of crumbs dropped when recording pth
     var crumbs: [LocationInfo]!
+    
+    /// list of crumbs dropped when following path
+    var followCrumbs: [LocationInfo] {
+        guard let anchors = sceneView.session.currentFrame?.anchors else {
+            return []
+        }
+        return anchors.compactMap({$0.name != nil && $0.name! == "followCrumb" ? LocationInfo(transform: $0.transform) : nil })
+    }
+    
+    /// list of keypoints calculated after path completion
+    var keypoints: [KeypointInfo]!
+    
+    /// stores the keypoints that have been checked off along the route thus far
+    var checkedOffKeypoints: [KeypointInfo]!
+    
+    /// SCNNode of the next keypoint
+    var keypointNode: SCNNode!
     
     /// previous keypoint location - originally set to current location
     var prevKeypointPosition: LocationInfo!
 
     /// Interface for logging data about the session and the path
-    var logger = PathLogger.shared
+    var logger = PathLogger()
+    
+    /// Interface for matching points to a saved route
+    var pathMatcher = PathMatcher()
     
     // MARK: - Timers for background functions
     
@@ -1952,6 +1191,9 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     
     /// times the generation of haptic feedback
     var hapticTimer: Timer?
+    
+    /// times the generation of snap to route
+    var snapToRouteTimer: Timer?
     
     /// times when an announcement should be removed.  These announcements are displayed on the `announcementText` label.
     var announcementRemovalTimer: Timer?
@@ -1965,9 +1207,9 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     // MARK: - Haptic generators
     
     /// The haptic feedback generator to use when facing towards the keypoint
-    var feedbackGenerator : UIImpactFeedbackGenerator?
+    var feedbackGenerator : UIImpactFeedbackGenerator? = nil
     /// The haptic feedback generator to use when a keypoint is reached
-    var waypointFeedbackGenerator: UINotificationFeedbackGenerator?
+    var waypointFeedbackGenerator: UINotificationFeedbackGenerator? = nil
     /// The time of last haptic feedback
     var feedbackTimer: Date!
     /// The delay between haptic feedback pulses in seconds
@@ -1979,7 +1221,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     let unit = [0: "ft", 1: "m"]
     
     /// the text to display for each possible unit
-    let unitText = [0: NSLocalizedString("imperialUnitText", comment: "this is the text which is displayed in the settings to show the user the option of imperial measurements"), 1: NSLocalizedString("metricUnitText", comment: "this is the text which is displayed in the settings to show the user the option of metric measurements")] as [Int : String]
+    let unitText = [0: " feet", 1: " meters"]
     
     /// the converstion factor to apply to distances as reported by ARKit so that they are expressed in the user's chosen distance units.  ARKit's unit of distance is meters.
     let unitConversionFactor = [0: Float(100.0/2.54/12.0), 1: Float(1.0)]
@@ -1987,20 +1229,8 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     /// the selected default unit index (this index cross-references `unit`, `unitText`, and `unitConversionFactor`
     var defaultUnit: Int!
     
-    /// Whether or not to upload the rich data
-    var uploadRichData: Bool?
-    
     /// the color of the waypoints.  0 is red, 1 is green, 2 is blue, and 3 is random
     var defaultColor: Int!
-    
-    /// true if path should be shown between waypoints, false otherwise
-    var showPath: Bool!
-    
-    /// true if saved route anchoring happens from images (currently the app only works with this set to true)
-    let imageAnchoring = true
-    
-    /// the color of the path.  0 is red, 1 is green, 2 is blue, and 3 is random
-    var defaultPathColor: Int!
     
     /// true if sound feedback should be generated when the user is facing the next waypoint, false otherwise
     var soundFeedback: Bool!
@@ -2016,18 +1246,15 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     
     /// The length of time that the timer will run for
     var timerLength: Int!
-    
-    /// This tracks whether the user has consented to log rich (image) data
-    var logRichData: Bool!
 
     /// This keeps track of the paused transform while the current session is being realigned to the saved route
-    var pausedTransform : simd_float4x4?
+    var pausedLandmark : RouteLandmark?
     
-    /// the Anchor Point to use to mark the beginning of the route currently being recorded
-    var beginRouteAnchorPoint = RouteAnchorPoint()
+    /// the landmark to use to mark the beginning of the route currently being recorded
+    var beginRouteLandmark = RouteLandmark()
     
-    /// the Anchor Point to use to mark the end of the route currently being recorded
-    var endRouteAnchorPoint = RouteAnchorPoint()
+    /// the landmark to use to mark the end of the route currently being recorded
+    var endRouteLandmark = RouteLandmark()
 
     /// the name of the route being recorded
     var routeName: NSString?
@@ -2035,11 +1262,21 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     /// the route just recorded.  This is useful for when the user resumes a route that wasn't saved.
     var justTraveledRoute: SavedRoute?
     
-    
+    /// this is a generically typed placeholder for the justUsedMap computed property.  This is needed due to the fact that @available cannot be used for stored attributes
+    private var justUsedMapAsAny: Any?
+
     /// the most recently used map.  This helps us determine whether a route the user is attempting to load requires alignment.  If we have already aligned within a particular map, we can skip the alignment procedure.
-    var justUsedMap : ARWorldMap?
+    @available(iOS 12.0, *)
+    var justUsedMap : ARWorldMap? {
+        get {
+            return justUsedMapAsAny as! ARWorldMap?
+        }
+        set (newValue) {
+            justUsedMapAsAny = newValue
+        }
+    }
     
-    /// DirectionText based on haptic/voice settings
+    /// DirectionText based on hapic/voice settings
     var Directions: Dictionary<Int, String> {
         if (hapticFeedback) {
             return HapticDirections
@@ -2048,111 +1285,105 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         }
     }
     
-    /// Announces the any excessive motion or insufficient visual features errors as specified in the last observed tracking state
-    /// Announces the any excessive motion or insufficient visual features errors as specified in the last observed tracking state
-    func announceCurrentTrackingErrors() {
-        switch trackingSessionErrorState {
-        case .insufficientFeatures:
-            if trackingWarningsAllowed {
-                self.announce(announcement: NSLocalizedString("insuficientFeaturesDegradedTrackingAnnouncemnt", comment: "An announcement which lets the user know  that their current surroundings do not have enough visual markers and thus the app's ability to track a route has been lowered."))
-                if self.soundFeedback {
-                    SoundEffectManager.shared.playSystemSound(id: 1050)
-                }
-            }
-        case .excessiveMotion:
-            if trackingWarningsAllowed {
-                self.announce(announcement: NSLocalizedString("excessiveMotionDegradedTrackingAnnouncemnt", comment: "An announcement which lets the user know that there is too much movement of their device and thus the app's ability to track a route has been lowered."))
-                if self.soundFeedback {
-                    SoundEffectManager.shared.playSystemSound(id: 1050)
-                }
-            }
-        case .none:
-            break
-        }
-    }
-    
     /// handles the user pressing the record path button.
     @objc func recordPath() {
-        ///PATHPOINT record two way path button -> create Anchor Point
-        ///route has not been auto aligned
-        isAutomaticAlignment = false
-        ///tells the program that it is recording a two way route
-        recordingSingleUseRoute = false
-        //update the state Boolean to say that this is not paused
-        paused = false
-        ///update the state Boolean to say that this is recording the first anchor point
-        startAnchorPoint = true
-
-        ///sends the user to create a Anchor Point
-        #if !APPCLIP
-        rootContainerView.homeButton.isHidden = false
-        #endif
-        creatingRouteAnchorPoint = true
-
-        hideAllViewsHelper()
-
-        // announce session state
-        trackingErrorsAnnouncementTimer = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: true) { timer in
-            self.announceCurrentTrackingErrors()
+        state = .recordingRoute
+    }
+    
+    /// Gets a transform suitable for soft alignment.  The transform that is returned will be based on  `firstTransformToUse` if `secondTransformToUse` is not specified or if the translation between the two is less than `softAlignmentSegmentLengthThreshold`.  The transform returned from this function is preleveled use in the realignment step (i.e., no leveling should be performed during the realignemnt process).
+    ///
+    /// - Parameters:
+    ///   - firstTransformToUse: the first transform to use for soft alignment (this should be the first or last keypoint depending on direction)
+    ///   - secondTransformToUse: the second transform to use for soft alignment (this should be the second or second to- last-keypoint if one exists)
+    ///   - isReversed: true if the path is reversed
+    /// - Returns: a leveled transform suitable for alignment
+    func getSoftAlignment(firstTransformToUse: simd_float4x4, secondTransformToUse: simd_float4x4?, isReversed: Bool)->simd_float4x4 {
+        guard let secondTransformToUse = secondTransformToUse else {
+            if isReversed {
+                return firstTransformToUse.level.flipOrientationAboutYAxis
+            } else {
+                return firstTransformToUse.level
+            }
         }
-        // this makes sure that the user doesn't start recording the single use route until the session is initialized
-        continuationAfterSessionIsReady = {
-            self.trackingErrorsAnnouncementTimer?.invalidate()
-            // sends the user to the screen where they can enter an app clip code ID for the route they're about to record
-            self.state = .recordingRoute
+
+        if simd_length(firstTransformToUse.level.columns.3 - secondTransformToUse.level.columns.3) < Float(softAlignmentSegmentLengthThreshold) {
+            if isReversed {
+                return firstTransformToUse.level.flipOrientationAboutYAxis
+            } else {
+                return firstTransformToUse.level
+            }
         }
-        ARSessionManager.shared.initialWorldMap = nil
-        trackingSessionErrorState = nil
-        ARSessionManager.shared.startSession()
+        let alignmentYaw = atan2(firstTransformToUse.x - secondTransformToUse.x, firstTransformToUse.z - secondTransformToUse.z)
+        var alignmentTransform = simd_float4x4.makeRotate(radians: alignmentYaw, 0, 1, 0)
+        alignmentTransform.columns.3 = firstTransformToUse.columns.3
+        return alignmentTransform
     }
     
     /// handles the user pressing the stop recording button.
     ///
     /// - Parameter sender: the button that generated the event
     @objc func stopRecording(_ sender: UIButton) {
-        // copy the recordingCrumbs over for use in path creation
-        crumbs = Array(recordingCrumbs)
-        isResumedRoute = false
+        // fill out landmarks with the first and last crumb
+        let p = PathFinder(crumbs: crumbs, hapticFeedback: hapticFeedback, voiceFeedback: voiceFeedback)
+        let keypoints = p.keypoints
+        if beginRouteLandmark.transform == nil, let firstKeypointTransform = keypoints.first?.location.transform {
+            beginRouteLandmark.information = "Route start"
+            var secondKeypointTransform: simd_float4x4? = nil
 
-        #if !APPCLIP
-        rootContainerView.homeButton.isHidden = false // home button here
-        #endif
-        resumeTrackingController.remove()
-        resumeTrackingConfirmController.remove()
-        stopRecordingController.remove()
-        setShouldSuggestAdjustOffset()
-        // heading offsets should not be updated from this point until route navigation starts
-        updateHeadingOffsetTimer?.invalidate()
-        recordPhaseHeadingOffsets = []
-        
-        ///checks if the route is a single use route or a multiple use route
-        if !recordingSingleUseRoute {
-            ///PATHPOINT two way route recording finished -> create end Anchor Point
-            ///sets the variable tracking whether the route is paused to be false
-            paused = false
-            creatingRouteAnchorPoint = false
-            if imageAnchoring {
-                /// sends the user to naming the route, skipping creating the end anchorpoint
-                state = .startingPauseProcedure
-            } else {    /// this probably shouldn't go to startingPauseProcedure but it also currently never gets here
-                ///sends the user to the process where they create an end anchorpoint
-                state = .startingPauseProcedure
+            if keypoints.count > 1 {
+                secondKeypointTransform = keypoints[1].location.transform
             }
-        } else {
-            ///PATHPOINT one way route recording finished -> play/pause
-            state = .readyToNavigateOrPause(allowPause: true)
+            
+            beginRouteLandmark.transform = getSoftAlignment(firstTransformToUse: firstKeypointTransform, secondTransformToUse: secondKeypointTransform, isReversed: false)
+            beginRouteLandmark.isSoftAlignment = true
         }
         
+        if endRouteLandmark.transform == nil, let lastKeypointTransform = keypoints.last?.location.transform {
+            endRouteLandmark.information = "Route end"
+            var secondToLastKeypointTransform: simd_float4x4? = nil
+
+            if keypoints.count > 1 {
+                secondToLastKeypointTransform = keypoints[keypoints.endIndex - 2].location.transform
+            }
+            
+            endRouteLandmark.transform = getSoftAlignment(firstTransformToUse: lastKeypointTransform, secondTransformToUse: secondToLastKeypointTransform, isReversed: true)
+            endRouteLandmark.isSoftAlignment = true
+        }
+        
+        if beginRouteLandmark.transform != nil {
+            if #available(iOS 12.0, *) {
+                sceneView.session.getCurrentWorldMap {
+                    worldMap, error in
+                    self.getRouteNameAndSaveRouteHelper(mapAsAny: worldMap)
+                }
+            } else {
+                getRouteNameAndSaveRouteHelper(mapAsAny: nil)
+            }
+        }
+
+        isResumedRoute = false
+        state = .readyToNavigateOrPause(allowPause: true)
     }
     
     /// handles the user pressing the start navigation button.
     ///
     /// - Parameter sender: the button that generated the event
     @objc func startNavigation(_ sender: UIButton) {
-        ///announce to the user that return navigation has started.
-        self.delayTransition(announcement: NSLocalizedString("startingReturnNavigationAnnouncement", comment: "This is an anouncement which is played when the user performs return navigation from the play pause menu. It signifies the start of a navigation session."), initialFocus: nil)
-        // this will handle the appropriate state transition if we pass the warning
         state = .navigatingRoute
+    }
+    
+    /// This helper function will restart the tracking session if a relocalization was in progress but did not succeed.  This is useful in the case when you want to allow for the recording of a new route and don't want to have the possibility achieving relocalization halfway through recording the route.
+    func restartSessionIfFailedToRelocalize() {
+        if attemptingRelocalization {
+            if !suppressTrackingWarnings {
+                announce(announcement: NSLocalizedString("Could not match environment to the saved route. Starting new tracking session.", comment: "Current environment does not match up with the environment in previously saved route. About to start a new tracking session."))
+            }
+            if #available(iOS 12.0, *) {
+                configuration.initialWorldMap = nil
+            }
+            sceneView.session.run(configuration, options: [.removeExistingAnchors, .resetTracking])
+            attemptingRelocalization = false
+        }
     }
     
     /// handles the user pressing the stop navigation button.
@@ -2162,104 +1393,50 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         // stop navigation
         followingCrumbs?.invalidate()
         hapticTimer?.invalidate()
+        snapToRouteTimer?.invalidate()
         
         feedbackGenerator = nil
         waypointFeedbackGenerator = nil
+
+        restartSessionIfFailedToRelocalize()
         
         // erase nearest keypoint
-        ARSessionManager.shared.removeNavigationNodes()
-
-        #if !APPCLIP
-        //self.surveyInterface.sendLogDataHelper(pathStatus: nil, vc: self)
-        self.hideAllViewsHelper()
-        self.state = .endScreen(completedRoute: true)
-        print("end screen displayed")
-        #else
-        self.state = .endScreen(completedRoute: false)
-        #endif
+        keypointNode.removeFromParentNode()
         
+        if(sendLogs) {
+            state = .ratingRoute(announceArrival: false)
+        } else {
+            state = .mainScreen(announceArrival: false)
+            logger.resetStateSequenceLog()
+        }
+    }
+    
+    /// The handler for the snap to route button.
+    ///
+    /// - Parameter send: the sender of the button pressed event
+    @objc func snapToRoute(_ send: UIButton) {
+        var keypointsToUse: [KeypointInfo] = checkedOffKeypoints
+        // always append the next point to check off
+        if let firstKeypoint = keypoints.first {
+            keypointsToUse.append(firstKeypoint)
+        }
+
+        let optimalTransform = pathMatcher.match(points: followCrumbs, toPath: keypointsToUse)
+        sceneView.session.setWorldOrigin(relativeTransform: optimalTransform.inverse)
     }
     
     /// handles the user pressing the pause button
     @objc func startPauseProcedure() {
-        creatingRouteAnchorPoint = false
-        paused = true
-        
-        //checks if the pause button has been called from inside a recording a multi use route
-        if !recordingSingleUseRoute {
-            hideAllViewsHelper()
-            ///PATHPOINT multi use route pause -> resume route
-            self.pauseTracking()
-        } else {
-            ///PATHPOINT single use route pause -> record end Anchor Point
-            state = .startingPauseProcedure
-        }
+        creatingRouteLandmark = false
+        state = .startingPauseProcedure
     }
     
-    /// handles the user pressing the Anchor Point button
-    @objc func startCreateAnchorPointProcedure() {
-        #if !APPCLIP
+    /// handles the user pressing the landmark button
+    @objc func startCreateLandmarkProcedure() {
         rootContainerView.homeButton.isHidden = false
-        #endif
-        creatingRouteAnchorPoint = true
-        
-        ///the route has not been resumed automaticly from a saved route
-        isAutomaticAlignment = false
-        ///tell the program that a single use route is being recorded
-        recordingSingleUseRoute = true
-        paused = false
-        ///PATHPOINT single use route button -> recording a route
-        ///hide all other views
-        hideAllViewsHelper()
-        
-        // announce session state
-        trackingErrorsAnnouncementTimer = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: true) { timer in
-            self.announceCurrentTrackingErrors()
-        }
-        // this makes sure that the user doesn't start recording the single use route until the session is initialized
-        continuationAfterSessionIsReady = {
-            self.trackingErrorsAnnouncementTimer?.invalidate()
-            ///play an announcement which tells the user that a route is being recorded
-            self.delayTransition(announcement: NSLocalizedString("singleUseRouteToRecordingRouteAnnouncement", comment: "This is an announcement which is spoken when the user starts recording a single use route. it informs the user that they are recording a single use route."), initialFocus: nil)
-            
-            //sends the user to the screen where they can start recording a route
-            self.state = .recordingRoute
-        }
-        ARSessionManager.shared.initialWorldMap = nil
-        trackingSessionErrorState = nil
-        ARSessionManager.shared.startSession()
-    }
-    
-    /// presents a view for the user to enter the app clip code ID
-    @objc func enterCodeID() {
-        #if CLEWMORE
-        //self.beginScanning(self.recordPathController.enterCodeButton)
-        print("Scanning Started")
-        #endif
-        self.recordPathController.remove()
-        self.add(enterCodeIDController)
-        #if !APPCLIP
-        self.rootContainerView.homeButton.isHidden = false
-        #endif
-
-    }
-    
-    /// this is called once the app clip code ID has been entered
-    @objc func codeIDEntered() {
-        self.enterCodeIDController.remove()
-      
-        NotificationCenter.default.addObserver(forName: NSNotification.Name("firebaseLoaded"), object: nil, queue: nil) { (notification) -> Void in
-            self.add(self.selectRouteController)
-            /*self.selectRouteController.modalPresentationStyle = .formSheet
-            self.selectRouteController.modalTransitionStyle = .crossDissolve
-            self.present(self.selectRouteController, animated: true)*/
-            // create listeners to ensure that the isReadingAnnouncement flag is reset properly
-            NotificationCenter.default.addObserver(forName: NSNotification.Name("shouldDismissRoutePopover"), object: nil, queue: nil) { (notification) -> Void in
-                self.selectRouteController.remove()
-                self.handleStateTransitionToNavigatingExternalRoute()
-            }
-        }
-        self.getFirebaseRoutesList()
+//        backButton.isHidden = true
+        creatingRouteLandmark = true
+        state = .startingPauseProcedure
     }
     
     /// this is called after the alignment countdown timer finishes in order to complete the pause tracking procedure
@@ -2268,255 +1445,134 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         state = .completingPauseProcedure
     }
     
-    func handleTransitionToScanTagView() {
-        scanTagController = UIHostingController(rootView: ScanTagView())
-        scanTagController?.view.frame = CGRect(x: 0,
-                                                                       y: UIScreen.main.bounds.size.height*0.15,
-                                                                       width: UIConstants.buttonFrameWidth * 1,
-                                                                       height: UIScreen.main.bounds.size.height*0.75)
-        scanTagController?.view.backgroundColor = .clear
-        
-        hideAllViewsHelper()
-        ARSessionManager.shared.startSession()
-        add(scanTagController!)
-    }
-    
-    /// Configure App Clip to query items
-    func handleUserActivity(for url: URL) {
-        // TODO: update this to load urls into a list of urls to be passed into the popover list <3
-        guard let components = NSURLComponents(url: url, resolvingAgainstBaseURL: true), let queryItems = components.queryItems else {
-            return
-        }
-        
-        /// with the invocation URL format https://occamlab.github.io/id?p=appClipCodeID, appClipCodeID being the name of the file in Firebase
-        if let appClipCodeID = queryItems.first(where: { $0.name == "p"}) {
-            self.appClipCodeID = appClipCodeID.value!
-            print("app clip code ID from URL: \(appClipCodeID.value!)")
-        }
-    }
-    
-    func loadRoute() {
-        #if !APPCLIP
-        arLogger.startTrial()
-        #endif
-        recordPathController.remove()
-        scanTagController?.remove()
-        handleStateTransitionToNavigatingExternalRoute()
-    }
-    
-    func populateSceneFromAppClipURL(scene: UIScene, url: URL) {
-        appClipObservers.map({ NotificationCenter.default.removeObserver($0) })
-        appClipObservers = []
-
-        /// This loading screen should show up if the URL is properly invoked
-        let loadFromAppClipController = UIHostingController(rootView: LoadFromAppClipView())
-        loadFromAppClipController.modalPresentationStyle = .fullScreen
-        present(loadFromAppClipController, animated: false)
-        print("loading screen successful B)")
-        
-        handleUserActivity(for: url)
-        getFirebaseRoutesList()
-            
-        let newObserver = NotificationCenter.default.addObserver(forName: NSNotification.Name("firebaseLoaded"), object: nil, queue: nil) { (notification) -> Void in
-            /// dismiss loading screen
-            loadFromAppClipController.dismiss(animated: false)
-            
-            /// bring up list of routes
-            let popoverController = UIHostingController(rootView: StartNavigationPopoverView(vc: self, routeList: self.availableRoutes))
-            popoverController.modalPresentationStyle = .fullScreen
-            self.present(popoverController, animated: true)
-            print("popover successful B)")
-            // create listeners to ensure that the isReadingAnnouncement flag is reset properly
-            let dismissObserver = NotificationCenter.default.addObserver(forName: NSNotification.Name("shouldDismissRoutePopover"), object: nil, queue: nil) { (notification) -> Void in
-                popoverController.dismiss(animated: true)
-                self.hideAllViewsHelper()
-                self.loadRoute()
-            }
-            self.appClipObservers.append(dismissObserver)
-        }
-        appClipObservers.append(newObserver)
-    }
-    
-    func getFirebaseRoutesList() {
-        let routeRef = Storage.storage().reference().child("AppClipRoutes")
-        let appClipRef = routeRef.child("\(self.appClipCodeID).json")
-            
-            /// attempt to download .json file from Firebase
-            appClipRef.getData(maxSize: 100000000000) { appClipJson, error in
-                do {
-                    if let appClipJson = appClipJson {
-                        /// unwrap NSData, if it exists, to a list, and set equal to existingRoutes
-                        let routesFile = try JSONSerialization.jsonObject(with: appClipJson, options: [])
-                        print("File: \(routesFile)")
-                        if let routesFile = routesFile as? [[String: String]] {
-                            self.availableRoutes.routeList = routesFile
-                            print("List: \(self.availableRoutes)")
-                            print("æ")
-                            NotificationCenter.default.post(name: NSNotification.Name("firebaseLoaded"), object: nil)
-                        }
-                    }
-                } catch {
-                    print("Failed to download Firebase data due to error \(error)")
-                }
-            }
-        }
-    
     /// this is called when the user has confirmed the alignment and is the alignment countdown should begin.  Once the alignment countdown has finished, the alignment will be performed and the app will move to the ready to navigate view.
     func resumeTracking() {
         // resume pose tracking with existing ARSessionConfiguration
+        guard let pausedLandmark = pausedLandmark else {
+            return
+        }
         hideAllViewsHelper()
-        pauseTrackingController.remove()
-        if case .readyForFinalResumeAlignment = self.state {
-            rootContainerView.countdownTimer.isHidden = false
-            rootContainerView.countdownTimer.start(beginingValue: ViewController.alignmentWaitingPeriod, interval: 1)
-            delayTransition()
+        let deadline: DispatchTime
+        
+        if !pausedLandmark.isSoftAlignment {
+            deadline = .now() + .seconds(ViewController.alignmentWaitingPeriod)
+        } else {
+            deadline = .now()
         }
         
-        if case .startingAutoAlignment = self.state, let routeTransform = self.pausedTransform, let tagAnchor = ARSessionManager.shared.currentFrame?.anchors.compactMap({$0 as? ARImageAnchor}).first {
-            rootContainerView.countdownTimer.isHidden = true
-            
-            let tagToWorld = tagAnchor.transform
-            let tagToRoute = routeTransform
-            let relativeTransform = (tagToWorld * tagToRoute.inverse).alignY()
-            ARSessionManager.shared.manualAlignment = relativeTransform
-            self.isResumedRoute = true
-            if self.paused {
-                ///PATHPOINT paused anchor point alignment timer -> return navigation
-                ///announce to the user that they have aligned to the anchor point sucessfully and are starting  navigation.
-                self.paused = false
-                self.alignmentTransition()
-                //self.delayTransition(announcement: NSLocalizedString("resumeAnchorPointToReturnNavigationAnnouncement", comment: "This is an Announcement which indicates that the pause session is complete, that the program was able to align with the anchor point, and that return navigation has started."), initialFocus: nil)
-                //self.state = .navigatingRoute
-
-            } else {
-                ///PATHPOINT load saved route -> start navigation
-
-                ///announce to the user that they have sucessfully aligned with their saved anchor point.
-                self.alignmentTransition()
-                //self.delayTransition(announcement: NSLocalizedString("resumeAnchorPointToReturnNavigationAnnouncement", comment: "This is an Announcement which indicates that the pause session is complete, that the program was able to align with the anchor point, and that return navigation has started."), initialFocus: nil)
-            }
-        } else {
-            DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(ViewController.alignmentWaitingPeriod)) {
+        pauseTrackingController.remove()
+        rootContainerView.countdownTimer.isHidden = false
+        rootContainerView.countdownTimer.start(beginingValue: ViewController.alignmentWaitingPeriod, interval: 1)
+        delayTransition()
+        DispatchQueue.main.asyncAfter(deadline: deadline) {
             self.rootContainerView.countdownTimer.isHidden = true
+
             // The first check is necessary in case the phone relocalizes before this code executes
-                if case .readyForFinalResumeAlignment = self.state, let routeTransform = self.pausedTransform, /*let tagAnchor = self.sceneView.session.currentFrame?.anchors.compactMap({$0 as? ARAppClipCodeAnchor}).filter({$0.isTracked}).first */ let tagAnchor = ARSessionManager.shared.currentFrame?.camera {
-                // yaw can be determined by projecting the camera's z-axis into the ground plane and using arc tangent (note: the camera coordinate conventions of ARKit https://developer.apple.com/documentation/arkit/arsessionconfiguration/worldalignment/camera
-                let alignYaw = self.getYawHelper(routeTransform)
-                let cameraYaw = self.getYawHelper(tagAnchor.transform)
-
-                print("image tag: \(tagAnchor)")
-                var tagToWorld = simd_float4x4.makeRotate(radians: cameraYaw, 0, 1, 0)
-                tagToWorld.columns.3 = tagAnchor.transform.columns.3
-                print(tagAnchor.transform)
+            if case .readyForFinalResumeAlignment = self.state, let alignTransform = self.pausedLandmark?.transform, let camera = self.sceneView.session.currentFrame?.camera {
+            // yaw can be determined by projecting the camera's z-axis into the ground plane and using arc tangent (note: the camera coordinate conventions of ARKit https://developer.apple.com/documentation/arkit/arsessionconfiguration/worldalignment/camera
+                let leveledCameraPose = camera.transform.level
                 
-                var tagToRoute =  simd_float4x4.makeRotate(radians: alignYaw, 0, 1, 0)
-                tagToRoute.columns.3 = routeTransform.columns.3
-                
-                ARSessionManager.shared.manualAlignment = tagToWorld * tagToRoute.inverse
-                
-                self.isResumedRoute = true
-                if self.paused {
-                    ///PATHPOINT paused anchor point alignment timer -> return navigation
-                    ///announce to the user that they have aligned to the anchor point sucessfully and are starting  navigation.
-                    self.paused = false
-                    self.delayTransition(announcement: NSLocalizedString("resumeAnchorPointToReturnNavigationAnnouncement", comment: "This is an Announcement which indicates that the pause session is complete, that the program was able to align with the anchor point, and that return navigation has started."), initialFocus: nil)
-                    self.state = .navigatingRoute
-
-                } else {
-                    ///PATHPOINT load saved route -> start navigation
-                    ///announce to the user that they have sucessfully aligned with their saved anchor point.
-                    self.delayTransition(announcement: NSLocalizedString("resumeAnchorPointToReturnNavigationAnnouncement", comment: "This is an Announcement which indicates that the pause session is complete, that the program was able to align with the anchor point, and that return navigation has started."), initialFocus: nil)
-                    self.state = .navigatingRoute
-
+                var leveledAlignPose = alignTransform
+                if !pausedLandmark.isSoftAlignment {
+                    // soft alignments are preleveled, so we only level if we are doing hard alignment
+                    leveledAlignPose = alignTransform.level
                 }
-            }
+                
+                let relativeTransform = leveledCameraPose * leveledAlignPose.inverse
+                self.sceneView.session.setWorldOrigin(relativeTransform: relativeTransform)
+                Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(self.playSound)), userInfo: nil, repeats: false)
+                self.isResumedRoute = true
+                self.state = .readyToNavigateOrPause(allowPause: false)
             }
         }
     }
     
     /// handles the user pressing the resume tracking confirmation button.
     @objc func confirmResumeTracking() {
-        print("entered")
         if let route = justTraveledRoute {
-            state = .startingResumeProcedure(route: route, worldMap: justUsedMap, navigateStartToEnd: false)
-            print("entered if")
+            state = .startingResumeProcedure(route: route, mapAsAny: justUsedMapAsAny, navigateStartToEnd: false)
         }
     }
     
     // MARK: - Logging
-        
-    /// drop a crumb during path recording
-    @objc func dropCrumb() {
-        guard let currentFrame = ARSessionManager.shared.currentFrame, case .recordingRoute = state else {
-            return
-        }
-        dropGeoAnchor(at: SIMD3<Float>(currentFrame.camera.transform.x, currentFrame.camera.transform.y, currentFrame.camera.transform.z))
+    
+    /// send log data for an successful route navigation (thumbs up)
+    @objc func sendLogData() {
+        // send success log data to Firebase
+        logger.compileLogData(false)
+        logger.resetStateSequenceLog()
+        state = .mainScreen(announceArrival: false)
     }
     
-    func dropGeoAnchor(at worldPosition: SIMD3<Float>) {
-        print("starting geoanchor process")
-        ARSessionManager.shared.sceneView.session.getGeoLocation(forPoint: worldPosition) { (location, altitude, error) in
-            if let error = error {
-                print("error adding Geo anchor")
-                return
-            }
-            print("new geo anchor!!")
-            let newAnchor = ARGeoAnchor(coordinate: location, altitude: altitude)
-            ARSessionManager.shared.add(anchor: newAnchor)
-            self.recordingGeoAnchors.append(newAnchor)
-        }
+    /// send log data for an unsuccessful route navigation (thumbs down)
+    @objc func sendDebugLogData() {
+        // send debug log data to Firebase
+        logger.compileLogData(true)
+        logger.resetStateSequenceLog()
+        state = .mainScreen(announceArrival: false)
     }
-
+    
+    /// drop a crumb during path recording
+    @objc func dropCrumb() {
+        // drop waypoint markers to record path
+        // TODO: gracefully handle error
+        let curLocation = getRealCoordinates(record: true)!.location
+        crumbs.append(curLocation)
+    }
     
     /// checks to see if user is on the right path during navigation.
     @objc func followCrumb() {
-        guard let curLocation = getRealCoordinates(record: true), let nextKeypoint = RouteManager.shared.nextKeypoint else {
+        guard let curLocation = getRealCoordinates(record: true) else {
             // TODO: might want to indicate that something is wrong to the user
             return
         }
-        guard let directionToNextKeypoint = getDirectionToNextKeypoint(currentLocation: curLocation) else {
-            return
-        }
+        let minDistance = followCrumbs.map({sqrt(pow($0.x - curLocation.location.x, 2) + pow($0.y - curLocation.location.y, 2) + pow($0.z - curLocation.location.z, 2)) }).min()
+        // always allow this for now if minDistance == nil || minDistance! > 0.2 {
+        sceneView.session.add(anchor: ARAnchor(name: "followCrumb", transform: curLocation.location.transform))
+       // }
+        var directionToNextKeypoint = getDirectionToNextKeypoint(currentLocation: curLocation)
+        
         if (directionToNextKeypoint.targetState == PositionState.atTarget) {
-            if !RouteManager.shared.onLastKeypoint {                // arrived at keypoint
+            if (keypoints.count > 1) {
+                // arrived at keypoint
                 // send haptic/sonic feedback
                 waypointFeedbackGenerator?.notificationOccurred(.success)
-                if (soundFeedback) { SoundEffectManager.shared.meh() }
-
-                // remove current visited keypont from keypoint list
-                prevKeypointPosition = nextKeypoint.location
-                RouteManager.shared.checkOffKeypoint()
-
-                // erase current keypoint and render next keypoint node
-                ARSessionManager.shared.renderKeypoint(RouteManager.shared.nextKeypoint!.location, defaultColor: defaultColor)
+                if (soundFeedback) { playSystemSound(id: 1016) }
                 
-                if showPath {
-                    ARSessionManager.shared.renderPath(prevKeypointPosition, RouteManager.shared.nextKeypoint!.location, defaultPathColor: defaultPathColor)
-                }
+                // remove current visited keypont from keypoint list
+                prevKeypointPosition = keypoints[0].location
+                checkedOffKeypoints.append(keypoints[0])
+                keypoints.remove(at: 0)
+                
+                // erase current keypoint and render next keypoint node
+                keypointNode.removeFromParentNode()
+                renderKeypoint(keypoints[0].location)
                 
                 // update directions to next keypoint
-                if let newDirectionToNextKeypoint = getDirectionToNextKeypoint(currentLocation: curLocation) {
-                    setDirectionText(currentLocation: curLocation.location, direction: newDirectionToNextKeypoint, displayDistance: false)
-                }
+                directionToNextKeypoint = getDirectionToNextKeypoint(currentLocation: curLocation)
+                setDirectionText(currentLocation: curLocation.location, direction: directionToNextKeypoint, displayDistance: false)
             } else {
+                // arrived at final keypoint
+                // send haptic/sonic feedback
                 waypointFeedbackGenerator?.notificationOccurred(.success)
-                if (soundFeedback) { SoundEffectManager.shared.success() }
-
-                RouteManager.shared.checkOffKeypoint()
-                ARSessionManager.shared.removeNavigationNodes()
+                if (soundFeedback) { playSystemSound(id: 1016) }
+                
+                // erase current keypoint node
+                keypointNode.removeFromParentNode()
                 
                 followingCrumbs?.invalidate()
                 hapticTimer?.invalidate()
+                snapToRouteTimer?.invalidate()
                 
-                #if !APPCLIP
-                //self.surveyInterface.sendLogDataHelper(pathStatus: nil, announceArrival: true, vc: self)
-                self.hideAllViewsHelper()
-                // if everything breaks, get this outta there B)
-                self.state = .endScreen(completedRoute: true)
-                print("end screen displayed")
-                #else
-                self.state = .endScreen(completedRoute: true)
-                #endif
+                restartSessionIfFailedToRelocalize()
+                
+                // update text and stop navigation
+                if(sendLogs) {
+                    state = .ratingRoute(announceArrival: true)
+                } else {
+                    state = .mainScreen(announceArrival: true)
+                    logger.resetStateSequenceLog()
+                }
             }
         }
     }
@@ -2566,6 +1622,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
   
     /// update the offset between direction of travel and the orientation of the phone.  This supports a feature which allows the user to navigate with the phone pointed in a direction other than the direction of travel.  The feature cannot be accessed by users in the app store version.
     @objc func updateHeadingOffset() {
+        // send haptic feedback depending on correct device
         guard let curLocation = getRealCoordinates(record: false) else {
             return
         }
@@ -2574,23 +1631,18 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         headingRingBuffer.insert(currPhoneHeading)
         locationRingBuffer.insert(Vector3(curLocation.location.x, curLocation.location.y, curLocation.location.z))
         
-        if let newOffset = getHeadingOffset(), cos(newOffset) > 0 {
-            if case .recordingRoute = state {
-                // see if it has been at least 1 second since we last recorded the offset
-                if -lastRecordPhaseOffsetTime.timeIntervalSinceNow > 1.0 {
-                    recordPhaseHeadingOffsets.append(newOffset)
-                    lastRecordPhaseOffsetTime = Date()
-                }
+        if let newOffset = getHeadingOffset() {
+            if adjustOffset {
+                nav.headingOffset = newOffset
             }
-            nav.headingOffset = newOffset
         }
     }
     
-    /// Compute the heading vector of the phone.  When the phone is mostly upright, this is just the project of the negative z-axis of the device into the x-z plane.  When the phone is mostly flat, this is the y-axis of the phone projected into the x-z plane after the pitch and roll of the phone are undone.  The case where the phone is mostly flat is used primarily for alignment to and creation of Anchor Points.
+    /// Compute the heading vector of the phone.  When the phone is mostly upright, this is just the project of the negative z-axis of the device into the x-z plane.  When the phone is mostly flat, this is the y-axis of the phone projected into the x-z plane after the pitch and roll of the phone are undone.  The case where the phone is mostly flat is used primarily for alignment to and creation of landmarks.
     ///
     /// - Parameter transform: the position and orientation of the phone
     /// - Returns: the heading vector as a 4 dimensional vector (y-component and w-component will necessarily be 0)
-    func getProjectedHeading(_ transform: simd_float4x4) -> simd_float4 {
+    static func getProjectedHeading(_ transform: simd_float4x4) -> simd_float4 {
         if abs(transform.columns.2.y) < abs(transform.columns.0.y) {
             return -simd_make_float4(transform.columns.2.x, 0, transform.columns.2.z, 0)
         } else {
@@ -2604,7 +1656,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     }
     
     /// this gets the yaw of the phone using the heading vector returned by `getProjectedHeading`.
-    func getYawHelper(_ transform: simd_float4x4) -> Float {
+    static func getYawHelper(_ transform: simd_float4x4) -> Float {
         let projectedHeading = getProjectedHeading(transform)
         return atan2f(-projectedHeading.x, -projectedHeading.z)
     }
@@ -2618,48 +1670,25 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
             // TODO: might want to indicate that something is wrong to the user
             return
         }
-        guard let directionToNextKeypoint = getDirectionToNextKeypoint(currentLocation: curLocation) else {
-            return
-        }
+        let directionToNextKeypoint = getDirectionToNextKeypoint(currentLocation: curLocation)
         let coneWidth: Float!
-        let lateralDisplacementToleranceRatio: Float
         if strictHaptic {
             coneWidth = Float.pi/12
-            lateralDisplacementToleranceRatio = 0.5          // this is the ratio between lateral distance when passing keypoint and the maximum acceptable lateral displacement
         } else {
             coneWidth = Float.pi/6
-            lateralDisplacementToleranceRatio = 1.0
         }
         
         // use a stricter criteria than 12 o'clock for providing haptic feedback
-        if directionToNextKeypoint.lateralDistanceRatioWhenCrossingTarget < lateralDisplacementToleranceRatio || abs(directionToNextKeypoint.angleDiff) < coneWidth {
+        if abs(directionToNextKeypoint.angleDiff) < coneWidth {
             let timeInterval = feedbackTimer.timeIntervalSinceNow
             if(-timeInterval > ViewController.FEEDBACKDELAY) {
                 // wait until desired time interval before sending another feedback
                 if (hapticFeedback) { feedbackGenerator?.impactOccurred() }
-                if (soundFeedback) { SoundEffectManager.shared.playSystemSound(id: 1103) }
+                if (soundFeedback) { playSystemSound(id: 1103) }
                 feedbackTimer = Date()
             }
         }
-        for anchorPoint in RouteManager.shared.intermediateAnchorPoints {
-            guard let arAnchor = anchorPoint.anchor, let anchorPointTransform = ARSessionManager.shared.getCurrentLocation(of: arAnchor)?.transform else {
-                continue
-            }
-            // TODO think about breaking ties by playing the least recently played voice note
-            // TODO consider different floors by considering the y value
-            if (voiceNoteToPlay == nil || !voiceNoteToPlay!.isPlaying) && sqrt(pow(anchorPointTransform.columns.3.x - curLocation.location.x,2) + pow(anchorPointTransform.columns.3.z - curLocation.location.z,2)) < ViewController.voiceNotePlayDistanceThreshold {
-                // play voice note
-                let voiceNoteToPlayURL = anchorPoint.voiceNote!.documentURL
-                do {
-                    let data = try Data(contentsOf: voiceNoteToPlayURL)
-                    voiceNoteToPlay = try AVAudioPlayer(data: data, fileTypeHint: AVFileType.caf.rawValue)
-                    voiceNoteToPlay?.prepareToPlay()
-                } catch {}
-                readVoiceNote()
-            }
-        }
     }
-    
     
     /// Communicates a message to the user via speech.  If VoiceOver is active, then VoiceOver is used to communicate the announcement, otherwise we use the AVSpeechEngine
     ///
@@ -2693,7 +1722,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
                 currentAnnouncement = announcement
                 synth.speak(utterance)
             } catch {
-                print("Unexpected error announcing something using AVSpeechEngine!")
+                print("Unexpeced error announcing something using AVSpeechEngine!")
             }
         }
     }
@@ -2702,13 +1731,11 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     ///
     /// - Parameter currentLocation: the current location of the device
     /// - Returns: the direction to the next keypoint with the distance rounded to the nearest tenth of a meter
-    func getDirectionToNextKeypoint(currentLocation: CurrentCoordinateInfo) -> DirectionInfo? {
+    func getDirectionToNextKeypoint(currentLocation: CurrentCoordinateInfo) -> DirectionInfo {
         // returns direction to next keypoint from current location
-        guard let nextKeypoint = RouteManager.shared.nextKeypoint, var dir = nav.getDirections(currentLocation: currentLocation, nextKeypoint: nextKeypoint, isLastKeypoint: RouteManager.shared.onLastKeypoint) else {
-             return nil
-         }
-         dir.distance = roundToTenths(dir.distance)
-         return dir
+        var dir = nav.getDirections(currentLocation: currentLocation, nextKeypoint: keypoints[0])
+        dir.distance = roundToTenths(dir.distance)
+        return dir
     }
     
     /// Called when the "get directions" button is pressed.  The announcement is made with a 0.5 second delay to allow the button name to be announced.
@@ -2720,7 +1747,6 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     // Chooses the states in which the home page alerts pop up
     @objc func homeButtonPressed() {
     // if the state case needs to have a home button alert, send it to the function that creates the relevant alert
-        hideAllViewsHelper()
         if case .navigatingRoute = self.state {
             homePageNavigationProcesses()
         }
@@ -2748,48 +1774,72 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         else if case .startingResumeProcedure = self.state {
             homePageNavigationProcesses()
         }
-        else if case .startingNameSavedRouteProcedure = self.state {
-            homePageNavigationProcesses()
-        }
-        else if case .endScreen = self.state {
-            homePageNavigationProcesses()
-        }
         else {
             // proceed to home page
             clearState()
             hideAllViewsHelper()
-            #if !APPCLIP
-            self.arLogger.finalizeTrial()
-            uploadLocalDataToCloudHelper()
-            #endif
             self.state = .mainScreen(announceArrival: false)
         }
-        
     }
     
-    @objc func burgerMenuButtonPressed() {
-        #if !APPCLIP
-        let storyBoard: UIStoryboard = UIStoryboard(name: "BurgerMenu", bundle: nil)
-        let popoverContent = storyBoard.instantiateViewController(withIdentifier: "burgerMenuTapped") as! BurgerMenuViewController
+    /// Called when the settings button is pressed.  This function will display the settings view (managed by SettingsViewController) as a popover.
+    @objc func settingsButtonPressed() {
+        let storyBoard: UIStoryboard = UIStoryboard(name: "SettingsAndHelp", bundle: nil)
+        let popoverContent = storyBoard.instantiateViewController(withIdentifier: "Settings") as! SettingsViewController
         popoverContent.preferredContentSize = CGSize(width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height)
-        popoverContent.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: popoverContent, action: #selector(popoverContent.doneWithBurgerMenu))
         let nav = UINavigationController(rootViewController: popoverContent)
         nav.modalPresentationStyle = .popover
         let popover = nav.popoverPresentationController
         popover?.delegate = self
         popover?.sourceView = self.view
         popover?.sourceRect = CGRect(x: 0, y: UIConstants.settingsAndHelpFrameHeight/2, width: 0,height: 0)
+        
+        popoverContent.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: popoverContent, action: #selector(popoverContent.doneWithSettings))
 
+        
         self.present(nav, animated: true, completion: nil)
-        #endif
+    }
+    
+    /// Called when the help button is pressed.  This function will display the help view (managed by HelpViewController) as a popover.
+    @objc func helpButtonPressed() {
+        let storyBoard: UIStoryboard = UIStoryboard(name: "SettingsAndHelp", bundle: nil)
+        let popoverContent = storyBoard.instantiateViewController(withIdentifier: "Help") as! HelpViewController
+        popoverContent.preferredContentSize = CGSize(width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height)
+        let nav = UINavigationController(rootViewController: popoverContent)
+        nav.modalPresentationStyle = .popover
+        let popover = nav.popoverPresentationController
+        popover?.delegate = self
+        popover?.sourceView = self.view
+        popover?.sourceRect = CGRect(x: 0, y: 0, width: 0, height: 0)
+        popoverContent.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: popoverContent, action: #selector(popoverContent.doneWithHelp))
+        suppressTrackingWarnings = true
+        self.present(nav, animated: true, completion: nil)
+    }
+    
+    /// Called when the Feedback button is pressed.  This function will display the Feedback view (managed by FeedbackViewController) as a popover.
+    @objc func feedbackButtonPressed() {
+        let storyBoard: UIStoryboard = UIStoryboard(name: "SettingsAndHelp", bundle: nil)
+        let popoverContent = storyBoard.instantiateViewController(withIdentifier: "Feedback") as! FeedbackViewController
+        popoverContent.preferredContentSize = CGSize(width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height)
+        let nav = UINavigationController(rootViewController: popoverContent)
+        nav.modalPresentationStyle = .popover
+        let popover = nav.popoverPresentationController
+        popover?.delegate = self
+        popover?.sourceView = self.view
+        popover?.sourceRect = CGRect(x: 0,
+                                     y: UIConstants.settingsAndHelpFrameHeight/2,
+                                     width: 0,
+                                     height: 0)
+        popoverContent.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: popoverContent, action: #selector(popoverContent.closeFeedback))
+        suppressTrackingWarnings = true
+        self.present(nav, animated: true, completion: nil)
     }
     
     /// Announce directions at any given point to the next keypoint
     @objc func announceDirectionHelp() {
         if case .navigatingRoute = state, let curLocation = getRealCoordinates(record: false) {
-            if let directionToNextKeypoint = getDirectionToNextKeypoint(currentLocation: curLocation) {
-                setDirectionText(currentLocation: curLocation.location, direction: directionToNextKeypoint, displayDistance: true)
-            }
+            let directionToNextKeypoint = getDirectionToNextKeypoint(currentLocation: curLocation)
+            setDirectionText(currentLocation: curLocation.location, direction: directionToNextKeypoint, displayDistance: true)
         }
     }
     
@@ -2800,30 +1850,26 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     ///   - direction: the direction info struct (e.g., as computed by the `Navigation` class)
     ///   - displayDistance: a Boolean that indicates whether the distance to the net keypoint should be displayed (true if it should be displayed, false otherwise)
     func setDirectionText(currentLocation: LocationInfo, direction: DirectionInfo, displayDistance: Bool) {
-        guard let nextKeypoint = RouteManager.shared.nextKeypoint else {
-            return
-        }
         // Set direction text for text label and VoiceOver
-        let xzNorm = sqrtf(powf(currentLocation.x - nextKeypoint.location.x, 2) + powf(currentLocation.z - nextKeypoint.location.z, 2))
-        let slope = (nextKeypoint.location.y - prevKeypointPosition.y) / xzNorm
-        let yDistance = abs(nextKeypoint.location.y - prevKeypointPosition.y)
+        let xzNorm = sqrtf(powf(currentLocation.x - keypoints[0].location.x, 2) + powf(currentLocation.z - keypoints[0].location.z, 2))
+        let slope = (keypoints[0].location.y - prevKeypointPosition.y) / xzNorm
         var dir = ""
         
-        if yDistance > 1 && slope > 0.3 { // Go upstairs
+        if(slope > 0.3) { // Go upstairs
             if(hapticFeedback) {
-                dir += "\(Directions[direction.hapticDirection]!)" + NSLocalizedString("climbStairsDirection", comment: "Additional directions given to user discussing climbing stairs")
+                dir += "\(Directions[direction.hapticDirection]!)" + NSLocalizedString(" and proceed upstairs", comment: "Additional directions given to user")
             } else {
-                dir += "\(Directions[direction.clockDirection]!)" + NSLocalizedString(" and proceed upstairs", comment: "Additional directions given to user telling them to climb stairs")
+                dir += "\(Directions[direction.clockDirection]!)" + NSLocalizedString(" and proceed upstairs", comment: "Additional directions given to user")
             }
             updateDirectionText(dir, distance: 0, displayDistance: false)
-        } else if yDistance > 1 && slope < -0.3 { // Go downstairs
+        } else if (slope < -0.3) { // Go downstairs
             if(hapticFeedback) {
-                dir += "\(Directions[direction.hapticDirection]!)\(NSLocalizedString("descendStairsDirection" , comment: "This is a direction which instructs the user to descend stairs"))"
+                dir += "\(Directions[direction.hapticDirection]!) and proceed downstairs"
             } else {
-                dir += "\(Directions[direction.clockDirection]!)\(NSLocalizedString("descendStairsDirection" , comment: "This is a direction which instructs the user to descend stairs"))"
+                dir += "\(Directions[direction.clockDirection]!) and proceed downstairs"
             }
             updateDirectionText(dir, distance: direction.distance, displayDistance: false)
-        } else { // normal directions
+        } else { // nromal directions
             if(hapticFeedback) {
                 dir += "\(Directions[direction.hapticDirection]!)"
             } else {
@@ -2833,14 +1879,118 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         }
     }
     
+    /// Create the keypoint SCNNode that corresponds to the rotating flashing element that looks like a navigation pin.
+    ///
+    /// - Parameter location: the location of the keypoint
+    func renderKeypoint(_ location: LocationInfo) {
+        // render SCNNode of given keypoint
+        keypointNode = SCNNode(mdlObject: keypointObject)
+
+        // configure node attributes
+        keypointNode.scale = SCNVector3(0.0004, 0.0004, 0.0004)
+        keypointNode.geometry?.firstMaterial?.diffuse.contents = UIColor.red
+        keypointNode.position = SCNVector3(location.x, location.y - 0.2, location.z)
+        keypointNode.rotation = SCNVector4(0, 1, 0, (location.yaw - Float.pi/2))
+        
+        let bound = SCNVector3(
+            x: keypointNode.boundingBox.max.x - keypointNode.boundingBox.min.x,
+            y: keypointNode.boundingBox.max.y - keypointNode.boundingBox.min.y,
+            z: keypointNode.boundingBox.max.z - keypointNode.boundingBox.min.z)
+        keypointNode.pivot = SCNMatrix4MakeTranslation(bound.x / 2, bound.y / 2, bound.z / 2)
+        
+        let spin = CABasicAnimation(keyPath: "rotation")
+        spin.fromValue = NSValue(scnVector4: SCNVector4(x: 0, y: 1, z: 0, w: 0))
+        spin.toValue = NSValue(scnVector4: SCNVector4(x: 0, y: 1, z: 0, w: Float(CGFloat(2 * Float.pi))))
+        spin.duration = 3
+        spin.repeatCount = .infinity
+        keypointNode.addAnimation(spin, forKey: "spin around")
+        
+        // animation - SCNNode flashes red
+        let flashRed = SCNAction.customAction(duration: 2) { (node, elapsedTime) -> () in
+            let percentage = Float(elapsedTime / 2)
+            var color = UIColor.clear
+            let power: Float = 2.0
+            
+            
+            if (percentage < 0.5) {
+                color = UIColor(red: 1,
+                                green: CGFloat(powf(2.0*percentage, power)),
+                                blue: CGFloat(powf(2.0*percentage, power)),
+                                alpha: 1)
+            } else {
+                color = UIColor(red: 1,
+                                green: CGFloat(powf(2-2.0*percentage, power)),
+                                blue: CGFloat(powf(2-2.0*percentage, power)),
+                                alpha: 1)
+            }
+            node.geometry!.firstMaterial!.diffuse.contents = color
+        }
+        
+        // animation - SCNNode flashes green
+        let flashGreen = SCNAction.customAction(duration: 2) { (node, elapsedTime) -> () in
+            let percentage = Float(elapsedTime / 2)
+            var color = UIColor.clear
+            let power: Float = 2.0
+            
+            
+            if (percentage < 0.5) {
+                color = UIColor(red: CGFloat(powf(2.0*percentage, power)),
+                                green: 1,
+                                blue: CGFloat(powf(2.0*percentage, power)),
+                                alpha: 1)
+            } else {
+                color = UIColor(red: CGFloat(powf(2-2.0*percentage, power)),
+                                green: 1,
+                                blue: CGFloat(powf(2-2.0*percentage, power)),
+                                alpha: 1)
+            }
+            node.geometry!.firstMaterial!.diffuse.contents = color
+        }
+        
+        // animation - SCNNode flashes blue
+        let flashBlue = SCNAction.customAction(duration: 2) { (node, elapsedTime) -> () in
+            let percentage = Float(elapsedTime / 2)
+            var color = UIColor.clear
+            let power: Float = 2.0
+            
+            
+            if (percentage < 0.5) {
+                color = UIColor(red: CGFloat(powf(2.0*percentage, power)),
+                                green: CGFloat(powf(2.0*percentage, power)),
+                                blue: 1,
+                                alpha: 1)
+            } else {
+                color = UIColor(red: CGFloat(powf(2-2.0*percentage, power)),
+                                green: CGFloat(powf(2-2.0*percentage, power)),
+                                blue: 1,
+                                alpha: 1)
+            }
+            node.geometry!.firstMaterial!.diffuse.contents = color
+        }
+        let flashColors = [flashRed, flashGreen, flashBlue]
+        
+        // set flashing color based on settings bundle configuration
+        var changeColor: SCNAction!
+        if (defaultColor == 3) {
+            changeColor = SCNAction.repeatForever(flashColors[Int(arc4random_uniform(3))])
+        } else {
+            changeColor = SCNAction.repeatForever(flashColors[defaultColor])
+        }
+        
+        // add keypoint node to view
+        keypointNode.runAction(changeColor)
+        sceneView.scene.rootNode.addChildNode(keypointNode)
+    }
+    
     /// Compute the location of the device based on the ARSession.  If the record flag is set to true, record this position in the logs.
     ///
     /// - Parameter record: a Boolean indicating whether to record the computed position (true if it should be computed, false otherwise)
     /// - Returns: the current location as a `CurrentCoordinateInfo` object
     func getRealCoordinates(record: Bool) -> CurrentCoordinateInfo? {
-        guard let currTransform = ARSessionManager.shared.currentFrame?.camera.transform else {
+        guard var currTransform = sceneView.session.currentFrame?.camera.transform else {
             return nil
         }
+
         // returns current location & orientation based on starting origin
         let scn = SCNMatrix4(currTransform)
         let transMatrix = Matrix3([scn.m11, scn.m12, scn.m13,
@@ -2849,9 +1999,90 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         
         // record location data in debug logs
         if(record) {
-            logger.logTransformMatrix(state: state, scn: scn, headingOffset: nav.headingOffset, useHeadingOffset: nav.useHeadingOffset)
+            logger.logTransformMatrix(state: state, scn: scn)
         }
         return CurrentCoordinateInfo(LocationInfo(transform: currTransform), transMatrix: transMatrix)
+    }
+    
+    ///Called when there is a change in tracking state.  This is important for both announcing tracking errors to the user and also to triggering some app state transitions.
+    ///
+    /// - Parameters:
+    ///   - session: the AR session associated with the change in tracking state
+    ///   - camera: the AR camera associated with the change in tracking state
+    func session(_ session: ARSession, cameraDidChangeTrackingState camera: ARCamera) {
+        var logString: String? = nil
+
+        switch camera.trackingState {
+        case .limited(let reason):
+            switch reason {
+            case .excessiveMotion:
+                logString = "ExcessiveMotion"
+                print("Excessive motion")
+                if !suppressTrackingWarnings {
+                    announce(announcement: NSLocalizedString("Excessive motion.\nTracking performance is degraded.", comment: "Let user know that there is too much movement of their phone and thus the app's ability to track a route has been lowered."))
+                    if soundFeedback {
+                        playSystemSound(id: 1050)
+                    }
+                }
+            case .insufficientFeatures:
+                logString = "InsufficientFeatures"
+                print("InsufficientFeatures")
+                if !suppressTrackingWarnings {
+                    announce(announcement: NSLocalizedString("Insufficient visual features.\nTracking performance is degraded.", comment: "Let user know that their current surroundings do not have enough visual markers and thus the app's ability to track a route has been lowered."))
+                    if soundFeedback {
+                        playSystemSound(id: 1050)
+                    }
+                }
+            case .initializing:
+                // don't log anything
+                print("initializing")
+            case .relocalizing:
+                logString = "Relocalizing"
+                print("Relocalizing")
+            @unknown default:
+                print("An error condition arose that we didn't know about when the app was last compiled")
+            }
+        case .normal:
+            logString = "Normal"
+            if #available(iOS 12.0, *), configuration.initialWorldMap != nil, attemptingRelocalization {
+                if !suppressTrackingWarnings {
+                    announce(announcement: NSLocalizedString("Successfully matched current environment to saved route.", comment: "Let user know that their surroundings match up to the surroundings of a saved route and that they can begin navigating."))
+                }
+                // We clear out `followCrumbs` as we have no way to update their position relative to the updated world origin.  We could potentially circumvent this if we inserted them as proper SCNNodes
+                attemptingRelocalization = false
+            } else if case let .limited(reason)? = trackingSessionState {
+                if !suppressTrackingWarnings {
+                    if reason == .initializing {
+                        announce(announcement: NSLocalizedString("Tracking session initialized.", comment: "Let user know that the tracking session has started."))
+                    } else {
+                        announce(announcement: NSLocalizedString("Tracking performance normal.", comment: "Let user know that the ability to track and record a route is normal."))
+                        if soundFeedback {
+                            playSystemSound(id: 1025)
+                        }
+                    }
+                }
+            }
+            if case .readyForFinalResumeAlignment = state, configuration.initialWorldMap != nil {
+                // this will cancel any realignment if it hasn't happened yet and go straight to route navigation mode.  This only applies if there an initial map (which would employ relocalization has occurred)
+                rootContainerView.countdownTimer.isHidden = true
+                isResumedRoute = true
+                
+                state = .readyToNavigateOrPause(allowPause: false)
+            }
+            print("normal")
+        case .notAvailable:
+            logString = "NotAvailable"
+            print("notAvailable")
+        }
+        if let logString = logString {
+            if case .recordingRoute = state {
+                logger.logTrackingError(isRecordingPhase: true, trackingError: logString)
+            } else if case .navigatingRoute = state {
+                logger.logTrackingError(isRecordingPhase: false, trackingError: logString)
+            }
+        }
+        // update the tracking state so we can use it in the next call to this function
+        trackingSessionState = camera.trackingState
     }
     
     /// this tells the ARSession that when the app is becoming active again, we should try to relocalize to the previous world map (rather than proceding with the tracking session in the normal state even though the coordinate systems are no longer aligned).
@@ -2863,51 +2094,34 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
 }
 
 // MARK: - methods for implementing RecorderViewControllerDelegate
-#if !APPCLIP
 extension ViewController: RecorderViewControllerDelegate {
     /// Called when a recording starts (currently nothing is done in this function)
     func didStartRecording() {
     }
     
-    /// Called when the user finishes recording a voice note.  This function adds the voice note to the `RouteAnchorPoint` object.
+    /// Called when the user finishes recording a voice note.  This function adds the voice note to the `RouteLandmark` object.
     ///
-    /// - Parameter audioFileURL: the URL to the audio recording
+    /// - Parameter audioFileURL: <#audioFileURL description#>
     func didFinishRecording(audioFileURL: URL) {
-        if case .recordingRoute = state {
-            guard let currentTransform = ARSessionManager.shared.currentFrame?.camera.transform else {
-                print("can't properly save Anchor Point since AR session is not running")
-                return
+        if creatingRouteLandmark {
+            // delete the file since we are re-recording it
+            if let beginRouteLandmarkVoiceNote = self.beginRouteLandmark.voiceNote {
+                do {
+                    try FileManager.default.removeItem(at: beginRouteLandmarkVoiceNote.documentURL)
+                } catch { }
             }
-            let noteAnchorPoint = RouteAnchorPoint()
-            noteAnchorPoint.voiceNote = audioFileURL.lastPathComponent as NSString
-            noteAnchorPoint.anchor = ARAnchor(transform: currentTransform)
-            ARSessionManager.shared.sceneView.session.add(anchor: noteAnchorPoint.anchor!)
-            RouteManager.shared.intermediateAnchorPoints.append(noteAnchorPoint)
-
-
+            beginRouteLandmark.voiceNote = audioFileURL.lastPathComponent as NSString
         } else {
-            print(audioFileURL)
-            if creatingRouteAnchorPoint {
-                // delete the file since we are re-recording it
-                if let beginRouteAnchorPointVoiceNote = self.beginRouteAnchorPoint.voiceNote {
-                    do {
-                        try FileManager.default.removeItem(at: beginRouteAnchorPointVoiceNote.documentURL)
-                    } catch { }
-                }
-                beginRouteAnchorPoint.voiceNote = audioFileURL.lastPathComponent as NSString
-            } else {
-                // delete the file since we are re-recording it
-                if let endRouteAnchorPointVoiceNote = self.endRouteAnchorPoint.voiceNote {
-                    do {
-                        try FileManager.default.removeItem(at: endRouteAnchorPointVoiceNote.documentURL)
-                    } catch { }
-                }
-                endRouteAnchorPoint.voiceNote = audioFileURL.lastPathComponent as NSString
+            // delete the file since we are re-recording it
+            if let endRouteLandmarkVoiceNote = self.endRouteLandmark.voiceNote {
+                do {
+                    try FileManager.default.removeItem(at: endRouteLandmarkVoiceNote.documentURL)
+                } catch { }
             }
+            endRouteLandmark.voiceNote = audioFileURL.lastPathComponent as NSString
         }
     }
 }
-#endif
 
 // MARK: - UIPopoverPresentationControllerDelegate
 extension ViewController: UIPopoverPresentationControllerDelegate {
@@ -2941,180 +2155,3 @@ extension ViewController: UIPopoverPresentationControllerDelegate {
         }
     }
 }
-
-extension ViewController: ARSessionManagerDelegate {
-    func geoAnchorsReadyForPathCreation(geoAnchors: [ARGeoAnchor]) {
-        // transition to navigation state and create the route
-        guard let resumedRouteGeoAnchors = resumedRoute?.geoAnchors else {
-            return
-        }
-        if case .readyToNavigateOrPause(_) = state {
-            let geoAnchorsByIdentifier = Dictionary(uniqueKeysWithValues: zip(geoAnchors.map({$0.identifier}), geoAnchors))
-            crumbs = []
-            for geoAnchor in resumedRouteGeoAnchors.reversed() {
-                crumbs.append(LocationInfo(anchor: geoAnchorsByIdentifier[geoAnchor.identifier]!))
-            }
-            state = .navigatingRoute
-        }
-    }
-    
-    func getPathColor() -> Int {
-        return defaultPathColor
-    }
-    
-    func getKeypointColor() -> Int {
-        return defaultColor
-    }
-    
-    func getShowPath() ->Bool {
-        return showPath
-    }
-    
-    func trackingErrorOccurred(_ trackingError : ARTrackingError) {
-        trackingSessionErrorState = trackingError
-        announceCurrentTrackingErrors()
-    }
-    
-    func sessionInitialized() {
-        if let continuation = continuationAfterSessionIsReady {
-            continuationAfterSessionIsReady = nil
-            continuation()
-        }
-    }
-    
-    func sessionRelocalizing() {
-        trackingSessionErrorState = nil
-    }
-    
-    func trackingIsNormal() {
-        let oldTrackingSessionErrorState = trackingSessionErrorState
-        trackingSessionErrorState = nil
-        // if we are waiting on the session, proceed now
-        if let continuation = continuationAfterSessionIsReady {
-            continuationAfterSessionIsReady = nil
-            continuation()
-        }
-        if ARSessionManager.shared.initialWorldMap != nil, attemptingRelocalization {
-            if trackingWarningsAllowed {
-                announce(announcement: NSLocalizedString("realignToSavedRouteAnnouncement", comment: "An announcement which lets the user know that their surroundings have been matched to a saved route"))
-            }
-            attemptingRelocalization = false
-        } else if oldTrackingSessionErrorState != nil {
-            if trackingWarningsAllowed {
-                announce(announcement: NSLocalizedString("fixedTrackingAnnouncement", comment: "Let user know that the ARKit tracking session has returned to its normal quality (this is played after the tracking has been restored from thir being insuficent visual features or excessive motion which degrade the tracking)"))
-                if soundFeedback {
-                    SoundEffectManager.shared.playSystemSound(id: 1025)
-                }
-            }
-        }
-        if case .readyForFinalResumeAlignment = state, ARSessionManager.shared.initialWorldMap != nil {
-            // this will cancel any realignment if it hasn't happened yet and go straight to route navigation mode
-            rootContainerView.countdownTimer.isHidden = true
-            isResumedRoute = true
-            
-            isAutomaticAlignment = true
-            
-            ///PATHPOINT: Auto Alignment -> resume route
-            state = .readyToNavigateOrPause(allowPause: false)
-        }
-    }
-    
-    func isRecording() -> Bool {
-        if case .recordingRoute = state {
-            return true
-        } else {
-            return false
-        }
-    }
-    
-    func receivedImageAnchors(imageAnchors: [ARImageAnchor]) {
-        if case .readyForFinalResumeAlignment = state {
-            if imageAnchors.first!.isTracked {
-                self.state = .startingAutoAlignment
-                resumeTracking()
-            }
-        }
-        
-        if case .startingPauseProcedure = state {
-            print("number of ARImageAnchors: \(imageAnchors.count)")
-            if imageAnchors.first!.isTracked {
-                self.state = .startingAutoAnchoring
-                print("auto anchoring")
-            }
-        }
-        
-        for imageAnchor in imageAnchors {
-            let imageNode: SCNNode
-            if let existingTagNode = ARSessionManager.shared.sceneView.scene.rootNode.childNode(withName: "Image Tag", recursively: false) {
-                imageNode = existingTagNode
-                imageNode.simdTransform = imageAnchor.transform
-            }
-            else {
-                if (soundFeedback) {
-                    SoundEffectManager.shared.meh()
-                }
-                
-               /* if case .startingAutoAnchoring = state {
-                    announce(announcement: NSLocalizedString("anchorImageTagInFrameAnnouncement", comment: "This is announced when the image tag is in frame and the user can set an anchor point."))
-                } else if case .startingAutoAlignment = state {
-                    announce(announcement: NSLocalizedString("alignImageTagInFrameAnnouncement", comment: "This is announced when the image tag is in frame, the user is localized to the route, and they can begin navigating."))
-                }*/
-                
-                imageNode = SCNNode()
-                imageNode.simdTransform = imageAnchor.transform
-                imageNode.name = "Image Tag"
-                ARSessionManager.shared.sceneView.scene.rootNode.addChildNode(imageNode)
-                
-                /// Adds plane to the tag to aid in the visualization
-                
-                let highlightPlane = SCNNode(geometry: SCNPlane(width: imageAnchor.referenceImage.physicalSize.width, height: imageAnchor.referenceImage.physicalSize.height))
-                
-                highlightPlane.eulerAngles.x = -.pi / 2
-                
-                highlightPlane.geometry?.firstMaterial?.diffuse.contents = UIColor.green
-                highlightPlane.opacity = 0.9
-                imageNode.addChildNode(highlightPlane)
-            }
-        }
-    }
-    
-    func shouldLogRichData() -> Bool {
-        if case .mainScreen(_) = state {
-            return false
-        } else if case .endScreen(_) = state {
-            return false
-        } else {
-            return true
-        }
-    }
-    
-    func getLoggingTag()->String {
-        return state.rawValue
-    }
-}
-
-extension NFCTypeNameFormat: CustomStringConvertible {
-    public var description: String {
-        switch self {
-        case .nfcWellKnown: return "NFC Well Known type"
-        case .media: return "Media type"
-        case .absoluteURI: return "Absolute URI type"
-        case .nfcExternal: return "NFC External type"
-        case .unknown: return "Unknown type"
-        case .unchanged: return "Unchanged type"
-        case .empty: return "Empty payload"
-        @unknown default: return "Invalid data"
-        }
-    }
-}
-
-#if !APPCLIP
-class UISurveyHostingController: UIHostingController<FirebaseFeedbackSurvey> {
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-            UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: self.view)
-        }
-    }
-}
-#endif

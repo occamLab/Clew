@@ -2,8 +2,8 @@
 //  PathMatcher.swift
 //  Clew
 //
-//  Created by Paul Ruvolo on 6/6/22.
-//  Copyright © 2022 OccamLab. All rights reserved.
+//  Created by Paul Ruvolo on 7/3/19.
+//  Copyright © 2019 OccamLab. All rights reserved.
 //
 
 import Foundation

@@ -9,7 +9,6 @@
 // and elements
 
 import UIKit
-import SwiftUI
 import ARKit
 import SceneKit
 import SceneKit.ModelIO
@@ -18,11 +17,8 @@ import AudioToolbox
 import MediaPlayer
 import VectorMath
 import Firebase
-#if !APPCLIP
-import ARDataLogger
-#endif
-//import FirebaseDatabase
-//import SRCountdownTimer
+import FirebaseDatabase
+import SRCountdownTimer
 
 /// View for buttons and elements which are, generally, accessible
 /// regardless of current app state
@@ -33,21 +29,14 @@ class RootContainerView: UIView {
     /// button for getting directions to the next keypoint
     var getDirectionButton: UIButton!
     
-    #if !APPCLIP
-    /// button for the burger menu
-    var burgerMenuButton: UIButton!
-    #endif
-    
     /// button for bringing up the settings menu
     var settingsButton: UIButton!
     
     /// button for bringing up the help menu
     var helpButton: UIButton!
 
-    #if !APPCLIP
     /// button for going to the main screen
     var homeButton: UIButton!
-    #endif
 
     /// button for bringing up the feedback menu
     var feedbackButton: UIButton!
@@ -60,10 +49,6 @@ class RootContainerView: UIView {
     /// a timer that counts down during the alignment procedure
     /// (alignment is captured at the end of the time)
     var countdownTimer: SRCountdownTimer!
-    
-    #if CLEWMORE
-    //var swiftUIPlaceHolder: UIViewController!
-    #endif
 
     /// required for non storyboard UIView
     /// objects
@@ -76,38 +61,58 @@ class RootContainerView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        backgroundColor = UIColor.systemBackground
-        // MARK: Burger Menu Button
-        #if !APPCLIP
-        burgerMenuButton = UIButton(frame: CGRect(x: UIConstants.buttonFrameWidth/(10/0.5),
-                                                  y: 10,
-                                                  width: UIConstants.buttonFrameWidth/7,
-                                                  height: UIConstants.buttonFrameWidth/7))
-        burgerMenuButton.isAccessibilityElement = true
-        burgerMenuButton.accessibilityLabel = NSLocalizedString("optionsButtonAccessibilityLabel", comment: "This is the accessibility label for the home button")
-        burgerMenuButton.setImage(UIImage(named: "burgerMenu"), for: .normal)
+        // MARK: Settings Button
+        settingsButton = UIButton(frame: CGRect(x: UIConstants.buttonFrameWidth/(10/0.5),
+                                                y: 10,
+                                                width: UIConstants.buttonFrameWidth/7,
+                                                height: UIConstants.buttonFrameWidth/7))
+        settingsButton.isAccessibilityElement = true
+        settingsButton.setTitle("Settings", for: .normal)
+        settingsButton.accessibilityLabel = "Settings"
+        settingsButton.titleLabel?.font = UIFont.systemFont(ofSize: 24.0)
+        settingsButton.setImage(UIImage(named: "settingsGear"), for: .normal)
+
         
+        // MARK: Help Button
+        helpButton = UIButton(frame: CGRect(x: UIConstants.buttonFrameWidth/(7/3),
+                                            y: UIConstants.yOriginOfSettingsAndHelpButton + 10,
+                                            width: UIConstants.buttonFrameWidth/7,
+                                            height: UIConstants.buttonFrameWidth/7))
+        helpButton.isAccessibilityElement = true
+        helpButton.setTitle("Help", for: .normal)
+        helpButton.titleLabel?.font = UIFont.systemFont(ofSize: 24.0)
+        helpButton.accessibilityLabel = "Help"
+        helpButton.setImage(UIImage(named: "HelpButton"), for: .normal)
 
         // MARK: Home Button
-        homeButton = UIButton(frame: CGRect(x: UIConstants.buttonFrameWidth/(10/8),
-                                            y: 10,
+        homeButton = UIButton(frame: CGRect(x: UIConstants.buttonFrameWidth/7,
+                                            y: UIConstants.yOriginOfSettingsAndHelpButton + 10,
                                             width: UIConstants.buttonFrameWidth/7,
                                             height: UIConstants.buttonFrameWidth/7))
         homeButton.isAccessibilityElement = true
         homeButton.setTitle("Home Button", for: .normal)
         homeButton.titleLabel?.font = UIFont.systemFont(ofSize: 24.0)
-        homeButton.accessibilityLabel = NSLocalizedString("homeButtonAccessibilityLabel", comment: "This is the accessibility label for the home button")
+        homeButton.accessibilityLabel = "Clew Home Screen"
         homeButton.setImage(UIImage(named: "homeButton"), for: .normal)
+        
+        feedbackButton = UIButton(frame: CGRect(x: UIConstants.buttonFrameWidth/(10/8),
+                                                y: 10,
+                                                width: UIConstants.buttonFrameWidth/7,
+                                                height: UIConstants.buttonFrameWidth/7))
+        feedbackButton.isAccessibilityElement = true
+        feedbackButton.setTitle("Feedback", for: .normal)
+        feedbackButton.titleLabel?.font = UIFont.systemFont(ofSize: 24.0)
+        feedbackButton.accessibilityLabel = "Feedback"
+        feedbackButton.setImage(UIImage(named: "Contact"), for: .normal)
 
-        #endif
-        // MARK: Get Directions Button
+
         getDirectionButton = UIButton(frame: CGRect(x: UIConstants.buttonFrameWidth/(7/5),
                                                     y: UIConstants.yOriginOfSettingsAndHelpButton + 10,
                                                     width: UIConstants.buttonFrameWidth/7,
                                                     height: UIConstants.buttonFrameWidth/7))
 
         getDirectionButton.isAccessibilityElement = true
-        getDirectionButton.accessibilityLabel = NSLocalizedString("getDirectionsButtonAccessibilityLabel", comment: "This is the accessibility label for the get directions button")
+        getDirectionButton.accessibilityLabel = "Get Directions"
         getDirectionButton.setImage(UIImage(named: "GetDirection"), for: .normal)
         getDirectionButton.isHidden = true
 
@@ -141,32 +146,13 @@ class RootContainerView: UIView {
         /// and announce through VoiceOver by posting appropriate notifications
         countdownTimer.accessibilityElementsHidden = true
         
-        #if CLEWMORE
-        /* swiftUIPlaceHolder = UIHostingController(rootView: DefaultView())
-        /*swiftUIPlaceHolder.view.frame(forAlignmentRect: CGRect(x: UIConstants.buttonFrameWidth*1/10,
-                                                          y: UIConstants.yOriginOfButtonFrame*11/10,
-                                                          width: self.frame.width,
-                                                          height: self.frame.height - UIConstants.buttonFrameHeight))
-    */
-        swiftUIPlaceHolder.view.frame(forAlignmentRect: CGRect(x: 100,
-                                                          y: 100,
-                                                          width: 600,
-                                                          height: 1000))
-        print("Coordinate Info: \(swiftUIPlaceHolder.view.frame)")
-        print("heehee") */
-        #endif
-        
         /// add all sub views
         addSubview(announcementText)
         addSubview(getDirectionButton)
+        addSubview(settingsButton)
+        addSubview(helpButton)
         addSubview(countdownTimer)
-        #if !APPCLIP
+        addSubview(feedbackButton)
         addSubview(homeButton)
-        addSubview(burgerMenuButton)
-        #endif
-        
-        #if CLEWMORE
-        //addSubview(swiftUIPlaceHolder.view)
-        #endif
     }
 }

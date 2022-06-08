@@ -58,79 +58,21 @@
 		</dict>
 		<dict>
 			<key>Type</key>
-			<string>PSToggleSwitchSpecifier</string>
-			<key>Title</key>
-			<string>Show Path</string>
-			<key>Key</key>
-			<string>showPath</string>
-			<key>DefaultValue</key>
-			<true/>
-		</dict>
-		<dict>
-			<key>Type</key>
-			<string>PSMultiValueSpecifier</string>
-			<key>Title</key>
-			<string>Path Color</string>
-			<key>Key</key>
-			<string>pathColor</string>
-			<key>DefaultValue</key>
-			<integer>0</integer>
-			<key>Values</key>
-			<array>
-				<integer>0</integer>
-				<integer>1</integer>
-				<integer>2</integer>
-				<integer>3</integer>
-			</array>
-			<key>Titles</key>
-			<array>
-				<string>Red</string>
-				<string>Green</string>
-				<string>Blue</string>
-				<string>Random</string>
-			</array>
-		</dict>
-		<dict>
-			<key>Type</key>
 			<string>PSGroupSpecifier</string>
 			<key>Title</key>
 			<string>Alignment Timer Options</string>
 		</dict>
 		<dict>
 			<key>Type</key>
-			<string>PSMultiValueSpecifier</string>
-			<key>Title</key>
-			<string>Timer Length</string>
+			<string>PSSliderSpecifier</string>
 			<key>Key</key>
 			<string>timerLength</string>
-			<key>Titles</key>
-			<array>
-				<string>1 second</string>
-				<string>2 seconds</string>
-				<string>3 seconds</string>
-				<string>4 seconds</string>
-				<string>5 seconds</string>
-				<string>6 seconds</string>
-				<string>7 seconds</string>
-				<string>8 seconds</string>
-				<string>9 seconds</string>
-				<string>10 seconds</string>
-			</array>
-			<key>Values</key>
-			<array>
-				<real>1</real>
-				<integer>2</integer>
-				<integer>3</integer>
-				<integer>4</integer>
-				<integer>5</integer>
-				<integer>6</integer>
-				<integer>7</integer>
-				<integer>8</integer>
-				<integer>9</integer>
-				<integer>10</integer>
-			</array>
 			<key>DefaultValue</key>
 			<integer>5</integer>
+			<key>MinimumValue</key>
+			<integer>1</integer>
+			<key>MaximumValue</key>
+			<integer>10</integer>
 		</dict>
 		<dict>
 			<key>Type</key>
@@ -170,21 +112,21 @@
 		</dict>
 		<dict>
 			<key>Type</key>
-			<string>PSToggleSwitchSpecifier</string>
-			<key>Title</key>
-			<string>Correct Offset of Phone / Body</string>
-			<key>Key</key>
-			<string>adjustOffset</string>
-			<key>DefaultValue</key>
-			<false/>
-		</dict>
-		<dict>
-			<key>Type</key>
 			<string>PSGroupSpecifier</string>
 			<key>Title</key>
 			<string>Send Feedback</string>
 			<key>FooterText</key>
 			<string>Help us improve the app by logging your Clew experience. These logs will not include any images or personal information.</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>Send Logs</string>
+			<key>Key</key>
+			<string>sendLogs</string>
+			<key>DefaultValue</key>
+			<true/>
 		</dict>
 	</array>
 </dict>

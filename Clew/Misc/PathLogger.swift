@@ -6,80 +6,56 @@
 //  Copyright © 2019 OccamLab. All rights reserved.
 //
 
-
 import Foundation
 import Firebase
 import SceneKit
-import ARKit
-#if !APPCLIP
-import FirebaseAnalytics
-import FirebaseAuth
-#endif
 
 //FirebaseApp.configure()
 //Analytics.
 
 /// A class to handle logging app usage data
 class PathLogger {
-    public static var shared = PathLogger()
     /// A handle to the Firebase storage
     let storageBaseRef = Storage.storage().reference()
-    /// history of settings in the app
-    var settingsHistory: [(Date, Dictionary<String, Any>)] = []
-    /// path data taken during RECORDPATH - [[1x16 transform matrix, navigation offset, use navigation offset]]
-    var pathData: LinkedList<[Float]> = []
+
+    /// path data taken during RECORDPATH - [[1x16 transform matrix]]
+    var pathData: [[Float]] = []
     /// time stamps for pathData
-    var pathDataTime: LinkedList<Double> = []
-    /// path data taken during NAVIGATEPATH - [[1x16 transform matrix, navigation offset, use navigation offset]]
-    var navigationData: LinkedList<[Float]> = []
+    var pathDataTime: [Double] = []
+    /// path data taken during NAVIGATEPATH - [[1x16 transform matrix]]
+    var navigationData: [[Float]] = []
     /// time stamps for navigationData
-    var navigationDataTime: LinkedList<Double> = []
+    var navigationDataTime: [Double] = []
     /// timer to use for logging
     var dataTimer = Date()
     /// list of tracking errors ["InsufficientFeatures", "ExcessiveMotion"]
-    var trackingErrorData: LinkedList<String> = []
+    var trackingErrorData: [String] = []
     /// time stamp of tracking error
-    var trackingErrorTime: LinkedList<Double> = []
+    var trackingErrorTime: [Double] = []
     /// tracking phase - true: recording, false: navigation
-    var trackingErrorPhase: LinkedList<Bool> = []
+    var trackingErrorPhase: [Bool] = []
 
     /// timer for logging state transitions
     var stateTransitionLogTimer = Date()
     /// all state transitions the app went through
-    var stateSequence: LinkedList<String> = []
+    var stateSequence: [String] = []
     /// time stamp of state transitions
-    var stateSequenceTime: LinkedList<Double> = []
+    var stateSequenceTime: [Double] = []
 
     /// description data during NAVIGATION
-    var speechData: LinkedList<String> = []
+    var speechData: [String] = []
     /// time stamp for speechData
-    var speechDataTime: LinkedList<Double> = []
+    var speechDataTime: [Double] = []
     /// list of keypoints - [[(LocationInfo)x, y, z, yaw]]
-    var keypointData: LinkedList<Array<Any>> = []
-    
-    /// the navigation route that the user is currently navigating
-    var currentNavigationRoute: SavedRoute?
-    /// the ARWorldMap that is currently navigating
-    var currentNavigationMap: ARWorldMap?
-    
-    private init() {
-        
-    }
+    var keypointData: [Array<Any>] = []
     
     /// language used in recording
+//    var langData: [String] = []
+//    let langData = Locale.preferredLanguages[0]
     func currentLocale() -> String {
         let preferredLanguage = Locale.preferredLanguages[0] as String
         print(preferredLanguage)
         return preferredLanguage
-    }
-    
-    /// Sets the current route and map so we can log it later
-    /// - Parameters:
-    ///   - route: the route being navigated
-    ///   - worldMap: the world map expressed as an optional Any type
-    func setCurrentRoute(route: SavedRoute, worldMap: ARWorldMap?) {
-        currentNavigationRoute = route
-        currentNavigationMap = worldMap
     }
     
     /// Add the specified state transition to the log.
@@ -114,15 +90,12 @@ class PathLogger {
     /// - Parameters:
     ///   - state: the app's state (this helps determine whether to log the transformation as part of the path recording or navigation data)
     ///   - scn: the 4x4 matrix that encodes the position and orientation of the phone
-    ///   - headingOffset: the offset
-    func logTransformMatrix(state: AppState, scn: SCNMatrix4, headingOffset: Float?, useHeadingOffset: Bool) {
+    func logTransformMatrix(state: AppState, scn: SCNMatrix4) {
         let logTime = -dataTimer.timeIntervalSinceNow
-        
-        // TODO: figure out better way to indicate nil value than hardcoded value of -1000.0
         let logMatrix = [scn.m11, scn.m12, scn.m13, scn.m14,
                          scn.m21, scn.m22, scn.m23, scn.m24,
                          scn.m31, scn.m32, scn.m33, scn.m34,
-                         scn.m41, scn.m42, scn.m43, scn.m44, headingOffset == nil ? -1000.0 : headingOffset!, useHeadingOffset ? 1.0 : 0.0]
+                         scn.m41, scn.m42, scn.m43, scn.m44]
         if case .navigatingRoute = state {
             navigationData.append(logMatrix)
             navigationDataTime.append(logTime)
@@ -141,10 +114,6 @@ class PathLogger {
             let data = [keypoint.location.x, keypoint.location.y, keypoint.location.z, keypoint.location.yaw]
             keypointData.append(data)
         }
-    }
-    
-    func logSettings(defaultUnit: Int, defaultColor: Int, soundFeedback: Bool, voiceFeedback: Bool, hapticFeedback: Bool, sendLogs: Bool, timerLength: Int, adjustOffset: Bool) {
-        settingsHistory.append((Date(), ["defaultUnit": defaultUnit, "defaultColor": defaultColor, "soundFeedback": soundFeedback, "voiceFeedback": voiceFeedback, "hapticFeedback": hapticFeedback, "sendLogs": sendLogs, "timerLength": timerLength, "adjustOffset": adjustOffset]))
     }
     
     /// Log language used by user in recording.
@@ -166,10 +135,6 @@ class PathLogger {
         trackingErrorData = []
         trackingErrorTime = []
         trackingErrorPhase = []
-        
-        // reset these
-        currentNavigationMap = nil
-        currentNavigationRoute = nil
     }
     
     /// Reset the logging variables having to do with path navigation.
@@ -192,34 +157,17 @@ class PathLogger {
     /// Compile log data and send it to the cloud
     ///
     /// - Parameter debug: true if the route was unsuccessful (useful for debugging) and false if the route was successful
-    func compileLogData(_ debug: Bool?)->[String] {
+    func compileLogData(_ debug: Bool) {
         // compile log data
         let date = Date()
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZZZZZ"
         let pathDate = dateFormatter.string(from: date)
         let pathID = UIDevice.current.identifierForVendor!.uuidString + dateFormatter.string(from: date)
-        let userId: String
+        let userId = Analytics.appInstanceID()
         
-        #if !APPCLIP
-        if let currentUser = Auth.auth().currentUser {
-            userId = currentUser.uid
-        } else {
-            userId = Analytics.appInstanceID()!
-        }
-        #else
-//        userId = Analytics.appInstanceID()!
-        userId = ""     // BL
-        #endif
-        
-        var logFileURLs: [String] = []
-        if let metaDataLogURL = sendMetaData(pathDate, pathID+"-0", userId, debug) {
-            logFileURLs.append(metaDataLogURL)
-        }
-        if let pathDataLogURL = sendPathData(pathID, userId) {
-            logFileURLs.append(pathDataLogURL)
-        }
-        return logFileURLs
+        sendMetaData(pathDate, pathID+"-0", userId, debug)
+        sendPathData(pathID, userId)
     }
     
     /// Send the meta data log to the cloud
@@ -229,39 +177,28 @@ class PathLogger {
     ///   - pathID: the path id
     ///   - userId: the user id
     ///   - debug: true if the route was unsuccessful (useful for debugging) and false if the route was successful
-    func sendMetaData(_ pathDate: String, _ pathID: String, _ userId: String, _ debug: Bool?)->String? {
+    func sendMetaData(_ pathDate: String, _ pathID: String, _ userId: String, _ debug: Bool) {
         let pathType: String
-        if debug == nil {
-            pathType = "notrated"
-        } else if debug! {
+        if(debug) {
             pathType = "debug"
         } else {
             pathType = "success"
-        }
-        
-        // compute time stamps for settings
-        for i in 0..<settingsHistory.count {
-            settingsHistory[i].1["relativeTimeStamp"] = settingsHistory[i].0.timeIntervalSince(stateTransitionLogTimer)
         }
         
         let body: [String : Any] = ["userId": userId,
                                     "PathID": pathID,
                                     "PathDate": pathDate,
                                     "PathType": pathType,
-                                    "isVoiceOverOn": UIAccessibility.isVoiceOverRunning,
-                                    "routeId": currentNavigationRoute != nil ? currentNavigationRoute!.id : "",
-                                    "hasMap": currentNavigationMap != nil,
-                                    "keypointData": Array(keypointData),
-                                    "trackingErrorPhase": Array(trackingErrorPhase),
-                                    "trackingErrorTime": Array(trackingErrorTime),
-                                    "trackingErrorData": Array(trackingErrorData),
-                                    "stateSequence": Array(stateSequence),
-                                    "stateSequenceTime": Array(stateSequenceTime),
-                                    "settingsHistory": settingsHistory.map({$0.1})]
+                                    "keypointData": keypointData,
+                                    "trackingErrorPhase": trackingErrorPhase,
+                                    "trackingErrorTime": trackingErrorTime,
+                                    "trackingErrorData": trackingErrorData,
+                                    "stateSequence": stateSequence,
+                                    "stateSequenceTime": stateSequenceTime]
         do {
             let jsonData = try JSONSerialization.data(withJSONObject: body, options: .prettyPrinted)
             // here "jsonData" is the dictionary encoded in JSON data
-            let storageRef = storageBaseRef.child("logs").child(userId).child(pathID + "_metadata.json")
+            let storageRef = storageBaseRef.child(userId + "_" + pathID + "_metadata.json")
             let fileType = StorageMetadata()
             fileType.contentType = "application/json"
             // upload the image to Firebase storage and setup auto snapshotting
@@ -271,17 +208,9 @@ class PathLogger {
                     print("could not upload meta data to firebase", error!.localizedDescription)
                     return
                 }
-                print("Successfully uploaded log! ", storageRef.fullPath)
             }
-            storageBaseRef.child("logs").child("0w5zdRj6HDahFNdqKNklSpfpSmq2").child("66F17E75-9F09-438A-89C1-36D1ACF4DFA82021-06-01T14:26:53-04:00-0_metadata.json").getData(maxSize: 100000000) { data, error in
-                print("data: \(data), error \(error)")
-                let str = String(decoding: data!, as: UTF8.self)
-                print(str)
-            }
-            return storageRef.fullPath
         } catch {
             print(error.localizedDescription)
-            return nil
         }
     }
     
@@ -290,37 +219,34 @@ class PathLogger {
     /// - Parameters:
     ///   - pathID: the id of the path
     ///   - userId: the user id
-    func sendPathData(_ pathID: String, _ userId: String)->String? {
+    func sendPathData(_ pathID: String, _ userId: String) {
         let body: [String : Any] = ["userId": userId,
                                     "PathID": pathID,
                                     "PathDate": "0",
                                     "PathType": "0",
-                                    "PathData": Array(pathData),
-                                    "pathDataTime": Array(pathDataTime),
-                                    "navigationData": Array(navigationData),
-                                    "navigationDataTime": Array(navigationDataTime),
-                                    "speechData": Array(speechData),
-                                    "speechDataTime": Array(speechDataTime)]
+                                    "PathData": pathData,
+                                    "pathDataTime": pathDataTime,
+                                    "navigationData": navigationData,
+                                    "navigationDataTime": navigationDataTime,
+                                    "speechData": speechData,
+                                    "speechDataTime": speechDataTime]
         
         do {
             let jsonData = try JSONSerialization.data(withJSONObject: body, options: .prettyPrinted)
             // here "jsonData" is the dictionary encoded as a JSON
-            let storageRef = storageBaseRef.child("logs").child(userId).child(pathID + "_pathdata.json")
+            let storageRef = storageBaseRef.child(userId + "_" + pathID + "_pathdata.json")
             let fileType = StorageMetadata()
             fileType.contentType = "application/json"
             // upload the image to Firebase storage and setup auto snapshotting
             storageRef.putData(jsonData, metadata: fileType) { (metadata, error) in
-                guard let metadata = metadata else {
+                guard metadata != nil else {
                     // Uh-oh, an error occurred!
                     print("could not upload path data to firebase", error!.localizedDescription)
                     return
                 }
-                print("Successfully uploaded log! ", storageRef.fullPath)
             }
-            return storageRef.fullPath
         } catch {
             print(error.localizedDescription)
-            return nil
         }
     }
 }

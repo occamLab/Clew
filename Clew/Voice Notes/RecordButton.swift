@@ -8,6 +8,7 @@
 
 import UIKit
 import AVFoundation
+import PRTween
 
 /// a button that can initiate an audio recording
 @IBDesignable
@@ -23,7 +24,7 @@ class RecordButton: UIButton {
         }
     }
     
-    /// true if various sound effects (e.g., record start and stop) should be played, false otherwise
+    /// true if various sound effects (e.g., record start and stop) should be ;layed, false otherwise
     @IBInspectable open var playSounds = true
     
     /// the color of the frame around the record button
@@ -103,9 +104,9 @@ class RecordButton: UIButton {
     /// specifies the accessibility label to be reflective of the current button state.
     fileprivate func setAccessibilityLabel() {
         if isRecording {
-            self.accessibilityLabel = NSLocalizedString("stopRecordingVoiceNoteAccessibilityLabel", comment: "This is the accessibility label which is played when a user with voice over selects the button to stop their voice recording")
+            self.accessibilityLabel = "Stop Recording"
         } else {
-            self.accessibilityLabel = NSLocalizedString("startRecordingVoiceNoteAccessibilityLabel", comment: "This is the accessibility label which is played when a user with voice over selects the button to record a voice recording in the voice recorder view")
+            self.accessibilityLabel = "Record Voice Note"
         }
     }
 
@@ -128,7 +129,7 @@ class RecordButton: UIButton {
             return super.isHighlighted
         }
         set {
-            super.isHighlighted = newValue
+            super.isHighlighted = isHighlighted
             setNeedsDisplay()
         }
     }

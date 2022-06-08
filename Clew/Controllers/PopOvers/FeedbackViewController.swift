@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import UIKit // EEA
 
 class FeedbackViewController : UIViewController, UITextViewDelegate, UIPopoverPresentationControllerDelegate, RecorderViewControllerDelegate {
 
@@ -41,12 +40,6 @@ class FeedbackViewController : UIViewController, UITextViewDelegate, UIPopoverPr
         ///sets the title of the popover
         title = "\(NSLocalizedString("feedbackMenuTitle", comment: "this is the title on the feedback popover content"))"
         
-        addTapGestureRecognizer()
-    }
-    
-    func addTapGestureRecognizer() {
-        let tap = UITapGestureRecognizer(target: view, action: #selector(UIView.endEditing))
-        view.addGestureRecognizer(tap)
     }
     
     ///called when the voice recording is started

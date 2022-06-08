@@ -14,7 +14,7 @@
     <a title="ResumeTrackingConfirmController Class Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html"> Docs</a> (95% documented)</p>
+        <p><a href="../index.html"> Docs</a> (97% documented)</p>
         <p class="header-right"><a href="https://github.com/occamLab/Clew"><img src="../img/gh.png"/>View on GitHub</a></p>
       </div>
     </header>
@@ -38,9 +38,6 @@
                 <a href="../Classes/AudioVisualizerView.html">AudioVisualizerView</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Classes/BurgerMenuViewController.html">BurgerMenuViewController</a>
-              </li>
-              <li class="nav-group-task">
                 <a href="../Classes/DataPersistence.html">DataPersistence</a>
               </li>
               <li class="nav-group-task">
@@ -59,9 +56,6 @@
                 <a href="../Classes/LocationInfo.html">LocationInfo</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Classes/NameSavedRouteController.html">NameSavedRouteController</a>
-              </li>
-              <li class="nav-group-task">
                 <a href="../Classes/Navigation.html">Navigation</a>
               </li>
               <li class="nav-group-task">
@@ -69,6 +63,9 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/PathLogger.html">PathLogger</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/PathMatcher.html">PathMatcher</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/PauseTrackingController.html">PauseTrackingController</a>
@@ -101,10 +98,7 @@
                 <a href="../Classes/RootContainerView.html">RootContainerView</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Classes/RouteAnchorPoint.html">RouteAnchorPoint</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Classes/RouteDocumentData.html">RouteDocumentData</a>
+                <a href="../Classes/RouteLandmark.html">RouteLandmark</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/RouteRatingController.html">RouteRatingController</a>
@@ -143,18 +137,6 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Global Variables.html#/s:4Clew16HapticDirectionsSDySiSSGvp">HapticDirections</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Global Variables.html#/s:4Clew20isAutomaticAlignmentSbvp">isAutomaticAlignment</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Global Variables.html#/s:4Clew6pausedSbvp">paused</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Global Variables.html#/s:4Clew23recordingSingleUseRouteSbvp">recordingSingleUseRoute</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Global Variables.html#/s:4Clew16startAnchorPointSbvp">startAnchorPoint</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Global Variables.html#/s:4Clew11targetDepthSfvp">targetDepth</a>
@@ -213,6 +195,18 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Extensions/UIViewController.html">UIViewController</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/float2.html">float2</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/float2x2.html">float2x2</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/float3.html">float3</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/float4.html">float4</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Extensions/float4x4.html">float4x4</a>
@@ -354,9 +348,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:4Clew31ResumeTrackingConfirmControllerC16anchorPointLabelSo7UILabelCSgvp"></a>
-                    <a name="//apple_ref/swift/Property/anchorPointLabel" class="dashAnchor"></a>
-                    <a class="token" href="#/s:4Clew31ResumeTrackingConfirmControllerC16anchorPointLabelSo7UILabelCSgvp">anchorPointLabel</a>
+                    <a name="/s:4Clew31ResumeTrackingConfirmControllerC13landmarkLabelSo7UILabelCSgvp"></a>
+                    <a name="//apple_ref/swift/Property/landmarkLabel" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Clew31ResumeTrackingConfirmControllerC13landmarkLabelSo7UILabelCSgvp">landmarkLabel</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -364,14 +358,14 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>text for Anchor Point information</p>
+                        <p>text for landmark information</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">anchorPointLabel</span><span class="p">:</span> <span class="kt">UILabel</span><span class="o">!</span></code></pre>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">landmarkLabel</span><span class="p">:</span> <span class="kt">UILabel</span><span class="o">!</span></code></pre>
 
                         </div>
                       </div>
@@ -437,7 +431,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2019 <a class="link" href="" target="_blank" rel="external"></a>. All rights reserved. (Last updated: 2019-08-13)</p>
+          <p>&copy; 2019 <a class="link" href="" target="_blank" rel="external"></a>. All rights reserved. (Last updated: 2019-08-07)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.9.6</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
         </section>
       </article>

@@ -6,8 +6,6 @@
 ### Firebase ###
 Clew/GoogleService-Info.plist
 Clew/GoogleService-Info_dev.plist
-*-Info.plist
-*-Info_dev.plist
 
 ### CocoaPods ###
 ## CocoaPods GitIgnore Template
@@ -30,7 +28,6 @@ DerivedData/
 *.perspectivev3
 !default.perspectivev3
 xcuserdata/
-*.mov
 
 ## Other
 *.moved-aside
@@ -52,8 +49,6 @@ xcuserdata/
 !*.xcodeproj/xcshareddata/
 !*.xcworkspace/contents.xcworkspacedata
 /*.gcno
-
-Package.resolved
 
 # End of https://www.gitignore.io/api/swift,xcode,cocoapods
 

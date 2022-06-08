@@ -11,18 +11,12 @@ import UIKit
 /// A View Controller for handling the stop recording state
 class StopRecordingController: UIViewController {
     
-    /// padding button used to force the stop route button to stay in the middle
-    var paddingButton: UIButton!
-
     /// Button for stopping a route recording
     var stopRecordingButton: UIButton!
 
-    /// button for recording a voice note about a part of the route
-    var recordVoiceNoteButton: UIButton!
-    
     /// called when the view appears (any time)
     override func viewDidAppear(_ animated: Bool) {
-        /// set stopRecordingButton as initially active voiceover button
+        /// set thumbsUpButton as initially active voiceover button
         UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: self.stopRecordingButton)
     }
     
@@ -36,24 +30,28 @@ class StopRecordingController: UIViewController {
                             height: UIConstants.buttonFrameHeight)
         
         view.backgroundColor = UIColor.black.withAlphaComponent(0.4)
-
-        paddingButton = UIButton.makeConstraintButton(view,
-                                                      alignment: UIConstants.ButtonContainerHorizontalAlignment.left,
-                                                      appearance: UIConstants.ButtonAppearance.textButton(label: ""),
-                                                      label: "")
-        paddingButton.isAccessibilityElement = false
-        paddingButton.alpha = 0
-
+        
+        let label = UILabel(frame: CGRect(x: 15,
+                                          y: UIScreen.main.bounds.size.height/5,
+                                          width: UIScreen.main.bounds.size.width-30,
+                                          height: UIScreen.main.bounds.size.height/2))
+        
+        var mainText : String?
+        if let mainText: String = mainText {
+            label.textColor = UIColor.white
+            label.textAlignment = .center
+            label.numberOfLines = 0
+            label.lineBreakMode = .byWordWrapping
+            label.font = label.font.withSize(20)
+            label.text = mainText
+            label.tag = UIView.mainTextTag
+            view.addSubview(label)
+        }
+        
         stopRecordingButton = UIButton.makeConstraintButton(view,
                                                        alignment: UIConstants.ButtonContainerHorizontalAlignment.center,
                                                        appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "StopRecording")!),
-                                                       label: NSLocalizedString("stopRecordingButtonAccessibilityLabel", comment: "The accessibility label of the button that allows user to stop recording a route."))
-        
-        
-        recordVoiceNoteButton = UIButton.makeConstraintButton(view,
-                                                         alignment: UIConstants.ButtonContainerHorizontalAlignment.right,
-                                                         appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "VoiceNote")!),
-                                                         label: NSLocalizedString("recordSpatialVoiceNoteAccessibilityLabel", comment: "This is the accessibility label for the button which allows the user to save a voice note to their current location in space."))
+                                                       label: NSLocalizedString("Stop recording", comment: "The name of the button that allows user to stop recording."))
         
         /// create stack view for aligning and distributing bottom layer buttons
         let stackView   = UIStackView()
@@ -67,10 +65,7 @@ class StopRecordingController: UIViewController {
         stackView.alignment = UIStackView.Alignment.center
         
         /// add elements to the stack
-        stackView.addArrangedSubview(paddingButton)
         stackView.addArrangedSubview(stopRecordingButton)
-        stackView.addArrangedSubview(recordVoiceNoteButton)
-
         
         /// size the stack
         stackView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
@@ -82,11 +77,6 @@ class StopRecordingController: UIViewController {
             stopRecordingButton.addTarget(parent,
                                           action: #selector(ViewController.stopRecording),
                                           for: .touchUpInside)
-            #if !APPCLIP
-            recordVoiceNoteButton.addTarget(parent,
-                                       action: #selector(ViewController.recordVoiceNote),
-                                       for: .touchUpInside)
-            #endif
         }
     }
 }

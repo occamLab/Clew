@@ -27,6 +27,36 @@ extension UIView {
         animation.duration = duration
         layer.add(animation, forKey: CATransitionType.fade.rawValue)
     }
+
+    /// Configures a button container view and adds a button.
+    ///
+    /// - Parameter buttonComponents: holds information about the button to add
+    ///
+//    func setupButtonContainer(withButtons buttonComponents: [ActionButtonComponents],
+//                              withMainText mainText: String? = nil) {
+//        self.backgroundColor = UIColor.black.withAlphaComponent(0.4)
+//        self.isHidden = true
+//
+//        if let mainText = mainText {
+//            let label = UILabel(frame: CGRect(x: 15,
+//                                              y: UIScreen.main.bounds.size.height/5,
+//                                              width: UIScreen.main.bounds.size.width-30,
+//                                              height: UIScreen.main.bounds.size.height/2))
+//            label.textColor = UIColor.white
+//            label.textAlignment = .center
+//            label.numberOfLines = 0
+//            label.lineBreakMode = .byWordWrapping
+//            label.font = label.font.withSize(20)
+//
+//            label.text = mainText
+//            label.tag = UIView.mainTextTag
+//            self.addSubview(label)
+//        }
+//        for components in buttonComponents {
+//            let button = UIButton.makeImageButton(self, components)
+//            self.addSubview(button)
+//        }
+//    }
     
     /// the main text UILabel if it exists for a particular view
     var mainText: UILabel? {
