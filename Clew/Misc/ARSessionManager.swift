@@ -71,7 +71,7 @@ class ARSessionManager: NSObject {
     /// this is the alignment between the reloaded route
     var manualAlignment: simd_float4x4?
     
-    let snapToRouteStatus: Bool = true
+    let snapToRouteStatus: Bool = false
     
     /// Keep track of when to log a frame
     var lastFrameLogTime = Date()
@@ -536,7 +536,7 @@ extension ARSessionManager: ARSessionDelegate {
             let jsonData = try
             JSONSerialization.data(withJSONObject:dataDictionary, options:.prettyPrinted)
             let storageRef =
-            storageBaseRef.child("GeoAnchorTest3").child(id + ".json")
+            storageBaseRef.child("GeoAnchorTest4").child(id + ".json")
             let fileType = StorageMetadata()
             fileType.contentType = "application/json"
             storageRef.putData(jsonData, metadata: fileType) { (metadata, error) in
@@ -593,11 +593,36 @@ extension ARSessionManager: ARSessionDelegate {
         }
     }
     
+    func snapToRoute(_ currentFrame : ARFrame) {
+        visualKeypoints = ViewController.routeKeypoints
+        var transformedKeypoints: [KeypointInfo]  = []
+        if let manualAlignment = manualAlignment {
+            transformedKeypoints = visualKeypoints.map({
+                KeypointInfo(location: LocationInfo(transform: manualAlignment*$0.location.transform))
+            })
+        } else {
+            transformedKeypoints = visualKeypoints
+        }
+        if counter % 30 == 0 {
+            cameraLocationInfos.append(LocationInfo(transform: currentFrame.camera.transform))
+        }
+        if counter % 500 == 0 && localized && currentFrame.geoTrackingStatus?.accuracy != ARGeoTrackingStatus.Accuracy.high {
+            manualAlignment = PathMatcher().match(points: cameraLocationInfos, toPath: transformedKeypoints).inverse * (manualAlignment ?? matrix_identity_float4x4)
+            renderKeypoint(RouteManager.shared.nextKeypoint!.location, defaultColor: delegate?.getKeypointColor() ?? 0)
+            let previousKeypointLocation = RouteManager.shared.getPreviousKeypoint(to: RouteManager.shared.nextKeypoint!)?.location ?? LocationInfo(transform: currentFrame.camera.transform)
+            renderPath(RouteManager.shared.nextKeypoint!.location, previousKeypointLocation, defaultPathColor: delegate?.getPathColor() ?? 0)
+            let quat = simd_quatf(manualAlignment!.inverse)
+            print("optimal transform", manualAlignment!.columns.3)
+            print("axis and angle change", quat.axis, quat.angle)
+            print("Snapping my fingers")
+        }
+    }
+    
     func session(_ session: ARSession, didUpdate frame: ARFrame) {
         
         // variable that determines whether current run should be logged to firebase or not. If set to true, change id to desired file name
-        let logPath = true
-        let id = "snapTestEight"
+        let logPath = false
+        let id = "snapTestTen"
         
         cameraPoses.append([frame.camera.transform.columns.3[0], frame.camera.transform.columns.3[2]])
         
@@ -611,31 +636,8 @@ extension ARSessionManager: ARSessionDelegate {
         }
 
         if snapToRouteStatus {
-            visualKeypoints = ViewController.routeKeypoints
-            var transformedKeypoints: [KeypointInfo]  = []
-            if let manualAlignment = manualAlignment {
-                for keypoint in visualKeypoints{
-                    transformedKeypoints.append(KeypointInfo(location: LocationInfo(transform: manualAlignment*keypoint.location.transform)))
-                }
-            } else {
-                transformedKeypoints = visualKeypoints
-            }
-            if counter % 200 == 0 {
-                cameraLocationInfos.append(LocationInfo(transform: frame.camera.transform))
-            }
-            if counter % 500 == 0 && localized && counter > 1800 {
-                manualAlignment = PathMatcher().match(points: cameraLocationInfos, toPath: transformedKeypoints).inverse * (manualAlignment ?? matrix_identity_float4x4)
-                renderKeypoint(RouteManager.shared.nextKeypoint!.location, defaultColor: 0)
-//                renderPath(RouteManager.shared.nextKeypoint!.location, ViewController().getRealCoordinates(record: true)!.location, defaultPathColor: 0)
-                let quat = simd_quatf(manualAlignment!.inverse)
-                print("optimal transform", manualAlignment!.columns.3)
-                print("axis and angle change", quat.axis, quat.angle)
-//                sceneView.session.setWorldOrigin(relativeTransform: optimalTransform.inverse)
-                print("Snapping my fingers")
-            }
+            snapToRoute(frame)
         }
-        
-        
         
         if logPath {
             counter += 1
