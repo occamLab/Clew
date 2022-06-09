@@ -171,8 +171,7 @@ class ARSessionManager: NSObject {
     /// Create the keypoint SCNNode that corresponds to the rotating flashing element that looks like a navigation pin.
     ///
     /// - Parameter location: the location of the keypoint
-    func renderKeypoint(_ location: LocationInfo, defaultColor: Int, _ optimalTransform: simd_float4x4? = matrix_identity_float4x4) {
-        let newKeypoint = LocationInfo(transform: location.transform * optimalTransform!)
+    func renderKeypoint(_ location: LocationInfo, defaultColor: Int) {
         keypointRenderJob = {
             self.renderKeypointHelper(location, defaultColor: defaultColor)
         }
@@ -416,6 +415,8 @@ class ARSessionManager: NSObject {
     ///  - locationFront: the location of the keypoint user is approaching
     ///  - locationBack: the location of the keypoint user is currently at
     func renderPath(_ locationFront: LocationInfo, _ locationBack: LocationInfo, defaultPathColor: Int) {
+//        let locationFrontSnapped = getCurrentLocation(of: locationFront)
+//        let locationBack = LocationInfo(transform: frame.camera.transform)
         pathRenderJob = {
             self.renderPathHelper(locationFront, locationBack, defaultPathColor: defaultPathColor)
         }
@@ -596,7 +597,7 @@ extension ARSessionManager: ARSessionDelegate {
         
         // variable that determines whether current run should be logged to firebase or not. If set to true, change id to desired file name
         let logPath = true
-        let id = "snapTestFour"
+        let id = "snapTestEight"
         
         cameraPoses.append([frame.camera.transform.columns.3[0], frame.camera.transform.columns.3[2]])
         
@@ -624,7 +625,8 @@ extension ARSessionManager: ARSessionDelegate {
             }
             if counter % 500 == 0 && localized && counter > 1800 {
                 manualAlignment = PathMatcher().match(points: cameraLocationInfos, toPath: transformedKeypoints).inverse * (manualAlignment ?? matrix_identity_float4x4)
-//                renderKeypoint() handle update anchor, render path
+                renderKeypoint(RouteManager.shared.nextKeypoint!.location, defaultColor: 0)
+//                renderPath(RouteManager.shared.nextKeypoint!.location, ViewController().getRealCoordinates(record: true)!.location, defaultPathColor: 0)
                 let quat = simd_quatf(manualAlignment!.inverse)
                 print("optimal transform", manualAlignment!.columns.3)
                 print("axis and angle change", quat.axis, quat.angle)
@@ -640,7 +642,11 @@ extension ARSessionManager: ARSessionDelegate {
             if counter % 400 == 0
             {
                 print("sending data to firebase")
-                sendPathKeypoints("\(id)", ViewController.routeKeypoints, cameraPoses)
+                var uploadToFirebase: [KeypointInfo] = []
+                for keypoint in ViewController.routeKeypoints {
+                    uploadToFirebase.append(KeypointInfo(location: LocationInfo(transform: (manualAlignment ?? matrix_identity_float4x4) * keypoint.location.transform)))
+                }
+                sendPathKeypoints("\(id)", uploadToFirebase, cameraPoses)
             }
         }
         if nCount == allGeoAnchors.count && nCount > 0, frame.geoTrackingStatus?.accuracy == ARGeoTrackingStatus.Accuracy.high {
