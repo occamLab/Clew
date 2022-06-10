@@ -71,7 +71,7 @@ class ARSessionManager: NSObject {
     /// this is the alignment between the reloaded route
     var manualAlignment: simd_float4x4?
     
-    let snapToRouteStatus: Bool = false
+    let snapToRouteStatus: Bool = true
     
     /// Keep track of when to log a frame
     var lastFrameLogTime = Date()
@@ -415,8 +415,6 @@ class ARSessionManager: NSObject {
     ///  - locationFront: the location of the keypoint user is approaching
     ///  - locationBack: the location of the keypoint user is currently at
     func renderPath(_ locationFront: LocationInfo, _ locationBack: LocationInfo, defaultPathColor: Int) {
-//        let locationFrontSnapped = getCurrentLocation(of: locationFront)
-//        let locationBack = LocationInfo(transform: frame.camera.transform)
         pathRenderJob = {
             self.renderPathHelper(locationFront, locationBack, defaultPathColor: defaultPathColor)
         }
@@ -595,14 +593,9 @@ extension ARSessionManager: ARSessionDelegate {
     
     func snapToRoute(_ currentFrame : ARFrame) {
         visualKeypoints = ViewController.routeKeypoints
-        var transformedKeypoints: [KeypointInfo]  = []
-        if let manualAlignment = manualAlignment {
-            transformedKeypoints = visualKeypoints.map({
-                KeypointInfo(location: LocationInfo(transform: manualAlignment*$0.location.transform))
-            })
-        } else {
-            transformedKeypoints = visualKeypoints
-        }
+        let transformedKeypoints = visualKeypoints.map({
+            KeypointInfo(location: LocationInfo(transform: (manualAlignment ?? matrix_identity_float4x4)*$0.location.transform))
+        })
         if counter % 30 == 0 {
             cameraLocationInfos.append(LocationInfo(transform: currentFrame.camera.transform))
         }
@@ -611,18 +604,19 @@ extension ARSessionManager: ARSessionDelegate {
             renderKeypoint(RouteManager.shared.nextKeypoint!.location, defaultColor: delegate?.getKeypointColor() ?? 0)
             let previousKeypointLocation = RouteManager.shared.getPreviousKeypoint(to: RouteManager.shared.nextKeypoint!)?.location ?? LocationInfo(transform: currentFrame.camera.transform)
             renderPath(RouteManager.shared.nextKeypoint!.location, previousKeypointLocation, defaultPathColor: delegate?.getPathColor() ?? 0)
-            let quat = simd_quatf(manualAlignment!.inverse)
-            print("optimal transform", manualAlignment!.columns.3)
-            print("axis and angle change", quat.axis, quat.angle)
-            print("Snapping my fingers")
+//            let quat = simd_quatf(manualAlignment!.inverse)
+//            print("optimal transform", manualAlignment!.columns.3)
+//            print("axis and angle change", quat.axis, quat.angle)
+//            print("SnapToRoute occurred")
         }
     }
     
     func session(_ session: ARSession, didUpdate frame: ARFrame) {
         
         // variable that determines whether current run should be logged to firebase or not. If set to true, change id to desired file name
-        let logPath = false
-        let id = "snapTestTen"
+        let logPath = true
+        let id = "weightsTestThree"
+        counter += 1
         
         cameraPoses.append([frame.camera.transform.columns.3[0], frame.camera.transform.columns.3[2]])
         
@@ -640,7 +634,6 @@ extension ARSessionManager: ARSessionDelegate {
         }
         
         if logPath {
-            counter += 1
             if counter % 400 == 0
             {
                 print("sending data to firebase")

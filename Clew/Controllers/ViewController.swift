@@ -445,12 +445,6 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         // save keypoints data for debug log
         logger.logKeypoints(keypoints: ViewController.routeKeypoints)
         
-//        var optimalTransform = matrix_identity_float4x4
-//        optimalTransform.columns.3 = [0, 0, -0, 1]
-        
-//        var optimalTransform = matrix_identity_float4x4
-//        optimalTransform.columns.3 = [0, 1, 0, 1]
-        
         // render 3D keypoints
         ARSessionManager.shared.renderKeypoint(RouteManager.shared.nextKeypoint!.location, defaultColor: defaultColor)
         
