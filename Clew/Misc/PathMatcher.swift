@@ -20,16 +20,29 @@ class PathMatcher {
     func match(points: [LocationInfo], toPath keypoints: [KeypointInfo])->simd_float4x4 {
         var optimalTransform = matrix_identity_float4x4
         var lastIterationCost = Float.infinity
+        
+        var weights: [Float] = Array(repeating: 1.0, count: points.count)
+        for (index, _) in weights.enumerated() {
+            if index < points.count/4 {
+                weights[index] = 0.001
+            } else if index > Int(Double(points.count) * 0.75) {
+                weights[index] = 1000
+            }
+        }
 
         while true {    // convergence is determined in the loop
             let transformedFollowCrumbs = transformLocationInfo(locations: points, transform: optimalTransform)
 
             let closestMatchToRoute = getClosestRouteMatch(points: transformedFollowCrumbs, routeKeypoints: keypoints)
-
-            let currentCost = zip(transformedFollowCrumbs, closestMatchToRoute).reduce(0) {
-                $0 + simd_length_squared($1.0 - $1.1)
+//            let currentCost: Float16 = zip(weights, zip(transformedFollowCrumbs, closestMatchToRoute)).reduce(into: 0) {
+//                $0 + simd_length_squared($1.0 * ($2.0 - $2.1))
+//            }
+            var currentCost: Float = 0.0
+            // TODO: clean up this line (zip doesn't support three arrays)
+            for (index, _) in transformedFollowCrumbs.enumerated() {
+                currentCost += weights[index] * simd_length_squared(transformedFollowCrumbs[index] - closestMatchToRoute[index])
             }
-            
+
             if lastIterationCost - currentCost < 10e-4 {
                 break
             }
@@ -37,11 +50,13 @@ class PathMatcher {
 
             var additionalTransform = matrix_identity_float4x4
             
-            let meanOfFollowCrumbs = transformedFollowCrumbs.reduce(simd_float4(0, 0, 0, 0)) {
-                $0 + $1 / (Float(transformedFollowCrumbs.count))
+            // calculate the weighted mean of both position arrays
+            let meanOfFollowCrumbs = zip(weights, transformedFollowCrumbs).reduce(simd_float4(0, 0, 0, 0)) {
+                $0 + ($1.0 * $1.1) / weights.reduce(0, +)
             }
-            let meanOfClosestMatches = closestMatchToRoute.reduce(simd_float4(0, 0, 0, 0)) {
-                $0 + $1 / (Float(closestMatchToRoute.count))
+            
+            let meanOfClosestMatches = zip(weights, closestMatchToRoute).reduce(simd_float4(0, 0, 0, 0)) {
+                $0 + ($1.0 * $1.1) / weights.reduce(0, +)
             }
             
             let meanSubtractedFollowCrumbs = transformedFollowCrumbs.map({$0 - meanOfFollowCrumbs})
