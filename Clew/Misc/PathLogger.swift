@@ -11,6 +11,7 @@ import Firebase
 import FirebaseStorage
 import FirebaseAnalytics
 import SceneKit
+import FirebaseAuth
 
 //FirebaseApp.configure()
 //Analytics.

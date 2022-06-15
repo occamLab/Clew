@@ -9,6 +9,7 @@
 import Foundation
 import Firebase
 import FirebaseStorage
+import FirebaseAuth
 import FirebaseAnalytics
 
 

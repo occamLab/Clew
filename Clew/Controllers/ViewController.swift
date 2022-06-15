@@ -24,6 +24,7 @@ import UIKit
 import ARKit
 import VectorMath
 import Firebase
+import FirebaseAuth
 import SwiftUI
 
 /// A custom enumeration type that describes the exact state of the app.  The state is not exhaustive (e.g., there are Boolean flags that also track app state).
@@ -898,7 +899,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
                 if let error = error {
                     print("Error getting data \(error)")
                 }
-                else if snapshot.exists(), let userDict = snapshot.value as? [String : AnyObject] {
+                else if snapshot?.exists() == true, let userDict = snapshot?.value as? [String : AnyObject] {
                     for (surveyName, surveyInfo) in userDict {
                         if let surveyInfoDict = surveyInfo as? [String : AnyObject] {
                             if let lastSurveyTime = surveyInfoDict["lastSurveyTime"] as? Double {
