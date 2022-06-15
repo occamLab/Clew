@@ -43,7 +43,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             createScene(scene, showTagScan: false)
             vc?.populateSceneFromAppClipURL(scene: scene, url: url)
         } else {
-            createScene(scene, showTagScan: true)
+            return
+            // Note: we used to have this and it causes issues when the main app is already installed
+            //createScene(scene, showTagScan: true)
         }
     }
     
