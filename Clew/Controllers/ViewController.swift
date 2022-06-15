@@ -183,7 +183,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
                 // nothing happens currently
                 break
             case .startingNameSavedRouteProcedure(let worldMap):
-                handleStateTransitionToStartingNameSavedRouteProcedure(worldMap: worldMap)
+                handleStateTransitionToStartingNameSavedRouteProcedure(worldMap: nil)
             case .initializing:
                 break
             case .finishedTutorialRoute(let announceArrival):

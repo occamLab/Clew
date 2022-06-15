@@ -126,7 +126,7 @@ class ARSessionManager: NSObject {
     
     var initialWorldMap: ARWorldMap? {
         set {
-            configuration.initialWorldMap = newValue
+            configuration.initialWorldMap = nil
         }
         get {
             return configuration.initialWorldMap

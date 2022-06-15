@@ -32,6 +32,7 @@ typedef struct {
     image2:(UIImage *) image2
     success:(void (^)(NSDictionary<NSString *, NSString *> *responseDict))success
                 failure:(void (^)(NSError* error))failure;
+
 /**
  Deduce the yaw between two images.
  

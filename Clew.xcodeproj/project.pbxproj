@@ -18,6 +18,8 @@
 		09A7B8B3285A27C8008A2B3C /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 09A7B8B2285A27C8008A2B3C /* FirebaseAuth */; };
 		09A7B8B5285A27D2008A2B3C /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 09A7B8B4285A27D2008A2B3C /* FirebaseStorage */; };
 		09A7B8B7285A27D8008A2B3C /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 09A7B8B6285A27D8008A2B3C /* FirebaseAnalytics */; };
+		09A7B8BB285A388A008A2B3C /* UniMatch.mm in Sources */ = {isa = PBXBuildFile; fileRef = 09A7B8B9285A3870008A2B3C /* UniMatch.mm */; };
+		09A7B8BC285A388A008A2B3C /* UniMatch.mm in Sources */ = {isa = PBXBuildFile; fileRef = 09A7B8B9285A3870008A2B3C /* UniMatch.mm */; };
 		14A90C0426A211BE003DAB30 /* ClewTutorialFeedback.wav in Resources */ = {isa = PBXBuildFile; fileRef = 14A90C0326A211BE003DAB30 /* ClewTutorialFeedback.wav */; };
 		14A90C0526A211BF003DAB30 /* ClewTutorialFeedback.wav in Resources */ = {isa = PBXBuildFile; fileRef = 14A90C0326A211BE003DAB30 /* ClewTutorialFeedback.wav */; };
 		14A90C0726A86A82003DAB30 /* TutorialFollowPath1.crd in Resources */ = {isa = PBXBuildFile; fileRef = 14A90C0626A86A82003DAB30 /* TutorialFollowPath1.crd */; };
@@ -280,6 +282,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		09A7B8B9285A3870008A2B3C /* UniMatch.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = UniMatch.mm; sourceTree = "<group>"; };
+		09A7B8BD285A389C008A2B3C /* UniMatch.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UniMatch.h; sourceTree = "<group>"; };
 		14A90C0326A211BE003DAB30 /* ClewTutorialFeedback.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = ClewTutorialFeedback.wav; sourceTree = "<group>"; };
 		14A90C0626A86A82003DAB30 /* TutorialFollowPath1.crd */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = TutorialFollowPath1.crd; sourceTree = "<group>"; };
 		14A90C0926AEF5CE003DAB30 /* TutorialFollowPath2.crd */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = TutorialFollowPath2.crd; sourceTree = "<group>"; };
@@ -827,6 +831,8 @@
 		82BE6CA727398BCA00387139 /* Visual Alignment */ = {
 			isa = PBXGroup;
 			children = (
+				09A7B8BD285A389C008A2B3C /* UniMatch.h */,
+				09A7B8B9285A3870008A2B3C /* UniMatch.mm */,
 				82BE6CA827398BED00387139 /* VisualAlignment.h */,
 				82BE6CA927398C1700387139 /* VisualAlignment.mm */,
 				82BE6CB027398E1D00387139 /* VisualAlignmentUtils.cpp */,
@@ -2034,6 +2040,7 @@
 				E5470F0422C119F5001092A4 /* FeedbackLogger.swift in Sources */,
 				8214120526D41476003EC2D4 /* SiriWalkThrough.swift in Sources */,
 				E5470F2822C119F5001092A4 /* ViewController.swift in Sources */,
+				09A7B8BC285A388A008A2B3C /* UniMatch.mm in Sources */,
 				82DE922727188ACE0086F5A4 /* RouteManager.swift in Sources */,
 				82A417E1262A205A001FCB8C /* AuthenticationHelper.swift in Sources */,
 				E5470F3622C119F5001092A4 /* PauseTrackingController.swift in Sources */,
@@ -2095,6 +2102,7 @@
 				E5470F4722C119F5001092A4 /* RootContainerView.swift in Sources */,
 				E5470F4B22C119F5001092A4 /* RouteTableViewCell.swift in Sources */,
 				E5470F0522C119F5001092A4 /* FeedbackLogger.swift in Sources */,
+				09A7B8BB285A388A008A2B3C /* UniMatch.mm in Sources */,
 				82DE922827188ACE0086F5A4 /* RouteManager.swift in Sources */,
 				82A417E2262A205A001FCB8C /* AuthenticationHelper.swift in Sources */,
 				E5470F2922C119F5001092A4 /* ViewController.swift in Sources */,
