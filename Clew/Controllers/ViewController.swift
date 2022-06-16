@@ -468,7 +468,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         var isSameMap = false
         if let worldMap = worldMap {
             // analyze the map to see if we can relocalize
-            if ARSessionManager.shared.adjustRelocalizationStrategy(worldMap: worldMap) == .none {
+            if ARSessionManager.shared.adjustRelocalizationStrategy(worldMap: worldMap, route: route) == .none {
                 // unfortunately, we are out of luck.  Better to not use the ARWorldMap
                 ARSessionManager.shared.initialWorldMap = nil
                 attemptingRelocalization = false

@@ -126,7 +126,7 @@ class ARSessionManager: NSObject {
     }
     
     func startSession() {
-        print("WORLD MAP STARTING SESSION!")
+        print("WORLD MAP STARTING SESSION! \(configuration.initialWorldMap)")
         manualAlignment = nil
         keypointRenderJob = nil
         pathRenderJob = nil
@@ -140,9 +140,19 @@ class ARSessionManager: NSObject {
         sceneView.session.pause()
     }
     
-    func adjustRelocalizationStrategy(worldMap: ARWorldMap)->RelocalizationStrategy {
-        if #available(iOS 15.0, *) {
-            if worldMap.anchors.firstIndex(where: {anchor in anchor is LocationInfo}) != nil {
+    func stripCrumbAnchorsFromInitialWorldMap(route: SavedRoute) {
+        let allCrumbAnchors = Set(route.crumbs.map({$0.identifier}))
+        if let mapAnchors = configuration.initialWorldMap?.anchors {
+            configuration.initialWorldMap?.anchors = mapAnchors.filter({!allCrumbAnchors.contains($0.identifier)})
+        }
+    }
+    
+    func adjustRelocalizationStrategy(worldMap: ARWorldMap, route: SavedRoute)->RelocalizationStrategy {
+        if #available(iOS 15.2, *) {
+            stripCrumbAnchorsFromInitialWorldMap(route: route)
+            relocalizationStrategy = .coordinateSystemAutoAligns
+        } else if #available(iOS 15.0, *) {
+            if worldMap.anchors.firstIndex(where: { anchor in anchor is LocationInfo}) != nil {
                 relocalizationStrategy = .useCrumbAnchorsForAlignment
             } else if worldMap.anchors.firstIndex(where: {anchor in anchor.name == "origin"}) != nil {
                 relocalizationStrategy = .useOriginAnchorForAlignment
