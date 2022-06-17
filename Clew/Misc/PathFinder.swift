@@ -223,10 +223,14 @@ public class RouteAnchorPoint: NSObject, NSSecureCoding {
     ///   - voiceNote: URL to auditory description
     public init(anchor: ARAnchor? = nil, information: NSString? = nil, voiceNote: NSString? = nil, imageFileName: NSString? = nil, intrinsics: simd_float4? = nil, transform: simd_float4x4? = nil) {
         self.anchor = anchor
+        self.transform = transform
         self.information = information
         self.voiceNote = voiceNote
         self.imageFileName = imageFileName
         self.intrinsics = intrinsics
+        if let _  = self.transform, let imageFilename = self.imageFileName {
+            self.image = UIImage(contentsOfFile: imageFilename.documentURL.path)
+        }
     }
     
     /// Encode the Anchor Point.
@@ -271,6 +275,11 @@ public class RouteAnchorPoint: NSObject, NSSecureCoding {
         var voiceNote : NSString? = nil
         var imageFileName : NSString?
         var intrinsics : simd_float4?
+        var transform : simd_float4x4?
+        
+        if let decodedTransform = aDecoder.decodeObject(forKey: "transform") as? simd_float4x4 {
+            transform = decodedTransform
+        }
         
         if let transformAsARAnchor = aDecoder.decodeObject(of: ARAnchor.self, forKey: "transformAsARAnchor") {
             anchor = transformAsARAnchor
@@ -284,7 +293,7 @@ public class RouteAnchorPoint: NSObject, NSSecureCoding {
         if let intrinsicsArray = aDecoder.decodeObject(forKey: "intrinsics") as? [Float] {
             intrinsics = simd_float4(intrinsicsArray[0], intrinsicsArray[1], intrinsicsArray[2], intrinsicsArray[3])
         }
-        self.init(anchor: anchor, information: information, voiceNote: voiceNote, imageFileName: imageFileName, intrinsics: intrinsics)
+        self.init(anchor: anchor, information: information, voiceNote: voiceNote, imageFileName: imageFileName, intrinsics: intrinsics, transform: transform)
     }
     
     func getThumbnail(imageHeight: CGFloat = 100)->UIImage? {
