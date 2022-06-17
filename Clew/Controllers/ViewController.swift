@@ -1942,7 +1942,9 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
         guard let directionToNextKeypoint = getDirectionToNextKeypoint(currentLocation: curLocation) else {
             return
         }
+        print(curLocation)
         print(" -- Following Crumb")
+        VisualAlignmentManager.shared.doVisualAlignment(delegate: self, alignAnchorPoint: nextKeypoint.location.routeAnchorPoint!, maxTries: ViewController.maxVisualAlignmentRetryCount, makeAnnouncement: true)
         
         if (directionToNextKeypoint.targetState == PositionState.atTarget) {
             if !RouteManager.shared.onLastKeypoint {
@@ -2364,6 +2366,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
         if(record) {
             logger.logTransformMatrix(state: state, scn: scn, headingOffset: nav.headingOffset, useHeadingOffset: nav.useHeadingOffset)
         }
+
         return CurrentCoordinateInfo(LocationInfo(frameTransform: curFrameTransform, frameIntrinsics: curFrameIntrinsics, frameImage: curFrameCapturedImage), transMatrix: transMatrix)
     }
     

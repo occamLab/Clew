@@ -86,8 +86,11 @@ public class LocationInfo : ARAnchor {
         super.encode(with: aCoder)
     }
     
-    public var frameImage: UIImage?
     public var routeAnchorPoint: RouteAnchorPoint!
+    
+    public override var description: String {
+        return "LocationInfo { RouteAnchorPoint: \(self.routeAnchorPoint), Transform: \(self.transform)"
+    }
     
     /// the translation expressed as a 3-element vector (x, y, z)
     public var translation: Vector3 {
@@ -191,6 +194,10 @@ public class RouteAnchorPoint: NSObject, NSSecureCoding {
     /// The position and orientation as a 4x4 matrix
     public var transform: simd_float4x4?
     private var thumbnailCache: [CGFloat: UIImage] = [:]
+    
+    public override var description: String {
+        return "RouteAnchorPoint { Image: \(String(describing: self.image)), Intrinsics \(self.intrinsics), Transform: \(self.transform)"
+    }
     
     /// Initialize the Anchor Point.
     ///

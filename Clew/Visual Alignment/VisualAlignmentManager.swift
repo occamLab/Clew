@@ -35,6 +35,7 @@ class VisualAlignmentManager {
     }
     
     func doVisualAlignment(delegate: VisualAlignmentManagerDelegate, alignAnchorPoint: RouteAnchorPoint, maxTries: Int, makeAnnouncement: Bool, isTutorial: Bool = false) {
+        print("Visual Called")
         reset()
         self.delegate = delegate
         self.alignAnchorPoint = alignAnchorPoint

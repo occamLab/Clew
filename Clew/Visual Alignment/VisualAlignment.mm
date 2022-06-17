@@ -169,6 +169,7 @@ UIImage *debug_match_image_ui = 0;
                 dispatch_semaphore_signal(sema);
 //                return ret;
             }
+            NSLog(@"Continued");
             std::vector<Eigen::Vector3d> all_rays_image_1, all_rays_image_2;
 
             for (unsigned int i = 0; i < matches.size(); i++) {
