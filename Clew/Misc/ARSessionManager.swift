@@ -33,6 +33,7 @@ protocol ARSessionManagerDelegate {
     func trackingErrorOccurred(_ : ARTrackingError)
     func sessionInitialized()
     func sessionRelocalizing()
+    func sessionDidRelocalize()
     func trackingIsNormal()
     func isRecording()->Bool
     func getPathColor()->Int
@@ -74,6 +75,9 @@ class ARSessionManager: NSObject {
     
     /// the strategy to employ with respect to the worldmap
     var relocalizationStrategy: RelocalizationStrategy = .none
+    
+    /// keep track of whether or not the session was, at any point, in the relocalizing state.  The behavior of the ARCamera.TrackingState is a bit erratic in that the session will sometimes execute unexpected sequences (e.g., initializing -> normal -> not available -> initializing -> relocalizing).
+    var sessionWasRelocalizing = false
     
     var initialWorldMap: ARWorldMap? {
         set {
@@ -128,6 +132,7 @@ class ARSessionManager: NSObject {
     func startSession() {
         print("WORLD MAP STARTING SESSION! \(configuration.initialWorldMap)")
         manualAlignment = nil
+        sessionWasRelocalizing = false
         keypointRenderJob = nil
         pathRenderJob = nil
         intermediateAnchorRenderJobs = [:]
@@ -564,6 +569,7 @@ extension ARSessionManager: ARSessionDelegate {
                 // don't log anything
                 print("initializing")
             case .relocalizing:
+                sessionWasRelocalizing = true
                 delegate?.sessionInitialized()
                 delegate?.sessionRelocalizing()
             @unknown default:
@@ -573,9 +579,12 @@ extension ARSessionManager: ARSessionDelegate {
             logString = "Normal"
             delegate?.sessionInitialized()
             delegate?.trackingIsNormal()
-            if relocalizationStrategy == .coordinateSystemAutoAligns {
-                manualAlignment = matrix_identity_float4x4
-                legacyHandleRelocalization()
+            if sessionWasRelocalizing {
+                delegate?.sessionDidRelocalize()
+                if relocalizationStrategy == .coordinateSystemAutoAligns {
+                    manualAlignment = matrix_identity_float4x4
+                    legacyHandleRelocalization()
+                }
             }
             print("normal")
         case .notAvailable:

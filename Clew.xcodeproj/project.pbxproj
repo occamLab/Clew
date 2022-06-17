@@ -43,9 +43,9 @@
 		82C027DF27F2528300F7B4C7 /* StartRecording.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 82C027D627F2528300F7B4C7 /* StartRecording.aiff */; };
 		82C027E027F2528300F7B4C7 /* StopRecording.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 82C027D727F2528300F7B4C7 /* StopRecording.aiff */; };
 		82C027E127F2528300F7B4C7 /* StopRecording.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 82C027D727F2528300F7B4C7 /* StopRecording.aiff */; };
+		82E5A0A9285CE98600B5E9FA /* RecordPathController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98AA58A326A1C13D001123F0 /* RecordPathController.swift */; };
 		98006F82268382D800E61861 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 98006F81268382D800E61861 /* Assets.xcassets */; };
 		98006F85268382D800E61861 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 98006F83268382D800E61861 /* LaunchScreen.storyboard */; };
-		98006FB22683844A00E61861 /* RecordPathController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470EE022C119F4001092A4 /* RecordPathController.swift */; };
 		98006FB32683844D00E61861 /* StartNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470EE122C119F4001092A4 /* StartNavigationController.swift */; };
 		98006FB42683845000E61861 /* StopRecordingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470EE222C119F4001092A4 /* StopRecordingController.swift */; };
 		98006FB52683845400E61861 /* ResumeTrackingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5470EE422C119F4001092A4 /* ResumeTrackingController.swift */; };
@@ -319,7 +319,6 @@
 		E5470ED922C119F4001092A4 /* UIButtonExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIButtonExtensions.swift; sourceTree = "<group>"; };
 		E5470EDA22C119F4001092A4 /* Float4x4Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Float4x4Extension.swift; sourceTree = "<group>"; };
 		E5470EDE22C119F4001092A4 /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		E5470EE022C119F4001092A4 /* RecordPathController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecordPathController.swift; sourceTree = "<group>"; };
 		E5470EE122C119F4001092A4 /* StartNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StartNavigationController.swift; sourceTree = "<group>"; };
 		E5470EE222C119F4001092A4 /* StopRecordingController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StopRecordingController.swift; sourceTree = "<group>"; };
 		E5470EE422C119F4001092A4 /* ResumeTrackingController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResumeTrackingController.swift; sourceTree = "<group>"; };
@@ -620,7 +619,6 @@
 		E5470EDF22C119F4001092A4 /* StateViews */ = {
 			isa = PBXGroup;
 			children = (
-				E5470EE022C119F4001092A4 /* RecordPathController.swift */,
 				E5470EE122C119F4001092A4 /* StartNavigationController.swift */,
 				E5470EE222C119F4001092A4 /* StopRecordingController.swift */,
 				E5470EE422C119F4001092A4 /* ResumeTrackingController.swift */,
@@ -860,7 +858,6 @@
 				98E3A391268F99E800C3DAD1 /* DataPersistence.swift in Sources */,
 				98006FB62683845600E61861 /* NameSavedRouteController.swift in Sources */,
 				9805366526838C500065E80F /* RouteTableViewCell.swift in Sources */,
-				98006FB22683844A00E61861 /* RecordPathController.swift in Sources */,
 				9863AF0726B331E700EF0C64 /* FeedbackLogger.swift in Sources */,
 				8227FCF0272B052C001031F9 /* SRCountdownTimer.swift in Sources */,
 				8227FCFC272B0845001031F9 /* PRTween.m in Sources */,
@@ -896,6 +893,7 @@
 				98053658268388D10065E80F /* Navigation.swift in Sources */,
 				98006FC4268385B700E61861 /* Float4x4Extension.swift in Sources */,
 				9805365A268388DD0065E80F /* PathFinder.swift in Sources */,
+				82E5A0A9285CE98600B5E9FA /* RecordPathController.swift in Sources */,
 				9863AF0626B32EB600EF0C64 /* SceneDelegate.swift in Sources */,
 				9863AF6926B44D9E00EF0C64 /* ScanTagView.swift in Sources */,
 				98006FCA268385DD00E61861 /* RoutesViewController.swift in Sources */,
@@ -1201,11 +1199,11 @@
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CODE_SIGN_ENTITLEMENTS = "UIKit Clip/UIKit_Clip.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 318;
+				CURRENT_PROJECT_VERSION = 319;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
 				INFOPLIST_FILE = "UIKit Clip/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1234,10 +1232,10 @@
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CODE_SIGN_ENTITLEMENTS = "UIKit Clip/UIKit_Clip.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 318;
+				CURRENT_PROJECT_VERSION = 319;
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
 				INFOPLIST_FILE = "UIKit Clip/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1265,13 +1263,13 @@
 				CODE_SIGN_ENTITLEMENTS = "Clew-More/Clew-More.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 318;
+				CURRENT_PROJECT_VERSION = 319;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_ASSET_PATHS = "\"Clew-More/Preview Content\"";
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = "Clew-More/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1302,12 +1300,12 @@
 				CODE_SIGN_ENTITLEMENTS = "Clew-More/Clew-More.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 318;
+				CURRENT_PROJECT_VERSION = 319;
 				DEVELOPMENT_ASSET_PATHS = "\"Clew-More/Preview Content\"";
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = "Clew-More/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

@@ -265,6 +265,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         // cancel the timer that announces tracking errors
         trackingErrorsAnnouncementTimer?.invalidate()
         // if the ARSession is running, pause it to conserve battery
+        ARSessionManager.shared.pauseSession()
         // set this to nil to prevent the app from erroneously detecting that we can auto-align to the route
         if #available(iOS 12.0, *) {
             ARSessionManager.shared.initialWorldMap = nil
@@ -499,23 +500,8 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
                 isSameMap = false
                 self.attemptingRelocalization = false
             }
-            if isTrackingPerformanceNormal, isSameMap {
-                // we can skip the whole process of relocalization since we are already using the correct map and tracking is normal.  It helps to strip out old anchors to reduce jitter though
-                ///PATHPOINT load route from automatic alignment -> start navigation
-                
-                self.isResumedRoute = true
-                self.isAutomaticAlignment = true
-                self.state = .readyToNavigateOrPause(allowPause: false)
-            }
-            else if isRelocalizing && isSameMap || isTrackingPerformanceNormal && worldMap == nil  {
-                // we don't have to wait for the session to start up.  It will be created automatically.
-                self.state = .readyForFinalResumeAlignment
-                self.showResumeTrackingConfirmButton(route: route, navigateStartToEnd: navigateStartToEnd)
-            } else {
-                // this makes sure that the user doesn't resume the session until the session   is initialized
-                self.state = .readyForFinalResumeAlignment
-                self.showResumeTrackingConfirmButton(route: route, navigateStartToEnd: navigateStartToEnd)
-            }
+            self.state = .readyForFinalResumeAlignment
+            self.showResumeTrackingConfirmButton(route: route, navigateStartToEnd: navigateStartToEnd)
         }
     }
     
@@ -709,6 +695,8 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     @objc func saveCodeIDButtonPressed() {
         hideAllViewsHelper()
         ///Announce to the user that they have saved the route ID and are now at the saving route name screen
+        // get session ready
+        ARSessionManager.shared.startSession()
         self.delayTransition(announcement: NSLocalizedString("saveCodeIDtoCreatingAnchorPointAnnouncement", comment: "This is an announcement which is spoken when the user finishes saving their route's app clip code ID. This announcement signifies the transition from the view where the user can enter the app clip code ID associated with the route to the view where the user can anchor the starting point of the route they are recording."), initialFocus: nil)
         /// send to pause procedure
         self.state = .startingPauseProcedure
@@ -1670,7 +1658,9 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     ///   - subview transitions?
     /// display RECORD PATH button/hide all other views
     @objc func showRecordPathButton(announceArrival: Bool) {
+        #if CLEWMORE
         add(recordPathController)
+        #endif
         /// handling main screen transitions outside of the first load
         /// add the view of the child to the view of the parent
         stopNavigationController.remove()
@@ -1713,7 +1703,16 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     func alignmentTransition() {
         AnnouncementManager.shared.announce(announcement: NSLocalizedString("resumeAnchorPointToReturnNavigationAnnouncement", comment: "This is an Announcement which indicates that the pause session is complete, that the program was able to align with the anchor point, and that return navigation has started."))
             Timer.scheduledTimer(withTimeInterval: 3.0, repeats: false) { timer in
-                self.state = .navigatingRoute
+                // check the state in case it has changed in the interim (e.g., a user clicked the home button)
+                switch (self.state) {
+                case .startingAutoAlignment:
+                    self.state = .navigatingRoute
+                case .readyForFinalResumeAlignment:
+                    self.state = .navigatingRoute
+                default:
+                    // do nothing since we probably hit the home button in the interim
+                    break
+                }
             }
 
     }
@@ -1857,50 +1856,15 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         // TODO: i18n/l10n
         if completedRoute{
             delayTransition(announcement: "You have arrived at your destination.")
-
-            //label.text = "You have arrived at your destination. Thank you for using the Clew App Clip"
-            //view.mainText?.text?.append(String.localizedStringWithFormat("You have arrived at your destination. Thank you for using the Clew App Clip", 5))
         } else{
             delayTransition(announcement: "Route navigation stopped. You may not have arrived at your destination yet.")
-            //label.text = "Route navigation stopped. You may not have arrived at your destination yet. Thank you for using the Clew App Clip"
-            // view.mainText?.text?.append(String.localizedStringWithFormat("Route navigation stopped. You may not have arrived at your destination yet. Thank you for using the Clew App Clip", 5))
         }
-        /*label.tag = UIView.mainTextTag
-        /// place label inside of the scrollview
-        scrollView.addSubview(label)
-        self.view.addSubview(scrollView)
-        
-        /// set top, left, right constraints on scrollView to
-        /// "main" view + 8.0 padding on each side
-        scrollView.topAnchor.constraint(equalTo: view.topAnchor, constant: UIScreen.main.bounds.size.height*0.15).isActive = true
-        scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8.0).isActive = true
-        scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8.0).isActive = true
-        
-        /// set the height constraint on the scrollView to 0.5 * the main view height
-        scrollView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.5).isActive = true
-        
-        /// set top, left, right AND bottom constraints on label to
-        /// scrollView + 8.0 padding on each side
-        label.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 8.0).isActive = true
-        label.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 8.0).isActive = true
-        label.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -8.0).isActive = true
-        label.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -8.0).isActive = true
-        
-        /// set the width of the label to the width of the scrollView (-16 for 8.0 padding on each side)
-        label.widthAnchor.constraint(equalTo: scrollView.widthAnchor, constant: -16.0).isActive = true
-        
-        /// configure label: Zero lines + Word Wrapping
-        label.numberOfLines = 0
-        label.lineBreakMode = NSLineBreakMode.byWordWrapping */
-        
-        if #available(iOS 14.0, *){
-            let config = SKOverlay.AppClipConfiguration(position: .bottom)
-            let overlay = SKOverlay(configuration: config)
-            overlay.present(in: scene)
-        print("UI done")
-
-        }
+        ARSessionManager.shared.pauseSession()
+        let config = SKOverlay.AppClipConfiguration(position: .bottom)
+        let overlay = SKOverlay(configuration: config)
+        overlay.present(in: scene)
         #else
+        ARSessionManager.shared.pauseSession()
         self.hideAllViewsHelper()
         self.add(self.endNavigationController!)
         #endif
@@ -2127,15 +2091,10 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         trackingErrorsAnnouncementTimer = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: true) { timer in
             self.announceCurrentTrackingErrors()
         }
-        // this makes sure that the user doesn't start recording the single use route until the session is initialized
-        continuationAfterSessionIsReady = {
-            self.trackingErrorsAnnouncementTimer?.invalidate()
-            // sends the user to the screen where they can enter an app clip code ID for the route they're about to record
-            self.state = .startingNameCodeIDProcedure
-        }
+        self.trackingErrorsAnnouncementTimer?.invalidate()
+        // sends the user to the screen where they can enter an app clip code ID for the route they're about to record
+        self.state = .startingNameCodeIDProcedure
         ARSessionManager.shared.initialWorldMap = nil
-        trackingSessionErrorState = nil
-        ARSessionManager.shared.startSession()
     }
     
     /// handles the user pressing the stop recording button.
@@ -2233,40 +2192,6 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
             ///PATHPOINT single use route pause -> record end Anchor Point
             state = .startingPauseProcedure
         }
-    }
-    
-    /// handles the user pressing the Anchor Point button
-    @objc func startCreateAnchorPointProcedure() {
-        #if !APPCLIP
-        rootContainerView.homeButton.isHidden = false
-        #endif
-        creatingRouteAnchorPoint = true
-        
-        ///the route has not been resumed automaticly from a saved route
-        isAutomaticAlignment = false
-        ///tell the program that a single use route is being recorded
-        recordingSingleUseRoute = true
-        paused = false
-        ///PATHPOINT single use route button -> recording a route
-        ///hide all other views
-        hideAllViewsHelper()
-        
-        // announce session state
-        trackingErrorsAnnouncementTimer = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: true) { timer in
-            self.announceCurrentTrackingErrors()
-        }
-        // this makes sure that the user doesn't start recording the single use route until the session is initialized
-        continuationAfterSessionIsReady = {
-            self.trackingErrorsAnnouncementTimer?.invalidate()
-            ///play an announcement which tells the user that a route is being recorded
-            self.delayTransition(announcement: NSLocalizedString("singleUseRouteToRecordingRouteAnnouncement", comment: "This is an announcement which is spoken when the user starts recording a single use route. it informs the user that they are recording a single use route."), initialFocus: nil)
-            
-            //sends the user to the screen where they can start recording a route
-            self.state = .recordingRoute
-        }
-        ARSessionManager.shared.initialWorldMap = nil
-        trackingSessionErrorState = nil
-        ARSessionManager.shared.startSession()
     }
     
     /// presents a view for the user to enter the app clip code ID
@@ -2417,21 +2342,8 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
             let relativeTransform = (tagToWorld * tagToRoute.inverse).alignY()
             ARSessionManager.shared.manualAlignment = relativeTransform
             self.isResumedRoute = true
-            if self.paused {
-                ///PATHPOINT paused anchor point alignment timer -> return navigation
-                ///announce to the user that they have aligned to the anchor point sucessfully and are starting  navigation.
-                self.paused = false
-                self.alignmentTransition()
-                //self.delayTransition(announcement: NSLocalizedString("resumeAnchorPointToReturnNavigationAnnouncement", comment: "This is an Announcement which indicates that the pause session is complete, that the program was able to align with the anchor point, and that return navigation has started."), initialFocus: nil)
-                //self.state = .navigatingRoute
-
-            } else {
-                ///PATHPOINT load saved route -> start navigation
-
-                ///announce to the user that they have sucessfully aligned with their saved anchor point.
-                self.alignmentTransition()
-                //self.delayTransition(announcement: NSLocalizedString("resumeAnchorPointToReturnNavigationAnnouncement", comment: "This is an Announcement which indicates that the pause session is complete, that the program was able to align with the anchor point, and that return navigation has started."), initialFocus: nil)
-            }
+            self.paused = false
+            self.alignmentTransition()
         } else {
             DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(ViewController.alignmentWaitingPeriod)) {
             self.rootContainerView.countdownTimer.isHidden = true
@@ -2488,7 +2400,8 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
             return
         }
         recordingCrumbs.append(curLocation)
-        ARSessionManager.shared.add(anchor: curLocation)
+        //Remove these crumbs in case they case issues with performance
+        //ARSessionManager.shared.add(anchor: curLocation)
     }
     
     /// checks to see if user is on the right path during navigation.
@@ -2996,12 +2909,7 @@ extension ViewController: ARSessionManagerDelegate {
             continuationAfterSessionIsReady = nil
             continuation()
         }
-        if ARSessionManager.shared.initialWorldMap != nil, attemptingRelocalization {
-            if trackingWarningsAllowed {
-                AnnouncementManager.shared.announce(announcement: NSLocalizedString("realignToSavedRouteAnnouncement", comment: "An announcement which lets the user know that their surroundings have been matched to a saved route"))
-            }
-            attemptingRelocalization = false
-        } else if oldTrackingSessionErrorState != nil {
+        if oldTrackingSessionErrorState != nil {
             if trackingWarningsAllowed {
                 AnnouncementManager.shared.announce(announcement: NSLocalizedString("fixedTrackingAnnouncement", comment: "Let user know that the ARKit tracking session has returned to its normal quality (this is played after the tracking has been restored from thir being insuficent visual features or excessive motion which degrade the tracking)"))
                 if soundFeedback {
@@ -3009,15 +2917,20 @@ extension ViewController: ARSessionManagerDelegate {
                 }
             }
         }
-        if case .readyForFinalResumeAlignment = state, ARSessionManager.shared.initialWorldMap != nil {
+    }
+    
+    func sessionDidRelocalize() {
+        if trackingWarningsAllowed {
+            AnnouncementManager.shared.announce(announcement: NSLocalizedString("realignToSavedRouteAnnouncement", comment: "An announcement which lets the user know that their surroundings have been matched to a saved route"))
+        }
+        attemptingRelocalization = false
+        if case .readyForFinalResumeAlignment = state {
+            // TODO: this is not doing the right thing for Clew Maps
             // this will cancel any realignment if it hasn't happened yet and go straight to route navigation mode
-            rootContainerView.countdownTimer.isHidden = true
+            resumeTrackingConfirmController.remove()
             isResumedRoute = true
-            
             isAutomaticAlignment = true
-            
-            ///PATHPOINT: Auto Alignment -> resume route
-            state = .readyToNavigateOrPause(allowPause: false)
+            alignmentTransition()
         }
     }
     
@@ -3055,12 +2968,6 @@ extension ViewController: ARSessionManagerDelegate {
                 if (soundFeedback) {
                     SoundEffectManager.shared.meh()
                 }
-                
-               /* if case .startingAutoAnchoring = state {
-                    announce(announcement: NSLocalizedString("anchorImageTagInFrameAnnouncement", comment: "This is announced when the image tag is in frame and the user can set an anchor point."))
-                } else if case .startingAutoAlignment = state {
-                    announce(announcement: NSLocalizedString("alignImageTagInFrameAnnouncement", comment: "This is announced when the image tag is in frame, the user is localized to the route, and they can begin navigating."))
-                }*/
                 
                 imageNode = SCNNode()
                 imageNode.simdTransform = imageAnchor.transform
