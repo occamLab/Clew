@@ -155,18 +155,25 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
             logger.logStateTransition(newState: state)
             switch state {
             case .recordingRoute:
+                print("State -- 1")
                 handleStateTransitionToRecordingRoute()
             case .readyToNavigateOrPause(_):
+                print("State -- 2")
                 handleStateTransitionToReadyToNavigateOrPause(allowPause: recordingSingleUseRoute, isTutorial: isTutorial)
             case .navigatingRoute:
+                print("State -- 3")
                 handleStateTransitionToNavigatingRoute()
             case .mainScreen(let announceArrival):
+                print("State -- 4")
                 handleStateTransitionToMainScreen(announceArrival: announceArrival)
             case .startingPauseProcedure:
+                print("State -- 5")
                 handleStateTransitionToStartingPauseProcedure()
             case .pauseWaitingPeriod:
+                print("State -- 6")
                 handleStateTransitionToPauseWaitingPeriod()
             case .completingPauseProcedure:
+                print("State -- 7")
                 handleStateTransitionToCompletingPauseProcedure()
             case .pauseProcedureCompleted:
                 // nothing happens currently
@@ -1902,12 +1909,32 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
         guard let curLocation = getRealCoordinates(record: true)?.location, case .recordingRoute = state else {
             return
         }
+        
+        
+//        guard let anchorPointImage = pixelBufferToUIImage(pixelBuffer: arFrame!.capturedImage) else {
+//            return
+//        }
+        
+//        let routeAnchorPoint = RouteAnchorPoint()
+        
+//        routeAnchorPoint.transform = arFrame!.camera.transform
+//        routeAnchorPoint.intrinsics = simd_float4(arFrame!.camera.intrinsics[0, 0], arFrame!.camera.intrinsics[1, 1], arFrame!.camera.intrinsics[2, 0], arFrame!.camera.intrinsics[2, 1])
+        
+        let routeAnchorPointImageIdentifier = UUID()
+        curLocation.routeAnchorPoint!.imageFileName = "\(routeAnchorPointImageIdentifier).jpg" as NSString
+        let routeAnchorPointJpeg = curLocation.routeAnchorPoint.image!.jpegData(compressionQuality: 1)
+        try! routeAnchorPointJpeg?.write(to: (curLocation.routeAnchorPoint.imageFileName!.documentURL), options: .atomic)
+        curLocation.routeAnchorPoint!.loadImage()
+        
+        
+        print("Dropping Crumb")
         recordingCrumbs.append(curLocation)
         ARSessionManager.shared.add(anchor: curLocation)
     }
     
     /// checks to see if user is on the right path during navigation.
     @objc func followCrumb() {
+
         guard let curLocation = getRealCoordinates(record: true), let nextKeypoint = RouteManager.shared.nextKeypoint else {
             // TODO: might want to indicate that something is wrong to the user
             return
@@ -1915,6 +1942,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
         guard let directionToNextKeypoint = getDirectionToNextKeypoint(currentLocation: curLocation) else {
             return
         }
+        print(" -- Following Crumb")
         
         if (directionToNextKeypoint.targetState == PositionState.atTarget) {
             if !RouteManager.shared.onLastKeypoint {
@@ -2316,11 +2344,18 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
     /// - Parameter record: a Boolean indicating whether to record the computed position (true if it should be computed, false otherwise)
     /// - Returns: the current location as a `CurrentCoordinateInfo` object
     func getRealCoordinates(record: Bool) -> CurrentCoordinateInfo? {
-        guard let currTransform = ARSessionManager.shared.currentFrame?.camera.transform else {
+        guard let curFrame = ARSessionManager.shared.currentFrame else {
             return nil
         }
+        let curFrameTransform = curFrame.camera.transform
+        let curFrameIntrinsics = simd_float4(curFrame.camera.intrinsics[0, 0], curFrame.camera.intrinsics[1, 1], curFrame.camera.intrinsics[2, 0], curFrame.camera.intrinsics[2, 1])
+        let curFrameCapturedImage = pixelBufferToUIImage(pixelBuffer: curFrame.capturedImage)
+        
+//        guard let currTransform = ARSessionManager.shared.currentFrame?.camera.transform else {
+//            return nil
+//        }
         // returns current location & orientation based on starting origin
-        let scn = SCNMatrix4(currTransform)
+        let scn = SCNMatrix4(curFrameTransform)
         let transMatrix = Matrix3([scn.m11, scn.m12, scn.m13,
                                    scn.m21, scn.m22, scn.m23,
                                    scn.m31, scn.m32, scn.m33])
@@ -2329,7 +2364,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
         if(record) {
             logger.logTransformMatrix(state: state, scn: scn, headingOffset: nav.headingOffset, useHeadingOffset: nav.useHeadingOffset)
         }
-        return CurrentCoordinateInfo(LocationInfo(transform: currTransform), transMatrix: transMatrix)
+        return CurrentCoordinateInfo(LocationInfo(frameTransform: curFrameTransform, frameIntrinsics: curFrameIntrinsics, frameImage: curFrameCapturedImage), transMatrix: transMatrix)
     }
     
     func runTutorialPath(routeName: String) {

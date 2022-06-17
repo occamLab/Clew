@@ -12,9 +12,9 @@ class RouteManager {
     static var shared = RouteManager()
     
     /// list of keypoints calculated after path completion
-    private var keypoints: [KeypointInfo]?
+    public var keypoints: [KeypointInfo]?
     /// keep a list of the keypoints from the original route since the keypoints array is cleared as the user traverses the route (TODO: use an index instead of deleting)
-    private var originalKeypoints: [KeypointInfo]?
+    public var originalKeypoints: [KeypointInfo]?
     /// Intermediate anchor points
     var intermediateAnchorPoints:[RouteAnchorPoint] = []
     

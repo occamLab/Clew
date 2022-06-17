@@ -58,6 +58,14 @@ public class LocationInfo : ARAnchor {
         super.init(transform: transform)
     }
     
+    init(frameTransform: simd_float4x4, frameIntrinsics: simd_float4, frameImage: UIImage?) {
+        super.init(transform: frameTransform)
+        self.routeAnchorPoint = RouteAnchorPoint()
+        self.routeAnchorPoint.image = frameImage
+        self.routeAnchorPoint.intrinsics = frameIntrinsics
+        self.routeAnchorPoint.transform = frameTransform
+    }
+    
     /// indicates whether secure coding is supported (it is)
     override public class var supportsSecureCoding: Bool {
         return true
@@ -77,6 +85,9 @@ public class LocationInfo : ARAnchor {
     override public func encode(with aCoder: NSCoder) {
         super.encode(with: aCoder)
     }
+    
+    public var frameImage: UIImage?
+    public var routeAnchorPoint: RouteAnchorPoint!
     
     /// the translation expressed as a 3-element vector (x, y, z)
     public var translation: Vector3 {
@@ -162,9 +173,9 @@ public struct KeypointInfo {
 }
 
 /// An encapsulation of a route Anchor Point, including position, text, and audio information.
-class RouteAnchorPoint: NSObject, NSSecureCoding {
+public class RouteAnchorPoint: NSObject, NSSecureCoding {
     /// Needs to be declared and assigned true to support `NSSecureCoding`
-    static var supportsSecureCoding = true
+    public static var supportsSecureCoding = true
     
     /// The position and orientation encoded as an ARAnchor
     public var anchor: ARAnchor?
@@ -177,6 +188,8 @@ class RouteAnchorPoint: NSObject, NSSecureCoding {
     public var image: UIImage?
     /// The intrinsics used to take the anchor point image
     public var intrinsics: simd_float4?
+    /// The position and orientation as a 4x4 matrix
+    public var transform: simd_float4x4?
     private var thumbnailCache: [CGFloat: UIImage] = [:]
     
     /// Initialize the Anchor Point.
@@ -185,7 +198,7 @@ class RouteAnchorPoint: NSObject, NSSecureCoding {
     ///   - transform: the position and orientation
     ///   - information: textual description
     ///   - voiceNote: URL to auditory description
-    public init(anchor: ARAnchor? = nil, information: NSString? = nil, voiceNote: NSString? = nil, imageFileName: NSString? = nil, intrinsics: simd_float4? = nil) {
+    public init(anchor: ARAnchor? = nil, information: NSString? = nil, voiceNote: NSString? = nil, imageFileName: NSString? = nil, intrinsics: simd_float4? = nil, transform: simd_float4x4? = nil) {
         self.anchor = anchor
         self.information = information
         self.voiceNote = voiceNote
@@ -196,7 +209,7 @@ class RouteAnchorPoint: NSObject, NSSecureCoding {
     /// Encode the Anchor Point.
     ///
     /// - Parameter aCoder: the encoder
-    func encode(with aCoder: NSCoder) {
+    public func encode(with aCoder: NSCoder) {
         aCoder.encode(anchor, forKey: "anchor")
         aCoder.encode(information, forKey: "information")
         aCoder.encode(voiceNote, forKey: "voiceNote")
@@ -221,7 +234,7 @@ class RouteAnchorPoint: NSObject, NSSecureCoding {
     /// Decode the Anchor Point.
     ///
     /// - Parameter aDecoder: the decoder
-    required convenience init?(coder aDecoder: NSCoder) {
+    required convenience public init?(coder aDecoder: NSCoder) {
         var anchor : ARAnchor? = nil
         var information : NSString? = nil
         var voiceNote : NSString? = nil

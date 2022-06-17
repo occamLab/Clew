@@ -520,7 +520,7 @@ extension ARSessionManager: ARSCNViewDelegate {
             return
         }
         if let nextKeypoint = RouteManager.shared.nextKeypoint, let cameraTransform = currentFrame?.camera.transform {
-            let previousKeypointLocation = RouteManager.shared.getPreviousKeypoint(to: nextKeypoint)?.location ?? LocationInfo(transform: cameraTransform)
+            let previousKeypointLocation = RouteManager.shared.getPreviousKeypoint(to:  nextKeypoint)?.location ?? LocationInfo(transform: cameraTransform)
             if nextKeypoint.location.identifier == anchor.identifier {
                 renderKeypoint(nextKeypoint.location, defaultColor: defaultColor)
             }

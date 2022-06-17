@@ -124,7 +124,14 @@ UIImage *debug_match_image_ui = 0;
 
     [self networkRequest:firstImageUIImage image2:secondImageUIImage success:^(NSDictionary<NSString *,NSString *> *responseDict) {
         NSArray *pointArray = [responseDict[@"points"] componentsSeparatedByString: @","];
-
+        
+        if ([pointArray count] == 1) {
+            ret.is_valid = false;
+            ret.yaw = 0;
+            NSLog(@"Exiting Block (0)");
+            dispatch_semaphore_signal(sema);
+        } else {
+        
         std::vector<UNIMatch *> matches;
         std::vector<cv::Point2f> vectors1, vectors2;
 
@@ -313,6 +320,7 @@ UIImage *debug_match_image_ui = 0;
             NSLog(@"Exiting Block (4)");
             dispatch_semaphore_signal(sema);
 //            return ret;
+        }
         }
 
     } failure:^(NSError *error) {
