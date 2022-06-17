@@ -80,10 +80,14 @@ public class LocationInfo : ARAnchor {
     ///
     /// - Parameter aDecoder: the NSCoder doing the decoding
     required init?(coder aDecoder: NSCoder) {
-        self.routeAnchorPoint = RouteAnchorPoint()
-        self.routeAnchorPoint.image = nil
-        self.routeAnchorPoint.intrinsics = nil
-        self.routeAnchorPoint.transform = nil
+        if let decodedRouteAnchorPoint = aDecoder.decodeObject(of: RouteAnchorPoint.self, forKey: "routeAnchorPoint") {
+            self.routeAnchorPoint = decodedRouteAnchorPoint
+        } else {
+            self.routeAnchorPoint = RouteAnchorPoint()
+            self.routeAnchorPoint.image = nil
+            self.routeAnchorPoint.intrinsics = nil
+            self.routeAnchorPoint.transform = nil
+        }
         self.whichConstruct = 4
         super.init(coder: aDecoder)
     }
@@ -94,6 +98,7 @@ public class LocationInfo : ARAnchor {
     /// - Parameter aCoder: the NSCoder doing the encoding
     override public func encode(with aCoder: NSCoder) {
         super.encode(with: aCoder)
+        aCoder.encode(routeAnchorPoint, forKey: "routeAnchorPoint")
     }
     
     public var routeAnchorPoint: RouteAnchorPoint
