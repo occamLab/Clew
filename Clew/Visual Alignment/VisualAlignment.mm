@@ -168,142 +168,143 @@ UIImage *debug_match_image_ui = 0;
                 NSLog(@"Exiting Block (1)");
                 dispatch_semaphore_signal(sema);
 //                return ret;
-            }
-            NSLog(@"Continued");
-            std::vector<Eigen::Vector3d> all_rays_image_1, all_rays_image_2;
+            } else {
+                NSLog(@"Continued");
+                std::vector<Eigen::Vector3d> all_rays_image_1, all_rays_image_2;
 
-            for (unsigned int i = 0; i < matches.size(); i++) {
-                const auto keypoint1 = matches[i].queryPt;
-                const auto keypoint2 = matches[i].trainPt;
+                for (unsigned int i = 0; i < matches.size(); i++) {
+                    const auto keypoint1 = matches[i].queryPt;
+                    const auto keypoint2 = matches[i].trainPt;
 
-                Eigen::Vector3f homogeneousKp1(downSampleFactor * keypoint1.x, downSampleFactor * keypoint1.y, 1.0);
-                Eigen::Vector3f image_1_ray = intrinsics1_matrix.inverse() * homogeneousKp1;
-                all_rays_image_1.push_back(Eigen::Vector3d(image_1_ray.x(), image_1_ray.y(), image_1_ray.z()));
-                Eigen::Vector3f homogeneousKp2(downSampleFactor * keypoint2.x, downSampleFactor * keypoint2.y, 1.0);
-                Eigen::Vector3f image_2_ray = intrinsics2_matrix.inverse() * homogeneousKp2;
-                all_rays_image_2.push_back(Eigen::Vector3d(image_2_ray.x(), image_2_ray.y(), image_2_ray.z()));
-            }
-
-            Eigen::Matrix3d bestEssential;
-            int bestInlierCount = -1;
-            double bestInlierResidualSum = -1;
-
-            unsigned int* indices = new unsigned int[matches.size()];
-            for (unsigned int i = 0; i < matches.size(); i++ ) {
-                indices[i] = i;
-            }
-            std::map<int, std::vector<float>> centiradQuantization;
-            std::map<int, std::vector<cv::Mat>> centiradQuantizationTranslations;
-
-            for (unsigned int trial = 0; trial < 100; trial++) {
-                std::random_shuffle(indices, indices + matches.size());
-                std::vector<cv::Point2f> vectors1_ransac, vectors2_ransac;
-                Eigen::Vector3d rotation_axis = Eigen::Vector3d(0, 1, 0);
-                Eigen::Vector3d image_1_rays[3];
-                Eigen::Vector3d image_2_rays[3];
-                std::vector<Eigen::Quaterniond> soln_rotations;
-                std::vector<Eigen::Vector3d> soln_translations;
-                for (unsigned int i = 0; i < 3; i++) {
-                    const auto& match = matches[indices[i]];
-                    const auto keypoint1 = match.queryPt;
-                    const auto keypoint2 = match.trainPt;
                     Eigen::Vector3f homogeneousKp1(downSampleFactor * keypoint1.x, downSampleFactor * keypoint1.y, 1.0);
                     Eigen::Vector3f image_1_ray = intrinsics1_matrix.inverse() * homogeneousKp1;
-                    image_1_rays[i] = Eigen::Vector3d(image_1_ray.x(), image_1_ray.y(), image_1_ray.z());
+                    all_rays_image_1.push_back(Eigen::Vector3d(image_1_ray.x(), image_1_ray.y(), image_1_ray.z()));
                     Eigen::Vector3f homogeneousKp2(downSampleFactor * keypoint2.x, downSampleFactor * keypoint2.y, 1.0);
                     Eigen::Vector3f image_2_ray = intrinsics2_matrix.inverse() * homogeneousKp2;
-                    image_2_rays[i] = Eigen::Vector3d(image_2_ray.x(), image_2_ray.y(), image_2_ray.z());
-                    vectors1_ransac.push_back(vectors1[indices[i]]);
-                    vectors2_ransac.push_back(vectors2[indices[i]]);
+                    all_rays_image_2.push_back(Eigen::Vector3d(image_2_ray.x(), image_2_ray.y(), image_2_ray.z()));
                 }
 
-                theia::ThreePointRelativePosePartialRotation(rotation_axis, image_1_rays, image_2_rays, &soln_rotations, &soln_translations);
+                Eigen::Matrix3d bestEssential;
+                int bestInlierCount = -1;
+                double bestInlierResidualSum = -1;
 
-                for (unsigned int i = 0; i < soln_rotations.size(); i++) {
-                    const Eigen::Matrix3d relative_rotation = soln_rotations[i].toRotationMatrix();
-                    Eigen::Matrix3d essential_matrix = CrossProductMatrix(soln_translations[i]) * relative_rotation;
-                    essential_matrix.normalize();
-                    int totalInliers = 0;
-                    double inlierResidualSum = 0.0;
-                    for (unsigned int j = 0; j < all_rays_image_1.size(); j++) {
-                        double pointResidual = abs(all_rays_image_2[j].transpose() * essential_matrix * all_rays_image_1[j]);
-                        if (pointResidual < 0.001) { // TODO: this threshold is not correct, we need to figure out how to make this into something consistent (e.g., distance in pixels to epipolar line)
-                            totalInliers++;
-                            inlierResidualSum += pointResidual;
-                        }
+                unsigned int* indices = new unsigned int[matches.size()];
+                for (unsigned int i = 0; i < matches.size(); i++ ) {
+                    indices[i] = i;
+                }
+                std::map<int, std::vector<float>> centiradQuantization;
+                std::map<int, std::vector<cv::Mat>> centiradQuantizationTranslations;
+
+                for (unsigned int trial = 0; trial < 100; trial++) {
+                    std::random_shuffle(indices, indices + matches.size());
+                    std::vector<cv::Point2f> vectors1_ransac, vectors2_ransac;
+                    Eigen::Vector3d rotation_axis = Eigen::Vector3d(0, 1, 0);
+                    Eigen::Vector3d image_1_rays[3];
+                    Eigen::Vector3d image_2_rays[3];
+                    std::vector<Eigen::Quaterniond> soln_rotations;
+                    std::vector<Eigen::Vector3d> soln_translations;
+                    for (unsigned int i = 0; i < 3; i++) {
+                        const auto& match = matches[indices[i]];
+                        const auto keypoint1 = match.queryPt;
+                        const auto keypoint2 = match.trainPt;
+                        Eigen::Vector3f homogeneousKp1(downSampleFactor * keypoint1.x, downSampleFactor * keypoint1.y, 1.0);
+                        Eigen::Vector3f image_1_ray = intrinsics1_matrix.inverse() * homogeneousKp1;
+                        image_1_rays[i] = Eigen::Vector3d(image_1_ray.x(), image_1_ray.y(), image_1_ray.z());
+                        Eigen::Vector3f homogeneousKp2(downSampleFactor * keypoint2.x, downSampleFactor * keypoint2.y, 1.0);
+                        Eigen::Vector3f image_2_ray = intrinsics2_matrix.inverse() * homogeneousKp2;
+                        image_2_rays[i] = Eigen::Vector3d(image_2_ray.x(), image_2_ray.y(), image_2_ray.z());
+                        vectors1_ransac.push_back(vectors1[indices[i]]);
+                        vectors2_ransac.push_back(vectors2[indices[i]]);
                     }
 
-                    // TODO this needs to be tuned in a smarter way (e.g., by running some iterations of RANSAC first and then adapting the threshold as a proportion of the best inlier count
-                    if (totalInliers > 0.5*all_rays_image_1.size()) {
-                        // compute pose for averaging purposes
-                        cv::Mat essential_matrixCV;
-                        eigen2cv(essential_matrix, essential_matrixCV);
-                        cv::Mat dcm_mat, translation_mat;
+                    theia::ThreePointRelativePosePartialRotation(rotation_axis, image_1_rays, image_2_rays, &soln_rotations, &soln_translations);
 
-                        int numInliers = cv::recoverPose(essential_matrixCV, vectors1_ransac, vectors2_ransac, dcm_mat, translation_mat, intrinsics1_matrix(0, 0), cv::Point2f(intrinsics1_matrix(0, 2), intrinsics1_matrix(1, 2)));
-                        if (numInliers < 3) {
-                            // one of the correspondences is behind the camera
-                            continue;
+                    for (unsigned int i = 0; i < soln_rotations.size(); i++) {
+                        const Eigen::Matrix3d relative_rotation = soln_rotations[i].toRotationMatrix();
+                        Eigen::Matrix3d essential_matrix = CrossProductMatrix(soln_translations[i]) * relative_rotation;
+                        essential_matrix.normalize();
+                        int totalInliers = 0;
+                        double inlierResidualSum = 0.0;
+                        for (unsigned int j = 0; j < all_rays_image_1.size(); j++) {
+                            double pointResidual = abs(all_rays_image_2[j].transpose() * essential_matrix * all_rays_image_1[j]);
+                            if (pointResidual < 0.001) { // TODO: this threshold is not correct, we need to figure out how to make this into something consistent (e.g., distance in pixels to epipolar line)
+                                totalInliers++;
+                                inlierResidualSum += pointResidual;
+                            }
                         }
-                        Eigen::Matrix3f dcm;
-                        cv2eigen(dcm_mat, dcm);
-                        const auto rotated = dcm * Eigen::Vector3f::UnitZ();
-                        float yaw = atan2(rotated(0), rotated(2));
-                        int quantized = (int) (yaw*100);
-                        if (centiradQuantization.find(quantized) == centiradQuantization.end()) {
-                            centiradQuantization[quantized] = std::vector<float>();
-                            centiradQuantizationTranslations[quantized] = std::vector<cv::Mat>();
+
+                        // TODO this needs to be tuned in a smarter way (e.g., by running some iterations of RANSAC first and then adapting the threshold as a proportion of the best inlier count
+                        if (totalInliers > 0.5*all_rays_image_1.size()) {
+                            // compute pose for averaging purposes
+                            cv::Mat essential_matrixCV;
+                            eigen2cv(essential_matrix, essential_matrixCV);
+                            cv::Mat dcm_mat, translation_mat;
+
+                            int numInliers = cv::recoverPose(essential_matrixCV, vectors1_ransac, vectors2_ransac, dcm_mat, translation_mat, intrinsics1_matrix(0, 0), cv::Point2f(intrinsics1_matrix(0, 2), intrinsics1_matrix(1, 2)));
+                            if (numInliers < 3) {
+                                // one of the correspondences is behind the camera
+                                continue;
+                            }
+                            Eigen::Matrix3f dcm;
+                            cv2eigen(dcm_mat, dcm);
+                            const auto rotated = dcm * Eigen::Vector3f::UnitZ();
+                            float yaw = atan2(rotated(0), rotated(2));
+                            int quantized = (int) (yaw*100);
+                            if (centiradQuantization.find(quantized) == centiradQuantization.end()) {
+                                centiradQuantization[quantized] = std::vector<float>();
+                                centiradQuantizationTranslations[quantized] = std::vector<cv::Mat>();
+                            }
+                            centiradQuantization[quantized].push_back(yaw);
+                            centiradQuantizationTranslations[quantized].push_back(translation_mat);
                         }
-                        centiradQuantization[quantized].push_back(yaw);
-                        centiradQuantizationTranslations[quantized].push_back(translation_mat);
-                    }
-                    if (bestInlierCount < 0 || totalInliers > bestInlierCount || (totalInliers == bestInlierCount && inlierResidualSum < bestInlierResidualSum)) {
-                        bestInlierCount = totalInliers;
-                        bestEssential = essential_matrix;
-                        bestInlierResidualSum = inlierResidualSum;
+                        if (bestInlierCount < 0 || totalInliers > bestInlierCount || (totalInliers == bestInlierCount && inlierResidualSum < bestInlierResidualSum)) {
+                            bestInlierCount = totalInliers;
+                            bestEssential = essential_matrix;
+                            bestInlierResidualSum = inlierResidualSum;
+                        }
                     }
                 }
+
+                float bestConsensusYaw = 0.0;
+                cv::Mat bestConsensusTranslation = cv::Mat(3,1, CV_64F, 0.0);
+                unsigned long mostQuantized = 0;
+                for (std::map<int, std::vector<float> >::iterator i = centiradQuantization.begin(); i != centiradQuantization.end(); ++i) {
+                    if (i->second.size() > mostQuantized) {
+                        mostQuantized = i->second.size();
+                        bestConsensusYaw = 0.0;
+                        // take the average of all elements in the bucket
+                        for (std::vector<float>::iterator j = i->second.begin(); j != i->second.end(); ++j) {
+                            bestConsensusYaw += *j / mostQuantized;
+                        }
+                        bestConsensusTranslation = cv::Mat(3,1, CV_64F, 0.0);
+                        for (unsigned long j = 0; j < centiradQuantizationTranslations[i->first].size(); j++) {
+                            bestConsensusTranslation += centiradQuantizationTranslations[i->first][j];
+                        }
+                        bestConsensusTranslation = bestConsensusTranslation / cv::norm(bestConsensusTranslation);
+                    }
+                }
+
+                cv::Mat bestEssentialCV;
+                eigen2cv(bestEssential, bestEssentialCV);
+                cv::Mat dcm_mat, translation_mat;
+
+                int numInliers = cv::recoverPose(bestEssentialCV, vectors1, vectors2, dcm_mat, translation_mat, intrinsics1_matrix(0, 0), cv::Point2f(intrinsics1_matrix(0, 2), intrinsics1_matrix(1, 2)));
+                Eigen::Matrix3f dcm;
+                cv2eigen(dcm_mat, dcm);
+                const auto rotated = dcm * Eigen::Vector3f::UnitZ();
+                const float yaw = atan2(rotated(0), rotated(2));
+                float residualAngle = abs(yaw) - acos((dcm.trace() - 1)/2);
+                ret.yaw = mostQuantized > 0 ? bestConsensusYaw : yaw;
+                ret.residualAngle = residualAngle;
+                ret.tx = mostQuantized > 0 ? bestConsensusTranslation.at<double>(0, 0) : translation_mat.at<double>(0, 0);
+                ret.ty = mostQuantized > 0 ? bestConsensusTranslation.at<double>(0, 1) : translation_mat.at<double>(0, 1);
+                ret.tz = mostQuantized > 0 ? bestConsensusTranslation.at<double>(0, 2) : translation_mat.at<double>(0, 2);
+                ret.is_valid = numInliers >= 6;
+                delete[] indices;
+                NSLog(@"Exiting Block (2)");
+                dispatch_semaphore_signal(sema);
+    //            return ret;
             }
-
-            float bestConsensusYaw = 0.0;
-            cv::Mat bestConsensusTranslation = cv::Mat(3,1, CV_64F, 0.0);
-            unsigned long mostQuantized = 0;
-            for (std::map<int, std::vector<float> >::iterator i = centiradQuantization.begin(); i != centiradQuantization.end(); ++i) {
-                if (i->second.size() > mostQuantized) {
-                    mostQuantized = i->second.size();
-                    bestConsensusYaw = 0.0;
-                    // take the average of all elements in the bucket
-                    for (std::vector<float>::iterator j = i->second.begin(); j != i->second.end(); ++j) {
-                        bestConsensusYaw += *j / mostQuantized;
-                    }
-                    bestConsensusTranslation = cv::Mat(3,1, CV_64F, 0.0);
-                    for (unsigned long j = 0; j < centiradQuantizationTranslations[i->first].size(); j++) {
-                        bestConsensusTranslation += centiradQuantizationTranslations[i->first][j];
-                    }
-                    bestConsensusTranslation = bestConsensusTranslation / cv::norm(bestConsensusTranslation);
-                }
-            }
-
-            cv::Mat bestEssentialCV;
-            eigen2cv(bestEssential, bestEssentialCV);
-            cv::Mat dcm_mat, translation_mat;
-
-            int numInliers = cv::recoverPose(bestEssentialCV, vectors1, vectors2, dcm_mat, translation_mat, intrinsics1_matrix(0, 0), cv::Point2f(intrinsics1_matrix(0, 2), intrinsics1_matrix(1, 2)));
-            Eigen::Matrix3f dcm;
-            cv2eigen(dcm_mat, dcm);
-            const auto rotated = dcm * Eigen::Vector3f::UnitZ();
-            const float yaw = atan2(rotated(0), rotated(2));
-            float residualAngle = abs(yaw) - acos((dcm.trace() - 1)/2);
-            ret.yaw = mostQuantized > 0 ? bestConsensusYaw : yaw;
-            ret.residualAngle = residualAngle;
-            ret.tx = mostQuantized > 0 ? bestConsensusTranslation.at<double>(0, 0) : translation_mat.at<double>(0, 0);
-            ret.ty = mostQuantized > 0 ? bestConsensusTranslation.at<double>(0, 1) : translation_mat.at<double>(0, 1);
-            ret.tz = mostQuantized > 0 ? bestConsensusTranslation.at<double>(0, 2) : translation_mat.at<double>(0, 2);
-            ret.is_valid = numInliers >= 6;
-            delete[] indices;
-            NSLog(@"Exiting Block (2)");
-            dispatch_semaphore_signal(sema);
-//            return ret;
         } else {
             if (matches.size() < 10) {
                 ret.is_valid = false;

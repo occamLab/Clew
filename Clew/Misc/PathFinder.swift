@@ -47,6 +47,8 @@ public class LocationInfo : ARAnchor {
     ///
     /// - Parameter anchor: the `ARAnchor` to use for describing the location
     required init(anchor: ARAnchor) {
+        self.routeAnchorPoint = RouteAnchorPoint()
+        self.whichConstruct = 1
         super.init(anchor: anchor)
     }
     
@@ -55,15 +57,18 @@ public class LocationInfo : ARAnchor {
     /// TODO: I think we might be able to delete this since all it does is call the super class method.
     /// - Parameter transform: the transform (4x4 matrix) describing the location
     override init(transform: simd_float4x4) {
+        self.routeAnchorPoint = RouteAnchorPoint()
+        self.whichConstruct = 2
         super.init(transform: transform)
     }
     
     init(frameTransform: simd_float4x4, frameIntrinsics: simd_float4, frameImage: UIImage?) {
-        super.init(transform: frameTransform)
         self.routeAnchorPoint = RouteAnchorPoint()
         self.routeAnchorPoint.image = frameImage
         self.routeAnchorPoint.intrinsics = frameIntrinsics
         self.routeAnchorPoint.transform = frameTransform
+        self.whichConstruct = 3
+        super.init(transform: frameTransform)
     }
     
     /// indicates whether secure coding is supported (it is)
@@ -75,6 +80,11 @@ public class LocationInfo : ARAnchor {
     ///
     /// - Parameter aDecoder: the NSCoder doing the decoding
     required init?(coder aDecoder: NSCoder) {
+        self.routeAnchorPoint = RouteAnchorPoint()
+        self.routeAnchorPoint.image = nil
+        self.routeAnchorPoint.intrinsics = nil
+        self.routeAnchorPoint.transform = nil
+        self.whichConstruct = 4
         super.init(coder: aDecoder)
     }
     
@@ -86,10 +96,11 @@ public class LocationInfo : ARAnchor {
         super.encode(with: aCoder)
     }
     
-    public var routeAnchorPoint: RouteAnchorPoint!
+    public var routeAnchorPoint: RouteAnchorPoint
+    public var whichConstruct: Int
     
     public override var description: String {
-        return "LocationInfo { RouteAnchorPoint: \(self.routeAnchorPoint), Transform: \(self.transform)"
+        return "LocationInfo { RouteAnchorPoint: \(self.routeAnchorPoint), Transform: \(self.transform), WhichConstruct: \(self.whichConstruct)"
     }
     
     /// the translation expressed as a 3-element vector (x, y, z)

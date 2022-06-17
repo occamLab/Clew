@@ -317,6 +317,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
     
     /// Handler for the navigatingRoute app state
     func handleStateTransitionToNavigatingRoute() {
+        print("Handling State Transition")
         // navigate the recorded path
 
         // If the route has not yet been saved, we can no longer save this route
@@ -675,6 +676,12 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
     func onRouteTableViewCellClicked(route: SavedRoute, navigateStartToEnd: Bool) {
         let worldMap = dataPersistence.unarchiveMap(id: route.id as String)
         hideAllViewsHelper()
+        print("Loading route")
+        print(route.id)
+        let crumbs1 = route.crumbs
+        for crumb in crumbs1 {
+            print(crumb)
+        }
         state = .startingResumeProcedure(route: route, worldMap: worldMap, navigateStartToEnd: navigateStartToEnd)
     }
     
@@ -687,6 +694,11 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
     ///   - worldMap: the world map
     /// - Throws: an error if something goes wrong
     func archive(routeId: NSString, beginRouteAnchorPoint: RouteAnchorPoint, endRouteAnchorPoint: RouteAnchorPoint, intermediateAnchorPoints: [RouteAnchorPoint], worldMap: Any?) throws {
+        print("Saving route with crumbs")
+        print(routeId)
+        for crumb in crumbs {
+            print(crumb)
+        }
         let savedRoute = SavedRoute(id: routeId, name: routeName!, crumbs: crumbs, dateCreated: Date() as NSDate, beginRouteAnchorPoint: beginRouteAnchorPoint, endRouteAnchorPoint: endRouteAnchorPoint, intermediateAnchorPoints: intermediateAnchorPoints)
         try dataPersistence.archive(route: savedRoute, worldMap: worldMap)
         justTraveledRoute = savedRoute
@@ -1921,10 +1933,10 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
 //        routeAnchorPoint.intrinsics = simd_float4(arFrame!.camera.intrinsics[0, 0], arFrame!.camera.intrinsics[1, 1], arFrame!.camera.intrinsics[2, 0], arFrame!.camera.intrinsics[2, 1])
         
         let routeAnchorPointImageIdentifier = UUID()
-        curLocation.routeAnchorPoint!.imageFileName = "\(routeAnchorPointImageIdentifier).jpg" as NSString
+        curLocation.routeAnchorPoint.imageFileName = "\(routeAnchorPointImageIdentifier).jpg" as NSString
         let routeAnchorPointJpeg = curLocation.routeAnchorPoint.image!.jpegData(compressionQuality: 1)
         try! routeAnchorPointJpeg?.write(to: (curLocation.routeAnchorPoint.imageFileName!.documentURL), options: .atomic)
-        curLocation.routeAnchorPoint!.loadImage()
+        curLocation.routeAnchorPoint.loadImage()
         
         
         print("Dropping Crumb")
@@ -1942,9 +1954,11 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
         guard let directionToNextKeypoint = getDirectionToNextKeypoint(currentLocation: curLocation) else {
             return
         }
-        print(curLocation)
         print(" -- Following Crumb")
-        VisualAlignmentManager.shared.doVisualAlignment(delegate: self, alignAnchorPoint: nextKeypoint.location.routeAnchorPoint!, maxTries: ViewController.maxVisualAlignmentRetryCount, makeAnnouncement: true)
+        for kpt in RouteManager.shared.keypoints! {
+            print(kpt.location)
+        }
+        VisualAlignmentManager.shared.doVisualAlignment(delegate: self, alignAnchorPoint: nextKeypoint.location.routeAnchorPoint, maxTries: ViewController.maxVisualAlignmentRetryCount, makeAnnouncement: true)
         
         if (directionToNextKeypoint.targetState == PositionState.atTarget) {
             if !RouteManager.shared.onLastKeypoint {
