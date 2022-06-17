@@ -43,9 +43,12 @@ class VisualAlignmentManager {
     }
     
     private func doVisualAlignmentHelper(triesLeft: Int, makeAnnouncement: Bool = false, isTutorial: Bool = false) {
-        if delegate?.shouldContinueAlignment() != true {
-            return
-        }
+//        if delegate?.shouldContinueAlignment() != true {
+//            print("Cock Blocking")
+//            return
+//        }
+        print("In Helper function")
+        print(self.alignAnchorPoint)
         if delegate?.isPhoneVertical() == false {
             // retry later if phone is not vertical
             if -lastVisualAlignmentFailureAnnouncement.timeIntervalSinceNow > ViewController.timeBetweenVisualAlignmentFailureAnnouncements {
@@ -55,9 +58,11 @@ class VisualAlignmentManager {
             DispatchQueue.global(qos: .userInitiated).asyncAfter(deadline: .now() + 0.25) {
                 self.doVisualAlignmentHelper(triesLeft: triesLeft, makeAnnouncement: makeAnnouncement, isTutorial: isTutorial)
             }
+            print("not vertical")
             return
         }
         if let alignAnchorPoint = alignAnchorPoint, let alignAnchorPointImage = alignAnchorPoint.image, let alignTransform = alignAnchorPoint.anchor?.transform, let frame = ARSessionManager.shared.currentFrame {
+            print("Ok fr")
             if makeAnnouncement {
                 AnnouncementManager.shared.announce(announcement: NSLocalizedString("visualAlignmentConfirmation", comment: "Announce that visual alignment process has began"))
             }

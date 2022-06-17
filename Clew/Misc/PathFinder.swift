@@ -240,6 +240,14 @@ public class RouteAnchorPoint: NSObject, NSSecureCoding {
             aCoder.encode(imageFileName, forKey: "image")
         }
         
+        if let image = self.image {
+            aCoder.encode(image, forKey: "uiimage")
+        }
+        
+        if let transform = self.transform {
+            aCoder.encode(transform, forKey: "transform")
+        }
+        
         if let intrinsics = intrinsics {
             aCoder.encode([intrinsics.x, intrinsics.y, intrinsics.z, intrinsics.w], forKey: "intrinsics")
         }
