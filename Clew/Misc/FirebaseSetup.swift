@@ -34,7 +34,7 @@ class FirebaseSetup {
                 if let error = error {
                     print("Error getting data \(error)")
                 }
-                else if snapshot.exists(), let userDict = snapshot.value as? [String : AnyObject] {
+                else if snapshot?.exists() == true, let userDict = snapshot?.value as? [String : AnyObject] {
                     for (surveyName, surveyInfo) in userDict {
                         if let surveyInfoDict = surveyInfo as? [String : AnyObject], let lastSurveyTime = surveyInfoDict["lastSurveyTime"] as? Double {
                             vc.lastSurveyTime[surveyName] = lastSurveyTime

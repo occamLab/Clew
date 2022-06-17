@@ -8,7 +8,7 @@
 
 import Foundation
 import ARKit
-import Firebase
+import FirebaseStorage
 #if !APPCLIP
 import ARDataLogger
 #endif
@@ -534,7 +534,7 @@ extension ARSessionManager: ARSessionDelegate {
             let jsonData = try
             JSONSerialization.data(withJSONObject:dataDictionary, options:.prettyPrinted)
             let storageRef =
-            storageBaseRef.child("GeoAnchorTest4").child(id + ".json")
+            storageBaseRef.child("NECO_TEST").child(id + ".json")
             let fileType = StorageMetadata()
             fileType.contentType = "application/json"
             storageRef.putData(jsonData, metadata: fileType) { (metadata, error) in
@@ -615,7 +615,7 @@ extension ARSessionManager: ARSessionDelegate {
         
         // variable that determines whether current run should be logged to firebase or not. If set to true, change id to desired file name
         let logPath = true
-        let id = "weightsTestThree"
+        let id = "withSnapCenterLeft"
         counter += 1
         
         cameraPoses.append([frame.camera.transform.columns.3[0], frame.camera.transform.columns.3[2]])

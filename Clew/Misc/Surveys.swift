@@ -12,7 +12,7 @@
 import SwiftUI
 import UIKit
 import SimpleForm
-import Firebase
+import FirebaseStorage
 import FirebaseDatabase
 import FirebaseAuth
 

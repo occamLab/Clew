@@ -1,0 +1,11 @@
+/* Class = "UILabel"; text = "Give Feedback"; ObjectID = "JnB-cV-dtW"; */
+"JnB-cV-dtW.text" = "Comparte tu opinión"; // Give Feedback option transitions to a screen that allows user to provide feedback to Clew development team.
+
+/* Class = "UILabel"; text = "Settings"; ObjectID = "TCm-6A-2mu"; */
+"TCm-6A-2mu.text" = "Ajustes"; // Settings option transitions to a screen that allows user to configure the settings of the application.
+
+/* Class = "UILabel"; text = "Help"; ObjectID = "q99-sr-qSp"; */
+"q99-sr-qSp.text" = "Ayuda"; // Help option transitions to the help menu.
+
+/* Class = "UITableViewSection"; headerTitle = "Menu"; ObjectID = "zjo-RA-y09"; */
+"zjo-RA-y09.headerTitle" = "Menú"; // Header for a burger menu that contains the above three options.

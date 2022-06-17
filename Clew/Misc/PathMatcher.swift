@@ -130,15 +130,16 @@ class PathMatcher {
         for p in points {
             var closestPoint = simd_float3()
             var closestDistance = Float.infinity
-            
-            for i in 0..<routeKeypoints.count-1 {
-                let startOfSegment = simd_float3(routeKeypoints[i].location.x, routeKeypoints[i].location.y, routeKeypoints[i].location.z)
-                let endOfSegment = simd_float3(routeKeypoints[i+1].location.x, routeKeypoints[i+1].location.y, routeKeypoints[i+1].location.z)
-                let closestOnSegment = closestPointOnSegment(p.inhomogeneous, start: startOfSegment, end: endOfSegment)
-                let d = simd_length(closestOnSegment - p.inhomogeneous)
-                if d < closestDistance {
-                    closestDistance = d
-                    closestPoint = closestOnSegment
+            if routeKeypoints.count > 1 {
+                for i in 0..<routeKeypoints.count-1 {
+                    let startOfSegment = simd_float3(routeKeypoints[i].location.x, routeKeypoints[i].location.y, routeKeypoints[i].location.z)
+                    let endOfSegment = simd_float3(routeKeypoints[i+1].location.x, routeKeypoints[i+1].location.y, routeKeypoints[i+1].location.z)
+                    let closestOnSegment = closestPointOnSegment(p.inhomogeneous, start: startOfSegment, end: endOfSegment)
+                    let d = simd_length(closestOnSegment - p.inhomogeneous)
+                    if d < closestDistance {
+                        closestDistance = d
+                        closestPoint = closestOnSegment
+                    }
                 }
             }
             closestPoints.append(closestPoint.homogeneous)

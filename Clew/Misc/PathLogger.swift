@@ -8,7 +8,7 @@
 
 
 import Foundation
-import Firebase
+import FirebaseStorage
 import SceneKit
 import ARKit
 #if !APPCLIP
