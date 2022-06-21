@@ -132,7 +132,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
     // MARK: Properties and subview declarations
     
     /// How long to wait (in seconds) between the alignment request and grabbing the transform
-    static var alignmentWaitingPeriod = 5
+    static var alignmentWaitingPeriod = 1
     
     /// A threshold distance between the user's current position and a voice note.  If the user is closer than this value the voice note will be played
     static let voiceNotePlayDistanceThreshold : Float = 0.75
@@ -1246,6 +1246,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
     
     /// Handle the user clicking the confirm alignment to a saved Anchor Point.  Depending on the app state, the behavior of this function will differ (e.g., if the route is being resumed versus reloaded)
     @objc func confirmAlignment() {
+        print("Confirming Alignment")
         if case .startingPauseProcedure = state {
             state = .pauseWaitingPeriod
         } else if case .startingResumeProcedure = state {
@@ -1821,6 +1822,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
                 }
             }
         } else if let pausedAnchorPoint = pausedAnchorPoint {
+            print("Resume Tracking: Do Visual Alignment")
             state = .visuallyAligning
             VisualAlignmentManager.shared.doVisualAlignment(delegate: self, alignAnchorPoint: pausedAnchorPoint, maxTries: ViewController.maxVisualAlignmentRetryCount, makeAnnouncement: false)
         }

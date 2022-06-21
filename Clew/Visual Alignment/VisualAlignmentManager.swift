@@ -58,11 +58,9 @@ class VisualAlignmentManager {
             DispatchQueue.global(qos: .userInitiated).asyncAfter(deadline: .now() + 0.25) {
                 self.doVisualAlignmentHelper(triesLeft: triesLeft, makeAnnouncement: makeAnnouncement, isTutorial: isTutorial)
             }
-            print("not vertical")
             return
         }
         if let alignAnchorPoint = alignAnchorPoint, let alignAnchorPointImage = alignAnchorPoint.image, let alignTransform = alignAnchorPoint.anchor?.transform, let frame = ARSessionManager.shared.currentFrame {
-            print("Ok fr")
             if makeAnnouncement {
                 AnnouncementManager.shared.announce(announcement: NSLocalizedString("visualAlignmentConfirmation", comment: "Announce that visual alignment process has began"))
             }
@@ -99,8 +97,11 @@ class VisualAlignmentManager {
                 }
                 if triesLeft > 1 && self.relativeYaws.count < ViewController.requiredSuccessfulVisualAlignmentFrames {
                     DispatchQueue.global(qos: .userInitiated).asyncAfter(deadline: .now() + (visualYawReturn.is_valid ? 0.25 : 1.0)) {
+                        print("Do iteration Alignment")
                         self.doVisualAlignmentHelper(triesLeft: triesLeft-1, isTutorial: isTutorial)
+                        print("In queue finished iteration alighment")
                     }
+                    print("Finished Iteration Alignmnet")
                     return
                 }
                 

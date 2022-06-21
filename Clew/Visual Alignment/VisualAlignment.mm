@@ -158,8 +158,6 @@ UIImage *debug_match_image_ui = 0;
 
         }
 
-        NSLog(@"vectors1 - size%lu", vectors1.size());
-
 
         if (useThreePoint) {
             if (matches.size() < 6) {
@@ -169,7 +167,6 @@ UIImage *debug_match_image_ui = 0;
                 dispatch_semaphore_signal(sema);
 //                return ret;
             } else {
-                NSLog(@"Continued");
                 std::vector<Eigen::Vector3d> all_rays_image_1, all_rays_image_2;
 
                 for (unsigned int i = 0; i < matches.size(); i++) {
