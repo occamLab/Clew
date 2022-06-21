@@ -592,7 +592,10 @@ extension ARSessionManager: ARSessionDelegate {
     }
     
     func snapToRoute(_ currentFrame : ARFrame) {
-        visualKeypoints = ViewController.routeKeypoints
+        let visualKeypoints = ViewController.routeKeypoints
+        if visualKeypoints.count == 0 {
+            return
+        }
         let transformedKeypoints = visualKeypoints.map({
             KeypointInfo(location: LocationInfo(transform: (manualAlignment ?? matrix_identity_float4x4)*$0.location.transform))
         })
@@ -715,7 +718,7 @@ extension ARSessionManager: ARSessionDelegate {
                 print("creating node for geoanchor")
             }
         }
-        print("nGeoAnchors \(geoAnchors.count)")
+//        print("nGeoAnchors \(geoAnchors.count)")
     }
     
     
@@ -783,7 +786,7 @@ extension ARSessionManager: ARSessionDelegate {
 
 extension ARSessionManager: ARSCNViewDelegate {
     public func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
-        print("handling anchor add from renderer")
+//        print("handling anchor add from renderer")
         handleAnchorUpdate(anchor: anchor)
     }
     func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
