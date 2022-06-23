@@ -242,6 +242,10 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     func handleStateTransitionToMainScreen(announceArrival: Bool) {
         isTutorial = false
         // cancel the timer that announces tracking errors
+        if #available(iOS 15.2, *) {
+            // we can pause the session to conserve battery in this iOS version as we will use auto coordinate system alignment (previously the other approaches to localization required the session to continue running)
+            ARSessionManager.shared.pauseSession()
+        }
         trackingErrorsAnnouncementTimer?.invalidate()
         // set this to nil to prevent the app from erroneously detecting that we can auto-align to the route
         ARSessionManager.shared.initialWorldMap = nil
@@ -254,7 +258,10 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     func handleStateTransitionToFinishedTutorialRoute(announceArrival: Bool) {
         // cancel the timer that announces tracking errors
         trackingErrorsAnnouncementTimer?.invalidate()
-        // TODO: see note elsewhere about needing to disable thsi for now. (previous: if the ARSession is running, pause it to conserve battery)
+        if #available(iOS 15.2, *) {
+            // we can pause the session to conserve battery in this iOS version as we will use auto coordinate system alignment (previously the other approaches to localization required the session to continue running)
+            ARSessionManager.shared.pauseSession()
+        }
         // set this to nil to prevent the app from erroneously detecting that we can auto-align to the route
         ARSessionManager.shared.initialWorldMap = nil
         showRecordPathButton(announceArrival: announceArrival)
@@ -264,10 +271,13 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     
     /// Handler for the recordingRoute app state
     func handleStateTransitionToRecordingRoute() {
-        // records a new path
-        // updates the state Boolean to signifiy that the program is no longer saving the first anchor point
+        // records a new path        
+        // updates the state Boolean to signify that the program is no longer saving the first anchor point
         startAnchorPoint = false
         attemptingRelocalization = false
+        
+        // update manual alignment for single use routes
+        ARSessionManager.shared.manualAlignment = matrix_identity_float4x4
         
         // TODO: probably don't need to set this to [], but erring on the side of begin conservative
         crumbs = []
@@ -375,7 +385,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         var isSameMap = false
         if let worldMap = worldMap {
             // analyze the map to see if we can relocalize
-            if ARSessionManager.shared.adjustRelocalizationStrategy(worldMap: worldMap) == .none {
+            if ARSessionManager.shared.adjustRelocalizationStrategy(worldMap: worldMap, route: route) == .none {
                 // unfortunately, we are out of luck.  Better to not use the ARWorldMap
                 ARSessionManager.shared.initialWorldMap = nil
                 attemptingRelocalization = false
@@ -1806,7 +1816,9 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
             return
         }
         recordingCrumbs.append(curLocation)
-        ARSessionManager.shared.add(anchor: curLocation)
+        if #unavailable(iOS 15.2) {
+            ARSessionManager.shared.add(anchor: curLocation)
+        }
     }
     
     /// checks to see if user is on the right path during navigation.
@@ -2047,7 +2059,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
                 try audioSession.setCategory(AVAudioSession.Category.playback)
                 try audioSession.setActive(true)
                 let utterance = AVSpeechUtterance(string: announcement)
-                utterance.rate = 0.6
+                utterance.rate = 0.5
                 currentAnnouncement = announcement
                 synth.speak(utterance)
             } catch {
@@ -2405,27 +2417,11 @@ extension ViewController: ARSessionManagerDelegate {
         trackingSessionErrorState = nil
     }
     
-    func trackingIsNormal() {
-        let oldTrackingSessionErrorState = trackingSessionErrorState
-        trackingSessionErrorState = nil
-        // if we are waiting on the session, proceed now
-        if let continuation = continuationAfterSessionIsReady {
-            continuationAfterSessionIsReady = nil
-            continuation()
+    func sessionDidRelocalize() {
+        if trackingWarningsAllowed {
+           announce(announcement: NSLocalizedString("realignToSavedRouteAnnouncement", comment: "An announcement which lets the user know that their surroundings have been matched to a saved route"))
         }
-        if ARSessionManager.shared.initialWorldMap != nil, attemptingRelocalization {
-            if trackingWarningsAllowed {
-                announce(announcement: NSLocalizedString("realignToSavedRouteAnnouncement", comment: "An announcement which lets the user know that their surroundings have been matched to a saved route"))
-            }
-            attemptingRelocalization = false
-        } else if oldTrackingSessionErrorState != nil {
-            if trackingWarningsAllowed {
-                announce(announcement: NSLocalizedString("fixedTrackingAnnouncement", comment: "Let user know that the ARKit tracking session has returned to its normal quality (this is played after the tracking has been restored from thir being insuficent visual features or excessive motion which degrade the tracking)"))
-                if soundFeedback {
-                    SoundEffectManager.shared.playSystemSound(id: 1025)
-                }
-            }
-        }
+        attemptingRelocalization = false
         if case .readyForFinalResumeAlignment = state {
             // this will cancel any realignment if it hasn't happened yet and go straight to route navigation mode
             rootContainerView.countdownTimer.isHidden = true
@@ -2436,6 +2432,24 @@ extension ViewController: ARSessionManagerDelegate {
             ///PATHPOINT: Auto Alignment -> resume route
             if !isTutorial, ARSessionManager.shared.initialWorldMap != nil {
                 state = .readyToNavigateOrPause(allowPause: false)
+            }
+        }
+    }
+    
+    func trackingIsNormal() {
+        let oldTrackingSessionErrorState = trackingSessionErrorState
+        trackingSessionErrorState = nil
+        // if we are waiting on the session, proceed now
+        if let continuation = continuationAfterSessionIsReady {
+            continuationAfterSessionIsReady = nil
+            continuation()
+        }
+        if oldTrackingSessionErrorState != nil {
+            if trackingWarningsAllowed {
+                announce(announcement: NSLocalizedString("fixedTrackingAnnouncement", comment: "Let user know that the ARKit tracking session has returned to its normal quality (this is played after the tracking has been restored from thir being insuficent visual features or excessive motion which degrade the tracking)"))
+                if soundFeedback {
+                    SoundEffectManager.shared.playSystemSound(id: 1025)
+                }
             }
         }
     }
