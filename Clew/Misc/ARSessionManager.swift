@@ -30,6 +30,7 @@ protocol ARSessionManagerDelegate {
     func trackingErrorOccurred(_ : ARTrackingError)
     func sessionInitialized()
     func sessionRelocalizing()
+    func sessionDidRelocalize()
     func trackingIsNormal()
     func isRecording()->Bool
     func getPathColor()->Int
@@ -58,6 +59,9 @@ class ARSessionManager: NSObject {
     
     /// the strategy to employ with respect to the worldmap
     var relocalizationStrategy: RelocalizationStrategy = .none
+    
+    /// keep track of whether or not the session was, at any point, in the relocalizing state.  The behavior of the ARCamera.TrackingState is a bit erratic in that the session will sometimes execute unexpected sequences (e.g., initializing -> normal -> not available -> initializing -> relocalizing).
+    var sessionWasRelocalizing = false
     
     var initialWorldMap: ARWorldMap? {
         set {
@@ -102,7 +106,11 @@ class ARSessionManager: NSObject {
     }
     
     func startSession() {
+        sessionWasRelocalizing = false
         manualAlignment = nil
+        keypointRenderJob = nil
+        pathRenderJob = nil
+        intermediateAnchorRenderJobs = [:]
         removeNavigationNodes()
         sceneView.session.run(configuration, options: [.removeExistingAnchors, .resetTracking])
     }
@@ -112,8 +120,16 @@ class ARSessionManager: NSObject {
         sceneView.session.pause()
     }
     
-    func adjustRelocalizationStrategy(worldMap: ARWorldMap)->RelocalizationStrategy {
-        if #available(iOS 15.0, *) {
+    /// Sets the relocalization strategy based on the iOS version.   This is a workaround for the issue described here: https://developer.apple.com/forums/thread/690668
+    /// - Parameters:
+    ///   - worldMap: the world map that describes the saved route
+    ///   - route: the route itself
+    /// - Returns: the strategy to use
+    func adjustRelocalizationStrategy(worldMap: ARWorldMap, route: SavedRoute)->RelocalizationStrategy {
+        if #available(iOS 15.2, *) {
+            stripCrumbAnchorsFromInitialWorldMap(route: route)
+            relocalizationStrategy = .coordinateSystemAutoAligns
+        } else if #available(iOS 15.0, *) {
             if worldMap.anchors.firstIndex(where: {anchor in anchor is LocationInfo}) != nil {
                 relocalizationStrategy = .useCrumbAnchorsForAlignment
             } else if worldMap.anchors.firstIndex(where: {anchor in anchor.name == "origin"}) != nil {
@@ -431,6 +447,15 @@ class ARSessionManager: NSObject {
         let speakerAsset = MDLAsset(url: speakerUrl as URL)
         speakerObject = speakerAsset.object(at: 0)
     }
+    
+    /// Remove crumb anchors from the world map (this is useful when we can use auto coordinate system alignment)
+    /// - Parameter route: the route that corresponds with the anchors stored in the world map
+    func stripCrumbAnchorsFromInitialWorldMap(route: SavedRoute) {
+         let allCrumbAnchors = Set(route.crumbs.map({$0.identifier}))
+         if let mapAnchors = configuration.initialWorldMap?.anchors {
+             configuration.initialWorldMap?.anchors = mapAnchors.filter({!allCrumbAnchors.contains($0.identifier)})
+         }
+     }
 }
 
 class ARData: ObservableObject {
@@ -482,6 +507,7 @@ extension ARSessionManager: ARSessionDelegate {
                 // don't log anything
                 print("initializing")
             case .relocalizing:
+                sessionWasRelocalizing = true
                 delegate?.sessionInitialized()
                 delegate?.sessionRelocalizing()
             @unknown default:
@@ -491,9 +517,12 @@ extension ARSessionManager: ARSessionDelegate {
             logString = "Normal"
             delegate?.sessionInitialized()
             delegate?.trackingIsNormal()
-            if relocalizationStrategy == .coordinateSystemAutoAligns {
-                manualAlignment = matrix_identity_float4x4
-                legacyHandleRelocalization()
+            if sessionWasRelocalizing {
+                delegate?.sessionDidRelocalize()
+                if relocalizationStrategy == .coordinateSystemAutoAligns {
+                    manualAlignment = matrix_identity_float4x4
+                    legacyHandleRelocalization()
+                }
             }
             print("normal")
         case .notAvailable:
