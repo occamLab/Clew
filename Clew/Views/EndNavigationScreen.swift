@@ -7,7 +7,6 @@
 //
 
 import SwiftUI
-import ARDataLogger
 import FirebaseStorage
 
 struct EndNavigationScreen: View {
@@ -37,14 +36,7 @@ struct EndNavigationScreen: View {
                             HStack {
                                 Spacer()
                                 Button(action: {
-                                    vc.surveyInterface.sendLogDataHelper(pathStatus: false, announceArrival: true, vc: vc)
                                     feedbackGiven = true
-                                    if vc.arLogger.hasLocalDataToUploadToCloud(), vc.arLogger.isConnectedToNetwork(), vc.uploadRichData == true {
-                                        uploadPending = true
-                                        vc.arLogger.uploadLocalDataToCloud() { (metdata, error) in
-                                            uploadPending = false
-                                        }
-                                    }
                                 }){
                                     Image("thumbs_up")
                                         .resizable()
@@ -53,14 +45,7 @@ struct EndNavigationScreen: View {
                                 .accessibility(label: Text("Good"))
                                 .accessibility(hint: Text("Submit Feedback that route is good"))
                                 Button(action: {
-                                    vc.surveyInterface.sendLogDataHelper(pathStatus: true, announceArrival: true, vc: vc)
                                     feedbackGiven = true
-                                    if vc.arLogger.hasLocalDataToUploadToCloud(), vc.arLogger.isConnectedToNetwork(), vc.uploadRichData == true {
-                                        uploadPending = true
-                                        vc.arLogger.uploadLocalDataToCloud() { (metadata, error) in
-                                            uploadPending = false
-                                        }
-                                    }
                                 }){
                                     Image("thumbs_down_red")
                                         .resizable()
@@ -81,25 +66,12 @@ struct EndNavigationScreen: View {
                 }
                 
                 /// Voice Feedback Interface
-                RecordFeedbackView()
+                //RecordFeedbackView()
                 
                 /// Home Button
                 Button(action: {
-                    if !feedbackGiven{
-                        vc.surveyInterface.sendLogDataHelper(pathStatus: nil, announceArrival: true, vc: vc)
-                    }
-                    vc.arLogger.finalizeTrial()
-                    if vc.arLogger.hasLocalDataToUploadToCloud(), vc.arLogger.isConnectedToNetwork(), vc.uploadRichData == true {
-                        uploadPending = true
-                        vc.arLogger.uploadLocalDataToCloud() { (metaData, error) in
-                            uploadPending = false
-                            self.vc.hideAllViewsHelper()
-                            self.vc.state = .mainScreen(announceArrival: false)
-                        }
-                    } else {
-                        self.vc.hideAllViewsHelper()
-                        self.vc.state = .mainScreen(announceArrival: false)
-                    }
+                    self.vc.hideAllViewsHelper()
+                    self.vc.state = .mainScreen(announceArrival: false)
                 }){
                     homeButtonView()
                 }
@@ -109,7 +81,7 @@ struct EndNavigationScreen: View {
             feedbackGiven = false
         })
         .sheet(isPresented: $uploadPending) {
-            UploadingView(loadingViewShowing: $uploadPending)
+            //UploadingView(loadingViewShowing: $uploadPending)
         }
     }
 }

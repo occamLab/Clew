@@ -18,9 +18,7 @@ import AudioToolbox
 import MediaPlayer
 import VectorMath
 import Firebase
-#if !APPCLIP
-import ARDataLogger
-#endif
+
 //import FirebaseDatabase
 //import SRCountdownTimer
 

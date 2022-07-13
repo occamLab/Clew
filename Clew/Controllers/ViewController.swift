@@ -34,9 +34,7 @@ import FirebaseStorage
 //import SRCountdownTimer
 import SwiftUI
 import Firebase
-#if !APPCLIP
-import ARDataLogger
-#endif
+import ARCore
 import CoreNFC
 
 /// A custom enumeration type that describes the exact state of the app.  The state is not exhaustive (e.g., there are Boolean flags that also track app state).
@@ -131,6 +129,11 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     /// A threshold distance between the user's current position and a voice note.  If the user is closer than this value the voice note will be played
     static let voiceNotePlayDistanceThreshold : Float = 0.75
     
+    /// heading accuracy threshold for geo alignment
+    static let headingAccuracyRequiredForGeoAlignment = 100.0
+    
+    let locationManager = CLLocationManager()
+    
     static var routeKeypoints: [KeypointInfo] = []
     
     /// The state of the ARKit tracking session as last communicated to us through the delegate protocol.  This is useful if you want to do something different in the delegate method depending on the previous state
@@ -148,7 +151,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     /// Helper Classes
     let firebaseSetup = FirebaseSetup()
     
-    let surveyInterface = SurveyInterface()
+    //let surveyInterface = SurveyInterface()
     
     /// The state of the app.  This should be constantly referenced and updated as the app transitions
     var state = AppState.initializing {
@@ -245,11 +248,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     
     ///tracks the observers that have been added for handling loading routes from an app clip invocation
     var appClipObservers: [NSObjectProtocol] = []
-    
-    /// ARDataLogger
-    #if !APPCLIP
-    var arLogger = ARLogger.shared
-    #endif
+
     
     /// This is an audio player that queues up the voice note associated with a particular route Anchor Point. The player is created whenever a saved route is loaded. Loading it before the user clicks the "Play Voice Note" button allows us to call the prepareToPlay function which reduces the latency when the user clicks the "Play Voice Note" button.
     var voiceNoteToPlay: AVAudioPlayer?
@@ -322,7 +321,9 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         // TODO: probably don't need to set this to [], but erring on the side of being conservative
         crumbs = []
         recordingCrumbs = []
-        recordingGeoAnchors = []
+        geoSpatialRecordingAnchors = []
+        geoSpatialAlignmentCrumbs = []
+        ARSessionManager.shared.manualAlignment = matrix_identity_float4x4
         RouteManager.shared.intermediateAnchorPoints = []
         logger.resetPathLog()
         
@@ -472,6 +473,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
                 self.followingCrumbs = Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: (#selector(self.followCrumb)), userInfo: nil, repeats: true)
             }
         } else {
+            print("FOLLOW CRUMBS")
             followingCrumbs = Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: (#selector(self.followCrumb)), userInfo: nil, repeats: true)
         }
         
@@ -498,10 +500,6 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         if case .normal? = ARSessionManager.shared.currentFrame?.camera.trackingState {
             isTrackingPerformanceNormal = true
         }
-        var isRelocalizing = false
-        if case .limited(reason: .relocalizing)? = ARSessionManager.shared.currentFrame?.camera.trackingState {
-            isRelocalizing = true
-        }
         var isSameMap = false
         if let worldMap = worldMap {
             // analyze the map to see if we can relocalize
@@ -527,28 +525,21 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
             crumbs = route.crumbs
             pausedTransform = route.endRouteAnchorPoint.anchor?.transform
         }
+        
+        geoSpatialAlignmentCrumbs = []
 
-        print("just added \(route.geoAnchors.count)")
         RouteManager.shared.intermediateAnchorPoints = route.intermediateAnchorPoints
         trackingSessionErrorState = nil
-        ARSessionManager.shared.startSession()
         continuationAfterSessionIsReady = {
-            // the relocalization strategy may have been adjusted during the session startup
-            for geoAnchor in route.geoAnchors {
-                print("adding")
-                ARSessionManager.shared.add(anchor: geoAnchor)
-            }
-            if ARSessionManager.shared.relocalizationStrategy == .none {
-                isSameMap = false
-                self.attemptingRelocalization = false
-            }
-                // we can skip the whole process of relocalization since we are already using the correct map and tracking is normal.  It helps to strip out old anchors to reduce jitter though
-                ///PATHPOINT load route from automatic alignment -> start navigation
+            // get the best geospatial pose and add it as an anchor
+            if let bestGeospatialRecordingAnchor = self.crumbs.min(by: { $0.headingUncertainty < $1.headingUncertainty }) {
+                ARSessionManager.shared.geoSpatialAlignmentTransform = bestGeospatialRecordingAnchor.geoAnchorTransform
+                ARSessionManager.shared.addGeoSpatialAnchor(location: bestGeospatialRecordingAnchor)
                 
-            self.isResumedRoute = true
-            self.isAutomaticAlignment = true
-            self.state = .readyToNavigateOrPause(allowPause: false)
+                self.trackGeoSpatialDuringNavigation =  Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: (#selector(self.trackGeoSpatialDuringNavigationHandler)), userInfo: nil, repeats: true)
+            }
         }
+        ARSessionManager.shared.startSession()
     }
     
     /// Handler for the startingNameCodeIDProcedure app state
@@ -690,7 +681,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         if paused {
             ///PATHPOINT pause recording anchor point alignment timer -> resume tracking
             ///proceed as normal with the pause structure (single use route)
-            justTraveledRoute = SavedRoute(id: "single use", appClipCodeID: self.appClipCodeID, name: "single use", crumbs: self.crumbs, geoAnchors: recordingGeoAnchors, dateCreated: Date() as NSDate, beginRouteAnchorPoint: self.beginRouteAnchorPoint, endRouteAnchorPoint: self.endRouteAnchorPoint, intermediateAnchorPoints: RouteManager.shared.intermediateAnchorPoints, imageAnchoring: imageAnchoring)
+            justTraveledRoute = SavedRoute(id: "single use", appClipCodeID: self.appClipCodeID, name: "single use", crumbs: self.crumbs, dateCreated: Date() as NSDate, beginRouteAnchorPoint: self.beginRouteAnchorPoint, endRouteAnchorPoint: self.endRouteAnchorPoint, intermediateAnchorPoints: RouteManager.shared.intermediateAnchorPoints, imageAnchoring: imageAnchoring)
             justUsedMap = worldMap
             showResumeTrackingButton()
             state = .pauseProcedureCompleted
@@ -801,7 +792,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     /// - Throws: an error if something goes wrong
 
     func archive(routeId: NSString, appClipCodeID: String, beginRouteAnchorPoint: RouteAnchorPoint, endRouteAnchorPoint: RouteAnchorPoint, intermediateAnchorPoints: [RouteAnchorPoint], worldMap: ARWorldMap?, imageAnchoring: Bool) throws {
-        let savedRoute = SavedRoute(id: routeId, appClipCodeID: self.appClipCodeID, name: routeName!, crumbs: crumbs, geoAnchors: recordingGeoAnchors, dateCreated: Date() as NSDate, beginRouteAnchorPoint: beginRouteAnchorPoint, endRouteAnchorPoint: endRouteAnchorPoint, intermediateAnchorPoints: intermediateAnchorPoints, imageAnchoring: imageAnchoring)
+        let savedRoute = SavedRoute(id: routeId, appClipCodeID: self.appClipCodeID, name: routeName!, crumbs: crumbs, dateCreated: Date() as NSDate, beginRouteAnchorPoint: beginRouteAnchorPoint, endRouteAnchorPoint: endRouteAnchorPoint, intermediateAnchorPoints: intermediateAnchorPoints, imageAnchoring: imageAnchoring)
 
       try dataPersistence.archive(route: savedRoute, worldMap: worldMap)
         justTraveledRoute = savedRoute
@@ -825,6 +816,9 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     let requiredDistance : Float = 0.3
     /// A threshold to determine when a path is too curvy to update the angle offset
     let linearDeviationThreshold: Float = 0.05
+    
+    /// record when we last alerted the user to the geo alignment
+    var lastGeoAlignmentChime = Date()
     
     /// an aray of heading offsets calculated during the record phase.  We use thsi to suggest that users enable the adjustOffest option
     var recordPhaseHeadingOffsets: LinkedList<Float> = []
@@ -1029,8 +1023,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         
         addGestures()
         firebaseSetup.setupFirebaseObservers(vc: self)
-        
-
+        locationManager.requestWhenInUseAuthorization()
         
         // create listeners to ensure that the isReadingAnnouncement flag is reset properly
         NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification, object: nil, queue: nil) { (notification) -> Void in
@@ -1065,10 +1058,6 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
                 }
             }
         }
-        #if !APPCLIP
-        arLogger.enabled = logRichData
-        arLogger.startTrial()
-        #endif
 
     }
     
@@ -1146,7 +1135,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
             DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
                 // make sure to wait for data to load from firebase.  If they have started using the app, don't interrupt them.
                 if case .mainScreen(_) = self.state {
-                    self.surveyInterface.presentSurveyIfIntervalHasPassed(mode: "onAppLaunch", logFileURLs: [], vc: self)
+                    //self.surveyInterface.presentSurveyIfIntervalHasPassed(mode: "onAppLaunch", logFileURLs: [], vc: self)
                 }
             }
             #endif
@@ -1170,6 +1159,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
             ARSessionManager.shared.removeNavigationNodes()
         }
         followingCrumbs?.invalidate()
+        trackGeoSpatialDuringNavigation?.invalidate()
         recordPhaseHeadingOffsets = []
         routeName = nil
         beginRouteAnchorPoint = RouteAnchorPoint()
@@ -1186,31 +1176,11 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         logger.resetStateSequenceLog()
     }
     
-    func uploadLocalDataToCloudHelper() {
-        #if !APPCLIP
-        guard arLogger.hasLocalDataToUploadToCloud(), arLogger.isConnectedToNetwork(), uploadRichData == true else {
-            return
-        }
-        let popoverController = UIHostingController(rootView: UploadingViewNoBinding())
-        popoverController.modalPresentationStyle = .fullScreen
-        self.present(popoverController, animated: true)
-        self.arLogger.uploadLocalDataToCloud() { wasSuccessful in
-            DispatchQueue.main.async {
-                popoverController.dismiss(animated: true)
-            }
-        }
-        #endif
-    }
-    
     /// This finishes the process of pressing the home button (after user has given confirmation)
     @objc func goHome() {
         // proceed to home page
         self.clearState()
         self.hideAllViewsHelper()
-        #if !APPCLIP
-        self.arLogger.finalizeTrial()
-        uploadLocalDataToCloudHelper()
-        #endif
         self.state = .mainScreen(announceArrival: false)
     }
     
@@ -1929,12 +1899,14 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     /// MARK: - Clew internal datastructures
     
     /// list of crumbs dropped when recording path
-    var recordingCrumbs: LinkedList<LocationInfo>!
+    var recordingCrumbs: LinkedList<LocationInfoGeoSpatial>!
     
-    var recordingGeoAnchors: [ARGeoAnchor] = []
+    var geoSpatialRecordingAnchors: [GARAnchor] = []
+
+    var geoSpatialAlignmentCrumbs: [LocationInfoGeoSpatial] = []
     
     /// list of crumbs to use for route creation
-    var crumbs: [LocationInfo]!
+    var crumbs: [LocationInfoGeoSpatial]!
     
     /// previous keypoint location - originally set to current location
     var prevKeypointPosition: LocationInfo!
@@ -1949,6 +1921,9 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     
     /// times the checking of the path navigation process (e.g., have we reached a waypoint)
     var followingCrumbs: Timer?
+    
+    /// keep track of geo spatial transform to see if we can use it for alignment
+    var trackGeoSpatialDuringNavigation: Timer?
     
     /// times the generation of haptic feedback
     var hapticTimer: Timer?
@@ -2112,6 +2087,22 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     @objc func stopRecording(_ sender: UIButton) {
         // copy the recordingCrumbs over for use in path creation
         crumbs = Array(recordingCrumbs)
+        
+        if let garFrame = ARSessionManager.shared.currentGARFrame {
+            var idToTransform: [UUID: simd_float4x4] = [:]
+            // fix crumbs (TODO: factor this out maybe)
+            for geoAnchor in garFrame.anchors {
+                idToTransform[geoAnchor.identifier] = geoAnchor.transform
+            }
+            for crumb in crumbs {
+                if let GARAnchorUUID = crumb.GARAnchorUUID, let newTransform = idToTransform[GARAnchorUUID] {
+                    //crumb.geoAnchorTransform = newTransform
+                } else {
+                    print("Could not update transform")
+                }
+            }
+        }
+        
         isResumedRoute = false
 
         #if !APPCLIP
@@ -2161,6 +2152,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     @objc func stopNavigation(_ sender: UIButton) {
         // stop navigation
         followingCrumbs?.invalidate()
+        trackGeoSpatialDuringNavigation?.invalidate()
         hapticTimer?.invalidate()
         
         feedbackGenerator = nil
@@ -2296,9 +2288,6 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     }
     
     func loadRoute() {
-        #if !APPCLIP
-        arLogger.startTrial()
-        #endif
         recordPathController.remove()
         scanTagController?.remove()
         handleStateTransitionToNavigatingExternalRoute()
@@ -2447,29 +2436,58 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         
     /// drop a crumb during path recording
     @objc func dropCrumb() {
-        guard let currentFrame = ARSessionManager.shared.currentFrame, case .recordingRoute = state else {
+        print("trying to drop crumb \(state)")
+        guard let curLocation = getGeoSpatialLocationInfo(), case .recordingRoute = state else {
+            print("crumb could not be added")
             return
         }
-        dropGeoAnchor(at: SIMD3<Float>(currentFrame.camera.transform.x, currentFrame.camera.transform.y, currentFrame.camera.transform.z))
+        let geoSpatialAnchor = ARSessionManager.shared.addGeoSpatialAnchor(location: curLocation)!
+        geoSpatialRecordingAnchors.append(geoSpatialAnchor)
+        curLocation.GARAnchorUUID = geoSpatialAnchor.identifier
+        curLocation.geoAnchorTransform = geoSpatialAnchor.transform
+        print("geoSpatialAnchor.transform \(geoSpatialAnchor.transform)")
+        recordingCrumbs.append(curLocation)
     }
     
-    func dropGeoAnchor(at worldPosition: SIMD3<Float>) {
-        print("starting geoanchor process")
-        ARSessionManager.shared.sceneView.session.getGeoLocation(forPoint: worldPosition) { (location, altitude, error) in
-            if let error = error {
-                print("error adding Geo anchor")
-                return
-            }
-            print("new geo anchor!!")
-            let newAnchor = ARGeoAnchor(coordinate: location, altitude: altitude)
-            ARSessionManager.shared.add(anchor: newAnchor)
-            self.recordingGeoAnchors.append(newAnchor)
+    @objc func trackGeoSpatialDuringNavigationHandler() {
+        if let geoAlignment = getGeoSpatialLocationInfo() {
+            geoSpatialAlignmentCrumbs.append(geoAlignment)
+            checkForGeoSpatialAlignment()
         }
     }
+    
+    func checkForGeoSpatialAlignment() {
+        if !attemptingRelocalization {
+            return
+        }
+        guard let bestRouteGeoSpatialAnchor = crumbs.min(by: { (crumb1, crumb2) in crumb1.headingUncertainty < crumb2.headingUncertainty }), let bestAlignmentGeoSpatialAnchor = geoSpatialAlignmentCrumbs.min(by: { (crumb1, crumb2) in crumb1.headingUncertainty < crumb2.headingUncertainty }), max(bestRouteGeoSpatialAnchor.headingUncertainty, bestAlignmentGeoSpatialAnchor.headingUncertainty) < Self.headingAccuracyRequiredForGeoAlignment else {
+            return
+        }
+        // TODO: we are currently aligning with anchors, but we may have to return to this
 
+        let alignECEF = convertToECEF(from: bestAlignmentGeoSpatialAnchor)
+        let routeECEF = convertToECEF(from: bestRouteGeoSpatialAnchor)
+    }
+    
+    func convertToECEF(from geoSpatial: LocationInfoGeoSpatial)->simd_float3 {
+        // https://en.wikipedia.org/wiki/Geographic_coordinate_conversion#From_geodetic_to_ECEF_coordinates
+        let phi = geoSpatial.latitude * Double.pi / 180.0
+        let lambda = geoSpatial.longitude * Double.pi / 180.0
+        let h = geoSpatial.altitude
+        let a = 6378137.0
+        let b = 6356752.3142
+        let e = 1 - pow(b,2)/pow(a,2)
+        let Nphi: Double = a / sqrt(1 - pow(e,2)*pow(sin(phi),2))
+        let X = (Nphi + h)*cos(phi)*cos(lambda)
+        let Y = (Nphi + h)*cos(phi)*sin(lambda)
+        let Z = ((1 - pow(e,2))*Nphi + h)*sin(phi)
+
+        return simd_float3(Float(X), Float(Y), Float(Z))
+    }
     
     /// checks to see if user is on the right path during navigation.
     @objc func followCrumb() {
+        print("follow crumb")
         guard let curLocation = getRealCoordinates(record: true), let nextKeypoint = RouteManager.shared.nextKeypoint else {
             // TODO: might want to indicate that something is wrong to the user
             return
@@ -2481,7 +2499,8 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
             if !RouteManager.shared.onLastKeypoint {                // arrived at keypoint
                 // send haptic/sonic feedback
                 waypointFeedbackGenerator?.notificationOccurred(.success)
-                if (soundFeedback) { SoundEffectManager.shared.meh() }
+                if (soundFeedback) { SoundEffectManager.shared.meh()
+                }
 
                 // remove current visited keypont from keypoint list
                 prevKeypointPosition = nextKeypoint.location
@@ -2506,6 +2525,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
                 ARSessionManager.shared.removeNavigationNodes()
                 
                 followingCrumbs?.invalidate()
+                trackGeoSpatialDuringNavigation?.invalidate()
                 hapticTimer?.invalidate()
                 
                 #if !APPCLIP
@@ -2758,10 +2778,6 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
             // proceed to home page
             clearState()
             hideAllViewsHelper()
-            #if !APPCLIP
-            self.arLogger.finalizeTrial()
-            uploadLocalDataToCloudHelper()
-            #endif
             self.state = .mainScreen(announceArrival: false)
         }
         
@@ -2831,6 +2847,13 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
             }
             updateDirectionText(dir, distance: direction.distance, displayDistance:  displayDistance)
         }
+    }
+    
+    func getGeoSpatialLocationInfo() -> LocationInfoGeoSpatial? {
+        if let worldTransformGeoSpatialPair = ARSessionManager.shared.worldTransformGeoSpatialPair {
+            return LocationInfoGeoSpatial(anchor: ARAnchor(transform: worldTransformGeoSpatialPair.0), latitude: worldTransformGeoSpatialPair.1.coordinate.latitude, longitude: worldTransformGeoSpatialPair.1.coordinate.longitude, altitude: worldTransformGeoSpatialPair.1.altitude, heading: worldTransformGeoSpatialPair.1.heading, horizontalUncertainty: worldTransformGeoSpatialPair.1.horizontalAccuracy, altitudeUncertainty: worldTransformGeoSpatialPair.1.verticalAccuracy, headingUncertainty: worldTransformGeoSpatialPair.1.headingAccuracy)
+        }
+        return nil
     }
     
     /// Compute the location of the device based on the ARSession.  If the record flag is set to true, record this position in the logs.
@@ -2943,17 +2966,11 @@ extension ViewController: UIPopoverPresentationControllerDelegate {
 }
 
 extension ViewController: ARSessionManagerDelegate {
-    func geoAnchorsReadyForPathCreation(geoAnchors: [ARGeoAnchor]) {
+    
+    func readyForPathCreation() {
         // transition to navigation state and create the route
-        guard let resumedRouteGeoAnchors = resumedRoute?.geoAnchors else {
-            return
-        }
         if case .readyToNavigateOrPause(_) = state {
-            let geoAnchorsByIdentifier = Dictionary(uniqueKeysWithValues: zip(geoAnchors.map({$0.identifier}), geoAnchors))
-            crumbs = []
-            for geoAnchor in resumedRouteGeoAnchors.reversed() {
-                crumbs.append(LocationInfo(anchor: geoAnchorsByIdentifier[geoAnchor.identifier]!))
-            }
+            crumbs = resumedRoute?.crumbs
             state = .navigatingRoute
         }
     }
@@ -2986,6 +3003,33 @@ extension ViewController: ARSessionManagerDelegate {
         trackingSessionErrorState = nil
     }
     
+    func sessionDidRelocalize() {
+      if trackingWarningsAllowed {
+         announce(announcement: NSLocalizedString("realignToSavedRouteAnnouncement", comment: "An announcement which lets the user know that their surroundings have been matched to a saved route"))
+      }
+      attemptingRelocalization = false
+      if case .startingResumeProcedure(let route, let worldMap, let navigateStartToEnd) = state {
+          // this will cancel any realignment if it hasn't happened yet and go straight to route navigation mode
+          rootContainerView.countdownTimer.isHidden = true
+          isResumedRoute = true
+
+          isAutomaticAlignment = true
+
+          state = .navigatingRoute
+      }
+    }
+    
+    func didDoGeoAlignment() {
+        if case .startingResumeProcedure(_, _, _) = state {
+            print("ARSessionManager manual \(ARSessionManager.shared.manualAlignment)")
+            state = .navigatingRoute
+        }
+        if -lastGeoAlignmentChime.timeIntervalSinceNow > 2.0 {
+            lastGeoAlignmentChime = Date()
+            SoundEffectManager.shared.success()
+        }
+    }
+    
     func trackingIsNormal() {
         let oldTrackingSessionErrorState = trackingSessionErrorState
         trackingSessionErrorState = nil
@@ -2994,28 +3038,13 @@ extension ViewController: ARSessionManagerDelegate {
             continuationAfterSessionIsReady = nil
             continuation()
         }
-        if ARSessionManager.shared.initialWorldMap != nil, attemptingRelocalization {
-            if trackingWarningsAllowed {
-                announce(announcement: NSLocalizedString("realignToSavedRouteAnnouncement", comment: "An announcement which lets the user know that their surroundings have been matched to a saved route"))
-            }
-            attemptingRelocalization = false
-        } else if oldTrackingSessionErrorState != nil {
+        if oldTrackingSessionErrorState != nil {
             if trackingWarningsAllowed {
                 announce(announcement: NSLocalizedString("fixedTrackingAnnouncement", comment: "Let user know that the ARKit tracking session has returned to its normal quality (this is played after the tracking has been restored from thir being insuficent visual features or excessive motion which degrade the tracking)"))
                 if soundFeedback {
                     SoundEffectManager.shared.playSystemSound(id: 1025)
                 }
             }
-        }
-        if case .readyForFinalResumeAlignment = state, ARSessionManager.shared.initialWorldMap != nil {
-            // this will cancel any realignment if it hasn't happened yet and go straight to route navigation mode
-            rootContainerView.countdownTimer.isHidden = true
-            isResumedRoute = true
-            
-            isAutomaticAlignment = true
-            
-            ///PATHPOINT: Auto Alignment -> resume route
-            state = .readyToNavigateOrPause(allowPause: false)
         }
     }
     
@@ -3107,14 +3136,3 @@ extension NFCTypeNameFormat: CustomStringConvertible {
         }
     }
 }
-
-#if !APPCLIP
-class UISurveyHostingController: UIHostingController<FirebaseFeedbackSurvey> {
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-            UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: self.view)
-        }
-    }
-}
-#endif

@@ -9,6 +9,7 @@
 import Foundation
 import VectorMath
 import ARKit
+import ARCoreGeospatial
 
 /// Struct to store location and transform information
 ///
@@ -42,6 +43,8 @@ public struct CurrentCoordinateInfo {
 
 /// Struct to store position information and yaw.  By sub-classing `ARAnchor`, we get specify the 6-DOFs of an ARAnchor while getting the ability to support the secure coding protocol for free.
 public class LocationInfo : ARAnchor {
+    /// this is temporary and is not serialized
+    var GARAnchorUUID: UUID?
     
     /// This initializes a new `LocationInfo` object based on the specified `ARAnchor`.
     ///
@@ -268,6 +271,80 @@ class RouteLandmark: NSObject, NSSecureCoding {
     }
     
 }
+
+class LocationInfoGeoSpatial: LocationInfo {
+    let latitude: Double
+    let longitude: Double
+    let heading: Double
+    let altitude: Double
+    let altitudeUncertainty: Double
+    let horizontalUncertainty: Double
+    let headingUncertainty: Double
+    var geoAnchorTransform: simd_float4x4?
+    
+    /// This initializes a new `LocationInfo` object based on the specified `ARAnchor`.
+    ///
+    /// - Parameter anchor: the `ARAnchor` to use for describing the location
+    /// - Parameter geoTransform: the geo spatial transform that Google's API returned when this location info was collected
+    required init(anchor: ARAnchor, latitude: Double, longitude: Double, altitude: Double, heading: Double, horizontalUncertainty: Double, altitudeUncertainty: Double, headingUncertainty: Double) {
+        self.latitude = latitude
+        self.longitude = longitude
+        self.altitude = altitude
+        self.horizontalUncertainty = horizontalUncertainty
+        self.altitudeUncertainty = altitudeUncertainty
+        self.heading = heading
+        self.headingUncertainty = headingUncertainty
+        super.init(anchor: anchor)
+    }
+    
+    /// indicates whether secure coding is supported (it is)
+    override public class var supportsSecureCoding: Bool {
+        return true
+    }
+    
+    required init(anchor: ARAnchor) {
+        self.latitude = 0.0
+        self.longitude = 0.0
+        self.altitude = 0.0
+        self.heading = 0.0
+        self.horizontalUncertainty = 0.0
+        self.altitudeUncertainty = 0.0
+        self.headingUncertainty = 0.0
+        super.init(anchor: anchor)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        self.heading = aDecoder.decodeDouble(forKey: "heading")
+        self.latitude = aDecoder.decodeDouble(forKey: "latitude")
+        self.longitude = aDecoder.decodeDouble(forKey: "longitude")
+        self.altitude = aDecoder.decodeDouble(forKey: "altitude")
+        self.altitudeUncertainty = aDecoder.decodeDouble(forKey: "altitudeUncertainty")
+        self.horizontalUncertainty = aDecoder.decodeDouble(forKey: "horizontalUncertainty")
+        
+        self.headingUncertainty = aDecoder.decodeDouble(forKey: "headingUncertainty")
+        
+        if let geoAnchorTransformAsARAnchor = aDecoder.decodeObject(of: ARAnchor.self, forKey: "geoAnchorTransform") {
+            geoAnchorTransform = geoAnchorTransformAsARAnchor.transform
+        }
+
+        super.init(coder: aDecoder)
+    }
+    
+    override func encode(with aCoder: NSCoder) {
+        super.encode(with: aCoder)
+        aCoder.encode(heading, forKey: "heading")
+        aCoder.encode(longitude, forKey: "longitude")
+        aCoder.encode(latitude, forKey: "latitude")
+        aCoder.encode(altitude, forKey: "altitude")
+        aCoder.encode(horizontalUncertainty, forKey: "horizontalUncertainty")
+        aCoder.encode(headingUncertainty, forKey: "headingUncertainty")
+        aCoder.encode(altitudeUncertainty, forKey: "altitudeUncertainty")
+        if let geoAnchorTransform = geoAnchorTransform {
+            aCoder.encode(ARAnchor(transform: geoAnchorTransform), forKey: "geoAnchorTransform")
+        }
+    }
+}
+
 /// This class encapsulates a route that can be persisted to storage and reloaded as needed.
 class SavedRoute: NSObject, NSSecureCoding, Identifiable {
     /// This is needed to use NSSecureCoding
@@ -280,10 +357,8 @@ class SavedRoute: NSObject, NSSecureCoding, Identifiable {
     /// The date the route was recorded
     public var dateCreated: NSDate
     /// The crumbs that make up the route.  The densely sampled positions (crumbs) are stored and the keypoints (sparser goal positionsare calculated on demand when navigation is requested.
-    public var crumbs: [LocationInfo]
-    
-    /// The geo anchors that constitute the route
-    public var geoAnchors: [ARGeoAnchor]
+    public var crumbs: [LocationInfoGeoSpatial]
+
     /// The Anchor Point marks the beginning of the route (needed for start to end navigation)
     public var beginRouteAnchorPoint : RouteAnchorPoint
     /// The Anchor Point marks the end of the route (needed for end to start navigation)
@@ -306,12 +381,11 @@ class SavedRoute: NSObject, NSSecureCoding, Identifiable {
     ///   - beginRouteAnchorPoint: the Anchor Point for the beginning of the route (pass a `RouteAnchorPoint` with default initialization if no Anchor Point was recorded at the beginning of the route)
     ///   - endRouteAnchorPoint: the Anchor Point for the end of the route (pass a `RouteAnchorPoint` with default initialization if no Anchor Point was recorded at the end of the route)
 
-    public init(id: NSString, appClipCodeID: String,  name: NSString, crumbs: [LocationInfo], geoAnchors: [ARGeoAnchor], dateCreated: NSDate = NSDate(), beginRouteAnchorPoint: RouteAnchorPoint, endRouteAnchorPoint: RouteAnchorPoint, intermediateAnchorPoints: [RouteAnchorPoint], imageAnchoring: Bool = false) {
+    public init(id: NSString, appClipCodeID: String,  name: NSString, crumbs: [LocationInfoGeoSpatial], dateCreated: NSDate = NSDate(), beginRouteAnchorPoint: RouteAnchorPoint, endRouteAnchorPoint: RouteAnchorPoint, intermediateAnchorPoints: [RouteAnchorPoint], imageAnchoring: Bool = false) {
         self.id = id
         self.appClipCodeID = appClipCodeID
         self.name = name
         self.crumbs = crumbs
-        self.geoAnchors = geoAnchors
         self.dateCreated = dateCreated
         self.beginRouteAnchorPoint = beginRouteAnchorPoint
         self.endRouteAnchorPoint = endRouteAnchorPoint
@@ -327,7 +401,6 @@ class SavedRoute: NSObject, NSSecureCoding, Identifiable {
         aCoder.encode(appClipCodeID, forKey: "appClipCodeID")
         aCoder.encode(name, forKey: "name")
         aCoder.encode(crumbs, forKey: "crumbs")
-        aCoder.encode(geoAnchors, forKey: "geoAnchors")
         aCoder.encode(dateCreated, forKey: "dateCreated")
         aCoder.encode(beginRouteAnchorPoint, forKey: "beginRouteAnchorPoint")
         aCoder.encode(endRouteAnchorPoint, forKey: "endRouteAnchorPoint")
@@ -348,11 +421,7 @@ class SavedRoute: NSObject, NSSecureCoding, Identifiable {
         guard let name = aDecoder.decodeObject(of: NSString.self, forKey: "name") else {
             return nil
         }
-        guard let crumbs = aDecoder.decodeObject(of: [].self, forKey: "crumbs") as? [LocationInfo] else {
-            return nil
-        }
-        
-        guard let geoAnchors = aDecoder.decodeObject(of: [].self, forKey: "geoAnchors") as? [ARGeoAnchor] else {
+        guard let crumbs = aDecoder.decodeObject(of: [].self, forKey: "crumbs") as? [LocationInfoGeoSpatial] else {
             return nil
         }
         
@@ -392,7 +461,7 @@ class SavedRoute: NSObject, NSSecureCoding, Identifiable {
         
         let imageAnchoring = aDecoder.decodeBool(forKey: "imageAnchoring")
         
-        self.init(id: id, appClipCodeID: appClipCodeID as String, name: name, crumbs: crumbs, geoAnchors: geoAnchors, dateCreated: dateCreated, beginRouteAnchorPoint: beginRouteAnchorPoint, endRouteAnchorPoint: endRouteAnchorPoint, intermediateAnchorPoints: intermediateRouteAnchorPoints, imageAnchoring: imageAnchoring)
+        self.init(id: id, appClipCodeID: appClipCodeID as String, name: name, crumbs: crumbs, dateCreated: dateCreated, beginRouteAnchorPoint: beginRouteAnchorPoint, endRouteAnchorPoint: endRouteAnchorPoint, intermediateAnchorPoints: intermediateRouteAnchorPoints, imageAnchoring: imageAnchoring)
     }
 }
 
@@ -405,7 +474,7 @@ class PathFinder {
     private let pathWidth: Scalar!
     
     /// The crumbs that make up the desired path. These should be ordered with respect to the user's intended direction of travel (start to end versus end to start)
-    private var crumbs: [LocationInfo]
+    private var crumbs: [LocationInfoGeoSpatial]
     
     /// Initializes the PathFinder class and determines the value of `pathWidth`
     ///
@@ -416,7 +485,7 @@ class PathFinder {
     ///
     /// - TODO:
     ///   - Clarify why these magic `pathWidth` values are as they are.
-    init(crumbs: [LocationInfo], hapticFeedback: Bool, voiceFeedback: Bool) {
+    init(crumbs: [LocationInfoGeoSpatial], hapticFeedback: Bool, voiceFeedback: Bool) {
         self.crumbs = crumbs
         if(!hapticFeedback && voiceFeedback) {
             pathWidth = 0.3

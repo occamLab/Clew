@@ -9,9 +9,7 @@
 import Foundation
 import ARKit
 import FirebaseStorage
-#if !APPCLIP
-import ARDataLogger
-#endif
+import ARCore
 
 enum ARTrackingError {
     case insufficientFeatures
@@ -42,11 +40,11 @@ protocol ARSessionManagerDelegate {
     func receivedImageAnchors(imageAnchors: [ARImageAnchor])
     func shouldLogRichData()->Bool
     func getLoggingTag()->String
-    func geoAnchorsReadyForPathCreation(geoAnchors: [ARGeoAnchor])
+    func sessionDidRelocalize()
+    func didDoGeoAlignment()
 }
 
 class ARSessionManager: NSObject {
-    var counter = 0
     var localized = false
     var cameraPoses: [Any] = []
     var visualKeypoints: [KeypointInfo] = []
@@ -55,6 +53,7 @@ class ARSessionManager: NSObject {
     static var shared = ARSessionManager()
     var delegate: ARSessionManagerDelegate?
     var lastTimeOutputtedGeoAnchors = Date()
+    var worldTransformGeoSpatialPair: (simd_float4x4, GARGeospatialTransform)?
     
     private override init() {
         super.init()
@@ -71,8 +70,8 @@ class ARSessionManager: NSObject {
     /// this is the alignment between the reloaded route
     var manualAlignment: simd_float4x4?
     
-    let snapToRouteStatus: Bool = true
-    
+    var garSession: GARSession?
+        
     /// Keep track of when to log a frame
     var lastFrameLogTime = Date()
     /// Keep track of when to log a pose
@@ -86,18 +85,20 @@ class ARSessionManager: NSObject {
     /// the strategy to employ with respect to the worldmap
     var relocalizationStrategy: RelocalizationStrategy = .none
     
+    /// keep track of whether or not the session was, at any point, in the relocalizing state.  The behavior of the ARCamera.TrackingState is a bit erratic in that the session will sometimes execute unexpected sequences (e.g., initializing -> normal -> not available -> initializing -> relocalizing).
+    var sessionWasRelocalizing = false
+    
     var initialWorldMap: ARWorldMap? {
         set {
-            print("SORRY!! \(newValue)")
-            //configuration.initialWorldMap = newValue
+            configuration.initialWorldMap = newValue
         }
         get {
-            return nil //configuration.initialWorldMap
+            return configuration.initialWorldMap
         }
     }
     
     /// AR Session Configuration
-    private var configuration: ARGeoTrackingConfiguration!
+    private var configuration: ARWorldTrackingConfiguration!
     
     /// SCNNode of the next keypoint
     private var keypointNode: SCNNode?
@@ -120,13 +121,21 @@ class ARSessionManager: NSObject {
         return sceneView.session.currentFrame
     }
     
+    var currentGARFrame: GARFrame?
+    
+    var geoSpatialAlignmentTransform: simd_float4x4?
+    
+    func addGeoSpatialAnchor(location: LocationInfoGeoSpatial)->GARAnchor? {
+        let headingAngle = (Double.pi / 180) * (180.0 - location.heading);
+        let eastUpSouthQAnchor = simd_quaternion(Float(headingAngle), simd_float3(0, 1, 0));
+        do {
+            return try! garSession?.createAnchor(coordinate: CLLocationCoordinate2D(latitude: location.latitude, longitude: location.longitude), altitude: location.altitude, eastUpSouthQAnchor: eastUpSouthQAnchor)
+        }
+    }
+    
     /// Create a new ARSession.
     func createARSessionConfiguration() {
-        configuration = ARGeoTrackingConfiguration()
-        //configuration.planeDetection = [.horizontal, .vertical]
-        if #available(iOS 14.3, *) {
-            //configuration.appClipCodeTrackingEnabled = true
-        }
+        configuration = ARWorldTrackingConfiguration()
         
         guard let referenceImages = ARReferenceImage.referenceImages(inGroupNamed: "AR Resources", bundle: nil) else {
             fatalError("Missing expected asset catalog resources.")
@@ -136,15 +145,29 @@ class ARSessionManager: NSObject {
     }
     
     func startSession() {
-        print("WORLD MAP STARTING SESSION!")
-        manualAlignment = nil
+        manualAlignment = matrix_identity_float4x4
         keypointRenderJob = nil
         pathRenderJob = nil
         intermediateAnchorRenderJobs = [:]
+        worldTransformGeoSpatialPair = nil
+        sessionWasRelocalizing = false
         removeNavigationNodes()
         sceneView.session.run(configuration, options: [.removeExistingAnchors])
-        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-            self.sceneView.session.run(self.configuration, options: [])
+        startGARSession()
+        print("STARTING SESSION \(configuration.initialWorldMap)")
+       
+    }
+    
+    func startGARSession() {
+        do {
+            garSession = try GARSession(apiKey: garAPIKey, bundleIdentifier: nil)
+            var error: NSError?
+            let configuration = GARSessionConfiguration()
+            configuration.geospatialMode = .enabled
+            garSession?.setConfiguration(configuration, error: &error)
+            print("gar set configuration error \(error)")
+        } catch {
+            print("failed to create GARSession")
         }
     }
     
@@ -154,18 +177,7 @@ class ARSessionManager: NSObject {
     }
     
     func adjustRelocalizationStrategy(worldMap: ARWorldMap)->RelocalizationStrategy {
-        if #available(iOS 15.0, *) {
-            if worldMap.anchors.firstIndex(where: {anchor in anchor is LocationInfo}) != nil {
-                relocalizationStrategy = .useCrumbAnchorsForAlignment
-            } else if worldMap.anchors.firstIndex(where: {anchor in anchor.name == "origin"}) != nil {
-                relocalizationStrategy = .useOriginAnchorForAlignment
-            } else {
-                relocalizationStrategy = .none
-            }
-        } else {
-            relocalizationStrategy = .coordinateSystemAutoAligns
-        }
-        return relocalizationStrategy
+        return .coordinateSystemAutoAligns
     }
     
     /// Create the keypoint SCNNode that corresponds to the rotating flashing element that looks like a navigation pin.
@@ -186,7 +198,7 @@ class ARSessionManager: NSObject {
         print("in render keypoint")
         // determine if the node is already in the scene
         let priorNode = sceneView.node(for: location)
-        if priorNode != nil && !snapToRouteStatus {
+        if priorNode != nil {
             print("position keypoint relative to anchor \(location.transform.columns.3)")
             keypointNode!.position = SCNVector3(0, -0.2, 0.0)
         } else {
@@ -285,13 +297,13 @@ class ARSessionManager: NSObject {
         
         // add keypoint node to view
         keypointNode!.runAction(changeColor)
-        if let priorNode = priorNode, !snapToRouteStatus {
+        if let priorNode = priorNode {
             // TODO: we are having a really hard time here
             // If we recreate the node every time it moves, then it will track
 //            keypointNode!.position = priorNode.position
             priorNode.addChildNode(keypointNode!)
         } else {
-        sceneView.scene.rootNode.addChildNode(keypointNode!)
+            sceneView.scene.rootNode.addChildNode(keypointNode!)
         }
     }
     func add(anchor: ARAnchor) {
@@ -496,27 +508,7 @@ class ARData: ObservableObject {
 
 extension ARSessionManager: ARSessionDelegate {
     func session(_ session: ARSession, didFailWithError error: Error) {
-        // When loading ARWorldMaps recorded under iOS15, they will cause an error when loaded under previous iOS vedrrsions.  If this happens, we can retry without the ARWorldMap
-       /* if (error as? NSError)?.code == 200, configuration.initialWorldMap != nil {
-            // try again without the world map
-            configuration.initialWorldMap = nil
-            relocalizationStrategy = .none
-            startSession()
-        }*/
         print("failure")
-    }
-    
-    /// - Tag: GeoTrackingStatus
-    func session(_ session: ARSession, didChange geoTrackingStatus: ARGeoTrackingStatus) {
-        print("rawaccuracy value", geoTrackingStatus.accuracy)
-        if geoTrackingStatus.accuracy == ARGeoTrackingStatus.Accuracy.high, let allGeoAnchors = session.currentFrame?.anchors.compactMap({$0 as? ARGeoAnchor}) {
-            print("we have high accuracy")
-            //delegate?.geoAnchorsReadyForPathCreation(geoAnchors: allGeoAnchors)
-        } else if geoTrackingStatus.accuracy == ARGeoTrackingStatus.Accuracy.medium {
-            print("we have medium accuracy")
-        } else if geoTrackingStatus.accuracy == ARGeoTrackingStatus.Accuracy.low {
-            print("we have low accuracy")
-        }
     }
     
     func sendPathKeypoints(_ id: String, _ allKeypoints: [KeypointInfo], _ cameraPositions: [Any]) -> String? {
@@ -591,71 +583,30 @@ extension ARSessionManager: ARSessionDelegate {
         }
     }
     
-    func snapToRoute(_ currentFrame : ARFrame) {
-        let visualKeypoints = ViewController.routeKeypoints
-        if visualKeypoints.count == 0 {
-            return
-        }
-        let transformedKeypoints = visualKeypoints.map({
-            KeypointInfo(location: LocationInfo(transform: (manualAlignment ?? matrix_identity_float4x4)*$0.location.transform))
-        })
-        if counter % 30 == 0 {
-            cameraLocationInfos.append(LocationInfo(transform: currentFrame.camera.transform))
-        }
-        if counter % 500 == 0 && localized && currentFrame.geoTrackingStatus?.accuracy != ARGeoTrackingStatus.Accuracy.high {
-            manualAlignment = PathMatcher().match(points: cameraLocationInfos, toPath: transformedKeypoints).inverse * (manualAlignment ?? matrix_identity_float4x4)
-            renderKeypoint(RouteManager.shared.nextKeypoint!.location, defaultColor: delegate?.getKeypointColor() ?? 0)
-            let previousKeypointLocation = RouteManager.shared.getPreviousKeypoint(to: RouteManager.shared.nextKeypoint!)?.location ?? LocationInfo(transform: currentFrame.camera.transform)
-            renderPath(RouteManager.shared.nextKeypoint!.location, previousKeypointLocation, defaultPathColor: delegate?.getPathColor() ?? 0)
-//            let quat = simd_quatf(manualAlignment!.inverse)
-//            print("optimal transform", manualAlignment!.columns.3)
-//            print("axis and angle change", quat.axis, quat.angle)
-//            print("SnapToRoute occurred")
+    func checkForGeoAlignment(alignmentAnchor: GARAnchor) {
+        if alignmentAnchor.hasValidTransform, let geoSpatialAlignmentTransform = geoSpatialAlignmentTransform {
+            self.manualAlignment = alignmentAnchor.transform * geoSpatialAlignmentTransform.inverse
+            print("self.manualAlignment \(self.manualAlignment)")
+            delegate?.didDoGeoAlignment()
         }
     }
     
     func session(_ session: ARSession, didUpdate frame: ARFrame) {
-        
-        // variable that determines whether current run should be logged to firebase or not. If set to true, change id to desired file name
-        let logPath = true
-        let id = "withSnapCenterLeft"
-        counter += 1
-        
-        cameraPoses.append([frame.camera.transform.columns.3[0], frame.camera.transform.columns.3[2]])
-        
-        let allGeoAnchors = frame.anchors.compactMap({$0 as? ARGeoAnchor})
-//        print("nGeoAnchors \(allGeoAnchors.count)")
-        var nCount = 0
-        for geoAnchor in allGeoAnchors {
-            if !simd_almost_equal_elements(geoAnchor.transform, matrix_identity_float4x4, 0.01) {
-                nCount += 1
-            }
-        }
+        do {
+            self.currentGARFrame = try garSession?.update(frame)
 
-        if snapToRouteStatus {
-            snapToRoute(frame)
-        }
-        
-        if logPath {
-            if counter % 400 == 0
-            {
-                print("sending data to firebase")
-                var uploadToFirebase: [KeypointInfo] = []
-                for keypoint in ViewController.routeKeypoints {
-                    uploadToFirebase.append(KeypointInfo(location: LocationInfo(transform: (manualAlignment ?? matrix_identity_float4x4) * keypoint.location.transform)))
+            if let geospatialTransform = self.currentGARFrame?.earth?.cameraGeospatialTransform {
+                print("\(ARSessionManager.shared.currentFrame?.camera.trackingState)")
+                print("got \(geospatialTransform)")
+                self.worldTransformGeoSpatialPair = (frame.camera.transform, geospatialTransform)
+                if geospatialTransform.headingAccuracy < 4.0, let alignmentAnchor = self.currentGARFrame?.anchors.first {
+                    checkForGeoAlignment(alignmentAnchor: alignmentAnchor)
                 }
-                sendPathKeypoints("\(id)", uploadToFirebase, cameraPoses)
             }
+        } catch {
+            print("couldn't update GAR Frame")
         }
-        if nCount == allGeoAnchors.count && nCount > 0, frame.geoTrackingStatus?.accuracy == ARGeoTrackingStatus.Accuracy.high {
-            delegate?.geoAnchorsReadyForPathCreation(geoAnchors: allGeoAnchors)
-            localized = true
-        }
-        if -lastTimeOutputtedGeoAnchors.timeIntervalSinceNow > 1 {
-            lastTimeOutputtedGeoAnchors = Date()
-            print("nGeoAnchors \(allGeoAnchors.count) non identity \(nCount)")
-        }
-
+        // TODO: test for alignment based on geospatial transform
         ARData.shared.set(transform: frame.camera.transform)
         if let keypointRenderJob = keypointRenderJob {
             keypointRenderJob()
@@ -671,56 +622,12 @@ extension ARSessionManager: ARSessionDelegate {
                 intermediateAnchorRenderJobs[intermediateAnchorRenderJob.0] = nil
             }
         }
-        #if !APPCLIP
-        ARLogger.shared.session(session, didUpdate: frame)
-        guard delegate?.shouldLogRichData() == true else {
-            return
-        }
         
-        if -lastFrameLogTime.timeIntervalSinceNow > 1.0 {
-            ARLogger.shared.log(frame: frame, withType: delegate?.getLoggingTag() ?? "none", withMeshLoggingBehavior: .none)
-            lastFrameLogTime = Date()
-        }
-        if -lastPoseLogTime.timeIntervalSinceNow > 0.1 {
-            ARLogger.shared.logPose(pose: frame.camera.transform, at: frame.timestamp)
-            lastPoseLogTime = Date()
-        }
-        #endif
         let imageAnchors = frame.anchors.compactMap({$0 as? ARImageAnchor})
         if !imageAnchors.isEmpty {
             delegate?.receivedImageAnchors(imageAnchors: imageAnchors)
         }
     }
-    
-    func session(_ session: ARSession, didUpdate anchors: [ARAnchor]) {
-        #if !APPCLIP
-        ARLogger.shared.session(session, didUpdate: anchors)
-        #endif
-        //print("update geoanchors", anchors.compactMap({$0 as? ARGeoAnchor}).count)
-    }
-    func session(_ session: ARSession, didRemove anchors: [ARAnchor]) {
-        #if !APPCLIP
-        ARLogger.shared.session(session, didRemove: anchors)
-        #endif
-    }
-    func session(_ session: ARSession, didAdd anchors: [ARAnchor]) {
-        let geoAnchors = anchors.compactMap({$0 as? ARGeoAnchor})
-
-        #if !APPCLIP
-        ARLogger.shared.session(session, didAdd: anchors)
-        #endif
-        for geoAnchor in geoAnchors {
-            if let nodeForAnchor = sceneView.node(for: geoAnchor), nodeForAnchor.childNodes.count == 0 {
-                let box = SCNBox(width: 0.1, height: 0.1, length: 0.1, chamferRadius: 0)
-                let node = SCNNode(geometry: box)
-                node.position = SCNVector3(0,0,0)
-                nodeForAnchor.addChildNode(node)
-                print("creating node for geoanchor")
-            }
-        }
-//        print("nGeoAnchors \(geoAnchors.count)")
-    }
-    
     
     /// Called when there is a change in tracking state.  This is important for both announcing tracking errors to the user and also to triggering some app state transitions.
     /// - Parameters:
@@ -742,6 +649,7 @@ extension ARSessionManager: ARSessionDelegate {
                 // don't log anything
                 print("initializing")
             case .relocalizing:
+                sessionWasRelocalizing = true
                 delegate?.sessionInitialized()
                 delegate?.sessionRelocalizing()
             @unknown default:
@@ -751,6 +659,13 @@ extension ARSessionManager: ARSessionDelegate {
             logString = "Normal"
             delegate?.sessionInitialized()
             delegate?.trackingIsNormal()
+            if sessionWasRelocalizing {
+                delegate?.sessionDidRelocalize()
+                if relocalizationStrategy == .coordinateSystemAutoAligns {
+                    manualAlignment = matrix_identity_float4x4
+                    legacyHandleRelocalization()
+                }
+            }
             if relocalizationStrategy == .coordinateSystemAutoAligns {
                 manualAlignment = matrix_identity_float4x4
                 legacyHandleRelocalization()
@@ -817,23 +732,5 @@ extension ARSessionManager: ARSCNViewDelegate {
                 ARSessionManager.shared.render(intermediateAnchorPoints: [intermediateAnchorPoint])
             }
         }
-    }
-}
-
-extension ARGeoTrackingStatus.Accuracy {
-    var description: String {
-        switch self {
-        case .undetermined: return "Undetermined"
-        case .low: return "Low"
-        case .medium: return "Medium"
-        case .high: return "High"
-        @unknown default: return "Unknown"
-        }
-    }
-}
-
-func getLocalizationAccuracy(geoTrackingStatus: ARGeoTrackingStatus) {
-    if geoTrackingStatus.state == .localized {
-        print("Accuracy: \(geoTrackingStatus.accuracy.description)")
     }
 }

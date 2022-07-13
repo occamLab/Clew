@@ -25,9 +25,6 @@ struct StartNavigationPopoverView: View {
                         vc.routeID = routeInfo.first!.key
                         vc.recordPathController.remove()
                         NotificationCenter.default.post(name: NSNotification.Name("shouldDismissRoutePopover"), object: nil)
-                        #if !APPCLIP
-                        self.vc.arLogger.startTrial()
-                        #endif
                     }) {
                         RowNotSelected {
                             RouteList(RouteName: routeInfo.first!.value)
@@ -81,9 +78,6 @@ struct StartButton: View {
     var body: some View {
         Button(action: {
             NotificationCenter.default.post(name: NSNotification.Name("shouldDismissRoutePopover"), object: nil)
-            #if !APPCLIP
-            self.vc.arLogger.startTrial()
-            #endif
         }) {
             StartButtonView()
         }

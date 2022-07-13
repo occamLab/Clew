@@ -58,13 +58,7 @@ class PauseTrackingController: UIViewController, UIScrollViewDelegate {
             
         }
         
-//        label.textColor = UIColor.white
-//        label.textAlignment = .center
-//        label.numberOfLines = 0
-//        label.lineBreakMode = .byWordWrapping
-//        label.font = UIFont.preferredFont(forTextStyle: .body)
         label.text = mainText
-//        label.tag = UIView.mainTextTag
         
         /// set confirm alignment button as initially active voiceover button
         UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: self.enterAnchorPointDescriptionButton)
@@ -98,17 +92,6 @@ class PauseTrackingController: UIViewController, UIScrollViewDelegate {
         let waitingPeriod = ViewController.alignmentWaitingPeriod
         // TODO: not sure why this code is duplicated
         var mainText:String = ""
-        
-//        if paused && recordingSingleUseRoute {
-//            mainText = String.localizedStringWithFormat(NSLocalizedString("singleUseRouteAnchorPointText", comment: "Information on how to record an anchor point when used for pausing a single use route"), waitingPeriod)
-//        } else {
-//            if startAnchorPoint {
-//                mainText = String.localizedStringWithFormat(NSLocalizedString("multipleUseRouteStartAnchorPointText", comment: "Information on how to record an anchor point when used recording the starting anchor point of a multiple use route."), waitingPeriod)
-//            } else {
-//                mainText = String.localizedStringWithFormat(NSLocalizedString("multipleUseRouteEndAnchorPointText", comment: "Information on how to record an anchor point when used recording the ending anchor point of a multiple use route."), waitingPeriod)
-//            }
-//
-//        }
         
         label.textColor = UIColor.white
         label.textAlignment = .center

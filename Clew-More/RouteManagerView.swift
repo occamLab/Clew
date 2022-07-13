@@ -33,7 +33,6 @@ struct RouteManagerView: View {
             Button(action: {
                 self.vc.onRouteTableViewCellClicked(route: self.route, navigateStartToEnd: true)
                 self.vc.routeOptionsController?.dismiss(animated: false)
-                self.vc.arLogger.startTrial()
             } ){
                 Text(String(NSLocalizedString("NavigateText", comment: "This is the text that tells the user to navigate a route")))
                     .frame(minWidth: 0, maxWidth: 300)

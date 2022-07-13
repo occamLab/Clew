@@ -4,23 +4,21 @@ platform :ios, '12.0'
 use_frameworks!
 
 def all_pods
-  # Pods for Clew
-  pod 'InAppSettingsKit'
-  pod 'VectorMath', '~> 0.3'
-  pod 'Firebase/Core'
-  pod 'Firebase/Storage'
-  pod 'Firebase/Database'
-  pod 'SRCountdownTimer'
-  pod 'PRTween', '~> 0.1'
-  pod 'Firebase/Analytics'
-  pod 'LASwift'
+   pod 'ARCore/Geospatial', '~> 1.32.0'
+   pod 'FirebaseStorage'
+   pod 'FirebaseAnalytics'
+   pod 'FirebaseAuth'
+   pod 'FirebaseDatabase'
+   pod 'LASwift'
+   pod 'VectorMath'
+   pod 'InAppSettingsKit'
 end
 
-target 'Clew' do
+target 'Clew-More' do
     all_pods
 end
 
-target 'Clew Dev' do
+target 'UIKit Clip' do
     all_pods
 end
 

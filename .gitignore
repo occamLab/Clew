@@ -55,5 +55,8 @@ xcuserdata/
 
 Package.resolved
 
+Clew/Misc/Credentials.swift
+
+
 # End of https://www.gitignore.io/api/swift,xcode,cocoapods
 
