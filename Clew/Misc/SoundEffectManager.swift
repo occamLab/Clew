@@ -22,7 +22,7 @@ class SoundEffectManager {
     }
     
     private func loadSoundEffects() {
-        if let successPath = Bundle.main.path(forResource: "ClewSuccessSound", ofType:"wav") {
+        if let successPath = Bundle.main.path(forResource: "ClewSuccessSound", ofType: "wav") {
             do {
                 let url = URL(fileURLWithPath: successPath)
                 successSound = try AVAudioPlayer(contentsOf: url)

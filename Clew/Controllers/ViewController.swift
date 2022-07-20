@@ -534,7 +534,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
             // get the best geospatial pose and add it as an anchor
             if let bestGeospatialRecordingAnchor = self.crumbs.min(by: { $0.headingUncertainty < $1.headingUncertainty }) {
                 ARSessionManager.shared.geoSpatialAlignmentTransform = bestGeospatialRecordingAnchor.geoAnchorTransform
-                ARSessionManager.shared.addGeoSpatialAnchor(location: bestGeospatialRecordingAnchor)
+                let _ = ARSessionManager.shared.addGeoSpatialAnchor(location: bestGeospatialRecordingAnchor)
                 
                 self.trackGeoSpatialDuringNavigation =  Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: (#selector(self.trackGeoSpatialDuringNavigationHandler)), userInfo: nil, repeats: true)
             }
@@ -1641,7 +1641,6 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     /// - Parameter announcement: the announcement to read after a 2 second delay
     func delayTransition(announcement: String? = nil, initialFocus: UIView? = nil) {
         // this notification currently cuts off the announcement of the button that was just pressed
-        print("initialFocus \(initialFocus) announcement \(announcement)")
         UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: initialFocus)
         print("notification posted")
         print(UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: initialFocus))
@@ -2087,22 +2086,6 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     @objc func stopRecording(_ sender: UIButton) {
         // copy the recordingCrumbs over for use in path creation
         crumbs = Array(recordingCrumbs)
-        
-        if let garFrame = ARSessionManager.shared.currentGARFrame {
-            var idToTransform: [UUID: simd_float4x4] = [:]
-            // fix crumbs (TODO: factor this out maybe)
-            for geoAnchor in garFrame.anchors {
-                idToTransform[geoAnchor.identifier] = geoAnchor.transform
-            }
-            for crumb in crumbs {
-                if let GARAnchorUUID = crumb.GARAnchorUUID, let newTransform = idToTransform[GARAnchorUUID] {
-                    //crumb.geoAnchorTransform = newTransform
-                } else {
-                    print("Could not update transform")
-                }
-            }
-        }
-        
         isResumedRoute = false
 
         #if !APPCLIP
@@ -2433,7 +2416,9 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     }
     
     // MARK: - Logging
-        
+    func normalizeAngle(inDegrees angle: Float)->Float {
+        return 180.0 / Float.pi * atan2(sin(angle * Float.pi / 180.0), cos(angle * Float.pi / 180.0))
+    }
     /// drop a crumb during path recording
     @objc func dropCrumb() {
         print("trying to drop crumb \(state)")
@@ -2445,7 +2430,37 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         geoSpatialRecordingAnchors.append(geoSpatialAnchor)
         curLocation.GARAnchorUUID = geoSpatialAnchor.identifier
         curLocation.geoAnchorTransform = geoSpatialAnchor.transform
-        print("geoSpatialAnchor.transform \(geoSpatialAnchor.transform)")
+        /*
+         * Findings thus far indicate that angleFromYAxisOfPhoneToARZAxis is probably the most stable estimate so far.  That said, with significant roll of the phone it can have an error of around 2-3 degrees at maximum.
+         
+           When trying do our alignment, we can be selective about the point we use to do the alignment to be one where the pose doesn't have much roll (the y-axis is roughly in the ground plane).  Or we can use the z-axis if there is a lot roll but no tilt.  Only when we have roll and tilt are we in trouble.
+         
+           Another possible approach would be to find where the x and z axes of the phone intersect the ground plane and use that to find a weighted average of the two angles. This is also not likely to be 100% accurate.
+            We should perhaps investigate the idea of having a two phase system where we switch over to the ARWorldMap once inside.  Perhaps this would let us keep the outdoor anchors and then switch the the ARWorldMap when alignment outdoors is complete.  This relies on the ability to not reset the tracking when changing from not having the map to having the map. (Update: unfortunately, this doesn't work due to a very small blackout period between the two phases of the app)
+         */
+        let angleFromARZAxisToHeading = atan2(geoSpatialAnchor.transform.columns.2.x, geoSpatialAnchor.transform.columns.2.z) * 180.0 / Float.pi
+        let angleFromNegZAxisOfPhoneToARZAxis = atan2(curLocation.transform.columns.2.x, curLocation.transform.columns.2.z) * 180.0  / Float.pi + 180
+        let angleFromYAxisOfPhoneToARZAxis = atan2(curLocation.transform.columns.1.x, curLocation.transform.columns.1.z) * 180.0  / Float.pi + 90
+        let angleFromNegXAxisOfPhoneToARZAxis = atan2(curLocation.transform.columns.0.x, curLocation.transform.columns.0.z) * 180.0  / Float.pi + 180
+        let magX = simd_length(simd_float2(x: curLocation.transform.columns.0.x, y: curLocation.transform.columns.0.z))
+        let magY = simd_length(simd_float2(x: curLocation.transform.columns.1.x, y: curLocation.transform.columns.1.z))
+        let magZ = simd_length(simd_float2(x: curLocation.transform.columns.2.x, y: curLocation.transform.columns.2.z))
+
+        //let angleBlend = magZ > magY ? angleFromNegZAxisOfPhoneToARZAxis :  angleFromYAxisOfPhoneToARZAxis
+        let angXRad = angleFromNegXAxisOfPhoneToARZAxis * Float.pi / 180.0
+        let angZRad = angleFromNegZAxisOfPhoneToARZAxis * Float.pi / 180.0
+        
+        // Note: this seems to be the best so far
+        let angYRad = angleFromYAxisOfPhoneToARZAxis * Float.pi / 180.0
+        
+        let angleBlend = atan2(magZ*sin(angZRad) + magY*sin(angYRad), magZ*cos(angZRad) + magY*cos(angYRad)) * 180 / Float.pi
+        
+        // the three angle blend doesn't work well
+        // let angleBlend = atan2(magZ*sin(angZRad) + magY*sin(angYRad) + magX*sin(angXRad), magZ*cos(angZRad) + magY*cos(angYRad) + magX*cos(angXRad)) * 180 / Float.pi
+
+
+        print("angles \(angleFromARZAxisToHeading - angleBlend) \(angleFromARZAxisToHeading - normalizeAngle(inDegrees: angleFromNegZAxisOfPhoneToARZAxis)) \(angleFromARZAxisToHeading - normalizeAngle(inDegrees: angleFromYAxisOfPhoneToARZAxis))")
+
         recordingCrumbs.append(curLocation)
     }
     
@@ -3004,19 +3019,19 @@ extension ViewController: ARSessionManagerDelegate {
     }
     
     func sessionDidRelocalize() {
-      if trackingWarningsAllowed {
+        if trackingWarningsAllowed {
          announce(announcement: NSLocalizedString("realignToSavedRouteAnnouncement", comment: "An announcement which lets the user know that their surroundings have been matched to a saved route"))
-      }
-      attemptingRelocalization = false
-      if case .startingResumeProcedure(let route, let worldMap, let navigateStartToEnd) = state {
-          // this will cancel any realignment if it hasn't happened yet and go straight to route navigation mode
-          rootContainerView.countdownTimer.isHidden = true
-          isResumedRoute = true
+        }
+        attemptingRelocalization = false
+        if case .startingResumeProcedure(_, _, _) = state {
+            // this will cancel any realignment if it hasn't happened yet and go straight to route navigation mode
+            rootContainerView.countdownTimer.isHidden = true
+            isResumedRoute = true
 
-          isAutomaticAlignment = true
+            isAutomaticAlignment = true
 
-          state = .navigatingRoute
-      }
+            state = .navigatingRoute
+        }
     }
     
     func didDoGeoAlignment() {

@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import ARKit
 
 /// Round a float to the nearest tenth.  Swift doesn't have a good built-in method for doing this.
 ///
@@ -411,5 +412,27 @@ public struct LinkedListIndex<T>: Comparable {
     
     public static func< <T>(lhs: LinkedListIndex<T>, rhs: LinkedListIndex<T>) -> Bool {
         return (lhs.tag < rhs.tag)
+    }
+}
+
+func convertToECEF(latitude: Double, longitude: Double, altitude: Double)->simd_double3 {
+    // https://en.wikipedia.org/wiki/Geographic_coordinate_conversion#From_geodetic_to_ECEF_coordinates
+    let phi = latitude * Double.pi / 180.0
+    let lambda = longitude * Double.pi / 180.0
+    let h = altitude
+    let a = 6378137.0
+    let b = 6356752.3142
+    let e = 1 - pow(b,2)/pow(a,2)
+    let Nphi: Double = a / sqrt(1 - pow(e,2)*pow(sin(phi),2))
+    let X = (Nphi + h)*cos(phi)*cos(lambda)
+    let Y = (Nphi + h)*cos(phi)*sin(lambda)
+    let Z = ((1 - pow(e,2))*Nphi + h)*sin(phi)
+
+    return simd_double3(X, Y, Z)
+}
+
+extension simd_float3 {
+    var normalized: simd_float3 {
+        return self / simd_length(self)
     }
 }

@@ -89,7 +89,6 @@ class PauseTrackingController: UIViewController, UIScrollViewDelegate {
         view.backgroundColor = UIColor.black.withAlphaComponent(0.4)
         
         /// label details
-        let waitingPeriod = ViewController.alignmentWaitingPeriod
         // TODO: not sure why this code is duplicated
         var mainText:String = ""
         

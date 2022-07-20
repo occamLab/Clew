@@ -25,6 +25,8 @@
 		8227FCFD272B0845001031F9 /* PRTween.m in Sources */ = {isa = PBXBuildFile; fileRef = 8227FCF9272B0845001031F9 /* PRTween.m */; };
 		8227FD03272B0954001031F9 /* PRTweenTimingFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 8227FD00272B0953001031F9 /* PRTweenTimingFunctions.m */; };
 		8227FD04272B0954001031F9 /* PRTweenTimingFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 8227FD00272B0953001031F9 /* PRTweenTimingFunctions.m */; };
+		828EFFA2287F5DAE00AE099E /* ClewSuccessSound.wav in Resources */ = {isa = PBXBuildFile; fileRef = 828EFFA1287F5DAE00AE099E /* ClewSuccessSound.wav */; };
+		828EFFA3287F5DAE00AE099E /* ClewSuccessSound.wav in Resources */ = {isa = PBXBuildFile; fileRef = 828EFFA1287F5DAE00AE099E /* ClewSuccessSound.wav */; };
 		82A4A9B9287E4D96007D8F23 /* Credentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82A4A9B8287E4D96007D8F23 /* Credentials.swift */; };
 		82A4A9BA287E4D96007D8F23 /* Credentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82A4A9B8287E4D96007D8F23 /* Credentials.swift */; };
 		82B25182278DF4B0001E3AB6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 82B25184278DF4B0001E3AB6 /* LaunchScreen.storyboard */; };
@@ -232,6 +234,7 @@
 		827CB5B224932CC60032A857 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/MainInterface.strings; sourceTree = "<group>"; };
 		827CB5B324932CC70032A857 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/SettingsAndHelp.strings; sourceTree = "<group>"; };
 		827CB5B424932CC70032A857 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/Localizable.strings; sourceTree = "<group>"; };
+		828EFFA1287F5DAE00AE099E /* ClewSuccessSound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = ClewSuccessSound.wav; sourceTree = "<group>"; };
 		82A417E0262A205A001FCB8C /* AuthenticationHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationHelper.swift; sourceTree = "<group>"; };
 		82A417EC262A2140001FCB8C /* Clew Dev.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Clew Dev.entitlements"; sourceTree = "<group>"; };
 		82A4A9B8287E4D96007D8F23 /* Credentials.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Credentials.swift; sourceTree = "<group>"; };
@@ -357,6 +360,7 @@
 		4D6B00B71F33C1C400952242 = {
 			isa = PBXGroup;
 			children = (
+				828EFFA1287F5DAE00AE099E /* ClewSuccessSound.wav */,
 				2A93C61727C41023005C8668 /* center ramp 2.mov */,
 				2A25570028493D2500D137FE /* NECO2_center_stair.MOV */,
 				2A4CC4A32849402000556268 /* center_ramp_occam_phone.mov */,
@@ -797,6 +801,7 @@
 				98006F82268382D800E61861 /* Assets.xcassets in Resources */,
 				98AB6079269DDCC700613BB5 /* anchorInFrame.mp3 in Resources */,
 				98006FBD2683859700E61861 /* StartRecording.aiff in Resources */,
+				828EFFA2287F5DAE00AE099E /* ClewSuccessSound.wav in Resources */,
 				98006FCC268386AD00E61861 /* Localizable.strings in Resources */,
 				980536702683AC8B0065E80F /* help in Resources */,
 				98006FBE2683859A00E61861 /* StopRecording.aiff in Resources */,
@@ -815,6 +820,7 @@
 				98FF7AD9269CC14D008C64E5 /* BurgerMenu.storyboard in Resources */,
 				98FF7AE1269CC172008C64E5 /* speaker.obj in Resources */,
 				98FF7ABA269CC0CB008C64E5 /* Settings.bundle in Resources */,
+				828EFFA3287F5DAE00AE099E /* ClewSuccessSound.wav in Resources */,
 				98FF7AE0269CC16B008C64E5 /* Confirm.mp3 in Resources */,
 				98FF7AA2269CBFEB008C64E5 /* Preview Assets.xcassets in Resources */,
 				98FF7AA7269CC040008C64E5 /* Localizable.strings in Resources */,
