@@ -346,7 +346,7 @@
     "scanNfcButtonText" = "Scan NFC tag";
 
     // NameCodeIDView
-    "nameCodeIDLabel" = "To create a route, the starting anchor point must be associated with an app clip code ID. Enter the three-digit ID for this route's starting point below.";
+    "nameCodeIDLabel" = "To create a route, the starting anchor point must be associated with a NFC app clip code ID.";
     "nameCodeIDTextField" = "3-digit app clip code ID";
     "nameCodeIDButtonText" = "Save Code ID";
     
