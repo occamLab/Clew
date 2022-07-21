@@ -533,7 +533,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         continuationAfterSessionIsReady = {
             // get the best geospatial pose and add it as an anchor
             if let bestGeospatialRecordingAnchor = self.crumbs.min(by: { $0.headingUncertainty < $1.headingUncertainty }) {
-                ARSessionManager.shared.geoSpatialAlignmentTransform = bestGeospatialRecordingAnchor.geoAnchorTransform
+                ARSessionManager.shared.geoSpatialAlignmentAnchor = bestGeospatialRecordingAnchor
                 let _ = ARSessionManager.shared.addGeoSpatialAnchor(location: bestGeospatialRecordingAnchor)
                 
                 self.trackGeoSpatialDuringNavigation =  Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: (#selector(self.trackGeoSpatialDuringNavigationHandler)), userInfo: nil, repeats: true)

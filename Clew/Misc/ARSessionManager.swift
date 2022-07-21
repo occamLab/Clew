@@ -70,6 +70,8 @@ class ARSessionManager: NSObject {
     /// this is the alignment between the reloaded route
     var manualAlignment: simd_float4x4?
     
+    let useGeoAnchorsForAlignment = true
+    
     var garSession: GARSession?
         
     /// Keep track of when to log a frame
@@ -123,7 +125,7 @@ class ARSessionManager: NSObject {
     
     var currentGARFrame: GARFrame?
     
-    var geoSpatialAlignmentTransform: simd_float4x4?
+    var geoSpatialAlignmentAnchor: LocationInfoGeoSpatial?
     
     func addGeoSpatialAnchor(location: LocationInfoGeoSpatial)->GARAnchor? {
         let headingAngle = (Double.pi / 180) * (180.0 - location.heading);
@@ -578,7 +580,7 @@ extension ARSessionManager: ARSessionDelegate {
     }
     
     func checkForGeoAlignment(alignmentAnchor: GARAnchor) {
-        if alignmentAnchor.hasValidTransform, let geoSpatialAlignmentTransform = geoSpatialAlignmentTransform {
+        if alignmentAnchor.hasValidTransform, let geoSpatialAlignmentTransform = geoSpatialAlignmentAnchor?.transform {
             self.manualAlignment = alignmentAnchor.transform * geoSpatialAlignmentTransform.inverse
             print("self.manualAlignment \(self.manualAlignment)")
             delegate?.didDoGeoAlignment()
@@ -599,9 +601,9 @@ extension ARSessionManager: ARSessionDelegate {
 
         geoTransformToECEF.columns.1 = simd_float4(simd_float3(upECEFDelta).normalized, 0)
         
-        let northECEFDelta = convertToECEF(latitude: cameraGeoTransform.coordinate.latitude + 0.0001, longitude: cameraGeoTransform.coordinate.longitude, altitude: cameraGeoTransform.altitude) - cameraOrigin
+        let southECEFDelta = convertToECEF(latitude: cameraGeoTransform.coordinate.latitude - 0.0001, longitude: cameraGeoTransform.coordinate.longitude, altitude: cameraGeoTransform.altitude) - cameraOrigin
         
-        let headingAxis = simd_quatf(angle: Float.pi / 180.0 * (180 - Float(cameraGeoTransform.heading)), axis: simd_float3(upECEFDelta).normalized).act(simd_float3(northECEFDelta))
+        let headingAxis = simd_quatf(angle: Float.pi / 180.0 * (180 - Float(cameraGeoTransform.heading)), axis: simd_float3(upECEFDelta).normalized).act(simd_float3(southECEFDelta))
         
         geoTransformToECEF.columns.2 = simd_float4(headingAxis.normalized, 0)
         
@@ -618,9 +620,9 @@ extension ARSessionManager: ARSessionDelegate {
         let upECEFDelta = simd_float3(convertToECEF(latitude: latlon.latitude, longitude: latlon.longitude, altitude: altitude+1.0) - poseOrigin)
         ECEFPose.columns.1 = simd_float4(upECEFDelta.normalized, 0)
         
-        let north = simd_float3(convertToECEF(latitude: latlon.latitude+0.0001, longitude: latlon.longitude, altitude: altitude) - poseOrigin)
+        let south = simd_float3(convertToECEF(latitude: latlon.latitude - 0.0001, longitude: latlon.longitude, altitude: altitude) - poseOrigin)
         
-        let headingAxis = simd_quatf(angle: Float.pi / 180.0 * (180 - Float(heading)), axis: upECEFDelta.normalized).act(north)
+        let headingAxis = simd_quatf(angle: Float.pi / 180.0 * (180 - Float(heading)), axis: upECEFDelta.normalized).act(south)
         
         ECEFPose.columns.2 = simd_float4(headingAxis.normalized, 0)
         ECEFPose.columns.0 = simd_float4(simd_cross(ECEFPose.columns.1.dropw(), ECEFPose.columns.2.dropw()), 0)
@@ -636,7 +638,7 @@ extension ARSessionManager: ARSessionDelegate {
         let cameraGeoAnchorToECEF = getGeoTransformToECEF(headingAxis: cameraHeadingAxis, cameraPos: simd_float3(cameraTransform.columns.3.x, cameraTransform.columns.3.y, cameraTransform.columns.3.z), cameraGeoTransform: geoSpatialTransform)
         let targetECEFPose = getECEFPose(at: latlon, withAltitude: altitude, withHeading: heading)
         let targetInCameraGeoAnchor = cameraGeoAnchorToECEF.inverse * targetECEFPose
-        let geoTransformZAxis = simd_quatf(angle: Float(geoSpatialTransform.heading - heading) * Float.pi / 180.0, axis: simd_float3(0, 1, 0)).act(cameraHeadingAxis)
+        let geoTransformZAxis = cameraHeadingAxis
         let geoTransformXAxis = simd_quatf(angle: Float.pi/2, axis: simd_float3(0, 1, 0)).act(geoTransformZAxis)
         let geoTransform = simd_float4x4(simd_float4(geoTransformXAxis, 0), simd_float4(0, 1, 0, 0), simd_float4(geoTransformZAxis, 0), cameraTransform.columns.3)
         let targetInARWorld = geoTransform * targetInCameraGeoAnchor
@@ -648,24 +650,38 @@ extension ARSessionManager: ARSessionDelegate {
             self.currentGARFrame = try garSession?.update(frame)
             if let geospatialTransform = self.currentGARFrame?.earth?.cameraGeospatialTransform {
                 self.worldTransformGeoSpatialPair = (frame.camera.transform, geospatialTransform)
-                let testAnchorComputation = true
-                let headingOffsetForTesting = 0.0;
-                let latlonAlternate = CLLocationCoordinate2DMake( geospatialTransform.coordinate.latitude, geospatialTransform.coordinate.longitude)
-                let altitudeOffset = 10.0
-                if testAnchorComputation , let myGeospatial = getGeospatialTransform(at: latlonAlternate, withAltitude: geospatialTransform.altitude + altitudeOffset, withHeading: geospatialTransform.heading + headingOffsetForTesting) {
-                    let headingAngle = (Double.pi / 180) * (180.0 - (geospatialTransform.heading + headingOffsetForTesting))
-                    let eastUpSouthQAnchor = simd_quaternion(Float(headingAngle), simd_float3(0, 1, 0))
-                    do {
-                        if let newGeoAnchor = try! garSession?.createAnchor(coordinate: latlonAlternate, altitude: geospatialTransform.altitude + altitudeOffset, eastUpSouthQAnchor: eastUpSouthQAnchor) {
-                            print("myGeoAnchor \(myGeospatial)")
-                            print("newGeoAnchor \(newGeoAnchor.transform)")
-                            print("check it")
-                            // TODO: altitude changes look good, but the other directions are not quite right yet
+                let testAnchorComputation = false
+
+                if testAnchorComputation {
+                    let headingOffsetForTesting = -23.0
+                    let latlonAlternate = CLLocationCoordinate2DMake( geospatialTransform.coordinate.latitude + 0.0001, geospatialTransform.coordinate.longitude-0.0003)
+                    let altitudeOffset = 10.0
+                    if let myGeospatial = getGeospatialTransform(at: latlonAlternate, withAltitude: geospatialTransform.altitude + altitudeOffset, withHeading: geospatialTransform.heading + headingOffsetForTesting) {
+                        
+                        let headingAngle = (Double.pi / 180) * (180.0 - (geospatialTransform.heading + headingOffsetForTesting))
+                        let eastUpSouthQAnchor = simd_quaternion(Float(headingAngle), simd_float3(0, 1, 0))
+                        do {
+                            if let newGeoAnchor = try! garSession?.createAnchor(coordinate: latlonAlternate, altitude: geospatialTransform.altitude + altitudeOffset, eastUpSouthQAnchor: eastUpSouthQAnchor) {
+                                print("myGeoAnchor \(myGeospatial)")
+                                print("newGeoAnchor \(newGeoAnchor.transform)")
+                                print("camera translation", frame.camera.transform.columns.3)
+                                print("check it")
+                            }
                         }
                     }
                 }
-                if geospatialTransform.headingAccuracy < 4.0, geospatialTransform.horizontalAccuracy < 1.5, let alignmentAnchor = self.currentGARFrame?.anchors.first {
-                    checkForGeoAlignment(alignmentAnchor: alignmentAnchor)
+                if geospatialTransform.headingAccuracy < 4.0, geospatialTransform.horizontalAccuracy < 1.5 {
+                    if useGeoAnchorsForAlignment {
+                        if let alignmentAnchor = self.currentGARFrame?.anchors.first {
+                            checkForGeoAlignment(alignmentAnchor: alignmentAnchor)
+                        }
+                    } else {
+                        if let geoSpatialAlignmentAnchor = geoSpatialAlignmentAnchor, let myGeospatial = getGeospatialTransform(at: CLLocationCoordinate2D(latitude: geoSpatialAlignmentAnchor.latitude, longitude: geoSpatialAlignmentAnchor.longitude), withAltitude: geoSpatialAlignmentAnchor.altitude, withHeading: geoSpatialAlignmentAnchor.heading) {
+                            self.manualAlignment = myGeospatial * geoSpatialAlignmentAnchor.transform.inverse
+                            print("self.manualAlignment \(self.manualAlignment)")
+                            delegate?.didDoGeoAlignment()
+                        }
+                    }
                 }
             }
         } catch {
