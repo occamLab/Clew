@@ -25,6 +25,8 @@
 		8227FCFD272B0845001031F9 /* PRTween.m in Sources */ = {isa = PBXBuildFile; fileRef = 8227FCF9272B0845001031F9 /* PRTween.m */; };
 		8227FD03272B0954001031F9 /* PRTweenTimingFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 8227FD00272B0953001031F9 /* PRTweenTimingFunctions.m */; };
 		8227FD04272B0954001031F9 /* PRTweenTimingFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 8227FD00272B0953001031F9 /* PRTweenTimingFunctions.m */; };
+		8284A741288AE23300999ABF /* NSObject+ARFrameStatusAdapter.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8284A740288AE23300999ABF /* NSObject+ARFrameStatusAdapter.mm */; };
+		8284A742288AE23300999ABF /* NSObject+ARFrameStatusAdapter.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8284A740288AE23300999ABF /* NSObject+ARFrameStatusAdapter.mm */; };
 		82A4A9B9287E4D96007D8F23 /* Credentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82A4A9B8287E4D96007D8F23 /* Credentials.swift */; };
 		82A4A9BA287E4D96007D8F23 /* Credentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82A4A9B8287E4D96007D8F23 /* Credentials.swift */; };
 		82B25182278DF4B0001E3AB6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 82B25184278DF4B0001E3AB6 /* LaunchScreen.storyboard */; };
@@ -232,6 +234,8 @@
 		827CB5B224932CC60032A857 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/MainInterface.strings; sourceTree = "<group>"; };
 		827CB5B324932CC70032A857 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/SettingsAndHelp.strings; sourceTree = "<group>"; };
 		827CB5B424932CC70032A857 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/Localizable.strings; sourceTree = "<group>"; };
+		8284A73F288AE23300999ABF /* NSObject+ARFrameStatusAdapter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSObject+ARFrameStatusAdapter.h"; sourceTree = "<group>"; };
+		8284A740288AE23300999ABF /* NSObject+ARFrameStatusAdapter.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = "NSObject+ARFrameStatusAdapter.mm"; sourceTree = "<group>"; };
 		82A417E0262A205A001FCB8C /* AuthenticationHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationHelper.swift; sourceTree = "<group>"; };
 		82A417EC262A2140001FCB8C /* Clew Dev.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Clew Dev.entitlements"; sourceTree = "<group>"; };
 		82A4A9B8287E4D96007D8F23 /* Credentials.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Credentials.swift; sourceTree = "<group>"; };
@@ -571,6 +575,8 @@
 				98CC6765268A1F2200E3759F /* SurveyInterface.swift */,
 				98CC6760268A0FEC00E3759F /* FirebaseSetup.swift */,
 				82273939272C7E43006C181E /* ARSessionManager.swift */,
+				8284A73F288AE23300999ABF /* NSObject+ARFrameStatusAdapter.h */,
+				8284A740288AE23300999ABF /* NSObject+ARFrameStatusAdapter.mm */,
 				8227393E272C7E7D006C181E /* RouteManager.swift */,
 				8227394327308486006C181E /* SoundEffectManager.swift */,
 				2AC1BF24284E746300C84D8B /* PathMatcher.swift */,
@@ -875,6 +881,7 @@
 				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac/GoogleToolboxForMac.framework",
 				"${BUILT_PRODUCTS_DIR}/GoogleUtilities/GoogleUtilities.framework",
 				"${BUILT_PRODUCTS_DIR}/InAppSettingsKit/InAppSettingsKit.framework",
+				"${BUILT_PRODUCTS_DIR}/JGMethodSwizzler/JGMethodSwizzler.framework",
 				"${BUILT_PRODUCTS_DIR}/LASwift/LASwift.framework",
 				"${BUILT_PRODUCTS_DIR}/PromisesObjC/FBLPromises.framework",
 				"${BUILT_PRODUCTS_DIR}/VectorMath/VectorMath.framework",
@@ -896,6 +903,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleToolboxForMac.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleUtilities.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/InAppSettingsKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/JGMethodSwizzler.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/LASwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBLPromises.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/VectorMath.framework",
@@ -967,6 +975,7 @@
 				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac/GoogleToolboxForMac.framework",
 				"${BUILT_PRODUCTS_DIR}/GoogleUtilities/GoogleUtilities.framework",
 				"${BUILT_PRODUCTS_DIR}/InAppSettingsKit/InAppSettingsKit.framework",
+				"${BUILT_PRODUCTS_DIR}/JGMethodSwizzler/JGMethodSwizzler.framework",
 				"${BUILT_PRODUCTS_DIR}/LASwift/LASwift.framework",
 				"${BUILT_PRODUCTS_DIR}/PromisesObjC/FBLPromises.framework",
 				"${BUILT_PRODUCTS_DIR}/VectorMath/VectorMath.framework",
@@ -988,6 +997,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleToolboxForMac.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleUtilities.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/InAppSettingsKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/JGMethodSwizzler.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/LASwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBLPromises.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/VectorMath.framework",
@@ -1051,6 +1061,7 @@
 				980536EE2684D16F0065E80F /* AppDelegate.swift in Sources */,
 				8227FD03272B0954001031F9 /* PRTweenTimingFunctions.m in Sources */,
 				98006FC3268385B300E61861 /* UIButtonExtensions.swift in Sources */,
+				8284A741288AE23300999ABF /* NSObject+ARFrameStatusAdapter.mm in Sources */,
 				82273941272C7E7D006C181E /* RouteManager.swift in Sources */,
 				9805366126838AA40065E80F /* RootContainerView.swift in Sources */,
 				98006FC2268385AF00E61861 /* UIViewExtensions.swift in Sources */,
@@ -1131,6 +1142,7 @@
 				9824AB5826B981900016225C /* InformedConsentViewModel.swift in Sources */,
 				8227393D272C7E43006C181E /* ARSessionManager.swift in Sources */,
 				98FF7AD4269CC125008C64E5 /* RoutesViewController.swift in Sources */,
+				8284A742288AE23300999ABF /* NSObject+ARFrameStatusAdapter.mm in Sources */,
 				98FF7ACE269CC114008C64E5 /* ResumeTrackingConfirmController.swift in Sources */,
 				98FF7AC2269CC0F0008C64E5 /* UIButtonExtensions.swift in Sources */,
 				98FF7ADC269CC157008C64E5 /* EnterCodeIDView.swift in Sources */,

@@ -514,7 +514,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
                 attemptingRelocalization = isSameMap && !isTrackingPerformanceNormal || !isSameMap
             }
         } else {
-            ARSessionManager.shared.relocalizationStrategy = .none
+            ARSessionManager.shared.relocalizationStrategy = .coordinateSystemAutoAligns
             ARSessionManager.shared.initialWorldMap = nil
         }
 

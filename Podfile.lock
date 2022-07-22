@@ -121,6 +121,7 @@ PODS:
     - GoogleUtilities/Logger
   - GTMSessionFetcher/Core (1.7.1)
   - InAppSettingsKit (3.3.6)
+  - JGMethodSwizzler (2.0.1)
   - LASwift (0.2.5)
   - leveldb-library (1.22.1)
   - nanopb (2.30908.0):
@@ -149,6 +150,7 @@ DEPENDENCIES:
   - FirebaseDatabase
   - FirebaseStorage
   - InAppSettingsKit
+  - JGMethodSwizzler (= 2.0.1)
   - LASwift
   - VectorMath
 
@@ -171,6 +173,7 @@ SPEC REPOS:
     - GoogleUtilities
     - GTMSessionFetcher
     - InAppSettingsKit
+    - JGMethodSwizzler
     - LASwift
     - leveldb-library
     - nanopb
@@ -195,12 +198,13 @@ SPEC CHECKSUMS:
   GoogleUtilities: e0913149f6b0625b553d70dae12b49fc62914fd1
   GTMSessionFetcher: 4577a4cc914a5a07c40a8a0ad0acc22080418c2d
   InAppSettingsKit: 37df0b44132380d4c7db6fc7cded92997e29873a
+  JGMethodSwizzler: e0ea5c1c6c55304ec4ef3f54e441400c6735c899
   LASwift: a820932178025d61856a3c32c51fdfff3b00a42c
   leveldb-library: 50c7b45cbd7bf543c81a468fe557a16ae3db8729
   nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
   PromisesObjC: 99b6f43f9e1044bd87a95a60beff28c2c44ddb72
   VectorMath: 55dded3a69e5061add78d06275561bc25ead2999
 
-PODFILE CHECKSUM: b119cfbb28d2a1ec3a8d7c3a2ecb2496d01f5b1f
+PODFILE CHECKSUM: bcc1643f7095e0e1564f24dadfdb4680fdafc0ca
 
 COCOAPODS: 1.11.2

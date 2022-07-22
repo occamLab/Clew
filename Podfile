@@ -12,6 +12,7 @@ def all_pods
    pod 'LASwift'
    pod 'VectorMath'
    pod 'InAppSettingsKit'
+   pod 'JGMethodSwizzler', '2.0.1'
 end
 
 target 'Clew-More' do

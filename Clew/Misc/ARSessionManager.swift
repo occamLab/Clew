@@ -83,7 +83,7 @@ class ARSessionManager: NSObject {
     private var intermediateAnchorRenderJobs: [RouteAnchorPoint : (()->())?] = [:]
     
     /// the strategy to employ with respect to the worldmap
-    var relocalizationStrategy: RelocalizationStrategy = .none
+    var relocalizationStrategy: RelocalizationStrategy = .coordinateSystemAutoAligns
     
     /// keep track of whether or not the session was, at any point, in the relocalizing state.  The behavior of the ARCamera.TrackingState is a bit erratic in that the session will sometimes execute unexpected sequences (e.g., initializing -> normal -> not available -> initializing -> relocalizing).
     var sessionWasRelocalizing = false
@@ -151,6 +151,7 @@ class ARSessionManager: NSObject {
         intermediateAnchorRenderJobs = [:]
         worldTransformGeoSpatialPair = nil
         sessionWasRelocalizing = false
+        localized = false
         removeNavigationNodes()
         sceneView.session.run(configuration, options: [.removeExistingAnchors])
         startGARSession()
@@ -593,13 +594,16 @@ extension ARSessionManager: ARSessionDelegate {
     
     func session(_ session: ARSession, didUpdate frame: ARFrame) {
         do {
+            print(frame.camera.trackingState)
+            ARFrameStatusAdapter.adjustTrackingStatus(frame)
+            print(frame.camera.trackingState)
             self.currentGARFrame = try garSession?.update(frame)
 
             if let geospatialTransform = self.currentGARFrame?.earth?.cameraGeospatialTransform {
                 print("\(ARSessionManager.shared.currentFrame?.camera.trackingState)")
                 print("got \(geospatialTransform)")
                 self.worldTransformGeoSpatialPair = (frame.camera.transform, geospatialTransform)
-                if geospatialTransform.headingAccuracy < 4.0, let alignmentAnchor = self.currentGARFrame?.anchors.first {
+                if !localized, geospatialTransform.headingAccuracy < 4.0, geospatialTransform.horizontalAccuracy < 1.5, let alignmentAnchor = self.currentGARFrame?.anchors.first {
                     checkForGeoAlignment(alignmentAnchor: alignmentAnchor)
                 }
             }
@@ -634,6 +638,7 @@ extension ARSessionManager: ARSessionDelegate {
     ///   - session: the AR session associated with the change in tracking state
     ///   - camera: the AR camera associated with the change in tracking state
     func session(_ session: ARSession, cameraDidChangeTrackingState camera: ARCamera) {
+        print("TRACKING STATE CHANGE!!")
         var logString: String? = nil
 
         switch camera.trackingState {
@@ -662,13 +667,10 @@ extension ARSessionManager: ARSessionDelegate {
             if sessionWasRelocalizing {
                 delegate?.sessionDidRelocalize()
                 if relocalizationStrategy == .coordinateSystemAutoAligns {
+                    localized = true
                     manualAlignment = matrix_identity_float4x4
                     legacyHandleRelocalization()
                 }
-            }
-            if relocalizationStrategy == .coordinateSystemAutoAligns {
-                manualAlignment = matrix_identity_float4x4
-                legacyHandleRelocalization()
             }
             print("normal")
         case .notAvailable:
