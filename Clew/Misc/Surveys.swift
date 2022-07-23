@@ -12,7 +12,6 @@
 import SwiftUI
 import UIKit
 import FirebaseStorage
-import FirebaseDatabase
 import FirebaseAuth
 
 enum QuestionType: String {
@@ -79,7 +78,7 @@ struct SurveyQuestion {
 }
 
 class FirebaseFeedbackSurveyModel {
-    let databaseHandle = Database.database()
+    // let databaseHandle = Database.database()
     public static var shared = FirebaseFeedbackSurveyModel()
     var questions: [String: [SurveyQuestion]] = [:]
     var intervals: [String: Double] = [:]
@@ -91,61 +90,61 @@ class FirebaseFeedbackSurveyModel {
     }
     
     private func setupListeners() {
-        let surveysRef = databaseHandle.reference(withPath: "surveys")
-        surveysRef.observe(.childAdded) { (snapshot) -> Void in
-            self.populateModel(snapshot)
-        }
-        surveysRef.observe(.childChanged) { (snapshot) -> Void in
-            self.populateModel(snapshot)
-        }
+//        let surveysRef = databaseHandle.reference(withPath: "surveys")
+//        surveysRef.observe(.childAdded) { (snapshot) -> Void in
+//            self.populateModel(snapshot)
+//        }
+//        surveysRef.observe(.childChanged) { (snapshot) -> Void in
+//            self.populateModel(snapshot)
+//        }
     }
-    private func populateModel(_ snapshot: DataSnapshot) {
-        print(snapshot.key)
-        
-        if snapshot.key == "currentAppLaunchSurvey" {
-            self.currentAppLaunchSurvey = snapshot.value as? String ?? "defaultSurvey"
-        } else if snapshot.key == "currentAfterRouteSurvey" {
-            self.currentAfterRouteSurvey = snapshot.value as? String ?? "defaultSurvey"
-        }
-        
-        var surveyQuestions: [SurveyQuestion] = []
-        guard let surveyQuestionsRaw = snapshot.value as? [String: Any] else {
-            return
-        }
-        var presentationIntervalInSeconds: Double = 0.0
-        for (childKey, childValue) in surveyQuestionsRaw {
-            if childKey == "_presentationIntervalInSeconds" {
-                if let newInterval = childValue as? Double {
-                    presentationIntervalInSeconds = newInterval
-                }
-                continue
-            }
-            guard let questionDefinition = childValue as? [String: Any], let prompt = questionDefinition["prompt"] as? [String: String], let questionType = questionDefinition["type"] as? String, let questionTypeEnum = QuestionType(rawValue: questionType), let questionOrder = questionDefinition["order"] as? Int, let text = prompt["en"] else {
-                continue
-            }
-            let numericalDefault = questionDefinition["numericalDefault"] as? Float
-            let numericalMin = questionDefinition["numericalMin"] as? Float
-            let numericalMax = questionDefinition["numericalMax"] as? Float
-            let quantizeSlider = questionDefinition["quantizeSlider"] as? Bool
-            let addSliderAccent = questionDefinition["addSliderAccent"] as? Bool
-
-            let booleanDefault = questionDefinition["booleanDefault"] as? Bool
-            let required = questionDefinition["required"] as? Bool ?? true
-            let isEmail = questionDefinition["isEmail"] as? Bool ?? false
-            var choices: [MultipleChoiceOption] = []
-            if let choiceDict = questionDefinition["choices"] as? [String : [String: Any] ] {
-                for (choiceKey, choiceDescription) in choiceDict {
-                    if let choice = MultipleChoiceOption(key: choiceKey, firebaseData: choiceDescription) {
-                        choices.append(choice)
-                    }
-                }
-            }
-            choices.sort(by: {$0.choiceOrder < $1.choiceOrder})
-            surveyQuestions.append(SurveyQuestion(name: childKey, text: text, localizations: prompt, questionType: questionTypeEnum, required: required, isEmail: isEmail, order: questionOrder, numericalDefault: numericalDefault, numericalMin: numericalMin, numericalMax: numericalMax, quantizeSlider: quantizeSlider, addSliderAccent: addSliderAccent, booleanDefault: booleanDefault, choices: choices))
-        }
-        questions[snapshot.key] = surveyQuestions
-        intervals[snapshot.key] = presentationIntervalInSeconds
-        print("intervals", intervals)
-    }
+//    private func populateModel(_ snapshot: DataSnapshot) {
+//        print(snapshot.key)
+//
+//        if snapshot.key == "currentAppLaunchSurvey" {
+//            self.currentAppLaunchSurvey = snapshot.value as? String ?? "defaultSurvey"
+//        } else if snapshot.key == "currentAfterRouteSurvey" {
+//            self.currentAfterRouteSurvey = snapshot.value as? String ?? "defaultSurvey"
+//        }
+//
+//        var surveyQuestions: [SurveyQuestion] = []
+//        guard let surveyQuestionsRaw = snapshot.value as? [String: Any] else {
+//            return
+//        }
+//        var presentationIntervalInSeconds: Double = 0.0
+//        for (childKey, childValue) in surveyQuestionsRaw {
+//            if childKey == "_presentationIntervalInSeconds" {
+//                if let newInterval = childValue as? Double {
+//                    presentationIntervalInSeconds = newInterval
+//                }
+//                continue
+//            }
+//            guard let questionDefinition = childValue as? [String: Any], let prompt = questionDefinition["prompt"] as? [String: String], let questionType = questionDefinition["type"] as? String, let questionTypeEnum = QuestionType(rawValue: questionType), let questionOrder = questionDefinition["order"] as? Int, let text = prompt["en"] else {
+//                continue
+//            }
+//            let numericalDefault = questionDefinition["numericalDefault"] as? Float
+//            let numericalMin = questionDefinition["numericalMin"] as? Float
+//            let numericalMax = questionDefinition["numericalMax"] as? Float
+//            let quantizeSlider = questionDefinition["quantizeSlider"] as? Bool
+//            let addSliderAccent = questionDefinition["addSliderAccent"] as? Bool
+//
+//            let booleanDefault = questionDefinition["booleanDefault"] as? Bool
+//            let required = questionDefinition["required"] as? Bool ?? true
+//            let isEmail = questionDefinition["isEmail"] as? Bool ?? false
+//            var choices: [MultipleChoiceOption] = []
+//            if let choiceDict = questionDefinition["choices"] as? [String : [String: Any] ] {
+//                for (choiceKey, choiceDescription) in choiceDict {
+//                    if let choice = MultipleChoiceOption(key: choiceKey, firebaseData: choiceDescription) {
+//                        choices.append(choice)
+//                    }
+//                }
+//            }
+//            choices.sort(by: {$0.choiceOrder < $1.choiceOrder})
+//            surveyQuestions.append(SurveyQuestion(name: childKey, text: text, localizations: prompt, questionType: questionTypeEnum, required: required, isEmail: isEmail, order: questionOrder, numericalDefault: numericalDefault, numericalMin: numericalMin, numericalMax: numericalMax, quantizeSlider: quantizeSlider, addSliderAccent: addSliderAccent, booleanDefault: booleanDefault, choices: choices))
+//        }
+//        questions[snapshot.key] = surveyQuestions
+//        intervals[snapshot.key] = presentationIntervalInSeconds
+//        print("intervals", intervals)
+//    }
     
 }

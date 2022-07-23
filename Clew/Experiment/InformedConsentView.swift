@@ -8,7 +8,6 @@
 import SwiftUI
 import Firebase
 import FirebaseAuth
-import FirebaseDatabase
 
 struct InformedConsentView : View {
     @ObservedObject var informedConsentModel = InformedConsentViewModel()
@@ -43,10 +42,10 @@ struct InformedConsentView : View {
                                   else {
                                     return
                                   }
-                                let ref = Database.database().reference().child("appclipexperiment").child("emails").child(uid)
-                                print(ref.url)
-                                ref.setValue(["email": informedConsentModel.userEmail])
-                                UserDefaults.standard.setValue(true, forKey: "hasconsented")
+//                                let ref = Database.database().reference().child("appclipexperiment").child("emails").child(uid)
+//                                print(ref.url)
+//                                ref.setValue(["email": informedConsentModel.userEmail])
+//                                UserDefaults.standard.setValue(true, forKey: "hasconsented")
                                 
                                 let vc = ViewController()
 

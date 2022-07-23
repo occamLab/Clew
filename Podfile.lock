@@ -54,9 +54,6 @@ PODS:
     - GoogleUtilities/Environment (~> 7.7)
     - GoogleUtilities/Logger (~> 7.7)
     - nanopb (~> 2.30908.0)
-  - FirebaseDatabase (8.15.0):
-    - FirebaseCore (~> 8.0)
-    - leveldb-library (~> 1.22)
   - FirebaseInstallations (8.15.0):
     - FirebaseCore (~> 8.0)
     - GoogleUtilities/Environment (~> 7.7)
@@ -123,7 +120,6 @@ PODS:
   - InAppSettingsKit (3.3.6)
   - JGMethodSwizzler (2.0.1)
   - LASwift (0.2.5)
-  - leveldb-library (1.22.1)
   - nanopb (2.30908.0):
     - nanopb/decode (= 2.30908.0)
     - nanopb/encode (= 2.30908.0)
@@ -147,7 +143,6 @@ DEPENDENCIES:
   - ARCore/Geospatial (~> 1.32.0)
   - FirebaseAnalytics
   - FirebaseAuth
-  - FirebaseDatabase
   - FirebaseStorage
   - InAppSettingsKit
   - JGMethodSwizzler (= 2.0.1)
@@ -163,7 +158,6 @@ SPEC REPOS:
     - FirebaseAuth
     - FirebaseCore
     - FirebaseCoreDiagnostics
-    - FirebaseDatabase
     - FirebaseInstallations
     - FirebaseRemoteConfig
     - FirebaseStorage
@@ -175,7 +169,6 @@ SPEC REPOS:
     - InAppSettingsKit
     - JGMethodSwizzler
     - LASwift
-    - leveldb-library
     - nanopb
     - PromisesObjC
     - VectorMath
@@ -188,7 +181,6 @@ SPEC CHECKSUMS:
   FirebaseAuth: 3e73bf8abf4fbb40f8b421f361f4cc48ee57388c
   FirebaseCore: 5743c5785c074a794d35f2fff7ecc254a91e08b1
   FirebaseCoreDiagnostics: 92e07a649aeb66352b319d43bdd2ee3942af84cb
-  FirebaseDatabase: f567afd233e54a303d84423207736590a6feb419
   FirebaseInstallations: 40bd9054049b2eae9a2c38ef1c3dd213df3605cd
   FirebaseRemoteConfig: 2d6e2cfdb49af79535c8af8a80a4a5009038ec2b
   FirebaseStorage: 8019af461599b2c3bc61c6a5dbdfa3d2de66a4d9
@@ -200,11 +192,10 @@ SPEC CHECKSUMS:
   InAppSettingsKit: 37df0b44132380d4c7db6fc7cded92997e29873a
   JGMethodSwizzler: e0ea5c1c6c55304ec4ef3f54e441400c6735c899
   LASwift: a820932178025d61856a3c32c51fdfff3b00a42c
-  leveldb-library: 50c7b45cbd7bf543c81a468fe557a16ae3db8729
   nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
   PromisesObjC: 99b6f43f9e1044bd87a95a60beff28c2c44ddb72
   VectorMath: 55dded3a69e5061add78d06275561bc25ead2999
 
-PODFILE CHECKSUM: bcc1643f7095e0e1564f24dadfdb4680fdafc0ca
+PODFILE CHECKSUM: e0f4f29a9b3275d07a2ae917af50bc0a3ce759ea
 
 COCOAPODS: 1.11.2

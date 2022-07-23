@@ -10,11 +10,7 @@ import Foundation
 import UIKit
 import SceneKit
 import StoreKit
-#if !APPCLIP
-import Firebase
-import FirebaseDatabase
 import FirebaseAuth
-#endif
 
 //
 //class SurveyInterface {

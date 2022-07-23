@@ -27,7 +27,7 @@
 	<key>NSCameraUsageDescription</key>
 	<string>Clew needs to access your camera to track your orientation.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string>Your location is needed to align you to saved routes</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Permission to use the microphone is required to use the voice notes feature.</string>
 	<key>UIApplicationSceneManifest</key>
