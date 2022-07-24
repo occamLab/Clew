@@ -10,6 +10,7 @@
 		2AC1BF23284E742700C84D8B /* FloatVectorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC1BF21284E742700C84D8B /* FloatVectorExtension.swift */; };
 		2AC1BF26284E746300C84D8B /* PathMatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC1BF24284E746300C84D8B /* PathMatcher.swift */; };
 		5032502F56E37423478807C3 /* Pods_Clew_More.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EAC26B83588530DE4F39F7F1 /* Pods_Clew_More.framework */; };
+		821C2230288CFA94005E5FD5 /* TestAccuracyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 821C222F288CFA94005E5FD5 /* TestAccuracyView.swift */; };
 		821FEE3227BCB47E008928E5 /* ScanTagView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9863AF6826B44D9E00EF0C64 /* ScanTagView.swift */; };
 		8227393D272C7E43006C181E /* ARSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82273939272C7E43006C181E /* ARSessionManager.swift */; };
 		82273942272C7E7D006C181E /* RouteManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8227393E272C7E7D006C181E /* RouteManager.swift */; };
@@ -142,6 +143,7 @@
 		7743819F2343E3F8003EBD85 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/SettingsAndHelp.strings; sourceTree = "<group>"; };
 		77467DAE22BBC1D300FA7DEE /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		8206436A23B556A200DEE347 /* es */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = es; path = es.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
+		821C222F288CFA94005E5FD5 /* TestAccuracyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TestAccuracyView.swift; path = "/Users/pruvolo/Software/ClewMaps/imported dependencies/TestAccuracyView.swift"; sourceTree = "<absolute>"; };
 		821CF7832513264400A7B3C2 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		821CF7892513264400A7B3C2 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		82272C5F287718DD00BE53FA /* FirebaseCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FirebaseCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -194,7 +196,6 @@
 		98384369269C9CC800B6CFC7 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		9838436E269C9CC900B6CFC7 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		98384370269C9CC900B6CFC7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		984FBD302695EC0200B63A6A /* SetTagController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetTagController.swift; sourceTree = "<group>"; };
 		984FBD332696179800B63A6A /* NameCodeIDController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NameCodeIDController.swift; sourceTree = "<group>"; };
 		984FBD3B26962E4900B63A6A /* EnterCodeIDView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterCodeIDView.swift; sourceTree = "<group>"; };
 		9863AF6826B44D9E00EF0C64 /* ScanTagView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanTagView.swift; sourceTree = "<group>"; };
@@ -246,7 +247,6 @@
 		E5470ED922C119F4001092A4 /* UIButtonExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIButtonExtensions.swift; sourceTree = "<group>"; };
 		E5470EDA22C119F4001092A4 /* Float4x4Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Float4x4Extension.swift; sourceTree = "<group>"; };
 		E5470EDE22C119F4001092A4 /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		E5470EE022C119F4001092A4 /* RecordPathController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecordPathController.swift; sourceTree = "<group>"; };
 		E5470EE122C119F4001092A4 /* StartNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StartNavigationController.swift; sourceTree = "<group>"; };
 		E5470EE222C119F4001092A4 /* StopRecordingController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StopRecordingController.swift; sourceTree = "<group>"; };
 		E5470EE422C119F4001092A4 /* ResumeTrackingController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResumeTrackingController.swift; sourceTree = "<group>"; };
@@ -544,7 +544,6 @@
 		E5470EDF22C119F4001092A4 /* StateViews */ = {
 			isa = PBXGroup;
 			children = (
-				E5470EE022C119F4001092A4 /* RecordPathController.swift */,
 				E5470EE122C119F4001092A4 /* StartNavigationController.swift */,
 				E5470EE222C119F4001092A4 /* StopRecordingController.swift */,
 				E5470EE422C119F4001092A4 /* ResumeTrackingController.swift */,
@@ -552,8 +551,8 @@
 				E5470EE522C119F4001092A4 /* StopNavigationController.swift */,
 				E5470EE622C119F4001092A4 /* PauseTrackingController.swift */,
 				E5470EE722C119F4001092A4 /* ResumeTrackingConfirmController.swift */,
+				821C222F288CFA94005E5FD5 /* TestAccuracyView.swift */,
 				984FBD332696179800B63A6A /* NameCodeIDController.swift */,
-				984FBD302695EC0200B63A6A /* SetTagController.swift */,
 			);
 			path = StateViews;
 			sourceTree = "<group>";
@@ -815,6 +814,7 @@
 				98FF7ACA269CC10A008C64E5 /* ResumeTrackingController.swift in Sources */,
 				98FF7AAD269CC0A3008C64E5 /* PathLogger.swift in Sources */,
 				98AA58A0269F7AD5001123F0 /* OptionsHeaderView.swift in Sources */,
+				821C2230288CFA94005E5FD5 /* TestAccuracyView.swift in Sources */,
 				98FF7AC1269CC0EE008C64E5 /* UIViewExtensions.swift in Sources */,
 				98FF7AC4269CC0F5008C64E5 /* TransparentTouchView.swift in Sources */,
 				98FF7AB8269CC0C1008C64E5 /* FirebaseSetup.swift in Sources */,

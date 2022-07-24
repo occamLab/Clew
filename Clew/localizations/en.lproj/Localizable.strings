@@ -39,8 +39,8 @@
 "resumePausedRouteButtonAccessibilityLabel" = "Resume";
 "singleUseRouteButtonText" = "Single Use Route";
 "recordSingleUseRouteButtonAccessibilityLabel" = "Record a single use route";
-"savedRoutesListButtonText" = "Manage and\nUpload Routes";
-"savedRoutesListButtonAccessibilityLabel" = "Click to manage and upload saved routes from your device";
+"savedRoutesListButtonText" = "Manage Routes";
+"savedRoutesListButtonAccessibilityLabel" = "Click to manage saved routes on your device";
 "stopNavigationButtonAccessibilityLabel" = "Stop navigation";
 "startReturnNavigationButtonAcessabilityLabel" = "Start return navigation";
 "stopRecordingButtonAccessibilityLabel" = "Stop recording";

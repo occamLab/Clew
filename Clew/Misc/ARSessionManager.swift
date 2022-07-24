@@ -44,7 +44,7 @@ protocol ARSessionManagerDelegate {
     func didDoGeoAlignment()
 }
 
-class ARSessionManager: NSObject {
+class ARSessionManager: NSObject, ObservableObject {
     var localized = false
     var cameraPoses: [Any] = []
     var visualKeypoints: [KeypointInfo] = []
@@ -53,7 +53,7 @@ class ARSessionManager: NSObject {
     static var shared = ARSessionManager()
     var delegate: ARSessionManagerDelegate?
     var lastTimeOutputtedGeoAnchors = Date()
-    var worldTransformGeoSpatialPair: (simd_float4x4, GARGeospatialTransform)?
+    @Published var worldTransformGeoSpatialPair: (simd_float4x4, GARGeospatialTransform)?
     
     private override init() {
         super.init()
@@ -68,7 +68,9 @@ class ARSessionManager: NSObject {
     var sceneView: ARSCNView = ARSCNView()
     
     /// this is the alignment between the reloaded route
-    var manualAlignment: simd_float4x4?/* {      willSet(myNewValue) {
+    var manualAlignment: simd_float4x4?
+    
+    /* TODO: make this accurately shift already rendered SCNNodes around {      willSet(myNewValue) {
             print("Called before setting the new value")
             if let newValue = myNewValue {
                 let oldValue = self.manualAlignment ?? matrix_identity_float4x4
@@ -172,7 +174,7 @@ class ARSessionManager: NSObject {
        
     }
     
-    func startGARSession() {
+    private func startGARSession() {
         do {
             garSession = try GARSession(apiKey: garAPIKey, bundleIdentifier: nil)
             var error: NSError?

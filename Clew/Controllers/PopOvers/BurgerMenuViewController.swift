@@ -29,9 +29,6 @@ class BurgerMenuViewController: UITableViewController, UIPopoverPresentationCont
         if indexPath == [0,1] {
             helpButtonPressed()
         }
-        if indexPath == [0,2] {
-            feedbackButtonPressed()
-        }
     }
     
     /// Called when the settings button is pressed.  This function will display the settings view (managed by SettingsViewController) as a popover.

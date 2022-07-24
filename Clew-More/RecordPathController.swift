@@ -17,7 +17,9 @@ class RecordPathController: UIViewController {
     /// button for accessing saved routes
     var routesButton: UIButton!
     
-    var enterCodeButton: UIButton!
+    //var enterCodeButton: UIButton!
+
+    var testAccuracyButton: UIButton!
 
     /// called when view appears (any time)
     override func viewDidAppear(_ animated: Bool) {
@@ -26,7 +28,9 @@ class RecordPathController: UIViewController {
         addAnchorPointButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .largeTitle)
         routesButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .largeTitle)
         // recordPathButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .largeTitle)
-        enterCodeButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .largeTitle)
+        // enterCodeButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .largeTitle)
+
+        testAccuracyButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .largeTitle)
     }
     
     /// called when the view has loaded.  We setup various app elements in here.
@@ -63,26 +67,48 @@ class RecordPathController: UIViewController {
 
         
         /// Creating a button that can be used to start the creation of a single use route.
-        enterCodeButton = UIButton(type: .custom)
-        enterCodeButton.layer.cornerRadius = 0.75 * addAnchorPointButton.bounds.size.width
-        enterCodeButton.clipsToBounds = true
-        enterCodeButton.translatesAutoresizingMaskIntoConstraints = false
-        enterCodeButton.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 1.1).isActive = true
-        enterCodeButton.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.height / 5).isActive = true
-        enterCodeButton.setBackgroundImage(UIImage(named: "WhiteButtonBackground"), for: .normal)
-        enterCodeButton.imageView?.contentMode = .scaleAspectFit
-        enterCodeButton.setTitle(NSLocalizedString("enterCodeButtonText", comment: "This is the text which appears on the enter an App Clip Code button"),for: .normal)
-        enterCodeButton.setTitleColor(.black, for: .normal)
-        enterCodeButton.titleLabel?.font = UIFont(name: "HelveticaNeue-Bold", size: 35)!
-        enterCodeButton.accessibilityLabel = NSLocalizedString("enterCodeButtonAccessibilityLabel", comment: "A button that allows the user to navigate a route one time.")
-        enterCodeButton.titleLabel?.textAlignment = .center
-        enterCodeButton.titleLabel?.numberOfLines = 0
-        enterCodeButton.titleLabel?.lineBreakMode = .byWordWrapping
-        enterCodeButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .largeTitle)
-        enterCodeButton.titleEdgeInsets.top = 0
-        enterCodeButton.titleEdgeInsets.left = 5
-        enterCodeButton.titleEdgeInsets.bottom = 0
-        enterCodeButton.titleEdgeInsets.right = 5
+//        enterCodeButton = UIButton(type: .custom)
+//        enterCodeButton.layer.cornerRadius = 0.75 * addAnchorPointButton.bounds.size.width
+//        enterCodeButton.clipsToBounds = true
+//        enterCodeButton.translatesAutoresizingMaskIntoConstraints = false
+//        enterCodeButton.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 1.1).isActive = true
+//        enterCodeButton.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.height / 5).isActive = true
+//        enterCodeButton.setBackgroundImage(UIImage(named: "WhiteButtonBackground"), for: .normal)
+//        enterCodeButton.imageView?.contentMode = .scaleAspectFit
+//        enterCodeButton.setTitle(NSLocalizedString("enterCodeButtonText", comment: "This is the text which appears on the enter an App Clip Code button"),for: .normal)
+//        enterCodeButton.setTitleColor(.black, for: .normal)
+//        enterCodeButton.titleLabel?.font = UIFont(name: "HelveticaNeue-Bold", size: 35)!
+//        enterCodeButton.accessibilityLabel = NSLocalizedString("enterCodeButtonAccessibilityLabel", comment: "A button that allows the user to navigate a route one time.")
+//        enterCodeButton.titleLabel?.textAlignment = .center
+//        enterCodeButton.titleLabel?.numberOfLines = 0
+//        enterCodeButton.titleLabel?.lineBreakMode = .byWordWrapping
+//        enterCodeButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .largeTitle)
+//        enterCodeButton.titleEdgeInsets.top = 0
+//        enterCodeButton.titleEdgeInsets.left = 5
+//        enterCodeButton.titleEdgeInsets.bottom = 0
+//        enterCodeButton.titleEdgeInsets.right = 5
+//
+        
+        testAccuracyButton = UIButton(type: .custom)
+        testAccuracyButton.layer.cornerRadius = 0.75 * addAnchorPointButton.bounds.size.width
+        testAccuracyButton.clipsToBounds = true
+        testAccuracyButton.translatesAutoresizingMaskIntoConstraints = false
+        testAccuracyButton.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 1.1).isActive = true
+        testAccuracyButton.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.height / 5).isActive = true
+        testAccuracyButton.setBackgroundImage(UIImage(named: "WhiteButtonBackground"), for: .normal)
+        testAccuracyButton.imageView?.contentMode = .scaleAspectFit
+        testAccuracyButton.setTitle("Test Location Accuracy", for: .normal)
+        testAccuracyButton.setTitleColor(.black, for: .normal)
+        testAccuracyButton.titleLabel?.font = UIFont(name: "HelveticaNeue-Bold", size: 35)!
+        testAccuracyButton.accessibilityLabel = NSLocalizedString("enterCodeButtonAccessibilityLabel", comment: "A button that allows the user to navigate a route one time.")
+        testAccuracyButton.titleLabel?.textAlignment = .center
+        testAccuracyButton.titleLabel?.numberOfLines = 0
+        testAccuracyButton.titleLabel?.lineBreakMode = .byWordWrapping
+        testAccuracyButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .largeTitle)
+        testAccuracyButton.titleEdgeInsets.top = 0
+        testAccuracyButton.titleEdgeInsets.left = 5
+        testAccuracyButton.titleEdgeInsets.bottom = 0
+        testAccuracyButton.titleEdgeInsets.right = 5
  
         
 
@@ -124,7 +150,7 @@ class RecordPathController: UIViewController {
         /// add elements to the stack
 
         stackView.addArrangedSubview(addAnchorPointButton)
-        stackView.addArrangedSubview(enterCodeButton)
+        stackView.addArrangedSubview(testAccuracyButton)
         stackView.addArrangedSubview(routesButton)
 
         
@@ -142,9 +168,8 @@ class RecordPathController: UIViewController {
             addAnchorPointButton.addTarget(parent,
                                           action: #selector(ViewController.recordPath),
                                           for: .touchUpInside)
-            // TO DO: fix :)
-            enterCodeButton.addTarget(parent,
-                                          action: #selector(ViewController.enterCodeID),
+            testAccuracyButton.addTarget(parent,
+                                          action: #selector(ViewController.testAccuracy),
                                           for: .touchUpInside)
         }
     }

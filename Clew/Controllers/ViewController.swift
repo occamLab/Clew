@@ -41,6 +41,8 @@ import CoreNFC
 enum AppState {
     /// This is the screen the comes up immediately after the splash screen
     case mainScreen(announceArrival: Bool)
+    /// User is testing the accuracy of geo localization
+    case testingAccuracy
     /// User is recording the route
     case recordingRoute
     /// User can either navigate back or pause
@@ -75,6 +77,8 @@ enum AppState {
     /// rawValue is useful for serializing state values, which we are currently using for our logging feature
     var rawValue: String {
         switch self {
+        case .testingAccuracy:
+            return "testingAccuracy"
         case .mainScreen(let announceArrival):
             return "mainScreen(announceArrival=\(announceArrival))"
         case .recordingRoute:
@@ -158,6 +162,8 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         didSet {
             logger.logStateTransition(newState: state)
             switch state {
+            case .testingAccuracy:
+                handleStateTransitionToTestingAccuracy()
             case .recordingRoute:
                 handleStateTransitionToRecordingRoute()
             case .readyToNavigateOrPause:
@@ -309,6 +315,11 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
             ARSessionManager.shared.initialWorldMap = nil
         }
         showRecordPathButton(announceArrival: announceArrival)
+    }
+    
+    func handleStateTransitionToTestingAccuracy() {
+        add(self.testingAccuracyController)
+        rootContainerView.homeButton.isHidden = false
     }
     
     /// Handler for the recordingRoute app state
@@ -750,6 +761,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     
     /// Hide all the subviews.  TODO: This should probably eventually refactored so it happens more automatically.
     func hideAllViewsHelper() {
+        testingAccuracyController.remove()
         recordPathController.remove()
         stopRecordingController.remove()
         startNavigationController.remove()
@@ -893,6 +905,8 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     var scanTagController: UIViewController?
     
     // SwiftUI controllers
+    var testingAccuracyController: UIViewController!
+    
     var enterCodeIDController: UIViewController!
     
     var selectRouteController: UIViewController!
@@ -936,8 +950,14 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         startNavigationController = StartNavigationController()
         stopNavigationController = StopNavigationController()
         
-        #if CLEWMORE
         /// This is a wrapper to allow SwiftUI views to be used with the existing UIKit framework.
+        testingAccuracyController = UIHostingController(rootView: TestingAccuracyView(vc: self))
+        testingAccuracyController.view.frame = CGRect(x: 0,
+                                                                       y: UIScreen.main.bounds.size.height*0.15,
+                                                                       width: UIConstants.buttonFrameWidth * 1,
+                                                                       height: UIScreen.main.bounds.size.height*0.75)
+        testingAccuracyController.view.backgroundColor = .clear
+        
         enterCodeIDController = UIHostingController(rootView: EnterCodeIDView(vc: self))
         enterCodeIDController.view.frame = CGRect(x: 0,
                                                                        y: UIScreen.main.bounds.size.height*0.15,
@@ -982,7 +1002,6 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
                                                                        height: UIScreen.main.bounds.size.height*0.85)
         endNavigationController?.view.backgroundColor = .white
         
-        #endif
         ARSessionManager.shared.delegate = self
         
         // Add the scene to the view, which is a RootContainerView
@@ -1154,6 +1173,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         #if !APPCLIP
         rootContainerView.homeButton.isHidden = true
         #endif
+        ARSessionManager.shared.pauseSession()
         recordPathController.isAccessibilityElement = false
         if case .navigatingRoute = self.state {
             ARSessionManager.shared.removeNavigationNodes()
@@ -2044,6 +2064,21 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         case .none:
             break
         }
+    }
+    
+    @objc func testAccuracy() {
+        // announce session state
+        trackingErrorsAnnouncementTimer = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: true) { timer in
+            self.announceCurrentTrackingErrors()
+        }
+        ARSessionManager.shared.initialWorldMap = nil
+        trackingSessionErrorState = nil
+        hideAllViewsHelper()
+        continuationAfterSessionIsReady = {
+            print("ready")
+            self.state = .testingAccuracy
+        }
+        ARSessionManager.shared.startSession()
     }
     
     /// handles the user pressing the record path button.

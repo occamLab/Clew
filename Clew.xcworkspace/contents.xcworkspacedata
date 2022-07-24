@@ -2,6 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:/Users/pruvolo/Software/ClewMaps/imported dependencies/TestAccuracyView.swift">
+   </FileRef>
+   <FileRef
       location = "group:Clew.xcodeproj">
    </FileRef>
    <FileRef
