@@ -11,11 +11,24 @@ import SwiftUI
 import Combine
 import ARCore
 
-enum GeospatialOverallQuality: String {
-    case excellent = "excellent"
-    case good = "good"
-    case fair = "fair"
-    case poor = "poor"
+enum GeospatialOverallQuality: Int, CustomStringConvertible {
+    var description: String {
+        switch (self) {
+        case .excellent:
+            return "excellent"
+        case .good:
+            return "good"
+        case .fair:
+            return "fair"
+        case .poor:
+            return "poor"
+        }
+    }
+    
+    case excellent = 0
+    case good = 1
+    case fair = 2
+    case poor = 3
 }
 
 extension GARGeospatialTransform {

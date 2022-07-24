@@ -136,6 +136,8 @@ class ARSessionManager: NSObject, ObservableObject {
         return sceneView.session.currentFrame
     }
     
+    var outdoorLocalizationQualityThreshold: GeospatialOverallQuality = .excellent
+    
     var currentGARFrame: GARFrame?
     
     var geoSpatialAlignmentTransform: simd_float4x4?
@@ -618,7 +620,7 @@ extension ARSessionManager: ARSessionDelegate {
                 print("\(ARSessionManager.shared.currentFrame?.camera.trackingState)")
                 print("got \(geospatialTransform)")
                 self.worldTransformGeoSpatialPair = (frame.camera.transform, geospatialTransform)
-                if !localized, geospatialTransform.headingAccuracy < 4.0, geospatialTransform.horizontalAccuracy < 1.5, let alignmentAnchor = self.currentGARFrame?.anchors.first {
+                if !localized, geospatialTransform.trackingQuality.rawValue <= outdoorLocalizationQualityThreshold.rawValue, let alignmentAnchor = self.currentGARFrame?.anchors.first {
                     checkForGeoAlignment(alignmentAnchor: alignmentAnchor)
                 }
             }

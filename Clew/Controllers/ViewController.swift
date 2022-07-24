@@ -1352,7 +1352,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     
     /// Register settings bundle
     func registerSettingsBundle(){
-        let appDefaults = ["crumbColor": 0, "showPath": true, "pathColor": 0, "hapticFeedback": true, "sendLogs": true, "voiceFeedback": true, "soundFeedback": true, "adjustOffset": false, "units": 0, "timerLength":5, "uploadRichData": false] as [String : Any]
+        let appDefaults = ["outdoorLocalizationThreshold": 0, "crumbColor": 0, "showPath": true, "pathColor": 0, "hapticFeedback": true, "sendLogs": true, "voiceFeedback": true, "soundFeedback": true, "adjustOffset": false, "units": 0, "timerLength":5, "uploadRichData": false] as [String : Any]
         UserDefaults.standard.register(defaults: appDefaults)
     }
 
@@ -1360,6 +1360,19 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     func updateDisplayFromDefaults(){
         let defaults = UserDefaults.standard
         
+        localizationQualityThreshold = defaults.integer(forKey: "outdoorLocalizationThreshold")
+        switch localizationQualityThreshold {
+        case 0:
+            ARSessionManager.shared.outdoorLocalizationQualityThreshold = .excellent
+        case 1:
+            ARSessionManager.shared.outdoorLocalizationQualityThreshold = .good
+        case 2:
+            ARSessionManager.shared.outdoorLocalizationQualityThreshold = .fair
+        case 3:
+            ARSessionManager.shared.outdoorLocalizationQualityThreshold = .poor
+        default:
+            break
+        }
         defaultUnit = defaults.integer(forKey: "units")
         uploadRichData = defaults.bool(forKey: "uploadRichData")
         defaultColor = defaults.integer(forKey: "crumbColor")
@@ -1375,7 +1388,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         logRichData = defaults.bool(forKey: "logRichData")
         
         // TODO: log settings here
-        logger.logSettings(defaultUnit: defaultUnit, defaultColor: defaultColor, soundFeedback: soundFeedback, voiceFeedback: voiceFeedback, hapticFeedback: hapticFeedback, sendLogs: sendLogs, timerLength: timerLength, adjustOffset: adjustOffset)
+        logger.logSettings(localizationThreshold: localizationQualityThreshold, defaultUnit: defaultUnit, defaultColor: defaultColor, soundFeedback: soundFeedback, voiceFeedback: voiceFeedback, hapticFeedback: hapticFeedback, sendLogs: sendLogs, timerLength: timerLength, adjustOffset: adjustOffset)
         
         // leads to JSON like:
         //   options: { "unit": "meter", "soundFeedback", true, ... }
@@ -1981,6 +1994,9 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
 
     /// the selected default unit index (this index cross-references `unit`, `unitText`, and `unitConversionFactor`
     var defaultUnit: Int!
+    
+    /// how accurate we require the localization of Geo Spatial API to be before we allow a route to be created or navigated
+    var localizationQualityThreshold: Int!
     
     /// Whether or not to upload the rich data
     var uploadRichData: Bool?
