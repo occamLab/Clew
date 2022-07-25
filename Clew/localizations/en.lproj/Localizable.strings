@@ -26,7 +26,7 @@
     // Voicing directions
 "startedTrackingSessionAnnouncement" = "Tracking session initialized.";
 "fixedTrackingAnnouncement" = "Tracking performance normal.";
-"properDevicePositioningAnnouncement" = "Hold vertically with the rear camera facing forward.";
+"properDevicePositioningAnnouncement" = "You are recording a route.  Hold vertically with the rear camera facing forward.";
 "completedNavigationAnnouncement" = "You've arrived.";
 
     // Name of labels that appear in UI

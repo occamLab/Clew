@@ -43,6 +43,8 @@ enum AppState {
     case mainScreen(announceArrival: Bool)
     /// User is testing the accuracy of geo localization
     case testingAccuracy
+    /// User is waiting to see if the geo accuracy is good enough to record the route
+    case waitingForSufficientGeoLocationAccuracy
     /// User is recording the route
     case recordingRoute
     /// User can either navigate back or pause
@@ -77,6 +79,8 @@ enum AppState {
     /// rawValue is useful for serializing state values, which we are currently using for our logging feature
     var rawValue: String {
         switch self {
+        case .waitingForSufficientGeoLocationAccuracy:
+            return "waitingForSufficientGeoLocationAccuracy"
         case .testingAccuracy:
             return "testingAccuracy"
         case .mainScreen(let announceArrival):
@@ -162,6 +166,8 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         didSet {
             logger.logStateTransition(newState: state)
             switch state {
+            case .waitingForSufficientGeoLocationAccuracy:
+                handleStateTransitionToWaitingForSufficientGeoLocationAccuracy()
             case .testingAccuracy:
                 handleStateTransitionToTestingAccuracy()
             case .recordingRoute:
@@ -320,6 +326,14 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     func handleStateTransitionToTestingAccuracy() {
         add(self.testingAccuracyController)
         rootContainerView.homeButton.isHidden = false
+    }
+    
+    func handleStateTransitionToWaitingForSufficientGeoLocationAccuracy() {
+        add(testingAccuracyController)
+        lastInsufficientAccuracyAnnouncement = Date()
+        announce(announcement: "Waiting for location accuracy to at least reach \(GeospatialOverallQuality(rawValue: localizationQualityThreshold)!)")
+        
+        announce(announcement: "Point your phone's rear camera at signs or buildings across the street to improve accuracy")
     }
     
     /// Handler for the recordingRoute app state
@@ -484,7 +498,6 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
                 self.followingCrumbs = Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: (#selector(self.followCrumb)), userInfo: nil, repeats: true)
             }
         } else {
-            print("FOLLOW CRUMBS")
             followingCrumbs = Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: (#selector(self.followCrumb)), userInfo: nil, repeats: true)
         }
         
@@ -494,6 +507,8 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         locationRingBuffer.clear()
         
         hapticTimer = Timer.scheduledTimer(timeInterval: 0.01, target: self, selector: (#selector(getHapticFeedback)), userInfo: nil, repeats: true)
+        
+        announce(announcement: "Use the \"get directions button\" to get the as-the-crow-flies path to the start")
     }
     
     /// Handler for the startingResumeProcedure app state
@@ -828,9 +843,9 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     let requiredDistance : Float = 0.3
     /// A threshold to determine when a path is too curvy to update the angle offset
     let linearDeviationThreshold: Float = 0.05
-    
-    /// record when we last alerted the user to the geo alignment
-    var lastGeoAlignmentChime = Date()
+
+    /// keep track of when we last told the user we are waiting for improved accuracy
+    var lastInsufficientAccuracyAnnouncement = Date()
     
     /// an aray of heading offsets calculated during the record phase.  We use thsi to suggest that users enable the adjustOffest option
     var recordPhaseHeadingOffsets: LinkedList<Float> = []
@@ -1159,11 +1174,6 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
             }
             #endif
         }
-    }
-    
-    /// Display a warning that tells the user they must create a Anchor Point to be able to use this route again in the forward direction
-    func showRecordPathWithoutAnchorPointWarning() {
-        state = .recordingRoute
     }
     
     /// func that prepares the state transition to home by clearing active processes and data
@@ -1703,6 +1713,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         #if !APPCLIP
         rootContainerView.homeButton.isHidden = false // home button here
         #endif
+        testingAccuracyController.remove()
         recordPathController.remove()
         recordPathController.view.isAccessibilityElement = false
         add(stopRecordingController)
@@ -1880,6 +1891,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
 
         }
         #else
+        ARSessionManager.shared.pauseSession()
         self.hideAllViewsHelper()
         self.add(self.endNavigationController!)
         #endif
@@ -2110,9 +2122,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         startAnchorPoint = true
 
         ///sends the user to create a Anchor Point
-        #if !APPCLIP
         rootContainerView.homeButton.isHidden = false
-        #endif
         creatingRouteAnchorPoint = true
 
         hideAllViewsHelper()
@@ -2125,7 +2135,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         continuationAfterSessionIsReady = {
             self.trackingErrorsAnnouncementTimer?.invalidate()
             // sends the user to the screen where they can enter an app clip code ID for the route they're about to record
-            self.state = .recordingRoute
+            self.state = .waitingForSufficientGeoLocationAccuracy
         }
         ARSessionManager.shared.initialWorldMap = nil
         trackingSessionErrorState = nil
@@ -2138,21 +2148,6 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     @objc func stopRecording(_ sender: UIButton) {
         // copy the recordingCrumbs over for use in path creation
         crumbs = Array(recordingCrumbs)
-        
-        if let garFrame = ARSessionManager.shared.currentGARFrame {
-            var idToTransform: [UUID: simd_float4x4] = [:]
-            // fix crumbs (TODO: factor this out maybe)
-            for geoAnchor in garFrame.anchors {
-                idToTransform[geoAnchor.identifier] = geoAnchor.transform
-            }
-            for crumb in crumbs {
-                if let GARAnchorUUID = crumb.GARAnchorUUID, let newTransform = idToTransform[GARAnchorUUID] {
-                    //crumb.geoAnchorTransform = newTransform
-                } else {
-                    print("Could not update transform")
-                }
-            }
-        }
         
         isResumedRoute = false
 
@@ -2775,7 +2770,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     /// - Returns: the direction to the next keypoint with the distance rounded to the nearest tenth of a meter
     func getDirectionToNextKeypoint(currentLocation: CurrentCoordinateInfo) -> DirectionInfo? {
         // returns direction to next keypoint from current location
-        guard let nextKeypoint = RouteManager.shared.nextKeypoint, var dir = nav.getDirections(currentLocation: currentLocation, nextKeypoint: nextKeypoint, isLastKeypoint: RouteManager.shared.onLastKeypoint) else {
+        guard let nextKeypoint = RouteManager.shared.nextKeypoint, var dir = nav.getDirections(currentLocation: currentLocation, nextKeypoint: nextKeypoint, isLastKeypoint: RouteManager.shared.onLastKeypoint, isFirstKeypoint: RouteManager.shared.onFirstKeypoint) else {
              return nil
          }
          dir.distance = roundToTenths(dir.distance)
@@ -3017,6 +3012,17 @@ extension ViewController: UIPopoverPresentationControllerDelegate {
 }
 
 extension ViewController: ARSessionManagerDelegate {
+    func didReceiveFrameWithTrackingQuality(_ currentQuality : GeospatialOverallQuality) {
+        if currentQuality.isAsGoodOrBetterThan(GeospatialOverallQuality(rawValue: localizationQualityThreshold)!), case .waitingForSufficientGeoLocationAccuracy = state {
+            delayTransition(announcement: "Accuracy is sufficient to start recording", initialFocus: nil)
+            ///sends the user to the screen where they name the route they're saving
+            state = .recordingRoute
+        } else if !currentQuality.isAsGoodOrBetterThan(GeospatialOverallQuality(rawValue: localizationQualityThreshold)!), case .startingResumeProcedure(_, _, _) = state, -lastInsufficientAccuracyAnnouncement.timeIntervalSinceNow > 5.0 {
+            lastInsufficientAccuracyAnnouncement = Date()
+            announce(announcement: "Waiting for location accuracy to at least reach \(GeospatialOverallQuality(rawValue: localizationQualityThreshold)!)")
+        }
+    }
+    
     
     func readyForPathCreation() {
         // transition to navigation state and create the route
@@ -3073,11 +3079,8 @@ extension ViewController: ARSessionManagerDelegate {
     func didDoGeoAlignment() {
         if case .startingResumeProcedure(_, _, _) = state {
             print("ARSessionManager manual \(ARSessionManager.shared.manualAlignment)")
+            delayTransition(announcement: "Accuracy is sufficient.  Starting navigation")
             state = .navigatingRoute
-        }
-        if -lastGeoAlignmentChime.timeIntervalSinceNow > 2.0 {
-            lastGeoAlignmentChime = Date()
-            SoundEffectManager.shared.success()
         }
     }
     

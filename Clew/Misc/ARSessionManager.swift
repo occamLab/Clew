@@ -42,6 +42,7 @@ protocol ARSessionManagerDelegate {
     func getLoggingTag()->String
     func sessionDidRelocalize()
     func didDoGeoAlignment()
+    func didReceiveFrameWithTrackingQuality(_ : GeospatialOverallQuality)
 }
 
 class ARSessionManager: NSObject, ObservableObject {
@@ -620,7 +621,8 @@ extension ARSessionManager: ARSessionDelegate {
                 print("\(ARSessionManager.shared.currentFrame?.camera.trackingState)")
                 print("got \(geospatialTransform)")
                 self.worldTransformGeoSpatialPair = (frame.camera.transform, geospatialTransform)
-                if !localized, geospatialTransform.trackingQuality.rawValue <= outdoorLocalizationQualityThreshold.rawValue, let alignmentAnchor = self.currentGARFrame?.anchors.first {
+                delegate?.didReceiveFrameWithTrackingQuality(geospatialTransform.trackingQuality)
+                if !localized, geospatialTransform.trackingQuality.isAsGoodOrBetterThan( outdoorLocalizationQualityThreshold), let alignmentAnchor = self.currentGARFrame?.anchors.first {
                     checkForGeoAlignment(alignmentAnchor: alignmentAnchor)
                 }
             }

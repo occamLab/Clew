@@ -29,6 +29,10 @@ enum GeospatialOverallQuality: Int, CustomStringConvertible {
     case good = 1
     case fair = 2
     case poor = 3
+    
+    func isAsGoodOrBetterThan(_ other: GeospatialOverallQuality)->Bool {
+        return self.rawValue <= other.rawValue
+    }
 }
 
 extension GARGeospatialTransform {
@@ -76,7 +80,7 @@ struct TestingAccuracyView: View {
                              .foregroundColor(Color.white)
                              .padding(20)
                          
-                         Text(String("Altitude is accurate to  \(String(format: "%.1f", spatialTransform.altitude)) meters"))
+                         Text(String("Altitude is accurate to  \(String(format: "%.1f", spatialTransform.verticalAccuracy)) meters"))
                              .foregroundColor(Color.white)
                              .padding(20)
                          

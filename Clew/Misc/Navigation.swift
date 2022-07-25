@@ -170,7 +170,7 @@ class Navigation {
     ///   - nextKeypoint
     ///   - isLastKeypoint (true if the keypoint is the last one in the route, false otherwise)
     /// - Returns: relative position of next keypoint as `DirectionInfo` object
-    public func getDirections(currentLocation: CurrentCoordinateInfo, nextKeypoint: KeypointInfo, isLastKeypoint: Bool) -> DirectionInfo? {
+    public func getDirections(currentLocation: CurrentCoordinateInfo, nextKeypoint: KeypointInfo, isLastKeypoint: Bool, isFirstKeypoint: Bool) -> DirectionInfo? {
         var shouldDebug = false
         if -lastTimeStampOfDebugInfo.timeIntervalSinceNow > 1.0 {
             shouldDebug = true
@@ -216,12 +216,22 @@ class Navigation {
         var direction = DirectionInfo(distance: planarDelta.length, angleDiff: angleDiff, clockDirection: clockDirection, hapticDirection: hapticDirection, lateralDistanceRatioWhenCrossingTarget: lateralDistanceRatioWhenCrossingTarget)
         
         //  Determine whether the phone is inside the bounding box of the keypoint
-        if (xDiff <= keypointTargetDepth && yDiff <= keypointTargetHeight && zDiff <= keypointTargetWidth) {
-            direction.targetState = .atTarget
-        } else if (sqrtf(powf(Float(xDiff), 2) + powf(Float(zDiff), 2)) <= 4) {
-            direction.targetState = .closeToTarget
+        if isFirstKeypoint {
+            if (abs(xDiff) <= keypointTargetDepth && abs(yDiff) <= keypointTargetHeight && zDiff <= keypointTargetWidth) {
+                direction.targetState = .atTarget
+            } else if (sqrtf(powf(Float(xDiff), 2) + powf(Float(zDiff), 2)) <= 4) {
+                direction.targetState = .closeToTarget
+            } else {
+                direction.targetState = .notAtTarget
+            }
         } else {
-            direction.targetState = .notAtTarget
+            if (xDiff <= keypointTargetDepth && yDiff <= keypointTargetHeight && zDiff <= keypointTargetWidth) {
+                direction.targetState = .atTarget
+            } else if (sqrtf(powf(Float(xDiff), 2) + powf(Float(zDiff), 2)) <= 4) {
+                direction.targetState = .closeToTarget
+            } else {
+                direction.targetState = .notAtTarget
+            }
         }
         
         return direction
