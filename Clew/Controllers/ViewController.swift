@@ -477,10 +477,11 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         // ? getting user location
         prevKeypointPosition = getRealCoordinates(record: true)!.location
         
+        // Don't render the first segment
         // render path
-        if showPath, let nextKeypoint = RouteManager.shared.nextKeypoint {
-            ARSessionManager.shared.renderPath(self.prevKeypointPosition, nextKeypoint.location, defaultPathColor: self.defaultPathColor)
-        }
+//        if showPath, let nextKeypoint = RouteManager.shared.nextKeypoint {
+//            ARSessionManager.shared.renderPath(self.prevKeypointPosition, nextKeypoint.location, defaultPathColor: self.defaultPathColor)
+//        }
         
         // render intermediate anchor points
         ARSessionManager.shared.render(intermediateAnchorPoints: RouteManager.shared.intermediateAnchorPoints)

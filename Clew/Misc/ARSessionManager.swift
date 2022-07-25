@@ -69,13 +69,11 @@ class ARSessionManager: NSObject, ObservableObject {
     var sceneView: ARSCNView = ARSCNView()
     
     /// this is the alignment between the reloaded route
-    var manualAlignment: simd_float4x4?
-    
-    /* TODO: make this accurately shift already rendered SCNNodes around {      willSet(myNewValue) {
-            print("Called before setting the new value")
+    var manualAlignment: simd_float4x4? {
+        willSet(myNewValue) {
             if let newValue = myNewValue {
                 let oldValue = self.manualAlignment ?? matrix_identity_float4x4
-                let relativeTransform = (oldValue.inverse * newValue).inverse
+                let relativeTransform = newValue * oldValue.inverse
                 if let keypointNode = keypointNode {
                     keypointNode.simdTransform = relativeTransform * keypointNode.simdTransform
                 }
@@ -84,7 +82,7 @@ class ARSessionManager: NSObject, ObservableObject {
                 }
             }
         }
-    }*/
+    }
     
     var garSession: GARSession?
         
