@@ -273,7 +273,7 @@ class PathLogger {
         do {
             let jsonData = try JSONSerialization.data(withJSONObject: body, options: .prettyPrinted)
             // here "jsonData" is the dictionary encoded in JSON data
-            let storageRef = storageBaseRef.child("logs").child(userId).child(pathID + "_metadata.json")
+            let storageRef = storageBaseRef.child("geo_location").child("logs").child(userId).child(pathID + "_metadata.json")
             let fileType = StorageMetadata()
             fileType.contentType = "application/json"
             // upload the image to Firebase storage and setup auto snapshotting
@@ -284,11 +284,6 @@ class PathLogger {
                     return
                 }
                 print("Successfully uploaded log! ", storageRef.fullPath)
-            }
-            storageBaseRef.child("logs").child("0w5zdRj6HDahFNdqKNklSpfpSmq2").child("66F17E75-9F09-438A-89C1-36D1ACF4DFA82021-06-01T14:26:53-04:00-0_metadata.json").getData(maxSize: 100000000) { data, error in
-                print("data: \(data), error \(error)")
-                let str = String(decoding: data!, as: UTF8.self)
-                print(str)
             }
             return storageRef.fullPath
         } catch {
@@ -317,7 +312,7 @@ class PathLogger {
         do {
             let jsonData = try JSONSerialization.data(withJSONObject: body, options: .prettyPrinted)
             // here "jsonData" is the dictionary encoded as a JSON
-            let storageRef = storageBaseRef.child("logs").child(userId).child(pathID + "_pathdata.json")
+            let storageRef = storageBaseRef.child("geo_location").child("logs").child(userId).child(pathID + "_pathdata.json")
             let fileType = StorageMetadata()
             fileType.contentType = "application/json"
             // upload the image to Firebase storage and setup auto snapshotting

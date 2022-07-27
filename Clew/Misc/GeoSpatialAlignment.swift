@@ -11,11 +11,25 @@ import ARCoreGeospatial
 
 class GeoSpatialAlignment {
     var relativeTransforms: [simd_float4x4] = []
+    var lastAnchorTransform: simd_float4x4?
     
     func update(anchorTransform: simd_float4x4, geoSpatialAlignmentCrumb: LocationInfoGeoSpatial, cameraGeospatialTransform: GARGeospatialTransform)->simd_float4x4? {
         guard let geoAnchorTransform = geoSpatialAlignmentCrumb.geoAnchorTransform else {
             return nil
         }
+        
+        if let lastAnchorTransform = lastAnchorTransform {
+            let relativeShift = lastAnchorTransform.inverse * anchorTransform
+            let angleDiff = simd_quatf(relativeShift)
+            let positionDiff = simd_length(relativeShift.columns.3.dropw())
+            if angleDiff.angle < 0.01 && positionDiff < 0.1 {
+                return nil
+            }
+        }
+        lastAnchorTransform = anchorTransform
+        PathLogger.shared.logGeospatialTransform(cameraGeospatialTransform)
+
+        print("something new!")
         
         let relativeTransform = anchorTransform * geoAnchorTransform.inverse
         
@@ -37,7 +51,7 @@ class GeoSpatialAlignment {
     }
     
     private func isOutlier(relativeTransform: simd_float4x4, cameraGeospatialTransform: GARGeospatialTransform)->Bool {
-        // TODO: this could get slow
+        // TODO: this could get slow (currently filtering)
         let relativeHeadingAngles = relativeTransforms.map({ existingRelativeTransform in Self.getHeadingAngleOffset(pose1: existingRelativeTransform, pose2: relativeTransform) })
         // TODO: use this somehow
         let relativeOrigins = relativeTransforms.map({ existingRelativeTransform in (relativeTransform.columns.3 - existingRelativeTransform.columns.3).dropw() })
@@ -45,14 +59,21 @@ class GeoSpatialAlignment {
         if relativeTransforms.isEmpty {
             return false
         } else if relativeTransforms.count < 5 {
-            let averageHeadingOffsetMagnitude = relativeHeadingAngles.map(abs).avg()
-            // check for suspiciously high average offset magnitude compared to purported heading accuracy.  The headingAccuracy confidence band should at least trap the average offset magnitude
-            return averageHeadingOffsetMagnitude > Float(cameraGeospatialTransform.headingAccuracy * Double.pi/180.0)
+            let averageHeadingOffsetMagnitude = relativeHeadingAngles.avg()
+            // check for suspiciously high average offset magnitude compared to purported heading accuracy.  Twice the headingAccuracy confidence band should at least trap the average offset magnitude
+            if averageHeadingOffsetMagnitude > 2.0*Float(cameraGeospatialTransform.headingAccuracy * Double.pi/180.0) {
+                //AnnouncementManager.shared.announce(announcement: "outlier 1")
+                return true
+            }
         } else {
-            // TODO: could also use the reported heading accuracy (i.e., the standard deviation)
-            let zScore = relativeHeadingAngles.avg() / relativeHeadingAngles.std()
-            return abs(zScore) > 1.0
+            // check for suspiciously high average offset magnitude compared to purported heading accuracy.  The twice the headingAccuracy confidence band should at least trap the average offset magnitude
+            if abs(relativeHeadingAngles.avg()) > 2.0*Float(cameraGeospatialTransform.headingAccuracy * Double.pi/180.0) {
+                //AnnouncementManager.shared.announce(announcement: "outlier 1 \(relativeHeadingAngles.count) \(abs(relativeHeadingAngles.avg()))")
+                return true
+            }
         }
+        //AnnouncementManager.shared.announce(announcement: "inlier \(relativeHeadingAngles.count)")
+        return false
     }
     
     func reset() {

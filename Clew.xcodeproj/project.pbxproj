@@ -18,6 +18,7 @@
 		8227FCF1272B052C001031F9 /* SRCountdownTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8227FCED272B052C001031F9 /* SRCountdownTimer.swift */; };
 		8227FCFD272B0845001031F9 /* PRTween.m in Sources */ = {isa = PBXBuildFile; fileRef = 8227FCF9272B0845001031F9 /* PRTween.m */; };
 		8227FD04272B0954001031F9 /* PRTweenTimingFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 8227FD00272B0953001031F9 /* PRTweenTimingFunctions.m */; };
+		825EEBCE28917FA200E97A2F /* AnnouncementManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 825EEBCD28917FA200E97A2F /* AnnouncementManager.swift */; };
 		8284A742288AE23300999ABF /* NSObject+ARFrameStatusAdapter.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8284A740288AE23300999ABF /* NSObject+ARFrameStatusAdapter.mm */; };
 		82A4A9BA287E4D96007D8F23 /* Credentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82A4A9B8287E4D96007D8F23 /* Credentials.swift */; };
 		82B25182278DF4B0001E3AB6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 82B25184278DF4B0001E3AB6 /* LaunchScreen.storyboard */; };
@@ -161,6 +162,7 @@
 		822E27F8210E3F260024A5E3 /* Clew Dev-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Clew Dev-Info.plist"; sourceTree = "<group>"; };
 		823DA453252F7EA800BB5E6B /* speaker.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = speaker.obj; sourceTree = "<group>"; };
 		82569F4D22187E6500448B45 /* help */ = {isa = PBXFileReference; lastKnownFileType = folder; path = help; sourceTree = "<group>"; };
+		825EEBCD28917FA200E97A2F /* AnnouncementManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnouncementManager.swift; sourceTree = "<group>"; };
 		8261892D264ACCC5007F99C4 /* AppleSignInController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppleSignInController.swift; sourceTree = "<group>"; };
 		827CB5B024932CC60032A857 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/SettingsAndHelp.strings; sourceTree = "<group>"; };
 		827CB5B124932CC60032A857 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/BurgerMenu.strings; sourceTree = "<group>"; };
@@ -504,6 +506,7 @@
 				8227394327308486006C181E /* SoundEffectManager.swift */,
 				2AC1BF24284E746300C84D8B /* PathMatcher.swift */,
 				82A4A9B8287E4D96007D8F23 /* Credentials.swift */,
+				825EEBCD28917FA200E97A2F /* AnnouncementManager.swift */,
 			);
 			path = Misc;
 			sourceTree = "<group>";
@@ -860,6 +863,7 @@
 				98FF7AC5269CC0FD008C64E5 /* ViewController.swift in Sources */,
 				98A2DAC826A76ACA00158F83 /* NameCodeIDView.swift in Sources */,
 				98FF7AAA269CC04C008C64E5 /* RecorderViewController.swift in Sources */,
+				825EEBCE28917FA200E97A2F /* AnnouncementManager.swift in Sources */,
 				82273942272C7E7D006C181E /* RouteManager.swift in Sources */,
 				98FF7AB2269CC0B0008C64E5 /* HelpCompiler.swift in Sources */,
 				98FF7ADB269CC153008C64E5 /* RouteTableViewCell.swift in Sources */,
