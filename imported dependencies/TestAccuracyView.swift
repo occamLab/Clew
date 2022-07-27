@@ -59,6 +59,10 @@ extension GARGeospatialTransform {
             return .poor
         }
     }
+    
+    func asDict()->[String: Any] {
+        return ["altitude": self.altitude, "heading": self.heading, "latitude": self.coordinate.latitude, "longitude": self.coordinate.longitude,  "altitudeAccuracy": self.verticalAccuracy, "positionAccuracy": self.horizontalAccuracy, "headingAccuracy": self.headingAccuracy]
+    }
 }
 
 /// Show the accuracy level of the GARSession

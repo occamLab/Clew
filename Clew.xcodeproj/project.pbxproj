@@ -22,6 +22,7 @@
 		82A4A9BA287E4D96007D8F23 /* Credentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82A4A9B8287E4D96007D8F23 /* Credentials.swift */; };
 		82B25182278DF4B0001E3AB6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 82B25184278DF4B0001E3AB6 /* LaunchScreen.storyboard */; };
 		82BFA96528749DB300039E97 /* GoogleService-Info_dev.plist in Resources */ = {isa = PBXBuildFile; fileRef = 82BFA96328749DB300039E97 /* GoogleService-Info_dev.plist */; };
+		82D37CA52890AE2100A1D032 /* GeoSpatialAlignment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82D37CA42890AE2100A1D032 /* GeoSpatialAlignment.swift */; };
 		9824AB5826B981900016225C /* InformedConsentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9824AB5726B981900016225C /* InformedConsentViewModel.swift */; };
 		9826B6D526B07C3F00EC563C /* EndNavigationScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9826B6D426B07C3F00EC563C /* EndNavigationScreen.swift */; };
 		9863AF0A26B4384000EF0C64 /* RouteDocumentData.swift in Sources */ = {isa = PBXBuildFile; fileRef = E565A10722F2173400C1998E /* RouteDocumentData.swift */; };
@@ -175,6 +176,7 @@
 		82B25183278DF4B0001E3AB6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		82BC47FD2640383300C7D364 /* Surveys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Surveys.swift; sourceTree = "<group>"; };
 		82BFA96328749DB300039E97 /* GoogleService-Info_dev.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info_dev.plist"; sourceTree = "<group>"; };
+		82D37CA42890AE2100A1D032 /* GeoSpatialAlignment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoSpatialAlignment.swift; sourceTree = "<group>"; };
 		82E4A5CE262A26DC000BEB44 /* Clew.entitlements */ = {isa = PBXFileReference; explicitFileType = text.plist.entitlements; path = Clew.entitlements; sourceTree = "<group>"; };
 		82F2DDD122E26A44005CD7D0 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		82F2DDD322E26A44005CD7D0 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/SettingsAndHelp.strings; sourceTree = "<group>"; };
@@ -495,6 +497,7 @@
 				98CC6765268A1F2200E3759F /* SurveyInterface.swift */,
 				98CC6760268A0FEC00E3759F /* FirebaseSetup.swift */,
 				82273939272C7E43006C181E /* ARSessionManager.swift */,
+				82D37CA42890AE2100A1D032 /* GeoSpatialAlignment.swift */,
 				8284A73F288AE23300999ABF /* NSObject+ARFrameStatusAdapter.h */,
 				8284A740288AE23300999ABF /* NSObject+ARFrameStatusAdapter.mm */,
 				8227393E272C7E7D006C181E /* RouteManager.swift */,
@@ -849,6 +852,7 @@
 				98FF7ADD269CC15A008C64E5 /* LoadFromAppClipView.swift in Sources */,
 				98FF7AB1269CC0AD008C64E5 /* Utility.swift in Sources */,
 				9863AF0A26B4384000EF0C64 /* RouteDocumentData.swift in Sources */,
+				82D37CA52890AE2100A1D032 /* GeoSpatialAlignment.swift in Sources */,
 				98FF7AC9269CC108008C64E5 /* StopRecordingController.swift in Sources */,
 				98CC59AD269CCB90002EF6D7 /* SurveyInterface.swift in Sources */,
 				98FF7AAE269CC0A5008C64E5 /* Navigation.swift in Sources */,
@@ -1105,7 +1109,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Clew-More/Clew-More.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 332;
+				CURRENT_PROJECT_VERSION = 333;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_ASSET_PATHS = "\"Clew-More/Preview Content\"";
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
@@ -1143,7 +1147,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Clew-More/Clew-More.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 332;
+				CURRENT_PROJECT_VERSION = 333;
 				DEVELOPMENT_ASSET_PATHS = "\"Clew-More/Preview Content\"";
 				DEVELOPMENT_TEAM = 42363V8M4P;
 				ENABLE_PREVIEWS = YES;

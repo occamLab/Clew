@@ -54,6 +54,8 @@ class ARSessionManager: NSObject, ObservableObject {
     static var shared = ARSessionManager()
     var delegate: ARSessionManagerDelegate?
     var lastTimeOutputtedGeoAnchors = Date()
+    var lastGeospatialLogTime = Date()
+    let geoSpatialAlignmentFilter = GeoSpatialAlignment()
     @Published var worldTransformGeoSpatialPair: (simd_float4x4, GARGeospatialTransform)?
     
     private override init() {
@@ -139,7 +141,7 @@ class ARSessionManager: NSObject, ObservableObject {
     
     var currentGARFrame: GARFrame?
     
-    var geoSpatialAlignmentTransform: simd_float4x4?
+    var geoSpatialAlignmentCrumb: LocationInfoGeoSpatial?
     
     func addGeoSpatialAnchor(location: LocationInfoGeoSpatial)->GARAnchor? {
         let headingAngle = (Double.pi / 180) * (180.0 - location.heading);
@@ -169,6 +171,7 @@ class ARSessionManager: NSObject, ObservableObject {
         sessionWasRelocalizing = false
         localized = false
         removeNavigationNodes()
+        geoSpatialAlignmentFilter.reset()
         sceneView.session.run(configuration, options: [.removeExistingAnchors])
         startGARSession()
         print("STARTING SESSION \(configuration.initialWorldMap)")
@@ -600,9 +603,13 @@ extension ARSessionManager: ARSessionDelegate {
         }
     }
     
-    func checkForGeoAlignment(alignmentAnchor: GARAnchor) {
-        if alignmentAnchor.hasValidTransform, let geoSpatialAlignmentTransform = geoSpatialAlignmentTransform {
-            self.manualAlignment = alignmentAnchor.transform * geoSpatialAlignmentTransform.inverse
+    func checkForGeoAlignment(geospatialTransform: GARGeospatialTransform) {
+        guard geospatialTransform.trackingQuality.isAsGoodOrBetterThan( outdoorLocalizationQualityThreshold), let alignmentAnchor = self.currentGARFrame?.anchors.first else {
+            return
+        }
+        
+        if alignmentAnchor.hasValidTransform, let geoSpatialAlignmentCrumb = geoSpatialAlignmentCrumb, let manualAlignment = geoSpatialAlignmentFilter.update(anchorTransform: alignmentAnchor.transform, geoSpatialAlignmentCrumb: geoSpatialAlignmentCrumb, cameraGeospatialTransform: geospatialTransform) {
+            self.manualAlignment = manualAlignment
             print("self.manualAlignment \(self.manualAlignment)")
             delegate?.didDoGeoAlignment()
         }
@@ -616,12 +623,15 @@ extension ARSessionManager: ARSessionDelegate {
             self.currentGARFrame = try garSession?.update(frame)
 
             if let geospatialTransform = self.currentGARFrame?.earth?.cameraGeospatialTransform {
-                print("\(ARSessionManager.shared.currentFrame?.camera.trackingState)")
+                if -lastGeospatialLogTime.timeIntervalSinceNow > 0.3 {
+                    lastGeospatialLogTime = Date()
+                    PathLogger.shared.logGeospatialTransform(geospatialTransform)
+                }
                 print("got \(geospatialTransform)")
                 self.worldTransformGeoSpatialPair = (frame.camera.transform, geospatialTransform)
                 delegate?.didReceiveFrameWithTrackingQuality(geospatialTransform.trackingQuality)
-                if !localized, geospatialTransform.trackingQuality.isAsGoodOrBetterThan( outdoorLocalizationQualityThreshold), let alignmentAnchor = self.currentGARFrame?.anchors.first {
-                    checkForGeoAlignment(alignmentAnchor: alignmentAnchor)
+                if !localized {
+                    checkForGeoAlignment(geospatialTransform: geospatialTransform)
                 }
             }
         } catch {

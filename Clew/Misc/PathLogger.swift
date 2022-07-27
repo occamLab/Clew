@@ -8,6 +8,7 @@
 
 
 import Foundation
+import ARCoreGeospatial
 import FirebaseStorage
 import SceneKit
 import ARKit
@@ -26,6 +27,10 @@ class PathLogger {
     let storageBaseRef = Storage.storage().reference()
     /// history of settings in the app
     var settingsHistory: [(Date, Dictionary<String, Any>)] = []
+    /// geo spatial camera transforms from ARCore
+    var geospatialTransforms: [GARGeospatialTransform] = []
+    /// time stamps for geospatialTransform
+    var geospatialTransformTimes: [Double] = []
     /// path data taken during RECORDPATH - [[1x16 transform matrix, navigation offset, use navigation offset]]
     var pathData: LinkedList<[Float]> = []
     /// time stamps for pathData
@@ -109,6 +114,11 @@ class PathLogger {
         trackingErrorData.append(trackingError)
     }
     
+    func logGeospatialTransform(_ transform: GARGeospatialTransform) {
+        geospatialTransformTimes.append(-stateTransitionLogTimer.timeIntervalSinceNow)
+        geospatialTransforms.append(transform)
+    }
+    
     /// Log a transformation matrix
     ///
     /// - Parameters:
@@ -187,6 +197,8 @@ class PathLogger {
         // reset log variables that aren't tied to path recording or navigation
         stateSequence = []
         stateSequenceTime = []
+        geospatialTransforms = []
+        geospatialTransformTimes = []
     }
     
     /// Compile log data and send it to the cloud
@@ -300,7 +312,7 @@ class PathLogger {
                                     "navigationData": Array(navigationData),
                                     "navigationDataTime": Array(navigationDataTime),
                                     "speechData": Array(speechData),
-                                    "speechDataTime": Array(speechDataTime)]
+                                    "speechDataTime": Array(speechDataTime), "geoSpatialTransforms": geospatialTransforms.map({$0.asDict()}), "geoSpatialTransformTimes": geospatialTransformTimes]
         
         do {
             let jsonData = try JSONSerialization.data(withJSONObject: body, options: .prettyPrinted)

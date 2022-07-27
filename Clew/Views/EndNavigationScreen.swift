@@ -37,6 +37,7 @@ struct EndNavigationScreen: View {
                                 Spacer()
                                 Button(action: {
                                     feedbackGiven = true
+                                    let logFileURLs = vc.logger.compileLogData(false)
                                 }){
                                     Image("thumbs_up")
                                         .resizable()
@@ -46,6 +47,7 @@ struct EndNavigationScreen: View {
                                 .accessibility(hint: Text("Submit Feedback that route is good"))
                                 Button(action: {
                                     feedbackGiven = true
+                                    let logFileURLs = vc.logger.compileLogData(true)
                                 }){
                                     Image("thumbs_down_red")
                                         .resizable()
