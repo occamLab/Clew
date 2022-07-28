@@ -1307,7 +1307,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     
     /// Register settings bundle
     func registerSettingsBundle(){
-        let appDefaults = ["outdoorLocalizationThreshold": 0, "crumbColor": 0, "showPath": true, "pathColor": 0, "hapticFeedback": true, "sendLogs": true, "voiceFeedback": true, "soundFeedback": true, "adjustOffset": false, "units": 0, "timerLength":5, "uploadRichData": false] as [String : Any]
+        let appDefaults = ["outdoorLocalizationThreshold": 0, "filterGeoSpatial": false, "crumbColor": 0, "showPath": true, "pathColor": 0, "hapticFeedback": true, "sendLogs": true, "voiceFeedback": true, "soundFeedback": true, "adjustOffset": false, "units": 0, "timerLength":5, "uploadRichData": false] as [String : Any]
         UserDefaults.standard.register(defaults: appDefaults)
     }
 
@@ -1316,6 +1316,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         let defaults = UserDefaults.standard
         
         localizationQualityThreshold = defaults.integer(forKey: "outdoorLocalizationThreshold")
+        ARSessionManager.shared.filterGeoSpatial = defaults.bool(forKey: "filterGeoSpatial")
         switch localizationQualityThreshold {
         case 0:
             ARSessionManager.shared.outdoorLocalizationQualityThreshold = .excellent

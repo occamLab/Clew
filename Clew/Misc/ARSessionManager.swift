@@ -56,6 +56,7 @@ class ARSessionManager: NSObject, ObservableObject {
     var lastTimeOutputtedGeoAnchors = Date()
     var lastGeospatialLogTime = Date()
     let geoSpatialAlignmentFilter = GeoSpatialAlignment()
+    var filterGeoSpatial: Bool = false
     @Published var worldTransformGeoSpatialPair: (simd_float4x4, GARGeospatialTransform)?
     
     private override init() {
@@ -608,7 +609,7 @@ extension ARSessionManager: ARSessionDelegate {
             return
         }
         
-        if alignmentAnchor.hasValidTransform, let geoSpatialAlignmentCrumb = geoSpatialAlignmentCrumb, let manualAlignment = geoSpatialAlignmentFilter.update(anchorTransform: alignmentAnchor.transform, geoSpatialAlignmentCrumb: geoSpatialAlignmentCrumb, cameraGeospatialTransform: geospatialTransform) {
+        if alignmentAnchor.hasValidTransform, let geoSpatialAlignmentCrumb = geoSpatialAlignmentCrumb, let manualAlignment = geoSpatialAlignmentFilter.update(anchorTransform: alignmentAnchor.transform, geoSpatialAlignmentCrumb: geoSpatialAlignmentCrumb, cameraGeospatialTransform: geospatialTransform, filterGeoSpatial: filterGeoSpatial) {
             self.manualAlignment = manualAlignment
             print("self.manualAlignment \(self.manualAlignment)")
             delegate?.didDoGeoAlignment()

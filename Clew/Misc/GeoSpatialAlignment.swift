@@ -13,7 +13,7 @@ class GeoSpatialAlignment {
     var relativeTransforms: [simd_float4x4] = []
     var lastAnchorTransform: simd_float4x4?
     
-    func update(anchorTransform: simd_float4x4, geoSpatialAlignmentCrumb: LocationInfoGeoSpatial, cameraGeospatialTransform: GARGeospatialTransform)->simd_float4x4? {
+    func update(anchorTransform: simd_float4x4, geoSpatialAlignmentCrumb: LocationInfoGeoSpatial, cameraGeospatialTransform: GARGeospatialTransform, filterGeoSpatial: Bool = false)->simd_float4x4? {
         guard let geoAnchorTransform = geoSpatialAlignmentCrumb.geoAnchorTransform else {
             return nil
         }
@@ -22,18 +22,16 @@ class GeoSpatialAlignment {
             let relativeShift = lastAnchorTransform.inverse * anchorTransform
             let angleDiff = simd_quatf(relativeShift)
             let positionDiff = simd_length(relativeShift.columns.3.dropw())
-            if angleDiff.angle < 0.01 && positionDiff < 0.1 {
+            if angleDiff.angle < 0.005 && positionDiff < 0.05 {
                 return nil
             }
         }
         lastAnchorTransform = anchorTransform
         PathLogger.shared.logGeospatialTransform(cameraGeospatialTransform)
-
-        print("something new!")
         
         let relativeTransform = anchorTransform * geoAnchorTransform.inverse
         
-        if isOutlier(relativeTransform: relativeTransform, cameraGeospatialTransform: cameraGeospatialTransform) {
+        if filterGeoSpatial, isOutlier(relativeTransform: relativeTransform, cameraGeospatialTransform: cameraGeospatialTransform) {
             return nil
         }
         // TODO: maybe some averaging?
