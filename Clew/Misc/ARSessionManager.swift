@@ -142,7 +142,13 @@ class ARSessionManager: NSObject, ObservableObject {
     
     var currentGARFrame: GARFrame?
     
-    var geoSpatialAlignmentCrumb: LocationInfoGeoSpatial?
+    var geoSpatialAlignmentCrumbs: [LocationInfoGeoSpatial] = [] {
+        didSet {
+            for crumb in geoSpatialAlignmentCrumbs {
+                addGeoSpatialAnchor(location: crumb)
+            }
+        }
+    }
     
     func addGeoSpatialAnchor(location: LocationInfoGeoSpatial)->GARAnchor? {
         let headingAngle = (Double.pi / 180) * (180.0 - location.heading);
@@ -604,12 +610,28 @@ extension ARSessionManager: ARSessionDelegate {
         }
     }
     
+    private func getBestAlignmentCrumb(cameraGeoSpatialTransform: GARGeospatialTransform, anchors: [GARAnchor])->(GARAnchor, LocationInfoGeoSpatial)? {
+        // TODO: something smarter to take into account distance to the current anchors
+        guard let bestGeospatialRecordingAnchor = geoSpatialAlignmentCrumbs.min(by: { $0.headingUncertainty < $1.headingUncertainty }) else {
+            return nil
+        }
+        for anchor in anchors {
+            if anchor.identifier == bestGeospatialRecordingAnchor.identifier, anchor.hasValidTransform {
+                return (anchor, bestGeospatialRecordingAnchor)
+            }
+        }
+        return nil
+    }
+    
     func checkForGeoAlignment(geospatialTransform: GARGeospatialTransform) {
-        guard geospatialTransform.trackingQuality.isAsGoodOrBetterThan( outdoorLocalizationQualityThreshold), let alignmentAnchor = self.currentGARFrame?.anchors.first else {
+        guard geospatialTransform.trackingQuality.isAsGoodOrBetterThan( outdoorLocalizationQualityThreshold), let GARAnchors = self.currentGARFrame?.anchors else {
+            return
+        }
+        guard let (alignmentAnchor, geoSpatialAlignmentCrumb) = getBestAlignmentCrumb(cameraGeoSpatialTransform: geospatialTransform, anchors: GARAnchors) else {
             return
         }
         
-        if alignmentAnchor.hasValidTransform, let geoSpatialAlignmentCrumb = geoSpatialAlignmentCrumb, let manualAlignment = geoSpatialAlignmentFilter.update(anchorTransform: alignmentAnchor.transform, geoSpatialAlignmentCrumb: geoSpatialAlignmentCrumb, cameraGeospatialTransform: geospatialTransform, filterGeoSpatial: filterGeoSpatial) {
+        if let manualAlignment = geoSpatialAlignmentFilter.update(anchorTransform: alignmentAnchor.transform, geoSpatialAlignmentCrumb: geoSpatialAlignmentCrumb, cameraGeospatialTransform: geospatialTransform, filterGeoSpatial: filterGeoSpatial) {
             self.manualAlignment = manualAlignment
             print("self.manualAlignment \(self.manualAlignment)")
             delegate?.didDoGeoAlignment()

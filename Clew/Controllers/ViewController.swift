@@ -517,13 +517,9 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         RouteManager.shared.intermediateAnchorPoints = route.intermediateAnchorPoints
         trackingSessionErrorState = nil
         continuationAfterSessionIsReady = {
-            // get the best geospatial pose and add it as an anchor
-            if let bestGeospatialRecordingAnchor = self.crumbs.min(by: { $0.headingUncertainty < $1.headingUncertainty }) {
-                ARSessionManager.shared.geoSpatialAlignmentCrumb = bestGeospatialRecordingAnchor
-                ARSessionManager.shared.addGeoSpatialAnchor(location: bestGeospatialRecordingAnchor)
-                
-                self.trackGeoSpatialDuringNavigation =  Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: (#selector(self.trackGeoSpatialDuringNavigationHandler)), userInfo: nil, repeats: true)
-            }
+            ARSessionManager.shared.geoSpatialAlignmentCrumbs = self.crumbs
+            
+            self.trackGeoSpatialDuringNavigation =  Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: (#selector(self.trackGeoSpatialDuringNavigationHandler)), userInfo: nil, repeats: true)
         }
         ARSessionManager.shared.startSession()
     }

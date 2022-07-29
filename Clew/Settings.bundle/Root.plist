@@ -44,7 +44,7 @@
 			<key>Key</key>
 			<string>filterGeoSpatial</string>
 			<key>DefaultValue</key>
-			<false/>
+			<true/>
 		</dict>
 		<dict>
 			<key>Type</key>
