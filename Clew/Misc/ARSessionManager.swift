@@ -614,7 +614,10 @@ extension ARSessionManager: ARSessionDelegate {
     
     private func getBestAlignmentCrumb(cameraGeoSpatialTransform: GARGeospatialTransform, anchors: [GARAnchor])->(GARAnchor, LocationInfoGeoSpatial)? {
         // TODO: something smarter to take into account distance to the current anchors
-        guard let bestGeospatialRecordingAnchor = geoSpatialAlignmentCrumbs.min(by: { $0.headingUncertainty < $1.headingUncertainty }) else {
+        let accurateGeoSpatialCrumbs = geoSpatialAlignmentCrumbs.filter( {$0.headingUncertainty < GARGeospatialTransform.excellentQualityHeadingAccuracy} )
+        let currLocation = CLLocation(latitude: cameraGeoSpatialTransform.coordinate.latitude, longitude: cameraGeoSpatialTransform.coordinate.longitude)
+
+        guard let bestGeospatialRecordingAnchor = accurateGeoSpatialCrumbs.min(by: { CLLocation(latitude: $0.latitude, longitude: $0.longitude).distance(from: currLocation) < CLLocation(latitude: $1.latitude, longitude: $1.longitude).distance(from: currLocation) }) else {
             return nil
         }
         for anchor in anchors {
