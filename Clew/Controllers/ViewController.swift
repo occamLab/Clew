@@ -1303,7 +1303,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     
     /// Register settings bundle
     func registerSettingsBundle(){
-        let appDefaults = ["outdoorLocalizationThreshold": 0, "filterGeoSpatial": false, "crumbColor": 0, "showPath": true, "pathColor": 0, "hapticFeedback": true, "sendLogs": true, "voiceFeedback": true, "soundFeedback": true, "adjustOffset": false, "units": 0, "timerLength":5, "uploadRichData": false] as [String : Any]
+        let appDefaults = ["outdoorLocalizationThreshold": 0, "filterGeoSpatial": true, "crumbColor": 0, "showPath": true, "pathColor": 0, "hapticFeedback": true, "sendLogs": true, "voiceFeedback": true, "soundFeedback": true, "adjustOffset": false, "units": 0, "timerLength":5, "uploadRichData": false] as [String : Any]
         UserDefaults.standard.register(defaults: appDefaults)
     }
 
