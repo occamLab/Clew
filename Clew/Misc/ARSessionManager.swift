@@ -145,7 +145,9 @@ class ARSessionManager: NSObject, ObservableObject {
     var geoSpatialAlignmentCrumbs: [LocationInfoGeoSpatial] = [] {
         didSet {
             for crumb in geoSpatialAlignmentCrumbs {
-                addGeoSpatialAnchor(location: crumb)
+                if let newAnchor = addGeoSpatialAnchor(location: crumb) {
+                    crumb.GARAnchorUUID = newAnchor.identifier
+                }
             }
         }
     }
@@ -616,7 +618,7 @@ extension ARSessionManager: ARSessionDelegate {
             return nil
         }
         for anchor in anchors {
-            if anchor.identifier == bestGeospatialRecordingAnchor.identifier, anchor.hasValidTransform {
+            if anchor.identifier == bestGeospatialRecordingAnchor.GARAnchorUUID, anchor.hasValidTransform {
                 return (anchor, bestGeospatialRecordingAnchor)
             }
         }
