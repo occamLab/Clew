@@ -144,7 +144,8 @@ class ARSessionManager: NSObject, ObservableObject {
     
     var geoSpatialAlignmentCrumbs: [LocationInfoGeoSpatial] = [] {
         didSet {
-            for crumb in geoSpatialAlignmentCrumbs {
+            let accurateGeoSpatialCrumbs = geoSpatialAlignmentCrumbs.filter( {$0.headingUncertainty < GARGeospatialTransform.excellentQualityHeadingAccuracy && $0.altitudeUncertainty < GARGeospatialTransform.excellentQualityAltitudeAccuracy && $0.horizontalUncertainty < GARGeospatialTransform.excellentQualityHorizontalAccuracy } )
+            for crumb in accurateGeoSpatialCrumbs {
                 if let newAnchor = addGeoSpatialAnchor(location: crumb) {
                     crumb.GARAnchorUUID = newAnchor.identifier
                 }
@@ -613,11 +614,10 @@ extension ARSessionManager: ARSessionDelegate {
     }
     
     private func getBestAlignmentCrumb(cameraGeoSpatialTransform: GARGeospatialTransform, anchors: [GARAnchor])->(GARAnchor, LocationInfoGeoSpatial)? {
-        // TODO: something smarter to take into account distance to the current anchors
-        let accurateGeoSpatialCrumbs = geoSpatialAlignmentCrumbs.filter( {$0.headingUncertainty < GARGeospatialTransform.excellentQualityHeadingAccuracy} )
+        
         let currLocation = CLLocation(latitude: cameraGeoSpatialTransform.coordinate.latitude, longitude: cameraGeoSpatialTransform.coordinate.longitude)
 
-        guard let bestGeospatialRecordingAnchor = accurateGeoSpatialCrumbs.min(by: { CLLocation(latitude: $0.latitude, longitude: $0.longitude).distance(from: currLocation) < CLLocation(latitude: $1.latitude, longitude: $1.longitude).distance(from: currLocation) }) else {
+        guard let bestGeospatialRecordingAnchor = geoSpatialAlignmentCrumbs.min(by: { CLLocation(latitude: $0.latitude, longitude: $0.longitude).distance(from: currLocation) < CLLocation(latitude: $1.latitude, longitude: $1.longitude).distance(from: currLocation) }) else {
             return nil
         }
         for anchor in anchors {
