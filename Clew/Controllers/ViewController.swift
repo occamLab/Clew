@@ -422,6 +422,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
 
         logger.resetNavigationLog()
 
+        logger.logSavedRouteGeospatialLocations(crumbs.reversed()) 
         // generate path from PathFinder class
         // enabled hapticFeedback generates more keypoints
         ViewController.routeKeypoints = PathFinder(crumbs: crumbs.reversed(), hapticFeedback: hapticFeedback, voiceFeedback: voiceFeedback).keypoints

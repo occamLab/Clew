@@ -12,10 +12,8 @@ import ARCoreGeospatial
 import FirebaseStorage
 import SceneKit
 import ARKit
-#if !APPCLIP
 import FirebaseAnalytics
 import FirebaseAuth
-#endif
 
 //FirebaseApp.configure()
 //Analytics.
@@ -31,6 +29,11 @@ class PathLogger {
     var geospatialTransforms: [GARGeospatialTransform] = []
     /// time stamps for geospatialTransform
     var geospatialTransformTimes: [Double] = []
+    /// time stamps for geospatialTransform
+    var geoLocationAlignmentAttemptTimes: [Double] = []
+    /// saved route geospatial locations
+    var geoLocationAlignmentAttempts: [(simd_float4x4, LocationInfoGeoSpatial, GARGeospatialTransform, Bool)] = []
+    var savedRouteGeospatialLocations: [LocationInfoGeoSpatial] = []
     /// path data taken during RECORDPATH - [[1x16 transform matrix, navigation offset, use navigation offset]]
     var pathData: LinkedList<[Float]> = []
     /// time stamps for pathData
@@ -119,6 +122,16 @@ class PathLogger {
         geospatialTransforms.append(transform)
     }
     
+    func logSavedRouteGeospatialLocations(_ savedLocations: [LocationInfoGeoSpatial]) {
+        savedRouteGeospatialLocations = savedLocations
+    }
+    
+    func logGeolocationAlignmentAttempt(anchorTransform: simd_float4x4, geoSpatialAlignmentCrumb: LocationInfoGeoSpatial, cameraGeospatialTransform: GARGeospatialTransform, wasAccepted: Bool) {
+        geoLocationAlignmentAttempts.append((anchorTransform, geoSpatialAlignmentCrumb, cameraGeospatialTransform, wasAccepted))
+        geoLocationAlignmentAttemptTimes.append(-dataTimer.timeIntervalSinceNow)
+    }
+
+    
     /// Log a transformation matrix
     ///
     /// - Parameters:
@@ -189,6 +202,9 @@ class PathLogger {
         navigationDataTime = []
         speechData = []
         speechDataTime = []
+        savedRouteGeospatialLocations = []
+        geoLocationAlignmentAttemptTimes = []
+        geoLocationAlignmentAttempts = []
         dataTimer = Date()
     }
     
@@ -307,7 +323,7 @@ class PathLogger {
                                     "navigationData": Array(navigationData),
                                     "navigationDataTime": Array(navigationDataTime),
                                     "speechData": Array(speechData),
-                                    "speechDataTime": Array(speechDataTime), "geoSpatialTransforms": geospatialTransforms.map({$0.asDict()}), "geoSpatialTransformTimes": geospatialTransformTimes]
+                                    "speechDataTime": Array(speechDataTime), "geoSpatialTransforms": geospatialTransforms.map({$0.asDict()}), "geoSpatialTransformTimes": geospatialTransformTimes, "geoLocationAlignmentAttemptTimes": geoLocationAlignmentAttemptTimes, "savedRouteGeospatialLocations": savedRouteGeospatialLocations.map({$0.asDict()}), "geoLocationAlignmentAttempts": geoLocationAlignmentAttempts.map({ ["anchorTransform": $0.0.asColumnMajorArray(), "geoSpatialAlignmentCrumb": $0.1.asDict(), "cameraGeospatialTransform": $0.2.asDict(), "wasAccepted": $0.3] })]
         
         do {
             let jsonData = try JSONSerialization.data(withJSONObject: body, options: .prettyPrinted)
@@ -332,3 +348,8 @@ class PathLogger {
     }
 }
 
+extension LocationInfoGeoSpatial {
+    func asDict()->[String: Any] {
+        return [ "latitude": latitude, "longitude": longitude, "heading": heading, "altitude": altitude, "altitudeUncertainty": altitudeUncertainty, "horizontalUncertainty": horizontalUncertainty, "headingUncertainty": headingUncertainty, "geoAnchorTransform": geoAnchorTransform?.asColumnMajorArray() ?? [] ]
+    }
+}

@@ -18,6 +18,10 @@ extension float4x4 {
     func frobenius()->Float {
         return sqrt(simd_length_squared(columns.0) + simd_length_squared(columns.1) + simd_length_squared(columns.2) + simd_length_squared(columns.3))
     }
+    
+    func asColumnMajorArray()->[Float] {
+        return [self.columns.0.x, self.columns.0.y, self.columns.0.z, self.columns.0.w, self.columns.1.x, self.columns.1.y, self.columns.1.z, self.columns.1.w, self.columns.2.x, self.columns.2.y, self.columns.2.z, self.columns.2.w, self.columns.3.x, self.columns.3.y, self.columns.3.z, self.columns.3.w]
+    }
 }
 
 // MARK: - Extensions for 3D floating point vector type

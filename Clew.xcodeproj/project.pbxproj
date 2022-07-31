@@ -1113,7 +1113,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Clew-More/Clew-More.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 336;
+				CURRENT_PROJECT_VERSION = 337;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_ASSET_PATHS = "\"Clew-More/Preview Content\"";
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
@@ -1151,7 +1151,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Clew-More/Clew-More.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 336;
+				CURRENT_PROJECT_VERSION = 337;
 				DEVELOPMENT_ASSET_PATHS = "\"Clew-More/Preview Content\"";
 				DEVELOPMENT_TEAM = 42363V8M4P;
 				ENABLE_PREVIEWS = YES;

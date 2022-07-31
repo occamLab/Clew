@@ -38,6 +38,7 @@ struct EndNavigationScreen: View {
                                 Button(action: {
                                     feedbackGiven = true
                                     let logFileURLs = vc.logger.compileLogData(false)
+                                    vc.logger.resetStateSequenceLog()
                                 }){
                                     Image("thumbs_up")
                                         .resizable()
@@ -48,6 +49,7 @@ struct EndNavigationScreen: View {
                                 Button(action: {
                                     feedbackGiven = true
                                     let logFileURLs = vc.logger.compileLogData(true)
+                                    vc.logger.resetStateSequenceLog()
                                 }){
                                     Image("thumbs_down_red")
                                         .resizable()

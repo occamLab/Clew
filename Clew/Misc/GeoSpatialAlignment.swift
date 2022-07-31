@@ -32,8 +32,11 @@ class GeoSpatialAlignment {
         let relativeTransform = anchorTransform * geoAnchorTransform.inverse
         
         if filterGeoSpatial, isOutlier(relativeTransform: relativeTransform, cameraGeospatialTransform: cameraGeospatialTransform) {
+            PathLogger.shared.logGeolocationAlignmentAttempt(anchorTransform: anchorTransform, geoSpatialAlignmentCrumb: geoSpatialAlignmentCrumb, cameraGeospatialTransform: cameraGeospatialTransform, wasAccepted: false)
             return nil
         }
+        PathLogger.shared.logGeolocationAlignmentAttempt(anchorTransform: anchorTransform, geoSpatialAlignmentCrumb: geoSpatialAlignmentCrumb, cameraGeospatialTransform: cameraGeospatialTransform, wasAccepted: true)
+
         // TODO: maybe some averaging?
         relativeTransforms.append(relativeTransform)
         return relativeTransform
