@@ -2967,6 +2967,8 @@ extension ViewController: ARSessionManagerDelegate {
     func sessionDidRelocalize() {
       if trackingWarningsAllowed {
           AnnouncementManager.shared.announce(announcement: NSLocalizedString("realignToSavedRouteAnnouncement", comment: "An announcement which lets the user know that their surroundings have been matched to a saved route"))
+          // TODO: we need to have these announcements logged with the Announcement Manager
+          PathLogger.shared.logSpeech(utterance: NSLocalizedString("realignToSavedRouteAnnouncement", comment: "An announcement which lets the user know that their surroundings have been matched to a saved route"))
       }
       attemptingRelocalization = false
       if case .startingResumeProcedure(let route, let worldMap, let navigateStartToEnd) = state {
