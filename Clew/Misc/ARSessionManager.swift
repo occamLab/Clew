@@ -43,6 +43,7 @@ protocol ARSessionManagerDelegate {
     func sessionDidRelocalize()
     func didDoGeoAlignment()
     func didReceiveFrameWithTrackingQuality(_ : GeospatialOverallQuality)
+    func didHostCloudAnchor(cloudIdentifier: String, withTransform: simd_float4x4)
 }
 
 class ARSessionManager: NSObject, ObservableObject {
@@ -58,16 +59,7 @@ class ARSessionManager: NSObject, ObservableObject {
     let geoSpatialAlignmentFilter = GeoSpatialAlignment()
     var filterGeoSpatial: Bool = false
     @Published var worldTransformGeoSpatialPair: (simd_float4x4, GARGeospatialTransform)?
-    
-    private override init() {
-        super.init()
-        sceneView.session.delegate = self
-        sceneView.delegate = self
-        sceneView.accessibilityIgnoresInvertColors = true
-        createARSessionConfiguration()
-        loadAssets()
-        sceneView.backgroundColor = .systemBackground
-    }
+
     /// This is embeds an AR scene.  The ARSession is a part of the scene view, which allows us to capture where the phone is in space and the state of the world tracking.  The scene also allows us to insert virtual objects
     var sceneView: ARSCNView = ARSCNView()
     
@@ -153,6 +145,43 @@ class ARSessionManager: NSObject, ObservableObject {
         }
     }
     
+    // TODO: we can probably get rid of these and use the cloudIdentifier as our key
+    private var sessionCloudAnchors: [UUID: ARAnchor] = [:]
+    
+    var lastResolvedCloudAnchorID: String?
+    
+    // TODO: we could have used String instead of NSString (be careful of breaking existing routes though)
+    var cloudAnchorsForAlignment: [NSString: ARAnchor] = [:] {
+        didSet {
+            sessionCloudAnchors = [:]
+            if cloudAnchorsForAlignment.count > 20 {
+                let tooManyAnchors = "Too many cloud anchors. Results may be unpredictable."
+                AnnouncementManager.shared.announce(announcement: tooManyAnchors)
+                PathLogger.shared.logSpeech(utterance: tooManyAnchors)
+            }
+            for cloudAnchor in cloudAnchorsForAlignment {
+                do {
+                    if let gAnchor = try garSession?.resolveCloudAnchor(String(cloudAnchor.0)) {
+                        sessionCloudAnchors[gAnchor.identifier] = cloudAnchor.1
+                        print("trying to resolve \(cloudAnchor.0)")
+                    }
+                } catch {
+                    print("synchronous failure to resolve")
+                }
+            }
+        }
+    }
+    
+    private override init() {
+        super.init()
+        sceneView.session.delegate = self
+        sceneView.delegate = self
+        sceneView.accessibilityIgnoresInvertColors = true
+        createARSessionConfiguration()
+        loadAssets()
+        sceneView.backgroundColor = .systemBackground
+    }
+    
     func addGeoSpatialAnchor(location: LocationInfoGeoSpatial)->GARAnchor? {
         let headingAngle = (Double.pi / 180) * (180.0 - location.heading);
         let eastUpSouthQAnchor = simd_quaternion(Float(headingAngle), simd_float3(0, 1, 0));
@@ -188,13 +217,28 @@ class ARSessionManager: NSObject, ObservableObject {
        
     }
     
+    func hostCloudAnchor(withTransform transform: simd_float4x4)->(GARAnchor, ARAnchor)? {
+        let newAnchor = ARAnchor(transform: transform)
+        add(anchor: newAnchor)
+        do {
+            if let newGARAnchor = try garSession?.hostCloudAnchor(newAnchor) {
+                return (newGARAnchor, newAnchor)
+            }
+        } catch {
+            print("host cloud anchor failed")
+        }
+        return nil
+    }
+    
     private func startGARSession() {
         do {
             garSession = try GARSession(apiKey: garAPIKey, bundleIdentifier: nil)
             var error: NSError?
             let configuration = GARSessionConfiguration()
             configuration.geospatialMode = .enabled
+            configuration.cloudAnchorMode = .enabled
             garSession?.setConfiguration(configuration, error: &error)
+            garSession?.delegate = self
             print("gar set configuration error \(error)")
         } catch {
             print("failed to create GARSession")
@@ -643,19 +687,28 @@ extension ARSessionManager: ARSessionDelegate {
         }
     }
     
+    private func checkForCloudAnchorAlignment(anchors: [GARAnchor]) {
+        for anchor in anchors {
+            if anchor.hasValidTransform, let correspondingARAnchor = sessionCloudAnchors[anchor.identifier], anchor.cloudIdentifier == lastResolvedCloudAnchorID  {
+                manualAlignment = (anchor.transform * correspondingARAnchor.transform.inverse).alignY()
+            }
+        }
+    }
+    
     func session(_ session: ARSession, didUpdate frame: ARFrame) {
         do {
-            print(frame.camera.trackingState)
             ARFrameStatusAdapter.adjustTrackingStatus(frame)
-            print(frame.camera.trackingState)
             self.currentGARFrame = try garSession?.update(frame)
 
+            if let gAnchors = currentGARFrame?.anchors {
+                checkForCloudAnchorAlignment(anchors: gAnchors)
+            }
+            
             if let geospatialTransform = self.currentGARFrame?.earth?.cameraGeospatialTransform {
                 if -lastGeospatialLogTime.timeIntervalSinceNow > 0.3 {
                     lastGeospatialLogTime = Date()
                     PathLogger.shared.logGeospatialTransform(geospatialTransform)
                 }
-                print("got \(geospatialTransform)")
                 self.worldTransformGeoSpatialPair = (frame.camera.transform, geospatialTransform)
                 delegate?.didReceiveFrameWithTrackingQuality(geospatialTransform.trackingQuality)
                 if !localized {
@@ -789,5 +842,28 @@ extension ARSessionManager: ARSCNViewDelegate {
                 ARSessionManager.shared.render(intermediateAnchorPoints: [intermediateAnchorPoint])
             }
         }
+    }
+}
+
+extension ARSessionManager: GARSessionDelegate {
+    func session(_ session: GARSession, didResolve anchor:GARAnchor) {
+        localized = true
+        if let cloudIdentifier = anchor.cloudIdentifier, anchor.hasValidTransform, let alignTransform = cloudAnchorsForAlignment[NSString(string: cloudIdentifier)]?.transform {
+            lastResolvedCloudAnchorID = cloudIdentifier
+            self.manualAlignment = (anchor.transform * alignTransform.inverse).alignY()
+            let announceResolution = "Cloud Anchor Resolved"
+            PathLogger.shared.logSpeech(utterance: announceResolution)
+            AnnouncementManager.shared.announce(announcement: announceResolution)
+        }
+    }
+    
+    func session(_ session: GARSession, didHost garAnchor:GARAnchor) {
+        if let cloudIdentifier = garAnchor.cloudIdentifier {
+            delegate?.didHostCloudAnchor(cloudIdentifier: cloudIdentifier, withTransform: garAnchor.transform)
+        }
+    }
+    
+    func session(_ session: GARSession, didFailToResolve didFailToResolveAnchor: GARAnchor) {
+        print("FAILURE")
     }
 }

@@ -5,6 +5,7 @@ use_frameworks!
 
 def all_pods
    pod 'ARCore/Geospatial', '~> 1.32.0'
+   pod 'ARCore/CloudAnchors', '~> 1.32.0'
    pod 'FirebaseStorage'
    pod 'FirebaseAnalytics'
    pod 'FirebaseAuth'

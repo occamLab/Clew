@@ -358,6 +358,9 @@ class SavedRoute: NSObject, NSSecureCoding, Identifiable {
     public var dateCreated: NSDate
     /// The crumbs that make up the route.  The densely sampled positions (crumbs) are stored and the keypoints (sparser goal positionsare calculated on demand when navigation is requested.
     public var crumbs: [LocationInfoGeoSpatial]
+    
+    /// the cloud anchors associated with the route
+    public var cloudAnchors: [NSString: ARAnchor]
 
     /// The Anchor Point marks the beginning of the route (needed for start to end navigation)
     public var beginRouteAnchorPoint : RouteAnchorPoint
@@ -381,11 +384,12 @@ class SavedRoute: NSObject, NSSecureCoding, Identifiable {
     ///   - beginRouteAnchorPoint: the Anchor Point for the beginning of the route (pass a `RouteAnchorPoint` with default initialization if no Anchor Point was recorded at the beginning of the route)
     ///   - endRouteAnchorPoint: the Anchor Point for the end of the route (pass a `RouteAnchorPoint` with default initialization if no Anchor Point was recorded at the end of the route)
 
-    public init(id: NSString, appClipCodeID: String,  name: NSString, crumbs: [LocationInfoGeoSpatial], dateCreated: NSDate = NSDate(), beginRouteAnchorPoint: RouteAnchorPoint, endRouteAnchorPoint: RouteAnchorPoint, intermediateAnchorPoints: [RouteAnchorPoint], imageAnchoring: Bool = false) {
+    public init(id: NSString, appClipCodeID: String,  name: NSString, crumbs: [LocationInfoGeoSpatial], cloudAnchors: [NSString: ARAnchor], dateCreated: NSDate = NSDate(), beginRouteAnchorPoint: RouteAnchorPoint, endRouteAnchorPoint: RouteAnchorPoint, intermediateAnchorPoints: [RouteAnchorPoint], imageAnchoring: Bool = false) {
         self.id = id
         self.appClipCodeID = appClipCodeID
         self.name = name
         self.crumbs = crumbs
+        self.cloudAnchors = cloudAnchors
         self.dateCreated = dateCreated
         self.beginRouteAnchorPoint = beginRouteAnchorPoint
         self.endRouteAnchorPoint = endRouteAnchorPoint
@@ -401,6 +405,10 @@ class SavedRoute: NSObject, NSSecureCoding, Identifiable {
         aCoder.encode(appClipCodeID, forKey: "appClipCodeID")
         aCoder.encode(name, forKey: "name")
         aCoder.encode(crumbs, forKey: "crumbs")
+        let cloudAnchorKeys = Array(cloudAnchors.keys)
+        let cloudAnchorValues = cloudAnchorKeys.map({cloudAnchors[$0]!})
+        aCoder.encode(cloudAnchorKeys, forKey: "cloudAnchorKeys")
+        aCoder.encode(cloudAnchorValues, forKey: "cloudAnchorValues")
         aCoder.encode(dateCreated, forKey: "dateCreated")
         aCoder.encode(beginRouteAnchorPoint, forKey: "beginRouteAnchorPoint")
         aCoder.encode(endRouteAnchorPoint, forKey: "endRouteAnchorPoint")
@@ -424,6 +432,11 @@ class SavedRoute: NSObject, NSSecureCoding, Identifiable {
         guard let crumbs = aDecoder.decodeObject(of: [].self, forKey: "crumbs") as? [LocationInfoGeoSpatial] else {
             return nil
         }
+        let cloudAnchorKeys = aDecoder.decodeObject(of: [].self, forKey: "cloudAnchorKeys") as? [NSString] ?? []
+        
+        let cloudAnchorValues = aDecoder.decodeObject(of: [].self, forKey: "cloudAnchorValues") as? [ARAnchor] ?? []
+        
+        let cloudAnchors = Dictionary(uniqueKeysWithValues: zip(cloudAnchorKeys, cloudAnchorValues))
         
         guard let dateCreated = aDecoder.decodeObject(of: NSDate.self, forKey: "dateCreated") else {
             return nil
@@ -461,7 +474,7 @@ class SavedRoute: NSObject, NSSecureCoding, Identifiable {
         
         let imageAnchoring = aDecoder.decodeBool(forKey: "imageAnchoring")
         
-        self.init(id: id, appClipCodeID: appClipCodeID as String, name: name, crumbs: crumbs, dateCreated: dateCreated, beginRouteAnchorPoint: beginRouteAnchorPoint, endRouteAnchorPoint: endRouteAnchorPoint, intermediateAnchorPoints: intermediateRouteAnchorPoints, imageAnchoring: imageAnchoring)
+        self.init(id: id, appClipCodeID: appClipCodeID as String, name: name, crumbs: crumbs, cloudAnchors: cloudAnchors, dateCreated: dateCreated, beginRouteAnchorPoint: beginRouteAnchorPoint, endRouteAnchorPoint: endRouteAnchorPoint, intermediateAnchorPoints: intermediateRouteAnchorPoints, imageAnchoring: imageAnchoring)
     }
 }
 

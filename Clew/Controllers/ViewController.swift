@@ -305,6 +305,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         // TODO: probably don't need to set this to [], but erring on the side of being conservative
         crumbs = []
         recordingCrumbs = []
+        cloudAnchors = [:]
         geoSpatialRecordingAnchors = []
         geoSpatialAlignmentCrumbs = []
         ARSessionManager.shared.manualAlignment = matrix_identity_float4x4
@@ -496,7 +497,9 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
                 attemptingRelocalization = false
             } else {
                 isSameMap = ARSessionManager.shared.initialWorldMap != nil && ARSessionManager.shared.initialWorldMap == worldMap
-                ARSessionManager.shared.initialWorldMap = worldMap
+                if route.cloudAnchors.isEmpty {
+                    ARSessionManager.shared.initialWorldMap = worldMap
+                }
                 // TODO: see if we can move this out of this if statement
                 attemptingRelocalization = isSameMap && !isTrackingPerformanceNormal || !isSameMap
             }
@@ -519,6 +522,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         trackingSessionErrorState = nil
         continuationAfterSessionIsReady = {
             ARSessionManager.shared.geoSpatialAlignmentCrumbs = self.crumbs
+            ARSessionManager.shared.cloudAnchorsForAlignment = route.cloudAnchors
             
             self.trackGeoSpatialDuringNavigation =  Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: (#selector(self.trackGeoSpatialDuringNavigationHandler)), userInfo: nil, repeats: true)
         }
@@ -664,7 +668,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         if paused {
             ///PATHPOINT pause recording anchor point alignment timer -> resume tracking
             ///proceed as normal with the pause structure (single use route)
-            justTraveledRoute = SavedRoute(id: "single use", appClipCodeID: self.appClipCodeID, name: "single use", crumbs: self.crumbs, dateCreated: Date() as NSDate, beginRouteAnchorPoint: self.beginRouteAnchorPoint, endRouteAnchorPoint: self.endRouteAnchorPoint, intermediateAnchorPoints: RouteManager.shared.intermediateAnchorPoints, imageAnchoring: imageAnchoring)
+            justTraveledRoute = SavedRoute(id: "single use", appClipCodeID: self.appClipCodeID, name: "single use", crumbs: self.crumbs, cloudAnchors: cloudAnchors, dateCreated: Date() as NSDate, beginRouteAnchorPoint: self.beginRouteAnchorPoint, endRouteAnchorPoint: self.endRouteAnchorPoint, intermediateAnchorPoints: RouteManager.shared.intermediateAnchorPoints, imageAnchoring: imageAnchoring)
             justUsedMap = worldMap
             showResumeTrackingButton()
             state = .pauseProcedureCompleted
@@ -776,7 +780,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     /// - Throws: an error if something goes wrong
 
     func archive(routeId: NSString, appClipCodeID: String, beginRouteAnchorPoint: RouteAnchorPoint, endRouteAnchorPoint: RouteAnchorPoint, intermediateAnchorPoints: [RouteAnchorPoint], worldMap: ARWorldMap?, imageAnchoring: Bool) throws {
-        let savedRoute = SavedRoute(id: routeId, appClipCodeID: self.appClipCodeID, name: routeName!, crumbs: crumbs, dateCreated: Date() as NSDate, beginRouteAnchorPoint: beginRouteAnchorPoint, endRouteAnchorPoint: endRouteAnchorPoint, intermediateAnchorPoints: intermediateAnchorPoints, imageAnchoring: imageAnchoring)
+        let savedRoute = SavedRoute(id: routeId, appClipCodeID: self.appClipCodeID, name: routeName!, crumbs: crumbs, cloudAnchors: cloudAnchors, dateCreated: Date() as NSDate, beginRouteAnchorPoint: beginRouteAnchorPoint, endRouteAnchorPoint: endRouteAnchorPoint, intermediateAnchorPoints: intermediateAnchorPoints, imageAnchoring: imageAnchoring)
 
       try dataPersistence.archive(route: savedRoute, worldMap: worldMap)
         justTraveledRoute = savedRoute
@@ -1898,6 +1902,9 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     /// list of crumbs to use for route creation
     var crumbs: [LocationInfoGeoSpatial]!
     
+    /// cloud anchors used for alignment
+    var cloudAnchors: [NSString: ARAnchor] = [:]
+    
     /// previous keypoint location - originally set to current location
     var prevKeypointPosition: LocationInfo!
 
@@ -1908,6 +1915,9 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     
     /// times the recording of path crumbs
     var droppingCrumbs: Timer?
+    
+    /// the time we last created a cloud anchor
+    var lastCloudAnchorTime = Date()
     
     /// times the checking of the path navigation process (e.g., have we reached a waypoint)
     var followingCrumbs: Timer?
@@ -2081,6 +2091,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         }
         ARSessionManager.shared.initialWorldMap = nil
         trackingSessionErrorState = nil
+        lastCloudAnchorTime = Date()
         ARSessionManager.shared.startSession()
     }
     
@@ -2424,7 +2435,6 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         
     /// drop a crumb during path recording
     @objc func dropCrumb() {
-        print("trying to drop crumb \(state)")
         guard let curLocation = getGeoSpatialLocationInfo(), case .recordingRoute = state else {
             print("crumb could not be added")
             return
@@ -2433,8 +2443,11 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         geoSpatialRecordingAnchors.append(geoSpatialAnchor)
         curLocation.GARAnchorUUID = geoSpatialAnchor.identifier
         curLocation.geoAnchorTransform = geoSpatialAnchor.transform
-        print("geoSpatialAnchor.transform \(geoSpatialAnchor.transform)")
         recordingCrumbs.append(curLocation)
+        
+        if -lastCloudAnchorTime.timeIntervalSinceNow > 25.0, let geoTransform = curLocation.geoAnchorTransform, let (cloudAnchor, arAnchor) = ARSessionManager.shared.hostCloudAnchor(withTransform: geoTransform) {
+            lastCloudAnchorTime = Date()
+        }
     }
     
     @objc func trackGeoSpatialDuringNavigationHandler() {
@@ -2916,6 +2929,10 @@ extension ViewController: UIPopoverPresentationControllerDelegate {
 }
 
 extension ViewController: ARSessionManagerDelegate {
+    func didHostCloudAnchor(cloudIdentifier: String, withTransform transform : simd_float4x4) {
+        cloudAnchors[NSString(string: cloudIdentifier)] = ARAnchor(transform: transform)
+    }
+    
     func didReceiveFrameWithTrackingQuality(_ currentQuality : GeospatialOverallQuality) {
         if currentQuality.isAsGoodOrBetterThan(GeospatialOverallQuality(rawValue: localizationQualityThreshold)!), case .waitingForSufficientGeoLocationAccuracy = state {
             delayTransition(announcement: "Accuracy is sufficient to start recording", initialFocus: nil)
