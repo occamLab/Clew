@@ -847,6 +847,9 @@ extension ARSessionManager: ARSCNViewDelegate {
 
 extension ARSessionManager: GARSessionDelegate {
     func session(_ session: GARSession, didResolve anchor:GARAnchor) {
+        if !localized {
+            delegate?.sessionDidRelocalize()
+        }
         localized = true
         if let cloudIdentifier = anchor.cloudIdentifier, anchor.hasValidTransform, let alignTransform = cloudAnchorsForAlignment[NSString(string: cloudIdentifier)]?.transform {
             lastResolvedCloudAnchorID = cloudIdentifier
