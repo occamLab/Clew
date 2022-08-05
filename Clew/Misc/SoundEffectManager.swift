@@ -87,13 +87,15 @@ class SoundEffectManager {
     /// Play the specified system sound.  If the system sound has been preloaded as an audio player, then play using the AVAudioSession.  If there is no corresponding player, use the `AudioServicesPlaySystemSound` function.
     ///
     /// - Parameter id: the id of the system sound to play
-    func playSystemSound(id: Int) {
+    func playSystemSound(id: Int, volume: Float = 1.0, pan: Float = 0.0) {
         overrideSilentMode()
         guard let player = audioPlayers[id] else {
             // fallback on system sounds
             AudioServicesPlaySystemSound(SystemSoundID(id))
             return
         }
+        player.volume = volume
+        player.pan = pan
         player.play()
     }
 }

@@ -654,26 +654,28 @@ extension ARSessionManager: ARSessionDelegate {
         }
     }
     
-    private func getBestAlignmentCrumb(cameraGeoSpatialTransform: GARGeospatialTransform, anchors: [GARAnchor])->(GARAnchor, LocationInfoGeoSpatial)? {
+    private func getBestAlignmentCrumb(cameraGeoSpatialTransform: GARGeospatialTransform, cameraWorldTransform: simd_float4x4, anchors: [GARAnchor])->(GARAnchor, LocationInfoGeoSpatial)? {
+        let accurateGeoSpatialCrumbs = geoSpatialAlignmentCrumbs.filter( {$0.headingUncertainty < GARGeospatialTransform.excellentQualityHeadingAccuracy && $0.altitudeUncertainty < GARGeospatialTransform.excellentQualityAltitudeAccuracy && $0.horizontalUncertainty < GARGeospatialTransform.excellentQualityHorizontalAccuracy } )
         
-        let currLocation = CLLocation(latitude: cameraGeoSpatialTransform.coordinate.latitude, longitude: cameraGeoSpatialTransform.coordinate.longitude)
-
-        guard let bestGeospatialRecordingAnchor = geoSpatialAlignmentCrumbs.min(by: { CLLocation(latitude: $0.latitude, longitude: $0.longitude).distance(from: currLocation) < CLLocation(latitude: $1.latitude, longitude: $1.longitude).distance(from: currLocation) }) else {
-            return nil
-        }
-        for anchor in anchors {
-            if anchor.identifier == bestGeospatialRecordingAnchor.GARAnchorUUID, anchor.hasValidTransform {
-                return (anchor, bestGeospatialRecordingAnchor)
+        var accurateGeoSpatialCrumbMap: [UUID: LocationInfoGeoSpatial] = [:]
+        for geoCrumb in accurateGeoSpatialCrumbs {
+            if let GARAnchorUUID = geoCrumb.GARAnchorUUID {
+                accurateGeoSpatialCrumbMap[GARAnchorUUID] = geoCrumb
             }
         }
-        return nil
+        let currentAccurateGeoAnchors = anchors.filter({ accurateGeoSpatialCrumbMap[$0.identifier] != nil && $0.hasValidTransform })
+        let worldPos = cameraWorldTransform.columns.3
+        guard let bestGeospatialRecordingAnchor = currentAccurateGeoAnchors.min(by: { simd_distance($0.transform.columns.3, worldPos) < simd_distance($1.transform.columns.3, worldPos) }) else {
+            return nil
+        }
+        return (bestGeospatialRecordingAnchor, accurateGeoSpatialCrumbMap[bestGeospatialRecordingAnchor.identifier]!)
     }
     
-    func checkForGeoAlignment(geospatialTransform: GARGeospatialTransform) {
+    func checkForGeoAlignment(geospatialTransform: GARGeospatialTransform, cameraWorldTransform: simd_float4x4) {
         guard geospatialTransform.trackingQuality.isAsGoodOrBetterThan( outdoorLocalizationQualityThreshold), let GARAnchors = self.currentGARFrame?.anchors else {
             return
         }
-        guard let (alignmentAnchor, geoSpatialAlignmentCrumb) = getBestAlignmentCrumb(cameraGeoSpatialTransform: geospatialTransform, anchors: GARAnchors) else {
+        guard let (alignmentAnchor, geoSpatialAlignmentCrumb) = getBestAlignmentCrumb(cameraGeoSpatialTransform: geospatialTransform, cameraWorldTransform: cameraWorldTransform, anchors: GARAnchors) else {
             return
         }
         
@@ -710,7 +712,7 @@ extension ARSessionManager: ARSessionDelegate {
                 self.worldTransformGeoSpatialPair = (frame.camera.transform, geospatialTransform)
                 delegate?.didReceiveFrameWithTrackingQuality(geospatialTransform.trackingQuality)
                 if localization == .none {
-                    checkForGeoAlignment(geospatialTransform: geospatialTransform)
+                    checkForGeoAlignment(geospatialTransform: geospatialTransform, cameraWorldTransform: frame.camera.transform)
                 }
             }
         } catch {
@@ -744,7 +746,6 @@ extension ARSessionManager: ARSessionDelegate {
     ///   - session: the AR session associated with the change in tracking state
     ///   - camera: the AR camera associated with the change in tracking state
     func session(_ session: ARSession, cameraDidChangeTrackingState camera: ARCamera) {
-        print("TRACKING STATE CHANGE!!")
         var logString: String? = nil
 
         switch camera.trackingState {

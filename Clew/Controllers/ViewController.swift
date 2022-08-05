@@ -945,7 +945,6 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
                                                                        height: UIScreen.main.bounds.size.height*0.85)
         nameCodeIDController.view.backgroundColor = .clear
         
-        
         endNavigationController = UIHostingController(rootView: EndNavigationScreen(vc: self))
         endNavigationController?.view.frame = CGRect(x: 0,
                                                                        y: UIScreen.main.bounds.size.height*0.15,
@@ -1814,6 +1813,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         #else
         ARSessionManager.shared.pauseSession()
         self.hideAllViewsHelper()
+        AnnouncementManager.shared.announce(announcement: "You've arrived")
         self.add(self.endNavigationController!)
         #endif
     }
@@ -2609,8 +2609,12 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
             let timeInterval = feedbackTimer.timeIntervalSinceNow
             if(-timeInterval > ViewController.FEEDBACKDELAY) {
                 // wait until desired time interval before sending another feedback
-                if (hapticFeedback) { feedbackGenerator?.impactOccurred() }
-                if (soundFeedback) { SoundEffectManager.shared.playSystemSound(id: 1103) }
+                if (hapticFeedback) { feedbackGenerator?.impactOccurred()
+                }
+                if (soundFeedback) {
+                    SoundEffectManager.shared.playSystemSound(id: 1103)
+
+                }
                 feedbackTimer = Date()
             }
         }
