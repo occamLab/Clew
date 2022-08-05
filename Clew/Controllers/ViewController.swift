@@ -480,10 +480,6 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         logger.setCurrentRoute(route: route, worldMap: worldMap)
         
         // load the world map and restart the session so that things have a chance to quiet down before putting it up to the wall
-        var isTrackingPerformanceNormal = false
-        if case .normal? = ARSessionManager.shared.currentFrame?.camera.trackingState {
-            isTrackingPerformanceNormal = true
-        }
         ARSessionManager.shared.initialWorldMap = worldMap
 
         if navigateStartToEnd {
