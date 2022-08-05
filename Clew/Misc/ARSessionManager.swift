@@ -47,7 +47,12 @@ protocol ARSessionManagerDelegate {
 }
 
 class ARSessionManager: NSObject, ObservableObject {
-    var localized = false
+    enum LocalizationState {
+        case none
+        case withCloudAnchors
+        case withARWorldMap
+    }
+    var localization: LocalizationState = .none
     var cameraPoses: [Any] = []
     var visualKeypoints: [KeypointInfo] = []
     var cameraLocationInfos: [LocationInfo] = []
@@ -90,9 +95,6 @@ class ARSessionManager: NSObject, ObservableObject {
     private var keypointRenderJob: (()->())?
     private var pathRenderJob: (()->())?
     private var intermediateAnchorRenderJobs: [RouteAnchorPoint : (()->())?] = [:]
-    
-    /// the strategy to employ with respect to the worldmap
-    var relocalizationStrategy: RelocalizationStrategy = .coordinateSystemAutoAligns
     
     /// keep track of whether or not the session was, at any point, in the relocalizing state.  The behavior of the ARCamera.TrackingState is a bit erratic in that the session will sometimes execute unexpected sequences (e.g., initializing -> normal -> not available -> initializing -> relocalizing).
     var sessionWasRelocalizing = false
@@ -175,7 +177,6 @@ class ARSessionManager: NSObject, ObservableObject {
     private override init() {
         super.init()
         sceneView.session.delegate = self
-        sceneView.delegate = self
         sceneView.accessibilityIgnoresInvertColors = true
         createARSessionConfiguration()
         loadAssets()
@@ -208,7 +209,7 @@ class ARSessionManager: NSObject, ObservableObject {
         intermediateAnchorRenderJobs = [:]
         worldTransformGeoSpatialPair = nil
         sessionWasRelocalizing = false
-        localized = false
+        localization = .none
         removeNavigationNodes()
         geoSpatialAlignmentFilter.reset()
         sceneView.session.run(configuration, options: [.removeExistingAnchors])
@@ -248,10 +249,6 @@ class ARSessionManager: NSObject, ObservableObject {
     /// This seems to interfere with placement of ARAnchors in the scene when reloading maps
     func pauseSession() {
         sceneView.session.pause()
-    }
-    
-    func adjustRelocalizationStrategy(worldMap: ARWorldMap)->RelocalizationStrategy {
-        return .coordinateSystemAutoAligns
     }
     
     /// Create the keypoint SCNNode that corresponds to the rotating flashing element that looks like a navigation pin.
@@ -700,7 +697,8 @@ extension ARSessionManager: ARSessionDelegate {
             ARFrameStatusAdapter.adjustTrackingStatus(frame)
             self.currentGARFrame = try garSession?.update(frame)
 
-            if let gAnchors = currentGARFrame?.anchors {
+            // don't use Cloud Anchors if we have localized with the ARWorldMap
+            if localization != .withARWorldMap, let gAnchors = currentGARFrame?.anchors {
                 checkForCloudAnchorAlignment(anchors: gAnchors)
             }
             
@@ -711,7 +709,7 @@ extension ARSessionManager: ARSessionDelegate {
                 }
                 self.worldTransformGeoSpatialPair = (frame.camera.transform, geospatialTransform)
                 delegate?.didReceiveFrameWithTrackingQuality(geospatialTransform.trackingQuality)
-                if !localized {
+                if localization == .none {
                     checkForGeoAlignment(geospatialTransform: geospatialTransform)
                 }
             }
@@ -773,12 +771,12 @@ extension ARSessionManager: ARSessionDelegate {
             delegate?.sessionInitialized()
             delegate?.trackingIsNormal()
             if sessionWasRelocalizing {
-                delegate?.sessionDidRelocalize()
-                if relocalizationStrategy == .coordinateSystemAutoAligns {
-                    localized = true
-                    manualAlignment = matrix_identity_float4x4
-                    legacyHandleRelocalization()
+                if localization == .none {
+                    delegate?.sessionDidRelocalize()
                 }
+                localization = .withARWorldMap
+                manualAlignment = matrix_identity_float4x4
+                legacyHandleRelocalization()
             }
             print("normal")
         case .notAvailable:
@@ -808,49 +806,16 @@ extension ARSessionManager: ARSessionDelegate {
     }
 }
 
-
-extension ARSessionManager: ARSCNViewDelegate {
-    public func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
-//        print("handling anchor add from renderer")
-        handleAnchorUpdate(anchor: anchor)
-    }
-    func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
-        //print("handling anchor update from renderer")
-       //handleAnchorUpdate(anchor: anchor)
-    }
-    
-    func handleAnchorUpdate(anchor: ARAnchor) {
-        if anchor.name == "origin", relocalizationStrategy == .useOriginAnchorForAlignment {
-            manualAlignment = anchor.transform
-            legacyHandleRelocalization()
-            return
-        }
-        guard let defaultColor = delegate?.getKeypointColor(), let defaultPathColor = delegate?.getPathColor(), relocalizationStrategy == .useCrumbAnchorsForAlignment, let showPath = delegate?.getShowPath() else {
-            return
-        }
-        if let nextKeypoint = RouteManager.shared.nextKeypoint, let cameraTransform = ARSessionManager.shared.currentFrame?.camera.transform {
-            let previousKeypointLocation = RouteManager.shared.getPreviousKeypoint(to: nextKeypoint)?.location ?? LocationInfo(transform: cameraTransform)
-            if nextKeypoint.location.identifier == anchor.identifier {
-                 ARSessionManager.shared.renderKeypoint(nextKeypoint.location, defaultColor: defaultColor)
-            }
-            if nextKeypoint.location.identifier == anchor.identifier || previousKeypointLocation.identifier == anchor.identifier, showPath {
-                renderPath(nextKeypoint.location, previousKeypointLocation, defaultPathColor: defaultPathColor)
-            }
-        }
-        for intermediateAnchorPoint in RouteManager.shared.intermediateAnchorPoints {
-            if let arAnchor = intermediateAnchorPoint.anchor, arAnchor.identifier == anchor.identifier {
-                ARSessionManager.shared.render(intermediateAnchorPoints: [intermediateAnchorPoint])
-            }
-        }
-    }
-}
-
 extension ARSessionManager: GARSessionDelegate {
     func session(_ session: GARSession, didResolve anchor:GARAnchor) {
-        if !localized {
+        if localization == .withARWorldMap {
+            // defer to the ARWorldMap
+            return
+        }
+        if localization == .none {
             delegate?.sessionDidRelocalize()
         }
-        localized = true
+        localization = .withCloudAnchors
         if let cloudIdentifier = anchor.cloudIdentifier, anchor.hasValidTransform, let alignTransform = cloudAnchorsForAlignment[NSString(string: cloudIdentifier)]?.transform {
             lastResolvedCloudAnchorID = cloudIdentifier
             self.manualAlignment = (anchor.transform * alignTransform.inverse).alignY()

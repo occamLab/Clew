@@ -234,9 +234,6 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     /// The route object when we are resuming a route
     var resumedRoute: SavedRoute?
     
-    /// Set to true when the user is attempting to load a saved route that has a map associated with it. Once relocalization succeeds, this flag should be set back to false
-    var attemptingRelocalization: Bool = false
-    
     /// this Boolean marks whether the curent route is 'paused' or not from the use of the pause button
     var paused: Bool = false
     
@@ -300,7 +297,6 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         // records a new path
         // updates the state Boolean to signify that the program is no longer saving the first anchor point
         startAnchorPoint = false
-        attemptingRelocalization = false
         
         // TODO: probably don't need to set this to [], but erring on the side of being conservative
         crumbs = []
@@ -488,25 +484,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         if case .normal? = ARSessionManager.shared.currentFrame?.camera.trackingState {
             isTrackingPerformanceNormal = true
         }
-        var isSameMap = false
-        if let worldMap = worldMap {
-            // analyze the map to see if we can relocalize
-            if ARSessionManager.shared.adjustRelocalizationStrategy(worldMap: worldMap) == .none {
-                // unfortunately, we are out of luck.  Better to not use the ARWorldMap
-                ARSessionManager.shared.initialWorldMap = nil
-                attemptingRelocalization = false
-            } else {
-                isSameMap = ARSessionManager.shared.initialWorldMap != nil && ARSessionManager.shared.initialWorldMap == worldMap
-                if route.cloudAnchors.isEmpty {
-                    ARSessionManager.shared.initialWorldMap = worldMap
-                }
-                // TODO: see if we can move this out of this if statement
-                attemptingRelocalization = isSameMap && !isTrackingPerformanceNormal || !isSameMap
-            }
-        } else {
-            ARSessionManager.shared.relocalizationStrategy = .coordinateSystemAutoAligns
-            ARSessionManager.shared.initialWorldMap = nil
-        }
+        ARSessionManager.shared.initialWorldMap = worldMap
 
         if navigateStartToEnd {
             crumbs = route.crumbs.reversed()
@@ -523,8 +501,6 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         continuationAfterSessionIsReady = {
             ARSessionManager.shared.geoSpatialAlignmentCrumbs = self.crumbs
             ARSessionManager.shared.cloudAnchorsForAlignment = route.cloudAnchors
-            
-            self.trackGeoSpatialDuringNavigation =  Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: (#selector(self.trackGeoSpatialDuringNavigationHandler)), userInfo: nil, repeats: true)
         }
         ARSessionManager.shared.startSession()
     }
@@ -2450,26 +2426,6 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         }
     }
     
-    @objc func trackGeoSpatialDuringNavigationHandler() {
-        if let geoAlignment = getGeoSpatialLocationInfo() {
-            geoSpatialAlignmentCrumbs.append(geoAlignment)
-            checkForGeoSpatialAlignment()
-        }
-    }
-    
-    func checkForGeoSpatialAlignment() {
-        if !attemptingRelocalization {
-            return
-        }
-        guard let bestRouteGeoSpatialAnchor = crumbs.min(by: { (crumb1, crumb2) in crumb1.headingUncertainty < crumb2.headingUncertainty }), let bestAlignmentGeoSpatialAnchor = geoSpatialAlignmentCrumbs.min(by: { (crumb1, crumb2) in crumb1.headingUncertainty < crumb2.headingUncertainty }), max(bestRouteGeoSpatialAnchor.headingUncertainty, bestAlignmentGeoSpatialAnchor.headingUncertainty) < Self.headingAccuracyRequiredForGeoAlignment else {
-            return
-        }
-        // TODO: we are currently aligning with anchors, but we may have to return to this
-
-        let alignECEF = convertToECEF(from: bestAlignmentGeoSpatialAnchor)
-        let routeECEF = convertToECEF(from: bestRouteGeoSpatialAnchor)
-    }
-    
     func convertToECEF(from geoSpatial: LocationInfoGeoSpatial)->simd_float3 {
         // https://en.wikipedia.org/wiki/Geographic_coordinate_conversion#From_geodetic_to_ECEF_coordinates
         let phi = geoSpatial.latitude * Double.pi / 180.0
@@ -2987,7 +2943,6 @@ extension ViewController: ARSessionManagerDelegate {
           // TODO: we need to have these announcements logged with the Announcement Manager
           PathLogger.shared.logSpeech(utterance: NSLocalizedString("realignToSavedRouteAnnouncement", comment: "An announcement which lets the user know that their surroundings have been matched to a saved route"))
       }
-      attemptingRelocalization = false
       if case .startingResumeProcedure(let route, let worldMap, let navigateStartToEnd) = state {
           // this will cancel any realignment if it hasn't happened yet and go straight to route navigation mode
           rootContainerView.countdownTimer.isHidden = true
