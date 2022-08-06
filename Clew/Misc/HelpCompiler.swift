@@ -62,8 +62,6 @@ class HelpCompiler {
                             <p>\(NSLocalizedString("ratingYourNavigationExperienceContent", comment: "This is a paragraph in the rating your navigation experiennce section of the help menu."))</p>
                             """),("\(NSLocalizedString("providingFeedbackToTheDevelopmentTeamHeader", comment: "this is a section in the help documentation menu"))","""
                                 <p>\(NSLocalizedString("providingFeedbackToTheDevelopmentTeamContent", comment: "This is a paragraph which describes how to send feedback to the development team"))</p>
-                                </body>
-                                </html>
                                 """)]
     
     ///compiles all of the web content into a giant string of HTML
@@ -115,8 +113,12 @@ class HelpCompiler {
         <body>
         <img class = "image" src="./clewLogo.png" alt="\(NSLocalizedString("clewAppLogoAccessibilityText", comment: "This is the accessibility text placed over the clew app logo in the help documentation"))">
         <h1 class = "pageTitle"> \(NSLocalizedString("clewHelpTitle", comment: "This is the top heading of the help documentation"))</h1>
+        <audio controls="true" autoplay>
+                  <source src="./clew_beta_tutorial.mp3" type="audio/mp3">
+                Your browser does not support the audio element.
+                </audio>
         """
-        
+        /*
         ///itterates through the dictionary of help sections and their content
         for (key,value) in contentDictioanry{
             
@@ -157,8 +159,8 @@ class HelpCompiler {
         
         <!--Loads the Javascript which handles the collapseability-->
         <script async src="./helpDocsJavascript.js"> </script>
-        """
-        
+        """*/
+        result += "</body></html>"
         ///returns the string which contains the full html for the website
         return result
     }
