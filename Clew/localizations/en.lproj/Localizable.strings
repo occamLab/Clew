@@ -27,7 +27,7 @@
 "startedTrackingSessionAnnouncement" = "Tracking session initialized.";
 "fixedTrackingAnnouncement" = "Tracking performance normal.";
 "properDevicePositioningAnnouncement" = "You are recording a route.  Hold vertically with the rear camera facing forward.";
-"completedNavigationAnnouncement" = "You've arrived.";
+"completedNavigationAnnouncement" = "You have arrived.";
 
     // Name of labels that appear in UI
 "saveARouteButtonText" = "Create a Route";
@@ -290,7 +290,7 @@
 
 "resumeAnchorPointToReturnNavigationAnnouncement" = "Starting navigation. Audio and haptics indicate that you are on the route.";
 "singleUseRouteToRecordingRouteAnnouncement" = "Now recording a single use route.";
-"saveRouteToPlayPauseAnnouncement" = "Route saved. You may now perform return navigation or return to the home screen.";
+"saveRouteToPlayPauseAnnouncement" = "Route saved. To test your route, first navigate to the starting location without guidance from the app. Next, access your route through the \"Manage Routes\" button.";
 "saveCodeIDtoCreatingAnchorPointAnnouncement" = "App clip code ID saved. You may now set an anchor point.";
 
 

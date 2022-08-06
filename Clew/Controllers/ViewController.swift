@@ -324,9 +324,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     ///
     /// - Parameter allowPause: a Boolean that determines whether the app should allow the user to pause the route (this is only allowed if it is the initial route recording)
     func handleStateTransitionToReadyToNavigateOrPause(allowPause: Bool) {
-        #if !APPCLIP
-            nameCodeIDController!.dismiss(animated: false)
-        #endif
+        nameCodeIDController!.dismiss(animated: false)
         droppingCrumbs?.invalidate()
         updateHeadingOffsetTimer?.invalidate()
         showStartNavigationButton(allowPause: allowPause)
@@ -704,7 +702,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         hideAllViewsHelper()
         /// PATHPOINT Save Route View -> play/pause
         ///Announce to the user that they have finished the alignment process and are now at the play pause screen
-        self.delayTransition(announcement: NSLocalizedString("saveRouteToPlayPauseAnnouncement", comment: "This is an announcement which is spoken when the user finishes saving their route. This announcement signifies the transition from the view where the user can name or save their route to the screen where the user can either pause the AR session tracking or they can perform return navigation."), initialFocus: nil)
+        self.delayTransition(announcement: nil, initialFocus: startNavigationController.label)
     }
     
     /// Hide all the subviews.  TODO: This should probably eventually refactored so it happens more automatically.
@@ -1642,9 +1640,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     
     /// Display start navigation view/hide all other views
     @objc func showStartNavigationButton(allowPause: Bool) {
-        #if !APPCLIP
         rootContainerView.homeButton.isHidden = !recordingSingleUseRoute // home button hidden if we are doing a multi use route (we use the large home button instead)
-        #endif
         resumeTrackingController.remove()
         resumeTrackingConfirmController.remove()
         stopRecordingController.remove()
@@ -1653,6 +1649,8 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         startNavigationController.isAutomaticAlignment = isAutomaticAlignment
         startNavigationController.recordingSingleUseRoute = recordingSingleUseRoute
         add(startNavigationController)
+        // disabling this to avoid confusion when users are testing the app
+        startNavigationController.startNavigationButton.isHidden = true
         startNavigationController.pauseButton.isHidden = !allowPause
         startNavigationController.largeHomeButton.isHidden = recordingSingleUseRoute
         startNavigationController.stackView.layoutIfNeeded()
@@ -1767,53 +1765,20 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         // TODO: i18n/l10n
         if completedRoute{
             delayTransition(announcement: "You have arrived at your destination.")
-
-            //label.text = "You have arrived at your destination. Thank you for using the Clew App Clip"
-            //view.mainText?.text?.append(String.localizedStringWithFormat("You have arrived at your destination. Thank you for using the Clew App Clip", 5))
         } else{
             delayTransition(announcement: "Route navigation stopped. You may not have arrived at your destination yet.")
-            //label.text = "Route navigation stopped. You may not have arrived at your destination yet. Thank you for using the Clew App Clip"
-            // view.mainText?.text?.append(String.localizedStringWithFormat("Route navigation stopped. You may not have arrived at your destination yet. Thank you for using the Clew App Clip", 5))
         }
-        /*label.tag = UIView.mainTextTag
-        /// place label inside of the scrollview
-        scrollView.addSubview(label)
-        self.view.addSubview(scrollView)
-        
-        /// set top, left, right constraints on scrollView to
-        /// "main" view + 8.0 padding on each side
-        scrollView.topAnchor.constraint(equalTo: view.topAnchor, constant: UIScreen.main.bounds.size.height*0.15).isActive = true
-        scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8.0).isActive = true
-        scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8.0).isActive = true
-        
-        /// set the height constraint on the scrollView to 0.5 * the main view height
-        scrollView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.5).isActive = true
-        
-        /// set top, left, right AND bottom constraints on label to
-        /// scrollView + 8.0 padding on each side
-        label.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 8.0).isActive = true
-        label.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 8.0).isActive = true
-        label.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -8.0).isActive = true
-        label.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -8.0).isActive = true
-        
-        /// set the width of the label to the width of the scrollView (-16 for 8.0 padding on each side)
-        label.widthAnchor.constraint(equalTo: scrollView.widthAnchor, constant: -16.0).isActive = true
-        
-        /// configure label: Zero lines + Word Wrapping
-        label.numberOfLines = 0
-        label.lineBreakMode = NSLineBreakMode.byWordWrapping */
-        
-        if #available(iOS 14.0, *){
-            let config = SKOverlay.AppClipConfiguration(position: .bottom)
-            let overlay = SKOverlay(configuration: config)
-            overlay.present(in: scene)
-        print("UI done")
 
-        }
+        let config = SKOverlay.AppClipConfiguration(position: .bottom)
+        let overlay = SKOverlay(configuration: config)
+        overlay.present(in: scene)
+        print("UI done")
         #else
         ARSessionManager.shared.pauseSession()
         self.hideAllViewsHelper()
-        AnnouncementManager.shared.announce(announcement: "You've arrived")
+        if completedRoute {
+            AnnouncementManager.shared.announce(announcement: "You have arrived")
+        }
         self.add(self.endNavigationController!)
         #endif
     }
@@ -2135,7 +2100,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         #if !APPCLIP
         //self.surveyInterface.sendLogDataHelper(pathStatus: nil, vc: self)
         self.hideAllViewsHelper()
-        self.state = .endScreen(completedRoute: true)
+        self.state = .endScreen(completedRoute: false)
         print("end screen displayed")
         #else
         self.state = .endScreen(completedRoute: false)

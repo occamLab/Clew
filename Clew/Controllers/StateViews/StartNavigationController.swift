@@ -33,15 +33,15 @@ class StartNavigationController: UIViewController {
     /// called when view appears (any time)
     override func viewWillAppear(_ animated: Bool) {
         
-        var mainText : String
+        var mainText : String = NSLocalizedString("saveRouteToPlayPauseAnnouncement", comment: "this tells the user they must navigate back and navigate in the same direction")
         if recordingSingleUseRoute {
-            mainText = NSLocalizedString("singleUsePlayPauseViewText", comment: "Information displayed to the user on the play pause screen after they have recorded a single use route. This describes the functionality of the play and pause buttons.")
+            //mainText = NSLocalizedString("singleUsePlayPauseViewText", comment: "Information displayed to the user on the play pause screen after they have recorded a single use route. This describes the functionality of the play and pause buttons.")
             largeHomeButton.isHidden = true
         } else {
             if isAutomaticAlignment {
-                mainText = NSLocalizedString("automaticAlignmentPlayPauseViewText", comment: "Information displayed to the user on the play pause screen after they have sucessfully aligned to their route automatically.")
+               // mainText = NSLocalizedString("automaticAlignmentPlayPauseViewText", comment: "Information displayed to the user on the play pause screen after they have sucessfully aligned to their route automatically.")
             } else {
-                mainText = NSLocalizedString("multipleUseRoutePlayPauseViewText", comment: "Information displayed to the user on the play pause screen after they have just recorded a multiple use route. This describes the functionality of the play and pause buttons.")
+              //  mainText = NSLocalizedString("multipleUseRoutePlayPauseViewText", comment: "Information displayed to the user on the play pause screen after they have just recorded a multiple use route. This describes the functionality of the play and pause buttons.")
             }
             
         }
@@ -82,17 +82,16 @@ class StartNavigationController: UIViewController {
         view.backgroundColor = UIColor.black.withAlphaComponent(0.4)
         
         // TODO: we can probably just use the code in viewDidAppear
-        var mainText : String
-        if recordingSingleUseRoute{
-            mainText = NSLocalizedString("singleUsePlayPauseViewText", comment: "Information displayed to the user on the play pause screen after they have recorded a single use route. This describes the functionality of the play and pause buttons.")
-        } else {
-            if isAutomaticAlignment {
-                mainText = NSLocalizedString("automaticAlignmentPlayPauseViewText", comment: "Information displayed to the user on the play pause screen after they have sucessfully aligned to their route automatically.")
-            } else {
-                mainText = NSLocalizedString("multipleUseRoutePlayPauseViewText", comment: "Information displayed to the user on the play pause screen after they have just recorded a multiple use route. This describes the functionality of the play and pause buttons.")
-            }
-            
-        }
+        var mainText : String = NSLocalizedString("saveRouteToPlayPauseAnnouncement", comment: "this tells the user they must navigate back and navigate in the same direction")//
+//        if recordingSingleUseRoute{
+//            mainText = NSLocalizedString("singleUsePlayPauseViewText", comment: "Information displayed to the user on the play pause screen after they have recorded a single use route. This describes the functionality of the play and pause buttons.")
+//        } else {
+//            if isAutomaticAlignment {
+//                mainText = NSLocalizedString("automaticAlignmentPlayPauseViewText", comment: "Information displayed to the user on the play pause screen after they have sucessfully aligned to their route automatically.")
+//            } else {
+//                mainText = NSLocalizedString("multipleUseRoutePlayPauseViewText", comment: "Information displayed to the user on the play pause screen after they have just recorded a multiple use route. This describes the functionality of the play and pause buttons.")
+//            }
+//        }
         
         label.textColor = UIColor.white
         label.textAlignment = .center
