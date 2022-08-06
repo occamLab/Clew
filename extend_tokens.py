@@ -5,11 +5,9 @@ import sys
 import os
 
 def extend_token(auth_token, anchor_id, expire_time):
-     print(anchor_id)
      curl_cmd = 'BEARER_TOKEN=`(oauth2l fetch --json ~/Downloads/clew-sandbox-22342ab55d3e.json arcore.management arcore.management)`; curl -H "Authorization: Bearer $BEARER_TOKEN" -H "Content-Type: application/json" -X "PATCH" \
    "https://arcorecloudanchor.googleapis.com/v1beta2/management/anchors/' + anchor_id + '?updateMask=expire_time" \
     -d \'{ expireTime: "' + expire_time + '" }\''
-     print(curl_cmd)
      print(os.system(curl_cmd))
 
 if len(sys.argv) < 3:
@@ -21,6 +19,5 @@ with open(sys.argv[1]) as f:
 
 
 for anchor in data['anchors']:
-    print(anchor)
     if anchor['expireTime'] != anchor['maximumExpireTime']:
         extend_token(sys.argv[2], os.path.basename(anchor['name']), anchor['maximumExpireTime'])
