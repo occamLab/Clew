@@ -44,7 +44,7 @@ enum AppState {
     /// User is testing the accuracy of geo localization
     case testingAccuracy
     /// User is waiting to see if the geo accuracy is good enough to record the route
-    case waitingForSufficientGeoLocationAccuracy
+    case waitingForSufficientGeoLocationAccuracyAndDoingInitialScan
     /// User is recording the route
     case recordingRoute
     /// User can either navigate back or pause
@@ -79,8 +79,8 @@ enum AppState {
     /// rawValue is useful for serializing state values, which we are currently using for our logging feature
     var rawValue: String {
         switch self {
-        case .waitingForSufficientGeoLocationAccuracy:
-            return "waitingForSufficientGeoLocationAccuracy"
+        case .waitingForSufficientGeoLocationAccuracyAndDoingInitialScan:
+            return "waitingForSufficientGeoLocationAccuracyAndDoingInitialScan"
         case .testingAccuracy:
             return "testingAccuracy"
         case .mainScreen(let announceArrival):
@@ -166,8 +166,8 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         didSet {
             logger.logStateTransition(newState: state)
             switch state {
-            case .waitingForSufficientGeoLocationAccuracy:
-                handleStateTransitionToWaitingForSufficientGeoLocationAccuracy()
+            case .waitingForSufficientGeoLocationAccuracyAndDoingInitialScan:
+                handleStateTransitionToWaitingForSufficientGeoLocationAccuracyAndDoingInitialScan()
             case .testingAccuracy:
                 handleStateTransitionToTestingAccuracy()
             case .recordingRoute:
@@ -284,12 +284,12 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         rootContainerView.homeButton.isHidden = false
     }
     
-    func handleStateTransitionToWaitingForSufficientGeoLocationAccuracy() {
+    func handleStateTransitionToWaitingForSufficientGeoLocationAccuracyAndDoingInitialScan() {
         add(testingAccuracyController)
         lastInsufficientAccuracyAnnouncement = Date()
         AnnouncementManager.shared.announce(announcement: "Waiting for location accuracy to at least reach \(GeospatialOverallQuality(rawValue: localizationQualityThreshold)!)")
-        
-        AnnouncementManager.shared.announce(announcement: "Point your phone's rear camera at signs or buildings across the street to improve accuracy")
+        AnnouncementManager.shared.announce(announcement: "Pan your phone slowly back and forth to record a cloud anchor.")
+        droppingCrumbs = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(dropCrumb), userInfo: nil, repeats: true)
     }
     
     /// Handler for the recordingRoute app state
@@ -301,7 +301,6 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         // TODO: probably don't need to set this to [], but erring on the side of being conservative
         crumbs = []
         recordingCrumbs = []
-        cloudAnchors = [:]
         geoSpatialRecordingAnchors = []
         geoSpatialAlignmentCrumbs = []
         ARSessionManager.shared.manualAlignment = matrix_identity_float4x4
@@ -311,7 +310,6 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         #if !APPCLIP
         showStopRecordingButton()
         #endif
-        droppingCrumbs = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(dropCrumb), userInfo: nil, repeats: true)
         // make sure there are no old values hanging around
         nav.headingOffset = 0.0
         headingRingBuffer.clear()
@@ -2025,7 +2023,9 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         continuationAfterSessionIsReady = {
             self.trackingErrorsAnnouncementTimer?.invalidate()
             // sends the user to the screen where they can enter an app clip code ID for the route they're about to record
-            self.state = .waitingForSufficientGeoLocationAccuracy
+            self.cloudAnchors = [:]
+            self.lastCloudAnchorTime = Date()
+            self.state = .waitingForSufficientGeoLocationAccuracyAndDoingInitialScan
         }
         ARSessionManager.shared.initialWorldMap = nil
         trackingSessionErrorState = nil
@@ -2039,6 +2039,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     @objc func stopRecording(_ sender: UIButton) {
         // copy the recordingCrumbs over for use in path creation
         crumbs = Array(recordingCrumbs)
+        droppingCrumbs?.invalidate()
         
         isResumedRoute = false
 
@@ -2373,19 +2374,21 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         
     /// drop a crumb during path recording
     @objc func dropCrumb() {
-        guard let curLocation = getGeoSpatialLocationInfo(), case .recordingRoute = state else {
+        guard let curLocation = getGeoSpatialLocationInfo() else {
             print("crumb could not be added")
             return
         }
         let geoSpatialAnchor = ARSessionManager.shared.addGeoSpatialAnchor(location: curLocation)!
-        geoSpatialRecordingAnchors.append(geoSpatialAnchor)
         curLocation.GARAnchorUUID = geoSpatialAnchor.identifier
         curLocation.geoAnchorTransform = geoSpatialAnchor.transform
-        recordingCrumbs.append(curLocation)
-        
         if -lastCloudAnchorTime.timeIntervalSinceNow > 25.0, let geoTransform = curLocation.geoAnchorTransform, let (cloudAnchor, arAnchor) = ARSessionManager.shared.hostCloudAnchor(withTransform: geoTransform) {
             lastCloudAnchorTime = Date()
         }
+        guard case .recordingRoute = state else {
+            return
+        }
+        geoSpatialRecordingAnchors.append(geoSpatialAnchor)
+        recordingCrumbs.append(curLocation)
     }
     
     func convertToECEF(from geoSpatial: LocationInfoGeoSpatial)->simd_float3 {
@@ -2852,12 +2855,13 @@ extension ViewController: UIPopoverPresentationControllerDelegate {
 
 extension ViewController: ARSessionManagerDelegate {
     func didHostCloudAnchor(cloudIdentifier: String, withTransform transform : simd_float4x4) {
+        AnnouncementManager.shared.announce(announcement: "Cloud anchor created")
         cloudAnchors[NSString(string: cloudIdentifier)] = ARAnchor(transform: transform)
     }
     
     func didReceiveFrameWithTrackingQuality(_ currentQuality : GeospatialOverallQuality) {
-        if currentQuality.isAsGoodOrBetterThan(GeospatialOverallQuality(rawValue: localizationQualityThreshold)!), case .waitingForSufficientGeoLocationAccuracy = state {
-            delayTransition(announcement: "Accuracy is sufficient to start recording", initialFocus: nil)
+        if currentQuality.isAsGoodOrBetterThan(GeospatialOverallQuality(rawValue: localizationQualityThreshold)!), case .waitingForSufficientGeoLocationAccuracyAndDoingInitialScan = state, !cloudAnchors.isEmpty {
+            delayTransition(announcement: "Accuracy is sufficient and initial anchor has been created. Starting recording", initialFocus: nil)
             ///sends the user to the screen where they name the route they're saving
             state = .recordingRoute
         } else if !currentQuality.isAsGoodOrBetterThan(GeospatialOverallQuality(rawValue: localizationQualityThreshold)!), case .startingResumeProcedure(_, _, _) = state, -lastInsufficientAccuracyAnnouncement.timeIntervalSinceNow > 5.0 {
