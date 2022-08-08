@@ -63,6 +63,7 @@ class ARSessionManager: NSObject, ObservableObject {
     var lastGeospatialLogTime = Date()
     let geoSpatialAlignmentFilter = GeoSpatialAlignment()
     var filterGeoSpatial: Bool = false
+    var disableARWorldMap: Bool = false
     @Published var worldTransformGeoSpatialPair: (simd_float4x4, GARGeospatialTransform)?
 
     /// This is embeds an AR scene.  The ARSession is a part of the scene view, which allows us to capture where the phone is in space and the state of the world tracking.  The scene also allows us to insert virtual objects
@@ -101,7 +102,9 @@ class ARSessionManager: NSObject, ObservableObject {
     
     var initialWorldMap: ARWorldMap? {
         set {
-            configuration.initialWorldMap = newValue
+            if !disableARWorldMap {
+                configuration.initialWorldMap = newValue
+            }
         }
         get {
             return configuration.initialWorldMap
