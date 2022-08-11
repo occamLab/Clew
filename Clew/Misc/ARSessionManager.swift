@@ -63,7 +63,11 @@ class ARSessionManager: NSObject, ObservableObject {
     var lastGeospatialLogTime = Date()
     let geoSpatialAlignmentFilter = GeoSpatialAlignment()
     var filterGeoSpatial: Bool = false
-    var disableARWorldMap: Bool = false
+    var disableARWorldMap: Bool = true
+    var visualizeCloudAnchors: Bool = false
+    var cloudAnchorSCNNodes: [String: SCNNode] = [:]
+    let cloudNodeUpdater = DispatchQueue(label: "cloudNodeUpdater")
+    
     @Published var worldTransformGeoSpatialPair: (simd_float4x4, GARGeospatialTransform)?
 
     /// This is embeds an AR scene.  The ARSession is a part of the scene view, which allows us to capture where the phone is in space and the state of the world tracking.  The scene also allows us to insert virtual objects
@@ -214,6 +218,12 @@ class ARSessionManager: NSObject, ObservableObject {
         sessionWasRelocalizing = false
         localization = .none
         removeNavigationNodes()
+        cloudNodeUpdater.async {
+            for (_, scnNode) in self.cloudAnchorSCNNodes {
+                scnNode.removeFromParentNode()
+            }
+            self.cloudAnchorSCNNodes = [:]
+        }
         geoSpatialAlignmentFilter.reset()
         sceneView.session.run(configuration, options: [.removeExistingAnchors])
         startGARSession()
@@ -700,8 +710,19 @@ extension ARSessionManager: ARSessionDelegate {
     func session(_ session: ARSession, didUpdate frame: ARFrame) {
         do {
             ARFrameStatusAdapter.adjustTrackingStatus(frame)
-            self.currentGARFrame = try garSession?.update(frame)
-
+            let garFrame = try garSession?.update(frame)
+            self.currentGARFrame = garFrame
+            // shift positions of cloud anchor nodes
+            cloudNodeUpdater.async {
+                if !self.visualizeCloudAnchors {
+                    return
+                }
+                for gAnchor in garFrame?.updatedAnchors ?? [] {
+                    if let cloudIdentifier = gAnchor.cloudIdentifier, gAnchor.hasValidTransform, let existingNode = self.cloudAnchorSCNNodes[cloudIdentifier] {
+                        existingNode.simdTransform = gAnchor.transform
+                    }
+                }
+            }
             // don't use Cloud Anchors if we have localized with the ARWorldMap
             if localization != .withARWorldMap, let gAnchors = currentGARFrame?.anchors {
                 checkForCloudAnchorAlignment(anchors: gAnchors)
@@ -808,6 +829,21 @@ extension ARSessionManager: ARSessionDelegate {
             ARSessionManager.shared.render(intermediateAnchorPoints: [intermediateAnchorPoint])
         }
     }
+    
+    private func createSCNNodeFor(identifier: String, at: simd_float4x4) {
+        if !visualizeCloudAnchors{
+            return
+        }
+        cloudNodeUpdater.async {
+            let newNode = SCNNode(geometry: SCNBox(width: 0.25, height: 0.25, length: 0.25, chamferRadius: 0.1))
+            
+            newNode.simdTransform = at
+            newNode.geometry?.firstMaterial!.diffuse.contents = UIColor.green
+            self.cloudAnchorSCNNodes[identifier] = newNode
+            self.sceneView.scene.rootNode.addChildNode(newNode)
+        }
+    }
+    
 }
 
 extension ARSessionManager: GARSessionDelegate {
@@ -823,6 +859,7 @@ extension ARSessionManager: GARSessionDelegate {
         if let cloudIdentifier = anchor.cloudIdentifier, anchor.hasValidTransform, let alignTransform = cloudAnchorsForAlignment[NSString(string: cloudIdentifier)]?.transform {
             lastResolvedCloudAnchorID = cloudIdentifier
             self.manualAlignment = (anchor.transform * alignTransform.inverse).alignY()
+            createSCNNodeFor(identifier: cloudIdentifier, at: anchor.transform)
             let announceResolution = "Cloud Anchor Resolved"
             PathLogger.shared.logSpeech(utterance: announceResolution)
             AnnouncementManager.shared.announce(announcement: announceResolution)
@@ -832,6 +869,7 @@ extension ARSessionManager: GARSessionDelegate {
     func session(_ session: GARSession, didHost garAnchor:GARAnchor) {
         if let cloudIdentifier = garAnchor.cloudIdentifier {
             delegate?.didHostCloudAnchor(cloudIdentifier: cloudIdentifier, withTransform: garAnchor.transform)
+            createSCNNodeFor(identifier: cloudIdentifier, at: garAnchor.transform)
         }
     }
     

@@ -1275,7 +1275,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     
     /// Register settings bundle
     func registerSettingsBundle(){
-        let appDefaults = ["outdoorLocalizationThreshold": 0, "filterGeoSpatial": true, "disableARWorldMap": false, "crumbColor": 0, "showPath": true, "pathColor": 0, "hapticFeedback": true, "sendLogs": true, "voiceFeedback": true, "soundFeedback": true, "adjustOffset": false, "units": 0, "timerLength":5, "uploadRichData": false] as [String : Any]
+        let appDefaults = ["outdoorLocalizationThreshold": 0, "filterGeoSpatial": true, "disableARWorldMap": true, "visualizeCloudAnchors": false, "crumbColor": 0, "showPath": true, "pathColor": 0, "hapticFeedback": true, "sendLogs": true, "voiceFeedback": true, "soundFeedback": true, "adjustOffset": false, "units": 0, "timerLength":5, "uploadRichData": false] as [String : Any]
         UserDefaults.standard.register(defaults: appDefaults)
     }
 
@@ -1286,6 +1286,8 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         localizationQualityThreshold = defaults.integer(forKey: "outdoorLocalizationThreshold")
         ARSessionManager.shared.disableARWorldMap = defaults.bool(forKey: "disableARWorldMap")
         ARSessionManager.shared.filterGeoSpatial = defaults.bool(forKey: "filterGeoSpatial")
+        ARSessionManager.shared.visualizeCloudAnchors = defaults.bool(forKey: "visualizeCloudAnchors")
+
         switch localizationQualityThreshold {
         case 0:
             ARSessionManager.shared.outdoorLocalizationQualityThreshold = .excellent

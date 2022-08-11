@@ -50,11 +50,21 @@
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
 			<key>Title</key>
+			<string>Visualize Cloud Anchors</string>
+			<key>Key</key>
+			<string>visualizeCloudAnchors</string>
+			<key>DefaultValue</key>
+			<false/>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
 			<string>Disable ARWorldMap</string>
 			<key>Key</key>
 			<string>disableARWorldMap</string>
 			<key>DefaultValue</key>
-			<false/>
+			<true/>
 		</dict>
 		<dict>
 			<key>Type</key>
