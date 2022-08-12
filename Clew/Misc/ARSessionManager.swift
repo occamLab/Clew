@@ -44,6 +44,7 @@ protocol ARSessionManagerDelegate {
     func didDoGeoAlignment()
     func didReceiveFrameWithTrackingQuality(_ : GeospatialOverallQuality)
     func didHostCloudAnchor(cloudIdentifier: String, withTransform: simd_float4x4)
+    func didUpdate(garAnchor: GARAnchor)
 }
 
 class ARSessionManager: NSObject, ObservableObject {
@@ -711,6 +712,9 @@ extension ARSessionManager: ARSessionDelegate {
         do {
             ARFrameStatusAdapter.adjustTrackingStatus(frame)
             let garFrame = try garSession?.update(frame)
+            for gAnchor in garFrame?.updatedAnchors ?? [] {
+                delegate?.didUpdate(garAnchor: gAnchor)
+            }
             self.currentGARFrame = garFrame
             // shift positions of cloud anchor nodes
             cloudNodeUpdater.async {

@@ -54,8 +54,8 @@ class AnnouncementManager: NSObject, AVSpeechSynthesizerDelegate {
     /// Communicates a message to the user via speech.  If VoiceOver is active, then VoiceOver is used to communicate the announcement, otherwise we use the AVSpeechEngine
     ///
     /// - Parameter announcement: the text to read to the user
-    func announce(announcement: String) {
-        if let currentAnnouncement = currentAnnouncement {
+    func announce(announcement: String, preempt: Bool=false) {
+        if let currentAnnouncement = currentAnnouncement, !preempt {
             // don't interrupt current announcement, but if there is something new to say put it on the queue to say next.  Note that adding it to the queue in this fashion could result in the next queued announcement being preempted
             if currentAnnouncement != announcement {
                 nextAnnouncement = announcement
@@ -81,6 +81,9 @@ class AnnouncementManager: NSObject, AVSpeechSynthesizerDelegate {
                 let utterance = AVSpeechUtterance(string: announcement)
                 utterance.rate = 0.5
                 currentAnnouncement = announcement
+                if preempt {
+                    synth.stopSpeaking(at: .immediate)
+                }
                 synth.speak(utterance)
             } catch {
                 print("Unexpected error announcing something using AVSpeechEngine!")

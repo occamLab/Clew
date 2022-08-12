@@ -22,6 +22,9 @@
 		8284A742288AE23300999ABF /* NSObject+ARFrameStatusAdapter.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8284A740288AE23300999ABF /* NSObject+ARFrameStatusAdapter.mm */; };
 		82A4A9BA287E4D96007D8F23 /* Credentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82A4A9B8287E4D96007D8F23 /* Credentials.swift */; };
 		82B25182278DF4B0001E3AB6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 82B25184278DF4B0001E3AB6 /* LaunchScreen.storyboard */; };
+		82BC1D5328A5FECC006C301B /* ClewErrorSound.wav in Resources */ = {isa = PBXBuildFile; fileRef = 82BC1D5128A5FECC006C301B /* ClewErrorSound.wav */; };
+		82BC1D5428A5FECC006C301B /* ClewSuccessSound.wav in Resources */ = {isa = PBXBuildFile; fileRef = 82BC1D5228A5FECC006C301B /* ClewSuccessSound.wav */; };
+		82BC1D5628A5FEFD006C301B /* ClewTutorialFeedback.wav in Resources */ = {isa = PBXBuildFile; fileRef = 82BC1D5528A5FEFD006C301B /* ClewTutorialFeedback.wav */; };
 		82BFA96528749DB300039E97 /* GoogleService-Info_dev.plist in Resources */ = {isa = PBXBuildFile; fileRef = 82BFA96328749DB300039E97 /* GoogleService-Info_dev.plist */; };
 		82D37CA52890AE2100A1D032 /* GeoSpatialAlignment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82D37CA42890AE2100A1D032 /* GeoSpatialAlignment.swift */; };
 		9824AB5826B981900016225C /* InformedConsentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9824AB5726B981900016225C /* InformedConsentViewModel.swift */; };
@@ -176,6 +179,9 @@
 		82A4A9B8287E4D96007D8F23 /* Credentials.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Credentials.swift; sourceTree = "<group>"; };
 		82AD6A24252F80AA00902A11 /* speaker.mtl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = speaker.mtl; sourceTree = "<group>"; };
 		82B25183278DF4B0001E3AB6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		82BC1D5128A5FECC006C301B /* ClewErrorSound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = ClewErrorSound.wav; sourceTree = "<group>"; };
+		82BC1D5228A5FECC006C301B /* ClewSuccessSound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = ClewSuccessSound.wav; sourceTree = "<group>"; };
+		82BC1D5528A5FEFD006C301B /* ClewTutorialFeedback.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = ClewTutorialFeedback.wav; sourceTree = "<group>"; };
 		82BC47FD2640383300C7D364 /* Surveys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Surveys.swift; sourceTree = "<group>"; };
 		82BFA96328749DB300039E97 /* GoogleService-Info_dev.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info_dev.plist"; sourceTree = "<group>"; };
 		82D37CA42890AE2100A1D032 /* GeoSpatialAlignment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoSpatialAlignment.swift; sourceTree = "<group>"; };
@@ -515,6 +521,9 @@
 			isa = PBXGroup;
 			children = (
 				E5470EBA22C119F4001092A4 /* SettingsTableViewController.h */,
+				82BC1D5528A5FEFD006C301B /* ClewTutorialFeedback.wav */,
+				82BC1D5128A5FECC006C301B /* ClewErrorSound.wav */,
+				82BC1D5228A5FECC006C301B /* ClewSuccessSound.wav */,
 				E5470ED222C119F4001092A4 /* StartRecording.aiff */,
 				E5470ED322C119F4001092A4 /* StopRecording.aiff */,
 			);
@@ -707,6 +716,9 @@
 				98FF7AA7269CC040008C64E5 /* Localizable.strings in Resources */,
 				98FF7AE2269CC175008C64E5 /* Crumb.obj in Resources */,
 				82B25182278DF4B0001E3AB6 /* LaunchScreen.storyboard in Resources */,
+				82BC1D5428A5FECC006C301B /* ClewSuccessSound.wav in Resources */,
+				82BC1D5328A5FECC006C301B /* ClewErrorSound.wav in Resources */,
+				82BC1D5628A5FEFD006C301B /* ClewTutorialFeedback.wav in Resources */,
 				98FF7AE3269CC178008C64E5 /* speaker.mtl in Resources */,
 				98FF7ABD269CC0E0008C64E5 /* StopRecording.aiff in Resources */,
 				82BFA96528749DB300039E97 /* GoogleService-Info_dev.plist in Resources */,
@@ -1113,7 +1125,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Clew-More/Clew-More.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 345;
+				CURRENT_PROJECT_VERSION = 346;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_ASSET_PATHS = "\"Clew-More/Preview Content\"";
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
@@ -1151,7 +1163,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Clew-More/Clew-More.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 345;
+				CURRENT_PROJECT_VERSION = 346;
 				DEVELOPMENT_ASSET_PATHS = "\"Clew-More/Preview Content\"";
 				DEVELOPMENT_TEAM = 42363V8M4P;
 				ENABLE_PREVIEWS = YES;

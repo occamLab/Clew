@@ -407,7 +407,8 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     /// Handler for the navigatingRoute app state
     func handleStateTransitionToNavigatingRoute() {
         // navigate the recorded path
-
+        // prevent bear left / bear right when the navigation is starting up
+        lastDirectionAnnouncement = Date()
         // If the route has not yet been saved, we can no longer save this route
         routeName = nil
         beginRouteAnchorPoint = RouteAnchorPoint()
@@ -876,6 +877,11 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     /// stop route navigation VC
     var stopNavigationController: StopNavigationController!
     
+    /// keep track of when the last off course announcement was given
+    var lastOffCourseAnnouncement: Date? = Date()
+    
+    /// last direction announcement
+    var lastDirectionAnnouncement = Date()
 
     /// called when the view has loaded.  We setup various app elements in here.
     override func viewDidLoad() {
@@ -1316,8 +1322,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         nav.useHeadingOffset = adjustOffset
         logRichData = defaults.bool(forKey: "logRichData")
         
-        // TODO: log settings here
-        logger.logSettings(localizationThreshold: localizationQualityThreshold, defaultUnit: defaultUnit, defaultColor: defaultColor, soundFeedback: soundFeedback, voiceFeedback: voiceFeedback, hapticFeedback: hapticFeedback, sendLogs: sendLogs, timerLength: timerLength, adjustOffset: adjustOffset)
+        logger.logSettings(localizationThreshold: localizationQualityThreshold, filterGeoSpatial: ARSessionManager.shared.filterGeoSpatial, disableARWorldMap: ARSessionManager.shared.disableARWorldMap, visualizeCloudAnchors: ARSessionManager.shared.visualizeCloudAnchors, defaultUnit: defaultUnit, defaultColor: defaultColor, soundFeedback: soundFeedback, voiceFeedback: voiceFeedback, hapticFeedback: hapticFeedback, sendLogs: sendLogs, timerLength: timerLength, adjustOffset: adjustOffset)
         
         // leads to JSON like:
         //   options: { "unit": "meter", "soundFeedback", true, ... }
@@ -1811,9 +1816,9 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
             if defaultUnit == 0 || distanceToDisplay >= 10 {
                 // don't use fractional feet or for higher numbers of meters (round instead)
                 // Related to higher number of meters, there is a somewhat strange behavior in VoiceOver where numbers greater than 10 will be read as, for instance, 11 dot 4 meters (instead of 11 point 4 meters).
-                altText += " for \(Int(distanceToDisplay))" + unitText[defaultUnit]!
+                altText += " and proceed \(Int(distanceToDisplay))" + unitText[defaultUnit]!
             } else {
-                altText += " for \(distanceToDisplay)" + unitText[defaultUnit]!
+                altText += " and proceed \(distanceToDisplay)" + unitText[defaultUnit]!
             }
         }
         if !remindedUserOfOffsetAdjustment && adjustOffset {
@@ -1823,7 +1828,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         if case .navigatingRoute = state {
             logger.logSpeech(utterance: altText)
         }
-        AnnouncementManager.shared.announce(announcement: altText)
+        AnnouncementManager.shared.announce(announcement: altText, preempt: true)
     }
     
     // MARK: - BreadCrumbs
@@ -1882,6 +1887,15 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     var feedbackTimer: Date!
     /// The delay between haptic feedback pulses in seconds
     static let FEEDBACKDELAY = 0.4
+    var spatialAudioTimer = Date()
+    
+    static let cloudAnchorDropInterval = 25.0
+    
+    static let spatialAudioInterval = 1.0
+    
+    static let offTrackCorrectionAnnouncementInterval = 2.0
+    
+    static let directionTextGracePeriod = 5.0
     
     // MARK: - Settings bundle configuration
     
@@ -2314,21 +2328,12 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
                 ///announce to the user that they have aligned to the anchor point sucessfully and are starting  navigation.
                 self.paused = false
                 self.alignmentTransition()
-                //self.delayTransition(announcement: NSLocalizedString("resumeAnchorPointToReturnNavigationAnnouncement", comment: "This is an Announcement which indicates that the pause session is complete, that the program was able to align with the anchor point, and that return navigation has started."), initialFocus: nil)
-                //self.state = .navigatingRoute
-
-            } else {
-                ///PATHPOINT load saved route -> start navigation
-
-                ///announce to the user that they have sucessfully aligned with their saved anchor point.
-                self.alignmentTransition()
-                //self.delayTransition(announcement: NSLocalizedString("resumeAnchorPointToReturnNavigationAnnouncement", comment: "This is an Announcement which indicates that the pause session is complete, that the program was able to align with the anchor point, and that return navigation has started."), initialFocus: nil)
             }
         } else {
             DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(ViewController.alignmentWaitingPeriod)) {
             self.rootContainerView.countdownTimer.isHidden = true
             // The first check is necessary in case the phone relocalizes before this code executes
-                if case .readyForFinalResumeAlignment = self.state, let routeTransform = self.pausedTransform, /*let tagAnchor = self.sceneView.session.currentFrame?.anchors.compactMap({$0 as? ARAppClipCodeAnchor}).filter({$0.isTracked}).first */ let tagAnchor = ARSessionManager.shared.currentFrame?.camera {
+                if case .readyForFinalResumeAlignment = self.state, let routeTransform = self.pausedTransform, let tagAnchor = ARSessionManager.shared.currentFrame?.camera {
                 // yaw can be determined by projecting the camera's z-axis into the ground plane and using arc tangent (note: the camera coordinate conventions of ARKit https://developer.apple.com/documentation/arkit/arsessionconfiguration/worldalignment/camera
                 let alignYaw = self.getYawHelper(routeTransform)
                 let cameraYaw = self.getYawHelper(tagAnchor.transform)
@@ -2383,7 +2388,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         let geoSpatialAnchor = ARSessionManager.shared.addGeoSpatialAnchor(location: curLocation)!
         curLocation.GARAnchorUUID = geoSpatialAnchor.identifier
         curLocation.geoAnchorTransform = geoSpatialAnchor.transform
-        if -lastCloudAnchorTime.timeIntervalSinceNow > 25.0, let geoTransform = curLocation.geoAnchorTransform, let (cloudAnchor, arAnchor) = ARSessionManager.shared.hostCloudAnchor(withTransform: geoTransform) {
+        if -lastCloudAnchorTime.timeIntervalSinceNow > Self.cloudAnchorDropInterval, let geoTransform = curLocation.geoAnchorTransform, let _ = ARSessionManager.shared.hostCloudAnchor(withTransform: geoTransform) {
             lastCloudAnchorTime = Date()
         }
         guard case .recordingRoute = state else {
@@ -2423,7 +2428,8 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
             if !RouteManager.shared.onLastKeypoint {                // arrived at keypoint
                 // send haptic/sonic feedback
                 waypointFeedbackGenerator?.notificationOccurred(.success)
-                if (soundFeedback) { SoundEffectManager.shared.meh()
+                if (soundFeedback) {
+                    SoundEffectManager.shared.meh()
                 }
 
                 // remove current visited keypont from keypoint list
@@ -2439,11 +2445,12 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
                 
                 // update directions to next keypoint
                 if let newDirectionToNextKeypoint = getDirectionToNextKeypoint(currentLocation: curLocation) {
-                    setDirectionText(currentLocation: curLocation.location, direction: newDirectionToNextKeypoint, displayDistance: false)
+                    setDirectionText(currentLocation: curLocation.location, direction: newDirectionToNextKeypoint, displayDistance: true)
                 }
             } else {
                 waypointFeedbackGenerator?.notificationOccurred(.success)
-                if (soundFeedback) { SoundEffectManager.shared.success() }
+                if (soundFeedback) { SoundEffectManager.shared.success()
+                }
 
                 RouteManager.shared.checkOffKeypoint()
                 ARSessionManager.shared.removeNavigationNodes()
@@ -2577,16 +2584,35 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         
         // use a stricter criteria than 12 o'clock for providing haptic feedback
         if directionToNextKeypoint.lateralDistanceRatioWhenCrossingTarget < lateralDisplacementToleranceRatio || abs(directionToNextKeypoint.angleDiff) < coneWidth {
-            let timeInterval = feedbackTimer.timeIntervalSinceNow
-            if(-timeInterval > ViewController.FEEDBACKDELAY) {
+            lastOffCourseAnnouncement = nil
+            if -feedbackTimer.timeIntervalSinceNow > ViewController.FEEDBACKDELAY {
                 // wait until desired time interval before sending another feedback
-                if (hapticFeedback) { feedbackGenerator?.impactOccurred()
+                if hapticFeedback { feedbackGenerator?.impactOccurred()
                 }
-                if (soundFeedback) {
+                if soundFeedback {
                     SoundEffectManager.shared.playSystemSound(id: 1103)
-
                 }
                 feedbackTimer = Date()
+            }
+        } else if -lastDirectionAnnouncement.timeIntervalSinceNow > Self.directionTextGracePeriod {
+            if SoundEffectManager.shared.isWearingBinauralHeadphones() {
+                if -spatialAudioTimer.timeIntervalSinceNow > Self.spatialAudioInterval {
+                    if directionToNextKeypoint.angleDiff > 0 {
+                        SoundEffectManager.shared.error(volume: 1.0, pan: 1.0)
+                    } else {
+                        SoundEffectManager.shared.error(volume: 1.0, pan: -1.0)
+                    }
+                    spatialAudioTimer = Date()
+                }
+            } else {
+                if lastOffCourseAnnouncement == nil || -lastOffCourseAnnouncement!.timeIntervalSinceNow > Self.offTrackCorrectionAnnouncementInterval {
+                    lastOffCourseAnnouncement = Date()
+                    if directionToNextKeypoint.angleDiff > 0 {
+                        AnnouncementManager.shared.announce(announcement: "Bear right to get on track")
+                    } else {
+                        AnnouncementManager.shared.announce(announcement: "Bear left to get on track")
+                    }
+                }
             }
         }
         for anchorPoint in RouteManager.shared.intermediateAnchorPoints {
@@ -2709,6 +2735,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         guard let nextKeypoint = RouteManager.shared.nextKeypoint else {
             return
         }
+        lastDirectionAnnouncement = Date()
         // Set direction text for text label and VoiceOver
         let xzNorm = sqrtf(powf(currentLocation.x - nextKeypoint.location.x, 2) + powf(currentLocation.z - nextKeypoint.location.z, 2))
         let slope = (nextKeypoint.location.y - prevKeypointPosition.y) / xzNorm
@@ -2856,6 +2883,12 @@ extension ViewController: UIPopoverPresentationControllerDelegate {
 }
 
 extension ViewController: ARSessionManagerDelegate {
+    func didUpdate(garAnchor: GARAnchor) {
+//        if garAnchor.hasValidTransform, let cloudIdentifier = garAnchor.cloudIdentifier, let oldARAnchor = cloudAnchors[NSString(string: cloudIdentifier)] {
+//            print("Transform shift", garAnchor.transform.inverse * oldARAnchor.transform)
+//        }
+    }
+    
     func didHostCloudAnchor(cloudIdentifier: String, withTransform transform : simd_float4x4) {
         AnnouncementManager.shared.announce(announcement: "Cloud anchor created")
         cloudAnchors[NSString(string: cloudIdentifier)] = ARAnchor(transform: transform)

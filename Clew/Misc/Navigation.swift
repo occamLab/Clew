@@ -248,9 +248,9 @@ class Navigation {
     ///    - potentially rethink this assignment to ints and dictionary.
     ///    - consider making return optional or throw an error rather than returning 0.
     private func getHapticDirection(angle: Float) -> Int {
-        if (-Float.pi/6 <= angle && angle <= Float.pi/6) {
+        if (-Float.pi/12 <= angle && angle <= Float.pi/12) {
             return 1
-        } else if (Float.pi/6 <= angle && angle <= Float.pi/3) {
+        } else if (Float.pi/12 <= angle && angle <= Float.pi/3) {
             return 2
         } else if (Float.pi/3 <= angle && angle <= (2*Float.pi/3)) {
             return 3
@@ -260,7 +260,7 @@ class Navigation {
             return 4
         } else if (-(2*Float.pi/3) <= angle && angle <= -(Float.pi/3)) {
             return 5
-        } else if (-Float.pi/3 <= angle && angle <= -Float.pi/6) {
+        } else if (-Float.pi/3 <= angle && angle <= -Float.pi/12) {
             return 6
         } else {
             return 0

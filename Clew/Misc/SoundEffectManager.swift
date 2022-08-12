@@ -21,6 +21,16 @@ class SoundEffectManager {
         loadSoundEffects()
     }
     
+    func isWearingBinauralHeadphones()->Bool {
+        let currentRoute = AVAudioSession.sharedInstance().currentRoute
+        for output in currentRoute.outputs.filter({output in Set([AVAudioSession.Port.headphones, AVAudioSession.Port.bluetoothA2DP]).contains(output.portType)}) {
+            if let channels = output.channels, channels.count >= 2 {
+                return true
+            }
+        }
+        return false
+    }
+    
     private func loadSoundEffects() {
         if let successPath = Bundle.main.path(forResource: "ClewSuccessSound", ofType:"wav") {
             do {
@@ -74,8 +84,10 @@ class SoundEffectManager {
         successSound?.play()
     }
     
-    func error() {
+    func error(volume: Float=1.0, pan:Float=0.0) {
         overrideSilentMode()
+        errorSound?.volume = volume
+        errorSound?.pan = pan
         errorSound?.play()
     }
     
