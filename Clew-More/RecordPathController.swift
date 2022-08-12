@@ -100,7 +100,7 @@ class RecordPathController: UIViewController {
         testAccuracyButton.setTitle("Test Location Accuracy", for: .normal)
         testAccuracyButton.setTitleColor(.black, for: .normal)
         testAccuracyButton.titleLabel?.font = UIFont(name: "HelveticaNeue-Bold", size: 35)!
-        testAccuracyButton.accessibilityLabel = NSLocalizedString("enterCodeButtonAccessibilityLabel", comment: "A button that allows the user to navigate a route one time.")
+        testAccuracyButton.accessibilityLabel = "Test Location Accuracy"
         testAccuracyButton.titleLabel?.textAlignment = .center
         testAccuracyButton.titleLabel?.numberOfLines = 0
         testAccuracyButton.titleLabel?.lineBreakMode = .byWordWrapping
