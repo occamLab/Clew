@@ -1701,11 +1701,11 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         startNavigationController.recordingSingleUseRoute = recordingSingleUseRoute
         add(startNavigationController)
         // disabling this to avoid confusion when users are testing the app
-        startNavigationController.startNavigationButton.isHidden = true
+        //startNavigationController.startNavigationButton.isHidden = true
         startNavigationController.pauseButton.isHidden = !allowPause
         startNavigationController.largeHomeButton.isHidden = recordingSingleUseRoute
         startNavigationController.stackView.layoutIfNeeded()
-        UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: startNavigationController.startNavigationButton)
+        UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: startNavigationController.largeHomeButton)
     }
 
     /// Display the pause tracking view/hide all other views

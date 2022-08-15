@@ -290,7 +290,7 @@
 
 "resumeAnchorPointToReturnNavigationAnnouncement" = "Starting navigation. Audio and haptics indicate that you are on the route.";
 "singleUseRouteToRecordingRouteAnnouncement" = "Now recording a single use route.";
-"saveRouteToPlayPauseAnnouncement" = "Route saved. To test your route, first navigate to the starting location without guidance from the app. Next, access your route through the \"Manage Routes\" button.";
+"saveRouteToPlayPauseAnnouncement" = "Route saved. To test your route, first navigate to the starting location without guidance from the app or via the navigate button on this screen.  Next, access your route through the \"Manage Routes\" button.  Note: Return navigation does not use cloud anchors or geo spatial localiation.";
 "saveCodeIDtoCreatingAnchorPointAnnouncement" = "App clip code ID saved. You may now set an anchor point.";
 
 
