@@ -1032,30 +1032,35 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
                 }
             }
         }
-        do {
-            hapticEngine = try CHHapticEngine()
-            try hapticEngine?.start()
-        } catch {
-            print("Unable to start haptic engine")
-        }
     }
     
     func startEndOfRouteHaptics() {
-        let events = [CHHapticEvent(eventType: .hapticContinuous, parameters: [
-            CHHapticEventParameter(parameterID: .hapticIntensity, value: 1.0),
-            CHHapticEventParameter(parameterID: .hapticSharpness, value: 0.1),
-            CHHapticEventParameter(parameterID: .attackTime, value: 0.1),
-            CHHapticEventParameter(parameterID: .releaseTime, value: 0.2),
-            CHHapticEventParameter(parameterID: .decayTime, value: 0.3) ], relativeTime: 0.1, duration: 0.6)]
-        
         do {
-            self.hapticPlayer = try self.hapticEngine?.makeAdvancedPlayer(with: CHHapticPattern(events: events, parameters: []))
-            self.hapticPlayer?.loopEnabled = true
-            try self.hapticPlayer?.start(atTime: 0)
-            print("Started Haptics!!")
+            hapticEngine = try CHHapticEngine()
+            hapticEngine?.start() { error in
+                if error != nil {
+                    print("error \(error?.localizedDescription)")
+                    return
+                }
+                let events = [CHHapticEvent(eventType: .hapticContinuous, parameters: [
+                    CHHapticEventParameter(parameterID: .hapticIntensity, value: 1.0),
+                    CHHapticEventParameter(parameterID: .hapticSharpness, value: 0.1),
+                    CHHapticEventParameter(parameterID: .attackTime, value: 0.1),
+                    CHHapticEventParameter(parameterID: .releaseTime, value: 0.2),
+                    CHHapticEventParameter(parameterID: .decayTime, value: 0.3) ], relativeTime: 0.1, duration: 0.6)]
+                
+                do {
+                    self.hapticPlayer = try self.hapticEngine?.makeAdvancedPlayer(with: CHHapticPattern(events: events, parameters: []))
+                    self.hapticPlayer?.loopEnabled = true
+                    try self.hapticPlayer?.start(atTime: 0)
+                    print("Started Haptics!!")
+                } catch {
+                    print("HAPTICS ERROR!!!")
+                    
+                }
+            }
         } catch {
-            print("HAPTICS ERROR!!!")
-            
+            print("Unable to start haptic engine")
         }
     }
     
