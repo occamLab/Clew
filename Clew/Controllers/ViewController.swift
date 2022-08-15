@@ -27,6 +27,7 @@ import SceneKit
 import SceneKit.ModelIO
 import StoreKit
 import AVFoundation
+import CoreHaptics
 import AudioToolbox
 import MediaPlayer
 import VectorMath
@@ -159,6 +160,11 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     /// Helper Classes
     let firebaseSetup = FirebaseSetup()
     
+    /// Allows us to use the core haptics API
+    var hapticEngine: CHHapticEngine?
+    /// Controls the dynamic haptic pattern at the end of the route
+    var hapticPlayer: CHHapticAdvancedPatternPlayer?
+    
     //let surveyInterface = SurveyInterface()
     
     /// The state of the app.  This should be constantly referenced and updated as the app transitions
@@ -272,10 +278,15 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         // cancel the timer that announces tracking errors
         trackingErrorsAnnouncementTimer?.invalidate()
         // if the ARSession is running, pause it to conserve battery
+        ARSessionManager.shared.pauseSession()
+        // turn off haptic feedback
+        hapticTimer?.invalidate()
+        do {
+            try hapticPlayer?.stop(atTime: 0.0)
+                hapticPlayer = nil
+        } catch {}
         // set this to nil to prevent the app from erroneously detecting that we can auto-align to the route
-        if #available(iOS 12.0, *) {
-            ARSessionManager.shared.initialWorldMap = nil
-        }
+        ARSessionManager.shared.initialWorldMap = nil
         showRecordPathButton(announceArrival: announceArrival)
     }
     
@@ -462,6 +473,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         locationRingBuffer.clear()
         
         hapticTimer = Timer.scheduledTimer(timeInterval: 0.01, target: self, selector: (#selector(getHapticFeedback)), userInfo: nil, repeats: true)
+        hapticPlayer = nil
         
         AnnouncementManager.shared.announce(announcement: "Use the \"get directions button\" to get the as-the-crow-flies path to the start")
     }
@@ -1020,7 +1032,31 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
                 }
             }
         }
-
+        do {
+            hapticEngine = try CHHapticEngine()
+            try hapticEngine?.start()
+        } catch {
+            print("Unable to start haptic engine")
+        }
+    }
+    
+    func startEndOfRouteHaptics() {
+        let events = [CHHapticEvent(eventType: .hapticContinuous, parameters: [
+            CHHapticEventParameter(parameterID: .hapticIntensity, value: 1.0),
+            CHHapticEventParameter(parameterID: .hapticSharpness, value: 0.1),
+            CHHapticEventParameter(parameterID: .attackTime, value: 0.1),
+            CHHapticEventParameter(parameterID: .releaseTime, value: 0.2),
+            CHHapticEventParameter(parameterID: .decayTime, value: 0.3) ], relativeTime: 0.1, duration: 0.6)]
+        
+        do {
+            self.hapticPlayer = try self.hapticEngine?.makeAdvancedPlayer(with: CHHapticPattern(events: events, parameters: []))
+            self.hapticPlayer?.loopEnabled = true
+            try self.hapticPlayer?.start(atTime: 0)
+            print("Started Haptics!!")
+        } catch {
+            print("HAPTICS ERROR!!!")
+            
+        }
     }
     
     /// Create the audio player objects for the various app sounds.  Creating them ahead of time helps reduce latency when playing them later.
@@ -1122,6 +1158,10 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         logger.resetNavigationLog()
         logger.resetPathLog()
         hapticTimer?.invalidate()
+        do {
+            try hapticPlayer?.stop(atTime: 0.0)
+        } catch {}
+        hapticPlayer = nil
         logger.resetStateSequenceLog()
     }
     
@@ -1755,38 +1795,15 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         delayTransition()
     }
     
-    func showEndScreenInformation(completedRoute: Bool){
-        #if APPCLIP
-        self.hideAllViewsHelper()
-        //self.sceneView.session.pause()
-        
-        trackingErrorsAnnouncementTimer?.invalidate()
-        
-        ARSessionManager.shared.initialWorldMap = nil
-        
-        self.rootContainerView.getDirectionButton.isHidden = true
-        guard let scene = self.view.window?.windowScene else {return}
-        
-        
-        // TODO: i18n/l10n
-        if completedRoute{
-            delayTransition(announcement: "You have arrived at your destination.")
-        } else{
-            delayTransition(announcement: "Route navigation stopped. You may not have arrived at your destination yet.")
+    func showEndScreenInformation(completedRoute: Bool) {
+        if !completedRoute {
+            ARSessionManager.shared.pauseSession()
         }
-
-        let config = SKOverlay.AppClipConfiguration(position: .bottom)
-        let overlay = SKOverlay(configuration: config)
-        overlay.present(in: scene)
-        print("UI done")
-        #else
-        ARSessionManager.shared.pauseSession()
         self.hideAllViewsHelper()
         if completedRoute {
             AnnouncementManager.shared.announce(announcement: "You have arrived")
         }
         self.add(self.endNavigationController!)
-        #endif
     }
     
     /// display stop navigation view/hide all other views
@@ -1895,7 +1912,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     
     static let offTrackCorrectionAnnouncementInterval = 2.0
     
-    static let directionTextGracePeriod = 5.0
+    static let directionTextGracePeriod = 3.5
     
     // MARK: - Settings bundle configuration
     
@@ -2115,14 +2132,10 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         // erase nearest keypoint
         ARSessionManager.shared.removeNavigationNodes()
 
-        #if !APPCLIP
         //self.surveyInterface.sendLogDataHelper(pathStatus: nil, vc: self)
         self.hideAllViewsHelper()
         self.state = .endScreen(completedRoute: false)
         print("end screen displayed")
-        #else
-        self.state = .endScreen(completedRoute: false)
-        #endif
         
     }
     
@@ -2431,7 +2444,6 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
                 if (soundFeedback) {
                     SoundEffectManager.shared.meh()
                 }
-
                 // remove current visited keypont from keypoint list
                 prevKeypointPosition = nextKeypoint.location
                 RouteManager.shared.checkOffKeypoint()
@@ -2457,17 +2469,13 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
                 
                 followingCrumbs?.invalidate()
                 trackGeoSpatialDuringNavigation?.invalidate()
-                hapticTimer?.invalidate()
-                
-                #if !APPCLIP
+                startEndOfRouteHaptics()
+
                 //self.surveyInterface.sendLogDataHelper(pathStatus: nil, announceArrival: true, vc: self)
                 self.hideAllViewsHelper()
                 // if everything breaks, get this outta there B)
                 self.state = .endScreen(completedRoute: true)
                 print("end screen displayed")
-                #else
-                self.state = .endScreen(completedRoute: true)
-                #endif
             }
         }
     }
@@ -2564,6 +2572,25 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     
     /// send haptic feedback if the device is pointing towards the next keypoint.
     @objc func getHapticFeedback() {
+        if RouteManager.shared.isComplete {
+            suppressTrackingWarnings = true
+            guard let curPos = getRealCoordinates(record: false)?.location.transform.columns.3.dropw(), let routeEndKeypoint = RouteManager.shared.lastKeypoint, let routeEnd = ARSessionManager.shared.getCurrentLocation(of: routeEndKeypoint.location) else {
+                // TODO: might want to indicate that something is wrong to the user
+                return
+            }
+            let routeEndPos = routeEnd.transform.columns.3.dropw()
+            let routeEndPosFloorPlane = simd_float2(routeEndPos.x, routeEndPos.z)
+            let curPosFloorPlane = simd_float2(curPos.x, curPos.z)
+            do {
+                print("curPos \(curPosFloorPlane) routeEnd \(routeEndPosFloorPlane)")
+                print("ADJUSTING \(max(0.0, 1.0 - simd_distance(curPosFloorPlane, routeEndPosFloorPlane)))")
+                try hapticPlayer?.sendParameters([CHHapticDynamicParameter(parameterID: .hapticIntensityControl, value: max(0.0, 1.0 - simd_distance(curPosFloorPlane, routeEndPosFloorPlane)), relativeTime: 0.0)], atTime: 0.0)
+                print("hapticPlayer \(hapticPlayer)")
+            } catch {
+                print("Unable to update")
+            }
+            return
+        }
         updateHeadingOffset()
         guard let curLocation = getRealCoordinates(record: false) else {
             // TODO: might want to indicate that something is wrong to the user
@@ -2605,12 +2632,21 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
                     spatialAudioTimer = Date()
                 }
             } else {
-                if lastOffCourseAnnouncement == nil || -lastOffCourseAnnouncement!.timeIntervalSinceNow > Self.offTrackCorrectionAnnouncementInterval {
+                let intervalMultiplier = RouteManager.shared.onFirstKeypoint ? 4.0 : 1.0
+                if lastOffCourseAnnouncement == nil || -lastOffCourseAnnouncement!.timeIntervalSinceNow > Self.offTrackCorrectionAnnouncementInterval * intervalMultiplier {
                     lastOffCourseAnnouncement = Date()
-                    if directionToNextKeypoint.angleDiff > 0 {
-                        AnnouncementManager.shared.announce(announcement: "Bear right to get on track")
+                    if RouteManager.shared.onFirstKeypoint {
+                        if directionToNextKeypoint.angleDiff > 0 {
+                            AnnouncementManager.shared.announce(announcement: "Bear right to face the start")
+                        } else {
+                            AnnouncementManager.shared.announce(announcement: "Bear left to face the start")
+                        }
                     } else {
-                        AnnouncementManager.shared.announce(announcement: "Bear left to get on track")
+                        if directionToNextKeypoint.angleDiff > 0 {
+                            AnnouncementManager.shared.announce(announcement: "Bear right to get on track")
+                        } else {
+                            AnnouncementManager.shared.announce(announcement: "Bear left to get on track")
+                        }
                     }
                 }
             }
@@ -2732,12 +2768,13 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     ///   - direction: the direction info struct (e.g., as computed by the `Navigation` class)
     ///   - displayDistance: a Boolean that indicates whether the distance to the net keypoint should be displayed (true if it should be displayed, false otherwise)
     func setDirectionText(currentLocation: LocationInfo, direction: DirectionInfo, displayDistance: Bool) {
-        guard let nextKeypoint = RouteManager.shared.nextKeypoint else {
+        guard let nextKeypoint = RouteManager.shared.nextKeypoint, let nextKeypointPositionAdjusted = ARSessionManager.shared.getCurrentLocation(of: nextKeypoint.location) else {
             return
         }
         lastDirectionAnnouncement = Date()
         // Set direction text for text label and VoiceOver
-        let xzNorm = sqrtf(powf(currentLocation.x - nextKeypoint.location.x, 2) + powf(currentLocation.z - nextKeypoint.location.z, 2))
+        
+        let xzNorm = sqrtf(powf(currentLocation.x - nextKeypointPositionAdjusted.x, 2) + powf(currentLocation.z - nextKeypointPositionAdjusted.z, 2))
         let slope = (nextKeypoint.location.y - prevKeypointPosition.y) / xzNorm
         let yDistance = abs(nextKeypoint.location.y - prevKeypointPosition.y)
         var dir = ""

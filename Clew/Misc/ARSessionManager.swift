@@ -703,7 +703,7 @@ extension ARSessionManager: ARSessionDelegate {
     private func checkForCloudAnchorAlignment(anchors: [GARAnchor]) {
         for anchor in anchors {
             if anchor.hasValidTransform, let correspondingARAnchor = sessionCloudAnchors[anchor.identifier], anchor.cloudIdentifier == lastResolvedCloudAnchorID  {
-                manualAlignment = (anchor.transform * correspondingARAnchor.transform.inverse).alignY()
+                manualAlignment = anchor.transform.alignY() * correspondingARAnchor.transform.inverse.alignY()
             }
         }
     }
@@ -862,7 +862,7 @@ extension ARSessionManager: GARSessionDelegate {
         localization = .withCloudAnchors
         if let cloudIdentifier = anchor.cloudIdentifier, anchor.hasValidTransform, let alignTransform = cloudAnchorsForAlignment[NSString(string: cloudIdentifier)]?.transform {
             lastResolvedCloudAnchorID = cloudIdentifier
-            self.manualAlignment = (anchor.transform * alignTransform.inverse).alignY()
+            self.manualAlignment = anchor.transform.alignY() * alignTransform.inverse.alignY()
             createSCNNodeFor(identifier: cloudIdentifier, at: anchor.transform)
             let announceResolution = "Cloud Anchor Resolved"
             PathLogger.shared.logSpeech(utterance: announceResolution)

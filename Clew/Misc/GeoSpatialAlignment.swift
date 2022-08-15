@@ -29,7 +29,7 @@ class GeoSpatialAlignment {
         lastAnchorTransform = anchorTransform
         PathLogger.shared.logGeospatialTransform(cameraGeospatialTransform)
         
-        let relativeTransform = anchorTransform * geoAnchorTransform.inverse
+        let relativeTransform = anchorTransform.alignY() * geoAnchorTransform.inverse.alignY()
         
         if filterGeoSpatial, isOutlier(relativeTransform: relativeTransform, cameraGeospatialTransform: cameraGeospatialTransform) {
             PathLogger.shared.logGeolocationAlignmentAttempt(anchorTransform: anchorTransform, geoSpatialAlignmentCrumb: geoSpatialAlignmentCrumb, cameraGeospatialTransform: cameraGeospatialTransform, wasAccepted: false)
