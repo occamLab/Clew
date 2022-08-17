@@ -3,4 +3,6 @@
 //
 
 #import "PRTween.h"
+#import "GFUtils.h"
+#import "GFGeoQueryBounds.h"
 #import "NSObject+ARFrameStatusAdapter.h"

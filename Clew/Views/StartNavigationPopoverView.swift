@@ -11,6 +11,9 @@ import Firebase
 
 class RouteListObject: ObservableObject {
     @Published var routeList = [[String: String]]()
+    func clear() {
+        routeList = []
+    }
 }
 
 struct StartNavigationPopoverView: View {

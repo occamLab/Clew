@@ -10,7 +10,8 @@ def all_pods
    pod 'FirebaseAnalytics'
    pod 'FirebaseAuth'
 # Firebase DB causes app store errors when combined with ARCore
-#   pod 'FirebaseDatabase'
+#   pod 'GeoFire'
+   pod 'FirebaseFirestore'
    pod 'LASwift'
    pod 'VectorMath'
    pod 'InAppSettingsKit'

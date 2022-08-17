@@ -9,6 +9,7 @@
 import Foundation
 import ARKit
 import FirebaseStorage
+import FirebaseFirestore
 
 /// This class handles saving and loading routes.
 /// TODO: make this a singleton
@@ -16,6 +17,9 @@ class DataPersistence {
     
     /// The list of routes.  This should not be modified directly to avoid divergence of this object from the data that is stored persistently.
     var routes = [SavedRoute]()
+    let db = Firestore.firestore()
+    /// This is the list of routes associated with a specific app clip code
+    var availableRoutes: RouteListObject = RouteListObject()
 
     /// Create the object by loading the saved routes from the URL returned by getRoutesURL()
     init() {
@@ -244,7 +248,7 @@ class DataPersistence {
     func uploadToFirebase(route: SavedRoute) {
         /// Called when the Upload Route button is pressed
         
-        let routeRef = Storage.storage().reference().child("AppClipRoutes")
+        let routeRef = Storage.storage().reference().child("geo_routes")
         let codedData = exportToCrd(route: route)
         
         ///creates a reference to the location we want to save the new files
@@ -256,47 +260,34 @@ class DataPersistence {
         /// initialize this
         let fileType = StorageMetadata()
         
-        /// Initializes routesFile list of [route.id: route.name] dictionaries
-        var existingRoutes: [[String: String]] = []
-     
-        /// attempt to download .json file from Firebase
-        appClipRef.getData(maxSize: 100000000000) { appClipJson, error in
-            do {
-                if let appClipJson = appClipJson {
-                    /// unwrap NSData, if it exists, to a list, and set equal to existingRoutes
-                    let routesFile = try JSONSerialization.jsonObject(with: appClipJson, options: [])
-                    
-                    if let routesFile = routesFile as? [[String: String]] {
-                        existingRoutes = routesFile
-                    }
-                }
-                let routeInfo = [route.id: route.name] as? [String: String]
-                if !existingRoutes.contains(routeInfo!) {
-                    existingRoutes.append(routeInfo!)
-                }
-                /// encode existingRoutes to Data
-                let updatedRoutesFile = try JSONSerialization.data(withJSONObject: existingRoutes, options: [])
+        /// upload .crd route file
+        fileType.contentType = "application/crd"
+        let _ = fileRef.putData(codedData, metadata: fileType){ (metadata, error) in
+            if metadata == nil {
+                print("could not upload route to Firebase", error!.localizedDescription)
+                AnnouncementManager.shared.announce(announcement: "Error Occurred While Sharing Route")
+            } else {
+                print("uploaded route successfully @", fileRef.fullPath)
                 
-                /// Upload JSON
-                fileType.contentType = "application/json"
-                let _ = appClipRef.putData(updatedRoutesFile, metadata: fileType){ (metadata, error) in
-                    if metadata == nil {
-                        print("could not upload .json to Firebase", error!.localizedDescription)
+                // TODO: we have to think about how to figure out lat / lon since we don't have high accuracy throughout
+                let loc = CLLocationCoordinate2D(latitude: route.crumbs.last?.latitude ?? 0.0, longitude: route.crumbs.last?.longitude ?? 0.0)
+                let hash = GFUtils.geoHash(forLocation: loc)
+                self.db.collection("routes").document(String(route.id)).setData([
+                    "name": route.name,
+                    "crd_file": fileRef.fullPath,
+                    "geohash": hash,
+                    "location": GeoPoint(latitude: loc.latitude, longitude: loc.longitude)
+                ]) { err in
+                    if let err = err {
+                        print("Error writing document: \(err)")
+                        AnnouncementManager.shared.announce(announcement: "Error Occurred While Sharing Route")
+
                     } else {
-                        print("uploaded .json successfully @", appClipRef.fullPath, "with content", existingRoutes)
-                        /// upload .crd route file
-                        fileType.contentType = "application/crd"
-                        let _ = fileRef.putData(codedData, metadata: fileType){ (metadata, error) in
-                            if metadata == nil {
-                                print("could not upload route to Firebase", error!.localizedDescription)
-                            } else {
-                                print("uploaded route successfully @", fileRef.fullPath)
-                            }
-                        }
+                        print("Document successfully written!")
+                        AnnouncementManager.shared.announce(announcement: "Route Successfully Shared")
                     }
                 }
-            } catch {
-                print("Unable to upload routes \(error)")
+
             }
         }
     }

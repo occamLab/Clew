@@ -265,9 +265,6 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     /// This is the identifier of the App Clip Code, which specifies the path to load and is assigned by SceneDelegate
     var appClipCodeID: String = ""
     
-    /// This is the list of routes associated with a specific app clip code
-    var availableRoutes: RouteListObject = RouteListObject() //[[String: String]]()
-    
     /// This is the ARWorldMap of the route being navigated.
     var routeWorldMap: ARWorldMap?
     
@@ -389,7 +386,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         logger.resetNavigationLog()
         
         // this is where the code would actually pick up B)
-        let pathRef = Storage.storage().reference().child("AppClipRoutes/\(routeID).crd")
+        let pathRef = Storage.storage().reference().child(routeID)
         
         // download path from Firebase
         pathRef.getData(maxSize: 100000000000) { data, error in
@@ -930,7 +927,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
                                                                        height: UIScreen.main.bounds.size.height*0.75)
         enterCodeIDController.view.backgroundColor = .clear
         
-        selectRouteController = UIHostingController(rootView: StartNavigationPopoverView(vc: self, routeList: self.availableRoutes))
+        selectRouteController = UIHostingController(rootView: StartNavigationPopoverView(vc: self, routeList: dataPersistence.availableRoutes))
         selectRouteController.view.frame = CGRect(x: 0,
                                                                        y: UIScreen.main.bounds.size.height*0.15,
                                                                        width: UIConstants.buttonFrameWidth * 1,
@@ -2195,17 +2192,67 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     }
     
     /// presents a view for the user to enter the app clip code ID
-    @objc func enterCodeID() {
-        #if CLEWMORE
-        //self.beginScanning(self.recordPathController.enterCodeButton)
-        print("Scanning Started")
-        #endif
+    @objc func navigateCloudRoute() {
+        dataPersistence.availableRoutes.clear()
         self.recordPathController.remove()
-        self.add(enterCodeIDController)
-        #if !APPCLIP
-        self.rootContainerView.homeButton.isHidden = false
-        #endif
+        guard let center = locationManager.location?.coordinate else {
+            AnnouncementManager.shared.announce(announcement: "Couldn't Get Location")
+            return
+        }
+        print("coordinate \(center)")
+        // Find cities within 50km of London
+        let radiusInM: Double = 10 * 1000
 
+        // Each item in 'bounds' represents a startAt/endAt pair. We have to issue
+        // a separate query for each pair. There can be up to 9 pairs of bounds
+        // depending on overlap, but in most cases there are 4.
+        let queryBounds = GFUtils.queryBounds(forLocation: center, withRadius: radiusInM)
+        let queries = queryBounds.map { bound -> Query in
+            return dataPersistence.db.collection("routes")
+                .order(by: "geohash")
+                .start(at: [bound.startValue])
+                .end(at: [bound.endValue])
+        }
+
+        var matchingDocs = [QueryDocumentSnapshot]()
+        // Collect all the query results together into a single list
+        func getDocumentsCompletion(snapshot: QuerySnapshot?, error: Error?) -> () {
+            guard let documents = snapshot?.documents else {
+                print("Unable to fetch snapshot data. \(String(describing: error))")
+                return
+            }
+
+            for document in documents {
+                if let location = document.data()["location"] as? GeoPoint, let crd_file = document.data()["crd_file"] as? String, let name = document.data()["name"] as? String {
+                    let coordinates = CLLocation(latitude: location.latitude, longitude: location.longitude)
+                    let centerPoint = CLLocation(latitude: center.latitude, longitude: center.longitude)
+
+                    // We have to filter out a few false positives due to GeoHash accuracy, but
+                    // most will match
+                    let distance = GFUtils.distance(from: centerPoint, to: coordinates)
+                    if distance <= radiusInM {
+                        matchingDocs.append(document)
+                        self.dataPersistence.availableRoutes.routeList.append([crd_file: name])
+                        print("found a document with distance \(distance)")
+                    }
+                }
+            }
+        }
+
+        // After all callbacks have executed, matchingDocs contains the result. Note that this
+        // sample does not demonstrate how to wait on all callbacks to complete.
+        for query in queries {
+            query.getDocuments(completion: getDocumentsCompletion)
+        }
+        
+        self.rootContainerView.homeButton.isHidden = false
+        
+        self.add(self.selectRouteController)
+
+        NotificationCenter.default.addObserver(forName: NSNotification.Name("shouldDismissRoutePopover"), object: nil, queue: nil) { (notification) -> Void in
+                self.selectRouteController.remove()
+                self.handleStateTransitionToNavigatingExternalRoute()
+        }
     }
     
     /// this is called once the app clip code ID has been entered
@@ -2283,7 +2330,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
             loadFromAppClipController.dismiss(animated: false)
             
             /// bring up list of routes
-            let popoverController = UIHostingController(rootView: StartNavigationPopoverView(vc: self, routeList: self.availableRoutes))
+            let popoverController = UIHostingController(rootView: StartNavigationPopoverView(vc: self, routeList: self.dataPersistence.availableRoutes))
             popoverController.modalPresentationStyle = .fullScreen
             self.present(popoverController, animated: true)
             print("popover successful B)")
@@ -2310,9 +2357,8 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
                         let routesFile = try JSONSerialization.jsonObject(with: appClipJson, options: [])
                         print("File: \(routesFile)")
                         if let routesFile = routesFile as? [[String: String]] {
-                            self.availableRoutes.routeList = routesFile
-                            print("List: \(self.availableRoutes)")
-                            print("æ")
+                            self.dataPersistence.availableRoutes.routeList = routesFile
+                            print("List: \(self.dataPersistence.availableRoutes)")
                             NotificationCenter.default.post(name: NSNotification.Name("firebaseLoaded"), object: nil)
                         }
                     }

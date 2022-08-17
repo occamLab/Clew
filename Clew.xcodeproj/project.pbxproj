@@ -20,6 +20,11 @@
 		8227FD04272B0954001031F9 /* PRTweenTimingFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 8227FD00272B0953001031F9 /* PRTweenTimingFunctions.m */; };
 		825EEBCE28917FA200E97A2F /* AnnouncementManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 825EEBCD28917FA200E97A2F /* AnnouncementManager.swift */; };
 		8284A742288AE23300999ABF /* NSObject+ARFrameStatusAdapter.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8284A740288AE23300999ABF /* NSObject+ARFrameStatusAdapter.mm */; };
+		82949C0228AD79030077C892 /* GFBase32Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 82949BF928AD78F30077C892 /* GFBase32Utils.m */; };
+		82949C0328AD79030077C892 /* GFUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 82949BFC28AD78FF0077C892 /* GFUtils.m */; };
+		82949C0428AD79030077C892 /* GFGeoHashQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = 82949BFD28AD79000077C892 /* GFGeoHashQuery.m */; };
+		82949C0528AD79030077C892 /* GFGeoHash.m in Sources */ = {isa = PBXBuildFile; fileRef = 82949BFE28AD79010077C892 /* GFGeoHash.m */; };
+		82949C0628AD79030077C892 /* GFGeoQueryBounds.m in Sources */ = {isa = PBXBuildFile; fileRef = 82949C0028AD79020077C892 /* GFGeoQueryBounds.m */; };
 		82A4A9BA287E4D96007D8F23 /* Credentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82A4A9B8287E4D96007D8F23 /* Credentials.swift */; };
 		82B25182278DF4B0001E3AB6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 82B25184278DF4B0001E3AB6 /* LaunchScreen.storyboard */; };
 		82BC1D5328A5FECC006C301B /* ClewErrorSound.wav in Resources */ = {isa = PBXBuildFile; fileRef = 82BC1D5128A5FECC006C301B /* ClewErrorSound.wav */; };
@@ -174,6 +179,16 @@
 		827CB5B424932CC70032A857 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/Localizable.strings; sourceTree = "<group>"; };
 		8284A73F288AE23300999ABF /* NSObject+ARFrameStatusAdapter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSObject+ARFrameStatusAdapter.h"; sourceTree = "<group>"; };
 		8284A740288AE23300999ABF /* NSObject+ARFrameStatusAdapter.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = "NSObject+ARFrameStatusAdapter.mm"; sourceTree = "<group>"; };
+		82949BF828AD78F30077C892 /* GFGeoHashQuery.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GFGeoHashQuery.h; sourceTree = "<group>"; };
+		82949BF928AD78F30077C892 /* GFBase32Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GFBase32Utils.m; sourceTree = "<group>"; };
+		82949BFA28AD78FC0077C892 /* GFUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GFUtils.h; sourceTree = "<group>"; };
+		82949BFB28AD78FE0077C892 /* GFBase32Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GFBase32Utils.h; sourceTree = "<group>"; };
+		82949BFC28AD78FF0077C892 /* GFUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GFUtils.m; sourceTree = "<group>"; };
+		82949BFD28AD79000077C892 /* GFGeoHashQuery.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GFGeoHashQuery.m; sourceTree = "<group>"; };
+		82949BFE28AD79010077C892 /* GFGeoHash.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GFGeoHash.m; sourceTree = "<group>"; };
+		82949BFF28AD79010077C892 /* GFGeoQueryBounds.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GFGeoQueryBounds.h; sourceTree = "<group>"; };
+		82949C0028AD79020077C892 /* GFGeoQueryBounds.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GFGeoQueryBounds.m; sourceTree = "<group>"; };
+		82949C0128AD79030077C892 /* GFGeoHash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GFGeoHash.h; sourceTree = "<group>"; };
 		82A417E0262A205A001FCB8C /* AuthenticationHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationHelper.swift; sourceTree = "<group>"; };
 		82A417EC262A2140001FCB8C /* Clew Dev.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Clew Dev.entitlements"; sourceTree = "<group>"; };
 		82A4A9B8287E4D96007D8F23 /* Credentials.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Credentials.swift; sourceTree = "<group>"; };
@@ -338,6 +353,16 @@
 			isa = PBXGroup;
 			children = (
 				8227FCED272B052C001031F9 /* SRCountdownTimer.swift */,
+				82949BFB28AD78FE0077C892 /* GFBase32Utils.h */,
+				82949BF928AD78F30077C892 /* GFBase32Utils.m */,
+				82949C0128AD79030077C892 /* GFGeoHash.h */,
+				82949BFE28AD79010077C892 /* GFGeoHash.m */,
+				82949BF828AD78F30077C892 /* GFGeoHashQuery.h */,
+				82949BFD28AD79000077C892 /* GFGeoHashQuery.m */,
+				82949BFF28AD79010077C892 /* GFGeoQueryBounds.h */,
+				82949C0028AD79020077C892 /* GFGeoQueryBounds.m */,
+				82949BFA28AD78FC0077C892 /* GFUtils.h */,
+				82949BFC28AD78FF0077C892 /* GFUtils.m */,
 				8227FCF9272B0845001031F9 /* PRTween.m */,
 				8227FCFE272B08BF001031F9 /* PRTween.h */,
 				8227FCF7272B0845001031F9 /* UIKit Clip-Bridging-Header.h */,
@@ -779,10 +804,12 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Clew-More/Pods-Clew-More-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/BoringSSL-GRPC/openssl_grpc.framework",
 				"${BUILT_PRODUCTS_DIR}/FirebaseABTesting/FirebaseABTesting.framework",
 				"${BUILT_PRODUCTS_DIR}/FirebaseAuth/FirebaseAuth.framework",
 				"${BUILT_PRODUCTS_DIR}/FirebaseCore/FirebaseCore.framework",
 				"${BUILT_PRODUCTS_DIR}/FirebaseCoreDiagnostics/FirebaseCoreDiagnostics.framework",
+				"${BUILT_PRODUCTS_DIR}/FirebaseFirestore/FirebaseFirestore.framework",
 				"${BUILT_PRODUCTS_DIR}/FirebaseInstallations/FirebaseInstallations.framework",
 				"${BUILT_PRODUCTS_DIR}/FirebaseRemoteConfig/FirebaseRemoteConfig.framework",
 				"${BUILT_PRODUCTS_DIR}/FirebaseStorage/FirebaseStorage.framework",
@@ -793,16 +820,23 @@
 				"${BUILT_PRODUCTS_DIR}/InAppSettingsKit/InAppSettingsKit.framework",
 				"${BUILT_PRODUCTS_DIR}/JGMethodSwizzler/JGMethodSwizzler.framework",
 				"${BUILT_PRODUCTS_DIR}/LASwift/LASwift.framework",
+				"${BUILT_PRODUCTS_DIR}/Libuv-gRPC/uv.framework",
 				"${BUILT_PRODUCTS_DIR}/PromisesObjC/FBLPromises.framework",
 				"${BUILT_PRODUCTS_DIR}/VectorMath/VectorMath.framework",
+				"${BUILT_PRODUCTS_DIR}/abseil/absl.framework",
+				"${BUILT_PRODUCTS_DIR}/gRPC-C++/grpcpp.framework",
+				"${BUILT_PRODUCTS_DIR}/gRPC-Core/grpc.framework",
+				"${BUILT_PRODUCTS_DIR}/leveldb-library/leveldb.framework",
 				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/openssl_grpc.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseABTesting.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseAuth.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseCore.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseCoreDiagnostics.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseFirestore.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseInstallations.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseRemoteConfig.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseStorage.framework",
@@ -813,8 +847,13 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/InAppSettingsKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/JGMethodSwizzler.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/LASwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/uv.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBLPromises.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/VectorMath.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/absl.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/grpcpp.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/grpc.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/leveldb.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -836,8 +875,11 @@
 				98FF7AC1269CC0EE008C64E5 /* UIViewExtensions.swift in Sources */,
 				98FF7AC4269CC0F5008C64E5 /* TransparentTouchView.swift in Sources */,
 				98FF7AB8269CC0C1008C64E5 /* FirebaseSetup.swift in Sources */,
+				82949C0428AD79030077C892 /* GFGeoHashQuery.m in Sources */,
 				98A2DABE26A709C400158F83 /* NameSavedRouteView.swift in Sources */,
+				82949C0628AD79030077C892 /* GFGeoQueryBounds.m in Sources */,
 				98FF7ADA269CC150008C64E5 /* RootContainerView.swift in Sources */,
+				82949C0528AD79030077C892 /* GFGeoHash.m in Sources */,
 				98FF7AD3269CC122008C64E5 /* FeedbackViewController.swift in Sources */,
 				98FF7ACD269CC112008C64E5 /* PauseTrackingController.swift in Sources */,
 				98AA5897269E1518001123F0 /* AppDelegate.swift in Sources */,
@@ -846,6 +888,7 @@
 				821FEE3227BCB47E008928E5 /* ScanTagView.swift in Sources */,
 				98AA5895269E0C13001123F0 /* StartMenuView.swift in Sources */,
 				98FF7AD1269CC11C008C64E5 /* HelpViewController.swift in Sources */,
+				82949C0228AD79030077C892 /* GFBase32Utils.m in Sources */,
 				98FF7AD7269CC143008C64E5 /* UIConstants.swift in Sources */,
 				2AC1BF23284E742700C84D8B /* FloatVectorExtension.swift in Sources */,
 				9826B6D526B07C3F00EC563C /* EndNavigationScreen.swift in Sources */,
@@ -882,6 +925,7 @@
 				8227FCFD272B0845001031F9 /* PRTween.m in Sources */,
 				98FF7ACF269CC117008C64E5 /* NameCodeIDController.swift in Sources */,
 				9824AB5826B981900016225C /* InformedConsentViewModel.swift in Sources */,
+				82949C0328AD79030077C892 /* GFUtils.m in Sources */,
 				8227393D272C7E43006C181E /* ARSessionManager.swift in Sources */,
 				98FF7AD4269CC125008C64E5 /* RoutesViewController.swift in Sources */,
 				8284A742288AE23300999ABF /* NSObject+ARFrameStatusAdapter.mm in Sources */,
@@ -1125,7 +1169,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Clew-More/Clew-More.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 351;
+				CURRENT_PROJECT_VERSION = 355;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_ASSET_PATHS = "\"Clew-More/Preview Content\"";
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
@@ -1163,7 +1207,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Clew-More/Clew-More.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 351;
+				CURRENT_PROJECT_VERSION = 355;
 				DEVELOPMENT_ASSET_PATHS = "\"Clew-More/Preview Content\"";
 				DEVELOPMENT_TEAM = 42363V8M4P;
 				ENABLE_PREVIEWS = YES;

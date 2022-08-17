@@ -20,6 +20,8 @@ class RecordPathController: UIViewController {
     //var enterCodeButton: UIButton!
 
     var testAccuracyButton: UIButton!
+    
+    var navigateCloudRoutesButton: UIButton!
 
     /// called when view appears (any time)
     override func viewDidAppear(_ animated: Bool) {
@@ -27,9 +29,6 @@ class RecordPathController: UIViewController {
         UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: self.addAnchorPointButton)
         addAnchorPointButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .largeTitle)
         routesButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .largeTitle)
-        // recordPathButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .largeTitle)
-        // enterCodeButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .largeTitle)
-
         testAccuracyButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .largeTitle)
     }
     
@@ -48,7 +47,7 @@ class RecordPathController: UIViewController {
         addAnchorPointButton.clipsToBounds = true
         addAnchorPointButton.translatesAutoresizingMaskIntoConstraints = false
         addAnchorPointButton.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 1.1).isActive = true
-        addAnchorPointButton.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.height / 5).isActive = true
+        addAnchorPointButton.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.height / 6).isActive = true
         addAnchorPointButton.setBackgroundImage(UIImage(named: "WhiteButtonBackground"), for: .normal)
         addAnchorPointButton.imageView?.contentMode = .scaleAspectFit
         /*addAnchorPointButton.setTitle(NSLocalizedString("saveARouteButtonText", comment: "This is the text which appears on the save a route buttton"),for: .normal)*/
@@ -65,36 +64,13 @@ class RecordPathController: UIViewController {
         addAnchorPointButton.titleEdgeInsets.bottom = 0
         addAnchorPointButton.titleEdgeInsets.right = 5
 
-        
-        /// Creating a button that can be used to start the creation of a single use route.
-//        enterCodeButton = UIButton(type: .custom)
-//        enterCodeButton.layer.cornerRadius = 0.75 * addAnchorPointButton.bounds.size.width
-//        enterCodeButton.clipsToBounds = true
-//        enterCodeButton.translatesAutoresizingMaskIntoConstraints = false
-//        enterCodeButton.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 1.1).isActive = true
-//        enterCodeButton.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.height / 5).isActive = true
-//        enterCodeButton.setBackgroundImage(UIImage(named: "WhiteButtonBackground"), for: .normal)
-//        enterCodeButton.imageView?.contentMode = .scaleAspectFit
-//        enterCodeButton.setTitle(NSLocalizedString("enterCodeButtonText", comment: "This is the text which appears on the enter an App Clip Code button"),for: .normal)
-//        enterCodeButton.setTitleColor(.black, for: .normal)
-//        enterCodeButton.titleLabel?.font = UIFont(name: "HelveticaNeue-Bold", size: 35)!
-//        enterCodeButton.accessibilityLabel = NSLocalizedString("enterCodeButtonAccessibilityLabel", comment: "A button that allows the user to navigate a route one time.")
-//        enterCodeButton.titleLabel?.textAlignment = .center
-//        enterCodeButton.titleLabel?.numberOfLines = 0
-//        enterCodeButton.titleLabel?.lineBreakMode = .byWordWrapping
-//        enterCodeButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .largeTitle)
-//        enterCodeButton.titleEdgeInsets.top = 0
-//        enterCodeButton.titleEdgeInsets.left = 5
-//        enterCodeButton.titleEdgeInsets.bottom = 0
-//        enterCodeButton.titleEdgeInsets.right = 5
-//
-        
+
         testAccuracyButton = UIButton(type: .custom)
         testAccuracyButton.layer.cornerRadius = 0.75 * addAnchorPointButton.bounds.size.width
         testAccuracyButton.clipsToBounds = true
         testAccuracyButton.translatesAutoresizingMaskIntoConstraints = false
         testAccuracyButton.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 1.1).isActive = true
-        testAccuracyButton.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.height / 5).isActive = true
+        testAccuracyButton.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.height / 6).isActive = true
         testAccuracyButton.setBackgroundImage(UIImage(named: "WhiteButtonBackground"), for: .normal)
         testAccuracyButton.imageView?.contentMode = .scaleAspectFit
         testAccuracyButton.setTitle("Test Location Accuracy", for: .normal)
@@ -111,6 +87,27 @@ class RecordPathController: UIViewController {
         testAccuracyButton.titleEdgeInsets.right = 5
  
         
+        navigateCloudRoutesButton = UIButton(type: .custom)
+        navigateCloudRoutesButton.layer.cornerRadius = 0.75 * addAnchorPointButton.bounds.size.width
+        navigateCloudRoutesButton.clipsToBounds = true
+        navigateCloudRoutesButton.translatesAutoresizingMaskIntoConstraints = false
+        navigateCloudRoutesButton.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 1.1).isActive = true
+        navigateCloudRoutesButton.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.height / 6).isActive = true
+        navigateCloudRoutesButton.setBackgroundImage(UIImage(named: "WhiteButtonBackground"), for: .normal)
+        navigateCloudRoutesButton.imageView?.contentMode = .scaleAspectFit
+        navigateCloudRoutesButton.setTitle("Navigate Cloud Route", for: .normal)
+        navigateCloudRoutesButton.setTitleColor(.black, for: .normal)
+        navigateCloudRoutesButton.titleLabel?.font = UIFont(name: "HelveticaNeue-Bold", size: 35)!
+        navigateCloudRoutesButton.accessibilityLabel = "Navigate Cloud Route"
+        navigateCloudRoutesButton.titleLabel?.textAlignment = .center
+        navigateCloudRoutesButton.titleLabel?.numberOfLines = 0
+        navigateCloudRoutesButton.titleLabel?.lineBreakMode = .byWordWrapping
+        navigateCloudRoutesButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .largeTitle)
+        navigateCloudRoutesButton.titleEdgeInsets.top = 0
+        navigateCloudRoutesButton.titleEdgeInsets.left = 5
+        navigateCloudRoutesButton.titleEdgeInsets.bottom = 0
+        navigateCloudRoutesButton.titleEdgeInsets.right = 5
+ 
 
         /// Creating a button that can be used to access the saved routes list.
         routesButton = UIButton(type: .custom)
@@ -118,7 +115,7 @@ class RecordPathController: UIViewController {
         routesButton.clipsToBounds = true
         routesButton.translatesAutoresizingMaskIntoConstraints = false
         routesButton.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 1.1).isActive = true
-        routesButton.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.height / 5).isActive = true
+        routesButton.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.height / 6).isActive = true
         routesButton.setBackgroundImage(UIImage(named: "WhiteButtonBackground"), for: .normal)
         routesButton.imageView?.contentMode = .scaleAspectFit
         ///LOCALIZE
@@ -151,6 +148,7 @@ class RecordPathController: UIViewController {
 
         stackView.addArrangedSubview(addAnchorPointButton)
         stackView.addArrangedSubview(testAccuracyButton)
+        stackView.addArrangedSubview(navigateCloudRoutesButton)
         stackView.addArrangedSubview(routesButton)
 
         
@@ -170,6 +168,9 @@ class RecordPathController: UIViewController {
                                           for: .touchUpInside)
             testAccuracyButton.addTarget(parent,
                                           action: #selector(ViewController.testAccuracy),
+                                          for: .touchUpInside)
+            navigateCloudRoutesButton.addTarget(parent,
+                                          action: #selector(ViewController.navigateCloudRoute),
                                           for: .touchUpInside)
         }
     }

@@ -3,3 +3,5 @@
 //
 
 #import "NSObject+ARFrameStatusAdapter.h"
+#import "GFUtils.h"
+#import "GFGeoQueryBounds.h"

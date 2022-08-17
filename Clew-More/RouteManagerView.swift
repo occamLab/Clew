@@ -32,6 +32,7 @@ struct RouteManagerView: View {
             .font(.title2)
         }
         VStack {
+            
             Button(action: {
                 self.vc.onRouteTableViewCellClicked(route: self.route, navigateStartToEnd: true)
                 self.vc.routeOptionsController?.dismiss(animated: false)
@@ -47,6 +48,25 @@ struct RouteManagerView: View {
                     .overlay(
                             RoundedRectangle(cornerRadius: 10)
                                 .stroke(Color.clewGreen, lineWidth: 4))
+            }.padding()
+            
+            Button(action: {
+                self.vc.dataPersistence.uploadToFirebase(route: self.route)
+                self.vc.routeOptionsController?.dismiss(animated: false)
+                self.vc.hideAllViewsHelper()
+                self.vc.add(self.vc.recordPathController)
+            } ){
+                Text(String(NSLocalizedString("UploadText", comment: "This is the text that tells the user to upload a route")))
+                    .frame(minWidth: 0, maxWidth: 300)
+                    .padding()
+                    .foregroundColor(.black)
+                    .background(Color.orange)
+                    .cornerRadius(10)
+                    .font(.system(size: 18, weight: .bold))
+                    .padding(10)
+                    .overlay(
+                            RoundedRectangle(cornerRadius: 10)
+                                .stroke(Color.orange, lineWidth: 4))
             }.padding()
             
             Button(action: {
