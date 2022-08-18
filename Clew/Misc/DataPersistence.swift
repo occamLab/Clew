@@ -10,6 +10,7 @@ import Foundation
 import ARKit
 import FirebaseStorage
 import FirebaseFirestore
+import FirebaseAuth
 
 /// This class handles saving and loading routes.
 /// TODO: make this a singleton
@@ -274,6 +275,7 @@ class DataPersistence {
                 let hash = GFUtils.geoHash(forLocation: loc)
                 self.db.collection("routes").document(String(route.id)).setData([
                     "name": route.name,
+                    "creating_user": Auth.auth().currentUser?.uid ?? "",
                     "crd_file": fileRef.fullPath,
                     "geohash": hash,
                     "location": GeoPoint(latitude: loc.latitude, longitude: loc.longitude)

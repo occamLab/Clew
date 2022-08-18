@@ -704,7 +704,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     }
     
     @objc func saveRouteButtonPressed(worldMap: ARWorldMap?) {
-        let id = String(Int64(NSDate().timeIntervalSince1970 * 1000)) as NSString
+        let id = UUID().uuidString as NSString
         // BL
         try! self.archive(routeId: id, appClipCodeID: self.appClipCodeID, beginRouteAnchorPoint: self.beginRouteAnchorPoint, endRouteAnchorPoint: self.endRouteAnchorPoint, intermediateAnchorPoints: RouteManager.shared.intermediateAnchorPoints, worldMap: self.routeWorldMap, imageAnchoring: self.imageAnchoring)
         hideAllViewsHelper()
