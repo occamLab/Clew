@@ -170,14 +170,30 @@ class PathLogger {
         settingsHistory.append((Date(), ["localizationThreshold": localizationThreshold, "disableARWorldMap": disableARWorldMap, "visualizeCloudAnchors": visualizeCloudAnchors, "filterGeoSpatial": filterGeoSpatial, "defaultUnit": defaultUnit, "defaultColor": defaultColor, "soundFeedback": soundFeedback, "voiceFeedback": voiceFeedback, "hapticFeedback": hapticFeedback, "sendLogs": sendLogs, "timerLength": timerLength, "adjustOffset": adjustOffset]))
     }
     
-    /// Log language used by user in recording.
-    //
-    ///
-//    func logLang() {
-//        let langData = Locale.preferredLanguages[0]
-//        return langData
-//    }
-    
+    func uploadRating(_ isDebug: Bool, forRoute: [String]) {
+        guard let userId = Auth.auth().currentUser?.uid else {
+            return
+        }
+        let body: [String : Any] = ["routeLogs": forRoute, "isDebug": isDebug]
+        do {
+            let jsonData = try JSONSerialization.data(withJSONObject: body, options: .prettyPrinted)
+            // here "jsonData" is the dictionary encoded in JSON data
+            let storageRef = storageBaseRef.child("geo_location").child("logs").child(userId).child(UUID().uuidString + "_rating.json")
+            let fileType = StorageMetadata()
+            fileType.contentType = "application/json"
+            // upload the image to Firebase storage and setup auto snapshotting
+            storageRef.putData(jsonData, metadata: fileType) { (metadata, error) in
+                guard metadata != nil else {
+                    // Uh-oh, an error occurred!
+                    print("could not upload meta data to firebase", error!.localizedDescription)
+                    return
+                }
+                print("Successfully uploaded log! ", storageRef.fullPath)
+            }
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
     
     /// Reset the logging variables having to do with path recording or ones that are shared between path recording / path navigating
     func resetPathLog() {
@@ -229,16 +245,11 @@ class PathLogger {
         let pathID = UIDevice.current.identifierForVendor!.uuidString + dateFormatter.string(from: date)
         let userId: String
         
-        #if !APPCLIP
         if let currentUser = Auth.auth().currentUser {
             userId = currentUser.uid
         } else {
             userId = Analytics.appInstanceID()!
         }
-        #else
-//        userId = Analytics.appInstanceID()!
-        userId = ""     // BL
-        #endif
         
         var logFileURLs: [String] = []
         if let metaDataLogURL = sendMetaData(pathDate, pathID+"-0", userId, debug) {

@@ -145,6 +145,8 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     
     static var routeKeypoints: [KeypointInfo] = []
     
+    var lastLogsUploaded: [String] = []
+    
     /// The state of the ARKit tracking session as last communicated to us through the delegate protocol.  This is useful if you want to do something different in the delegate method depending on the previous state
     var trackingSessionErrorState : ARTrackingError?
     #if !APPCLIP
@@ -1805,6 +1807,8 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         if completedRoute {
             AnnouncementManager.shared.announce(announcement: "You have arrived")
         }
+        lastLogsUploaded = PathLogger.shared.compileLogData(nil)
+        logger.resetStateSequenceLog()
         self.add(self.endNavigationController!)
     }
     
