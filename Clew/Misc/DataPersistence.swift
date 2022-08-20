@@ -248,16 +248,15 @@ class DataPersistence {
     
     func uploadToFirebase(route: SavedRoute) {
         /// Called when the Upload Route button is pressed
+        guard let uid = Auth.auth().currentUser?.uid else {
+            return
+        }
         
-        let routeRef = Storage.storage().reference().child("geo_routes")
+        let routeRef = Storage.storage().reference().child("routes").child(uid)
         let codedData = exportToCrd(route: route)
         
         ///creates a reference to the location we want to save the new files
         let fileRef = routeRef.child("\(route.id).crd")
-
-        /// creates a reference to the location we want the .json to live
-        let appClipRef = routeRef.child("\(route.appClipCodeID).json")
-        
         /// initialize this
         let fileType = StorageMetadata()
         
