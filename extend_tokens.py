@@ -17,7 +17,9 @@ if len(sys.argv) < 3:
 with open(sys.argv[1]) as f:
     data = json.load(f)
 
-
 for anchor in data['anchors']:
     if anchor['expireTime'] != anchor['maximumExpireTime']:
         extend_token(sys.argv[2], os.path.basename(anchor['name']), anchor['maximumExpireTime'])
+
+if 'nextPageToken' in data:
+    os.system('./extend_cloud_anchors.sh ' + data['nextPageToken'])
