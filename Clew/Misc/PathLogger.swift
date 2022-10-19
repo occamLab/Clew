@@ -34,6 +34,10 @@ class PathLogger {
     /// saved route geospatial locations
     var geoLocationAlignmentAttempts: [(simd_float4x4, LocationInfoGeoSpatial, GARGeospatialTransform, Bool)] = []
     var savedRouteGeospatialLocations: [LocationInfoGeoSpatial] = []
+    
+    /// logging for cloud anchors
+    var cloudAnchorsForAlignment: [LoggedCloudAnchor] = []
+    
     /// path data taken during RECORDPATH - [[1x16 transform matrix, navigation offset, use navigation offset]]
     var pathData: LinkedList<[Float]> = []
     /// time stamps for pathData
@@ -132,6 +136,11 @@ class PathLogger {
     }
 
     
+    func logCloudAnchorForAlignment(anchorIdentifier: String, cloudAnchorID: String, anchorTransform: ARAnchor) {
+        
+    }
+
+    
     /// Log a transformation matrix
     ///
     /// - Parameters:
@@ -219,6 +228,7 @@ class PathLogger {
         speechData = []
         speechDataTime = []
         savedRouteGeospatialLocations = []
+        cloudAnchorsForAlignment = []
         geoLocationAlignmentAttemptTimes = []
         geoLocationAlignmentAttempts = []
         dataTimer = Date()
@@ -290,6 +300,7 @@ class PathLogger {
                                     "isVoiceOverOn": UIAccessibility.isVoiceOverRunning,
                                     "routeId": currentNavigationRoute != nil ? currentNavigationRoute!.id : "",
                                     "hasMap": currentNavigationMap != nil,
+                                    "cloudAnchorsForAlignment": cloudAnchorsForAlignment.map( { $0.asDict() }),
                                     "keypointData": Array(keypointData),
                                     "trackingErrorPhase": Array(trackingErrorPhase),
                                     "trackingErrorTime": Array(trackingErrorTime),
@@ -362,5 +373,15 @@ class PathLogger {
 extension LocationInfoGeoSpatial {
     func asDict()->[String: Any] {
         return [ "latitude": latitude, "longitude": longitude, "heading": heading, "altitude": altitude, "altitudeUncertainty": altitudeUncertainty, "horizontalUncertainty": horizontalUncertainty, "headingUncertainty": headingUncertainty, "geoAnchorTransform": geoAnchorTransform?.asColumnMajorArray() ?? [] ]
+    }
+}
+
+struct LoggedCloudAnchor {
+    let anchorIdentifier: String
+    let cloudAnchorID: String
+    let anchorTransform: ARAnchor
+            
+    func asDict()->[String: Any] {
+        return [ "anchorIdentifier": anchorIdentifier, "cloudAnchorID": cloudAnchorID, "anchorTransform": anchorTransform.transform.asColumnMajorArray() ]
     }
 }

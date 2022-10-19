@@ -172,6 +172,11 @@ class ARSessionManager: NSObject, ObservableObject {
             for cloudAnchor in cloudAnchorsForAlignment {
                 do {
                     if let gAnchor = try garSession?.resolveCloudAnchor(String(cloudAnchor.0)) {
+                        
+                        
+                        // log the cloud anchors
+                        PathLogger.shared.logCloudAnchorForAlignment(anchorIdentifier: gAnchor.identifier.uuidString, cloudAnchorID: String(cloudAnchor.0), anchorTransform: cloudAnchor.1)
+
                         sessionCloudAnchors[gAnchor.identifier] = cloudAnchor.1
                         print("trying to resolve \(cloudAnchor.0)")
                     }
