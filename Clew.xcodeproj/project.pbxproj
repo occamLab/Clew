@@ -10,6 +10,12 @@
 		2AC1BF23284E742700C84D8B /* FloatVectorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC1BF21284E742700C84D8B /* FloatVectorExtension.swift */; };
 		2AC1BF26284E746300C84D8B /* PathMatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC1BF24284E746300C84D8B /* PathMatcher.swift */; };
 		5032502F56E37423478807C3 /* Pods_Clew_More.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EAC26B83588530DE4F39F7F1 /* Pods_Clew_More.framework */; };
+		82093A1629007A9B00BEBA89 /* InternetConnectionUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82093A1529007A9B00BEBA89 /* InternetConnectionUtil.swift */; };
+		82093A1829007AA100BEBA89 /* PointCloud.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82093A1729007AA100BEBA89 /* PointCloud.swift */; };
+		82093A1A29007AB000BEBA89 /* TrialManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82093A1929007AB000BEBA89 /* TrialManager.swift */; };
+		82093A1D29007AB700BEBA89 /* UploadingProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82093A1B29007AB700BEBA89 /* UploadingProgress.swift */; };
+		82093A1E29007AB700BEBA89 /* UploadManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82093A1C29007AB700BEBA89 /* UploadManager.swift */; };
+		82093A2029007AC400BEBA89 /* ARDataLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82093A1F29007AC400BEBA89 /* ARDataLogger.swift */; };
 		821C2230288CFA94005E5FD5 /* TestAccuracyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 821C222F288CFA94005E5FD5 /* TestAccuracyView.swift */; };
 		821FEE3227BCB47E008928E5 /* ScanTagView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9863AF6826B44D9E00EF0C64 /* ScanTagView.swift */; };
 		8227393D272C7E43006C181E /* ARSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82273939272C7E43006C181E /* ARSessionManager.swift */; };
@@ -32,6 +38,11 @@
 		82BC1D5628A5FEFD006C301B /* ClewTutorialFeedback.wav in Resources */ = {isa = PBXBuildFile; fileRef = 82BC1D5528A5FEFD006C301B /* ClewTutorialFeedback.wav */; };
 		82BFA96528749DB300039E97 /* GoogleService-Info_dev.plist in Resources */ = {isa = PBXBuildFile; fileRef = 82BFA96328749DB300039E97 /* GoogleService-Info_dev.plist */; };
 		82D37CA52890AE2100A1D032 /* GeoSpatialAlignment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82D37CA42890AE2100A1D032 /* GeoSpatialAlignment.swift */; };
+		82E874A829007BD100557F93 /* ARExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82E874A729007BD100557F93 /* ARExtensions.swift */; };
+		82E874AA29007C1500557F93 /* simd_extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82E874A929007C1500557F93 /* simd_extensions.swift */; };
+		82E874AC29007C6800557F93 /* Mesh.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82E874AB29007C6800557F93 /* Mesh.pb.swift */; };
+		82E874AE29007D1300557F93 /* ImageManipulation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82E874AD29007D1300557F93 /* ImageManipulation.swift */; };
+		82E874B029007D6600557F93 /* CGPointUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82E874AF29007D6600557F93 /* CGPointUtilities.swift */; };
 		9824AB5826B981900016225C /* InformedConsentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9824AB5726B981900016225C /* InformedConsentViewModel.swift */; };
 		9826B6D526B07C3F00EC563C /* EndNavigationScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9826B6D426B07C3F00EC563C /* EndNavigationScreen.swift */; };
 		9863AF0A26B4384000EF0C64 /* RouteDocumentData.swift in Sources */ = {isa = PBXBuildFile; fileRef = E565A10722F2173400C1998E /* RouteDocumentData.swift */; };
@@ -153,6 +164,12 @@
 		7743819F2343E3F8003EBD85 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/SettingsAndHelp.strings; sourceTree = "<group>"; };
 		77467DAE22BBC1D300FA7DEE /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		8206436A23B556A200DEE347 /* es */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = es; path = es.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
+		82093A1529007A9B00BEBA89 /* InternetConnectionUtil.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InternetConnectionUtil.swift; sourceTree = "<group>"; };
+		82093A1729007AA100BEBA89 /* PointCloud.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PointCloud.swift; sourceTree = "<group>"; };
+		82093A1929007AB000BEBA89 /* TrialManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrialManager.swift; sourceTree = "<group>"; };
+		82093A1B29007AB700BEBA89 /* UploadingProgress.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UploadingProgress.swift; sourceTree = "<group>"; };
+		82093A1C29007AB700BEBA89 /* UploadManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UploadManager.swift; sourceTree = "<group>"; };
+		82093A1F29007AC400BEBA89 /* ARDataLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ARDataLogger.swift; sourceTree = "<group>"; };
 		821C222F288CFA94005E5FD5 /* TestAccuracyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TestAccuracyView.swift; path = "/Users/pruvolo/Software/ClewMaps/imported dependencies/TestAccuracyView.swift"; sourceTree = "<absolute>"; };
 		821CF7832513264400A7B3C2 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		821CF7892513264400A7B3C2 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -201,6 +218,11 @@
 		82BFA96328749DB300039E97 /* GoogleService-Info_dev.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info_dev.plist"; sourceTree = "<group>"; };
 		82D37CA42890AE2100A1D032 /* GeoSpatialAlignment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoSpatialAlignment.swift; sourceTree = "<group>"; };
 		82E4A5CE262A26DC000BEB44 /* Clew.entitlements */ = {isa = PBXFileReference; explicitFileType = text.plist.entitlements; path = Clew.entitlements; sourceTree = "<group>"; };
+		82E874A729007BD100557F93 /* ARExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARExtensions.swift; sourceTree = "<group>"; };
+		82E874A929007C1500557F93 /* simd_extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = simd_extensions.swift; sourceTree = "<group>"; };
+		82E874AB29007C6800557F93 /* Mesh.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Mesh.pb.swift; sourceTree = "<group>"; };
+		82E874AD29007D1300557F93 /* ImageManipulation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageManipulation.swift; sourceTree = "<group>"; };
+		82E874AF29007D6600557F93 /* CGPointUtilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CGPointUtilities.swift; sourceTree = "<group>"; };
 		82F2DDD122E26A44005CD7D0 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		82F2DDD322E26A44005CD7D0 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/SettingsAndHelp.strings; sourceTree = "<group>"; };
 		98006F7A268382D600E61861 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -349,6 +371,24 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		82093A1429007A5500BEBA89 /* ARDataLogger */ = {
+			isa = PBXGroup;
+			children = (
+				82093A1529007A9B00BEBA89 /* InternetConnectionUtil.swift */,
+				82093A1729007AA100BEBA89 /* PointCloud.swift */,
+				82093A1929007AB000BEBA89 /* TrialManager.swift */,
+				82093A1B29007AB700BEBA89 /* UploadingProgress.swift */,
+				82093A1C29007AB700BEBA89 /* UploadManager.swift */,
+				82093A1F29007AC400BEBA89 /* ARDataLogger.swift */,
+				82E874A729007BD100557F93 /* ARExtensions.swift */,
+				82E874A929007C1500557F93 /* simd_extensions.swift */,
+				82E874AF29007D6600557F93 /* CGPointUtilities.swift */,
+				82E874AD29007D1300557F93 /* ImageManipulation.swift */,
+				82E874AB29007C6800557F93 /* Mesh.pb.swift */,
+			);
+			path = ARDataLogger;
+			sourceTree = "<group>";
+		};
 		8227FCEC272B0512001031F9 /* imported dependencies */ = {
 			isa = PBXGroup;
 			children = (
@@ -486,6 +526,7 @@
 		E5470EA922C119F4001092A4 /* Clew */ = {
 			isa = PBXGroup;
 			children = (
+				82093A1429007A5500BEBA89 /* ARDataLogger */,
 				9863AF6A26B495CD00EF0C64 /* Experiment */,
 				82E4A5CE262A26DC000BEB44 /* Clew.entitlements */,
 				E5D1695522E103A0008754D0 /* localizations */,
@@ -804,6 +845,7 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Clew-More/Pods-Clew-More-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/BitByteData/BitByteData.framework",
 				"${BUILT_PRODUCTS_DIR}/BoringSSL-GRPC/openssl_grpc.framework",
 				"${BUILT_PRODUCTS_DIR}/FirebaseABTesting/FirebaseABTesting.framework",
 				"${BUILT_PRODUCTS_DIR}/FirebaseAuth/FirebaseAuth.framework",
@@ -822,6 +864,8 @@
 				"${BUILT_PRODUCTS_DIR}/LASwift/LASwift.framework",
 				"${BUILT_PRODUCTS_DIR}/Libuv-gRPC/uv.framework",
 				"${BUILT_PRODUCTS_DIR}/PromisesObjC/FBLPromises.framework",
+				"${BUILT_PRODUCTS_DIR}/SWCompression/SWCompression.framework",
+				"${BUILT_PRODUCTS_DIR}/SwiftProtobuf/SwiftProtobuf.framework",
 				"${BUILT_PRODUCTS_DIR}/VectorMath/VectorMath.framework",
 				"${BUILT_PRODUCTS_DIR}/abseil/absl.framework",
 				"${BUILT_PRODUCTS_DIR}/gRPC-C++/grpcpp.framework",
@@ -831,6 +875,7 @@
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/BitByteData.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/openssl_grpc.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseABTesting.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseAuth.framework",
@@ -849,6 +894,8 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/LASwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/uv.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBLPromises.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SWCompression.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftProtobuf.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/VectorMath.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/absl.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/grpcpp.framework",
@@ -872,9 +919,11 @@
 				98FF7AAD269CC0A3008C64E5 /* PathLogger.swift in Sources */,
 				98AA58A0269F7AD5001123F0 /* OptionsHeaderView.swift in Sources */,
 				821C2230288CFA94005E5FD5 /* TestAccuracyView.swift in Sources */,
+				82093A1629007A9B00BEBA89 /* InternetConnectionUtil.swift in Sources */,
 				98FF7AC1269CC0EE008C64E5 /* UIViewExtensions.swift in Sources */,
 				98FF7AC4269CC0F5008C64E5 /* TransparentTouchView.swift in Sources */,
 				98FF7AB8269CC0C1008C64E5 /* FirebaseSetup.swift in Sources */,
+				82093A1E29007AB700BEBA89 /* UploadManager.swift in Sources */,
 				82949C0428AD79030077C892 /* GFGeoHashQuery.m in Sources */,
 				98A2DABE26A709C400158F83 /* NameSavedRouteView.swift in Sources */,
 				82949C0628AD79030077C892 /* GFGeoQueryBounds.m in Sources */,
@@ -892,8 +941,11 @@
 				98FF7AD7269CC143008C64E5 /* UIConstants.swift in Sources */,
 				2AC1BF23284E742700C84D8B /* FloatVectorExtension.swift in Sources */,
 				9826B6D526B07C3F00EC563C /* EndNavigationScreen.swift in Sources */,
+				82093A1829007AA100BEBA89 /* PointCloud.swift in Sources */,
 				98CC59AA269CC92D002EF6D7 /* FeedbackLogger.swift in Sources */,
+				82E874AA29007C1500557F93 /* simd_extensions.swift in Sources */,
 				98FF7AAB269CC04F008C64E5 /* RecordButton.swift in Sources */,
+				82093A2029007AC400BEBA89 /* ARDataLogger.swift in Sources */,
 				9863AF6F26B4965600EF0C64 /* InformedConsentView.swift in Sources */,
 				98FF7AC3269CC0F2008C64E5 /* Float4x4Extension.swift in Sources */,
 				98FF7AAC269CC0A0008C64E5 /* DataPersistence.swift in Sources */,
@@ -912,6 +964,7 @@
 				9863AF0A26B4384000EF0C64 /* RouteDocumentData.swift in Sources */,
 				82D37CA52890AE2100A1D032 /* GeoSpatialAlignment.swift in Sources */,
 				98FF7AC9269CC108008C64E5 /* StopRecordingController.swift in Sources */,
+				82E874A829007BD100557F93 /* ARExtensions.swift in Sources */,
 				98CC59AD269CCB90002EF6D7 /* SurveyInterface.swift in Sources */,
 				98FF7AAE269CC0A5008C64E5 /* Navigation.swift in Sources */,
 				98AA58A626A604C3001123F0 /* RouteManagerView.swift in Sources */,
@@ -921,11 +974,13 @@
 				825EEBCE28917FA200E97A2F /* AnnouncementManager.swift in Sources */,
 				82273942272C7E7D006C181E /* RouteManager.swift in Sources */,
 				98FF7AB2269CC0B0008C64E5 /* HelpCompiler.swift in Sources */,
+				82E874AC29007C6800557F93 /* Mesh.pb.swift in Sources */,
 				98FF7ADB269CC153008C64E5 /* RouteTableViewCell.swift in Sources */,
 				8227FCFD272B0845001031F9 /* PRTween.m in Sources */,
 				98FF7ACF269CC117008C64E5 /* NameCodeIDController.swift in Sources */,
 				9824AB5826B981900016225C /* InformedConsentViewModel.swift in Sources */,
 				82949C0328AD79030077C892 /* GFUtils.m in Sources */,
+				82093A1D29007AB700BEBA89 /* UploadingProgress.swift in Sources */,
 				8227393D272C7E43006C181E /* ARSessionManager.swift in Sources */,
 				98FF7AD4269CC125008C64E5 /* RoutesViewController.swift in Sources */,
 				8284A742288AE23300999ABF /* NSObject+ARFrameStatusAdapter.mm in Sources */,
@@ -934,7 +989,10 @@
 				98FF7ADC269CC157008C64E5 /* EnterCodeIDView.swift in Sources */,
 				98FF7AD2269CC11F008C64E5 /* BurgerMenuViewController.swift in Sources */,
 				98AA58A826A60F02001123F0 /* SavedRoutesList.swift in Sources */,
+				82E874AE29007D1300557F93 /* ImageManipulation.swift in Sources */,
+				82093A1A29007AB000BEBA89 /* TrialManager.swift in Sources */,
 				98FF7AA9269CC04A008C64E5 /* AudioVisualizerView.swift in Sources */,
+				82E874B029007D6600557F93 /* CGPointUtilities.swift in Sources */,
 				98FF7ACB269CC10C008C64E5 /* NameSavedRouteController.swift in Sources */,
 				8227FD04272B0954001031F9 /* PRTweenTimingFunctions.m in Sources */,
 				98AA58A426A1C13D001123F0 /* RecordPathController.swift in Sources */,

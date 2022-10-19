@@ -404,6 +404,8 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
                     NSKeyedUnarchiver.setClass(RouteAnchorPoint.self, forClassName: "Clew_More.RouteAnchorPoint")
                     if let document = try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data!) as? RouteDocumentData {
                         let thisRoute = document.route
+                        ARLogger.shared.dataDir = "visual_alignment_benchmarking/\(thisRoute.name)"
+                        ARLogger.shared.startTrial()
                         ARSessionManager.shared.initialWorldMap = document.map
                         self.state = .startingResumeProcedure(route: thisRoute, worldMap: ARSessionManager.shared.initialWorldMap, navigateStartToEnd: true)
                     }
@@ -745,6 +747,8 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     ///   - navigateStartToEnd: a Boolean indicating the navigation direction (true is start to end)
     func onRouteTableViewCellClicked(route: SavedRoute, navigateStartToEnd: Bool) {
         let worldMap = dataPersistence.unarchiveMap(id: route.id as String)
+        ARLogger.shared.dataDir = "visual_alignment_benchmarking/\(route.name)"
+        ARLogger.shared.startTrial()
         hideAllViewsHelper()
         state = .startingResumeProcedure(route: route, worldMap: worldMap, navigateStartToEnd: navigateStartToEnd)
     }
@@ -964,6 +968,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
                                                                        width: UIConstants.buttonFrameWidth * 1,
                                                                        height: UIScreen.main.bounds.size.height*0.85)
         endNavigationController?.view.backgroundColor = .white
+        ARLogger.shared.doAynchronousUploads = true
         
         ARSessionManager.shared.delegate = self
         

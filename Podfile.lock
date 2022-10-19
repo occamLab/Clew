@@ -618,6 +618,7 @@ PODS:
     - ARCore/GARSession (~> 1.32)
     - GoogleToolboxForMac/Logger (~> 2.1)
     - "GoogleToolboxForMac/NSData+zlib (~> 2.1)"
+  - BitByteData (2.0.2)
   - BoringSSL-GRPC (0.0.24):
     - BoringSSL-GRPC/Implementation (= 0.0.24)
     - BoringSSL-GRPC/Interface (= 0.0.24)
@@ -806,6 +807,48 @@ PODS:
   - nanopb/decode (2.30908.0)
   - nanopb/encode (2.30908.0)
   - PromisesObjC (2.1.0)
+  - SWCompression (4.8.2):
+    - BitByteData (~> 2.0)
+    - SWCompression/BZip2 (= 4.8.2)
+    - SWCompression/Deflate (= 4.8.2)
+    - SWCompression/GZip (= 4.8.2)
+    - SWCompression/LZ4 (= 4.8.2)
+    - SWCompression/LZMA (= 4.8.2)
+    - SWCompression/LZMA2 (= 4.8.2)
+    - SWCompression/SevenZip (= 4.8.2)
+    - SWCompression/TAR (= 4.8.2)
+    - SWCompression/XZ (= 4.8.2)
+    - SWCompression/ZIP (= 4.8.2)
+    - SWCompression/Zlib (= 4.8.2)
+  - SWCompression/BZip2 (4.8.2):
+    - BitByteData (~> 2.0)
+  - SWCompression/Deflate (4.8.2):
+    - BitByteData (~> 2.0)
+  - SWCompression/GZip (4.8.2):
+    - BitByteData (~> 2.0)
+    - SWCompression/Deflate
+  - SWCompression/LZ4 (4.8.2):
+    - BitByteData (~> 2.0)
+  - SWCompression/LZMA (4.8.2):
+    - BitByteData (~> 2.0)
+  - SWCompression/LZMA2 (4.8.2):
+    - BitByteData (~> 2.0)
+    - SWCompression/LZMA
+  - SWCompression/SevenZip (4.8.2):
+    - BitByteData (~> 2.0)
+    - SWCompression/LZMA2
+  - SWCompression/TAR (4.8.2):
+    - BitByteData (~> 2.0)
+  - SWCompression/XZ (4.8.2):
+    - BitByteData (~> 2.0)
+    - SWCompression/LZMA2
+  - SWCompression/ZIP (4.8.2):
+    - BitByteData (~> 2.0)
+    - SWCompression/Deflate
+  - SWCompression/Zlib (4.8.2):
+    - BitByteData (~> 2.0)
+    - SWCompression/Deflate
+  - SwiftProtobuf (1.20.2)
   - VectorMath (0.4.1):
     - VectorMath/Core (= 0.4.1)
     - VectorMath/MapKit (= 0.4.1)
@@ -829,12 +872,15 @@ DEPENDENCIES:
   - InAppSettingsKit
   - JGMethodSwizzler (= 2.0.1)
   - LASwift
+  - SWCompression
+  - SwiftProtobuf
   - VectorMath
 
 SPEC REPOS:
   trunk:
     - abseil
     - ARCore
+    - BitByteData
     - BoringSSL-GRPC
     - Firebase
     - FirebaseABTesting
@@ -860,11 +906,14 @@ SPEC REPOS:
     - Libuv-gRPC
     - nanopb
     - PromisesObjC
+    - SWCompression
+    - SwiftProtobuf
     - VectorMath
 
 SPEC CHECKSUMS:
   abseil: ebe5b5529fb05d93a8bdb7951607be08b7fa71bc
   ARCore: 3124ed997ad2554a24d5fdbeb40f76265dea8d69
+  BitByteData: 4ba0d1ed07c497cdde396b966c1e24838f4e394e
   BoringSSL-GRPC: 3175b25143e648463a56daeaaa499c6cb86dad33
   Firebase: 5f8193dff4b5b7c5d5ef72ae54bb76c08e2b841d
   FirebaseABTesting: 10cbce8db9985ae2e3847ea44e9947dd18f94e10
@@ -890,8 +939,10 @@ SPEC CHECKSUMS:
   Libuv-gRPC: 55e51798e14ef436ad9bc45d12d43b77b49df378
   nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
   PromisesObjC: 99b6f43f9e1044bd87a95a60beff28c2c44ddb72
+  SWCompression: 5bc6918d9e75f9008b6fc2265a2f3ec297ac5327
+  SwiftProtobuf: 9f458aaa7844a2fc0b910053e66578bc4e2da9c1
   VectorMath: 55dded3a69e5061add78d06275561bc25ead2999
 
-PODFILE CHECKSUM: 74c24378f58025dca8258788fe362bd3e56e0912
+PODFILE CHECKSUM: 21b786437f78d609a5f0f8baaff4907eb3c5e398
 
 COCOAPODS: 1.11.2

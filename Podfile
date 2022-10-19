@@ -6,9 +6,11 @@ use_frameworks!
 def all_pods
    pod 'ARCore/Geospatial', '~> 1.32.0'
    pod 'ARCore/CloudAnchors', '~> 1.32.0'
+   pod 'SwiftProtobuf'
    pod 'FirebaseStorage'
    pod 'FirebaseAnalytics'
    pod 'FirebaseAuth'
+   pod 'SWCompression'
 # Firebase DB causes app store errors when combined with ARCore
 #   pod 'GeoFire'
    pod 'FirebaseFirestore'

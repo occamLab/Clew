@@ -29,6 +29,18 @@ class BurgerMenuViewController: UITableViewController, UIPopoverPresentationCont
         if indexPath == [0,1] {
             helpButtonPressed()
         }
+        if indexPath == [0,2] {
+            ARLogger.shared.dataDir = "visual_alignment_benchmarking"
+            ARLogger.shared.uploadLocalDataToCloud() { wasSuccessful in
+                if wasSuccessful {
+                    AnnouncementManager.shared.announce(announcement: "data uploaded")
+                } else {
+                    AnnouncementManager.shared.announce(announcement: "error uploading data")
+
+                }
+                print("wasSuccessful \(wasSuccessful)")
+            }
+        }
     }
     
     /// Called when the settings button is pressed.  This function will display the settings view (managed by SettingsViewController) as a popover.

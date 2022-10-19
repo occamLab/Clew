@@ -298,6 +298,7 @@ class PathLogger {
                                     "PathDate": pathDate,
                                     "PathType": pathType,
                                     "isVoiceOverOn": UIAccessibility.isVoiceOverRunning,
+                                    "ARLoggerDataDir": ARLogger.shared.baseTrialPath,
                                     "routeId": currentNavigationRoute != nil ? currentNavigationRoute!.id : "",
                                     "hasMap": currentNavigationMap != nil,
                                     "cloudAnchorsForAlignment": cloudAnchorsForAlignment.map( { $0.asDict() }),
@@ -345,7 +346,7 @@ class PathLogger {
                                     "navigationData": Array(navigationData),
                                     "navigationDataTime": Array(navigationDataTime),
                                     "speechData": Array(speechData),
-                                    "speechDataTime": Array(speechDataTime), "geoSpatialTransforms": geospatialTransforms.map({$0.asDict()}), "geoSpatialTransformTimes": geospatialTransformTimes, "geoLocationAlignmentAttemptTimes": geoLocationAlignmentAttemptTimes, "savedRouteGeospatialLocations": savedRouteGeospatialLocations.map({$0.asDict()}), "geoLocationAlignmentAttempts": geoLocationAlignmentAttempts.map({ ["anchorTransform": $0.0.asColumnMajorArray(), "geoSpatialAlignmentCrumb": $0.1.asDict(), "cameraGeospatialTransform": $0.2.asDict(), "wasAccepted": $0.3] })]
+                                    "speechDataTime": Array(speechDataTime), "geoSpatialTransforms": geospatialTransforms.map({$0.asDict()}), "geoSpatialTransformTimes": geospatialTransformTimes, "geoLocationAlignmentAttemptTimes": geoLocationAlignmentAttemptTimes, "savedRouteGeospatialLocations": savedRouteGeospatialLocations.map({$0.asDict()}), "geoLocationAlignmentAttempts": geoLocationAlignmentAttempts.map({ ["anchorTransform": $0.0.asColumnMajorArray, "geoSpatialAlignmentCrumb": $0.1.asDict(), "cameraGeospatialTransform": $0.2.asDict(), "wasAccepted": $0.3] })]
         
         do {
             let jsonData = try JSONSerialization.data(withJSONObject: body, options: .prettyPrinted)
@@ -372,7 +373,7 @@ class PathLogger {
 
 extension LocationInfoGeoSpatial {
     func asDict()->[String: Any] {
-        return [ "latitude": latitude, "longitude": longitude, "heading": heading, "altitude": altitude, "altitudeUncertainty": altitudeUncertainty, "horizontalUncertainty": horizontalUncertainty, "headingUncertainty": headingUncertainty, "geoAnchorTransform": geoAnchorTransform?.asColumnMajorArray() ?? [] ]
+        return [ "latitude": latitude, "longitude": longitude, "heading": heading, "altitude": altitude, "altitudeUncertainty": altitudeUncertainty, "horizontalUncertainty": horizontalUncertainty, "headingUncertainty": headingUncertainty, "geoAnchorTransform": geoAnchorTransform?.asColumnMajorArray ?? [] ]
     }
 }
 
@@ -382,6 +383,6 @@ struct LoggedCloudAnchor {
     let anchorTransform: ARAnchor
             
     func asDict()->[String: Any] {
-        return [ "anchorIdentifier": anchorIdentifier, "cloudAnchorID": cloudAnchorID, "anchorTransform": anchorTransform.transform.asColumnMajorArray() ]
+        return [ "anchorIdentifier": anchorIdentifier, "cloudAnchorID": cloudAnchorID, "anchorTransform": anchorTransform.transform.asColumnMajorArray ]
     }
 }

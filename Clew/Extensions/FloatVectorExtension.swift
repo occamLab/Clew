@@ -18,28 +18,6 @@ extension float4x4 {
     func frobenius()->Float {
         return sqrt(simd_length_squared(columns.0) + simd_length_squared(columns.1) + simd_length_squared(columns.2) + simd_length_squared(columns.3))
     }
-    
-    func asColumnMajorArray()->[Float] {
-        return [self.columns.0.x, self.columns.0.y, self.columns.0.z, self.columns.0.w, self.columns.1.x, self.columns.1.y, self.columns.1.z, self.columns.1.w, self.columns.2.x, self.columns.2.y, self.columns.2.z, self.columns.2.w, self.columns.3.x, self.columns.3.y, self.columns.3.z, self.columns.3.w]
-    }
-}
-
-// MARK: - Extensions for 3D floating point vector type
-
-extension float3 {
-    /// convert from a 3-element inhomogeneous vector to a 4-element homogeneous one.
-    var homogeneous: float4 {
-        return float4(x, y, z, 1)
-    }
-}
-
-// MARK: - Extensions for 4D floating point vector type
-
-extension float4 {
-    /// convert from a 4-element homogeneous vector to a 3-element inhomogeneous one.  This attribute only makes sense if the 4-element vector is a homogeneous representation of a 3D point.
-    var inhomogeneous: float3 {
-        return float3(x/w, y/w, z/w)
-    }
 }
 
 // MARK: - Extension for the two dimensional floating point vector type

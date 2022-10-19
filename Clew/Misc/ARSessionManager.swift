@@ -216,6 +216,10 @@ class ARSessionManager: NSObject, ObservableObject {
     }
     
     func startSession() {
+        if ARWorldTrackingConfiguration.supportsFrameSemantics([.sceneDepth, .smoothedSceneDepth]) {
+            configuration.frameSemantics = [.sceneDepth]
+        }
+        
         manualAlignment = matrix_identity_float4x4
         keypointRenderJob = nil
         pathRenderJob = nil
@@ -714,6 +718,13 @@ extension ARSessionManager: ARSessionDelegate {
     }
     
     func session(_ session: ARSession, didUpdate frame: ARFrame) {
+        ARLogger.shared.session(session, didUpdate: frame)
+        
+        if -lastFrameLogTime.timeIntervalSinceNow > 1.0 {
+            ARLogger.shared.log(frame: frame, withType: "test", withMeshLoggingBehavior: .none)
+            lastFrameLogTime = Date()
+        }
+        
         do {
             ARFrameStatusAdapter.adjustTrackingStatus(frame)
             let garFrame = try garSession?.update(frame)
@@ -773,7 +784,17 @@ extension ARSessionManager: ARSessionDelegate {
             delegate?.receivedImageAnchors(imageAnchors: imageAnchors)
         }
     }
-    
+    func session(_ session: ARSession, didUpdate anchors: [ARAnchor]) {
+        ARLogger.shared.session(session, didUpdate: anchors)
+    }
+    func session(_ session: ARSession, didAdd anchors: [ARAnchor]) {
+        ARLogger.shared.session(session, didAdd: anchors)
+        
+    }
+    func session(_ session: ARSession, didRemove anchors: [ARAnchor]) {
+        ARLogger.shared.session(session, didRemove: anchors)
+        
+    }
     /// Called when there is a change in tracking state.  This is important for both announcing tracking errors to the user and also to triggering some app state transitions.
     /// - Parameters:
     ///   - session: the AR session associated with the change in tracking state
