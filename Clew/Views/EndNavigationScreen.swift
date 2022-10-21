@@ -37,6 +37,7 @@ struct EndNavigationScreen: View {
                                 Spacer()
                                 Button(action: {
                                     feedbackGiven = true
+                                    ARLogger.shared.finalizeTrial()
                                     vc.logger.uploadRating(false, forRoute: vc.lastLogsUploaded)
                                 }){
                                     Image("thumbs_up")
@@ -47,6 +48,7 @@ struct EndNavigationScreen: View {
                                 .accessibility(hint: Text("Submit Feedback that route is good"))
                                 Button(action: {
                                     feedbackGiven = true
+                                    ARLogger.shared.finalizeTrial()
                                     vc.logger.uploadRating(true, forRoute: vc.lastLogsUploaded)
                                 }){
                                     Image("thumbs_down_red")

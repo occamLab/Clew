@@ -77,6 +77,9 @@ class ARSessionManager: NSObject, ObservableObject {
     /// this is the alignment between the reloaded route
     var manualAlignment: simd_float4x4? {
         willSet(myNewValue) {
+            if let newValue = myNewValue, let currentFrameTimeStamp = sceneView.session.currentFrame?.timestamp {
+                ARLogger.shared.logPose(pose: newValue, at: currentFrameTimeStamp)
+            }
             if let newValue = myNewValue {
                 let oldValue = self.manualAlignment ?? matrix_identity_float4x4
                 let relativeTransform = newValue * oldValue.inverse
@@ -891,6 +894,7 @@ extension ARSessionManager: GARSessionDelegate {
             self.manualAlignment = anchor.transform.alignY() * alignTransform.inverse.alignY()
             createSCNNodeFor(identifier: cloudIdentifier, at: anchor.transform)
             let announceResolution = "Cloud Anchor Resolved"
+            ARLogger.shared.logString(logMessage: announceResolution)
             PathLogger.shared.logSpeech(utterance: announceResolution)
             AnnouncementManager.shared.announce(announcement: announceResolution)
         }
