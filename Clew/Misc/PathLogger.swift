@@ -35,6 +35,10 @@ class PathLogger {
     var geoLocationAlignmentAttempts: [(simd_float4x4, LocationInfoGeoSpatial, GARGeospatialTransform, Bool)] = []
     var savedRouteGeospatialLocations: [LocationInfoGeoSpatial] = []
     
+    /// keeps track of the current GAR anchors and timestamps
+    var garAnchors: [[LoggedGARAnchor]] = []
+    var garAnchorTimestamps: [Double] = []
+    
     /// logging for cloud anchors
     var cloudAnchorsForAlignment: [LoggedCloudAnchor] = []
     
@@ -124,6 +128,11 @@ class PathLogger {
     func logGeospatialTransform(_ transform: GARGeospatialTransform) {
         geospatialTransformTimes.append(-stateTransitionLogTimer.timeIntervalSinceNow)
         geospatialTransforms.append(transform)
+    }
+    
+    func logGARAnchors(anchors: [GARAnchor], timestamp: Double) {
+        garAnchors.append(anchors.map({anchor in LoggedGARAnchor(transform: anchor.transform, hasValidTransform: anchor.hasValidTransform, cloudIdentifier: anchor.cloudIdentifier ?? "", identifier: anchor.identifier)}))
+        garAnchorTimestamps.append(timestamp)
     }
     
     func logSavedRouteGeospatialLocations(_ savedLocations: [LocationInfoGeoSpatial]) {
@@ -228,6 +237,8 @@ class PathLogger {
         speechData = []
         speechDataTime = []
         savedRouteGeospatialLocations = []
+        garAnchorTimestamps = []
+        garAnchors = []
         cloudAnchorsForAlignment = []
         geoLocationAlignmentAttemptTimes = []
         geoLocationAlignmentAttempts = []
@@ -302,6 +313,8 @@ class PathLogger {
                                     "routeId": currentNavigationRoute != nil ? currentNavigationRoute!.id : "",
                                     "hasMap": currentNavigationMap != nil,
                                     "cloudAnchorsForAlignment": cloudAnchorsForAlignment.map( { $0.asDict() }),
+                                    "garAnchorTimestamps": garAnchorTimestamps,
+                                    "garAnchors": garAnchors.map({garAnchorList in garAnchorList.map({garAnchor in garAnchor.asDict() })}),
                                     "keypointData": Array(keypointData),
                                     "trackingErrorPhase": Array(trackingErrorPhase),
                                     "trackingErrorTime": Array(trackingErrorTime),
@@ -384,5 +397,20 @@ struct LoggedCloudAnchor {
             
     func asDict()->[String: Any] {
         return [ "anchorIdentifier": anchorIdentifier, "cloudAnchorID": cloudAnchorID, "anchorTransform": anchorTransform.transform.asColumnMajorArray ]
+    }
+}
+
+
+struct LoggedGARAnchor {
+    let transform: simd_float4x4
+    let hasValidTransform: Bool
+    let cloudIdentifier: String
+    let identifier: UUID
+    
+    func asDict()->[String: Any] {
+        return ["transform": transform.asColumnMajorArray,
+                "hasValidTransform": hasValidTransform,
+                "cloudIdentifier": cloudIdentifier,
+                "identifier": identifier.uuidString]
     }
 }

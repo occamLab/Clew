@@ -60,7 +60,7 @@ class ARSessionManager: NSObject, ObservableObject {
     let storageBaseRef = Storage.storage().reference()
     static var shared = ARSessionManager()
     var delegate: ARSessionManagerDelegate?
-    var lastTimeOutputtedGeoAnchors = Date()
+    var lastGARAnchorLogTimeStamp = Date()
     var lastGeospatialLogTime = Date()
     let geoSpatialAlignmentFilter = GeoSpatialAlignment()
     var filterGeoSpatial: Bool = false
@@ -698,9 +698,16 @@ extension ARSessionManager: ARSessionDelegate {
     }
     
     func checkForGeoAlignment(geospatialTransform: GARGeospatialTransform, cameraWorldTransform: simd_float4x4) {
-        guard geospatialTransform.trackingQuality.isAsGoodOrBetterThan( outdoorLocalizationQualityThreshold), let GARAnchors = self.currentGARFrame?.anchors else {
+        guard geospatialTransform.trackingQuality.isAsGoodOrBetterThan( outdoorLocalizationQualityThreshold), let GARAnchors = self.currentGARFrame?.anchors, let timestamp = self.currentGARFrame?.timestamp else {
             return
         }
+        if -lastGARAnchorLogTimeStamp.timeIntervalSinceNow > 1.0 {
+            // log these periodically so we store too much data
+            lastGARAnchorLogTimeStamp = Date()
+            PathLogger.shared.logGARAnchors(anchors: GARAnchors, timestamp: timestamp)
+        }
+        print("Num GARAnchors \(GARAnchors.count)")
+        
         guard let (alignmentAnchor, geoSpatialAlignmentCrumb) = getBestAlignmentCrumb(cameraGeoSpatialTransform: geospatialTransform, cameraWorldTransform: cameraWorldTransform, anchors: GARAnchors) else {
             return
         }
