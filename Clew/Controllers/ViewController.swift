@@ -1330,7 +1330,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     
     /// Register settings bundle
     func registerSettingsBundle(){
-        let appDefaults = ["outdoorLocalizationThreshold": 0, "filterGeoSpatial": true, "disableARWorldMap": true, "visualizeCloudAnchors": false, "crumbColor": 0, "showPath": true, "pathColor": 0, "hapticFeedback": true, "sendLogs": true, "voiceFeedback": true, "soundFeedback": true, "adjustOffset": false, "units": 0, "timerLength":5, "uploadRichData": false] as [String : Any]
+        let appDefaults = ["outdoorLocalizationThreshold": 0, "filterGeoSpatial": true, "disableARWorldMap": true, "visualizeCloudAnchors": false, "crumbColor": 0, "showPath": true, "pathColor": 0, "hapticFeedback": true, "sendLogs": true, "voiceFeedback": true, "soundFeedback": true, "adjustOffset": false, "units": 0, "timerLength":5, "logRichData": false, "logGARAnchors": false] as [String : Any]
         UserDefaults.standard.register(defaults: appDefaults)
     }
 
@@ -1356,7 +1356,6 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
             break
         }
         defaultUnit = defaults.integer(forKey: "units")
-        uploadRichData = defaults.bool(forKey: "uploadRichData")
         defaultColor = defaults.integer(forKey: "crumbColor")
         showPath = defaults.bool(forKey: "showPath")
         defaultPathColor = defaults.integer(forKey: "pathColor")
@@ -1370,6 +1369,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         adjustOffset = defaults.bool(forKey: "adjustOffset")
         nav.useHeadingOffset = adjustOffset
         logRichData = defaults.bool(forKey: "logRichData")
+        logGARAnchors = defaults.bool(forKey: "logGARAnchors")
         
         logger.logSettings(localizationThreshold: localizationQualityThreshold, filterGeoSpatial: ARSessionManager.shared.filterGeoSpatial, disableARWorldMap: ARSessionManager.shared.disableARWorldMap, visualizeCloudAnchors: ARSessionManager.shared.visualizeCloudAnchors, defaultUnit: defaultUnit, defaultColor: defaultColor, soundFeedback: soundFeedback, voiceFeedback: voiceFeedback, hapticFeedback: hapticFeedback, sendLogs: sendLogs, timerLength: timerLength, adjustOffset: adjustOffset)
         
@@ -1942,9 +1942,6 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     /// how accurate we require the localization of Geo Spatial API to be before we allow a route to be created or navigated
     var localizationQualityThreshold: Int!
     
-    /// Whether or not to upload the rich data
-    var uploadRichData: Bool?
-    
     /// the color of the waypoints.  0 is red, 1 is green, 2 is blue, and 3 is random
     var defaultColor: Int!
     
@@ -1972,8 +1969,11 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     /// The length of time that the timer will run for
     var timerLength: Int!
     
-    /// This tracks whether the user has consented to log rich (image) data
+    /// This tracks whether the user wants to log rich (image) data
     var logRichData: Bool!
+    
+    /// This tracks whether to upload the GARAnchors once per second
+    var logGARAnchors: Bool!
 
     /// This keeps track of the paused transform while the current session is being realigned to the saved route
     var pausedTransform : simd_float4x4?
@@ -3141,7 +3141,14 @@ extension ViewController: ARSessionManagerDelegate {
         }
     }
     
+    func shouldLogGARAnchors()->Bool {
+        return logGARAnchors
+    }
+    
     func shouldLogRichData() -> Bool {
+        if !logRichData {
+            return false;
+        }
         if case .mainScreen(_) = state {
             return false
         } else if case .endScreen(_) = state {

@@ -39,6 +39,7 @@ protocol ARSessionManagerDelegate {
     func getShowPath()->Bool
     func receivedImageAnchors(imageAnchors: [ARImageAnchor])
     func shouldLogRichData()->Bool
+    func shouldLogGARAnchors()->Bool
     func getLoggingTag()->String
     func sessionDidRelocalize()
     func didDoGeoAlignment()
@@ -701,12 +702,11 @@ extension ARSessionManager: ARSessionDelegate {
         guard geospatialTransform.trackingQuality.isAsGoodOrBetterThan( outdoorLocalizationQualityThreshold), let GARAnchors = self.currentGARFrame?.anchors, let timestamp = self.currentGARFrame?.timestamp else {
             return
         }
-        if -lastGARAnchorLogTimeStamp.timeIntervalSinceNow > 1.0 {
+        if -lastGARAnchorLogTimeStamp.timeIntervalSinceNow > 1.0, delegate?.shouldLogGARAnchors() == true {
             // log these periodically so we store too much data
             lastGARAnchorLogTimeStamp = Date()
             PathLogger.shared.logGARAnchors(anchors: GARAnchors, timestamp: timestamp)
         }
-        print("Num GARAnchors \(GARAnchors.count)")
         
         guard let (alignmentAnchor, geoSpatialAlignmentCrumb) = getBestAlignmentCrumb(cameraGeoSpatialTransform: geospatialTransform, cameraWorldTransform: cameraWorldTransform, anchors: GARAnchors) else {
             return
@@ -730,7 +730,7 @@ extension ARSessionManager: ARSessionDelegate {
     func session(_ session: ARSession, didUpdate frame: ARFrame) {
         ARLogger.shared.session(session, didUpdate: frame)
         
-        if -lastFrameLogTime.timeIntervalSinceNow > 1.0 {
+        if -lastFrameLogTime.timeIntervalSinceNow > 1.0, delegate?.shouldLogRichData() == true {
             ARLogger.shared.log(frame: frame, withType: "test", withMeshLoggingBehavior: .none)
             lastFrameLogTime = Date()
         }

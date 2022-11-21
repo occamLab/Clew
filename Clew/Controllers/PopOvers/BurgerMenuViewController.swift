@@ -79,6 +79,14 @@ class BurgerMenuViewController: UITableViewController, UIPopoverPresentationCont
         self.present(nav, animated: true, completion: nil)
     }
     
+    override func tableView(_ tableView: UITableView,
+                            heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if indexPath.row == 2, !UploadManager.shared.hasLocalDataToUploadToCloud() {
+            return 0
+        }
+        return super.tableView(tableView, heightForRowAt: indexPath)
+    }
+    
     /// Called when the help button is pressed.  This function will display the help view (managed by HelpViewController) as a popover.
     func helpButtonPressed() {
         let storyBoard: UIStoryboard = UIStoryboard(name: "SettingsAndHelp", bundle: nil)
