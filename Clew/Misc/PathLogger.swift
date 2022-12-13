@@ -38,6 +38,7 @@ class PathLogger {
     /// keeps track of the current GAR anchors and timestamps
     var garAnchors: [[LoggedGARAnchor]] = []
     var garAnchorTimestamps: [Double] = []
+    var garAnchorCameraWorldTransforms: [simd_float4x4] = []
     
     /// logging for cloud anchors
     var cloudAnchorsForAlignment: [LoggedCloudAnchor] = []
@@ -130,9 +131,10 @@ class PathLogger {
         geospatialTransforms.append(transform)
     }
     
-    func logGARAnchors(anchors: [GARAnchor], timestamp: Double) {
+    func logGARAnchors(anchors: [GARAnchor], cameraWorldTransform: simd_float4x4, timestamp: Double) {
         garAnchors.append(anchors.map({anchor in LoggedGARAnchor(transform: anchor.transform, hasValidTransform: anchor.hasValidTransform, cloudIdentifier: anchor.cloudIdentifier ?? "", identifier: anchor.identifier)}))
         garAnchorTimestamps.append(timestamp)
+        garAnchorCameraWorldTransforms.append(cameraWorldTransform)
     }
     
     func logSavedRouteGeospatialLocations(_ savedLocations: [LocationInfoGeoSpatial]) {
@@ -238,6 +240,7 @@ class PathLogger {
         speechDataTime = []
         savedRouteGeospatialLocations = []
         garAnchorTimestamps = []
+        garAnchorCameraWorldTransforms = []
         garAnchors = []
         cloudAnchorsForAlignment = []
         geoLocationAlignmentAttemptTimes = []
@@ -314,6 +317,7 @@ class PathLogger {
                                     "hasMap": currentNavigationMap != nil,
                                     "cloudAnchorsForAlignment": cloudAnchorsForAlignment.map( { $0.asDict() }),
                                     "garAnchorTimestamps": garAnchorTimestamps,
+                                    "garAnchorCameraWorldTransforms": garAnchorCameraWorldTransforms.map({$0.asColumnMajorArray}),
                                     "garAnchors": garAnchors.map({garAnchorList in garAnchorList.map({garAnchor in garAnchor.asDict() })}),
                                     "keypointData": Array(keypointData),
                                     "trackingErrorPhase": Array(trackingErrorPhase),
@@ -386,7 +390,7 @@ class PathLogger {
 
 extension LocationInfoGeoSpatial {
     func asDict()->[String: Any] {
-        return [ "latitude": latitude, "longitude": longitude, "heading": heading, "altitude": altitude, "altitudeUncertainty": altitudeUncertainty, "horizontalUncertainty": horizontalUncertainty, "headingUncertainty": headingUncertainty, "geoAnchorTransform": geoAnchorTransform?.asColumnMajorArray ?? [] ]
+        return [ "latitude": latitude, "longitude": longitude, "heading": heading, "altitude": altitude, "altitudeUncertainty": altitudeUncertainty, "horizontalUncertainty": horizontalUncertainty, "headingUncertainty": headingUncertainty, "GARAnchorUUID": GARAnchorUUID?.uuidString ?? "", "geoAnchorTransform": geoAnchorTransform?.asColumnMajorArray ?? [] ]
     }
 }
 
