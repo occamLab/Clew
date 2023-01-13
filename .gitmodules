@@ -1,0 +1,3 @@
+[submodule "FirebasePlists"]
+	path = FirebasePlists
+	url = https://github.com/occamLab/FirebasePlists
