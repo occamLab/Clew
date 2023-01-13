@@ -29,6 +29,7 @@ import StoreKit
 import AVFoundation
 import AudioToolbox
 import MediaPlayer
+import CoreHaptics
 import VectorMath
 import Firebase
 //import SRCountdownTimer
@@ -146,6 +147,11 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     /// Helper Classes
     let firebaseSetup = FirebaseSetup()
     
+    /// Allows us to use the core haptics API
+    var hapticEngine: CHHapticEngine?
+    /// Controls the dynamic haptic pattern at the end of the route
+    var hapticPlayer: CHHapticAdvancedPatternPlayer?
+    
     let surveyInterface = SurveyInterface()
     
     /// The state of the app.  This should be constantly referenced and updated as the app transitions
@@ -262,6 +268,11 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     ///
     /// - Parameter announceArrival: a Boolean that indicates whether the user's arrival should be announced (true means the user has arrived)
     func handleStateTransitionToMainScreen(announceArrival: Bool) {
+        hapticTimer?.invalidate()
+        do {
+            try hapticPlayer?.stop(atTime: 0.0)
+                hapticPlayer = nil
+        } catch {}
         // cancel the timer that announces tracking errors
         trackingErrorsAnnouncementTimer?.invalidate()
         // if the ARSession is running, pause it to conserve battery
@@ -350,6 +361,10 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     // handler for downloaded routes
     // <3 Esme wrote a function !
     func handleStateTransitionToNavigatingExternalRoute() {
+        
+        // prevent bear left / bear right when the navigation is starting up
+        lastDirectionAnnouncement = Date()
+        
         // navigate the recorded path
 
         // If the route has not yet been saved, we can no longer save this route
@@ -392,6 +407,9 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     /// Handler for the navigatingRoute app state
     func handleStateTransitionToNavigatingRoute() {
         // navigate the recorded path
+        
+        // prevent bear left / bear right when the navigation is starting up
+        lastDirectionAnnouncement = Date()
 
         // If the route has not yet been saved, we can no longer save this route
         routeName = nil
@@ -444,8 +462,8 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         // make sure there are no old values hanging around
         headingRingBuffer.clear()
         locationRingBuffer.clear()
-        
         hapticTimer = Timer.scheduledTimer(timeInterval: 0.01, target: self, selector: (#selector(getHapticFeedback)), userInfo: nil, repeats: true)
+        hapticPlayer = nil
     }
     
     /// Handler for the startingResumeProcedure app state
@@ -879,6 +897,11 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     /// stop route navigation VC
     var stopNavigationController: StopNavigationController!
     
+    /// keep track of when the last off course announcement was given
+    var lastOffCourseAnnouncement: Date? = Date()
+    
+    /// last direction announcement
+    var lastDirectionAnnouncement = Date()
 
     /// called when the view has loaded.  We setup various app elements in here.
     override func viewDidLoad() {
@@ -1029,6 +1052,36 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
 
     }
     
+    func startEndOfRouteHaptics() {
+        do {
+            hapticEngine = try CHHapticEngine()
+            hapticEngine?.start() { error in
+                if error != nil {
+                    print("error \(error?.localizedDescription)")
+                    return
+                }
+                let events = [CHHapticEvent(eventType: .hapticContinuous, parameters: [
+                    CHHapticEventParameter(parameterID: .hapticIntensity, value: 1.0),
+                    CHHapticEventParameter(parameterID: .hapticSharpness, value: 0.1),
+                    CHHapticEventParameter(parameterID: .attackTime, value: 0.1),
+                    CHHapticEventParameter(parameterID: .releaseTime, value: 0.2),
+                    CHHapticEventParameter(parameterID: .decayTime, value: 0.3) ], relativeTime: 0.1, duration: 0.6)]
+                
+                do {
+                    self.hapticPlayer = try self.hapticEngine?.makeAdvancedPlayer(with: CHHapticPattern(events: events, parameters: []))
+                    self.hapticPlayer?.loopEnabled = true
+                    try self.hapticPlayer?.start(atTime: 0)
+                    print("Started Haptics!!")
+                } catch {
+                    print("HAPTICS ERROR!!!")
+                    
+                }
+            }
+        } catch {
+            print("Unable to start haptic engine")
+        }
+    }
+    
     /// Create the audio player objects for the various app sounds.  Creating them ahead of time helps reduce latency when playing them later.
     func setupAudioPlayers() {
         let anchorInFrameSound = Bundle.main.path(forResource: "anchorInFrame", ofType: "mp3")
@@ -1122,6 +1175,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         #if !APPCLIP
         rootContainerView.homeButton.isHidden = true
         #endif
+        ARSessionManager.shared.pauseSession()
         recordPathController.isAccessibilityElement = false
         if case .navigatingRoute = self.state {
             ARSessionManager.shared.removeNavigationNodes()
@@ -1140,6 +1194,10 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         logger.resetNavigationLog()
         logger.resetPathLog()
         hapticTimer?.invalidate()
+        do {
+            try hapticPlayer?.stop(atTime: 0.0)
+        } catch {}
+        hapticPlayer = nil
         logger.resetStateSequenceLog()
     }
     
@@ -1321,19 +1379,6 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
                                            preferredStyle: .alert)
         logAlertVC.addAction(UIAlertAction(title: NSLocalizedString("anchorPointTextPop-UpConfirmation", comment: "What the user clicks to acknowledge a message and dismiss pop-up"), style: .default, handler: { action -> Void in
             self.showSafetyAlert()
-        }
-        ))
-        self.present(logAlertVC, animated: true, completion: nil)
-    }
-    
-    func showInvalidAppClipCodeAlert() {
-        let logAlertVC = UIAlertController(title: "No routes associated with this NFC tag",
-                                           message: "No routes were found to be associated with this NFC tag in Clew Maps' online database.  Did you forget to upload your route to the cloud through \"Manage and Upload Routes\" menu?",
-                                           preferredStyle: .alert)
-        logAlertVC.addAction(UIAlertAction(title: "Dismiss", style: .default, handler: { action -> Void in
-            #if !APPCLIP
-                self.goHome()
-            #endif
         }
         ))
         self.present(logAlertVC, animated: true, completion: nil)
@@ -1857,14 +1902,16 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         if completedRoute{
             delayTransition(announcement: "You have arrived at your destination.")
         } else{
+            ARSessionManager.shared.pauseSession()
             delayTransition(announcement: "Route navigation stopped. You may not have arrived at your destination yet.")
         }
-        ARSessionManager.shared.pauseSession()
         let config = SKOverlay.AppClipConfiguration(position: .bottom)
         let overlay = SKOverlay(configuration: config)
         overlay.present(in: scene)
         #else
-        ARSessionManager.shared.pauseSession()
+        if !completedRoute {
+            ARSessionManager.shared.pauseSession()
+        }
         self.hideAllViewsHelper()
         self.add(self.endNavigationController!)
         #endif
@@ -1966,6 +2013,10 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     static let delayBeforeErrorSound = 3.0
     /// Delay (and interval) before announcing to the user that they should press the get directions button
     static let delayBeforeErrorAnnouncement = 8.0
+    
+    static let directionTextGracePeriod = 3.5
+    
+    static let offTrackCorrectionAnnouncementInterval = 2.0
     
     // MARK: - Settings bundle configuration
     
@@ -2175,7 +2226,6 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         #else
         self.state = .endScreen(completedRoute: false)
         #endif
-        
     }
     
     /// handles the user pressing the pause button
@@ -2442,8 +2492,8 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
                 ARSessionManager.shared.removeNavigationNodes()
                 
                 followingCrumbs?.invalidate()
-                hapticTimer?.invalidate()
-                
+                startEndOfRouteHaptics()
+
                 #if !APPCLIP
                 //self.surveyInterface.sendLogDataHelper(pathStatus: nil, announceArrival: true, vc: self)
                 self.hideAllViewsHelper()
@@ -2549,6 +2599,25 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
     
     /// send haptic feedback if the device is pointing towards the next keypoint.
     @objc func getHapticFeedback() {
+        if RouteManager.shared.isComplete {
+            suppressTrackingWarnings = true
+            guard let curPos = getRealCoordinates(record: false)?.location.transform.columns.3.dropw(), let routeEndKeypoint = RouteManager.shared.lastKeypoint, let routeEnd = ARSessionManager.shared.getCurrentLocation(of: routeEndKeypoint.location) else {
+                // TODO: might want to indicate that something is wrong to the user
+                return
+            }
+            let routeEndPos = routeEnd.transform.columns.3.dropw()
+            let routeEndPosFloorPlane = simd_float2(routeEndPos.x, routeEndPos.z)
+            let curPosFloorPlane = simd_float2(curPos.x, curPos.z)
+            do {
+                print("curPos \(curPosFloorPlane) routeEnd \(routeEndPosFloorPlane)")
+                print("ADJUSTING \(max(0.0, 1.0 - simd_distance(curPosFloorPlane, routeEndPosFloorPlane)))")
+                try hapticPlayer?.sendParameters([CHHapticDynamicParameter(parameterID: .hapticIntensityControl, value: max(0.0, 1.0 - simd_distance(curPosFloorPlane, routeEndPosFloorPlane)), relativeTime: 0.0)], atTime: 0.0)
+                print("hapticPlayer \(hapticPlayer)")
+            } catch {
+                print("Unable to update")
+            }
+            return
+        }
         updateHeadingOffset()
         guard let curLocation = getRealCoordinates(record: false) else {
             // TODO: might want to indicate that something is wrong to the user
@@ -2569,43 +2638,32 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         
         // use a stricter criteria than 12 o'clock for providing haptic feedback
         if directionToNextKeypoint.lateralDistanceRatioWhenCrossingTarget < lateralDisplacementToleranceRatio || abs(directionToNextKeypoint.angleDiff) < coneWidth {
-            // mark this since we now want to wait a while before giving error feedback
-            errorFeedbackTimer = Date()
-            if playedErrorSoundForOffRoute || remindedUserOfDirectionsButton {
-                AnnouncementManager.shared.announce(announcement: NSLocalizedString("youAreOnTrack", comment: "tell the user they are now on track"))
-            }
-            playedErrorSoundForOffRoute = false
-            remindedUserOfDirectionsButton = false
-            
-            let timeInterval = feedbackTimer.timeIntervalSinceNow
-            if(-timeInterval > ViewController.FEEDBACKDELAY) {
+            lastOffCourseAnnouncement = nil
+            if -feedbackTimer.timeIntervalSinceNow > ViewController.FEEDBACKDELAY {
                 // wait until desired time interval before sending another feedback
-                if (hapticFeedback) {
-                    feedbackGenerator?.impactOccurred()
+                if hapticFeedback { feedbackGenerator?.impactOccurred()
                 }
-                if (soundFeedback) { SoundEffectManager.shared.playSystemSound(id: 1103)
+                if soundFeedback {
+                    SoundEffectManager.shared.playSystemSound(id: 1103)
                 }
                 feedbackTimer = Date()
             }
-        } else {
-            let timeInterval = errorFeedbackTimer.timeIntervalSinceNow
-            if -timeInterval > ViewController.delayBeforeErrorAnnouncement {
-                // wait until desired time interval before sending another feedback
-                AnnouncementManager.shared.announce(announcement: NSLocalizedString("offThePathAnnouncement", comment: "this announcemet is delivered if the user is off the path for 10 seconds or more."))
-                errorFeedbackTimer = Date()
-                playedErrorSoundForOffRoute = false
-                remindedUserOfDirectionsButton = true
-            } else if -timeInterval > ViewController.delayBeforeErrorSound {
-                // wait until desired time interval before sending another feedback
-                if soundFeedback, !playedErrorSoundForOffRoute {
-                    SoundEffectManager.shared.error()
-                    if directionToNextKeypoint.angleDiff < 0 {
-                        AnnouncementManager.shared.announce(announcement: NSLocalizedString("turnLeftUntilYouFeelHapticFeedback", comment: "indicates you need to turn left to get on track"))
+        } else if -lastDirectionAnnouncement.timeIntervalSinceNow > Self.directionTextGracePeriod {
+            let intervalMultiplier = RouteManager.shared.onFirstKeypoint ? 4.0 : 1.0
+            if lastOffCourseAnnouncement == nil || -lastOffCourseAnnouncement!.timeIntervalSinceNow > Self.offTrackCorrectionAnnouncementInterval * intervalMultiplier {
+                lastOffCourseAnnouncement = Date()
+                if RouteManager.shared.onFirstKeypoint {
+                    if directionToNextKeypoint.angleDiff > 0 {
+                        AnnouncementManager.shared.announce(announcement: "Bear right to face the start")
                     } else {
-                        AnnouncementManager.shared.announce(announcement: NSLocalizedString("turnRightUntilYouFeelHapticFeedback", comment: "indicates you need to turn right to get on track"))
-
+                        AnnouncementManager.shared.announce(announcement: "Bear left to face the start")
+                        }
+                } else {
+                    if directionToNextKeypoint.angleDiff > 0 {
+                        AnnouncementManager.shared.announce(announcement: "Bear right to get on track")
+                    } else {
+                        AnnouncementManager.shared.announce(announcement: "Bear left to get on track")
                     }
-                    playedErrorSoundForOffRoute = true
                 }
             }
         }
@@ -2627,6 +2685,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
             }
         }
     }
+    
     
     /// Get direction to next keypoint based on the current location
     ///
@@ -2733,6 +2792,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, AVSpeechSynthe
         guard let nextKeypoint = RouteManager.shared.nextKeypoint else {
             return
         }
+        lastDirectionAnnouncement = Date()
         // Set direction text for text label and VoiceOver
         let xzNorm = sqrtf(powf(currentLocation.x - nextKeypoint.location.x, 2) + powf(currentLocation.z - nextKeypoint.location.z, 2))
         let slope = (nextKeypoint.location.y - prevKeypointPosition.y) / xzNorm

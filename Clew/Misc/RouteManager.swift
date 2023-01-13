@@ -51,7 +51,19 @@ class RouteManager {
         return nil
     }
     
+    var onFirstKeypoint: Bool {
+        return keypoints?.count == originalKeypoints?.count
+    }
+    
     var onLastKeypoint: Bool {
         return keypoints?.count == 1
+    }
+    
+    var isComplete: Bool {
+        return keypoints?.isEmpty == true
+    }
+    
+    var lastKeypoint: KeypointInfo? {
+        return originalKeypoints?.last
     }
 }
