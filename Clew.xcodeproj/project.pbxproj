@@ -780,7 +780,7 @@
 			packageReferences = (
 				8227FCC8272AFFB5001031F9 /* XCRemoteSwiftPackageReference "SimpleForm" */,
 				8227FCCD272B0062001031F9 /* XCRemoteSwiftPackageReference "ARDataLogger" */,
-				8227FCD2272B0355001031F9 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				8227FCD2272B0355001031F9 /* XCRemoteSwiftPackageReference "firebase-ios-sdk.git" */,
 				8227FCE5272B04D5001031F9 /* XCRemoteSwiftPackageReference "VectorMath" */,
 				8227FCF2272B05B8001031F9 /* XCRemoteSwiftPackageReference "InAppSettingsKit" */,
 			);
@@ -1435,7 +1435,7 @@
 				kind = branch;
 			};
 		};
-		8227FCD2272B0355001031F9 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+		8227FCD2272B0355001031F9 /* XCRemoteSwiftPackageReference "firebase-ios-sdk.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
 			requirement = {
@@ -1474,27 +1474,27 @@
 		};
 		8227FCDB272B0363001031F9 /* FirebaseAnalytics */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 8227FCD2272B0355001031F9 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			package = 8227FCD2272B0355001031F9 /* XCRemoteSwiftPackageReference "firebase-ios-sdk.git" */;
 			productName = FirebaseAnalytics;
 		};
 		8227FCDD272B036A001031F9 /* FirebaseStorage */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 8227FCD2272B0355001031F9 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			package = 8227FCD2272B0355001031F9 /* XCRemoteSwiftPackageReference "firebase-ios-sdk.git" */;
 			productName = FirebaseStorage;
 		};
 		8227FCDF272B0371001031F9 /* FirebaseAuth */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 8227FCD2272B0355001031F9 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			package = 8227FCD2272B0355001031F9 /* XCRemoteSwiftPackageReference "firebase-ios-sdk.git" */;
 			productName = FirebaseAuth;
 		};
 		8227FCE1272B03B5001031F9 /* FirebaseDatabase */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 8227FCD2272B0355001031F9 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			package = 8227FCD2272B0355001031F9 /* XCRemoteSwiftPackageReference "firebase-ios-sdk.git" */;
 			productName = FirebaseDatabase;
 		};
 		8227FCE3272B048E001031F9 /* FirebaseStorage */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 8227FCD2272B0355001031F9 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			package = 8227FCD2272B0355001031F9 /* XCRemoteSwiftPackageReference "firebase-ios-sdk.git" */;
 			productName = FirebaseStorage;
 		};
 		8227FCE8272B04E3001031F9 /* VectorMath */ = {
