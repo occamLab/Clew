@@ -1214,7 +1214,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0.30;
+				MARKETING_VERSION = 2.0.31;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -D IS_DEV_TARGET";
@@ -1246,7 +1246,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0.30;
+				MARKETING_VERSION = 2.0.31;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -D IS_DEV_TARGET";
 				PRODUCT_BUNDLE_IDENTIFIER = edu.occamlab.ClewMaps.Clip;
@@ -1280,7 +1280,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0.30;
+				MARKETING_VERSION = 2.0.31;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				OTHER_LDFLAGS = "$(inherited)";
@@ -1316,7 +1316,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0.30;
+				MARKETING_VERSION = 2.0.31;
 				MTL_FAST_MATH = YES;
 				OTHER_LDFLAGS = (
 					"-l\"c++\"",
