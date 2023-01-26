@@ -23,9 +23,6 @@ struct NameCodeIDView: View {
                 Rectangle()
                     .foregroundColor(Color.black.opacity(0.4))
                     .frame(maxHeight: .infinity)
-                Text(NSLocalizedString("nameCodeIDLabel", comment: "Text that instructs the user to enter the code ID associated with the start anchor of the route they are recording."))
-                    .foregroundColor(Color.white)
-                    .padding(.horizontal, 20)
             }
             VStack {
                 ScanNFCButton(vc: vc)
@@ -47,7 +44,7 @@ struct ScanNFCButtonView: View {
                 .frame(maxWidth: UIScreen.main.bounds.size.width/1.1, maxHeight: UIScreen.main.bounds.size.height/5)
             HStack{
                 Spacer()
-                Text("Scan NFC App Clip Code")
+                Text("Scan Starting Tag")
                     .bold()
                     .foregroundColor(Color.black)
                 Spacer()

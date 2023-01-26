@@ -27,8 +27,6 @@ struct RouteManagerView: View {
             .font(.title)
             .multilineTextAlignment(.center)
             .accessibility(hint: Text("Route Name"))
-        Text("\(String(NSLocalizedString("AppClipCodeIDText", comment: "describes an app clip code ID"))): \(String(route.appClipCodeID))")
-            .font(.title2)
         VStack {
             Button(action: {
                 self.vc.onRouteTableViewCellClicked(route: self.route, navigateStartToEnd: true)

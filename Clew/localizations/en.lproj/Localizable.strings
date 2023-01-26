@@ -291,7 +291,7 @@
 "resumeAnchorPointToReturnNavigationAnnouncement" = "Starting navigation. Audio and haptics indicate that you are on the route.";
 "singleUseRouteToRecordingRouteAnnouncement" = "Now recording a single use route.";
 "saveRouteToPlayPauseAnnouncement" = "Route saved.";
-"saveCodeIDtoCreatingAnchorPointAnnouncement" = "App clip code ID saved. You may now set an anchor point.";
+"saveCodeIDtoCreatingAnchorPointAnnouncement" = "Starting location saved. You may now set an anchor point.";
 
 
 //Play/Pause text
