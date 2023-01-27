@@ -170,7 +170,7 @@
 		82093A1B29007AB700BEBA89 /* UploadingProgress.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UploadingProgress.swift; sourceTree = "<group>"; };
 		82093A1C29007AB700BEBA89 /* UploadManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UploadManager.swift; sourceTree = "<group>"; };
 		82093A1F29007AC400BEBA89 /* ARDataLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ARDataLogger.swift; sourceTree = "<group>"; };
-		821C222F288CFA94005E5FD5 /* TestAccuracyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TestAccuracyView.swift; path = "/Users/pruvolo/Software/ClewMaps/imported dependencies/TestAccuracyView.swift"; sourceTree = "<absolute>"; };
+		821C222F288CFA94005E5FD5 /* TestAccuracyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestAccuracyView.swift; sourceTree = "<group>"; };
 		821CF7832513264400A7B3C2 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		821CF7892513264400A7B3C2 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		82272C5F287718DD00BE53FA /* FirebaseCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FirebaseCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
