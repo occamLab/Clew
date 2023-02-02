@@ -41,9 +41,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         #endif
         logUserProperties()
         // use for testing sign-in flow
-        // try? Auth.auth().signOut()
+        //try? Auth.auth().signOut()
         if (Auth.auth().currentUser == nil) {
-            #if IS_DEV_TARGET
+            //#if IS_DEV_TARGET
                 Auth.auth().signInAnonymously() { (authResult, error) in
                     guard authResult != nil else {
                         print("login error", error!.localizedDescription)
@@ -57,13 +57,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     self.window?.makeKeyAndVisible()
                 }
                 return true
-            #else
-                window = UIWindow(frame:UIScreen.main.bounds)
-                window?.makeKeyAndVisible()
-                window?.rootViewController = AppleSignInController()
-                UIApplication.shared.isIdleTimerDisabled = true
-                return true
-            #endif
+            // Old code for Apple Signin
+//            #else
+//                window = UIWindow(frame:UIScreen.main.bounds)
+//                window?.makeKeyAndVisible()
+//                window?.rootViewController = AppleSignInController()
+//                UIApplication.shared.isIdleTimerDisabled = true
+//                return true
+//            #endif
         }
         
         // Override point for customization after application launch.

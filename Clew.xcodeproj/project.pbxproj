@@ -23,7 +23,7 @@
 		1F27632422FCBB9900E1FCF8 /* BurgerMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F27632222FCBB6E00E1FCF8 /* BurgerMenuViewController.swift */; };
 		1F2971A522DF60F700B896C6 /* HelpCompiler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2B9D7022C3B50D00317DC8 /* HelpCompiler.swift */; };
 		1F2B9D7222C3B50D00317DC8 /* HelpCompiler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2B9D7022C3B50D00317DC8 /* HelpCompiler.swift */; };
-		1F2B9D8722C5446B00317DC8 /* (null) in Resources */ = {isa = PBXBuildFile; };
+		1F2B9D8722C5446B00317DC8 /* BuildFile in Resources */ = {isa = PBXBuildFile; };
 		4D6B00E51F33C9B800952242 /* Crumb.obj in Resources */ = {isa = PBXBuildFile; fileRef = 4D6B00E41F33C85500952242 /* Crumb.obj */; };
 		4DF05CC81F34EB6B008B0E31 /* Confirm.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4DF05CC71F34EB56008B0E31 /* Confirm.mp3 */; };
 		772E4563236CC155008EF6AC /* SettingsAndHelp.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 772E4566236CC155008EF6AC /* SettingsAndHelp.storyboard */; };
@@ -1814,7 +1814,7 @@
 			mainGroup = 4D6B00B71F33C1C400952242;
 			packageReferences = (
 				82D94B61266FC7CF00EE2C1C /* XCRemoteSwiftPackageReference "SimpleForm" */,
-				82BE6C7D2739815900387139 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				82BE6C7D2739815900387139 /* XCRemoteSwiftPackageReference "firebase-ios-sdk.git" */,
 				82BE6C8E2739823400387139 /* XCRemoteSwiftPackageReference "VectorMath" */,
 				82BE6C932739828E00387139 /* XCRemoteSwiftPackageReference "InAppSettingsKit" */,
 			);
@@ -1871,7 +1871,7 @@
 				82BE71B02739982200387139 /* QR in Resources */,
 				E59DA6BF22C65F5900FCD5A1 /* LaunchScreen.storyboard in Resources */,
 				E5470F4E22C119F5001092A4 /* GoogleService-Info_dev.plist in Resources */,
-				1F2B9D8722C5446B00317DC8 /* (null) in Resources */,
+				1F2B9D8722C5446B00317DC8 /* BuildFile in Resources */,
 				82BE71BA2739982200387139 /* UmfPackSupport in Resources */,
 				82AD6A25252F80AA00902A11 /* speaker.mtl in Resources */,
 				82BE71CE2739982200387139 /* PaStiXSupport in Resources */,
@@ -2515,7 +2515,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		82BE6C7D2739815900387139 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+		82BE6C7D2739815900387139 /* XCRemoteSwiftPackageReference "firebase-ios-sdk.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
 			requirement = {
@@ -2552,42 +2552,42 @@
 /* Begin XCSwiftPackageProductDependency section */
 		82BE6C7E2739815900387139 /* FirebaseAnalytics */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 82BE6C7D2739815900387139 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			package = 82BE6C7D2739815900387139 /* XCRemoteSwiftPackageReference "firebase-ios-sdk.git" */;
 			productName = FirebaseAnalytics;
 		};
 		82BE6C802739815900387139 /* FirebaseAuth */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 82BE6C7D2739815900387139 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			package = 82BE6C7D2739815900387139 /* XCRemoteSwiftPackageReference "firebase-ios-sdk.git" */;
 			productName = FirebaseAuth;
 		};
 		82BE6C822739815900387139 /* FirebaseDatabase */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 82BE6C7D2739815900387139 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			package = 82BE6C7D2739815900387139 /* XCRemoteSwiftPackageReference "firebase-ios-sdk.git" */;
 			productName = FirebaseDatabase;
 		};
 		82BE6C842739815900387139 /* FirebaseStorage */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 82BE6C7D2739815900387139 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			package = 82BE6C7D2739815900387139 /* XCRemoteSwiftPackageReference "firebase-ios-sdk.git" */;
 			productName = FirebaseStorage;
 		};
 		82BE6C862739817D00387139 /* FirebaseAnalytics */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 82BE6C7D2739815900387139 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			package = 82BE6C7D2739815900387139 /* XCRemoteSwiftPackageReference "firebase-ios-sdk.git" */;
 			productName = FirebaseAnalytics;
 		};
 		82BE6C882739818A00387139 /* FirebaseAuth */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 82BE6C7D2739815900387139 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			package = 82BE6C7D2739815900387139 /* XCRemoteSwiftPackageReference "firebase-ios-sdk.git" */;
 			productName = FirebaseAuth;
 		};
 		82BE6C8A2739819100387139 /* FirebaseDatabase */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 82BE6C7D2739815900387139 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			package = 82BE6C7D2739815900387139 /* XCRemoteSwiftPackageReference "firebase-ios-sdk.git" */;
 			productName = FirebaseDatabase;
 		};
 		82BE6C8C2739819700387139 /* FirebaseStorage */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 82BE6C7D2739815900387139 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			package = 82BE6C7D2739815900387139 /* XCRemoteSwiftPackageReference "firebase-ios-sdk.git" */;
 			productName = FirebaseStorage;
 		};
 		82BE6C8F2739823400387139 /* VectorMath */ = {

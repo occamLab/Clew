@@ -85,7 +85,7 @@ class AnnouncementManager: NSObject {
                 try audioSession.setCategory(AVAudioSession.Category.playback)
                 try audioSession.setActive(true)
                 let utterance = AVSpeechUtterance(string: announcement)
-                utterance.rate = 0.6
+                utterance.rate = 0.5
                 currentAnnouncement = announcement
                 synth.speak(utterance)
             } catch {

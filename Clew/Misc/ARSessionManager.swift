@@ -41,6 +41,7 @@ protocol ARSessionManagerDelegate {
 class ARSessionManager: NSObject {
     static var shared = ARSessionManager()
     var delegate: ARSessionManagerDelegate?
+    var lastTorchChange = 0.0
     
     private override init() {
         super.init()
@@ -166,7 +167,32 @@ class ARSessionManager: NSObject {
         configuration.isAutoFocusEnabled = false
     }
     
+    func adjustTorch(lightingIntensity: Float, timestamp: Double) {
+        guard
+            let device = AVCaptureDevice.default(for: AVMediaType.video),
+            device.hasTorch
+        else { return }
+        if device.torchMode == .off && lightingIntensity < 700 {
+            do {
+                try device.lockForConfiguration()
+                try device.setTorchModeOn(level: 1.0)
+                lastTorchChange = timestamp
+            } catch {
+                print("torch error")
+            }
+        } else if device.torchMode == .on && lightingIntensity > 1200 && timestamp - lastTorchChange > 60.0 {
+            do {
+                try device.lockForConfiguration()
+                device.torchMode = .off
+                lastTorchChange = timestamp
+            } catch {
+                print("torch error")
+            }
+        }
+    }
+    
     func startSession() {
+        lastTorchChange = 0.0
         manualAlignment = nil
         removeNavigationNodes()
         sceneView.session.run(configuration, options: [.removeExistingAnchors, .resetTracking])
@@ -424,6 +450,9 @@ class ARData: ObservableObject {
 extension ARSessionManager: ARSessionDelegate {
     func session(_ session: ARSession, didUpdate frame: ARFrame) {
         ARData.shared.set(transform: frame.camera.transform, intrinsics: frame.camera.intrinsics, image: frame.capturedImage)
+        if let lighting = frame.lightEstimate {
+            adjustTorch(lightingIntensity: Float(lighting.ambientIntensity), timestamp: frame.timestamp)
+        }
         if let keypointRenderJob = keypointRenderJob {
             keypointRenderJob()
             self.keypointRenderJob = nil

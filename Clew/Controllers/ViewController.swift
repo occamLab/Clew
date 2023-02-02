@@ -1272,6 +1272,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
     /// display RECORD PATH button/hide all other views
     @objc func showRecordPathButton(announceArrival: Bool) {
         hideAllViewsHelper()
+        ARSessionManager.shared.pauseSession()
         add(recordPathController)
         /// handling main screen transitions outside of the first load
         
