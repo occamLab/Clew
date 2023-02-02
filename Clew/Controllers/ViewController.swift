@@ -898,7 +898,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
                 if let error = error {
                     print("Error getting data \(error)")
                 }
-                else if snapshot.exists(), let userDict = snapshot.value as? [String : AnyObject] {
+                else if let snapshot = snapshot, snapshot.exists(), let userDict = snapshot.value as? [String : AnyObject] {
                     for (surveyName, surveyInfo) in userDict {
                         if let surveyInfoDict = surveyInfo as? [String : AnyObject] {
                             if let lastSurveyTime = surveyInfoDict["lastSurveyTime"] as? Double {
