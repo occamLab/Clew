@@ -51,6 +51,7 @@
 		827EDC3426CDA72300AAA12A /* SoundEffectManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 827EDC3326CDA72200AAA12A /* SoundEffectManager.swift */; };
 		827EDC3526CDA72300AAA12A /* SoundEffectManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 827EDC3326CDA72200AAA12A /* SoundEffectManager.swift */; };
 		828CB790298C67B20036D18A /* ARCoreCloudAnchors in Frameworks */ = {isa = PBXBuildFile; productRef = 828CB78F298C67B20036D18A /* ARCoreCloudAnchors */; };
+		828CB792298C6C220036D18A /* Credentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = 828CB791298C6C220036D18A /* Credentials.swift */; };
 		82984803271F106E00DA3005 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 82984806271F106E00DA3005 /* InfoPlist.strings */; };
 		82984804271F106E00DA3005 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 82984806271F106E00DA3005 /* InfoPlist.strings */; };
 		82A417E1262A205A001FCB8C /* AuthenticationHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82A417E0262A205A001FCB8C /* AuthenticationHelper.swift */; };
@@ -307,6 +308,7 @@
 		827EDC3326CDA72200AAA12A /* SoundEffectManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundEffectManager.swift; sourceTree = "<group>"; };
 		828CB78D298C652D0036D18A /* ARCorePackage */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = ARCorePackage; path = ../../Downloads/ARCorePackage; sourceTree = "<group>"; };
 		828CB78E298C67910036D18A /* ARCorePackage */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = ARCorePackage; path = ../../Downloads/ARCorePackage; sourceTree = "<group>"; };
+		828CB791298C6C220036D18A /* Credentials.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Credentials.swift; sourceTree = "<group>"; };
 		82984805271F106E00DA3005 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		82984807271F107400DA3005 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		82A417E0262A205A001FCB8C /* AuthenticationHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationHelper.swift; sourceTree = "<group>"; };
@@ -1610,6 +1612,7 @@
 				82DE9223271876900086F5A4 /* ARSessionManager.swift */,
 				82DE922627188ACE0086F5A4 /* RouteManager.swift */,
 				821D07352742B44400FE6297 /* AnnouncementManager.swift */,
+				828CB791298C6C220036D18A /* Credentials.swift */,
 			);
 			path = Misc;
 			sourceTree = "<group>";
@@ -2032,6 +2035,7 @@
 				986640CE22FB68F2005AA1F6 /* NameSavedRouteController.swift in Sources */,
 				E5470EFE22C119F5001092A4 /* DataPersistence.swift in Sources */,
 				E5470F0022C119F5001092A4 /* PathLogger.swift in Sources */,
+				828CB792298C6C220036D18A /* Credentials.swift in Sources */,
 				E5470F2422C119F5001092A4 /* UIButtonExtensions.swift in Sources */,
 				E5470EF822C119F5001092A4 /* AudioVisualizerView.swift in Sources */,
 				1F2971A522DF60F700B896C6 /* HelpCompiler.swift in Sources */,

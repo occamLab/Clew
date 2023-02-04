@@ -432,6 +432,8 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
             // this makes sure that the user doesn't resume the session until the session is initialized
             continuationAfterSessionIsReady = {
                 self.state = .readyForFinalResumeAlignment
+                ARSessionManager.shared.cloudAnchorsForAlignment = route.cloudAnchors
+                print("n cloud anchors \(route.cloudAnchors)")
                 self.showResumeTrackingConfirmButton(route: route, navigateStartToEnd: navigateStartToEnd)
             }
         }
@@ -585,6 +587,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
 
             // no more crumbs
             droppingCrumbs?.invalidate()
+            creatingCloudAnchors?.invalidate()
 
             ARSessionManager.shared.sceneView.session.getCurrentWorldMap { worldMap, error in
                 self.completingPauseProcedureHelper(worldMap: worldMap)
@@ -597,7 +600,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
         if paused {
             ///PATHPOINT pause recording anchor point alignment timer -> resume tracking
             //proceed as normal with the pause structure (single use route)
-            justTraveledRoute = SavedRoute(id: "single use", name: "single use", crumbs: self.crumbs, dateCreated: Date() as NSDate, beginRouteAnchorPoint: self.beginRouteAnchorPoint, endRouteAnchorPoint: self.endRouteAnchorPoint, intermediateAnchorPoints: RouteManager.shared.intermediateAnchorPoints)
+            justTraveledRoute = SavedRoute(id: "single use", name: "single use", crumbs: self.crumbs, cloudAnchors: cloudAnchors, dateCreated: Date() as NSDate, beginRouteAnchorPoint: self.beginRouteAnchorPoint, endRouteAnchorPoint: self.endRouteAnchorPoint, intermediateAnchorPoints: RouteManager.shared.intermediateAnchorPoints)
             justUsedMap = worldMap
             showResumeTrackingButton()
             state = .pauseProcedureCompleted
@@ -679,7 +682,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
     ///   - worldMap: the world map
     /// - Throws: an error if something goes wrong
     func archive(routeId: NSString, beginRouteAnchorPoint: RouteAnchorPoint, endRouteAnchorPoint: RouteAnchorPoint, intermediateAnchorPoints: [RouteAnchorPoint], worldMap: Any?) throws {
-        let savedRoute = SavedRoute(id: routeId, name: routeName!, crumbs: crumbs, dateCreated: Date() as NSDate, beginRouteAnchorPoint: beginRouteAnchorPoint, endRouteAnchorPoint: endRouteAnchorPoint, intermediateAnchorPoints: intermediateAnchorPoints)
+        let savedRoute = SavedRoute(id: routeId, name: routeName!, crumbs: crumbs, cloudAnchors: cloudAnchors, dateCreated: Date() as NSDate, beginRouteAnchorPoint: beginRouteAnchorPoint, endRouteAnchorPoint: endRouteAnchorPoint, intermediateAnchorPoints: intermediateAnchorPoints)
         try dataPersistence.archive(route: savedRoute, worldMap: worldMap)
         justTraveledRoute = savedRoute
     }
@@ -1037,6 +1040,36 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
         self.present(alert, animated: true, completion: nil)
     }
     
+    func sessionDidRelocalize() {
+      if trackingWarningsAllowed {
+          AnnouncementManager.shared.announce(announcement: NSLocalizedString("realignToSavedRouteAnnouncement", comment: "An announcement which lets the user know that their surroundings have been matched to a saved route"))
+          // TODO: we need to have these announcements logged with the Announcement Manager
+          PathLogger.shared.logSpeech(utterance: NSLocalizedString("realignToSavedRouteAnnouncement", comment: "An announcement which lets the user know that their surroundings have been matched to a saved route"))
+      }
+        var shouldSkipPastAlignment = false
+        if case .startingResumeProcedure(_, _, _) = state {
+            shouldSkipPastAlignment = true
+        } else if case .readyForFinalResumeAlignment = state {
+            shouldSkipPastAlignment = true
+        } else if case .visuallyAligning = state {
+            shouldSkipPastAlignment = true
+        }
+        if shouldSkipPastAlignment {
+          // this will cancel any realignment if it hasn't happened yet and go straight to route navigation mode
+          rootContainerView.countdownTimer.isHidden = true
+          isResumedRoute = true
+
+          isAutomaticAlignment = true
+
+          state = .navigatingRoute
+      }
+    }
+    
+    func didHostCloudAnchor(cloudIdentifier: String, withTransform transform : simd_float4x4) {
+        AnnouncementManager.shared.announce(announcement: "Cloud anchor created")
+        cloudAnchors[NSString(string: cloudIdentifier)] = ARAnchor(transform: transform)
+    }
+    
     /// function that creates alerts for the home button
     func showAdjustOffsetSuggestion() {
         // Create alert to warn users of lost information
@@ -1272,6 +1305,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
     /// display RECORD PATH button/hide all other views
     @objc func showRecordPathButton(announceArrival: Bool) {
         hideAllViewsHelper()
+        creatingCloudAnchors?.invalidate()
         ARSessionManager.shared.pauseSession()
         add(recordPathController)
         /// handling main screen transitions outside of the first load
@@ -1466,6 +1500,9 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
     /// list of crumbs to use for route creation
     var crumbs: [LocationInfo]!
     
+    /// cloud anchors used for alignment
+    var cloudAnchors: [NSString: ARAnchor] = [:]
+    
     /// previous keypoint location - originally set to current location
     var prevKeypointPosition: LocationInfo!
 
@@ -1475,13 +1512,21 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
     // MARK: - Timers for background functions
     
     /// times the recording of path crumbs
+    var creatingCloudAnchors: Timer?
+    
+    /// times the recording of path crumbs
     var droppingCrumbs: Timer?
     
     /// times the checking of the path navigation process (e.g., have we reached a waypoint)
     var followingCrumbs: Timer?
+
+    /// the time we last created a cloud anchor
+    var lastCloudAnchorTime = Date()
     
     /// times the generation of haptic feedback
     var hapticTimer: Timer?
+    
+    static let cloudAnchorDropInterval = 25.0
     
     /// times when the heading offset should be recalculated.  The ability to use the heading offset is currently not exposed to the user.
     var updateHeadingOffsetTimer: Timer?
@@ -1637,6 +1682,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
         // this makes sure that the user doesn't start recording the single use route until the session is initialized
         continuationAfterSessionIsReady = {
             self.trackingErrorsAnnouncementTimer?.invalidate()
+            self.lastCloudAnchorTime = Date()
             //sends the user to the screen where they can start recording a route
             self.state = .startingPauseProcedure
         }
@@ -1719,6 +1765,8 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
     
     @objc func setVisualAlignment() {
         isVisualAlignment = true
+        // start creating cloud anchors
+        creatingCloudAnchors = Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: #selector(createCloudAnchors), userInfo: nil, repeats: true)
         try? showPauseTrackingButton()
     }
     
@@ -1896,12 +1944,22 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
             }
         }
     }
+    
+    @objc func createCloudAnchors() {
+        guard let curLocation = getRealCoordinates(record: false)?.location else {
+            return
+        }
+        if -lastCloudAnchorTime.timeIntervalSinceNow > Self.cloudAnchorDropInterval, let _ = ARSessionManager.shared.hostCloudAnchor(withTransform: simd_float4x4(translation: simd_float3(curLocation.x, curLocation.y, curLocation.z), rotation: simd_quatf())) {
+            lastCloudAnchorTime = Date()
+        }
+    }
         
     /// drop a crumb during path recording
     @objc func dropCrumb() {
         guard let curLocation = getRealCoordinates(record: true)?.location, case .recordingRoute = state else {
             return
         }
+        
         recordingCrumbs.append(curLocation)
         ARSessionManager.shared.add(anchor: curLocation)
     }

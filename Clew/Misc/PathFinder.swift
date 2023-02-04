@@ -321,6 +321,9 @@ class SavedRoute: NSObject, NSSecureCoding {
     public var dateCreated: NSDate
     /// The crumbs that make up the route.  The densely sampled positions (crumbs) are stored and the keypoints (sparser goal positionsare calculated on demand when navigation is requested.
     public var crumbs: [LocationInfo]
+    /// the cloud anchors associated with the route
+    public var cloudAnchors: [NSString: ARAnchor]
+    
     /// The Anchor Point marks the beginning of the route (needed for start to end navigation)
     public var beginRouteAnchorPoint : RouteAnchorPoint
     /// The Anchor Point marks the end of the route (needed for end to start navigation)
@@ -337,10 +340,11 @@ class SavedRoute: NSObject, NSSecureCoding {
     ///   - dateCreated: the route creation date
     ///   - beginRouteAnchorPoint: the Anchor Point for the beginning of the route (pass a `RouteAnchorPoint` with default initialization if no Anchor Point was recorded at the beginning of the route)
     ///   - endRouteAnchorPoint: the Anchor Point for the end of the route (pass a `RouteAnchorPoint` with default initialization if no Anchor Point was recorded at the end of the route)
-    public init(id: NSString, name: NSString, crumbs: [LocationInfo], dateCreated: NSDate = NSDate(), beginRouteAnchorPoint: RouteAnchorPoint, endRouteAnchorPoint: RouteAnchorPoint, intermediateAnchorPoints: [RouteAnchorPoint]) {
+    public init(id: NSString, name: NSString, crumbs: [LocationInfo], cloudAnchors: [NSString: ARAnchor], dateCreated: NSDate = NSDate(), beginRouteAnchorPoint: RouteAnchorPoint, endRouteAnchorPoint: RouteAnchorPoint, intermediateAnchorPoints: [RouteAnchorPoint]) {
         self.id = id
         self.name = name
         self.crumbs = crumbs
+        self.cloudAnchors = cloudAnchors
         self.dateCreated = dateCreated
         self.beginRouteAnchorPoint = beginRouteAnchorPoint
         self.endRouteAnchorPoint = endRouteAnchorPoint
@@ -354,6 +358,12 @@ class SavedRoute: NSObject, NSSecureCoding {
         aCoder.encode(id, forKey: "id")
         aCoder.encode(name, forKey: "name")
         aCoder.encode(crumbs, forKey: "crumbs")
+        
+        let cloudAnchorKeys = Array(cloudAnchors.keys)
+        let cloudAnchorValues = cloudAnchorKeys.map({cloudAnchors[$0]!})
+        aCoder.encode(cloudAnchorKeys, forKey: "cloudAnchorKeys")
+        aCoder.encode(cloudAnchorValues, forKey: "cloudAnchorValues")
+        
         aCoder.encode(dateCreated, forKey: "dateCreated")
         aCoder.encode(beginRouteAnchorPoint, forKey: "beginRouteAnchorPoint")
         aCoder.encode(endRouteAnchorPoint, forKey: "endRouteAnchorPoint")
@@ -373,6 +383,13 @@ class SavedRoute: NSObject, NSSecureCoding {
         guard let crumbs = aDecoder.decodeObject(of: [].self, forKey: "crumbs") as? [LocationInfo] else {
             return nil
         }
+        
+        let cloudAnchorKeys = aDecoder.decodeObject(of: [].self, forKey: "cloudAnchorKeys") as? [NSString] ?? []
+        
+        let cloudAnchorValues = aDecoder.decodeObject(of: [].self, forKey: "cloudAnchorValues") as? [ARAnchor] ?? []
+        
+        let cloudAnchors = Dictionary(uniqueKeysWithValues: zip(cloudAnchorKeys, cloudAnchorValues))
+        
         guard let dateCreated = aDecoder.decodeObject(of: NSDate.self, forKey: "dateCreated") else {
             return nil
         }
@@ -405,7 +422,7 @@ class SavedRoute: NSObject, NSSecureCoding {
         if let anchorPoints = aDecoder.decodeObject(of: [].self, forKey: "intermediateAnchorPoints") as? [RouteAnchorPoint] {
             intermediateRouteAnchorPoints = anchorPoints
         }
-        self.init(id: id, name: name, crumbs: crumbs, dateCreated: dateCreated, beginRouteAnchorPoint: beginRouteAnchorPoint, endRouteAnchorPoint: endRouteAnchorPoint, intermediateAnchorPoints: intermediateRouteAnchorPoints)
+        self.init(id: id, name: name, crumbs: crumbs, cloudAnchors: cloudAnchors, dateCreated: dateCreated, beginRouteAnchorPoint: beginRouteAnchorPoint, endRouteAnchorPoint: endRouteAnchorPoint, intermediateAnchorPoints: intermediateRouteAnchorPoints)
     }
 }
 

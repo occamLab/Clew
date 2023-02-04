@@ -3,6 +3,8 @@
 ### apple metadata ###
 .DS_Store
 
+Credentials.swift
+
 ### Firebase ###
 Clew/GoogleService-Info.plist
 Clew/GoogleService-Info_dev.plist
