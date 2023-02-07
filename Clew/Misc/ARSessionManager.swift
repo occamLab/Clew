@@ -38,7 +38,7 @@ protocol ARSessionManagerDelegate {
     func getShowPath()->Bool
     func newFrameAvailable()
     func sessionDidRelocalize()
-    func didHostCloudAnchor(cloudIdentifier: String, withTransform transform : simd_float4x4)
+    func didHostCloudAnchor(cloudIdentifier: String, anchorIdentifier: String, withTransform transform : simd_float4x4)
 }
 
 class ARSessionManager: NSObject {
@@ -51,7 +51,8 @@ class ARSessionManager: NSObject {
         case withARWorldMap
     }
     var localization: LocalizationState = .none
-
+    let alignmentFilter = AlignmentFilter()
+    var sessionWasRelocalizing = false
     // TODO: we can probably get rid of these and use the cloudIdentifier as our key
     private var sessionCloudAnchors: [UUID: ARAnchor] = [:]
     
@@ -155,14 +156,29 @@ class ARSessionManager: NSObject {
     var sceneView: ARSCNView = ARSCNView()
     
     /// this is the alignment between the reloaded route
-    var manualAlignment: simd_float4x4?
+    var manualAlignment: simd_float4x4? {
+        willSet(myNewValue) {
+            if let newValue = myNewValue {
+                let oldValue = self.manualAlignment ?? matrix_identity_float4x4
+                let relativeTransform = newValue * oldValue.inverse
+                if let keypointNode = keypointNode {
+                    keypointNode.simdTransform = relativeTransform * keypointNode.simdTransform
+                }
+                if let pathObj = pathObj {
+                    pathObj.simdTransform = relativeTransform * pathObj.simdTransform
+                }
+            }
+        }
+    }
     
     /// the strategy to employ with respect to the worldmap
     var relocalizationStrategy: RelocalizationStrategy = .none
     
     var initialWorldMap: ARWorldMap? {
         set {
-            configuration.initialWorldMap = newValue
+            if !ViewController.debugARCore {
+                configuration.initialWorldMap = newValue
+            }
         }
         get {
             return configuration.initialWorldMap
@@ -234,7 +250,12 @@ class ARSessionManager: NSObject {
         lastTorchChange = 0.0
         manualAlignment = nil
         localization = .none
+        sessionWasRelocalizing = false
+        keypointRenderJob = nil
+        pathRenderJob = nil
+        intermediateAnchorRenderJobs = [:]
         removeNavigationNodes()
+        alignmentFilter.reset()
         sceneView.session.run(configuration, options: [.removeExistingAnchors, .resetTracking])
         startGARSession()
     }
@@ -271,19 +292,19 @@ class ARSessionManager: NSObject {
         }
     }
     
-    func adjustRelocalizationStrategy(worldMap: ARWorldMap)->RelocalizationStrategy {
-        if #available(iOS 15.0, *) {
-            if worldMap.anchors.firstIndex(where: {anchor in anchor is LocationInfo}) != nil {
-                relocalizationStrategy = .useCrumbAnchorsForAlignment
-            } else if worldMap.anchors.firstIndex(where: {anchor in anchor.name == "origin"}) != nil {
-                relocalizationStrategy = .useOriginAnchorForAlignment
-            } else {
-                relocalizationStrategy = .none
-            }
-        } else {
-            relocalizationStrategy = .coordinateSystemAutoAligns
-        }
+    func adjustRelocalizationStrategy(worldMap: ARWorldMap, route: SavedRoute)->RelocalizationStrategy {
+        stripCrumbAnchorsFromInitialWorldMap(route: route)
+        relocalizationStrategy = .coordinateSystemAutoAligns
         return relocalizationStrategy
+    }
+    
+    /// Remove crumb anchors from the world map (this is useful when we can use auto coordinate system alignment)
+      /// - Parameter route: the route that corresponds with the anchors stored in the world map
+    func stripCrumbAnchorsFromInitialWorldMap(route: SavedRoute) {
+        let allCrumbAnchors = Set(route.crumbs.map({$0.identifier}))
+        if let mapAnchors = configuration.initialWorldMap?.anchors {
+            configuration.initialWorldMap?.anchors = mapAnchors.filter({!allCrumbAnchors.contains($0.identifier)})
+        }
     }
     
     /// Create the keypoint SCNNode that corresponds to the rotating flashing element that looks like a navigation pin.
@@ -555,7 +576,17 @@ extension ARSessionManager: ARSessionDelegate {
     private func checkForCloudAnchorAlignment(anchors: [GARAnchor]) {
         for anchor in anchors {
             if anchor.hasValidTransform, let correspondingARAnchor = sessionCloudAnchors[anchor.identifier], anchor.cloudIdentifier == lastResolvedCloudAnchorID  {
-                manualAlignment = anchor.transform.alignY() * correspondingARAnchor.transform.inverse.alignY()
+                let proposed = anchor.transform.alignY() * correspondingARAnchor.transform.inverse.alignY()
+                if let manualAlignment = manualAlignment {
+                    if let newAlignment = alignmentFilter.update(proposed: proposed, old: manualAlignment) {
+                        self.manualAlignment = newAlignment
+                        if ViewController.debugARCore {
+                            AnnouncementManager.shared.announce(announcement: "new alignment")
+                        }
+                    }
+                } else {
+                    manualAlignment = proposed
+                }
             }
         }
     }
@@ -581,6 +612,7 @@ extension ARSessionManager: ARSessionDelegate {
                 // don't log anything
                 print("initializing")
             case .relocalizing:
+                sessionWasRelocalizing = true
                 delegate?.sessionInitialized()
                 delegate?.sessionRelocalizing()
             @unknown default:
@@ -590,9 +622,12 @@ extension ARSessionManager: ARSessionDelegate {
             logString = "Normal"
             delegate?.sessionInitialized()
             delegate?.trackingIsNormal()
-            if relocalizationStrategy == .coordinateSystemAutoAligns {
-                manualAlignment = matrix_identity_float4x4
-                legacyHandleRelocalization()
+            if sessionWasRelocalizing {
+                delegate?.sessionDidRelocalize()
+                if relocalizationStrategy == .coordinateSystemAutoAligns {
+                    manualAlignment = matrix_identity_float4x4
+                    legacyHandleRelocalization()
+                }
             }
             print("normal")
         case .notAvailable:
@@ -663,22 +698,33 @@ extension ARSessionManager: GARSessionDelegate {
             // defer to the ARWorldMap
             return
         }
-        if localization == .none {
+        if sessionWasRelocalizing && localization == .none {
             delegate?.sessionDidRelocalize()
         }
+        let oldLocalization = localization
         localization = .withCloudAnchors
         if let cloudIdentifier = anchor.cloudIdentifier, anchor.hasValidTransform, let alignTransform = cloudAnchorsForAlignment[NSString(string: cloudIdentifier)]?.transform {
             lastResolvedCloudAnchorID = cloudIdentifier
-            self.manualAlignment = anchor.transform.alignY() * alignTransform.inverse.alignY()
-            let announceResolution = "Cloud Anchor Resolved"
-            PathLogger.shared.logSpeech(utterance: announceResolution)
-            AnnouncementManager.shared.announce(announcement: announceResolution)
+            let proposed = anchor.transform.alignY() * alignTransform.inverse.alignY()
+            if let manualAlignment = manualAlignment, oldLocalization != .none {
+                if let newAlignment = alignmentFilter.update(proposed: proposed, old: manualAlignment) {
+                    self.manualAlignment = newAlignment
+                }
+            } else {
+                manualAlignment = proposed
+            }
+
+            if ViewController.debugARCore {
+                let announceResolution = "Cloud Anchor Resolved"
+                PathLogger.shared.logSpeech(utterance: announceResolution)
+                AnnouncementManager.shared.announce(announcement: announceResolution)
+            }
         }
     }
     
     func session(_ session: GARSession, didHost garAnchor:GARAnchor) {
         if let cloudIdentifier = garAnchor.cloudIdentifier {
-            delegate?.didHostCloudAnchor(cloudIdentifier: cloudIdentifier, withTransform: garAnchor.transform)
+            delegate?.didHostCloudAnchor(cloudIdentifier: cloudIdentifier, anchorIdentifier: garAnchor.identifier.uuidString, withTransform: garAnchor.transform)
             // createSCNNodeFor(identifier: cloudIdentifier, at: garAnchor.transform)
         }
     }

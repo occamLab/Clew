@@ -133,6 +133,7 @@ enum AppState {
 
 /// The view controller that handles the main Clew window.  This view controller is always active and handles the various views that are used for different app functionalities.
 class ViewController: UIViewController, SRCountdownTimerDelegate {
+    static let debugARCore = true
     // MARK: Properties and subview declarations
     
     /// How long to wait (in seconds) between the alignment request and grabbing the transform
@@ -297,6 +298,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
         // TODO: probably don't need to set this to [], but erring on the side of begin conservative
         crumbs = []
         recordingCrumbs = []
+        ARSessionManager.shared.manualAlignment = matrix_identity_float4x4
         RouteManager.shared.intermediateAnchorPoints = []
         logger.resetPathLog()
         
@@ -404,7 +406,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
         var isSameMap = false
         if let worldMap = worldMap {
             // analyze the map to see if we can relocalize
-            if ARSessionManager.shared.adjustRelocalizationStrategy(worldMap: worldMap) == .none {
+            if ARSessionManager.shared.adjustRelocalizationStrategy(worldMap: worldMap, route: route) == .none {
                 // unfortunately, we are out of luck.  Better to not use the ARWorldMap
                 ARSessionManager.shared.initialWorldMap = nil
                 attemptingRelocalization = false
@@ -460,7 +462,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
             guard let curLocation = getRealCoordinates(record: false)?.location else {
                 return
             }
-            ARSessionManager.shared.hostCloudAnchor(withTransform: simd_float4x4(translation: simd_float3(curLocation.x, curLocation.y, curLocation.z), rotation: simd_quatf()))
+            hostNewCloudAnchor(at: simd_float3(curLocation.x, curLocation.y, curLocation.z))
             self.lastCloudAnchorTime = Date()
             self.creatingCloudAnchors = Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: #selector(createCloudAnchors), userInfo: nil, repeats: true)
             AnnouncementManager.shared.announce(announcement: NSLocalizedString("readyToRecordAnnouncement", comment: "this is spoken right before recording a visually aligned route."))
@@ -617,6 +619,8 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
 
             // no more crumbs
             droppingCrumbs?.invalidate()
+            print("PAUL STOPPING CLOUD!")
+            hostNewCloudAnchor(at: currentTransform.columns.3.dropW)
             creatingCloudAnchors?.invalidate()
 
             ARSessionManager.shared.sceneView.session.getCurrentWorldMap { worldMap, error in
@@ -664,7 +668,9 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
     }
     
     @objc func saveRouteButtonPressed() {
-        let id = String(Int64(NSDate().timeIntervalSince1970 * 1000)) as NSString
+        guard let id = routeRecordingID else {
+            return
+        }
         // Get the input values from user, if it's nil then use timestamp
         self.routeName = nameSavedRouteController.textField.text as NSString? ?? id
         try! self.archive(routeId: id, beginRouteAnchorPoint: self.beginRouteAnchorPoint, endRouteAnchorPoint: self.endRouteAnchorPoint, intermediateAnchorPoints: RouteManager.shared.intermediateAnchorPoints, worldMap: nameSavedRouteController.worldMap)
@@ -698,6 +704,10 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
     ///   - route: the route that was clicked
     ///   - navigateStartToEnd: a Boolean indicating the navigation direction (true is start to end)
     func onRouteTableViewCellClicked(route: SavedRoute, navigateStartToEnd: Bool) {
+        hapticTimer?.invalidate()
+        if Self.debugARCore {
+            AnnouncementManager.shared.announce(announcement: "Route has \(route.cloudAnchors.count)")
+        }
         let worldMap = dataPersistence.unarchiveMap(id: route.id as String)
         hideAllViewsHelper()
         do {
@@ -1128,6 +1138,9 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
         } else if case .visuallyAligning = state {
             shouldSkipPastAlignment = true
         }
+        if Self.debugARCore {
+            AnnouncementManager.shared.announce(announcement: "should skip \(shouldSkipPastAlignment)")
+        }
         if shouldSkipPastAlignment {
           // this will cancel any realignment if it hasn't happened yet and go straight to route navigation mode
           rootContainerView.countdownTimer.isHidden = true
@@ -1139,8 +1152,25 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
       }
     }
     
-    func didHostCloudAnchor(cloudIdentifier: String, withTransform transform : simd_float4x4) {
-        // TODO: handle the case when this comes in after the route finishes.
+    func didHostCloudAnchor(cloudIdentifier: String, anchorIdentifier: String, withTransform transform : simd_float4x4) {
+        if Self.debugARCore {
+            AnnouncementManager.shared.announce(announcement: "Did Host Anchor")
+        }
+        print("DID HOST")
+        if let associatedRoute = pendingCloudAnchors[anchorIdentifier] {
+            for route in dataPersistence.routes {
+                // update the route
+                if route.id == associatedRoute {
+                    route.cloudAnchors[NSString(string: cloudIdentifier)] = ARAnchor(transform: transform)
+                    dataPersistence.update(route: route)
+                    dataPersistence.writeRoutesFile()
+                    if Self.debugARCore {
+                        AnnouncementManager.shared.announce(announcement: "Updating post hoc \(route.cloudAnchors.count)")
+                    }
+                    return
+                }
+            }
+        }
         cloudAnchors[NSString(string: cloudIdentifier)] = ARAnchor(transform: transform)
     }
     
@@ -1576,6 +1606,12 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
     /// list of crumbs to use for route creation
     var crumbs: [LocationInfo]!
     
+    /// cloud anchors that have been sent to Google but have yet to come back.  The key is the GARAnchor identifier and the value is the route that the anchor should be associated with
+    var pendingCloudAnchors: [String: NSString] = [:]
+    
+    /// an ID to keep track of a route recording
+    var routeRecordingID: NSString?
+    
     /// cloud anchors used for alignment
     var cloudAnchors: [NSString: ARAnchor] = [:]
     
@@ -1744,9 +1780,9 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
         ///PATHPOINT record two way path button -> create Anchor Point
         do {
             try hapticPlayer?.pause(atTime: 0.0)
-        } catch {
-            
-        }
+        } catch { }
+        // give the route an ID to identify it before the recording has been created
+        routeRecordingID = NSString(string: UUID().uuidString)
         hapticTimer?.invalidate()
         ///route has not been auto aligned
         isAutomaticAlignment = false
@@ -2037,11 +2073,29 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
         }
     }
     
+    /// Create a new cloud anchor at the specified position.  This function will take care of calling the appropriate ARSessionManager function and keep track of the pending queue of cloud anchors
+    /// - Parameter at: the translation to place the anchor at
+    private func hostNewCloudAnchor(at: simd_float3)->Bool {
+        if let pendingCloudAnchor = ARSessionManager.shared.hostCloudAnchor(withTransform: simd_float4x4(translation: at, rotation: simd_quatf())) {
+            pendingCloudAnchors[pendingCloudAnchor.0.identifier.uuidString] = routeRecordingID
+            if ViewController.debugARCore {
+                AnnouncementManager.shared.announce(announcement: "Successfully requested cloud anchor")
+            }
+            return true
+        }
+        if ViewController.debugARCore {
+            AnnouncementManager.shared.announce(announcement: "Unsuccessfully requested cloud anchor")
+        }
+        return false
+    }
+    
     @objc func createCloudAnchors() {
         guard let curLocation = getRealCoordinates(record: false)?.location else {
             return
         }
-        if -lastCloudAnchorTime.timeIntervalSinceNow > Self.cloudAnchorDropInterval, let _ = ARSessionManager.shared.hostCloudAnchor(withTransform: simd_float4x4(translation: simd_float3(curLocation.x, curLocation.y, curLocation.z), rotation: simd_quatf())) {
+        if -lastCloudAnchorTime.timeIntervalSinceNow > Self.cloudAnchorDropInterval, hostNewCloudAnchor(at: simd_float3(curLocation.x, curLocation.y, curLocation.z)) {
+            print("PAUL pending")
+
             lastCloudAnchorTime = Date()
         }
     }

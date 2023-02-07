@@ -40,8 +40,7 @@ class DataPersistence {
         if !update(route: route) {
             self.routes.append(route)
         }
-        let data = try NSKeyedArchiver.archivedData(withRootObject: self.routes, requiringSecureCoding: true)
-        try data.write(to: self.getRoutesURL(), options: [.atomic])
+        writeRoutesFile()
         // Save the world map corresponding to the route
         if let worldMap = worldMap {
             let data = try NSKeyedArchiver.archivedData(withRootObject: worldMap, requiringSecureCoding: true)
@@ -275,6 +274,15 @@ class DataPersistence {
         return false
     }
     
+    func writeRoutesFile() {
+        do {
+            let data = try NSKeyedArchiver.archivedData(withRootObject: self.routes, requiringSecureCoding: true)
+            try data.write(to: self.getRoutesURL(), options: [.atomic])
+        } catch {
+            print(error)
+        }
+    }
+    
     /// Delete the specified route
     ///
     /// - Parameter route: the route do delete
@@ -282,8 +290,8 @@ class DataPersistence {
     func delete(route: SavedRoute) throws {
         // Remove route from the route list
         self.routes = self.routes.filter { $0.id != route.id }
-        let data = try NSKeyedArchiver.archivedData(withRootObject: self.routes, requiringSecureCoding: true)
-        try data.write(to: self.getRoutesURL(), options: [.atomic])
+        writeRoutesFile()
+
         // Remove the world map corresponding to the route.  We use try? to continue execution even if this fails, since it is not strictly necessary for continued operation
         try? FileManager().removeItem(atPath: self.getWorldMapURL(id: route.id as String).path)
         if let beginRouteAnchorPointVoiceNote = route.beginRouteAnchorPoint.voiceNote {
