@@ -66,6 +66,16 @@ class SoundEffectManager {
         }
     }
     
+    func isWearingBinauralHeadphones()->Bool {
+        let currentRoute = AVAudioSession.sharedInstance().currentRoute
+        for output in currentRoute.outputs.filter({output in Set([AVAudioSession.Port.headphones, AVAudioSession.Port.bluetoothA2DP]).contains(output.portType)}) {
+            if let channels = output.channels, channels.count >= 2 {
+                return true
+            }
+        }
+        return false
+    }
+    
     private func overrideSilentMode() {
         try? AVAudioSession.sharedInstance().setCategory(AVAudioSession.Category.playback)
         try? AVAudioSession.sharedInstance().setActive(true)

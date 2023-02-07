@@ -25,6 +25,7 @@ import ARKit
 import VectorMath
 import Firebase
 import SwiftUI
+import CoreHaptics
 
 /// A custom enumeration type that describes the exact state of the app.  The state is not exhaustive (e.g., there are Boolean flags that also track app state).
 enum AppState {
@@ -56,6 +57,8 @@ enum AppState {
     case resumeWaitingPeriod
     /// after the countdown has elapsed and visual alignment is actually occuring
     case visuallyAligning
+    /// the user should slowly sweep their phone back and forth to map the environment
+    case mappingLocalEnvironment
     /// the user is attempting to name the route they're in the process of saving
     case startingNameSavedRouteProcedure(worldMap: ARWorldMap?)
     
@@ -88,6 +91,8 @@ enum AppState {
             return "resumeWaitingPeriod"
         case .visuallyAligning:
             return "visuallyAligning"
+        case .mappingLocalEnvironment:
+            return "mappingLocalEnvironment"
         case .startingNameSavedRouteProcedure:
             return "startingNameSavedRouteProcedure"
         case .finishedTutorialRoute:
@@ -148,6 +153,11 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
     /// the last time this particular user submitted each survey (nil if we don't know this information or it hasn't been loaded from the database yet)
     var lastSurveySubmissionTime: [String: Double] = [:]
     
+    /// Allows us to use the core haptics API
+    var hapticEngine: CHHapticEngine?
+    /// Controls the dynamic haptic pattern at the end of the route
+    var hapticPlayer: CHHapticAdvancedPatternPlayer?
+    
     /// The state of the app.  This should be constantly referenced and updated as the app transitions
     var state = AppState.initializing {
         didSet {
@@ -178,6 +188,8 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
             case .visuallyAligning:
                 // nothing happens currently
                 break
+            case .mappingLocalEnvironment:
+                handleStateTransitionToMappingLocalEnvironment()
             case .resumeWaitingPeriod:
                 // nothing happens currently
                 break
@@ -253,6 +265,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
     /// - Parameter announceArrival: a Boolean that indicates whether the user's arrival should be announced (true means the user has arrived)
     func handleStateTransitionToMainScreen(announceArrival: Bool) {
         isTutorial = false
+        
         // cancel the timer that announces tracking errors
         trackingErrorsAnnouncementTimer?.invalidate()
         // set this to nil to prevent the app from erroneously detecting that we can auto-align to the route
@@ -315,7 +328,8 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
         routeName = nil
         beginRouteAnchorPoint = RouteAnchorPoint()
         endRouteAnchorPoint = RouteAnchorPoint()
-
+        // prevent bear left / bear right when the navigation is starting up
+        lastDirectionAnnouncement = Date()
         logger.resetNavigationLog()
 
         // generate path from PathFinder class
@@ -436,6 +450,21 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
                 print("n cloud anchors \(route.cloudAnchors)")
                 self.showResumeTrackingConfirmButton(route: route, navigateStartToEnd: navigateStartToEnd)
             }
+        }
+    }
+    
+    /// Handles the case where we should have the user map the local environment by panning their phone back and forth
+    func handleStateTransitionToMappingLocalEnvironment() {
+        AnnouncementManager.shared.announce(announcement: NSLocalizedString("scanToMapEnvironment", comment: "This is the announcement to the user to pan their phone to capture the environment"))
+        DispatchQueue.main.asyncAfter(deadline: .now() + 15.0) { [self] in
+            guard let curLocation = getRealCoordinates(record: false)?.location else {
+                return
+            }
+            ARSessionManager.shared.hostCloudAnchor(withTransform: simd_float4x4(translation: simd_float3(curLocation.x, curLocation.y, curLocation.z), rotation: simd_quatf()))
+            self.lastCloudAnchorTime = Date()
+            self.creatingCloudAnchors = Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: #selector(createCloudAnchors), userInfo: nil, repeats: true)
+            AnnouncementManager.shared.announce(announcement: NSLocalizedString("readyToRecordAnnouncement", comment: "this is spoken right before recording a visually aligned route."))
+            self.state = .recordingRoute
         }
     }
     
@@ -560,16 +589,17 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
                     beginRouteAnchorPoint.intrinsics = imageAlignment.1
                 }
                 SoundEffectManager.shared.playSystemSound(id: 1108)
+                state = .mappingLocalEnvironment
             } else {
                 SoundEffectManager.shared.meh()
+                ///PATHPOINT begining anchor point alignment timer -> record route
+                ///announce to the user that they have sucessfully saved an anchor point.
+                delayTransition(announcement: NSLocalizedString("multipleUseRouteAnchorPointToRecordingRouteAnnouncement", comment: "This is the announcement which is spoken after the first anchor point of a multiple use route is saved. this signifies the completeion of the saving an anchor point procedure and the start of recording a route to be saved."), initialFocus: nil)
+                ///sends the user to a route recording of the program is creating a beginning route Anchor Point
+                lastCloudAnchorTime = Date() - 10
+                self.creatingCloudAnchors = Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: #selector(createCloudAnchors), userInfo: nil, repeats: true)
+                state = .recordingRoute
             }
-
-            ///PATHPOINT begining anchor point alignment timer -> record route
-            ///announce to the user that they have sucessfully saved an anchor point.
-            delayTransition(announcement: NSLocalizedString("multipleUseRouteAnchorPointToRecordingRouteAnnouncement", comment: "This is the announcement which is spoken after the first anchor point of a multiple use route is saved. this signifies the completeion of the saving an anchor point procedure and the start of recording a route to be saved."), initialFocus: nil)
-            ///sends the user to a route recording of the program is creating a beginning route Anchor Point
-            state = .recordingRoute
-            return
         } else if let currentTransform = ARSessionManager.shared.currentFrame?.camera.transform {
             // make sure to log transform
             let _ = self.getRealCoordinates(record: true)
@@ -670,6 +700,9 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
     func onRouteTableViewCellClicked(route: SavedRoute, navigateStartToEnd: Bool) {
         let worldMap = dataPersistence.unarchiveMap(id: route.id as String)
         hideAllViewsHelper()
+        do {
+            try hapticPlayer?.stop(atTime: 0.0)
+        } catch { }
         state = .startingResumeProcedure(route: route, worldMap: worldMap, navigateStartToEnd: navigateStartToEnd)
     }
     
@@ -684,6 +717,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
     func archive(routeId: NSString, beginRouteAnchorPoint: RouteAnchorPoint, endRouteAnchorPoint: RouteAnchorPoint, intermediateAnchorPoints: [RouteAnchorPoint], worldMap: Any?) throws {
         let savedRoute = SavedRoute(id: routeId, name: routeName!, crumbs: crumbs, cloudAnchors: cloudAnchors, dateCreated: Date() as NSDate, beginRouteAnchorPoint: beginRouteAnchorPoint, endRouteAnchorPoint: endRouteAnchorPoint, intermediateAnchorPoints: intermediateAnchorPoints)
         try dataPersistence.archive(route: savedRoute, worldMap: worldMap)
+        print("ARCHIVED \(cloudAnchors.count)")
         justTraveledRoute = savedRoute
     }
 
@@ -776,6 +810,12 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
     
     /// stop route navigation VC
     var stopNavigationController: StopNavigationController!
+    
+    /// keep track of when the last off course announcement was given
+    var lastOffCourseAnnouncement: Date? = Date()
+    
+    /// last direction announcement
+    var lastDirectionAnnouncement = Date()
     
     /// called when the view has loaded.  We setup various app elements in here.
     override func viewDidLoad() {
@@ -921,6 +961,36 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
         
     }
     
+    func startEndOfRouteHaptics() {
+        do {
+            hapticEngine = try CHHapticEngine()
+            hapticEngine?.start() { error in
+                if error != nil {
+                    print("error \(error?.localizedDescription)")
+                    return
+                }
+                let events = [CHHapticEvent(eventType: .hapticContinuous, parameters: [
+                    CHHapticEventParameter(parameterID: .hapticIntensity, value: 1.0),
+                    CHHapticEventParameter(parameterID: .hapticSharpness, value: 0.1),
+                    CHHapticEventParameter(parameterID: .attackTime, value: 0.1),
+                    CHHapticEventParameter(parameterID: .releaseTime, value: 0.2),
+                    CHHapticEventParameter(parameterID: .decayTime, value: 0.3) ], relativeTime: 0.1, duration: 0.6)]
+                
+                do {
+                    self.hapticPlayer = try self.hapticEngine?.makeAdvancedPlayer(with: CHHapticPattern(events: events, parameters: []))
+                    self.hapticPlayer?.loopEnabled = true
+                    try self.hapticPlayer?.start(atTime: 0)
+                    print("Started Haptics!!")
+                } catch {
+                    print("HAPTICS ERROR!!!")
+                    
+                }
+            }
+        } catch {
+            print("Unable to start haptic engine")
+        }
+    }
+    
     /// Respond to any dynamic reconfiguration requests (this is currently not used in the app store version of Clew).
     ///
     /// - Parameter snapshot: the new configuration data
@@ -1005,6 +1075,10 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
         logger.resetNavigationLog()
         logger.resetPathLog()
         hapticTimer?.invalidate()
+        do {
+            try hapticPlayer?.stop(atTime: 0.0)
+        } catch {}
+        hapticPlayer = nil
         logger.resetStateSequenceLog()
     }
     
@@ -1066,7 +1140,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
     }
     
     func didHostCloudAnchor(cloudIdentifier: String, withTransform transform : simd_float4x4) {
-        AnnouncementManager.shared.announce(announcement: "Cloud anchor created")
+        // TODO: handle the case when this comes in after the route finishes.
         cloudAnchors[NSString(string: cloudIdentifier)] = ARAnchor(transform: transform)
     }
     
@@ -1306,7 +1380,9 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
     @objc func showRecordPathButton(announceArrival: Bool) {
         hideAllViewsHelper()
         creatingCloudAnchors?.invalidate()
-        ARSessionManager.shared.pauseSession()
+        if !announceArrival {
+            ARSessionManager.shared.pauseSession()
+        }
         add(recordPathController)
         /// handling main screen transitions outside of the first load
         
@@ -1528,6 +1604,12 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
     
     static let cloudAnchorDropInterval = 25.0
     
+    static let spatialAudioInterval = 1.0
+    
+    static let offTrackCorrectionAnnouncementInterval = 2.0
+    
+    static let directionTextGracePeriod = 3.5
+    
     /// times when the heading offset should be recalculated.  The ability to use the heading offset is currently not exposed to the user.
     var updateHeadingOffsetTimer: Timer?
     
@@ -1660,6 +1742,12 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
     /// handles the user pressing the record path button.
     @objc func recordPath() {
         ///PATHPOINT record two way path button -> create Anchor Point
+        do {
+            try hapticPlayer?.pause(atTime: 0.0)
+        } catch {
+            
+        }
+        hapticTimer?.invalidate()
         ///route has not been auto aligned
         isAutomaticAlignment = false
         ///tells the program that it is recording a two way route
@@ -1766,7 +1854,6 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
     @objc func setVisualAlignment() {
         isVisualAlignment = true
         // start creating cloud anchors
-        creatingCloudAnchors = Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: #selector(createCloudAnchors), userInfo: nil, repeats: true)
         try? showPauseTrackingButton()
     }
     
@@ -1779,6 +1866,11 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
     @objc func startCreateAnchorPointProcedure() {
         rootContainerView.homeButton.isHidden = false
         creatingRouteAnchorPoint = true
+        hapticTimer?.invalidate()
+        do {
+            try hapticPlayer?.stop(atTime: 0.0)
+        } catch {}
+        
         
         ///the route has not been resumed automaticly from a saved route
         isAutomaticAlignment = false
@@ -2004,9 +2096,8 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
 
                 RouteManager.shared.checkOffKeypoint()
                 ARSessionManager.shared.removeNavigationNodes()
-                
+                startEndOfRouteHaptics()
                 followingCrumbs?.invalidate()
-                hapticTimer?.invalidate()
                 PathLogger.shared.logEvent(eventDescription: "arrived")
                 sendLogDataHelper(pathStatus: nil, announceArrival: true)
             }
@@ -2105,6 +2196,25 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
     
     /// send haptic feedback if the device is pointing towards the next keypoint.
     @objc func getHapticFeedback() {
+        if RouteManager.shared.isComplete {
+            suppressTrackingWarnings = true
+            guard let curPos = getRealCoordinates(record: false)?.location.transform.columns.3.dropw(), let routeEndKeypoint = RouteManager.shared.lastKeypoint, let routeEnd = ARSessionManager.shared.getCurrentLocation(of: routeEndKeypoint.location) else {
+                // TODO: might want to indicate that something is wrong to the user
+                return
+            }
+            let routeEndPos = routeEnd.transform.columns.3.dropw()
+            let routeEndPosFloorPlane = simd_float2(routeEndPos.x, routeEndPos.z)
+            let curPosFloorPlane = simd_float2(curPos.x, curPos.z)
+            do {
+                print("curPos \(curPosFloorPlane) routeEnd \(routeEndPosFloorPlane)")
+                print("ADJUSTING \(max(0.0, 1.0 - simd_distance(curPosFloorPlane, routeEndPosFloorPlane)))")
+                try hapticPlayer?.sendParameters([CHHapticDynamicParameter(parameterID: .hapticIntensityControl, value: max(0.0, 1.0 - simd_distance(curPosFloorPlane, routeEndPosFloorPlane)), relativeTime: 0.0)], atTime: 0.0)
+                print("hapticPlayer \(hapticPlayer)")
+            } catch {
+                print("Unable to update")
+            }
+            return
+        }
         updateHeadingOffset()
         guard let curLocation = getRealCoordinates(record: false) else {
             // TODO: might want to indicate that something is wrong to the user
@@ -2125,32 +2235,32 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
         
         // use a stricter criteria than 12 o'clock for providing haptic feedback
         if directionToNextKeypoint.lateralDistanceRatioWhenCrossingTarget < lateralDisplacementToleranceRatio || abs(directionToNextKeypoint.angleDiff) < coneWidth {
-            // mark this since we now want to wait a while before giving error feedback
-            errorFeedbackTimer = Date()
-            playedErrorSoundForOffRoute = false
-            let timeInterval = feedbackTimer.timeIntervalSinceNow
-            if(-timeInterval > ViewController.FEEDBACKDELAY) {
+            lastOffCourseAnnouncement = nil
+            if -feedbackTimer.timeIntervalSinceNow > ViewController.FEEDBACKDELAY {
                 // wait until desired time interval before sending another feedback
-                if (hapticFeedback) {
-                    feedbackGenerator?.impactOccurred()
+                if hapticFeedback { feedbackGenerator?.impactOccurred()
                 }
-                if (soundFeedback) { SoundEffectManager.shared.playSystemSound(id: 1103)
+                if soundFeedback {
+                    SoundEffectManager.shared.playSystemSound(id: 1103)
                 }
                 feedbackTimer = Date()
             }
-        } else {
-            let timeInterval = errorFeedbackTimer.timeIntervalSinceNow
-            if -timeInterval > ViewController.delayBeforeErrorAnnouncement {
-                // wait until desired time interval before sending another feedback
-                if AnnouncementManager.shared.voiceFeedback {
-                    AnnouncementManager.shared.announce(announcement: NSLocalizedString("offThePathAnnouncement", comment: "this announcemet is delivered if the user is off the path for 10 seconds or more."))
-                }
-                errorFeedbackTimer = Date()
-                playedErrorSoundForOffRoute = false
-            } else if -timeInterval > ViewController.delayBeforeErrorSound {
-                // wait until desired time interval before sending another feedback
-                if soundFeedback, !playedErrorSoundForOffRoute { SoundEffectManager.shared.error()
-                    playedErrorSoundForOffRoute = true
+        } else if -lastDirectionAnnouncement.timeIntervalSinceNow > Self.directionTextGracePeriod {
+            let intervalMultiplier = RouteManager.shared.onFirstKeypoint ? 4.0 : 1.0
+            if lastOffCourseAnnouncement == nil || -lastOffCourseAnnouncement!.timeIntervalSinceNow > Self.offTrackCorrectionAnnouncementInterval * intervalMultiplier {
+                lastOffCourseAnnouncement = Date()
+                if RouteManager.shared.onFirstKeypoint {
+                    if directionToNextKeypoint.angleDiff > 0 {
+                        AnnouncementManager.shared.announce(announcement: NSLocalizedString("bearRightToFaceStart", comment: "announcement to direct the user to the first keypoint"))
+                    } else {
+                        AnnouncementManager.shared.announce(announcement: NSLocalizedString("bearLeftToFaceStart", comment: "announcement to direct the user to the first keypoint"))
+                    }
+                } else {
+                    if directionToNextKeypoint.angleDiff > 0 {
+                        AnnouncementManager.shared.announce(announcement: NSLocalizedString("bearRightToGetOnTrack", comment: "announcement to direct the user to a  keypoint"))
+                    } else {
+                        AnnouncementManager.shared.announce(announcement: NSLocalizedString("bearLeftToGetOnTrack", comment: "announcement to direct the user to a  keypoint"))
+                    }
                 }
             }
         }
@@ -2243,6 +2353,9 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
                 break
                 
             case .visuallyAligning:
+                break
+                
+            case .mappingLocalEnvironment:
                 break
                 
             case .startingNameSavedRouteProcedure(worldMap: let worldMap):
@@ -2339,6 +2452,8 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
         guard let nextKeypoint = RouteManager.shared.nextKeypoint else {
             return
         }
+        lastDirectionAnnouncement = Date()
+
         // Set direction text for text label and VoiceOver
         let xzNorm = sqrtf(powf(currentLocation.x - nextKeypoint.location.x, 2) + powf(currentLocation.z - nextKeypoint.location.z, 2))
         let slope = (nextKeypoint.location.y - prevKeypointPosition.y) / xzNorm

@@ -211,7 +211,7 @@ class ARSessionManager: NSObject {
             let device = AVCaptureDevice.default(for: AVMediaType.video),
             device.hasTorch
         else { return }
-        if device.torchMode == .off && lightingIntensity < 700 {
+        if device.torchMode == .off && lightingIntensity < 500 {
             do {
                 try device.lockForConfiguration()
                 try device.setTorchModeOn(level: 1.0)

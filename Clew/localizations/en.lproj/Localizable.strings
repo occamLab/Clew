@@ -653,3 +653,10 @@ There are two types of anchor points: visual and physical.  You can practice the
 "havingTroubleVisuallyAligning" = "Having trouble aligning. Try rotating your phone slowly from side-to-side.";
 "holdVerticallyToContinueAlignment" = "Hold phone vertically to continue alignment";
 "alignmentCanContinue" = "Camera now vertical, continuing alignment";
+"scanToMapEnvironment" = "Almost ready.  For the next 10 seconds, keep your phone vertical and slowly pan your phone back and forth";
+"visualAlignmentAnchorPointSaved" = "Anchor image saved.  We are almost ready to record the route";
+"readyToRecordAnnouncement" = "Ready to go.  You can now record the route by walking along it.";
+"bearLeftToFaceStart"  = "Bear left to face the start";
+"bearRightToFaceStart" = "Bear right to face the start";
+"bearLeftToGetOnTrack" = "Bear left to get on track";
+"bearRightToGetOnTrack" = "Bear right to get on track";
