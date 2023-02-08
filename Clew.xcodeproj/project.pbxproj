@@ -36,6 +36,12 @@
 		8214120826D497DE003EC2D4 /* SiriShortcutsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8214120726D497DE003EC2D4 /* SiriShortcutsManager.swift */; };
 		8214120926D497DE003EC2D4 /* SiriShortcutsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8214120726D497DE003EC2D4 /* SiriShortcutsManager.swift */; };
 		821C01852994317E006EBDC5 /* ARCoreCloudAnchors in Frameworks */ = {isa = PBXBuildFile; productRef = 821C01842994317E006EBDC5 /* ARCoreCloudAnchors */; };
+		821C018829943859006EBDC5 /* NSObject+ARFrameStatusAdapter.mm in Sources */ = {isa = PBXBuildFile; fileRef = 821C018729943859006EBDC5 /* NSObject+ARFrameStatusAdapter.mm */; };
+		821C018929943859006EBDC5 /* NSObject+ARFrameStatusAdapter.mm in Sources */ = {isa = PBXBuildFile; fileRef = 821C018729943859006EBDC5 /* NSObject+ARFrameStatusAdapter.mm */; };
+		821C018C2994393E006EBDC5 /* JGMethodSwizzler.m in Sources */ = {isa = PBXBuildFile; fileRef = 821C018B2994393E006EBDC5 /* JGMethodSwizzler.m */; };
+		821C018D2994393E006EBDC5 /* JGMethodSwizzler.m in Sources */ = {isa = PBXBuildFile; fileRef = 821C018B2994393E006EBDC5 /* JGMethodSwizzler.m */; };
+		821C018F2994397F006EBDC5 /* ARCoreCloudAnchors in Frameworks */ = {isa = PBXBuildFile; productRef = 821C018E2994397F006EBDC5 /* ARCoreCloudAnchors */; };
+		821C019029943997006EBDC5 /* Credentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = 828CB791298C6C220036D18A /* Credentials.swift */; };
 		821CF7842513264400A7B3C2 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 821CF7822513264400A7B3C2 /* InfoPlist.strings */; };
 		821D07332742B33100FE6297 /* VisualAlignmentManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 821D07322742B33100FE6297 /* VisualAlignmentManager.swift */; };
 		821D07342742B33200FE6297 /* VisualAlignmentManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 821D07322742B33100FE6297 /* VisualAlignmentManager.swift */; };
@@ -297,6 +303,10 @@
 		8214120426D41476003EC2D4 /* SiriWalkThrough.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SiriWalkThrough.swift; sourceTree = "<group>"; };
 		8214120726D497DE003EC2D4 /* SiriShortcutsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SiriShortcutsManager.swift; sourceTree = "<group>"; };
 		821C01832994314B006EBDC5 /* ARCorePackage */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = ARCorePackage; path = ExternalDependencies/ARCorePackage; sourceTree = "<group>"; };
+		821C018629943819006EBDC5 /* NSObject+ARFrameStatusAdapter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSObject+ARFrameStatusAdapter.h"; sourceTree = "<group>"; };
+		821C018729943859006EBDC5 /* NSObject+ARFrameStatusAdapter.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = "NSObject+ARFrameStatusAdapter.mm"; sourceTree = "<group>"; };
+		821C018A299438D1006EBDC5 /* JGMethodSwizzler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JGMethodSwizzler.h; sourceTree = "<group>"; };
+		821C018B2994393E006EBDC5 /* JGMethodSwizzler.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JGMethodSwizzler.m; sourceTree = "<group>"; };
 		821CF7832513264400A7B3C2 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		821D07322742B33100FE6297 /* VisualAlignmentManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisualAlignmentManager.swift; sourceTree = "<group>"; };
 		821D07352742B44400FE6297 /* AnnouncementManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnouncementManager.swift; sourceTree = "<group>"; };
@@ -749,6 +759,7 @@
 				82BE6CA627398B4000387139 /* opencv2.framework in Frameworks */,
 				82BE6C892739818A00387139 /* FirebaseAuth in Frameworks */,
 				82BE6C8B2739819100387139 /* FirebaseDatabase in Frameworks */,
+				821C018F2994397F006EBDC5 /* ARCoreCloudAnchors in Frameworks */,
 				82BE6C8D2739819700387139 /* FirebaseStorage in Frameworks */,
 				82D94B65266FC86200EE2C1C /* SimpleForm in Frameworks */,
 				82BE6C922739824500387139 /* VectorMath in Frameworks */,
@@ -1613,6 +1624,7 @@
 				E5470EB522C119F4001092A4 /* Utility.swift */,
 				1F2B9D7022C3B50D00317DC8 /* HelpCompiler.swift */,
 				E5470EB622C119F4001092A4 /* AppDelegate.swift */,
+				821C018729943859006EBDC5 /* NSObject+ARFrameStatusAdapter.mm */,
 				E565A10722F2173400C1998E /* RouteDocumentData.swift */,
 				82A417E0262A205A001FCB8C /* AuthenticationHelper.swift */,
 				82BC47FD2640383300C7D364 /* Surveys.swift */,
@@ -1623,6 +1635,9 @@
 				821D07352742B44400FE6297 /* AnnouncementManager.swift */,
 				828CB791298C6C220036D18A /* Credentials.swift */,
 				828CB7932992F3AA0036D18A /* AlignmentFilter.swift */,
+				821C018629943819006EBDC5 /* NSObject+ARFrameStatusAdapter.h */,
+				821C018A299438D1006EBDC5 /* JGMethodSwizzler.h */,
+				821C018B2994393E006EBDC5 /* JGMethodSwizzler.m */,
 			);
 			path = Misc;
 			sourceTree = "<group>";
@@ -1778,6 +1793,7 @@
 				82BE6C8C2739819700387139 /* FirebaseStorage */,
 				82BE6C912739824500387139 /* VectorMath */,
 				82BE6C96273982A100387139 /* InAppSettingsKit */,
+				821C018E2994397F006EBDC5 /* ARCoreCloudAnchors */,
 			);
 			productName = Clew;
 			productReference = B7EB59EC20F693EB00FBBC6A /* Clew Dev.app */;
@@ -2024,6 +2040,7 @@
 				82BC47FE2640383300C7D364 /* Surveys.swift in Sources */,
 				E5470F0622C119F5001092A4 /* PathFinder.swift in Sources */,
 				E5470F2C22C119F5001092A4 /* StartNavigationController.swift in Sources */,
+				821C018829943859006EBDC5 /* NSObject+ARFrameStatusAdapter.mm in Sources */,
 				E5470F4222C119F5001092A4 /* UIConstants.swift in Sources */,
 				E8773AFB268B874F003EA863 /* SiriShortcutsController.swift in Sources */,
 				E5470F2022C119F5001092A4 /* UIViewControllerExtensions.swift in Sources */,
@@ -2046,6 +2063,7 @@
 				986640CE22FB68F2005AA1F6 /* NameSavedRouteController.swift in Sources */,
 				E5470EFE22C119F5001092A4 /* DataPersistence.swift in Sources */,
 				E5470F0022C119F5001092A4 /* PathLogger.swift in Sources */,
+				821C018C2994393E006EBDC5 /* JGMethodSwizzler.m in Sources */,
 				828CB792298C6C220036D18A /* Credentials.swift in Sources */,
 				E5470F2422C119F5001092A4 /* UIButtonExtensions.swift in Sources */,
 				E5470EF822C119F5001092A4 /* AudioVisualizerView.swift in Sources */,
@@ -2093,11 +2111,13 @@
 				E5470F2122C119F5001092A4 /* UIViewControllerExtensions.swift in Sources */,
 				82BE6CA0273983E200387139 /* PRTweenTimingFunctions.m in Sources */,
 				E565A10922F2173400C1998E /* RouteDocumentData.swift in Sources */,
+				821C019029943997006EBDC5 /* Credentials.swift in Sources */,
 				E5470F3B22C119F5001092A4 /* HelpViewController.swift in Sources */,
 				E5470F0322C119F5001092A4 /* Navigation.swift in Sources */,
 				E5470F3922C119F5001092A4 /* ResumeTrackingConfirmController.swift in Sources */,
 				82BE6C9D273983C900387139 /* PRTween.m in Sources */,
 				E5470EFB22C119F5001092A4 /* RecorderViewController.swift in Sources */,
+				821C018D2994393E006EBDC5 /* JGMethodSwizzler.m in Sources */,
 				828CB7952992F3AA0036D18A /* AlignmentFilter.swift in Sources */,
 				E5470F4722C119F5001092A4 /* RootContainerView.swift in Sources */,
 				E5470F4B22C119F5001092A4 /* RouteTableViewCell.swift in Sources */,
@@ -2109,6 +2129,7 @@
 				986640CF22FC9606005AA1F6 /* NameSavedRouteController.swift in Sources */,
 				E5470F2B22C119F5001092A4 /* RecordPathController.swift in Sources */,
 				E5470EFF22C119F5001092A4 /* DataPersistence.swift in Sources */,
+				821C018929943859006EBDC5 /* NSObject+ARFrameStatusAdapter.mm in Sources */,
 				E5470F0122C119F5001092A4 /* PathLogger.swift in Sources */,
 				E5470F2522C119F5001092A4 /* UIButtonExtensions.swift in Sources */,
 				E5470EF922C119F5001092A4 /* AudioVisualizerView.swift in Sources */,
@@ -2590,6 +2611,10 @@
 
 /* Begin XCSwiftPackageProductDependency section */
 		821C01842994317E006EBDC5 /* ARCoreCloudAnchors */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ARCoreCloudAnchors;
+		};
+		821C018E2994397F006EBDC5 /* ARCoreCloudAnchors */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = ARCoreCloudAnchors;
 		};

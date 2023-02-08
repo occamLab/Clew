@@ -544,7 +544,7 @@ extension ARSessionManager: ARSessionDelegate {
         }
         
         do {
-            //ARFrameStatusAdapter.adjustTrackingStatus(frame)
+            ARFrameStatusAdapter.adjustTrackingStatus(frame)
             let garFrame = try garSession?.update(frame)
             self.currentGARFrame = garFrame
             // don't use Cloud Anchors if we have localized with the ARWorldMap

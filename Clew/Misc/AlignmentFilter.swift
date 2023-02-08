@@ -20,7 +20,7 @@ class AlignmentFilter {
             // not worth updating
             return nil
         }
-        if angleDiff.angle > 0.5 || positionDiff > 5.0 {
+        if angleDiff.angle > 1.0 || positionDiff > 7.0 {
             // probably an outlier
             return nil
         }
