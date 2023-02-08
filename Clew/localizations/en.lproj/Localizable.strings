@@ -659,3 +659,5 @@ There are two types of anchor points: visual and physical.  You can practice the
 "bearRightToFaceStart" = "Bear right to face the start";
 "bearLeftToGetOnTrack" = "Bear left to get on track";
 "bearRightToGetOnTrack" = "Bear right to get on track";
+"visualAnchorButton" = "Visual Anchor";
+"physicalAnchorButton" = "Physical Anchor";

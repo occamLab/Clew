@@ -481,3 +481,5 @@
 "bearRightToFaceStart" = "اسحب لليمين للبداية";
 "bearLeftToGetOnTrack" = "اسحب لليسار للانتقال ألى المسار";
 "bearRightToGetOnTrack" = "اسحب لليمين للانتقال ألى المسار";
+"visualAnchorButton" = "نقطة ثابتة مرئية";
+"physicalAnchorButton" = "نقطة ثابتة فعلية";

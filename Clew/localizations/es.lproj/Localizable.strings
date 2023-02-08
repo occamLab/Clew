@@ -399,3 +399,5 @@ Para crear un punto de anclaje, mantén tu dispositivo plano con la pantalla hac
 "bearRightToFaceStart" = "Gire a la derecha para enfrentar el comienzo";
 "bearLeftToGetOnTrack" = "Gire a la izquierda para seguir la ruta";
 "bearRightToGetOnTrack" = "Gire a la derecha para seguir la ruta";
+"visualAnchorButton" = "Anclaje Visual";
+"physicalAnchorButton" = "Anclaje Físico";
