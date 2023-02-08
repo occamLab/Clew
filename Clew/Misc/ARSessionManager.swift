@@ -61,7 +61,7 @@ class ARSessionManager: NSObject {
     var cloudAnchorsForAlignment: [NSString: ARAnchor] = [:] {
         didSet {
             sessionCloudAnchors = [:]
-            if cloudAnchorsForAlignment.count > 20 {
+            if cloudAnchorsForAlignment.count > 40 {
                 let tooManyAnchors = "Too many cloud anchors. Results may be unpredictable."
                 AnnouncementManager.shared.announce(announcement: tooManyAnchors)
                 PathLogger.shared.logSpeech(utterance: tooManyAnchors)
@@ -227,7 +227,7 @@ class ARSessionManager: NSObject {
             let device = AVCaptureDevice.default(for: AVMediaType.video),
             device.hasTorch
         else { return }
-        if device.torchMode == .off && lightingIntensity < 500 {
+        if device.torchMode == .off && lightingIntensity < 300 {
             do {
                 try device.lockForConfiguration()
                 try device.setTorchModeOn(level: 1.0)
@@ -235,7 +235,7 @@ class ARSessionManager: NSObject {
             } catch {
                 print("torch error")
             }
-        } else if device.torchMode == .on && lightingIntensity > 1200 && timestamp - lastTorchChange > 60.0 {
+        } else if device.torchMode == .on && lightingIntensity > 1000 && timestamp - lastTorchChange > 60.0 {
             do {
                 try device.lockForConfiguration()
                 device.torchMode = .off

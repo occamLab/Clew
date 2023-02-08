@@ -35,6 +35,7 @@
 		8214120626D41477003EC2D4 /* SiriWalkThrough.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8214120426D41476003EC2D4 /* SiriWalkThrough.swift */; };
 		8214120826D497DE003EC2D4 /* SiriShortcutsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8214120726D497DE003EC2D4 /* SiriShortcutsManager.swift */; };
 		8214120926D497DE003EC2D4 /* SiriShortcutsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8214120726D497DE003EC2D4 /* SiriShortcutsManager.swift */; };
+		821C01852994317E006EBDC5 /* ARCoreCloudAnchors in Frameworks */ = {isa = PBXBuildFile; productRef = 821C01842994317E006EBDC5 /* ARCoreCloudAnchors */; };
 		821CF7842513264400A7B3C2 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 821CF7822513264400A7B3C2 /* InfoPlist.strings */; };
 		821D07332742B33100FE6297 /* VisualAlignmentManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 821D07322742B33100FE6297 /* VisualAlignmentManager.swift */; };
 		821D07342742B33200FE6297 /* VisualAlignmentManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 821D07322742B33100FE6297 /* VisualAlignmentManager.swift */; };
@@ -50,7 +51,6 @@
 		827EDC3226CDA5C000AAA12A /* ClewErrorSound.wav in Resources */ = {isa = PBXBuildFile; fileRef = 827EDC3026CDA5C000AAA12A /* ClewErrorSound.wav */; };
 		827EDC3426CDA72300AAA12A /* SoundEffectManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 827EDC3326CDA72200AAA12A /* SoundEffectManager.swift */; };
 		827EDC3526CDA72300AAA12A /* SoundEffectManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 827EDC3326CDA72200AAA12A /* SoundEffectManager.swift */; };
-		828CB790298C67B20036D18A /* ARCoreCloudAnchors in Frameworks */ = {isa = PBXBuildFile; productRef = 828CB78F298C67B20036D18A /* ARCoreCloudAnchors */; };
 		828CB792298C6C220036D18A /* Credentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = 828CB791298C6C220036D18A /* Credentials.swift */; };
 		828CB7942992F3AA0036D18A /* AlignmentFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 828CB7932992F3AA0036D18A /* AlignmentFilter.swift */; };
 		828CB7952992F3AA0036D18A /* AlignmentFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 828CB7932992F3AA0036D18A /* AlignmentFilter.swift */; };
@@ -296,6 +296,7 @@
 		8206436A23B556A200DEE347 /* es */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = es; path = es.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
 		8214120426D41476003EC2D4 /* SiriWalkThrough.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SiriWalkThrough.swift; sourceTree = "<group>"; };
 		8214120726D497DE003EC2D4 /* SiriShortcutsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SiriShortcutsManager.swift; sourceTree = "<group>"; };
+		821C01832994314B006EBDC5 /* ARCorePackage */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = ARCorePackage; path = ExternalDependencies/ARCorePackage; sourceTree = "<group>"; };
 		821CF7832513264400A7B3C2 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		821D07322742B33100FE6297 /* VisualAlignmentManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisualAlignmentManager.swift; sourceTree = "<group>"; };
 		821D07352742B44400FE6297 /* AnnouncementManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnouncementManager.swift; sourceTree = "<group>"; };
@@ -308,10 +309,12 @@
 		827CB5B424932CC70032A857 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/Localizable.strings; sourceTree = "<group>"; };
 		827EDC3026CDA5C000AAA12A /* ClewErrorSound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = ClewErrorSound.wav; sourceTree = "<group>"; };
 		827EDC3326CDA72200AAA12A /* SoundEffectManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundEffectManager.swift; sourceTree = "<group>"; };
-		828CB78D298C652D0036D18A /* ARCorePackage */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = ARCorePackage; path = ../../Downloads/ARCorePackage; sourceTree = "<group>"; };
-		828CB78E298C67910036D18A /* ARCorePackage */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = ARCorePackage; path = ../../Downloads/ARCorePackage; sourceTree = "<group>"; };
+		828CB78D298C652D0036D18A /* ARCorePackage */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = ARCorePackage; path = ExternalDependencies/ARCorePackage; sourceTree = "<group>"; };
+		828CB78E298C67910036D18A /* ARCorePackage */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = ARCorePackage; path = ExternalDependencies/ARCorePackage; sourceTree = "<group>"; };
 		828CB791298C6C220036D18A /* Credentials.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Credentials.swift; sourceTree = "<group>"; };
 		828CB7932992F3AA0036D18A /* AlignmentFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlignmentFilter.swift; sourceTree = "<group>"; };
+		828CB796299430AC0036D18A /* ARCorePackage */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = ARCorePackage; path = ExternalDependencies/ARCorePackage; sourceTree = "<group>"; };
+		828CB797299430D20036D18A /* ARCorePackage */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = ARCorePackage; path = ExternalDependencies/ARCorePackage; sourceTree = "<group>"; };
 		82984805271F106E00DA3005 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		82984807271F107400DA3005 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		82A417E0262A205A001FCB8C /* AuthenticationHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationHelper.swift; sourceTree = "<group>"; };
@@ -730,7 +733,7 @@
 				82BE6CA527398B4000387139 /* opencv2.framework in Frameworks */,
 				82BE6C812739815900387139 /* FirebaseAuth in Frameworks */,
 				82BE6C832739815900387139 /* FirebaseDatabase in Frameworks */,
-				828CB790298C67B20036D18A /* ARCoreCloudAnchors in Frameworks */,
+				821C01852994317E006EBDC5 /* ARCoreCloudAnchors in Frameworks */,
 				82BE6C852739815900387139 /* FirebaseStorage in Frameworks */,
 				82D94B63266FC7CF00EE2C1C /* SimpleForm in Frameworks */,
 				82BE6C902739823400387139 /* VectorMath in Frameworks */,
@@ -813,6 +816,9 @@
 			children = (
 				828CB78D298C652D0036D18A /* ARCorePackage */,
 				828CB78E298C67910036D18A /* ARCorePackage */,
+				828CB796299430AC0036D18A /* ARCorePackage */,
+				828CB797299430D20036D18A /* ARCorePackage */,
+				821C01832994314B006EBDC5 /* ARCorePackage */,
 			);
 			name = Packages;
 			sourceTree = "<group>";
@@ -1745,7 +1751,7 @@
 				82BE6C842739815900387139 /* FirebaseStorage */,
 				82BE6C8F2739823400387139 /* VectorMath */,
 				82BE6C942739828E00387139 /* InAppSettingsKit */,
-				828CB78F298C67B20036D18A /* ARCoreCloudAnchors */,
+				821C01842994317E006EBDC5 /* ARCoreCloudAnchors */,
 			);
 			productName = Clew;
 			productReference = 4D6B00C01F33C1C400952242 /* Clew.app */;
@@ -2465,7 +2471,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
 				INFOPLIST_FILE = "route-quicklook/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2490,7 +2496,7 @@
 				CURRENT_PROJECT_VERSION = 171;
 				DEVELOPMENT_TEAM = 787TUDMR8Q;
 				INFOPLIST_FILE = "route-quicklook/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2583,7 +2589,7 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		828CB78F298C67B20036D18A /* ARCoreCloudAnchors */ = {
+		821C01842994317E006EBDC5 /* ARCoreCloudAnchors */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = ARCoreCloudAnchors;
 		};

@@ -1154,7 +1154,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
     
     func didHostCloudAnchor(cloudIdentifier: String, anchorIdentifier: String, withTransform transform : simd_float4x4) {
         if Self.debugARCore {
-            AnnouncementManager.shared.announce(announcement: "Did Host Anchor")
+            AnnouncementManager.shared.announce(announcement: "Did Host Anchor \(cloudAnchors.count)")
         }
         print("DID HOST")
         if let associatedRoute = pendingCloudAnchors[anchorIdentifier] {
