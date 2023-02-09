@@ -9,6 +9,7 @@
 import Foundation
 import ARKit
 import ARCore
+import ARCoreCloudAnchors
 
 enum ARTrackingError {
     case insufficientFeatures
@@ -623,10 +624,13 @@ extension ARSessionManager: ARSessionDelegate {
             delegate?.sessionInitialized()
             delegate?.trackingIsNormal()
             if sessionWasRelocalizing {
-                delegate?.sessionDidRelocalize()
+                if localization == .none {
+                    delegate?.sessionDidRelocalize()
+                }
                 if relocalizationStrategy == .coordinateSystemAutoAligns {
                     manualAlignment = matrix_identity_float4x4
                     legacyHandleRelocalization()
+                    localization = .withARWorldMap
                 }
             }
             print("normal")

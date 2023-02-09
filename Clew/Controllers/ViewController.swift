@@ -2772,9 +2772,6 @@ extension ViewController: ARSessionManagerDelegate {
             continuation()
         }
         if ARSessionManager.shared.initialWorldMap != nil, attemptingRelocalization {
-            if trackingWarningsAllowed {
-                AnnouncementManager.shared.announce(announcement: NSLocalizedString("realignToSavedRouteAnnouncement", comment: "An announcement which lets the user know that their surroundings have been matched to a saved route"))
-            }
             attemptingRelocalization = false
         } else if oldTrackingSessionErrorState != nil {
             if trackingWarningsAllowed {

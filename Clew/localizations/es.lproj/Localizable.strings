@@ -394,10 +394,10 @@ Para crear un punto de anclaje, mantén tu dispositivo plano con la pantalla hac
 "holdVerticallyToContinueAlignment" = "Mantén el teléfono en posición vertical para continuar la alineación";
 "alignmentCanContinue" = "La cámara ya está en vertical, continuando la alineación";
 "scanToMapEnvironment" = "Casi listo. Durante los próximos 10 segundos, mantén el teléfono en vertical y mueve lentamente el teléfono de un lado a otro";
-"readyToRecordAnnouncement" = "Listo para ir. Ahora puede grabar la ruta caminando.";
+"readyToRecordAnnouncement" = "Listo para comenzar. Ahora puede grabar la ruta caminando.";
 "bearLeftToFaceStart" = "Gire a la izquierda para enfrentar el inicio";
-"bearRightToFaceStart" = "Gire a la derecha para enfrentar el comienzo";
-"bearLeftToGetOnTrack" = "Gire a la izquierda para seguir la ruta";
-"bearRightToGetOnTrack" = "Gire a la derecha para seguir la ruta";
+"bearRightToFaceStart" = "Gire a la derecha para enfrentar el inicio";
+"bearLeftToGetOnTrack" = "Ajuste a la izquierda para seguir la ruta";
+"bearRightToGetOnTrack" = "Ajuste a la derecha para seguir la ruta";
 "visualAnchorButton" = "Anclaje Visual";
 "physicalAnchorButton" = "Anclaje Físico";
