@@ -148,7 +148,7 @@ class PathLogger {
 
     
     func logCloudAnchorForAlignment(anchorIdentifier: String, cloudAnchorID: String, anchorTransform: ARAnchor) {
-        
+        cloudAnchorsForAlignment.append(LoggedCloudAnchor(anchorIdentifier: anchorIdentifier, cloudAnchorID: cloudAnchorID, anchorTransform: anchorTransform))
     }
 
     
@@ -227,6 +227,7 @@ class PathLogger {
         trackingErrorPhase = []
         
         // reset these
+        cloudAnchorsForAlignment = []
         currentNavigationMap = nil
         currentNavigationRoute = nil
     }
@@ -242,7 +243,6 @@ class PathLogger {
         garAnchorTimestamps = []
         garAnchorCameraWorldTransforms = []
         garAnchors = []
-        cloudAnchorsForAlignment = []
         geoLocationAlignmentAttemptTimes = []
         geoLocationAlignmentAttempts = []
         dataTimer = Date()

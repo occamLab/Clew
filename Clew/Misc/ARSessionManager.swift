@@ -55,6 +55,8 @@ class ARSessionManager: NSObject, ObservableObject {
         case withARWorldMap
     }
     var localization: LocalizationState = .none
+    //var landmark: GARAnchor?
+    //var landmarkNode: SCNNode?
     var cameraPoses: [Any] = []
     var visualKeypoints: [KeypointInfo] = []
     var cameraLocationInfos: [LocationInfo] = []
@@ -168,7 +170,7 @@ class ARSessionManager: NSObject, ObservableObject {
     var cloudAnchorsForAlignment: [NSString: ARAnchor] = [:] {
         didSet {
             sessionCloudAnchors = [:]
-            if cloudAnchorsForAlignment.count > 20 {
+            if cloudAnchorsForAlignment.count > 40 {
                 let tooManyAnchors = "Too many cloud anchors. Results may be unpredictable."
                 AnnouncementManager.shared.announce(announcement: tooManyAnchors)
                 PathLogger.shared.logSpeech(utterance: tooManyAnchors)
@@ -198,6 +200,14 @@ class ARSessionManager: NSObject, ObservableObject {
         createARSessionConfiguration()
         loadAssets()
         sceneView.backgroundColor = .systemBackground
+    }
+    
+    func addGeoSpatialAnchor(latitude: Double, longitude: Double, altitude: Double)->GARAnchor? {
+        let headingAngle = (Double.pi / 180) * (180.0 - 0.0);
+        let eastUpSouthQAnchor = simd_quaternion(Float(headingAngle), simd_float3(0, 1, 0));
+        do {
+            return try! garSession?.createAnchor(coordinate: CLLocationCoordinate2D(latitude: latitude, longitude: longitude), altitude: altitude, eastUpSouthQAnchor: eastUpSouthQAnchor)
+        }
     }
     
     func addGeoSpatialAnchor(location: LocationInfoGeoSpatial)->GARAnchor? {
@@ -260,6 +270,7 @@ class ARSessionManager: NSObject, ObservableObject {
     
     private func startGARSession() {
         do {
+            //landmark = nil
             garSession = try GARSession(apiKey: garAPIKey, bundleIdentifier: nil)
             var error: NSError?
             let configuration = GARSessionConfiguration()
@@ -748,6 +759,11 @@ extension ARSessionManager: ARSessionDelegate {
             ARFrameStatusAdapter.adjustTrackingStatus(frame)
             let garFrame = try garSession?.update(frame)
             for gAnchor in garFrame?.updatedAnchors ?? [] {
+//                if gAnchor.identifier == landmark?.identifier {
+//                    landmarkNode?.simdTransform = gAnchor.transform
+//                    print("translation", gAnchor.transform.columns.3)
+//                }
+//
                 delegate?.didUpdate(garAnchor: gAnchor)
             }
             self.currentGARFrame = garFrame
@@ -767,7 +783,20 @@ extension ARSessionManager: ARSessionDelegate {
                 checkForCloudAnchorAlignment(anchors: gAnchors)
             }
             
+            
             if let geospatialTransform = self.currentGARFrame?.earth?.cameraGeospatialTransform {
+                print("accuracy \(geospatialTransform.horizontalAccuracy)")
+//                if geospatialTransform.horizontalAccuracy < 1 && landmark == nil {
+//                    // create the anchor here
+//                    landmark = addGeoSpatialAnchor(latitude: 42.293584, longitude: -71.263936, altitude: geospatialTransform.altitude)
+//                    let newNode = SCNNode(geometry: SCNBox(width: 0.25, height: 0.25, length: 0.25, chamferRadius: 0.1))
+//                    
+//                    newNode.geometry?.firstMaterial!.diffuse.contents = UIColor.green
+//                    landmarkNode = newNode
+//                    self.sceneView.scene.rootNode.addChildNode(newNode)
+//                }
+                print(geospatialTransform)
+                
                 if -lastGeospatialLogTime.timeIntervalSinceNow > 0.3 {
                     lastGeospatialLogTime = Date()
                     PathLogger.shared.logGeospatialTransform(geospatialTransform)

@@ -78,6 +78,10 @@ struct TestingAccuracyView: View {
                          .foregroundColor(Color.black.opacity(0.4))
                          .frame(maxHeight: .infinity)
                      VStack(alignment: .leading) {
+                         Text(String("Latitude: \(spatialTransform.coordinate.latitude)")).foregroundColor(Color.white)
+                             .padding(20)
+                         Text(String("Longitude: \(spatialTransform.coordinate.longitude)")).foregroundColor(Color.white)
+                             .padding(20)
                          Text(String("Overall outdoor localization is \(spatialTransform.trackingQuality)")).foregroundColor(Color.white)
                              .padding(20)
                          Text(String("Position is accurate to  \(String(format: "%.1f", spatialTransform.horizontalAccuracy)) meters"))
