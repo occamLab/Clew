@@ -35,12 +35,10 @@
 		8214120626D41477003EC2D4 /* SiriWalkThrough.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8214120426D41476003EC2D4 /* SiriWalkThrough.swift */; };
 		8214120826D497DE003EC2D4 /* SiriShortcutsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8214120726D497DE003EC2D4 /* SiriShortcutsManager.swift */; };
 		8214120926D497DE003EC2D4 /* SiriShortcutsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8214120726D497DE003EC2D4 /* SiriShortcutsManager.swift */; };
-		821C01852994317E006EBDC5 /* ARCoreCloudAnchors in Frameworks */ = {isa = PBXBuildFile; productRef = 821C01842994317E006EBDC5 /* ARCoreCloudAnchors */; };
 		821C018829943859006EBDC5 /* NSObject+ARFrameStatusAdapter.mm in Sources */ = {isa = PBXBuildFile; fileRef = 821C018729943859006EBDC5 /* NSObject+ARFrameStatusAdapter.mm */; };
 		821C018929943859006EBDC5 /* NSObject+ARFrameStatusAdapter.mm in Sources */ = {isa = PBXBuildFile; fileRef = 821C018729943859006EBDC5 /* NSObject+ARFrameStatusAdapter.mm */; };
 		821C018C2994393E006EBDC5 /* JGMethodSwizzler.m in Sources */ = {isa = PBXBuildFile; fileRef = 821C018B2994393E006EBDC5 /* JGMethodSwizzler.m */; };
 		821C018D2994393E006EBDC5 /* JGMethodSwizzler.m in Sources */ = {isa = PBXBuildFile; fileRef = 821C018B2994393E006EBDC5 /* JGMethodSwizzler.m */; };
-		821C018F2994397F006EBDC5 /* ARCoreCloudAnchors in Frameworks */ = {isa = PBXBuildFile; productRef = 821C018E2994397F006EBDC5 /* ARCoreCloudAnchors */; };
 		821C019029943997006EBDC5 /* Credentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = 828CB791298C6C220036D18A /* Credentials.swift */; };
 		821CF7842513264400A7B3C2 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 821CF7822513264400A7B3C2 /* InfoPlist.strings */; };
 		821D07332742B33100FE6297 /* VisualAlignmentManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 821D07322742B33100FE6297 /* VisualAlignmentManager.swift */; };
@@ -158,6 +156,8 @@
 		82C09674273AE50D0073EE6E /* ChooseAnchorMethodController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82C09672273AE50D0073EE6E /* ChooseAnchorMethodController.swift */; };
 		82CD6F2129968AC200C2DC8C /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 82CD6F2029968AC200C2DC8C /* opencv2.framework */; };
 		82CD6F2229968AC200C2DC8C /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 82CD6F2029968AC200C2DC8C /* opencv2.framework */; };
+		82CD6F24299690A300C2DC8C /* ARCoreCloudAnchors in Frameworks */ = {isa = PBXBuildFile; productRef = 82CD6F23299690A300C2DC8C /* ARCoreCloudAnchors */; };
+		82CD6F26299690AD00C2DC8C /* ARCoreCloudAnchors in Frameworks */ = {isa = PBXBuildFile; productRef = 82CD6F25299690AD00C2DC8C /* ARCoreCloudAnchors */; };
 		82D94B63266FC7CF00EE2C1C /* SimpleForm in Frameworks */ = {isa = PBXBuildFile; productRef = 82D94B62266FC7CF00EE2C1C /* SimpleForm */; };
 		82D94B65266FC86200EE2C1C /* SimpleForm in Frameworks */ = {isa = PBXBuildFile; productRef = 82D94B64266FC86200EE2C1C /* SimpleForm */; };
 		82DE9224271876910086F5A4 /* ARSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82DE9223271876900086F5A4 /* ARSessionManager.swift */; };
@@ -743,7 +743,7 @@
 				82BE6C812739815900387139 /* FirebaseAuth in Frameworks */,
 				82CD6F2129968AC200C2DC8C /* opencv2.framework in Frameworks */,
 				82BE6C832739815900387139 /* FirebaseDatabase in Frameworks */,
-				821C01852994317E006EBDC5 /* ARCoreCloudAnchors in Frameworks */,
+				82CD6F26299690AD00C2DC8C /* ARCoreCloudAnchors in Frameworks */,
 				82BE6C852739815900387139 /* FirebaseStorage in Frameworks */,
 				82D94B63266FC7CF00EE2C1C /* SimpleForm in Frameworks */,
 				82BE6C902739823400387139 /* VectorMath in Frameworks */,
@@ -759,7 +759,7 @@
 				82BE6C892739818A00387139 /* FirebaseAuth in Frameworks */,
 				82CD6F2229968AC200C2DC8C /* opencv2.framework in Frameworks */,
 				82BE6C8B2739819100387139 /* FirebaseDatabase in Frameworks */,
-				821C018F2994397F006EBDC5 /* ARCoreCloudAnchors in Frameworks */,
+				82CD6F24299690A300C2DC8C /* ARCoreCloudAnchors in Frameworks */,
 				82BE6C8D2739819700387139 /* FirebaseStorage in Frameworks */,
 				82D94B65266FC86200EE2C1C /* SimpleForm in Frameworks */,
 				82BE6C922739824500387139 /* VectorMath in Frameworks */,
@@ -1766,7 +1766,7 @@
 				82BE6C842739815900387139 /* FirebaseStorage */,
 				82BE6C8F2739823400387139 /* VectorMath */,
 				82BE6C942739828E00387139 /* InAppSettingsKit */,
-				821C01842994317E006EBDC5 /* ARCoreCloudAnchors */,
+				82CD6F25299690AD00C2DC8C /* ARCoreCloudAnchors */,
 			);
 			productName = Clew;
 			productReference = 4D6B00C01F33C1C400952242 /* Clew.app */;
@@ -1793,7 +1793,7 @@
 				82BE6C8C2739819700387139 /* FirebaseStorage */,
 				82BE6C912739824500387139 /* VectorMath */,
 				82BE6C96273982A100387139 /* InAppSettingsKit */,
-				821C018E2994397F006EBDC5 /* ARCoreCloudAnchors */,
+				82CD6F23299690A300C2DC8C /* ARCoreCloudAnchors */,
 			);
 			productName = Clew;
 			productReference = B7EB59EC20F693EB00FBBC6A /* Clew Dev.app */;
@@ -2610,14 +2610,6 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		821C01842994317E006EBDC5 /* ARCoreCloudAnchors */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = ARCoreCloudAnchors;
-		};
-		821C018E2994397F006EBDC5 /* ARCoreCloudAnchors */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = ARCoreCloudAnchors;
-		};
 		82BE6C7E2739815900387139 /* FirebaseAnalytics */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 82BE6C7D2739815900387139 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
@@ -2677,6 +2669,14 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 82BE6C932739828E00387139 /* XCRemoteSwiftPackageReference "InAppSettingsKit" */;
 			productName = InAppSettingsKit;
+		};
+		82CD6F23299690A300C2DC8C /* ARCoreCloudAnchors */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ARCoreCloudAnchors;
+		};
+		82CD6F25299690AD00C2DC8C /* ARCoreCloudAnchors */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ARCoreCloudAnchors;
 		};
 		82D94B62266FC7CF00EE2C1C /* SimpleForm */ = {
 			isa = XCSwiftPackageProductDependency;
