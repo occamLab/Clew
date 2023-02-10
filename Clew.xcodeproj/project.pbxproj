@@ -86,8 +86,6 @@
 		82BE6CA0273983E200387139 /* PRTweenTimingFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 82BE6C9E273983E200387139 /* PRTweenTimingFunctions.m */; };
 		82BE6CA2273984BA00387139 /* SRCountdownTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82BE6CA1273984BA00387139 /* SRCountdownTimer.swift */; };
 		82BE6CA3273984BA00387139 /* SRCountdownTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82BE6CA1273984BA00387139 /* SRCountdownTimer.swift */; };
-		82BE6CA527398B4000387139 /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 82BE6CA427398B3F00387139 /* opencv2.framework */; };
-		82BE6CA627398B4000387139 /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 82BE6CA427398B3F00387139 /* opencv2.framework */; };
 		82BE6CAA27398C1700387139 /* VisualAlignment.mm in Sources */ = {isa = PBXBuildFile; fileRef = 82BE6CA927398C1700387139 /* VisualAlignment.mm */; };
 		82BE6CAB27398C1700387139 /* VisualAlignment.mm in Sources */ = {isa = PBXBuildFile; fileRef = 82BE6CA927398C1700387139 /* VisualAlignment.mm */; };
 		82BE6CB227398E1D00387139 /* VisualAlignmentUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82BE6CB027398E1D00387139 /* VisualAlignmentUtils.cpp */; };
@@ -158,6 +156,8 @@
 		82BE71D32739982200387139 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 82BE71932739982200387139 /* README.md */; };
 		82C09673273AE50D0073EE6E /* ChooseAnchorMethodController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82C09672273AE50D0073EE6E /* ChooseAnchorMethodController.swift */; };
 		82C09674273AE50D0073EE6E /* ChooseAnchorMethodController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82C09672273AE50D0073EE6E /* ChooseAnchorMethodController.swift */; };
+		82CD6F2129968AC200C2DC8C /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 82CD6F2029968AC200C2DC8C /* opencv2.framework */; };
+		82CD6F2229968AC200C2DC8C /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 82CD6F2029968AC200C2DC8C /* opencv2.framework */; };
 		82D94B63266FC7CF00EE2C1C /* SimpleForm in Frameworks */ = {isa = PBXBuildFile; productRef = 82D94B62266FC7CF00EE2C1C /* SimpleForm */; };
 		82D94B65266FC86200EE2C1C /* SimpleForm in Frameworks */ = {isa = PBXBuildFile; productRef = 82D94B64266FC86200EE2C1C /* SimpleForm */; };
 		82DE9224271876910086F5A4 /* ARSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82DE9223271876900086F5A4 /* ARSessionManager.swift */; };
@@ -321,7 +321,7 @@
 		827EDC3326CDA72200AAA12A /* SoundEffectManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundEffectManager.swift; sourceTree = "<group>"; };
 		828CB78D298C652D0036D18A /* ARCorePackage */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = ARCorePackage; path = ExternalDependencies/ARCorePackage; sourceTree = "<group>"; };
 		828CB78E298C67910036D18A /* ARCorePackage */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = ARCorePackage; path = ExternalDependencies/ARCorePackage; sourceTree = "<group>"; };
-		828CB791298C6C220036D18A /* Credentials.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Credentials.swift; sourceTree = "<group>"; };
+		828CB791298C6C220036D18A /* Credentials.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Credentials.swift; path = ../../FirebasePlists/Clew/Credentials.swift; sourceTree = "<group>"; };
 		828CB7932992F3AA0036D18A /* AlignmentFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlignmentFilter.swift; sourceTree = "<group>"; };
 		828CB796299430AC0036D18A /* ARCorePackage */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = ARCorePackage; path = ExternalDependencies/ARCorePackage; sourceTree = "<group>"; };
 		828CB797299430D20036D18A /* ARCorePackage */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = ARCorePackage; path = ExternalDependencies/ARCorePackage; sourceTree = "<group>"; };
@@ -336,7 +336,6 @@
 		82BE6C9B273983C900387139 /* PRTween.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PRTween.m; sourceTree = "<group>"; };
 		82BE6C9E273983E200387139 /* PRTweenTimingFunctions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PRTweenTimingFunctions.m; sourceTree = "<group>"; };
 		82BE6CA1273984BA00387139 /* SRCountdownTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SRCountdownTimer.swift; sourceTree = "<group>"; };
-		82BE6CA427398B3F00387139 /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = opencv2.framework; sourceTree = "<group>"; };
 		82BE6CA827398BED00387139 /* VisualAlignment.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VisualAlignment.h; sourceTree = "<group>"; };
 		82BE6CA927398C1700387139 /* VisualAlignment.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = VisualAlignment.mm; sourceTree = "<group>"; };
 		82BE6CB027398E1D00387139 /* VisualAlignmentUtils.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = VisualAlignmentUtils.cpp; sourceTree = "<group>"; };
@@ -670,6 +669,7 @@
 		82BE71922739982200387139 /* KLUSupport */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = KLUSupport; sourceTree = "<group>"; };
 		82BE71932739982200387139 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		82C09672273AE50D0073EE6E /* ChooseAnchorMethodController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseAnchorMethodController.swift; sourceTree = "<group>"; };
+		82CD6F2029968AC200C2DC8C /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = opencv2.framework; sourceTree = "<group>"; };
 		82DDE1EE26F38D1300C58FA4 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/BurgerMenu.strings; sourceTree = "<group>"; };
 		82DDE1F026F38D4000C58FA4 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/BurgerMenu.strings; sourceTree = "<group>"; };
 		82DDE1F226F38F6F00C58FA4 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/SettingsAndHelp.strings; sourceTree = "<group>"; };
@@ -740,8 +740,8 @@
 			files = (
 				82BE6C952739828E00387139 /* InAppSettingsKit in Frameworks */,
 				82BE6C7F2739815900387139 /* FirebaseAnalytics in Frameworks */,
-				82BE6CA527398B4000387139 /* opencv2.framework in Frameworks */,
 				82BE6C812739815900387139 /* FirebaseAuth in Frameworks */,
+				82CD6F2129968AC200C2DC8C /* opencv2.framework in Frameworks */,
 				82BE6C832739815900387139 /* FirebaseDatabase in Frameworks */,
 				821C01852994317E006EBDC5 /* ARCoreCloudAnchors in Frameworks */,
 				82BE6C852739815900387139 /* FirebaseStorage in Frameworks */,
@@ -756,8 +756,8 @@
 			files = (
 				82BE6C97273982A100387139 /* InAppSettingsKit in Frameworks */,
 				82BE6C872739817D00387139 /* FirebaseAnalytics in Frameworks */,
-				82BE6CA627398B4000387139 /* opencv2.framework in Frameworks */,
 				82BE6C892739818A00387139 /* FirebaseAuth in Frameworks */,
+				82CD6F2229968AC200C2DC8C /* opencv2.framework in Frameworks */,
 				82BE6C8B2739819100387139 /* FirebaseDatabase in Frameworks */,
 				821C018F2994397F006EBDC5 /* ARCoreCloudAnchors in Frameworks */,
 				82BE6C8D2739819700387139 /* FirebaseStorage in Frameworks */,
@@ -1573,8 +1573,8 @@
 			isa = PBXGroup;
 			children = (
 				82BE701C2739982100387139 /* eigen */,
-				82BE6CA427398B3F00387139 /* opencv2.framework */,
 				E5E9015322FB4CEB00AD0E95 /* QuickLook.framework */,
+				82CD6F2029968AC200C2DC8C /* opencv2.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
