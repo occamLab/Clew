@@ -2771,26 +2771,12 @@ extension ViewController: ARSessionManagerDelegate {
             continuationAfterSessionIsReady = nil
             continuation()
         }
-        if ARSessionManager.shared.initialWorldMap != nil, attemptingRelocalization {
-            attemptingRelocalization = false
-        } else if oldTrackingSessionErrorState != nil {
+        if oldTrackingSessionErrorState != nil {
             if trackingWarningsAllowed {
                 AnnouncementManager.shared.announce(announcement: NSLocalizedString("fixedTrackingAnnouncement", comment: "Let user know that the ARKit tracking session has returned to its normal quality (this is played after the tracking has been restored from thir being insuficent visual features or excessive motion which degrade the tracking)"))
                 if soundFeedback {
                     SoundEffectManager.shared.playSystemSound(id: 1025)
                 }
-            }
-        }
-        if state.isInReadyForFinalResumeAlignment || state.isInTimerCountdown || state.isTryingToAlign {
-            // this will cancel any realignment if it hasn't happened yet and go straight to route navigation mode
-            rootContainerView.countdownTimer.isHidden = true
-            isResumedRoute = true
-            
-            isAutomaticAlignment = true
-            
-            ///PATHPOINT: Auto Alignment -> resume route
-            if !isTutorial, ARSessionManager.shared.initialWorldMap != nil {
-                state = .readyToNavigateOrPause(allowPause: false)
             }
         }
     }
