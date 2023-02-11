@@ -26,6 +26,7 @@ import VectorMath
 import Firebase
 import SwiftUI
 import CoreHaptics
+import CoreLocation
 
 /// A custom enumeration type that describes the exact state of the app.  The state is not exhaustive (e.g., there are Boolean flags that also track app state).
 enum AppState {
@@ -61,7 +62,7 @@ enum AppState {
     case mappingLocalEnvironment
     /// the user is attempting to name the route they're in the process of saving
     case startingNameSavedRouteProcedure(worldMap: ARWorldMap?)
-    
+//    case getLocation
     /// rawValue is useful for serializing state values, which we are currently using for our logging feature
     var rawValue: String {
         switch self {
@@ -97,6 +98,8 @@ enum AppState {
             return "startingNameSavedRouteProcedure"
         case .finishedTutorialRoute:
             return "finishedTutorialRoute"
+//        case .getLocation:
+//            return "getLocation"
         }
     }
     
@@ -200,6 +203,12 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
                 break
             case .finishedTutorialRoute(let announceArrival):
                 handleStateTransitionToFinishedTutorialRoute(announceArrival: announceArrival)
+//            case .getLocation:
+//                let textLabel = UILabel(frame: CGRect(x: 20, y: 20, width: 100, height: 20))
+//                textLabel.font = UIFont.systemFont(ofSize: 20)
+//                textLabel.textColor = UIColor.green
+//                textLabel.textAlignment = .center
+//                self.view.addSubview(textLabel)
             }
         }
     }
@@ -395,6 +404,11 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
         isVisualAlignment = navigateStartToEnd ? route.beginRouteAnchorPoint.imageFileName != nil : route.endRouteAnchorPoint.imageFileName != nil
         
         // load the world map and restart the session so that things have a chance to quiet down before putting it up to the wall
+        
+//        var showLocation = true
+//        if showLocation == true {
+//            locationManager(CLLocationManager, didUpdateLocations: [CLLocation])
+//        }
         var isTrackingPerformanceNormal = false
         if case .normal? = ARSessionManager.shared.currentFrame?.camera.trackingState {
             isTrackingPerformanceNormal = true
@@ -846,6 +860,12 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
         nameSavedRouteController = NameSavedRouteController()
         ARSessionManager.shared.delegate = self
         
+        // Location
+        let locationManager = CLLocationManager()
+        locationManager.delegate = self
+        locationManager.requestWhenInUseAuthorization()
+        
+        locationManager.startUpdatingLocation()
         // Add the scene to the view, which is a RootContainerView
         ARSessionManager.shared.sceneView.frame = view.frame
         view.addSubview(ARSessionManager.shared.sceneView)
@@ -2833,5 +2853,21 @@ extension ViewController: VisualAlignmentManagerDelegate {
         SoundEffectManager.shared.meh()
         isResumedRoute = true
         state = .readyToNavigateOrPause(allowPause: false)
+    }
+}
+
+extension ViewController: CLLocationManagerDelegate {
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        let currentLocation = locations.last!
+        let latitude = currentLocation.coordinate.latitude
+        let longitude = currentLocation.coordinate.longitude
+        let textLabel = UILabel(frame: CGRect(x: 20, y: 20, width: 100, height: 20))
+        textLabel.font = UIFont.systemFont(ofSize: 20)
+        textLabel.textColor = UIColor.green
+        textLabel.textAlignment = .center
+        textLabel.text = "Latitude: \(latitude)\nLongitude: \(longitude)"
+        // self.view.addSubview(textLabel)
+        self.view.addSubview(textLabel)
+//locationLabel.text = "Latitude: \(latitude)\nLongitude: \(longitude)"
     }
 }
