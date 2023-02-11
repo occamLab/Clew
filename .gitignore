@@ -54,5 +54,10 @@ opencv2.framework/*
 !*.xcworkspace/contents.xcworkspacedata
 /*.gcno
 
-# End of https://www.gitignore.io/api/swift,xcode,cocoapods
+*.xcodeproj/*
+!*.xcodeproj/project.pbxproj
+!*.xcodeproj/xcshareddata/
+!*.xcworkspace/contents.xcworkspacedata
+/*.gcno
 
+# End of https://www.gitignore.io/api/swift,xcode,cocoapods
