@@ -59,6 +59,7 @@
 "startReturnNavigationButtonAccessibilityLabel" = "Start navigation";
 "optionsButtonAccessibilityLabel" = "Options";
 "signInwithAppleButtonAccessibilityLabel" = "Sign In";
+"busStopButtonText" = "Navigate to Bus Stop";
 
     // Save routes
 "saveRoutePop-UpTitle" = "Save route";

@@ -19,6 +19,9 @@ class RecordPathController: UIViewController {
 
     /// button for accessing saved routes
     var routesButton: UIButton!
+    
+    /// button for going into bus sotp mode
+    var busStopButton: UIButton!
 
     /// called when view appears (any time)
     override func viewDidAppear(_ animated: Bool) {
@@ -27,6 +30,7 @@ class RecordPathController: UIViewController {
         addAnchorPointButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .largeTitle)
         routesButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .largeTitle)
         recordPathButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .largeTitle)
+        busStopButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .largeTitle)
     }
     
     /// called when the view has loaded.  We setup various app elements in here.
@@ -74,6 +78,18 @@ class RecordPathController: UIViewController {
         routesButton.addLargeTitle(NSLocalizedString("savedRoutesListButtonText", comment: "This is the text which appears on the Saved routes List buttton"))
         routesButton.accessibilityLabel = NSLocalizedString("savedRoutesListButtonAccessibilityLabel", comment: "The accessibility tag for a button which opens a menu which displays all the saved routes created by the user.")
         
+        /// Creating a button that can be used to navigate to a bus stop
+        busStopButton = UIButton(type: .custom)
+        busStopButton.layer.cornerRadius = 0.75 * routesButton.bounds.size.width
+        busStopButton.clipsToBounds = true
+        busStopButton.translatesAutoresizingMaskIntoConstraints = false
+        busStopButton.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 1.1).isActive = true
+        busStopButton.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.height / 5).isActive = true
+        busStopButton.setBackgroundImage(UIImage(named: "WhiteButtonBackground"), for: .normal)
+        busStopButton.imageView?.contentMode = .scaleAspectFit
+        busStopButton.addLargeTitle(NSLocalizedString("busStopButtonText", comment: "This is the text which appears on the bust stop buttton"))
+//        busStopButton.accessibilityLabel = NSLocalizedString("savedRoutesListButtonAccessibilityLabel", comment: "The accessibility tag for a button which opens a menu which displays all the saved routes created by the user.")
+        
         /// create stack view for aligning and distributing bottom layer buttons
         let stackView   = UIStackView()
         view.addSubview(stackView)
@@ -89,6 +105,7 @@ class RecordPathController: UIViewController {
         stackView.addArrangedSubview(recordPathButton)
         stackView.addArrangedSubview(addAnchorPointButton)
         stackView.addArrangedSubview(routesButton)
+        stackView.addArrangedSubview(busStopButton)
 
         
         /// size the stack
@@ -108,6 +125,7 @@ class RecordPathController: UIViewController {
             recordPathButton.addTarget(parent,
                                           action: #selector(ViewController.startCreateAnchorPointProcedure),
                                           for: .touchUpInside)
+            busStopButton.addTarget(parent, action: #selector(ViewController.findBusStop), for: .touchUpInside)
         }
     }
 }

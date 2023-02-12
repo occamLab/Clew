@@ -1795,6 +1795,21 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
         }
     }
     
+    /// handles the suer pressing the bus stop button
+    /// based on recordPath()
+    /// TODO fix and get working STEP
+    @objc func findBusStop() {
+        isAutomaticAlignment = false
+        recordingSingleUseRoute = false
+        paused = false
+        
+        hideAllViewsHelper()
+        
+        ARSessionManager.shared.initialWorldMap = nil
+        trackingSessionErrorState = nil
+        ARSessionManager.shared.startSession()
+    }
+    
     /// handles the user pressing the record path button.
     @objc func recordPath() {
         ///PATHPOINT record two way path button -> create Anchor Point
@@ -2871,3 +2886,16 @@ extension ViewController: CLLocationManagerDelegate {
 //locationLabel.text = "Latitude: \(latitude)\nLongitude: \(longitude)"
     }
 }
+
+//func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+//    let currentLocation = locations.last!
+//    let latitude = currentLocation.coordinate.latitude
+//    let longitude = currentLocation.coordinate.longitude
+//    let textLabel = UILabel(frame: CGRect(x: 20, y: 20, width: 100, height: 20))
+//    textLabel.font = UIFont.systemFont(ofSize: 20)
+//    textLabel.textColor = UIColor.green
+//    textLabel.textAlignment = .center
+//    textLabel.text = "Latitude: \(latitude)\nLongitude: \(longitude)"
+//    // self.view.addSubview(textLabel)
+////    View.view.addSubview(textLabel)
+//}
