@@ -1135,11 +1135,11 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
     }
     
     func sessionDidRelocalize() {
-      if trackingWarningsAllowed {
-          AnnouncementManager.shared.announce(announcement: NSLocalizedString("realignToSavedRouteAnnouncement", comment: "An announcement which lets the user know that their surroundings have been matched to a saved route"))
-          // TODO: we need to have these announcements logged with the Announcement Manager
-          PathLogger.shared.logSpeech(utterance: NSLocalizedString("realignToSavedRouteAnnouncement", comment: "An announcement which lets the user know that their surroundings have been matched to a saved route"))
-      }
+        if trackingWarningsAllowed {
+            AnnouncementManager.shared.announce(announcement: NSLocalizedString("realignToSavedRouteAnnouncement", comment: "An announcement which lets the user know that their surroundings have been matched to a saved route"))
+            // TODO: we need to have these announcements logged with the Announcement Manager
+            PathLogger.shared.logSpeech(utterance: NSLocalizedString("realignToSavedRouteAnnouncement", comment: "An announcement which lets the user know that their surroundings have been matched to a saved route"))
+        }
         var shouldSkipPastAlignment = false
         if case .startingResumeProcedure(_, _, _) = state {
             shouldSkipPastAlignment = true
@@ -2773,25 +2773,6 @@ extension ViewController: ARSessionManagerDelegate {
     
     func sessionRelocalizing() {
         trackingSessionErrorState = nil
-    }
-    
-    func sessionDidRelocalize() {
-        if trackingWarningsAllowed {
-           announce(announcement: NSLocalizedString("realignToSavedRouteAnnouncement", comment: "An announcement which lets the user know that their surroundings have been matched to a saved route"))
-        }
-        attemptingRelocalization = false
-        if case .readyForFinalResumeAlignment = state {
-            // this will cancel any realignment if it hasn't happened yet and go straight to route navigation mode
-            rootContainerView.countdownTimer.isHidden = true
-            isResumedRoute = true
-            
-            isAutomaticAlignment = true
-            
-            ///PATHPOINT: Auto Alignment -> resume route
-            if !isTutorial, ARSessionManager.shared.initialWorldMap != nil {
-                state = .readyToNavigateOrPause(allowPause: false)
-            }
-        }
     }
     
     func trackingIsNormal() {

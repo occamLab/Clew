@@ -39,7 +39,6 @@ protocol ARSessionManagerDelegate {
     func getKeypointColor()->Int
     func getShowPath()->Bool
     func newFrameAvailable()
-    func sessionDidRelocalize()
     func didHostCloudAnchor(cloudIdentifier: String, anchorIdentifier: String, withTransform transform : simd_float4x4)
 }
 
@@ -54,7 +53,7 @@ class ARSessionManager: NSObject {
     }
     var localization: LocalizationState = .none
     let alignmentFilter = AlignmentFilter()
-    var sessionWasRelocalizing = false
+
     // TODO: we can probably get rid of these and use the cloudIdentifier as our key
     private var sessionCloudAnchors: [UUID: ARAnchor] = [:]
     
@@ -524,15 +523,6 @@ class ARSessionManager: NSObject {
         let speakerAsset = MDLAsset(url: speakerUrl as URL)
         speakerObject = speakerAsset.object(at: 0)
     }
-    
-    /// Remove crumb anchors from the world map (this is useful when we can use auto coordinate system alignment)
-    /// - Parameter route: the route that corresponds with the anchors stored in the world map
-    func stripCrumbAnchorsFromInitialWorldMap(route: SavedRoute) {
-         let allCrumbAnchors = Set(route.crumbs.map({$0.identifier}))
-         if let mapAnchors = configuration.initialWorldMap?.anchors {
-             configuration.initialWorldMap?.anchors = mapAnchors.filter({!allCrumbAnchors.contains($0.identifier)})
-         }
-     }
 }
 
 class ARData: ObservableObject {
