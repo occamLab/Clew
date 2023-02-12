@@ -15,6 +15,29 @@ import SceneKit
 //FirebaseApp.configure()
 //Analytics.
 
+enum AlignmentEvent {
+    case physicalAlignment(transform: simd_float4x4, isTutorial: Bool)
+    case successfulVisualAlignmentTrial(transform: simd_float4x4, nInliers: Int, nMatches: Int, yaw: Float, isTutorial: Bool)
+    case unsuccessfulVisualAlignmentTrial(transform: simd_float4x4, nInliers: Int, nMatches: Int, isTutorial: Bool)
+    case finalVisualAlignmentSucceeded(transform: simd_float4x4, isTutorial: Bool)
+    case finalVisualAlignmentFailed(transform: simd_float4x4, isTutorial: Bool)
+    
+    var toJSONDict : [String:Any] {
+        switch self {
+        case .physicalAlignment(let transform, let isTutorial):
+            return ["type": "physicalAlignment", "cameraTransformRowMajor": transform.toRowMajorOrder(), "isTutorial": isTutorial]
+        case .successfulVisualAlignmentTrial(let transform, let nInliers, let nMatches, let yaw, let isTutorial):
+            return ["type": "successfulVisualAlignmentTrial", "yaw": yaw, "nInliers": nInliers, "nMatches": nMatches, "cameraTransformRowMajor": transform.toRowMajorOrder(), "isTutorial": isTutorial]
+        case .unsuccessfulVisualAlignmentTrial(let transform, let nInliers, let nMatches, let isTutorial):
+            return ["type": "unsuccessfulVisualAlignmentTrial", "nInliers": nInliers, "cameraTransformRowMajor": transform.toRowMajorOrder(), "nMatches": nMatches, "isTutorial": isTutorial]
+        case .finalVisualAlignmentSucceeded(let transform, let isTutorial):
+            return ["type": "finalVisualAlignmentSucceeded", "relativeTransformRowMajor": transform.toRowMajorOrder(), "isTutorial": isTutorial]
+        case .finalVisualAlignmentFailed(let transform, let isTutorial):
+            return ["type": "finalVisualAlignmentFailed", "relativeTransformRowMajor": transform.toRowMajorOrder(), "isTutorial": isTutorial]
+        }
+    }
+}
+
 /// A class to handle logging app usage data
 class PathLogger {
     public static var shared = PathLogger()
@@ -26,6 +49,10 @@ class PathLogger {
     var alignmentData: LinkedList<[Float]> = []
     /// time stamps for pathData
     var alignmentDataTime: LinkedList<Double> = []
+    /// alignment events
+    var alignmentEvents: [AlignmentEvent] = []
+    /// alignment event times
+    var alignmentEventTimes: [Double] = []
     /// path data taken during RECORDPATH - [[1x16 transform matrix, navigation offset, use navigation offset]]
     var pathData: LinkedList<[Float]> = []
     /// time stamps for pathData
@@ -102,6 +129,11 @@ class PathLogger {
         speechDataTime.append(-dataTimer.timeIntervalSinceNow)
     }
     
+    func logAlignmentEvent(alignmentEvent: AlignmentEvent) {
+        alignmentEventTimes.append(-stateTransitionLogTimer.timeIntervalSinceNow)
+        alignmentEvents.append(alignmentEvent)
+    }
+    
     /// Log a tracking error from the app.
     ///
     /// - Parameters:
@@ -147,7 +179,7 @@ class PathLogger {
     func logKeypoints(keypoints: [KeypointInfo]) {
         keypointData = []
         for keypoint in keypoints {
-            let data = [keypoint.location.x, keypoint.location.y, keypoint.location.z, keypoint.location.yaw]
+            let data: [Any] = [keypoint.location.x, keypoint.location.y, keypoint.location.z, keypoint.location.yaw, keypoint.location.identifier.uuidString]
             keypointData.append(data)
         }
     }
@@ -206,6 +238,8 @@ class PathLogger {
         
         alignmentData = []
         alignmentDataTime = []
+        alignmentEvents = []
+        alignmentEventTimes = []
         
         eventData = []
         eventDataTime = []
@@ -278,7 +312,12 @@ class PathLogger {
                                     "eventData": Array(eventData),
                                     "eventDataTime": Array(eventDataTime)]
         do {
-            let jsonData = try JSONSerialization.data(withJSONObject: body, options: .prettyPrinted)
+            let jsonData: Data
+            if JSONSerialization.isValidJSONObject(body) {
+                jsonData = try JSONSerialization.data(withJSONObject: body, options: .prettyPrinted)
+            } else {
+                jsonData = try JSONSerialization.data(withJSONObject: ["logstatus": "invalid"], options: .prettyPrinted)
+            }
             // here "jsonData" is the dictionary encoded in JSON data
             let storageRef = storageBaseRef.child("logs").child(userId).child(pathID + "_metadata.json")
             let fileType = StorageMetadata()
@@ -313,13 +352,20 @@ class PathLogger {
                                     "pathDataTime": Array(pathDataTime),
                                     "AlignmentData": Array(alignmentData),
                                     "AlignmentDataTime": Array(alignmentDataTime),
+                                    "alignmentEvents": alignmentEvents.map({$0.toJSONDict}),
+                                    "alignmentEventTimes": alignmentEventTimes,
                                     "navigationData": Array(navigationData),
                                     "navigationDataTime": Array(navigationDataTime),
                                     "speechData": Array(speechData),
                                     "speechDataTime": Array(speechDataTime)]
         
         do {
-            let jsonData = try JSONSerialization.data(withJSONObject: body, options: .prettyPrinted)
+            let jsonData: Data
+            if JSONSerialization.isValidJSONObject(body) {
+                jsonData = try JSONSerialization.data(withJSONObject: body, options: .prettyPrinted)
+            } else {
+                jsonData = try JSONSerialization.data(withJSONObject: ["logstatus": "invalid"], options: .prettyPrinted)
+            }
             // here "jsonData" is the dictionary encoded as a JSON
             let storageRef = storageBaseRef.child("logs").child(userId).child(pathID + "_pathdata.json")
             let fileType = StorageMetadata()

@@ -120,11 +120,18 @@
 
 "singleUseRouteAnchorPointText" = "To be able to resume your tracking at a later point you need to record an anchor point for the end of your route. An anchor point records the position and alignment of your device so the app can reload your route from a temporary file. As a result the accuracy of your return navigation relies entirely on how accurately you can realign and position your phone with your saved anchor point at a later point. We suggest using the text and voice note buttons to record a text note and/or a voice recording which can help you realign your device to the anchor point you recorded at a later time.\nTo create an anchor point, hold your device flat with the screen facing up. Press the top (short) edge flush against a flat vertical surface (such as a wall) the \”align\” button starts a %lu-second countdown. The countdown is intended to give you time to position your device; the anchor point will be saved at the end of the countdown.";
 
-"multipleUseRouteStartAnchorPointText" = "To allow your route to be navigated at a later point you need to record an anchor point for the start of your route. An anchor point records the position and alignment of your device so the app can reload your route from a saved file. As a result the accuracy of your saved route navigation relies entirely on how accurately you can realign and position your phone with your saved anchor point at a later point. We suggest using the text and voice note buttons to record a text note and/or a voice recording which can help you realign your device to the anchor point you recorded at a later time.\nTo create an anchor point, hold your device flat with the screen facing up. Press the top (short) edge flush against a flat vertical surface (such as a wall) the \”align\” button starts a %lu-second countdown. The countdown is intended to give you time to position your device; the anchor point will be saved at the end of the countdown.";
+"physicalAnchorPointInstructions" = "To create a physical anchor point, hold your device flat with the screen facing up. Press the top (short) edge flush against a flat vertical surface (such as a wall) the \”align\” button starts a %lu-second countdown. The countdown is intended to give you time to position your device; the anchor point will be saved at the end of the countdown.";
 
-"multipleUseRouteEndAnchorPointText" = "To allow your route to be navigated in the reverse direction you need to record an anchor point for the end of your route. An anchor point records the position and alignment of your device so the app can reload your route from a saved file. As a result the accuracy of your saved route navigation relies entirely on how accurately you can realign and position your phone with your saved anchor point at a later point. We suggest using the text and voice note buttons to record a text note and/or a voice recording which can help you realign your device to the anchor point you recorded at a later time.\nTo create an anchor point, hold your device flat with the screen facing up. Press the top (short) edge flush against a flat vertical surface (such as a wall) the \”align\” button starts a %lu-second countdown. The countdown is intended to give you time to position your device; the anchor point will be saved at the end of the countdown.";
+"visualAnchorPointInstructions" = "To create a visual anchor point, hold your phone vertically with the rear camera facing in the direction that the route would be navigated starting from your current position. The \”align\” button starts a %lu-second countdown. The countdown is intended to give you time to position your phone; the anchor point will be saved at the end of the countdown.";
+
+
+"voiceNoteSuggestions" = "We suggest using the text and voice note buttons to record a text note and/or a voice recording which can help you realign your device to the anchor point you recorded at a later time.";
 
 "anchorPointAlignmentText" = "Please align your device with your previously recorded anchor point. To do this hold your device flat with the screen pointing up. Press the top (short) edge flush with the same vertical surface that you used to create the anchor point. Activating the align button will start an alignment countdown this is intended to give you time to make final adjustments to the positioning of your device. At the end of the countdown the alignment will be taken and the device will provide an announcement indicating that the anchor point was saved.";
+
+
+"visualAnchorPointAlignmentText" = "Stand at the location of your anchor point. Next, hold your phone vertically with the rear camera pointing in the same direction as it was when you set the anchor point.\n\nThe align button will start the alignment process. The app will play a success chime if alignment is working well or provide you with additional instructions if alignment is going poorly.";
+
 "anchorPointIntroductionToSavedText" = "The Anchor Point information you entered is: ";
 
 //Settings
@@ -402,14 +409,25 @@
 "anchorPointsTutorialText" = "Setting anchor points is an important skill that is needed in order to save routes or pause navigation. Anchor points allow Clew to record your position and orientation within the route's environment. The anchor point realigns you to the correct path whenever you want to navigate a route that has been saved for later use and they are essential to Clew's navigation accuracy.";
 
 "settingAnAnchorPointTutorialTitle" = "Setting an Anchor Point";
+"settingAVisualAnchorPointTutorialTitle" = "Setting a Visual Anchor Point";
+"settingAPhysicalAnchorPointTutorialTitle" = "Setting a Physical Anchor Point";
+
 "settingAnAnchorPointTutorialText" = "Anchor points are created at the beginning and at the end of a route. We recommend setting the anchor point at a location that is easy to remember and find at a later time. A good anchor point could be set at a wall, a doorframe, or a piece of furniture like a table.";
 
 "textOrVoiceNotesTutorialTitle" = "Text or Voice Notes";
 "textOrVoiceNotesTutorialText" = "Clew allows you to record a text or voice note to describe the location of your anchor point. This can be especially helpful when you want to find and realign yourself to the saved anchor point at a later time.";
 
-"physicalAlignmentTutorialTitle" = "Physical Alignment";
-"physicalAlignmentTutorialTextParagraph1" = "Physical alignment sets the anchor point using the phone's inertial sensors. This method requires you to hold the phone in the horizontal or flat pose with the screen facing up, and press the top (short edge) of the phone against a vertical edge, like against a wall, a doorframe or a table.";
+"alignmentTypesTitle" = "Types of Anchor Points";
+"alignmentTypesParagraph" = "There are two different types of anchor points you can create. Use whichever one works best for you.  Over time you will get a feel for the conditions under which to use one over the other.";
+
+"visualAlignmentTutorialTitle" = "Visual Anchor Point";
+"physicalAlignmentTutorialTitle" = "Physical Anchor Point";
+"physicalAlignmentTutorialTextParagraph1" = "You set a physical anchor point using the phone's inertial sensors. This method requires you to hold the phone in the horizontal or flat pose with the screen facing up, and press the top (short edge) of the phone against a vertical edge, like against a wall, a doorframe or a table.";
 "physicalAlignmentTutorialTextParagraph2" = "Press the align button and wait for the countdown. The anchor point will be saved at the end of the countdown.";
+
+
+"visualAlignmentTutorialTextParagraph1" = "You set a visual anchor point using imagery from your phone's rear-facing camera (to ensure your privacy, this imagery will never leave your device). This method requires you to hold your phone with the rear camera facing in the direction of travel of the route that you are about to record.  Visual anchor points are generally the easier method to use, but in situations where the lighting of the environment may change dramatically from recording to navigation time, physical anchor points may be more robust.";
+
 
 "findingAnAnchorPointTutorialTitle" = "Finding an Anchor Point";
 "findingAnAnchorPointTutorialTextParagraph1" = "The accuracy of the navigation will depend on how well you can realign yourself to the saved anchor point. To find and realign yourself to a saved anchor point, you should try to position yourself as closely as possible to the exact location of the originally saved anchor point.";
@@ -419,7 +437,6 @@
 "applesARWorldMapTutorialTitle" = "Apple's ARWorld Map";
 "applesARWorldMapTutorialTextParagraph1" = "Apple's ARWorld map can help make the process of finding and aligning to a saved anchor point easier. Especially for those that have newer iPhone models and for environments with consistent, artificial lighting, the physical alignment can simply be achieved by holding the phone in the vertical pose. However, we recommend that you be consistent in holding the phone pose and relocalizing yourself as best as possible to the originally saved anchor point in order to ensure the best accuracy from Clew.";
 
-"applesARWorldMapTutorialTextParagraph2" = "Next you will have a chance to practice setting and aligning to anchor points.  Tap the 'Practice' button to start the exercise.";
 
 // The tips page is currently deprecated
 //"anchorPointsTutorialTipsTitle" = "Anchor Point Tips";
@@ -431,14 +448,18 @@
 
 
 "anchorPointPracticeSetTutorialTitle" = "Setting an Anchor Point";
+"visualAnchorPointPracticeSetTutorialTitle" = "Setting a Visual Anchor Point";
+"physicalAnchorPointPracticeSetTutorialTitle" = "Setting a Physical Anchor Point";
+
 "setAnchorPointButtonText" = "Set Anchor Point";
 "alignToAnchorPointButtonText" = "Find and Align to Anchor Point";
 
 "anchorPointPracticeSetTutorialTextParagraph1" = "This exercise will have you practice setting an anchor point. Remember to choose a location for your anchor point that you can easily find at some later time. You'll practice setting the anchor point using the physical alignment method. Remember to position your phone flat with the screen facing up against a vertical edge of a wall, or doorframe or a table.";
 
-"anchorPointPracticeSetTutorialTextParagraph2" = "Press the Set Anchor Point button, position your phone, and wait for the countdown.";
+"visualAnchorPointPracticeSetTutorialTextParagraph1" = "This exercise will have you practice setting an anchor point. Remember to choose a location for your anchor point that you can easily find at some later time (e.g., you might use a doorway as the anchor location). You'll practice setting the anchor point using the visual alignment method.  You will need to hold your phone vertically with the rear camera pointing along the direction of travel of the route.";
 
-"anchorPointPracticeAlignTitle" = "Align to Anchor Point";
+
+"anchorPointPracticeSetTutorialTextParagraph2" = "Press the Set Anchor Point button, position your phone, and wait for the countdown.";
 
 "findingSavedAnchorPointTitle" = "Finding the Saved Anchor Point";
 "findingSavedAnchorPointTextParagraph1" = "This exercise will have you practice finding and realigning yourself to a saved anchor point. After some time, try returning to the same location of your anchor point. Next realign your phone to the same position.";
@@ -447,9 +468,19 @@
 
 "findingSavedAnchorPointTextParagraph3" = "Press the Find Anchor Point button. Wait for the countdown to complete. The app will provide feedback about how closely aligned you were to the saved anchor point.";
 
+"findingSavedVisualAnchorPointTitle" = "Finding the Saved Visual Anchor Point";
+"findingSavedVisualAnchorPointTextParagraph1" = "This exercise will have you practice finding and realigning yourself to a saved anchor point. Return to the location of your anchor point. You should position yourself as close as possible to the location where you set the anchor point. While the app is able to align the orientation of your phone to the saved route, it cannot automatically align your position (you can accomplish this by standing in the appropriate location).";
+
+"findingSavedVisualAnchorPointTextParagraph2" = "Hold your phone vertically, with the rear camera pointing in roughly the same direction as it was when you set the anchor point.";
+
+"findingSavedVisualAnchorPointTextParagraph3" = "Press the Find Anchor Point button. The app will play a success chime if alignment is working well.  If alignment is not working well, follow the instructions to adjust the tilt of your phone or to rotate it slowly from side to side. The app will provide feedback about how closely aligned you were to the saved anchor point.";
+
+
 "anchorPointPracticeAlignTextParagraph1" = "Nice Job! You've set an anchor point!";
 
 "anchorPointPracticeAlignTextParagraph2" = "Now that you've saved an anchor point, try walking away from it- or wait a few minutes to return to the next exercise.";
+
+"visualAnchorPointPracticeAlignTextParagraph2" = "Now that you've saved an anchor point, try walking away from it and returning to the anchor point location on your own (without guidance from the app). Do not lock your phone or put the app into the background.";
 
 "alignToAnchorPointButtonText" = "Find Anchor Point";
 
@@ -584,3 +615,49 @@
 "moduleNotCompleted" = "Module Not Completed";
 
 "offThePathAnnouncement" = "If you are having trouble following the route, press the \"get directions\" button.";
+
+"noVisualMatchesNavigationNavigationIsUnlikelyToWorkWell" = "Alignment was unsuccessful. Navigation performance will likely be poor.";
+
+"yawAlignedWellPositionWasBad" = "Visual matching worked well, but the position of the phone moved significantly";
+
+"practiceVisualAlignmentTitle" = "Practice Visual Anchoring";
+"practicePhysicalAlignmentTitle" = "Practice Physical Anchoring";
+"visualAlignmentConfirmation" = "Starting Visual Alignment";
+"alignmentImageNotVertical" = "The alignment image was not captured with your phone in a vertical position.  Results may be unpredictable.";
+// TODO: make localization easier by sharing with end anchor and pause anchor
+"chooseAlignmentMethodStartAnchor" = "To be able to load your route later, you need to record an anchor point to mark the start of your route. An anchor point records the position and alignment of your device so the app can reload your route. As a result the accuracy of your navigation will depend on how accurately you can return to your saved anchor point at a later point.\n
+There are two types of anchor points: visual and physical.  You can practice them in the Clew tutorial.";
+"chooseAlignmentMethodEndAnchor" = "To be able to load your route later, you need to record an anchor point to mark the end of your route. An anchor point records the position and alignment of your device so the app can reload your route. As a result the accuracy of your navigation will depend on how accurately you can return to your saved anchor point at a later point.\n
+There are two types of anchor points: visual and physical.  You can practice them in the Clew tutorial.";
+
+"chooseAlignmentMethodPauseAnchor" = "To be able to re-load your route later, you need to record an anchor point to mark the pause position of your route. An anchor point records the position and alignment of your device so the app can reload your route. As a result the accuracy of your navigation will depend on how accurately you can return to your saved anchor point at a later point.\n
+There are two types of anchor points: visual and physical.  You can practice them in the Clew tutorial.";
+
+
+"createPhysicalAnchorPointButtonAccessibilityLabel" = "Create a physical anchor point";
+"createVisualAnchorPointButtonAccessibilityLabel" = "Create a visual anchor point";
+
+
+"significantVersionChangesVisualAlignment-UpContent" = "Now you can use pictures to anchor saved routes or pause navigation. We have created a tutorial to help you practice this new feature. To use the feature when recording a route, select \"Create a Visual Anchor point\".";
+"significantVersionChanges-VisualAlignment" = "Start Visual Alignment Tutorial";
+
+"returnAnchorReminder" = "Next, create an anchor point to mark the end of the saved route";
+"holdVerticallyToBeginAlignment" = "Camera not vertical, hold phone vertically to begin alignment";
+"holdVerticallyToBeginAnchoring" = "Camera not vertical, hold phone vertically to begin countdown";
+"cameraNowVerticalStartingAnchoring" = "Camera now vertical, starting countdown";
+"cameraNowVerticalStartingAlignment" = "Camera now vertical, starting alignment";
+
+"cameraNotVerticalPausingAlignment" = "Camera no longer vertical, pausing alignment";
+"cameraNotVerticalRestartingAnchoringCountdown" = "Camera no longer vertical, restarting and stopping countdown";
+"tutorialVerticalPhoneAnchor" = "Hold phone vertically for best alignment";
+"havingTroubleVisuallyAligning" = "Having trouble aligning. Try rotating your phone slowly from side-to-side.";
+"holdVerticallyToContinueAlignment" = "Hold phone vertically to continue alignment";
+"alignmentCanContinue" = "Camera now vertical, continuing alignment";
+"scanToMapEnvironment" = "Almost ready.  For the next 10 seconds, keep your phone vertical and slowly pan your phone back and forth";
+"readyToRecordAnnouncement" = "Ready to go.  You can now record the route by walking along it.";
+"bearLeftToFaceStart"  = "Bear left to face the start";
+"bearRightToFaceStart" = "Bear right to face the start";
+"bearLeftToGetOnTrack" = "Bear left to get on track";
+"bearRightToGetOnTrack" = "Bear right to get on track";
+"visualAnchorButton" = "Visual Anchor";
+"physicalAnchorButton" = "Physical Anchor";

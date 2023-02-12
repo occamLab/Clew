@@ -33,17 +33,25 @@ class RouteDocumentData: NSObject, NSSecureCoding {
     /// the audio recordings of the route voice notes
     public var routeVoiceNotes: [NSString]
     
+    /// the image for alignment at the beginning of the route
+    public var beginImage: String?
+    
+    /// the image for alignment at the end of the route
+    public var endImage: String?
+    
     /// Initialize the sharing document.
     ///
     /// - Parameters:
     ///   - route: the route data
     ///   - map: the arkit world map
-    public init(route: SavedRoute, map: Any? = nil, beginVoiceNote: String? = nil, endVoiceNote: String? = nil, routeVoiceNotes: [NSString]) {
+    public init(route: SavedRoute, map: Any? = nil, beginVoiceNote: String? = nil, endVoiceNote: String? = nil, routeVoiceNotes: [NSString], beginImage: String? = nil, endImage: String? = nil) {
         self.route = route
         self.map = map
         self.beginVoiceNote = beginVoiceNote
         self.endVoiceNote = endVoiceNote
         self.routeVoiceNotes = routeVoiceNotes
+        self.beginImage = beginImage
+        self.endImage = endImage
     }
     
     /// Encodes the object to the specified coder object. Here, we combine each essential element
@@ -56,6 +64,8 @@ class RouteDocumentData: NSObject, NSSecureCoding {
         aCoder.encode(beginVoiceNote as NSString?, forKey: "beginVoiceNote")
         aCoder.encode(endVoiceNote as NSString?, forKey: "endVoiceNote")
         aCoder.encode(routeVoiceNotes, forKey: "routeVoiceNotes")
+        aCoder.encode(beginImage as NSString?, forKey: "beginImage")
+        aCoder.encode(endImage as NSString?, forKey: "endImage")
     }
     
     /// Initialize an object based using data from a decoder.
@@ -79,7 +89,10 @@ class RouteDocumentData: NSObject, NSSecureCoding {
             routeVoiceNotesFinal = routeVoiceNotes
         }
         
+        let beginImage = aDecoder.decodeObject(of: NSString.self, forKey: "beginImage")
+        let endImage = aDecoder.decodeObject(of: NSString.self, forKey: "endImage")
+        
         /// construct a new saved route from the decoded data
-        self.init(route: route, map: newMap, beginVoiceNote: beginNote as String?, endVoiceNote: endNote as String?, routeVoiceNotes: routeVoiceNotesFinal)
+        self.init(route: route, map: newMap, beginVoiceNote: beginNote as String?, endVoiceNote: endNote as String?, routeVoiceNotes: routeVoiceNotesFinal, beginImage: beginImage as String?, endImage: endImage as String?)
     }
 }

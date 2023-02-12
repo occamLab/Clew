@@ -23,6 +23,9 @@ class ResumeTrackingConfirmController: UIViewController, UIScrollViewDelegate {
     /// text for Anchor Point information
     var anchorPointLabel: UILabel!
     
+    /// flags whether or not this is supposed to use visual alignment
+    var isVisualAlignment = false
+    
     /// flags whether or not this is displayed as part of the tutorial
     var isTutorial = false
     
@@ -39,6 +42,10 @@ class ResumeTrackingConfirmController: UIViewController, UIScrollViewDelegate {
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        let waitingPeriod = ViewController.alignmentWaitingPeriod
+
         if isTutorial {
             confirmAlignmentButton.setImage(UIImage(named: "StartNavigation")!, for: .normal)
             confirmAlignmentButton.accessibilityLabel = NSLocalizedString("startReturnNavigationButtonAccessibilityLabel", comment: "The accessibility label for the button that allows user to start navigating back along their route.")
@@ -46,7 +53,18 @@ class ResumeTrackingConfirmController: UIViewController, UIScrollViewDelegate {
             confirmAlignmentButton.setImage(UIImage(named: "Align")!, for: .normal)
             confirmAlignmentButton.accessibilityLabel = NSLocalizedString("startAlignmentCountdownButtonAccessibilityLabel", comment: "this is athe accessibility label for the button which allows the user to start an alignment procedure when saving an anchor point")
         }
-        super.viewWillAppear(animated)
+        let alignInfo: String
+        if isTutorial {
+            alignInfo = NSLocalizedString("tutorialRouteAlignmentText", comment: "Text describing the process of aligning to a tutorial route. This text shows up on the alignment screen.")
+            
+        } else {
+            if isVisualAlignment {
+                alignInfo = NSLocalizedString("visualAnchorPointAlignmentText", comment: "Text describing the process of visually aligning to an anchor point. This text shows up on the alignment screen.")
+            } else {
+                alignInfo = String.localizedStringWithFormat(NSLocalizedString("anchorPointAlignmentText", comment: "Text describing the process of aligning to an anchorpoint. This text shows up on the alignment screen."), waitingPeriod)
+            }
+        }
+        label.text = alignInfo        
     }
     
     /// called when the view has loaded.  We setup various app elements in here.
@@ -71,18 +89,11 @@ class ResumeTrackingConfirmController: UIViewController, UIScrollViewDelegate {
         
         /// darken background of view
         view.backgroundColor = UIColor.black.withAlphaComponent(0.4)
-        
-        /// label details
-        let waitingPeriod = ViewController.alignmentWaitingPeriod
-        let alignInfo = String.localizedStringWithFormat(NSLocalizedString("anchorPointAlignmentText", comment: "Text describing the process of aligning to an anchorpoint. This text shows up on the alignment screen."), waitingPeriod)
-
-        let mainText = alignInfo
         label.textColor = UIColor.white
         label.textAlignment = .center
         label.numberOfLines = 0
         label.lineBreakMode = .byWordWrapping
         label.font = UIFont.preferredFont(forTextStyle: .body)
-        label.text = mainText
         label.tag = UIView.mainTextTag
         
         anchorPointLabel.textColor = UIColor.white

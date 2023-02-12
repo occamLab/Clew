@@ -66,6 +66,8 @@ class SoundEffectManager {
             audioPlayers[1016] = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: "/System/Library/Audio/UISounds/tweet_sent.caf"))
             audioPlayers[1050] = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: "/System/Library/Audio/UISounds/ussd.caf"))
             audioPlayers[1025] = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: "/System/Library/Audio/UISounds/New/Fanfare.caf"))
+            audioPlayers[1108] = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: "/System/Library/Audio/UISounds/photoShutter.caf"))
+
 
             for p in audioPlayers.values {
                 p.prepareToPlay()
@@ -73,6 +75,16 @@ class SoundEffectManager {
         } catch let error {
             print("count not setup audio players", error)
         }
+    }
+    
+    func isWearingBinauralHeadphones()->Bool {
+        let currentRoute = AVAudioSession.sharedInstance().currentRoute
+        for output in currentRoute.outputs.filter({output in Set([AVAudioSession.Port.headphones, AVAudioSession.Port.bluetoothA2DP]).contains(output.portType)}) {
+            if let channels = output.channels, channels.count >= 2 {
+                return true
+            }
+        }
+        return false
     }
     
     private func overrideSilentMode() {

@@ -28,6 +28,9 @@ class PauseTrackingController: UIViewController, UIScrollViewDelegate {
     /// paused Boolean that should be set from ViewController in order to display appropriate text
     var paused: Bool!
     
+    /// a Boolean that indicates whether the current pause or resume process is for visual alignment
+    var isVisualAlignment: Bool!
+    
     /// recordingSingleUseRoute Boolean that should be set from ViewController in order to display appropriate text
     var recordingSingleUseRoute: Bool!
     
@@ -40,20 +43,13 @@ class PauseTrackingController: UIViewController, UIScrollViewDelegate {
         
         /// label details
         let waitingPeriod = ViewController.alignmentWaitingPeriod
-        var mainText : String
-        
-        if paused  && recordingSingleUseRoute {
-            mainText = String.localizedStringWithFormat(NSLocalizedString("singleUseRouteAnchorPointText", comment: "Information on how to record an anchor point when used for pausing a single use route"), waitingPeriod)
+        var mainText: String
+        if isVisualAlignment {
+            mainText = String.localizedStringWithFormat(NSLocalizedString("visualAnchorPointInstructions", comment: "Information on how to record a visual anchor point."), waitingPeriod)
         } else {
-            if startAnchorPoint{
-                mainText = String.localizedStringWithFormat(NSLocalizedString("multipleUseRouteStartAnchorPointText", comment: "Information on how to record an anchor point when used recording the starting anchor point of a multiple use route."), waitingPeriod)
-                
-            } else {
-                mainText = String.localizedStringWithFormat(NSLocalizedString("multipleUseRouteEndAnchorPointText", comment: "Information on how to record an anchor point when used recording the ending anchor point of a multiple use route."), waitingPeriod)
-            }
-            
+            mainText = String.localizedStringWithFormat(NSLocalizedString("physicalAnchorPointInstructions", comment: "Information on how to record a physical anchor point."), waitingPeriod)
         }
-        
+        mainText += "\n\n" + NSLocalizedString("voiceNoteSuggestions", comment: "this text tells the user about the purpose of the voice note and text information buttons.")
         label.textColor = UIColor.white
         label.textAlignment = .center
         label.numberOfLines = 0
@@ -77,6 +73,8 @@ class PauseTrackingController: UIViewController, UIScrollViewDelegate {
                                                  y: 0,
                                                  width: UIScreen.main.bounds.size.width,
                                                  height: UIScreen.main.bounds.size.height - 1))
+        /// create stack view for aligning and distributing bottom layer buttons
+        let stackView   = UIStackView()
         
         /// create a label, and a scrollview for it to live in
         label = UILabel()
@@ -93,19 +91,13 @@ class PauseTrackingController: UIViewController, UIScrollViewDelegate {
         /// label details
         let waitingPeriod = ViewController.alignmentWaitingPeriod
         // TODO: not sure why this code is duplicated
-        var mainText:String
-        
-        if paused && recordingSingleUseRoute {
-            mainText = String.localizedStringWithFormat(NSLocalizedString("singleUseRouteAnchorPointText", comment: "Information on how to record an anchor point when used for pausing a single use route"), waitingPeriod)
+        var mainText: String
+        if isVisualAlignment {
+            mainText = String.localizedStringWithFormat(NSLocalizedString("visualAnchorPointInstructions", comment: "Information on how to record a visual anchor point."), waitingPeriod)
         } else {
-            if startAnchorPoint {
-                mainText = String.localizedStringWithFormat(NSLocalizedString("multipleUseRouteStartAnchorPointText", comment: "Information on how to record an anchor point when used recording the starting anchor point of a multiple use route."), waitingPeriod)
-            } else {
-                mainText = String.localizedStringWithFormat(NSLocalizedString("multipleUseRouteEndAnchorPointText", comment: "Information on how to record an anchor point when used recording the ending anchor point of a multiple use route."), waitingPeriod)
-            }
-            
+            mainText = String.localizedStringWithFormat(NSLocalizedString("physicalAnchorPointInstructions", comment: "Information on how to record a physical anchor point."), waitingPeriod)
         }
-        
+        mainText += "\n\n" + NSLocalizedString("voiceNoteSuggestions", comment: "this text tells the user about the purpose of the voice note and text information buttons.")
         label.textColor = UIColor.white
         label.textAlignment = .center
         label.numberOfLines = 0
@@ -123,9 +115,6 @@ class PauseTrackingController: UIViewController, UIScrollViewDelegate {
         scrollView.topAnchor.constraint(equalTo: view.topAnchor, constant: UIScreen.main.bounds.size.height*0.2+30).isActive = true
         scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8.0).isActive = true
         scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8.0).isActive = true
-        
-        /// set the height constraint on the scrollView to 0.4 * the main view height
-        scrollView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.4).isActive = true
         
         /// set top, left, right AND bottom constraints on label to
         /// scrollView + 8.0 padding on each side
@@ -157,29 +146,43 @@ class PauseTrackingController: UIViewController, UIScrollViewDelegate {
                                                           appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "Align")!),
                                                           label: NSLocalizedString("startAlignmentCountdownButtonAccessibilityLabel", comment: "this is athe accessibility label for the button which allows the user to start an alignment procedure when saving an anchor point"))
         
-        /// create stack view for aligning and distributing bottom layer buttons
-        let stackView   = UIStackView()
         view.addSubview(stackView)
         stackView.translatesAutoresizingMaskIntoConstraints = false;
         
         /// define horizonal, centered, and equal alignment of elements
         /// inside the bottom stack
-        stackView.axis = NSLayoutConstraint.Axis.horizontal
+        stackView.axis = NSLayoutConstraint.Axis.vertical
         stackView.distribution  = UIStackView.Distribution.equalSpacing
         stackView.alignment = UIStackView.Alignment.center
         
         /// add elements to the stack
-        stackView.addArrangedSubview(enterAnchorPointDescriptionButton)
-        stackView.addArrangedSubview(recordVoiceNoteButton)
         stackView.addArrangedSubview(confirmAlignmentButton)
+
+        /// create stack view for aligning and distributing bottom layer buttons
+        let subStackView   = UIStackView()
+        stackView.addArrangedSubview(subStackView)
+        subStackView.translatesAutoresizingMaskIntoConstraints = false;
         
+        /// define horizonal, centered, and equal alignment of elements
+        /// inside the bottom stack
+        subStackView.axis = NSLayoutConstraint.Axis.horizontal
+        subStackView.distribution  = UIStackView.Distribution.equalSpacing
+        subStackView.alignment = UIStackView.Alignment.center
+        subStackView.addArrangedSubview(recordVoiceNoteButton)
+        subStackView.addArrangedSubview(enterAnchorPointDescriptionButton)
+        subStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: UIConstants.yButtonFrameMargin).isActive = true
+        subStackView.heightAnchor.constraint(equalTo: stackView.heightAnchor, multiplier: 0.33).isActive = true
         scrollView.flashScrollIndicators()
 
         /// size the stack
         stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: UIConstants.yButtonFrameMargin).isActive = true
         stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -UIConstants.yButtonFrameMargin).isActive = true
         stackView.topAnchor.constraint(equalTo: view.topAnchor, constant: UIConstants.yOriginOfButtonFrame + UIConstants.yButtonFrameMargin).isActive = true
-        stackView.bottomAnchor.constraint(equalTo: view.topAnchor, constant: UIConstants.yOriginOfButtonFrame + UIConstants.buttonFrameHeight - UIConstants.yButtonFrameMargin).isActive = true
+        stackView.bottomAnchor.constraint(equalTo: view.topAnchor, constant: UIConstants.yOriginOfButtonFrame + UIConstants.hierarchyButtonFrameHeight - UIConstants.yButtonFrameMargin).isActive = true
+        
+        /// set the bottom anchor reltive to the top anchor of stack view
+        scrollView.bottomAnchor.constraint(equalTo: stackView.topAnchor, constant: -10).isActive = true
+        
         /// set function targets for the functions in this state
         if let parent: UIViewController = parent {
             enterAnchorPointDescriptionButton.addTarget(parent,

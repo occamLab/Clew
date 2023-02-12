@@ -8,6 +8,8 @@
 
 import Foundation
 import ARKit
+import ARCore
+import ARCoreCloudAnchors
 
 enum ARTrackingError {
     case insufficientFeatures
@@ -36,11 +38,48 @@ protocol ARSessionManagerDelegate {
     func getPathColor()->Int
     func getKeypointColor()->Int
     func getShowPath()->Bool
+    func newFrameAvailable()
+    func sessionDidRelocalize()
+    func didHostCloudAnchor(cloudIdentifier: String, anchorIdentifier: String, withTransform transform : simd_float4x4)
 }
 
 class ARSessionManager: NSObject {
     static var shared = ARSessionManager()
     var delegate: ARSessionManagerDelegate?
+    var lastTorchChange = 0.0
+    enum LocalizationState {
+        case none
+        case withCloudAnchors
+        case withARWorldMap
+    }
+    var localization: LocalizationState = .none
+    let alignmentFilter = AlignmentFilter()
+    var sessionWasRelocalizing = false
+    // TODO: we can probably get rid of these and use the cloudIdentifier as our key
+    private var sessionCloudAnchors: [UUID: ARAnchor] = [:]
+    
+    var lastResolvedCloudAnchorID: String?
+    
+    var cloudAnchorsForAlignment: [NSString: ARAnchor] = [:] {
+        didSet {
+            sessionCloudAnchors = [:]
+            if cloudAnchorsForAlignment.count > 40 {
+                let tooManyAnchors = "Too many cloud anchors. Results may be unpredictable."
+                AnnouncementManager.shared.announce(announcement: tooManyAnchors)
+                PathLogger.shared.logSpeech(utterance: tooManyAnchors)
+            }
+            for cloudAnchor in cloudAnchorsForAlignment {
+                do {
+                    if let gAnchor = try garSession?.resolveCloudAnchor(String(cloudAnchor.0)) {
+                        sessionCloudAnchors[gAnchor.identifier] = cloudAnchor.1
+                        print("trying to resolve \(cloudAnchor.0)")
+                    }
+                } catch {
+                    print("synchronous failure to resolve")
+                }
+            }
+        }
+    }
     
     private override init() {
         super.init()
@@ -51,11 +90,88 @@ class ARSessionManager: NSObject {
         loadAssets()
         sceneView.backgroundColor = .systemBackground
     }
+    
+    // animation - SCNNode flashes red
+    private let flashRed = SCNAction.customAction(duration: 2) { (node, elapsedTime) -> () in
+        let percentage = Float(elapsedTime / 2)
+        var color = UIColor.clear
+        let power: Float = 2.0
+        
+        
+        if (percentage < 0.5) {
+            color = UIColor(red: 1,
+                            green: CGFloat(powf(2.0*percentage, power)),
+                            blue: CGFloat(powf(2.0*percentage, power)),
+                            alpha: 1)
+        } else {
+            color = UIColor(red: 1,
+                            green: CGFloat(powf(2-2.0*percentage, power)),
+                            blue: CGFloat(powf(2-2.0*percentage, power)),
+                            alpha: 1)
+        }
+        node.geometry!.firstMaterial!.diffuse.contents = color
+    }
+    
+    // animation - SCNNode flashes green
+    private let flashGreen = SCNAction.customAction(duration: 2) { (node, elapsedTime) -> () in
+        let percentage = Float(elapsedTime / 2)
+        var color = UIColor.clear
+        let power: Float = 2.0
+        
+        
+        if (percentage < 0.5) {
+            color = UIColor(red: CGFloat(powf(2.0*percentage, power)),
+                            green: 1,
+                            blue: CGFloat(powf(2.0*percentage, power)),
+                            alpha: 1)
+        } else {
+            color = UIColor(red: CGFloat(powf(2-2.0*percentage, power)),
+                            green: 1,
+                            blue: CGFloat(powf(2-2.0*percentage, power)),
+                            alpha: 1)
+        }
+        node.geometry!.firstMaterial!.diffuse.contents = color
+    }
+    
+    // animation - SCNNode flashes blue
+    private let flashBlue = SCNAction.customAction(duration: 2) { (node, elapsedTime) -> () in
+        let percentage = Float(elapsedTime / 2)
+        var color = UIColor.clear
+        let power: Float = 2.0
+        
+        
+        if (percentage < 0.5) {
+            color = UIColor(red: CGFloat(powf(2.0*percentage, power)),
+                            green: CGFloat(powf(2.0*percentage, power)),
+                            blue: 1,
+                            alpha: 1)
+        } else {
+            color = UIColor(red: CGFloat(powf(2-2.0*percentage, power)),
+                            green: CGFloat(powf(2-2.0*percentage, power)),
+                            blue: 1,
+                            alpha: 1)
+        }
+        node.geometry!.firstMaterial!.diffuse.contents = color
+    }
+    
     /// This is embeds an AR scene.  The ARSession is a part of the scene view, which allows us to capture where the phone is in space and the state of the world tracking.  The scene also allows us to insert virtual objects
     var sceneView: ARSCNView = ARSCNView()
     
     /// this is the alignment between the reloaded route
-    var manualAlignment: simd_float4x4?
+    var manualAlignment: simd_float4x4? {
+        willSet(myNewValue) {
+            if let newValue = myNewValue {
+                let oldValue = self.manualAlignment ?? matrix_identity_float4x4
+                let relativeTransform = newValue * oldValue.inverse
+                if let keypointNode = keypointNode {
+                    keypointNode.simdTransform = relativeTransform * keypointNode.simdTransform
+                }
+                if let pathObj = pathObj {
+                    pathObj.simdTransform = relativeTransform * pathObj.simdTransform
+                }
+            }
+        }
+    }
     
     /// the strategy to employ with respect to the worldmap
     var relocalizationStrategy: RelocalizationStrategy = .none
@@ -65,7 +181,9 @@ class ARSessionManager: NSObject {
     
     var initialWorldMap: ARWorldMap? {
         set {
-            configuration.initialWorldMap = newValue
+            if !ViewController.debugARCore {
+                configuration.initialWorldMap = newValue
+            }
         }
         get {
             return configuration.initialWorldMap
@@ -98,6 +216,10 @@ class ARSessionManager: NSObject {
         return sceneView.session.currentFrame
     }
     
+    var currentGARFrame: GARFrame?
+    
+    var garSession: GARSession?
+
     /// Create a new ARSession.
     func createARSessionConfiguration() {
         configuration = ARWorldTrackingConfiguration()
@@ -105,14 +227,42 @@ class ARSessionManager: NSObject {
         configuration.isAutoFocusEnabled = false
     }
     
+    func adjustTorch(lightingIntensity: Float, timestamp: Double) {
+        guard
+            let device = AVCaptureDevice.default(for: AVMediaType.video),
+            device.hasTorch
+        else { return }
+        if device.torchMode == .off && lightingIntensity < 300 {
+            do {
+                try device.lockForConfiguration()
+                try device.setTorchModeOn(level: 1.0)
+                lastTorchChange = timestamp
+            } catch {
+                print("torch error")
+            }
+        } else if device.torchMode == .on && lightingIntensity > 1000 && timestamp - lastTorchChange > 60.0 {
+            do {
+                try device.lockForConfiguration()
+                device.torchMode = .off
+                lastTorchChange = timestamp
+            } catch {
+                print("torch error")
+            }
+        }
+    }
+    
     func startSession() {
-        sessionWasRelocalizing = false
+        lastTorchChange = 0.0
         manualAlignment = nil
+        localization = .none
+        sessionWasRelocalizing = false
         keypointRenderJob = nil
         pathRenderJob = nil
         intermediateAnchorRenderJobs = [:]
         removeNavigationNodes()
+        alignmentFilter.reset()
         sceneView.session.run(configuration, options: [.removeExistingAnchors, .resetTracking])
+        startGARSession()
     }
     
     /// This seems to interfere with placement of ARAnchors in the scene when reloading maps
@@ -120,27 +270,46 @@ class ARSessionManager: NSObject {
         sceneView.session.pause()
     }
     
-    /// Sets the relocalization strategy based on the iOS version.   This is a workaround for the issue described here: https://developer.apple.com/forums/thread/690668
-    /// - Parameters:
-    ///   - worldMap: the world map that describes the saved route
-    ///   - route: the route itself
-    /// - Returns: the strategy to use
-    func adjustRelocalizationStrategy(worldMap: ARWorldMap, route: SavedRoute)->RelocalizationStrategy {
-        if #available(iOS 15.2, *) {
-            stripCrumbAnchorsFromInitialWorldMap(route: route)
-            relocalizationStrategy = .coordinateSystemAutoAligns
-        } else if #available(iOS 15.0, *) {
-            if worldMap.anchors.firstIndex(where: {anchor in anchor is LocationInfo}) != nil {
-                relocalizationStrategy = .useCrumbAnchorsForAlignment
-            } else if worldMap.anchors.firstIndex(where: {anchor in anchor.name == "origin"}) != nil {
-                relocalizationStrategy = .useOriginAnchorForAlignment
-            } else {
-                relocalizationStrategy = .none
+    func hostCloudAnchor(withTransform transform: simd_float4x4)->(GARAnchor, ARAnchor)? {
+        let newAnchor = ARAnchor(transform: transform)
+        add(anchor: newAnchor)
+        do {
+            if let newGARAnchor = try garSession?.hostCloudAnchor(newAnchor) {
+                return (newGARAnchor, newAnchor)
             }
-        } else {
-            relocalizationStrategy = .coordinateSystemAutoAligns
+        } catch {
+            print("host cloud anchor failed \(error.localizedDescription)")
         }
+        return nil
+    }
+    
+    private func startGARSession() {
+        do {
+            garSession = try GARSession(apiKey: garAPIKey, bundleIdentifier: nil)
+            var error: NSError?
+            let configuration = GARSessionConfiguration()
+            configuration.cloudAnchorMode = .enabled
+            garSession?.setConfiguration(configuration, error: &error)
+            garSession?.delegate = self
+            print("gar set configuration error \(error)")
+        } catch {
+            print("failed to create GARSession")
+        }
+    }
+    
+    func adjustRelocalizationStrategy(worldMap: ARWorldMap, route: SavedRoute)->RelocalizationStrategy {
+        stripCrumbAnchorsFromInitialWorldMap(route: route)
+        relocalizationStrategy = .coordinateSystemAutoAligns
         return relocalizationStrategy
+    }
+    
+    /// Remove crumb anchors from the world map (this is useful when we can use auto coordinate system alignment)
+      /// - Parameter route: the route that corresponds with the anchors stored in the world map
+    func stripCrumbAnchorsFromInitialWorldMap(route: SavedRoute) {
+        let allCrumbAnchors = Set(route.crumbs.map({$0.identifier}))
+        if let mapAnchors = configuration.initialWorldMap?.anchors {
+            configuration.initialWorldMap?.anchors = mapAnchors.filter({!allCrumbAnchors.contains($0.identifier)})
+        }
     }
     
     /// Create the keypoint SCNNode that corresponds to the rotating flashing element that looks like a navigation pin.
@@ -153,16 +322,42 @@ class ARSessionManager: NSObject {
     }
     
     func renderKeypointHelper(_ location: LocationInfo, defaultColor: Int) {
-        keypointNode?.removeFromParentNode()
-        keypointNode = SCNNode(mdlObject: keypointObject)
-        keypointNode!.scale = SCNVector3(0.0004, 0.0004, 0.0004)
-        // configure node attributes
-        keypointNode!.geometry?.firstMaterial?.diffuse.contents = UIColor.red
+        if keypointNode == nil {
+            keypointNode = SCNNode(mdlObject: keypointObject)
+            keypointNode!.scale = SCNVector3(0.0004, 0.0004, 0.0004)
+            // configure node attributes
+            keypointNode!.geometry?.firstMaterial?.diffuse.contents = UIColor.red
+                
+            let bound = SCNVector3(
+                x: keypointNode!.boundingBox.max.x - keypointNode!.boundingBox.min.x,
+                y: keypointNode!.boundingBox.max.y - keypointNode!.boundingBox.min.y,
+                z: keypointNode!.boundingBox.max.z - keypointNode!.boundingBox.min.z)
+            keypointNode!.pivot = SCNMatrix4MakeTranslation(bound.x / 2, bound.y / 2, bound.z / 2)
+            
+            let spin = CABasicAnimation(keyPath: "rotation")
+            spin.fromValue = NSValue(scnVector4: SCNVector4(x: 0, y: 1, z: 0, w: 0))
+            spin.toValue = NSValue(scnVector4: SCNVector4(x: 0, y: 1, z: 0, w: Float(CGFloat(2 * Float.pi))))
+            spin.duration = 3
+            spin.repeatCount = .infinity
+            keypointNode!.addAnimation(spin, forKey: "spin around")
+            let flashColors = [flashRed, flashGreen, flashBlue]
+            
+            // set flashing color based on settings bundle configuration
+            var changeColor: SCNAction!
+            if (defaultColor == 3) {
+                changeColor = SCNAction.repeatForever(flashColors[Int(arc4random_uniform(3))])
+            } else {
+                changeColor = SCNAction.repeatForever(flashColors[defaultColor])
+            }
+            
+            // add keypoint node to view
+            keypointNode!.runAction(changeColor)
+            sceneView.scene.rootNode.addChildNode(keypointNode!)
+        }
         
         // determine if the node is already in the scene
-        let priorNode = sceneView.node(for: location)
-        if priorNode != nil {
-            keypointNode!.position = SCNVector3(0, -0.2, 0.0)
+        if let priorNode = sceneView.node(for: location) {
+            keypointNode!.position = priorNode.position
         } else {
             if let manualAlignment = manualAlignment {
                 let alignedLocation = manualAlignment*location.transform
@@ -172,101 +367,6 @@ class ARSessionManager: NSObject {
             }
             keypointNode!.rotation = SCNVector4(0, 1, 0, (location.yaw - Float.pi/2))
         }
-        
-        let bound = SCNVector3(
-            x: keypointNode!.boundingBox.max.x - keypointNode!.boundingBox.min.x,
-            y: keypointNode!.boundingBox.max.y - keypointNode!.boundingBox.min.y,
-            z: keypointNode!.boundingBox.max.z - keypointNode!.boundingBox.min.z)
-        keypointNode!.pivot = SCNMatrix4MakeTranslation(bound.x / 2, bound.y / 2, bound.z / 2)
-        
-        let spin = CABasicAnimation(keyPath: "rotation")
-        spin.fromValue = NSValue(scnVector4: SCNVector4(x: 0, y: 1, z: 0, w: 0))
-        spin.toValue = NSValue(scnVector4: SCNVector4(x: 0, y: 1, z: 0, w: Float(CGFloat(2 * Float.pi))))
-        spin.duration = 3
-        spin.repeatCount = .infinity
-        keypointNode!.addAnimation(spin, forKey: "spin around")
-        
-        // animation - SCNNode flashes red
-        let flashRed = SCNAction.customAction(duration: 2) { (node, elapsedTime) -> () in
-            let percentage = Float(elapsedTime / 2)
-            var color = UIColor.clear
-            let power: Float = 2.0
-            
-            
-            if (percentage < 0.5) {
-                color = UIColor(red: 1,
-                                green: CGFloat(powf(2.0*percentage, power)),
-                                blue: CGFloat(powf(2.0*percentage, power)),
-                                alpha: 1)
-            } else {
-                color = UIColor(red: 1,
-                                green: CGFloat(powf(2-2.0*percentage, power)),
-                                blue: CGFloat(powf(2-2.0*percentage, power)),
-                                alpha: 1)
-            }
-            node.geometry!.firstMaterial!.diffuse.contents = color
-        }
-        
-        // animation - SCNNode flashes green
-        let flashGreen = SCNAction.customAction(duration: 2) { (node, elapsedTime) -> () in
-            let percentage = Float(elapsedTime / 2)
-            var color = UIColor.clear
-            let power: Float = 2.0
-            
-            
-            if (percentage < 0.5) {
-                color = UIColor(red: CGFloat(powf(2.0*percentage, power)),
-                                green: 1,
-                                blue: CGFloat(powf(2.0*percentage, power)),
-                                alpha: 1)
-            } else {
-                color = UIColor(red: CGFloat(powf(2-2.0*percentage, power)),
-                                green: 1,
-                                blue: CGFloat(powf(2-2.0*percentage, power)),
-                                alpha: 1)
-            }
-            node.geometry!.firstMaterial!.diffuse.contents = color
-        }
-        
-        // animation - SCNNode flashes blue
-        let flashBlue = SCNAction.customAction(duration: 2) { (node, elapsedTime) -> () in
-            let percentage = Float(elapsedTime / 2)
-            var color = UIColor.clear
-            let power: Float = 2.0
-            
-            
-            if (percentage < 0.5) {
-                color = UIColor(red: CGFloat(powf(2.0*percentage, power)),
-                                green: CGFloat(powf(2.0*percentage, power)),
-                                blue: 1,
-                                alpha: 1)
-            } else {
-                color = UIColor(red: CGFloat(powf(2-2.0*percentage, power)),
-                                green: CGFloat(powf(2-2.0*percentage, power)),
-                                blue: 1,
-                                alpha: 1)
-            }
-            node.geometry!.firstMaterial!.diffuse.contents = color
-        }
-        let flashColors = [flashRed, flashGreen, flashBlue]
-        
-        // set flashing color based on settings bundle configuration
-        var changeColor: SCNAction!
-        if (defaultColor == 3) {
-            changeColor = SCNAction.repeatForever(flashColors[Int(arc4random_uniform(3))])
-        } else {
-            changeColor = SCNAction.repeatForever(flashColors[defaultColor])
-        }
-        
-        // add keypoint node to view
-        keypointNode!.runAction(changeColor)
-        if let priorNode = priorNode {
-            // TODO: we are having a really hard time here
-            // If we recreate the node every time it moves, then it will track
-            keypointNode!.position = priorNode.position
-            //priorNode.addChildNode(keypointNode!)
-        }// else {
-        sceneView.scene.rootNode.addChildNode(keypointNode!)
     }
     
     func add(anchor: ARAnchor) {
@@ -284,19 +384,43 @@ class ARSessionManager: NSObject {
     
     /// This function renders a spinning blue speaker icon at the location of a voice note
     func renderHelper(intermediateAnchorPoint: RouteAnchorPoint) {
-        if let anchorPointNode = anchorPointNodes[intermediateAnchorPoint] {
-            anchorPointNode.removeFromParentNode()
-            anchorPointNodes[intermediateAnchorPoint] = nil
-        }
-        
         guard let intermediateARAnchor = intermediateAnchorPoint.anchor else {
             return
         }
-        let anchorPointNode = SCNNode(mdlObject: speakerObject)
+        let anchorPointNode: SCNNode
+        if let node = anchorPointNodes[intermediateAnchorPoint] {
+            anchorPointNode = node
+        } else {
+            anchorPointNode = SCNNode(mdlObject: speakerObject)
+            // render SCNNode of given keypoint
+            // configure node attributes
+            anchorPointNode.scale = SCNVector3(0.02, 0.02, 0.02)
+            anchorPointNode.geometry?.firstMaterial?.diffuse.contents = UIColor.blue
+            // I don't think yaw really matters here (so we are putting 0 where we used to have location.yaw
+            anchorPointNode.rotation = SCNVector4(0, 1, 0, (0 - Float.pi/2))
+            
+            let bound = SCNVector3(
+                x: anchorPointNode.boundingBox.max.x - anchorPointNode.boundingBox.min.x,
+                y: anchorPointNode.boundingBox.max.y - anchorPointNode.boundingBox.min.y,
+                z: anchorPointNode.boundingBox.max.z - anchorPointNode.boundingBox.min.z)
+            anchorPointNode.pivot = SCNMatrix4MakeTranslation(0, bound.y / 2, 0)
+            let spin = CABasicAnimation(keyPath: "rotation")
+            spin.fromValue = NSValue(scnVector4: SCNVector4(x: 0, y: 1, z: 0, w: 0))
+            spin.toValue = NSValue(scnVector4: SCNVector4(x: 0, y: 1, z: 0, w: Float(CGFloat(2 * Float.pi))))
+            spin.duration = 3
+            spin.repeatCount = .infinity
+            anchorPointNode.addAnimation(spin, forKey: "spin around")
+            
+            // set flashing color based on settings bundle configuration
+            let changeColor = SCNAction.repeatForever(flashBlue)
+            // add keypoint node to view
+            anchorPointNode.runAction(changeColor)
+            anchorPointNodes[intermediateAnchorPoint] = anchorPointNode
+            sceneView.scene.rootNode.addChildNode(anchorPointNode)
+        }
         
-        let priorNode = sceneView.node(for: intermediateARAnchor)
-        if priorNode != nil {
-            anchorPointNode.position = SCNVector3(0, -0.2, 0.0)
+        if let priorNode = sceneView.node(for: intermediateARAnchor) {
+            anchorPointNode.position = priorNode.position
         } else {
             if let manualAlignment = manualAlignment {
                 let alignedLocation = manualAlignment*intermediateARAnchor.transform
@@ -305,54 +429,6 @@ class ARSessionManager: NSObject {
                 anchorPointNode.position = SCNVector3(intermediateARAnchor.transform.x, intermediateARAnchor.transform.y - 0.2, intermediateARAnchor.transform.z)
             }
         }
-        // render SCNNode of given keypoint
-        // configure node attributes
-        anchorPointNode.scale = SCNVector3(0.02, 0.02, 0.02)
-        anchorPointNode.geometry?.firstMaterial?.diffuse.contents = UIColor.blue
-        // I don't think yaw really matters here (so we are putting 0 where we used to have location.yaw
-        anchorPointNode.rotation = SCNVector4(0, 1, 0, (0 - Float.pi/2))
-        
-        let bound = SCNVector3(
-            x: anchorPointNode.boundingBox.max.x - anchorPointNode.boundingBox.min.x,
-            y: anchorPointNode.boundingBox.max.y - anchorPointNode.boundingBox.min.y,
-            z: anchorPointNode.boundingBox.max.z - anchorPointNode.boundingBox.min.z)
-        anchorPointNode.pivot = SCNMatrix4MakeTranslation(0, bound.y / 2, 0)
-        let spin = CABasicAnimation(keyPath: "rotation")
-        spin.fromValue = NSValue(scnVector4: SCNVector4(x: 0, y: 1, z: 0, w: 0))
-        spin.toValue = NSValue(scnVector4: SCNVector4(x: 0, y: 1, z: 0, w: Float(CGFloat(2 * Float.pi))))
-        spin.duration = 3
-        spin.repeatCount = .infinity
-        anchorPointNode.addAnimation(spin, forKey: "spin around")
-        
-        // animation - SCNNode flashes blue
-        let flashBlue = SCNAction.customAction(duration: 2) { (node, elapsedTime) -> () in
-            let percentage = Float(elapsedTime / 2)
-            var color = UIColor.clear
-            let power: Float = 2.0
-            
-            
-            if (percentage < 0.5) {
-                color = UIColor(red: CGFloat(powf(2.0*percentage, power)),
-                                green: CGFloat(powf(2.0*percentage, power)),
-                                blue: 1,
-                                alpha: 1)
-            } else {
-                color = UIColor(red: CGFloat(powf(2-2.0*percentage, power)),
-                                green: CGFloat(powf(2-2.0*percentage, power)),
-                                blue: 1,
-                                alpha: 1)
-            }
-            node.geometry!.firstMaterial!.diffuse.contents = color
-        }
-        // set flashing color based on settings bundle configuration
-        let changeColor = SCNAction.repeatForever(flashBlue)
-        // add keypoint node to view
-        anchorPointNode.runAction(changeColor)
-        anchorPointNodes[intermediateAnchorPoint] = anchorPointNode
-        if let priorNode = priorNode {
-            anchorPointNode.position = priorNode.position
-        }
-        sceneView.scene.rootNode.addChildNode(anchorPointNode)
     }
     
     func getCurrentLocation(of anchor: ARAnchor)->LocationInfo? {
@@ -387,9 +463,24 @@ class ARSessionManager: NSObject {
     }
 
     func renderPathHelper(_ locationFront: LocationInfo, _ locationBack: LocationInfo, defaultPathColor: Int) {
-        pathObj?.removeFromParentNode()
         guard let locationFront = getCurrentLocation(of: locationFront), let locationBack = getCurrentLocation(of: locationBack) else {
             return
+        }
+        
+        if pathObj == nil {
+            pathObj = SCNNode(geometry: SCNBox(width: 1.0, height: 0.25, length: 0.08, chamferRadius: 3))
+            let colors = [UIColor.red, UIColor.green, UIColor.blue]
+            let color: UIColor
+            // set color based on settings bundle configuration
+            if (defaultPathColor == 3) {
+                color = colors[Int(arc4random_uniform(3))]
+            } else {
+                color = colors[defaultPathColor]
+            }
+            pathObj?.geometry?.firstMaterial!.diffuse.contents = color
+            // configure node attributes
+            pathObj?.opacity = CGFloat(0.7)
+            sceneView.scene.rootNode.addChildNode(pathObj!)
         }
         let x = (locationFront.x + locationBack.x) / 2
         let y = (locationFront.y + locationBack.y) / 2
@@ -399,18 +490,7 @@ class ARSessionManager: NSObject {
         let zDist = locationFront.z - locationBack.z
         let pathDist = sqrt(pow(xDist, 2) + pow(yDist, 2) + pow(zDist, 2))
         
-        // render SCNNode of given keypoint
-        pathObj = SCNNode(geometry: SCNBox(width: CGFloat(pathDist), height: 0.25, length: 0.08, chamferRadius: 3))
         
-        let colors = [UIColor.red, UIColor.green, UIColor.blue]
-        var color: UIColor!
-        // set color based on settings bundle configuration
-        if (defaultPathColor == 3) {
-            color = colors[Int(arc4random_uniform(3))]
-        } else {
-            color = colors[defaultPathColor]
-        }
-        pathObj?.geometry?.firstMaterial!.diffuse.contents = color
         let xAxis = simd_normalize(simd_float3(xDist, yDist, zDist))
         let yAxis: simd_float3
         if xDist == 0 && zDist == 0 {
@@ -431,11 +511,8 @@ class ARSessionManager: NSObject {
         let zAxis = simd_cross(xAxis, yAxis)
         
         let pathTransform = simd_float4x4(columns: (simd_float4(xAxis, 0), simd_float4(yAxis, 0), simd_float4(zAxis, 0), simd_float4(x, y - 0.6, z, 1)))
-        // configure node attributes
-        pathObj!.opacity = CGFloat(0.7)
         pathObj!.simdTransform = pathTransform
-        
-        sceneView.scene.rootNode.addChildNode(pathObj!)
+        pathObj!.scale.x = pathDist
     }
     
     /// Load the crumb 3D model
@@ -462,16 +539,35 @@ class ARData: ObservableObject {
     public static var shared = ARData()
     
     private(set) var transform: simd_float4x4?
+    private(set) var intrinsics: simd_float3x3?
+    private(set) var image: CVPixelBuffer?
     
-    func set(transform: simd_float4x4) {
+    func set(transform: simd_float4x4, intrinsics: simd_float3x3, image: CVPixelBuffer) {
         self.transform = transform
+        self.intrinsics = intrinsics
+        self.image = image
         objectWillChange.send()
     }
 }
 
 extension ARSessionManager: ARSessionDelegate {
     func session(_ session: ARSession, didUpdate frame: ARFrame) {
-        ARData.shared.set(transform: frame.camera.transform)
+        ARData.shared.set(transform: frame.camera.transform, intrinsics: frame.camera.intrinsics, image: frame.capturedImage)
+        if let lighting = frame.lightEstimate {
+            adjustTorch(lightingIntensity: Float(lighting.ambientIntensity), timestamp: frame.timestamp)
+        }
+        
+        do {
+            ARFrameStatusAdapter.adjustTrackingStatus(frame)
+            let garFrame = try garSession?.update(frame)
+            self.currentGARFrame = garFrame
+            // don't use Cloud Anchors if we have localized with the ARWorldMap
+            if localization != .withARWorldMap, let gAnchors = currentGARFrame?.anchors {
+                checkForCloudAnchorAlignment(anchors: gAnchors)
+            }
+        } catch {
+            print("couldn't update GAR Frame")
+        }
         if let keypointRenderJob = keypointRenderJob {
             keypointRenderJob()
             self.keypointRenderJob = nil
@@ -486,7 +582,30 @@ extension ARSessionManager: ARSessionDelegate {
                 intermediateAnchorRenderJobs[intermediateAnchorRenderJob.0] = nil
             }
         }
+        delegate?.newFrameAvailable()
     }
+    
+    /// Update alignment based on cloud anchors that have been detected
+    /// - Parameter anchors: the current GARAnchors
+    private func checkForCloudAnchorAlignment(anchors: [GARAnchor]) {
+        for anchor in anchors {
+            if anchor.hasValidTransform, let correspondingARAnchor = sessionCloudAnchors[anchor.identifier], anchor.cloudIdentifier == lastResolvedCloudAnchorID  {
+                let proposed = anchor.transform.alignY() * correspondingARAnchor.transform.inverse.alignY()
+                if let manualAlignment = manualAlignment {
+                    if let newAlignment = alignmentFilter.update(proposed: proposed, old: manualAlignment) {
+                        self.manualAlignment = newAlignment
+                        if ViewController.debugARCore {
+                            AnnouncementManager.shared.announce(announcement: "new alignment")
+                        }
+                    }
+                } else {
+                    manualAlignment = proposed
+                }
+            }
+        }
+    }
+    
+    
     /// Called when there is a change in tracking state.  This is important for both announcing tracking errors to the user and also to triggering some app state transitions.
     /// - Parameters:
     ///   - session: the AR session associated with the change in tracking state
@@ -518,10 +637,13 @@ extension ARSessionManager: ARSessionDelegate {
             delegate?.sessionInitialized()
             delegate?.trackingIsNormal()
             if sessionWasRelocalizing {
-                delegate?.sessionDidRelocalize()
+                if localization == .none {
+                    delegate?.sessionDidRelocalize()
+                }
                 if relocalizationStrategy == .coordinateSystemAutoAligns {
                     manualAlignment = matrix_identity_float4x4
                     legacyHandleRelocalization()
+                    localization = .withARWorldMap
                 }
             }
             print("normal")
@@ -584,5 +706,47 @@ extension ARSessionManager: ARSCNViewDelegate {
                 render(intermediateAnchorPoints: [intermediateAnchorPoint])
             }
         }
+    }
+}
+
+extension ARSessionManager: GARSessionDelegate {
+    func session(_ session: GARSession, didResolve anchor:GARAnchor) {
+        if localization == .withARWorldMap {
+            // defer to the ARWorldMap
+            return
+        }
+        if sessionWasRelocalizing && localization == .none {
+            delegate?.sessionDidRelocalize()
+        }
+        let oldLocalization = localization
+        localization = .withCloudAnchors
+        if let cloudIdentifier = anchor.cloudIdentifier, anchor.hasValidTransform, let alignTransform = cloudAnchorsForAlignment[NSString(string: cloudIdentifier)]?.transform {
+            lastResolvedCloudAnchorID = cloudIdentifier
+            let proposed = anchor.transform.alignY() * alignTransform.inverse.alignY()
+            if let manualAlignment = manualAlignment, oldLocalization != .none {
+                if let newAlignment = alignmentFilter.update(proposed: proposed, old: manualAlignment) {
+                    self.manualAlignment = newAlignment
+                }
+            } else {
+                manualAlignment = proposed
+            }
+
+            if ViewController.debugARCore {
+                let announceResolution = "Cloud Anchor Resolved"
+                PathLogger.shared.logSpeech(utterance: announceResolution)
+                AnnouncementManager.shared.announce(announcement: announceResolution)
+            }
+        }
+    }
+    
+    func session(_ session: GARSession, didHost garAnchor:GARAnchor) {
+        if let cloudIdentifier = garAnchor.cloudIdentifier {
+            delegate?.didHostCloudAnchor(cloudIdentifier: cloudIdentifier, anchorIdentifier: garAnchor.identifier.uuidString, withTransform: garAnchor.transform)
+            // createSCNNodeFor(identifier: cloudIdentifier, at: garAnchor.transform)
+        }
+    }
+    
+    func session(_ session: GARSession, didFailToResolve didFailToResolveAnchor: GARAnchor) {
+        print("FAILURE")
     }
 }

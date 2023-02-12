@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import VideoToolbox
 
 /// Round a float to the nearest tenth.  Swift doesn't have a good built-in method for doing this.
 ///
@@ -429,4 +430,20 @@ extension UITextView {
         toolBar.setItems([flexible, barButton], animated: false)//4
         self.inputAccessoryView = toolBar//5
     }
+}
+
+func mostFrequent(array: [Int]) -> (mostFrequent: [Int], count: Int)? {
+    var counts: [Int: Int] = [:]
+        
+    array.forEach { counts[$0] = (counts[$0] ?? 0) + 1 }
+    if let count = counts.max(by: {$0.value < $1.value})?.value {
+        return (counts.compactMap { $0.value == count ? $0.key : nil }, count)
+    }
+    return nil
+}
+
+func pixelBufferToUIImage(pixelBuffer: CVPixelBuffer) -> UIImage? {
+    var cgImage: CGImage?
+    VTCreateCGImageFromCVPixelBuffer(pixelBuffer, options: nil, imageOut: &cgImage)
+    return cgImage.map{UIImage(cgImage: $0)}
 }

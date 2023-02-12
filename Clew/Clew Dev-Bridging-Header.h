@@ -3,3 +3,5 @@
 //
 
 #import "PRTween.h"
+#import "VisualAlignment.h"
+#import "NSObject+ARFrameStatusAdapter.h"

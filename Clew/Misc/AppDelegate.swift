@@ -41,15 +41,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         #endif
         logUserProperties()
         // use for testing sign-in flow
-        // try? Auth.auth().signOut()
+        //try? Auth.auth().signOut()
         if (Auth.auth().currentUser == nil) {
-            #if IS_DEV_TARGET
+            //#if IS_DEV_TARGET
                 Auth.auth().signInAnonymously() { (authResult, error) in
-                    guard let authResult = authResult else {
+                    guard authResult != nil else {
                         print("login error", error!.localizedDescription)
                         return
                     }
-                    print("successful login", Auth.auth().currentUser?.uid)
+                    print("successful login", Auth.auth().currentUser?.uid ?? "no UID available")
                     // Override point for customization after application launch.
                     self.vc = ViewController()
                     self.window = UIWindow(frame:UIScreen.main.bounds)
@@ -57,13 +57,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     self.window?.makeKeyAndVisible()
                 }
                 return true
-            #else
-                window = UIWindow(frame:UIScreen.main.bounds)
-                window?.makeKeyAndVisible()
-                window?.rootViewController = AppleSignInController()
-                UIApplication.shared.isIdleTimerDisabled = true
-                return true
-            #endif
+            // Old code for Apple Signin
+//            #else
+//                window = UIWindow(frame:UIScreen.main.bounds)
+//                window?.makeKeyAndVisible()
+//                window?.rootViewController = AppleSignInController()
+//                UIApplication.shared.isIdleTimerDisabled = true
+//                return true
+//            #endif
         }
         
         // Override point for customization after application launch.
@@ -84,7 +85,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         guard url.pathExtension == "crd" else { return false }
         
         /// import the file here
-        (vc as? ViewController)?.dataPersistence.importData(from: url)
+        vc?.dataPersistence.importData(from: url)
         
         return true
     }

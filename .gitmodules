@@ -1,0 +1,9 @@
+[submodule "opencv2.framework"]
+	path = opencv2.framework
+	url = https://github.com/occamLab/opencv2.framework
+[submodule "FirebasePlists"]
+	path = FirebasePlists
+	url = https://github.com/occamLab/FirebasePlists
+[submodule "ExternalDependencies"]
+	path = ExternalDependencies
+	url = https://github.com/occamLab/ExternalDependencies

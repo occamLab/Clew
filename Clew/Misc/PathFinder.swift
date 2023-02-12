@@ -172,6 +172,12 @@ class RouteAnchorPoint: NSObject, NSSecureCoding {
     public var information: NSString?
     /// The URL to an audio file that contains information to help the user remember a Anchor Point
     public var voiceNote: NSString?
+    /// The image associated with the anchor point
+    public var imageFileName: NSString?
+    public var image: UIImage?
+    /// The intrinsics used to take the anchor point image
+    public var intrinsics: simd_float4?
+    private var thumbnailCache: [CGFloat: UIImage] = [:]
     
     /// Initialize the Anchor Point.
     ///
@@ -179,10 +185,12 @@ class RouteAnchorPoint: NSObject, NSSecureCoding {
     ///   - transform: the position and orientation
     ///   - information: textual description
     ///   - voiceNote: URL to auditory description
-    public init(anchor: ARAnchor? = nil, information: NSString? = nil, voiceNote: NSString? = nil) {
+    public init(anchor: ARAnchor? = nil, information: NSString? = nil, voiceNote: NSString? = nil, imageFileName: NSString? = nil, intrinsics: simd_float4? = nil) {
         self.anchor = anchor
         self.information = information
         self.voiceNote = voiceNote
+        self.imageFileName = imageFileName
+        self.intrinsics = intrinsics
     }
     
     /// Encode the Anchor Point.
@@ -192,6 +200,22 @@ class RouteAnchorPoint: NSObject, NSSecureCoding {
         aCoder.encode(anchor, forKey: "anchor")
         aCoder.encode(information, forKey: "information")
         aCoder.encode(voiceNote, forKey: "voiceNote")
+        if imageFileName != nil {
+            aCoder.encode(imageFileName, forKey: "image")
+        }
+        
+        if let intrinsics = intrinsics {
+            aCoder.encode([intrinsics.x, intrinsics.y, intrinsics.z, intrinsics.w], forKey: "intrinsics")
+        }
+    }
+    
+    /// Used to load the anchor point image when it is needed, given the imaguURL is non-nil
+    func loadImage() {
+        guard let imageFileName = imageFileName else {
+            print("Could not find url to load route anchor point image from")
+            return
+        }
+        self.image = UIImage(contentsOfFile: imageFileName.documentURL.path)
     }
     
     /// Decode the Anchor Point.
@@ -201,6 +225,8 @@ class RouteAnchorPoint: NSObject, NSSecureCoding {
         var anchor : ARAnchor? = nil
         var information : NSString? = nil
         var voiceNote : NSString? = nil
+        var imageFileName : NSString?
+        var intrinsics : simd_float4?
         
         if let transformAsARAnchor = aDecoder.decodeObject(of: ARAnchor.self, forKey: "transformAsARAnchor") {
             anchor = transformAsARAnchor
@@ -209,9 +235,26 @@ class RouteAnchorPoint: NSObject, NSSecureCoding {
         }
         information = aDecoder.decodeObject(of: NSString.self, forKey: "information")
         voiceNote = aDecoder.decodeObject(of: NSString.self, forKey: "voiceNote")
-        self.init(anchor: anchor, information: information, voiceNote: voiceNote)
+        imageFileName = aDecoder.decodeObject(of: NSString.self, forKey: "image")
+        
+        if let intrinsicsArray = aDecoder.decodeObject(forKey: "intrinsics") as? [Float] {
+            intrinsics = simd_float4(intrinsicsArray[0], intrinsicsArray[1], intrinsicsArray[2], intrinsicsArray[3])
+        }
+        self.init(anchor: anchor, information: information, voiceNote: voiceNote, imageFileName: imageFileName, intrinsics: intrinsics)
     }
     
+    func getThumbnail(imageHeight: CGFloat = 100)->UIImage? {
+        guard let image = image else {
+            return nil
+        }
+        if let cached = thumbnailCache[imageHeight] {
+            return cached
+        }
+        let imageWidth = image.size.width * imageHeight / image.size.height
+        let imageThumbnail = image.imageWithSize(scaledToSize: CGSize(width: imageWidth, height: imageHeight))
+        thumbnailCache[imageHeight] = imageThumbnail.rotate(radians: Float.pi/2)?.withRenderingMode(.alwaysOriginal)
+        return thumbnailCache[imageHeight]
+    }
 }
 
 /// [Deprecated] [Needed to load old routes] An encapsulation of a route landmark, including position, text, and audio information.
@@ -264,7 +307,6 @@ class RouteLandmark: NSObject, NSSecureCoding {
         voiceNote = aDecoder.decodeObject(of: NSString.self, forKey: "voiceNote")
         self.init(transform: transform, information: information, voiceNote: voiceNote)
     }
-    
 }
 /// This class encapsulates a route that can be persisted to storage and reloaded as needed.
 class SavedRoute: NSObject, NSSecureCoding {
@@ -279,6 +321,9 @@ class SavedRoute: NSObject, NSSecureCoding {
     public var dateCreated: NSDate
     /// The crumbs that make up the route.  The densely sampled positions (crumbs) are stored and the keypoints (sparser goal positionsare calculated on demand when navigation is requested.
     public var crumbs: [LocationInfo]
+    /// the cloud anchors associated with the route
+    public var cloudAnchors: [NSString: ARAnchor]
+    
     /// The Anchor Point marks the beginning of the route (needed for start to end navigation)
     public var beginRouteAnchorPoint : RouteAnchorPoint
     /// The Anchor Point marks the end of the route (needed for end to start navigation)
@@ -295,10 +340,11 @@ class SavedRoute: NSObject, NSSecureCoding {
     ///   - dateCreated: the route creation date
     ///   - beginRouteAnchorPoint: the Anchor Point for the beginning of the route (pass a `RouteAnchorPoint` with default initialization if no Anchor Point was recorded at the beginning of the route)
     ///   - endRouteAnchorPoint: the Anchor Point for the end of the route (pass a `RouteAnchorPoint` with default initialization if no Anchor Point was recorded at the end of the route)
-    public init(id: NSString, name: NSString, crumbs: [LocationInfo], dateCreated: NSDate = NSDate(), beginRouteAnchorPoint: RouteAnchorPoint, endRouteAnchorPoint: RouteAnchorPoint, intermediateAnchorPoints: [RouteAnchorPoint]) {
+    public init(id: NSString, name: NSString, crumbs: [LocationInfo], cloudAnchors: [NSString: ARAnchor], dateCreated: NSDate = NSDate(), beginRouteAnchorPoint: RouteAnchorPoint, endRouteAnchorPoint: RouteAnchorPoint, intermediateAnchorPoints: [RouteAnchorPoint]) {
         self.id = id
         self.name = name
         self.crumbs = crumbs
+        self.cloudAnchors = cloudAnchors
         self.dateCreated = dateCreated
         self.beginRouteAnchorPoint = beginRouteAnchorPoint
         self.endRouteAnchorPoint = endRouteAnchorPoint
@@ -312,6 +358,12 @@ class SavedRoute: NSObject, NSSecureCoding {
         aCoder.encode(id, forKey: "id")
         aCoder.encode(name, forKey: "name")
         aCoder.encode(crumbs, forKey: "crumbs")
+        
+        let cloudAnchorKeys = Array(cloudAnchors.keys)
+        let cloudAnchorValues = cloudAnchorKeys.map({cloudAnchors[$0]!})
+        aCoder.encode(cloudAnchorKeys, forKey: "cloudAnchorKeys")
+        aCoder.encode(cloudAnchorValues, forKey: "cloudAnchorValues")
+        
         aCoder.encode(dateCreated, forKey: "dateCreated")
         aCoder.encode(beginRouteAnchorPoint, forKey: "beginRouteAnchorPoint")
         aCoder.encode(endRouteAnchorPoint, forKey: "endRouteAnchorPoint")
@@ -331,6 +383,13 @@ class SavedRoute: NSObject, NSSecureCoding {
         guard let crumbs = aDecoder.decodeObject(of: [].self, forKey: "crumbs") as? [LocationInfo] else {
             return nil
         }
+        
+        let cloudAnchorKeys = aDecoder.decodeObject(of: [].self, forKey: "cloudAnchorKeys") as? [NSString] ?? []
+        
+        let cloudAnchorValues = aDecoder.decodeObject(of: [].self, forKey: "cloudAnchorValues") as? [ARAnchor] ?? []
+        
+        let cloudAnchors = Dictionary(uniqueKeysWithValues: zip(cloudAnchorKeys, cloudAnchorValues))
+        
         guard let dateCreated = aDecoder.decodeObject(of: NSDate.self, forKey: "dateCreated") else {
             return nil
         }
@@ -363,7 +422,7 @@ class SavedRoute: NSObject, NSSecureCoding {
         if let anchorPoints = aDecoder.decodeObject(of: [].self, forKey: "intermediateAnchorPoints") as? [RouteAnchorPoint] {
             intermediateRouteAnchorPoints = anchorPoints
         }
-        self.init(id: id, name: name, crumbs: crumbs, dateCreated: dateCreated, beginRouteAnchorPoint: beginRouteAnchorPoint, endRouteAnchorPoint: endRouteAnchorPoint, intermediateAnchorPoints: intermediateRouteAnchorPoints)
+        self.init(id: id, name: name, crumbs: crumbs, cloudAnchors: cloudAnchors, dateCreated: dateCreated, beginRouteAnchorPoint: beginRouteAnchorPoint, endRouteAnchorPoint: endRouteAnchorPoint, intermediateAnchorPoints: intermediateRouteAnchorPoints)
     }
 }
 
