@@ -45,6 +45,8 @@
 		821D07342742B33200FE6297 /* VisualAlignmentManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 821D07322742B33100FE6297 /* VisualAlignmentManager.swift */; };
 		821D07362742B44400FE6297 /* AnnouncementManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 821D07352742B44400FE6297 /* AnnouncementManager.swift */; };
 		821D07372742B44400FE6297 /* AnnouncementManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 821D07352742B44400FE6297 /* AnnouncementManager.swift */; };
+		822695122998733500165152 /* ARCoreGeospatial in Frameworks */ = {isa = PBXBuildFile; productRef = 822695112998733500165152 /* ARCoreGeospatial */; };
+		822695162998734900165152 /* ARCoreGeospatial in Frameworks */ = {isa = PBXBuildFile; productRef = 822695152998734900165152 /* ARCoreGeospatial */; };
 		823DA454252F7EA800BB5E6B /* speaker.obj in Resources */ = {isa = PBXBuildFile; fileRef = 823DA453252F7EA800BB5E6B /* speaker.obj */; };
 		823DA455252F7EA800BB5E6B /* speaker.obj in Resources */ = {isa = PBXBuildFile; fileRef = 823DA453252F7EA800BB5E6B /* speaker.obj */; };
 		82569F4E22187E6500448B45 /* help in Resources */ = {isa = PBXBuildFile; fileRef = 82569F4D22187E6500448B45 /* help */; };
@@ -745,6 +747,7 @@
 				82BE6C832739815900387139 /* FirebaseDatabase in Frameworks */,
 				82CD6F26299690AD00C2DC8C /* ARCoreCloudAnchors in Frameworks */,
 				82BE6C852739815900387139 /* FirebaseStorage in Frameworks */,
+				822695122998733500165152 /* ARCoreGeospatial in Frameworks */,
 				82D94B63266FC7CF00EE2C1C /* SimpleForm in Frameworks */,
 				82BE6C902739823400387139 /* VectorMath in Frameworks */,
 			);
@@ -761,6 +764,7 @@
 				82BE6C8B2739819100387139 /* FirebaseDatabase in Frameworks */,
 				82CD6F24299690A300C2DC8C /* ARCoreCloudAnchors in Frameworks */,
 				82BE6C8D2739819700387139 /* FirebaseStorage in Frameworks */,
+				822695162998734900165152 /* ARCoreGeospatial in Frameworks */,
 				82D94B65266FC86200EE2C1C /* SimpleForm in Frameworks */,
 				82BE6C922739824500387139 /* VectorMath in Frameworks */,
 			);
@@ -1651,7 +1655,6 @@
 				827EDC3026CDA5C000AAA12A /* ClewErrorSound.wav */,
 				14A90C0326A211BE003DAB30 /* ClewTutorialFeedback.wav */,
 				E5470ED322C119F4001092A4 /* StopRecording.aiff */,
-				828F8883286549B500F92FD8 /* tamb_tap_short.wav */,
 			);
 			path = "Sound Effects";
 			sourceTree = "<group>";
@@ -1768,6 +1771,7 @@
 				82BE6C8F2739823400387139 /* VectorMath */,
 				82BE6C942739828E00387139 /* InAppSettingsKit */,
 				82CD6F25299690AD00C2DC8C /* ARCoreCloudAnchors */,
+				822695112998733500165152 /* ARCoreGeospatial */,
 			);
 			productName = Clew;
 			productReference = 4D6B00C01F33C1C400952242 /* Clew.app */;
@@ -1795,6 +1799,7 @@
 				82BE6C912739824500387139 /* VectorMath */,
 				82BE6C96273982A100387139 /* InAppSettingsKit */,
 				82CD6F23299690A300C2DC8C /* ARCoreCloudAnchors */,
+				822695152998734900165152 /* ARCoreGeospatial */,
 			);
 			productName = Clew;
 			productReference = B7EB59EC20F693EB00FBBC6A /* Clew Dev.app */;
@@ -2611,6 +2616,14 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		822695112998733500165152 /* ARCoreGeospatial */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ARCoreGeospatial;
+		};
+		822695152998734900165152 /* ARCoreGeospatial */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ARCoreGeospatial;
+		};
 		82BE6C7E2739815900387139 /* FirebaseAnalytics */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 82BE6C7D2739815900387139 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;

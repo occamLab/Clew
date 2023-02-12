@@ -878,7 +878,8 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
 
         // make sure this happens after the view is created!
         rootContainerView.countdownTimer.delegate = self
-        
+        locationManager.requestWhenInUseAuthorization()
+
         AnnouncementManager.shared.announcementText = rootContainerView.announcementText
         
         ///sets the length of the timer to be equal to what the person has in their settings
@@ -1608,6 +1609,8 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
         AnnouncementManager.shared.announce(announcement: altText)
     }
         
+    let locationManager = CLLocationManager()
+    
     /// MARK: - Clew internal datastructures
     
     /// list of crumbs dropped when recording path
@@ -2773,25 +2776,6 @@ extension ViewController: ARSessionManagerDelegate {
     
     func sessionRelocalizing() {
         trackingSessionErrorState = nil
-    }
-    
-    func sessionDidRelocalize() {
-        if trackingWarningsAllowed {
-           announce(announcement: NSLocalizedString("realignToSavedRouteAnnouncement", comment: "An announcement which lets the user know that their surroundings have been matched to a saved route"))
-        }
-        attemptingRelocalization = false
-        if case .readyForFinalResumeAlignment = state {
-            // this will cancel any realignment if it hasn't happened yet and go straight to route navigation mode
-            rootContainerView.countdownTimer.isHidden = true
-            isResumedRoute = true
-            
-            isAutomaticAlignment = true
-            
-            ///PATHPOINT: Auto Alignment -> resume route
-            if !isTutorial, ARSessionManager.shared.initialWorldMap != nil {
-                state = .readyToNavigateOrPause(allowPause: false)
-            }
-        }
     }
     
     func trackingIsNormal() {
