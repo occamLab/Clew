@@ -14,6 +14,8 @@ class SoundEffectManager {
     private var successSound: AVAudioPlayer?
     private var mehSound: AVAudioPlayer?
     private var errorSound: AVAudioPlayer?
+    private var tambourineSound: AVAudioPlayer?
+
     /// audio players for playing system sounds through an `AVAudioSession` (this allows them to be audible even when the rocker switch is muted.
     var audioPlayers: [Int: AVAudioPlayer] = [:]
 
@@ -45,6 +47,15 @@ class SoundEffectManager {
                 let url = URL(fileURLWithPath: mehPath)
                 mehSound = try AVAudioPlayer(contentsOf: url)
                 mehSound?.prepareToPlay()
+            } catch {
+                print("error \(error)")
+            }
+        }
+        if let tambourinePath = Bundle.main.path(forResource: "tamb_tap_short", ofType:"wav") {
+            do {
+                let url = URL(fileURLWithPath: tambourinePath)
+                tambourineSound = try AVAudioPlayer(contentsOf: url)
+                tambourineSound?.prepareToPlay()
             } catch {
                 print("error \(error)")
             }
@@ -94,6 +105,11 @@ class SoundEffectManager {
     func meh() {
         overrideSilentMode()
         mehSound?.play()
+    }
+    
+    func tambourine() {
+        overrideSilentMode()
+        tambourineSound?.play()
     }
     
     /// Play the specified system sound.  If the system sound has been preloaded as an audio player, then play using the AVAudioSession.  If there is no corresponding player, use the `AudioServicesPlaySystemSound` function.

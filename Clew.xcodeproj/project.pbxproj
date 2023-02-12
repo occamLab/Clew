@@ -1651,6 +1651,7 @@
 				827EDC3026CDA5C000AAA12A /* ClewErrorSound.wav */,
 				14A90C0326A211BE003DAB30 /* ClewTutorialFeedback.wav */,
 				E5470ED322C119F4001092A4 /* StopRecording.aiff */,
+				828F8883286549B500F92FD8 /* tamb_tap_short.wav */,
 			);
 			path = "Sound Effects";
 			sourceTree = "<group>";

@@ -32,6 +32,7 @@ protocol ARSessionManagerDelegate {
     func trackingErrorOccurred(_ : ARTrackingError)
     func sessionInitialized()
     func sessionRelocalizing()
+    func sessionDidRelocalize()
     func trackingIsNormal()
     func isRecording()->Bool
     func getPathColor()->Int
@@ -174,6 +175,9 @@ class ARSessionManager: NSObject {
     
     /// the strategy to employ with respect to the worldmap
     var relocalizationStrategy: RelocalizationStrategy = .none
+    
+    /// keep track of whether or not the session was, at any point, in the relocalizing state.  The behavior of the ARCamera.TrackingState is a bit erratic in that the session will sometimes execute unexpected sequences (e.g., initializing -> normal -> not available -> initializing -> relocalizing).
+    var sessionWasRelocalizing = false
     
     var initialWorldMap: ARWorldMap? {
         set {
@@ -520,6 +524,15 @@ class ARSessionManager: NSObject {
         let speakerAsset = MDLAsset(url: speakerUrl as URL)
         speakerObject = speakerAsset.object(at: 0)
     }
+    
+    /// Remove crumb anchors from the world map (this is useful when we can use auto coordinate system alignment)
+    /// - Parameter route: the route that corresponds with the anchors stored in the world map
+    func stripCrumbAnchorsFromInitialWorldMap(route: SavedRoute) {
+         let allCrumbAnchors = Set(route.crumbs.map({$0.identifier}))
+         if let mapAnchors = configuration.initialWorldMap?.anchors {
+             configuration.initialWorldMap?.anchors = mapAnchors.filter({!allCrumbAnchors.contains($0.identifier)})
+         }
+     }
 }
 
 class ARData: ObservableObject {

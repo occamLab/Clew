@@ -268,6 +268,10 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
         isTutorial = false
         
         // cancel the timer that announces tracking errors
+        if #available(iOS 15.2, *) {
+            // we can pause the session to conserve battery in this iOS version as we will use auto coordinate system alignment (previously the other approaches to localization required the session to continue running)
+            ARSessionManager.shared.pauseSession()
+        }
         trackingErrorsAnnouncementTimer?.invalidate()
         // set this to nil to prevent the app from erroneously detecting that we can auto-align to the route
         ARSessionManager.shared.initialWorldMap = nil
@@ -280,7 +284,10 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
     func handleStateTransitionToFinishedTutorialRoute(announceArrival: Bool) {
         // cancel the timer that announces tracking errors
         trackingErrorsAnnouncementTimer?.invalidate()
-        // TODO: see note elsewhere about needing to disable thsi for now. (previous: if the ARSession is running, pause it to conserve battery)
+        if #available(iOS 15.2, *) {
+            // we can pause the session to conserve battery in this iOS version as we will use auto coordinate system alignment (previously the other approaches to localization required the session to continue running)
+            ARSessionManager.shared.pauseSession()
+        }
         // set this to nil to prevent the app from erroneously detecting that we can auto-align to the route
         ARSessionManager.shared.initialWorldMap = nil
         showRecordPathButton(announceArrival: announceArrival)
@@ -290,10 +297,13 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
     
     /// Handler for the recordingRoute app state
     func handleStateTransitionToRecordingRoute() {
-        // records a new path
-        // updates the state Boolean to signifiy that the program is no longer saving the first anchor point
+        // records a new path        
+        // updates the state Boolean to signify that the program is no longer saving the first anchor point
         startAnchorPoint = false
         attemptingRelocalization = false
+        
+        // update manual alignment for single use routes
+        ARSessionManager.shared.manualAlignment = matrix_identity_float4x4
         
         // TODO: probably don't need to set this to [], but erring on the side of begin conservative
         crumbs = []
@@ -2107,7 +2117,9 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
         }
         
         recordingCrumbs.append(curLocation)
-        ARSessionManager.shared.add(anchor: curLocation)
+        if #unavailable(iOS 15.2) {
+            ARSessionManager.shared.add(anchor: curLocation)
+        }
     }
     
     /// checks to see if user is on the right path during navigation.
@@ -2761,6 +2773,25 @@ extension ViewController: ARSessionManagerDelegate {
     
     func sessionRelocalizing() {
         trackingSessionErrorState = nil
+    }
+    
+    func sessionDidRelocalize() {
+        if trackingWarningsAllowed {
+           announce(announcement: NSLocalizedString("realignToSavedRouteAnnouncement", comment: "An announcement which lets the user know that their surroundings have been matched to a saved route"))
+        }
+        attemptingRelocalization = false
+        if case .readyForFinalResumeAlignment = state {
+            // this will cancel any realignment if it hasn't happened yet and go straight to route navigation mode
+            rootContainerView.countdownTimer.isHidden = true
+            isResumedRoute = true
+            
+            isAutomaticAlignment = true
+            
+            ///PATHPOINT: Auto Alignment -> resume route
+            if !isTutorial, ARSessionManager.shared.initialWorldMap != nil {
+                state = .readyToNavigateOrPause(allowPause: false)
+            }
+        }
     }
     
     func trackingIsNormal() {
