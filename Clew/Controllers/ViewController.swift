@@ -135,7 +135,7 @@ enum AppState {
 }
 
 /// The view controller that handles the main Clew window.  This view controller is always active and handles the various views that are used for different app functionalities.
-class ViewController: UIViewController, SRCountdownTimerDelegate {
+class ViewController: UIViewController, SRCountdownTimerDelegate, CLLocationManagerDelegate {
     static let debugARCore = false
     // MARK: Properties and subview declarations
     
@@ -841,6 +841,10 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
     /// last direction announcement
     var lastDirectionAnnouncement = Date()
     
+    /// location
+    let locationLabel = UILabel()
+    let locationManager = CLLocationManager()
+    
     /// called when the view has loaded.  We setup various app elements in here.
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -861,11 +865,25 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
         ARSessionManager.shared.delegate = self
         
         // Location
-        let locationManager = CLLocationManager()
+        
         locationManager.delegate = self
         locationManager.requestWhenInUseAuthorization()
         
         locationManager.startUpdatingLocation()
+        
+        // Initialize label
+        locationLabel.text = "Loading..."
+        locationLabel.textAlignment = .center
+        locationLabel.translatesAutoresizingMaskIntoConstraints = false
+
+        // Add label to the view
+        view.addSubview(locationLabel)
+        // Constrain label to the center of the view
+       NSLayoutConstraint.activate([
+           locationLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+           locationLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+       ])
+        
         // Add the scene to the view, which is a RootContainerView
         ARSessionManager.shared.sceneView.frame = view.frame
         view.addSubview(ARSessionManager.shared.sceneView)
@@ -2026,6 +2044,16 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
         }
     }
     
+    // MARK: - CLLocationManagerDelegate TODO fix STEP
+
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        // Get the most recent location from the locations array
+        let latestLocation = locations.last!
+
+        // Update the label with the user's location
+        locationLabel.text = "Latitude: \(latestLocation.coordinate.latitude)\nLongitude: \(latestLocation.coordinate.longitude)"
+    }
+    
     // MARK: - Logging
     
     /// Presents a survey to the user as a popover.  The method will check to see if it has been sufficiently long since the user was last asked to fill out this survey before displaying the survey.
@@ -2871,21 +2899,22 @@ extension ViewController: VisualAlignmentManagerDelegate {
     }
 }
 
-extension ViewController: CLLocationManagerDelegate {
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        let currentLocation = locations.last!
-        let latitude = currentLocation.coordinate.latitude
-        let longitude = currentLocation.coordinate.longitude
-        let textLabel = UILabel(frame: CGRect(x: 20, y: 20, width: 100, height: 20))
-        textLabel.font = UIFont.systemFont(ofSize: 20)
-        textLabel.textColor = UIColor.green
-        textLabel.textAlignment = .center
-        textLabel.text = "Latitude: \(latitude)\nLongitude: \(longitude)"
-        // self.view.addSubview(textLabel)
-        self.view.addSubview(textLabel)
+//extension ViewController: CLLocationManagerDelegate {
+//    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+//        let currentLocation = locations.last!
+//        let latitude = currentLocation.coordinate.latitude
+//        let longitude = currentLocation.coordinate.longitude
+//        let textLabel = UILabel(frame: CGRect(x: 20, y: 20, width: 100, height: 20))
+//        textLabel.font = UIFont.systemFont(ofSize: 20)
+//        textLabel.textColor = UIColor.green
+//        textLabel.textAlignment = .center
+//        textLabel.text = "Latitude: \(latitude)\nLongitude: \(longitude)"
+//        print("Latitude: \(latitude)\nLongitude: \(longitude)")
+//        // self.view.addSubview(textLabel)
+//        self.view.addSubview(textLabel)
 //locationLabel.text = "Latitude: \(latitude)\nLongitude: \(longitude)"
-    }
-}
+//    }
+//}
 
 //func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
 //    let currentLocation = locations.last!
