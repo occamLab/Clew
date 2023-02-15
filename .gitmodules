@@ -1,6 +1,3 @@
-[submodule "opencv2.framework"]
-	path = opencv2.framework
-	url = git@github.com:occamLab/opencv2.framework.git
 [submodule "FirebasePlists"]
 	path = FirebasePlists
 	url = git@github.com:occamLab/FirebasePlists.git
