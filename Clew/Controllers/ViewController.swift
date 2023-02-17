@@ -842,7 +842,8 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, CLLocationMana
     var lastDirectionAnnouncement = Date()
     
     /// location
-    let locationLabel = UILabel()
+    let latitudeLabel = UILabel()
+    let longitudeLabel = UILabel()
     let locationManager = CLLocationManager()
     
     /// called when the view has loaded.  We setup various app elements in here.
@@ -871,18 +872,21 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, CLLocationMana
         
         locationManager.startUpdatingLocation()
         
-        // Initialize label
-        locationLabel.text = "Loading..."
-        locationLabel.textAlignment = .center
-        locationLabel.translatesAutoresizingMaskIntoConstraints = false
+        // create the stack view
+        let locationStackView = UIStackView(arrangedSubviews: [latitudeLabel, longitudeLabel])
+        locationStackView.axis = .vertical
+        locationStackView.alignment = .leading
+        locationStackView.distribution = .fillEqually
+        locationStackView.spacing = 8
+        
+        // add stack vierw to view hierarchy
+        view.addSubview(locationStackView)
+        
+        // Set the stack view's constraints
+        locationStackView.translatesAutoresizingMaskIntoConstraints = false
+        locationStackView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        locationStackView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
 
-        // Add label to the view
-        view.addSubview(locationLabel)
-        // Constrain label to the center of the view
-       NSLayoutConstraint.activate([
-           locationLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-           locationLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-       ])
         
         // Add the scene to the view, which is a RootContainerView
         ARSessionManager.shared.sceneView.frame = view.frame
@@ -2051,7 +2055,9 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, CLLocationMana
         let latestLocation = locations.last!
 
         // Update the label with the user's location
-        locationLabel.text = "Latitude: \(latestLocation.coordinate.latitude)\nLongitude: \(latestLocation.coordinate.longitude)"
+        latitudeLabel.text = "Latitude: \(latestLocation.coordinate.latitude)"
+        
+        longitudeLabel.text = "Longitude: \(latestLocation.coordinate.longitude)"
     }
     
     // MARK: - Logging
