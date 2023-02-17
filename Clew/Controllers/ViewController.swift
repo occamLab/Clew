@@ -845,7 +845,6 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, CLLocationMana
     let latitudeLabel = UILabel()
     let longitudeLabel = UILabel()
     let locationManager = CLLocationManager()
-    
     /// called when the view has loaded.  We setup various app elements in here.
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -866,9 +865,9 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, CLLocationMana
         ARSessionManager.shared.delegate = self
         
         // Location
-        
-        locationManager.delegate = self
         locationManager.requestWhenInUseAuthorization()
+        locationManager.delegate = self
+        locationManager.distanceFilter = 0.01
         
         locationManager.startUpdatingLocation()
         
@@ -2051,13 +2050,16 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, CLLocationMana
     // MARK: - CLLocationManagerDelegate TODO fix STEP
 
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        print("HIIIIIIIIIIIIIIIIII")
         // Get the most recent location from the locations array
-        let latestLocation = locations.last!
-
+//        let latestLocation = locations.last!
+        let latestLocation = locations.first!
         // Update the label with the user's location
         latitudeLabel.text = "Latitude: \(latestLocation.coordinate.latitude)"
-        
+        print(latestLocation.coordinate.latitude)
+        print("BYEEEEEE")
         longitudeLabel.text = "Longitude: \(latestLocation.coordinate.longitude)"
+        Thread.sleep(forTimeInterval: 0.001)
     }
     
     // MARK: - Logging
