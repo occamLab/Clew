@@ -24,6 +24,7 @@ import UIKit
 import ARKit
 import VectorMath
 import Firebase
+import ARCoreGeospatial
 import SwiftUI
 import CoreHaptics
 import CoreLocation
@@ -147,6 +148,9 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, CLLocationMana
     
     /// The state of the tracking session as last communicated to us through the delgate protocol.  This is useful if you want to do something different in the delegate method depending on whether there has been an error
     var trackingSessionErrorState : ARTrackingError?
+    
+    /// the model for the bus stop data
+    let busStopDataModel = BusStopDataModel()
     
     /// The data source for in-app surveys
     let surveyModel = FirebaseFeedbackSurveyModel.shared
@@ -844,6 +848,8 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, CLLocationMana
     /// location
     let latitudeLabel = UILabel()
     let longitudeLabel = UILabel()
+    let locationAccuracyLabel = UILabel()
+
     let locationManager = CLLocationManager()
     /// called when the view has loaded.  We setup various app elements in here.
     override func viewDidLoad() {
@@ -872,7 +878,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, CLLocationMana
         locationManager.startUpdatingLocation()
         
         // create the stack view
-        let locationStackView = UIStackView(arrangedSubviews: [latitudeLabel, longitudeLabel])
+        let locationStackView = UIStackView(arrangedSubviews: [latitudeLabel, longitudeLabel, locationAccuracyLabel])
         locationStackView.axis = .vertical
         locationStackView.alignment = .leading
         locationStackView.distribution = .fillEqually
@@ -2050,16 +2056,15 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, CLLocationMana
     // MARK: - CLLocationManagerDelegate TODO fix STEP
 
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        print("HIIIIIIIIIIIIIIIIII")
+        //print("HIIIIIIIIIIIIIIIIII")
         // Get the most recent location from the locations array
 //        let latestLocation = locations.last!
-        let latestLocation = locations.first!
+        //let latestLocation = locations.first!
         // Update the label with the user's location
-        latitudeLabel.text = "Latitude: \(latestLocation.coordinate.latitude)"
-        print(latestLocation.coordinate.latitude)
-        print("BYEEEEEE")
-        longitudeLabel.text = "Longitude: \(latestLocation.coordinate.longitude)"
-        Thread.sleep(forTimeInterval: 0.001)
+        //latitudeLabel.text = "Latitude: \(latestLocation.coordinate.latitude)"
+        //print(latestLocation.coordinate.latitude)
+        //print("BYEEEEEE")
+        //longitudeLabel.text = "Longitude: \(latestLocation.coordinate.longitude)"
     }
     
     // MARK: - Logging
@@ -2806,6 +2811,12 @@ class UISurveyHostingController: UIHostingController<FirebaseFeedbackSurvey> {
 }
 
 extension ViewController: ARSessionManagerDelegate {
+    func locationDidUpdate(cameraGeoSpatialTransform: GARGeospatialTransform) {
+        latitudeLabel.text = String(cameraGeoSpatialTransform.coordinate.latitude)
+        longitudeLabel.text = String(cameraGeoSpatialTransform.coordinate.longitude)
+        locationAccuracyLabel.text = String(cameraGeoSpatialTransform.horizontalAccuracy)
+    }
+    
     func getPathColor() -> Int {
         return defaultPathColor
     }

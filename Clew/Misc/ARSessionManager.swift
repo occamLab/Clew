@@ -10,6 +10,7 @@ import Foundation
 import ARKit
 import ARCore
 import ARCoreCloudAnchors
+import ARCoreGeospatial
 
 enum ARTrackingError {
     case insufficientFeatures
@@ -40,6 +41,7 @@ protocol ARSessionManagerDelegate {
     func newFrameAvailable()
     func sessionDidRelocalize()
     func didHostCloudAnchor(cloudIdentifier: String, anchorIdentifier: String, withTransform transform : simd_float4x4)
+    func locationDidUpdate(cameraGeoSpatialTransform: GARGeospatialTransform)
 }
 
 class ARSessionManager: NSObject {
@@ -194,6 +196,9 @@ class ARSessionManager: NSObject {
     private var pathRenderJob: (()->())?
     private var intermediateAnchorRenderJobs: [RouteAnchorPoint : (()->())?] = [:]
     
+    private var mockBusStop: GARAnchor?
+    private var mockBusStopNode: SCNNode?
+    
     /// SCNNode of the next keypoint
     private var keypointNode: SCNNode?
     
@@ -248,6 +253,8 @@ class ARSessionManager: NSObject {
     }
     
     func startSession() {
+        mockBusStop = nil
+        mockBusStopNode = nil
         lastTorchChange = 0.0
         manualAlignment = nil
         localization = .none
@@ -285,6 +292,7 @@ class ARSessionManager: NSObject {
             var error: NSError?
             let configuration = GARSessionConfiguration()
             configuration.cloudAnchorMode = .enabled
+            configuration.geospatialMode = .enabled
             garSession?.setConfiguration(configuration, error: &error)
             garSession?.delegate = self
             print("gar set configuration error \(error)")
@@ -545,8 +553,37 @@ extension ARSessionManager: ARSessionDelegate {
         }
         
         do {
+            
             ARFrameStatusAdapter.adjustTrackingStatus(frame)
             let garFrame = try garSession?.update(frame)
+            
+            // TODO: create GeoSpatialAnchors to mark bus stops? STEP
+            if mockBusStop == nil {
+                do {
+                    mockBusStop = try garSession?.createAnchorOnTerrain(coordinate: CLLocationCoordinate2D(latitude: 42.293585, longitude: -71.2639328), altitudeAboveTerrain: 0.0, eastUpSouthQAnchor: simd_quatf())
+                } catch {
+                    print("Got an error \(error)")
+                }
+            }
+            
+            if let geoSpatialTransform = garFrame?.earth?.cameraGeospatialTransform {
+                delegate?.locationDidUpdate(cameraGeoSpatialTransform: geoSpatialTransform)
+                print("geoSpatialTransform \(geoSpatialTransform.coordinate)")
+            }
+            for anchor in garFrame?.anchors ?? [] {
+                if anchor.hasValidTransform {
+                    if mockBusStopNode == nil {
+                        // create bus stop node
+                        let box = SCNBox(width: 0.2, height: 0.2, length: 0.2, chamferRadius: 0)
+                        mockBusStopNode = SCNNode(geometry: box)
+                        mockBusStopNode?.simdTransform = anchor.transform
+                        sceneView.scene.rootNode.addChildNode(mockBusStopNode!)
+                    } else {
+                        mockBusStopNode?.simdTransform = anchor.transform
+                    }
+                }
+                print(anchor.hasValidTransform)
+            }
             self.currentGARFrame = garFrame
             // don't use Cloud Anchors if we have localized with the ARWorldMap
             if localization != .withARWorldMap, let gAnchors = currentGARFrame?.anchors {
