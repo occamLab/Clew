@@ -879,6 +879,12 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, CLLocationMana
         
         // create the stack view
         let locationStackView = UIStackView(arrangedSubviews: [latitudeLabel, longitudeLabel, locationAccuracyLabel])
+        if #available(iOS 14.0, *) {
+//          locationStackView.backgroundColor = .green
+            locationStackView.backgroundColor = UIColor.gray.withAlphaComponent(0.8)
+        } else {
+            // Fallback for older versions of iOS
+        }
         locationStackView.axis = .vertical
         locationStackView.alignment = .leading
         locationStackView.distribution = .fillEqually
@@ -2812,9 +2818,9 @@ class UISurveyHostingController: UIHostingController<FirebaseFeedbackSurvey> {
 
 extension ViewController: ARSessionManagerDelegate {
     func locationDidUpdate(cameraGeoSpatialTransform: GARGeospatialTransform) {
-        latitudeLabel.text = String(cameraGeoSpatialTransform.coordinate.latitude)
-        longitudeLabel.text = String(cameraGeoSpatialTransform.coordinate.longitude)
-        locationAccuracyLabel.text = String(cameraGeoSpatialTransform.horizontalAccuracy)
+        latitudeLabel.text = ("Latitude: \(String(cameraGeoSpatialTransform.coordinate.latitude))")
+        longitudeLabel.text = ("Longitude:  \(String(cameraGeoSpatialTransform.coordinate.longitude))")
+        locationAccuracyLabel.text = ("Accuracy: \(String(cameraGeoSpatialTransform.horizontalAccuracy))")
     }
     
     func getPathColor() -> Int {
