@@ -834,6 +834,8 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
     /// keep track of when the last off course announcement was given
     var lastOffCourseAnnouncement: Date? = Date()
     
+    var timeOffTrack: Date?
+    
     /// last direction announcement
     var lastDirectionAnnouncement = Date()
     
@@ -1652,9 +1654,11 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
     
     static let spatialAudioInterval = 1.0
     
-    static let offTrackCorrectionAnnouncementInterval = 2.0
+    static let offTrackCorrectionAnnouncementInterval = 4.0
     
     static let directionTextGracePeriod = 3.5
+    
+    static let offTrackGracePeriod = 2.0
     
     /// times when the heading offset should be recalculated.  The ability to use the heading offset is currently not exposed to the user.
     var updateHeadingOffsetTimer: Timer?
@@ -2301,6 +2305,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
         
         // use a stricter criteria than 12 o'clock for providing haptic feedback
         if directionToNextKeypoint.lateralDistanceRatioWhenCrossingTarget < lateralDisplacementToleranceRatio || abs(directionToNextKeypoint.angleDiff) < coneWidth {
+            timeOffTrack = nil
             lastOffCourseAnnouncement = nil
             if -feedbackTimer.timeIntervalSinceNow > ViewController.FEEDBACKDELAY {
                 // wait until desired time interval before sending another feedback
@@ -2311,21 +2316,26 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
                 }
                 feedbackTimer = Date()
             }
-        } else if -lastDirectionAnnouncement.timeIntervalSinceNow > Self.directionTextGracePeriod {
-            let intervalMultiplier = RouteManager.shared.onFirstKeypoint ? 4.0 : 1.0
-            if lastOffCourseAnnouncement == nil || -lastOffCourseAnnouncement!.timeIntervalSinceNow > Self.offTrackCorrectionAnnouncementInterval * intervalMultiplier {
-                lastOffCourseAnnouncement = Date()
-                if RouteManager.shared.onFirstKeypoint {
-                    if directionToNextKeypoint.angleDiff > 0 {
-                        AnnouncementManager.shared.announce(announcement: NSLocalizedString("bearRightToFaceStart", comment: "announcement to direct the user to the first keypoint"))
+        } else {
+            if timeOffTrack == nil {
+                timeOffTrack = Date()
+            }
+            if -lastDirectionAnnouncement.timeIntervalSinceNow > Self.directionTextGracePeriod, -(timeOffTrack?.timeIntervalSinceNow ?? 0.0) > Self.offTrackGracePeriod {
+                let intervalMultiplier = RouteManager.shared.onFirstKeypoint ? 2.0 : 1.0
+                if lastOffCourseAnnouncement == nil || -lastOffCourseAnnouncement!.timeIntervalSinceNow > Self.offTrackCorrectionAnnouncementInterval * intervalMultiplier {
+                    lastOffCourseAnnouncement = Date()
+                    if RouteManager.shared.onFirstKeypoint {
+                        if directionToNextKeypoint.angleDiff > 0 {
+                            AnnouncementManager.shared.announce(announcement: NSLocalizedString("bearRightToFaceStart", comment: "announcement to direct the user to the first keypoint"))
+                        } else {
+                            AnnouncementManager.shared.announce(announcement: NSLocalizedString("bearLeftToFaceStart", comment: "announcement to direct the user to the first keypoint"))
+                        }
                     } else {
-                        AnnouncementManager.shared.announce(announcement: NSLocalizedString("bearLeftToFaceStart", comment: "announcement to direct the user to the first keypoint"))
-                    }
-                } else {
-                    if directionToNextKeypoint.angleDiff > 0 {
-                        AnnouncementManager.shared.announce(announcement: NSLocalizedString("bearRightToGetOnTrack", comment: "announcement to direct the user to a  keypoint"))
-                    } else {
-                        AnnouncementManager.shared.announce(announcement: NSLocalizedString("bearLeftToGetOnTrack", comment: "announcement to direct the user to a  keypoint"))
+                        if directionToNextKeypoint.angleDiff > 0 {
+                            AnnouncementManager.shared.announce(announcement: NSLocalizedString("bearRightToGetOnTrack", comment: "announcement to direct the user to a  keypoint"))
+                        } else {
+                            AnnouncementManager.shared.announce(announcement: NSLocalizedString("bearLeftToGetOnTrack", comment: "announcement to direct the user to a  keypoint"))
+                        }
                     }
                 }
             }

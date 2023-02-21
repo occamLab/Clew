@@ -47,6 +47,8 @@
 		821D07372742B44400FE6297 /* AnnouncementManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 821D07352742B44400FE6297 /* AnnouncementManager.swift */; };
 		823DA454252F7EA800BB5E6B /* speaker.obj in Resources */ = {isa = PBXBuildFile; fileRef = 823DA453252F7EA800BB5E6B /* speaker.obj */; };
 		823DA455252F7EA800BB5E6B /* speaker.obj in Resources */ = {isa = PBXBuildFile; fileRef = 823DA453252F7EA800BB5E6B /* speaker.obj */; };
+		82497EDC299DA7830000D1FE /* ci_post_clone.sh in Resources */ = {isa = PBXBuildFile; fileRef = 82497EDB299DA7830000D1FE /* ci_post_clone.sh */; };
+		82497EDD299DA7830000D1FE /* ci_post_clone.sh in Resources */ = {isa = PBXBuildFile; fileRef = 82497EDB299DA7830000D1FE /* ci_post_clone.sh */; };
 		82569F4E22187E6500448B45 /* help in Resources */ = {isa = PBXBuildFile; fileRef = 82569F4D22187E6500448B45 /* help */; };
 		82569F4F22187E6500448B45 /* help in Resources */ = {isa = PBXBuildFile; fileRef = 82569F4D22187E6500448B45 /* help */; };
 		8261892E264ACCC5007F99C4 /* AppleSignInController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8261892D264ACCC5007F99C4 /* AppleSignInController.swift */; };
@@ -312,6 +314,7 @@
 		821D07352742B44400FE6297 /* AnnouncementManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnouncementManager.swift; sourceTree = "<group>"; };
 		822E27F8210E3F260024A5E3 /* Clew Dev-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Clew Dev-Info.plist"; sourceTree = "<group>"; };
 		823DA453252F7EA800BB5E6B /* speaker.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = speaker.obj; sourceTree = "<group>"; };
+		82497EDB299DA7830000D1FE /* ci_post_clone.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = ci_post_clone.sh; sourceTree = "<group>"; };
 		82569F4D22187E6500448B45 /* help */ = {isa = PBXFileReference; lastKnownFileType = folder; path = help; sourceTree = "<group>"; };
 		8261892D264ACCC5007F99C4 /* AppleSignInController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppleSignInController.swift; sourceTree = "<group>"; };
 		827CB5B224932CC60032A857 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/MainInterface.strings; sourceTree = "<group>"; };
@@ -790,6 +793,7 @@
 		4D6B00B71F33C1C400952242 = {
 			isa = PBXGroup;
 			children = (
+				82497EDA299DA7210000D1FE /* ci_scripts */,
 				828CB78C298C652D0036D18A /* Packages */,
 				82BE6C982739836700387139 /* imported dependencies */,
 				82984806271F106E00DA3005 /* InfoPlist.strings */,
@@ -820,6 +824,14 @@
 				E5E9016722FB4D4A00AD0E95 /* route-quicklook.appex */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		82497EDA299DA7210000D1FE /* ci_scripts */ = {
+			isa = PBXGroup;
+			children = (
+				82497EDB299DA7830000D1FE /* ci_post_clone.sh */,
+			);
+			path = ci_scripts;
 			sourceTree = "<group>";
 		};
 		828CB78C298C652D0036D18A /* Packages */ = {
@@ -1651,7 +1663,6 @@
 				827EDC3026CDA5C000AAA12A /* ClewErrorSound.wav */,
 				14A90C0326A211BE003DAB30 /* ClewTutorialFeedback.wav */,
 				E5470ED322C119F4001092A4 /* StopRecording.aiff */,
-				828F8883286549B500F92FD8 /* tamb_tap_short.wav */,
 			);
 			path = "Sound Effects";
 			sourceTree = "<group>";
@@ -1903,6 +1914,7 @@
 				14B7EA12269631C500E4A3CE /* ClewSuccessSound.wav in Resources */,
 				82BE71CC2739982200387139 /* Eigenvalues in Resources */,
 				82BE71BC2739982200387139 /* IterativeLinearSolvers in Resources */,
+				82497EDC299DA7830000D1FE /* ci_post_clone.sh in Resources */,
 				82BE71B82739982200387139 /* Cholesky in Resources */,
 				82BE71982739982200387139 /* StdDeque in Resources */,
 				82BE71C42739982200387139 /* SuperLUSupport in Resources */,
@@ -1947,6 +1959,7 @@
 				82BE71C32739982200387139 /* Geometry in Resources */,
 				82BE71A92739982200387139 /* SparseCore in Resources */,
 				82984804271F106E00DA3005 /* InfoPlist.strings in Resources */,
+				82497EDD299DA7830000D1FE /* ci_post_clone.sh in Resources */,
 				82BE71A32739982200387139 /* QtAlignedMalloc in Resources */,
 				82BE71C52739982200387139 /* SuperLUSupport in Resources */,
 				82BE71CB2739982200387139 /* SparseCholesky in Resources */,
