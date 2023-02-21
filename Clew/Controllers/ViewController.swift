@@ -1654,7 +1654,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
     
     static let spatialAudioInterval = 1.0
     
-    static let offTrackCorrectionAnnouncementInterval = 4.0
+    static let offTrackCorrectionAnnouncementInterval = 5.0
     
     static let directionTextGracePeriod = 3.5
     
