@@ -574,7 +574,10 @@ extension ARSessionManager: ARSessionDelegate {
                 if anchor.hasValidTransform {
                     if mockBusStopNode == nil {
                         // create bus stop node
-                        let box = SCNBox(width: 0.2, height: 0.2, length: 0.2, chamferRadius: 0)
+                        let box = SCNBox(width: 0.2, height: 3, length: 0.2, chamferRadius: 0)
+                        let material = SCNMaterial()
+                        material.diffuse.contents = UIColor.red
+                        box.firstMaterial = material
                         mockBusStopNode = SCNNode(geometry: box)
                         mockBusStopNode?.simdTransform = anchor.transform
                         sceneView.scene.rootNode.addChildNode(mockBusStopNode!)
