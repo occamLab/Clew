@@ -16,7 +16,6 @@ import FirebaseAnalytics
 import FirebaseAuth
 #endif
 
-//FirebaseApp.configure()
 //Analytics.
 
 /// A class to handle logging app usage data

@@ -31,13 +31,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
 
         // Use Firebase library to configure APIs
-        #if IS_DEV_TARGET
-            let filePath = Bundle.main.path(forResource: "GoogleService-Info_dev", ofType: "plist")!
-            let options = FirebaseOptions(contentsOfFile: filePath)
-            FirebaseApp.configure(options: options!)
-        #else
-            FirebaseApp.configure()
-        #endif
+        let filePath = Bundle.main.path(forResource: "GoogleService-Info_dev", ofType: "plist")!
+        let options = FirebaseOptions(contentsOfFile: filePath)
+        FirebaseApp.configure(options: options!)
         logUserProperties()
         // use for testing sign-in flow try? Auth.auth().signOut()
         if #available(iOS 13.0, *) {
