@@ -7,6 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		13AAEC5229974C25000F7A6F /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 13AAEC5129974C25000F7A6F /* CoreLocation.framework */; };
+		13BD17C829A012DF0050A32B /* ARCoreGeospatial in Frameworks */ = {isa = PBXBuildFile; productRef = 13BD17C729A012DF0050A32B /* ARCoreGeospatial */; };
+		13BD17CA29A012ED0050A32B /* ARCoreGeospatial in Frameworks */ = {isa = PBXBuildFile; productRef = 13BD17C929A012ED0050A32B /* ARCoreGeospatial */; };
+		13BD17CD29A01BCC0050A32B /* sample.json in Resources */ = {isa = PBXBuildFile; fileRef = 13BD17CC29A01BCC0050A32B /* sample.json */; };
+		13BD17CE29A01BCC0050A32B /* sample.json in Resources */ = {isa = PBXBuildFile; fileRef = 13BD17CC29A01BCC0050A32B /* sample.json */; };
+		13BD17D029A01C130050A32B /* BusStopDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13BD17CF29A01C130050A32B /* BusStopDataModel.swift */; };
+		13BD17D129A01C130050A32B /* BusStopDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13BD17CF29A01C130050A32B /* BusStopDataModel.swift */; };
+		13BD17D629AD35B00050A32B /* test.json in Resources */ = {isa = PBXBuildFile; fileRef = 13BD17D529AD35B00050A32B /* test.json */; };
+		13BD17D729AD35B00050A32B /* test.json in Resources */ = {isa = PBXBuildFile; fileRef = 13BD17D529AD35B00050A32B /* test.json */; };
 		14A90C0426A211BE003DAB30 /* ClewTutorialFeedback.wav in Resources */ = {isa = PBXBuildFile; fileRef = 14A90C0326A211BE003DAB30 /* ClewTutorialFeedback.wav */; };
 		14A90C0526A211BF003DAB30 /* ClewTutorialFeedback.wav in Resources */ = {isa = PBXBuildFile; fileRef = 14A90C0326A211BE003DAB30 /* ClewTutorialFeedback.wav */; };
 		14A90C0726A86A82003DAB30 /* TutorialFollowPath1.crd in Resources */ = {isa = PBXBuildFile; fileRef = 14A90C0626A86A82003DAB30 /* TutorialFollowPath1.crd */; };
@@ -283,6 +292,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		13AAEC5129974C25000F7A6F /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		13BD17CC29A01BCC0050A32B /* sample.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = sample.json; sourceTree = "<group>"; };
+		13BD17CF29A01C130050A32B /* BusStopDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusStopDataModel.swift; sourceTree = "<group>"; };
+		13BD17D529AD35B00050A32B /* test.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = test.json; sourceTree = "<group>"; };
 		14A90C0326A211BE003DAB30 /* ClewTutorialFeedback.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = ClewTutorialFeedback.wav; sourceTree = "<group>"; };
 		14A90C0626A86A82003DAB30 /* TutorialFollowPath1.crd */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = TutorialFollowPath1.crd; sourceTree = "<group>"; };
 		14A90C0926AEF5CE003DAB30 /* TutorialFollowPath2.crd */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = TutorialFollowPath2.crd; sourceTree = "<group>"; };
@@ -742,8 +755,10 @@
 				82BE6C7F2739815900387139 /* FirebaseAnalytics in Frameworks */,
 				82BE6C812739815900387139 /* FirebaseAuth in Frameworks */,
 				82CD6F2129968AC200C2DC8C /* opencv2.framework in Frameworks */,
+				13BD17C829A012DF0050A32B /* ARCoreGeospatial in Frameworks */,
 				82BE6C832739815900387139 /* FirebaseDatabase in Frameworks */,
 				82CD6F26299690AD00C2DC8C /* ARCoreCloudAnchors in Frameworks */,
+				13AAEC5229974C25000F7A6F /* CoreLocation.framework in Frameworks */,
 				82BE6C852739815900387139 /* FirebaseStorage in Frameworks */,
 				82D94B63266FC7CF00EE2C1C /* SimpleForm in Frameworks */,
 				82BE6C902739823400387139 /* VectorMath in Frameworks */,
@@ -761,6 +776,7 @@
 				82BE6C8B2739819100387139 /* FirebaseDatabase in Frameworks */,
 				82CD6F24299690A300C2DC8C /* ARCoreCloudAnchors in Frameworks */,
 				82BE6C8D2739819700387139 /* FirebaseStorage in Frameworks */,
+				13BD17CA29A012ED0050A32B /* ARCoreGeospatial in Frameworks */,
 				82D94B65266FC86200EE2C1C /* SimpleForm in Frameworks */,
 				82BE6C922739824500387139 /* VectorMath in Frameworks */,
 			);
@@ -777,6 +793,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		13BD17CB29A01B790050A32B /* Sample Datasets */ = {
+			isa = PBXGroup;
+			children = (
+				13BD17CC29A01BCC0050A32B /* sample.json */,
+				13BD17D529AD35B00050A32B /* test.json */,
+			);
+			path = "Sample Datasets";
+			sourceTree = "<group>";
+		};
 		14B02B3026823E1400174B36 /* Tutorial */ = {
 			isa = PBXGroup;
 			children = (
@@ -1572,6 +1597,7 @@
 		C63B435EA8A32350A76E47DD /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				13AAEC5129974C25000F7A6F /* CoreLocation.framework */,
 				82BE701C2739982100387139 /* eigen */,
 				E5E9015322FB4CEB00AD0E95 /* QuickLook.framework */,
 				82CD6F2029968AC200C2DC8C /* opencv2.framework */,
@@ -1582,6 +1608,7 @@
 		E5470EA922C119F4001092A4 /* Clew */ = {
 			isa = PBXGroup;
 			children = (
+				13BD17CB29A01B790050A32B /* Sample Datasets */,
 				82BE6CA727398BCA00387139 /* Visual Alignment */,
 				14B02B3026823E1400174B36 /* Tutorial */,
 				82E4A5CE262A26DC000BEB44 /* Clew.entitlements */,
@@ -1638,6 +1665,7 @@
 				821C018629943819006EBDC5 /* NSObject+ARFrameStatusAdapter.h */,
 				821C018A299438D1006EBDC5 /* JGMethodSwizzler.h */,
 				821C018B2994393E006EBDC5 /* JGMethodSwizzler.m */,
+				13BD17CF29A01C130050A32B /* BusStopDataModel.swift */,
 			);
 			path = Misc;
 			sourceTree = "<group>";
@@ -1767,6 +1795,7 @@
 				82BE6C8F2739823400387139 /* VectorMath */,
 				82BE6C942739828E00387139 /* InAppSettingsKit */,
 				82CD6F25299690AD00C2DC8C /* ARCoreCloudAnchors */,
+				13BD17C729A012DF0050A32B /* ARCoreGeospatial */,
 			);
 			productName = Clew;
 			productReference = 4D6B00C01F33C1C400952242 /* Clew.app */;
@@ -1794,6 +1823,7 @@
 				82BE6C912739824500387139 /* VectorMath */,
 				82BE6C96273982A100387139 /* InAppSettingsKit */,
 				82CD6F23299690A300C2DC8C /* ARCoreCloudAnchors */,
+				13BD17C929A012ED0050A32B /* ARCoreGeospatial */,
 			);
 			productName = Clew;
 			productReference = B7EB59EC20F693EB00FBBC6A /* Clew Dev.app */;
@@ -1896,6 +1926,7 @@
 				4D6B00E51F33C9B800952242 /* Crumb.obj in Resources */,
 				14A90C0A26AEF5CE003DAB30 /* TutorialFollowPath2.crd in Resources */,
 				82BE71962739982200387139 /* StdVector in Resources */,
+				13BD17D629AD35B00050A32B /* test.json in Resources */,
 				82BE71A22739982200387139 /* QtAlignedMalloc in Resources */,
 				82BE71AC2739982200387139 /* Dense in Resources */,
 				E5470F1C22C119F5001092A4 /* GoogleService-Info.plist in Resources */,
@@ -1915,6 +1946,7 @@
 				82BE71B02739982200387139 /* QR in Resources */,
 				E59DA6BF22C65F5900FCD5A1 /* LaunchScreen.storyboard in Resources */,
 				E5470F4E22C119F5001092A4 /* GoogleService-Info_dev.plist in Resources */,
+				13BD17CD29A01BCC0050A32B /* sample.json in Resources */,
 				1F2B9D8722C5446B00317DC8 /* (null) in Resources */,
 				82BE71BA2739982200387139 /* UmfPackSupport in Resources */,
 				82AD6A25252F80AA00902A11 /* speaker.mtl in Resources */,
@@ -1984,11 +2016,13 @@
 				82BE71AD2739982200387139 /* Dense in Resources */,
 				82BE71A72739982200387139 /* PardisoSupport in Resources */,
 				82BE71992739982200387139 /* StdDeque in Resources */,
+				13BD17D729AD35B00050A32B /* test.json in Resources */,
 				E59DA6C022C65F5900FCD5A1 /* LaunchScreen.storyboard in Resources */,
 				772E4564236CC155008EF6AC /* SettingsAndHelp.storyboard in Resources */,
 				14A90C0826A86A82003DAB30 /* TutorialFollowPath1.crd in Resources */,
 				82BE71AF2739982200387139 /* SPQRSupport in Resources */,
 				E5470F1D22C119F5001092A4 /* GoogleService-Info.plist in Resources */,
+				13BD17CE29A01BCC0050A32B /* sample.json in Resources */,
 				82BE71B72739982200387139 /* SVD in Resources */,
 				14B7EA13269631C500E4A3CE /* ClewSuccessSound.wav in Resources */,
 				E5470F1722C119F5001092A4 /* Assets.xcassets in Resources */,
@@ -2018,6 +2052,7 @@
 				E5470F0A22C119F5001092A4 /* AppDelegate.swift in Sources */,
 				82C09673273AE50D0073EE6E /* ChooseAnchorMethodController.swift in Sources */,
 				E5470F2222C119F5001092A4 /* UIViewExtensions.swift in Sources */,
+				13BD17D029A01C130050A32B /* BusStopDataModel.swift in Sources */,
 				E538EF4F22D3BFEC004216E9 /* TransparentTouchView.swift in Sources */,
 				E5470F3C22C119F5001092A4 /* FeedbackViewController.swift in Sources */,
 				E5470F3422C119F5001092A4 /* StopNavigationController.swift in Sources */,
@@ -2083,6 +2118,7 @@
 				E5470F2F22C119F5001092A4 /* StopRecordingController.swift in Sources */,
 				82C09674273AE50D0073EE6E /* ChooseAnchorMethodController.swift in Sources */,
 				E5470F0B22C119F5001092A4 /* AppDelegate.swift in Sources */,
+				13BD17D129A01C130050A32B /* BusStopDataModel.swift in Sources */,
 				E5470F2322C119F5001092A4 /* UIViewExtensions.swift in Sources */,
 				E5470F3D22C119F5001092A4 /* FeedbackViewController.swift in Sources */,
 				E5470F3522C119F5001092A4 /* StopNavigationController.swift in Sources */,
@@ -2356,7 +2392,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clew/Clew.entitlements;
 				CURRENT_PROJECT_VERSION = 171;
 				DEVELOPMENT_ASSET_PATHS = "";
-				DEVELOPMENT_TEAM = 787TUDMR8Q;
+				DEVELOPMENT_TEAM = 3V9A95PP47;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -2373,7 +2409,7 @@
 					"$(inherited)",
 					"-ObjC",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = edu.occam.Clew;
+				PRODUCT_BUNDLE_IDENTIFIER = edu.scoleman.Clew;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Clew/Clew-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -2391,7 +2427,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clew/Clew.entitlements;
 				CURRENT_PROJECT_VERSION = 171;
 				DEVELOPMENT_ASSET_PATHS = "";
-				DEVELOPMENT_TEAM = 787TUDMR8Q;
+				DEVELOPMENT_TEAM = 3V9A95PP47;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -2408,7 +2444,7 @@
 					"$(inherited)",
 					"-ObjC",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = edu.occam.Clew;
+				PRODUCT_BUNDLE_IDENTIFIER = edu.scoleman.Clew;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Clew/Clew-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
@@ -2425,7 +2461,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 171;
-				DEVELOPMENT_TEAM = 787TUDMR8Q;
+				DEVELOPMENT_TEAM = 3V9A95PP47;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -2439,7 +2475,7 @@
 				);
 				MARKETING_VERSION = 2.0.27;
 				OTHER_SWIFT_FLAGS = "$(inherited) \"-DDEVELOPER\" \"-DIS_DEV_TARGET\"";
-				PRODUCT_BUNDLE_IDENTIFIER = "edu.occam.Clew-Dev";
+				PRODUCT_BUNDLE_IDENTIFIER = "edu.scoleman.Clew-Dev";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_COMPILATION_MODE = singlefile;
@@ -2459,7 +2495,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 171;
-				DEVELOPMENT_TEAM = 787TUDMR8Q;
+				DEVELOPMENT_TEAM = 3V9A95PP47;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -2473,7 +2509,7 @@
 				);
 				MARKETING_VERSION = 2.0.27;
 				OTHER_SWIFT_FLAGS = "$(inherited) \"-DDEVELOPER\" \"-DIS_DEV_TARGET\"";
-				PRODUCT_BUNDLE_IDENTIFIER = "edu.occam.Clew-Dev";
+				PRODUCT_BUNDLE_IDENTIFIER = "edu.scoleman.Clew-Dev";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_COMPILATION_MODE = wholemodule;
@@ -2490,7 +2526,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 171;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = 787TUDMR8Q;
+				DEVELOPMENT_TEAM = 3V9A95PP47;
 				INFOPLIST_FILE = "route-quicklook/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.2;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -2501,7 +2537,7 @@
 				MARKETING_VERSION = 2.0.27;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = "edu.occam.Clew.route-quicklook";
+				PRODUCT_BUNDLE_IDENTIFIER = "edu.scoleman.Clew.route-quicklook";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
@@ -2515,7 +2551,7 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 171;
-				DEVELOPMENT_TEAM = 787TUDMR8Q;
+				DEVELOPMENT_TEAM = 3V9A95PP47;
 				INFOPLIST_FILE = "route-quicklook/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.2;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -2525,7 +2561,7 @@
 				);
 				MARKETING_VERSION = 2.0.27;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = "edu.occam.Clew.route-quicklook";
+				PRODUCT_BUNDLE_IDENTIFIER = "edu.scoleman.Clew.route-quicklook";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
@@ -2610,6 +2646,14 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		13BD17C729A012DF0050A32B /* ARCoreGeospatial */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ARCoreGeospatial;
+		};
+		13BD17C929A012ED0050A32B /* ARCoreGeospatial */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ARCoreGeospatial;
+		};
 		82BE6C7E2739815900387139 /* FirebaseAnalytics */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 82BE6C7D2739815900387139 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
