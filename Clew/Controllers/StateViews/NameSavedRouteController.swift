@@ -61,17 +61,18 @@ class NameSavedRouteController: UIViewController, UITextFieldDelegate {
         
         /// Creating a button that can be used to save the name of your route
         saveRouteButton = UIButton(type: .custom)
-        saveRouteButton.layer.cornerRadius = 0.5 * saveRouteButton.bounds.size.width
+        saveRouteButton.layer.cornerRadius = 0.075 * UIConstants.buttonFrameWidth
         saveRouteButton.clipsToBounds = true
+        saveRouteButton.layer.borderWidth = UIConstants.buttonFrameWidth * 0.05
+        saveRouteButton.layer.borderColor = CGColor(red: 102.0/255.0, green: 188.0/255.0, blue: 71.0/255.0, alpha: 1.0)
         saveRouteButton.translatesAutoresizingMaskIntoConstraints = false
         saveRouteButton.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 1.1).isActive = true
         saveRouteButton.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 2.5).isActive = true
-        saveRouteButton.setBackgroundImage(UIImage(named: "WhiteButtonBackground"), for: .normal)
-        saveRouteButton.imageView?.contentMode = .scaleAspectFit
         saveRouteButton.setTitle(NSLocalizedString("saveARouteButtonText", comment: "This is the text which appears on the save a route buttton"),for: .normal)
         saveRouteButton.setTitleColor(.black, for: .normal)
         saveRouteButton.titleLabel?.font = UIFont(name: "HelveticaNeue-Bold", size: 35)!
         saveRouteButton.accessibilityLabel = NSLocalizedString("saveARouteButtonAccessibilityLabel", comment: "A button that allows the user to save a path to a destination.")
+        saveRouteButton.backgroundColor = .systemBackground
         saveRouteButton.titleLabel?.textAlignment = .center
         saveRouteButton.titleLabel?.numberOfLines = 0
         saveRouteButton.titleLabel?.lineBreakMode = .byWordWrapping

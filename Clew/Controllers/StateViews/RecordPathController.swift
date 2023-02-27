@@ -40,37 +40,40 @@ class RecordPathController: UIViewController {
         
         /// Creating a button that can be used to start the creation of a saved route.
         addAnchorPointButton = UIButton(type: .custom)
-        addAnchorPointButton.layer.cornerRadius = 0.5 * addAnchorPointButton.bounds.size.width
+        addAnchorPointButton.layer.cornerRadius = 0.075 * UIConstants.buttonFrameWidth
         addAnchorPointButton.clipsToBounds = true
+        addAnchorPointButton.layer.borderWidth = UIConstants.buttonFrameWidth * 0.05
+        addAnchorPointButton.layer.borderColor = CGColor(red: 102.0/255.0, green: 188.0/255.0, blue: 71.0/255.0, alpha: 1.0)
         addAnchorPointButton.translatesAutoresizingMaskIntoConstraints = false
         addAnchorPointButton.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 1.1).isActive = true
         addAnchorPointButton.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.height / 5).isActive = true
-        addAnchorPointButton.setBackgroundImage(UIImage(named: "WhiteButtonBackground"), for: .normal)
-        addAnchorPointButton.imageView?.contentMode = .scaleAspectFit
+        addAnchorPointButton.backgroundColor = .systemBackground
         addAnchorPointButton.addLargeTitle(NSLocalizedString("saveARouteButtonText", comment: "This is the text which appears on the save a route buttton"))
         addAnchorPointButton.accessibilityLabel = NSLocalizedString("saveARouteButtonAccessibilityLabel", comment: "A button that allows the user to save a path to a destination.")
 
         /// Creating a button that can be used to start the creation of a single use route.
         recordPathButton = UIButton(type: .custom)
-        recordPathButton.layer.cornerRadius = 0.75 * addAnchorPointButton.bounds.size.width
+        recordPathButton.layer.cornerRadius = 0.075 * UIConstants.buttonFrameWidth
         recordPathButton.clipsToBounds = true
+        recordPathButton.layer.borderWidth = UIConstants.buttonFrameWidth * 0.05
+        recordPathButton.layer.borderColor = CGColor(red: 102.0/255.0, green: 188.0/255.0, blue: 71.0/255.0, alpha: 1.0)
         recordPathButton.translatesAutoresizingMaskIntoConstraints = false
         recordPathButton.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 1.1).isActive = true
         recordPathButton.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.height / 5).isActive = true
-        recordPathButton.setBackgroundImage(UIImage(named: "WhiteButtonBackground"), for: .normal)
-        recordPathButton.imageView?.contentMode = .scaleAspectFit
+        recordPathButton.backgroundColor = .systemBackground
         recordPathButton.addLargeTitle(NSLocalizedString("singleUseRouteButtonText", comment: "This is the text which appears on the single use route buttton"))
         recordPathButton.accessibilityLabel = NSLocalizedString("recordSingleUseRouteButtonAccessibilityLabel", comment: "A button that allows the user to navigate a route one time.")
 
         /// Creating a button that can be used to access the saved routes list.
         routesButton = UIButton(type: .custom)
-        routesButton.layer.cornerRadius = 0.75 * routesButton.bounds.size.width
+        routesButton.layer.cornerRadius = 0.075 * UIConstants.buttonFrameWidth
         routesButton.clipsToBounds = true
+        routesButton.layer.borderWidth = UIConstants.buttonFrameWidth * 0.05
+        routesButton.layer.borderColor = CGColor(red: 102.0/255.0, green: 188.0/255.0, blue: 71.0/255.0, alpha: 1.0)
         routesButton.translatesAutoresizingMaskIntoConstraints = false
         routesButton.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 1.1).isActive = true
         routesButton.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.height / 5).isActive = true
-        routesButton.setBackgroundImage(UIImage(named: "WhiteButtonBackground"), for: .normal)
-        routesButton.imageView?.contentMode = .scaleAspectFit
+        routesButton.backgroundColor = .systemBackground
         routesButton.addLargeTitle(NSLocalizedString("savedRoutesListButtonText", comment: "This is the text which appears on the Saved routes List buttton"))
         routesButton.accessibilityLabel = NSLocalizedString("savedRoutesListButtonAccessibilityLabel", comment: "The accessibility tag for a button which opens a menu which displays all the saved routes created by the user.")
         

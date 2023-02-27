@@ -268,10 +268,6 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
         isTutorial = false
         
         // cancel the timer that announces tracking errors
-        if #available(iOS 15.2, *) {
-            // we can pause the session to conserve battery in this iOS version as we will use auto coordinate system alignment (previously the other approaches to localization required the session to continue running)
-            ARSessionManager.shared.pauseSession()
-        }
         trackingErrorsAnnouncementTimer?.invalidate()
         // set this to nil to prevent the app from erroneously detecting that we can auto-align to the route
         ARSessionManager.shared.initialWorldMap = nil
@@ -284,10 +280,8 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
     func handleStateTransitionToFinishedTutorialRoute(announceArrival: Bool) {
         // cancel the timer that announces tracking errors
         trackingErrorsAnnouncementTimer?.invalidate()
-        if #available(iOS 15.2, *) {
-            // we can pause the session to conserve battery in this iOS version as we will use auto coordinate system alignment (previously the other approaches to localization required the session to continue running)
-            ARSessionManager.shared.pauseSession()
-        }
+        // we can pause the session to conserve battery in this iOS version as we will use auto coordinate system alignment (previously the other approaches to localization required the session to continue running)
+        ARSessionManager.shared.pauseSession()
         // set this to nil to prevent the app from erroneously detecting that we can auto-align to the route
         ARSessionManager.shared.initialWorldMap = nil
         showRecordPathButton(announceArrival: announceArrival)

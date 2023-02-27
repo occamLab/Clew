@@ -112,26 +112,28 @@ class ChooseAnchorMethodController: UIViewController, UIScrollViewDelegate {
 
         /// Creating a button that can be used to select visual alignment
         visualAlignment = UIButton(type: .custom)
-        visualAlignment.layer.cornerRadius = 0.75 * visualAlignment.bounds.size.width
+        visualAlignment.layer.cornerRadius = 0.075 * UIConstants.buttonFrameWidth
         visualAlignment.clipsToBounds = true
+        visualAlignment.layer.borderWidth = UIConstants.buttonFrameWidth * 0.05
+        visualAlignment.layer.borderColor = CGColor(red: 102.0/255.0, green: 188.0/255.0, blue: 71.0/255.0, alpha: 1.0)
         visualAlignment.translatesAutoresizingMaskIntoConstraints = false
         visualAlignment.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 1.1).isActive = true
         visualAlignment.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.height / 10).isActive = true
-        visualAlignment.setBackgroundImage(UIImage(named: "WhiteButtonBackground"), for: .normal)
-        visualAlignment.imageView?.contentMode = .scaleAspectFit
         visualAlignment.addLargeTitle(NSLocalizedString("visualAnchorButton", comment: "the text shown on the screen for the visual anchor button"))
+        visualAlignment.backgroundColor = .systemBackground
         visualAlignment.accessibilityLabel = NSLocalizedString("createVisualAnchorPointButtonAccessibilityLabel", comment: "This is the accessibility label for the button that starts the creation of a visual anchor point.")
         
         /// Creating a button that can be used to select visual alignment
         physicalAlignment = UIButton(type: .custom)
-        physicalAlignment.layer.cornerRadius = 0.75 * visualAlignment.bounds.size.width
+        physicalAlignment.layer.cornerRadius = 0.075 * UIConstants.buttonFrameWidth
         physicalAlignment.clipsToBounds = true
+        physicalAlignment.layer.borderWidth = UIConstants.buttonFrameWidth * 0.05
+        physicalAlignment.layer.borderColor = CGColor(red: 102.0/255.0, green: 188.0/255.0, blue: 71.0/255.0, alpha: 1.0)
         physicalAlignment.translatesAutoresizingMaskIntoConstraints = false
         physicalAlignment.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 1.1).isActive = true
         physicalAlignment.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.height / 10).isActive = true
-        physicalAlignment.setBackgroundImage(UIImage(named: "WhiteButtonBackground"), for: .normal)
-        physicalAlignment.imageView?.contentMode = .scaleAspectFit
         physicalAlignment.addLargeTitle(NSLocalizedString("physicalAnchorButton", comment: "the text shown on the screen for the physical anchor button"))
+        physicalAlignment.backgroundColor = .systemBackground
         
         physicalAlignment.accessibilityLabel = NSLocalizedString("createPhysicalAnchorPointButtonAccessibilityLabel", comment: "This is the accessibility label for the button that starts the creation of a physical anchor point.")
         

@@ -2382,7 +2382,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0.27;
+				MARKETING_VERSION = 2.0.28;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -2417,7 +2417,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0.27;
+				MARKETING_VERSION = 2.0.28;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -2451,7 +2451,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0.27;
+				MARKETING_VERSION = 2.0.28;
 				OTHER_SWIFT_FLAGS = "$(inherited) \"-DDEVELOPER\" \"-DIS_DEV_TARGET\"";
 				PRODUCT_BUNDLE_IDENTIFIER = "edu.occam.Clew-Dev";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2485,7 +2485,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0.27;
+				MARKETING_VERSION = 2.0.28;
 				OTHER_SWIFT_FLAGS = "$(inherited) \"-DDEVELOPER\" \"-DIS_DEV_TARGET\"";
 				PRODUCT_BUNDLE_IDENTIFIER = "edu.occam.Clew-Dev";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2512,7 +2512,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 2.0.27;
+				MARKETING_VERSION = 2.0.28;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "edu.occam.Clew.route-quicklook";
@@ -2537,7 +2537,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 2.0.27;
+				MARKETING_VERSION = 2.0.28;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "edu.occam.Clew.route-quicklook";
 				PRODUCT_NAME = "$(TARGET_NAME)";
