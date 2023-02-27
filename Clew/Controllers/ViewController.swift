@@ -149,8 +149,8 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, CLLocationMana
     /// The state of the tracking session as last communicated to us through the delgate protocol.  This is useful if you want to do something different in the delegate method depending on whether there has been an error
     var trackingSessionErrorState : ARTrackingError?
     
-    /// the model for the bus stop data
-    let busStopDataModel = BusStopDataModel()
+    /// the model for the bus stop data (force this to be parsed)
+    let busStopDataModel = BusStopDataModel.shared
     
     /// The data source for in-app surveys
     let surveyModel = FirebaseFeedbackSurveyModel.shared

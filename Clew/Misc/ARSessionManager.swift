@@ -48,6 +48,7 @@ class ARSessionManager: NSObject {
     static var shared = ARSessionManager()
     var delegate: ARSessionManagerDelegate?
     var lastTorchChange = 0.0
+    var didPopulateBusStops = false
     enum LocalizationState {
         case none
         case withCloudAnchors
@@ -254,6 +255,7 @@ class ARSessionManager: NSObject {
     
     func startSession() {
         mockBusStop = nil
+        didPopulateBusStops = false
         mockBusStopNode = nil
         lastTorchChange = 0.0
         manualAlignment = nil
@@ -568,7 +570,18 @@ extension ARSessionManager: ARSessionDelegate {
             
             if let geoSpatialTransform = garFrame?.earth?.cameraGeospatialTransform {
                 delegate?.locationDidUpdate(cameraGeoSpatialTransform: geoSpatialTransform)
-                print("geoSpatialTransform \(geoSpatialTransform.coordinate)")
+                // TODO: check for high accuracy
+                if !didPopulateBusStops {
+                    DispatchQueue.global(qos: .background).async {
+                        self.didPopulateBusStops = true
+                        self.populateBusStops(latitude: geoSpatialTransform.coordinate.latitude, longitude: geoSpatialTransform.coordinate.longitude)
+                    }
+                }
+                
+//                for stop in BusStopDataModel.shared.stops {
+//
+//                    print("geoSpatialTransform \(geoSpatialTransform.coordinate)")
+//                }
             }
             for anchor in garFrame?.anchors ?? [] {
                 if anchor.hasValidTransform {
@@ -610,6 +623,27 @@ extension ARSessionManager: ARSessionDelegate {
             }
         }
         delegate?.newFrameAvailable()
+    }
+    
+    func populateBusStops(latitude: Double, longitude: Double) {
+        let currentCoordinate = CLLocation(latitude: latitude, longitude: longitude)
+        var closestBusStops: [BusStop] = [] //2 bus stops
+        for stop in BusStopDataModel.shared.stops {
+            let distance = stop.distanceFrom(latitude: latitude, longitude: longitude)
+            if Set(closestBusStops.map({$0.Stop_ID})).contains(stop.Stop_ID) {
+                continue
+            }
+            if closestBusStops.count >= 2 {
+                if closestBusStops[1].distanceFrom(latitude: latitude, longitude: longitude) > distance {
+                    closestBusStops[1] = stop
+                }
+            }
+            else {
+                closestBusStops.append(stop)
+            }
+            closestBusStops = closestBusStops.sorted(by: {$0.distanceFrom(latitude: latitude, longitude: longitude) < $1.distanceFrom(latitude: latitude, longitude: longitude)})
+        }
+        print("closest stops \(closestBusStops[0].Stop_ID), \(closestBusStops[1].Stop_ID)")
     }
     
     /// Update alignment based on cloud anchors that have been detected
