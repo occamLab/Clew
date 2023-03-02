@@ -721,6 +721,8 @@ extension ARSessionManager: ARSessionDelegate {
             PathLogger.shared.logGARAnchors(anchors: GARAnchors, cameraWorldTransform: cameraWorldTransform, timestamp: timestamp)
         }
         
+        PathLogger.shared.logGeospatialTransform(geospatialTransform)
+        
         guard geospatialTransform.trackingQuality.isAsGoodOrBetterThan( outdoorLocalizationQualityThreshold), let GARAnchors = self.currentGARFrame?.anchors else {
             return
         }
