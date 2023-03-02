@@ -714,6 +714,13 @@ extension ARSessionManager: ARSessionDelegate {
     ///   - geospatialTransform: the current spatial transform (latitude, longitude, etc.)
     ///   - cameraWorldTransform: the current camera transform (same as the frame.camera.transform in ARKit)
     func checkForGeoAlignment(geospatialTransform: GARGeospatialTransform, cameraWorldTransform: simd_float4x4) {
+        if -lastGARAnchorLogTimeStamp.timeIntervalSinceNow > 1.0, delegate?.shouldLogGARAnchors() == true, let timestamp = self.currentGARFrame?.timestamp, let GARAnchors = self.currentGARFrame?.anchors {
+            // log these periodically so we store too much data
+            lastGARAnchorLogTimeStamp = Date()
+
+            PathLogger.shared.logGARAnchors(anchors: GARAnchors, cameraWorldTransform: cameraWorldTransform, timestamp: timestamp)
+        }
+        
         guard geospatialTransform.trackingQuality.isAsGoodOrBetterThan( outdoorLocalizationQualityThreshold), let GARAnchors = self.currentGARFrame?.anchors else {
             return
         }
@@ -722,12 +729,6 @@ extension ARSessionManager: ARSessionDelegate {
             return
         }
         
-        if -lastGARAnchorLogTimeStamp.timeIntervalSinceNow > 1.0, delegate?.shouldLogGARAnchors() == true, let timestamp = self.currentGARFrame?.timestamp, let GARAnchors = self.currentGARFrame?.anchors {
-            // log these periodically so we store too much data
-            lastGARAnchorLogTimeStamp = Date()
-
-            PathLogger.shared.logGARAnchors(anchors: GARAnchors, cameraWorldTransform: cameraWorldTransform, timestamp: timestamp)
-        }
         
         guard let manualAlignment = geoSpatialAlignmentFilter.update(anchorTransform: alignmentAnchor.transform, geoSpatialAlignmentCrumb: geoSpatialAlignmentCrumb, cameraGeospatialTransform: geospatialTransform, filterGeoSpatial: filterGeoSpatial) else {
             return

@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		2AC1BF23284E742700C84D8B /* FloatVectorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC1BF21284E742700C84D8B /* FloatVectorExtension.swift */; };
 		2AC1BF26284E746300C84D8B /* PathMatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC1BF24284E746300C84D8B /* PathMatcher.swift */; };
-		5032502F56E37423478807C3 /* Pods_Clew_More.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EAC26B83588530DE4F39F7F1 /* Pods_Clew_More.framework */; };
+		4908284433E40A743AA7A9D7 /* Pods_Clew_More.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BEE3FFCCC1C72D9108CCB818 /* Pods_Clew_More.framework */; };
 		82093A1629007A9B00BEBA89 /* InternetConnectionUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82093A1529007A9B00BEBA89 /* InternetConnectionUtil.swift */; };
 		82093A1829007AA100BEBA89 /* PointCloud.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82093A1729007AA100BEBA89 /* PointCloud.swift */; };
 		82093A1A29007AB000BEBA89 /* TrialManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82093A1929007AB000BEBA89 /* TrialManager.swift */; };
@@ -17,6 +17,7 @@
 		82093A1E29007AB700BEBA89 /* UploadManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82093A1C29007AB700BEBA89 /* UploadManager.swift */; };
 		82093A2029007AC400BEBA89 /* ARDataLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82093A1F29007AC400BEBA89 /* ARDataLogger.swift */; };
 		821C2230288CFA94005E5FD5 /* TestAccuracyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 821C222F288CFA94005E5FD5 /* TestAccuracyView.swift */; };
+		821F35DA29B106CD0066B211 /* Credentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = 821F35D929B106CD0066B211 /* Credentials.swift */; };
 		821FEE3227BCB47E008928E5 /* ScanTagView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9863AF6826B44D9E00EF0C64 /* ScanTagView.swift */; };
 		8227393D272C7E43006C181E /* ARSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82273939272C7E43006C181E /* ARSessionManager.swift */; };
 		82273942272C7E7D006C181E /* RouteManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8227393E272C7E7D006C181E /* RouteManager.swift */; };
@@ -31,7 +32,6 @@
 		82949C0428AD79030077C892 /* GFGeoHashQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = 82949BFD28AD79000077C892 /* GFGeoHashQuery.m */; };
 		82949C0528AD79030077C892 /* GFGeoHash.m in Sources */ = {isa = PBXBuildFile; fileRef = 82949BFE28AD79010077C892 /* GFGeoHash.m */; };
 		82949C0628AD79030077C892 /* GFGeoQueryBounds.m in Sources */ = {isa = PBXBuildFile; fileRef = 82949C0028AD79020077C892 /* GFGeoQueryBounds.m */; };
-		82A4A9BA287E4D96007D8F23 /* Credentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82A4A9B8287E4D96007D8F23 /* Credentials.swift */; };
 		82B25182278DF4B0001E3AB6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 82B25184278DF4B0001E3AB6 /* LaunchScreen.storyboard */; };
 		82BC1D5328A5FECC006C301B /* ClewErrorSound.wav in Resources */ = {isa = PBXBuildFile; fileRef = 82BC1D5128A5FECC006C301B /* ClewErrorSound.wav */; };
 		82BC1D5428A5FECC006C301B /* ClewSuccessSound.wav in Resources */ = {isa = PBXBuildFile; fileRef = 82BC1D5228A5FECC006C301B /* ClewSuccessSound.wav */; };
@@ -138,7 +138,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		12481236BF43266FFD36D7D8 /* Pods-UIKit Clip.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UIKit Clip.release.xcconfig"; path = "Target Support Files/Pods-UIKit Clip/Pods-UIKit Clip.release.xcconfig"; sourceTree = "<group>"; };
 		1F27632222FCBB6E00E1FCF8 /* BurgerMenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BurgerMenuViewController.swift; sourceTree = "<group>"; };
 		1F2B9D7022C3B50D00317DC8 /* HelpCompiler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HelpCompiler.swift; sourceTree = "<group>"; };
 		2A25570028493D2500D137FE /* NECO2_center_stair.MOV */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; name = NECO2_center_stair.MOV; path = ../../../Downloads/NECO2_center_stair.MOV; sourceTree = "<group>"; };
@@ -154,8 +153,6 @@
 		2AC1BF24284E746300C84D8B /* PathMatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PathMatcher.swift; sourceTree = "<group>"; };
 		4D6B00E41F33C85500952242 /* Crumb.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = Crumb.obj; sourceTree = "<group>"; };
 		4DF05CC71F34EB56008B0E31 /* Confirm.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = Confirm.mp3; sourceTree = "<group>"; };
-		4F11B5F14B421EF53D9BD432 /* Pods-UIKit Clip.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UIKit Clip.debug.xcconfig"; path = "Target Support Files/Pods-UIKit Clip/Pods-UIKit Clip.debug.xcconfig"; sourceTree = "<group>"; };
-		4F7D6AD80FDE9532E2EF59D5 /* Pods_UIKit_Clip.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_UIKit_Clip.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		772E455F235F91C6008EF6AC /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
 		772E4562236CC0A7008EF6AC /* es */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = es; path = es.lproj/BurgerMenu.storyboard; sourceTree = "<group>"; };
 		772E4565236CC155008EF6AC /* es */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = es; path = es.lproj/SettingsAndHelp.storyboard; sourceTree = "<group>"; };
@@ -163,6 +160,7 @@
 		772E4568236CC7BE008EF6AC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/BurgerMenu.storyboard; sourceTree = "<group>"; };
 		7743819F2343E3F8003EBD85 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/SettingsAndHelp.strings; sourceTree = "<group>"; };
 		77467DAE22BBC1D300FA7DEE /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		7B7C30995397150153E664DA /* Pods-Clew-More.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew-More.release.xcconfig"; path = "Target Support Files/Pods-Clew-More/Pods-Clew-More.release.xcconfig"; sourceTree = "<group>"; };
 		8206436A23B556A200DEE347 /* es */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = es; path = es.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
 		82093A1529007A9B00BEBA89 /* InternetConnectionUtil.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InternetConnectionUtil.swift; sourceTree = "<group>"; };
 		82093A1729007AA100BEBA89 /* PointCloud.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PointCloud.swift; sourceTree = "<group>"; };
@@ -173,6 +171,7 @@
 		821C222F288CFA94005E5FD5 /* TestAccuracyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestAccuracyView.swift; sourceTree = "<group>"; };
 		821CF7832513264400A7B3C2 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		821CF7892513264400A7B3C2 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		821F35D929B106CD0066B211 /* Credentials.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Credentials.swift; sourceTree = "<group>"; };
 		82272C5F287718DD00BE53FA /* FirebaseCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FirebaseCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		82273939272C7E43006C181E /* ARSessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARSessionManager.swift; sourceTree = "<group>"; };
 		8227393E272C7E7D006C181E /* RouteManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteManager.swift; sourceTree = "<group>"; };
@@ -208,7 +207,6 @@
 		82949C0128AD79030077C892 /* GFGeoHash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GFGeoHash.h; sourceTree = "<group>"; };
 		82A417E0262A205A001FCB8C /* AuthenticationHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationHelper.swift; sourceTree = "<group>"; };
 		82A417EC262A2140001FCB8C /* Clew Dev.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Clew Dev.entitlements"; sourceTree = "<group>"; };
-		82A4A9B8287E4D96007D8F23 /* Credentials.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Credentials.swift; sourceTree = "<group>"; };
 		82AD6A24252F80AA00902A11 /* speaker.mtl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = speaker.mtl; sourceTree = "<group>"; };
 		82B25183278DF4B0001E3AB6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		82BC1D5128A5FECC006C301B /* ClewErrorSound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = ClewErrorSound.wav; sourceTree = "<group>"; };
@@ -269,8 +267,8 @@
 		98FF7A98269CBFE9008C64E5 /* Clew-More.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Clew-More.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		98FF7AA1269CBFEB008C64E5 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		98FF7AA3269CBFEB008C64E5 /* Info.plist */ = {isa = PBXFileReference; explicitFileType = text.plist.entitlements; path = Info.plist; sourceTree = "<group>"; };
-		99B75EE0A0A74386A126E3F6 /* Pods-Clew-More.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew-More.debug.xcconfig"; path = "Target Support Files/Pods-Clew-More/Pods-Clew-More.debug.xcconfig"; sourceTree = "<group>"; };
-		BF9814E722D6F74302340C44 /* Pods-Clew-More.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew-More.release.xcconfig"; path = "Target Support Files/Pods-Clew-More/Pods-Clew-More.release.xcconfig"; sourceTree = "<group>"; };
+		9D736E81F3C68342CB1C80A1 /* Pods-Clew-More.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clew-More.debug.xcconfig"; path = "Target Support Files/Pods-Clew-More/Pods-Clew-More.debug.xcconfig"; sourceTree = "<group>"; };
+		BEE3FFCCC1C72D9108CCB818 /* Pods_Clew_More.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Clew_More.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E538EF4E22D3BFEC004216E9 /* TransparentTouchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransparentTouchView.swift; sourceTree = "<group>"; };
 		E5470EAB22C119F4001092A4 /* RecordButtonKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecordButtonKit.swift; sourceTree = "<group>"; };
 		E5470EAC22C119F4001092A4 /* AudioVisualizerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioVisualizerView.swift; sourceTree = "<group>"; };
@@ -311,7 +309,6 @@
 		E5E9016A22FB4D4A00AD0E95 /* PreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewViewController.swift; sourceTree = "<group>"; };
 		E5E9016D22FB4D4A00AD0E95 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
 		E5E9016F22FB4D4A00AD0E95 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		EAC26B83588530DE4F39F7F1 /* Pods_Clew_More.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Clew_More.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -319,7 +316,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5032502F56E37423478807C3 /* Pods_Clew_More.framework in Frameworks */,
+				4908284433E40A743AA7A9D7 /* Pods_Clew_More.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -504,10 +501,8 @@
 		A8DB9F10DF5E272C5264DBD2 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				99B75EE0A0A74386A126E3F6 /* Pods-Clew-More.debug.xcconfig */,
-				BF9814E722D6F74302340C44 /* Pods-Clew-More.release.xcconfig */,
-				4F11B5F14B421EF53D9BD432 /* Pods-UIKit Clip.debug.xcconfig */,
-				12481236BF43266FFD36D7D8 /* Pods-UIKit Clip.release.xcconfig */,
+				9D736E81F3C68342CB1C80A1 /* Pods-Clew-More.debug.xcconfig */,
+				7B7C30995397150153E664DA /* Pods-Clew-More.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -517,8 +512,7 @@
 			children = (
 				82272C5F287718DD00BE53FA /* FirebaseCore.framework */,
 				E5E9015322FB4CEB00AD0E95 /* QuickLook.framework */,
-				EAC26B83588530DE4F39F7F1 /* Pods_Clew_More.framework */,
-				4F7D6AD80FDE9532E2EF59D5 /* Pods_UIKit_Clip.framework */,
+				BEE3FFCCC1C72D9108CCB818 /* Pods_Clew_More.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -577,8 +571,8 @@
 				8227393E272C7E7D006C181E /* RouteManager.swift */,
 				8227394327308486006C181E /* SoundEffectManager.swift */,
 				2AC1BF24284E746300C84D8B /* PathMatcher.swift */,
-				82A4A9B8287E4D96007D8F23 /* Credentials.swift */,
 				825EEBCD28917FA200E97A2F /* AnnouncementManager.swift */,
+				821F35D929B106CD0066B211 /* Credentials.swift */,
 			);
 			path = Misc;
 			sourceTree = "<group>";
@@ -695,13 +689,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 98FF7AA6269CBFEB008C64E5 /* Build configuration list for PBXNativeTarget "Clew-More" */;
 			buildPhases = (
-				27BAC48939D955ABAFD8E8B7 /* [CP] Check Pods Manifest.lock */,
+				CA6BAF2E88436FBAF8361FF6 /* [CP] Check Pods Manifest.lock */,
 				98FF7A94269CBFE9008C64E5 /* Sources */,
 				98FF7A95269CBFE9008C64E5 /* Frameworks */,
 				98FF7A96269CBFE9008C64E5 /* Resources */,
 				9863AF6726B4456100EF0C64 /* Embed App Clips */,
-				B4E886EC244F521152DA77BD /* [CP] Embed Pods Frameworks */,
-				9B18E1D8A899F31E70480AF3 /* [CP] Copy Pods Resources */,
+				C84692DE6B1D4C605015C2AB /* [CP] Embed Pods Frameworks */,
+				EBD36E1C2C8303424845B266 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -749,11 +743,11 @@
 			packageReferences = (
 				8227FCC8272AFFB5001031F9 /* XCRemoteSwiftPackageReference "SimpleForm" */,
 				8227FCCD272B0062001031F9 /* XCRemoteSwiftPackageReference "ARDataLogger" */,
-				8227FCD2272B0355001031F9 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				8227FCD2272B0355001031F9 /* XCRemoteSwiftPackageReference "firebase-ios-sdk.git" */,
 				8227FCE5272B04D5001031F9 /* XCRemoteSwiftPackageReference "VectorMath" */,
 				8227FCF2272B05B8001031F9 /* XCRemoteSwiftPackageReference "InAppSettingsKit" */,
-				2AC1BF1E284E741400C84D8B /* XCRemoteSwiftPackageReference "LASwift" */,
-				2AC1BF27284E74AE00C84D8B /* XCRemoteSwiftPackageReference "LASwift" */,
+				2AC1BF1E284E741400C84D8B /* XCRemoteSwiftPackageReference "LASwift.git" */,
+				2AC1BF27284E74AE00C84D8B /* XCRemoteSwiftPackageReference "LASwift.git" */,
 				2AC1BF2A285B8A2C00C84D8B /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				2AB33ABA285CCE6E005780AF /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				2AB33ABB285CD1AF005780AF /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
@@ -798,47 +792,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		27BAC48939D955ABAFD8E8B7 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-Clew-More-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		9B18E1D8A899F31E70480AF3 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Clew-More/Pods-Clew-More-resources.sh",
-				"${PODS_CONFIGURATION_BUILD_DIR}/ARCore/ARCoreResources.bundle",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ARCoreResources.bundle",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Clew-More/Pods-Clew-More-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		B4E886EC244F521152DA77BD /* [CP] Embed Pods Frameworks */ = {
+		C84692DE6B1D4C605015C2AB /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -857,7 +811,6 @@
 				"${BUILT_PRODUCTS_DIR}/FirebaseStorage/FirebaseStorage.framework",
 				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
 				"${BUILT_PRODUCTS_DIR}/GoogleDataTransport/GoogleDataTransport.framework",
-				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac/GoogleToolboxForMac.framework",
 				"${BUILT_PRODUCTS_DIR}/GoogleUtilities/GoogleUtilities.framework",
 				"${BUILT_PRODUCTS_DIR}/InAppSettingsKit/InAppSettingsKit.framework",
 				"${BUILT_PRODUCTS_DIR}/JGMethodSwizzler/JGMethodSwizzler.framework",
@@ -887,7 +840,6 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseStorage.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleDataTransport.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleToolboxForMac.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleUtilities.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/InAppSettingsKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/JGMethodSwizzler.framework",
@@ -906,6 +858,46 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Clew-More/Pods-Clew-More-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		CA6BAF2E88436FBAF8361FF6 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Clew-More-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		EBD36E1C2C8303424845B266 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Clew-More/Pods-Clew-More-resources.sh",
+				"${PODS_CONFIGURATION_BUILD_DIR}/ARCore/ARCoreResources.bundle",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ARCoreResources.bundle",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Clew-More/Pods-Clew-More-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -951,7 +943,6 @@
 				98FF7AAC269CC0A0008C64E5 /* DataPersistence.swift in Sources */,
 				98AA589B269E2217001123F0 /* Surveys.swift in Sources */,
 				98FF7AC0269CC0EC008C64E5 /* UIViewControllerExtensions.swift in Sources */,
-				82A4A9BA287E4D96007D8F23 /* Credentials.swift in Sources */,
 				8227FCF1272B052C001031F9 /* SRCountdownTimer.swift in Sources */,
 				98FF7AB0269CC0AB008C64E5 /* PathFinder.swift in Sources */,
 				98AA589A269E1CC2001123F0 /* StartNavigationPopoverView.swift in Sources */,
@@ -982,6 +973,7 @@
 				82949C0328AD79030077C892 /* GFUtils.m in Sources */,
 				82093A1D29007AB700BEBA89 /* UploadingProgress.swift in Sources */,
 				8227393D272C7E43006C181E /* ARSessionManager.swift in Sources */,
+				821F35DA29B106CD0066B211 /* Credentials.swift in Sources */,
 				98FF7AD4269CC125008C64E5 /* RoutesViewController.swift in Sources */,
 				8284A742288AE23300999ABF /* NSObject+ARFrameStatusAdapter.mm in Sources */,
 				98FF7ACE269CC114008C64E5 /* ResumeTrackingConfirmController.swift in Sources */,
@@ -1217,7 +1209,7 @@
 		};
 		98FF7AA4269CBFEB008C64E5 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 99B75EE0A0A74386A126E3F6 /* Pods-Clew-More.debug.xcconfig */;
+			baseConfigurationReference = 9D736E81F3C68342CB1C80A1 /* Pods-Clew-More.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1255,7 +1247,7 @@
 		};
 		98FF7AA5269CBFEB008C64E5 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = BF9814E722D6F74302340C44 /* Pods-Clew-More.release.xcconfig */;
+			baseConfigurationReference = 7B7C30995397150153E664DA /* Pods-Clew-More.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1385,7 +1377,7 @@
 				kind = branch;
 			};
 		};
-		2AC1BF1E284E741400C84D8B /* XCRemoteSwiftPackageReference "LASwift" */ = {
+		2AC1BF1E284E741400C84D8B /* XCRemoteSwiftPackageReference "LASwift.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "git@github.com:AlexanderTar/LASwift.git";
 			requirement = {
@@ -1393,7 +1385,7 @@
 				kind = branch;
 			};
 		};
-		2AC1BF27284E74AE00C84D8B /* XCRemoteSwiftPackageReference "LASwift" */ = {
+		2AC1BF27284E74AE00C84D8B /* XCRemoteSwiftPackageReference "LASwift.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "git@github.com:AlexanderTar/LASwift.git";
 			requirement = {
@@ -1425,7 +1417,7 @@
 				kind = branch;
 			};
 		};
-		8227FCD2272B0355001031F9 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+		8227FCD2272B0355001031F9 /* XCRemoteSwiftPackageReference "firebase-ios-sdk.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
 			requirement = {
