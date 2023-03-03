@@ -197,8 +197,10 @@ class ARSessionManager: NSObject {
     private var pathRenderJob: (()->())?
     private var intermediateAnchorRenderJobs: [RouteAnchorPoint : (()->())?] = [:]
     
-    private var mockBusStop: GARAnchor?
-    private var mockBusStopNode: SCNNode?
+    private var mockBusStop1: GARAnchor?
+    private var mockBusStopNode1: SCNNode?
+    private var mockBusStop2: GARAnchor?
+    private var mockBusStopNode2: SCNNode?
     
     /// SCNNode of the next keypoint
     private var keypointNode: SCNNode?
@@ -254,9 +256,11 @@ class ARSessionManager: NSObject {
     }
     
     func startSession() {
-        mockBusStop = nil
+        mockBusStop1 = nil
+        mockBusStop2 = nil
         didPopulateBusStops = false
-        mockBusStopNode = nil
+        mockBusStopNode1 = nil
+        mockBusStopNode2 = nil
         lastTorchChange = 0.0
         manualAlignment = nil
         localization = .none
@@ -560,9 +564,17 @@ extension ARSessionManager: ARSessionDelegate {
             let garFrame = try garSession?.update(frame)
             
             // TODO: create GeoSpatialAnchors to mark bus stops? STEP
-            if mockBusStop == nil {
+            if mockBusStop1 == nil {
                 do {
-                    mockBusStop = try garSession?.createAnchorOnTerrain(coordinate: CLLocationCoordinate2D(latitude: 42.293585, longitude: -71.2639328), altitudeAboveTerrain: 0.0, eastUpSouthQAnchor: simd_quatf())
+                    mockBusStop1 = try garSession?.createAnchorOnTerrain(coordinate: CLLocationCoordinate2D(latitude: 42.34955790819036, longitude: -71.06377035559136), altitudeAboveTerrain: 0.0, eastUpSouthQAnchor: simd_quatf())
+                } catch {
+                    print("Got an error \(error)")
+                }
+            }
+            
+            if mockBusStop2 == nil {
+                do {
+                    mockBusStop2 = try garSession?.createAnchorOnTerrain(coordinate: CLLocationCoordinate2D(latitude: 42.34961906936855, longitude: -71.06373780091388), altitudeAboveTerrain: 0.0, eastUpSouthQAnchor: simd_quatf())
                 } catch {
                     print("Got an error \(error)")
                 }
@@ -585,17 +597,30 @@ extension ARSessionManager: ARSessionDelegate {
             }
             for anchor in garFrame?.anchors ?? [] {
                 if anchor.hasValidTransform {
-                    if mockBusStopNode == nil {
+                    if mockBusStopNode1 == nil {
                         // create bus stop node
                         let box = SCNBox(width: 0.2, height: 3, length: 0.2, chamferRadius: 0)
                         let material = SCNMaterial()
                         material.diffuse.contents = UIColor.red
                         box.firstMaterial = material
-                        mockBusStopNode = SCNNode(geometry: box)
-                        mockBusStopNode?.simdTransform = anchor.transform
-                        sceneView.scene.rootNode.addChildNode(mockBusStopNode!)
+                        mockBusStopNode1 = SCNNode(geometry: box)
+                        mockBusStopNode1?.simdTransform = anchor.transform
+                        sceneView.scene.rootNode.addChildNode(mockBusStopNode1!)
                     } else {
-                        mockBusStopNode?.simdTransform = anchor.transform
+                        mockBusStopNode1?.simdTransform = anchor.transform
+                    }
+                    
+                    if mockBusStopNode2 == nil {
+                        // create bus stop node
+                        let box = SCNBox(width: 0.2, height: 3, length: 0.2, chamferRadius: 0)
+                        let material = SCNMaterial()
+                        material.diffuse.contents = UIColor.blue
+                        box.firstMaterial = material
+                        mockBusStopNode2 = SCNNode(geometry: box)
+                        mockBusStopNode2?.simdTransform = anchor.transform
+                        sceneView.scene.rootNode.addChildNode(mockBusStopNode2!)
+                    } else {
+                        mockBusStopNode2?.simdTransform = anchor.transform
                     }
                 }
                 print(anchor.hasValidTransform)
@@ -643,6 +668,7 @@ extension ARSessionManager: ARSessionDelegate {
             }
             closestBusStops = closestBusStops.sorted(by: {$0.distanceFrom(latitude: latitude, longitude: longitude) < $1.distanceFrom(latitude: latitude, longitude: longitude)})
         }
+        print("closest stops \(closestBusStops[0].Stop_name), \(closestBusStops[1].Stop_name)")
         print("closest stops \(closestBusStops[0].Stop_ID), \(closestBusStops[1].Stop_ID)")
     }
     
