@@ -18,6 +18,15 @@ import FirebaseAuth
 //FirebaseApp.configure()
 //Analytics.
 
+struct GeospatialWorldTransformPair {
+    let geospatialTransform: GARGeospatialTransform
+    let cameraWorldTransform: simd_float4x4
+    
+    func asDict()->[String: Any] {
+        return ["geospatialTransform": geospatialTransform.asDict(), "cameraWorldTransform": cameraWorldTransform.asColumnMajorArray]
+    }
+}
+
 /// A class to handle logging app usage data
 class PathLogger {
     public static var shared = PathLogger()
@@ -38,7 +47,7 @@ class PathLogger {
     /// keeps track of the current GAR anchors and timestamps
     var garAnchors: [[LoggedGARAnchor]] = []
     var garAnchorTimestamps: [Double] = []
-    var garAnchorCameraWorldTransforms: [simd_float4x4] = []
+    var garAnchorCameraWorldTransforms: [GeospatialWorldTransformPair] = []
     
     /// logging for cloud anchors
     var cloudAnchorsForAlignment: [LoggedCloudAnchor] = []
@@ -131,10 +140,10 @@ class PathLogger {
         geospatialTransforms.append(transform)
     }
     
-    func logGARAnchors(anchors: [GARAnchor], cameraWorldTransform: simd_float4x4, timestamp: Double) {
+    func logGARAnchors(anchors: [GARAnchor], cameraWorldTransform: simd_float4x4, geospatialTransform: GARGeospatialTransform, timestamp: Double) {
         garAnchors.append(anchors.map({anchor in LoggedGARAnchor(transform: anchor.transform, hasValidTransform: anchor.hasValidTransform, cloudIdentifier: anchor.cloudIdentifier ?? "", identifier: anchor.identifier)}))
         garAnchorTimestamps.append(timestamp)
-        garAnchorCameraWorldTransforms.append(cameraWorldTransform)
+        garAnchorCameraWorldTransforms.append(GeospatialWorldTransformPair(geospatialTransform: geospatialTransform, cameraWorldTransform: cameraWorldTransform))
     }
     
     func logSavedRouteGeospatialLocations(_ savedLocations: [LocationInfoGeoSpatial]) {
@@ -317,7 +326,7 @@ class PathLogger {
                                     "hasMap": currentNavigationMap != nil,
                                     "cloudAnchorsForAlignment": cloudAnchorsForAlignment.map( { $0.asDict() }),
                                     "garAnchorTimestamps": garAnchorTimestamps,
-                                    "garAnchorCameraWorldTransforms": garAnchorCameraWorldTransforms.map({$0.asColumnMajorArray}),
+                                    "garAnchorCameraWorldTransformsAndGeoSpatialData": garAnchorCameraWorldTransforms.map({$0.asDict()}),
                                     "garAnchors": garAnchors.map({garAnchorList in garAnchorList.map({garAnchor in garAnchor.asDict() })}),
                                     "keypointData": Array(keypointData),
                                     "trackingErrorPhase": Array(trackingErrorPhase),

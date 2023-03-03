@@ -718,10 +718,8 @@ extension ARSessionManager: ARSessionDelegate {
             // log these periodically so we store too much data
             lastGARAnchorLogTimeStamp = Date()
 
-            PathLogger.shared.logGARAnchors(anchors: GARAnchors, cameraWorldTransform: cameraWorldTransform, timestamp: timestamp)
+            PathLogger.shared.logGARAnchors(anchors: GARAnchors, cameraWorldTransform: cameraWorldTransform, geospatialTransform: geospatialTransform, timestamp: timestamp)
         }
-        
-        PathLogger.shared.logGeospatialTransform(geospatialTransform)
         
         guard geospatialTransform.trackingQuality.isAsGoodOrBetterThan( outdoorLocalizationQualityThreshold), let GARAnchors = self.currentGARFrame?.anchors else {
             return
@@ -762,11 +760,6 @@ extension ARSessionManager: ARSessionDelegate {
             ARFrameStatusAdapter.adjustTrackingStatus(frame)
             let garFrame = try garSession?.update(frame)
             for gAnchor in garFrame?.updatedAnchors ?? [] {
-//                if gAnchor.identifier == landmark?.identifier {
-//                    landmarkNode?.simdTransform = gAnchor.transform
-//                    print("translation", gAnchor.transform.columns.3)
-//                }
-//
                 delegate?.didUpdate(garAnchor: gAnchor)
             }
             self.currentGARFrame = garFrame
@@ -789,15 +782,6 @@ extension ARSessionManager: ARSessionDelegate {
             
             if let geospatialTransform = self.currentGARFrame?.earth?.cameraGeospatialTransform {
                 print("accuracy \(geospatialTransform.horizontalAccuracy)")
-//                if geospatialTransform.horizontalAccuracy < 1 && landmark == nil {
-//                    // create the anchor here
-//                    landmark = addGeoSpatialAnchor(latitude: 42.293584, longitude: -71.263936, altitude: geospatialTransform.altitude)
-//                    let newNode = SCNNode(geometry: SCNBox(width: 0.25, height: 0.25, length: 0.25, chamferRadius: 0.1))
-//                    
-//                    newNode.geometry?.firstMaterial!.diffuse.contents = UIColor.green
-//                    landmarkNode = newNode
-//                    self.sceneView.scene.rootNode.addChildNode(newNode)
-//                }
                 print(geospatialTransform)
                 
                 if -lastGeospatialLogTime.timeIntervalSinceNow > 0.3 {
