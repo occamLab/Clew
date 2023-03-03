@@ -49,6 +49,7 @@ class RecordPathController: UIViewController {
         addAnchorPointButton.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.height / 5).isActive = true
         addAnchorPointButton.backgroundColor = .systemBackground
         addAnchorPointButton.addLargeTitle(NSLocalizedString("saveARouteButtonText", comment: "This is the text which appears on the save a route buttton"))
+        addAnchorPointButton.setTitleColor(.label, for: .normal)
         addAnchorPointButton.accessibilityLabel = NSLocalizedString("saveARouteButtonAccessibilityLabel", comment: "A button that allows the user to save a path to a destination.")
 
         /// Creating a button that can be used to start the creation of a single use route.
@@ -62,6 +63,7 @@ class RecordPathController: UIViewController {
         recordPathButton.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.height / 5).isActive = true
         recordPathButton.backgroundColor = .systemBackground
         recordPathButton.addLargeTitle(NSLocalizedString("singleUseRouteButtonText", comment: "This is the text which appears on the single use route buttton"))
+        recordPathButton.setTitleColor(.label, for: .normal)
         recordPathButton.accessibilityLabel = NSLocalizedString("recordSingleUseRouteButtonAccessibilityLabel", comment: "A button that allows the user to navigate a route one time.")
 
         /// Creating a button that can be used to access the saved routes list.
@@ -75,6 +77,7 @@ class RecordPathController: UIViewController {
         routesButton.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.height / 5).isActive = true
         routesButton.backgroundColor = .systemBackground
         routesButton.addLargeTitle(NSLocalizedString("savedRoutesListButtonText", comment: "This is the text which appears on the Saved routes List buttton"))
+        routesButton.setTitleColor(.label, for: .normal)
         routesButton.accessibilityLabel = NSLocalizedString("savedRoutesListButtonAccessibilityLabel", comment: "The accessibility tag for a button which opens a menu which displays all the saved routes created by the user.")
         
         /// create stack view for aligning and distributing bottom layer buttons

@@ -120,6 +120,7 @@ class ChooseAnchorMethodController: UIViewController, UIScrollViewDelegate {
         visualAlignment.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 1.1).isActive = true
         visualAlignment.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.height / 10).isActive = true
         visualAlignment.addLargeTitle(NSLocalizedString("visualAnchorButton", comment: "the text shown on the screen for the visual anchor button"))
+        visualAlignment.setTitleColor(.label, for: .normal)
         visualAlignment.backgroundColor = .systemBackground
         visualAlignment.accessibilityLabel = NSLocalizedString("createVisualAnchorPointButtonAccessibilityLabel", comment: "This is the accessibility label for the button that starts the creation of a visual anchor point.")
         
@@ -133,6 +134,7 @@ class ChooseAnchorMethodController: UIViewController, UIScrollViewDelegate {
         physicalAlignment.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 1.1).isActive = true
         physicalAlignment.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.height / 10).isActive = true
         physicalAlignment.addLargeTitle(NSLocalizedString("physicalAnchorButton", comment: "the text shown on the screen for the physical anchor button"))
+        physicalAlignment.setTitleColor(.label, for: .normal)
         physicalAlignment.backgroundColor = .systemBackground
         
         physicalAlignment.accessibilityLabel = NSLocalizedString("createPhysicalAnchorPointButtonAccessibilityLabel", comment: "This is the accessibility label for the button that starts the creation of a physical anchor point.")
