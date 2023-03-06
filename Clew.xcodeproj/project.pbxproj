@@ -16,6 +16,8 @@
 		13BD17D129A01C130050A32B /* BusStopDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13BD17CF29A01C130050A32B /* BusStopDataModel.swift */; };
 		13BD17D629AD35B00050A32B /* test.json in Resources */ = {isa = PBXBuildFile; fileRef = 13BD17D529AD35B00050A32B /* test.json */; };
 		13BD17D729AD35B00050A32B /* test.json in Resources */ = {isa = PBXBuildFile; fileRef = 13BD17D529AD35B00050A32B /* test.json */; };
+		13BD17DC29B199530050A32B /* BusStopViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13BD17DB29B199530050A32B /* BusStopViewController.swift */; };
+		13BD17DD29B199530050A32B /* BusStopViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13BD17DB29B199530050A32B /* BusStopViewController.swift */; };
 		14A90C0426A211BE003DAB30 /* ClewTutorialFeedback.wav in Resources */ = {isa = PBXBuildFile; fileRef = 14A90C0326A211BE003DAB30 /* ClewTutorialFeedback.wav */; };
 		14A90C0526A211BF003DAB30 /* ClewTutorialFeedback.wav in Resources */ = {isa = PBXBuildFile; fileRef = 14A90C0326A211BE003DAB30 /* ClewTutorialFeedback.wav */; };
 		14A90C0726A86A82003DAB30 /* TutorialFollowPath1.crd in Resources */ = {isa = PBXBuildFile; fileRef = 14A90C0626A86A82003DAB30 /* TutorialFollowPath1.crd */; };
@@ -296,6 +298,7 @@
 		13BD17CC29A01BCC0050A32B /* sample.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = sample.json; sourceTree = "<group>"; };
 		13BD17CF29A01C130050A32B /* BusStopDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusStopDataModel.swift; sourceTree = "<group>"; };
 		13BD17D529AD35B00050A32B /* test.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = test.json; sourceTree = "<group>"; };
+		13BD17DB29B199530050A32B /* BusStopViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusStopViewController.swift; sourceTree = "<group>"; };
 		14A90C0326A211BE003DAB30 /* ClewTutorialFeedback.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = ClewTutorialFeedback.wav; sourceTree = "<group>"; };
 		14A90C0626A86A82003DAB30 /* TutorialFollowPath1.crd */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = TutorialFollowPath1.crd; sourceTree = "<group>"; };
 		14A90C0926AEF5CE003DAB30 /* TutorialFollowPath2.crd */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = TutorialFollowPath2.crd; sourceTree = "<group>"; };
@@ -1710,6 +1713,7 @@
 		E5470EDF22C119F4001092A4 /* StateViews */ = {
 			isa = PBXGroup;
 			children = (
+				13BD17DB29B199530050A32B /* BusStopViewController.swift */,
 				E5470EE022C119F4001092A4 /* RecordPathController.swift */,
 				E5470EE122C119F4001092A4 /* StartNavigationController.swift */,
 				E5470EE222C119F4001092A4 /* StopRecordingController.swift */,
@@ -2093,6 +2097,7 @@
 				E5470F2822C119F5001092A4 /* ViewController.swift in Sources */,
 				82DE922727188ACE0086F5A4 /* RouteManager.swift in Sources */,
 				82A417E1262A205A001FCB8C /* AuthenticationHelper.swift in Sources */,
+				13BD17DC29B199530050A32B /* BusStopViewController.swift in Sources */,
 				E5470F3622C119F5001092A4 /* PauseTrackingController.swift in Sources */,
 				E5470F2A22C119F5001092A4 /* RecordPathController.swift in Sources */,
 				986640CE22FB68F2005AA1F6 /* NameSavedRouteController.swift in Sources */,
@@ -2159,6 +2164,7 @@
 				E5470F4B22C119F5001092A4 /* RouteTableViewCell.swift in Sources */,
 				E5470F0522C119F5001092A4 /* FeedbackLogger.swift in Sources */,
 				82DE922827188ACE0086F5A4 /* RouteManager.swift in Sources */,
+				13BD17DD29B199530050A32B /* BusStopViewController.swift in Sources */,
 				82A417E2262A205A001FCB8C /* AuthenticationHelper.swift in Sources */,
 				E5470F2922C119F5001092A4 /* ViewController.swift in Sources */,
 				E5470F3722C119F5001092A4 /* PauseTrackingController.swift in Sources */,

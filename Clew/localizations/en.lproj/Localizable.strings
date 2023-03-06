@@ -60,6 +60,7 @@
 "optionsButtonAccessibilityLabel" = "Options";
 "signInwithAppleButtonAccessibilityLabel" = "Sign In";
 "busStopButtonText" = "Navigate to Bus Stop";
+"busStopTwoButtonText" = "Navigate to second Bus Stop"; //change this to populate with second value of 2 closest bus stops
 
     // Save routes
 "saveRoutePop-UpTitle" = "Save route";

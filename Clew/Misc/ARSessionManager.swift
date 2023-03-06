@@ -566,7 +566,7 @@ extension ARSessionManager: ARSessionDelegate {
             // TODO: create GeoSpatialAnchors to mark bus stops? STEP
             if mockBusStop1 == nil {
                 do {
-                    mockBusStop1 = try garSession?.createAnchorOnTerrain(coordinate: CLLocationCoordinate2D(latitude: 42.34955790819036, longitude: -71.06377035559136), altitudeAboveTerrain: 0.0, eastUpSouthQAnchor: simd_quatf())
+                    mockBusStop1 = try garSession?.createAnchorOnTerrain(coordinate: CLLocationCoordinate2D(latitude: 42.29637514139371, longitude: -71.23683163102729), altitudeAboveTerrain: 0.0, eastUpSouthQAnchor: simd_quatf())
                 } catch {
                     print("Got an error \(error)")
                 }
@@ -574,7 +574,7 @@ extension ARSessionManager: ARSessionDelegate {
             
             if mockBusStop2 == nil {
                 do {
-                    mockBusStop2 = try garSession?.createAnchorOnTerrain(coordinate: CLLocationCoordinate2D(latitude: 42.34961906936855, longitude: -71.06373780091388), altitudeAboveTerrain: 0.0, eastUpSouthQAnchor: simd_quatf())
+                    mockBusStop2 = try garSession?.createAnchorOnTerrain(coordinate: CLLocationCoordinate2D(latitude: 42.296450653447216, longitude: -71.23681033296808), altitudeAboveTerrain: 0.0, eastUpSouthQAnchor: simd_quatf())
                 } catch {
                     print("Got an error \(error)")
                 }
@@ -597,31 +597,20 @@ extension ARSessionManager: ARSessionDelegate {
             }
             for anchor in garFrame?.anchors ?? [] {
                 if anchor.hasValidTransform {
-                    if mockBusStopNode1 == nil {
-                        // create bus stop node
-                        let box = SCNBox(width: 0.2, height: 3, length: 0.2, chamferRadius: 0)
-                        let material = SCNMaterial()
-                        material.diffuse.contents = UIColor.red
-                        box.firstMaterial = material
-                        mockBusStopNode1 = SCNNode(geometry: box)
-                        mockBusStopNode1?.simdTransform = anchor.transform
-                        sceneView.scene.rootNode.addChildNode(mockBusStopNode1!)
-                    } else {
-                        mockBusStopNode1?.simdTransform = anchor.transform
-                    }
+                 
                     
-                    if mockBusStopNode2 == nil {
-                        // create bus stop node
-                        let box = SCNBox(width: 0.2, height: 3, length: 0.2, chamferRadius: 0)
-                        let material = SCNMaterial()
-                        material.diffuse.contents = UIColor.blue
-                        box.firstMaterial = material
-                        mockBusStopNode2 = SCNNode(geometry: box)
-                        mockBusStopNode2?.simdTransform = anchor.transform
-                        sceneView.scene.rootNode.addChildNode(mockBusStopNode2!)
-                    } else {
-                        mockBusStopNode2?.simdTransform = anchor.transform
-                    }
+//                    if mockBusStopNode2 == nil {
+//                        // create bus stop node
+//                        let box = SCNBox(width: 0.2, height: 3, length: 0.2, chamferRadius: 0)
+//                        let material = SCNMaterial()
+//                        material.diffuse.contents = UIColor.blue
+//                        box.firstMaterial = material
+//                        mockBusStopNode2 = SCNNode(geometry: box)
+//                        mockBusStopNode2?.simdTransform = anchor.transform
+//                        sceneView.scene.rootNode.addChildNode(mockBusStopNode2!)
+//                    } else {
+//                        mockBusStopNode2?.simdTransform = anchor.transform
+//                    }
                 }
                 print(anchor.hasValidTransform)
             }

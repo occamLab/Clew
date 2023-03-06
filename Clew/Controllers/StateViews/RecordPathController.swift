@@ -10,7 +10,7 @@ import UIKit
 
 /// A View Controller for handling the recording path/route state
 class RecordPathController: UIViewController {
-
+    
     /// Button for recording a route
     var recordPathButton: UIButton!
     
@@ -22,7 +22,10 @@ class RecordPathController: UIViewController {
     
     /// button for going into bus sotp mode
     var busStopButton: UIButton!
-
+    
+    /// button for going to second bus stop
+    var busStopTwoButton: UIButton!
+    
     /// called when view appears (any time)
     override func viewDidAppear(_ animated: Bool) {
         /// set thumbsUpButton as initially active voiceover button
@@ -31,6 +34,7 @@ class RecordPathController: UIViewController {
         routesButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .largeTitle)
         recordPathButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .largeTitle)
         busStopButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .largeTitle)
+        busStopTwoButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .largeTitle)
     }
     
     /// called when the view has loaded.  We setup various app elements in here.
@@ -90,6 +94,17 @@ class RecordPathController: UIViewController {
         busStopButton.addLargeTitle(NSLocalizedString("busStopButtonText", comment: "This is the text which appears on the bust stop buttton"))
 //        busStopButton.accessibilityLabel = NSLocalizedString("savedRoutesListButtonAccessibilityLabel", comment: "The accessibility tag for a button which opens a menu which displays all the saved routes created by the user.")
         
+        /// Creating a button that can be used to navigate to a bus stop
+        busStopTwoButton = UIButton(type: .custom)
+        busStopTwoButton.layer.cornerRadius = 0.75 * routesButton.bounds.size.width
+        busStopTwoButton.clipsToBounds = true
+        busStopTwoButton.translatesAutoresizingMaskIntoConstraints = false
+        busStopTwoButton.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 1.1).isActive = true
+        busStopTwoButton.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.height / 5).isActive = true
+        busStopTwoButton.setBackgroundImage(UIImage(named: "WhiteButtonBackground"), for: .normal)
+        busStopTwoButton.imageView?.contentMode = .scaleAspectFit
+        busStopTwoButton.addLargeTitle(NSLocalizedString("busStopTwoButtonText", comment: "This is the text which appears on the bus stop button"))
+        
         /// create stack view for aligning and distributing bottom layer buttons
         let stackView   = UIStackView()
         view.addSubview(stackView)
@@ -106,6 +121,7 @@ class RecordPathController: UIViewController {
         stackView.addArrangedSubview(addAnchorPointButton)
         stackView.addArrangedSubview(routesButton)
         stackView.addArrangedSubview(busStopButton)
+//        stackView.addArrangedSubview(busStopTwoButton)
 
         
         /// size the stack
@@ -125,7 +141,19 @@ class RecordPathController: UIViewController {
             recordPathButton.addTarget(parent,
                                           action: #selector(ViewController.startCreateAnchorPointProcedure),
                                           for: .touchUpInside)
-            busStopButton.addTarget(parent, action: #selector(ViewController.findBusStop), for: .touchUpInside)
+            busStopButton.addTarget(parent, action: #selector(ViewController.findBusStopPressed), for: .touchUpInside)
+            //busStopTwoButton.addTarget(parent, action: #selector(ViewController.findBusStop), for: .touchUpInside)
+
         }
     }
+
+//    @objc func showBusStopView(_ sender: UIButton) {
+//        if let button = sender as? UIButton {
+//            if button == busStopButton {
+//                let busStopViewController = BusStopViewController()
+//                busStopViewController.modalTransitionStyle = .flipHorizontal
+//                present(busStopViewController, animated: true, completion: nil)
+//            }
+//        }
+//    }
 }

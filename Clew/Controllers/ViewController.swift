@@ -664,6 +664,15 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, CLLocationMana
         }
     }
     
+    //@objc func stopOneButtonPressed() {
+        // first stop - that's the bus stop to navigate to
+    //}
+    
+    //@objc func stopTwoButtonPressed() {
+        // second stop - that's the bus stop to navigate to
+    //}
+    
+
     /// Called when the user presses the routes button.  The function will display the `Routes` view, which is managed by `RoutesViewController`.
     @objc func routesButtonPressed() {
         ///update state boolians
@@ -830,6 +839,8 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, CLLocationMana
     /// route recording VC (called on app start)
     var recordPathController: RecordPathController!
     
+    var busStopViewController: BusStopViewController!
+    
     /// saving route name VC
     var nameSavedRouteController: NameSavedRouteController!
     
@@ -865,6 +876,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, CLLocationMana
         resumeTrackingConfirmController = ResumeTrackingConfirmController()
         stopRecordingController = StopRecordingController()
         recordPathController = RecordPathController()
+        busStopViewController = BusStopViewController()
         startNavigationController = StartNavigationController()
         stopNavigationController = StopNavigationController()
         nameSavedRouteController = NameSavedRouteController()
@@ -1828,20 +1840,26 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, CLLocationMana
         }
     }
     
-    /// handles the suer pressing the bus stop button
+    /// handles the user pressing the bus stop button
     /// based on recordPath()
     /// TODO fix and get working STEP
-    @objc func findBusStop() {
-        isAutomaticAlignment = false
-        recordingSingleUseRoute = false
-        paused = false
-        
-        hideAllViewsHelper()
-        
-        ARSessionManager.shared.initialWorldMap = nil
-        trackingSessionErrorState = nil
-        ARSessionManager.shared.startSession()
-    }
+//    @IBAction func showBusStopView(_ sender: UIButton) {
+//    @IBAction func showBusStopView(_ sender: UIButton) {
+//        if let button = sender as? UIButton {
+//            if button ==
+//        }
+//    }
+//    @objc func findBusStopPressed() {
+//        isAutomaticAlignment = false
+//        recordingSingleUseRoute = false
+//        paused = false
+//
+//        hideAllViewsHelper()
+//
+//        ARSessionManager.shared.initialWorldMap = nil
+//        trackingSessionErrorState = nil
+//        ARSessionManager.shared.startSession()
+//    }
     
     /// handles the user pressing the record path button.
     @objc func recordPath() {
@@ -2661,6 +2679,12 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, CLLocationMana
         } catch {
             print("error \(error)")
         }
+    }
+    
+    // STEP button
+    @objc func findBusStopPressed(){
+        hideAllViewsHelper()
+        add(busStopViewController)
     }
     
     /// Checks to see if we need to reset the timer
