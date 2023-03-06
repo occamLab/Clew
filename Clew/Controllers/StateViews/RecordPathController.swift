@@ -91,7 +91,7 @@ class RecordPathController: UIViewController {
         busStopButton.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.height / 5).isActive = true
         busStopButton.setBackgroundImage(UIImage(named: "WhiteButtonBackground"), for: .normal)
         busStopButton.imageView?.contentMode = .scaleAspectFit
-        busStopButton.addLargeTitle(NSLocalizedString("busStopButtonText", comment: "This is the text which appears on the bust stop buttton"))
+        busStopButton.addLargeTitle(NSLocalizedString("Navigate to Bus Stop", comment: "This is the text which appears on the bust stop buttton"))
 //        busStopButton.accessibilityLabel = NSLocalizedString("savedRoutesListButtonAccessibilityLabel", comment: "The accessibility tag for a button which opens a menu which displays all the saved routes created by the user.")
         
         /// Creating a button that can be used to navigate to a bus stop

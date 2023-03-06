@@ -664,14 +664,6 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, CLLocationMana
         }
     }
     
-    //@objc func stopOneButtonPressed() {
-        // first stop - that's the bus stop to navigate to
-    //}
-    
-    //@objc func stopTwoButtonPressed() {
-        // second stop - that's the bus stop to navigate to
-    //}
-    
 
     /// Called when the user presses the routes button.  The function will display the `Routes` view, which is managed by `RoutesViewController`.
     @objc func routesButtonPressed() {
@@ -722,6 +714,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, CLLocationMana
         resumeTrackingConfirmController.remove()
         resumeTrackingController.remove()
         nameSavedRouteController.remove()
+        busStopViewController.remove()
         rootContainerView.countdownTimer.isHidden = true
     }
     
@@ -1849,17 +1842,22 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, CLLocationMana
 //            if button ==
 //        }
 //    }
-//    @objc func findBusStopPressed() {
-//        isAutomaticAlignment = false
-//        recordingSingleUseRoute = false
-//        paused = false
-//
-//        hideAllViewsHelper()
-//
-//        ARSessionManager.shared.initialWorldMap = nil
-//        trackingSessionErrorState = nil
-//        ARSessionManager.shared.startSession()
-//    }
+    @objc func findBusStopPressed() {
+        hideAllViewsHelper()
+        add(busStopViewController)
+    }
+    
+    @objc func navigateToBusStop() {
+        isAutomaticAlignment = false
+        recordingSingleUseRoute = false
+        paused = false
+
+        hideAllViewsHelper()
+
+        ARSessionManager.shared.initialWorldMap = nil
+        trackingSessionErrorState = nil
+        ARSessionManager.shared.startSession()
+    }
     
     /// handles the user pressing the record path button.
     @objc func recordPath() {
@@ -2682,10 +2680,10 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, CLLocationMana
     }
     
     // STEP button
-    @objc func findBusStopPressed(){
-        hideAllViewsHelper()
-        add(busStopViewController)
-    }
+//    @objc func findBusStopPressed(){
+//        hideAllViewsHelper()
+//        add(busStopViewController)
+//    }
     
     /// Checks to see if we need to reset the timer
     /// - Returns: true if timer was reset

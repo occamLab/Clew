@@ -7,32 +7,89 @@
 //
 
 import UIKit
-//import RecordPathController
+import ARKit
 
 class BusStopViewController: UIViewController {
-
+    
+    /// button for closest bus stop
+    var busStopOneButton: UIButton!
+    
+    /// button for second closest bus stop
+    var busStopTwoButton: UIButton!
+    
+    /// called when view appears (any time)
+    override func viewDidAppear(_ animated: Bool) {
+        /// set thumbsUpButton as initially active voiceover button
+        busStopOneButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .largeTitle)
+        busStopTwoButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .largeTitle)
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
         
-//        let button = UIButton(type: .system)
-//        button.setTitle("Show New View", for: .normal)
-//        button.addTarget(self, action: (showBusStopView(<#T##UIButton#>)), for: .touchUpInside)
-//        button.frame = CGRect(x:50, y:100, width:200, height: 50)
-//        view.addSubview(button)
-
-        // Do any additional setup after loading the view.
+        //view.backgroundColor = .white
+        self.modalPresentationStyle = .fullScreen
+        view = TransparentTouchView(frame:CGRect(x: 0,
+                                                 y: UIScreen.main.bounds.size.height*0.2+30,
+                                                 width: UIConstants.buttonFrameWidth * 1,
+                                                 height: UIScreen.main.bounds.size.height*0.7-30))
+        
+        busStopOneButton = UIButton(type: .custom)
+        busStopOneButton.layer.cornerRadius = 0.75 * busStopOneButton.bounds.size.width
+        busStopOneButton.clipsToBounds = true
+        busStopOneButton.translatesAutoresizingMaskIntoConstraints = false
+        busStopOneButton.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 1.1).isActive = true
+        busStopOneButton.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.height / 5).isActive = true
+        busStopOneButton.setBackgroundImage(UIImage(named: "WhiteButtonBackground"), for: .normal)
+        busStopOneButton.imageView?.contentMode = .scaleAspectFit
+        busStopOneButton.addLargeTitle(NSLocalizedString("busStopOneButtonText", comment: "This is the text which appears on the bus stop one buttton"))
+        //busStopOneButton.setTitle("\(closestBusStops[0])")
+        
+        busStopTwoButton = UIButton(type: .custom)
+        busStopTwoButton.layer.cornerRadius = 0.75 * busStopTwoButton.bounds.size.width
+        busStopTwoButton.clipsToBounds = true
+        busStopTwoButton.translatesAutoresizingMaskIntoConstraints = false
+        busStopTwoButton.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 1.1).isActive = true
+        busStopTwoButton.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.height / 5).isActive = true
+        busStopTwoButton.setBackgroundImage(UIImage(named: "WhiteButtonBackground"), for: .normal)
+        busStopTwoButton.imageView?.contentMode = .scaleAspectFit
+        busStopTwoButton.addLargeTitle(NSLocalizedString("busStopTwoButtonText", comment: "This is the text which appears on the bus stop two buttton"))
+        //busStopTwoButton.setTitle(closestBusStops[1].Stop_name)
+        
+        let stackView   = UIStackView()
+        view.addSubview(stackView)
+        stackView.translatesAutoresizingMaskIntoConstraints = false;
+        
+        /// define horizonal, centered, and equal alignment of elements
+        /// inside the bottom stack
+        stackView.axis = NSLayoutConstraint.Axis.vertical
+        stackView.distribution  = UIStackView.Distribution.equalSpacing
+        stackView.alignment = UIStackView.Alignment.center
+        
+        /// add elements to the stack
+        stackView.addArrangedSubview(busStopOneButton)
+        stackView.addArrangedSubview(busStopTwoButton)
+        
+        /// size the stack
+        stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 5).isActive = true
+        stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -5).isActive = true
+        stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 20).isActive = true
+        stackView.topAnchor.constraint(equalTo: view.topAnchor, constant: 0).isActive = true
+        
+        if let parent: UIViewController = parent {
+            
+            busStopOneButton.addTarget(parent, action: #selector(ViewController.navigateToBusStop), for: .touchUpInside)
+            busStopTwoButton.addTarget(parent, action: #selector(ViewController.navigateToBusStop), for: .touchUpInside)
+        }
+        
+        /*
+         // MARK: - Navigation
+         
+         // In a storyboard-based application, you will often want to do a little preparation before navigation
+         override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+         // Get the new view controller using segue.destination.
+         // Pass the selected object to the new view controller.
+         }
+         */
+        
     }
-    
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }
