@@ -8,8 +8,9 @@
 
 import UIKit
 import ARKit
+import ARCoreGeospatial
 
-class BusStopViewController: UIViewController {
+class BusStopViewController: UIViewController, ARSessionManagerObserver {
     var closestStops: [BusStop] = []
     
 //    required init?(coder decoder: NSCoder, closestStops: [BusStop]) {
@@ -32,6 +33,19 @@ class BusStopViewController: UIViewController {
     var busStopTwoButton: UIButton!
     
     let busStopDataModel = BusStopDataModel.shared
+    
+    /// This function is called by the ARSessionManager whenever the geo location is updated
+    /// - Parameter cameraGeoSpatialTransform: this provides lat, long, heading, altitude as well as confidence bands
+    func locationDidUpdate(cameraGeoSpatialTransform: GARGeospatialTransform) {
+        let currentLatLon = cameraGeoSpatialTransform.coordinate
+        print("got a new lat lon in the bus stop view controller \(currentLatLon)")
+    }
+
+    
+    override func viewWillAppear(_ animated: Bool) {
+        // listen for to the ARSessionManager
+        ARSessionManager.shared.observer = self
+    }
     
     /// called when view appears (any time)
     override func viewDidAppear(_ animated: Bool) {

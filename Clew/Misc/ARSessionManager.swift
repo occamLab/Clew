@@ -29,24 +29,41 @@ enum RelocalizationStrategy {
     case useCrumbAnchorsForAlignment
 }
 
-protocol ARSessionManagerDelegate {
+protocol ARSessionManagerObserver {
     func trackingErrorOccurred(_ : ARTrackingError)
+    func newFrameAvailable()
+    func sessionDidRelocalize()
     func sessionInitialized()
     func sessionRelocalizing()
     func trackingIsNormal()
+    func didHostCloudAnchor(cloudIdentifier: String, anchorIdentifier: String, withTransform transform : simd_float4x4)
+    func locationDidUpdate(cameraGeoSpatialTransform: GARGeospatialTransform)
+}
+
+// add default behavior
+extension ARSessionManagerObserver {
+    func trackingErrorOccurred(_ : ARTrackingError) {}
+    func newFrameAvailable() {}
+    func sessionDidRelocalize() {}
+    func sessionInitialized() {}
+    func sessionRelocalizing() {}
+    func trackingIsNormal() {}
+    func didHostCloudAnchor(cloudIdentifier: String, anchorIdentifier: String, withTransform transform : simd_float4x4) {}
+    func locationDidUpdate(cameraGeoSpatialTransform: GARGeospatialTransform) {}
+}
+
+protocol ARSessionManagerDelegate: ARSessionManagerObserver {
     func isRecording()->Bool
     func getPathColor()->Int
     func getKeypointColor()->Int
     func getShowPath()->Bool
-    func newFrameAvailable()
-    func sessionDidRelocalize()
-    func didHostCloudAnchor(cloudIdentifier: String, anchorIdentifier: String, withTransform transform : simd_float4x4)
-    func locationDidUpdate(cameraGeoSpatialTransform: GARGeospatialTransform)
 }
 
 class ARSessionManager: NSObject {
     static var shared = ARSessionManager()
     var delegate: ARSessionManagerDelegate?
+    // currently just supporting one observer (could add support for a set, but would be more involved)
+    var observer: ARSessionManagerObserver?
     var lastTorchChange = 0.0
 
     enum LocalizationState {
@@ -577,6 +594,7 @@ extension ARSessionManager: ARSessionDelegate {
             if let geoSpatialTransform = garFrame?.earth?.cameraGeospatialTransform {
                 lastGeoLocation = geoSpatialTransform.coordinate
                 delegate?.locationDidUpdate(cameraGeoSpatialTransform: geoSpatialTransform)
+                observer?.locationDidUpdate(cameraGeoSpatialTransform: geoSpatialTransform)
             }
             for anchor in garFrame?.anchors ?? [] {
                 if anchor.hasValidTransform {
@@ -618,6 +636,7 @@ extension ARSessionManager: ARSessionDelegate {
             }
         }
         delegate?.newFrameAvailable()
+        observer?.newFrameAvailable()
     }
     
     func createTerrainAnchor(coordinate: CLLocationCoordinate2D)->GARAnchor? {
@@ -663,9 +682,11 @@ extension ARSessionManager: ARSessionDelegate {
             case .excessiveMotion:
                 logString = "ExcessiveMotion"
                 delegate?.trackingErrorOccurred(.excessiveMotion)
+                observer?.trackingErrorOccurred(.excessiveMotion)
             case .insufficientFeatures:
                 logString = "InsufficientFeatures"
                 delegate?.trackingErrorOccurred(.insufficientFeatures)
+                observer?.trackingErrorOccurred(.insufficientFeatures)
             case .initializing:
                 // don't log anything
                 print("initializing")
@@ -673,6 +694,8 @@ extension ARSessionManager: ARSessionDelegate {
                 sessionWasRelocalizing = true
                 delegate?.sessionInitialized()
                 delegate?.sessionRelocalizing()
+                observer?.sessionInitialized()
+                observer?.sessionRelocalizing()
             @unknown default:
                 print("An error condition arose that we didn't know about when the app was last compiled")
             }
@@ -680,9 +703,12 @@ extension ARSessionManager: ARSessionDelegate {
             logString = "Normal"
             delegate?.sessionInitialized()
             delegate?.trackingIsNormal()
+            observer?.sessionInitialized()
+            observer?.trackingIsNormal()
             if sessionWasRelocalizing {
                 if localization == .none {
                     delegate?.sessionDidRelocalize()
+                    observer?.sessionDidRelocalize()
                 }
                 if relocalizationStrategy == .coordinateSystemAutoAligns {
                     manualAlignment = matrix_identity_float4x4
@@ -761,6 +787,7 @@ extension ARSessionManager: GARSessionDelegate {
         }
         if sessionWasRelocalizing && localization == .none {
             delegate?.sessionDidRelocalize()
+            observer?.sessionDidRelocalize()
         }
         let oldLocalization = localization
         localization = .withCloudAnchors
@@ -786,6 +813,7 @@ extension ARSessionManager: GARSessionDelegate {
     func session(_ session: GARSession, didHost garAnchor:GARAnchor) {
         if let cloudIdentifier = garAnchor.cloudIdentifier {
             delegate?.didHostCloudAnchor(cloudIdentifier: cloudIdentifier, anchorIdentifier: garAnchor.identifier.uuidString, withTransform: garAnchor.transform)
+            observer?.didHostCloudAnchor(cloudIdentifier: cloudIdentifier, anchorIdentifier: garAnchor.identifier.uuidString, withTransform: garAnchor.transform)
             // createSCNNodeFor(identifier: cloudIdentifier, at: garAnchor.transform)
         }
     }
