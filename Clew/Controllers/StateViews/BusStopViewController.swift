@@ -10,6 +10,20 @@ import UIKit
 import ARKit
 
 class BusStopViewController: UIViewController {
+    var closestStops: [BusStop] = []
+    
+//    required init?(coder decoder: NSCoder, closestStops: [BusStop]) {
+//            self.closestStops = closestStops
+//            super.init(coder: decoder)
+//            print("BUS STOP VIEW CONTROLLER \(self.closestStops)")
+//
+//        }
+//
+//    required init?(coder aDecoder: NSCoder) {
+//        fatalError("init(coder:) has not been implemented")
+//    }
+    
+
     
     /// button for closest bus stop
     var busStopOneButton: UIButton!
@@ -17,12 +31,15 @@ class BusStopViewController: UIViewController {
     /// button for second closest bus stop
     var busStopTwoButton: UIButton!
     
+    let busStopDataModel = BusStopDataModel.shared
+    
     /// called when view appears (any time)
     override func viewDidAppear(_ animated: Bool) {
         /// set thumbsUpButton as initially active voiceover button
         busStopOneButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .largeTitle)
         busStopTwoButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .largeTitle)
     }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -42,7 +59,8 @@ class BusStopViewController: UIViewController {
         busStopOneButton.setBackgroundImage(UIImage(named: "WhiteButtonBackground"), for: .normal)
         busStopOneButton.imageView?.contentMode = .scaleAspectFit
         busStopOneButton.addLargeTitle(NSLocalizedString("busStopOneButtonText", comment: "This is the text which appears on the bus stop one buttton"))
-        //busStopOneButton.setTitle("\(closestBusStops[0])")
+        // add tag so we can send over to ViewController
+        busStopOneButton.tag = 0
         
         busStopTwoButton = UIButton(type: .custom)
         busStopTwoButton.layer.cornerRadius = 0.75 * busStopTwoButton.bounds.size.width
@@ -53,6 +71,8 @@ class BusStopViewController: UIViewController {
         busStopTwoButton.setBackgroundImage(UIImage(named: "WhiteButtonBackground"), for: .normal)
         busStopTwoButton.imageView?.contentMode = .scaleAspectFit
         busStopTwoButton.addLargeTitle(NSLocalizedString("busStopTwoButtonText", comment: "This is the text which appears on the bus stop two buttton"))
+        // add tag so we can send over to ViewController
+        busStopTwoButton.tag = 1
         //busStopTwoButton.setTitle(closestBusStops[1].Stop_name)
         
         let stackView   = UIStackView()
@@ -75,21 +95,17 @@ class BusStopViewController: UIViewController {
         stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 20).isActive = true
         stackView.topAnchor.constraint(equalTo: view.topAnchor, constant: 0).isActive = true
         
+        
         if let parent: UIViewController = parent {
             
             busStopOneButton.addTarget(parent, action: #selector(ViewController.navigateToBusStop), for: .touchUpInside)
             busStopTwoButton.addTarget(parent, action: #selector(ViewController.navigateToBusStop), for: .touchUpInside)
         }
         
-        /*
-         // MARK: - Navigation
-         
-         // In a storyboard-based application, you will often want to do a little preparation before navigation
-         override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-         // Get the new view controller using segue.destination.
-         // Pass the selected object to the new view controller.
-         }
-         */
-        
+    }
+    
+//    func updateButtonText(closestStops: [BusStop]) {
+    func updateButtonText(text: String) {
+        busStopOneButton.addLargeTitle(text)
     }
 }

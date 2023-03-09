@@ -41,66 +41,26 @@ class BusStopDataModel {
               }
         }
     }
+    
+    func getClosestBusStops(to coordinate: CLLocationCoordinate2D)->[BusStop] {
+        var closestBusStops: [BusStop] = []
+        for stop in BusStopDataModel.shared.stops {
+            let distance = stop.distanceFrom(latitude: coordinate.latitude, longitude: coordinate.longitude)
+            if Set(closestBusStops.map({$0.Stop_ID})).contains(stop.Stop_ID) {
+                continue
+            }
+            if closestBusStops.count >= 2 {
+                if closestBusStops[1].distanceFrom(latitude: coordinate.latitude, longitude: coordinate.longitude) > distance {
+                    closestBusStops[1] = stop
+                }
+            }
+            else {
+                closestBusStops.append(stop)
+            }
+            closestBusStops = closestBusStops.sorted(by: {$0.distanceFrom(latitude: coordinate.latitude, longitude: coordinate.longitude) < $1.distanceFrom(latitude: coordinate.latitude, longitude: coordinate.longitude)})
+        }
+        print("closest stops \(closestBusStops[0].Stop_name), \(closestBusStops[1].Stop_name)")
+        print("closest stops \(closestBusStops[0].Stop_ID), \(closestBusStops[1].Stop_ID)")
+        return closestBusStops
+    }
 }
-
-//class BusStopDataModel {
-//    init() {
-//        if let path = Bundle.main.path(forResource: "busStopData", ofType: "csv") {
-////            var allBusStops = try! DataFrame(
-////                csvData: path,
-////                options: options
-////            )
-//            let data = try Data(contentsOf: URL(fileURLWithPath: path), options: options)
-//
-//        }
-//
-//    }
-//}
-
-//guard let fileUrl = URL(string: deaths_path) else {
-//
-//    fatalError("Error creating Url")
-//
-//}
-//
-//
-//var covidDeathsDf = try! DataFrame(
-//
-//    contentsOfCSVFile: fileUrl,
-//
-//    options: options)
-//
-//
-//print("\(covidDeathsDf)")
-
-
-//struct ResponseData: Decodable {
-//    var colors: [ColorPair]
-//}
-//
-//struct ColorPair : Decodable {
-//    var color: String
-//    var value: String
-//}
-//
-//class BusStopDataModel {
-//    init() {
-//        if let path = Bundle.main.path(forResource: "sample", ofType: "json") {
-//            do {
-//                  let data = try Data(contentsOf: URL(fileURLWithPath: path), options: .mappedIfSafe)
-//                print("data \(data)")
-//                let decoder = JSONDecoder()
-//                let jsonData = try decoder.decode(ResponseData.self, from: data)
-//                for color in jsonData.colors {
-//                    print("color \(color.color) value \(color.value)")
-//                }
-//              } catch {
-//                   // handle error
-//                  print("error \(error)")
-//                  print("test")
-//              }
-//        }
-//
-//        print("test")
-//    }
-//}
