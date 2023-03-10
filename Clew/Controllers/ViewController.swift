@@ -1852,7 +1852,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, CLLocationMana
         add(busStopViewController)
         busStopViewController.updateButtonText(text: "Pretend this is a name :))")
         
-        var lastLatLon = ARSessionManager.shared.lastGeoLocation
+//        var lastLatLon = ARSessionManager.shared.lastGeoLocation
         
 //        guard let lastLatLon = ARSessionManager.shared.lastGeoLocation else {
 //            print("lastLatLon in else fuck step")

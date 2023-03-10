@@ -34,11 +34,20 @@ class BusStopViewController: UIViewController, ARSessionManagerObserver {
     
     let busStopDataModel = BusStopDataModel.shared
     
+    var buttonsHaveNames = false
+    
     /// This function is called by the ARSessionManager whenever the geo location is updated
     /// - Parameter cameraGeoSpatialTransform: this provides lat, long, heading, altitude as well as confidence bands
     func locationDidUpdate(cameraGeoSpatialTransform: GARGeospatialTransform) {
         let currentLatLon = cameraGeoSpatialTransform.coordinate
-        print("got a new lat lon in the bus stop view controller \(currentLatLon)")
+//        print("got a new lat lon in the bus stop view controller \(currentLatLon)")
+        if !buttonsHaveNames {
+            let closestTwoStops = busStopDataModel.getClosestBusStops(to: currentLatLon)
+            busStopOneButton.addLargeTitle(closestTwoStops[0].Stop_name)
+            busStopTwoButton.addLargeTitle(closestTwoStops[1].Stop_name)
+            buttonsHaveNames = true
+        }
+        
     }
 
     
