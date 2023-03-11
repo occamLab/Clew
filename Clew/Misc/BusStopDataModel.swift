@@ -30,15 +30,20 @@ class BusStopDataModel {
     private init() {
         if let path = Bundle.main.path(forResource: "test", ofType: "json") {
             do {
-                  let data = try Data(contentsOf: URL(fileURLWithPath: path), options: .mappedIfSafe)
+                let data = try Data(contentsOf: URL(fileURLWithPath: path), options: .mappedIfSafe)
                 print("data \(data)")
                 let decoder = JSONDecoder()
                 stops = try decoder.decode([BusStop].self, from: data)
-              } catch {
-                   // handle error
-                  print("error \(error)")
-                  print("test")
-              }
+                
+                // add testing bus stops
+                stops.append(BusStop(Stop_ID: 0, Stop_name: "OlinMAC", Direction: 0, Latitude: 42.293592, Longitude: -71.264154))
+                stops.append(BusStop(Stop_ID: 1, Stop_name: "OlinCenterO", Direction: 1, Latitude: 42.293584, Longitude: -71.263934))
+                
+            } catch {
+                // handle error
+                print("error \(error)")
+                print("test")
+            }
         }
     }
     

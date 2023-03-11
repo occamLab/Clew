@@ -65,6 +65,8 @@ class ARSessionManager: NSObject {
     // currently just supporting one observer (could add support for a set, but would be more involved)
     var observer: ARSessionManagerObserver?
     var lastTorchChange = 0.0
+    let generator = UIImpactFeedbackGenerator(style: .heavy)
+    var lastHapticTime = Date()
 
     enum LocalizationState {
         case none
@@ -576,21 +578,33 @@ extension ARSessionManager: ARSessionDelegate {
             adjustTorch(lightingIntensity: Float(lighting.ambientIntensity), timestamp: frame.timestamp)
         }
         
+        if let busStopNode = busStopNode {
+            let distanceToBusStop = simd_distance(busStopNode.simdTransform.columns.3, frame.camera.transform.columns.3)
+            let headingVec = simd_normalize(simd_float3(-frame.camera.transform.columns.2.x, 0.0, -frame.camera.transform.columns.2.z)) // how we're currently facing
+            let pointingVector = simd_float3(busStopNode.simdTransform.columns.3.x - frame.camera.transform.columns.3.x,
+                                             0.0,
+                                             busStopNode.simdTransform.columns.3.z - frame.camera.transform.columns.3.z) // where we want to go
+            // calculate angle between 2 vectors
+            let deltaZ = headingVec.z - pointingVector.z
+            let deltaX = headingVec.x - pointingVector.x
+            let angle = atan2(deltaZ, deltaX)
+            let q = simd_quaternion(headingVec, pointingVector)
+            let angleDiff = q.angle * sign(q.axis.y)
+            // 10 deg in radians (we chose this)
+            if -lastHapticTime.timeIntervalSinceNow > 0.5, abs(angleDiff) <= (10 * Float.pi / 180) {
+                lastHapticTime = Date()
+                generator.impactOccurred(intensity: 1.0)
+            }
+            print("angle diff: \(angleDiff)")
+
+            //print("distanceToBusStop \(distanceToBusStop)")
+        }
+        
         do {
             
             ARFrameStatusAdapter.adjustTrackingStatus(frame)
             let garFrame = try garSession?.update(frame)
-            
-            // TODO: create GeoSpatialAnchors to mark bus stops? ST
-            
-//            if mockBusStop2 == nil {
-//                do {
-//                    mockBusStop2 = try garSession?.createAnchorOnTerrain(coordinate: CLLocationCoordinate2D(latitude: 42.296450653447216, longitude: -71.23681033296808), altitudeAboveTerrain: 0.0, eastUpSouthQAnchor: simd_quatf())
-//                } catch {
-//                    print("Got an error \(error)")
-//                }
-//            }
-            
+                        
             if let geoSpatialTransform = garFrame?.earth?.cameraGeospatialTransform {
                 lastGeoLocation = geoSpatialTransform.coordinate
                 delegate?.locationDidUpdate(cameraGeoSpatialTransform: geoSpatialTransform)
@@ -601,6 +615,7 @@ extension ARSessionManager: ARSessionDelegate {
                     if busStopNode == nil {
                         // create bus stop node
                         let box = SCNBox(width: 0.2, height: 3, length: 0.2, chamferRadius: 0)
+                        print("anchor.transform \(anchor.transform)")
                         let material = SCNMaterial()
                         material.diffuse.contents = UIColor.blue
                         box.firstMaterial = material

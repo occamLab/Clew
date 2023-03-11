@@ -1844,65 +1844,20 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, CLLocationMana
         ARSessionManager.shared.initialWorldMap = nil
         trackingSessionErrorState = nil
         ARSessionManager.shared.startSession()
-        
-//        guard let lastLatLon = ARSessionManager.shared.lastGeoLocation else {
-//            return
-//        }
-        
+
         add(busStopViewController)
-        busStopViewController.updateButtonText(text: "Pretend this is a name :))")
-        
-//        var lastLatLon = ARSessionManager.shared.lastGeoLocation
-        
-//        guard let lastLatLon = ARSessionManager.shared.lastGeoLocation else {
-//            print("lastLatLon in else fuck step")
-//            return
-//        }
-//        let closestBusStops = BusStopDataModel.shared.getClosestBusStops(to: lastLatLon ?? CLLocationCoordinate2D(latitude: 0, longitude: 0))
-//        let coder = NSKeyedUnarchiver(forReadingWith: Data())
-//        if let busStopVC = BusStopViewController(coder: coder, closestStops: closestBusStops) {
-//            // The initializer succeeded, so busStopVC is now a non-optional BusStopViewController instance
-//            // You can use busStopVC here
-//            print("before add")
-//            add(busStopVC)
-//            print("after add")
-//        } else {
-//            // The initializer failed, so busStopVC is nil
-//            // Handle the failure case here
-//            print("busStopVC Failed")
-//        }
-        
-        // adding coder to try to make a new busStopVC
-//        let coder = NSKeyedUnarchiver(forReadingWith: Data())
-//        let busStopVC = BusStopViewController(coder: coder, location: lastLatLon)
-//        add(busStopVC)    let coder = NSKeyedUnarchiver(forReadingWith: Data())
-//        let busStopVC = BusStopViewController(coder: coder, location: lastLatLon)
-//        add(busStopVC)
-        
-        // find closest bus stops
-    
     }
     
     @objc func navigateToBusStop(sender: UIButton!) {
         guard let lastLatLon = ARSessionManager.shared.lastGeoLocation else {
             return
         }
-//        isAutomaticAlignment = false
-//        recordingSingleUseRoute = false
-//        paused = false
-//
-        hideAllViewsHelper()
-//
-//        ARSessionManager.shared.initialWorldMap = nil
-//        trackingSessionErrorState = nil
-//        ARSessionManager.shared.startSession()
-        
-        // get which bus stop button was pressed (0/1)
 
-        
+        hideAllViewsHelper()
+
+        // get which bus stop button was pressed (0/1)
         let selectedBusStop : Int = sender.tag
         let closestBusStops = BusStopDataModel.shared.getClosestBusStops(to: lastLatLon)
-        //ARSessionManager.shared.renderBusStop(latitude: , longitude: )
         if selectedBusStop == 0 {
             ARSessionManager.shared.createTerrainAnchor(coordinate: CLLocationCoordinate2D(latitude: closestBusStops[0].Latitude, longitude: closestBusStops[0].Longitude))
         }

@@ -127,8 +127,4 @@ class BusStopViewController: UIViewController, ARSessionManagerObserver {
         
     }
     
-//    func updateButtonText(closestStops: [BusStop]) {
-    func updateButtonText(text: String) {
-        busStopOneButton.addLargeTitle(text)
-    }
 }
