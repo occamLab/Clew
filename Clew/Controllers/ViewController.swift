@@ -853,7 +853,11 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, CLLocationMana
     let latitudeLabel = UILabel()
     let longitudeLabel = UILabel()
     let locationAccuracyLabel = UILabel()
-
+    
+    /// debug label to show distance from bus stop
+    let distanceFromBusStopLabel = UILabel()
+    var timeSinceDistanceFromBusStop = Date()
+    
     let locationManager = CLLocationManager()
     /// called when the view has loaded.  We setup various app elements in here.
     override func viewDidLoad() {
@@ -1852,9 +1856,27 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, CLLocationMana
         guard let lastLatLon = ARSessionManager.shared.lastGeoLocation else {
             return
         }
+        
+        // STEP TODO: move this to function that is continously called
+        print("hi \( ARSessionManager.shared.distanceToBusStop)")
+        if -timeSinceDistanceFromBusStop.timeIntervalSinceNow > 1, abs(ARSessionManager.shared.angleDiff) <= (10 * Float.pi / 180), ARSessionManager.shared.distanceToBusStop >= 0 {
+            timeSinceDistanceFromBusStop = Date()
+            print("hello \(ARSessionManager.shared.distanceToBusStop)")
+            distanceFromBusStopLabel.text = String(ARSessionManager.shared.distanceToBusStop)
+        }
+        
+        distanceFromBusStopLabel.textColor = UIColor.black
+        view.addSubview(distanceFromBusStopLabel)
 
+        distanceFromBusStopLabel.translatesAutoresizingMaskIntoConstraints = false
+        distanceFromBusStopLabel.backgroundColor = UIColor.gray.withAlphaComponent(0.8)
+        NSLayoutConstraint.activate([
+            distanceFromBusStopLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
+            distanceFromBusStopLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: -20)
+        ])
+        
         hideAllViewsHelper()
-
+        
         // get which bus stop button was pressed (0/1)
         let selectedBusStop : Int = sender.tag
         let closestBusStops = BusStopDataModel.shared.getClosestBusStops(to: lastLatLon)
@@ -1864,6 +1886,8 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, CLLocationMana
         else {
             ARSessionManager.shared.createTerrainAnchor(coordinate: CLLocationCoordinate2D(latitude: closestBusStops[1].Latitude, longitude: closestBusStops[1].Longitude))
         }
+        
+        
     }
     
     /// handles the user pressing the record path button.

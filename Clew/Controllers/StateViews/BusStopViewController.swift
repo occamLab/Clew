@@ -47,7 +47,7 @@ class BusStopViewController: UIViewController, ARSessionManagerObserver {
             busStopTwoButton.addLargeTitle(closestTwoStops[1].Stop_name)
             buttonsHaveNames = true
         }
-        
+    
     }
 
     

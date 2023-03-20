@@ -66,8 +66,9 @@ class ARSessionManager: NSObject {
     var observer: ARSessionManagerObserver?
     var lastTorchChange = 0.0
     let generator = UIImpactFeedbackGenerator(style: .heavy)
-    var lastHapticTime = Date()
-
+    var lastHapticTime = Date() // tracking when we give angle haptic feedback
+    var lastDistanceTime = Date() // tracking when we give feedback about straight line distance away
+    
     enum LocalizationState {
         case none
         case withCloudAnchors
@@ -77,6 +78,12 @@ class ARSessionManager: NSObject {
     var localization: LocalizationState = .none
     let alignmentFilter = AlignmentFilter()
     var sessionWasRelocalizing = false
+    var distanceToBusStop: Float = -1 // default value is an impossible distance (negative)
+    
+    // used to update distance from bus stop debug label in ViewController
+    var angleDiff: Float = 0.0
+    
+    
     // TODO: we can probably get rid of these and use the cloudIdentifier as our key
     private var sessionCloudAnchors: [UUID: ARAnchor] = [:]
     
@@ -579,23 +586,29 @@ extension ARSessionManager: ARSessionDelegate {
         }
         
         if let busStopNode = busStopNode {
-            let distanceToBusStop = simd_distance(busStopNode.simdTransform.columns.3, frame.camera.transform.columns.3)
+            distanceToBusStop = simd_distance(busStopNode.simdTransform.columns.3, frame.camera.transform.columns.3) // straight line distance in meters
             let headingVec = simd_normalize(simd_float3(-frame.camera.transform.columns.2.x, 0.0, -frame.camera.transform.columns.2.z)) // how we're currently facing
             let pointingVector = simd_float3(busStopNode.simdTransform.columns.3.x - frame.camera.transform.columns.3.x,
                                              0.0,
                                              busStopNode.simdTransform.columns.3.z - frame.camera.transform.columns.3.z) // where we want to go
+            
             // calculate angle between 2 vectors
-            let deltaZ = headingVec.z - pointingVector.z
-            let deltaX = headingVec.x - pointingVector.x
-            let angle = atan2(deltaZ, deltaX)
             let q = simd_quaternion(headingVec, pointingVector)
-            let angleDiff = q.angle * sign(q.axis.y)
+            angleDiff = q.angle * sign(q.axis.y)
+            
             // 10 deg in radians (we chose this)
-            if -lastHapticTime.timeIntervalSinceNow > 0.5, abs(angleDiff) <= (10 * Float.pi / 180) {
+            if -lastHapticTime.timeIntervalSinceNow > 0.25, abs(angleDiff) <= (10 * Float.pi / 180) {
                 lastHapticTime = Date()
                 generator.impactOccurred(intensity: 1.0)
             }
             print("angle diff: \(angleDiff)")
+            
+            // alert distance to straight line distance, only if pointing towards bus stop
+            if -lastDistanceTime.timeIntervalSinceNow > 1, abs(angleDiff) <= (10 * Float.pi / 180) {
+                lastDistanceTime = Date()
+                print("Distance to bus stop: \(distanceToBusStop)")
+            }
+            
 
             //print("distanceToBusStop \(distanceToBusStop)")
         }
