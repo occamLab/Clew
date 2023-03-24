@@ -152,6 +152,9 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, CLLocationMana
     /// the model for the bus stop data (force this to be parsed)
     let busStopDataModel = BusStopDataModel.shared
     
+    /// the model for the doors
+    let doorDataModel = DoorDataModel.shared
+    
     /// The data source for in-app surveys
     let surveyModel = FirebaseFeedbackSurveyModel.shared
     

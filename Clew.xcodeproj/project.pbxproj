@@ -18,6 +18,10 @@
 		13BD17D729AD35B00050A32B /* test.json in Resources */ = {isa = PBXBuildFile; fileRef = 13BD17D529AD35B00050A32B /* test.json */; };
 		13BD17DC29B199530050A32B /* BusStopViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13BD17DB29B199530050A32B /* BusStopViewController.swift */; };
 		13BD17DD29B199530050A32B /* BusStopViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13BD17DB29B199530050A32B /* BusStopViewController.swift */; };
+		13BD17DF29C8E1800050A32B /* Olin_College_Doors.geojson in Resources */ = {isa = PBXBuildFile; fileRef = 13BD17DE29C8E1800050A32B /* Olin_College_Doors.geojson */; };
+		13BD17E029C8E1800050A32B /* Olin_College_Doors.geojson in Resources */ = {isa = PBXBuildFile; fileRef = 13BD17DE29C8E1800050A32B /* Olin_College_Doors.geojson */; };
+		13BD17E229C8E20C0050A32B /* DoorDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13BD17E129C8E20C0050A32B /* DoorDataModel.swift */; };
+		13BD17E329C8E20C0050A32B /* DoorDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13BD17E129C8E20C0050A32B /* DoorDataModel.swift */; };
 		14A90C0426A211BE003DAB30 /* ClewTutorialFeedback.wav in Resources */ = {isa = PBXBuildFile; fileRef = 14A90C0326A211BE003DAB30 /* ClewTutorialFeedback.wav */; };
 		14A90C0526A211BF003DAB30 /* ClewTutorialFeedback.wav in Resources */ = {isa = PBXBuildFile; fileRef = 14A90C0326A211BE003DAB30 /* ClewTutorialFeedback.wav */; };
 		14A90C0726A86A82003DAB30 /* TutorialFollowPath1.crd in Resources */ = {isa = PBXBuildFile; fileRef = 14A90C0626A86A82003DAB30 /* TutorialFollowPath1.crd */; };
@@ -299,6 +303,8 @@
 		13BD17CF29A01C130050A32B /* BusStopDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusStopDataModel.swift; sourceTree = "<group>"; };
 		13BD17D529AD35B00050A32B /* test.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = test.json; sourceTree = "<group>"; };
 		13BD17DB29B199530050A32B /* BusStopViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusStopViewController.swift; sourceTree = "<group>"; };
+		13BD17DE29C8E1800050A32B /* Olin_College_Doors.geojson */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Olin_College_Doors.geojson; sourceTree = "<group>"; };
+		13BD17E129C8E20C0050A32B /* DoorDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoorDataModel.swift; sourceTree = "<group>"; };
 		14A90C0326A211BE003DAB30 /* ClewTutorialFeedback.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = ClewTutorialFeedback.wav; sourceTree = "<group>"; };
 		14A90C0626A86A82003DAB30 /* TutorialFollowPath1.crd */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = TutorialFollowPath1.crd; sourceTree = "<group>"; };
 		14A90C0926AEF5CE003DAB30 /* TutorialFollowPath2.crd */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = TutorialFollowPath2.crd; sourceTree = "<group>"; };
@@ -799,6 +805,7 @@
 		13BD17CB29A01B790050A32B /* Sample Datasets */ = {
 			isa = PBXGroup;
 			children = (
+				13BD17DE29C8E1800050A32B /* Olin_College_Doors.geojson */,
 				13BD17CC29A01BCC0050A32B /* sample.json */,
 				13BD17D529AD35B00050A32B /* test.json */,
 			);
@@ -1669,6 +1676,7 @@
 				821C018A299438D1006EBDC5 /* JGMethodSwizzler.h */,
 				821C018B2994393E006EBDC5 /* JGMethodSwizzler.m */,
 				13BD17CF29A01C130050A32B /* BusStopDataModel.swift */,
+				13BD17E129C8E20C0050A32B /* DoorDataModel.swift */,
 			);
 			path = Misc;
 			sourceTree = "<group>";
@@ -1955,6 +1963,7 @@
 				82BE71BA2739982200387139 /* UmfPackSupport in Resources */,
 				82AD6A25252F80AA00902A11 /* speaker.mtl in Resources */,
 				82BE71CE2739982200387139 /* PaStiXSupport in Resources */,
+				13BD17DF29C8E1800050A32B /* Olin_College_Doors.geojson in Resources */,
 				82BE71AA2739982200387139 /* Jacobi in Resources */,
 				82BE71A42739982200387139 /* Householder in Resources */,
 				82BE719C2739982200387139 /* Core in Resources */,
@@ -2033,6 +2042,7 @@
 				82BE71972739982200387139 /* StdVector in Resources */,
 				823DA455252F7EA800BB5E6B /* speaker.obj in Resources */,
 				82BE719B2739982200387139 /* CMakeLists.txt in Resources */,
+				13BD17E029C8E1800050A32B /* Olin_College_Doors.geojson in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2077,6 +2087,7 @@
 				828CB7942992F3AA0036D18A /* AlignmentFilter.swift in Sources */,
 				82BE6CA2273984BA00387139 /* SRCountdownTimer.swift in Sources */,
 				82BC47FE2640383300C7D364 /* Surveys.swift in Sources */,
+				13BD17E229C8E20C0050A32B /* DoorDataModel.swift in Sources */,
 				E5470F0622C119F5001092A4 /* PathFinder.swift in Sources */,
 				E5470F2C22C119F5001092A4 /* StartNavigationController.swift in Sources */,
 				821C018829943859006EBDC5 /* NSObject+ARFrameStatusAdapter.mm in Sources */,
@@ -2144,6 +2155,7 @@
 				82BE6CA3273984BA00387139 /* SRCountdownTimer.swift in Sources */,
 				14B7EA0A268E052100E4A3CE /* SettingWalkThrough.swift in Sources */,
 				82BC47FF2640396700C7D364 /* Surveys.swift in Sources */,
+				13BD17E329C8E20C0050A32B /* DoorDataModel.swift in Sources */,
 				E5470F0722C119F5001092A4 /* PathFinder.swift in Sources */,
 				E5470F2D22C119F5001092A4 /* StartNavigationController.swift in Sources */,
 				1F2B9D7222C3B50D00317DC8 /* HelpCompiler.swift in Sources */,

@@ -1,0 +1,32 @@
+{
+"type": "FeatureCollection",
+"name": "Olin College Doors",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "Name": "Milas Door (Main)" }, "geometry": { "type": "Point", "coordinates": [ -71.264047239568399, 42.292977039976599, 58.222413532784202 ] } },
+{ "type": "Feature", "properties": { "Name": "Milas Door (Near CC - Upstairs)" }, "geometry": { "type": "Point", "coordinates": [ -71.263800464645101, 42.2929238575732, 58.008563649605897 ] } },
+{ "type": "Feature", "properties": { "Name": "Milas Door (Near CC - Downstairs)" }, "geometry": { "type": "Point", "coordinates": [ -71.263777845545206, 42.292902774483998, 53.361106327460398 ] } },
+{ "type": "Feature", "properties": { "Name": "CC door (Main - Near Milas)" }, "geometry": { "type": "Point", "coordinates": [ -71.2635556144741, 42.293290429446103, 57.9762384524103 ] } },
+{ "type": "Feature", "properties": { "Name": "CC Door (Near WH)" }, "geometry": { "type": "Point", "coordinates": [ -71.263382777110905, 42.293216905002602, 53.456842265222797 ] } },
+{ "type": "Feature", "properties": { "Name": "CC Door (Near AC)" }, "geometry": { "type": "Point", "coordinates": [ -71.263559309301101, 42.293797462193098, 59.123140716918599 ] } },
+{ "type": "Feature", "properties": { "Name": "CC Door (Near Wooden Waterfall)" }, "geometry": { "type": "Point", "coordinates": [ -71.263167960600697, 42.293646552972398, 53.030159817183701 ] } },
+{ "type": "Feature", "properties": { "Name": "AC Door (Main)" }, "geometry": { "type": "Point", "coordinates": [ -71.264277415340501, 42.293641551869499, 58.129199529804197 ] } },
+{ "type": "Feature", "properties": { "Name": "AC Door (Near CC)" }, "geometry": { "type": "Point", "coordinates": [ -71.263799682908896, 42.293851429013003, 58.316080474733802 ] } },
+{ "type": "Feature", "properties": { "Name": "AC Door (Near Milas)" }, "geometry": { "type": "Point", "coordinates": [ -71.264600066761702, 42.293230316483701, 58.3844671369392 ] } },
+{ "type": "Feature", "properties": { "Name": "AC Door (Back Door - LPB)" }, "geometry": { "type": "Point", "coordinates": [ -71.264387675065095, 42.293813796274499, 63.039451185372897 ] } },
+{ "type": "Feature", "properties": { "Name": "West Hall Front Door" }, "geometry": { "type": "Point", "coordinates": [ -71.262960040787306, 42.293026286308198, 51.287397851921199 ] } },
+{ "type": "Feature", "properties": { "Name": "West Hall Side Door Facing East Hall" }, "geometry": { "type": "Point", "coordinates": [ -71.262659802525604, 42.292904530841803, 49.520529040613702 ] } },
+{ "type": "Feature", "properties": { "Name": "West Hall Door Facing CC" }, "geometry": { "type": "Point", "coordinates": [ -71.263156580587506, 42.2931904911445, 51.712094048854603 ] } },
+{ "type": "Feature", "properties": { "Name": "East Hall Side Door Facing West Hall" }, "geometry": { "type": "Point", "coordinates": [ -71.262478584613802, 42.292797842333599, 47.963346127356701 ] } },
+{ "type": "Feature", "properties": { "Name": "East Hall Front Door" }, "geometry": { "type": "Point", "coordinates": [ -71.262263945264294, 42.292611596638999, 47.967055248856902 ] } },
+{ "type": "Feature", "properties": { "Name": "East Hall Basement Floor East Wing Door" }, "geometry": { "type": "Point", "coordinates": [ -71.261991219182406, 42.292417812542702, 45.918558395603597 ] } },
+{ "type": "Feature", "properties": { "Name": "East Hall Basement Lot B Door" }, "geometry": { "type": "Point", "coordinates": [ -71.261898215960599, 42.292547254863202, 44.999949031673097 ] } },
+{ "type": "Feature", "properties": { "Name": "East Hall 1st Floor Lot B Door" }, "geometry": { "type": "Point", "coordinates": [ -71.262063887510394, 42.292631366065798, 47.959270757213197 ] } },
+{ "type": "Feature", "properties": { "Name": "East Hall Loop Door" }, "geometry": { "type": "Point", "coordinates": [ -71.262150582885297, 42.292748582811299, 50.784413646634597 ] } },
+{ "type": "Feature", "properties": { "Name": "East Hall East Wing Loop Door" }, "geometry": { "type": "Point", "coordinates": [ -71.262080980120402, 42.293007036830097, 48.038412023446298 ] } },
+{ "type": "Feature", "properties": { "Name": "West Hall 1st Floor Lounge Door" }, "geometry": { "type": "Point", "coordinates": [ -71.262918424425393, 42.293149512602, 52.070521109380202 ] } },
+{ "type": "Feature", "properties": { "Name": "West Hall Door Facing Gate" }, "geometry": { "type": "Point", "coordinates": [ -71.262682551419601, 42.2933941299572, 51.129128694339698 ] } },
+{ "type": "Feature", "properties": { "Name": "West Hall 1East Door" }, "geometry": { "type": "Point", "coordinates": [ -71.262776723107095, 42.293030172175598, 49.476126366421802 ] } },
+{ "type": "Feature", "properties": { "Name": "West Hall 1st Floor Lounge Door" }, "geometry": { "type": "Point", "coordinates": [ -71.262776723107095, 42.293030172175598, 49.071893213434997 ] } }
+]
+}

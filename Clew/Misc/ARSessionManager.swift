@@ -601,7 +601,7 @@ extension ARSessionManager: ARSessionDelegate {
                 lastHapticTime = Date()
                 generator.impactOccurred(intensity: 1.0)
             }
-            print("angle diff: \(angleDiff)")
+//            print("angle diff: \(angleDiff)")
             
             // alert distance to straight line distance, only if pointing towards bus stop
             if -lastDistanceTime.timeIntervalSinceNow > 1, abs(angleDiff) <= (10 * Float.pi / 180) {
