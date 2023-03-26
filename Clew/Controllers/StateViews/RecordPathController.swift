@@ -148,14 +148,4 @@ class RecordPathController: UIViewController {
 
         }
     }
-
-//    @objc func showBusStopView(_ sender: UIButton) {
-//        if let button = sender as? UIButton {
-//            if button == busStopButton {
-//                let busStopViewController = BusStopViewController()
-//                busStopViewController.modalTransitionStyle = .flipHorizontal
-//                present(busStopViewController, animated: true, completion: nil)
-//            }
-//        }
-//    }
 }

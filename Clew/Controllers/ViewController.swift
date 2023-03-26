@@ -3036,33 +3036,3 @@ extension ViewController: VisualAlignmentManagerDelegate {
         state = .readyToNavigateOrPause(allowPause: false)
     }
 }
-
-//extension ViewController: CLLocationManagerDelegate {
-//    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-//        let currentLocation = locations.last!
-//        let latitude = currentLocation.coordinate.latitude
-//        let longitude = currentLocation.coordinate.longitude
-//        let textLabel = UILabel(frame: CGRect(x: 20, y: 20, width: 100, height: 20))
-//        textLabel.font = UIFont.systemFont(ofSize: 20)
-//        textLabel.textColor = UIColor.green
-//        textLabel.textAlignment = .center
-//        textLabel.text = "Latitude: \(latitude)\nLongitude: \(longitude)"
-//        print("Latitude: \(latitude)\nLongitude: \(longitude)")
-//        // self.view.addSubview(textLabel)
-//        self.view.addSubview(textLabel)
-//locationLabel.text = "Latitude: \(latitude)\nLongitude: \(longitude)"
-//    }
-//}
-
-//func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-//    let currentLocation = locations.last!
-//    let latitude = currentLocation.coordinate.latitude
-//    let longitude = currentLocation.coordinate.longitude
-//    let textLabel = UILabel(frame: CGRect(x: 20, y: 20, width: 100, height: 20))
-//    textLabel.font = UIFont.systemFont(ofSize: 20)
-//    textLabel.textColor = UIColor.green
-//    textLabel.textAlignment = .center
-//    textLabel.text = "Latitude: \(latitude)\nLongitude: \(longitude)"
-//    // self.view.addSubview(textLabel)
-////    View.view.addSubview(textLabel)
-//}

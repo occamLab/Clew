@@ -13,19 +13,6 @@ import ARCoreGeospatial
 class BusStopViewController: UIViewController, ARSessionManagerObserver {
     var closestStops: [BusStop] = []
     
-//    required init?(coder decoder: NSCoder, closestStops: [BusStop]) {
-//            self.closestStops = closestStops
-//            super.init(coder: decoder)
-//            print("BUS STOP VIEW CONTROLLER \(self.closestStops)")
-//
-//        }
-//
-//    required init?(coder aDecoder: NSCoder) {
-//        fatalError("init(coder:) has not been implemented")
-//    }
-    
-
-    
     /// button for closest bus stop
     var busStopOneButton: UIButton!
     
