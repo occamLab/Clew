@@ -24,7 +24,7 @@ class RecordPathController: UIViewController {
     var busStopButton: UIButton!
     
     /// button for going to second bus stop
-    var busStopTwoButton: UIButton!
+    var doorButton: UIButton!
     
     /// called when view appears (any time)
     override func viewDidAppear(_ animated: Bool) {
@@ -34,7 +34,7 @@ class RecordPathController: UIViewController {
         routesButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .largeTitle)
         recordPathButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .largeTitle)
         busStopButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .largeTitle)
-        busStopTwoButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .largeTitle)
+        doorButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .largeTitle)
     }
     
     /// called when the view has loaded.  We setup various app elements in here.
@@ -95,15 +95,15 @@ class RecordPathController: UIViewController {
 //        busStopButton.accessibilityLabel = NSLocalizedString("savedRoutesListButtonAccessibilityLabel", comment: "The accessibility tag for a button which opens a menu which displays all the saved routes created by the user.")
         
         /// Creating a button that can be used to navigate to a bus stop
-        busStopTwoButton = UIButton(type: .custom)
-        busStopTwoButton.layer.cornerRadius = 0.75 * routesButton.bounds.size.width
-        busStopTwoButton.clipsToBounds = true
-        busStopTwoButton.translatesAutoresizingMaskIntoConstraints = false
-        busStopTwoButton.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 1.1).isActive = true
-        busStopTwoButton.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.height / 5).isActive = true
-        busStopTwoButton.setBackgroundImage(UIImage(named: "WhiteButtonBackground"), for: .normal)
-        busStopTwoButton.imageView?.contentMode = .scaleAspectFit
-        busStopTwoButton.addLargeTitle(NSLocalizedString("busStopTwoButtonText", comment: "This is the text which appears on the bus stop button"))
+        doorButton = UIButton(type: .custom)
+        doorButton.layer.cornerRadius = 0.75 * routesButton.bounds.size.width
+        doorButton.clipsToBounds = true
+        doorButton.translatesAutoresizingMaskIntoConstraints = false
+        doorButton.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width / 1.1).isActive = true
+        doorButton.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.height / 5).isActive = true
+        doorButton.setBackgroundImage(UIImage(named: "WhiteButtonBackground"), for: .normal)
+        doorButton.imageView?.contentMode = .scaleAspectFit
+        doorButton.addLargeTitle(NSLocalizedString("Navigate to Door", comment: "This is the text which appears on the door button"))
         
         /// create stack view for aligning and distributing bottom layer buttons
         let stackView   = UIStackView()
@@ -117,10 +117,11 @@ class RecordPathController: UIViewController {
         stackView.alignment = UIStackView.Alignment.center
         
         /// add elements to the stack
-        stackView.addArrangedSubview(recordPathButton)
-        stackView.addArrangedSubview(addAnchorPointButton)
-        stackView.addArrangedSubview(routesButton)
+        //stackView.addArrangedSubview(recordPathButton)
+       // stackView.addArrangedSubview(addAnchorPointButton)
+        //stackView.addArrangedSubview(routesButton)
         stackView.addArrangedSubview(busStopButton)
+        stackView.addArrangedSubview(doorButton)
 //        stackView.addArrangedSubview(busStopTwoButton)
 
         
@@ -142,6 +143,7 @@ class RecordPathController: UIViewController {
                                           action: #selector(ViewController.startCreateAnchorPointProcedure),
                                           for: .touchUpInside)
             busStopButton.addTarget(parent, action: #selector(ViewController.findBusStopPressed), for: .touchUpInside)
+            doorButton.addTarget(parent, action:#selector(ViewController.findDoorPressed), for: .touchUpInside)
             //busStopTwoButton.addTarget(parent, action: #selector(ViewController.findBusStop), for: .touchUpInside)
 
         }

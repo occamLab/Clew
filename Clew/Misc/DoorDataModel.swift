@@ -11,15 +11,19 @@ import TabularData
 
 // just properties of Doors we want
 // created from DoorsRaw
-struct Doors: Codable {
+struct Door: Codable {
     let name: String
     let latitude: Double
     let longitude: Double
+    func distanceFrom(latitude: Double, longitude: Double)->Double {
+        let doorLocation = CLLocation(latitude: self.latitude, longitude: self.longitude)
+        return doorLocation.distance(from: CLLocation(latitude: latitude, longitude: longitude))
+    }
 }
 
 // MARK: - Welcome
 // hold raw data from JSON
-struct DoorsRaw: Codable {
+struct DoorRaw: Codable {
     let type, name: String
     let crs: CRS
     let features: [Feature]
@@ -62,18 +66,18 @@ class DoorDataModel {
     public static var shared = DoorDataModel()
     
     var doorsRaw: [Feature] = []
-    var doors: [Doors] = []
+    var doors: [Door] = []
     private init() {
         if let path = Bundle.main.path(forResource: "Olin_College_Doors", ofType: "geojson") {
             do {
                 let data = try Data(contentsOf: URL(fileURLWithPath: path), options: .mappedIfSafe)
                 let decoder = JSONDecoder()
-                doorsRaw = try decoder.decode(DoorsRaw.self, from: data).features
+                doorsRaw = try decoder.decode(DoorRaw.self, from: data).features
                 for i in 0...doorsRaw.count-1 {
                     let stopName = doorsRaw[i].properties.name
                     let latitude = doorsRaw[i].geometry.coordinates[1]
                     let longitude = doorsRaw[i].geometry.coordinates[0]
-                    doors.append(Doors(name: stopName, latitude: latitude, longitude: longitude))
+                    doors.append(Door(name: stopName, latitude: latitude, longitude: longitude))
                 }
                 print("doors \(doors)")
             } catch {
@@ -82,5 +86,26 @@ class DoorDataModel {
                 }
             }
             }
+    
+    func getClosestDoors(to coordinate: CLLocationCoordinate2D)->[Door] {
+        var closestDoors: [Door] = []
+        for door in DoorDataModel.shared.doors {
+            let distance = door.distanceFrom(latitude: coordinate.latitude, longitude: coordinate.longitude)
+            if Set(closestDoors.map({$0.name})).contains(door.name) {
+                continue
+            }
+            if closestDoors.count >= 2 {
+                if closestDoors[1].distanceFrom(latitude: coordinate.latitude, longitude: coordinate.longitude) > distance {
+                    closestDoors[1] = door
+                }
+            }
+            else {
+                closestDoors.append(door)
+            }
+            closestDoors = closestDoors.sorted(by: {$0.distanceFrom(latitude: coordinate.latitude, longitude: coordinate.longitude) < $1.distanceFrom(latitude: coordinate.latitude, longitude: coordinate.longitude)})
+        }
+        print("closest stops \(closestDoors[0].name), \(closestDoors[1].name)")
+        return closestDoors
+    }
 
 }

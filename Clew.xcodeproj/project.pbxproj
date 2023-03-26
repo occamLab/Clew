@@ -22,6 +22,8 @@
 		13BD17E029C8E1800050A32B /* Olin_College_Doors.geojson in Resources */ = {isa = PBXBuildFile; fileRef = 13BD17DE29C8E1800050A32B /* Olin_College_Doors.geojson */; };
 		13BD17E229C8E20C0050A32B /* DoorDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13BD17E129C8E20C0050A32B /* DoorDataModel.swift */; };
 		13BD17E329C8E20C0050A32B /* DoorDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13BD17E129C8E20C0050A32B /* DoorDataModel.swift */; };
+		13BD17EB29CE3AD60050A32B /* DoorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13BD17EA29CE3AD60050A32B /* DoorViewController.swift */; };
+		13BD17EC29CE3AD60050A32B /* DoorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13BD17EA29CE3AD60050A32B /* DoorViewController.swift */; };
 		14A90C0426A211BE003DAB30 /* ClewTutorialFeedback.wav in Resources */ = {isa = PBXBuildFile; fileRef = 14A90C0326A211BE003DAB30 /* ClewTutorialFeedback.wav */; };
 		14A90C0526A211BF003DAB30 /* ClewTutorialFeedback.wav in Resources */ = {isa = PBXBuildFile; fileRef = 14A90C0326A211BE003DAB30 /* ClewTutorialFeedback.wav */; };
 		14A90C0726A86A82003DAB30 /* TutorialFollowPath1.crd in Resources */ = {isa = PBXBuildFile; fileRef = 14A90C0626A86A82003DAB30 /* TutorialFollowPath1.crd */; };
@@ -305,6 +307,7 @@
 		13BD17DB29B199530050A32B /* BusStopViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusStopViewController.swift; sourceTree = "<group>"; };
 		13BD17DE29C8E1800050A32B /* Olin_College_Doors.geojson */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Olin_College_Doors.geojson; sourceTree = "<group>"; };
 		13BD17E129C8E20C0050A32B /* DoorDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoorDataModel.swift; sourceTree = "<group>"; };
+		13BD17EA29CE3AD60050A32B /* DoorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoorViewController.swift; sourceTree = "<group>"; };
 		14A90C0326A211BE003DAB30 /* ClewTutorialFeedback.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = ClewTutorialFeedback.wav; sourceTree = "<group>"; };
 		14A90C0626A86A82003DAB30 /* TutorialFollowPath1.crd */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = TutorialFollowPath1.crd; sourceTree = "<group>"; };
 		14A90C0926AEF5CE003DAB30 /* TutorialFollowPath2.crd */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = TutorialFollowPath2.crd; sourceTree = "<group>"; };
@@ -1725,6 +1728,7 @@
 				E5470EE022C119F4001092A4 /* RecordPathController.swift */,
 				E5470EE122C119F4001092A4 /* StartNavigationController.swift */,
 				E5470EE222C119F4001092A4 /* StopRecordingController.swift */,
+				13BD17EA29CE3AD60050A32B /* DoorViewController.swift */,
 				E5470EE422C119F4001092A4 /* ResumeTrackingController.swift */,
 				986640CD22FB68F2005AA1F6 /* NameSavedRouteController.swift */,
 				E5470EE522C119F4001092A4 /* StopNavigationController.swift */,
@@ -2082,6 +2086,7 @@
 				14B02B3226823E2C00174B36 /* TutorialTestViews.swift in Sources */,
 				821D07332742B33100FE6297 /* VisualAlignmentManager.swift in Sources */,
 				E5470F2622C119F5001092A4 /* Float4x4Extension.swift in Sources */,
+				13BD17EB29CE3AD60050A32B /* DoorViewController.swift in Sources */,
 				E5470EF622C119F5001092A4 /* RecordButtonKit.swift in Sources */,
 				14B7EA09268E052100E4A3CE /* SettingWalkThrough.swift in Sources */,
 				828CB7942992F3AA0036D18A /* AlignmentFilter.swift in Sources */,
@@ -2150,6 +2155,7 @@
 				14B02B3326823E2C00174B36 /* TutorialTestViews.swift in Sources */,
 				821D07342742B33200FE6297 /* VisualAlignmentManager.swift in Sources */,
 				E5470F2722C119F5001092A4 /* Float4x4Extension.swift in Sources */,
+				13BD17EC29CE3AD60050A32B /* DoorViewController.swift in Sources */,
 				E5470EF722C119F5001092A4 /* RecordButtonKit.swift in Sources */,
 				8214120626D41477003EC2D4 /* SiriWalkThrough.swift in Sources */,
 				82BE6CA3273984BA00387139 /* SRCountdownTimer.swift in Sources */,

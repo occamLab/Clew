@@ -79,7 +79,7 @@ class ARSessionManager: NSObject {
     let alignmentFilter = AlignmentFilter()
     var sessionWasRelocalizing = false
     var distanceToBusStop: Float = -1 // default value is an impossible distance (negative)
-    
+    var distanceToDoor: Float = -1
     // used to update distance from bus stop debug label in ViewController
     var angleDiff: Float = 0.0
     
@@ -230,6 +230,10 @@ class ARSessionManager: NSObject {
     private var mockBusStop2: GARAnchor?
     private var mockBusStopNode2: SCNNode?
     
+    private var door: GARAnchor?
+    private var doorNode: SCNNode?
+    private var door2: GARAnchor?
+    private var door2Node: SCNNode?
     /// SCNNode of the next keypoint
     private var keypointNode: SCNNode?
     
@@ -288,6 +292,10 @@ class ARSessionManager: NSObject {
         mockBusStop2 = nil
         busStopNode = nil
         mockBusStopNode2 = nil
+        door = nil
+        door2 = nil
+        door2Node = nil
+        doorNode = nil
         lastTorchChange = 0.0
         manualAlignment = nil
         localization = .none
@@ -613,6 +621,31 @@ extension ARSessionManager: ARSessionDelegate {
             //print("distanceToBusStop \(distanceToBusStop)")
         }
         
+        if let doorNode = doorNode {
+            distanceToDoor = simd_distance(doorNode.simdTransform.columns.3, frame.camera.transform.columns.3) // straight line distance in meters
+            let headingVec = simd_normalize(simd_float3(-frame.camera.transform.columns.2.x, 0.0, -frame.camera.transform.columns.2.z)) // how we're currently facing
+            let pointingVector = simd_float3(doorNode.simdTransform.columns.3.x - frame.camera.transform.columns.3.x,
+                                             0.0,
+                                             doorNode.simdTransform.columns.3.z - frame.camera.transform.columns.3.z) // where we want to go
+            
+            // calculate angle between 2 vectors
+            let q = simd_quaternion(headingVec, pointingVector)
+            angleDiff = q.angle * sign(q.axis.y)
+            
+            // 10 deg in radians (we chose this)
+            if -lastHapticTime.timeIntervalSinceNow > 0.25, abs(angleDiff) <= (10 * Float.pi / 180) {
+                lastHapticTime = Date()
+                generator.impactOccurred(intensity: 1.0)
+            }
+//            print("angle diff: \(angleDiff)")
+            
+            // alert distance to straight line distance, only if pointing towards bus stop
+            if -lastDistanceTime.timeIntervalSinceNow > 1, abs(angleDiff) <= (10 * Float.pi / 180) {
+                lastDistanceTime = Date()
+                print("Distance to door: \(distanceToDoor)")
+            }
+        }
+        
         do {
             
             ARFrameStatusAdapter.adjustTrackingStatus(frame)
@@ -669,6 +702,7 @@ extension ARSessionManager: ARSessionDelegate {
     
     func createTerrainAnchor(coordinate: CLLocationCoordinate2D)->GARAnchor? {
         do {
+            print("coordinate: \(coordinate)")
             return try garSession?.createAnchorOnTerrain(coordinate: coordinate, altitudeAboveTerrain: 0.0, eastUpSouthQAnchor: simd_quatf())
         } catch {
             print("error creating terrain achor \(error)")

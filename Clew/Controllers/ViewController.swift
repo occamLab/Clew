@@ -718,6 +718,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, CLLocationMana
         resumeTrackingController.remove()
         nameSavedRouteController.remove()
         busStopViewController?.remove()
+        doorViewController?.remove()
         rootContainerView.countdownTimer.isHidden = true
     }
     
@@ -837,6 +838,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, CLLocationMana
     
     var busStopViewController: BusStopViewController!
     
+    var doorViewController: DoorViewController!
     /// saving route name VC
     var nameSavedRouteController: NameSavedRouteController!
     
@@ -861,6 +863,8 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, CLLocationMana
     let distanceFromBusStopLabel = UILabel()
     var timeSinceDistanceFromBusStop = Date()
     
+    var timeSinceDistanceFromDoor = Date()
+    let distanceFromDoorLabel = UILabel()
     let locationManager = CLLocationManager()
     /// called when the view has loaded.  We setup various app elements in here.
     override func viewDidLoad() {
@@ -877,6 +881,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, CLLocationMana
         stopRecordingController = StopRecordingController()
         recordPathController = RecordPathController()
         busStopViewController = BusStopViewController()
+        doorViewController = DoorViewController()
         startNavigationController = StartNavigationController()
         stopNavigationController = StopNavigationController()
         nameSavedRouteController = NameSavedRouteController()
@@ -1855,6 +1860,21 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, CLLocationMana
         add(busStopViewController)
     }
     
+    @objc func findDoorPressed() {
+        print("pressed findBusStop")
+        hideAllViewsHelper()
+        
+        isAutomaticAlignment = false
+        recordingSingleUseRoute = false
+        paused = false
+
+        ARSessionManager.shared.initialWorldMap = nil
+        trackingSessionErrorState = nil
+        ARSessionManager.shared.startSession()
+
+        add(doorViewController)
+    }
+    
     @objc func navigateToBusStop(sender: UIButton!) {
         guard let lastLatLon = ARSessionManager.shared.lastGeoLocation else {
             return
@@ -1892,6 +1912,43 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, CLLocationMana
         
         
     }
+    
+    @objc func navigateToDoor(sender: UIButton!) {
+        guard let lastLatLon = ARSessionManager.shared.lastGeoLocation else {
+            return
+        }
+        
+        // STEP TODO: move this to function that is continously called
+        print("hi \( ARSessionManager.shared.distanceToDoor)")
+        if -timeSinceDistanceFromDoor.timeIntervalSinceNow > 1, abs(ARSessionManager.shared.angleDiff) <= (10 * Float.pi / 180), ARSessionManager.shared.distanceToDoor >= 0 {
+            timeSinceDistanceFromDoor = Date()
+            print("hello \(ARSessionManager.shared.distanceToBusStop)")
+            distanceFromDoorLabel.text = String(ARSessionManager.shared.distanceToDoor)
+        }
+        
+        distanceFromDoorLabel.textColor = UIColor.black
+        view.addSubview(distanceFromDoorLabel)
+        
+        distanceFromDoorLabel.translatesAutoresizingMaskIntoConstraints = false
+        distanceFromDoorLabel.backgroundColor = UIColor.gray.withAlphaComponent(0.8)
+        NSLayoutConstraint.activate([
+            distanceFromDoorLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
+            distanceFromDoorLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: -20)
+        ])
+        
+        hideAllViewsHelper()
+        
+        // get which bus stop button was pressed (0/1)
+        let selectedDoor : Int = sender.tag
+        let closestDoors = DoorDataModel.shared.getClosestDoors(to: lastLatLon)
+        if selectedDoor == 0 {
+            ARSessionManager.shared.createTerrainAnchor(coordinate: CLLocationCoordinate2D(latitude: closestDoors[0].latitude, longitude: closestDoors[0].longitude))
+        }
+        else {
+            ARSessionManager.shared.createTerrainAnchor(coordinate: CLLocationCoordinate2D(latitude: closestDoors[1].latitude, longitude: closestDoors[1].longitude))
+        }
+    }
+        
     
     /// handles the user pressing the record path button.
     @objc func recordPath() {
