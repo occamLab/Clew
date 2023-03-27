@@ -27,6 +27,17 @@ import Firebase
 import SwiftUI
 import CoreHaptics
 
+enum HapticFeedbackType: Int {
+    case appStore = 0
+    case frequencyBasedOnDistance = 1
+}
+
+enum SoundFeedbackType: Int {
+    case appStore = 0
+    case frequencyBasedOnDistanceRegardless = 1
+    case frequencyBasedOnDistanceWhenFacing = 2
+}
+
 /// A custom enumeration type that describes the exact state of the app.  The state is not exhaustive (e.g., there are Boolean flags that also track app state).
 enum AppState {
     /// This is the screen the comes up immediately after the splash screen
@@ -153,6 +164,9 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
     
     /// the last time this particular user submitted each survey (nil if we don't know this information or it hasn't been loaded from the database yet)
     var lastSurveySubmissionTime: [String: Double] = [:]
+    
+    /// record whether we've started the end of route haptics
+    var startedEndOfRouteHaptics: Bool?
     
     /// Allows us to use the core haptics API
     var hapticEngine: CHHapticEngine?
@@ -329,7 +343,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
     /// Handler for the navigatingRoute app state
     func handleStateTransitionToNavigatingRoute() {
         // navigate the recorded path
-
+        startedEndOfRouteHaptics = false
         // If the route has not yet been saved, we can no longer save this route
         routeName = nil
         beginRouteAnchorPoint = RouteAnchorPoint()
@@ -341,7 +355,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
         // generate path from PathFinder class
         // enabled hapticFeedback generates more keypoints
         // TODO: need settings manager
-        let routeKeypoints = PathFinder(crumbs: crumbs.reversed(), hapticFeedback: hapticFeedback, voiceFeedback: AnnouncementManager.shared.voiceFeedback).keypoints
+        let routeKeypoints = PathFinder(crumbs: crumbs.reversed()).keypoints
         RouteManager.shared.setRouteKeypoints(kps: routeKeypoints)
         
         // save keypoints data for debug log
@@ -378,6 +392,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
         }
         
         feedbackTimer = Date()
+        soundTimer = Date()
         errorFeedbackTimer = Date()
         playedErrorSoundForOffRoute = false
         // make sure there are no old values hanging around
@@ -996,6 +1011,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
                     self.hapticPlayer = try self.hapticEngine?.makeAdvancedPlayer(with: CHHapticPattern(events: events, parameters: []))
                     self.hapticPlayer?.loopEnabled = true
                     try self.hapticPlayer?.start(atTime: 0)
+                    self.startedEndOfRouteHaptics = true
                     print("Started Haptics!!")
                 } catch {
                     print("HAPTICS ERROR!!!")
@@ -1339,7 +1355,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
     /// Register settings bundle
     func registerSettingsBundle(){
         let usesMetric = Locale.current.usesMetricSystem
-        let appDefaults = ["crumbColor": 0, "showPath": true, "pathColor": 0, "hapticFeedback": true, "sendLogs": true, "voiceFeedback": true, "soundFeedback": true, "adjustOffset": false, "units": usesMetric ? 1 : 0, "timerLength":5, "siriShortcutAlert": false] as [String : Any]
+        let appDefaults = ["crumbColor": 0, "showPath": true, "pathColor": 0, "hapticFeedback": 0, "sendLogs": true, "voiceFeedback": true, "doBearLeftRight": true, "soundFeedback": 0, "adjustOffset": false, "units": usesMetric ? 1 : 0, "timerLength":5, "siriShortcutAlert": false] as [String : Any]
         UserDefaults.standard.register(defaults: appDefaults)
     }
 
@@ -1351,15 +1367,16 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
         defaultColor = defaults.integer(forKey: "crumbColor")
         showPath = defaults.bool(forKey: "showPath")
         defaultPathColor = defaults.integer(forKey: "pathColor")
-        soundFeedback = defaults.bool(forKey: "soundFeedback")
+        doBearLeftRight = defaults.bool(forKey: "doBearLeftRight")
+        soundFeedback = SoundFeedbackType(rawValue: defaults.integer(forKey: "soundFeedback"))
         AnnouncementManager.shared.voiceFeedback = defaults.bool(forKey: "voiceFeedback")
-        hapticFeedback = defaults.bool(forKey: "hapticFeedback")
+        hapticFeedback = HapticFeedbackType(rawValue: defaults.integer(forKey: "hapticFeedback"))
         sendLogs = true // (making this mandatory) defaults.bool(forKey: "sendLogs")
         timerLength = defaults.integer(forKey: "timerLength")
         adjustOffset = defaults.bool(forKey: "adjustOffset")
         nav.useHeadingOffset = adjustOffset
         
-        logger.logSettings(defaultUnit: defaultUnit, defaultColor: defaultColor, soundFeedback: soundFeedback, voiceFeedback: AnnouncementManager.shared.voiceFeedback, hapticFeedback: hapticFeedback, sendLogs: sendLogs, timerLength: timerLength, adjustOffset: adjustOffset)
+        logger.logSettings(defaultUnit: defaultUnit, defaultColor: defaultColor, soundFeedback: soundFeedback.rawValue, voiceFeedback: AnnouncementManager.shared.voiceFeedback, hapticFeedback: hapticFeedback.rawValue, sendLogs: sendLogs, timerLength: timerLength, adjustOffset: adjustOffset)
     }
     
     /// Handles updates to the app settings.
@@ -1668,6 +1685,10 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
     var waypointFeedbackGenerator: UINotificationFeedbackGenerator?
     /// The time of last haptic feedback
     var feedbackTimer: Date!
+    
+    /// The time of last sound feedback
+    var soundTimer: Date!
+
     /// The delay between haptic feedback pulses in seconds
     static let FEEDBACKDELAY = 0.4
     
@@ -1722,11 +1743,14 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
     /// the color of the path.  0 is red, 1 is green, 2 is blue, and 3 is random
     var defaultPathColor: Int!
     
+    /// true if we should give bear left / bear right adjustments
+    var doBearLeftRight: Bool!
+    
     /// true if sound feedback should be generated when the user is facing the next waypoint, false otherwise
-    var soundFeedback: Bool!
+    var soundFeedback: SoundFeedbackType!
     
     /// true if haptic feedback should be generated when the user is facing the next waypoint, false otherwise
-    var hapticFeedback: Bool!
+    var hapticFeedback: HapticFeedbackType!
 
     /// true if we should prompt the user to rate route navigation and then send log data to the cloud
     var sendLogs: Bool!
@@ -1754,11 +1778,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
     
     /// DirectionText based on hapic/voice settings
     var Directions: Dictionary<Int, String> {
-        if (hapticFeedback) {
-            return HapticDirections
-        } else {
-            return ClockDirections
-        }
+        return ClockDirections
     }
     
     /// Announces the any excessive motion or insufficient visual features errors as specified in the last observed tracking state
@@ -1767,16 +1787,12 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
         case .insufficientFeatures:
             if trackingWarningsAllowed {
                 AnnouncementManager.shared.announce(announcement: NSLocalizedString("insuficientFeaturesDegradedTrackingAnnouncemnt", comment: "An announcement which lets the user know  that their current surroundings do not have enough visual markers and thus the app's ability to track a route has been lowered."))
-                if self.soundFeedback {
-                    SoundEffectManager.shared.playSystemSound(id: 1050)
-                }
+                SoundEffectManager.shared.playSystemSound(id: 1050)
             }
         case .excessiveMotion:
             if trackingWarningsAllowed {
                 AnnouncementManager.shared.announce(announcement: NSLocalizedString("excessiveMotionDegradedTrackingAnnouncemnt", comment: "An announcement which lets the user know that there is too much movement of their device and thus the app's ability to track a route has been lowered."))
-                if self.soundFeedback {
-                    SoundEffectManager.shared.playSystemSound(id: 1050)
-                }
+                SoundEffectManager.shared.playSystemSound(id: 1050)
             }
         case .none:
             break
@@ -2129,13 +2145,18 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
         guard let directionToNextKeypoint = getDirectionToNextKeypoint(currentLocation: curLocation) else {
             return
         }
+        if hapticFeedback == .frequencyBasedOnDistance {
+            if startedEndOfRouteHaptics != true {
+                startEndOfRouteHaptics()
+            }
+        }
         
         if (directionToNextKeypoint.targetState == PositionState.atTarget) {
             if !RouteManager.shared.onLastKeypoint {
                 // arrived at keypoint
                 // send haptic/sonic feedback
                 waypointFeedbackGenerator?.notificationOccurred(.success)
-                if (soundFeedback) { SoundEffectManager.shared.meh() }
+                SoundEffectManager.shared.meh()
                 
                 // remove current visited keypont from keypoint list
                 prevKeypointPosition = nextKeypoint.location
@@ -2156,11 +2177,13 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
                 // arrived at final keypoint
                 // send haptic/sonic feedback
                 waypointFeedbackGenerator?.notificationOccurred(.success)
-                if (soundFeedback) { SoundEffectManager.shared.success() }
+                SoundEffectManager.shared.success()
 
                 RouteManager.shared.checkOffKeypoint()
                 ARSessionManager.shared.removeNavigationNodes()
-                startEndOfRouteHaptics()
+                if startedEndOfRouteHaptics != true {
+                    startEndOfRouteHaptics()
+                }
                 followingCrumbs?.invalidate()
                 PathLogger.shared.logEvent(eventDescription: "arrived")
                 sendLogDataHelper(pathStatus: nil, announceArrival: true)
@@ -2287,6 +2310,17 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
         guard let directionToNextKeypoint = getDirectionToNextKeypoint(currentLocation: curLocation) else {
             return
         }
+        
+        if hapticFeedback == .frequencyBasedOnDistance {
+            do {
+                print("ADJUSTING \(max(0.0, 1.0 - directionToNextKeypoint.distance))")
+                try hapticPlayer?.sendParameters([CHHapticDynamicParameter(parameterID: .hapticIntensityControl, value: max(0.2, 1.0 - directionToNextKeypoint.distance/5.0), relativeTime: 0.0)], atTime: 0.0)
+                print("hapticPlayer \(hapticPlayer)")
+            } catch {
+                print("Unable to update")
+            }
+        }
+        
         let coneWidth: Float!
         let lateralDisplacementToleranceRatio: Float
         if strictHaptic {
@@ -2296,17 +2330,30 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
             coneWidth = Float.pi/6
             lateralDisplacementToleranceRatio = 1.0
         }
-        
+        let facingTarget = directionToNextKeypoint.lateralDistanceRatioWhenCrossingTarget < lateralDisplacementToleranceRatio || abs(directionToNextKeypoint.angleDiff) < coneWidth
+        let triggerSoundFeedback: Bool
+        switch soundFeedback {
+        case .appStore:
+            triggerSoundFeedback = facingTarget && -soundTimer.timeIntervalSinceNow > ViewController.FEEDBACKDELAY
+        case .frequencyBasedOnDistanceRegardless:
+            triggerSoundFeedback = -soundTimer.timeIntervalSinceNow > ViewController.FEEDBACKDELAY*max(0.2, Double(min(2.0, directionToNextKeypoint.distance)))
+        case .frequencyBasedOnDistanceWhenFacing:
+            triggerSoundFeedback = facingTarget && -soundTimer.timeIntervalSinceNow > ViewController.FEEDBACKDELAY*max(0.2, Double(min(2.0, directionToNextKeypoint.distance)))
+        case .none:
+            triggerSoundFeedback = false
+        }
+        if triggerSoundFeedback {
+            SoundEffectManager.shared.playSystemSound(id: 1103)
+            soundTimer = Date()
+        }
         // use a stricter criteria than 12 o'clock for providing haptic feedback
-        if directionToNextKeypoint.lateralDistanceRatioWhenCrossingTarget < lateralDisplacementToleranceRatio || abs(directionToNextKeypoint.angleDiff) < coneWidth {
+        if facingTarget {
             timeOffTrack = nil
             lastOffCourseAnnouncement = nil
             if -feedbackTimer.timeIntervalSinceNow > ViewController.FEEDBACKDELAY {
                 // wait until desired time interval before sending another feedback
-                if hapticFeedback { feedbackGenerator?.impactOccurred()
-                }
-                if soundFeedback {
-                    SoundEffectManager.shared.playSystemSound(id: 1103)
+                if hapticFeedback == .appStore {
+                    feedbackGenerator?.impactOccurred()
                 }
                 feedbackTimer = Date()
             }
@@ -2314,7 +2361,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
             if timeOffTrack == nil {
                 timeOffTrack = Date()
             }
-            if -lastDirectionAnnouncement.timeIntervalSinceNow > Self.directionTextGracePeriod, -(timeOffTrack?.timeIntervalSinceNow ?? 0.0) > Self.offTrackGracePeriod {
+            if doBearLeftRight && -lastDirectionAnnouncement.timeIntervalSinceNow > Self.directionTextGracePeriod, -(timeOffTrack?.timeIntervalSinceNow ?? 0.0) > Self.offTrackGracePeriod {
                 let intervalMultiplier = RouteManager.shared.onFirstKeypoint ? 2.0 : 1.0
                 if lastOffCourseAnnouncement == nil || -lastOffCourseAnnouncement!.timeIntervalSinceNow > Self.offTrackCorrectionAnnouncementInterval * intervalMultiplier {
                     lastOffCourseAnnouncement = Date()
@@ -2531,25 +2578,13 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
         var dir = ""
         
         if yDistance > 1 && slope > 0.3 { // Go upstairs
-            if(hapticFeedback) {
-                dir += "\(Directions[direction.hapticDirection]!)" + NSLocalizedString("climbStairsDirection", comment: "Additional directions given to user discussing climbing stairs")
-            } else {
-                dir += "\(Directions[direction.clockDirection]!)" + NSLocalizedString(" and proceed upstairs", comment: "Additional directions given to user telling them to climb stairs")
-            }
+            dir += "\(Directions[direction.clockDirection]!)" + NSLocalizedString(" and proceed upstairs", comment: "Additional directions given to user telling them to climb stairs")
             updateDirectionText(dir, distance: 0, displayDistance: false)
         } else if yDistance > 1 && slope < -0.3 { // Go downstairs
-            if(hapticFeedback) {
-                dir += "\(Directions[direction.hapticDirection]!)\(NSLocalizedString("descendStairsDirection" , comment: "This is a direction which instructs the user to descend stairs"))"
-            } else {
-                dir += "\(Directions[direction.clockDirection]!)\(NSLocalizedString("descendStairsDirection" , comment: "This is a direction which instructs the user to descend stairs"))"
-            }
+            dir += "\(Directions[direction.clockDirection]!)\(NSLocalizedString("descendStairsDirection" , comment: "This is a direction which instructs the user to descend stairs"))"
             updateDirectionText(dir, distance: direction.distance, displayDistance: false)
         } else { // normal directions
-            if(hapticFeedback) {
-                dir += "\(Directions[direction.hapticDirection]!)"
-            } else {
-                dir += "\(Directions[direction.clockDirection]!)"
-            }
+            dir += "\(Directions[direction.clockDirection]!)"
             updateDirectionText(dir, distance: direction.distance, displayDistance:  displayDistance)
         }
     }
@@ -2790,9 +2825,7 @@ extension ViewController: ARSessionManagerDelegate {
         if oldTrackingSessionErrorState != nil {
             if trackingWarningsAllowed {
                 AnnouncementManager.shared.announce(announcement: NSLocalizedString("fixedTrackingAnnouncement", comment: "Let user know that the ARKit tracking session has returned to its normal quality (this is played after the tracking has been restored from thir being insuficent visual features or excessive motion which degrade the tracking)"))
-                if soundFeedback {
-                    SoundEffectManager.shared.playSystemSound(id: 1025)
-                }
+                SoundEffectManager.shared.playSystemSound(id: 1025)
             }
         }
     }

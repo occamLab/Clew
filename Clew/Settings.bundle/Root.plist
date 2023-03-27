@@ -140,13 +140,25 @@
 		</dict>
 		<dict>
 			<key>Type</key>
-			<string>PSToggleSwitchSpecifier</string>
+			<string>PSMultiValueSpecifier</string>
 			<key>Title</key>
 			<string>Sound</string>
 			<key>Key</key>
 			<string>soundFeedback</string>
+			<key>Values</key>
+			<array>
+				<integer>0</integer>
+				<integer>1</integer>
+				<integer>2</integer>
+			</array>
+			<key>Titles</key>
+			<array>
+				<string>App Store Clew</string>
+				<string>Frequency-based regardless of direction</string>
+				<string>Frequency-based when on track</string>
+			</array>
 			<key>DefaultValue</key>
-			<true/>
+			<integer>0</integer>
 		</dict>
 		<dict>
 			<key>Type</key>
@@ -162,11 +174,31 @@
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
 			<key>Title</key>
+			<string>Give Bear Right / Left</string>
+			<key>Key</key>
+			<string>doBearLeftRight</string>
+			<key>DefaultValue</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSMultiValueSpecifier</string>
+			<key>Title</key>
 			<string>Haptic</string>
 			<key>Key</key>
 			<string>hapticFeedback</string>
+			<key>Values</key>
+			<array>
+				<integer>0</integer>
+				<integer>1</integer>
+			</array>
+			<key>Titles</key>
+			<array>
+				<string>App Store Clew</string>
+				<string>Frequency based on distance</string>
+			</array>
 			<key>DefaultValue</key>
-			<true/>
+			<integer>0</integer>
 		</dict>
 		<dict>
 			<key>Type</key>

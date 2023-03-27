@@ -446,13 +446,9 @@ class PathFinder {
     ///
     /// - TODO:
     ///   - Clarify why these magic `pathWidth` values are as they are.
-    init(crumbs: [LocationInfo], hapticFeedback: Bool, voiceFeedback: Bool) {
+    init(crumbs: [LocationInfo]) {
         self.crumbs = crumbs
-        if(!hapticFeedback && voiceFeedback) {
-            pathWidth = 0.3
-        } else {
-            pathWidth = 0.3
-        }
+        pathWidth = 0.3
     }
     
     /// a list of `KeypointInfo` objects representing the important turns in the path.
