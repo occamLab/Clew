@@ -1922,7 +1922,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate, CLLocationMana
         print("hi \( ARSessionManager.shared.distanceToDoor)")
         if -timeSinceDistanceFromDoor.timeIntervalSinceNow > 1, abs(ARSessionManager.shared.angleDiff) <= (10 * Float.pi / 180), ARSessionManager.shared.distanceToDoor >= 0 {
             timeSinceDistanceFromDoor = Date()
-            print("hello \(ARSessionManager.shared.distanceToBusStop)")
+            print("hello \(ARSessionManager.shared.distanceToDoor)")
             distanceFromDoorLabel.text = String(ARSessionManager.shared.distanceToDoor)
         }
         

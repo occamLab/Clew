@@ -80,6 +80,7 @@ class ARSessionManager: NSObject {
     var sessionWasRelocalizing = false
     var distanceToBusStop: Float = -1 // default value is an impossible distance (negative)
     var distanceToDoor: Float = -1
+    var distanceToTargetLocation: Float = -1
     // used to update distance from bus stop debug label in ViewController
     var angleDiff: Float = 0.0
     
@@ -225,15 +226,9 @@ class ARSessionManager: NSObject {
     private var intermediateAnchorRenderJobs: [RouteAnchorPoint : (()->())?] = [:]
     
     /// STEP
-    private var busStop: GARAnchor?
-    private var busStopNode: SCNNode?
-    private var mockBusStop2: GARAnchor?
-    private var mockBusStopNode2: SCNNode?
+    private var targetLocation: GARAnchor?
+    private var targetLocationNode: SCNNode?
     
-    private var door: GARAnchor?
-    private var doorNode: SCNNode?
-    private var door2: GARAnchor?
-    private var door2Node: SCNNode?
     /// SCNNode of the next keypoint
     private var keypointNode: SCNNode?
     
@@ -288,14 +283,8 @@ class ARSessionManager: NSObject {
     }
     
     func startSession() {
-        busStop = nil
-        mockBusStop2 = nil
-        busStopNode = nil
-        mockBusStopNode2 = nil
-        door = nil
-        door2 = nil
-        door2Node = nil
-        doorNode = nil
+        targetLocation = nil
+        targetLocationNode = nil
         lastTorchChange = 0.0
         manualAlignment = nil
         localization = .none
@@ -593,12 +582,12 @@ extension ARSessionManager: ARSessionDelegate {
             adjustTorch(lightingIntensity: Float(lighting.ambientIntensity), timestamp: frame.timestamp)
         }
         
-        if let busStopNode = busStopNode {
-            distanceToBusStop = simd_distance(busStopNode.simdTransform.columns.3, frame.camera.transform.columns.3) // straight line distance in meters
+        if let targetLocationNode = targetLocationNode {
+            distanceToTargetLocation = simd_distance(targetLocationNode.simdTransform.columns.3, frame.camera.transform.columns.3) // straight line distance in meters
             let headingVec = simd_normalize(simd_float3(-frame.camera.transform.columns.2.x, 0.0, -frame.camera.transform.columns.2.z)) // how we're currently facing
-            let pointingVector = simd_float3(busStopNode.simdTransform.columns.3.x - frame.camera.transform.columns.3.x,
+            let pointingVector = simd_float3(targetLocationNode.simdTransform.columns.3.x - frame.camera.transform.columns.3.x,
                                              0.0,
-                                             busStopNode.simdTransform.columns.3.z - frame.camera.transform.columns.3.z) // where we want to go
+                                             targetLocationNode.simdTransform.columns.3.z - frame.camera.transform.columns.3.z) // where we want to go
             
             // calculate angle between 2 vectors
             let q = simd_quaternion(headingVec, pointingVector)
@@ -608,44 +597,17 @@ extension ARSessionManager: ARSessionDelegate {
             if -lastHapticTime.timeIntervalSinceNow > 0.25, abs(angleDiff) <= (10 * Float.pi / 180) {
                 lastHapticTime = Date()
                 generator.impactOccurred(intensity: 1.0)
-            }
-//            print("angle diff: \(angleDiff)")
-            
-            // alert distance to straight line distance, only if pointing towards bus stop
-            if -lastDistanceTime.timeIntervalSinceNow > 1, abs(angleDiff) <= (10 * Float.pi / 180) {
-                lastDistanceTime = Date()
-                print("Distance to bus stop: \(distanceToBusStop)")
-            }
-            
-
-            //print("distanceToBusStop \(distanceToBusStop)")
-        }
-        
-        if let doorNode = doorNode {
-            distanceToDoor = simd_distance(doorNode.simdTransform.columns.3, frame.camera.transform.columns.3) // straight line distance in meters
-            let headingVec = simd_normalize(simd_float3(-frame.camera.transform.columns.2.x, 0.0, -frame.camera.transform.columns.2.z)) // how we're currently facing
-            let pointingVector = simd_float3(doorNode.simdTransform.columns.3.x - frame.camera.transform.columns.3.x,
-                                             0.0,
-                                             doorNode.simdTransform.columns.3.z - frame.camera.transform.columns.3.z) // where we want to go
-            
-            // calculate angle between 2 vectors
-            let q = simd_quaternion(headingVec, pointingVector)
-            angleDiff = q.angle * sign(q.axis.y)
-            
-            // 10 deg in radians (we chose this)
-            if -lastHapticTime.timeIntervalSinceNow > 0.25, abs(angleDiff) <= (10 * Float.pi / 180) {
-                lastHapticTime = Date()
                 generator.impactOccurred(intensity: 1.0)
             }
 //            print("angle diff: \(angleDiff)")
             
             // alert distance to straight line distance, only if pointing towards bus stop
-            if -lastDistanceTime.timeIntervalSinceNow > 1, abs(angleDiff) <= (10 * Float.pi / 180) {
+            if -lastDistanceTime.timeIntervalSinceNow > 5, abs(angleDiff) <= (10 * Float.pi / 180) {
                 lastDistanceTime = Date()
-                print("Distance to door: \(distanceToDoor)")
+                AnnouncementManager.shared.announce(announcement: "\(Int(distanceToTargetLocation)) meters away.")
             }
         }
-        
+    
         do {
             
             ARFrameStatusAdapter.adjustTrackingStatus(frame)
@@ -658,19 +620,21 @@ extension ARSessionManager: ARSessionDelegate {
             }
             for anchor in garFrame?.anchors ?? [] {
                 if anchor.hasValidTransform {
-                    if busStopNode == nil {
-                        // create bus stop node
+                    
+                    if targetLocationNode == nil {
+                        // create target location node
                         let box = SCNBox(width: 0.2, height: 3, length: 0.2, chamferRadius: 0)
                         print("anchor.transform \(anchor.transform)")
                         let material = SCNMaterial()
                         material.diffuse.contents = UIColor.blue
                         box.firstMaterial = material
-                        busStopNode = SCNNode(geometry: box)
-                        busStopNode?.simdTransform = anchor.transform
-                        sceneView.scene.rootNode.addChildNode(busStopNode!)
+                        targetLocationNode = SCNNode(geometry: box)
+                        targetLocationNode?.simdTransform = anchor.transform
+                        sceneView.scene.rootNode.addChildNode(targetLocationNode!)
                     } else {
-                        busStopNode?.simdTransform = anchor.transform
+                        targetLocationNode?.simdTransform = anchor.transform
                     }
+                    
                 }
                 print(anchor.hasValidTransform)
             }
