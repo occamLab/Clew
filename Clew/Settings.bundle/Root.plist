@@ -195,7 +195,7 @@
 			<key>Titles</key>
 			<array>
 				<string>App Store Clew</string>
-				<string>Frequency based on distance</string>
+				<string>Intensity based on distance</string>
 			</array>
 			<key>DefaultValue</key>
 			<integer>0</integer>

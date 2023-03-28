@@ -29,7 +29,7 @@ import CoreHaptics
 
 enum HapticFeedbackType: Int {
     case appStore = 0
-    case frequencyBasedOnDistance = 1
+    case intensityBasedOnDistance = 1
 }
 
 enum SoundFeedbackType: Int {
@@ -356,7 +356,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
         // generate path from PathFinder class
         // enabled hapticFeedback generates more keypoints
         // TODO: need settings manager
-        let routeKeypoints = PathFinder(crumbs: crumbs.reversed()).keypoints
+        let routeKeypoints = PathFinder(crumbs: crumbs.reversed(), manualKeypointIndices: manualKeypointIndices).keypoints
         RouteManager.shared.setRouteKeypoints(kps: routeKeypoints)
         
         // save keypoints data for debug log
@@ -2155,7 +2155,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
         guard let directionToNextKeypoint = getDirectionToNextKeypoint(currentLocation: curLocation) else {
             return
         }
-        if hapticFeedback == .frequencyBasedOnDistance {
+        if hapticFeedback == .intensityBasedOnDistance {
             if startedEndOfRouteHaptics != true {
                 startEndOfRouteHaptics()
             }
@@ -2321,10 +2321,10 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
             return
         }
         
-        if hapticFeedback == .frequencyBasedOnDistance {
+        if hapticFeedback == .intensityBasedOnDistance {
             do {
                 print("ADJUSTING \(max(0.0, 1.0 - directionToNextKeypoint.distance))")
-                try hapticPlayer?.sendParameters([CHHapticDynamicParameter(parameterID: .hapticIntensityControl, value: max(0.2, 1.0 - directionToNextKeypoint.distance/5.0), relativeTime: 0.0)], atTime: 0.0)
+                try hapticPlayer?.sendParameters([CHHapticDynamicParameter(parameterID: .hapticIntensityControl, value: max(0.1, 1.0 - directionToNextKeypoint.distance/5.0), relativeTime: 0.0)], atTime: 0.0)
                 print("hapticPlayer \(hapticPlayer)")
             } catch {
                 print("Unable to update")

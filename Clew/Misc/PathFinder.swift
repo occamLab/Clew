@@ -437,10 +437,12 @@ class PathFinder {
     ///  Maximum width of the breadcrumb path in meters.
     ///
     /// Points falling outside this margin will produce more keypoints, through Ramer-Douglas-Peucker algorithm
-    private let pathWidth: Scalar!
+    private var pathWidth: Scalar!
     
     /// The crumbs that make up the desired path. These should be ordered with respect to the user's intended direction of travel (start to end versus end to start)
     private var crumbs: [LocationInfo]
+    
+    private var manualKeypointIndices: [Int]
     
     /// Initializes the PathFinder class and determines the value of `pathWidth`
     ///
@@ -451,15 +453,25 @@ class PathFinder {
     ///
     /// - TODO:
     ///   - Clarify why these magic `pathWidth` values are as they are.
-    init(crumbs: [LocationInfo]) {
+    init(crumbs: [LocationInfo], manualKeypointIndices: [Int]) {
         self.crumbs = crumbs
+        self.manualKeypointIndices = manualKeypointIndices
         pathWidth = 0.3
     }
     
     /// a list of `KeypointInfo` objects representing the important turns in the path.
     public var keypoints: [KeypointInfo] {
         get {
-            return getKeypoints(edibleCrumbs: crumbs)
+            if manualKeypointIndices.count != 0 {
+                pathWidth = 0.0001
+                var newCrumbs : [LocationInfo] = []
+                for index in manualKeypointIndices {
+                    newCrumbs.append(crumbs[index])
+                }
+                crumbs = newCrumbs
+            }
+            let kp = getKeypoints(edibleCrumbs: crumbs)
+            return kp
         }
     }
     
@@ -468,8 +480,11 @@ class PathFinder {
     /// - Parameter edibleCrumbs: a list of `LocationInfo` objects representing the trail of breadcrumbs left on the path.
     /// - Returns: a list of `KeypointInfo` objects representing the turns in the path
     func getKeypoints(edibleCrumbs: [LocationInfo]) -> [KeypointInfo] {
-        var keypoints = [KeypointInfo]()
         let firstKeypointLocation = edibleCrumbs.first!
+        if edibleCrumbs.count == 1 {
+            return [KeypointInfo(location: firstKeypointLocation)]
+        }
+        var keypoints = [KeypointInfo]()
         keypoints.append(KeypointInfo(location: firstKeypointLocation))
         
         keypoints += calculateKeypoints(edibleCrumbs: edibleCrumbs)
