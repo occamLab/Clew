@@ -316,6 +316,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
         // TODO: probably don't need to set this to [], but erring on the side of begin conservative
         crumbs = []
         recordingCrumbs = []
+        manualKeypointIndices = []
         ARSessionManager.shared.manualAlignment = matrix_identity_float4x4
         RouteManager.shared.intermediateAnchorPoints = []
         logger.resetPathLog()
@@ -440,6 +441,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
             ARSessionManager.shared.initialWorldMap = nil
         }
 
+        manualKeypointIndices = route.manualKeypointIndices
         if navigateStartToEnd {
             crumbs = route.crumbs.reversed()
             pausedAnchorPoint = route.beginRouteAnchorPoint
@@ -653,7 +655,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
         if paused {
             ///PATHPOINT pause recording anchor point alignment timer -> resume tracking
             //proceed as normal with the pause structure (single use route)
-            justTraveledRoute = SavedRoute(id: "single use", name: "single use", crumbs: self.crumbs, cloudAnchors: cloudAnchors, dateCreated: Date() as NSDate, beginRouteAnchorPoint: self.beginRouteAnchorPoint, endRouteAnchorPoint: self.endRouteAnchorPoint, intermediateAnchorPoints: RouteManager.shared.intermediateAnchorPoints)
+            justTraveledRoute = SavedRoute(id: "single use", name: "single use", crumbs: self.crumbs, manualKeypointIndices: manualKeypointIndices, cloudAnchors: cloudAnchors, dateCreated: Date() as NSDate, beginRouteAnchorPoint: self.beginRouteAnchorPoint, endRouteAnchorPoint: self.endRouteAnchorPoint, intermediateAnchorPoints: RouteManager.shared.intermediateAnchorPoints)
             justUsedMap = worldMap
             showResumeTrackingButton()
             state = .pauseProcedureCompleted
@@ -744,7 +746,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
     ///   - worldMap: the world map
     /// - Throws: an error if something goes wrong
     func archive(routeId: NSString, beginRouteAnchorPoint: RouteAnchorPoint, endRouteAnchorPoint: RouteAnchorPoint, intermediateAnchorPoints: [RouteAnchorPoint], worldMap: Any?) throws {
-        let savedRoute = SavedRoute(id: routeId, name: routeName!, crumbs: crumbs, cloudAnchors: cloudAnchors, dateCreated: Date() as NSDate, beginRouteAnchorPoint: beginRouteAnchorPoint, endRouteAnchorPoint: endRouteAnchorPoint, intermediateAnchorPoints: intermediateAnchorPoints)
+        let savedRoute = SavedRoute(id: routeId, name: routeName!, crumbs: crumbs, manualKeypointIndices: manualKeypointIndices, cloudAnchors: cloudAnchors, dateCreated: Date() as NSDate, beginRouteAnchorPoint: beginRouteAnchorPoint, endRouteAnchorPoint: endRouteAnchorPoint, intermediateAnchorPoints: intermediateAnchorPoints)
         try dataPersistence.archive(route: savedRoute, worldMap: worldMap)
         print("ARCHIVED \(cloudAnchors.count)")
         justTraveledRoute = savedRoute
@@ -1626,6 +1628,9 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
     /// list of crumbs dropped when recording path
     var recordingCrumbs: LinkedList<LocationInfo>!
     
+    /// list of which recording crumbs should be used as keypoints
+    var manualKeypointIndices: [Int] = []
+    
     /// list of crumbs to use for route creation
     var crumbs: [LocationInfo]!
     
@@ -1868,6 +1873,11 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
             state = .readyToNavigateOrPause(allowPause: true)
         }
         
+    }
+    
+    @objc func addManualKeypoint(_ send: UIButton?) {
+        manualKeypointIndices.append(recordingCrumbs.count - 1)
+        print("hit button")
     }
     
     /// handles the user pressing the start navigation button.
@@ -2638,9 +2648,10 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
         guard isVisualAlignment, state.isTryingToAlign || state.isInTimerCountdown else {
             return
         }
-        guard let phoneCurrentlyVertical = ARSessionManager.shared.currentFrame?.camera.transform.isVerticalPhonePose() else {
-            return
-        }
+//        guard let phoneCurrentlyVertical = ARSessionManager.shared.currentFrame?.camera.transform.isVerticalPhonePose() else {
+//            return
+//        }
+        let phoneCurrentlyVertical = true
         
         guard let unwrappedPhoneVertical = phoneVertical else {
             if !phoneCurrentlyVertical {

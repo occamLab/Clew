@@ -16,6 +16,9 @@ class StopRecordingController: UIViewController {
 
     /// Button for stopping a route recording
     var stopRecordingButton: UIButton!
+    
+    /// Button for adding a keypoint
+    var addManualKeypointButton: UIButton!
 
     /// button for recording a voice note about a part of the route
     var recordVoiceNoteButton: UIButton!
@@ -44,6 +47,11 @@ class StopRecordingController: UIViewController {
         paddingButton.isAccessibilityElement = false
         paddingButton.alpha = 0
 
+        addManualKeypointButton = UIButton.makeConstraintButton(view,
+                                                       alignment: UIConstants.ButtonContainerHorizontalAlignment.right,
+                                                       appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "Landmark")!),
+                                                       label: "Add manual keypoint")
+        
         stopRecordingButton = UIButton.makeConstraintButton(view,
                                                        alignment: UIConstants.ButtonContainerHorizontalAlignment.center,
                                                        appearance: UIConstants.ButtonAppearance.imageButton(image: UIImage(named: "StopRecording")!),
@@ -67,7 +75,7 @@ class StopRecordingController: UIViewController {
         stackView.alignment = UIStackView.Alignment.center
         
         /// add elements to the stack
-        stackView.addArrangedSubview(paddingButton)
+        stackView.addArrangedSubview(addManualKeypointButton)
         stackView.addArrangedSubview(stopRecordingButton)
         stackView.addArrangedSubview(recordVoiceNoteButton)
 
@@ -80,6 +88,9 @@ class StopRecordingController: UIViewController {
         stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -UIConstants.yButtonFrameMargin).isActive = true
 
         if let parent: UIViewController = parent {
+            addManualKeypointButton.addTarget(parent,
+                                          action: #selector(ViewController.addManualKeypoint),
+                                          for: .touchUpInside)
             stopRecordingButton.addTarget(parent,
                                           action: #selector(ViewController.stopRecording),
                                           for: .touchUpInside)

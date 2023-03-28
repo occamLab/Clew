@@ -321,6 +321,8 @@ class SavedRoute: NSObject, NSSecureCoding {
     public var dateCreated: NSDate
     /// The crumbs that make up the route.  The densely sampled positions (crumbs) are stored and the keypoints (sparser goal positionsare calculated on demand when navigation is requested.
     public var crumbs: [LocationInfo]
+    /// the indices in crumbs to use for navigation keypoints
+    public var manualKeypointIndices: [Int]
     /// the cloud anchors associated with the route
     public var cloudAnchors: [NSString: ARAnchor]
     
@@ -340,10 +342,11 @@ class SavedRoute: NSObject, NSSecureCoding {
     ///   - dateCreated: the route creation date
     ///   - beginRouteAnchorPoint: the Anchor Point for the beginning of the route (pass a `RouteAnchorPoint` with default initialization if no Anchor Point was recorded at the beginning of the route)
     ///   - endRouteAnchorPoint: the Anchor Point for the end of the route (pass a `RouteAnchorPoint` with default initialization if no Anchor Point was recorded at the end of the route)
-    public init(id: NSString, name: NSString, crumbs: [LocationInfo], cloudAnchors: [NSString: ARAnchor], dateCreated: NSDate = NSDate(), beginRouteAnchorPoint: RouteAnchorPoint, endRouteAnchorPoint: RouteAnchorPoint, intermediateAnchorPoints: [RouteAnchorPoint]) {
+    public init(id: NSString, name: NSString, crumbs: [LocationInfo], manualKeypointIndices: [Int], cloudAnchors: [NSString: ARAnchor], dateCreated: NSDate = NSDate(), beginRouteAnchorPoint: RouteAnchorPoint, endRouteAnchorPoint: RouteAnchorPoint, intermediateAnchorPoints: [RouteAnchorPoint]) {
         self.id = id
         self.name = name
         self.crumbs = crumbs
+        self.manualKeypointIndices = manualKeypointIndices
         self.cloudAnchors = cloudAnchors
         self.dateCreated = dateCreated
         self.beginRouteAnchorPoint = beginRouteAnchorPoint
@@ -358,6 +361,7 @@ class SavedRoute: NSObject, NSSecureCoding {
         aCoder.encode(id, forKey: "id")
         aCoder.encode(name, forKey: "name")
         aCoder.encode(crumbs, forKey: "crumbs")
+        aCoder.encode(manualKeypointIndices, forKey: "manualKeypointIndices")
         
         let cloudAnchorKeys = Array(cloudAnchors.keys)
         let cloudAnchorValues = cloudAnchorKeys.map({cloudAnchors[$0]!})
@@ -417,12 +421,13 @@ class SavedRoute: NSObject, NSSecureCoding {
             // convert to the new format
             endRouteAnchorPoint = RouteAnchorPoint(anchor: ARAnchor(transform: landmarkTransform), information: endRouteLandmark.information, voiceNote: endRouteLandmark.voiceNote)
         }
+        let manualKeypointIndices = aDecoder.decodeObject(of: [].self, forKey: "manualKeypointIndices") as? [Int] ?? []
         
         var intermediateRouteAnchorPoints: [RouteAnchorPoint] = []
         if let anchorPoints = aDecoder.decodeObject(of: [].self, forKey: "intermediateAnchorPoints") as? [RouteAnchorPoint] {
             intermediateRouteAnchorPoints = anchorPoints
         }
-        self.init(id: id, name: name, crumbs: crumbs, cloudAnchors: cloudAnchors, dateCreated: dateCreated, beginRouteAnchorPoint: beginRouteAnchorPoint, endRouteAnchorPoint: endRouteAnchorPoint, intermediateAnchorPoints: intermediateRouteAnchorPoints)
+        self.init(id: id, name: name, crumbs: crumbs, manualKeypointIndices: manualKeypointIndices, cloudAnchors: cloudAnchors, dateCreated: dateCreated, beginRouteAnchorPoint: beginRouteAnchorPoint, endRouteAnchorPoint: endRouteAnchorPoint, intermediateAnchorPoints: intermediateRouteAnchorPoints)
     }
 }
 
