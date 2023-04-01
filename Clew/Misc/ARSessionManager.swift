@@ -10,6 +10,7 @@ import Foundation
 import ARKit
 import FirebaseStorage
 import ARCore
+import ARCore
 
 enum ARTrackingError {
     case insufficientFeatures
@@ -743,6 +744,15 @@ extension ARSessionManager: ARSessionDelegate {
     private func checkForCloudAnchorAlignment(anchors: [GARAnchor]) {
         for anchor in anchors {
             if anchor.hasValidTransform, let correspondingARAnchor = sessionCloudAnchors[anchor.identifier], anchor.cloudIdentifier == lastResolvedCloudAnchorID  {
+                
+                if let manualAlignment = manualAlignment {
+                    let deviation = simd_distance((manualAlignment * correspondingARAnchor.transform).columns.3, anchor.transform.columns.3)
+                    if deviation > 3.0 {
+                        // outlier rejection
+                        return
+                    }
+                }
+
                 manualAlignment = anchor.transform.alignY() * correspondingARAnchor.transform.inverse.alignY()
             }
         }
@@ -768,8 +778,10 @@ extension ARSessionManager: ARSessionDelegate {
                 if !self.visualizeCloudAnchors {
                     return
                 }
+                print("printing cloud anchors")
                 for gAnchor in garFrame?.updatedAnchors ?? [] {
                     if let cloudIdentifier = gAnchor.cloudIdentifier, gAnchor.hasValidTransform, let existingNode = self.cloudAnchorSCNNodes[cloudIdentifier] {
+                        print("updated cloud anchor \(gAnchor.transform.x), \(gAnchor.transform.y) \(gAnchor.transform.z)")
                         existingNode.simdTransform = gAnchor.transform
                     }
                 }
@@ -918,8 +930,22 @@ extension ARSessionManager: GARSessionDelegate {
         if localization == .none {
             delegate?.sessionDidRelocalize()
         }
+        
+
+        guard let cloudIdentifier = anchor.cloudIdentifier, let alignTransform = cloudAnchorsForAlignment[NSString(string: cloudIdentifier)]?.transform else {
+            return
+        }
+        if localization == .withCloudAnchors {
+            let deviation = simd_distance((manualAlignment! * alignTransform).columns.3, anchor.transform.columns.3)
+            if deviation > 3.0 {
+                AnnouncementManager.shared.announce(announcement: "Rejected outlier \(round(deviation))")
+                return
+            } else {
+                AnnouncementManager.shared.announce(announcement: "Accepted inlier \(round(deviation))")
+            }
+        }
         localization = .withCloudAnchors
-        if let cloudIdentifier = anchor.cloudIdentifier, anchor.hasValidTransform, let alignTransform = cloudAnchorsForAlignment[NSString(string: cloudIdentifier)]?.transform {
+        if  anchor.hasValidTransform {
             lastResolvedCloudAnchorID = cloudIdentifier
             self.manualAlignment = anchor.transform.alignY() * alignTransform.inverse.alignY()
             createSCNNodeFor(identifier: cloudIdentifier, at: anchor.transform)

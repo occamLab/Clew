@@ -41,6 +41,9 @@ class BurgerMenuViewController: UITableViewController, UIPopoverPresentationCont
                 print("wasSuccessful \(wasSuccessful)")
             }
         }
+        if indexPath == [0, 3] {
+            ARLogger.shared.dumpLocalData()
+        }
     }
     
     /// Called when the settings button is pressed.  This function will display the settings view (managed by SettingsViewController) as a popover.
@@ -81,7 +84,7 @@ class BurgerMenuViewController: UITableViewController, UIPopoverPresentationCont
     
     override func tableView(_ tableView: UITableView,
                             heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if indexPath.row == 2, !UploadManager.shared.hasLocalDataToUploadToCloud() {
+        if indexPath.row == 2 || indexPath.row == 3, !UploadManager.shared.hasLocalDataToUploadToCloud() {
             return 0
         }
         return super.tableView(tableView, heightForRowAt: indexPath)

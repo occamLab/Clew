@@ -596,20 +596,20 @@ PODS:
     - abseil/base/base_internal
     - abseil/base/config
     - abseil/meta/type_traits
-  - ARCore/Base (1.35.0):
+  - ARCore/Base (1.36.0):
     - GoogleDataTransport (~> 9.2)
     - nanopb (< 2.30910.0, >= 2.30908.0)
-  - ARCore/CloudAnchors (1.35.0):
-    - ARCore/GARSession (~> 1.35)
-    - GTMSessionFetcher/Core (< 3.0, >= 1.5)
+  - ARCore/CloudAnchors (1.36.0):
+    - ARCore/GARSession (~> 1.36)
+    - GTMSessionFetcher/Core (< 4.0, >= 1.5)
     - nanopb (< 2.30910.0, >= 2.30908.0)
-  - ARCore/GARSession (1.35.0):
-    - ARCore/Base (~> 1.35)
+  - ARCore/GARSession (1.36.0):
+    - ARCore/Base (~> 1.36)
     - Firebase/RemoteConfig (< 11.0, >= 8.0)
     - GoogleDataTransport (~> 9.2)
     - nanopb (< 2.30910.0, >= 2.30908.0)
-  - ARCore/Geospatial (1.35.0):
-    - ARCore/GARSession (~> 1.35)
+  - ARCore/Geospatial (1.36.0):
+    - ARCore/GARSession (~> 1.36)
   - BitByteData (2.0.2)
   - BoringSSL-GRPC (0.0.24):
     - BoringSSL-GRPC/Implementation (= 0.0.24)
@@ -850,8 +850,8 @@ PODS:
     - VectorMath/Core
 
 DEPENDENCIES:
-  - ARCore/CloudAnchors (~> 1.35.0)
-  - ARCore/Geospatial (~> 1.35.0)
+  - ARCore/CloudAnchors (~> 1.36.0)
+  - ARCore/Geospatial (~> 1.36.0)
   - FirebaseAnalytics
   - FirebaseAuth
   - FirebaseFirestore
@@ -898,7 +898,7 @@ SPEC REPOS:
 
 SPEC CHECKSUMS:
   abseil: ebe5b5529fb05d93a8bdb7951607be08b7fa71bc
-  ARCore: b7ce7f400275982eb26a2e19deb3bab5cea062fc
+  ARCore: 0ae024c989d177c9f907b54e9efc28940045f8df
   BitByteData: 4ba0d1ed07c497cdde396b966c1e24838f4e394e
   BoringSSL-GRPC: 3175b25143e648463a56daeaaa499c6cb86dad33
   Firebase: 5f8193dff4b5b7c5d5ef72ae54bb76c08e2b841d
@@ -928,6 +928,6 @@ SPEC CHECKSUMS:
   SwiftProtobuf: 9f458aaa7844a2fc0b910053e66578bc4e2da9c1
   VectorMath: 55dded3a69e5061add78d06275561bc25ead2999
 
-PODFILE CHECKSUM: bc1b769869250e590bbb5158460c4688a2cfc850
+PODFILE CHECKSUM: 1e64f82e6712492e527e690e1d7c53ddb803c3c0
 
 COCOAPODS: 1.12.0

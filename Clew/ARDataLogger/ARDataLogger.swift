@@ -115,6 +115,10 @@ public class ARLogger: ARDataLoggerAdapter {
         }
     }
     
+    public func dumpLocalData() {
+        uploadManager.dumpLocalData()
+    }
+    
     private func uploadLog() {
         guard enabled else {
             return

@@ -9,6 +9,7 @@
 
 import Foundation
 import ARCoreGeospatial
+import FirebaseCore
 import FirebaseStorage
 import SceneKit
 import ARKit

@@ -106,6 +106,24 @@ class UploadManager {
         return false
     }
     
+    func dumpLocalData() {
+        DispatchQueue.global(qos: .userInteractive).async {
+            if let enumerator = try? FileManager.default.contentsOfDirectory(at: self.localMetaDataDir, includingPropertiesForKeys: nil) {
+                var cleanupFiles: [URL] = []
+                for url in enumerator {
+                    if let metadata = try? Data(contentsOf: url), let json = try? JSONSerialization.jsonObject(with: metadata, options: []) as? [String: String] {
+                        let localURL = self.localDataDir.appendingPathComponent(json["localFile"]!)
+                        cleanupFiles.append(url)
+                        cleanupFiles.append(localURL)
+                    }
+                }
+                for cleanupFile in cleanupFiles {
+                    try? FileManager.default.removeItem(at: cleanupFile)
+                }
+            }
+        }
+    }
+    
     func uploadLocalDataToCloud(completion: ((StorageMetadata?, Error?) -> Void)?) {
         DispatchQueue.global(qos: .userInteractive).async {
             if let enumerator = try? FileManager.default.contentsOfDirectory(at: self.localMetaDataDir, includingPropertiesForKeys: nil) {
