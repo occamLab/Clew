@@ -30,6 +30,7 @@ class DoorViewController: UIViewController, ARSessionManagerObserver {
         let currentLatLon = cameraGeoSpatialTransform.coordinate
 //        print("got a new lat lon in the bus stop view controller \(currentLatLon)")
         if !buttonsHaveNames {
+            AnnouncementManager.shared.announce(announcement: "Localized")
             let closestTwoDoors = doorDataModel.getClosestDoors(to: currentLatLon)
             doorOneButton.addLargeTitle(closestTwoDoors[0].name)
             doorTwoButton.addLargeTitle(closestTwoDoors[1].name)
@@ -54,6 +55,8 @@ class DoorViewController: UIViewController, ARSessionManagerObserver {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        AnnouncementManager.shared.announce(announcement: "Localizing")
+        
         //view.backgroundColor = .white
         self.modalPresentationStyle = .fullScreen
         view = TransparentTouchView(frame:CGRect(x: 0,
@@ -69,7 +72,7 @@ class DoorViewController: UIViewController, ARSessionManagerObserver {
         doorOneButton.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.height / 5).isActive = true
         doorOneButton.setBackgroundImage(UIImage(named: "WhiteButtonBackground"), for: .normal)
         doorOneButton.imageView?.contentMode = .scaleAspectFit
-        doorOneButton.addLargeTitle(NSLocalizedString("doorOneButtonText", comment: "This is the text which appears on the door one buttton"))
+        doorOneButton.addLargeTitle(NSLocalizedString("Localizing...", comment: "This is the text which appears on the door one buttton"))
         // add tag so we can send over to ViewController
         doorOneButton.tag = 0
         
@@ -81,7 +84,7 @@ class DoorViewController: UIViewController, ARSessionManagerObserver {
         doorTwoButton.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.height / 5).isActive = true
         doorTwoButton.setBackgroundImage(UIImage(named: "WhiteButtonBackground"), for: .normal)
         doorTwoButton.imageView?.contentMode = .scaleAspectFit
-        doorTwoButton.addLargeTitle(NSLocalizedString("doorTwoButtonText", comment: "This is the text which appears on the door two buttton"))
+        doorTwoButton.addLargeTitle(NSLocalizedString("Localizing...", comment: "This is the text which appears on the door two buttton"))
         // add tag so we can send over to ViewController
         doorTwoButton.tag = 1
         //busStopTwoButton.setTitle(closestBusStops[1].Stop_name)

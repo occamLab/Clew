@@ -29,6 +29,7 @@ class BusStopViewController: UIViewController, ARSessionManagerObserver {
         let currentLatLon = cameraGeoSpatialTransform.coordinate
 //        print("got a new lat lon in the bus stop view controller \(currentLatLon)")
         if !buttonsHaveNames {
+            AnnouncementManager.shared.announce(announcement: "Localized")
             let closestTwoStops = busStopDataModel.getClosestBusStops(to: currentLatLon)
             busStopOneButton.addLargeTitle(closestTwoStops[0].Stop_name)
             busStopTwoButton.addLargeTitle(closestTwoStops[1].Stop_name)
@@ -36,7 +37,6 @@ class BusStopViewController: UIViewController, ARSessionManagerObserver {
         }
     
     }
-
     
     override func viewWillAppear(_ animated: Bool) {
         // listen for to the ARSessionManager
@@ -53,6 +53,8 @@ class BusStopViewController: UIViewController, ARSessionManagerObserver {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        AnnouncementManager.shared.announce(announcement: "Localizing")
+        
         //view.backgroundColor = .white
         self.modalPresentationStyle = .fullScreen
         view = TransparentTouchView(frame:CGRect(x: 0,
@@ -68,7 +70,7 @@ class BusStopViewController: UIViewController, ARSessionManagerObserver {
         busStopOneButton.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.height / 5).isActive = true
         busStopOneButton.setBackgroundImage(UIImage(named: "WhiteButtonBackground"), for: .normal)
         busStopOneButton.imageView?.contentMode = .scaleAspectFit
-        busStopOneButton.addLargeTitle(NSLocalizedString("busStopOneButtonText", comment: "This is the text which appears on the bus stop one buttton"))
+        busStopOneButton.addLargeTitle(NSLocalizedString("Localizing...", comment: "This is the text which appears on the bus stop one buttton"))
         // add tag so we can send over to ViewController
         busStopOneButton.tag = 0
         
@@ -80,7 +82,7 @@ class BusStopViewController: UIViewController, ARSessionManagerObserver {
         busStopTwoButton.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.height / 5).isActive = true
         busStopTwoButton.setBackgroundImage(UIImage(named: "WhiteButtonBackground"), for: .normal)
         busStopTwoButton.imageView?.contentMode = .scaleAspectFit
-        busStopTwoButton.addLargeTitle(NSLocalizedString("busStopTwoButtonText", comment: "This is the text which appears on the bus stop two buttton"))
+        busStopTwoButton.addLargeTitle(NSLocalizedString("Localizing...", comment: "This is the text which appears on the bus stop two buttton"))
         // add tag so we can send over to ViewController
         busStopTwoButton.tag = 1
         //busStopTwoButton.setTitle(closestBusStops[1].Stop_name)

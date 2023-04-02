@@ -602,7 +602,6 @@ extension ARSessionManager: ARSessionDelegate {
                 generator.impactOccurred(intensity: 1.0)
                 generator.impactOccurred(intensity: 1.0)
             }
-//            print("angle diff: \(angleDiff)")
             
                 
             if distanceToTargetLocation < 1, announceDistance == true { // user has arrived
