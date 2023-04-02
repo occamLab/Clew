@@ -2931,9 +2931,22 @@ class UISurveyHostingController: UIHostingController<FirebaseFeedbackSurvey> {
 
 extension ViewController: ARSessionManagerDelegate {
     func locationDidUpdate(cameraGeoSpatialTransform: GARGeospatialTransform) {
-        latitudeLabel.text = ("Latitude: \(String(cameraGeoSpatialTransform.coordinate.latitude))")
-        longitudeLabel.text = ("Longitude:  \(String(cameraGeoSpatialTransform.coordinate.longitude))")
-        locationAccuracyLabel.text = ("Accuracy: \(String(cameraGeoSpatialTransform.horizontalAccuracy))")
+        //        latitudeLabel.text = ("Latitude: \(String(cameraGeoSpatialTransform.coordinate.latitude))")
+        //        longitudeLabel.text = ("Longitude:  \(String(cameraGeoSpatialTransform.coordinate.longitude))")
+        //        locationAccuracyLabel.text = ("Accuracy: \(String(cameraGeoSpatialTransform.horizontalAccuracy))")
+    }
+    
+    func arrivedToTargetLocation() {
+        let borderWidth: CGFloat = 20.0 // set the desired border width
+        let borderColor = UIColor.blue.cgColor // set the desired border color
+
+        let borderLayer = CALayer()
+        borderLayer.frame = view.bounds
+        borderLayer.borderColor = borderColor
+        borderLayer.borderWidth = borderWidth
+
+        view.layer.addSublayer(borderLayer)
+
     }
     
     func getPathColor() -> Int {

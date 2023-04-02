@@ -38,6 +38,7 @@ protocol ARSessionManagerObserver {
     func trackingIsNormal()
     func didHostCloudAnchor(cloudIdentifier: String, anchorIdentifier: String, withTransform transform : simd_float4x4)
     func locationDidUpdate(cameraGeoSpatialTransform: GARGeospatialTransform)
+    func arrivedToTargetLocation()
 }
 
 // add default behavior
@@ -50,6 +51,7 @@ extension ARSessionManagerObserver {
     func trackingIsNormal() {}
     func didHostCloudAnchor(cloudIdentifier: String, anchorIdentifier: String, withTransform transform : simd_float4x4) {}
     func locationDidUpdate(cameraGeoSpatialTransform: GARGeospatialTransform) {}
+    func arrivedToTargetLocation() {}
 }
 
 protocol ARSessionManagerDelegate: ARSessionManagerObserver {
@@ -602,10 +604,14 @@ extension ARSessionManager: ARSessionDelegate {
             }
 //            print("angle diff: \(angleDiff)")
             
+                
             if distanceToTargetLocation < 1, announceDistance == true { // user has arrived
+//            if -lastDistanceTime.timeIntervalSinceNow > 5, announceDistance == true { // line used for testing
                 AnnouncementManager.shared.announce(announcement: "You are within 1 cane length of your destination")
                 announceDistance = false
                 targetLocationNode.removeFromParentNode() // remove node to increase space on screen
+                delegate?.arrivedToTargetLocation()
+                observer?.arrivedToTargetLocation()
             }
             
             // alert distance to straight line distance, only if pointing towards bus stop
