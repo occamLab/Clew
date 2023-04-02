@@ -68,6 +68,7 @@ class ARSessionManager: NSObject {
     let generator = UIImpactFeedbackGenerator(style: .heavy)
     var lastHapticTime = Date() // tracking when we give angle haptic feedback
     var lastDistanceTime = Date() // tracking when we give feedback about straight line distance away
+    var announceDistance = true // boolean turns false once user arrives
     
     enum LocalizationState {
         case none
@@ -601,11 +602,19 @@ extension ARSessionManager: ARSessionDelegate {
             }
 //            print("angle diff: \(angleDiff)")
             
+            if distanceToTargetLocation < 1, announceDistance == true { // user has arrived
+                AnnouncementManager.shared.announce(announcement: "You are within 1 cane length of your destination")
+                announceDistance = false
+                targetLocationNode.removeFromParentNode() // remove node to increase space on screen
+            }
+            
             // alert distance to straight line distance, only if pointing towards bus stop
-            if -lastDistanceTime.timeIntervalSinceNow > 5, abs(angleDiff) <= (10 * Float.pi / 180) {
+            if -lastDistanceTime.timeIntervalSinceNow > 5, abs(angleDiff) <= (10 * Float.pi / 180), announceDistance == true{
                 lastDistanceTime = Date()
                 AnnouncementManager.shared.announce(announcement: "\(Int(distanceToTargetLocation)) meters away.")
             }
+            
+            
         }
     
         do {

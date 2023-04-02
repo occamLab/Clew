@@ -79,6 +79,7 @@ class DoorDataModel {
                     let longitude = doorsRaw[i].geometry.coordinates[0]
                     doors.append(Door(name: stopName, latitude: latitude, longitude: longitude))
                 }
+                doors.append(Door(name: "CCSideByHand", latitude: 42.293811, longitude: -71.263533))
                 print("doors \(doors)")
             } catch {
                     // handle error
