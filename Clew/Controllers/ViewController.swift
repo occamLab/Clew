@@ -144,7 +144,7 @@ enum AppState {
 
 /// The view controller that handles the main Clew window.  This view controller is always active and handles the various views that are used for different app functionalities.
 class ViewController: UIViewController, SRCountdownTimerDelegate {
-    static let debugARCore = false
+    static let debugARCore = true
     // MARK: Properties and subview declarations
     
     /// How long to wait (in seconds) between the alignment request and grabbing the transform

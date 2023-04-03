@@ -250,7 +250,7 @@ class ARSessionManager: NSObject {
         }
     }
     
-    func startSession() {
+    func startSession(shouldRelocalize: Bool = false) {
         lastTorchChange = 0.0
         manualAlignment = nil
         localization = .none
@@ -580,17 +580,16 @@ extension ARSessionManager: ARSessionDelegate {
     private func checkForCloudAnchorAlignment(anchors: [GARAnchor]) {
         for anchor in anchors {
             if anchor.hasValidTransform, let correspondingARAnchor = sessionCloudAnchors[anchor.identifier], anchor.cloudIdentifier == lastResolvedCloudAnchorID  {
-                let proposed = anchor.transform.alignY() * correspondingARAnchor.transform.inverse.alignY()
+                
                 if let manualAlignment = manualAlignment {
-                    if let newAlignment = alignmentFilter.update(proposed: proposed, old: manualAlignment) {
-                        self.manualAlignment = newAlignment
-                        if ViewController.debugARCore {
-                            AnnouncementManager.shared.announce(announcement: "new alignment")
-                        }
+                    let deviation = simd_distance((manualAlignment * correspondingARAnchor.transform).columns.3, anchor.transform.columns.3)
+                    if deviation > 3.0 {
+                        // outlier rejection
+                        return
                     }
-                } else {
-                    manualAlignment = proposed
                 }
+
+                manualAlignment = anchor.transform.alignY() * correspondingARAnchor.transform.inverse.alignY()
             }
         }
     }
@@ -701,31 +700,43 @@ extension ARSessionManager: ARSCNViewDelegate {
 
 extension ARSessionManager: GARSessionDelegate {
     func session(_ session: GARSession, didResolve anchor:GARAnchor) {
-        if localization == .withARWorldMap {
+        guard localization != .withARWorldMap, let cloudIdentifier = anchor.cloudIdentifier, anchor.hasValidTransform, let alignTransform = cloudAnchorsForAlignment[NSString(string: cloudIdentifier)]?.transform else {
             // defer to the ARWorldMap
             return
         }
-        if sessionWasRelocalizing && localization == .none {
+        // when debugging ARCore, we don't use the map and will never enter sessionWasRelocalizing (TODO: handle this better by distinguishing when we are relocalizing using cloud anchors versus just starting a new recording session)
+        if (sessionWasRelocalizing || ViewController.debugARCore) && localization == .none {
             delegate?.sessionDidRelocalize()
+        }
+        if localization == .withCloudAnchors, let manualAlignment = manualAlignment {
+            let deviation = simd_distance((manualAlignment * alignTransform).columns.3, anchor.transform.columns.3)
+            if deviation > 3.0 {
+                if ViewController.debugARCore {
+                    AnnouncementManager.shared.announce(announcement: "Rejected outlier \(round(deviation))")
+                }
+                return
+            } else {
+                if ViewController.debugARCore {
+                    AnnouncementManager.shared.announce(announcement: "Accepted inlier \(round(deviation))")
+                }
+            }
         }
         let oldLocalization = localization
         localization = .withCloudAnchors
-        if let cloudIdentifier = anchor.cloudIdentifier, anchor.hasValidTransform, let alignTransform = cloudAnchorsForAlignment[NSString(string: cloudIdentifier)]?.transform {
-            lastResolvedCloudAnchorID = cloudIdentifier
-            let proposed = anchor.transform.alignY() * alignTransform.inverse.alignY()
-            if let manualAlignment = manualAlignment, oldLocalization != .none {
-                if let newAlignment = alignmentFilter.update(proposed: proposed, old: manualAlignment) {
-                    self.manualAlignment = newAlignment
-                }
-            } else {
-                manualAlignment = proposed
+        lastResolvedCloudAnchorID = cloudIdentifier
+        let proposed = anchor.transform.alignY() * alignTransform.inverse.alignY()
+        if let manualAlignment = manualAlignment, oldLocalization != .none {
+            if let newAlignment = alignmentFilter.update(proposed: proposed, old: manualAlignment) {
+                self.manualAlignment = newAlignment
             }
+        } else {
+            manualAlignment = proposed
+        }
 
-            if ViewController.debugARCore {
-                let announceResolution = "Cloud Anchor Resolved"
-                PathLogger.shared.logSpeech(utterance: announceResolution)
-                AnnouncementManager.shared.announce(announcement: announceResolution)
-            }
+        if ViewController.debugARCore {
+            let announceResolution = "Cloud Anchor Resolved"
+            PathLogger.shared.logSpeech(utterance: announceResolution)
+            AnnouncementManager.shared.announce(announcement: announceResolution)
         }
     }
     
