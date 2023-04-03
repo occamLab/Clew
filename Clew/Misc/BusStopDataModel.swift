@@ -28,7 +28,7 @@ class BusStopDataModel {
     
     var stops: [BusStop] = []
     private init() {
-        if let path = Bundle.main.path(forResource: "test", ofType: "json") {
+        if let path = Bundle.main.path(forResource: "mbtaBusStops", ofType: "json") {
             do {
                 let data = try Data(contentsOf: URL(fileURLWithPath: path), options: .mappedIfSafe)
                 print("data \(data)")

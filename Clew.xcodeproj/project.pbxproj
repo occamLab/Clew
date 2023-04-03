@@ -14,8 +14,6 @@
 		13BD17CE29A01BCC0050A32B /* sample.json in Resources */ = {isa = PBXBuildFile; fileRef = 13BD17CC29A01BCC0050A32B /* sample.json */; };
 		13BD17D029A01C130050A32B /* BusStopDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13BD17CF29A01C130050A32B /* BusStopDataModel.swift */; };
 		13BD17D129A01C130050A32B /* BusStopDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13BD17CF29A01C130050A32B /* BusStopDataModel.swift */; };
-		13BD17D629AD35B00050A32B /* test.json in Resources */ = {isa = PBXBuildFile; fileRef = 13BD17D529AD35B00050A32B /* test.json */; };
-		13BD17D729AD35B00050A32B /* test.json in Resources */ = {isa = PBXBuildFile; fileRef = 13BD17D529AD35B00050A32B /* test.json */; };
 		13BD17DC29B199530050A32B /* BusStopViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13BD17DB29B199530050A32B /* BusStopViewController.swift */; };
 		13BD17DD29B199530050A32B /* BusStopViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13BD17DB29B199530050A32B /* BusStopViewController.swift */; };
 		13BD17DF29C8E1800050A32B /* Olin_College_Doors.geojson in Resources */ = {isa = PBXBuildFile; fileRef = 13BD17DE29C8E1800050A32B /* Olin_College_Doors.geojson */; };
@@ -24,6 +22,10 @@
 		13BD17E329C8E20C0050A32B /* DoorDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13BD17E129C8E20C0050A32B /* DoorDataModel.swift */; };
 		13BD17EB29CE3AD60050A32B /* DoorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13BD17EA29CE3AD60050A32B /* DoorViewController.swift */; };
 		13BD17EC29CE3AD60050A32B /* DoorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13BD17EA29CE3AD60050A32B /* DoorViewController.swift */; };
+		13BD17F129DB4E7C0050A32B /* TargetLocationDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13BD17F029DB4E7C0050A32B /* TargetLocationDataModel.swift */; };
+		13BD17F229DB4E7C0050A32B /* TargetLocationDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13BD17F029DB4E7C0050A32B /* TargetLocationDataModel.swift */; };
+		13BD17F429DB51630050A32B /* mbtaBusStops.json in Resources */ = {isa = PBXBuildFile; fileRef = 13BD17F329DB51630050A32B /* mbtaBusStops.json */; };
+		13BD17F529DB51630050A32B /* mbtaBusStops.json in Resources */ = {isa = PBXBuildFile; fileRef = 13BD17F329DB51630050A32B /* mbtaBusStops.json */; };
 		14A90C0426A211BE003DAB30 /* ClewTutorialFeedback.wav in Resources */ = {isa = PBXBuildFile; fileRef = 14A90C0326A211BE003DAB30 /* ClewTutorialFeedback.wav */; };
 		14A90C0526A211BF003DAB30 /* ClewTutorialFeedback.wav in Resources */ = {isa = PBXBuildFile; fileRef = 14A90C0326A211BE003DAB30 /* ClewTutorialFeedback.wav */; };
 		14A90C0726A86A82003DAB30 /* TutorialFollowPath1.crd in Resources */ = {isa = PBXBuildFile; fileRef = 14A90C0626A86A82003DAB30 /* TutorialFollowPath1.crd */; };
@@ -303,11 +305,12 @@
 		13AAEC5129974C25000F7A6F /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		13BD17CC29A01BCC0050A32B /* sample.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = sample.json; sourceTree = "<group>"; };
 		13BD17CF29A01C130050A32B /* BusStopDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusStopDataModel.swift; sourceTree = "<group>"; };
-		13BD17D529AD35B00050A32B /* test.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = test.json; sourceTree = "<group>"; };
 		13BD17DB29B199530050A32B /* BusStopViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusStopViewController.swift; sourceTree = "<group>"; };
 		13BD17DE29C8E1800050A32B /* Olin_College_Doors.geojson */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Olin_College_Doors.geojson; sourceTree = "<group>"; };
 		13BD17E129C8E20C0050A32B /* DoorDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoorDataModel.swift; sourceTree = "<group>"; };
 		13BD17EA29CE3AD60050A32B /* DoorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoorViewController.swift; sourceTree = "<group>"; };
+		13BD17F029DB4E7C0050A32B /* TargetLocationDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TargetLocationDataModel.swift; sourceTree = "<group>"; };
+		13BD17F329DB51630050A32B /* mbtaBusStops.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = mbtaBusStops.json; sourceTree = "<group>"; };
 		14A90C0326A211BE003DAB30 /* ClewTutorialFeedback.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = ClewTutorialFeedback.wav; sourceTree = "<group>"; };
 		14A90C0626A86A82003DAB30 /* TutorialFollowPath1.crd */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = TutorialFollowPath1.crd; sourceTree = "<group>"; };
 		14A90C0926AEF5CE003DAB30 /* TutorialFollowPath2.crd */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = TutorialFollowPath2.crd; sourceTree = "<group>"; };
@@ -808,9 +811,9 @@
 		13BD17CB29A01B790050A32B /* Sample Datasets */ = {
 			isa = PBXGroup;
 			children = (
+				13BD17F329DB51630050A32B /* mbtaBusStops.json */,
 				13BD17DE29C8E1800050A32B /* Olin_College_Doors.geojson */,
 				13BD17CC29A01BCC0050A32B /* sample.json */,
-				13BD17D529AD35B00050A32B /* test.json */,
 			);
 			path = "Sample Datasets";
 			sourceTree = "<group>";
@@ -1680,6 +1683,7 @@
 				821C018B2994393E006EBDC5 /* JGMethodSwizzler.m */,
 				13BD17CF29A01C130050A32B /* BusStopDataModel.swift */,
 				13BD17E129C8E20C0050A32B /* DoorDataModel.swift */,
+				13BD17F029DB4E7C0050A32B /* TargetLocationDataModel.swift */,
 			);
 			path = Misc;
 			sourceTree = "<group>";
@@ -1942,7 +1946,6 @@
 				4D6B00E51F33C9B800952242 /* Crumb.obj in Resources */,
 				14A90C0A26AEF5CE003DAB30 /* TutorialFollowPath2.crd in Resources */,
 				82BE71962739982200387139 /* StdVector in Resources */,
-				13BD17D629AD35B00050A32B /* test.json in Resources */,
 				82BE71A22739982200387139 /* QtAlignedMalloc in Resources */,
 				82BE71AC2739982200387139 /* Dense in Resources */,
 				E5470F1C22C119F5001092A4 /* GoogleService-Info.plist in Resources */,
@@ -1956,6 +1959,7 @@
 				E5470F0E22C119F5001092A4 /* Settings.bundle in Resources */,
 				82569F4E22187E6500448B45 /* help in Resources */,
 				82FB2F1626D82BB4005E5088 /* TutorialFollowPathRelease2.crd in Resources */,
+				13BD17F429DB51630050A32B /* mbtaBusStops.json in Resources */,
 				E5470F1622C119F5001092A4 /* Assets.xcassets in Resources */,
 				77365B182343ECBA008BC35C /* BurgerMenu.storyboard in Resources */,
 				82BE71C62739982200387139 /* StdList in Resources */,
@@ -2002,6 +2006,7 @@
 				E5470F1922C119F5001092A4 /* StartRecording.aiff in Resources */,
 				82BE719D2739982200387139 /* Core in Resources */,
 				82BE719F2739982200387139 /* SparseLU in Resources */,
+				13BD17F529DB51630050A32B /* mbtaBusStops.json in Resources */,
 				14A90C0526A211BF003DAB30 /* ClewTutorialFeedback.wav in Resources */,
 				82BE71D32739982200387139 /* README.md in Resources */,
 				82BE71C72739982200387139 /* StdList in Resources */,
@@ -2033,7 +2038,6 @@
 				82BE71AD2739982200387139 /* Dense in Resources */,
 				82BE71A72739982200387139 /* PardisoSupport in Resources */,
 				82BE71992739982200387139 /* StdDeque in Resources */,
-				13BD17D729AD35B00050A32B /* test.json in Resources */,
 				E59DA6C022C65F5900FCD5A1 /* LaunchScreen.storyboard in Resources */,
 				772E4564236CC155008EF6AC /* SettingsAndHelp.storyboard in Resources */,
 				14A90C0826A86A82003DAB30 /* TutorialFollowPath1.crd in Resources */,
@@ -2102,6 +2106,7 @@
 				E5470F3A22C119F5001092A4 /* HelpViewController.swift in Sources */,
 				E565A10822F2173400C1998E /* RouteDocumentData.swift in Sources */,
 				82BE6C9F273983E200387139 /* PRTweenTimingFunctions.m in Sources */,
+				13BD17F129DB4E7C0050A32B /* TargetLocationDataModel.swift in Sources */,
 				E5470F0222C119F5001092A4 /* Navigation.swift in Sources */,
 				E5470F3822C119F5001092A4 /* ResumeTrackingConfirmController.swift in Sources */,
 				E5470EFA22C119F5001092A4 /* RecorderViewController.swift in Sources */,
@@ -2171,6 +2176,7 @@
 				82BE6CA0273983E200387139 /* PRTweenTimingFunctions.m in Sources */,
 				E565A10922F2173400C1998E /* RouteDocumentData.swift in Sources */,
 				821C019029943997006EBDC5 /* Credentials.swift in Sources */,
+				13BD17F229DB4E7C0050A32B /* TargetLocationDataModel.swift in Sources */,
 				E5470F3B22C119F5001092A4 /* HelpViewController.swift in Sources */,
 				E5470F0322C119F5001092A4 /* Navigation.swift in Sources */,
 				E5470F3922C119F5001092A4 /* ResumeTrackingConfirmController.swift in Sources */,

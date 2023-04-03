@@ -21,46 +21,46 @@ struct Door: Codable {
     }
 }
 
-// MARK: - Welcome
-// hold raw data from JSON
-struct DoorRaw: Codable {
-    let type, name: String
-    let crs: CRS
-    let features: [Feature]
-}
-
-// MARK: - CRS
-struct CRS: Codable {
-    let type: String
-    let properties: CRSProperties
-}
-
-// MARK: - CRSProperties
-struct CRSProperties: Codable {
-    let name: String
-}
-
-// MARK: - Feature
-struct Feature: Codable {
-    let type: String
-    let properties: FeatureProperties
-    let geometry: Geometry
-}
-
-// MARK: - Geometry
-struct Geometry: Codable {
-    let type: String
-    let coordinates: [Double]
-}
-
-// MARK: - FeatureProperties
-struct FeatureProperties: Codable {
-    let name: String
-
-    enum CodingKeys: String, CodingKey {
-        case name = "Name"
-    }
-}
+//// MARK: - Welcome
+//// hold raw data from JSON
+//struct DoorRaw: Codable {
+//    let type, name: String
+//    let crs: CRS
+//    let features: [Feature]
+//}
+//
+//// MARK: - CRS
+//struct CRS: Codable {
+//    let type: String
+//    let properties: CRSProperties
+//}
+//
+//// MARK: - CRSProperties
+//struct CRSProperties: Codable {
+//    let name: String
+//}
+//
+//// MARK: - Feature
+//struct Feature: Codable {
+//    let type: String
+//    let properties: FeatureProperties
+//    let geometry: Geometry
+//}
+//
+//// MARK: - Geometry
+//struct Geometry: Codable {
+//    let type: String
+//    let coordinates: [Double]
+//}
+//
+//// MARK: - FeatureProperties
+//struct FeatureProperties: Codable {
+//    let name: String
+//
+//    enum CodingKeys: String, CodingKey {
+//        case name = "Name"
+//    }
+//}
 
 class DoorDataModel {
     public static var shared = DoorDataModel()
@@ -80,6 +80,8 @@ class DoorDataModel {
                     doors.append(Door(name: stopName, latitude: latitude, longitude: longitude))
                 }
                 doors.append(Door(name: "CCSideByHand", latitude: 42.293811, longitude: -71.263533))
+                doors.append(Door(name: "Howe Building East", latitude: 42.361361, longitude: -71.174921))
+                doors.append(Door(name: "Library Main Door", latitude: 42.3615711, longitude: -71.177996))
                 print("doors \(doors)")
             } catch {
                     // handle error
