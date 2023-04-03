@@ -447,6 +447,8 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
             pausedAnchorPoint = route.beginRouteAnchorPoint
         } else {
             crumbs = route.crumbs
+            // this is weird, but the way these indices are stored is based on navigate start to end, so you need to modify here
+            manualKeypointIndices = manualKeypointIndices.map({route.crumbs.count - $0 - 1}).sorted()
             pausedAnchorPoint = route.endRouteAnchorPoint
         }
         pausedAnchorPoint?.loadImage()
@@ -485,7 +487,6 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
             }
             hostNewCloudAnchor(at: simd_float3(curLocation.x, curLocation.y, curLocation.z))
             self.lastCloudAnchorTime = Date()
-            self.creatingCloudAnchors = Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: #selector(createCloudAnchors), userInfo: nil, repeats: true)
             AnnouncementManager.shared.announce(announcement: NSLocalizedString("readyToRecordAnnouncement", comment: "this is spoken right before recording a visually aligned route."))
             self.state = .recordingRoute
         }
@@ -612,15 +613,15 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
                     beginRouteAnchorPoint.intrinsics = imageAlignment.1
                 }
                 SoundEffectManager.shared.playSystemSound(id: 1108)
-                state = .mappingLocalEnvironment
+                state = .recordingRoute
             } else {
                 SoundEffectManager.shared.meh()
                 ///PATHPOINT begining anchor point alignment timer -> record route
                 ///announce to the user that they have sucessfully saved an anchor point.
                 delayTransition(announcement: NSLocalizedString("multipleUseRouteAnchorPointToRecordingRouteAnnouncement", comment: "This is the announcement which is spoken after the first anchor point of a multiple use route is saved. this signifies the completeion of the saving an anchor point procedure and the start of recording a route to be saved."), initialFocus: nil)
                 ///sends the user to a route recording of the program is creating a beginning route Anchor Point
-                lastCloudAnchorTime = Date() - 10
-                self.creatingCloudAnchors = Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: #selector(createCloudAnchors), userInfo: nil, repeats: true)
+                // lastCloudAnchorTime = Date() - 10
+                //  self.creatingCloudAnchors = Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: #selector(createCloudAnchors), userInfo: nil, repeats: true)
                 state = .recordingRoute
             }
         } else if let currentTransform = ARSessionManager.shared.currentFrame?.camera.transform {
@@ -641,6 +642,9 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
             // no more crumbs
             droppingCrumbs?.invalidate()
             print("PAUL STOPPING CLOUD!")
+            if Self.debugARCore {
+                AnnouncementManager.shared.announce(announcement: "creating final anchor")
+            }
             hostNewCloudAnchor(at: currentTransform.columns.3.dropW)
             creatingCloudAnchors?.invalidate()
 
@@ -1877,7 +1881,15 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
     
     @objc func addManualKeypoint(_ send: UIButton?) {
         manualKeypointIndices.append(recordingCrumbs.count - 1)
-        print("hit button")
+        AnnouncementManager.shared.announce(announcement: "A cloud anchor will be created in 30 seconds")
+        DispatchQueue.main.asyncAfter(deadline: .now() + 30) {
+            guard let curLocation = self.getRealCoordinates(record: false)?.location else {
+                return
+            }
+            if self.hostNewCloudAnchor(at: simd_float3(curLocation.x, curLocation.y, curLocation.z)) {
+                self.lastCloudAnchorTime = Date()
+            }
+        }
     }
     
     /// handles the user pressing the start navigation button.
@@ -2128,8 +2140,6 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
             return
         }
         if -lastCloudAnchorTime.timeIntervalSinceNow > Self.cloudAnchorDropInterval, hostNewCloudAnchor(at: simd_float3(curLocation.x, curLocation.y, curLocation.z)) {
-            print("PAUL pending")
-
             lastCloudAnchorTime = Date()
         }
     }
