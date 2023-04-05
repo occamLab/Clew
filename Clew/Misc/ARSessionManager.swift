@@ -9,8 +9,7 @@
 import Foundation
 import ARKit
 import FirebaseStorage
-import ARCore
-import ARCore
+import ARCoreGeospatial
 
 enum ARTrackingError {
     case insufficientFeatures
@@ -154,7 +153,7 @@ class ARSessionManager: NSObject, ObservableObject {
     var geoSpatialAlignmentCrumbs: [LocationInfoGeoSpatial] = [] {
         didSet {
             let accurateGeoSpatialCrumbs = geoSpatialAlignmentCrumbs.filter( {$0.headingUncertainty < GARGeospatialTransform.excellentQualityHeadingAccuracy && $0.altitudeUncertainty < GARGeospatialTransform.excellentQualityAltitudeAccuracy && $0.horizontalUncertainty < GARGeospatialTransform.excellentQualityHorizontalAccuracy } )
-            for crumb in accurateGeoSpatialCrumbs {
+            for crumb in geoSpatialAlignmentCrumbs {
                 if let newAnchor = addGeoSpatialAnchor(location: crumb) {
                     crumb.GARAnchorUUID = newAnchor.identifier
                 }

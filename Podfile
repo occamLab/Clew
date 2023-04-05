@@ -26,11 +26,11 @@ end
 
 # manually set the swift version for SRCountdownTimer since it doesn't work with Swift 5.0
 post_install do |installer|
-  installer.pods_project.targets.each do |target|
-    if ['SRCountdownTimer'].include? target.name
-      target.build_configurations.each do |config|
-        config.build_settings['SWIFT_VERSION'] = '4.0'
-      end
-    end
-  end
+    installer.generated_projects.each do |project|
+          project.targets.each do |target|
+              target.build_configurations.each do |config|
+                  config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '13.0'
+               end
+          end
+   end
 end
