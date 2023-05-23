@@ -57,4 +57,4 @@ def extend_cloud_anchors_dev(event: scheduler_fn.ScheduledEvent) -> None:
     main("clew-sandbox-22342ab55d3e.json")
 
 if __name__ == '__main__':
-    main()
+    main("clew-781f4-87dd19e48356.json")
