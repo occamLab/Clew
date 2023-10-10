@@ -15,7 +15,9 @@ class SoundEffectManager {
     private var mehSound: AVAudioPlayer?
     private var errorSound: AVAudioPlayer?
     private var tambourineSound: AVAudioPlayer?
-
+    /// a player for the on track sound
+    private var onTrackSound: AVAudioPlayer?
+    
     /// audio players for playing system sounds through an `AVAudioSession` (this allows them to be audible even when the rocker switch is muted.
     var audioPlayers: [Int: AVAudioPlayer] = [:]
 
@@ -38,6 +40,15 @@ class SoundEffectManager {
                 let url = URL(fileURLWithPath: errorPath)
                 errorSound = try AVAudioPlayer(contentsOf: url)
                 errorSound?.prepareToPlay()
+            } catch {
+                print("error \(error)")
+            }
+        }
+        if let onTrackPath = Bundle.main.path(forResource: "caf_MultiwayJoin", ofType:"wav") {
+            do {
+                let url = URL(fileURLWithPath: onTrackPath)
+                onTrackSound = try AVAudioPlayer(contentsOf: url)
+                onTrackSound?.prepareToPlay()
             } catch {
                 print("error \(error)")
             }
@@ -75,6 +86,12 @@ class SoundEffectManager {
         } catch let error {
             print("count not setup audio players", error)
         }
+    }
+    
+    /// Plays a chime that indicates user is facing the next keypoint of a route after having started the route
+    func onTrack() {
+        overrideSilentMode()
+        onTrackSound?.play()
     }
     
     func isWearingBinauralHeadphones()->Bool {

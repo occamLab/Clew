@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -156,10 +156,14 @@
 		82BE71D32739982200387139 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 82BE71932739982200387139 /* README.md */; };
 		82C09673273AE50D0073EE6E /* ChooseAnchorMethodController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82C09672273AE50D0073EE6E /* ChooseAnchorMethodController.swift */; };
 		82C09674273AE50D0073EE6E /* ChooseAnchorMethodController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82C09672273AE50D0073EE6E /* ChooseAnchorMethodController.swift */; };
+		82C0A4BA2AD5D8A4002C377E /* caf_MultiwayJoin.wav in Resources */ = {isa = PBXBuildFile; fileRef = 82C0A4B92AD5D8A4002C377E /* caf_MultiwayJoin.wav */; };
+		82C0A4BB2AD5D8A4002C377E /* caf_MultiwayJoin.wav in Resources */ = {isa = PBXBuildFile; fileRef = 82C0A4B92AD5D8A4002C377E /* caf_MultiwayJoin.wav */; };
 		82CD6F2129968AC200C2DC8C /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 82CD6F2029968AC200C2DC8C /* opencv2.framework */; };
 		82CD6F2229968AC200C2DC8C /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 82CD6F2029968AC200C2DC8C /* opencv2.framework */; };
 		82CD6F24299690A300C2DC8C /* ARCoreCloudAnchors in Frameworks */ = {isa = PBXBuildFile; productRef = 82CD6F23299690A300C2DC8C /* ARCoreCloudAnchors */; };
 		82CD6F26299690AD00C2DC8C /* ARCoreCloudAnchors in Frameworks */ = {isa = PBXBuildFile; productRef = 82CD6F25299690AD00C2DC8C /* ARCoreCloudAnchors */; };
+		82D5A3FC2AD0A2A3009B958A /* RouteRatingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82D5A3FB2AD0A2A3009B958A /* RouteRatingController.swift */; };
+		82D5A3FD2AD0A2A3009B958A /* RouteRatingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82D5A3FB2AD0A2A3009B958A /* RouteRatingController.swift */; };
 		82D94B63266FC7CF00EE2C1C /* SimpleForm in Frameworks */ = {isa = PBXBuildFile; productRef = 82D94B62266FC7CF00EE2C1C /* SimpleForm */; };
 		82D94B65266FC86200EE2C1C /* SimpleForm in Frameworks */ = {isa = PBXBuildFile; productRef = 82D94B64266FC86200EE2C1C /* SimpleForm */; };
 		82DE9224271876910086F5A4 /* ARSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82DE9223271876900086F5A4 /* ARSessionManager.swift */; };
@@ -672,7 +676,9 @@
 		82BE71922739982200387139 /* KLUSupport */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = KLUSupport; sourceTree = "<group>"; };
 		82BE71932739982200387139 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		82C09672273AE50D0073EE6E /* ChooseAnchorMethodController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseAnchorMethodController.swift; sourceTree = "<group>"; };
+		82C0A4B92AD5D8A4002C377E /* caf_MultiwayJoin.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = caf_MultiwayJoin.wav; sourceTree = "<group>"; };
 		82CD6F2029968AC200C2DC8C /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = opencv2.framework; sourceTree = "<group>"; };
+		82D5A3FB2AD0A2A3009B958A /* RouteRatingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteRatingController.swift; sourceTree = "<group>"; };
 		82DDE1EE26F38D1300C58FA4 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/BurgerMenu.strings; sourceTree = "<group>"; };
 		82DDE1F026F38D4000C58FA4 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/BurgerMenu.strings; sourceTree = "<group>"; };
 		82DDE1F226F38F6F00C58FA4 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/SettingsAndHelp.strings; sourceTree = "<group>"; };
@@ -1659,6 +1665,7 @@
 			children = (
 				E5470EBA22C119F4001092A4 /* SettingsTableViewController.h */,
 				E5470ED222C119F4001092A4 /* StartRecording.aiff */,
+				82C0A4B92AD5D8A4002C377E /* caf_MultiwayJoin.wav */,
 				14B7EA11269631C500E4A3CE /* ClewSuccessSound.wav */,
 				827EDC3026CDA5C000AAA12A /* ClewErrorSound.wav */,
 				14A90C0326A211BE003DAB30 /* ClewTutorialFeedback.wav */,
@@ -1704,6 +1711,7 @@
 				E5470EE722C119F4001092A4 /* ResumeTrackingConfirmController.swift */,
 				E8773AFA268B874F003EA863 /* SiriShortcutsController.swift */,
 				82C09672273AE50D0073EE6E /* ChooseAnchorMethodController.swift */,
+				82D5A3FB2AD0A2A3009B958A /* RouteRatingController.swift */,
 			);
 			path = StateViews;
 			sourceTree = "<group>";
@@ -1907,6 +1915,7 @@
 				82BE71A82739982200387139 /* SparseCore in Resources */,
 				4D6B00E51F33C9B800952242 /* Crumb.obj in Resources */,
 				14A90C0A26AEF5CE003DAB30 /* TutorialFollowPath2.crd in Resources */,
+				82C0A4BA2AD5D8A4002C377E /* caf_MultiwayJoin.wav in Resources */,
 				82BE71962739982200387139 /* StdVector in Resources */,
 				82BE71A22739982200387139 /* QtAlignedMalloc in Resources */,
 				82BE71AC2739982200387139 /* Dense in Resources */,
@@ -1978,6 +1987,7 @@
 				827EDC3226CDA5C000AAA12A /* ClewErrorSound.wav in Resources */,
 				82BE71BF2739982200387139 /* LU in Resources */,
 				82BE71A12739982200387139 /* OrderingMethods in Resources */,
+				82C0A4BB2AD5D8A4002C377E /* caf_MultiwayJoin.wav in Resources */,
 				82BE71BB2739982200387139 /* UmfPackSupport in Resources */,
 				E5470F1B22C119F5001092A4 /* StopRecording.aiff in Resources */,
 				82BE71C12739982200387139 /* Sparse in Resources */,
@@ -2030,6 +2040,7 @@
 			files = (
 				E5470F2E22C119F5001092A4 /* StopRecordingController.swift in Sources */,
 				E5470F0A22C119F5001092A4 /* AppDelegate.swift in Sources */,
+				82D5A3FC2AD0A2A3009B958A /* RouteRatingController.swift in Sources */,
 				82C09673273AE50D0073EE6E /* ChooseAnchorMethodController.swift in Sources */,
 				E5470F2222C119F5001092A4 /* UIViewExtensions.swift in Sources */,
 				E538EF4F22D3BFEC004216E9 /* TransparentTouchView.swift in Sources */,
@@ -2095,6 +2106,7 @@
 			files = (
 				E538EF5022D3BFEC004216E9 /* TransparentTouchView.swift in Sources */,
 				E5470F2F22C119F5001092A4 /* StopRecordingController.swift in Sources */,
+				82D5A3FD2AD0A2A3009B958A /* RouteRatingController.swift in Sources */,
 				82C09674273AE50D0073EE6E /* ChooseAnchorMethodController.swift in Sources */,
 				E5470F0B22C119F5001092A4 /* AppDelegate.swift in Sources */,
 				E5470F2322C119F5001092A4 /* UIViewExtensions.swift in Sources */,
@@ -2296,7 +2308,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -2352,7 +2364,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;

@@ -39,6 +39,8 @@ enum AppState {
     case finishedTutorialRoute(announceArrival: Bool)
     /// User is navigating along a route
     case navigatingRoute
+    /// User is rating the route
+    case ratingRoute(announceArrival: Bool)
     /// The app is starting up
     case initializing
     /// The user has requested a pause, but has not yet put the phone in the save location
@@ -69,6 +71,8 @@ enum AppState {
             return "mainScreen(announceArrival=\(announceArrival))"
         case .recordingRoute:
             return "recordingRoute"
+        case .ratingRoute(let announceArrival):
+            return "ratingRoute(announceArrival=\(announceArrival))"
         case .readyToNavigateOrPause:
             return "readyToNavigateOrPause"
         case .navigatingRoute:
@@ -170,6 +174,8 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
                 handleStateTransitionToReadyToNavigateOrPause(allowPause: recordingSingleUseRoute, isTutorial: isTutorial)
             case .navigatingRoute:
                 handleStateTransitionToNavigatingRoute()
+            case .ratingRoute(let announceArrival):
+                handleStateTransitionToRatingRoute(announceArrival: announceArrival)
             case .mainScreen(let announceArrival):
                 handleStateTransitionToMainScreen(announceArrival: announceArrival)
             case .startingPauseProcedure:
@@ -273,6 +279,36 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
         ARSessionManager.shared.initialWorldMap = nil
         showRecordPathButton(announceArrival: announceArrival)
     }
+    
+    /// Handler for the route rating app state
+    ///
+    /// - Parameter announceArrival: a Boolean that is true if we should announce that the user has arrived at the destination and false otherwise
+    func handleStateTransitionToRatingRoute(announceArrival: Bool) {
+        showRouteRating(announceArrival: announceArrival)
+    }
+    
+    
+    /// display route rating view/hide all other views
+    @objc func showRouteRating(announceArrival: Bool) {
+        rootContainerView.getDirectionButton.isHidden = true
+        rootContainerView.homeButton.isHidden = true
+        stopNavigationController.remove()
+        add(routeRatingController)
+        if announceArrival {
+            routeRatingController.view.mainText?.text = NSLocalizedString("ratingYourServiceViewText", comment: "The text that is displayed when the user has completed navigation of their route. This prompts the user to rate their navigation experience.")
+        } else {
+            routeRatingController.view.mainText?.text = NSLocalizedString("ratingYourServiceViewText", comment: "The text that is displayed when the user has completed navigation of their route. This prompts the user to rate their navigation experience.")
+        }
+        
+        feedbackGenerator = nil
+        waypointFeedbackGenerator = nil
+        if announceArrival {
+            delayTransition(announcement: NSLocalizedString("completedNavigationAnnouncement", comment: "An announcement which is played to notify the user that they have arrived at the end of their route."))
+        } else {
+            delayTransition()
+        }
+    }
+    
     
     /// Handler for the tutorial route state
     ///
@@ -692,6 +728,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
     func hideAllViewsHelper() {
         chooseAnchorMethodController.remove()
         recordPathController.remove()
+        routeRatingController.remove()
         stopRecordingController.remove()
         startNavigationController.remove()
         stopNavigationController.remove()
@@ -801,6 +838,9 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
     /// route navigation method choosing VC
     var chooseAnchorMethodController: ChooseAnchorMethodController!
     
+    /// route rating VC
+    var routeRatingController: RouteRatingController!
+    
     /// route navigation pausing VC
     var pauseTrackingController: PauseTrackingController!
     
@@ -842,6 +882,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
         self.modalPresentationStyle = .fullScreen
         // initialize child view controllers
         chooseAnchorMethodController = ChooseAnchorMethodController()
+        routeRatingController = RouteRatingController()
         pauseTrackingController = PauseTrackingController()
         resumeTrackingController = ResumeTrackingController()
         resumeTrackingConfirmController = ResumeTrackingConfirmController()
@@ -1876,7 +1917,11 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
         waypointFeedbackGenerator = nil
         ARSessionManager.shared.removeNavigationNodes()
         PathLogger.shared.logEvent(eventDescription: "pressed stop")
-        sendLogDataHelper(pathStatus: nil)
+        if sendLogs {
+            state = .ratingRoute(announceArrival: false)
+        } else {
+            sendLogDataHelper(pathStatus: nil)
+        }
     }
     
     /// handles the user pressing the pause button
@@ -2063,22 +2108,29 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
         }
     }
     
+    /// This is used when you want to send log data for a successful path
+    @objc
+    func sendThumbsUpPath() {
+        sendLogDataHelper(pathStatus: false, announceArrival: false)
+    }
+    
+    /// This is used when you want to send log data for an unsuccessful path
+    @objc
+    func sendThumbsDownPath() {
+        sendLogDataHelper(pathStatus: true, announceArrival: false)
+    }
+    
     func sendLogDataHelper(pathStatus: Bool?, announceArrival: Bool = false) {
         // send success log data to Firebase
         let logFileURLs = logger.compileLogData(pathStatus)
-        logger.resetStateSequenceLog()
+        clearState()
         if case .navigatingRoute = state, isTutorial {
             // TODO: might be able to remove this finishedTutorialRoute state and use the Boolean instead
             state = .finishedTutorialRoute(announceArrival: announceArrival)
         } else {
             state = .mainScreen(announceArrival: announceArrival)
         }
-        if sendLogs {
-            // do this in a little while to give it time to announce arrival
-            DispatchQueue.main.asyncAfter(deadline: .now() + (announceArrival ? 3 : 1)) {
-                self.presentSurveyIfIntervalHasPassed(mode: "afterRoute", logFileURLs: logFileURLs)
-            }
-        }
+        // remove the survey after the completion of the route
     }
     
     /// Create a new cloud anchor at the specified position.  This function will take care of calling the appropriate ARSessionManager function and keep track of the pending queue of cloud anchors
@@ -2163,7 +2215,12 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
                 startEndOfRouteHaptics()
                 followingCrumbs?.invalidate()
                 PathLogger.shared.logEvent(eventDescription: "arrived")
-                sendLogDataHelper(pathStatus: nil, announceArrival: true)
+                // update text and stop navigation
+                if(sendLogs) {
+                    state = .ratingRoute(announceArrival: true)
+                } else {
+                    sendLogDataHelper(pathStatus: nil, announceArrival: true)
+                }
             }
         }
     }
@@ -2306,7 +2363,7 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
                 if hapticFeedback { feedbackGenerator?.impactOccurred()
                 }
                 if soundFeedback {
-                    SoundEffectManager.shared.playSystemSound(id: 1103)
+                    SoundEffectManager.shared.onTrack()
                 }
                 feedbackTimer = Date()
             }
@@ -2394,7 +2451,8 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
                 break
             case .readyToNavigateOrPause(allowPause: let allowPause):
                 break // pageToDisplay = "FindPath"
-                
+            case .ratingRoute(let announceArrival):
+                break
             case .navigatingRoute:
                 break // pageToDisplay = "FindPath"
                 
