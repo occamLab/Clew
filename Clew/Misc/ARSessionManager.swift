@@ -39,7 +39,6 @@ protocol ARSessionManagerDelegate {
     func getKeypointColor()->Int
     func getShowPath()->Bool
     func newFrameAvailable()
-    func didHostCloudAnchor(cloudIdentifier: String, anchorIdentifier: String, withTransform transform : simd_float4x4)
 }
 
 class ARSessionManager: NSObject {
@@ -269,12 +268,18 @@ class ARSessionManager: NSObject {
         sceneView.session.pause()
     }
     
-    func hostCloudAnchor(withTransform transform: simd_float4x4)->(GARAnchor, ARAnchor)? {
+    func hostCloudAnchor(withTransform transform: simd_float4x4, completionHandler: @escaping ((String, simd_float4x4)?)->())->(GARAnchor, ARAnchor)? {
         let newAnchor = ARAnchor(transform: transform)
         add(anchor: newAnchor)
         do {
-            if let newGARAnchor = try garSession?.hostCloudAnchor(newAnchor) {
-                return (newGARAnchor, newAnchor)
+            try garSession?.hostCloudAnchor(newAnchor, ttlDays: 1) { cloudIdentifier, anchorState    in
+                guard anchorState == .success else {
+                    return completionHandler(nil)
+                }
+                guard let cloudIdentifier = cloudIdentifier else {
+                    return completionHandler(nil)
+                }
+                return completionHandler((cloudIdentifier, transform))
             }
         } catch {
             print("host cloud anchor failed \(error.localizedDescription)")
@@ -431,6 +436,7 @@ class ARSessionManager: NSObject {
     }
     
     func getCurrentLocation(of anchor: ARAnchor)->LocationInfo? {
+        print("manualAlignment \(manualAlignment)")
         if let node = sceneView.node(for: anchor), let anchor = sceneView.anchor(for: node) {
             return LocationInfo(anchor: anchor)
         } else if let manualAlignment = manualAlignment {
@@ -726,13 +732,6 @@ extension ARSessionManager: GARSessionDelegate {
                 PathLogger.shared.logSpeech(utterance: announceResolution)
                 AnnouncementManager.shared.announce(announcement: announceResolution)
             }
-        }
-    }
-    
-    func session(_ session: GARSession, didHost garAnchor:GARAnchor) {
-        if let cloudIdentifier = garAnchor.cloudIdentifier {
-            delegate?.didHostCloudAnchor(cloudIdentifier: cloudIdentifier, anchorIdentifier: garAnchor.identifier.uuidString, withTransform: garAnchor.transform)
-            // createSCNNodeFor(identifier: cloudIdentifier, at: garAnchor.transform)
         }
     }
     

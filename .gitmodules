@@ -1,6 +1,3 @@
 [submodule "FirebasePlists"]
 	path = FirebasePlists
 	url = git@github.com:occamLab/FirebasePlists.git
-[submodule "ExternalDependencies"]
-	path = ExternalDependencies
-	url = git@github.com:occamLab/ExternalDependencies.git

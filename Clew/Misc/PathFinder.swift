@@ -387,8 +387,19 @@ class SavedRoute: NSObject, NSSecureCoding {
         let cloudAnchorKeys = aDecoder.decodeObject(of: [].self, forKey: "cloudAnchorKeys") as? [NSString] ?? []
         
         let cloudAnchorValues = aDecoder.decodeObject(of: [].self, forKey: "cloudAnchorValues") as? [ARAnchor] ?? []
+        // detect bad rotations
+        var fixedCloudAnchorValues: [ARAnchor] = []
+        for cloudAnchorValue in cloudAnchorValues {
+            // we have a bad value
+            if simd_length(cloudAnchorValue.transform.columns.0) < 0.1 {
+                fixedCloudAnchorValues.append(ARAnchor(transform: simd_float4x4(translation: cloudAnchorValue.transform.columns.3.dropW, rotation: simd_quatf(ix: 0, iy: 0, iz: 0, r: 1.0))))
+                print("Fixing a bad value")
+            } else {
+                fixedCloudAnchorValues.append(cloudAnchorValue)
+            }
+        }
         
-        let cloudAnchors = Dictionary(uniqueKeysWithValues: zip(cloudAnchorKeys, cloudAnchorValues))
+        let cloudAnchors = Dictionary(uniqueKeysWithValues: zip(cloudAnchorKeys, fixedCloudAnchorValues))
         
         guard let dateCreated = aDecoder.decodeObject(of: NSDate.self, forKey: "dateCreated") else {
             return nil

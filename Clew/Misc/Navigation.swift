@@ -190,7 +190,11 @@ class Navigation {
         // Finds angle from "forward"-looking towards the next keypoint in radians. Not sure which direction is negative vs. positive for now.
         let angle = atan2f((currentLocation.location.x - nextLocation.x), (currentLocation.location.z-nextLocation.z))
         
+        
         let angleDiff = getAngleDiff(angle1: trueYaw, angle2: angle)
+        guard !angleDiff.isNaN else {
+            return nil
+        }
         
         let hapticDirection = getHapticDirection(angle: angleDiff)
         let clockDirection = getClockDirection(angle: angleDiff)

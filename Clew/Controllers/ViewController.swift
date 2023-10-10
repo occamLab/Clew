@@ -439,8 +439,15 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
         if case .normal? = ARSessionManager.shared.currentFrame?.camera.trackingState {
             isTrackingPerformanceNormal = true
         }
-        var isRelocalizing = false
-        if case .limited(reason: .relocalizing)? = ARSessionManager.shared.currentFrame?.camera.trackingState {
+        let isRelocalizing: Bool
+        if let status = ARSessionManager.shared.currentFrame?.camera.trackingState {
+            if case .limited(reason: .relocalizing) = status {
+                isRelocalizing = true
+            } else {
+                isRelocalizing = false
+            }
+        } else {
+            // no session running, we need to relocalize
             isRelocalizing = true
         }
         var isSameMap = false
@@ -451,7 +458,8 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
                 ARSessionManager.shared.initialWorldMap = nil
                 attemptingRelocalization = false
             } else {
-                isSameMap = ARSessionManager.shared.initialWorldMap != nil && ARSessionManager.shared.initialWorldMap == worldMap
+                // since we keep resetting the session each time, we can't rely on this
+                isSameMap = false
                 ARSessionManager.shared.initialWorldMap = worldMap
                 // TODO: see if we can move this out of this if statement
                 attemptingRelocalization = isSameMap && !isTrackingPerformanceNormal || !isSameMap
@@ -754,6 +762,8 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
         do {
             try hapticPlayer?.stop(atTime: 0.0)
         } catch { }
+        ARSessionManager.shared.startSession()
+
         state = .startingResumeProcedure(route: route, worldMap: worldMap, navigateStartToEnd: navigateStartToEnd)
     }
     
@@ -1199,28 +1209,6 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
       }
     }
     
-    func didHostCloudAnchor(cloudIdentifier: String, anchorIdentifier: String, withTransform transform : simd_float4x4) {
-        if Self.debugARCore {
-            AnnouncementManager.shared.announce(announcement: "Did Host Anchor \(cloudAnchors.count)")
-        }
-        print("DID HOST")
-        if let associatedRoute = pendingCloudAnchors[anchorIdentifier] {
-            for route in dataPersistence.routes {
-                // update the route
-                if route.id == associatedRoute {
-                    route.cloudAnchors[NSString(string: cloudIdentifier)] = ARAnchor(transform: transform)
-                    dataPersistence.update(route: route)
-                    dataPersistence.writeRoutesFile()
-                    if Self.debugARCore {
-                        AnnouncementManager.shared.announce(announcement: "Updating post hoc \(route.cloudAnchors.count)")
-                    }
-                    return
-                }
-            }
-        }
-        cloudAnchors[NSString(string: cloudIdentifier)] = ARAnchor(transform: transform)
-    }
-    
     /// function that creates alerts for the home button
     func showAdjustOffsetSuggestion() {
         // Create alert to warn users of lost information
@@ -1652,9 +1640,6 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
     
     /// list of crumbs to use for route creation
     var crumbs: [LocationInfo]!
-    
-    /// cloud anchors that have been sent to Google but have yet to come back.  The key is the GARAnchor identifier and the value is the route that the anchor should be associated with
-    var pendingCloudAnchors: [String: NSString] = [:]
     
     /// an ID to keep track of a route recording
     var routeRecordingID: NSString?
@@ -2136,17 +2121,31 @@ class ViewController: UIViewController, SRCountdownTimerDelegate {
     /// Create a new cloud anchor at the specified position.  This function will take care of calling the appropriate ARSessionManager function and keep track of the pending queue of cloud anchors
     /// - Parameter at: the translation to place the anchor at
     private func hostNewCloudAnchor(at: simd_float3)->Bool {
-        if let pendingCloudAnchor = ARSessionManager.shared.hostCloudAnchor(withTransform: simd_float4x4(translation: at, rotation: simd_quatf())) {
-            pendingCloudAnchors[pendingCloudAnchor.0.identifier.uuidString] = routeRecordingID
-            if ViewController.debugARCore {
-                AnnouncementManager.shared.announce(announcement: "Successfully requested cloud anchor")
+        let associatedRoute = routeRecordingID
+        let anchorPose = simd_float4x4(translation: at, rotation: simd_quatf(vector: simd_float4(0, 0, 0, 1)))
+
+        ARSessionManager.shared.hostCloudAnchor(withTransform: anchorPose) { idTransformTuple in
+            guard let (cloudIdentifier, transform) = idTransformTuple else {
+                return
             }
-            return true
+            // check if the route has already been saved
+            for route in self.dataPersistence.routes {
+                // update the route
+                if route.id == associatedRoute {
+                    route.cloudAnchors[NSString(string: cloudIdentifier)] = ARAnchor(transform: transform)
+                    self.dataPersistence.update(route: route)
+                    self.dataPersistence.writeRoutesFile()
+                    if Self.debugARCore {
+                        AnnouncementManager.shared.announce(announcement: "Updating post hoc \(route.cloudAnchors.count)")
+                    }
+                    return
+                }
+            }
+            // if we didn't find the saved route, save it to the object we are creating
+            self.cloudAnchors[NSString(string: cloudIdentifier)] = ARAnchor(transform: transform)
+            
         }
-        if ViewController.debugARCore {
-            AnnouncementManager.shared.announce(announcement: "Unsuccessfully requested cloud anchor")
-        }
-        return false
+        return true
     }
     
     @objc func createCloudAnchors() {

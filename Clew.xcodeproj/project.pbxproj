@@ -53,6 +53,10 @@
 		82569F4F22187E6500448B45 /* help in Resources */ = {isa = PBXBuildFile; fileRef = 82569F4D22187E6500448B45 /* help */; };
 		8261892E264ACCC5007F99C4 /* AppleSignInController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8261892D264ACCC5007F99C4 /* AppleSignInController.swift */; };
 		8261892F264ACCC5007F99C4 /* AppleSignInController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8261892D264ACCC5007F99C4 /* AppleSignInController.swift */; };
+		826BC06A2AD5E7EE00F18F27 /* ARCoreCloudAnchors in Frameworks */ = {isa = PBXBuildFile; productRef = 826BC0692AD5E7EE00F18F27 /* ARCoreCloudAnchors */; };
+		826BC06C2AD5E7EE00F18F27 /* ARCoreGARSession in Frameworks */ = {isa = PBXBuildFile; productRef = 826BC06B2AD5E7EE00F18F27 /* ARCoreGARSession */; };
+		826BC06E2AD5E81500F18F27 /* ARCoreCloudAnchors in Frameworks */ = {isa = PBXBuildFile; productRef = 826BC06D2AD5E81500F18F27 /* ARCoreCloudAnchors */; };
+		826BC0702AD5E81500F18F27 /* ARCoreGARSession in Frameworks */ = {isa = PBXBuildFile; productRef = 826BC06F2AD5E81500F18F27 /* ARCoreGARSession */; };
 		827EDC3126CDA5C000AAA12A /* ClewErrorSound.wav in Resources */ = {isa = PBXBuildFile; fileRef = 827EDC3026CDA5C000AAA12A /* ClewErrorSound.wav */; };
 		827EDC3226CDA5C000AAA12A /* ClewErrorSound.wav in Resources */ = {isa = PBXBuildFile; fileRef = 827EDC3026CDA5C000AAA12A /* ClewErrorSound.wav */; };
 		827EDC3426CDA72300AAA12A /* SoundEffectManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 827EDC3326CDA72200AAA12A /* SoundEffectManager.swift */; };
@@ -308,7 +312,6 @@
 		8206436A23B556A200DEE347 /* es */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = es; path = es.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
 		8214120426D41476003EC2D4 /* SiriWalkThrough.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SiriWalkThrough.swift; sourceTree = "<group>"; };
 		8214120726D497DE003EC2D4 /* SiriShortcutsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SiriShortcutsManager.swift; sourceTree = "<group>"; };
-		821C01832994314B006EBDC5 /* ARCorePackage */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = ARCorePackage; path = ExternalDependencies/ARCorePackage; sourceTree = "<group>"; };
 		821C018629943819006EBDC5 /* NSObject+ARFrameStatusAdapter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSObject+ARFrameStatusAdapter.h"; sourceTree = "<group>"; };
 		821C018729943859006EBDC5 /* NSObject+ARFrameStatusAdapter.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = "NSObject+ARFrameStatusAdapter.mm"; sourceTree = "<group>"; };
 		821C018A299438D1006EBDC5 /* JGMethodSwizzler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JGMethodSwizzler.h; sourceTree = "<group>"; };
@@ -326,12 +329,8 @@
 		827CB5B424932CC70032A857 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/Localizable.strings; sourceTree = "<group>"; };
 		827EDC3026CDA5C000AAA12A /* ClewErrorSound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = ClewErrorSound.wav; sourceTree = "<group>"; };
 		827EDC3326CDA72200AAA12A /* SoundEffectManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundEffectManager.swift; sourceTree = "<group>"; };
-		828CB78D298C652D0036D18A /* ARCorePackage */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = ARCorePackage; path = ExternalDependencies/ARCorePackage; sourceTree = "<group>"; };
-		828CB78E298C67910036D18A /* ARCorePackage */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = ARCorePackage; path = ExternalDependencies/ARCorePackage; sourceTree = "<group>"; };
 		828CB791298C6C220036D18A /* Credentials.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Credentials.swift; path = ../../FirebasePlists/Clew/Credentials.swift; sourceTree = "<group>"; };
 		828CB7932992F3AA0036D18A /* AlignmentFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlignmentFilter.swift; sourceTree = "<group>"; };
-		828CB796299430AC0036D18A /* ARCorePackage */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = ARCorePackage; path = ExternalDependencies/ARCorePackage; sourceTree = "<group>"; };
-		828CB797299430D20036D18A /* ARCorePackage */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = ARCorePackage; path = ExternalDependencies/ARCorePackage; sourceTree = "<group>"; };
 		82984805271F106E00DA3005 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		82984807271F107400DA3005 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		82A417E0262A205A001FCB8C /* AuthenticationHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationHelper.swift; sourceTree = "<group>"; };
@@ -749,9 +748,11 @@
 			files = (
 				82BE6C952739828E00387139 /* InAppSettingsKit in Frameworks */,
 				82BE6C7F2739815900387139 /* FirebaseAnalytics in Frameworks */,
+				826BC06C2AD5E7EE00F18F27 /* ARCoreGARSession in Frameworks */,
 				82BE6C812739815900387139 /* FirebaseAuth in Frameworks */,
 				82CD6F2129968AC200C2DC8C /* opencv2.framework in Frameworks */,
 				82BE6C832739815900387139 /* FirebaseDatabase in Frameworks */,
+				826BC06A2AD5E7EE00F18F27 /* ARCoreCloudAnchors in Frameworks */,
 				82CD6F26299690AD00C2DC8C /* ARCoreCloudAnchors in Frameworks */,
 				82BE6C852739815900387139 /* FirebaseStorage in Frameworks */,
 				82D94B63266FC7CF00EE2C1C /* SimpleForm in Frameworks */,
@@ -765,9 +766,11 @@
 			files = (
 				82BE6C97273982A100387139 /* InAppSettingsKit in Frameworks */,
 				82BE6C872739817D00387139 /* FirebaseAnalytics in Frameworks */,
+				826BC0702AD5E81500F18F27 /* ARCoreGARSession in Frameworks */,
 				82BE6C892739818A00387139 /* FirebaseAuth in Frameworks */,
 				82CD6F2229968AC200C2DC8C /* opencv2.framework in Frameworks */,
 				82BE6C8B2739819100387139 /* FirebaseDatabase in Frameworks */,
+				826BC06E2AD5E81500F18F27 /* ARCoreCloudAnchors in Frameworks */,
 				82CD6F24299690A300C2DC8C /* ARCoreCloudAnchors in Frameworks */,
 				82BE6C8D2739819700387139 /* FirebaseStorage in Frameworks */,
 				82D94B65266FC86200EE2C1C /* SimpleForm in Frameworks */,
@@ -800,7 +803,6 @@
 			isa = PBXGroup;
 			children = (
 				82497EDA299DA7210000D1FE /* ci_scripts */,
-				828CB78C298C652D0036D18A /* Packages */,
 				82BE6C982739836700387139 /* imported dependencies */,
 				82984806271F106E00DA3005 /* InfoPlist.strings */,
 				82A417EC262A2140001FCB8C /* Clew Dev.entitlements */,
@@ -838,18 +840,6 @@
 				82497EDB299DA7830000D1FE /* ci_post_clone.sh */,
 			);
 			path = ci_scripts;
-			sourceTree = "<group>";
-		};
-		828CB78C298C652D0036D18A /* Packages */ = {
-			isa = PBXGroup;
-			children = (
-				828CB78D298C652D0036D18A /* ARCorePackage */,
-				828CB78E298C67910036D18A /* ARCorePackage */,
-				828CB796299430AC0036D18A /* ARCorePackage */,
-				828CB797299430D20036D18A /* ARCorePackage */,
-				821C01832994314B006EBDC5 /* ARCorePackage */,
-			);
-			name = Packages;
 			sourceTree = "<group>";
 		};
 		82BE6C982739836700387139 /* imported dependencies */ = {
@@ -1787,6 +1777,8 @@
 				82BE6C8F2739823400387139 /* VectorMath */,
 				82BE6C942739828E00387139 /* InAppSettingsKit */,
 				82CD6F25299690AD00C2DC8C /* ARCoreCloudAnchors */,
+				826BC0692AD5E7EE00F18F27 /* ARCoreCloudAnchors */,
+				826BC06B2AD5E7EE00F18F27 /* ARCoreGARSession */,
 			);
 			productName = Clew;
 			productReference = 4D6B00C01F33C1C400952242 /* Clew.app */;
@@ -1814,6 +1806,8 @@
 				82BE6C912739824500387139 /* VectorMath */,
 				82BE6C96273982A100387139 /* InAppSettingsKit */,
 				82CD6F23299690A300C2DC8C /* ARCoreCloudAnchors */,
+				826BC06D2AD5E81500F18F27 /* ARCoreCloudAnchors */,
+				826BC06F2AD5E81500F18F27 /* ARCoreGARSession */,
 			);
 			productName = Clew;
 			productReference = B7EB59EC20F693EB00FBBC6A /* Clew Dev.app */;
@@ -1881,6 +1875,7 @@
 				82BE6C7D2739815900387139 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				82BE6C8E2739823400387139 /* XCRemoteSwiftPackageReference "VectorMath" */,
 				82BE6C932739828E00387139 /* XCRemoteSwiftPackageReference "InAppSettingsKit" */,
+				826BC0682AD5E7EE00F18F27 /* XCRemoteSwiftPackageReference "arcore-ios-sdk" */,
 			);
 			productRefGroup = 4D6B00C11F33C1C400952242 /* Products */;
 			projectDirPath = "";
@@ -2394,7 +2389,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0.29;
+				MARKETING_VERSION = 2.0.30;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -2429,7 +2424,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0.29;
+				MARKETING_VERSION = 2.0.30;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -2463,7 +2458,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0.29;
+				MARKETING_VERSION = 2.0.30;
 				OTHER_SWIFT_FLAGS = "$(inherited) \"-DDEVELOPER\" \"-DIS_DEV_TARGET\"";
 				PRODUCT_BUNDLE_IDENTIFIER = "edu.occam.Clew-Dev";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2497,7 +2492,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0.29;
+				MARKETING_VERSION = 2.0.30;
 				OTHER_SWIFT_FLAGS = "$(inherited) \"-DDEVELOPER\" \"-DIS_DEV_TARGET\"";
 				PRODUCT_BUNDLE_IDENTIFIER = "edu.occam.Clew-Dev";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2524,7 +2519,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 2.0.29;
+				MARKETING_VERSION = 2.0.30;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "edu.occam.Clew.route-quicklook";
@@ -2549,7 +2544,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 2.0.29;
+				MARKETING_VERSION = 2.0.30;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "edu.occam.Clew.route-quicklook";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2601,6 +2596,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		826BC0682AD5E7EE00F18F27 /* XCRemoteSwiftPackageReference "arcore-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/google-ar/arcore-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.39.0;
+			};
+		};
 		82BE6C7D2739815900387139 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
@@ -2636,6 +2639,26 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		826BC0692AD5E7EE00F18F27 /* ARCoreCloudAnchors */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 826BC0682AD5E7EE00F18F27 /* XCRemoteSwiftPackageReference "arcore-ios-sdk" */;
+			productName = ARCoreCloudAnchors;
+		};
+		826BC06B2AD5E7EE00F18F27 /* ARCoreGARSession */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 826BC0682AD5E7EE00F18F27 /* XCRemoteSwiftPackageReference "arcore-ios-sdk" */;
+			productName = ARCoreGARSession;
+		};
+		826BC06D2AD5E81500F18F27 /* ARCoreCloudAnchors */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 826BC0682AD5E7EE00F18F27 /* XCRemoteSwiftPackageReference "arcore-ios-sdk" */;
+			productName = ARCoreCloudAnchors;
+		};
+		826BC06F2AD5E81500F18F27 /* ARCoreGARSession */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 826BC0682AD5E7EE00F18F27 /* XCRemoteSwiftPackageReference "arcore-ios-sdk" */;
+			productName = ARCoreGARSession;
+		};
 		82BE6C7E2739815900387139 /* FirebaseAnalytics */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 82BE6C7D2739815900387139 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
