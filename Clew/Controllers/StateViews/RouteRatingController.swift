@@ -128,8 +128,6 @@ class RouteRatingController: UIViewController {
         
 
         if let parent = parent as? ViewController {
-            // TODO: add         sendLogDataHelper(pathStatus: nil, announceArrival: false)
-
             thumbsUpButton.addTarget(parent,
                                      action: #selector(ViewController.sendThumbsUpPath),
                                      for: .touchUpInside)
